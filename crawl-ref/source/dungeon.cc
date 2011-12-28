@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <list>
+#include <map>
 #include <set>
 #include <sstream>
 #include <algorithm>
@@ -68,10 +69,8 @@
 #include "state.h"
 #include "tags.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tileview.h"
-#endif
+#include "tiledef-dngn.h"
+#include "tileview.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -188,8 +187,8 @@ static void _calc_density();
 
 // A mask of vaults and vault-specific flags.
 std::vector<vault_placement> Temp_Vaults;
-FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
-FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
+static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_mask *Vault_Placement_Mask = NULL;
 
@@ -393,7 +392,7 @@ static bool _build_level_vetoable(int level_number, branch_type branch,
 static void _builder_assertions()
 {
 #ifdef ASSERTS
-    for(rectangle_iterator ri(0); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
         if (!in_bounds(*ri))
             if (!is_valid_border_feat(grd(*ri)))
             {
@@ -1016,7 +1015,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.rock_colour != BLACK)
         env.rock_colour = place.map.rock_colour;
 
-#ifdef USE_TILE
     if (!place.map.rock_tile.empty())
     {
         tileidx_t rock;
@@ -1040,7 +1038,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
             env.tile_default.floor = floor;
         }
     }
-#endif
 
     env.level_vaults.push_back(new vault_placement(place));
     if (register_vault)
@@ -1231,12 +1228,10 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear exclusions
     clear_excludes();
 
-#ifdef USE_TILE
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
-#endif
 }
 
 static void _build_layout_skeleton(int level_number, branch_type branch)
@@ -1921,7 +1916,9 @@ static void _ruin_level(Iterator ri,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    std::vector<coord_def> to_replace;
+    typedef std::pair<coord_def, dungeon_feature_type> coord_feat;
+    typedef std::vector<coord_feat> coord_feats;
+    coord_feats to_replace;
 
     for (; ri; ++ri)
     {
@@ -1941,31 +1938,59 @@ static void _ruin_level(Iterator ri,
         if (map_masked(*ri, vault_mask))
             continue;
 
+        // Pick a random adjacent non-wall, non-door, non-statue
+        // feature, and count the number of such features.
+        dungeon_feature_type replacement = DNGN_FLOOR;
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
-                floor_count++;
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
+                && !feat_is_statue_or_idol(grd(*ai))
+                // Shouldn't happen, but just in case.
+                && grd(*ai) != DNGN_MALIGN_GATEWAY)
+            {
+                if (one_chance_in(++floor_count))
+                    replacement = grd(*ai);
+            }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
-         * floor tiles */
+         * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(*ri);
+        {
+            to_replace.push_back(coord_feat(*ri, replacement));
+        }
     }
 
-    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+    for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
+        const coord_def &p(it->first);
+        dungeon_feature_type replacement = it->second;
+
+        // Don't replace doors with impassable features.
+        if (feat_is_door(grd(p)))
+        {
+            if (feat_is_water(replacement))
+                replacement = DNGN_SHALLOW_WATER;
+            else
+                replacement = DNGN_FLOOR;
+        }
+        else if (feat_has_solid_floor(replacement)
+                 && replacement != DNGN_SHALLOW_WATER)
+        {
+            // Exclude traps, shops, stairs, portals, altars, fountains.
+            // The first four, especially, are a big deal.
+            replacement = DNGN_FLOOR;
+        }
+
         /* only remove some doors, to preserve tactical options */
-        /* XXX: should this pick a random adjacent floor type, rather than
-         * just hardcoding DNGN_FLOOR? */
-        if (feat_is_wall(grd(*it)) || coinflip() && feat_is_door(grd(*it)))
-            grd(*it) = DNGN_FLOOR;
+        if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+            grd(p) = replacement;
 
         /* but remove doors if we've removed all adjacent walls */
-        for (adjacent_iterator wai(*it); wai; ++wai)
+        for (adjacent_iterator wai(p); wai; ++wai)
         {
             if (feat_is_door(grd(*wai)))
             {
@@ -1975,19 +2000,21 @@ static void _ruin_level(Iterator ri,
                     if (feat_is_wall(grd(*dai)))
                         remove = false;
                 }
+                // It's always safe to replace a door with floor.
                 if (remove)
                     grd(*wai) = DNGN_FLOOR;
             }
         }
 
         /* replace some ruined walls with plants/fungi/bushes */
-        if (plant_density && one_chance_in(plant_density))
+        if (plant_density && one_chance_in(plant_density)
+            && feat_has_solid_floor(replacement))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
                      coinflip()        ? MONS_PLANT :
                      MONS_FUNGUS;
-            mg.pos = *it;
+            mg.pos = p;
             mons_place(mgen_data(mg));
         }
     }
@@ -2034,10 +2061,6 @@ static void _place_feature_mimics(int level_number,
         if (!is_valid_mimic_feat(feat))
             continue;
 
-        // Don't mess up tomb's layout.
-        if (player_in_branch(BRANCH_TOMB) && feat_is_stone_stair(feat))
-            continue;
-
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
             continue;
@@ -2046,10 +2069,13 @@ static void _place_feature_mimics(int level_number,
         if (door_vetoed(pos))
             continue;
 
-        // Don't mimic escape hatches in vaults since they are often used
-        // to prevent trapping the player.
-        if (feat_is_escape_hatch(feat) && map_masked(pos, MMT_VAULT))
+        // Don't mimic staircases in vaults to avoid trapping the player or
+        // breaking vault layouts.
+        if (map_masked(pos, MMT_VAULT)
+            && (feat_is_escape_hatch(feat) || feat_is_stone_stair(feat)))
+        {
             continue;
+        }
 
         // Dont mimic guaranteed portals.
         if (feat == DNGN_ENTER_ABYSS && you.absdepth0 == 24)
@@ -2390,15 +2416,23 @@ static void _pan_level(int level_number)
     }
     else
     {
-        const map_def *layout = random_map_for_tag("layout", true, true);
-
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
-                                 true);
-
         const map_def *vault = random_map_for_tag("pan", true);
         ASSERT(vault);
 
-        _build_secondary_vault(level_number, vault);
+        if (vault->orient == MAP_ENCOMPASS)
+        {
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+                    true);
+        }
+        else
+        {
+            const map_def *layout = random_map_for_tag("layout", true, true);
+
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
+                    true);
+
+            _build_secondary_vault(level_number, vault);
+        }
     }
 }
 
@@ -2546,7 +2580,7 @@ static int _min_transitive_label(map_component & component)
         label = current->label;
 
         current = current->min_equivalent;
-    } while(current);
+    } while (current);
 
     return label;
 }
@@ -3300,7 +3334,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     {
         mg.cls = montypes[random2(montypes.size())];
 
-        if (player_in_branch(BRANCH_COCYTUS) &&
+        if (player_in_hell() &&
             mons_class_can_be_zombified(mg.cls))
         {
             static const monster_type lut[3][2] =
@@ -3382,7 +3416,7 @@ static void _place_aquatic_monsters(int level_number)
 
             if (player_in_branch(BRANCH_SWAMP) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
-            else if (player_in_branch(BRANCH_COCYTUS))
+            else if (player_in_hell())
             {
                 // Eels are useless when zombified
                 if (swimming_things[i] == MONS_ELECTRIC_EEL)
@@ -5100,8 +5134,8 @@ void place_spec_shop(int level_number,
                 && mitm[orb].base_type != OBJ_GOLD
                 && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
-                        && mitm[orb].base_type != OBJ_FOOD
-                        && spec->items.empty())))
+                        && mitm[orb].base_type != OBJ_FOOD)
+                    || !spec->items.empty()))
             {
                 break;
             }
@@ -6162,9 +6196,7 @@ void vault_placement::apply_grid()
                 env.grid_colours(*ri) = 0;
                 env.pgrid(*ri) = 0;
                 // what about heightmap?
-#ifdef USE_TILE
                 tile_clear_flavour(*ri);
-#endif
             }
 
             keyed_mapspec *mapsp = map.mapspec_at(dp);

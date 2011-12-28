@@ -1,15 +1,41 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
         "./tileinfo-icons", "./tileinfo-dngn", "./enums",
-        "./map_knowledge"],
-function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
+        "./map_knowledge", "./tileinfos"],
+function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinfos) {
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
+        this.glyph_mode = false;
+        this.glyph_mode_font_size = 24;
+        this.glyph_mode_font = "monospace";
     }
 
     function in_water(cell)
     {
         return ((cell.bg & enums.TILE_FLAG_WATER) && !(cell.fg & enums.TILE_FLAG_FLYING));
+    }
+
+    function term_colour_attr(col)
+    {
+        return (col & 0xF0) >> 4;
+    }
+
+    function term_colour_apply_attributes(col)
+    {
+        var fg = col & 0xF;
+        var bg = 0;
+        var attr = term_colour_attr(col);
+        if (attr == enums.CHATTR.HILITE)
+        {
+            bg = (col & 0xF000) >> 12;
+        }
+        if (attr == enums.CHATTR.REVERSE)
+        {
+            var z = bg;
+            bg = fg;
+            fg = z;
+        }
+        return { fg: fg, bg: bg, attr: attr };
     }
 
     function get_img(id)
@@ -66,6 +92,12 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
             this.y_scale = h / 32;
         },
 
+        glyph_mode_font_name: function ()
+        {
+            return (this.glyph_mode_font_size + "px " +
+                    this.glyph_mode_font);
+        },
+
         render_cursors: function(cx, cy, x, y)
         {
             var renderer = this;
@@ -103,7 +135,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
             if (!cell)
             {
-                this.render_flash(x, y);
+                if (!this.glyph_mode)
+                    this.render_flash(x, y);
 
                 this.render_cursors(cx, cy, x, y);
                 return;
@@ -116,6 +149,45 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
             cell.flv = cell.flv || {};
             cell.flv.f = cell.flv.f || 0;
             cell.flv.s = cell.flv.s || 0;
+            map_cell.g = map_cell.g || ' ';
+            if (map_cell.col == undefined) map_cell.col = 7;
+
+            if (this.glyph_mode)
+            {
+                var col = term_colour_apply_attributes(map_cell.col);
+
+                var prefix = "";
+                if (col.attr == enums.CHATTR.BOLD)
+                {
+                    prefix = "bold ";
+                }
+
+                this.ctx.fillStyle = enums.term_colours[col.bg];
+                this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+                this.ctx.fillStyle = enums.term_colours[col.fg];
+                this.ctx.font = prefix + this.glyph_mode_font_name();
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+
+                this.ctx.save();
+
+                try
+                {
+                    this.ctx.beginPath();
+                    this.ctx.rect(x, y, this.cell_width, this.cell_height);
+                    this.ctx.clip();
+
+                    this.ctx.fillText(map_cell.g,
+                                      x + this.cell_width/2, y + this.cell_height/2);
+                }
+                finally
+                {
+                    this.ctx.restore();
+                }
+
+                this.render_cursors(cx, cy, x, y);
+                return;
+            }
 
             // cell is basically a packed_cell + doll + mcache entries
             this.draw_background(x, y, cell);
@@ -617,10 +689,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
 
         // Helper functions for drawing from specific textures
-        draw_tile: function(idx, x, y, img_name, mod, ofsx, ofsy, y_max)
+        draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max)
         {
             var info = mod.get_tile_info(idx);
-            var img = get_img(img_name);
+            var img = get_img(mod.get_img(idx));
             if (!info)
             {
                 throw ("Tile not found: " + idx);
@@ -652,23 +724,28 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
         draw_dngn: function(idx, x, y)
         {
-            this.draw_tile(idx, x, y, dngn.get_img(idx), dngn);
+            this.draw_tile(idx, x, y, dngn);
         },
 
         draw_main: function(idx, x, y)
         {
-            this.draw_tile(idx, x, y, "main", main);
+            this.draw_tile(idx, x, y, main);
         },
 
         draw_player: function(idx, x, y, ofsx, ofsy, y_max)
         {
-            this.draw_tile(idx, x, y, "player",
-                           player, ofsx, ofsy, y_max);
+            this.draw_tile(idx, x, y, player, ofsx, ofsy, y_max);
         },
 
         draw_icon: function(idx, x, y, ofsx, ofsy)
         {
-            this.draw_tile(idx, x, y, "icons", icons, ofsx, ofsy);
+            this.draw_tile(idx, x, y, icons, ofsx, ofsy);
+        },
+
+        draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max)
+        {
+            var mod = tileinfos(tex);
+            this.draw_tile(idx, x, y, mod, ofsx, ofsy);
         },
     });
 

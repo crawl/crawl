@@ -89,6 +89,10 @@ LUARET1(you_race, string, species_name(you.species).c_str())
 function class() */
 LUARET1(you_class, string, get_job_name(you.char_class))
 /*
+--- Is player in wizard mode?
+function wizard() */
+LUARET1(you_wizard, boolean, you.wizard)
+/*
 --- Get name of player's god
 function god() */
 LUARET1(you_god, string, god_name(you.religion).c_str())
@@ -136,6 +140,7 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible(false, true))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
@@ -145,6 +150,8 @@ LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
 LUARET1(you_transform, string, transform_name())
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
+LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
+LUARET1(you_swift, boolean, you.duration[DUR_SWIFTNESS])
 LUARET1(you_paralysed, boolean, you.paralysed())
 LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
@@ -315,6 +322,7 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
+    { "wizard"      , you_wizard },
     { "god"         , you_god },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
@@ -335,6 +343,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
+    { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },
     { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
@@ -345,6 +354,8 @@ static const struct luaL_reg you_clib[] =
     { "berserk",      you_berserk },
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
+    { "shrouded",     you_shrouded },
+    { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },
     { "hasted",       you_hasted },

@@ -68,6 +68,12 @@ ASSERTS = yes
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
+        profile package-source source build-windows package-windows rest docs greet \
+        api
+
+include Makefile.obj
+
 #
 # Compiler Flags
 #
@@ -109,7 +115,7 @@ CFOPTIMIZE += -flto=jobserver -fwhole-program
 endif
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall
+CFWARN := -Wall -Wformat-security -Werror=format-security
 CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
@@ -204,6 +210,9 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
+	ifeq ($(shell gcc -v -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
+		EXTRA_LIBS += -static-libgcc -static-libstdc++
+	endif
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -243,6 +252,9 @@ ifdef BUILD_ALL
 	BUILD_ZLIB = YesPlease
 endif
 
+# Should be the first rule, but must come after $(GAME) is set.
+all: greet $(GAME) docs webserver
+
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
@@ -279,50 +291,31 @@ SQLITE_LIB := -lsqlite3
 # Set up the TILES variant
 #
 ifdef TILES
-
-# For now, everything but the iPad uses the standard
-# SDL/OpenGL/Freetype combination.
-ifndef IPAD
-	SDL = YesPlease
-	GL = YesPlease
-	FT = YesPlease
-endif
-
 TILES_ANY = YesPlease
-
+OBJECTS += $(TILES_OBJECTS) $(GLTILES_OBJECTS)
 endif
 
 ifdef WEBTILES
-
 TILES_ANY = YesPlease
-
+OBJECTS += $(TILES_OBJECTS) $(WEBTILES_OBJECTS)
 endif
 
 #
 # Check for an Apple-released compiler.
 #
+ifndef NO_APPLE_GCC
 ifeq ($(uname_S),Darwin)
 ifneq ($(shell gcc -v 2>&1 | grep Apple),)
 APPLE_GCC = YesPlease
 endif
 endif
-
-#
-# Set up object file dependencies for $(GAME) target.
-#
-include Makefile.obj
-
-# Just a quick hack to make it clean up
-# tiles-specific object files too.
-ifneq (,$(findstring clean,$(MAKECMDGOALS)))
-TILES := YesPlease
 endif
 
-# Works for Mac OS X and Linux.
-OBJECTS += crash-u.o
 
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
+else
+EXTRA_LIBS += -pthread
 endif
 
 ifndef TILES
@@ -397,20 +390,35 @@ ifdef APPLE_GCC
 
 MARCH := $(uname_M)
 
+
+ifndef NO_AUTO_SDK
+
+# Find the oldest SDK available, in attempt to make this build as
+# backward-compatible as we possibly can.
+SDK_VER := $(shell ls /Developer/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+
+ifeq ($(SDK_VER),10.4u)
+SDK_VER := 10.4
+endif
+
+ifndef SDK_VER
+$(error You do not seem to have any Mac OS X SDKs installed! This build is doomed to fail)
+endif
+
+endif
+
+ifndef SDK_VER
 ifeq ($(MARCH),ppc)
-	SDK_VER := 10.4
+SDK_VER := 10.4
 endif
 ifeq ($(MARCH),i386)
-	SDK_VER := 10.4
+SDK_VER := 10.4
 endif
 ifeq ($(MARCH),x86_64)
-ifeq ($(uname_R),11.0.0)
-	SDK_VER := 10.7
-else
 ifdef TILES
-	SDK_VER := 10.6
+SDK_VER := 10.6
 else
-	SDK_VER := 10.5
+SDK_VER := 10.5
 endif
 endif
 endif
@@ -421,8 +429,11 @@ ifeq ($(SDK_VER),10.4)
 GCC_VER := 4.0
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-GCC_VER := 4.2
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
+endif
+
+ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
+$(error The Mac OS X $(SDK_VER) SDK seems missing)
 endif
 
 ifdef BUILD_UNIVERSAL
@@ -471,8 +482,8 @@ ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) > /dev/null 2> /dev/null && ech
 LMACH :=
 endif
 
-GCC := $(LMACH)gcc$(GCC_VER_SUFFIX)
-GXX := $(LMACH)g++$(GCC_VER_SUFFIX)
+GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
+GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
 
 else
 
@@ -533,11 +544,14 @@ else
 endif
 
 RLTILES = rltiles
+INCLUDES_L += -I$(RLTILES)
+
+# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types
+$(OBJECTS:%.o=%.cc): | $(TILEDEFHDRS)
 
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
-INCLUDES_L += -I$(RLTILES)
 endif
 
 #
@@ -547,7 +561,6 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
-INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
@@ -556,20 +569,10 @@ ifdef BUILD_FREETYPE
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/freetype2
 endif
 
-ifdef SDL
-DEFINES_L += -DUSE_SDL
-endif
-
-ifdef GL
-DEFINES_L += -DUSE_GL
-endif
+DEFINES_L += -DUSE_SDL -DUSE_GL -DUSE_FT
 
 ifdef GLES
 DEFINES_L += -DUSE_GLES
-endif
-
-ifdef FT
-DEFINES_L += -DUSE_FT
 endif
 
 # Okay, we have to assume we're on something else that
@@ -600,7 +603,7 @@ SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
 
-LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -882,9 +885,9 @@ TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
-ifdef TILES_ANY
 OBJECTS += $(TILEDEFOBJS)
 
+ifdef TILES_ANY
 ifndef NO_OPTIMIZE
   ifneq (,$(shell which advpng))
     USE_ADVPNG = y
@@ -957,12 +960,6 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet \
-        api
-
-all: greet $(GAME) docs webserver
-
 greet:
 	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
 	"  * at INSTALL.txt: the solution to your problem just might be in there!\\n"
@@ -984,7 +981,8 @@ webserver/game_data/static/%.png: dat/tiles/%.png
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
-            denzi_undead_warrior omndra_zot_demon
+            denzi_undead_warrior omndra_zot_demon omndra_fire_mage \
+            shadyamish_octm denzi_evil_mage denzi_invasion
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -997,7 +995,7 @@ webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 clean-webserver:
-	$(RM) $(STATICFILES)
+	$(RM) $(STATICFILES) webserver/*.pyc
 
 ifdef WEBTILES
 webserver: $(STATICFILES)
@@ -1031,16 +1029,16 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 
 .PHONY: .force-cflags
 
+endif
+endif
+endif
+
 ##########################################################################
 # Dependencies
 
 DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
 -include $(DEPS)
-
-endif
-endif
-endif
 
 # Only serves to check if all .d files can be built
 depend: $(DEPS)
@@ -1151,6 +1149,8 @@ endif
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
+	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
+	util/columnise-credits.pl $(datadir_fp)/docs/CREDITS.txt
 	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
 	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
@@ -1202,7 +1202,7 @@ endif
 clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
-	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
+	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
 	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d
 	$(RM) -r build-win
 	$(RM) -r build
@@ -1260,14 +1260,23 @@ endif
 
 # Plain old compilation
 #
+
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
-%.o: %.m .cflags $(GENERATED_HEADERS)
+# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types.
+#
+# This ensures that we update these headers before building anything
+# that might depend on them without our knowing it yet, but lets the
+# .d files take care of *whether* or not to rebuild.
+#
+# This is kind of important when building without ccache.
+
+%.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc .cflags $(GENERATED_HEADERS)
+%.o: %.cc .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
@@ -1313,11 +1322,9 @@ mon-util.d: mon-mst.h
 
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH)
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
 
-$(TILEDEFSRCS): build-rltiles
-$(TILEDEFHDRS): build-rltiles
-$(ORIGTILEFILES): build-rltiles
+$(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 
 dat/tiles/%.png: $(RLTILES)/%.png
 	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
@@ -1331,19 +1338,15 @@ clean-rltiles:
 
 ifdef TILES_ANY
 $(GAME): $(DESTTILEFILES)
-$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
 endif
 
 #############################################################################
 # Packaging a source tarball for release
 #
 
-credits: util/columnise-credits.pl
-	util/columnise-credits.pl ../CREDITS.txt
-
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
-source: removeold prebuildyacc credits
+source: removeold prebuildyacc
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
@@ -1358,7 +1361,8 @@ source: removeold prebuildyacc credits
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
 	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
-	cd build && mv crawl-ref $(PKG_SRC_DIR)
+	util/columnise-credits.pl build/crawl-ref/CREDITS.txt
+	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source
 	cd build && tar cfJ ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
@@ -1401,6 +1405,7 @@ endif
 	mv build-win/crawl.exe build-win/crawl-tiles.exe
 	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
 	mv build-win/crawl.exe build-win/crawl-console.exe
+	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
 
 #############################################################################

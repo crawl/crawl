@@ -42,14 +42,16 @@
  * This is called when the player quaff a potion, but also for some cards,
  * beams, sparkling fountains, god effects and miscasts.
  *
- * @param pot_eff   The potion type.
- * @param pow       The power of the effect. 40 for actual potions.
- * @param drank_it  Wether the player actually quaffed (potions and fountains).
- * @param was_known Wether the potion was already identified.
+ * @param pot_eff       The potion type.
+ * @param pow           The power of the effect. 40 for actual potions.
+ * @param drank_it      Whether the player actually quaffed (potions and fountains).
+ * @param was_known     Whether the potion was already identified.
+ * @param from_fountain Is this from a fountain?
  *
  * @return If the potion was identified.
  */
-bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
+bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
+                   bool from_fountain)
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
@@ -250,10 +252,21 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                  "That liquid tasted %s nasty...",
                  (pot_eff == POT_POISON) ? "very" : "extremely");
 
+            int amount;
+            std::string msg;
             if (pot_eff == POT_POISON)
-                poison_player(1 + random2avg(5, 2), "", "a potion of poison");
+            {
+                amount = 1 + random2avg(5, 2);
+                msg = "a potion of poison";
+            }
             else
-                poison_player(3 + random2avg(13, 2), "", "a potion of strong poison");
+            {
+                amount = 3 + random2avg(13, 2);
+                msg = "a potion of strong poison";
+            }
+            if (from_fountain)
+                msg = "a sparkling fountain";
+            poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
         break;

@@ -998,14 +998,20 @@ bool strip_channel_prefix(std::string &text, msg_channel_type &channel, bool sil
 
     if (param == "WARN")
         channel = MSGCH_WARN, sound = true;
+    else if (param == "VISUAL WARN")
+        channel = MSGCH_WARN;
     else if (param == "SOUND")
         channel = MSGCH_SOUND, sound = true;
     else if (param == "VISUAL")
         channel = MSGCH_TALK_VISUAL;
     else if (param == "SPELL")
         channel = MSGCH_MONSTER_SPELL, sound = true;
+    else if (param == "VISUAL SPELL")
+        channel = MSGCH_MONSTER_SPELL;
     else if (param == "ENCHANT")
         channel = MSGCH_MONSTER_ENCHANT, sound = true;
+    else if (param == "VISUAL ENCHANT")
+        channel = MSGCH_MONSTER_ENCHANT;
     else
     {
         param = replace_all(param, " ", "_");
@@ -1084,6 +1090,11 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
 
+    // Must do this before converting to formatted string and back;
+    // that doesn't preserve close tags!
+    std::string col = colour_to_str(colour_msg(colour));
+    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+
     if (you.duration[DUR_QUAD_DAMAGE])
     {
         // No sound, so we simulate the reverb with all caps.
@@ -1099,8 +1110,6 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
         text = fs.to_colour_string();
     }
 
-    std::string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
     message_item msg = message_item(text, channel, param, join);
     messages.add(msg);
     _last_msg_turn = msg.turn;

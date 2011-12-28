@@ -21,6 +21,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "crash.h"
 #include "database.h"
 #include "delay.h"
 #include "dungeon.h"
@@ -121,6 +122,8 @@ bool CrawlIsCrashing = false;
 
 NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
+    disable_other_crashes();
+
     std::string error = print_error? strerror(errno) : "";
     if (format)
     {
@@ -139,7 +142,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
             error += "\n";
     }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     bool need_pause = true;
     if (exit_code && !error.empty())
@@ -163,7 +166,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         error.clear();
     }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
@@ -252,7 +255,7 @@ bool print_error_screen(const char *message, ...)
 
     // Break message into correctly sized lines.
     int width = 80;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     width = crawl_view.msgsz.x;
 #else
     width = std::min(80, get_number_of_cols());
@@ -274,6 +277,10 @@ void redraw_screen(void)
         clrscr();
         return;
     }
+
+#ifdef USE_TILE_WEB
+    tiles.close_all_menus();
+#endif
 
     draw_border();
 
@@ -713,7 +720,7 @@ maybe_bool frombool(bool b)
 
 bool tobool(maybe_bool mb)
 {
-    ASSERT (mb != B_MAYBE);
+    ASSERT(mb != B_MAYBE);
     return (mb == B_TRUE);
 }
 

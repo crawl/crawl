@@ -1016,7 +1016,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 {
                     mprf("%s bleeds profusely from %s eyes and ears.",
                          mon->name(DESC_THE).c_str(),
-                         mons_pronoun(mon->type, PRONOUN_POSSESSIVE));
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str());
                 }
                 break;
             case RECITE_CHAOTIC:
@@ -1348,7 +1348,7 @@ void elyvilon_purification()
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_NAUSEA] = 0;
     restore_stat(STAT_ALL, 0, false);
-    unrot_hp(10000);
+    unrot_hp(9999);
 }
 
 bool elyvilon_divine_vigour()
@@ -1405,8 +1405,9 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_TORNADO
         || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION)
-        // Toxic Radiance does no direct damage
+        || spell == SPELL_OZOCUBUS_REFRIGERATION
+        || spell == SPELL_OLGREBS_TOXIC_RADIANCE
+        || spell == SPELL_INNER_FLAME)
     {
         return (true);
     }
@@ -1902,43 +1903,34 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
 // Returns the number of corpses consumed.
 int fedhas_fungal_bloom()
 {
-    int seen_mushrooms  = 0;
-    int seen_corpses    = 0;
-
+    int seen_mushrooms = 0;
+    int seen_corpses = 0;
     int processed_count = 0;
     bool kills = false;
 
     for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
         monster* target = monster_at(*i);
-        if (target && target->is_summoned())
-            continue;
-
         if (!is_harmless_cloud(cloud_type_at(*i)))
             continue;
 
         if (target && target->mons_species() != MONS_TOADSTOOL)
         {
+            bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
             {
             case MONS_ZOMBIE_SMALL:
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {
-                    processed_count++;
-
-                    monster_type skele_type = MONS_SKELETON_LARGE;
-                    if (mons_zombie_size(mons_zombie_base(target)) == Z_SMALL)
-                        skele_type = MONS_SKELETON_SMALL;
-
                     simple_monster_message(target, "'s flesh rots away.");
-                    int current_hp = target->hit_points;
-                    target->upgrade_type(skele_type, true, true);
 
-                    if (target->hit_points > current_hp)
-                        target->hit_points = current_hp;
+                    downgrade_zombie_to_skeleton(target);
 
                     behaviour_event(target, ME_ALERT, MHITYOU);
+
+                    if (piety)
+                        processed_count++;
 
                     continue;
                 }
@@ -1948,15 +1940,20 @@ int fedhas_fungal_bloom()
             {
                 simple_monster_message(target, " rots away and dies.");
 
-                coord_def pos = target->pos();
-                int colour    = target->colour;
-                int corpse    = monster_die(target, KILL_MISC, NON_MONSTER, true);
                 kills = true;
+
+                const coord_def pos = target->pos();
+                const int colour = target->colour;
+                const int corpse = monster_die(target, KILL_MISC, NON_MONSTER,
+                                               true);
 
                 // If a corpse didn't drop, create a toadstool.
                 // If one did drop, we will create toadstools from it as usual
                 // later on.
-                if (corpse < 0)
+                // Give neither piety nor toadstools for summoned creatures.
+                // Assumes that summoned creatures do not drop corpses (hence
+                // will not give piety in the next loop).
+                if (corpse < 0 && piety)
                 {
                     const int mushroom = create_monster(
                                 mgen_data(MONS_TOADSTOOL,
@@ -1980,6 +1977,10 @@ int fedhas_fungal_bloom()
 
                     continue;
                 }
+
+                // Verify that summoned creatures do not drop a corpse.
+                ASSERT(corpse < 0 || piety);
+
                 break;
             }
 
@@ -1991,25 +1992,26 @@ int fedhas_fungal_bloom()
         for (stack_iterator j(*i); j; ++j)
         {
             bool corpse_on_pos = false;
+
             if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
             {
-                corpse_on_pos  = true;
-                int trial_prob = mushroom_prob(*j);
+                corpse_on_pos = true;
 
-                processed_count++;
-                int target_count = 1 + binomial_generator(20, trial_prob);
-
+                const int trial_prob = mushroom_prob(*j);
+                const int target_count = 1 + binomial_generator(20, trial_prob);
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
                                        BEH_GOOD_NEUTRAL, true);
-
-                seen_mushrooms += seen_per;
 
                 // Either turn this corpse into a skeleton or destroy it.
                 if (mons_skeleton(j->plus))
                     turn_corpse_into_skeleton(*j);
                 else
                     destroy_item(j->index());
+
+                seen_mushrooms += seen_per;
+
+                processed_count++;
             }
 
             if (corpse_on_pos && you.see_cell(*i))
@@ -2032,7 +2034,7 @@ int fedhas_fungal_bloom()
         // -cao
 
         int piety_gain = 0;
-        for (int i = 0; i < processed_count * 2; i++)
+        for (int i = 0; i < processed_count * 2; ++i)
             piety_gain += random2(15); // avg 1.4 piety per corpse
         gain_piety(piety_gain, 10);
     }
@@ -2223,7 +2225,7 @@ bool fedhas_sunlight()
         }
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Move the cursor out of the way (it looks weird).
     coord_def temp = grid2view(base);
     cgotoxy(temp.x, temp.y, GOTO_DNGN);
@@ -3117,7 +3119,7 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
 
 bool cheibriados_slouch(int pow)
 {
-    int count = apply_area_visible(_slouchable, pow, true, &you);
+    int count = apply_area_visible(_slouchable, pow, &you);
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
@@ -3132,7 +3134,7 @@ bool cheibriados_slouch(int pow)
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, pow, true, &you);
+    apply_area_visible(_slouch_monsters, pow, &you);
     return true;
 }
 
@@ -3153,7 +3155,6 @@ void cheibriados_temporal_distortion()
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
-    update_level(time * 10);
 
     monster* mon;
     if (mon = monster_at(old_pos))
@@ -3190,7 +3191,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     // a tiny bit.
     update_level(pow * 10);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     delay(1000);
 #endif
 
@@ -3215,7 +3216,7 @@ bool ashenzari_transfer_knowledge()
         if (!ashenzari_end_transfer())
             return false;
 
-    while(true)
+    while (true)
     {
         skill_menu(SKMF_RESKILL_FROM);
         if (is_invalid_skill(you.transfer_from_skill))

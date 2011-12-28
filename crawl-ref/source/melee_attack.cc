@@ -44,6 +44,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
@@ -90,15 +91,15 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
+melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num)
     :  // Call attack's constructor
-    attack::attack(attk, defn, allow_unarmed),
+    attack::attack(attk, defn),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
-    can_do_unarmed(allow_unarmed), stab_attempt(false), stab_bonus(0),
+    stab_attempt(false), stab_bonus(0),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     attack_occurred = false;
@@ -112,10 +113,6 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     attacker_shield_tohit_penalty =
         attacker->shield_tohit_penalty(true);
 
-    can_do_unarmed =
-        attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty);
-
     if (attacker->atype() == ACT_MONSTER)
     {
         mon_attack_def mon_attk = mons_attack_spec(attacker->as_monster(),
@@ -124,7 +121,20 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
         attk_damage     = mon_attk.damage;
+
+        if (attk_type == AT_WEAP_ONLY)
+        {
+            int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
+            if (weap == NON_ITEM)
+                attk_type = AT_NONE;
+            else if (is_range_weapon(mitm[weap]))
+                attk_type = AT_SHOOT;
+            else
+                attk_type = AT_HIT;
+        }
     }
+    else
+        attk_type = AT_HIT;
 
     shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
@@ -136,31 +146,6 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
             unrand_entry = get_unrand_entry(weapon->special);
     }
 
-    if (weapon)
-    {
-        hands = hands_reqd(*weapon, attacker->body_size());
-
-        switch (single_damage_type(*weapon))
-        {
-        case DAM_BLUDGEON:
-        case DAM_WHIP:
-            noise_factor = 125;
-            break;
-        case DAM_SLICE:
-            noise_factor = 100;
-            break;
-        case DAM_PIERCE:
-            noise_factor = 75;
-            break;
-        }
-    }
-
-    hand_half_bonus = (can_do_unarmed
-                       && !shield
-                       && weapon
-                       && !weapon->cursed()
-                       && hands == HANDS_HALF);
-
     attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
     defender_visible   = defender && defender->observable();
@@ -170,259 +155,107 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
 
     attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
     attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
+}
 
-    if (defender && defender->submerged() && can_do_unarmed)
-    {
-        // Unarmed attacks from tentacles are the only ones that can
-        // reach submerged monsters.
-        can_do_unarmed = (attacker->damage_type() == DVORP_TENTACLE);
-    }
+static bool _conduction_affected(const coord_def &pos)
+{
+    const actor *act = actor_at(pos);
+
+    // Don't check rElec to avoid leaking information about armour etc.
+    return feat_is_water(grd(pos)) && act && act->ground_level();
 }
 
 bool melee_attack::handle_phase_attempted()
 {
+    // Skip invalid and dummy attacks.
+    if (!adjacent(attacker->pos(), defender->pos()) && attk_type != AT_HIT
+        && attk_flavour != AF_REACH || attk_type == AT_SHOOT)
+    {
+        --effective_attack_number;
+
+        return (false);
+    }
+
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (weapon && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_DEVASTATOR)
+        if ((damage_brand == SPWPN_ELECTROCUTION
+                && _conduction_affected(defender->pos()))
+            || (weapon && is_unrandom_artefact(*weapon)
+                && weapon->special == UNRAND_DEVASTATOR))
         {
-            targetter_smite hitfunc(attacker, 1, 1, 1);
-            hitfunc.set_aim(defender->pos());
-            if (stop_attack_prompt(hitfunc, "attack"))
-                return (false);
+            if (damage_brand == SPWPN_ELECTROCUTION
+                && adjacent(attacker->pos(), defender->pos())
+                && _conduction_affected(attacker->pos())
+                && !attacker->res_elec()
+                && !you.received_weapon_warning)
+            {
+                std::string prompt = "Really attack with ";
+                if (weapon)
+                    prompt += weapon->name(DESC_YOUR);
+                else
+                    prompt += "your electric unarmed attack";
+                prompt += " while in water? ";
+
+                if (yesno(prompt.c_str(), true, 'n'))
+                    you.received_weapon_warning = true;
+                else
+                    return (false);
+            }
+            else
+            {
+                std::string junk1, junk2;
+                const char *verb = (bad_attack(defender->as_monster(),
+                                               junk1, junk2)
+                                    ? "attack" : "attack near");
+                bool (*aff_func)(const coord_def &) = 0;
+                if (damage_brand == SPWPN_ELECTROCUTION)
+                    aff_func = _conduction_affected;
+
+                targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
+                hitfunc.set_aim(defender->pos());
+
+                if (stop_attack_prompt(hitfunc, verb))
+                {
+                    cancel_attack = true;
+                    return (false);
+                }
+            }
         }
         else if (stop_attack_prompt(defender->as_monster(), false,
                                     attacker->pos()))
         {
+            cancel_attack = true;
             return (false);
         }
     }
-
-    if (attacker != defender)
+    // Set delay now that we know the attack won't be cancelled.
+    if (attacker->atype() == ACT_PLAYER)
     {
-        // Allow setting of your allies' target, etc.
-        attacker->attacking(defender);
-
-        check_autoberserk();
-    }
-
-    // The attacker loses nutrition.
-    attacker->make_hungry(3, true);
-
-    // Initial attack causes energy to be used for all attacks.  No
-    // additional energy is used for unarmed attacks.
-    if (effective_attack_number == 0)
-        attacker->lose_energy(EUT_ATTACK);
-
-    // Xom thinks fumbles are funny...
-    if (attacker->fumbles_attack())
-    {
-        // ... and thinks fumbling when trying to hit yourself is just
-        // hilarious.
-        xom_is_stimulated(attacker == defender ? 200 : 10);
-
-        if (damage_brand == SPWPN_CHAOS)
-            chaos_affects_attacker();
-
-        return (false);
-    }
-    // Non-fumbled self-attacks due to confusion are still pretty funny, though.
-    else if (attacker == defender && attacker->confused())
-    {
-        // And is still hilarious if it's the player.
-        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 200 : 100);
-    }
-
-    attack_occurred = true;
-
-    // Based on pre-unification code, this looks to be the appropriate place
-    // to check unrand effects, but this will result in behavior where unrand
-    // effects will occur regardless of whether the attacker hits or misses
-    if (check_unrand_effects())
-        return (false);
-
-    /* TODO Permanently remove this? Commented out for temporary removal
-     *
-     * The only scenario this handles that isn't handled elsewhere (later on)
-     * is identifying a ranged, cursed weapon wielded by a monster...which
-     * seems like an information leak and very much a special-case. -Cryptic
-    if (attacker->atype() == ACT_MONSTER)
-    {
-        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-        if (weap && you.can_see(attacker) && weap->cursed()
-            && is_range_weapon(*weap))
+        you.time_taken = calc_attack_delay();
+        if (weapon)
         {
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-        }
-    }
-     */
-
-    // Check for player practicing dodging
-    if (one_chance_in(3) && defender == &you)
-        practise(EX_MONSTER_MAY_HIT);
-
-    return (true);
-}
-
-bool melee_attack::handle_phase_blocked()
-{
-    damage_done = 0;
-
-    // Defending monster protects itself from attacks using the wall
-    // it's in. Zotdef: allow a 5% chance of a hit anyway
-    if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
-        && mons_wall_shielded(defender->as_monster())
-        && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
-    {
-        std::string feat_name = raw_feature_description(grd(defender->pos()));
-
-        if (attacker->atype() == ACT_PLAYER)
-        {
-            // Player incurs their attack delay, of course.
-            // TODO: potentially remove this; since this code has been pushed
-            // back in the time line of attack sequencing, we may have already
-            // incured the attacker's delay...
-            you.time_taken = calc_attack_delay();
-
-            if (you.can_see(defender))
+            if (weapon->base_type == OBJ_WEAPONS)
+                count_action(CACT_MELEE, weapon->sub_type);
+            else if (weapon->base_type == OBJ_STAVES)
             {
-                mprf("The %s protects %s from harm.",
-                     feat_name.c_str(),
-                     defender->name(DESC_THE).c_str());
-            }
-            else
-            {
-                mprf("You hit the %s.", feat_name.c_str());
+                count_action(CACT_MELEE, item_is_rod(*weapon) ?
+                                          WPN_CLUB : WPN_STAFF);
             }
         }
         else
-        {
-            if (!mons_near(defender->as_monster()))
-            {
-                simple_monster_message(attacker->as_monster(),
-                                       " hits something.");
-            }
-            else if (you.can_see(attacker))
-            {
-                mprf("%s tries to hit %s, but is blocked by the %s.",
-                     attacker->name(DESC_THE).c_str(),
-                     defender->name(DESC_THE).c_str(),
-                     feat_name.c_str());
-            }
-        }
-
-        // Give chaos weapon a chance to affect the attacker
-        if (damage_brand == SPWPN_CHAOS)
-            chaos_affects_attacker();
-    }
-
-    return (true);
-}
-
-bool melee_attack::handle_phase_dodged()
-{
-    did_hit = false;
-
-    const int ev = defender->melee_evasion(attacker);
-    const int ev_nophase = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
-    {
-        if (needs_message && !defender_invisible)
-        {
-            mprf("%s momentarily %s out as %s "
-                 "attack passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 atk_name(DESC_ITS).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation().c_str());
-        }
+            count_action(CACT_MELEE, -1);
     }
     else
     {
-        if (needs_message && !defender_invisible)
-        {
-            // TODO: Unify these, placed player_warn_miss here so I can remove
-            // player_attack
-            if (attacker->atype() == ACT_PLAYER)
-            {
-                player_warn_miss();
-            }
-            else
-            {
-                mprf("%s%s misses %s%s",
-                     atk_name(DESC_THE).c_str(),
-                     evasion_margin_adverb().c_str(),
-                     defender_name().c_str(),
-                     attack_strength_punctuation().c_str());
-            }
-        }
-    }
+        // Initial attack causes energy to be used for all attacks.  No
+        // additional energy is used for unarmed attacks.
+        if (effective_attack_number == 0)
+            attacker->lose_energy(EUT_ATTACK);
 
-    if (attacker != defender &&
-        defender->atype() == ACT_PLAYER &&
-        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
-    {
-        // Only half the normal chance of retaliation for attacks after the
-        // first one.
-        if (attacker->alive() &&
-            you.species == SP_MINOTAUR &&
-            you.can_see(attacker) &&
-            (effective_attack_number == 0 || coinflip()))
-        {
-            do_minotaur_retaliation();
-        }
-
-        // Retaliations can kill!
-        if (!attacker->alive())
+        // Statues and other special monsters which have AT_NONE need to lose
+        // energy, but otherwise should exit the melee attack now.
+        if (attk_type == AT_NONE)
             return (false);
-    }
-
-    return (true);
-}
-
-/* An attack has been determined to have hit something
- *
- * Applies attack delays for both players and monsters (independently),
- * Handles to-hit effects for both attackers and defenders,
- * Determines shield_block and passess off execution to handle_phase_blocked,
- * Determines damage and passes off execution to handle_phase_damaged
- */
-bool melee_attack::handle_phase_hit()
-{
-    did_hit = true;
-    perceived_attack = true;
-    bool hit_woke_orc = false;
-
-    if (attacker->atype() == ACT_PLAYER)
-    {
-        if (crawl_state.game_is_hints())
-            Hints.hints_melee_counter++;
-
-        // Apply attack delay
-        you.time_taken = calc_attack_delay();
-        // Check for stab (and set stab_attempt and stab_bonus)
-        player_stab_check();
-
-        // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (you.religion == GOD_BEOGH
-            && mons_genus(defender->mons_species()) == MONS_ORC
-            && !defender->is_summoned()
-            && !defender->as_monster()->is_shapeshifter()
-            && !player_under_penance() && you.piety >= piety_breakpoint(2)
-            && mons_near(defender->as_monster()) && defender->asleep())
-        {
-            hit_woke_orc = true;
-        }
-    }
-    else
-    {
-        // These effects (mutations right now) are only triggered when
-        // the player is hit, each of them will verify their own required
-        // parameters of the effec
-        do_passive_freeze();
-        emit_foul_stench();
 
         // Monsters lose additional energy only for the first two weapon
         // attacks; subsequent hits are free.
@@ -453,8 +286,204 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
-    if (attacker != defender && attacker->self_destructs())
-        return (did_hit = perceived_attack = true);
+    if (attacker != defender)
+    {
+        // Allow setting of your allies' target, etc.
+        attacker->attacking(defender);
+
+        check_autoberserk();
+    }
+
+    // The attacker loses nutrition.
+    attacker->make_hungry(3, true);
+
+    // Xom thinks fumbles are funny...
+    if (attacker->fumbles_attack())
+    {
+        // ... and thinks fumbling when trying to hit yourself is just
+        // hilarious.
+        xom_is_stimulated(attacker == defender ? 200 : 10);
+
+        if (damage_brand == SPWPN_CHAOS)
+            chaos_affects_attacker();
+
+        return (false);
+    }
+    // Non-fumbled self-attacks due to confusion are still pretty funny, though.
+    else if (attacker == defender && attacker->confused())
+    {
+        // And is still hilarious if it's the player.
+        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 200 : 100);
+    }
+
+    // Defending monster protects itself from attacks using the wall
+    // it's in. Zotdef: allow a 5% chance of a hit anyway
+    if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
+        && mons_wall_shielded(defender->as_monster())
+        && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
+    {
+        std::string feat_name = raw_feature_description(grd(defender->pos()));
+
+        if (attacker->atype() == ACT_PLAYER)
+        {
+            if (you.can_see(defender))
+            {
+                mprf("The %s protects %s from harm.",
+                     feat_name.c_str(),
+                     defender->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf("You hit the %s.", feat_name.c_str());
+            }
+        }
+        else
+        {
+            if (!mons_near(defender->as_monster()))
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " hits something.");
+            }
+            else if (you.can_see(attacker))
+            {
+                mprf("%s tries to hit %s, but is blocked by the %s.",
+                     attacker->name(DESC_THE).c_str(),
+                     defender->name(DESC_THE).c_str(),
+                     feat_name.c_str());
+            }
+        }
+
+        // Give chaos weapon a chance to affect the attacker
+        if (damage_brand == SPWPN_CHAOS)
+            chaos_affects_attacker();
+
+        return (false);
+    }
+
+    attack_occurred = true;
+
+    /* TODO Permanently remove this? Commented out for temporary removal
+     *
+     * The only scenario this handles that isn't handled elsewhere (later on)
+     * is identifying a ranged, cursed weapon wielded by a monster...which
+     * seems like an information leak and very much a special-case. -Cryptic
+    if (attacker->atype() == ACT_MONSTER)
+    {
+        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
+        if (weap && you.can_see(attacker) && weap->cursed()
+            && is_range_weapon(*weap))
+        {
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
+        }
+    }
+     */
+
+    // Check for player practicing dodging
+    if (one_chance_in(3) && defender == &you)
+        practise(EX_MONSTER_MAY_HIT);
+
+    return (true);
+}
+
+bool melee_attack::handle_phase_blocked()
+{
+    damage_done = 0;
+    return (true);
+}
+
+bool melee_attack::handle_phase_dodged()
+{
+    did_hit = false;
+
+    const int ev = defender->melee_evasion(attacker);
+    const int ev_nophase = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+    if (ev_margin + (ev - ev_nophase) > 0)
+    {
+        if (needs_message && !defender_invisible)
+        {
+            mprf("%s momentarily %s out as %s "
+                 "attack passes through %s%s",
+                 defender->name(DESC_THE).c_str(),
+                 defender->conj_verb("phase").c_str(),
+                 atk_name(DESC_ITS).c_str(),
+                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                 attack_strength_punctuation().c_str());
+        }
+    }
+    else
+    {
+        if (needs_message)
+        {
+            // TODO: Unify these, placed player_warn_miss here so I can remove
+            // player_attack
+            if (attacker->atype() == ACT_PLAYER)
+                player_warn_miss();
+            else
+            {
+                mprf("%s%s misses %s%s",
+                     atk_name(DESC_THE).c_str(),
+                     evasion_margin_adverb().c_str(),
+                     defender_name().c_str(),
+                     attack_strength_punctuation().c_str());
+            }
+        }
+    }
+
+    if (attacker != defender &&
+        grid_distance(defender->pos(), attacker->pos()) == 1)
+    {
+        // Only half the normal chance of retaliation for attacks after the
+        // first one.
+        if (attacker->alive()
+            && (defender->is_player() ?
+                   you.species == SP_MINOTAUR :
+                   mons_base_type(defender->as_monster()) == MONS_MINOTAUR)
+            && defender->can_see(attacker)
+            // FIXME: player's attack is -1, even for auxes
+            && effective_attack_number <= 0)
+        {
+            do_minotaur_retaliation();
+        }
+
+        // Retaliations can kill!
+        if (!attacker->alive())
+            return (false);
+    }
+
+    return (true);
+}
+
+/* An attack has been determined to have hit something
+ *
+ * Handles to-hit effects for both attackers and defenders,
+ * Determines damage and passes off execution to handle_phase_damaged
+ * Also applies weapon brands
+ *
+ * Returns (continue combat)
+ */
+bool melee_attack::handle_phase_hit()
+{
+    did_hit = true;
+    perceived_attack = true;
+    bool hit_woke_orc = false;
+
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        if (crawl_state.game_is_hints())
+            Hints.hints_melee_counter++;
+
+        // TODO: Remove this (placed here so I can get rid of player_attack)
+        if (you.religion == GOD_BEOGH
+            && mons_genus(defender->mons_species()) == MONS_ORC
+            && !defender->is_summoned()
+            && !defender->as_monster()->is_shapeshifter()
+            && !player_under_penance() && you.piety >= piety_breakpoint(2)
+            && mons_near(defender->as_monster()) && defender->asleep())
+        {
+            hit_woke_orc = true;
+        }
+    }
 
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
@@ -466,16 +495,22 @@ bool melee_attack::handle_phase_hit()
         slimify_monster(defender->as_monster());
         you.duration[DUR_SLIMIFY] = 0;
 
-        return (true);
+        return (false);
     }
 
     // This does more than just calculate the damage, it also sets up
     // messages, etc.
     damage_done = calc_damage();
 
-    // Check if some hit-effect killed the monster
-    if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
-        return (true);
+    bool stop_hit = false;
+    // Check if some hit-effect killed the monster.  We muse
+    if (attacker->atype() == ACT_PLAYER)
+        stop_hit = player_monattk_hit_effects();
+
+    // check_unrand_effects is safe to call with a dead defender, so always
+    // call it, even if the hit effects said to stop.
+    if (check_unrand_effects() || stop_hit)
+        return (false);
 
     if (damage_done > 0)
     {
@@ -490,7 +525,7 @@ bool melee_attack::handle_phase_hit()
             beogh_follower_convert(defender->as_monster(), true);
         }
     }
-    else
+    else if (needs_message)
     {
         attack_verb = attacker->atype() == ACT_PLAYER
                       ? attack_verb
@@ -504,8 +539,31 @@ bool melee_attack::handle_phase_hit()
              attacker->atype() == ACT_PLAYER ? "do" : "does");
     }
 
-    if (defender->props.exists("helpless"))
-        defender->props.erase("helpless");
+    // Check for weapon brand & inflict that damage too
+    apply_damage_brand();
+
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        // Always upset monster regardless of damage.
+        // However, successful stabs inhibit shouting.
+        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
+                        coord_def(), !stab_attempt);
+
+        // [ds] Monster may disappear after behaviour event.
+        if (!defender->alive())
+            return (true);
+    }
+    else if (defender->atype() == ACT_PLAYER)
+    {
+        // These effects (mutations right now) are only triggered when
+        // the player is hit, each of them will verify their own required
+        // parameters of the effec
+        do_passive_freeze();
+        emit_foul_stench();
+    }
+
+    if (attacker->atype() == ACT_PLAYER)
+        player_sustain_passive_damage();
 
     return (true);
 }
@@ -513,17 +571,6 @@ bool melee_attack::handle_phase_hit()
 bool melee_attack::handle_phase_damaged()
 {
     bool shroud_broken = false;
-
-    if (defender->can_bleed()
-        && !defender->is_summoned()
-        && !defender->submerged())
-    {
-        int blood = modify_blood_amount(damage_done, attacker->damage_type());
-        if (blood > defender->stat_hp())
-            blood = defender->stat_hp();
-
-        bleed_onto_floor(defender->pos(), defender->type, blood, true);
-    }
 
     // TODO: Move this somewhere else, this is a terrible place for a
     // block-like (prevents all damage) effect.
@@ -555,11 +602,20 @@ bool melee_attack::handle_phase_damaged()
         }
     }
 
+    if (defender->can_bleed()
+        && !defender->is_summoned()
+        && !defender->submerged())
+    {
+        int blood = modify_blood_amount(damage_done, attacker->damage_type());
+        if (blood > defender->stat_hp())
+            blood = defender->stat_hp();
+
+        bleed_onto_floor(defender->pos(), defender->type, blood, true);
+    }
+
     announce_hit();
     // Inflict stored damage
     damage_done = inflict_damage(damage_done);
-    // Check for weapon brand & inflict that damage too
-    apply_damage_brand();
 
     // TODO: Unify these, added here so we can get rid of player_attack
     if (attacker->atype() == ACT_PLAYER)
@@ -567,33 +623,12 @@ bool melee_attack::handle_phase_damaged()
         if (damage_done)
             player_exercise_combat_skills();
 
-        // Always upset monster regardless of damage.
-        // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
-                        coord_def(), !stab_attempt);
-
-        // [ds] Monster may disappear after behaviour event.
-        if (!defender->alive())
-            return (true);
-
         // ugh, inspecting attack_verb here is pretty ugly
         if (damage_done && attack_verb == "trample")
             do_knockback();
 
-        player_sustain_passive_damage();
-
-        // Thirsty stabbing vampires get to draw blood.
-        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-            && stab_attempt && stab_bonus > 0)
-        {
-            _player_vampire_draws_blood(defender->as_monster(),
-                                        damage_done, true);
-        }
-
         if (defender->alive())
         {
-            print_wounds(defender->as_monster());
-
             // Actually apply the bleeding effect, this can come from an
             // aux claw or a main hand claw attack and up to now has not
             // actually happened.
@@ -609,6 +644,23 @@ bool melee_attack::handle_phase_damaged()
     }
     else
     {
+        // Monsters attacking themselves don't get attack flavour.
+        // The message sequences look too weird.  Also, stealing
+        // attacks aren't handled until after the damage msg. Also,
+        // no attack flavours for dead defenders
+        if (attacker != defender && attk_flavour != AF_STEAL
+            && defender->alive())
+        {
+            if (attacker->atype() == ACT_MONSTER)
+                mons_apply_attack_flavour();
+
+            if (needs_message && !special_damage_message.empty())
+                mprf("%s", special_damage_message.c_str());
+
+            if (special_damage > 0)
+                inflict_damage(special_damage, special_damage_flavour);
+        }
+
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
                                   || (attk_flavour == AF_CHAOS
                                       && attacker != defender);
@@ -625,22 +677,6 @@ bool melee_attack::handle_phase_damaged()
 
         if (attacker != defender && attk_type == AT_TRAMPLE)
             do_knockback();
-
-        // Monsters attacking themselves don't get attack flavour.
-        // The message sequences look too weird.  Also, stealing
-        // attacks aren't handled until after the damage msg. Also,
-        // no attack flavours for dead defenders
-        if (attacker != defender && attk_flavour != AF_STEAL
-            && defender->alive())
-        {
-            mons_apply_attack_flavour();
-
-            if (needs_message && !special_damage_message.empty())
-                mprf("%s", special_damage_message.c_str());
-
-            inflict_damage(special_damage, special_damage_flavour, true);
-        }
-
 
         // Defender banished.  Bail since the defender is still alive in the
         // Abyss.
@@ -716,18 +752,22 @@ bool melee_attack::handle_phase_killed()
         unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
                                                true, special_damage);
 
-    _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
-
+    _defender_die();
     return (true);
 }
 
 bool melee_attack::handle_phase_end()
 {
-    if (attacker->atype() == ACT_PLAYER && can_do_unarmed
-        && adjacent(defender->pos(), attacker->pos()))
+    if (attacker->atype() == ACT_PLAYER)
     {
         // returns whether an aux attack successfully took place
-        player_aux_unarmed();
+        if (!defender->as_monster()->friendly()
+            && adjacent(defender->pos(), attacker->pos()))
+        {
+            player_aux_unarmed();
+        }
+
+        print_wounds(defender->as_monster());
     }
 
     // Check for passive mutation effects.
@@ -740,13 +780,35 @@ bool melee_attack::handle_phase_end()
     // This may invalidate both the attacker and defender.
     fire_final_effects();
 
-    return(true);
+    return (true);
 }
 
+/* Initiate the processing of the attack
+ *
+ * Called from the main code (fight.cc), this method begins the actual combat
+ * for a particular attack and is responsible for looping through each of the
+ * appropriate phases (which then can call other related phases within
+ * themselves).
+ *
+ * Returns whether combat was completely successful
+ *      If combat was not successful, it could be any number of reasons, like
+ *      the defender or attacker dying during the attack? or a defender moving
+ *      from its starting position.
+ */
 bool melee_attack::attack()
 {
+
+    // monster constriction is completely different.
+    // I hate to special case so soon after the rewrite, it just doesn't fit
+
+    if (attacker->atype() != ACT_PLAYER && attk_type == AT_CONSTRICT)
+        return (handle_constriction());
+
     if (!handle_phase_attempted())
         return (false);
+
+    if (attacker != defender && attacker->self_destructs())
+        return (did_hit = perceived_attack = true);
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
@@ -754,11 +816,8 @@ bool melee_attack::attack()
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
     const int ev = defender->melee_evasion(attacker);
-    const int ev_helpless = defender_invisible ? ev
-        : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-
     ev_margin = test_hit(to_hit, ev);
-    const bool shield_blocked = attack_shield_blocked(true);
+    bool shield_blocked = attack_shield_blocked(true);
 
     // Stuff for god conduct, this has to remain here for scope reasons.
     god_conduct_trigger conducts[3];
@@ -778,63 +837,60 @@ bool melee_attack::attack()
 
             return (false);
         }
+        // Check for stab (and set stab_attempt and stab_bonus)
+        player_stab_check();
+        // Make sure we hit if we passed the stab check.
+        if (stab_attempt && stab_bonus > 0)
+        {
+            ev_margin = AUTOMATIC_HIT;
+            shield_blocked = false;
+        }
     }
 
-    // Check for a stab (helpless or petrifying)
-    if (to_hit >= ev && ev_helpless > ev)
-    {
-        defender->props["helpless"] = true;
-        ev_margin = 1;
-
-        handle_phase_hit();
-    }
-    else if (shield_blocked)
+    if (shield_blocked)
     {
         handle_phase_blocked();
     }
-    else if (ev_margin >= 0)
-    {
-        if (attacker != defender && attack_warded_off())
-            {
-            // A warded-off attack takes half the normal energy.
-            attacker->gain_energy(EUT_ATTACK, 2);
-
-            perceived_attack = true;
-            return (false);
-        }
-
-        handle_phase_hit();
-    }
     else
     {
-        handle_phase_dodged();
-    }
+        if (attacker != defender
+            && defender->atype() == ACT_PLAYER
+            && grid_distance(defender->pos(), attacker->pos()) == 1)
+        {
+            // Check for defender Spines
+            do_spines();
 
-    if (!shield_blocked
-        && attacker != defender 
-        && defender->atype() == ACT_PLAYER 
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
-    {
-        // Check for defender Spines
-        do_spines();
+            // Spines can kill!
+            if (!attacker->alive())
+                return (false);
+        }
 
-        // Spines can kill!
-        if (!attacker->alive())
-            return (false);
+        if (ev_margin >= 0)
+        {
+            if (attacker != defender && attack_warded_off())
+                {
+                // A warded-off attack takes half the normal energy.
+                attacker->gain_energy(EUT_ATTACK, 2);
+
+                perceived_attack = true;
+                return (false);
+            }
+
+            if (!handle_phase_hit())
+                return (false);
+        }
+        else
+            handle_phase_dodged();
     }
 
     // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
-        && attacker != defender && !attacker->confused())
+        && attacker != defender && !attacker->confused()
+        && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
+        && (attacker->atype() == ACT_PLAYER
+            || attacker->as_monster()->friendly()))
     {
-        if (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
-        {
-            if (attacker->atype() == ACT_PLAYER
-                || attacker->as_monster()->friendly())
-            {
-                remove_sanctuary(true);
-            }
-        }
+        remove_sanctuary(true);
     }
 
     if (attacker->atype() == ACT_PLAYER)
@@ -863,6 +919,7 @@ bool melee_attack::attack()
     if (perceived_attack && attacker->alive()
         && (defender->atype() == ACT_PLAYER
             || defender->as_monster()->friendly())
+        && attacker->atype() != ACT_PLAYER
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
@@ -880,8 +937,8 @@ bool melee_attack::attack()
                         if (wield_weapon(true, i))
                             return (false);
         }
-        else
-            you.pet_target = attacker->mindex();
+
+        you.pet_target = attacker->mindex();
     }
 
     if (!defender->alive())
@@ -894,22 +951,35 @@ bool melee_attack::attack()
     return (attack_occurred);
 }
 
+/* Initializes the noise_factor
+ *
+ * For both players and monsters, separately sets the noise_factor for weapon
+ * attacks based on damage type or attack_type/attack_flavour respectively.
+ * Sets an average noise value for unarmed combat regardless of atype().
+ */
 // TODO: Unify attack_type and unarmed_attack_type, the former includes the latter
 // however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
 {
-    if (attk_type == AT_WEAP_ONLY)
+    if (attacker->atype() == ACT_PLAYER && weapon != NULL)
     {
-        int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-        if (weap == NON_ITEM)
-            attk_type = AT_NONE;
-        else if (is_range_weapon(mitm[weap]))
-            attk_type = AT_SHOOT;
-        else
-            attk_type = AT_HIT;
-    }
+        hands = hands_reqd(*weapon, attacker->body_size());
 
-    if (weapon == NULL && attacker->atype() == ACT_MONSTER)
+        switch (single_damage_type(*weapon))
+        {
+        case DAM_BLUDGEON:
+        case DAM_WHIP:
+            noise_factor = 125;
+            break;
+        case DAM_SLICE:
+            noise_factor = 100;
+            break;
+        case DAM_PIERCE:
+            noise_factor = 75;
+            break;
+        }
+    }
+    else if (attacker->atype() == ACT_MONSTER && weapon == NULL)
     {
         switch (attk_type)
         {
@@ -949,7 +1019,6 @@ void melee_attack::adjust_noise()
             break;
 
         case AT_WEAP_ONLY:
-            noise_factor = noise_factor;
             break;
 
         // To prevent compiler warnings.
@@ -1011,6 +1080,11 @@ bool melee_attack::check_unrand_effects()
     return (false);
 }
 
+/* Setup all unarmed (non attack_type) variables
+ *
+ * Clears any previous unarmed attack information and sets everything from
+ * noise_factor to verb and damage. Called after player_aux_choose_baseattack
+ */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
 {
     noise_factor = 100;
@@ -1021,6 +1095,12 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     switch (atk)
     {
+    case UNAT_CONSTRICT:
+        aux_attack = aux_verb = "constrict";
+        aux_damage = 1; // place holder
+        noise_factor = 10; // extremely quiet?
+        break;
+
     case UNAT_KICK:
         aux_attack = aux_verb = "kick";
         aux_damage = 5;
@@ -1161,16 +1241,30 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-
+/* Selects the unarmed attack type
+ *
+ * Selects at random, but then takes into accout various combinations of player
+ * species, transformations, and other stuff to determine whether the randomly
+ * selected unarmed attack type is appropriate (eg, no kicking for octopodes...
+ * who technically lack legs.
+ */
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
     unarmed_attack_type baseattack =
-        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
+
+    // If constriction is available to the species, choose it
+    if (you.species == SP_NAGA)
+        baseattack = UNAT_CONSTRICT;
+
+    if (you.species == SP_OCTOPODE && you.has_usable_tentacle())
+        baseattack = UNAT_CONSTRICT;
 
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
+    if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH
+            && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
     // With fangs, replace head attacks with bites.
@@ -1207,8 +1301,6 @@ bool melee_attack::player_aux_test_hit()
     did_hit = false;
 
     const int evasion = defender->melee_evasion(attacker);
-    const int helpful_evasion =
-        defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     if (you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON)
@@ -1222,12 +1314,6 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
-    if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
-        && defender_visible)
-    {
-        defender->props["helpless"] = true;
-    }
-
     if (to_hit >= evasion || auto_hit)
         return (true);
 
@@ -1239,7 +1325,7 @@ bool melee_attack::player_aux_test_hit()
         mprf("Your %s passes through %s as %s momentarily phases out.",
             aux_attack.c_str(),
             defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN).c_str());
+            defender->pronoun(PRONOUN_SUBJECTIVE).c_str());
     }
     else
     {
@@ -1250,7 +1336,14 @@ bool melee_attack::player_aux_test_hit()
     return (false);
 }
 
-// Returns true to end the attack round.
+/* Controls the looping on available unarmed attacks
+ *
+ * As the master method for unarmed player combat, this loops through
+ * available unarmed attacks, determining whether they hit and - if so -
+ * calculating and applying their damage.
+ *
+ * Returns (defender dead)
+ */
 bool melee_attack::player_aux_unarmed()
 {
     unwind_var<brand_type> save_brand(damage_brand);
@@ -1261,8 +1354,14 @@ bool melee_attack::player_aux_unarmed()
      * but still needs to pass the other checks in _extra_aux_attack().
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
-
-    baseattack = player_aux_choose_baseattack();
+    // Unarmed skill gives a chance at getting an aux even without the
+    // corresponding mutation.
+    if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
+                                   + attacker_shield_tohit_penalty)
+        || you.species == SP_NAGA || you.species == SP_OCTOPODE)
+    {
+        baseattack = player_aux_choose_baseattack();
+    }
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
@@ -1276,6 +1375,14 @@ bool melee_attack::player_aux_unarmed()
 
         // Determine and set damage and attack words.
         player_aux_setup(atk);
+
+        if (atk == UNAT_CONSTRICT) // special case, handle in own proc
+        {
+            handle_constriction();
+            if (!defender->alive())
+                return (true);
+            continue;
+        }
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
                          damage_brand == SPWPN_VAMPIRICISM));
@@ -1323,9 +1430,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage += (slaying > -1) ? random2(1 + slaying)
                                  : -random2(1 - slaying);
     aux_damage  = player_apply_misc_modifiers(aux_damage);
-
-    // Clear stab bonus which will be set for the primary weapon attack.
-    stab_bonus  = 0;
 
     const int pre_ac_dmg = aux_damage;
     const int post_ac_dmg = apply_defender_ac(aux_damage);
@@ -1404,13 +1508,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              you.can_see(defender) ? ", but do no damage" : "");
     }
 
-    if (defender->props.exists("helpless"))
-        defender->props.erase("helpless");
-
     if (defender->as_monster()->hit_points < 1)
     {
-        _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
-
+        _defender_die();
         return (true);
     }
 
@@ -1708,84 +1808,6 @@ void melee_attack::set_attack_verb()
             attack_verb = "clumsily bash";
     }
 
-    // Take transformations into account, if no weapon is wielded.
-    if (weap_type == WPN_UNARMED
-        && you.form != TRAN_NONE
-        && you.form != TRAN_APPENDAGE)
-    {
-        switch (you.form)
-        {
-        case TRAN_SPIDER:
-        case TRAN_BAT:
-        case TRAN_PIG:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "bite";
-            else
-                attack_verb = "maul";
-            break;
-        case TRAN_BLADE_HANDS:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "slash";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "slice";
-            else
-                attack_verb = "shred";
-            break;
-        case TRAN_STATUE:
-        case TRAN_LICH:
-            if (you.has_usable_claws())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "scratch";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "claw";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "mangle";
-                else
-                    attack_verb = "eviscerate";
-                break;
-            }
-            else if (you.has_usable_tentacles())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "tentacle-slap";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "bludgeon";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "batter";
-                else
-                    attack_verb = "thrash";
-                break;
-            }
-            // or fall-through
-        case TRAN_ICE_BEAST:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "punch";
-            else
-                attack_verb = "pummel";
-            break;
-        case TRAN_DRAGON:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "claw";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "bite";
-            else
-                attack_verb = "maul";
-            break;
-        case TRAN_NONE:
-        case TRAN_APPENDAGE:
-            break;
-        } // transformations
-    }
-
     // Take normal hits into account.  If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
@@ -1888,35 +1910,106 @@ void melee_attack::set_attack_verb()
         break;
 
     case -1: // unarmed
-        if (you.damage_type() == DVORP_CLAWING)
+        switch (you.form)
         {
+        case TRAN_SPIDER:
+        case TRAN_BAT:
+        case TRAN_PIG:
             if (damage_done < HIT_WEAK)
-                attack_verb = "scratch";
-            else if (damage_done < HIT_MED)
-                attack_verb = "claw";
+                attack_verb = "hit";
             else if (damage_done < HIT_STRONG)
-                attack_verb = "mangle";
+                attack_verb = "bite";
             else
-                attack_verb = "eviscerate";
-        }
-        else if (you.damage_type() == DVORP_TENTACLE)
-        {
+                attack_verb = "maul";
+            break;
+        case TRAN_BLADE_HANDS:
             if (damage_done < HIT_WEAK)
-                attack_verb = "tentacle-slap";
+                attack_verb = "hit";
             else if (damage_done < HIT_MED)
-                attack_verb = "bludgeon";
+                attack_verb = "slash";
             else if (damage_done < HIT_STRONG)
-                attack_verb = "batter";
+                attack_verb = "slice";
             else
-                attack_verb = "thrash";
-        }
-        else
-        {
-            if (damage_done < HIT_MED)
+                attack_verb = "shred";
+            break;
+        case TRAN_STATUE:
+        case TRAN_LICH:
+            if (you.has_usable_claws())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+                break;
+            }
+            else if (you.has_usable_tentacles())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+                break;
+            }
+            // or fall-through
+        case TRAN_ICE_BEAST:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage_done < HIT_MED)
                 attack_verb = "punch";
             else
                 attack_verb = "pummel";
-        }
+            break;
+        case TRAN_DRAGON:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage_done < HIT_MED)
+                attack_verb = "claw";
+            else if (damage_done < HIT_STRONG)
+                attack_verb = "bite";
+            else
+                attack_verb = "maul";
+            break;
+        case TRAN_NONE:
+        case TRAN_APPENDAGE:
+            if (you.damage_type() == DVORP_CLAWING)
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+            }
+            else if (you.damage_type() == DVORP_TENTACLE)
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+            }
+            else
+            {
+                if (damage_done < HIT_MED)
+                    attack_verb = "punch";
+                else
+                    attack_verb = "pummel";
+            }
+            break;
+        } // transformations
         break;
 
     case WPN_UNKNOWN:
@@ -2004,14 +2097,6 @@ bool melee_attack::player_monattk_hit_effects()
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
-    if (needs_message && !special_damage_message.empty())
-    {
-        mprf("%s", special_damage_message.c_str());
-        // Don't do a message-only miscast right after a special damage.
-        if (miscast_level == 0)
-            miscast_level = -1;
-    }
-
     dprf("Special damage to %s: %d, flavour: %d",
          defender->name(DESC_THE).c_str(),
          special_damage, special_damage_flavour);
@@ -2034,13 +2119,15 @@ bool melee_attack::player_monattk_hit_effects()
     return (false);
 }
 
-void melee_attack::_monster_die(monster* mons, killer_type killer,
-                                int killer_index)
+void melee_attack::_defender_die()
 {
-    if (invalid_monster(mons))
-        return; // Already died some other way.
+    if (defender->atype() == ACT_PLAYER)
+        return;
 
-    monster_die(mons, killer, killer_index);
+    if (invalid_monster(defender->as_monster()))
+        return;
+
+    monster_die(defender->as_monster(), attacker);
 }
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)
@@ -2484,9 +2571,9 @@ void melee_attack::chaos_affects_defender()
             beam.name = atk_name(DESC_THE);
 
         beam.thrower =
-            (attacker->atype() == ACT_PLAYER)          ? KILL_YOU
+            (attacker->atype() == ACT_PLAYER)           ? KILL_YOU
             : attacker->as_monster()->confused_by_you() ? KILL_YOU_CONF
-                                                       : KILL_MON;
+                                                        : KILL_MON;
 
         if (beam.thrower == KILL_YOU || attacker->as_monster()->friendly())
             beam.attitude = ATT_FRIENDLY;
@@ -2785,7 +2872,8 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
 bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
-    int brand;
+    int brand, res = 0;
+    bool ret = false;
 
     if (weapon)
     {
@@ -2794,18 +2882,19 @@ bool melee_attack::apply_damage_brand()
         else
             brand_was_known = item_type_known(*weapon);
     }
-    bool ret = false;
-
-    // Monster resistance to the brand.
-    int res = 0;
 
     special_damage = 0;
     obvious_effect = false;
+    brand = damage_brand == SPWPN_CHAOS ? random_chaos_brand() : damage_brand;
 
-    if (damage_brand == SPWPN_CHAOS)
-        brand = random_chaos_brand();
-    else
-        brand = damage_brand;
+    if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
+        && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRICISM
+        && !defender->alive())
+    {
+        // Most brands have no extra effects on just killed enemies, and the
+        // effect would be often inappropriate.
+        return false;
+    }
 
     switch (brand)
     {
@@ -2854,8 +2943,9 @@ bool melee_attack::apply_damage_brand()
             const coord_def& pos = defender->pos();
 
             // We know the defender is neither airborne nor electricity
-            // resistant, from above, but is it on water?
-            if (feat_is_water(grd(pos)))
+            // resistant, from above, but we still have to make sure it
+            // is in water (and not clinging above it).
+            if (_conduction_affected(pos))
             {
                 add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
                                  pos);
@@ -2954,7 +3044,6 @@ bool melee_attack::apply_damage_brand()
         // Handle weapon effects.
         // We only get here if we've done base damage, so no
         // worries on that score.
-
         if (attacker->atype() == ACT_PLAYER)
             mpr("You feel better.");
         else if (attacker_visible)
@@ -3057,6 +3146,8 @@ bool melee_attack::apply_damage_brand()
     if (needs_message && !special_damage_message.empty())
     {
         mprf("%s", special_damage_message.c_str());
+
+        special_damage_message.clear();
         // Don't do message-only miscasts along with a special
         // damage message.
         if (miscast_level == 0)
@@ -3064,7 +3155,7 @@ bool melee_attack::apply_damage_brand()
     }
 
     if (special_damage > 0)
-        inflict_damage(special_damage, special_damage_flavour, true);
+        inflict_damage(special_damage, special_damage_flavour);
 
     if (obvious_effect && attacker_visible && weapon != NULL)
     {
@@ -3095,7 +3186,7 @@ bool melee_attack::apply_damage_brand()
 //  * Each weapon type has a noise rating, like it does an accuracy
 //    rating and base delay.
 //
-//  * For player, stealth skill and/or weapon skillr reducing noise.
+//  * For player, stealth skill and/or weapon skill reducing noise.
 //
 //  * Randart property to make randart weapons louder or softer when
 //    they hit.
@@ -3168,7 +3259,7 @@ bool melee_attack::chop_hydra_head(int dam,
                 bleed_onto_floor(defender->pos(), defender->type,
                                  defender->as_monster()->hit_points, true);
 
-            defender->hurt(attacker, defender->as_monster()->hit_points);
+            defender->hurt(attacker, INSTANT_DEATH);
 
             return (true);
         }
@@ -3356,7 +3447,7 @@ void melee_attack::player_apply_staff_damage()
         {
             cast_abjuration((you.skill(SK_SUMMONINGS, 100)
                             + you.skill(SK_EVOCATIONS, 50)) / 80,
-                            defender->as_monster());
+                            defender->pos());
         }
         break;
 
@@ -3375,30 +3466,15 @@ void melee_attack::player_apply_staff_damage()
     }
 }
 
-bool melee_attack::player_check_monster_died()
-{
-    if (!defender->alive())
-    {
-        // note: doesn't take account of special weapons, etc.
-        dprf("Hit for %d.", damage_done);
-
-        player_monattk_hit_effects();
-
-        _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
-
-        return (true);
-    }
-
-    return (false);
-}
-
 /* Calculate the to-hit for an attacker
  *
  * @param random deterministic or stochastic calculation(s)
  */
 int melee_attack::calc_to_hit(bool random)
 {
-    const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER) ? 25 : 15;
+    const bool fighter = attacker->atype() == ACT_MONSTER
+                         && attacker->as_monster()->is_fighter();
+    const int hd_mult = fighter ? 25 : 15;
     int mhit = attacker->atype() == ACT_PLAYER ?
                 15 + (calc_stat_to_hit_base() / 2)
               : 18 + attacker->get_experience_level() * hd_mult / 10;
@@ -3407,15 +3483,20 @@ int melee_attack::calc_to_hit(bool random)
     const int base_hit = mhit;
 #endif
 
-    if (wearing_amulet(AMU_INACCURACY))
-        mhit -= 5;
-
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
     if (attacker->atype() == ACT_PLAYER)
     {
+        if (wearing_amulet(AMU_INACCURACY))
+            mhit -= 5;
+
+        // If you can't see yourself, you're a little less accurate. Maybe
+        // monsters should get this penalty too? (would nerf orc wizards a bit)
+        if (!you.visible_to(&you))
+            mhit -= 5;
+
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -3433,9 +3514,13 @@ int melee_attack::calc_to_hit(bool random)
         }
         else
         {                       // ...you must be unarmed
+            // Members of clawed species have presumably been using the claws,
+            // making them more practiced and thus more accurate in unarmed
+            // combat.  They keep this benefit even the claws are covered (or
+            // missing because of a change in form).
             mhit += species_has_claws(you.species) ? 4 : 2;
 
-            mhit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
+            mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,
                                          random);
         }
 
@@ -3477,8 +3562,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit -= 3;
 
         // armour penalty
-        mhit -= (attacker_armour_tohit_penalty
-                        + attacker_shield_tohit_penalty);
+        mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         //mutation
         if (player_mutation_level(MUT_EYEBALLS))
@@ -3503,10 +3587,41 @@ int melee_attack::calc_to_hit(bool random)
                 // Just trying to touch is easier that trying to damage.
                 mhit += maybe_random2(you.dex(), random);
             }
+
+            // TODO: Review this later (transformations getting extra hit
+            // almost across the board seems bad) - Cryp71c
+            switch (you.form)
+            {
+            case TRAN_SPIDER:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_BAT:
+                mhit += maybe_random2(12, random);
+                break;
+            case TRAN_ICE_BEAST:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_BLADE_HANDS:
+                mhit += maybe_random2(12, random);
+                break;
+            case TRAN_STATUE:
+                mhit += maybe_random2(9, random);
+                break;
+            case TRAN_DRAGON:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_LICH:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_PIG:
+            case TRAN_APPENDAGE:
+            case TRAN_NONE:
+                break;
+            }
         }
 
         // If no defender, we're calculating to-hit for debug-display
-        // purposes, so don't drop down to defender code below (there is none)
+        // purposes, so don't drop down to defender code below
         if (defender == NULL)
             return (mhit);
     }
@@ -3522,13 +3637,17 @@ int melee_attack::calc_to_hit(bool random)
 
         if (weapon && item_is_rod(*weapon))
             mhit += (short)weapon->props["rod_enchantment"];
+
+        // Probably players should get this penalty too.
+        if (attacker->confused())
+            mhit -= 5;
     }
 
-    if (attacker->confused())
-        mhit -= 5;
-
     if (!defender->visible_to(attacker))
-        mhit = mhit * 75 / 100;
+        if (attacker->atype() == ACT_PLAYER)
+            mhit -= 6;
+        else
+            mhit = mhit * 65 / 100;
     else
     {
         // This can only help if you're visible!
@@ -3559,8 +3678,9 @@ int melee_attack::calc_to_hit(bool random)
  * and fork on the logic.
  *
  * @param random deterministic or stochastic calculation(s)
+ * @param apply haste/finesse scaling
  */
-int melee_attack::calc_attack_delay(bool random)
+int melee_attack::calc_attack_delay(bool random, bool scaled)
 {
     if (attacker->atype() == ACT_PLAYER)
     {
@@ -3577,9 +3697,15 @@ int melee_attack::calc_attack_delay(bool random)
                                         rv::random2(1 + attacker_shield_penalty));
             }
         }
+        // Give unarmed shield-users a slight penalty always.
+        if (!weapon && player_wearing_slot(EQ_SHIELD))
+            attack_delay += rv::random2(2);
 
         attack_delay = rv::max(attack_delay, constant(3));
         int final_delay = random ? attack_delay.roll() : attack_delay.expected();
+        // Stop here if we just want the unmodified value.
+        if (!scaled)
+            return final_delay;
 
         if (you.duration[DUR_FINESSE])
         {
@@ -3603,6 +3729,13 @@ int melee_attack::calc_attack_delay(bool random)
     return (0);
 }
 
+/* Check for stab and prepare combat for stab-values
+ *
+ * Grant an automatic stab if paralyzed or sleeping (with highest damage value)
+ * stab_bonus is used as the divisor in damage calculations, so lower values
+ * will yield higher damage. Normal stab chance is (stab_skill + dex + 1 / roll)
+ * This averages out to about 1/3 chance for a non extended-endgame stabber.
+ */
 void melee_attack::player_stab_check()
 {
     if (you.stat_zero[STAT_DEX] || you.confused())
@@ -3653,6 +3786,9 @@ void melee_attack::player_stab_check()
     }
 }
 
+
+// TODO: Unify this and player_unarmed_speed (if possible), then unify with
+// monster weapon/attack speed
 random_var melee_attack::player_weapon_speed()
 {
     random_var attack_delay = constant(15);
@@ -3698,23 +3834,16 @@ random_var melee_attack::player_unarmed_speed()
                  (rv::roll_dice(1, 10) +
                   rv::roll_dice(2, attacker_body_armour_penalty)));
 
-    // Not even bats can attack faster than this.
-    min_delay = 5;
-
-    // Unarmed speed.
+    // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
     {
-        unarmed_delay =
-            rv::max(unarmed_delay
-                     - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)),
-                                player_in_bat_form() ? 30 : 50),
-                    constant(min_delay));
+        unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
     }
-
+    // Bats are faster (for what good it does them).
+    if (player_in_bat_form())
+        unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
     return (unarmed_delay);
 }
-
-///////////////////////////////////////////////////////////////////////////
 
 bool melee_attack::attack_warded_off()
 {
@@ -3745,6 +3874,15 @@ bool melee_attack::attack_warded_off()
     return (false);
 }
 
+/* Determine whether a block occurred
+ *
+ * No blocks if defender is incapacitated, would be nice to eventually expand
+ * this method to handle partial blocks as well as full blocks (although this
+ * would serve as a nerf to shields and - while more realistic - may not be a
+ * good mechanic for shields.
+ *
+ * Returns (block_occurred)
+ */
 bool melee_attack::attack_shield_blocked(bool verbose)
 {
     if (!defender_shield && defender->atype() != ACT_PLAYER)
@@ -3783,6 +3921,14 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
+/* Select the attack verb for attacker
+ *
+ * If klown, select randomly from klown_attack, otherwise check for any special
+ * case attack verbs (tentacles or door/fountain-mimics) and if all else fails,
+ * select an attack verb from attack_types based on the ENUM value of attk_type.
+ *
+ * Returns (attack_verb)
+ */
 std::string melee_attack::mons_attack_verb()
 {
     static const char *klown_attack[] =
@@ -3870,7 +4016,7 @@ std::string melee_attack::mons_attack_desc()
     if (dist > 2)
     {
         ASSERT(attk_flavour == AF_REACH || weapon && weapon_reach(*weapon));
-        ret = "from afar";
+        ret = " from afar";
     }
 
     if (weapon && attacker->type != MONS_DANCING_WEAPON)
@@ -4277,7 +4423,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HOLY:
-
         if (defender->is_evil() || defender->is_unholy())
             special_damage = attk_damage * 0.75;
 
@@ -4290,7 +4435,6 @@ void melee_attack::mons_apply_attack_flavour()
                  special_attack_punctuation().c_str());
 
         }
-
         break;
 
     case AF_ANTIMAGIC:
@@ -4323,7 +4467,7 @@ void melee_attack::do_passive_freeze()
 
         simple_monster_message(mon, " is very cold.");
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         flash_monster_colour(mon, LIGHTBLUE, 200);
 #endif
 
@@ -4370,13 +4514,10 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
+    const int evp = body ? -property(*body, PARM_EVASION) : 0;
     const int mut = player_mutation_level(MUT_SPINY);
-    int evp = 0;
 
-    if (body)
-        evp = -property(*body, PARM_EVASION);
-
-    if (you.mutation[MUT_SPINY] && attacker->alive() && one_chance_in(evp + 1))
+    if (mut && attacker->alive() && one_chance_in(evp + 1))
     {
         if (test_hit(2 + 4 * mut, attacker->melee_evasion(defender)) < 0)
         {
@@ -4429,23 +4570,52 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
-    if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
-          || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
-          || you.form == TRAN_LICH))
+    if (defender->cannot_act() || !attacker->alive())
+        return;
+
+    if (!defender->is_player())
     {
-        // You are in a non-minotaur form.
+        // monsters have no STR or DEX
+        if (!x_chance_in_y(2, 5))
+            return;
+
+        int hurt = random2(20) - attacker->armour_class();
+        if (you.see_cell(defender->pos()))
+        {
+            const std::string defname = defender->name(DESC_THE);
+            mprf("%s furiously retaliates!", defname.c_str());
+            if (hurt <= 0)
+            {
+                mprf("%s headbutts %s, but does no damage.", defname.c_str(),
+                     attacker->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf("%s headbutts %s%s", defname.c_str(),
+                     attacker->name(DESC_THE).c_str(),
+                     get_exclams(hurt).c_str());
+            }
+        }
+        if (hurt > 0)
+        {
+            if (attacker->is_player())
+                ouch(hurt, defender->mindex(), KILLED_BY_HEADBUTT);
+            else
+                attacker->hurt(defender, hurt);
+        }
         return;
     }
-    if (you.cannot_act())
+
+    if (!form_keeps_mutations())
     {
-        // You can't move.
+        // You are in a non-minotaur form.
         return;
     }
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
     const int slaying = slaying_bonus(PWPN_DAMAGE);
 
-    if (attacker->alive() && 5*you.strength() + 7*you.dex() > random2(600))
+    if (5 * you.strength() + 7 * you.dex() > random2(600))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
@@ -4474,7 +4644,6 @@ void melee_attack::do_minotaur_retaliation()
             attacker->hurt(&you, hurt);
         }
     }
-    return;
 }
 
 bool melee_attack::do_knockback(bool trample)
@@ -4562,6 +4731,9 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.form == TRAN_SPIDER
                 || you.form == TRAN_BAT);
 
+    case UNAT_CONSTRICT:
+        return (you.form != TRAN_NONE);
+
     default:
         return (false);
     }
@@ -4570,10 +4742,11 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
 {
     // No extra unarmed attacks for disabled mutations.
-    // XXX: It might be better to make player_mutation_level
-    //      aware of mutations that are disabled due to transformation.
     if (_tran_forbid_aux_attack(atk))
         return (false);
+
+    if (atk == UNAT_CONSTRICT)
+        return (is_base);
 
     if (you.strength() + you.dex() <= random2(50))
         return (false);
@@ -4614,6 +4787,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
                 && x_chance_in_y(2, 5));
 
     case UNAT_PUNCH:
+        return (is_base && !one_chance_in(3));
+
+    case UNAT_CONSTRICT:
         return (is_base);
 
     default:
@@ -4683,32 +4859,31 @@ int melee_attack::test_hit(int to_land, int ev)
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
 
-    ev *= 2;
-
     if (to_land >= AUTOMATIC_HIT)
         return (true);
     else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
+    else if (attacker->atype() == ACT_PLAYER)
+        margin = to_land - ev;
     else
     {
         roll = random2(to_land + 1);
-        margin = (roll - random2avg(ev, 2));
+        margin = (roll - random2avg(2*ev, 2));
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    float miss;
-
-    if (to_hit < ev)
-        miss = 100.0 - MIN_HIT_MISS_PERCENTAGE / 2.0;
+    // Giving less info for now, since this is better than giving incorrect
+    // info.
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        dprf("to hit: %d; ev: %d; result: %s (%d)",
+         to_hit, ev, (margin >= 0) ? "hit" : "miss", margin);
+    }
     else
     {
-        miss = MIN_HIT_MISS_PERCENTAGE / 2.0 +
-            ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
+        dprf("to hit: %d; to hit roll: %d; ev: %d; result: %s (%d)",
+             to_hit, roll, ev, (margin >= 0) ? "hit" : "miss", margin);
     }
-
-    dprf("to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
-         to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss",
-            (roll == -1) ? "!!!" : "", margin);
 #endif
 
     return (margin);
@@ -4776,7 +4951,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
             break;
         case TRAN_STATUE: // multiplied by 1.5 later
-            damage = 6 + you.strength();
+            damage = 6 + div_rand_round(you.strength(), 3);
             break;
         case TRAN_DRAGON: // +6 from claws
             damage = 12 + div_rand_round(you.strength() * 2, 3);
@@ -4986,8 +5161,11 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 {
     ASSERT(you.species == SP_VAMPIRE);
 
-    if (!_vamp_wants_blood_from_monster(mon))
+    if (!_vamp_wants_blood_from_monster(mon) ||
+        (!adjacent(defender->pos(), attacker->pos()) && needs_bite_msg))
+    {
         return (false);
+    }
 
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
@@ -5059,6 +5237,8 @@ int melee_attack::calc_stat_to_dam_base()
 
 void melee_attack::stab_message()
 {
+    defender->props["helpless"] = true;
+
     switch (stab_bonus)
     {
     case 6:     // big melee, monster surrounded/not paying attention
@@ -5100,6 +5280,8 @@ void melee_attack::stab_message()
               defender->pronoun(PRONOUN_REFLEXIVE).c_str());
         break;
     }
+
+    defender->props.erase("helpless");
 }
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
@@ -5138,3 +5320,94 @@ int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
     }
     return defender->hurt(attacker, dam, flavour, clean);
 }
+
+// Avoid warnings for unread variables.  Used with variable declarations,
+// so unparenthesised: use only as a statement!
+#ifdef DEBUG_DIAGNOSTICS
+# define DIAG_ONLY(x) x
+#else
+# define DIAG_ONLY(x) (void)0
+#endif
+
+bool melee_attack::handle_constriction()
+{
+    // see what is grabbed already
+
+    bool defender_grabbed = false;
+    bool any_grabbed = false;
+    int grabslot = 0;
+
+    int maxgrab = (attacker->mons_species(true) == MONS_OCTOPODE) ? 8 : 1;
+    ASSERT(maxgrab <= MAX_CONSTRICT);
+
+    for (int i = 0; i < maxgrab; i++)
+    {
+        if (attacker->constricting[i] == defender->mindex())
+            defender_grabbed = true;
+        if (attacker->constricting[i] != NON_ENTITY)
+            any_grabbed = true;
+    }
+
+    // if a new constriction is possible, try it
+    if (!defender_grabbed
+        && (!any_grabbed || attacker->has_usable_tentacle())
+        && defender->constricted_by == NON_ENTITY)
+    {
+        // calculate to_hit
+        int attackdice, defenddice;
+        if (attacker->atype() == ACT_PLAYER)
+        {
+            attackdice = roll_dice(3, you.strength()*(you.body_size()+1));
+            defenddice = roll_dice(1, 3*defender->melee_evasion(attacker)*
+                                      (defender->body_size()+1));
+        }
+        else
+        {
+            attackdice = roll_dice(1, attacker->as_monster()->hit_dice*
+                                      (attacker->body_size()+1));
+            defenddice = roll_dice(1, defender->melee_evasion(attacker)*
+                                      (defender->body_size()+1));
+        }
+
+        // if hit, grab
+        if (attacker->body_size() >= defender->body_size()
+            && !defender->is_insubstantial()
+            && adjacent(attacker->pos(), defender->pos())
+            && attackdice >= defenddice)
+        {
+            defender_grabbed = true;
+            any_grabbed = true;
+            for (int i = 0; i < maxgrab && grabslot == 0; i++)
+            {
+                if (attacker->constricting[i] == NON_ENTITY)
+                {
+                    grabslot = i + 1;
+                    attacker->constricting[i] = defender->mindex();
+                    attacker->dur_has_constricted[i] = 0;
+                    defender->constricted_by = attacker->mindex();
+                    defender->dur_been_constricted = 0;
+                }
+            }
+            ASSERT(grabslot != 0);
+        }
+
+        dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d gslot %d",
+             attacker->name(DESC_PLAIN, true).c_str(),
+             defender->name(DESC_PLAIN, true).c_str(),
+             (attacker->atype() == ACT_PLAYER
+                 ? you.strength()
+                 : attacker->as_monster()->hit_dice),
+             attacker->body_size(),
+             attackdice,
+             defender->melee_evasion(attacker), defender->body_size(),
+             defenddice, grabslot);
+    }
+
+    // if anything is grabbed, do damage accordingly
+    if (any_grabbed)
+        handle_noattack_constrictions(attacker);
+
+    attacker->has_constricted_this_turn = true;
+    return true;
+}
+#undef DIAG_ONLY

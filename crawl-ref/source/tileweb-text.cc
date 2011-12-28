@@ -93,8 +93,7 @@ void WebTextArea::send(bool force)
     if (!force && !m_dirty) return;
     m_dirty = false;
 
-    bool start = true;
-    uint8_t last_col = 0;
+    int last_col = -1;
     int space_count = 0;
     bool dirty = false;
     std::wstringstream html;
@@ -103,7 +102,7 @@ void WebTextArea::send(bool force)
 
     for (int y = 0; y < my; ++y)
     {
-        start = true;
+        last_col = -1;
         space_count = 0;
         dirty = false;
         html.str(L"");
@@ -130,13 +129,14 @@ void WebTextArea::send(bool force)
                 }
             }
 
-            if ((col != last_col) && !start)
-                html << "</span>";
-            if ((col != last_col) || start)
+            if (col != last_col && chr != ' ')
+            {
+                if (last_col != -1)
+                    html << "</span>";
                 html << "<span class=\\\"fg" << (col & 0xf)
                      << " bg" << ((col >> 4) & 0xf) << "\\\">";
-            last_col = col;
-            start = false;
+                last_col = col;
+            }
 
             if (chr == ' ' && ((col >> 4) & 0xF) == 0)
                 space_count++;
@@ -166,12 +166,15 @@ void WebTextArea::send(bool force)
             }
         }
 
-        if (dirty || force)
+        if (dirty || (force && !html.str().empty()))
         {
             if (!sending)
             {
-                tiles.write_message("{msg:'txt',id:'%s',lines:{",
+                tiles.write_message("{msg:'txt',id:'%s'",
                                     m_client_side_name.c_str());
+                if (force)
+                    tiles.write_message(",clear:1");
+                tiles.write_message(",lines:{");
                 sending = true;
             }
 

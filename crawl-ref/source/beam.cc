@@ -170,7 +170,8 @@ static void _zap_animation(int colour, const monster* mon = NULL,
     {
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
-#else
+#endif
+#ifndef USE_TILE_LOCAL
         view_update();
         cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
@@ -737,7 +738,7 @@ void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
     {
-        if (!find_ray(source, target, ray))
+        if (!find_ray(source, target, ray, opc_solid_see))
             fallback_ray(source, target, ray);
     }
 }
@@ -764,7 +765,8 @@ void bolt::draw(const coord_def& p)
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
     cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
     put_colour_ch(colour == BLACK ? random_colour()
                                   : element_colour(colour),
@@ -960,9 +962,14 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRATE:
         if (hear)
         {
-            msg = "You hear the screech of bent metal.";
+            if (see)
+                msg = "The grate screeches as it bends and collapses.";
+            else
+                msg = "You hear the screech of bent metal.";
             chan = MSGCH_SOUND;
         }
+        else if (see)
+            msg = "The grate bends and collapses.";
         break;
 
     case DNGN_ORCISH_IDOL:
@@ -1356,13 +1363,6 @@ void bolt::do_fire()
         ray.advance();
     }
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // Before we start drawing the beam, turn buffering off.
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
-
     while (map_bounds(pos()))
     {
         if (range_used() > range)
@@ -1472,11 +1472,6 @@ void bolt::do_fire()
             you.pet_target = beam_source;
         }
     }
-
-    // That's it!
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    set_buffering(oldValue);
-#endif
 }
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
@@ -1937,8 +1932,11 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
     pow = std::min(pow, 200);
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
+        if (!you.see_cell_no_trans(mi->pos()))
+            continue;
+
         if (mi->has_ench(wh_enchant))
             continue;
 
@@ -2214,7 +2212,7 @@ static void _create_feat_at(coord_def center,
         dungeon_terrain_changed(center, newfeat, true, false, true);
 }
 
-static coord_def _random_point_visible_from(const coord_def &c,
+static coord_def _random_point_hittable_from(const coord_def &c,
                                             int radius,
                                             int margin = 1,
                                             int tries = 5)
@@ -2241,7 +2239,7 @@ static void _create_feat_splash(coord_def center,
     _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
-        const coord_def newp(_random_point_visible_from(center, radius));
+        const coord_def newp(_random_point_hittable_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
         _create_feat_at(newp, overwriteable, newfeat);
@@ -2850,28 +2848,20 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
-                           bool deflect, bool repel, defer_rand &r)
+                           int defl, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return (true);
 
-    if (is_beam && deflect)
+    if (is_beam)
     {
-        attack = r[0].random2(attack * 2) / 3;
-    }
-    else if (is_beam && repel)
-    {
-        if (attack >= 2)
+        if (defl > 1)
+            attack = r[0].random2(attack * 2) / 3;
+        else if (defl && attack >= 2) // don't increase acc of 0
             attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
-    else if (deflect)
-    {
-        attack = r[0].random2(attack / 2);
-    }
-    else if (repel)
-    {
-        attack = r[0].random2(attack);
-    }
+    else if (defl)
+        attack = r[0].random2(attack / defl);
 
     dprf("Beam attack: %d, defence: %d", attack, defence);
 
@@ -3158,26 +3148,19 @@ bool bolt::misses_player()
     defer_rand r;
     bool miss = true;
 
-    bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
-    bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
-                || player_mutation_level(MUT_DISTORTION_FIELD) == 3;
+    int defl = you.missile_deflection();
     if (flavour == BEAM_LIGHT)
-        dmsl = rmsl = false;
+        defl = 0;
 
-    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
-    {
+    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, 0, r))
         mprf("The %s misses you.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, rmsl, r))
-    {
-        mprf("The %s is repelled.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, dmsl, rmsl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge_less, is_beam, defl, r))
     {
         // active voice to imply stronger effect
-        mprf("You deflect the %s!", name.c_str());
+        mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
+             name.c_str());
     }
-    else if (!_test_beam_hit(real_tohit, dodge, is_beam, dmsl, rmsl, r))
+    else if (!_test_beam_hit(real_tohit, dodge, is_beam, defl, r))
     {
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
@@ -3190,14 +3173,10 @@ bool bolt::misses_player()
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
-        if (_test_beam_hit(real_tohit, dodge_more, is_beam, dmsl, rmsl, r))
-        {
+        if (_test_beam_hit(real_tohit, dodge_more, is_beam, defl, r))
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
-        }
         else
-        {
             mprf("Helpless, you fail to dodge the %s.", name.c_str());
-        }
 
         miss = false;
     }
@@ -3846,6 +3825,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!damage_ignores_armour())
     {
         int ac = mon->armour_class();
+        // Armour is less useful against electricity.
+        if (flavour == BEAM_ELECTRICITY)
+            ac /= 2;
         if (is_tracer && preac_max_damage > 0)
         {
             tracer_postac_min = std::max(0, preac_min_damage - ac);
@@ -4081,7 +4063,18 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
+    {
+        bool was_asleep = mon->asleep();
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+
+        // Don't allow needles of sleeping to awaken monsters.
+        if (item && item->base_type == OBJ_MISSILES
+            && get_ammo_brand(*item) == SPMSL_SLEEP
+            && was_asleep && !mon->asleep())
+        {
+            mon->put_to_sleep(agent(), 0);
+        }
+    }
 
     // Sticky flame.
     if (name == "sticky flame" || name == "splash of liquid fire")
@@ -4394,25 +4387,25 @@ void bolt::affect_monster(monster* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
-    bool dmsl = mons_class_flag(mon->type, M_DEFLECT_MISSILES);
+    int defl = mon->missile_deflection();
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, dmsl, false, r))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, defl, r))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
             // if it would have hit otherwise...
-            if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
+            if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
             {
                 msg::stream << mon->name(DESC_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       is_beam, false, false, r))
+                                       is_beam, 0, r))
             {
                 msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
@@ -5302,13 +5295,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     exp_map.init(INT_MAX);
     determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // turn buffering off
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
-
     // We get a bit fancy, drawing all radius 0 effects, then radius
     // 1, radius 2, etc.  It looks a bit better that way.
     const std::vector< std::vector<coord_def> > sweep = _radial_sweep(r);
@@ -5367,11 +5353,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         }
     }
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    if (!is_tracer)
-        set_buffering(oldValue);
-#endif
-
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)
     {
@@ -5397,7 +5378,8 @@ void bolt::explosion_draw_cell(const coord_def& p)
 #ifdef USE_TILE
         if (in_los_bounds_v(drawpos))
             tiles.add_overlay(p, tileidx_bolt(*this));
-#else
+#endif
+#ifndef USE_TILE_LOCAL
         // bounds check
         if (in_los_bounds_v(drawpos))
         {

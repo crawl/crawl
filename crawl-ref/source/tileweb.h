@@ -14,6 +14,22 @@
 #include <map>
 #include <sys/un.h>
 
+class Menu;
+
+enum WebtilesCRTMode
+{
+    CRT_DISABLED,
+    CRT_NORMAL,
+    CRT_MENU
+};
+
+enum WebtilesUIState
+{
+    UI_NORMAL,
+    UI_CRT,
+    UI_VIEW_MAP,
+};
+
 class TilesFramework
 {
 public:
@@ -43,7 +59,7 @@ public:
     void clear_text_tags(text_tag_type type);
     void add_text_tag(text_tag_type type, const std::string &tag,
                       const coord_def &gc);
-    void add_text_tag(text_tag_type type, const monster* mon);
+    void add_text_tag(text_tag_type type, const monster_info& mon);
 
     const coord_def &get_cursor() const;
 
@@ -59,9 +75,17 @@ public:
     void put_ucs_string(ucs_t *str);
     void clear_to_end_of_line();
 
+    void push_menu(Menu* m);
+    void push_crt_menu(std::string tag);
+    void pop_menu();
+    void close_all_menus();
+
     void write_message(const char *format, ...);
     void finish_message();
-    void send_message(const char *format, ...);
+    void send_message(const char *format = "", ...);
+
+    bool has_receivers() { return !m_dest_addrs.empty(); }
+    bool is_controlled_from_web() { return m_controlled_from_web; }
 
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
@@ -87,15 +111,32 @@ public:
        data is sent until pop_prefix is called. The suffix
        passed to pop_prefix will only be sent if the prefix
        was sent. */
-    void push_prefix(std::string prefix);
-    void pop_prefix(std::string suffix);
+    void push_prefix(const std::string& prefix);
+    void pop_prefix(const std::string& suffix);
     bool prefix_popped();
+
+    // Helper functions for writing JSON
+    void write_message_escaped(const std::string& s);
+    void json_open_object(const std::string& name = "");
+    void json_close_object();
+    void json_open_array(const std::string& name = "");
+    void json_close_array();
+    void json_write_comma();
+    void json_write_name(const std::string& name);
+    void json_write_int(int value);
+    void json_write_int(const std::string& name, int value);
+    void json_write_string(const std::string& value);
+    void json_write_string(const std::string& name, const std::string& value);
 
     std::string m_sock_name;
     bool m_await_connection;
 
-    void set_crt_enabled(bool value);
-    bool is_crt_enabled();
+    WebtilesCRTMode m_crt_mode;
+
+    void clear_crt_menu() { m_text_menu.clear(); }
+
+    void set_ui_state(WebtilesUIState state);
+    WebtilesUIState get_ui_state() { return m_ui_state; }
 
 protected:
     int m_sock;
@@ -103,21 +144,24 @@ protected:
     std::string m_msg_buf;
     std::vector<sockaddr_un> m_dest_addrs;
 
+    bool m_controlled_from_web;
+
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, std::string data);
     wint_t _receive_control_message();
 
     std::vector<std::string> m_prefixes;
+    int json_object_level;
+    bool need_comma;
 
-    enum LayerID
+    struct MenuInfo
     {
-        LAYER_NORMAL,
-        LAYER_CRT,
-        LAYER_TILE_CONTROL,
-        LAYER_MAX,
+        std::string tag;
+        Menu* menu;
     };
-    LayerID m_active_layer;
-    bool m_crt_enabled;
+    std::vector<MenuInfo> m_menu_stack;
+
+    WebtilesUIState m_ui_state;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
@@ -147,6 +191,7 @@ protected:
     bool m_has_overlays;
 
     WebTextArea m_text_crt;
+    WebTextArea m_text_menu;
     WebTextArea m_text_stat;
     WebTextArea m_text_message;
 
@@ -180,18 +225,54 @@ class tiles_crt_control
 {
 public:
     tiles_crt_control(bool crt_enabled)
-        : m_was_enabled(tiles.is_crt_enabled())
+        : m_old_mode(tiles.m_crt_mode)
     {
-        tiles.set_crt_enabled(crt_enabled);
+        tiles.m_crt_mode = crt_enabled ? CRT_NORMAL : CRT_DISABLED;
+    }
+
+    tiles_crt_control(WebtilesCRTMode mode,
+                      std::string tag = "")
+        : m_old_mode(tiles.m_crt_mode)
+    {
+        tiles.m_crt_mode = mode;
+        if (mode == CRT_MENU)
+        {
+            tiles.push_crt_menu(tag);
+        }
     }
 
     ~tiles_crt_control()
     {
-        tiles.set_crt_enabled(m_was_enabled);
+        if (tiles.m_crt_mode == CRT_MENU)
+        {
+            tiles.pop_menu();
+            tiles.clear_crt_menu();
+        }
+        tiles.m_crt_mode = m_old_mode;
     }
 
 private:
-    bool m_was_enabled;
+    WebtilesCRTMode m_old_mode;
+};
+
+class tiles_ui_control
+{
+public:
+    tiles_ui_control(WebtilesUIState state)
+        : m_new_state(state), m_old_state(tiles.get_ui_state())
+    {
+        tiles.set_ui_state(state);
+    }
+
+    ~tiles_ui_control()
+    {
+        if (tiles.get_ui_state() == m_new_state)
+            tiles.set_ui_state(m_old_state);
+    }
+
+private:
+    WebtilesUIState m_new_state;
+    WebtilesUIState m_old_state;
 };
 
 #endif

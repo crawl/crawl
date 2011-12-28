@@ -217,7 +217,7 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
         mon            = orig;
         mon.hit_points = mon.max_hit_points;
         you.time_taken = player_speed();
-        if (fight_melee(&you, &mon, true))
+        if (fight_melee(&you, &mon))
             hits++;
 
         you.hunger = hunger;
@@ -562,6 +562,9 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     menv[mindex].behaviour = BEH_SEEK;
 
     you.exp_available = 0;
+    unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    crawl_state.disables.set(DIS_DEATH);
+    crawl_state.disables.set(DIS_DELAY);
 
     if (!use_defaults || defence)
     {

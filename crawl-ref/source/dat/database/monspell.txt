@@ -279,7 +279,7 @@ Dissolution cast
 %%%%
 Gastronok cast
 
-@The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
+@The_monster@'s eyestalks quiver as @subjective@ mumbles some strange words.
 
 @The_monster@ chants a spell, wobbling all the while.
 
@@ -449,13 +449,13 @@ giant eyeball cast
 %%%%
 guardian serpent cast targeted
 
-@The_monster@ coils @objective@self and waves @possessive@ upper body at @target@.
+@The_monster@ coils @reflexive@ and waves @possessive@ upper body at @target@.
 
 @The_monster@ casts a spell at @target@.
 %%%%
 guardian serpent cast
 
-@The_monster@ coils @objective@self and performs some mystic snake dance.
+@The_monster@ coils @reflexive@ and performs some mystic snake dance.
 
 @The_monster@ casts a spell.
 

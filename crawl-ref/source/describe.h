@@ -72,10 +72,8 @@ void append_weapon_stats(std::string &description, const item_def &item);
 void append_armour_stats(std::string &description, const item_def &item);
 void append_missile_info(std::string &description);
 
-void describe_monsters(const monster_info &mi, bool force_seen = false,
-                       const std::string &footer = "",
-                       bool wait_until_key_pressed = true,
-                       bool show_quote = false);
+int describe_monsters(const monster_info &mi, bool force_seen = false,
+                      const std::string &footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
@@ -98,11 +96,8 @@ std::string get_command_description(const command_type cmd,
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);
 
-void print_quote (const describe_info &inf);
-void print_quote (const std::string &desc);
-
-template<class T> void process_description(T &proc, const describe_info &inf);
-template<class T> void process_quote(T &proc, const describe_info &inf);
+void print_quote(const describe_info &inf);
+void print_quote(const std::string &desc);
 
 void trim_randart_inscrip(item_def& item);
 std::string artefact_auto_inscription(const item_def& item);
@@ -139,130 +134,5 @@ protected:
     int h;
     std::ostringstream ostr;
 };
-
-/* ***********************************************************************
- * template implementations
- * *********************************************************************** */
-// My kingdom for a closure.
-template<class T>
-inline void process_description(T &proc, const describe_info &inf)
-{
-    const unsigned int line_width = proc.width();
-    const          int height     = proc.height();
-
-    std::string desc;
-
-    // How many lines is the title; we also seem to be adding 1 to
-    // start with.
-    int num_lines = count_desc_lines(inf.title, line_width) + 1;
-
-    int body_lines   = count_desc_lines(inf.body.str(), line_width);
-    const int suffix_lines = count_desc_lines(inf.suffix, line_width);
-    const int prefix_lines = count_desc_lines(inf.prefix, line_width);
-    const int footer_lines = count_desc_lines(inf.footer, line_width)
-                             + (inf.footer.empty() ? 0 : 1);
-
-    // Maybe skip the body if body + title would be too many lines.
-    if (inf.title.empty())
-    {
-        desc = inf.body.str();
-        // There is a default 1 line addition for some reason.
-        num_lines = body_lines + 1;
-    }
-    else if (body_lines + num_lines + 2 <= height)
-    {
-        desc = inf.title + "\n\n";
-        desc += inf.body.str();
-        // Got 2 lines from the two \ns that weren't counted yet.
-        num_lines += body_lines + 2;
-    }
-    else
-        desc = inf.title + "\n";
-
-    // Prefer the footer over the suffix.
-    if (num_lines + suffix_lines + footer_lines <= height)
-    {
-        desc = desc + inf.suffix;
-        num_lines += suffix_lines;
-    }
-
-    // Prefer the footer over the prefix.
-    if (num_lines + prefix_lines + footer_lines <= height)
-    {
-        desc = inf.prefix + desc;
-        num_lines += prefix_lines;
-    }
-
-    if (!inf.footer.empty() && num_lines + footer_lines <= height)
-    {
-        const int bottom_line = std::min(std::max(24, num_lines + 2),
-                                         height - footer_lines + 1);
-        const int newlines = bottom_line - num_lines;
-
-        if (newlines >= 0)
-        {
-            desc.append(newlines, '\n');
-            desc = desc + inf.footer;
-        }
-    }
-
-    while (!desc.empty())
-    {
-        proc.print(wordwrap_line(desc, line_width));
-        if (!desc.empty())
-            proc.nextline();
-    }
-}
-
-template<class T>
-inline void process_quote(T &proc, const describe_info &inf)
-{
-    const unsigned int line_width = proc.width();
-    const          int height     = proc.height();
-
-    std::string desc;
-
-    // How many lines is the title; we also seem to be adding 1 to
-    // start with.
-    int num_lines = count_desc_lines(inf.title, line_width) + 1;
-
-    int body_lines   = count_desc_lines(inf.quote, line_width);
-
-    // Maybe skip the body if body + title would be too many lines.
-    if (inf.title.empty())
-    {
-        desc = inf.quote;
-        // There is a default 1 line addition for some reason.
-        num_lines = body_lines + 1;
-    }
-    else if (body_lines + num_lines + 2 <= height)
-    {
-        desc = inf.title + "\n\n";
-        desc += inf.quote;
-        // Got 2 lines from the two \ns that weren't counted yet.
-        num_lines += body_lines + 2;
-    }
-    else
-        desc = inf.title + "\n";
-
-    if (num_lines <= height)
-    {
-        const int bottom_line = std::min(std::max(24, num_lines + 2),
-                                         height);
-        const int newlines = bottom_line - num_lines;
-
-        if (newlines >= 0)
-        {
-            desc.append(newlines, '\n');
-        }
-    }
-
-    while (!desc.empty())
-    {
-        proc.print(wordwrap_line(desc, line_width));
-        if (!desc.empty())
-            proc.nextline();
-    }
-}
 
 #endif

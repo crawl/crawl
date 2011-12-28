@@ -313,7 +313,7 @@ Choose any deck in your inventory and draw a card from it.
 %%%%
 Peek at Two
 
-Draw two cards from any deck in your inventory, look at them, and shuffle them back into the deck. The deck will be inscribed as containing those two cards, and, if they are different, this will identify the deck.
+Discard one card from any deck in your inventory to draw two cards from the deck, look at them, and shuffle them back into the deck. The deck will be inscribed as containing those two cards, and, if they are different, this will identify the deck.
 %%%%
 Triple Draw
 
@@ -321,7 +321,7 @@ Draw three cards from any deck in your inventory, look at them, and decide which
 %%%%
 Mark Four
 
-Draw four cards from any deck in your inventory, mark and remember them, so that you can tell when they are on top, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
+Discard between one and three cards from any deck in your inventory to draw four cards from the deck, mark and remember them, so that you can tell when they are on top, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
 %%%%
 Stack Five
 

@@ -37,7 +37,7 @@ function ossuary_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The staircase has disappeared completely beneath the sand.",
-        desc = "A sand-covered staircase",
+        desc = "sand-covered staircase",
         desc_long = desc_long,
         entity = 'staircase',
         dst = "Ossuary",
@@ -183,7 +183,7 @@ KFEAT:   T = alarm trap / floor
 ITEM:    any scroll w:2 / any scroll q:2 w:3 / \
          any potion w:4 / any potion q:2 w:6
 MONS:    mummy
-MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
          hobgoblin zombie / kobold zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
@@ -243,7 +243,7 @@ NSUBST:  J = 1:= / *:c
 NSUBST:  K = 1:= / *:c
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
-MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
+MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
@@ -327,7 +327,7 @@ SUBST:   3 = 3 2:1 .:1
 SUBST:   f = ~
 ITEM:    any scroll, any potion
 MONS:    mummy
-MONS:    rat zombie / jackal zombie / quokka zombie / snake zombie / \
+MONS:    rat zombie / jackal zombie / quokka zombie / adder zombie / \
          goblin zombie / hobgoblin zombie / kobold zombie
 MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
@@ -391,7 +391,7 @@ SUBST:   M = 1f, d = dddf, e = eeef
 NSUBST:  . = 6:^ / *:.
 KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
-SUBST:   = = =+
+NSUBST:  = = 1:= / *:+
 : ossuary_setup_features(_G)
 MAP
           vvv
@@ -466,7 +466,7 @@ WEIGHT:  20
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
-         snake zombie / gnoll zombie / orc zombie / kobold zombie / \
+         adder zombie / gnoll zombie / orc zombie / kobold zombie / \
          big kobold zombie / hound zombie / human zombie / elf zombie
 MONS:    mummy
 ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
@@ -920,8 +920,8 @@ WEIGHT:  10
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen
 MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
-         kobold zombie / snake zombie / orc skeleton / hobgoblin skeleton /\
-         small snake skeleton / nothing w:5
+         kobold zombie / adder zombie / orc skeleton / hobgoblin skeleton /\
+         ball python skeleton / nothing w:5
 MONS:    wight
 MONS:    flying skull
 MONS:    guardian mummy / mummy w:2
@@ -953,21 +953,21 @@ cc.......cc
      cc.cc
      cc.cc
     cc.cc
-   cc.cc                          ccccccccccccccccc
-   cc..ccc                        c...............c
-    cc...cc                       c.=cc..xxx..cc=.c
-  ccc...ccc                       c.c4c..x3x..c4c.c
- cc......cccccccccccccccccccccccccc.ccc..yzy..ccc.c
-cc........cc$c$c$c$c$cc.....cccVccc...............c
-c..........c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
-c..c.......+..........+..d..L.....+.c3z..eee..z3x.c
-cc.cc......c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
-cc.c......cc$c$c$c$c$cc.....cccXccc...............c
-cc.cc....cccccccccccccccccccccccccc.ccc..yzy..ccc.c
- cc.....cc                        c.c4c..x3x..c4c.c
-  cc...cc                         c.=cc..xxx..cc=.c
-   ccccc                          c...............c
-                                  ccccccccccccccccc
+   cc.cc                            ccccccccccccccccc
+   cc..ccc                          c...............c
+    cc...cc                         c.=cc..xxx..cc=.c
+  ccc...ccc                         c.c4c..x3x..c4c.c
+ cc......cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
+cc........cc$c$c$c$c$cc.....cccccVccc...............c
+c..........c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+c..c.......+..........+..d....L.....+.c3z..eee..z3x.c
+cc.cc......c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+cc.c......cc$c$c$c$c$cc.....cccccXccc...............c
+cc.cc....cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
+ cc.....cc                          c.c4c..x3x..c4c.c
+  cc...cc                           c.=cc..xxx..cc=.c
+   ccccc                            c...............c
+                                    ccccccccccccccccc
 ENDMAP
 
 
@@ -1020,7 +1020,7 @@ NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen
-MONS:   rat zombie / quokka zombie / snake zombie /\
+MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy

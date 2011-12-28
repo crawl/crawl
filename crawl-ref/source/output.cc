@@ -51,7 +51,7 @@
 #include "showsymb.h"
 #include "spl-transloc.h"
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 #include "directn.h"
 #endif
 
@@ -161,12 +161,12 @@ class colour_bar
     int m_request_redraw_after; // force a redraw at this turn count
 };
 
-colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
+static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
-colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
+static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
-colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
+static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
 // ----------------------------------------------------------------------
@@ -626,6 +626,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
+        DUR_DIVINE_STAMINA,
     };
 
     status_info inf;
@@ -638,7 +640,7 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if(!allow_control_teleport(true) && Options.show_no_ctele)
+    if (!allow_control_teleport(true) && Options.show_no_ctele)
         out.push_back(status_light(RED,"-cTele"));
 }
 
@@ -1522,7 +1524,7 @@ static std::string _god_powers(bool simple)
             std::string asterisks = std::string(prank, '*')
                                     + std::string(6 - prank, '.');
             if (simple)
-                return(asterisks);
+                return (asterisks);
             godpowers = chop_string(godpowers, 20, false)
                       + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
@@ -2038,6 +2040,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
     };
 
     status_info inf;
@@ -2144,7 +2147,12 @@ static std::string _status_mut_abilities(int sw)
 
       case SP_YELLOW_DRACONIAN:
           mutations.push_back("spit acid");
-          mutations.push_back("acid resistance");
+
+          if (form_keeps_mutations() || you.form == TRAN_DRAGON)
+              mutations.push_back("acid resistance");
+          else
+              mutations.push_back("<darkgrey>(acid resistance)</darkgrey>");
+
           break;
 
       case SP_GREY_DRACONIAN:
@@ -2196,9 +2204,10 @@ static std::string _status_mut_abilities(int sw)
     std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        int level = player_mutation_level((mutation_type) i);
-        if (!level)
+        if (!you.mutation[i])
             continue;
+
+        int level = player_mutation_level((mutation_type) i);
 
         const bool lowered = (level < you.mutation[i]);
         const mutation_def& mdef = get_mutation_def((mutation_type) i);
@@ -2217,7 +2226,7 @@ static std::string _status_mut_abilities(int sw)
                 current += ostr.str();
             }
         }
-        else
+        else if (level)
         {
             switch (i)
             {
@@ -2311,7 +2320,6 @@ static std::string _status_mut_abilities(int sw)
                 break;
             case MUT_SLIMY_GREEN_SCALES:
                 AC_change += level;
-                EV_change -= level-1;
                 break;
             case MUT_THIN_METALLIC_SCALES:
                 AC_change += level;
@@ -2334,13 +2342,17 @@ static std::string _status_mut_abilities(int sw)
 
         if (!current.empty())
         {
+            if (level == 0)
+                current = "(" + current + ")";
             if (lowered)
                 current = "<darkgrey>" + current + "</darkgrey>";
             mutations.push_back(current);
         }
     }
 
-    if (AC_change)
+    // Statue form does not get AC benefits from scales etc.  It does
+    // get changes to EV and SH.
+    if (AC_change && you.form != TRAN_STATUE)
     {
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
         mutations.push_back(info);

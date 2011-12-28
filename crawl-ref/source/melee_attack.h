@@ -15,6 +15,7 @@ struct mon_attack_def;
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
+    UNAT_CONSTRICT,  // put constriction first so octopodes will use it
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_TAILSLAP,
@@ -22,7 +23,7 @@ enum unarmed_attack_type
     UNAT_BITE,
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
-    UNAT_FIRST_ATTACK = UNAT_KICK,
+    UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
     UNAT_LAST_ATTACK = UNAT_TENTACLES
 };
 
@@ -39,8 +40,6 @@ public:
 
     beam_type special_damage_flavour;
 
-    bool      can_do_unarmed;
-
     bool    stab_attempt;
     int     stab_bonus;
 
@@ -51,7 +50,7 @@ public:
     actor* miscast_target;
 
 public:
-    melee_attack(actor *attacker, actor *defender, bool allow_unarmed = true,
+    melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1);
 
     // Applies attack damage and other effects.
@@ -59,7 +58,7 @@ public:
 
     // To-hit is a function of attacker/defender, inherited from attack
     int calc_to_hit(bool random = true);
-    int calc_attack_delay(bool random = true);
+    int calc_attack_delay(bool random = true, bool scaled = true);
 
     static void chaos_affect_actor(actor *victim);
 
@@ -72,6 +71,8 @@ private:
     bool handle_phase_damaged();
     bool handle_phase_killed();
     bool handle_phase_end();
+    // Replaces some of the above phases.
+    bool handle_constriction();
 
     /* Combat Calculations */
     int test_hit(int to_hit, int ev);
@@ -161,7 +162,6 @@ private:
     void player_sustain_passive_damage();
     int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
-    bool player_check_monster_died();
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
@@ -169,7 +169,7 @@ private:
     std::string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
-    void _monster_die(monster* mons, killer_type killer, int killer_index);
+    void _defender_die();
 
     // Output methods
     void stab_message();

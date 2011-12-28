@@ -58,7 +58,9 @@ public:
     dist();
 
     bool isMe() const;
-    void confusion_fuzz(); // modify target as if the player is confused.
+
+    // modify target as if the player is confused.
+    void confusion_fuzz(int range = 6);
 
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?

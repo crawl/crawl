@@ -1541,6 +1541,13 @@ MAP
       ...........
 ENDMAP
 
+NAME:  abandoned_shop
+TAGS:  extra
+DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Vault, Forest, Dwarf
+KFEAT: O = abandoned_shop
+MAP
+O
+ENDMAP
 
 #####################################################################
 #
@@ -1726,11 +1733,11 @@ KFEAT:   z = zot trap
 SUBST:   *: *$
 WEIGHT:  3
 MAP
-xxxxxxxxxx
-xxxxxxx**x
-@ZZZZZ=**x
-xxxxxxx**x
-xxxxxxxxxx
+xxxxxxcccc
+xxxxxxc**c
+@ZZZZZ=**c
+xxxxxxc**c
+xxxxxxcccc
 ENDMAP
 
 NAME:   water_maze_lemuel
@@ -1796,12 +1803,11 @@ xxxx$$$x
 ENDMAP
 
 # Transporter accident (mumra)
-# This might be quite hard to find (unless you're an Ash worshipper)
 NAME:   mumra_transporter_accident
 TAGS:   extra
 WEIGHT: 1
 DEPTH:  D:5-,Lair,Elf:1-4,Orc
-SUBST:  X = x.
+SUBST:  X = m.
  : dgn.delayed_decay(_G,'B', 'human skeleton')
 KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
 # Prevent random teleportation getting you stuck
@@ -1810,11 +1816,11 @@ KFEAT:  AB = floor
 MAP
      ....
     .XXXX.
-   .XxxxxX.
-  .XxxxxxxX.
-  .XxxABxxX.
-  .XxxxxxxX.
-   .XxxxxX.
+   .XmmmmX.
+  .XmmmmmmX.
+  .XmmABmmX.
+  .XmmmmmmX.
+   .XmmmmX.
     .XXXX.
      ....
 ENDMAP
@@ -1949,12 +1955,97 @@ TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
 NSUBST: + = 1:+ / *:x, = = 1:= / *:x
 SUBST:  d = %%%., e = **%.
 MAP
-x++xxxx
+xxxxxxx
 +dd=eex
-+dd=eex
+xdd=eem@
 xxxxxxx
 ENDMAP
 
+NAME:   evilmike_butchery
+TAGS:   no_item_gen
+SUBST:  . = ..", X = xxB
+KPROP:  "B = bloody
+SUBST:  " = ., B = x
+NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.^
+: if you.absdepth() > 12 then
+KFEAT:  ^ = blade trap
+: else
+KITEM:  ^ = hand axe
+: end
+ITEM:   beef jerky / w:5 minotaur chunk
+: dgn.delayed_decay(_G, 'e', 'minotaur corpse')
+SUBST:  ' = .
+MAP
+xxxxxxxxx
+xXXXXXXXx
+xX.....Xx
+xX.....Xx
++'.....Xx
+xX.....Xx
+xX.....Xx
+xXXXXXXXx
+xxxxxxxxx
+ENDMAP
+
+NAME:   dk_vineyard_1
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 6:d
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass / floor_dirt
+COLOUR: .d = green
+MAP
+xxxxxxxxx
+xwwwwwwwx
+xw.....wx
+xw.....wx
+xw.....w+
+xw.....wx
+xw.....wx
+xw.....wx
+xwwwwwwwx
+xxxxxxxxx
+ENDMAP
+
+NAME:   dk_vineyard_2
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 4:d
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass
+COLOUR: .d = green
+MAP
+xxxxxxxx
+x......x
+x.wwww.+
+x......x
+xxxxxxxx
+ENDMAP
+
+NAME:   dk_vineyard_3
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 4:d
+NSUBST: : = 5:. / *:'
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass
+COLOUR: .d = green
+FTILE:  ' = floor_normal
+MAP
+::..::
+:..ww.
+:.ww.:
+.ww..:
+:.ww..
+.ww...
+:...::
+ENDMAP
 
 ##########################################################################
 #
@@ -2312,7 +2403,7 @@ NAME:  kilobyte_tornado_obelisk
 TAGS:  no_monster_gen
 DEPTH: D:15-27, Elf
 ITEM:  acquire any
-MONS:  statue generate_awake n_rpl name:diamond_obelisk hp:10000 \
+MONS:  statue generate_awake n_rpl n_des name:diamond_obelisk hp:10000 \
        col:white tile:mons_diamond_obelisk perm_ench:tornado
 KPROP: .d1 = no_tele_into
 MAP
@@ -2349,14 +2440,14 @@ DEPTH: D:4-
 MAP
 ............
 ..xxxx=xxx..
-.xx..x...xx.
+.xG..x...Gx.
 .x....x...x.
 .x...x....x.
 .xx.x*x.x.=.
 .=.x.x*x.xx.
 .x....x...x.
 .x...x....x.
-.xx...x..xx.
+.xG...x..Gx.
 ..xxx=xxxx..
 ............
 ENDMAP
@@ -2475,12 +2566,12 @@ MAP
 ............
 .~xxxxxxxx~.
 .x........x.
-.x.cccccc.x.
+.x.ccnccc.x.
 .x.c|..<c.x.
-.x.c.**.c.x.
-.x.c.**.c.x.
+.x.c.**.n.x.
+.x.n.**.c.x.
 .x.c>..|c.x.
-.x.cccccc.x.
+.x.cccncc.x.
 .x........x.
 .~xxxxxxxx~.
 ............

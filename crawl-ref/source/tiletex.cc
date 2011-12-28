@@ -12,17 +12,6 @@
 #include "tiletex.h"
 #include "windowmanager.h"
 
-TextureID get_dngn_tex(tileidx_t idx)
-{
-    assert(idx < TILE_FEAT_MAX);
-    if (idx < TILE_FLOOR_MAX)
-        return (TEX_FLOOR);
-    else if (idx < TILE_WALL_MAX)
-        return (TEX_WALL);
-    else
-        return (TEX_FEAT);
-}
-
 GenericTexture::GenericTexture() :
     m_handle(0),
     m_width(0),
@@ -93,7 +82,7 @@ void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
 }
 
 // This array should correspond to the TEX_ enum.
-const char *ImageManager::filenames[TEX_MAX] =
+static const char *_filenames[TEX_MAX] =
 {
     "floor.png",
     "wall.png",
@@ -101,7 +90,7 @@ const char *ImageManager::filenames[TEX_MAX] =
     "player.png",
     "main.png",
     "gui.png",
-    "icons.png"
+    "icons.png",
 };
 
 ImageManager::ImageManager()
@@ -118,9 +107,9 @@ bool ImageManager::load_textures(bool need_mips)
     MipMapOptions mip = need_mips ?
         MIPMAP_CREATE : MIPMAP_NONE;
 
-    for (size_t i = 0; i < sizeof(filenames) / sizeof(filenames[0]); ++i)
+    for (size_t i = 0; i < ARRAYSZ(_filenames); ++i)
     {
-        if (!m_textures[i].load_texture(filenames[i], mip))
+        if (!m_textures[i].load_texture(_filenames[i], mip))
             return (false);
     }
 

@@ -32,6 +32,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -253,12 +254,37 @@ static void _update_item_at(const coord_def &gp)
 
 static void _update_cloud(int cloudno)
 {
-    const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud   = env.cloud[cloudno].type;
-    env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
+    cloud_struct& cloud = env.cloud[cloudno];
+    const coord_def gp = cloud.pos;
+
+    unsigned short ch = 0;
+
+    tileidx_t index = 0;
+    if (!cloud.tile.empty())
+    {
+        if (!tile_main_index(cloud.tile.c_str(), &index))
+        {
+            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", cloud.tile.c_str());
+            ch = TILE_ERROR;
+        }
+        else
+        {
+            int offset = tile_main_count(index);
+            ch = index + offset;
+        }
+    }
+
+    int dur = cloud.decay/20;
+    if (dur < 0)
+        dur = 0;
+    else if (dur > 3)
+        dur = 3;
+
+    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp);
+    env.map_knowledge(gp).set_cloud(ci);
 
 #ifdef USE_TILE
-    tile_place_cloud(gp, env.cloud[cloudno]);
+    tile_place_cloud(gp, *env.map_knowledge(gp).cloudinfo());
 #endif
 }
 
@@ -423,7 +449,7 @@ static void _update_monster(monster* mons)
     env.map_knowledge(gp).set_monster(mi);
 
 #ifdef USE_TILE
-    tile_place_monster(mons->pos(), mons);
+    tile_place_monster(mons->pos(), *env.map_knowledge(gp).monsterinfo());
 #endif
 }
 

@@ -98,7 +98,7 @@ void TextRegion::addstr(const char *buffer)
                     scroll();
             }
         }
-    } while(clen);
+    } while (clen);
     if (cursor_flag)
         cgotoxy(print_x+1, print_y+1);
 }

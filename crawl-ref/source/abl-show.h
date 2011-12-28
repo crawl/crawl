@@ -32,7 +32,7 @@ bool string_matches_ability_name(const std::string& key);
 std::string print_abilities(void);
 
 void set_god_ability_slots(void);
-std::vector<ability_type> get_god_abilities();
+std::vector<ability_type> get_god_abilities(bool include_unusable = false);
 void gain_god_ability(int i);
 void lose_god_ability(int i);
 

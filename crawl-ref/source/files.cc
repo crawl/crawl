@@ -81,10 +81,11 @@
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
+ // TODO -- dolls
  #include "tiledef-player.h"
  #include "tilepick-p.h"
- #include "tileview.h"
 #endif
+#include "tileview.h"
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
@@ -324,9 +325,13 @@ bool is_newer(const std::string &a, const std::string &b)
     return (file_modtime(a) > file_modtime(b));
 }
 
-static int _create_directory(const char *dir)
+static bool _create_directory(const char *dir)
 {
-    return mkdir_u(dir, 0755);
+    if (!mkdir_u(dir, 0755))
+        return true;
+    if (errno == EEXIST) // might be not a directory
+        return dir_exists(dir);
+    return false;
 }
 
 static bool _create_dirs(const std::string &dir)
@@ -349,7 +354,7 @@ static bool _create_dirs(const std::string &dir)
         if (i == 0 && dir.size() && dir[0] == FILE_SEPARATOR)
             path = FILE_SEPARATOR + path;
 
-        if (!dir_exists(path) && _create_directory(path.c_str()))
+        if (!_create_directory(path.c_str()))
             return (false);
 
         path += FILE_SEPARATOR;
@@ -433,6 +438,8 @@ static std::vector<std::string> _get_base_dirs()
         std::string base = rawbases[i];
         if (base.empty())
             continue;
+
+        base = canonicalise_file_separator(base);
 
         if (base[base.length() - 1] != FILE_SEPARATOR)
             base += FILE_SEPARATOR;
@@ -607,12 +614,6 @@ static void _fill_player_doll(player_save_info &p, package *save)
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species, p.experience_level, &equip_doll);
             success = true;
-
-            while (_readln(fdoll, fbuf))
-            {
-                if (strcmp(fbuf, "net") == 0)
-                    p.held_in_net = true;
-            }
         }
     }
 
@@ -1216,11 +1217,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             you.char_direction = GDT_DESCENDING;
         }
 
-#ifdef USE_TILE
         tile_init_default_flavour();
         tile_clear_flavour();
         env.tile_names.clear();
-#endif
 
         // XXX: This is ugly.
         bool dummy;
@@ -1318,9 +1317,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level(true);
-#ifdef USE_TILE
         tile_new_level(just_created_level);
-#endif
     }
     else if (load_mode == LOAD_RESTART_GAME)
     {

@@ -23,6 +23,8 @@
 #include "tiledoll.h"
 #endif
 
+class targetter;
+
 int check_stealth(void);
 
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
@@ -266,8 +268,8 @@ public:
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
-  // Count of spells cast.
-  std::map<spell_type, FixedVector<int, 27> > spell_usage;
+  // Count of various types of actions made.
+  std::map<std::pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
   // For now, only control the speed of abyss morphing.
   int abyss_speed;
@@ -313,6 +315,7 @@ public:
   bool redraw_evasion;
 
   uint8_t flash_colour;
+  targetter *flash_where;
 
   int time_taken;
 
@@ -526,7 +529,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    bool can_bleed() const;
+    bool can_bleed(bool allow_tran = true) const;
     bool mutate();
     void backlight();
     void banish(const std::string &who = "");
@@ -557,7 +560,7 @@ public:
 
     int warding() const;
 
-    int mons_species() const;
+    int mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
@@ -634,9 +637,8 @@ public:
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;
-
     void shield_block_succeeded(actor *foe);
-
+    int missile_deflection() const;
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const;
@@ -682,7 +684,14 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-
+    void accum_been_constricted();
+    void accum_has_constricted();
+    bool attempt_escape();
+    bool is_constricted_larger();
+    bool is_constricted();
+    bool has_usable_tentacle();
+    void clear_all_constrictions();
+    void clear_specific_constrictions(int mindex);
 
 protected:
     void _removed_beholder();
@@ -714,7 +723,6 @@ struct player_save_info
 
 #ifdef USE_TILE
     dolls_data doll;
-    bool held_in_net;
 #endif
 
     bool save_loadable;
@@ -806,7 +814,7 @@ int player_spirit_shield(bool calc_unid = true);
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
 
-int player_mutation_level(mutation_type mut);
+int player_mutation_level(mutation_type mut, bool temp = true);
 
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
@@ -857,6 +865,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
 unsigned int exp_needed(int lev);
+bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
@@ -865,8 +874,7 @@ void display_char_status(void);
 void forget_map(int chance_forgotten = 100, bool force = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
-              unsigned int* actual_avail_gain = NULL);
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
@@ -965,4 +973,6 @@ void run_macro(const char *macroname = NULL);
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
+
+void count_action(caction_type type, int subtype = 0);
 #endif

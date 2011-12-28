@@ -155,7 +155,8 @@ SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
 FTILE:  -OD = floor_hall
 COLOUR: X-D = magenta
-KPROP:  O- = no_tele_into
+KPROP:  O-X = no_tele_into
+SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
 MARKER: + = lua:restrict_door()
@@ -219,10 +220,12 @@ TAGS:   no_monster_gen patrolling zot_entry
 KFEAT:  O = enter_zot
 # Grey dracs can escape from the islands if they have water. This is intentional.
 SUBST:  G: GXm., m: mmlw
+KFEAT:  m = iron_grate
 SUBST:  x: xcvX
 NSUBST: 2 = 2:2 / *:-
 TILE:   X = wall_zot_magenta
 COLOUR: X = magenta
+SUBST:  X = c
 COLOUR: . = white
 FTILE:  -23O = floor_hall
 SUBST:  - = .
@@ -263,6 +266,7 @@ TAGS:   no_monster_gen patrolling zot_entry
 KFEAT:  O = enter_zot
 TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
+SUBST:  X = c
 FTILE:  -O+ = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
@@ -291,9 +295,9 @@ ENDMAP
 NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
-TILE:   x = wall_zot_magenta
-COLOUR: x+- = magenta
-FTILE:  O-+ = floor_hall
+TILE:   c = wall_zot_magenta
+COLOUR: c+- = magenta
+FTILE:  O-+c = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 5:3 / 2:2 / 1:1
@@ -302,13 +306,13 @@ MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golde
 MONS:   patrolling base draconian
 MAP
 ....d....
-.dxx+xxd.
-.xx---xx.
-.x-----x.
-dx--O--xd
-.x-----x.
-.xx---xx.
-.dxxxxxd.
+.dcc+ccd.
+.cc---cc.
+.c-----c.
+dc--O--cd
+.c-----c.
+.cc---cc.
+.dcccccd.
 ....d....
 ENDMAP
 
@@ -316,10 +320,10 @@ NAME:   evilmike_zot_entry_diamond
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
-TILE:   X = wall_zot_magenta
-COLOUR: X+- = magenta
-FTILE:  -O+A = floor_hall
-KPROP:  -OxA = no_tele_into
+TILE:   c = wall_zot_magenta
+COLOUR: c+- = magenta
+FTILE:  -O+Ac = floor_hall
+KPROP:  -OcA = no_tele_into
 SUBST:  - = .
 NSUBST: 2 = 2:2 / *:.
 NSUBST: 1 = 2:1 / *:2
@@ -328,21 +332,21 @@ MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golde
 MONS:   patrolling base draconian
 MAP
       ..1..
-     .2X+X2.
-    ..XX-XX..
-   3.XX---XX.3
-  ..XX--O--XX..
- ..XXXX---XXXX..
-.2XX-XXX-XXX-XX2.
-.XX---XXXXX---XX.
-1+--A--XXX--A--+1
-.XX---XXXXX---XX.
-.2XX-XXX-XXX-XX2.
- ..XXXX---XXXX..
-  ..XX--A--XX..
-   3.XX---XX.3
-    ..XX-XX..
-     .2X+X2.
+     .2c+c2.
+    ..cc-cc..
+   3.cc---cc.3
+  ..cc--O--cc..
+ ..cccc---cccc..
+.2cc-ccc-ccc-cc2.
+.cc---ccccc---cc.
+1+--A--ccc--A--+1
+.cc---ccccc---cc.
+.2cc-ccc-ccc-cc2.
+ ..cccc---cccc..
+  ..cc--A--cc..
+   3.cc---cc.3
+    ..cc-cc..
+     .2c+c2.
       ..1..
 ENDMAP
 
@@ -500,6 +504,7 @@ NAME:  lemuel_golem_globe
 DEPTH: Zot:*
 TAGS:  no_rotate
 KFEAT: T = teleport trap
+KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
 MAP
@@ -522,7 +527,8 @@ ORIENT: float
 TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww, m:mn
+SUBST:  1=123, w:w., w=Ww
+KFEAT:  m = iron_grate
 MAP
 ............................
 ..mmm..................mmm..
@@ -547,7 +553,8 @@ ORIENT: float
 TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww, m:mn
+SUBST:  1=123, w:w., w=Ww
+KFEAT:  m = iron_grate
 MAP
 ................
 ................
@@ -831,41 +838,41 @@ TILE:     c = dngn_stone_wall_magenta
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccYYYYYYYYYccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccYYYYYYYYYYYcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-XxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcYYYYYYYYYYYYYYYcxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxX
-XxxxxxxxxxxXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXxxxxxxxxxX
-XxxxxxxxxxXX...................XXXYYYYYYYYYYYYYXXX...................XXxxxxxxxxX
-XxxxxxxxxXX..........3...........XXYYYYYYYYYYYXX...........3..........XXxxxxxxxX
-XxxxxxxxxX..8.....................XYYYYYYYYYYYX.....................8..XxxxxxxxX
-XxxxxxxxxX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......XxxxxxxxX
-XxxxxxxxxXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXxxxxxxxX
-XxxxxxxxxxXX......................YYYYYYYYYYYYY......................XXxxxxxxxxX
-XxxxxxxxxxxXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXxxxxxxxxxX
-XxxxxxxxxxXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXxxxxxxxxX
-XxxxxxxxxXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXxxxxxxxX
-XxxxxxxxxX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....XxxxxxxxX
-XxxxxxxxxX...8....................cYYYYYYYYYYYc....................8...XxxxxxxxX
-XxxxxxxxxXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXxxxxxxxX
-XxxxxxxxxxXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXxxxxxxxxX
-XxxxxxxxxxxXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXxxxxxxxxxX
-XxxxxxxxxxxxXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXxxxxxxxxxxX
-Xxxxxxxxxxxcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccxxxxxxxxxX
-Xxxxxxxxxxcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccxxxxxxxxX
-Xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxX
-Xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxX
-Xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxX
-Xxxxxxxxxc..8.....8.8.......8.cxxc.............cxxc8........8.....8.8..cxxxxxxxX
-Xxxxxxxxxc.8...8......8.8.....cxxcc.1...1...1.ccxxc......8.......8.....cxxxxxxxX
-Xxxxxxxxxc8..8...8.8.8.8...8.8cxxxc...........cxxxc8.8..8..8.8.8...8.8.cxxxxxxxX
-Xxxxxxxxxc.....8.........8....cxxcc...........ccxxc....8.8.............cxxxxxxxX
-Xxxxxxxxxcc...5..8..8.8....8.ccxxc.............cxxcc8.....8....8..5.8.ccxxxxxxxX
-Xxxxxxxxxxcc8......8....8.8.ccxxcc.............ccxxcc.8.8....8....8..ccxxxxxxxxX
-Xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxX
-XXXXXXXXXXXXccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccYYYYYYYYYccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccYYYYYYYYYYYcccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcYYYYYYYYYYYYYYYcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXXXXXXXXXXX
+XXXXXXXXXXXX...................XXXYYYYYYYYYYYYYXXX...................XXXXXXXXXXX
+XXXXXXXXXXX..........3...........XXYYYYYYYYYYYXX...........3..........XXXXXXXXXX
+XXXXXXXXXX..8.....................XYYYYYYYYYYYX.....................8..XXXXXXXXX
+XXXXXXXXXX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......XXXXXXXXX
+XXXXXXXXXXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXXXXXXXXX
+XXXXXXXXXXXX......................YYYYYYYYYYYYY......................XXXXXXXXXXX
+XXXXXXXXXXXXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXXXXXXXXXXX
+XXXXXXXXXXXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXXXXXXXXXX
+XXXXXXXXXXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXXXXXXXXX
+XXXXXXXXXX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....XXXXXXXXX
+XXXXXXXXXX...8....................cYYYYYYYYYYYc....................8...XXXXXXXXX
+XXXXXXXXXXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXXXXXXXXX
+XXXXXXXXXXXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXXXXXXXXXX
+XXXXXXXXXXXXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXXXXXXXXXXX
+XXXXXXXXXXXXXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXXXXXXXXXXXX
+XXXXXXXXXXXcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccXXXXXXXXXX
+XXXXXXXXXXcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccXXXXXXXXX
+XXXXXXXXXcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccXXXXXXXX
+XXXXXXXXXc.8..8....8.8........ccc...............ccc.....8....8..8.8....cXXXXXXXX
+XXXXXXXXXc..8..8.8....8.8.8.5.cXcc.............ccXc.5.8.8.8....8.8...8.cXXXXXXXX
+XXXXXXXXXc..8.....8.8.......8.cXXc.............cXXc8........8.....8.8..cXXXXXXXX
+XXXXXXXXXc.8...8......8.8.....cXXcc.1...1...1.ccXXc......8.......8.....cXXXXXXXX
+XXXXXXXXXc8..8...8.8.8.8...8.8cXXXc...........cXXXc8.8..8..8.8.8...8.8.cXXXXXXXX
+XXXXXXXXXc.....8.........8....cXXcc...........ccXXc....8.8.............cXXXXXXXX
+XXXXXXXXXcc...5..8..8.8....8.ccXXc.............cXXcc8.....8....8..5.8.ccXXXXXXXX
+XXXXXXXXXXcc8......8....8.8.ccXXcc.............ccXXcc.8.8....8....8..ccXXXXXXXXX
+XXXXXXXXXXXcc..............ccXXXc...............cXXXcc..............ccXXXXXXXXXX
+XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
 NAME:   orb_original

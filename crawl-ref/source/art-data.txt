@@ -20,7 +20,7 @@
 # of different unrandarts conflict.
 #
 # Add new artefact definitions at the end of the file; doing so should cause
-# no problems with save-file compatibilty, but for tile builds it will
+# no problems with save-file compatibility, but for tile builds it will
 # cause a shift of remembered tiles (since each new unrandart needs its
 # own tiles).  Changing the order of the definitions will likely cause
 # strange behaviour in games saved previous to the change, and deleting
@@ -156,7 +156,6 @@
 # This entry must always be first.
 ENUM:   DUMMY1
 NAME:   DUMMY UNRANDART 1
-APPEAR: DUMMY UNRANDART 1
 OBJ:    OBJ_UNASSIGNED/250
 PLUS:   250/250
 COLOUR: BLACK
@@ -343,7 +342,6 @@ DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon armour
-APPEAR:  faerie dragon armour
 OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
@@ -645,6 +643,7 @@ DESC:    It is designed for easy concealment, but still packs a nasty punch.
 NAME:    Wyrmbane
 APPEAR:  scale-covered lance
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
+BASE_DAM: +2
 PLUS:    +9/+6
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
@@ -729,7 +728,7 @@ INT:      3
 BRAND:    SPWPN_RETURNING
 DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
-NAME:     Captain's cutlass
+NAME:     captain's cutlass
 APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
 PLUS:     +6/+7
@@ -829,7 +828,6 @@ DESC_END: Once owned by Ukta, a powerful ogre shaman, this fur hat houses
           the spirit of an especially mighty bear.
 
 NAME:     robe of Misfortune
-APPEAR:   fabulously ornate robe
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     -5
 COLOUR:   MAGENTA
@@ -927,7 +925,6 @@ MAGIC:   40
 DESC:    A bronze shield.
 
 NAME:    robe of Folly
-APPEAR:  dull robe
 OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    -1
 COLOUR:  LIGHTGREY
@@ -1000,7 +997,7 @@ MAGIC:   30
 BOOL:    elec
 DESC:    A dirty hat.
 
-NAME:    Fencer's gloves
+NAME:    fencer's gloves
 APPEAR:  silk gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
@@ -1244,7 +1241,8 @@ APPEAR:   loaded stick
 OBJ:      OBJ_WEAPONS/WPN_CLUB
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
-PLUS:     +2/+4
+PLUS:     +4/+8
+BASE_DAM: +3
 BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
@@ -1266,7 +1264,6 @@ DESC:     This opalescent cloak gleams with all dragon colours.
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
-APPEAR: DUMMY UNRANDART 2
 OBJ:    OBJ_UNASSIGNED/250
 PLUS:   250/250
 COLOUR: BLACK

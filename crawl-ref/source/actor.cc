@@ -305,3 +305,27 @@ void actor::clear_clinging()
     if (props.exists("clinging"))
         props["clinging"] = false;
 }
+
+bool actor::is_constricting()
+{
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (constricting[i] != NON_ENTITY)
+            return true;
+
+    return false;
+}
+
+bool actor::is_constricted()
+{
+    return (constricted_by != NON_ENTITY);
+}
+
+actor *mindex_to_actor(short mindex)
+{
+    if (mindex == MHITYOU)
+        return &you;
+    else if (invalid_monster_index(mindex))
+        return 0;
+    else
+        return &env.mons[mindex];
+}

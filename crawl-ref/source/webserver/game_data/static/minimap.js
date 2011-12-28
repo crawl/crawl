@@ -85,7 +85,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         if (cell && (cell.fg & enums.TILE_FLAG_MASK) == player.PLAYER)
             return enums.MF_PLAYER;
         else
-            return map_cell.mf;
+            return map_cell.mf || enums.MF_UNSEEN;
     }
 
     function center()
@@ -128,7 +128,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function set(cx, cy, colour)
     {
-        if (!enabled) return;
+        if (!enabled || colour === undefined) return;
 
         var x = cx - cell_x;
         var y = cy - cell_y;

@@ -40,7 +40,7 @@ static void _extra_hp(int amount_extra);
 bool form_can_wield(transformation_type form)
 {
     return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-         || form == TRAN_APPENDAGE);
+            || form == TRAN_APPENDAGE);
 }
 
 bool form_can_fly(transformation_type form)
@@ -85,7 +85,7 @@ bool form_can_butcher_barehanded(transformation_type form)
             || form == TRAN_ICE_BEAST);
 }
 
-// Used to mark transformations which override species/mutation intrinsics.
+// Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
     return (form != TRAN_NONE && form != TRAN_APPENDAGE
@@ -134,6 +134,22 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 
     default:                // Bug-catcher.
         die("Unknown transformation type %d in form_can_wear_item", you.form);
+    }
+}
+
+// Used to mark forms which keep most form-based mutations.
+bool form_keeps_mutations(transformation_type form)
+{
+    switch (form)
+    {
+    case TRAN_NONE:
+    case TRAN_BLADE_HANDS:
+    case TRAN_STATUE:
+    case TRAN_LICH:
+    case TRAN_APPENDAGE:
+        return true;
+    default:
+        return false;
     }
 }
 
@@ -349,7 +365,7 @@ static bool _abort_or_fizzle(bool just_check)
 
 monster_type transform_mons()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_SPIDER:
         return MONS_SPIDER;
@@ -385,7 +401,7 @@ std::string blade_parts(bool terse)
 
 monster_type dragon_form_dragon_type()
 {
-    switch(you.species)
+    switch (you.species)
     {
         case SP_WHITE_DRACONIAN:
              return MONS_ICE_DRAGON;
@@ -412,7 +428,7 @@ monster_type dragon_form_dragon_type()
 // with a denominator of 10
 int form_hp_mod()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_STATUE:
         return 13;
@@ -717,7 +733,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (!just_check)
         {
             you.attribute[ATTR_APPENDAGE] = app;
-            switch(app)
+            switch (app)
             {
             case MUT_HORNS:
                 msg = "You grow a pair of large bovine horns.";

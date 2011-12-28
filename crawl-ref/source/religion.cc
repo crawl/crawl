@@ -284,7 +284,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark four cards in a deck",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
-    { "provide lesser healing for yourself and others",
+    { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing for yourself and others",
       "restore your abilities",
@@ -401,7 +401,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark decks",
       "stack decks" },
     // Elyvilon
-    { "provide lesser healing",
+    { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing",
       "restore your abilities",
@@ -1775,9 +1775,7 @@ static bool _beogh_blessing_priesthood(monster* mon)
 
     if (priest_type != MONS_PROGRAM_BUG)
     {
-        // Turn an ordinary monster into a priestly monster, using a
-        // function normally used when going up an experience level.
-        // This is a hack, but there seems to be no better way for now.
+        // Turn an ordinary monster into a priestly monster.
         mon->upgrade_type(priest_type, true, true);
         give_monster_proper_name(mon);
 
@@ -2024,7 +2022,7 @@ blessing_done:
                      whom.c_str(), result.c_str()).c_str(),
         god);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     flash_monster_colour(follower, god_colour(god), 200);
 #endif
 
@@ -2693,7 +2691,7 @@ static void _gain_piety_point()
                     you.duration[DUR_CONF] = 0;
                 }
 
-                ash_id_inventory();
+                god_id_inventory();
             }
 
             // When you gain a piety level, you get another chance to
@@ -2707,7 +2705,7 @@ static void _gain_piety_point()
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
-        // Or the player's symbol.
+        // The player's symbol depends on Beogh piety.
         update_player_symbol();
     }
 
@@ -2877,7 +2875,7 @@ static bool _fedhas_protects_species(int mc)
 
 bool fedhas_protects(const monster* target)
 {
-    return target && _fedhas_protects_species(target->mons_species());
+    return (target && _fedhas_protects_species(target->mons_species()));
 }
 
 // Fedhas neutralises most plants and fungi
@@ -2918,7 +2916,7 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    std::vector<ability_type> abilities = get_god_abilities();
+    std::vector<ability_type> abilities = get_god_abilities(true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         you.stop_train.insert(abil_skill(abilities[i]));
@@ -2945,6 +2943,12 @@ void excommunication(god_type new_god)
 
     mpr("You have lost your religion!");
     more();
+
+    if (old_god == GOD_BEOGH)
+    {
+        // The player's symbol depends on Beogh worship.
+        update_player_symbol();
+    }
 
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
 #ifdef DGL_WHEREIS
@@ -3103,6 +3107,7 @@ void excommunication(god_type new_god)
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
+        you.duration[DUR_SCRYING] = 0;
         you.exp_docked = exp_needed(std::min<int>(you.max_level, 27)  + 1)
                        - exp_needed(std::min<int>(you.max_level, 27));
         you.exp_docked_total = you.exp_docked;
@@ -3220,7 +3225,7 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_JIYVA:
             return (mons_class_is_slime(species));
         case GOD_FEDHAS:
-            return _fedhas_protects_species(species);
+            return (_fedhas_protects_species(species));
         default:
             return (false);
     }
@@ -3351,7 +3356,7 @@ static void _god_welcome_identify_gear()
 
     if (you.religion == GOD_ASHENZARI)
     {
-        // Seemingly redundant with ash_id_inventory(), but we don't want to
+        // Seemingly redundant with god_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (int i = 0; i < ENDOFPACK; i++)
             if (you.inv[i].defined())
@@ -3362,9 +3367,13 @@ static void _god_welcome_identify_gear()
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_WEAPON, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
-        ash_id_inventory();
+        god_id_inventory();
         ash_detect_portals(true);
     }
+
+    // detect evil weapons
+    if (you.religion == GOD_ELYVILON)
+        god_id_inventory();
 }
 
 void god_pitch(god_type which_god)
@@ -3402,6 +3411,10 @@ void god_pitch(god_type which_god)
         divine_retribution(GOD_LUGONU, true);
         return;
     }
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "god_pitch");
+#endif
 
     describe_god(which_god, false);
 
@@ -3463,6 +3476,12 @@ void god_pitch(god_type which_god)
         gain_piety(35, 1, true, false);
     }
 
+    if (you.religion == GOD_BEOGH)
+    {
+        // The player's symbol depends on Beogh worship.
+        update_player_symbol();
+    }
+
     _god_welcome_identify_gear();
     ash_check_bondage();
 
@@ -3479,6 +3498,10 @@ void god_pitch(god_type which_god)
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             if (you.skills[sk])
                 you.train[sk] = 0;
+
+    // Elyvilon gives you invocations immediately.
+    if (you.religion == GOD_ELYVILON)
+        you.start_train.insert(SK_INVOCATIONS);
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
@@ -3509,6 +3532,7 @@ void god_pitch(god_type which_god)
     {
         mpr("You can now call upon Elyvilon to destroy weapons lying on the "
             "ground.", MSGCH_GOD);
+        mpr("You can now provide lesser healing for others.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {

@@ -119,7 +119,7 @@ void jiyva_stat_action()
     int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {
-        cur_stat[x] = you.max_stat(static_cast<stat_type>(x));
+        cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
         stat_total += cur_stat[x];
     }
     // Try to avoid burdening people or making their armour difficult to use.
@@ -206,7 +206,7 @@ static kill_method_type _statloss_killtype(stat_type stat)
     }
 }
 
-const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
+static const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
     { "strength", "weakened", "weaker", "stronger" },
     { "intelligence", "dopey", "stupid", "clever" },
     { "dexterity", "clumsy", "clumsy", "agile" }

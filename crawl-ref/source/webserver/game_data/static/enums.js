@@ -1,10 +1,11 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
     var exports = {};
-    // Goto regions
-    exports.GOTO_CRT = 0;
-    exports.GOTO_MSG = 1;
-    exports.GOTO_STAT = 2;
+    // UI States (tileweb.h)
+    exports.ui = {};
+    exports.ui.NORMAL   = 0;
+    exports.ui.CRT      = 1;
+    exports.ui.VIEW_MAP = 2;
 
     // Cursors
     exports.CURSOR_MOUSE = 0;
@@ -90,9 +91,61 @@ define(function () {
     // General
     exports.TILE_FLAG_MASK       = 0x000007FF;
 
+    function rgb(r, g, b)
+    {
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+    exports.term_colours = [
+        rgb(  0,   0,   0),
+        rgb(  0,  82, 255),
+        rgb(100, 185,  70),
+        rgb(  0, 180, 180),
+        rgb(255,  48,   0),
+        rgb(238,  92, 238),
+        rgb(165,  91,   0),
+        rgb(162, 162, 162),
+        rgb( 82,  82,  82),
+        rgb( 82, 102, 255),
+        rgb( 82, 255,  82),
+        rgb( 82, 255, 255),
+        rgb(255,  82,  82),
+        rgb(255,  82, 255),
+        rgb(255, 255,  82),
+        rgb(255, 255, 255),
+    ];
+
+    // Menu flags -- see menu.h
+    var mf = {};
+    mf.NOSELECT         = 0x0000;
+    mf.SINGLESELECT     = 0x0001;
+    mf.MULTISELECT      = 0x0002;
+    mf.NO_SELECT_QTY    = 0x0004;
+    mf.ANYPRINTABLE     = 0x0008;
+    mf.SELECT_BY_PAGE   = 0x0010;
+    mf.ALWAYS_SHOW_MORE = 0x0020;
+    mf.NOWRAP           = 0x0040;
+    mf.ALLOW_FILTER     = 0x0080;
+    mf.ALLOW_FORMATTING = 0x0100;
+    mf.SHOW_PAGENUMBERS = 0x0200;
+    mf.EASY_EXIT        = 0x1000;
+    mf.START_AT_END     = 0x2000;
+    mf.PRESELECTED      = 0x4000;
+    exports.menu_flag = mf;
+
+    var val = 0;
+    exports.CHATTR = {};
+    exports.CHATTR.NORMAL = val++;
+    exports.CHATTR.STANDOUT = val++;
+    exports.CHATTR.BOLD = val++;
+    exports.CHATTR.BLINK = val++;
+    exports.CHATTR.UNDERLINE = val++;
+    exports.CHATTR.REVERSE = val++;
+    exports.CHATTR.DIM = val++;
+    exports.CHATTR.HILITE = val++;
+    exports.CHATTR.ATTRMASK = 0xF;
 
     // Minimap features
-    var val = 0;
+    val = 0;
     exports.MF_UNSEEN = val++;
     exports.MF_FLOOR = val++;
     exports.MF_WALL = val++;

@@ -22,6 +22,7 @@ function place_bazaar_portal(e, perm)
   else
      e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
   end
+  e.tile("O = dngn_portal_bazaar")
 end
 
 function bazaar_portal(timed)
@@ -55,7 +56,7 @@ function bazaar_portal(timed)
                   low=blow, high=bhigh, msg=messager, single_timed=true,
                   disappear='The gate to the bazaar disappears!',
                   desc = pdesc, desc_long = desc_long, dst = 'Bazaar',
-                  floor = 'stone_arch'
+                  floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
               }
   else
     return one_way_stair { desc = 'gateway to a bazaar', desc_long = desc_long,

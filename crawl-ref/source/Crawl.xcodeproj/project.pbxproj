@@ -7,6 +7,92 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F909AE1148B23BC00084E83 /* acquire.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ABD148B23BC00084E83 /* acquire.cc */; };
+		1F909AE2148B23BC00084E83 /* art-data.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F909AC1148B23BC00084E83 /* art-data.txt */; };
+		1F909AE3148B23BC00084E83 /* asg.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AC3148B23BC00084E83 /* asg.cc */; };
+		1F909AE4148B23BC00084E83 /* attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AC5148B23BC00084E83 /* attack.cc */; };
+		1F909AE5148B23BC00084E83 /* cellular.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACA148B23BC00084E83 /* cellular.cc */; };
+		1F909AE6148B23BC00084E83 /* dactions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACD148B23BC00084E83 /* dactions.cc */; };
+		1F909AE7148B23BC00084E83 /* dgn-delve.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACF148B23BC00084E83 /* dgn-delve.cc */; };
+		1F909AE8148B23BC00084E83 /* dgn-labyrinth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */; };
+		1F909AE9148B23BC00084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
+		1F909AEA148B23BC00084E83 /* errors.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD6148B23BC00084E83 /* errors.cc */; };
+		1F909AEB148B23BC00084E83 /* evoke.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD8148B23BC00084E83 /* evoke.cc */; };
+		1F909AEC148B23BC00084E83 /* exercise.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADA148B23BC00084E83 /* exercise.cc */; };
+		1F909AED148B23BC00084E83 /* fineff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADC148B23BC00084E83 /* fineff.cc */; };
+		1F909AEE148B23BC00084E83 /* godmenu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* godmenu.cc */; };
+		1F909AEF148B23BC00084E83 /* l_colour.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AE0148B23BC00084E83 /* l_colour.cc */; };
+		1F909B01148B23E000084E83 /* tilecell.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AF2148B23E000084E83 /* tilecell.cc */; };
+		1F909B02148B23E000084E83 /* tilereg-cmd.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AF7148B23E000084E83 /* tilereg-cmd.cc */; };
+		1F909B03148B23E000084E83 /* tilereg-skl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFA148B23E000084E83 /* tilereg-skl.cc */; };
+		1F909B04148B23E000084E83 /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFD148B23E000084E83 /* tutorial.cc */; };
+		1F909B05148B23E000084E83 /* zotdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFF148B23E000084E83 /* zotdef.cc */; };
+		1F909B25148B242D00084E83 /* skill_menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B08148B242D00084E83 /* skill_menu.cc */; };
+		1F909B26148B242D00084E83 /* spl-clouds.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0A148B242D00084E83 /* spl-clouds.cc */; };
+		1F909B27148B242D00084E83 /* spl-damage.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0C148B242D00084E83 /* spl-damage.cc */; };
+		1F909B28148B242D00084E83 /* spl-goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0E148B242D00084E83 /* spl-goditem.cc */; };
+		1F909B29148B242D00084E83 /* spl-miscast.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B10148B242D00084E83 /* spl-miscast.cc */; };
+		1F909B2A148B242D00084E83 /* spl-monench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B12148B242D00084E83 /* spl-monench.cc */; };
+		1F909B2B148B242D00084E83 /* spl-other.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B14148B242D00084E83 /* spl-other.cc */; };
+		1F909B2C148B242D00084E83 /* spl-selfench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B16148B242D00084E83 /* spl-selfench.cc */; };
+		1F909B2D148B242D00084E83 /* spl-summoning.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B18148B242D00084E83 /* spl-summoning.cc */; };
+		1F909B2E148B242D00084E83 /* spl-tornado.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1A148B242D00084E83 /* spl-tornado.cc */; };
+		1F909B2F148B242D00084E83 /* spl-transloc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1B148B242D00084E83 /* spl-transloc.cc */; };
+		1F909B30148B242D00084E83 /* spl-wpnench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1D148B242D00084E83 /* spl-wpnench.cc */; };
+		1F909B31148B242D00084E83 /* status.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1F148B242D00084E83 /* status.cc */; };
+		1F909B32148B242D00084E83 /* syscalls.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B21148B242D00084E83 /* syscalls.cc */; };
+		1F909B33148B242D00084E83 /* target.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B23148B242D00084E83 /* target.cc */; };
+		1F909B42148B244F00084E83 /* melee_attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B34148B244F00084E83 /* melee_attack.cc */; };
+		1F909B43148B244F00084E83 /* mon-ench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B35148B244F00084E83 /* mon-ench.cc */; };
+		1F909B44148B244F00084E83 /* mon-stealth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B39148B244F00084E83 /* mon-stealth.cc */; };
+		1F909B45148B244F00084E83 /* orb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3B148B244F00084E83 /* orb.cc */; };
+		1F909B46148B244F00084E83 /* package.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3D148B244F00084E83 /* package.cc */; };
+		1F909B47148B244F00084E83 /* potion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3F148B244F00084E83 /* potion.cc */; };
+		1F909B4E148B251700084E83 /* unicode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B4C148B251700084E83 /* unicode.cc */; };
+		1F909B57148B25DD00084E83 /* fearmonger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B56148B25DD00084E83 /* fearmonger.cc */; };
+		1F909B65148B262D00084E83 /* icons.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 1F909B63148B262800084E83 /* icons.png */; };
+		1F909B72148B2CB400084E83 /* tiledef-icons.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B70148B2CB400084E83 /* tiledef-icons.cc */; };
+		1F909B81148B2D9100084E83 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F909B80148B2D9100084E83 /* libz.dylib */; };
+		1F909BB5148B428E00084E83 /* zotdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFF148B23E000084E83 /* zotdef.cc */; };
+		1F909BBA148B42C700084E83 /* spl-clouds.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0A148B242D00084E83 /* spl-clouds.cc */; };
+		1F909BBB148B42C700084E83 /* spl-damage.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0C148B242D00084E83 /* spl-damage.cc */; };
+		1F909BBC148B42C700084E83 /* spl-goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0E148B242D00084E83 /* spl-goditem.cc */; };
+		1F909BBD148B42C700084E83 /* spl-miscast.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B10148B242D00084E83 /* spl-miscast.cc */; };
+		1F909BBE148B42C700084E83 /* spl-monench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B12148B242D00084E83 /* spl-monench.cc */; };
+		1F909BBF148B42C700084E83 /* spl-other.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B14148B242D00084E83 /* spl-other.cc */; };
+		1F909BC0148B42C700084E83 /* spl-selfench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B16148B242D00084E83 /* spl-selfench.cc */; };
+		1F909BC1148B42C700084E83 /* spl-summoning.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B18148B242D00084E83 /* spl-summoning.cc */; };
+		1F909BC2148B42C700084E83 /* spl-tornado.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1A148B242D00084E83 /* spl-tornado.cc */; };
+		1F909BC3148B42C700084E83 /* spl-transloc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1B148B242D00084E83 /* spl-transloc.cc */; };
+		1F909BC4148B42C700084E83 /* spl-wpnench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1D148B242D00084E83 /* spl-wpnench.cc */; };
+		1F909BC8148B42E900084E83 /* unicode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B4C148B251700084E83 /* unicode.cc */; };
+		1F909BCE148B440800084E83 /* dgn-delve.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACF148B23BC00084E83 /* dgn-delve.cc */; };
+		1F909BCF148B440800084E83 /* dgn-labyrinth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */; };
+		1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
+		1F909BD1148B440800084E83 /* fineff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADC148B23BC00084E83 /* fineff.cc */; };
+		1F909BD2148B440800084E83 /* godmenu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* godmenu.cc */; };
+		1F909BD3148B440800084E83 /* package.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3D148B244F00084E83 /* package.cc */; };
+		1F909BDC148B445100084E83 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F909B80148B2D9100084E83 /* libz.dylib */; };
+		1F909BE3148B450000084E83 /* skill_menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B08148B242D00084E83 /* skill_menu.cc */; };
+		1F909BEB148B450E00084E83 /* target.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B23148B242D00084E83 /* target.cc */; };
+		1F909C03148B455600084E83 /* mon-ench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B35148B244F00084E83 /* mon-ench.cc */; };
+		1F909C04148B455600084E83 /* mon-stealth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B39148B244F00084E83 /* mon-stealth.cc */; };
+		1F909C05148B455600084E83 /* syscalls.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B21148B242D00084E83 /* syscalls.cc */; };
+		1F909C10148B459B00084E83 /* asg.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AC3148B23BC00084E83 /* asg.cc */; };
+		1F909C16148B45EE00084E83 /* evoke.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD8148B23BC00084E83 /* evoke.cc */; };
+		1F909C17148B45EE00084E83 /* status.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1F148B242D00084E83 /* status.cc */; };
+		1F909C1F148B465300084E83 /* errors.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD6148B23BC00084E83 /* errors.cc */; };
+		1F909C20148B465300084E83 /* fearmonger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B56148B25DD00084E83 /* fearmonger.cc */; };
+		1F909C21148B465300084E83 /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFD148B23E000084E83 /* tutorial.cc */; };
+		1F909C24148B466700084E83 /* acquire.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ABD148B23BC00084E83 /* acquire.cc */; };
+		1F909C2D148B469C00084E83 /* dactions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACD148B23BC00084E83 /* dactions.cc */; };
+		1F909C2E148B469C00084E83 /* melee_attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B34148B244F00084E83 /* melee_attack.cc */; };
+		1F909C38148B46E900084E83 /* attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AC5148B23BC00084E83 /* attack.cc */; };
+		1F909C39148B46E900084E83 /* exercise.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADA148B23BC00084E83 /* exercise.cc */; };
+		1F909C3A148B46E900084E83 /* orb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3B148B244F00084E83 /* orb.cc */; };
+		1F909C41148B478600084E83 /* cellular.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACA148B23BC00084E83 /* cellular.cc */; };
+		1F909C42148B478600084E83 /* l_colour.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AE0148B23BC00084E83 /* l_colour.cc */; };
+		1F909C4D148B47AA00084E83 /* potion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3F148B244F00084E83 /* potion.cc */; };
 		4C59B09011E7964700760867 /* hints.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08A11E7964700760867 /* hints.cc */; };
 		4C59B09111E7964700760867 /* tiledgnbuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08B11E7964700760867 /* tiledgnbuf.cc */; };
 		4C59B09211E7964700760867 /* tilepick-p.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08C11E7964700760867 /* tilepick-p.cc */; };
@@ -15,12 +101,10 @@
 		4C59B0AD11E798C400760867 /* tiledef-feat.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AA11E798C400760867 /* tiledef-feat.cc */; };
 		4C59B0AE11E798C400760867 /* tiledef-floor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AB11E798C400760867 /* tiledef-floor.cc */; };
 		4C59B0AF11E798C400760867 /* tiledef-wall.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AC11E798C400760867 /* tiledef-wall.cc */; };
-		4C59B0BF11E79BB100760867 /* dgn-actions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08911E7964700760867 /* dgn-actions.cc */; };
-		4C59B0C011E79BB600760867 /* dgn-actions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08911E7964700760867 /* dgn-actions.cc */; };
 		4C59B0D611E79F6800760867 /* hints.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08A11E7964700760867 /* hints.cc */; };
-		4C59B0E711E7A06D00760867 /* feat.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E411E7A06D00760867 /* feat.png */; };
-		4C59B0E811E7A06D00760867 /* floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E511E7A06D00760867 /* floor.png */; };
-		4C59B0E911E7A06D00760867 /* wall.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E611E7A06D00760867 /* wall.png */; };
+		4C59B0E711E7A06D00760867 /* feat.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E411E7A06D00760867 /* feat.png */; };
+		4C59B0E811E7A06D00760867 /* floor.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E511E7A06D00760867 /* floor.png */; };
+		4C59B0E911E7A06D00760867 /* wall.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E611E7A06D00760867 /* wall.png */; };
 		7B09F5441133D63E004F149D /* godconduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* godconduct.cc */; };
 		7B09F5451133D63E004F149D /* godpassive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* godpassive.cc */; };
 		7B09F5461133D63E004F149D /* godprayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* godprayer.cc */; };
@@ -79,8 +163,6 @@
 		7B09F5981133D6AB004F149D /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCE10BD494400A99626 /* hiscores.cc */; };
 		7B09F5991133D6AB004F149D /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD010BD494400A99626 /* initfile.cc */; };
 		7B09F59A1133D6AB004F149D /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
-		7B09F59B1133D6AB004F149D /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD410BD494400A99626 /* it_use2.cc */; };
-		7B09F59C1133D6AB004F149D /* it_use3.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD610BD494400A99626 /* it_use3.cc */; };
 		7B09F59D1133D6AB004F149D /* item_use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item_use.cc */; };
 		7B09F59E1133D6AB004F149D /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* itemname.cc */; };
 		7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
@@ -151,7 +233,6 @@
 		7B09F5E31133D6AB004F149D /* mon-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404410BD494400A99626 /* mon-util.cc */; };
 		7B09F5E41133D6AB004F149D /* mon_resist_def.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5521133D66C004F149D /* mon_resist_def.cc */; };
 		7B09F5E51133D6AB004F149D /* monster.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404610BD494400A99626 /* monster.cc */; };
-		7B09F5E61133D6AB004F149D /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404A10BD494500A99626 /* mt19937ar.cc */; };
 		7B09F5E71133D6AB004F149D /* mutation.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404C10BD494500A99626 /* mutation.cc */; };
 		7B09F5E81133D6AB004F149D /* newgame.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404E10BD494500A99626 /* newgame.cc */; };
 		7B09F5E91133D6AB004F149D /* ng-init.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6405010BD494500A99626 /* ng-init.cc */; };
@@ -168,7 +249,6 @@
 		7B09F5F41133D6AB004F149D /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406910BD494500A99626 /* ray.cc */; };
 		7B09F5F51133D6AB004F149D /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406B10BD494500A99626 /* religion.cc */; };
 		7B09F5F61133D6AB004F149D /* rng.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406D10BD494500A99626 /* rng.cc */; };
-		7B09F5F71133D6AB004F149D /* sha256.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406F10BD494500A99626 /* sha256.cc */; };
 		7B09F5F81133D6AB004F149D /* shopping.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407110BD494500A99626 /* shopping.cc */; };
 		7B09F5F91133D6AB004F149D /* shout.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407310BD494500A99626 /* shout.cc */; };
 		7B09F5FA1133D6AB004F149D /* show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407510BD494500A99626 /* show.cc */; };
@@ -176,13 +256,8 @@
 		7B09F5FC1133D6AB004F149D /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407910BD494500A99626 /* skills.cc */; };
 		7B09F5FD1133D6AB004F149D /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407B10BD494500A99626 /* skills2.cc */; };
 		7B09F5FE1133D6AB004F149D /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407D10BD494500A99626 /* species.cc */; };
-		7B09F5FF1133D6AB004F149D /* spells1.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407F10BD494500A99626 /* spells1.cc */; };
-		7B09F6001133D6AB004F149D /* spells2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408110BD494500A99626 /* spells2.cc */; };
-		7B09F6011133D6AB004F149D /* spells3.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408310BD494500A99626 /* spells3.cc */; };
-		7B09F6021133D6AB004F149D /* spells4.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408510BD494500A99626 /* spells4.cc */; };
 		7B09F6031133D6AB004F149D /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408710BD494500A99626 /* spl-book.cc */; };
 		7B09F6041133D6AB004F149D /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408910BD494500A99626 /* spl-cast.cc */; };
-		7B09F6051133D6AB004F149D /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408C10BD494500A99626 /* spl-mis.cc */; };
 		7B09F6061133D6AB004F149D /* spl-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408E10BD494500A99626 /* spl-util.cc */; };
 		7B09F6071133D6AB004F149D /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6409010BD494500A99626 /* sqldbm.cc */; };
 		7B09F6081133D6AB004F149D /* stash.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6409210BD494500A99626 /* stash.cc */; };
@@ -451,8 +526,6 @@
 		E5D640F210BD494500A99626 /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCE10BD494400A99626 /* hiscores.cc */; };
 		E5D640F310BD494500A99626 /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD010BD494400A99626 /* initfile.cc */; };
 		E5D640F410BD494500A99626 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
-		E5D640F510BD494500A99626 /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD410BD494400A99626 /* it_use2.cc */; };
-		E5D640F610BD494500A99626 /* it_use3.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD610BD494400A99626 /* it_use3.cc */; };
 		E5D640F710BD494500A99626 /* item_use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item_use.cc */; };
 		E5D640F810BD494500A99626 /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* itemname.cc */; };
 		E5D640F910BD494500A99626 /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
@@ -514,7 +587,6 @@
 		E5D6413610BD494500A99626 /* mon-transit.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404210BD494400A99626 /* mon-transit.cc */; };
 		E5D6413710BD494500A99626 /* mon-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404410BD494400A99626 /* mon-util.cc */; };
 		E5D6413810BD494500A99626 /* monster.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404610BD494400A99626 /* monster.cc */; };
-		E5D6413910BD494500A99626 /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404A10BD494500A99626 /* mt19937ar.cc */; };
 		E5D6413A10BD494500A99626 /* mutation.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404C10BD494500A99626 /* mutation.cc */; };
 		E5D6413B10BD494500A99626 /* newgame.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6404E10BD494500A99626 /* newgame.cc */; };
 		E5D6413C10BD494500A99626 /* ng-init.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6405010BD494500A99626 /* ng-init.cc */; };
@@ -530,7 +602,6 @@
 		E5D6414710BD494500A99626 /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406910BD494500A99626 /* ray.cc */; };
 		E5D6414810BD494500A99626 /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406B10BD494500A99626 /* religion.cc */; };
 		E5D6414910BD494500A99626 /* rng.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406D10BD494500A99626 /* rng.cc */; };
-		E5D6414A10BD494500A99626 /* sha256.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406F10BD494500A99626 /* sha256.cc */; };
 		E5D6414B10BD494500A99626 /* shopping.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407110BD494500A99626 /* shopping.cc */; };
 		E5D6414C10BD494500A99626 /* shout.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407310BD494500A99626 /* shout.cc */; };
 		E5D6414D10BD494500A99626 /* show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407510BD494500A99626 /* show.cc */; };
@@ -538,13 +609,8 @@
 		E5D6414F10BD494500A99626 /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407910BD494500A99626 /* skills.cc */; };
 		E5D6415010BD494500A99626 /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407B10BD494500A99626 /* skills2.cc */; };
 		E5D6415110BD494500A99626 /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407D10BD494500A99626 /* species.cc */; };
-		E5D6415210BD494500A99626 /* spells1.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407F10BD494500A99626 /* spells1.cc */; };
-		E5D6415310BD494500A99626 /* spells2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408110BD494500A99626 /* spells2.cc */; };
-		E5D6415410BD494500A99626 /* spells3.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408310BD494500A99626 /* spells3.cc */; };
-		E5D6415510BD494500A99626 /* spells4.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408510BD494500A99626 /* spells4.cc */; };
 		E5D6415610BD494500A99626 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408710BD494500A99626 /* spl-book.cc */; };
 		E5D6415710BD494500A99626 /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408910BD494500A99626 /* spl-cast.cc */; };
-		E5D6415810BD494500A99626 /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408C10BD494500A99626 /* spl-mis.cc */; };
 		E5D6415910BD494500A99626 /* spl-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408E10BD494500A99626 /* spl-util.cc */; };
 		E5D6415A10BD494500A99626 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6409010BD494500A99626 /* sqldbm.cc */; };
 		E5D6415B10BD494500A99626 /* stash.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6409210BD494500A99626 /* stash.cc */; };
@@ -771,6 +837,10 @@
 			dstPath = dat/tiles;
 			dstSubfolderSpec = 7;
 			files = (
+				4C59B0E711E7A06D00760867 /* feat.png in Copy Dungeon Tiles */,
+				4C59B0E811E7A06D00760867 /* floor.png in Copy Dungeon Tiles */,
+				4C59B0E911E7A06D00760867 /* wall.png in Copy Dungeon Tiles */,
+				1F909B65148B262D00084E83 /* icons.png in Copy Dungeon Tiles */,
 				B032D700106C02930002D70D /* dngn.png in Copy Dungeon Tiles */,
 				B032D701106C02930002D70D /* gui.png in Copy Dungeon Tiles */,
 				B032D702106C02930002D70D /* main.png in Copy Dungeon Tiles */,
@@ -833,9 +903,109 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F909ABD148B23BC00084E83 /* acquire.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = acquire.cc; sourceTree = "<group>"; };
+		1F909ABE148B23BC00084E83 /* acquire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = acquire.h; sourceTree = "<group>"; };
+		1F909ABF148B23BC00084E83 /* aptitudes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aptitudes.h; sourceTree = "<group>"; };
+		1F909AC0148B23BC00084E83 /* art-data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "art-data.h"; sourceTree = "<group>"; };
+		1F909AC1148B23BC00084E83 /* art-data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "art-data.txt"; sourceTree = "<group>"; };
+		1F909AC2148B23BC00084E83 /* art-enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "art-enum.h"; sourceTree = "<group>"; };
+		1F909AC3148B23BC00084E83 /* asg.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = asg.cc; sourceTree = "<group>"; };
+		1F909AC4148B23BC00084E83 /* asg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asg.h; sourceTree = "<group>"; };
+		1F909AC5148B23BC00084E83 /* attack.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attack.cc; sourceTree = "<group>"; };
+		1F909AC6148B23BC00084E83 /* attack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attack.h; sourceTree = "<group>"; };
+		1F909AC7148B23BC00084E83 /* book-data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "book-data.h"; sourceTree = "<group>"; };
+		1F909AC8148B23BC00084E83 /* branch-data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "branch-data.h"; sourceTree = "<group>"; };
+		1F909AC9148B23BC00084E83 /* build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = build.h; sourceTree = "<group>"; };
+		1F909ACA148B23BC00084E83 /* cellular.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cellular.cc; sourceTree = "<group>"; };
+		1F909ACB148B23BC00084E83 /* cellular.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cellular.h; sourceTree = "<group>"; };
+		1F909ACC148B23BC00084E83 /* compflag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compflag.h; sourceTree = "<group>"; };
+		1F909ACD148B23BC00084E83 /* dactions.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dactions.cc; sourceTree = "<group>"; };
+		1F909ACE148B23BC00084E83 /* dactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dactions.h; sourceTree = "<group>"; };
+		1F909ACF148B23BC00084E83 /* dgn-delve.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-delve.cc"; sourceTree = "<group>"; };
+		1F909AD0148B23BC00084E83 /* dgn-delve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-delve.h"; sourceTree = "<group>"; };
+		1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-labyrinth.cc"; sourceTree = "<group>"; };
+		1F909AD2148B23BC00084E83 /* dgn-labyrinth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-labyrinth.h"; sourceTree = "<group>"; };
+		1F909AD3148B23BC00084E83 /* dgn-layouts.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-layouts.cc"; sourceTree = "<group>"; };
+		1F909AD4148B23BC00084E83 /* dgn-layouts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-layouts.h"; sourceTree = "<group>"; };
+		1F909AD5148B23BC00084E83 /* endianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endianness.h; sourceTree = "<group>"; };
+		1F909AD6148B23BC00084E83 /* errors.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = errors.cc; sourceTree = "<group>"; };
+		1F909AD7148B23BC00084E83 /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
+		1F909AD8148B23BC00084E83 /* evoke.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evoke.cc; sourceTree = "<group>"; };
+		1F909AD9148B23BC00084E83 /* evoke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evoke.h; sourceTree = "<group>"; };
+		1F909ADA148B23BC00084E83 /* exercise.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exercise.cc; sourceTree = "<group>"; };
+		1F909ADB148B23BC00084E83 /* exercise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exercise.h; sourceTree = "<group>"; };
+		1F909ADC148B23BC00084E83 /* fineff.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fineff.cc; sourceTree = "<group>"; };
+		1F909ADD148B23BC00084E83 /* fineff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fineff.h; sourceTree = "<group>"; };
+		1F909ADE148B23BC00084E83 /* godmenu.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godmenu.cc; sourceTree = "<group>"; };
+		1F909ADF148B23BC00084E83 /* godmenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godmenu.h; sourceTree = "<group>"; };
+		1F909AE0148B23BC00084E83 /* l_colour.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_colour.cc; sourceTree = "<group>"; };
+		1F909AF2148B23E000084E83 /* tilecell.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilecell.cc; sourceTree = "<group>"; };
+		1F909AF3148B23E000084E83 /* tilecell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tilecell.h; sourceTree = "<group>"; };
+		1F909AF4148B23E000084E83 /* tiledgnbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiledgnbuf.h; sourceTree = "<group>"; };
+		1F909AF5148B23E000084E83 /* tilepick-p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tilepick-p.h"; sourceTree = "<group>"; };
+		1F909AF6148B23E000084E83 /* tilepick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tilepick.h; sourceTree = "<group>"; };
+		1F909AF7148B23E000084E83 /* tilereg-cmd.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tilereg-cmd.cc"; sourceTree = "<group>"; };
+		1F909AF8148B23E000084E83 /* tilereg-cmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tilereg-cmd.h"; sourceTree = "<group>"; };
+		1F909AF9148B23E000084E83 /* tilereg-mon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tilereg-mon.h"; sourceTree = "<group>"; };
+		1F909AFA148B23E000084E83 /* tilereg-skl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tilereg-skl.cc"; sourceTree = "<group>"; };
+		1F909AFB148B23E000084E83 /* tilereg-skl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tilereg-skl.h"; sourceTree = "<group>"; };
+		1F909AFC148B23E000084E83 /* tileview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tileview.h; sourceTree = "<group>"; };
+		1F909AFD148B23E000084E83 /* tutorial.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tutorial.cc; sourceTree = "<group>"; };
+		1F909AFE148B23E000084E83 /* tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tutorial.h; sourceTree = "<group>"; };
+		1F909AFF148B23E000084E83 /* zotdef.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zotdef.cc; sourceTree = "<group>"; };
+		1F909B00148B23E000084E83 /* zotdef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zotdef.h; sourceTree = "<group>"; };
+		1F909B08148B242D00084E83 /* skill_menu.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skill_menu.cc; sourceTree = "<group>"; };
+		1F909B09148B242D00084E83 /* skill_menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skill_menu.h; sourceTree = "<group>"; };
+		1F909B0A148B242D00084E83 /* spl-clouds.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-clouds.cc"; sourceTree = "<group>"; };
+		1F909B0B148B242D00084E83 /* spl-clouds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-clouds.h"; sourceTree = "<group>"; };
+		1F909B0C148B242D00084E83 /* spl-damage.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-damage.cc"; sourceTree = "<group>"; };
+		1F909B0D148B242D00084E83 /* spl-damage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-damage.h"; sourceTree = "<group>"; };
+		1F909B0E148B242D00084E83 /* spl-goditem.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-goditem.cc"; sourceTree = "<group>"; };
+		1F909B0F148B242D00084E83 /* spl-goditem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-goditem.h"; sourceTree = "<group>"; };
+		1F909B10148B242D00084E83 /* spl-miscast.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-miscast.cc"; sourceTree = "<group>"; };
+		1F909B11148B242D00084E83 /* spl-miscast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-miscast.h"; sourceTree = "<group>"; };
+		1F909B12148B242D00084E83 /* spl-monench.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-monench.cc"; sourceTree = "<group>"; };
+		1F909B13148B242D00084E83 /* spl-monench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-monench.h"; sourceTree = "<group>"; };
+		1F909B14148B242D00084E83 /* spl-other.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-other.cc"; sourceTree = "<group>"; };
+		1F909B15148B242D00084E83 /* spl-other.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-other.h"; sourceTree = "<group>"; };
+		1F909B16148B242D00084E83 /* spl-selfench.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-selfench.cc"; sourceTree = "<group>"; };
+		1F909B17148B242D00084E83 /* spl-selfench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-selfench.h"; sourceTree = "<group>"; };
+		1F909B18148B242D00084E83 /* spl-summoning.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-summoning.cc"; sourceTree = "<group>"; };
+		1F909B19148B242D00084E83 /* spl-summoning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-summoning.h"; sourceTree = "<group>"; };
+		1F909B1A148B242D00084E83 /* spl-tornado.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-tornado.cc"; sourceTree = "<group>"; };
+		1F909B1B148B242D00084E83 /* spl-transloc.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-transloc.cc"; sourceTree = "<group>"; };
+		1F909B1C148B242D00084E83 /* spl-transloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-transloc.h"; sourceTree = "<group>"; };
+		1F909B1D148B242D00084E83 /* spl-wpnench.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-wpnench.cc"; sourceTree = "<group>"; };
+		1F909B1E148B242D00084E83 /* spl-wpnench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-wpnench.h"; sourceTree = "<group>"; };
+		1F909B1F148B242D00084E83 /* status.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = status.cc; sourceTree = "<group>"; };
+		1F909B20148B242D00084E83 /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
+		1F909B21148B242D00084E83 /* syscalls.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syscalls.cc; sourceTree = "<group>"; };
+		1F909B22148B242D00084E83 /* syscalls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syscalls.h; sourceTree = "<group>"; };
+		1F909B23148B242D00084E83 /* target.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = target.cc; sourceTree = "<group>"; };
+		1F909B24148B242D00084E83 /* target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = target.h; sourceTree = "<group>"; };
+		1F909B34148B244F00084E83 /* melee_attack.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = melee_attack.cc; sourceTree = "<group>"; };
+		1F909B35148B244F00084E83 /* mon-ench.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-ench.cc"; sourceTree = "<group>"; };
+		1F909B36148B244F00084E83 /* mon-ench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-ench.h"; sourceTree = "<group>"; };
+		1F909B37148B244F00084E83 /* mon-flags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-flags.h"; sourceTree = "<group>"; };
+		1F909B38148B244F00084E83 /* mon-mst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-mst.h"; sourceTree = "<group>"; };
+		1F909B39148B244F00084E83 /* mon-stealth.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-stealth.cc"; sourceTree = "<group>"; };
+		1F909B3A148B244F00084E83 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
+		1F909B3B148B244F00084E83 /* orb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orb.cc; sourceTree = "<group>"; };
+		1F909B3C148B244F00084E83 /* orb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = orb.h; sourceTree = "<group>"; };
+		1F909B3D148B244F00084E83 /* package.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = package.cc; sourceTree = "<group>"; };
+		1F909B3E148B244F00084E83 /* package.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = package.h; sourceTree = "<group>"; };
+		1F909B3F148B244F00084E83 /* potion.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = potion.cc; sourceTree = "<group>"; };
+		1F909B40148B244F00084E83 /* potion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = potion.h; sourceTree = "<group>"; };
+		1F909B41148B244F00084E83 /* props.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = props.h; sourceTree = "<group>"; };
+		1F909B4C148B251700084E83 /* unicode.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unicode.cc; sourceTree = "<group>"; };
+		1F909B4D148B251700084E83 /* unicode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unicode.h; sourceTree = "<group>"; };
+		1F909B56148B25DD00084E83 /* fearmonger.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fearmonger.cc; sourceTree = "<group>"; };
+		1F909B63148B262800084E83 /* icons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icons.png; path = rltiles/icons.png; sourceTree = "<group>"; };
+		1F909B70148B2CB400084E83 /* tiledef-icons.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-icons.cc"; path = "rltiles/tiledef-icons.cc"; sourceTree = "<group>"; };
+		1F909B71148B2CB400084E83 /* tiledef-icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-icons.h"; path = "rltiles/tiledef-icons.h"; sourceTree = "<group>"; };
+		1F909B80148B2D9100084E83 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4C59B08711E7964700760867 /* dgn-actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-actions.h"; sourceTree = "<group>"; };
 		4C59B08811E7964700760867 /* hints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hints.h; sourceTree = "<group>"; };
-		4C59B08911E7964700760867 /* dgn-actions.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-actions.cc"; sourceTree = "<group>"; };
 		4C59B08A11E7964700760867 /* hints.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hints.cc; sourceTree = "<group>"; };
 		4C59B08B11E7964700760867 /* tiledgnbuf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiledgnbuf.cc; sourceTree = "<group>"; };
 		4C59B08C11E7964700760867 /* tilepick-p.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tilepick-p.cc"; sourceTree = "<group>"; };
@@ -1207,10 +1377,6 @@
 		E5D63FD110BD494400A99626 /* initfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = initfile.h; sourceTree = "<group>"; };
 		E5D63FD210BD494400A99626 /* invent.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = invent.cc; sourceTree = "<group>"; };
 		E5D63FD310BD494400A99626 /* invent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = invent.h; sourceTree = "<group>"; };
-		E5D63FD410BD494400A99626 /* it_use2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = it_use2.cc; sourceTree = "<group>"; };
-		E5D63FD510BD494400A99626 /* it_use2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = it_use2.h; sourceTree = "<group>"; };
-		E5D63FD610BD494400A99626 /* it_use3.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = it_use3.cc; sourceTree = "<group>"; };
-		E5D63FD710BD494400A99626 /* it_use3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = it_use3.h; sourceTree = "<group>"; };
 		E5D63FD810BD494400A99626 /* item_use.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item_use.cc; sourceTree = "<group>"; };
 		E5D63FD910BD494400A99626 /* item_use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item_use.h; sourceTree = "<group>"; };
 		E5D63FDA10BD494400A99626 /* itemname.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = itemname.cc; sourceTree = "<group>"; };
@@ -1251,7 +1417,6 @@
 		E5D63FFD10BD494400A99626 /* l_you.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_you.cc; sourceTree = "<group>"; };
 		E5D63FFE10BD494400A99626 /* lev-pand.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "lev-pand.cc"; sourceTree = "<group>"; };
 		E5D63FFF10BD494400A99626 /* lev-pand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "lev-pand.h"; sourceTree = "<group>"; };
-		E5D6400110BD494400A99626 /* libdos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libdos.h; sourceTree = "<group>"; };
 		E5D6400310BD494400A99626 /* libutil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libutil.cc; sourceTree = "<group>"; };
 		E5D6400410BD494400A99626 /* libutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libutil.h; sourceTree = "<group>"; };
 		E5D6400710BD494400A99626 /* los_def.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = los_def.cc; sourceTree = "<group>"; };
@@ -1318,8 +1483,6 @@
 		E5D6404710BD494400A99626 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monster.h; sourceTree = "<group>"; };
 		E5D6404810BD494500A99626 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpr.h; sourceTree = "<group>"; };
 		E5D6404910BD494500A99626 /* msvc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = msvc.h; sourceTree = "<group>"; };
-		E5D6404A10BD494500A99626 /* mt19937ar.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mt19937ar.cc; sourceTree = "<group>"; };
-		E5D6404B10BD494500A99626 /* mt19937ar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mt19937ar.h; sourceTree = "<group>"; };
 		E5D6404C10BD494500A99626 /* mutation.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mutation.cc; sourceTree = "<group>"; };
 		E5D6404D10BD494500A99626 /* mutation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mutation.h; sourceTree = "<group>"; };
 		E5D6404E10BD494500A99626 /* newgame.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newgame.cc; sourceTree = "<group>"; };
@@ -1353,8 +1516,6 @@
 		E5D6406C10BD494500A99626 /* religion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = religion.h; sourceTree = "<group>"; };
 		E5D6406D10BD494500A99626 /* rng.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rng.cc; sourceTree = "<group>"; };
 		E5D6406E10BD494500A99626 /* rng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rng.h; sourceTree = "<group>"; };
-		E5D6406F10BD494500A99626 /* sha256.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha256.cc; sourceTree = "<group>"; };
-		E5D6407010BD494500A99626 /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha256.h; sourceTree = "<group>"; };
 		E5D6407110BD494500A99626 /* shopping.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shopping.cc; sourceTree = "<group>"; };
 		E5D6407210BD494500A99626 /* shopping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shopping.h; sourceTree = "<group>"; };
 		E5D6407310BD494500A99626 /* shout.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shout.cc; sourceTree = "<group>"; };
@@ -1369,21 +1530,11 @@
 		E5D6407C10BD494500A99626 /* skills2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skills2.h; sourceTree = "<group>"; };
 		E5D6407D10BD494500A99626 /* species.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = species.cc; sourceTree = "<group>"; };
 		E5D6407E10BD494500A99626 /* species.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = species.h; sourceTree = "<group>"; };
-		E5D6407F10BD494500A99626 /* spells1.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spells1.cc; sourceTree = "<group>"; };
-		E5D6408010BD494500A99626 /* spells1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spells1.h; sourceTree = "<group>"; };
-		E5D6408110BD494500A99626 /* spells2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spells2.cc; sourceTree = "<group>"; };
-		E5D6408210BD494500A99626 /* spells2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spells2.h; sourceTree = "<group>"; };
-		E5D6408310BD494500A99626 /* spells3.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spells3.cc; sourceTree = "<group>"; };
-		E5D6408410BD494500A99626 /* spells3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spells3.h; sourceTree = "<group>"; };
-		E5D6408510BD494500A99626 /* spells4.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spells4.cc; sourceTree = "<group>"; };
-		E5D6408610BD494500A99626 /* spells4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spells4.h; sourceTree = "<group>"; };
 		E5D6408710BD494500A99626 /* spl-book.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-book.cc"; sourceTree = "<group>"; };
 		E5D6408810BD494500A99626 /* spl-book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-book.h"; sourceTree = "<group>"; };
 		E5D6408910BD494500A99626 /* spl-cast.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-cast.cc"; sourceTree = "<group>"; };
 		E5D6408A10BD494500A99626 /* spl-cast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-cast.h"; sourceTree = "<group>"; };
 		E5D6408B10BD494500A99626 /* spl-data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-data.h"; sourceTree = "<group>"; };
-		E5D6408C10BD494500A99626 /* spl-mis.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-mis.cc"; sourceTree = "<group>"; };
-		E5D6408D10BD494500A99626 /* spl-mis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-mis.h"; sourceTree = "<group>"; };
 		E5D6408E10BD494500A99626 /* spl-util.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-util.cc"; sourceTree = "<group>"; };
 		E5D6408F10BD494500A99626 /* spl-util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-util.h"; sourceTree = "<group>"; };
 		E5D6409010BD494500A99626 /* sqldbm.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sqldbm.cc; sourceTree = "<group>"; };
@@ -1445,6 +1596,7 @@
 				7B0EFDD80BD1374900002671 /* liblua.a in Frameworks */,
 				7B3B075B0BD13AAB00F2980E /* libreadline.dylib in Frameworks */,
 				7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */,
+				1F909BDC148B445100084E83 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1452,11 +1604,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */,
 				B032D68E106C02070002D70D /* AppKit.framework in Frameworks */,
 				B032D686106C02070002D70D /* liblua.a in Frameworks */,
 				B032D688106C02070002D70D /* libncurses.dylib in Frameworks */,
 				B032D687106C02070002D70D /* libreadline.dylib in Frameworks */,
+				B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */,
+				1F909B81148B2D9100084E83 /* libz.dylib in Frameworks */,
 				B032D68C106C02070002D70D /* OpenGL.framework in Frameworks */,
 				B0F7DFEF1086F4F1008FFA70 /* libpng.framework in Frameworks */,
 				B0F7DF8B1086F0D5008FFA70 /* SDL_image.framework in Frameworks */,
@@ -1499,6 +1652,7 @@
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 				7B352F1B0B0022C900CABB32 /* Resources */,
 				08FB7795FE84155DC02AAC07 /* Source */,
+				1F909B80148B2D9100084E83 /* libz.dylib */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -1605,13 +1759,12 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				4C59B08711E7964700760867 /* dgn-actions.h */,
-				4C59B08811E7964700760867 /* hints.h */,
-				4C59B08A11E7964700760867 /* hints.cc */,
 				E5D63F5D10BD494300A99626 /* abl-show.cc */,
 				E5D63F5E10BD494300A99626 /* abl-show.h */,
 				E5D63F5F10BD494300A99626 /* abyss.cc */,
 				E5D63F6010BD494300A99626 /* abyss.h */,
+				1F909ABD148B23BC00084E83 /* acquire.cc */,
+				1F909ABE148B23BC00084E83 /* acquire.h */,
 				7B51659211859CFA005B23ED /* act-iter.cc */,
 				7B51659311859CFA005B23ED /* act-iter.h */,
 				E5D63F6110BD494300A99626 /* actor-los.cc */,
@@ -1619,13 +1772,21 @@
 				E5D63F6310BD494300A99626 /* actor.h */,
 				E5D63F6410BD494300A99626 /* AppHdr.cc */,
 				E5D63F6510BD494300A99626 /* AppHdr.h */,
+				1F909ABF148B23BC00084E83 /* aptitudes.h */,
 				E5D63F6610BD494300A99626 /* areas.cc */,
 				E5D63F6710BD494300A99626 /* areas.h */,
 				E5D63F6810BD494300A99626 /* arena.cc */,
 				E5D63F6910BD494300A99626 /* arena.h */,
+				1F909AC0148B23BC00084E83 /* art-data.h */,
+				1F909AC1148B23BC00084E83 /* art-data.txt */,
+				1F909AC2148B23BC00084E83 /* art-enum.h */,
 				E5D63F6B10BD494300A99626 /* art-func.h */,
 				E5D63F6C10BD494300A99626 /* artefact.cc */,
 				E5D63F6D10BD494300A99626 /* artefact.h */,
+				1F909AC3148B23BC00084E83 /* asg.cc */,
+				1F909AC4148B23BC00084E83 /* asg.h */,
+				1F909AC5148B23BC00084E83 /* attack.cc */,
+				1F909AC6148B23BC00084E83 /* attack.h */,
 				E5D63F6E10BD494300A99626 /* attitude-change.cc */,
 				E5D63F6F10BD494300A99626 /* attitude-change.h */,
 				E5D63F7010BD494300A99626 /* beam.cc */,
@@ -1633,8 +1794,13 @@
 				E5D63F7210BD494400A99626 /* behold.cc */,
 				E5D63F7310BD494400A99626 /* bitary.cc */,
 				E5D63F7410BD494400A99626 /* bitary.h */,
+				1F909AC7148B23BC00084E83 /* book-data.h */,
+				1F909AC8148B23BC00084E83 /* branch-data.h */,
 				E5D63F7510BD494400A99626 /* branch.cc */,
 				E5D63F7610BD494400A99626 /* branch.h */,
+				1F909AC9148B23BC00084E83 /* build.h */,
+				1F909ACA148B23BC00084E83 /* cellular.cc */,
+				1F909ACB148B23BC00084E83 /* cellular.h */,
 				E5D63F7810BD494400A99626 /* chardump.cc */,
 				E5D63F7910BD494400A99626 /* chardump.h */,
 				E5D63F7A10BD494400A99626 /* cio.cc */,
@@ -1651,6 +1817,7 @@
 				E5D63F8510BD494400A99626 /* colour.h */,
 				E5D63F8610BD494400A99626 /* command.cc */,
 				E5D63F8710BD494400A99626 /* command.h */,
+				1F909ACC148B23BC00084E83 /* compflag.h */,
 				E5D63F8910BD494400A99626 /* coord-circle.cc */,
 				E5D63F8A10BD494400A99626 /* coord-circle.h */,
 				E5D63F8B10BD494400A99626 /* coord.cc */,
@@ -1661,6 +1828,8 @@
 				E5D63F9210BD494400A99626 /* crash.h */,
 				E5D63F9310BD494400A99626 /* ctest.cc */,
 				E5D63F9410BD494400A99626 /* ctest.h */,
+				1F909ACD148B23BC00084E83 /* dactions.cc */,
+				1F909ACE148B23BC00084E83 /* dactions.h */,
 				E5D63F9510BD494400A99626 /* database.cc */,
 				E5D63F9610BD494400A99626 /* database.h */,
 				E5D63F9710BD494400A99626 /* dbg-asrt.cc */,
@@ -1681,9 +1850,15 @@
 				E5D63FA610BD494400A99626 /* describe.h */,
 				7B51659911859D30005B23ED /* dgl-message.cc */,
 				7B51659A11859D30005B23ED /* dgl-message.h */,
-				4C59B08911E7964700760867 /* dgn-actions.cc */,
+				4C59B08711E7964700760867 /* dgn-actions.h */,
+				1F909ACF148B23BC00084E83 /* dgn-delve.cc */,
+				1F909AD0148B23BC00084E83 /* dgn-delve.h */,
 				7B09F6371133D823004F149D /* dgn-height.cc */,
 				7B09F6381133D823004F149D /* dgn-height.h */,
+				1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */,
+				1F909AD2148B23BC00084E83 /* dgn-labyrinth.h */,
+				1F909AD3148B23BC00084E83 /* dgn-layouts.cc */,
+				1F909AD4148B23BC00084E83 /* dgn-layouts.h */,
 				7B09F6391133D823004F149D /* dgn-overview.cc */,
 				7B09F63A1133D823004F149D /* dgn-overview.h */,
 				7B09F63B1133D823004F149D /* dgn-shoals.cc */,
@@ -1700,17 +1875,27 @@
 				E5D63FAE10BD494400A99626 /* dungeon.h */,
 				E5D63FAF10BD494400A99626 /* effects.cc */,
 				E5D63FB010BD494400A99626 /* effects.h */,
+				1F909AD5148B23BC00084E83 /* endianness.h */,
 				E5D63FB110BD494400A99626 /* enum.h */,
 				E5D63FB210BD494400A99626 /* env.h */,
+				1F909AD6148B23BC00084E83 /* errors.cc */,
+				1F909AD7148B23BC00084E83 /* errors.h */,
+				1F909AD8148B23BC00084E83 /* evoke.cc */,
+				1F909AD9148B23BC00084E83 /* evoke.h */,
 				E5D63FB310BD494400A99626 /* exclude.cc */,
 				E5D63FB410BD494400A99626 /* exclude.h */,
+				1F909ADA148B23BC00084E83 /* exercise.cc */,
+				1F909ADB148B23BC00084E83 /* exercise.h */,
 				E5D63FB510BD494400A99626 /* externs.h */,
+				1F909B56148B25DD00084E83 /* fearmonger.cc */,
 				E5D63FB610BD494400A99626 /* feature.cc */,
 				E5D63FB710BD494400A99626 /* feature.h */,
 				E5D63FB810BD494400A99626 /* fight.cc */,
 				E5D63FB910BD494400A99626 /* fight.h */,
 				E5D63FBA10BD494400A99626 /* files.cc */,
 				E5D63FBB10BD494400A99626 /* files.h */,
+				1F909ADC148B23BC00084E83 /* fineff.cc */,
+				1F909ADD148B23BC00084E83 /* fineff.h */,
 				E5D63FBC10BD494400A99626 /* fixedarray.h */,
 				E5D63FBD10BD494400A99626 /* fixedvector.h */,
 				7B51659B11859D30005B23ED /* flood_find.h */,
@@ -1736,22 +1921,22 @@
 				7B09F53C1133D63E004F149D /* godconduct.h */,
 				E5D63FCA10BD494400A99626 /* goditem.cc */,
 				E5D63FCB10BD494400A99626 /* goditem.h */,
+				1F909ADE148B23BC00084E83 /* godmenu.cc */,
+				1F909ADF148B23BC00084E83 /* godmenu.h */,
 				7B09F53D1133D63E004F149D /* godpassive.cc */,
 				7B09F53E1133D63E004F149D /* godpassive.h */,
 				7B09F53F1133D63E004F149D /* godprayer.cc */,
 				7B09F5401133D63E004F149D /* godprayer.h */,
 				E5D63FCC10BD494400A99626 /* godwrath.cc */,
 				E5D63FCD10BD494400A99626 /* godwrath.h */,
+				4C59B08A11E7964700760867 /* hints.cc */,
+				4C59B08811E7964700760867 /* hints.h */,
 				E5D63FCE10BD494400A99626 /* hiscores.cc */,
 				E5D63FCF10BD494400A99626 /* hiscores.h */,
 				E5D63FD010BD494400A99626 /* initfile.cc */,
 				E5D63FD110BD494400A99626 /* initfile.h */,
 				E5D63FD210BD494400A99626 /* invent.cc */,
 				E5D63FD310BD494400A99626 /* invent.h */,
-				E5D63FD410BD494400A99626 /* it_use2.cc */,
-				E5D63FD510BD494400A99626 /* it_use2.h */,
-				E5D63FD610BD494400A99626 /* it_use3.cc */,
-				E5D63FD710BD494400A99626 /* it_use3.h */,
 				E5D63FD810BD494400A99626 /* item_use.cc */,
 				E5D63FD910BD494400A99626 /* item_use.h */,
 				E5D63FDA10BD494400A99626 /* itemname.cc */,
@@ -1765,6 +1950,7 @@
 				E5D63FE210BD494400A99626 /* jobs.h */,
 				E5D63FE310BD494400A99626 /* kills.cc */,
 				E5D63FE410BD494400A99626 /* kills.h */,
+				1F909AE0148B23BC00084E83 /* l_colour.cc */,
 				E5D63FE510BD494400A99626 /* l_crawl.cc */,
 				E5D63FE610BD494400A99626 /* l_debug.cc */,
 				E5D63FE710BD494400A99626 /* l_defs.h */,
@@ -1795,7 +1981,6 @@
 				E5D63FFD10BD494400A99626 /* l_you.cc */,
 				E5D63FFE10BD494400A99626 /* lev-pand.cc */,
 				E5D63FFF10BD494400A99626 /* lev-pand.h */,
-				E5D6400110BD494400A99626 /* libdos.h */,
 				7BDE8454116D24E600974D63 /* libunix.cc */,
 				7BDE8455116D24E600974D63 /* libunix.h */,
 				E5D6400310BD494400A99626 /* libutil.cc */,
@@ -1822,6 +2007,7 @@
 				E5D6401B10BD494400A99626 /* maps.cc */,
 				E5D6401C10BD494400A99626 /* maps.h */,
 				E5D6401D10BD494400A99626 /* matrix.h */,
+				1F909B34148B244F00084E83 /* melee_attack.cc */,
 				7B09F54C1133D66C004F149D /* melee_attack.h */,
 				E5D6401E10BD494400A99626 /* menu.cc */,
 				E5D6401F10BD494400A99626 /* menu.h */,
@@ -1848,7 +2034,10 @@
 				E5D6402C10BD494400A99626 /* mon-data.h */,
 				7B09F5561133D66C004F149D /* mon-death.cc */,
 				7B09F5571133D66C004F149D /* mon-death.h */,
+				1F909B35148B244F00084E83 /* mon-ench.cc */,
+				1F909B36148B244F00084E83 /* mon-ench.h */,
 				7B09F5581133D66C004F149D /* mon-enum.h */,
+				1F909B37148B244F00084E83 /* mon-flags.h */,
 				E5D6402D10BD494400A99626 /* mon-gear.cc */,
 				E5D6402E10BD494400A99626 /* mon-gear.h */,
 				E5D6402F10BD494400A99626 /* mon-grow.cc */,
@@ -1859,6 +2048,7 @@
 				E5D6403410BD494400A99626 /* mon-iter.h */,
 				E5D6403510BD494400A99626 /* mon-movetarget.cc */,
 				E5D6403610BD494400A99626 /* mon-movetarget.h */,
+				1F909B38148B244F00084E83 /* mon-mst.h */,
 				E5D6403710BD494400A99626 /* mon-pathfind.cc */,
 				E5D6403810BD494400A99626 /* mon-pathfind.h */,
 				E5D6403910BD494400A99626 /* mon-pick.cc */,
@@ -1870,6 +2060,7 @@
 				E5D6403D10BD494400A99626 /* mon-speak.cc */,
 				E5D6403E10BD494400A99626 /* mon-speak.h */,
 				E5D6403F10BD494400A99626 /* mon-spll.h */,
+				1F909B39148B244F00084E83 /* mon-stealth.cc */,
 				E5D6404010BD494400A99626 /* mon-stuff.cc */,
 				E5D6404110BD494400A99626 /* mon-stuff.h */,
 				E5D6404210BD494400A99626 /* mon-transit.cc */,
@@ -1882,8 +2073,6 @@
 				E5D6404710BD494400A99626 /* monster.h */,
 				E5D6404810BD494500A99626 /* mpr.h */,
 				E5D6404910BD494500A99626 /* msvc.h */,
-				E5D6404A10BD494500A99626 /* mt19937ar.cc */,
-				E5D6404B10BD494500A99626 /* mt19937ar.h */,
 				7B5165A211859D5A005B23ED /* mutation-data.h */,
 				E5D6404C10BD494500A99626 /* mutation.cc */,
 				E5D6404D10BD494500A99626 /* mutation.h */,
@@ -1900,13 +2089,18 @@
 				7B5165A511859D5A005B23ED /* ng-setup.h */,
 				7B5165A611859D5A005B23ED /* ng-wanderer.cc */,
 				7B5165A711859D5A005B23ED /* ng-wanderer.h */,
+				1F909B3A148B244F00084E83 /* noise.h */,
 				E5D6405610BD494500A99626 /* notes.cc */,
 				E5D6405710BD494500A99626 /* notes.h */,
 				E5D6405810BD494500A99626 /* options.h */,
+				1F909B3B148B244F00084E83 /* orb.cc */,
+				1F909B3C148B244F00084E83 /* orb.h */,
 				E5D6405910BD494500A99626 /* ouch.cc */,
 				E5D6405A10BD494500A99626 /* ouch.h */,
 				E5D6405B10BD494500A99626 /* output.cc */,
 				E5D6405C10BD494500A99626 /* output.h */,
+				1F909B3D148B244F00084E83 /* package.cc */,
+				1F909B3E148B244F00084E83 /* package.h */,
 				7B09F5591133D66C004F149D /* pattern.cc */,
 				7B09F55A1133D66C004F149D /* pattern.h */,
 				7B5165A811859D5A005B23ED /* place-info.cc */,
@@ -1921,6 +2115,9 @@
 				7B5165AC11859D5A005B23ED /* player-stats.h */,
 				E5D6406210BD494500A99626 /* player.cc */,
 				E5D6406310BD494500A99626 /* player.h */,
+				1F909B3F148B244F00084E83 /* potion.cc */,
+				1F909B40148B244F00084E83 /* potion.h */,
+				1F909B41148B244F00084E83 /* props.h */,
 				E5D6406410BD494500A99626 /* quiver.cc */,
 				E5D6406510BD494500A99626 /* quiver.h */,
 				7B5165B711859D82005B23ED /* random-var.cc */,
@@ -1935,8 +2132,6 @@
 				E5D6406C10BD494500A99626 /* religion.h */,
 				E5D6406D10BD494500A99626 /* rng.cc */,
 				E5D6406E10BD494500A99626 /* rng.h */,
-				E5D6406F10BD494500A99626 /* sha256.cc */,
-				E5D6407010BD494500A99626 /* sha256.h */,
 				E5D6407110BD494500A99626 /* shopping.cc */,
 				E5D6407210BD494500A99626 /* shopping.h */,
 				E5D6407310BD494500A99626 /* shout.cc */,
@@ -1945,29 +2140,42 @@
 				E5D6407610BD494500A99626 /* show.h */,
 				E5D6407710BD494500A99626 /* showsymb.cc */,
 				E5D6407810BD494500A99626 /* showsymb.h */,
+				1F909B08148B242D00084E83 /* skill_menu.cc */,
+				1F909B09148B242D00084E83 /* skill_menu.h */,
 				E5D6407910BD494500A99626 /* skills.cc */,
 				E5D6407A10BD494500A99626 /* skills.h */,
 				E5D6407B10BD494500A99626 /* skills2.cc */,
 				E5D6407C10BD494500A99626 /* skills2.h */,
 				E5D6407D10BD494500A99626 /* species.cc */,
 				E5D6407E10BD494500A99626 /* species.h */,
-				E5D6407F10BD494500A99626 /* spells1.cc */,
-				E5D6408010BD494500A99626 /* spells1.h */,
-				E5D6408110BD494500A99626 /* spells2.cc */,
-				E5D6408210BD494500A99626 /* spells2.h */,
-				E5D6408310BD494500A99626 /* spells3.cc */,
-				E5D6408410BD494500A99626 /* spells3.h */,
-				E5D6408510BD494500A99626 /* spells4.cc */,
-				E5D6408610BD494500A99626 /* spells4.h */,
 				E5D6408710BD494500A99626 /* spl-book.cc */,
 				E5D6408810BD494500A99626 /* spl-book.h */,
 				E5D6408910BD494500A99626 /* spl-cast.cc */,
 				E5D6408A10BD494500A99626 /* spl-cast.h */,
+				1F909B0A148B242D00084E83 /* spl-clouds.cc */,
+				1F909B0B148B242D00084E83 /* spl-clouds.h */,
+				1F909B0C148B242D00084E83 /* spl-damage.cc */,
+				1F909B0D148B242D00084E83 /* spl-damage.h */,
 				E5D6408B10BD494500A99626 /* spl-data.h */,
-				E5D6408C10BD494500A99626 /* spl-mis.cc */,
-				E5D6408D10BD494500A99626 /* spl-mis.h */,
+				1F909B0E148B242D00084E83 /* spl-goditem.cc */,
+				1F909B0F148B242D00084E83 /* spl-goditem.h */,
+				1F909B10148B242D00084E83 /* spl-miscast.cc */,
+				1F909B11148B242D00084E83 /* spl-miscast.h */,
+				1F909B12148B242D00084E83 /* spl-monench.cc */,
+				1F909B13148B242D00084E83 /* spl-monench.h */,
+				1F909B14148B242D00084E83 /* spl-other.cc */,
+				1F909B15148B242D00084E83 /* spl-other.h */,
+				1F909B16148B242D00084E83 /* spl-selfench.cc */,
+				1F909B17148B242D00084E83 /* spl-selfench.h */,
+				1F909B18148B242D00084E83 /* spl-summoning.cc */,
+				1F909B19148B242D00084E83 /* spl-summoning.h */,
+				1F909B1A148B242D00084E83 /* spl-tornado.cc */,
+				1F909B1B148B242D00084E83 /* spl-transloc.cc */,
+				1F909B1C148B242D00084E83 /* spl-transloc.h */,
 				E5D6408E10BD494500A99626 /* spl-util.cc */,
 				E5D6408F10BD494500A99626 /* spl-util.h */,
+				1F909B1D148B242D00084E83 /* spl-wpnench.cc */,
+				1F909B1E148B242D00084E83 /* spl-wpnench.h */,
 				7B5165BA11859D82005B23ED /* spl-zap.cc */,
 				7B5165BB11859D82005B23ED /* spl-zap.h */,
 				7B5165BC11859D82005B23ED /* sprint.cc */,
@@ -1982,24 +2190,36 @@
 				E5D6409310BD494500A99626 /* stash.h */,
 				E5D6409410BD494500A99626 /* state.cc */,
 				E5D6409510BD494500A99626 /* state.h */,
+				1F909B1F148B242D00084E83 /* status.cc */,
+				1F909B20148B242D00084E83 /* status.h */,
 				E5D6409610BD494500A99626 /* store.cc */,
 				E5D6409710BD494500A99626 /* store.h */,
 				E5D6409810BD494500A99626 /* stuff.cc */,
 				E5D6409910BD494500A99626 /* stuff.h */,
+				1F909B21148B242D00084E83 /* syscalls.cc */,
+				1F909B22148B242D00084E83 /* syscalls.h */,
 				7B5165C211859D82005B23ED /* tag-version.h */,
 				E5D6409A10BD494500A99626 /* tags.cc */,
 				E5D6409B10BD494500A99626 /* tags.h */,
 				7B5165C311859D82005B23ED /* tagstring.cc */,
 				7B5165C411859D82005B23ED /* tagstring.h */,
+				1F909B23148B242D00084E83 /* target.cc */,
+				1F909B24148B242D00084E83 /* target.h */,
 				E5D6409C10BD494500A99626 /* teleport.cc */,
 				E5D6409D10BD494500A99626 /* teleport.h */,
 				E5D6409E10BD494500A99626 /* terrain.cc */,
 				E5D6409F10BD494500A99626 /* terrain.h */,
+				1F909AF2148B23E000084E83 /* tilecell.cc */,
+				1F909AF3148B23E000084E83 /* tilecell.h */,
 				4C59B08B11E7964700760867 /* tiledgnbuf.cc */,
-				4C59B08E11E7964700760867 /* tileview.cc */,
+				1F909AF4148B23E000084E83 /* tiledgnbuf.h */,
 				7B51655D11859CD6005B23ED /* tiledoll.cc */,
 				7B51655E11859CD6005B23ED /* tiledoll.h */,
 				4C59B08C11E7964700760867 /* tilepick-p.cc */,
+				1F909AF5148B23E000084E83 /* tilepick-p.h */,
+				1F909AF6148B23E000084E83 /* tilepick.h */,
+				1F909AF7148B23E000084E83 /* tilereg-cmd.cc */,
+				1F909AF8148B23E000084E83 /* tilereg-cmd.h */,
 				7B51655F11859CD6005B23ED /* tilereg-crt.cc */,
 				7B51656011859CD6005B23ED /* tilereg-crt.h */,
 				7B51656111859CD6005B23ED /* tilereg-dgn.cc */,
@@ -2011,14 +2231,17 @@
 				7B51656711859CD6005B23ED /* tilereg-inv.cc */,
 				7B51656811859CD6005B23ED /* tilereg-inv.h */,
 				7B51656911859CD6005B23ED /* tilereg-map.cc */,
-				4C59B08D11E7964700760867 /* tilereg-mon.cc */,
 				7B51656A11859CD6005B23ED /* tilereg-map.h */,
 				7B51656B11859CD6005B23ED /* tilereg-mem.cc */,
 				7B51656C11859CD6005B23ED /* tilereg-mem.h */,
 				7B51656D11859CD6005B23ED /* tilereg-menu.cc */,
 				7B51656E11859CD6005B23ED /* tilereg-menu.h */,
+				4C59B08D11E7964700760867 /* tilereg-mon.cc */,
+				1F909AF9148B23E000084E83 /* tilereg-mon.h */,
 				7B51656F11859CD6005B23ED /* tilereg-msg.cc */,
 				7B51657011859CD6005B23ED /* tilereg-msg.h */,
+				1F909AFA148B23E000084E83 /* tilereg-skl.cc */,
+				1F909AFB148B23E000084E83 /* tilereg-skl.h */,
 				7B51657111859CD6005B23ED /* tilereg-spl.cc */,
 				7B51657211859CD6005B23ED /* tilereg-spl.h */,
 				7B51657311859CD6005B23ED /* tilereg-stat.cc */,
@@ -2029,6 +2252,8 @@
 				7B51657811859CD6005B23ED /* tilereg-text.h */,
 				7B51657911859CD6005B23ED /* tilereg-title.cc */,
 				7B51657A11859CD6005B23ED /* tilereg-title.h */,
+				4C59B08E11E7964700760867 /* tileview.cc */,
+				1F909AFC148B23E000084E83 /* tileview.h */,
 				7B09F55B1133D66C004F149D /* transform.cc */,
 				7B09F55C1133D66C004F149D /* transform.h */,
 				7B09F55D1133D66C004F149D /* trap_def.h */,
@@ -2037,6 +2262,10 @@
 				E5D640A410BD494500A99626 /* travel.cc */,
 				E5D640A510BD494500A99626 /* travel.h */,
 				7B09F55E1133D66C004F149D /* travel_defs.h */,
+				1F909AFD148B23E000084E83 /* tutorial.cc */,
+				1F909AFE148B23E000084E83 /* tutorial.h */,
+				1F909B4C148B251700084E83 /* unicode.cc */,
+				1F909B4D148B251700084E83 /* unicode.h */,
 				7B09F55F1133D66C004F149D /* unwind.h */,
 				E5D640A810BD494500A99626 /* version.cc */,
 				E5D640A910BD494500A99626 /* version.h */,
@@ -2064,6 +2293,8 @@
 				E5D640BC10BD494500A99626 /* xom.cc */,
 				E5D640BD10BD494500A99626 /* xom.h */,
 				7B5165C511859D82005B23ED /* zap-data.h */,
+				1F909AFF148B23E000084E83 /* zotdef.cc */,
+				1F909B00148B23E000084E83 /* zotdef.h */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -2082,14 +2313,15 @@
 			children = (
 				D2F271FE0DA1C5AD00445FE9 /* dat */,
 				B090C2EE10671F8900AE855D /* dngn.png */,
+				D2F2723F0DA1C61600445FE9 /* docs */,
 				4C59B0E411E7A06D00760867 /* feat.png */,
 				4C59B0E511E7A06D00760867 /* floor.png */,
-				D2F2723F0DA1C61600445FE9 /* docs */,
 				B090C2EF10671F8900AE855D /* gui.png */,
+				1F909B63148B262800084E83 /* icons.png */,
 				B090C2F010671F8900AE855D /* main.png */,
 				B090C2F110671F8900AE855D /* player.png */,
-				4C59B0E611E7A06D00760867 /* wall.png */,
 				B09CCE5A1083159100623CFA /* settings */,
+				4C59B0E611E7A06D00760867 /* wall.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2186,25 +2418,27 @@
 		D25C917A0FF035D100D9E8AD /* rltiles */ = {
 			isa = PBXGroup;
 			children = (
-				4C59B0A711E798C400760867 /* tiledef-feat.h */,
-				4C59B0A811E798C400760867 /* tiledef-floor.h */,
-				4C59B0A911E798C400760867 /* tiledef-wall.h */,
-				4C59B0AA11E798C400760867 /* tiledef-feat.cc */,
-				4C59B0AB11E798C400760867 /* tiledef-floor.cc */,
-				4C59B0AC11E798C400760867 /* tiledef-wall.cc */,
 				D2660C000FF0749200986331 /* dc-dngn.txt */,
 				D2660C010FF0749200986331 /* dc-main.txt */,
 				D2660C020FF0749200986331 /* dc-player.txt */,
 				B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */,
 				B0B5DFD41066FA240020B21F /* tiledef-dngn.h */,
+				4C59B0AA11E798C400760867 /* tiledef-feat.cc */,
+				4C59B0A711E798C400760867 /* tiledef-feat.h */,
+				4C59B0AB11E798C400760867 /* tiledef-floor.cc */,
+				4C59B0A811E798C400760867 /* tiledef-floor.h */,
 				B0B5DFD51066FA240020B21F /* tiledef-gui.cc */,
 				B0B5DFD61066FA240020B21F /* tiledef-gui.h */,
+				1F909B70148B2CB400084E83 /* tiledef-icons.cc */,
+				1F909B71148B2CB400084E83 /* tiledef-icons.h */,
 				B0B5DFD71066FA240020B21F /* tiledef-main.cc */,
 				B0B5DFD81066FA240020B21F /* tiledef-main.h */,
 				B0B5DFD91066FA240020B21F /* tiledef-player.cc */,
 				B0B5DFDA1066FA240020B21F /* tiledef-player.h */,
 				B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */,
 				B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */,
+				4C59B0AC11E798C400760867 /* tiledef-wall.cc */,
+				4C59B0A911E798C400760867 /* tiledef-wall.h */,
 				B0B5DFD21066FA240020B21F /* tiledef_defines.h */,
 				D25C91840FF0366F00D9E8AD /* tool */,
 			);
@@ -2331,6 +2565,7 @@
 				B032D524106C01AF0002D70D /* Sources */,
 				B032D525106C01AF0002D70D /* Frameworks */,
 				B032D70F106C03000002D70D /* Copy Frameworks */,
+				1F909B87148B311300084E83 /* Generate Info.plist */,
 			);
 			buildRules = (
 			);
@@ -2393,6 +2628,7 @@
 				B090C2DB10671E3200AE855D /* Copy Crawl Executable */,
 				B090C2ED10671F5F00AE855D /* Copy Dungeon Tiles */,
 				B0B5DF681066EDFF0020B21F /* Copy Frameworks */,
+				1F909C56148B47CB00084E83 /* Generate Info.plist */,
 			);
 			buildRules = (
 			);
@@ -2413,7 +2649,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Crawl" */;
 			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Crawl */;
 			projectDirPath = "";
 			projectReferences = (
@@ -2535,9 +2778,7 @@
 				B032D6FB106C02540002D70D /* dat in Resources */,
 				B032D6FC106C02540002D70D /* docs in Resources */,
 				B09CCE671083159100623CFA /* settings in Resources */,
-				4C59B0E711E7A06D00760867 /* feat.png in Resources */,
-				4C59B0E811E7A06D00760867 /* floor.png in Resources */,
-				4C59B0E911E7A06D00760867 /* wall.png in Resources */,
+				1F909AE2148B23BC00084E83 /* art-data.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2555,6 +2796,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1F909B87148B311300084E83 /* Generate Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"${PROJECT_DIR}\"\nmkdir -p \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\nperl -lpe \"s/%VERSION%/$(git describe --tags)/g;\" \\\n\t     -e \"s/%NAME%/Dungeon Crawl Stone Soup/g;\" \\\n\t     -e \"s/%YEAR%/$(date +%Y)/ge;\" \\\n\t     -e \"s/%EXECUTABLE%/${EXECUTABLE_NAME}/g;\" \\\n\t     mac/Crawl-Info.plist > \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Info.plist\"";
+		};
+		1F909C56148B47CB00084E83 /* Generate Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"${PROJECT_DIR}\"\nmkdir -p \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\nperl -lpe \"s/%VERSION%/$(git describe --tags)/g;\" \\\n\t     -e \"s/%NAME%/Dungeon Crawl Stone Soup/g;\" \\\n\t     -e \"s/%YEAR%/$(date +%Y)/ge;\" \\\n\t     -e \"s/%EXECUTABLE%/${EXECUTABLE_NAME}/g;\" \\\n\t     mac/Crawl-Info.plist > \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Info.plist\"";
+		};
 		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2581,7 +2850,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui floor wall feat; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
+			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\nutil/gen-mst.pl\nutil/gen-luatags.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui floor wall feat icons unrand; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2661,17 +2930,21 @@
 			files = (
 				7BDE8447116D24B300974D63 /* abl-show.cc in Sources */,
 				7BDE8448116D24B300974D63 /* abyss.cc in Sources */,
+				1F909C24148B466700084E83 /* acquire.cc in Sources */,
 				7B51659511859CFA005B23ED /* act-iter.cc in Sources */,
 				7BDE8449116D24B300974D63 /* actor-los.cc in Sources */,
 				7BDE844A116D24B300974D63 /* actor.cc in Sources */,
 				7BDE844B116D24B300974D63 /* areas.cc in Sources */,
 				7BDE844C116D24B300974D63 /* arena.cc in Sources */,
 				7BDE844D116D24B300974D63 /* artefact.cc in Sources */,
+				1F909C10148B459B00084E83 /* asg.cc in Sources */,
+				1F909C38148B46E900084E83 /* attack.cc in Sources */,
 				7BDE844E116D24B300974D63 /* attitude-change.cc in Sources */,
 				7BDE844F116D24B300974D63 /* beam.cc in Sources */,
 				7B09F56D1133D6AB004F149D /* behold.cc in Sources */,
 				7B09F56E1133D6AB004F149D /* bitary.cc in Sources */,
 				7B09F56F1133D6AB004F149D /* branch.cc in Sources */,
+				1F909C41148B478600084E83 /* cellular.cc in Sources */,
 				7B09F5701133D6AB004F149D /* chardump.cc in Sources */,
 				7B09F5711133D6AB004F149D /* cio.cc in Sources */,
 				7B09F5721133D6AB004F149D /* cloud.cc in Sources */,
@@ -2684,6 +2957,7 @@
 				7B09F5791133D6AB004F149D /* coordit.cc in Sources */,
 				7B09F57A1133D6AB004F149D /* crash-u.cc in Sources */,
 				7B09F57B1133D6AB004F149D /* ctest.cc in Sources */,
+				1F909C2D148B469C00084E83 /* dactions.cc in Sources */,
 				7B09F57C1133D6AB004F149D /* database.cc in Sources */,
 				7B09F57D1133D6AB004F149D /* dbg-asrt.cc in Sources */,
 				7B09F57E1133D6AB004F149D /* dbg-maps.cc in Sources */,
@@ -2693,7 +2967,10 @@
 				7B09F5821133D6AB004F149D /* delay.cc in Sources */,
 				7B09F5831133D6AB004F149D /* describe.cc in Sources */,
 				7B51659D11859D30005B23ED /* dgl-message.cc in Sources */,
+				1F909BCE148B440800084E83 /* dgn-delve.cc in Sources */,
 				7B09F6431133D823004F149D /* dgn-height.cc in Sources */,
+				1F909BCF148B440800084E83 /* dgn-labyrinth.cc in Sources */,
+				1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */,
 				7B09F6441133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6451133D823004F149D /* dgn-shoals.cc in Sources */,
 				7B09F6461133D823004F149D /* dgn-swamp.cc in Sources */,
@@ -2702,10 +2979,15 @@
 				7B09F5861133D6AB004F149D /* dlua.cc in Sources */,
 				7B09F5871133D6AB004F149D /* dungeon.cc in Sources */,
 				7B09F5881133D6AB004F149D /* effects.cc in Sources */,
+				1F909C1F148B465300084E83 /* errors.cc in Sources */,
+				1F909C16148B45EE00084E83 /* evoke.cc in Sources */,
 				7B09F5891133D6AB004F149D /* exclude.cc in Sources */,
+				1F909C39148B46E900084E83 /* exercise.cc in Sources */,
+				1F909C20148B465300084E83 /* fearmonger.cc in Sources */,
 				7B09F58A1133D6AB004F149D /* feature.cc in Sources */,
 				7B09F58B1133D6AB004F149D /* fight.cc in Sources */,
 				7B09F58C1133D6AB004F149D /* files.cc in Sources */,
+				1F909BD1148B440800084E83 /* fineff.cc in Sources */,
 				7B09F58D1133D6AB004F149D /* food.cc in Sources */,
 				7B09F58E1133D6AB004F149D /* format.cc in Sources */,
 				7B09F58F1133D6AB004F149D /* fprop.cc in Sources */,
@@ -2714,20 +2996,21 @@
 				7B09F5921133D6AB004F149D /* godabil.cc in Sources */,
 				7B09F5931133D6AB004F149D /* godconduct.cc in Sources */,
 				7B09F5941133D6AB004F149D /* goditem.cc in Sources */,
+				1F909BD2148B440800084E83 /* godmenu.cc in Sources */,
 				7B09F5951133D6AB004F149D /* godpassive.cc in Sources */,
 				7B09F5961133D6AB004F149D /* godprayer.cc in Sources */,
 				7B09F5971133D6AB004F149D /* godwrath.cc in Sources */,
+				4C59B0D611E79F6800760867 /* hints.cc in Sources */,
 				7B09F5981133D6AB004F149D /* hiscores.cc in Sources */,
 				7B09F5991133D6AB004F149D /* initfile.cc in Sources */,
 				7B09F59A1133D6AB004F149D /* invent.cc in Sources */,
-				7B09F59B1133D6AB004F149D /* it_use2.cc in Sources */,
-				7B09F59C1133D6AB004F149D /* it_use3.cc in Sources */,
 				7B09F59D1133D6AB004F149D /* item_use.cc in Sources */,
 				7B09F59E1133D6AB004F149D /* itemname.cc in Sources */,
 				7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */,
 				7B09F5A01133D6AB004F149D /* items.cc in Sources */,
 				7B09F5A11133D6AB004F149D /* jobs.cc in Sources */,
 				7B09F5A21133D6AB004F149D /* kills.cc in Sources */,
+				1F909C42148B478600084E83 /* l_colour.cc in Sources */,
 				7B09F5A31133D6AB004F149D /* l_crawl.cc in Sources */,
 				7B09F5A41133D6AB004F149D /* l_debug.cc in Sources */,
 				7B09F5A51133D6AB004F149D /* l_dgn.cc in Sources */,
@@ -2772,6 +3055,7 @@
 				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
 				7B09F5CB1133D6AB004F149D /* mapmark.cc in Sources */,
 				7B09F5CC1133D6AB004F149D /* maps.cc in Sources */,
+				1F909C2E148B469C00084E83 /* melee_attack.cc in Sources */,
 				7B09F5CD1133D6AB004F149D /* menu.cc in Sources */,
 				7B09F64B1133D92C004F149D /* message-stream.cc in Sources */,
 				7B09F5CE1133D6AB004F149D /* message.cc in Sources */,
@@ -2784,6 +3068,7 @@
 				7B09F5D51133D6AB004F149D /* mon-cast.cc in Sources */,
 				7B09F5D61133D6AB004F149D /* mon-clone.cc in Sources */,
 				7B09F5D71133D6AB004F149D /* mon-death.cc in Sources */,
+				1F909C03148B455600084E83 /* mon-ench.cc in Sources */,
 				7B09F5D81133D6AB004F149D /* mon-gear.cc in Sources */,
 				7B09F5D91133D6AB004F149D /* mon-grow.cc in Sources */,
 				7B09F5DA1133D6AB004F149D /* mon-info.cc in Sources */,
@@ -2794,12 +3079,12 @@
 				7B09F5DF1133D6AB004F149D /* mon-place.cc in Sources */,
 				7B09F6511133DA4D004F149D /* mon-project.cc in Sources */,
 				7B09F5E01133D6AB004F149D /* mon-speak.cc in Sources */,
+				1F909C04148B455600084E83 /* mon-stealth.cc in Sources */,
 				7B09F5E11133D6AB004F149D /* mon-stuff.cc in Sources */,
 				7B09F5E21133D6AB004F149D /* mon-transit.cc in Sources */,
 				7B09F5E31133D6AB004F149D /* mon-util.cc in Sources */,
 				7B09F5E41133D6AB004F149D /* mon_resist_def.cc in Sources */,
 				7B09F5E51133D6AB004F149D /* monster.cc in Sources */,
-				7B09F5E61133D6AB004F149D /* mt19937ar.cc in Sources */,
 				7B09F5E71133D6AB004F149D /* mutation.cc in Sources */,
 				7B09F5E81133D6AB004F149D /* newgame.cc in Sources */,
 				7B09F5E91133D6AB004F149D /* ng-init.cc in Sources */,
@@ -2808,8 +3093,10 @@
 				7B5165B211859D5A005B23ED /* ng-setup.cc in Sources */,
 				7B5165B311859D5A005B23ED /* ng-wanderer.cc in Sources */,
 				7B09F5EC1133D6AB004F149D /* notes.cc in Sources */,
+				1F909C3A148B46E900084E83 /* orb.cc in Sources */,
 				7B09F5ED1133D6AB004F149D /* ouch.cc in Sources */,
 				7B09F5EE1133D6AB004F149D /* output.cc in Sources */,
+				1F909BD3148B440800084E83 /* package.cc in Sources */,
 				7B09F5EF1133D6AB004F149D /* pattern.cc in Sources */,
 				7B5165B411859D5A005B23ED /* place-info.cc in Sources */,
 				7B09F5F01133D6AB004F149D /* place.cc in Sources */,
@@ -2817,28 +3104,35 @@
 				7BDE8444116D247D00974D63 /* player-equip.cc in Sources */,
 				7B5165B611859D5A005B23ED /* player-stats.cc in Sources */,
 				7B09F5F11133D6AB004F149D /* player.cc in Sources */,
+				1F909C4D148B47AA00084E83 /* potion.cc in Sources */,
 				7B09F5F21133D6AB004F149D /* quiver.cc in Sources */,
 				7B5165CC11859D82005B23ED /* random-var.cc in Sources */,
 				7B09F5F31133D6AB004F149D /* random.cc in Sources */,
 				7B09F5F41133D6AB004F149D /* ray.cc in Sources */,
 				7B09F5F51133D6AB004F149D /* religion.cc in Sources */,
 				7B09F5F61133D6AB004F149D /* rng.cc in Sources */,
-				7B09F5F71133D6AB004F149D /* sha256.cc in Sources */,
 				7B09F5F81133D6AB004F149D /* shopping.cc in Sources */,
 				7B09F5F91133D6AB004F149D /* shout.cc in Sources */,
 				7B09F5FA1133D6AB004F149D /* show.cc in Sources */,
 				7B09F5FB1133D6AB004F149D /* showsymb.cc in Sources */,
+				1F909BE3148B450000084E83 /* skill_menu.cc in Sources */,
 				7B09F5FC1133D6AB004F149D /* skills.cc in Sources */,
 				7B09F5FD1133D6AB004F149D /* skills2.cc in Sources */,
 				7B09F5FE1133D6AB004F149D /* species.cc in Sources */,
-				7B09F5FF1133D6AB004F149D /* spells1.cc in Sources */,
-				7B09F6001133D6AB004F149D /* spells2.cc in Sources */,
-				7B09F6011133D6AB004F149D /* spells3.cc in Sources */,
-				7B09F6021133D6AB004F149D /* spells4.cc in Sources */,
 				7B09F6031133D6AB004F149D /* spl-book.cc in Sources */,
 				7B09F6041133D6AB004F149D /* spl-cast.cc in Sources */,
-				7B09F6051133D6AB004F149D /* spl-mis.cc in Sources */,
+				1F909BBA148B42C700084E83 /* spl-clouds.cc in Sources */,
+				1F909BBB148B42C700084E83 /* spl-damage.cc in Sources */,
+				1F909BBC148B42C700084E83 /* spl-goditem.cc in Sources */,
+				1F909BBD148B42C700084E83 /* spl-miscast.cc in Sources */,
+				1F909BBE148B42C700084E83 /* spl-monench.cc in Sources */,
+				1F909BBF148B42C700084E83 /* spl-other.cc in Sources */,
+				1F909BC0148B42C700084E83 /* spl-selfench.cc in Sources */,
+				1F909BC1148B42C700084E83 /* spl-summoning.cc in Sources */,
+				1F909BC2148B42C700084E83 /* spl-tornado.cc in Sources */,
+				1F909BC3148B42C700084E83 /* spl-transloc.cc in Sources */,
 				7B09F6061133D6AB004F149D /* spl-util.cc in Sources */,
+				1F909BC4148B42C700084E83 /* spl-wpnench.cc in Sources */,
 				7B5165CD11859D82005B23ED /* spl-zap.cc in Sources */,
 				7B5165CE11859D82005B23ED /* sprint.cc in Sources */,
 				7B09F6071133D6AB004F149D /* sqldbm.cc in Sources */,
@@ -2846,15 +3140,20 @@
 				7B5165D011859D82005B23ED /* startup.cc in Sources */,
 				7B09F6081133D6AB004F149D /* stash.cc in Sources */,
 				7B09F6091133D6AB004F149D /* state.cc in Sources */,
+				1F909C17148B45EE00084E83 /* status.cc in Sources */,
 				7B09F60A1133D6AB004F149D /* store.cc in Sources */,
 				7B09F60B1133D6AB004F149D /* stuff.cc in Sources */,
+				1F909C05148B455600084E83 /* syscalls.cc in Sources */,
 				7B09F60C1133D6AB004F149D /* tags.cc in Sources */,
 				7B5165D111859D82005B23ED /* tagstring.cc in Sources */,
+				1F909BEB148B450E00084E83 /* target.cc in Sources */,
 				7B09F60D1133D6AB004F149D /* teleport.cc in Sources */,
 				7B09F60E1133D6AB004F149D /* terrain.cc in Sources */,
 				7B09F6201133D6AB004F149D /* transform.cc in Sources */,
 				7B09F6211133D6AB004F149D /* traps.cc in Sources */,
 				7B09F6221133D6AB004F149D /* travel.cc in Sources */,
+				1F909C21148B465300084E83 /* tutorial.cc in Sources */,
+				1F909BC8148B42E900084E83 /* unicode.cc in Sources */,
 				7B09F6241133D6AB004F149D /* version.cc in Sources */,
 				7B09F6251133D6AB004F149D /* view.cc in Sources */,
 				7B09F6261133D6AB004F149D /* viewchar.cc in Sources */,
@@ -2866,8 +3165,7 @@
 				7B09F62C1133D6AB004F149D /* wiz-mon.cc in Sources */,
 				7B09F62D1133D6AB004F149D /* wiz-you.cc in Sources */,
 				7B09F62E1133D6AB004F149D /* xom.cc in Sources */,
-				4C59B0C011E79BB600760867 /* dgn-actions.cc in Sources */,
-				4C59B0D611E79F6800760867 /* hints.cc in Sources */,
+				1F909BB5148B428E00084E83 /* zotdef.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2877,6 +3175,7 @@
 			files = (
 				E5D640BE10BD494500A99626 /* abl-show.cc in Sources */,
 				E5D640BF10BD494500A99626 /* abyss.cc in Sources */,
+				1F909AE1148B23BC00084E83 /* acquire.cc in Sources */,
 				7B51659411859CFA005B23ED /* act-iter.cc in Sources */,
 				E5D640C010BD494500A99626 /* actor-los.cc in Sources */,
 				E5D640C110BD494500A99626 /* actor.cc in Sources */,
@@ -2884,11 +3183,14 @@
 				E5D640C310BD494500A99626 /* areas.cc in Sources */,
 				E5D640C410BD494500A99626 /* arena.cc in Sources */,
 				E5D640C510BD494500A99626 /* artefact.cc in Sources */,
+				1F909AE3148B23BC00084E83 /* asg.cc in Sources */,
+				1F909AE4148B23BC00084E83 /* attack.cc in Sources */,
 				E5D640C610BD494500A99626 /* attitude-change.cc in Sources */,
 				E5D640C710BD494500A99626 /* beam.cc in Sources */,
 				E5D640C810BD494500A99626 /* behold.cc in Sources */,
 				E5D640C910BD494500A99626 /* bitary.cc in Sources */,
 				E5D640CA10BD494500A99626 /* branch.cc in Sources */,
+				1F909AE5148B23BC00084E83 /* cellular.cc in Sources */,
 				E5D640CB10BD494500A99626 /* chardump.cc in Sources */,
 				E5D640CC10BD494500A99626 /* cio.cc in Sources */,
 				E5D640CD10BD494500A99626 /* cloud.cc in Sources */,
@@ -2901,6 +3203,7 @@
 				E5D640D410BD494500A99626 /* coordit.cc in Sources */,
 				E5D640D610BD494500A99626 /* crash-u.cc in Sources */,
 				E5D640D810BD494500A99626 /* ctest.cc in Sources */,
+				1F909AE6148B23BC00084E83 /* dactions.cc in Sources */,
 				E5D640D910BD494500A99626 /* database.cc in Sources */,
 				E5D640DA10BD494500A99626 /* dbg-asrt.cc in Sources */,
 				E5D640DB10BD494500A99626 /* dbg-maps.cc in Sources */,
@@ -2910,7 +3213,10 @@
 				E5D640DF10BD494500A99626 /* delay.cc in Sources */,
 				E5D640E010BD494500A99626 /* describe.cc in Sources */,
 				7B51659C11859D30005B23ED /* dgl-message.cc in Sources */,
+				1F909AE7148B23BC00084E83 /* dgn-delve.cc in Sources */,
 				7B09F63F1133D823004F149D /* dgn-height.cc in Sources */,
+				1F909AE8148B23BC00084E83 /* dgn-labyrinth.cc in Sources */,
+				1F909AE9148B23BC00084E83 /* dgn-layouts.cc in Sources */,
 				7B09F6401133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6411133D823004F149D /* dgn-shoals.cc in Sources */,
 				7B09F6421133D823004F149D /* dgn-swamp.cc in Sources */,
@@ -2919,10 +3225,15 @@
 				E5D640E310BD494500A99626 /* dlua.cc in Sources */,
 				E5D640E410BD494500A99626 /* dungeon.cc in Sources */,
 				E5D640E510BD494500A99626 /* effects.cc in Sources */,
+				1F909AEA148B23BC00084E83 /* errors.cc in Sources */,
+				1F909AEB148B23BC00084E83 /* evoke.cc in Sources */,
 				E5D640E610BD494500A99626 /* exclude.cc in Sources */,
+				1F909AEC148B23BC00084E83 /* exercise.cc in Sources */,
+				1F909B57148B25DD00084E83 /* fearmonger.cc in Sources */,
 				E5D640E710BD494500A99626 /* feature.cc in Sources */,
 				E5D640E810BD494500A99626 /* fight.cc in Sources */,
 				E5D640E910BD494500A99626 /* files.cc in Sources */,
+				1F909AED148B23BC00084E83 /* fineff.cc in Sources */,
 				7B51659811859D1A005B23ED /* fontwrapper-ft.cc in Sources */,
 				E5D640EA10BD494500A99626 /* food.cc in Sources */,
 				E5D640EB10BD494500A99626 /* format.cc in Sources */,
@@ -2934,20 +3245,21 @@
 				E5D640EF10BD494500A99626 /* godabil.cc in Sources */,
 				7B09F5441133D63E004F149D /* godconduct.cc in Sources */,
 				E5D640F010BD494500A99626 /* goditem.cc in Sources */,
+				1F909AEE148B23BC00084E83 /* godmenu.cc in Sources */,
 				7B09F5451133D63E004F149D /* godpassive.cc in Sources */,
 				7B09F5461133D63E004F149D /* godprayer.cc in Sources */,
 				E5D640F110BD494500A99626 /* godwrath.cc in Sources */,
+				4C59B09011E7964700760867 /* hints.cc in Sources */,
 				E5D640F210BD494500A99626 /* hiscores.cc in Sources */,
 				E5D640F310BD494500A99626 /* initfile.cc in Sources */,
 				E5D640F410BD494500A99626 /* invent.cc in Sources */,
-				E5D640F510BD494500A99626 /* it_use2.cc in Sources */,
-				E5D640F610BD494500A99626 /* it_use3.cc in Sources */,
 				E5D640F710BD494500A99626 /* item_use.cc in Sources */,
 				E5D640F810BD494500A99626 /* itemname.cc in Sources */,
 				E5D640F910BD494500A99626 /* itemprop.cc in Sources */,
 				E5D640FA10BD494500A99626 /* items.cc in Sources */,
 				E5D640FB10BD494500A99626 /* jobs.cc in Sources */,
 				E5D640FC10BD494500A99626 /* kills.cc in Sources */,
+				1F909AEF148B23BC00084E83 /* l_colour.cc in Sources */,
 				E5D640FD10BD494500A99626 /* l_crawl.cc in Sources */,
 				E5D640FE10BD494500A99626 /* l_debug.cc in Sources */,
 				E5D640FF10BD494500A99626 /* l_dgn.cc in Sources */,
@@ -2991,6 +3303,7 @@
 				B032D6DC106C02150002D70D /* mapdef.cc in Sources */,
 				E5D6412310BD494500A99626 /* mapmark.cc in Sources */,
 				E5D6412410BD494500A99626 /* maps.cc in Sources */,
+				1F909B42148B244F00084E83 /* melee_attack.cc in Sources */,
 				E5D6412510BD494500A99626 /* menu.cc in Sources */,
 				7B09F64A1133D92C004F149D /* message-stream.cc in Sources */,
 				E5D6412610BD494500A99626 /* message.cc in Sources */,
@@ -3003,6 +3316,7 @@
 				E5D6412B10BD494500A99626 /* mon-cast.cc in Sources */,
 				7B09F5631133D66C004F149D /* mon-clone.cc in Sources */,
 				7B09F5641133D66C004F149D /* mon-death.cc in Sources */,
+				1F909B43148B244F00084E83 /* mon-ench.cc in Sources */,
 				E5D6412C10BD494500A99626 /* mon-gear.cc in Sources */,
 				E5D6412D10BD494500A99626 /* mon-grow.cc in Sources */,
 				E5D6412E10BD494500A99626 /* mon-info.cc in Sources */,
@@ -3013,12 +3327,12 @@
 				E5D6413310BD494500A99626 /* mon-place.cc in Sources */,
 				7B09F6501133DA4D004F149D /* mon-project.cc in Sources */,
 				E5D6413410BD494500A99626 /* mon-speak.cc in Sources */,
+				1F909B44148B244F00084E83 /* mon-stealth.cc in Sources */,
 				E5D6413510BD494500A99626 /* mon-stuff.cc in Sources */,
 				E5D6413610BD494500A99626 /* mon-transit.cc in Sources */,
 				E5D6413710BD494500A99626 /* mon-util.cc in Sources */,
 				7B09F5621133D66C004F149D /* mon_resist_def.cc in Sources */,
 				E5D6413810BD494500A99626 /* monster.cc in Sources */,
-				E5D6413910BD494500A99626 /* mt19937ar.cc in Sources */,
 				E5D6413A10BD494500A99626 /* mutation.cc in Sources */,
 				E5D6413B10BD494500A99626 /* newgame.cc in Sources */,
 				E5D6413C10BD494500A99626 /* ng-init.cc in Sources */,
@@ -3027,8 +3341,10 @@
 				7B5165AD11859D5A005B23ED /* ng-setup.cc in Sources */,
 				7B5165AE11859D5A005B23ED /* ng-wanderer.cc in Sources */,
 				E5D6413F10BD494500A99626 /* notes.cc in Sources */,
+				1F909B45148B244F00084E83 /* orb.cc in Sources */,
 				E5D6414010BD494500A99626 /* ouch.cc in Sources */,
 				E5D6414110BD494500A99626 /* output.cc in Sources */,
+				1F909B46148B244F00084E83 /* package.cc in Sources */,
 				7B09F5651133D66C004F149D /* pattern.cc in Sources */,
 				7B5165AF11859D5A005B23ED /* place-info.cc in Sources */,
 				E5D6414310BD494500A99626 /* place.cc in Sources */,
@@ -3036,6 +3352,7 @@
 				7BDE8445116D247D00974D63 /* player-equip.cc in Sources */,
 				7B5165B111859D5A005B23ED /* player-stats.cc in Sources */,
 				E5D6414410BD494500A99626 /* player.cc in Sources */,
+				1F909B47148B244F00084E83 /* potion.cc in Sources */,
 				E5D6414510BD494500A99626 /* quiver.cc in Sources */,
 				7B5165C611859D82005B23ED /* random-var.cc in Sources */,
 				E5D6414610BD494500A99626 /* random.cc in Sources */,
@@ -3043,22 +3360,28 @@
 				E5D6414810BD494500A99626 /* religion.cc in Sources */,
 				E5D6414910BD494500A99626 /* rng.cc in Sources */,
 				B032D691106C02150002D70D /* SDLMain.m in Sources */,
-				E5D6414A10BD494500A99626 /* sha256.cc in Sources */,
 				E5D6414B10BD494500A99626 /* shopping.cc in Sources */,
 				E5D6414C10BD494500A99626 /* shout.cc in Sources */,
 				E5D6414D10BD494500A99626 /* show.cc in Sources */,
 				E5D6414E10BD494500A99626 /* showsymb.cc in Sources */,
+				1F909B25148B242D00084E83 /* skill_menu.cc in Sources */,
 				E5D6414F10BD494500A99626 /* skills.cc in Sources */,
 				E5D6415010BD494500A99626 /* skills2.cc in Sources */,
 				E5D6415110BD494500A99626 /* species.cc in Sources */,
-				E5D6415210BD494500A99626 /* spells1.cc in Sources */,
-				E5D6415310BD494500A99626 /* spells2.cc in Sources */,
-				E5D6415410BD494500A99626 /* spells3.cc in Sources */,
-				E5D6415510BD494500A99626 /* spells4.cc in Sources */,
 				E5D6415610BD494500A99626 /* spl-book.cc in Sources */,
 				E5D6415710BD494500A99626 /* spl-cast.cc in Sources */,
-				E5D6415810BD494500A99626 /* spl-mis.cc in Sources */,
+				1F909B26148B242D00084E83 /* spl-clouds.cc in Sources */,
+				1F909B27148B242D00084E83 /* spl-damage.cc in Sources */,
+				1F909B28148B242D00084E83 /* spl-goditem.cc in Sources */,
+				1F909B29148B242D00084E83 /* spl-miscast.cc in Sources */,
+				1F909B2A148B242D00084E83 /* spl-monench.cc in Sources */,
+				1F909B2B148B242D00084E83 /* spl-other.cc in Sources */,
+				1F909B2C148B242D00084E83 /* spl-selfench.cc in Sources */,
+				1F909B2D148B242D00084E83 /* spl-summoning.cc in Sources */,
+				1F909B2E148B242D00084E83 /* spl-tornado.cc in Sources */,
+				1F909B2F148B242D00084E83 /* spl-transloc.cc in Sources */,
 				E5D6415910BD494500A99626 /* spl-util.cc in Sources */,
+				1F909B30148B242D00084E83 /* spl-wpnench.cc in Sources */,
 				7B5165C711859D82005B23ED /* spl-zap.cc in Sources */,
 				7B5165C811859D82005B23ED /* sprint.cc in Sources */,
 				E5D6415A10BD494500A99626 /* sqldbm.cc in Sources */,
@@ -3066,22 +3389,33 @@
 				7B5165CA11859D82005B23ED /* startup.cc in Sources */,
 				E5D6415B10BD494500A99626 /* stash.cc in Sources */,
 				E5D6415C10BD494500A99626 /* state.cc in Sources */,
+				1F909B31148B242D00084E83 /* status.cc in Sources */,
 				E5D6415D10BD494500A99626 /* store.cc in Sources */,
 				E5D6415E10BD494500A99626 /* stuff.cc in Sources */,
+				1F909B32148B242D00084E83 /* syscalls.cc in Sources */,
 				E5D6415F10BD494500A99626 /* tags.cc in Sources */,
 				7B5165CB11859D82005B23ED /* tagstring.cc in Sources */,
+				1F909B33148B242D00084E83 /* target.cc in Sources */,
 				E5D6416010BD494500A99626 /* teleport.cc in Sources */,
 				E5D6416110BD494500A99626 /* terrain.cc in Sources */,
 				B032D6F4106C02150002D70D /* tilebuf.cc in Sources */,
+				1F909B01148B23E000084E83 /* tilecell.cc in Sources */,
 				B032D692106C02150002D70D /* tiledef-dngn.cc in Sources */,
+				4C59B0AD11E798C400760867 /* tiledef-feat.cc in Sources */,
+				4C59B0AE11E798C400760867 /* tiledef-floor.cc in Sources */,
 				B032D693106C02150002D70D /* tiledef-gui.cc in Sources */,
+				1F909B72148B2CB400084E83 /* tiledef-icons.cc in Sources */,
 				B032D694106C02150002D70D /* tiledef-main.cc in Sources */,
 				B032D695106C02150002D70D /* tiledef-player.cc in Sources */,
 				B032D696106C02150002D70D /* tiledef-unrand.cc in Sources */,
+				4C59B0AF11E798C400760867 /* tiledef-wall.cc in Sources */,
+				4C59B09111E7964700760867 /* tiledgnbuf.cc in Sources */,
 				7B51657B11859CD6005B23ED /* tiledoll.cc in Sources */,
 				B032D6F5106C02150002D70D /* tilefont.cc in Sources */,
 				B032D6F6106C02150002D70D /* tilemcache.cc in Sources */,
+				4C59B09211E7964700760867 /* tilepick-p.cc in Sources */,
 				B032D6F7106C02150002D70D /* tilepick.cc in Sources */,
+				1F909B02148B23E000084E83 /* tilereg-cmd.cc in Sources */,
 				7B51657C11859CD6005B23ED /* tilereg-crt.cc in Sources */,
 				7B51657D11859CD6005B23ED /* tilereg-dgn.cc in Sources */,
 				7B51657E11859CD6005B23ED /* tilereg-doll.cc in Sources */,
@@ -3090,7 +3424,9 @@
 				7B51658111859CD6005B23ED /* tilereg-map.cc in Sources */,
 				7B51658211859CD6005B23ED /* tilereg-mem.cc in Sources */,
 				7B51658311859CD6005B23ED /* tilereg-menu.cc in Sources */,
+				4C59B09311E7964700760867 /* tilereg-mon.cc in Sources */,
 				7B51658411859CD6005B23ED /* tilereg-msg.cc in Sources */,
+				1F909B03148B23E000084E83 /* tilereg-skl.cc in Sources */,
 				7B51658511859CD6005B23ED /* tilereg-spl.cc in Sources */,
 				7B51658611859CD6005B23ED /* tilereg-stat.cc in Sources */,
 				7B51658711859CD6005B23ED /* tilereg-tab.cc in Sources */,
@@ -3099,9 +3435,12 @@
 				B032D6F8106C02150002D70D /* tilereg.cc in Sources */,
 				B032D698106C02150002D70D /* tilesdl.cc in Sources */,
 				B032D6F9106C02150002D70D /* tiletex.cc in Sources */,
+				4C59B09411E7964700760867 /* tileview.cc in Sources */,
 				7B09F5661133D66C004F149D /* transform.cc in Sources */,
 				E5D6416310BD494500A99626 /* traps.cc in Sources */,
 				E5D6416410BD494500A99626 /* travel.cc in Sources */,
+				1F909B04148B23E000084E83 /* tutorial.cc in Sources */,
+				1F909B4E148B251700084E83 /* unicode.cc in Sources */,
 				E5D6416610BD494500A99626 /* version.cc in Sources */,
 				E5D6416710BD494500A99626 /* view.cc in Sources */,
 				E5D6416810BD494500A99626 /* viewchar.cc in Sources */,
@@ -3114,15 +3453,7 @@
 				E5D6416E10BD494500A99626 /* wiz-mon.cc in Sources */,
 				E5D6416F10BD494500A99626 /* wiz-you.cc in Sources */,
 				E5D6417010BD494500A99626 /* xom.cc in Sources */,
-				4C59B09011E7964700760867 /* hints.cc in Sources */,
-				4C59B09111E7964700760867 /* tiledgnbuf.cc in Sources */,
-				4C59B09211E7964700760867 /* tilepick-p.cc in Sources */,
-				4C59B09311E7964700760867 /* tilereg-mon.cc in Sources */,
-				4C59B09411E7964700760867 /* tileview.cc in Sources */,
-				4C59B0AD11E798C400760867 /* tiledef-feat.cc in Sources */,
-				4C59B0AE11E798C400760867 /* tiledef-floor.cc in Sources */,
-				4C59B0AF11E798C400760867 /* tiledef-wall.cc in Sources */,
-				4C59B0BF11E79BB100760867 /* dgn-actions.cc in Sources */,
+				1F909B05148B23E000084E83 /* zotdef.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3619,6 +3950,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					USE_TILE,
+					USE_TILE_LOCAL,
 					CLUA_BINDINGS,
 					USE_SDL,
 					USE_GL,

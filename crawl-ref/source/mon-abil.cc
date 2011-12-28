@@ -487,7 +487,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     merge_to->hit_dice = orighd;
     _merge_ench_durations(crawlie, merge_to, true);
 
-    undead_abomination_convert(merge_to, newhd);
+    init_abomination(merge_to, newhd);
     merge_to->max_hit_points = mhp;
     merge_to->hit_points = hp;
 
@@ -1167,7 +1167,6 @@ static void _cherub_hymn(monster* chief)
     }
 }
 
-
 static bool _make_monster_angry(const monster* mon, monster* targ)
 {
     if (mon->friendly() != targ->friendly())
@@ -1201,9 +1200,10 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     {
         if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
         {
-            mprf("%s calls on %s to defend her!",
+            mprf("%s calls on %s to defend %s!",
                 mon->name(DESC_THE).c_str(),
-                targ->name(DESC_THE).c_str());
+                targ->name(DESC_THE).c_str(),
+                mon->pronoun(PRONOUN_OBJECTIVE).c_str());
         }
         else
             mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
@@ -1800,7 +1800,7 @@ struct complicated_sight_check
     bool operator()(monster* mons, actor * test)
     {
         return (test->visible_to(mons)
-                && cell_see_cell(base_position, test->pos(), LOS_SOLID));
+                && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE));
     }
 };
 

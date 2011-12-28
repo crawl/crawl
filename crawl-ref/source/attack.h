@@ -52,7 +52,6 @@ public:
     brand_type      damage_brand;
     skill_type      wpn_skill;
     hands_reqd_type hands;
-    bool            hand_half_bonus;
 
     // Attacker's shield, stored so we can reference it and determine
     // the attacker's combat effectiveness (staff + shield == bad)
@@ -85,7 +84,7 @@ public:
 
 // Public Methods
 public:
-    attack(actor *attk, actor *defn, bool allow_unarmed);
+    attack(actor *attk, actor *defn);
 
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool) = 0;

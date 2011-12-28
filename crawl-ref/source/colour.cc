@@ -536,6 +536,14 @@ void init_element_colours()
                             90,  WHITE,
                             30,  LIGHTGREY,
                         0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_SUBTRACTOR, "subtractor",
+                            24,  CYAN,
+                            24,  MAGENTA,
+                            24,  LIGHTBLUE,
+                            24,  LIGHTRED,
+                            24,  YELLOW,
+                        0));
     add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, "elven_brick", _etc_elven_brick
                        ));
@@ -690,7 +698,7 @@ int str_to_colour(const std::string &str, int default_colour,
     return ((ret == 16) ? default_colour : ret);
 }
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)

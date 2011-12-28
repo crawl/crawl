@@ -214,7 +214,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 2 },
-    { WPN_GREAT_MACE,        "great mace",         17, -4, 17, 270,  9,
+    { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
@@ -256,10 +256,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_SCIMITAR,              "scimitar",              11, -1, 14, 170,  3,
+    { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      12, -2, 13, 170,  3,
+    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
 #if TAG_MAJOR_VERSION == 32
@@ -319,7 +319,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_TRIDENT,           "trident",             9,  3, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 10 },
-    { WPN_HALBERD,           "halberd",            13, -3, 14, 200,  5,
+    { WPN_HALBERD,           "halberd",            13, -3, 15, 200,  5,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
@@ -331,7 +331,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_TRISHULA,          "trishula",           13,  0, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 0 },
-    { WPN_GLAIVE,            "glaive",             15, -3, 16, 200,  6,
+    { WPN_GLAIVE,            "glaive",             15, -3, 17, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
     { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
@@ -519,19 +519,6 @@ void do_curse_item(item_def &item, bool quiet)
         return;
     }
 
-    // Neither can pearl dragon hides
-    if (item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_PEARL_DRAGON_HIDE
-            || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
-    {
-        if (!quiet)
-        {
-            mprf("Your %s glows black briefly, but repels the curse.",
-                item.name(DESC_PLAIN).c_str());
-        }
-        return;
-    }
-
     if (!quiet)
     {
         mprf("Your %s glows black for a moment.",
@@ -572,7 +559,7 @@ void do_curse_item(item_def &item, bool quiet)
             }
 
             ash_check_bondage();
-            ash_id_inventory();
+            god_id_inventory();
         }
 
         xom_is_stimulated(amusement);
@@ -657,7 +644,7 @@ static bool _is_affordable(const item_def &item)
     if (in_shop(item))
         return (int)item_value(item) < you.gold;
 
-    // Explicitely marked by a vault.
+    // Explicitly marked by a vault.
     if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
 
@@ -1619,6 +1606,12 @@ bool is_whip_type(int wpn_type)
             || wpn_type == WPN_SACRED_SCOURGE);
 }
 
+bool is_giant_club_type(int wpn_type)
+{
+    return (wpn_type == WPN_GIANT_CLUB
+            || wpn_type == WPN_GIANT_SPIKED_CLUB);
+}
+
 bool is_demonic(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
@@ -1816,7 +1809,7 @@ bool convert2bad(item_def &item)
 
 int weapon_str_weight(const item_def &wpn)
 {
-    ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
+    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
     if (wpn.base_type == OBJ_STAVES)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
@@ -2061,7 +2054,7 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
 
 static size_type weapon_size(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
     if (item.base_type == OBJ_STAVES)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].fit_size);
@@ -2307,7 +2300,7 @@ bool item_is_spellbook(const item_def &item)
 // Returns number of pluses on jewellery (always none for amulets yet).
 int ring_has_pluses(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_JEWELLERY);
+    ASSERT(item.base_type == OBJ_JEWELLERY);
 
     // not known -> no pluses
     if (!item_type_known(item))
@@ -2336,8 +2329,8 @@ int ring_has_pluses(const item_def &item)
 // has more effect than just having one on.
 bool ring_has_stackable_effect(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_JEWELLERY);
-    ASSERT (!jewellery_is_amulet(item));
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+    ASSERT(!jewellery_is_amulet(item));
 
     if (!item_type_known(item))
         return (false);

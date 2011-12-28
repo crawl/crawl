@@ -116,24 +116,19 @@ std::string item_def::name(description_level_type descrip,
 
     monster_flag_type corpse_flags;
 
-    if (base_type == OBJ_CORPSES && is_named_corpse(*this)
+    if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
+         && !(((corpse_flags =
 #if TAG_MAJOR_VERSION == 32
-        && !(((corpse_flags = (int64_t)props[CORPSE_NAME_TYPE_KEY])
+                 (int64_t)props[CORPSE_NAME_TYPE_KEY]
 #else
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+                 props[CORPSE_NAME_TYPE_KEY].get_int64()
 #endif
-               & MF_NAME_SPECIES)
-             && !(corpse_flags & MF_NAME_DEFINITE))
-             && !(corpse_flags & MF_NAME_SUFFIX)
-        && !starts_with(get_corpse_name(*this), "shaped "))
-    {
-        descrip = DESC_THE;
-    }
-
-    if (item_is_orb(*this)
-        || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this))
-            && is_artefact(*this))
+               ) & MF_NAME_SPECIES)
+              && !(corpse_flags & MF_NAME_DEFINITE))
+         && !(corpse_flags & MF_NAME_SUFFIX)
+         && !starts_with(get_corpse_name(*this), "shaped "))
+        || item_is_orb(*this) || item_is_horn_of_geryon(*this)
+        || (ident || item_type_known(*this)) && is_artefact(*this))
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -141,6 +136,9 @@ std::string item_def::name(description_level_type descrip,
         default:
             buff << "the ";
         case DESC_PLAIN:
+        case DESC_DBNAME:
+        case DESC_BASENAME:
+        case DESC_QUALNAME:
             break;
         }
     }
@@ -173,15 +171,12 @@ std::string item_def::name(description_level_type descrip,
         switch (descrip)
         {
         case DESC_THE:        buff << "the "; break;
-
         case DESC_YOUR:       buff << "your "; break;
         case DESC_ITS:        buff << "its "; break;
-
         case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
                               buff << (startvowel ? "an " : "a "); break;
-
         case DESC_PLAIN:
         default:
             break;
@@ -318,7 +313,8 @@ std::string item_def::name(description_level_type descrip,
 
             std::vector<std::string>::iterator iter = insparts.begin();
 
-            for (;;) {
+            for (;;)
+            {
                 buff << *iter;
                 if (++iter == insparts.end()) break;
                 buff << ", ";
@@ -941,6 +937,7 @@ static const char* _book_type_name(int booktype)
         return "Minor Magic";
 #if TAG_MAJOR_VERSION == 32
     case BOOK_CONJURATIONS_I:
+        return "Old Conjurations";
 #endif
     case BOOK_CONJURATIONS_II:
         return "Conjurations";
@@ -1859,7 +1856,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX
+            && !dbname)
         {
             buff << " of " << _name;
         }
@@ -2210,7 +2208,6 @@ void check_item_knowledge(bool unknown_items)
     menu.load_items(items, discoveries_item_mangle);
     menu.show(true);
     char last_char = menu.getkey();
-    redraw_screen();
 
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
@@ -2740,6 +2737,10 @@ bool is_bad_item(const item_def &item, bool temp)
             return (false);
         }
     case OBJ_JEWELLERY:
+        // Potentially useful.  TODO: check the properties.
+        if (is_artefact(item))
+            return (false);
+
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
@@ -2769,12 +2770,12 @@ bool is_bad_item(const item_def &item, bool temp)
 // worthwhile.
 bool is_dangerous_item(const item_def &item, bool temp)
 {
+    if (!item_type_known(item))
+        return (false);
+
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        if (!item_type_known(item))
-            return (false);
-
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
@@ -2790,9 +2791,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         }
 
     case OBJ_POTIONS:
-        if (!item_type_known(item))
-            return (false);
-
         switch (item.sub_type)
         {
         case POT_MUTATION:
@@ -2968,7 +2966,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
-            return (temp ? you.backlit(true) : you.haloed());
+            return (temp ? you.backlit(true)
+                         : you.haloed() && you.religion == GOD_SHINING_ONE);
 
         }
 
@@ -2978,7 +2977,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
-        // Potentially useful.
+        // Potentially useful.  TODO: check the properties.
         if (is_artefact(item))
             return (false);
 
@@ -3039,7 +3038,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
-            return (temp && you.backlit(true));
+            return (temp ? you.backlit(true)
+                         : you.haloed() && you.religion == GOD_SHINING_ONE);
 
         case RING_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
@@ -3281,7 +3281,7 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
     return (item_name);
 }
 
-typedef std::map<std::string, item_types_pair> item_names_map;
+typedef std::map<std::string, item_kind> item_names_map;
 static item_names_map item_names_cache;
 
 typedef std::map<unsigned, std::vector<std::string> > item_names_by_glyph_map;
@@ -3309,34 +3309,49 @@ void init_item_name_cache()
                 }
             }
 
+            int npluses = 0;
+            if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
+                npluses = NUM_SKILLS;
+            else if (base_type == OBJ_MISCELLANY && sub_type == MISC_RUNE_OF_ZOT)
+                npluses = NUM_RUNE_TYPES;
+
             item_def item;
             item.base_type = base_type;
             item.sub_type = sub_type;
-            if (is_deck(item))
+            for (int plus = 0; plus <= npluses; plus++)
             {
-                item.plus = 1;
-                item.special = DECK_RARITY_COMMON;
-                init_deck(item);
-            }
-            std::string name = item.name(DESC_DBNAME, true, true);
-            lowercase(name);
-            glyph g = get_item_glyph(&item);
+                if (plus > 0)
+                    item.plus = std::max(0, plus - 1);
+                if (is_deck(item))
+                {
+                    item.plus = 1;
+                    item.special = DECK_RARITY_COMMON;
+                    init_deck(item);
+                }
+                std::string name = item.name(plus ? DESC_PLAIN : DESC_DBNAME,
+                                             true, true);
+                lowercase(name);
+                glyph g = get_item_glyph(&item);
 
-            if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
-                continue;
-            else if (name.find("buggy") != std::string::npos)
-            {
-                crawl_state.add_startup_error("Bad name for item name "
-                                              " cache: " + name);
-                continue;
-            }
+                if (base_type == OBJ_JEWELLERY && sub_type >= NUM_RINGS
+                    && sub_type < AMU_FIRST_AMULET)
+                {
+                    continue;
+                }
+                else if (name.find("buggy") != std::string::npos)
+                {
+                    crawl_state.add_startup_error("Bad name for item name "
+                                                  " cache: " + name);
+                    continue;
+                }
 
-            if (item_names_cache.find(name) == item_names_cache.end())
-            {
-                item_names_cache[name].base_type = base_type;
-                item_names_cache[name].sub_type = sub_type;
-                if (g.ch)
-                    item_names_by_glyph_cache[g.ch].push_back(name);
+                if (item_names_cache.find(name) == item_names_cache.end())
+                {
+                    item_kind kind = {base_type, sub_type, item.plus, 0};
+                    item_names_cache[name] = kind;
+                    if (g.ch)
+                        item_names_by_glyph_cache[g.ch].push_back(name);
+                }
             }
         }
     }
@@ -3344,7 +3359,7 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_types_pair item_types_by_name(std::string name)
+item_kind item_kind_by_name(std::string name)
 {
     lowercase(name);
 
@@ -3353,7 +3368,7 @@ item_types_pair item_types_by_name(std::string name)
     if (i != item_names_cache.end())
         return (i->second);
 
-    item_types_pair err = {OBJ_UNASSIGNED, 0};
+    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
 
     return (err);
 }

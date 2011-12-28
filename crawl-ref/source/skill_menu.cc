@@ -118,8 +118,11 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO))
+    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO)
+        && !is_set(SKMF_RESKILL_FROM))
+    {
         return false;
+    }
 
     if (mastered())
     {
@@ -778,8 +781,11 @@ bool SkillMenu::exit()
             break;
         }
 
-        if (you.skills[i] < 27 && !is_useless_skill((skill_type)i))
+        if (you.skills[i] < 27 && you.can_train[i]
+            && !is_useless_skill((skill_type) i))
+        {
             maxed_out = false;
+        }
     }
 
     if (!enabled_skill && !maxed_out)
@@ -1364,6 +1370,10 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "skills");
+#endif
+
     clrscr();
     SkillMenu skm(flag, exp);
     int keyn;

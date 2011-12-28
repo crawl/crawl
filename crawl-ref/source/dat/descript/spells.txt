@@ -224,7 +224,7 @@ This spell sets a weapon or launcher held by the caster ablaze. It will not affe
 %%%%
 Fire Storm
 
-This spell creates a mighty storm of roaring flame.
+This spell calls forth a mighty storm of roaring flame directly onto the target, dealing partially irresistible fire damage in a large area and leaving behind short-lived fire vortices.
 %%%%
 Fireball
 
@@ -280,7 +280,7 @@ This spell temporarily transforms the caster's body into a frozen ice-creature, 
 %%%%
 Ice Storm
 
-This spell conjures forth a raging blizzard of ice, sleet and freezing gasses.
+This spell hurls a raging blizzard of ice, sleet and freezing gasses at the target, dealing partially irresistible cold damage in a large area.
 %%%%
 Ignite Poison
 
@@ -364,7 +364,7 @@ The caster also gains some of the more dubious benefits of having an undead body
 %%%%
 Olgreb's Toxic Radiance
 
-This spell bathes the caster's surroundings in a sickly green light, inflicting poison on everything in sight (including the caster).
+This spell bathes the caster's surroundings in a sickly green light, inflicting poison on everything nearby (including the caster). It can be blocked by translucent walls, however, and invisible creatures are completely unaffected.
 %%%%
 Orb of Destruction
 

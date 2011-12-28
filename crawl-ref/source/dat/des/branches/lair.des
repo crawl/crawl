@@ -152,9 +152,9 @@ MAP
 xxxxxxxxx?xxxx
 xxxxxx?xxxx?xx
 ?xx?xxxxxxx?xx
-xxxxxx121xxxxx
-?xxxxx1O1xxx?x
-xxx??x111xxx?x
+xxxxxx121xxx.x
+?xxxxx1O1.x.?@
+xxx??x111x.x?x
 xxxxxxxx??xxxx
 x?xxxx?xxxxx?x
 xxxxxxxxx?xxxx
@@ -263,12 +263,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
 xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
-xxxxxxxxxxxxx?....xxx...2....??????..????x..%xxxx
-xx?xx???xxxxx..xx??xx??..........?...???..??x=.?x
-@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.xxx.?x
-xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?xxx$xx
-xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??xx?x
-xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?xxx
+xxxxxxxxxxxxx?....xxx...2....??????..????x..%cccc
+xx?xx???xxxxx..xx??xx??..........?...???..??c=.?c
+@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.ccc.?c
+xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?ccc$cc
+xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??cc?c
+xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?ccc
 xxxxxxxxxxxxxxxxxxxxx?R?xxxxxxxxxx.xxx?xxx?xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -598,6 +598,10 @@ ENDMAP
 #       Using KMONS and KITEM, we could have fruits on the same
 #       square as a tree/plant.
 #
+# Nutritional data is normal/herbi 3/carni 3.
+
+# avg 4.675 chokos
+# 2.8k/6.3k/0 nutrition
 NAME:   blue_anna_choko_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -617,6 +621,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 lychees or rambutans
+# 3.6k/8.1k/0 nutrition
 NAME:   blue_anna_soapberry_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -641,6 +647,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 oranges or lemons
+# 6k/13.2k/0 nutrition
 NAME:   blue_anna_citrus_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -665,6 +673,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 apples
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_apple_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -685,6 +695,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 apricots
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_apricot_tree
 TAGS:   fruiting_plant allow_dup
 SUBST:  . = G:20 B:15 .
@@ -705,6 +717,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 pears
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_pyrus_tree
 TAGS:   fruiting_plant allow_dup
 SUBST:  . = G:20 B:15 .
@@ -725,6 +739,8 @@ MAP
 .....
 ENDMAP
 
+# avg 5.756 snozzcumbers
+# 8.6k/17.3k/0 nutrition
 NAME:   blue_anna_bittermelon_vine
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -744,6 +760,8 @@ MAP
 .....
 ENDMAP
 
+# avg 12.5 grapes or 14.236 sultanas
+# 1.2k/3.1k/0 or 1k/2.3k/0 nutrition
 NAME:   blue_anna_grape_vine
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -769,6 +787,8 @@ MAP
 .....
 ENDMAP
 
+# avg 10.875 bananas (all in one pile)
+# 10.9k/23.4k/0 nutrition
 NAME:   blue_anna_musa_stalks
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -790,6 +810,8 @@ MAP
 .....
 ENDMAP
 
+# avg 28.260 strawberries
+# 5.6k/14.1k/0 nutrition
 NAME:   blue_anna_strawberry_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -799,8 +821,7 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-NSUBST: . = 1:d / *=..1
-NSUBST: . = 2:1 / *=.....1
+NSUBST: . = 2:1 / *=dddd.1
 MONS:   plant name:strawberry name_adjective
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
@@ -1034,8 +1055,8 @@ DEPTH:  Lair
 MONS:   plant / oklob plant w:1 / nothing w:15
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xllllllllxxxxxxxxxxxxxxxxxxx11xxx111....
-xlllllllxxxxxxxxxxxxxx111xxxx111xx111..@
+xllllllllxxxxxxxxxxxxxxxxxxx11xxx111.....
+xlllllllxxxxxxxxxxxxxx111xxxx111xx111...@
 xlllllxxxx111xxx11xxxxx111111111111111..x
 xllxxxxxx11xxxx11xxxx111111111111111111xx
 xllllxxxx1xxxxxx11111111111111111111x1xx
@@ -1293,9 +1314,9 @@ xxxxXt....PPXxx
 xxttttt......Xxx                           xxxx
 xttttxx.X..X..Xxx                         xxT.xxx...@
 xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
-xtttxccco.Gc.....ccPWWcco..%cccP..ccP....P.G.o.TTxxx.
+xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
 xttxcccc...c.P...=P.WwW+...%Qc.....+.....c.c...TTTx..
-xxccccccPc.ccccP.c.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
+xxccccccPc.ccccPGc.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
 xccccccc+c.P.PccccPwwwwco..%cc.22..cccc.P..c+ccccccc.
 xcc1...PPccccP.P.cWwWWPccccccc%...PcP.PPccccPP1..%cc.
 xcc......cccccccPcccW.ccco.occcP.ccc.ccccccc......cc.
@@ -1327,7 +1348,7 @@ MONS:   red devil / rotting devil / hairy devil / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
-MONS:   wizard col:red hd:13 name:crazed n_adj tile:mons_hell_wizard
+MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
 KITEM:  / = acquire any
 MARKER: = = lua:restrict_door {}
 MAP
@@ -1346,7 +1367,7 @@ MAP
  ...tttttttttt..ttttttt0tt.tttttttttcccccc++cccccccx
  ..Tttttttttt..tttttttttttt=ccccccccc:::::::::::::cL
  ..Ttttttttt.0t..ttttttttttc::::::::c:::Q;;;;Q::::cL
- .Tttttttttt..tt..tttttttttc::G:G:::c:::::::::::::cL
+ .Tttttttttt..tt..tttttttttc::G:G:::=:::::::::::::cL
  ..Tttttttt..tttt.tttttttttc:::G:G::cccccccccccccccL
  .Tttttttt..ttttt..ttttttttc::G:G:::c;;;;;;;2llllllL
  ..Ttttt.0ttttttt...tttttttc:::G:G::c;;;;;;;222llllL
@@ -1373,16 +1394,8 @@ KFEAT:  9 = rock_wall
 SUBST:  X = x.
 SUBST:  P = 11.
 # Give a hint about the dragon cave.
-: if crawl.one_chance_in(4) then
-SUBST:  C = c
-: elseif crawl.one_chance_in(3) then
-NSUBST: " = 2:$ / *:$..
-: elseif crawl.coinflip() then
 NSUBST: " = 1:GU / *:.
-: else
 KPROP:  = = bloody
-: end
-SUBST:  C = x
 SUBST:  _ = .
 : lair_small_ending(_G)
 MAP
@@ -1398,9 +1411,9 @@ Xxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
 Xxc$$$$ccxxx...Xxxxxxx2..x9xxxx...xxxxxx
 xxc$$$$$cxxx..xxxxxxxXx4..xXxx..4xxxxxxx
 xxcc$7$$cxx..x9xxxxxxxxx2P..X...xXxxxxxx
-xxxcc$$CCxX..Xxxxxxxxxxx....4.xxxxxxxxxx
-xxxxccC=CX".xxxxxxxxxXx...P.xxxx236xxxxx
-xxxxxxxCP""xxxxxxxxxXx...Xx9Xxx5625%xxxx
+xxxcc$$ccxX..Xxxxxxxxxxx....4.xxxxxxxxxx
+xxxxccc=cX".xxxxxxxxxXx...P.xxxx236xxxxx
+xxxxxxxcP""xxxxxxxxxXx...Xx9Xxx5625%xxxx
 xxxxxxxX""xxXxxxxXxx...4xxxxxxx%334xxxxx
 xxxxxxxxX.2.xxxx9x....x..xxxxxxxx5.xxxxx
 xxxxxxxxxX...xXx...4Xxx2...1xxxx...xxxxx
@@ -1524,7 +1537,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-# See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:branch:forest.
+# See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:dungeon:branch:forest.
 #
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
@@ -1533,6 +1546,10 @@ MONS:   black bear / grizzly bear, wolf, spriggan
 MONS:   spriggan rider / spriggan druid
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
+# These can't be substituted with floor because it might be disconnected, but if
+# there were some way to substitute space (DNGN_UNKNOWN) instead, that would
+# work.
+SUBST:  E = t
 SUBST:  2 = 2., 3 = 3., 4 = 4., . = .:190 1
 KITEM:  $ = gold, star_item
 MAP
@@ -1542,26 +1559,26 @@ tttttttttT$G$Ttttttt....ttttttttt.....ttTTtttttTT
 ttttttttt3.$..TTT....ttT...TTT....ttT.2222TTtt..@
 tttttttTT.3.3....TTttttttT..3...TttttttTT222..ttT
 tttttT.....4..3TtttttttttT3...3ttttttttt22ttttttt
-ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttT
+ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttE
 tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt
 tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt
-ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttT
+ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttE
 tt22ttt..3..tttttt..TTT.ttttttttttttttttttt.tt
 tt22tttT..3.ttttT.Tttttt.22tttttttttttttttT.tt
 tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt
 tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt
-tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttT
-ttT.tttt.....TTT222TttttttttttT...TT...TttttT
+tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttE
+ttT.tttt.....TTT222TttttttttttT...TT...TttttE
 ttt..tt...TTttttttt..TTttttttttt..3...Tttttt
-tttT....TtttttttttttT@   TTttttt34.3.ttttttT
-ttttT..tttttttttttttT      TTttttT..tttttT
-ttttT..TtttttttttttT          ttttttttt
-ttttt...ttttttttttT            ttttttt
-tttttT..TttttttT                 TTT
-ttttttt.@ttT
-ttttttT
-tttT
-tT
+tttT....TtttttttttttT@   EEttttt34.3.ttttttE
+ttttT..tttttttttttttE      EEttttT..tttttE
+ttttT..TtttttttttttE          ttttttttt
+ttttt...ttttttttttE            ttttttt
+tttttT..TttttttE                 EEE
+ttttttt.@ttE
+ttttttE
+tttE
+tE
 t
 ENDMAP
 

@@ -94,9 +94,15 @@ body {
     left: 50px;
     top: 50px;
 
-    border: 1px solid white;
+    border: 1px solid lightgray;
     padding: 10px;
     background-color: black;
+
+    z-index: 3000;
+}
+
+.floating_dialog .title {
+    text-align: center;
 }
 
 #register label {
@@ -135,6 +141,7 @@ body {
     padding: 5px;
     border: 1px solid #626262;
 
+    z-index: 3000;
 }
 
 #chat_caption {
@@ -193,6 +200,18 @@ a:hover {
 #loader_center {
     display: table-cell;
     vertical-align: middle;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.7;
+    z-index: 2000;
 }
 
 .fg0 { color: rgb(  0,   0,   0); }

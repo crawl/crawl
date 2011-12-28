@@ -6,12 +6,11 @@
 #ifndef TILEPICK_H
 #define TILEPICK_H
 
-#ifdef USE_TILE
-
 #include "tiledef_defines.h"
+#include "mon-info.h"
 
 struct bolt;
-struct cloud_struct;
+struct cloud_info;
 struct coord_def;
 struct item_def;
 class monster;
@@ -20,18 +19,17 @@ struct show_type;
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
-void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
-tileidx_t tileidx_monster(const monster* mon);
-tileidx_t tileidx_draco_base(const monster* mon);
-tileidx_t tileidx_draco_job(const monster* mon);
+tileidx_t tileidx_monster(const monster_info& mon);
+tileidx_t tileidx_draco_base(const monster_info& mon);
+tileidx_t tileidx_draco_job(const monster_info& mon);
 
 tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
-tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance = false);
+tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
@@ -57,5 +55,4 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
 void tile_init_props(monster* mon);
 
-#endif
 #endif

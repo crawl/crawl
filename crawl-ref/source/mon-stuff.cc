@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "tagstring.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -248,6 +249,28 @@ monster_type fill_out_corpse(const monster* mons,
                 corpse_class = draco_subspecies(mons);
         }
 
+        if (mons && mons->type == MONS_SERPENT_OF_HELL)
+        {
+            switch (mons->props["serpent_of_hell_flavour"].get_int())
+            {
+            case BRANCH_GEHENNA:
+                corpse_class = MONS_DRAGON;
+                break;
+            case BRANCH_COCYTUS:
+                corpse_class = MONS_ICE_DRAGON;
+                break;
+            case BRANCH_DIS:
+                corpse_class = MONS_IRON_DRAGON;
+                break;
+            case BRANCH_TARTARUS:
+                corpse_class = MONS_SHADOW_DRAGON;
+                break;
+            default:
+                corpse_class = MONS_DRAGON;
+                break;
+            }
+        }
+
         if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_SHAPESHIFTER))
@@ -296,7 +319,7 @@ monster_type fill_out_corpse(const monster* mons,
         }
     }
 
-    if (mons && !mons->mname.empty())
+    if (mons && !mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
     {
         corpse.props[CORPSE_NAME_KEY] = mons->mname;
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons->flags;
@@ -643,8 +666,7 @@ static void _give_player_experience(int experience, killer_type killer,
         return;
 
     unsigned int exp_gain = 0;
-    unsigned int avail_gain = 0;
-    gain_exp(experience, &exp_gain, &avail_gain);
+    gain_exp(experience, &exp_gain);
 
     kill_category kc =
             (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
@@ -655,7 +677,6 @@ static void _give_player_experience(int experience, killer_type killer,
 
     delta.mon_kill_num[kc]++;
     delta.mon_kill_exp       += exp_gain;
-    delta.mon_kill_exp_avail += avail_gain;
 
     you.global_info += delta;
     you.global_info.assert_validity();
@@ -1346,7 +1367,7 @@ static int _destroy_tentacles(monster* head)
 
 static std::string _killer_type_name(killer_type killer)
 {
-    switch(killer)
+    switch (killer)
     {
     case KILL_NONE:
         return ("none");
@@ -1440,6 +1461,22 @@ static bool _reaping(monster *mons)
     return false;
 }
 
+int monster_die(monster* mons, actor *killer, bool silent,
+                bool wizard, bool fake)
+{
+    killer_type ktype = KILL_YOU;
+    int kindex = NON_MONSTER;
+
+    if (killer->atype() == ACT_MONSTER)
+    {
+        const monster *kmons = killer->as_monster();
+        ktype = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
+        kindex = kmons->mindex();
+    }
+
+    return monster_die(mons, ktype, kindex, silent, wizard, fake);
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -1496,6 +1533,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     mons_clear_trapping_net(mons);
+    mons->clear_all_constrictions();
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
@@ -1754,13 +1792,13 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_LIVING,
                                     mons->hit_dice, true, mons);
 
+                    // TSO hates natural evil and unholy beings.
                     if (mons->is_unholy())
                     {
                         did_god_conduct(DID_KILL_NATURAL_UNHOLY,
                                         mons->hit_dice, true, mons);
                     }
-
-                    if (mons->is_evil())
+                    else if (mons->is_evil())
                     {
                         did_god_conduct(DID_KILL_NATURAL_EVIL,
                                         mons->hit_dice, true, mons);
@@ -1770,6 +1808,17 @@ int monster_die(monster* mons, killer_type killer,
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     mons->hit_dice, true, mons);
+                    // Dual holiness, Trog and Kiku like dead demons.
+                    if ((mons->type == MONS_ABOMINATION_SMALL
+                         || mons->type == MONS_ABOMINATION_LARGE
+                         || mons->type == MONS_CRAWLING_CORPSE
+                         || mons->type == MONS_MACABRE_MASS)
+                        && (you.religion == GOD_TROG
+                         || you.religion == GOD_KIKUBAAQUDGHA))
+                    {
+                        did_god_conduct(DID_KILL_DEMON,
+                                        mons->hit_dice, true, mons);
+                    }
                 }
                 else if (targ_holy == MH_DEMONIC)
                 {
@@ -1778,15 +1827,14 @@ int monster_die(monster* mons, killer_type killer,
                 }
 
                 // Zin hates unclean and chaotic beings.
-                if (mons->is_unclean())
-                {
-                    did_god_conduct(DID_KILL_UNCLEAN,
-                                    mons->hit_dice, true, mons);
-                }
-
                 if (mons->is_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
+                                    mons->hit_dice, true, mons);
+                }
+                else if (mons->is_unclean())
+                {
+                    did_god_conduct(DID_KILL_UNCLEAN,
                                     mons->hit_dice, true, mons);
                 }
 
@@ -2163,7 +2211,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (fake_abjuration)
                 {
-                    if (mons_genus(mons->type) == MONS_SNAKE)
+                    if (mons_genus(mons->type) == MONS_ADDER)
                     {
                         // Sticks to Snake
                         simple_monster_message(mons, " withers and dies!",
@@ -2595,7 +2643,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_is_tentacle(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
-        || (new_mclass == MONS_HUMAN && mons->type == MONS_PRINCE_RIBBIT))
+        || (new_mclass == MONS_HUMAN
+            && (mons->type == MONS_PRINCE_RIBBIT
+                || mons->mname == "Prince Ribbit")))
     {
         return (false);
     }
@@ -2647,6 +2697,11 @@ void change_monster_type(monster* mons, monster_type targetc)
     // the invisibility enchantment below.
     mons->del_ench(ENCH_INVIS, false, false);
 
+    // Remove replacement tile, since it probably doesn't work for the
+    // new monster.
+    mons->props.erase("monster_tile_name");
+    mons->props.erase("monster_tile");
+
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
     // the polymorph disrupts the beholding process.  Do this before
@@ -2671,7 +2726,17 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
-        name = mons->mname;
+    {
+        if ((flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        {
+            // Remove the replacement name from the new monster
+            flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
+                              | MF_NAME_DEFINITE | MF_NAME_SPECIES
+                              | MF_NAME_ZOMBIE | MF_NAME_NOCORPSE);
+        }
+        else
+            name = mons->mname;
+    }
     else if (mons_is_unique(mons->type))
     {
         flags |= MF_INTERESTING;
@@ -2934,8 +2999,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             verb = "degenerates into ";
         else if (_jiyva_slime_target(targetc))
             verb = "quivers uncontrollably and liquefies into ";
-        else if (oldc == MONS_KILLER_BEE_LARVA && targetc == MONS_KILLER_BEE)
-            verb = "metamorphoses into ";
         else
             verb = "evaporates and reforms as ";
 
@@ -3229,6 +3292,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     {
         if (!quiet)
             simple_monster_message(mons, " is held in a net!");
+        return (false);
+    }
+
+    if (mons->is_constricted())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " is being constricted!");
         return (false);
     }
 
@@ -4115,13 +4185,11 @@ int dismiss_monsters(std::string pattern)
 // applied to new games.
 void zap_los_monsters(bool items_also)
 {
-    // Not using player LOS since clouds might temporarily
-    // block monsters.
-    los_def los(you.pos(), opc_fullyopaque);
-    los.update();
-
-    for (radius_iterator ri(&los); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID))
+            continue;
+
         if (items_also)
         {
             int item = igrd(*ri);
@@ -4257,6 +4325,10 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
+    // if constricted by larger, abort
+    if (mons->is_constricted_larger())
+        return;
+
     if (mons_is_shedu(mons) && shedu_pair_alive(mons))
     {
         // find a location close to its mate instead.
@@ -4300,6 +4372,20 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
+    // handle constriction, if any
+    if (mons->is_constricted())
+    {
+        if (mons->constricted_by == MHITYOU)
+            player_teleport_to_monster(mons, newpos);
+        else
+            monster_teleport_to_player(mons->constricted_by, newpos);
+    }
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mons->constricting[i] == MHITYOU)
+            player_teleport_to_monster(mons, newpos);
+        else if (mons->constricting[i] != NON_ENTITY)
+            monster_teleport_to_player(mons->constricting[i], newpos);
+
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4321,7 +4407,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             // Even if it doesn't interrupt an activity (the player isn't
             // delayed, the monster isn't hostile) we still want to give
             // a message.
-            activity_interrupt_data ai(mons, "thin air");
+            activity_interrupt_data ai(mons, SC_TELEPORT_IN);
             if (!interrupt_activity(AI_SEE_MONSTER, ai))
                 simple_monster_message(mons, " appears out of thin air!");
         }
@@ -4340,6 +4426,143 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
+}
+
+static void _lose_constriction(actor *att, actor *def)
+{
+    def->clear_specific_constrictions(att->mindex());
+    att->clear_specific_constrictions(def->mindex());
+
+    if (you.see_cell(att->pos()) || you.see_cell(def->pos()))
+    {
+        mprf("%s lose%s %s grip on %s.",
+             att->name(DESC_THE).c_str(),
+             att->is_player() ? "" : "s",
+             att->pronoun(PRONOUN_POSSESSIVE).c_str(),
+             def->name(DESC_THE).c_str());
+    }
+}
+
+void monster_teleport_to_player(int mindex, coord_def playerpos)
+{
+    coord_def target;
+    coord_def newpos;
+    monster *mons = &env.mons[mindex];
+    actor *mons2;
+
+    int tries = 0;
+    while (tries++ < 30)
+    {
+        target = coord_def(random_range(playerpos.x - 1, playerpos.x + 1),
+                           random_range(playerpos.y - 1, playerpos.y + 1));
+
+        if (!_monster_space_valid(mons, target, false))
+            continue;
+
+        newpos = target;
+        break;
+    }
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
+    const coord_def oldplace = mons->pos();
+
+    mons->move_to_pos(newpos);
+
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
+
+    // the monster which has just moved could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mons->constricting[i] != mindex
+            && mons->constricting[i] != NON_ENTITY)
+        {
+            if (mons->constricting[i] == MHITYOU)
+                mons2 = &you;
+            else
+                mons2 = &env.mons[mons->constricting[i]];
+
+            if (!adjacent(mons->pos(), mons2->pos()))
+                _lose_constriction(mons, mons2);
+        }
+
+    // if it's coming along because it was constricting player, but something
+    // else was constricting it, then the something else loses its grip too
+    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY)
+    {
+        if (mons->constricted_by == MHITYOU)
+            mons2 = &you;
+        else
+            mons2 = &env.mons[mons->constricted_by];
+
+        if (!adjacent(mons->pos(), mons2->pos()))
+            _lose_constriction(mons, mons2);
+    }
+
+    simple_monster_message(mons, " comes along for the ride!");
+
+    mons->check_redraw(newpos);
+    mons->apply_location_effects(newpos);
+
+    mons_relocated(mons);
+}
+
+void player_teleport_to_monster(monster *mons, coord_def monsterpos)
+{
+    coord_def target;
+    coord_def newpos;
+
+    int tries = 0;
+    while (tries++ < 30)
+    {
+        target = coord_def(random_range(monsterpos.x - 1, monsterpos.x + 1),
+                           random_range(monsterpos.y - 1, monsterpos.y + 1));
+
+        if (!_monster_space_valid(mons, target, false))
+            continue;
+
+        newpos = target;
+        break;
+    }
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
+    // Move it to its new home.
+    you.moveto(newpos);
+
+    // you could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (you.constricting[i] != mons->mindex()
+            && you.constricting[i] != NON_ENTITY
+            && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
+        {
+            _lose_constriction(&you, &env.mons[you.constricting[i]]);
+        }
+
+    // if you're coming along because you're constricting it and something
+    // else was constricting you, then the something else loses its grip too
+
+    if (you.constricted_by != mons->mindex()
+        && you.constricted_by != NON_ENTITY
+        && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
+    {
+        _lose_constriction(&env.mons[you.constricted_by], &you);
+    }
+
+    mpr("You come along for the ride!");
 }
 
 void mons_clear_trapping_net(monster* mon)

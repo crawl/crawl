@@ -146,7 +146,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 {
     skill_type selected_skill = SK_NONE;
 
-    switch((int)selected_role)
+    switch ((int)selected_role)
     {
     case STAT_DEX:
         switch (random2(6))
@@ -205,6 +205,11 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         break;
     }
 
+    if (selected_skill == NUM_SKILLS)
+    {
+        ASSERT(you.species == SP_FELID);
+        selected_skill = SK_UNARMED_COMBAT;
+    }
     return (selected_skill);
 }
 
@@ -290,7 +295,7 @@ static skill_type _weighted_skill_roll()
 static void _give_wanderer_book(skill_type skill, int & slot)
 {
     int book_type = BOOK_MINOR_MAGIC;
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_SPELLCASTING:
         book_type = BOOK_MINOR_MAGIC;
@@ -472,7 +477,7 @@ static void _curing_or_teleport(int n)
     }
 }
 
-// Create a random wand/rod of striking in the inventory.
+// Create a random wand in the inventory.
 static void _wanderer_random_evokable(int & slot)
 {
     wand_type selected_wand = WAND_ENSLAVEMENT;
@@ -534,7 +539,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         skill = max_skill;
     }
 
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_MACES_FLAILS:
     case SK_AXES:
@@ -594,7 +599,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     }
 
     case SK_EVOCATIONS:
-        // Random wand/rod of striking.
+        // Random wand
         _wanderer_random_evokable(slot);
         break;
     }
@@ -718,7 +723,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     if (gift_skills.find(skill) != gift_skills.end())
         skill = SK_TRAPS_DOORS;
 
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_MACES_FLAILS:
     case SK_AXES:

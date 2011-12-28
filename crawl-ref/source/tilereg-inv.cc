@@ -3,6 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-inv.h"
+#include "process_desc.h"
 
 #include "cio.h"
 #include "describe.h"

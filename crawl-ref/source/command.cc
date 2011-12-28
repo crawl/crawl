@@ -417,11 +417,12 @@ static void _adjust_ability(void)
     }
 
     int selected = -1;
-    while (selected < 0)
-    {
-        msg::streams(MSGCH_PROMPT) << "Adjust which ability? (? or * to list) "
-                                   << std::endl;
+    mpr("Adjust which ability? ", MSGCH_PROMPT);
 
+    if (Options.auto_list)
+        selected = choose_ability_menu(talents);
+    else
+    {
         const int keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')
@@ -443,24 +444,22 @@ static void _adjust_ability(void)
                     break;
                 }
             }
-
-            // If we can't, cancel out.
-            if (selected < 0)
-            {
-                mpr("No such ability.");
-                return;
-            }
         }
     }
 
-    msg::stream << static_cast<char>(talents[selected].hotkey)
-                << " - "
-                << ability_name(talents[selected].which)
-                << std::endl;
+    // If we couldn't find anything, cancel out.
+    if (selected < 0)
+    {
+        mpr("No such ability.");
+        return;
+    }
+
+    mprf_nocap("%c - %s", static_cast<char>(talents[selected].hotkey),
+               ability_name(talents[selected].which));
 
     const int index1 = letter_to_index(talents[selected].hotkey);
 
-    msg::streams(MSGCH_PROMPT) << "Adjust to which letter? " << std::endl;
+    mpr("Adjust to which letter?", MSGCH_PROMPT);
 
     const int keyin = get_ch();
 
@@ -483,20 +482,18 @@ static void _adjust_ability(void)
     {
         if (talents[i].hotkey == keyin)
         {
-            msg::stream << "Swapping with: "
-                        << static_cast<char>(keyin) << " - "
-                        << ability_name(talents[i].which)
-                        << std::endl;
+            mprf("Swapping with: %c - %s", static_cast<char>(keyin),
+                 ability_name(talents[i].which));
             printed_message = true;
             break;
         }
     }
 
     if (!printed_message)
-        msg::stream << "Moving to: "
-                    << static_cast<char>(keyin) << " - "
-                    << ability_name(talents[selected].which)
-                    << std::endl;
+    {
+        mprf("Moving to: %c - %s", static_cast<char>(keyin),
+             ability_name(talents[selected].which));
+    }
 
     // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];
@@ -740,7 +737,7 @@ static const char *targeting_help_1 =
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
     "<w>Ctrl-F</w> : monster targeting modes\n"
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     "<w>Ctrl-L</w> : targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
@@ -842,7 +839,7 @@ struct help_file
     bool auto_hotkey;
 };
 
-help_file help_files[] = {
+static help_file help_files[] = {
     { "crawl_manual.txt",  '*', true },
     { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },
@@ -1034,7 +1031,7 @@ static std::vector<std::string> _get_branch_keys()
         const Branch &branch     = branches[which_branch];
 
         // Skip unimplemented branches
-        if(branch_is_unfinished(which_branch))
+        if (branch_is_unfinished(which_branch))
             continue;
 
         names.push_back(branch.shortname);
@@ -1069,7 +1066,7 @@ static bool _spell_filter(std::string key, std::string body)
 
 static bool _item_filter(std::string key, std::string body)
 {
-    return (item_types_by_name(key).base_type == OBJ_UNASSIGNED);
+    return (item_kind_by_name(key).base_type == OBJ_UNASSIGNED);
 }
 
 static bool _skill_filter(std::string key, std::string body)
@@ -1284,16 +1281,14 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     return (true);
 }
 
-// Does not wait for keypress; the caller must do that if necessary.
-// Returns true if we need to wait for keypress.
-static bool _do_description(std::string key, std::string type,
+// Returns the result of the keypress.
+static int _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
 
     std::string desc = getLongDescription(key);
-
     int width = std::min(80, get_number_of_cols());
 
     god_type which_god = str_to_god(key);
@@ -1331,8 +1326,7 @@ static bool _do_description(std::string key, std::string type,
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monster_info mi(mon_num);
-            describe_monsters(mi, true, footer);
-            return (false);
+            return describe_monsters(mi, true, footer);
         }
         else
         {
@@ -1364,11 +1358,6 @@ static bool _do_description(std::string key, std::string type,
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
                     {
-// These extra lines don't fit onto the console screen and may mean
-// that the *entire* descriptions, spells and all, doesn't get displayed.
-// I'm not sure why description is so fussy about that when the footer
-// and everything isn't even used.
-#ifdef USE_TILE
                         // FIXME: Duplicates messages from describe.cc.
                         if (!player_can_memorise_from_spellbook(mitm[thing_created]))
                         {
@@ -1381,7 +1370,6 @@ static bool _do_description(std::string key, std::string type,
                                     "memorise a spell from this book, the book "
                                     "will lash out at you.";
                         }
-#endif
                         append_spells(desc, mitm[thing_created]);
                     }
                 }
@@ -1403,8 +1391,12 @@ static bool _do_description(std::string key, std::string type,
     inf.footer = footer;
     inf.title  = key;
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "description");
+#endif
+
     print_description(inf);
-    return (true);
+    return getchm();
 }
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
@@ -1485,8 +1477,7 @@ static void _find_description(bool *again, std::string *error_inout)
 {
     *again = true;
 
-    clrscr();
-    viewwindow();
+    redraw_screen();
 
     if (!error_inout->empty())
         mpr(error_inout->c_str(), MSGCH_PROMPT);
@@ -1674,8 +1665,7 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        if (_do_description(key_list[0], type))
-            getchm();
+        _do_description(key_list[0], type);
         return;
     }
 
@@ -1685,11 +1675,7 @@ static void _find_description(bool *again, std::string *error_inout)
         footer += regex;
         footer += "'. To see non-exact matches, press space.";
 
-        _do_description(regex, type, footer);
-        // FIXME: This results in an *additional* getchm(). We might have
-        // to check for this eventuality way over in describe.cc and
-        // _print_toggle_message. (jpeg)
-        if (getchm() != ' ')
+        if (_do_description(regex, type, footer) != ' ')
             return;
     }
 
@@ -1708,7 +1694,7 @@ static void _find_description(bool *again, std::string *error_inout)
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monster> monster_list;
+    std::list<monster_info> monster_list;
     std::list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -1721,7 +1707,6 @@ static void _find_description(bool *again, std::string *error_inout)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
-            monster     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
 
             // Not worth the effort handling the item; also, it would
@@ -1733,25 +1718,22 @@ static void _find_description(bool *again, std::string *error_inout)
             if (mons_is_tentacle_segment(m_type))
                 continue;
 
-            // NOTE: Initializing the demon_ghost part of (very) ugly
-            // things and player ghosts is taken care of in define_monster().
-            fake_mon.type = m_type;
-            fake_mon.props["fake"] = true;
-            // HACK: Set an arbitrary humanoid monster as base type.
+            monster_type base_type = MONS_NO_MONSTER;
             if (mons_class_is_zombified(m_type))
             {
-                monster_type base_type = MONS_GOBLIN;
+                // HACK: Set an arbitrary humanoid monster as base type.
                 if (zombie_class_size(m_type) == Z_BIG)
                     base_type = MONS_HILL_GIANT;
-                define_zombie(&fake_mon, base_type, m_type);
+                else
+                    base_type = MONS_GOBLIN;
             }
-            else
-                define_monster(&fake_mon);
+            monster_info fake_mon(m_type, base_type);
+            fake_mon.props["fake"] = true;
 
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             int colour = mons_class_colour(m_type);
             if (colour == BLACK)
                 colour = LIGHTGREY;
@@ -1759,7 +1741,7 @@ static void _find_description(bool *again, std::string *error_inout)
             std::string prefix = "(<";
             prefix += colour_to_str(colour);
             prefix += ">";
-            prefix += stringize_glyph(mons_char(fake_mon.type));
+            prefix += stringize_glyph(mons_char(m_type));
             prefix += "</";
             prefix += colour_to_str(colour);
             prefix += ">) ";
@@ -1782,7 +1764,7 @@ static void _find_description(bool *again, std::string *error_inout)
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
                                letter);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
@@ -1821,7 +1803,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
             if (doing_mons)
             {
-                monster* mon = (monster*) sel[0]->data;
+                monster_info* mon = (monster_info*) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else if (doing_features)
@@ -1829,8 +1811,7 @@ static void _find_description(bool *again, std::string *error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            if (_do_description(key, type))
-                getchm();
+            _do_description(key, type);
         }
     }
 }
@@ -1948,7 +1929,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_help.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                             "<cyan>[ +/L-click : Page down.   - : Page up."
                             "           Esc/R-click exits.]"));
 #else
@@ -2776,9 +2757,10 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "<w>Ctrl-X</w> : Xom effect stats\n"
                        "\n"
-                       "<yellow>Wizard targeting commands</yellow>\n"
+                       "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"
-                       "<w>x?</w>     : list targeted commands\n",
+                       "<w>x?</w>     : list targeted commands\n"
+                       "<w>X?</w>     : list map-mode commands\n",
                        true, true);
 
     int key = _show_keyhelp_menu(cols.formatted_lines(), false,

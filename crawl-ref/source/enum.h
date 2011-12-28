@@ -254,6 +254,7 @@ enum attribute_type
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
+    ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     NUM_ATTRIBUTES
 };
 
@@ -270,7 +271,7 @@ enum transformation_type
     TRAN_PIG,
     TRAN_APPENDAGE,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_APPENDAGE - 1
+    LAST_FORM = TRAN_APPENDAGE
 };
 
 enum beam_type                  // beam[].flavour
@@ -479,10 +480,22 @@ enum branch_type                // you.where_are_you
 };
 
 enum burden_state_type          // you.burden_state
-{
-    BS_UNENCUMBERED,            //    0
-    BS_ENCUMBERED = 2,          //    2
-    BS_OVERLOADED = 5,          //    5
+{   // these values increase hunger and divide stealth
+    BS_UNENCUMBERED = 0,
+    BS_ENCUMBERED   = 2,
+    BS_OVERLOADED   = 5,
+};
+
+enum caction_type    // Primary categorization of counted actions.
+{                    // A subtype will also be given in each case:
+    CACT_MELEE,      // weapon_type
+    CACT_FIRE,       // weapon_type
+    CACT_THROW,      // missile_type
+    CACT_CAST,       // spell_type
+    CACT_INVOKE,     // ability_type
+    CACT_EVOKE,      // evoc_type
+    CACT_USE,        // object_class_type
+    NUM_CACTIONS,
 };
 
 enum canned_message_type
@@ -1015,6 +1028,15 @@ enum description_level_type
                                        // description in the db.
 
     DESC_NONE
+};
+
+enum evoc_type
+{
+    EVOC_ABIL,
+    EVOC_WAND,
+    EVOC_ROD,
+    EVOC_DECK,
+    EVOC_MISC,
 };
 
 enum game_direction_type
@@ -1623,8 +1645,8 @@ enum god_type
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
-    GOD_NAMELESS = 101,                // for monsters with non-player gods
-    GOD_VIABLE = 102,
+    GOD_NAMELESS,                      // for monsters with non-player gods
+    GOD_VIABLE,
 };
 
 enum holy_word_source_type
@@ -1755,8 +1777,8 @@ enum job_type
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,
-    JOB_RANDOM  = 101,
-    JOB_VIABLE  = 102,
+    JOB_RANDOM,
+    JOB_VIABLE,
 };
 
 enum KeymapContext
@@ -1898,8 +1920,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GILA_MONSTER,
 #endif
     MONS_KOMODO_DRAGON,
-    MONS_SMALL_SNAKE,
-    MONS_SNAKE,
+    MONS_BALL_PYTHON,
+    MONS_ADDER,
     MONS_WATER_MOCCASIN,
 #if TAG_MAJOR_VERSION == 32
     MONS_VIPER,
@@ -2458,6 +2480,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GNOLL_SERGEANT,
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
+    MONS_SERAPH,
+    MONS_SUBTRACTOR_SNAKE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2668,7 +2692,7 @@ enum mutation_type
     MUT_EVOLUTION,
     NUM_MUTATIONS,
 
-    RANDOM_MUTATION = NUM_MUTATIONS + 1,
+    RANDOM_MUTATION,
     RANDOM_XOM_MUTATION,
     RANDOM_GOOD_MUTATION,
     RANDOM_BAD_MUTATION,
@@ -2789,10 +2813,10 @@ enum potion_type
 
 enum pronoun_type
 {
-    PRONOUN,
+    PRONOUN_SUBJECTIVE,
     PRONOUN_POSSESSIVE,
-    PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
-    PRONOUN_OBJECTIVE,                  // objective is always lowercase
+    PRONOUN_REFLEXIVE,
+    PRONOUN_OBJECTIVE,
 };
 
 enum artefact_prop_type
@@ -3513,10 +3537,39 @@ enum disable_type
     DIS_PLAYER_REGEN,
     DIS_HUNGER,
     DIS_DEATH,
+    DIS_DELAY,
     NUM_DISABLEMENTS
 };
 
-#ifdef USE_TILE
+// these are an unholy mess
+enum seen_context_type
+{
+    SC_NONE,
+    SC_JUST_SEEN,       // \TODO: find out and describe what's the difference
+    SC_NEWLY_SEEN,      // /between these two
+    SC_ALREADY_SEEN,
+    SC_TELEPORT_IN,
+    SC_SURFACES,                      // land-capable
+    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
+    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
+    SC_FISH_SURFACES,                 // water/lava-only
+    SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
+    SC_UNCHARM,
+    SC_DOOR,
+    SC_GATE,
+};
+
+enum los_type
+{
+    LOS_ARENA        = 0,
+    LOS_DEFAULT      = (1 << 0),
+    LOS_NO_TRANS     = (1 << 1),
+    LOS_SOLID        = (1 << 2),
+    LOS_SOLID_SEE    = (1 << 3),
+};
+
+// Tiles stuff.
+
 enum screen_mode
 {
     SCREENMODE_WINDOW = 0,
@@ -3662,8 +3715,6 @@ enum
 {
     NUM_MAX_DOLLS = 10,
 };
-
-#endif
 
 #ifdef WIZARD
 

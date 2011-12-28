@@ -16,6 +16,9 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
+/* Fix annoying precompiled header compile errors caused by unused Objective-C variant. */
+#if !defined(__OBJC__)
+
 #include "platform.h"
 #include <stdint.h>
 
@@ -142,7 +145,10 @@
         #define USE_UNIX_SIGNALS
     #endif
 
-    #if !defined(USE_TILE)
+    #ifdef USE_TILE_WEB
+        #error Webtiles are not supported on Windows.
+    #endif
+    #ifndef USE_TILE_LOCAL
         #include "libw32c.h"
     #endif
 
@@ -400,11 +406,13 @@ inline void UNUSED(const volatile T &)
 # include "libw32c.h"
 #endif
 
-#ifdef USE_TILE
-# ifdef __cplusplus
+#ifdef __cplusplus
+# ifdef USE_TILE
 #  include "libgui.h"
-#  include "tiles.h"
 # endif
+# include "tiles.h"
 #endif
+
+#endif // !defined __OBJC__
 
 #endif // APPHDR_H

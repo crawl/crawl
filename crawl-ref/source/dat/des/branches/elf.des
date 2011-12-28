@@ -737,6 +737,7 @@ ENDMAP
 #
 # Elf:5 branch endings
 #
+# Total weight: 140.
 ##############################################################################
 ##############################################################################
 
@@ -746,7 +747,7 @@ ENDMAP
 ##
 NAME:    elf_hall
 PLACE:   Elf:5
-WEIGHT:  50
+WEIGHT:  30
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -997,7 +998,6 @@ ENDMAP
 #
 NAME:    minmay_elf_hall_hex
 PLACE:   Elf:5
-WEIGHT:  3
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1055,7 +1055,6 @@ ENDMAP
 # Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
 NAME:    minmay_elf_hall_dome
 PLACE:   Elf:5
-WEIGHT:  3
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1135,7 +1134,6 @@ ENDMAP
 # Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
 NAME:    minmay_elf_hall_quartered_circle
 PLACE:   Elf:5
-WEIGHT:  3
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1185,10 +1183,11 @@ PLACE:   Elf:5
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
-KMONS:   9 = stone golem
-KMONS:   8 = crystal golem
+KMONS:   9 = stone golem / w:5 clay golem / w:5 nothing
+KMONS:   8 = crystal golem / nothing
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
-SHUFFLE: 12, 34, 67, 8b / 9c / 9c / 9c
+SHUFFLE: 12, 34, 67, 8b / 9C / 9C / 9C
+SUBST:   C = c
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP

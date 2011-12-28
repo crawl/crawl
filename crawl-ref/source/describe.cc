@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "describe.h"
+#include "process_desc.h"
 #include "database.h"
 
 #include <stdio.h>
@@ -119,7 +120,7 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
-void print_quote (const std::string &body)
+void print_quote(const std::string &body)
 {
     describe_info inf;
     inf.quote = body;
@@ -140,7 +141,7 @@ public:
         else
             cgotoxy(1, height());
         // Otherwise cgotoxy asserts; let's just clobber the last line
-        // instead, which should be noticable enough.
+        // instead, which should be noticeable enough.
     }
 };
 
@@ -153,7 +154,7 @@ void print_description(const describe_info &inf)
     process_description<default_desc_proc>(proc, inf);
 }
 
-void print_quote (const describe_info &inf)
+void print_quote(const describe_info &inf)
 {
     clrscr();
     textcolor(LIGHTGREY);
@@ -172,6 +173,7 @@ static const char* _jewellery_base_ability_string(int subtype)
     case RING_WIZARDRY:          return "Wiz";
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
+    case RING_TELEPORTATION:     return "*TELE +Tele";
     case RING_TELEPORT_CONTROL:  return "cTele";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
@@ -508,13 +510,13 @@ static std::string _randart_descrip(const item_def &item)
     // Some special cases which don't fit into the above.
     if (known_proprt(ARTP_METABOLISM))
     {
-        if (proprt[ ARTP_METABOLISM ] >= 3)
+        if (proprt[ARTP_METABOLISM] >= 3)
             description += "\nIt greatly speeds your metabolism.";
-        else if (proprt[ ARTP_METABOLISM ] >= 1)
+        else if (proprt[ARTP_METABOLISM] >= 1)
             description += "\nIt speeds your metabolism. ";
-        if (proprt[ ARTP_METABOLISM ] <= -3)
+        if (proprt[ARTP_METABOLISM] <= -3)
             description += "\nIt greatly slows your metabolism.";
-        else if (proprt[ ARTP_METABOLISM ] <= -1)
+        else if (proprt[ARTP_METABOLISM] <= -1)
             description += "\nIt slows your metabolism. ";
     }
 
@@ -530,7 +532,7 @@ static std::string _randart_descrip(const item_def &item)
 
     if (known_proprt(ARTP_MUTAGENIC))
     {
-        if (proprt[ ARTP_MUTAGENIC ] > 3)
+        if (proprt[ARTP_MUTAGENIC] > 3)
             description += "\nIt glows with mutagenic radiation.";
         else
             description += "\nIt emits mutagenic radiation.";
@@ -809,13 +811,19 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     description = "";
 
     if (verbose)
+    {
+        description += "\n";
         append_weapon_stats(description, item);
+    }
 
     int spec_ench = get_weapon_brand(item);
     int damtype = get_vorpal_type(item);
 
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
+
+    if (verbose && weapon_skill(item) == SK_POLEARMS)
+        description += "\n\nIt can be evoked to extend its reach.";
 
     // special weapon descrip
     if (spec_ench != SPWPN_NORMAL && item_type_known(item))
@@ -965,7 +973,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "\n\n";
+            description += "\n";
             description += rand_desc;
         }
 
@@ -1290,6 +1298,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         && item.sub_type != ARM_BUCKLER
         && item.sub_type != ARM_LARGE_SHIELD)
     {
+        description += "\n";
         append_armour_stats(description, item);
     }
 
@@ -1392,7 +1401,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "\n\n";
+            description += "\n";
             description += rand_desc;
         }
 
@@ -1756,7 +1765,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     std::ostringstream description;
 
     if (!dump)
-        description << item.name(DESC_INVENTORY_EQUIP);
+        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)
@@ -1807,12 +1816,12 @@ std::string get_item_description(const item_def &item, bool verbose,
 
             if (item_type_known(item) && desc_id[0] != '\0')
             {
-                description << desc_id << "\n";
+                description << desc_id;
                 need_base_desc = false;
             }
             else if (desc[0] != '\0')
             {
-                description << desc << "\n";
+                description << desc;
                 need_base_desc = false;
             }
         }
@@ -1831,7 +1840,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (count_desc_lines(db_desc, lineWidth)
                     + count_desc_lines(quote, lineWidth) <= height)
                 {
-                    if (!db_desc.empty())
+                    if (!db_desc.empty() && !quote.empty())
                         db_desc += "\n";
                     db_desc += quote;
                 }
@@ -1846,25 +1855,20 @@ std::string get_item_description(const item_def &item, bool verbose,
                 }
                 else
                 {
-                    description << article_a(item.name(DESC_A, true,
-                                                       false, false), false);
+                    description << uppercase_first(item.name(DESC_A, true,
+                                                             false, false));
                     description << ".\n";
                 }
             }
             else
                 description << db_desc;
 
-            if (item.base_type == OBJ_WANDS
-                || item.base_type == OBJ_MISSILES
-                || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-            {
-                // Get rid of newline at end of description, so that
-                // either the wand "no charges left" or the meat chunk
-                // "unpleasant" description can follow on the same line.
-                // Same for missiles' descriptions.
-                description.seekp(description.tellp() - (std::streamoff)2);
-                description << " ";
-            }
+            // Get rid of newline at end of description; in most cases we
+            // will be adding "\n\n" immediately, and we want only one,
+            // not two, blank lines.  This allow allows the "unpleasant"
+            // message for chunks to appear on the same line.
+            description.seekp((std::streamoff)-1, std::ios_base::cur);
+            description << " ";
         }
     }
 
@@ -1953,7 +1957,6 @@ std::string get_item_description(const item_def &item, bool verbose,
         {
             description << "\nUnfortunately, it has no charges left.";
         }
-        description << "\n";
         break;
 
     case OBJ_CORPSES:
@@ -2029,7 +2032,6 @@ std::string get_item_description(const item_def &item, bool verbose,
                 description << "\n\n" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";
             }
-            description << "\n";
         }
         break;
 
@@ -2085,14 +2087,14 @@ std::string get_item_description(const item_def &item, bool verbose,
                 else
                     description << desc;
             }
-            std::string stats = "";
+            std::string stats = "\n";
             append_weapon_stats(stats, item);
             description << stats;
             description << "\n\nIt falls into the 'Maces & Flails' category.";
         }
         else
         {
-            std::string stats = "";
+            std::string stats = "\n";
             append_weapon_stats(stats, item);
             description << stats;
             description << "\n\nIt falls into the 'Staves' category.";
@@ -2196,7 +2198,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                     << "use of such an item.";
     }
 
-    if (origin_describable(item))
+    if (verbose && origin_describable(item))
         description << "\n" << origin_desc(item) << ".";
 
     if (verbose)
@@ -2216,10 +2218,10 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     dungeon_feature_type feat = grd(pos);
 
     std::string desc      = feature_description(pos, false, DESC_A, false);
-    std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    inf.title = desc;
+    inf.title = uppercase_first(desc);
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
     {
@@ -2290,12 +2292,13 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-static bool _print_toggle_message(const describe_info &inf)
+// Returns the pressed key in key
+static int _print_toggle_message(const describe_info &inf, int& key)
 {
     if (inf.quote.empty())
     {
         mouse_control mc(MOUSE_MODE_MORE);
-        getchm();
+        key = getchm();
         return (false);
     }
     else
@@ -2311,9 +2314,9 @@ static bool _print_toggle_message(const describe_info &inf)
             " to toggle between the overview and the extended description.").display();
 
         mouse_control mc(MOUSE_MODE_MORE);
-        const int keyin = getchm();
+        key = getchm();
 
-        if (keyin == '!' || keyin == CK_MOUSE_CMD)
+        if (key == '!' || key == CK_MOUSE_CMD)
             return (true);
 
         return (false);
@@ -2325,6 +2328,10 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     describe_info inf;
     get_feature_desc(pos, inf);
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_feature");
+#endif
+
     if (show_quote)
         print_quote(inf);
     else
@@ -2333,7 +2340,8 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    if (_print_toggle_message(inf))
+    int key;
+    if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
 }
 
@@ -2551,7 +2559,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     std::string prompt = "You can ";
     int keyin;
     std::vector<command_type> actions;
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
@@ -2731,6 +2739,10 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 {
     if (!item.defined())
         return (true);
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
+#endif
 
     if (_can_show_spells(item))
       return _describe_spellbook(item);
@@ -3252,7 +3264,7 @@ static std::string _monster_stat_description(const monster_info& mi)
         resist_descriptions.push_back(tmp);
     }
 
-    const char* pronoun = mi.pronoun(PRONOUN);
+    const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
 
     if (mi.threat != MTHRT_UNDEF)
         result << uppercase_first(pronoun) << " looks "
@@ -3367,7 +3379,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
-        inf.title = mi.full_name(DESC_A, true);
+        inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
 
     std::string db_name;
 
@@ -3526,16 +3538,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN))
+        inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is incapable of using stairs.\n";
     }
 
     if (mi.intel() == I_PLANT)
-        inf.body << uppercase_first(mi.pronoun(PRONOUN)) << " is mindless.\n";
+        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))
     {
-        inf.body << uppercase_first(mi.pronoun(PRONOUN))
+        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is vulnerable to silver and hated by Zin.\n";
     }
 
@@ -3642,14 +3654,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #endif
 }
 
-void describe_monsters(const monster_info &mi, bool force_seen,
-                       const std::string &footer,
-                       bool wait_until_key_pressed,
-                       bool show_quote)
+int describe_monsters(const monster_info &mi, bool force_seen,
+                      const std::string &footer)
 {
     describe_info inf;
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
+
+    bool show_quote = false;
 
     if (!footer.empty())
     {
@@ -3659,25 +3671,32 @@ void describe_monsters(const monster_info &mi, bool force_seen,
             inf.footer += "\n" + footer;
     }
 
-    if (show_quote)
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
+#endif
+
+    int key;
+    do
     {
-        print_quote(inf);
+        if (show_quote)
+        {
+            print_quote(inf);
+        }
+        else
+        {
+            print_description(inf);
+
+            // TODO enne - this should really move into get_monster_db_desc
+            // and an additional tutorial string added to describe_info.
+            if (crawl_state.game_is_hints())
+                hints_describe_monster(mi, has_stat_desc);
+        }
+
+        show_quote = !show_quote;
     }
-    else
-    {
-        print_description(inf);
+    while (_print_toggle_message(inf, key));
 
-        // TODO enne - this should really move into get_monster_db_desc
-        // and an additional tutorial string added to describe_info.
-        if (crawl_state.game_is_hints())
-            hints_describe_monster(mi, has_stat_desc);
-    }
-
-
-    mouse_control mc(MOUSE_MODE_MORE);
-
-    if (wait_until_key_pressed && _print_toggle_message(inf))
-        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, !show_quote);
+    return key;
 }
 
 static const char* xl_rank_names[] = {
@@ -3808,7 +3827,7 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
     // "Various" instead of the cost of the first ability.
     const std::string cost =
         "(" +
-              ((abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS
+              ((abil == ABIL_ELYVILON_LESSER_HEALING_SELF
                 || abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS
                 || abil == ABIL_YRED_RECALL_UNDEAD_SLAVES) ?
                     "Various" : make_cost_description(abil))
@@ -3832,6 +3851,14 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
 static bool _print_god_abil_desc(int god, int numpower)
 {
+    // Combine the two lesser healing powers together.
+    if (god == GOD_ELYVILON && numpower == 0)
+    {
+        _print_final_god_abil_desc(god,
+                                   "You can provide lesser healing for yourself and others.",
+                                   ABIL_ELYVILON_LESSER_HEALING_SELF);
+        return (true);
+    }
     const char* pmsg = god_gain_power_messages[god][numpower];
 
     // If no message then no power.
@@ -4007,7 +4034,7 @@ static std::string _religion_help(god_type god)
 // The various titles granted by the god of your choice.  Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
-const char *divine_title[NUM_GODS][8] =
+static const char *divine_title[NUM_GODS][8] =
 {
     // No god.
     {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
@@ -4233,10 +4260,6 @@ static void _detailed_god_description(god_type which_god)
             broken = "Note that Trog does not demand training of the "
                      "Invocations skill. All abilities are purely based on "
                      "piety.";
-            break;
-
-        case GOD_ZIN:
-            broken = "Zin will feed starving followers upon <w>p</w>rayer.";
             break;
 
         case GOD_ELYVILON:
@@ -4575,6 +4598,17 @@ void describe_god(god_type which_god, bool give_title)
                                            ABIL_NON_ABILITY);
             }
         }
+        else if (which_god == GOD_ELYVILON)
+        {
+            // Only print this here if we don't have lesser self-healing.
+            if (you.piety < piety_breakpoint(0) || player_under_penance())
+            {
+                have_any = true;
+                _print_final_god_abil_desc(which_god,
+                                           "You can provide lesser healing for others.",
+                                           ABIL_ELYVILON_LESSER_HEALING_OTHERS);
+            }
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
@@ -4740,6 +4774,10 @@ std::string get_skill_description(skill_type skill, bool need_title)
 void describe_skill(skill_type skill)
 {
     std::ostringstream data;
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_skill");
+#endif
 
     data << get_skill_description(skill, true);
 

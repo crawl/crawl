@@ -427,7 +427,7 @@ static const char *kill_method_names[] =
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
-    "falling_through_gate", "disintegration",
+    "falling_through_gate", "disintegration", "headbutt",
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -918,6 +918,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     }
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
+            || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_SPORE
@@ -1132,8 +1133,10 @@ void scorefile_entry::init(time_t dt)
     // 4.2      - stats and god info
 
     version = Version::Short();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles   = 1;
+#elif defined (USE_TILE_WEB)
+    tiles   = ::tiles.is_controlled_from_web();
 #else
     tiles   = 0;
 #endif
@@ -1224,6 +1227,7 @@ void scorefile_entry::init(time_t dt)
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK, STATUS_AIRBORNE,
         DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID, DUR_MIRROR_DAMAGE,
         DUR_SCRYING, STATUS_FIREBALL, DUR_SHROUD_OF_GOLUBRIA,
+        STATUS_CONSTRICTED,
     };
 
     status_info inf;
@@ -1638,6 +1642,14 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         // put the damage on the weapon line if there is one
         if (auxkilldata.empty())
             needs_damage = true;
+        break;
+
+    case KILLED_BY_HEADBUTT:
+        if (terse)
+            desc += apostrophise(death_source_desc()) + " headbutt";
+        else
+            desc += "Headbutted by " + death_source_desc();
+        needs_damage = true;
         break;
 
     case KILLED_BY_POISON:
@@ -2352,6 +2364,10 @@ std::string xlog_fields::xlog_line() const
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
 
+/**
+ * @brief Record the player reaching a milestone, if ::DGL_MILESTONES is defined.
+ * @callergraph
+ */
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level,

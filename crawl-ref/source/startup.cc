@@ -46,13 +46,15 @@
 #include "state.h"
 #include "status.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "view.h"
 #include "viewchar.h"
 
 #ifdef USE_TILE
  #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
- #include "tileview.h"
 #endif
 
 // Initialise a whole lot of stuff...
@@ -288,9 +290,7 @@ static void _post_init(bool newc)
             fully_map_level();
     }
 
-#ifdef USE_TILE
     tile_new_level(newc);
-#endif
 
     // This just puts the view up for the first turn.
     viewwindow();
@@ -513,7 +513,7 @@ static int _misc_text_start_y(int num)
 {
     const int max_lines = get_number_of_lines() - NUM_MISC_LINES;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     return (max_lines);
 #else
     if (num <= 2)

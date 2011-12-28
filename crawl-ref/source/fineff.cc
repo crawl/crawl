@@ -83,7 +83,7 @@ void fire_final_effects()
             else if (fe.def == MID_PLAYER)
             {
                 simple_god_message(" mirrors your injury!");
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
                 flash_monster_colour(attacker->as_monster(), RED, 200);
 #endif
 

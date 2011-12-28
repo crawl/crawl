@@ -30,6 +30,13 @@ function ($, map_knowledge, cr, dungeon_renderer) {
         return (monster_sort(monster1, monster2) == 0);
     }
 
+    function is_excluded(monster)
+    {
+        return (monster.typedata.no_exp &&
+                !(monster.name == "active ballistomycete"
+                  || monster.name.match(/tentacle$/)));
+    }
+
     function monster_sort(m1, m2)
     {
         // Compare monster_info::less_than
@@ -61,7 +68,10 @@ function ($, map_knowledge, cr, dungeon_renderer) {
         var monster_list = [];
 
         for (var loc in monsters)
+        {
+            if (is_excluded(monsters[loc].mon)) continue;
             monster_list.push(monsters[loc]);
+        }
 
         monster_list.sort(function (m1, m2) {
             return monster_sort(m1.mon, m2.mon);
@@ -143,6 +153,11 @@ function ($, map_knowledge, cr, dungeon_renderer) {
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
+            for (key in dungeon_renderer)
+            {
+                if (key.match(/^glyph_mode/))
+                    renderer[key] = dungeon_renderer[key];
+            }
             var w = renderer.cell_width;
             var displayed_monsters = Math.min(monsters.length, 6);
             var needed_width = w * displayed_monsters;

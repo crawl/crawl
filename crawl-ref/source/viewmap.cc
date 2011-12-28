@@ -32,13 +32,13 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
 #ifdef USE_TILE
 #include "tilereg.h"
-#include "tileview.h"
 #endif
 
 #ifndef USE_TILE_LOCAL
@@ -79,7 +79,7 @@ static bool _travel_colour_override(const coord_def& p)
     show_class cls = get_cell_show_class(cell, Options.clean_map);
     if (cls == SH_FEATURE)
     {
-        switch(cell.feat())
+        switch (cell.feat())
         {
         case DNGN_FLOOR:
         case DNGN_LAVA:
@@ -665,11 +665,9 @@ public:
     {
 #ifdef USE_TILE
         tiles.clear_minimap();
+#endif
         level_excursion::go_to(next);
         tile_new_level(false);
-#else
-        level_excursion::go_to(next);
-#endif
 
         if (travel_mode)
         {
@@ -718,6 +716,7 @@ bool show_map(level_pos &lpos,
 
 #ifdef USE_TILE_WEB
         tiles_crt_control crt(false);
+        tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
         int move_x = 0, move_y = 0, scroll_y = 0;

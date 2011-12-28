@@ -94,9 +94,9 @@ void mprf(msg_channel_type channel, int param, PRINTF(2, ));
 void mprf(msg_channel_type channel, PRINTF(1, ));
 void mprf(PRINTF(0, ));
 
-void mprf_nocap(msg_channel_type channel, int param, const char *format, ...);
-void mprf_nocap(msg_channel_type channel, const char *format, ...);
-void mprf_nocap(const char *format, ...);
+void mprf_nocap(msg_channel_type channel, int param, PRINTF(2, ));
+void mprf_nocap(msg_channel_type channel, PRINTF(1, ));
+void mprf_nocap(PRINTF(0, ));
 
 // Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS

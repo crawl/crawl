@@ -102,6 +102,8 @@ static spell_type search_order_third[] = {
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
+    // No Simulacrum: iffy for pghosts (picking up material components),
+    // largely useless on Pan lords.
 };
 
 // Order for looking for enchants for the 4th & 5th spell slots.  If
@@ -345,10 +347,10 @@ static int _player_ghost_base_movement_speed()
 {
     int speed = 10;
 
-    if (player_mutation_level(MUT_FAST))
-        speed += player_mutation_level(MUT_FAST) + 1;
-    if (player_mutation_level(MUT_SLOW))
-        speed -= player_mutation_level(MUT_SLOW) + 1;
+    if (player_mutation_level(MUT_FAST, false))
+        speed += player_mutation_level(MUT_FAST, false) + 1;
+    if (player_mutation_level(MUT_SLOW, false))
+        speed -= player_mutation_level(MUT_SLOW, false) + 1;
 
     if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;

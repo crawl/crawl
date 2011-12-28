@@ -25,14 +25,15 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-attack::attack(actor *attk, actor *defn, bool allow_unarmed)
+attack::attack(actor *attk, actor *defn)
     : attacker(attk), defender(defn), attack_occurred(false),
     cancel_attack(false), did_hit(false), needs_message(false),
     attacker_visible(false), defender_visible(false),
     attacker_invisible(false), defender_invisible(false), to_hit(0),
-    damage_done(0), aux_damage(0), min_delay(0), final_attack_delay(0),
-    noise_factor(0), ev_margin(0), weapon(NULL), damage_brand(SPWPN_NORMAL),
-    wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE), hand_half_bonus(false),
+    damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
+    final_attack_delay(0), apply_bleeding(false), noise_factor(0),
+    ev_margin(0), weapon(NULL),
+    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
     shield(NULL), art_props(0), unrand_entry(NULL), attacker_to_hit_penalty(0),
     attack_verb("bug"), verb_degree(), no_damage_message(),
     special_damage_message(), aux_attack(), aux_verb(),
@@ -48,7 +49,8 @@ attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     init_attack();
 }
 
-bool attack::handle_phase_attempted() {
+bool attack::handle_phase_attempted()
+{
     return true;
 }
 
@@ -106,7 +108,7 @@ std::string attack::anon_pronoun(pronoun_type pron)
     switch (pron)
     {
     default:
-    case PRONOUN:               return "it";
+    case PRONOUN_SUBJECTIVE:    return "it";
     case PRONOUN_POSSESSIVE:    return "its";
     case PRONOUN_REFLEXIVE:     return "itself";
     }

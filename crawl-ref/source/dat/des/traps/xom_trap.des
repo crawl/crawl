@@ -5,9 +5,9 @@
 # Xom Altar Trap (by 7hm)
 #
 # In front of Xom's altar is a useful (preset) item.  He warns you that you shouldn't
-# pick it up.  If you approach the altar followed by a monster, Xom dissapears when
+# pick it up.  If you approach the altar followed by a monster, Xom disappears when
 # you hit the pressure plate, as does the item. If you approach the altar alone, Xom's
-# altar dissapears and a he turns the empty spaces into a closed corridor.  He then
+# altar disappears and a he turns the empty spaces into a closed corridor.  He then
 # spawns a monster at the other end of a corridor. The item you pick up is a wand
 # geared towards escape / saving you options but with a small chance of random effects
 

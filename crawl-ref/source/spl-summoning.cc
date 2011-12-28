@@ -158,37 +158,35 @@ spret_type cast_summon_small_mammals(int pow, god_type god, bool fail)
 
 static bool _snakable_missile(const item_def& item)
 {
-    if (item.base_type != OBJ_MISSILES
-        || item.sub_type != MI_ARROW && item.sub_type != MI_JAVELIN)
-    {
-        return false;
-    }
-
-    return item.special != SPMSL_SILVER && item.special != SPMSL_STEEL;
+    return (item.base_type == OBJ_MISSILES
+            && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
+            && item.special != SPMSL_SILVER
+            && item.special != SPMSL_STEEL);
 }
 
 static bool _snakable_weapon(const item_def& item)
 {
     if (item.base_type == OBJ_STAVES)
         return true;
+
     return (item.base_type == OBJ_WEAPONS
-           && (item.sub_type == WPN_CLUB
-            || item.sub_type == WPN_SPEAR
-            || item.sub_type == WPN_TRIDENT
-            || item.sub_type == WPN_DEMON_TRIDENT
-            || item.sub_type == WPN_STAFF
-            || item.sub_type == WPN_QUARTERSTAFF
-            || item.sub_type == WPN_SCYTHE
-            || item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_BOW
-            || item.sub_type == WPN_LONGBOW
-            || item.sub_type == WPN_ANKUS
-            || item.sub_type == WPN_HALBERD
-            || item.sub_type == WPN_GLAIVE
-            || item.sub_type == WPN_BARDICHE
-            || item.sub_type == WPN_BLOWGUN)
-           && !is_artefact(item));
+            && !is_artefact(item)
+            && (item.sub_type == WPN_CLUB
+                || item.sub_type == WPN_ANKUS
+                || item.sub_type == WPN_GIANT_CLUB
+                || item.sub_type == WPN_GIANT_SPIKED_CLUB
+                || item.sub_type == WPN_SPEAR
+                || item.sub_type == WPN_TRIDENT
+                || item.sub_type == WPN_HALBERD
+                || item.sub_type == WPN_SCYTHE
+                || item.sub_type == WPN_DEMON_TRIDENT
+                || item.sub_type == WPN_GLAIVE
+                || item.sub_type == WPN_BARDICHE
+                || item.sub_type == WPN_STAFF
+                || item.sub_type == WPN_QUARTERSTAFF
+                || item.sub_type == WPN_BLOWGUN
+                || item.sub_type == WPN_BOW
+                || item.sub_type == WPN_LONGBOW));
 }
 
 bool item_is_snakable(const item_def& item)
@@ -238,10 +236,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                 || one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25))))
             {
                 mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
-                                                  : MONS_SNAKE;
+                                                  : MONS_ADDER;
             }
             else
-                mon = MONS_SMALL_SNAKE;
+                mon = MONS_BALL_PYTHON;
 
             const int mon_index = create_monster(mgen_data(mon, beha, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
@@ -262,7 +260,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         // the really big sticks (so bonus applies really only to trolls
         // and ogres).  Still, it's unlikely any character is strong
         // enough to bother lugging a few of these around. - bwr
-        monster_type mon = MONS_SNAKE;
+        monster_type mon = MONS_ADDER;
 
         if (get_weapon_brand(wpn) == SPWPN_VENOM || item_mass(wpn) >= 300)
             mon = MONS_WATER_MOCCASIN;
@@ -1757,7 +1755,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         *motions_r |= DEAD_ARE_FLYING;
     else if (mons_class_flies(zombie_type) == FL_LEVITATE)
         *motions_r |= DEAD_ARE_FLOATING;
-    else if (mons_genus(zombie_type)    == MONS_SNAKE
+    else if (mons_genus(zombie_type)    == MONS_ADDER
              || mons_genus(zombie_type) == MONS_NAGA
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
              || mons_genus(zombie_type) == MONS_GIANT_SLUG
@@ -1901,7 +1899,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_skeleton(si->plus)
             && mons_class_can_be_zombified(si->plus))
         {
-            turn_corpse_into_skeleton_and_chunks(*si);
+            butcher_corpse(*si, B_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
             if (Options.chunks_autopickup)
                 request_autopickup();
@@ -1953,9 +1951,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     const item_def* weapon = you.weapon();
 
     if (weapon
-        && (weapon->base_type == OBJ_CORPSES
-            || (weapon->base_type == OBJ_FOOD
-                && weapon->sub_type == FOOD_CHUNK)))
+        && weapon->base_type == OBJ_FOOD && weapon->sub_type == FOOD_CHUNK)
     {
         const monster_type sim_type = static_cast<monster_type>(weapon->plus);
 
@@ -2014,38 +2010,197 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
-// Make the proper stat adjustments to turn a demonic abomination into
-// an undead abomination.
-bool undead_abomination_convert(monster* mon, int hd)
+static void _apport_and_butcher(monster *caster, item_def &item)
 {
-    if (mon->type == MONS_CRAWLING_CORPSE
-        || mon->type == MONS_MACABRE_MASS)
+    ASSERT(caster->inv[MSLOT_MISCELLANY] == NON_ITEM);
+    bool apported = false;
+
+    if (item.pos != caster->pos())
     {
-        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
-        return (true);
+        apported = true;
+        const std::string item_name = item.name(DESC_A);
+
+        std::string theft;
+        if (is_being_drained(item))
+            theft = " you were drinking from";
+        else if (is_being_butchered(item))
+            theft = " you were butchering";
+
+        if (you.can_see(caster))
+        {
+            mprf("%s casts a spell and %s%s float%s close.",
+                 caster->name(DESC_THE).c_str(),
+                 item_name.c_str(),
+                 theft.c_str(),
+                 item.quantity > 1 ? "" : "s");
+        }
+        else if (you.see_cell(item.pos))
+        {
+            mprf("%s%s suddenly rise%s and float%s away!",
+                 item_name.c_str(),
+                 theft.c_str(),
+                 item.quantity > 1 ? "" : "s",
+                 item.quantity > 1 ? "" : "s");
+        }
+        if (!theft.empty())
+            xom_is_stimulated(100);
     }
-    else if (mon->type != MONS_ABOMINATION_LARGE
-             && mon->type != MONS_ABOMINATION_SMALL)
+
+    // Monsters get to pick up items as a free action elsewhere so let's
+    // exploit that here.  No Apportation tug of war, Animate Dead or Corpse
+    // Rot as guaranteed defense.
+    if (you.see_cell(caster->pos()))
     {
-        return (false);
+        mprf("%s picks up %s%s.",
+             caster->name(DESC_THE).c_str(),
+             item.name(apported ? DESC_THE : DESC_A).c_str(),
+             item.base_type == OBJ_CORPSES ? " and starts butchering it"
+                                           : "");
     }
 
-    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
-    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
+    if (item.base_type == OBJ_CORPSES)
+    {
+        // Butchering takes a long time, though.
+        caster->lose_energy(EUT_SPECIAL, 1, 4);
+        butcher_corpse(item);
+    }
 
-    // Mark this abomination as undead.
-    mon->flags |= MF_FAKE_UNDEAD;
+    if (!caster->pickup_item(item, 0, true))
+    {
+        mprf(MSGCH_ERROR,
+             "ERROR: monster %s can't pick up simulacrum ingredients (%s).",
+             caster->name(DESC_PLAIN).c_str(),
+             item.name(DESC_PLAIN).c_str());
+        return;
+    }
 
-    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED : RED);
+    ASSERT(item.is_valid());
+}
 
-    mon->hit_dice = std::min(max_hd, hd);
+// Monsters who get Simulacrum automatically know Apportation as well, just
+// like those with summoning spells get Abjuration.
+bool monster_simulacrum(monster *caster, bool actual)
+{
+    dprf("trying to cast simulacrum");
+    bool need_drop = false;
+    if (caster->inv[MSLOT_MISCELLANY] != NON_ITEM)
+    {
+        item_def& item(mitm[caster->inv[MSLOT_MISCELLANY]]);
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+            && mons_class_can_be_zombified(item.plus))
+        {
+            if (!actual)
+                return true;
 
-    mon->max_hit_points = std::max(1, hit_points(mon->hit_dice, 2, 5));
-    mon->hit_points     = mon->max_hit_points;
+            // You can see the spell being cast, not necessarily the caster.
+            bool cast_visible = you.see_cell(caster->pos());
 
-    mon->ac = std::min(max_ac, 2 * hd / 3);
+            monster_type sim_type = static_cast<monster_type>(item.plus);
+            monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
+                MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
-    return (true);
+            // Can't create more than the available chunks.
+            int how_many = std::min(8, 4 + random2(100) / 20);
+            how_many = std::min<int>(how_many, item.quantity);
+
+            int created = 0;
+            int seen = 0;
+
+            sim_type = static_cast<monster_type>(item.orig_monnum - 1);
+
+            for (int i = 0; i < how_many; ++i)
+            {
+                // Use the original monster type as the zombified type here,
+                // to get the proper stats from it.
+                const int mons =
+                    create_monster(
+                        mgen_data(mon_type, SAME_ATTITUDE(caster), caster,
+                                  0, SPELL_SIMULACRUM,
+                                  caster->pos(), caster->foe,
+                                  MG_FORCE_BEH | (cast_visible ? MG_DONT_COME : 0),
+                                  caster->god,
+                                  sim_type));
+
+                if (mons != -1)
+                {
+                    if (!created++ && cast_visible)
+                    {
+                        simple_monster_message(caster,
+                            " holds a chunk of flesh high, and a cloud of icy vapour forms.",
+                            caster->friendly() ? MSGCH_FRIEND_SPELL : MSGCH_MONSTER_SPELL);
+                    }
+
+                    if (--item.quantity <= 0)
+                    {
+                        caster->inv[MSLOT_MISCELLANY] = NON_ITEM;
+                        destroy_item(item);
+                    }
+
+                    player_angers_monster(&menv[mons]);
+
+                    monster* sim = &menv[mons];
+                    sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+                    if (you.can_see(sim))
+                        seen++;
+                }
+            }
+
+            if (cast_visible)
+            {
+                if (seen > 1)
+                {
+                    mprf(MSGCH_WARN,
+                         "The vapour coalesces into ice likenesses of %s.",
+                         pluralise(mons_class_name(sim_type)).c_str());
+                }
+                else if (seen == 1)
+                {
+                    const char *name = mons_class_name(sim_type);
+                    mprf(MSGCH_WARN,
+                         "The vapour coalesces into an ice likeness of %s %s.",
+                         article_a(name).c_str(), name);
+                }
+            }
+            // if the cast was not visible, you get "comes into view" instead
+
+            // Always return -- if we have chunks but there is no space to
+            // create simulacra, obtaining more would have to be restricted
+            // only to the same monster type.
+            return created;
+        }
+
+        // a non-chunk
+        need_drop = true;
+    }
+
+    // need to be able to pick up the apported corpse
+    if (caster->flight_mode() == FL_LEVITATE)
+        return false;
+    if (feat_virtually_destroys_item(grd(caster->pos()), item_def()))
+        return false;
+
+    for (distance_iterator di(caster->pos(), true, false, LOS_RADIUS); di; ++di)
+    {
+        if (!cell_see_cell(caster->pos(), *di, LOS_NO_TRANS))
+            continue;
+        for (stack_iterator si(*di); si; ++si)
+        {
+            if ((si->base_type == OBJ_FOOD && si->sub_type == FOOD_CHUNK
+                 || si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                && mons_class_can_be_zombified(si->plus))
+            {
+                dprf("found %s", si->name(DESC_PLAIN).c_str());
+                if (actual)
+                {
+                    if (need_drop)
+                        caster->drop_item(MSLOT_MISCELLANY, -1);
+                    _apport_and_butcher(caster, *si);
+                }
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 // Return a definite/indefinite article for (number) things.
@@ -2060,6 +2215,10 @@ static const char *_count_article(int number, bool definite)
     else
         return ("Some");
 }
+
+// Minimum number of affected corpses before a monster will cast
+// Twisted Resurrection.
+static const int _twisted_res_tracer_min_corpses = 2;
 
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual)
@@ -2085,7 +2244,10 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
             {
                 if (!actual)
-                    return (true);
+                {
+                    ++num_crawlies;
+                    continue;
+                }
 
                 if (mons_genus(si->plus) == MONS_ORC)
                     num_orcs++;
@@ -2102,10 +2264,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             }
         }
 
-        if (num_corpses == 0)
+        if (!actual || num_corpses == 0)
             continue;
 
         // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
+        // 10 aum per HD at 500 power (monster version).
         int hd = div_rand_round((pow + 100) * total_mass, (200*300));
 
         if (hd <= 0)
@@ -2138,9 +2301,8 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (mons != -1)
         {
             // Set hit dice, AC, and HP.
-            undead_abomination_convert(&menv[mons], hd);
+            init_abomination(&menv[mons], hd);
 
-            // Override Lugonu/Makhleb, since these are not really demonic.
             menv[mons].god = god;
 
             if (num_corpses > 1)
@@ -2155,12 +2317,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         }
     }
 
+    if (!actual)
+        return (num_crawlies >= _twisted_res_tracer_min_corpses);
+
     if (num_lost + num_crawlies + num_masses == 0)
         return (false);
-
-    // The tracer should have stopped at the first corpse, or found no
-    // corpses and returned false.
-    ASSERT(actual);
 
     if (num_lost)
         mprf("%s %s into %s!",
@@ -2319,9 +2480,12 @@ static int _abjuration(int pow, monster *mon)
     return (true);
 }
 
-spret_type cast_abjuration(int pow, monster *mon, bool fail)
+spret_type cast_abjuration(int pow, const coord_def& where, bool fail)
 {
     fail_check();
+
+    monster* mon = monster_at(where);
+
     if (mon)
     {
         mpr("Send 'em back where they came from!");

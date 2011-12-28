@@ -365,7 +365,7 @@ ENDMAP
 NAME:  minmay_snake_closets
 TAGS:  no_monster_gen no_item_gen
 DEPTH: D:2-4
-MONS:  snake / small snake
+MONS:  adder / ball python
 ITEM:  any scroll / any potion
 SUBST: ? = 111d
 MAP
@@ -388,27 +388,27 @@ NAME:   goddamned_bats
 DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_spe tile:mons_megabat
-KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe tile:mons_megabat
+KMONS:  2 = bat name:microbat n_rpl n_des n_spe col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
-KMONS:  4 = bat name:giga n_adj n_spe hd:4 col:brown tile:mons_gigabat
+KMONS:  3 = bat name:fruity n_adj n_des n_spe col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_des n_spe hd:4 col:brown tile:mons_gigabat
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
-KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
+KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_des n_spe n_zom
 # The only here without a basis in reality.
-KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_spe n_zom
+KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
 # There are actual "ghost bats" too, but near-extinct, while ghost-faceds
 # have a number of species and are widespread.
-KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
+KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
 # Just an US WW2 military project, but that's good enough.
 KMONS:  9 = fire bat hd:1
-KMONS:  0 = bat zombie name:rotten_bat n_rpl n_spe n_zom
+KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 # Correction, this one, added because of a tile, is not real as well.
-KMONS:  A = bat name:phase n_adj n_spe col:lightgreen spells:blink tile:mons_phase_bat
+KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 # Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
-KMONS:  B = bat name:dwarf_mountain n_adj n_spe
+KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe
 MAP
        xxxxx
       xxxxxxx
@@ -435,7 +435,7 @@ ENDMAP
 NAME:   saegor_snake_ambush
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:3-5
-KMONS:  S = w:3 snake / w:4 small_snake / w:5 plant / nothing
+KMONS:  S = w:3 adder / w:4 ball python / w:5 plant / nothing
 KFEAT:  SX = W
 KITEM:  X = gold
 KPROP:  W = no_rtele_into
@@ -490,7 +490,7 @@ ENDMAP
 NAME:  pond
 DEPTH: D:10-27, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / snake / rat / green rat / swamp drake w:2
+MONS:  giant frog w:30 / adder / rat / green rat / swamp drake w:2
 MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
@@ -603,7 +603,7 @@ NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: D:18-
 MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
-MONS:  small snake / snake / water moccasin / black mamba / anaconda
+MONS:  ball python / adder / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
@@ -678,6 +678,55 @@ MAP
 '??.
 ENDMAP
 
+NAME:   nicolae_underground_beach
+DEPTH:  D:2-
+TAGS:   no_trap_gen no_pool_fixup
+SUBST:  N = MO, M = bW, O = wW
+: if you.absdepth() > 6 then
+SUBST:  b = SBB
+KPROP:  B = bloody
+SUBST:  B = S
+NSUBST: S = 3:v / *:S
+: dgn.delayed_decay(_G, 'v', 'human corpse')
+NSUBST: w = 4:j / *:w
+KMONS:  j = shark
+KFEAT:  j = w
+: else
+SUBST:  b = S
+TAGS:   no_monster_gen
+: end
+SUBST:  E = .S
+COLOUR: Sv : brown
+FTILE:  vSwWj = floor_sand_stone
+SUBST:  S = .
+MAP
+      xxxxx
+    xxxMNOxxx
+   xxbbMNOwwxx
+xxxxbbbMNOwwwx
+.EEEbbbMNOwwwx
+@EEEbbbMNOwwwx
+.EEEbbbMNOwwwx
+xxxxbbbMNOwwwx
+   xxbbMNOwwxx
+    xxxMNOxxx
+      xxxxx
+ENDMAP
+
+# The dragon can be ood, but it can only get out if you let it chase you. A
+# window provides ample warning.
+NAME:   evilmike_quicksilver_bait
+TAGS:   no_monster_gen
+DEPTH:  D:16-
+KITEM:  1 = gold, gold, gold, superb_item, acquire any
+KMONS:  1 = patrolling quicksilver dragon
+MAP
+ ccccccccccccc
+@llllllllllllc
+ cnccccccccclc
+ c1llllllllllc
+ ccccccccccccc
+ENDMAP
 
 ###############################################################################
 #
@@ -910,7 +959,7 @@ KMONS:   7 =  kobold ; dagger . dart
 : else
 KMONS:   7 =  big kobold ; dagger . throwing net q:2
 : end
-KMONS:   1 = kobold name:hungry name_adjective name_species ; nothing
+KMONS:   1 = kobold name:hungry name_adjective name_nocorpse ; nothing
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
@@ -942,6 +991,7 @@ ENDMAP
 
 NAME:  nooodl_orcs_dogs
 DEPTH: D:10-, Orc
+TAGS:  mini_float
 : if you.absdepth() > 18 then
 MONS:  w:5 orc warlord / orc knight / orc warrior / orc sorcerer / w:5 orc wizard
 : elseif you.absdepth() > 13 then
@@ -967,9 +1017,10 @@ ENDMAP
 # This vault was built by evilmike, but the idea is mikee's. Who is really the
 # evil one here?
 NAME:   mikee_hates_you
-DEPTH:  D:9-27
+TAGS:   no_monster_gen
+DEPTH:  D:13-27
 KPROP:  l = no_cloud_gen
-KMONS:  1 = generate_awake siren ; trident ego:distortion | trident ego:venom
+KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
 KITEM:  1 = acquire any
 MARKER: ! = lua:fog_machine { \
                 cloud_type = "foul pestilence", \
@@ -985,11 +1036,12 @@ MARKER: + = lua:restrict_door()
 MARKER: = = lua:restrict_door()
 SUBST:  ! = .
 MAP
-xxxxxxxxxx
-xxxxx=xxxx
-+!!!!l1=>x
-xxxxxxxxxx
-xxxxxxxxxx
+ccccccccccc
+cccccc=cccc
+@+!!!!l1=>c
+cccccccnccc
+cccccccnccc
+       @
 ENDMAP
 
 #################################################################
@@ -1070,7 +1122,7 @@ wwww..11x.x..wwwwwwwww
  www...xx>x11wwwwwwwww
  www..xx??x.wwwwwwwww
  wwww.xx??x.wwwwwww
-  wwww.xxxx.wwwwww
+  wwww.xxmx.wwwwww
    wwwwww..wwwww
     wwwwwwwwwww
        wwwwww
@@ -1246,6 +1298,7 @@ xxxxxx
 ENDMAP
 
 # The Horrible House of Horrid Horrors (by Mu.)
+# XXX: Undiggable glass has been converted to statues.
 NAME:   horrible_house_mu
 DEPTH:  D:16-25, Vault
 KMONS:  g = boggart
@@ -1263,7 +1316,7 @@ MAP
 ..c..$$$.....$$$..c..
 ..c.g....lVl....g.c..
 ..c...llll.llll...c..
-..c...lnll.llnl...c..
+..c...lGll.llGl...c..
 ..c.hlllc.8.clllh.c..
 ..c...llcccccll...c..
 ..c...lllllllll...c..
@@ -1538,20 +1591,21 @@ MONS:  silver statue / orange crystal statue / ice statue w:5
 SUBST: ? = bbb.
 MAP
  .......
-..bm?mb..
-.bm...mb.
-.m..*..m.
+..bG?Gb..
+.bG...Gb.
+.G..*..G.
 .?.*1*.?.
-.m..*..m.
-.bm...mb.
-..bm?mb..
+.G..*..G.
+.bG...Gb.
+..bG?Gb..
  .......
 ENDMAP
 
 NAME:  minmay_protected_statue
 DEPTH: D:9-26
 MONS:  silver statue / orange crystal statue, plant, bush
-SUBST: n : n:20 m 2:1 3:1 t:1
+SUBST: n : n:20 G 2:1 3:1
+KFEAT: n = iron_grate
 MAP
   ...
  .*|*.
@@ -1565,7 +1619,7 @@ ENDMAP
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-26
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-NSUBST: ? = 1:= / *:b
+NSUBST: ? = 1:= / 1:n / *:b
 MAP
       .....
     ...b+b...
@@ -1797,6 +1851,20 @@ b..1.....G.....1..b
 c.................c
 c.....c.....c.....c
 cccbcccc.@.ccccbccc
+ENDMAP
+
+NAME:   evilmike_surprise_oklob
+DEPTH:  D:9-, Elf, Vault
+WEIGHT: 5
+KMASK:  x = no_wall_fixup
+KMONS:  1 = oklob plant
+KITEM:  1 = star_item / nothing
+KITEM:  | = gold, superb_item
+MAP
+ccccccccccc
+c1x|mmm...c
+ccccccccc.c
+ccccccccc@c
 ENDMAP
 
 
@@ -2189,7 +2257,7 @@ ENDMAP
 NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
-NSUBST: B = 1:= / *:c
+NSUBST: B = 1:= / 1:n / *:c
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
@@ -2480,7 +2548,7 @@ NAME:   minmay_guarded_unrand_dyrovepreva
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:14-
 WEIGHT: 3
-MONS:   patrolling crystal golem name:crystal_guardian n_rpl spells:bolt_of_fire;bolt_of_cold
+MONS:   patrolling crystal golem name:crystal_guardian n_rpl n_des spells:bolt_of_fire;bolt_of_cold
 MONS:   orange crystal statue
 ITEM:   cap unrand:crown_of_dyrovepreva
 KPROP:  12d' = no_rtele_into
@@ -2683,8 +2751,8 @@ ENDMAP
 
 # This wizard likes to experiment!
 NAME:    laboratory_2
-MONS:    col:lightred wizard spells:polymorph_other;paralyse;blink\
-         ;bolt_of_fire;bolt_of_fire;teleport_self
+MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
+         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26, Vault
 MONS:    laboratory rat
 MAP
@@ -2821,14 +2889,14 @@ KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
-.+.Ax.C=.9x.
-.x.B=.Dx..x.
-.xxxxxxxx=x.
-.x.8+|0x8.x.
-.x8$x.|x..x.
-.xx=xxxx=xx.
-.x.9=EFx..x.
-.x..xGH=9.x.
+.+.Ac.Cc.9x.
+.x.B=.D=..x.
+.xcccccc=cx.
+.x.8+|0c8.x.
+.x8$c.|c..x.
+.xc=cccc=cx.
+.x.9=EF=..x.
+.x..cGHc9.x.
 .xxxxxxxxxx.
 ............
 ENDMAP

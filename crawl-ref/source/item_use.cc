@@ -1312,17 +1312,17 @@ bool fire_warn_if_impossible(bool silent)
 }
 static bool _autoswitch_to_ranged()
 {
-    if(you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+    if (you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
         return false;
 
     int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
-    if(!is_range_weapon(launcher))
+    if (!is_range_weapon(launcher))
         return false;
 
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
-       if(iter->launched_by(launcher))
+       if (iter->launched_by(launcher))
        {
           if (!wield_weapon(true, item_slot))
               return false;
@@ -1344,13 +1344,13 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return (-1);
     }
 
-    if(Options.auto_switch && you.m_quiver->get_fire_item() == -1
+    if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
         return (-1);
     }
 
-    if(!_fire_choose_item_and_target(item, target, teleport))
+    if (!_fire_choose_item_and_target(item, target, teleport))
         return (-1);
 
     std::string warn;
@@ -1676,7 +1676,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         monster* mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
-            mon->seen_context = "thin air";
+            mon->seen_context = SC_TELEPORT_IN;
 
         mon->move_to_pos(pos);
 
@@ -2009,7 +2009,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             entry->fight_func.launch(launcher, &beam, &ammo_name,
                                      &returning);
 
-        switch(sm)
+        switch (sm)
         {
         case SM_CONTINUE:
             break;
@@ -2324,7 +2324,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     int         level = 0;
     const char* msg   = NULL;
 
-    switch(launcher->sub_type)
+    switch (launcher->sub_type)
     {
     case WPN_BLOWGUN:
         return;
@@ -2629,7 +2629,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Lower accuracy if held in a net.
         if (you.attribute[ATTR_HELD])
-            baseHit--;
+            baseHit = baseHit / 2 - 1;
 
         // For all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
@@ -2676,6 +2676,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
 
         practise(EX_WILL_LAUNCH, launcher_skill);
+        count_action(CACT_FIRE, launcher.sub_type);
 
         // Removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
@@ -2842,10 +2843,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
 
             // Give an appropriate 'tohit':
-            // * hand axes and clubs are -5
-            // * daggers are +1
+            // * clubs and hand axes are -5
             // * spears are -1
-            // * rocks are 0
+            // * large rocks, stones and throwing nets are 0
+            // * daggers and javelins are +1
+            // * darts are +2
             if (wepClass == OBJ_WEAPONS)
             {
                 switch (wepType)
@@ -2956,6 +2958,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 dice_mult = dice_mult * 130 / 100;
 
             practise(EX_WILL_THROW_MSL, wepType);
+            count_action(CACT_THROW, wepType);
         }
         else
         {
@@ -4127,6 +4130,7 @@ void zap_wand(int slot)
     }
 
     practise(EX_DID_ZAP_WAND);
+    count_action(CACT_EVOKE, EVOC_WAND);
     alert_nearby_monsters();
 
     if (!alreadyknown && !alreadytried && risky)
@@ -4281,6 +4285,7 @@ void drink(int slot)
     }
 
     dec_inv_item_quantity(slot, 1);
+    count_action(CACT_USE, OBJ_POTIONS);
     you.turn_is_over = true;
 
     if (you.species != SP_VAMPIRE)
@@ -4363,7 +4368,7 @@ static bool _drink_fountain()
 
     // Good gods do not punish for bad random effects. However, they do
     // punish drinking from a fountain of blood.
-    potion_effect(fountain_effect, 100, true, feat != DNGN_FOUNTAIN_SPARKLING);
+    potion_effect(fountain_effect, 100, true, feat != DNGN_FOUNTAIN_SPARKLING, true);
 
     bool gone_dry = false;
     if (feat == DNGN_FOUNTAIN_BLUE)
@@ -4850,15 +4855,28 @@ static bool _scroll_modify_item(item_def scroll)
     // Get the slot of the scroll just read.
     int item_slot = scroll.link;
 
-    // Get the slot of the item the scroll is to be used on.
-    // Ban the scroll's own slot from the prompt to avoid the stupid situation
-    // where you use identify on itself.
-    item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
-                                   MT_INVLIST, OSEL_ANY, true, true, false, 0,
-                                   item_slot, NULL, OPER_ANY, true);
+    do
+    {
+        // Get the slot of the item the scroll is to be used on.
+        // Ban the scroll's own slot from the prompt to avoid the stupid situation
+        // where you use identify on itself.
+        item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
+                                       MT_INVLIST, OSEL_ANY, true, true, false, 0,
+                                       item_slot, NULL, OPER_ANY, true);
 
-    if (prompt_failed(item_slot))
-        return (false);
+        if (item_slot == PROMPT_NOTHING)
+            return (false);
+
+        if (item_slot == PROMPT_ABORT
+            && yesno("Really abort (and waste the scroll)?"))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+    }
+    while (item_slot < 0);
+
+    ASSERT_SAVE(item_slot >= 0);
 
     item_def &item = you.inv[item_slot];
 
@@ -5279,6 +5297,7 @@ void read_scroll(int slot)
             mpr(pre_succ_msg);
         id_the_scroll = _vorpalise_weapon(alreadyknown);
         if (!id_the_scroll)
+        {
             if (alreadyknown)
             {
                 mpr("This will not work.");
@@ -5290,6 +5309,9 @@ void read_scroll(int slot)
                 mpr("You feel like taking on a jabberwock.");
                 id_the_scroll = true;
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
+        }
         break;
 
     case SCR_IDENTIFY:
@@ -5408,7 +5430,10 @@ void read_scroll(int slot)
     std::string scroll_name = scroll.name(DESC_QUALNAME).c_str();
 
     if (!cancel_scroll)
+    {
         dec_inv_item_quantity(item_slot, 1);
+        count_action(CACT_USE, OBJ_SCROLLS);
+    }
 
     if (id_the_scroll && !alreadyknown && which_scroll != SCR_ACQUIREMENT)
     {

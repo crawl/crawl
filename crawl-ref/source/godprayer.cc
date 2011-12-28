@@ -207,7 +207,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
                 maybe_bloodify_square(*ri);
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     delay(1000);
 #endif
@@ -371,7 +371,7 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    switch(you.religion)
+    switch (you.religion)
     {
     case GOD_JIYVA:
         you.duration[DUR_JELLY_PRAYER] = 200;
@@ -586,13 +586,21 @@ static void _ashenzari_sac_scroll(const item_def& item)
 // Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
-    // Artefacts, including most randarts.
-    if (type != OBJ_MISSILES && random2(value) >= random2(250))
+    // Once you've reached *** once, don't accept weapon sacrifices ever
+    // again just because of value.
+    if (you.piety_max[GOD_ELYVILON] >= piety_breakpoint(2))
+        return (false);
+
+    // value/500 chance of piety normally
+    if (value > random2(500))
         return (true);
 
-    // All weapons and missiles are acceptable at low piety.
-    if (you.piety < piety_breakpoint(0) || player_under_penance())
+    // But all non-missiles are acceptable if you've never reached *.
+    if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
+        && type != OBJ_MISSILES)
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -636,7 +644,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         return _sac_corpse(item);
 
     // item_value() multiplies by quantity.
-    const int shop_value = item_value(item) / item.quantity;
+    const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (is_worthless_consumable(item) ? 1 : shop_value);

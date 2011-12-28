@@ -44,13 +44,13 @@
 #include "state.h"
 #include "env.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
- #include "tilepick.h"
 #endif
 
 band_type active_monster_band = BAND_NO_BAND;
@@ -87,9 +87,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
-// static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
-//                               int px, int py, int power, int extra,
-//                               bool first_band_member, int dur = 0);
 
 static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
                               bool force_pos = false, bool dont_place = false);
@@ -1818,9 +1815,7 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->ghost_demon_init();
     }
 
-#ifdef USE_TILE
     tile_init_props(mon);
-#endif
 
 #ifndef DEBUG_DIAGNOSTICS
     // A rare case of a debug message NOT showing in the debug mode.
@@ -1837,6 +1832,8 @@ static int _place_monster_aux(const mgen_data &mg,
         arena_placed_monster(mon);
     else if (!Generating_Level && you.can_see(mon))
     {
+        if (mg.flags & MG_DONT_COME)
+            mon->seen_context = SC_JUST_SEEN;
         // FIXME: This causes "comes into view" messages at the
         //        wrong time, since code checks for placement
         //        success before printing messages.
@@ -2017,12 +2014,9 @@ void roll_zombie_hp(monster* mon)
     mon->hit_points     = mon->max_hit_points;
 }
 
-static void _roll_zombie_ac_ev(monster* mon)
+static void _roll_zombie_ac_ev_mods(monster* mon, int& acmod, int& evmod)
 {
     ASSERT(mons_class_is_zombified(mon->type));
-
-    int acmod = 0;
-    int evmod = 0;
 
     switch (mon->type)
     {
@@ -2054,6 +2048,16 @@ static void _roll_zombie_ac_ev(monster* mon)
         die("invalid zombie type %d (%s)", mon->type,
             mons_class_name(mon->type));
     }
+}
+
+static void _roll_zombie_ac_ev(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int acmod = 0;
+    int evmod = 0;
+
+    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
 
     mon->ac = std::max(mon->ac + acmod, 0);
     mon->ev = std::max(mon->ev + evmod, 0);
@@ -2095,6 +2099,43 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     roll_zombie_hp(mon);
     _roll_zombie_ac_ev(mon);
+}
+
+bool downgrade_zombie_to_skeleton(monster* mon)
+{
+    if ((mon->type != MONS_ZOMBIE_SMALL && mon->type != MONS_ZOMBIE_LARGE)
+        || !mons_skeleton(mon->base_monster))
+    {
+        return (false);
+    }
+
+    int acmod = 0;
+    int evmod = 0;
+
+    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
+
+    // Reverse the zombie AC and EV mods, since they will be replaced
+    // with the skeleton AC and EV mods below.
+    mon->ac = std::max(mon->ac - acmod, 0);
+    mon->ev = std::max(mon->ev - evmod, 0);
+
+    const int old_hp    = mon->hit_points;
+    const int old_maxhp = mon->max_hit_points;
+
+    mon->type           = (mons_zombie_size(mon->base_monster) == Z_SMALL) ?
+                              MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
+
+    mon->colour         = mons_class_colour(mon->type);
+    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
+
+    roll_zombie_hp(mon);
+    _roll_zombie_ac_ev(mon);
+
+    // Scale the skeleton HP to the zombie HP.
+    mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
+    mon->hit_points     = std::max(mon->hit_points, 1);
+
+    return (true);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
@@ -3044,7 +3085,7 @@ int mons_place(mgen_data mg)
     if (mid == -1)
         return (-1);
 
-    dprf("Created a %s.", menv[mid].base_name(DESC_PLAIN, true).c_str());
+    dprf("Created %s.", menv[mid].base_name(DESC_A, true).c_str());
 
     monster* creation = &menv[mid];
 
@@ -3214,52 +3255,45 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
-bool player_will_anger_monster(monster_type type, bool *holy,
-                               bool *unholy, bool *lawful,
-                               bool *antimagical)
+conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
     dummy.type = type;
 
-    return (player_will_anger_monster(&dummy, holy, unholy, lawful,
-                                      antimagical));
+    return (player_will_anger_monster(&dummy));
 }
 
-bool player_will_anger_monster(monster* mon, bool *holy,
-                               bool *unholy, bool *lawful,
-                               bool *antimagical)
+conduct_type player_will_anger_monster(monster* mon)
 {
-    const bool isHoly =
-        (is_good_god(you.religion) && (mon->is_unholy() || mon->is_evil()));
-    const bool isUnholy =
-        (is_evil_god(you.religion) && mon->is_holy());
-    const bool isLawful =
-        (you.religion == GOD_ZIN && (mon->is_unclean() || mon->is_chaotic()));
-    const bool isAntimagical =
-        (you.religion == GOD_TROG && mon->is_actual_spellcaster());
+    if (is_good_god(you.religion) && mon->is_unholy())
+        return DID_UNHOLY;
+    if (is_good_god(you.religion) && mon->is_evil())
+        return DID_NECROMANCY;
+    if (you.religion == GOD_FEDHAS && mon->holiness() == MH_UNDEAD
+        && !mon->is_insubstantial())
+    {
+        return DID_CORPSE_VIOLATION;
+    }
+    if (is_evil_god(you.religion) && mon->is_holy())
+        return DID_HOLY;
+    if (you.religion == GOD_ZIN)
+    {
+        if (mon->is_unclean())
+            return DID_UNCLEAN;
+        if (mon->is_chaotic())
+            return DID_CHAOS;
+    }
+    if (you.religion == GOD_TROG && mon->is_actual_spellcaster())
+        return DID_SPELL_CASTING;
 
-    if (holy)
-        *holy = isHoly;
-    if (unholy)
-        *unholy = isUnholy;
-    if (lawful)
-        *lawful = isLawful;
-    if (antimagical)
-        *antimagical = isAntimagical;
-
-    return (isHoly || isUnholy || isLawful || isAntimagical);
+    return DID_NOTHING;
 }
 
 bool player_angers_monster(monster* mon)
 {
-    bool holy;
-    bool unholy;
-    bool lawful;
-    bool antimagical;
-
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
-    if (player_will_anger_monster(mon, &holy, &unholy, &lawful, &antimagical)
-        && mon->wont_attack())
+    conduct_type why = player_will_anger_monster(mon);
+    if (why && mon->wont_attack())
     {
         mon->attitude = ATT_HOSTILE;
         mon->del_ench(ENCH_CHARM);
@@ -3267,19 +3301,31 @@ bool player_angers_monster(monster* mon)
 
         if (you.can_see(mon))
         {
-            std::string aura;
+            const std::string mname = mon->name(DESC_THE).c_str();
 
-            if (holy)
-                aura = "holy";
-            else if (unholy)
-                aura = "unholy";
-            else if (lawful)
-                aura = "lawful";
-            else if (antimagical)
-                aura = "anti-magical";
-
-            mprf("%s is enraged by your %s aura!",
-                 mon->name(DESC_THE).c_str(), aura.c_str());
+            switch(why)
+            {
+            case DID_UNHOLY:
+            case DID_NECROMANCY:
+                mprf("%s is enraged by your holy aura!", mname.c_str());
+                break;
+            case DID_CORPSE_VIOLATION:
+                mprf("%s is revulsed by your support of nature!", mname.c_str());
+                break;
+            case DID_HOLY:
+                mprf("%s is enraged by your evilness!", mname.c_str());
+                break;
+            case DID_UNCLEAN:
+            case DID_CHAOS:
+                mprf("%s is enraged by your lawfulness!", mname.c_str());
+                break;
+            case DID_SPELL_CASTING:
+                mprf("%s is enraged by your antimagic god!", mname.c_str());
+                break;
+            default:
+                mprf("%s is enraged by a buggy thing about you!", mname.c_str());
+                break;
+            }
         }
 
         return (true);
@@ -3370,15 +3416,6 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
     // XXX: A lot of hacks that could be avoided by passing the
     //      monster generation data through.
 
-    // Assume all player summoning originates from player x,y.
-    // XXX: no longer true with Haunt.
-    bool playerSummon = (where == you.pos());
-    bool monsterSummon = !playerSummon && actor_at(where);
-
-    // Require LOS and no transparent walls, except for
-    // summoning monsters.
-    los_type los = monsterSummon ? LOS_DEFAULT : LOS_NO_TRANS;
-
     int good_count = 0;
 
     for (radius_iterator ri(where, radius, C_ROUND, NULL, !allow_centre);
@@ -3389,7 +3426,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
         if (actor_at(*ri))
             continue;
 
-        if (!cell_see_cell(where, *ri, los))
+        if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
         success =

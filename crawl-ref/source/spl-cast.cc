@@ -90,11 +90,11 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell)
+static std::string _spell_base_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -116,11 +116,11 @@ static std::string _spell_base_description(spell_type spell)
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell)
+static std::string _spell_extra_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -241,11 +241,11 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                           || allow_preselect && you.last_cast_spell == spell);
 
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_spell_base_description(spell),
-                                    _spell_extra_description(spell),
+            new ToggleableMenuEntry(_spell_base_description(spell, viewing),
+                                    _spell_extra_description(spell, viewing),
                                     MEL_ITEM, 1, letter, preselect);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
         spell_menu.add_entry(me);
@@ -736,9 +736,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             practise(EX_DID_CAST, spell);
             did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-            if (you.spell_usage.find(spell) == you.spell_usage.end())
-                you.spell_usage[spell].init(0);
-            you.spell_usage[spell][you.experience_level - 1]++;
+            count_action(CACT_CAST, spell);
         }
         else
             practise(EX_DID_MISCAST, spell);
@@ -1003,7 +1001,7 @@ static bool _spellcasting_aborted(spell_type spell,
 
 static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
-    switch(spell)
+    switch (spell)
     {
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
@@ -1034,7 +1032,7 @@ spret_type your_spells(spell_type spell, int powc,
     beam.origin_spell = spell;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
-    // succeeded must be performed after the switch().
+    // succeeded must be performed after the switch.
     if (_spellcasting_aborted(spell, check_range, wiz_cast))
         return (SPRET_ABORT);
 
@@ -1461,7 +1459,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_ABJURATION:
-        return cast_abjuration(powc, monster_at(target), fail);
+        return cast_abjuration(powc, beam.target, fail);
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);

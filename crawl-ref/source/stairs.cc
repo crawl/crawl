@@ -38,7 +38,7 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
 #include "traps.h"
@@ -728,7 +728,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
         std::random_shuffle(runes.begin(), runes.end());
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
 #else
