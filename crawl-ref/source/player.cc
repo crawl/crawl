@@ -7353,24 +7353,6 @@ void player::accum_has_constricted()
             dur_has_constricted[i] += you.time_taken;
 }
 
-bool player::is_constricted_larger()
-{
-    size_type psize;
-    size_type msize;
-
-    if (!is_constricted())
-        return false;
-    psize = body_size();
-    msize = env.mons[constricted_by].body_size();
-    return (msize > psize);
-
-}
-
-bool player::is_constricted()
-{
-    return (constricted_by != NON_ENTITY);
-}
-
 bool player::attempt_escape()
 {
     size_type thesize;
@@ -7445,25 +7427,6 @@ void player::clear_all_constrictions()
         }
         constricting[i] = NON_ENTITY;
         dur_has_constricted[i] = 0;
-    }
-}
-
-void player::clear_specific_constrictions(int mind)
-{
-    if (constricted_by == mind)
-    {
-        constricted_by = NON_ENTITY;
-        dur_been_constricted = 0;
-        escape_attempts = 0;
-    }
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (constricting[i] == mind)
-        {
-            constricting[i] = NON_ENTITY;
-            dur_has_constricted[i] = 0;
-        }
     }
 }
 
