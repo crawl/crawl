@@ -14,9 +14,9 @@ function tutorial_messenger (data, triggerable, triggerer, marker, ev)
 end
 
 function tutorial_message (text, onetime)
-  -- defaults to true
+  -- defaults to false
   if onetime == nil then
-    onetime = true
+    onetime = false
   end
 
   local data = {text=text, channel="tutorial", onetime=onetime}
