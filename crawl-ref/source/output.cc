@@ -1987,6 +1987,20 @@ std::string magic_res_adjective(int mr)
     return prefix + " resistant";
 }
 
+static std::string _annotate_form_based(std::string desc, bool suppressed)
+{
+    if (suppressed)
+        return ("<darkgrey>(" + desc + ")</darkgrey>");
+    else
+        return (desc);
+}
+
+static std::string _dragon_abil(std::string desc)
+{
+    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    return _annotate_form_based(desc, supp);
+}
+
 // Creates rows of short descriptions for current
 // status, mutations and abilities.
 static std::string _status_mut_abilities(int sw)
@@ -2105,7 +2119,15 @@ static std::string _status_mut_abilities(int sw)
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
       case SP_MERFOLK:
-          mutations.push_back("change form in water");
+          mutations.push_back(_annotate_form_based("change form in water",
+                                                   form_changed_physiology()));
+          mutations.push_back(_annotate_form_based("swift swim",
+                                                   form_changed_physiology()));
+          break;
+
+      case SP_MINOTAUR:
+          mutations.push_back(_annotate_form_based("retaliatory headbutt",
+                                                   !form_keeps_mutations()));
           break;
 
       case SP_NAGA:
@@ -2116,13 +2138,17 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("breathe poison");
           break;
 
+      case SP_GHOUL:
+          mutations.push_back("rotting body");
+
       case SP_TENGU:
           if (you.experience_level > 4)
           {
               std::string help = "able to fly";
               if (you.experience_level > 14)
                   help += " continuously";
-              mutations.push_back(help);
+              mutations.push_back(_annotate_form_based(help,
+                                                       player_is_shapechanged()));
           }
           break;
 
@@ -2136,14 +2162,20 @@ static std::string _status_mut_abilities(int sw)
                   help = "strongly " + help;
               mutations.push_back(help);
           }
+          mutations.push_back("restore body");
           break;
 
       case SP_KOBOLD:
           mutations.push_back("disease resistance");
           break;
 
+      case SP_VAMPIRE:
+          if (you.experience_level >= 6)
+              mutations.push_back("bottle blood");
+
       case SP_DEEP_DWARF:
           mutations.push_back("damage resistance");
+          mutations.push_back("recharge devices");
           break;
 
       case SP_FELID:
@@ -2151,25 +2183,22 @@ static std::string _status_mut_abilities(int sw)
           break;
 
       case SP_RED_DRACONIAN:
-          mutations.push_back("breathe fire");
+          mutations.push_back(_dragon_abil("breathe fire"));
           break;
 
       case SP_WHITE_DRACONIAN:
-          mutations.push_back("breathe frost");
+          mutations.push_back(_dragon_abil("breathe frost"));
           break;
 
       case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe noxious fumes");
+          mutations.push_back(_dragon_abil("breathe noxious fumes"));
           break;
 
       case SP_YELLOW_DRACONIAN:
-          mutations.push_back("spit acid");
-
-          if (form_keeps_mutations() || you.form == TRAN_DRAGON)
-              mutations.push_back("acid resistance");
-          else
-              mutations.push_back("<darkgrey>(acid resistance)</darkgrey>");
-
+          mutations.push_back(_dragon_abil("spit acid"));
+          mutations.push_back(_annotate_form_based("acid resistance",
+                                                   !form_keeps_mutations()
+                                                    && you.form != TRAN_DRAGON));
           break;
 
       case SP_GREY_DRACONIAN:
@@ -2177,19 +2206,19 @@ static std::string _status_mut_abilities(int sw)
           break;
 
       case SP_BLACK_DRACONIAN:
-          mutations.push_back("breathe lightning");
+          mutations.push_back(_dragon_abil("breathe lightning"));
           break;
 
       case SP_PURPLE_DRACONIAN:
-          mutations.push_back("breathe power");
+          mutations.push_back(_dragon_abil("breathe power"));
           break;
 
       case SP_MOTTLED_DRACONIAN:
-          mutations.push_back("breathe sticky flames");
+          mutations.push_back(_dragon_abil("breathe sticky flames"));
           break;
 
       case SP_PALE_DRACONIAN:
-          mutations.push_back("breathe steam");
+          mutations.push_back(_dragon_abil("breathe steam"));
           break;
 
       default:
