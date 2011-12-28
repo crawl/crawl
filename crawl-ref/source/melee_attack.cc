@@ -4743,7 +4743,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.form == TRAN_BAT);
 
     case UNAT_CONSTRICT:
-        return (you.form != TRAN_NONE);
+        return (!form_keeps_mutations());
 
     default:
         return (false);
