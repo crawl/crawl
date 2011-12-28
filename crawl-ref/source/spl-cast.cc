@@ -298,10 +298,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.duration[DUR_BRILLIANCE])
         fail_reduce = fail_reduce * 67 / 100;
 
-    // Draconians get a boost to dragon-form.
-    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
-        fail_reduce = fail_reduce * 70 / 100;
-
     // Hard cap on fail rate reduction.
     if (fail_reduce < 50)
         fail_reduce = 50;
