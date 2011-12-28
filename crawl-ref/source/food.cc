@@ -59,7 +59,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
 static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
-static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
+static void _heal_from_food(int hp_amt, bool unrot = false,
                             bool restore_str = false);
 
 
@@ -247,7 +247,8 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         return (false);
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
-             && mons_has_blood(mitm[corpse_id].plus)
+             && (can_bottle_blood_from_corpse(mitm[corpse_id].plus)
+                 || !is_bad_food(mitm[corpse_id]))
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM)
              && (Options.confirm_butcher == CONFIRM_NEVER
@@ -260,9 +261,9 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     return (true);
 }
 
-static bool _butcher_corpse(int corpse_id, int butcher_tool,
-                            bool first_corpse = true,
-                            bool bottle_blood = false)
+static bool _corpse_butchery(int corpse_id, int butcher_tool,
+                             bool first_corpse = true,
+                             bool bottle_blood = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -493,7 +494,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
             return (false);
 
-        success = _butcher_corpse(corpse_id, butcher_tool, true, bottle_blood);
+        success = _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
@@ -534,7 +535,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                     return (false);
 
                 corpse_id = si->index();
-                _butcher_corpse(corpse_id, butcher_tool, true, bottle_blood);
+                _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
                 break;
             }
 
@@ -601,8 +602,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, butcher_tool, first_corpse,
-                                bottle_blood))
+            if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
+                                 bottle_blood))
             {
                 success = true;
                 first_corpse = false;
@@ -699,7 +700,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     if (!check_hunger)
         return true;
 
-    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_STARVING)
+    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_NEAR_STARVING)
     {
         if (!silent)
         {
@@ -744,13 +745,16 @@ void end_nausea()
 {
     const char *add = "";
     // spoilable food, need to interrupt before it can go bad
-    if (_has_edible_chunks() or count_corpses_in_pack(false))
+    if (_has_edible_chunks())
         add = ", and you want to eat";
     else if (you.hunger_state <= HS_HUNGRY)
         add = ", and you need some food";
     else if (can_ingest(OBJ_FOOD, FOOD_CHUNK, true)) // carnivore/gourmand
         add = ", so let's find someone to eat";
     mprf(MSGCH_DURATION, "Your stomach is not as upset anymore%s.", add);
+
+    if (!_has_edible_chunks() && _eat_check(true, true))
+        _have_corpses_in_pack(false);
 }
 
 // [ds] Returns true if something was eaten.
@@ -1805,46 +1809,47 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_ROTTEN:
     case CE_CONTAMINATED:
     case CE_CLEAN:
+    {
+        int contam = _contamination_ratio(chunk_effect);
+        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
-            int contam = _contamination_ratio(chunk_effect);
-            if (player_mutation_level(MUT_SAPROVOROUS) == 3)
+            mprf("This %s flesh tastes %s!",
+                 chunk_effect == CE_ROTTEN   ? "rotting"   : "raw",
+                 x_chance_in_y(contam, 1000) ? "delicious" : "good");
+            if (you.species == SP_GHOUL)
             {
-                mprf("This %s flesh tastes %s!",
-                     chunk_effect == CE_ROTTEN ? "rotting" : "raw",
-                     x_chance_in_y(contam, 1000) ? "delicious" : "good");
-                if (you.species == SP_GHOUL)
+                int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
+                if (!x_chance_in_y(contam + 4000, 5000))
+                    hp_amt = 0;
+                _heal_from_food(hp_amt, !one_chance_in(4),
+                                x_chance_in_y(contam, 5000));
+            }
+        }
+        else
+        {
+            if (x_chance_in_y(contam, 1000))
+            {
+                mpr("There is something wrong with this meat.");
+                if (you.duration[DUR_DIVINE_STAMINA] > 0)
+                    mpr("Your divine stamina protects you.");
+                else
                 {
-                    int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-                    if (!x_chance_in_y(contam + 4000, 5000))
-                        hp_amt = 0;
-                    _heal_from_food(hp_amt, 0, !one_chance_in(4),
-                                    x_chance_in_y(contam, 5000));
+                    if (you.duration[DUR_NAUSEA])
+                        you.sicken(50 + random2(100));
+                    you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
+                    learned_something_new(HINT_CONTAMINATED_CHUNK);
+                    xom_is_stimulated(random2(100));
                 }
             }
             else
-            {
-                if (x_chance_in_y(contam, 1000))
-                {
-                    mpr("There is something wrong with this meat.");
-                    if (you.duration[DUR_DIVINE_STAMINA] > 0)
-                        mpr("Your divine stamina protects you.");
-                    else
-                    {
-                        if (you.duration[DUR_NAUSEA])
-                            you.sicken(50 + random2(100));
-                        you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
-                        learned_something_new(HINT_CONTAMINATED_CHUNK);
-                        xom_is_stimulated(random2(100));
-                    }
-                }
-                else
-                    _say_chunk_flavour(likes_chunks);
-                nutrition = nutrition * (1000 - contam) / 1000;
-            }
+                _say_chunk_flavour(likes_chunks);
 
-            do_eat = true;
+            nutrition = nutrition * (1000 - contam) / 1000;
         }
+
+        do_eat = true;
         break;
+    }
 
     case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
     case CE_MUTAGEN_GOOD:
@@ -1999,7 +2004,7 @@ static void _eating(object_class_type item_class, int item_type)
 
             if (you.duration[DUR_NAUSEA])
             {
-                // possible only when starving
+                // possible only when starving or near starving
                 mpr("You force it down, but cannot stomach much of it.");
                 food_value /= 2;
             }
@@ -2247,117 +2252,66 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     else if (feeding > 0)
         end_feeding = true;
 
-    switch (mons_type)
+    switch (chunk_type)
     {
-        case MONS_HUMAN:
-            food_value += random2avg((you.experience_level * 10)/duration, 2);
-
-            // Human may give a bit of healing during feeding as long as
-            // the corpse is still fairly fresh.
-            if (corpse.special > 150)
+        case CE_CLEAN:
+            if (start_feeding)
             {
-                int hp_amt = 1 + you.experience_level/3;
-
-                if (!end_feeding)
-                {
-                    if (start_feeding)
-                        mpr("This warm blood tastes really delicious!");
-
-                    if (hp_amt >= duration)
-                        hp_amt /= duration;
-                    else if (x_chance_in_y(hp_amt, duration))
-                        hp_amt = 1;
-
-                    _heal_from_food(hp_amt);
-                }
-                else
-                {
-                    // Give the remainder of healing at the end.
-                    if (hp_amt > duration)
-                        _heal_from_food(hp_amt % duration);
-                }
+                mprf("This %sblood tastes delicious!",
+                     mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
+                                                              : "");
             }
+            else if (end_feeding && corpse.special > 150)
+                _heal_from_food(1);
             break;
 
-        case MONS_ELF:
-            food_value += random2avg((you.experience_level * 10) / duration, 2);
-
-            // Elven blood gives a bit of mana at the end of feeding,
-            // but only from fairly fresh corpses.
-            if (corpse.special > 150)
-            {
-                if (end_feeding)
-                {
-                    const int mp_amt = 1 + random2(3);
-                    _heal_from_food(1, mp_amt);
-                }
-                else if (start_feeding)
-                    mpr("This warm blood tastes magically delicious!");
-            }
+        case CE_CONTAMINATED:
+            food_value /= 2;
+            if (start_feeding)
+                mpr("Somehow this blood was not very filling!");
+            else if (end_feeding && corpse.special > 150)
+                _heal_from_food(1);
             break;
 
-        default:
-            switch (chunk_type)
-            {
-                case CE_CLEAN:
-                    if (start_feeding)
-                    {
-                        mprf("This %sblood tastes delicious!",
-                             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
-                                                                      : "");
-                    }
-                    else if (end_feeding && corpse.special > 150)
-                        _heal_from_food(1);
-                    break;
+        case CE_POISONOUS:
+        case CE_POISON_CONTAM:
+            make_hungry(food_value / duration / 2, false);
+            // Always print this message - maybe you lost poison
+            // resistance due to feeding.
+            mpr("Blech - this blood tastes nasty!");
+            if (poison_player(1 + random2(3), "", "poisonous blood"))
+                xom_is_stimulated(random2(100));
+            stop_delay();
+            return;
 
-                case CE_CONTAMINATED:
-                    food_value /= 2;
-                    if (start_feeding)
-                        mpr("Somehow this blood was not very filling!");
-                    else if (end_feeding && corpse.special > 150)
-                        _heal_from_food(1);
-                    break;
+        case CE_MUTAGEN_RANDOM:
+            food_value /= 2;
+            if (start_feeding)
+                mpr("This blood tastes really weird!");
+            mutate(RANDOM_MUTATION);
+            did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+            xom_is_stimulated(100);
+            // Sometimes heal by one hp.
+            if (end_feeding && corpse.special > 150 && coinflip())
+                _heal_from_food(1);
+            break;
 
-                case CE_POISONOUS:
-                case CE_POISON_CONTAM:
-                    make_hungry(food_value / duration / 2, false);
-                    // Always print this message - maybe you lost poison
-                    // resistance due to feeding.
-                    mpr("Blech - this blood tastes nasty!");
-                    if (poison_player(1 + random2(3), "", "poisonous blood"))
-                        xom_is_stimulated(random2(100));
-                    stop_delay();
-                    return;
+        case CE_MUTAGEN_BAD:
+            food_value /= 2;
+            if (start_feeding)
+                mpr("This blood tastes *really* weird!");
+            give_bad_mutation();
+            did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+            xom_is_stimulated(random2(200));
+            // No healing from bad mutagenic blood.
+            break;
 
-                case CE_MUTAGEN_RANDOM:
-                    food_value /= 2;
-                    if (start_feeding)
-                        mpr("This blood tastes really weird!");
-                    mutate(RANDOM_MUTATION);
-                    did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-                    xom_is_stimulated(100);
-                    // Sometimes heal by one hp.
-                    if (end_feeding && corpse.special > 150 && coinflip())
-                        _heal_from_food(1);
-                    break;
-
-                case CE_MUTAGEN_BAD:
-                    food_value /= 2;
-                    if (start_feeding)
-                        mpr("This blood tastes *really* weird!");
-                    give_bad_mutation();
-                    did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-                    xom_is_stimulated(random2(200));
-                    // No healing from bad mutagenic blood.
-                    break;
-
-                case CE_ROT:
-                    you.rot(&you, 5 + random2(5));
-                    if (you.sicken(50 + random2(100)))
-                        xom_is_stimulated(random2(100));
-                    stop_delay();
-                    break;
-            }
+        case CE_ROT:
+            you.rot(&you, 5 + random2(5));
+            if (you.sicken(50 + random2(100)))
+                xom_is_stimulated(random2(100));
+            stop_delay();
+            break;
     }
 
     if (!end_feeding)
@@ -2842,14 +2796,10 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     return (true);
 }
 
-static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
-                            bool restore_str)
+static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
 {
     if (hp_amt > 0)
         inc_hp(hp_amt);
-
-    if (mp_amt > 0)
-        inc_mp(mp_amt);
 
     if (unrot && player_rotted())
     {

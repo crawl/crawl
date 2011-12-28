@@ -343,6 +343,10 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
     cursor_control coff(false);
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control menu(CRT_MENU, "shop");
+#endif
+
     clrscr();
 
     const std::string hello = "Welcome to " + shop_name(shop.pos) + "!";
@@ -2421,7 +2425,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
     case OBJ_STAVES:
-        // Only these are really interchangable.
+        // Only these are really interchangeable.
         break;
 
     default:

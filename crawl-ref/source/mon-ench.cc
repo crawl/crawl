@@ -168,15 +168,15 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                 mprf("%s hides itself under the floor.",
                      name(DESC_A, true).c_str());
             }
-            else if (seen_context == "surfaces"
-                     || seen_context == "bursts forth"
-                     || seen_context == "emerges")
+            else if (seen_context == SC_SURFACES)
             {
                 // The monster surfaced and submerged in the same turn
                 // without doing anything else.
                 interrupt_activity(AI_SEE_MONSTER,
                                    activity_interrupt_data(this,
-                                                           "surfaced"));
+                                                           SC_SURFACES_BRIEFLY));
+                // Why does this handle only land-capables?  I'd imagine this
+                // to happen mostly (only?) for fish. -- 1KB
             }
             else if (crawl_state.game_is_arena())
                 mprf("%s submerges.", name(DESC_A, true).c_str());
@@ -212,6 +212,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             firing_pos.reset();
         }
         mons_att_changed(this);
+        // clear any constrictions on/by you
+        clear_specific_constrictions(MHITYOU);
+        you.clear_specific_constrictions(mindex());
+
+        // TODO -- and friends
+
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
@@ -476,7 +482,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
-                               activity_interrupt_data(this, "uncharm"));
+                               activity_interrupt_data(this, SC_UNCHARM));
         }
 
         if (is_patrolling())
@@ -574,17 +580,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
                 // Already set somewhere else.
-                if (!seen_context.empty())
+                if (seen_context)
                     return;
 
-                if (type == MONS_AIR_ELEMENTAL)
-                    seen_context = "thin air";
-                else if (type == MONS_TRAPDOOR_SPIDER)
-                    seen_context = "leaps out";
-                else if (!monster_habitable_grid(this, DNGN_FLOOR))
-                    seen_context = "bursts forth";
+                if (!monster_habitable_grid(this, DNGN_FLOOR))
+                    seen_context = SC_FISH_SURFACES;
                 else
-                    seen_context = "surfaces";
+                    seen_context = SC_SURFACES;
             }
             else if (!quiet)
             {
@@ -1314,8 +1316,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             {
                 if (type == MONS_PILLAR_OF_SALT)
                 {
-                     mprf("The %s crumbles away.",
-                          name(DESC_PLAIN, false).c_str());
+                     mprf("%s crumbles away.",
+                          name(DESC_THE, false).c_str());
                 }
                 else
                 {
@@ -1496,7 +1498,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
         // an assert about it. -cao
-        if (!(flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS)
+            && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_GLOWING_SHAPESHIFTER
                 || one_chance_in(4)))
         {
@@ -1505,7 +1508,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SHAPESHIFTER:         // This ench never runs out!
-        if (!(flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS)
+            && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
                 || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
         {

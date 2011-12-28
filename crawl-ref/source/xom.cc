@@ -1612,8 +1612,8 @@ static int _xom_swap_weapons(bool debug = false)
     // ...and get its weapon.
     int monwpn = mon->inv[MSLOT_WEAPON];
     int mywpn  = you.equip[EQ_WEAPON];
-    ASSERT (monwpn != NON_ITEM);
-    ASSERT (mywpn  != -1);
+    ASSERT(monwpn != NON_ITEM);
+    ASSERT(mywpn  != -1);
 
     unwield_item();
 
@@ -1754,12 +1754,17 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 static int _xom_random_stickable(const int HD)
 {
     int c;
-    static const int arr[13] = {WPN_CLUB, WPN_STAFF, WPN_QUARTERSTAFF, WPN_BOW,
-                                WPN_SPEAR, WPN_BLOWGUN, WPN_GLAIVE, WPN_HALBERD,
-                                WPN_ANKUS, WPN_SCYTHE, WPN_LONGBOW,
-                                WPN_GIANT_CLUB, WPN_GIANT_SPIKED_CLUB};
+    // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
+    // It has everything but tridents, demon tridents and bardiches, and
+    // puts the giant club types at the end as special cases.
+    static const int arr[13] = {
+        WPN_CLUB,    WPN_ANKUS,      WPN_SPEAR,        WPN_HALBERD,
+        WPN_SCYTHE,  WPN_GLAIVE,     WPN_STAFF,        WPN_QUARTERSTAFF,
+        WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
+        WPN_GIANT_SPIKED_CLUB
+    };
 
-    // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10
+    // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10, and
     // weapon_rarity also gives us 1-10.
     do
         c = random2(HD);
@@ -1783,7 +1788,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
         if (mi->attitude != ATT_HOSTILE)
             continue;
 
-        if (mons_genus(mi->type) == MONS_SNAKE)
+        if (mons_genus(mi->type) == MONS_ADDER)
         {
             if (!action)
             {
@@ -1800,8 +1805,10 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                     x_chance_in_y(3,5) ? OBJ_MISSILES
                                        : OBJ_WEAPONS;
 
-            const int sub_type  = (base_type == OBJ_MISSILES ? MI_ARROW
-                                        : _xom_random_stickable(mi->hit_dice));
+            const int sub_type =
+                    (base_type == OBJ_MISSILES ?
+                        (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
+                            : _xom_random_stickable(mi->hit_dice));
 
             int thing_created = items(0, base_type, sub_type, true,
                                       mi->hit_dice / 3 - 1, MAKE_ITEM_NO_RACE,
@@ -1823,28 +1830,6 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             move_item_to_grid(&thing_created, mi->pos());
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
         }
-#if 0
-        // Polymorph naga into wood golem, undecided as to whether it will
-        // remain or not.
-        else if (mons_genus(mi->type) == MONS_NAGA)
-        {
-            if (!action)
-            {
-                if (debug)
-                    return (XOM_GOOD_SNAKES);
-
-                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                               "snakes to sticks"), true);
-                god_speaks(GOD_XOM, _get_xom_speech("snakes to sticks").c_str());
-                action = true;
-            }
-
-            // MONS_WOOD_GOLEM is not normally a suitable polymorph form
-            // so we have to force it using the last 'true' in the parameter
-            // list
-            monster_polymorph(*mi, MONS_WOOD_GOLEM, PPT_SAME, false, true);
-        }
-#endif
     }
 
     if (action)
@@ -2244,11 +2229,13 @@ static int _xom_change_scenery(bool debug = false)
         case DNGN_DETECTED_SECRET_DOOR:
         case DNGN_SECRET_DOOR:
             grd(pos) = DNGN_OPEN_DOOR;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_open++;
             break;
         case DNGN_OPEN_DOOR:
             grd(pos) = DNGN_CLOSED_DOOR;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_close++;
             break;
@@ -2260,6 +2247,7 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = (dungeon_feature_type) (grd(pos) - fountain_diff);
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_flow++;
             break;
@@ -2269,6 +2257,7 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = DNGN_FOUNTAIN_BLOOD;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_blood++;
             break;
@@ -3134,7 +3123,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     }
 
     ray_def ray;
-    if (!find_ray(begin, towards, ray))
+    if (!find_ray(begin, towards, ray, opc_solid_see))
     {
         mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
         return (stairs_moved);

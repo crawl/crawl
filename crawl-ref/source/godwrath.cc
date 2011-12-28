@@ -363,7 +363,7 @@ static bool _cheibriados_retribution()
     if (one_chance_in(5 - wrath_type))
         glammer = true;
 
-    switch(wrath_type)
+    switch (wrath_type)
     {
     // Very high tension wrath
     case 4:
@@ -990,7 +990,7 @@ static bool _jiyva_retribution()
 
         if (found_one)
         {
-            mprf(MSGCH_GOD, "Jiyva's putrescence saturates the %s!",
+            mprf(MSGCH_GOD, "Jiyva's putrescence saturates %s!",
                  mon->name(DESC_THE).c_str());
 
             slimify_monster(mon, true);

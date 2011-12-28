@@ -66,7 +66,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
+bool fight_melee(actor *attacker, actor *defender)
 {
     if (defender->atype() == ACT_PLAYER)
     {
@@ -84,7 +84,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
         // change that.
         behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
     }
-    else if(attacker->atype() == ACT_PLAYER)
+    else if (attacker->atype() == ACT_PLAYER)
     {
         ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs or boulders this way.
@@ -94,7 +94,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
             return (false);
         }
 
-        melee_attack attk(&you, defender, allow_unarmed);
+        melee_attack attk(&you, defender);
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
@@ -122,7 +122,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
 
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
-    // about unpredictable or wierd results from players.
+    // about unpredictable or weird results from players.
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
         attacker->as_monster()->number : 4;
@@ -178,31 +178,13 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
                 break;
         }
 
-        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-
-        if (attk.type == AT_CHERUB)
-            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
-
-        if (attk.type == AT_NONE)
-        {
-            // Make sure the monster uses up some energy, even though it
-            // didn't actually attack.
-            if (effective_attack_number == 0)
-                attacker->as_monster()->lose_energy(EUT_ATTACK);
-            break;
-        }
-        // Skip dummy attacks.
-        if ((!allow_unarmed && attk.type != AT_HIT && attk.flavour != AF_REACH)
-            || attk.type == AT_SHOOT)
-        {
-            --effective_attack_number;
-            continue;
-        }
-
-        melee_attack melee_attk(attacker, defender, allow_unarmed, attack_number,
+        melee_attack melee_attk(attacker, defender, attack_number,
                           effective_attack_number);
-        melee_attk.attack();
+
+        // If the attack fails out, keep effective_attack_number up to
+        // date so that we don't cause excess energy loss in monsters
+        if (!melee_attk.attack())
+            effective_attack_number = melee_attk.effective_attack_number;
     }
 
     return (true);
@@ -486,7 +468,7 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
     if (ret > 8)
     {
         // these weapons are huge, so strength plays a larger role
-        if (wpn_type == WPN_GIANT_CLUB || wpn_type == WPN_GIANT_SPIKED_CLUB)
+        if (is_giant_club_type(wpn_type))
             ret = 9;
         else
             ret = 8;

@@ -26,9 +26,7 @@
 #include "place.h"
 #include "religion.h"
 #include "stairs.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
 
@@ -87,11 +85,9 @@ LUAFN(debug_generate_level)
     no_messages mx;
     env.map_knowledge.init(map_cell());
     los_changed();
-#ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
     tile_new_level(true);
-#endif
     builder(you.absdepth0, lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
 }
@@ -144,7 +140,7 @@ LUAFN(debug_bouncy_beam)
     beam.draw_delay = 0;
 
     if (findray)
-        beam.chose_ray = find_ray(source, target, beam.ray);
+        beam.chose_ray = find_ray(source, target, beam.ray, opc_solid_see);
 
     beam.name       = "debug lightning beam";
     beam.short_name = "DEBUG";
@@ -330,6 +326,7 @@ static const char* disablements[] =
     "player_regen",
     "hunger",
     "death",
+    "delay",
 };
 
 LUAFN(debug_disable)

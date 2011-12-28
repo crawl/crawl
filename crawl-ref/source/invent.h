@@ -116,7 +116,7 @@ public:
 
     virtual std::string get_filter_text() const;
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tiles) const;
 #endif
 
@@ -185,7 +185,7 @@ protected:
     invtitle_annotator title_annotate;
 };
 
-bool any_items_to_select(int type_expect, bool msg = false);
+bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
 
 int prompt_invent_item(const char *prompt,
                         menu_type type,

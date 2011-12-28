@@ -6,7 +6,7 @@
 ##############################################################################
 
 {{
-function crypt_drop_glass_walls(data, triggerable, triggerer, marker, ev)
+function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
     if data.trig == true then
         return
     else
@@ -372,22 +372,22 @@ KITEM: v = $ / %
 SUBST: $ = $.*|
 SUBST: + = +=
 MAP
-   ccccc
-ccccv.vcccc
-c$.=.Y..=$c
-c.ccv.vcc.c
-c+ccc+ccc+c
-c..$c.c$..c
-c.1.c.c.1.c
-c$.$c.c$.$c
-ccc=c.ccccc
-cccZcZc$c
-c.=.cZczc
-cZcccZc=c
-c.=2+Z+2c
-cccccZccc
-    c.c
-    c@c
+    ccccc
+ ccccv.vcccc
+ c$.=.Y..=$c
+ c.ccv.vcc.c
+ c+ccc+ccc+c
+ c..$c.c$..c
+@n.1.c.c.1.c
+ c$.$c.c$.$c
+ ccc=c.ccccc
+ cccZcZc$c
+ c.=.cZczc
+ cZcccZc=c
+ c.=2+Z+2c
+ cccccZccc
+     c.c
+     c@c
 ENDMAP
 
 ##############################################################################
@@ -742,12 +742,13 @@ ENDMAP
 ##############################################################################
 #       eye to eye with the evil
 #
+# XXX: Undiggable glass has been converted to grates.
 NAME:   david_glass_crypt
 ORIENT: float
 TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
 MARKER: m = lua:portal_desc {wall_phase = 1}
-SUBST:  m : mnn
+KFEAT:  m = iron_grate
 MONS:   patrolling lich / patrolling ancient lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
@@ -758,7 +759,7 @@ KMONS:  F = orange crystal statue / silver statue / ice statue
 {{
 lua_marker("|",
            Triggerable.synchronized_markers(
-             function_at_spot("crypt_drop_glass_walls", { trig = false },
+             function_at_spot("crypt_drop_grates", { trig = false },
                               true, { only_at_slave = true,
                                       listen_to_slaves = true })))
 }}
@@ -1135,7 +1136,7 @@ MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie 
 MONS:   generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling phantasmal warrior
-MONS:   ghost moth name:greater col:lightmagenta n_adj hd:15
+MONS:   ghost moth name:greater col:lightmagenta n_adj n_spe hd:15
 MONS:   eidolon / shadow wraith
 MONS:   freezing wraith / phantasmal warrior
 MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \

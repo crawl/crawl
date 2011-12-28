@@ -175,14 +175,19 @@ blink_frog MONS_BLINK_FROG
 spiny_frog MONS_SPINY_FROG
 
 ## Snakes ('S')
-small_snake MONS_SMALL_SNAKE
-snake MONS_SNAKE
+ball_python MONS_BALL_PYTHON
+adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
+snake_blue MONS_SUBTRACTOR_SNAKE
+snake_yellow
+snake_cyan
+snake_green
+snake_violet
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR
@@ -348,6 +353,7 @@ very_ugly_thing5
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
 abomination_small MONS_ABOMINATION_SMALL
+abomination_small1
 
 ## Golems ('8')
 %sdir dc-mon/nonliving
@@ -879,11 +885,10 @@ murray MONS_MURRAY
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
+crawling_corpse MONS_CRAWLING_CORPSE
+macabre_mass MONS_MACABRE_MASS
 ## From a special vault (ancient_champions.des)
 dc-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
-## Placeholders, please replace
-UNUSED/spells/components/corpse MONS_CRAWLING_CORPSE
-dc-mon/demons/abomination_large5 MONS_MACABRE_MASS
 
 %include dc-zombie.txt
 
@@ -931,6 +936,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_centaur TRAN_STATUE_CENTAUR
 statue_form_naga TRAN_STATUE_NAGA
+statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -938,6 +944,7 @@ lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_centaur TRAN_LICH_CENTAUR
 lich_form_naga TRAN_LICH_NAGA
+lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 

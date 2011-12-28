@@ -136,6 +136,8 @@
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
  #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
  #include "tilereg.h"
 #endif
 
@@ -222,7 +224,13 @@ static void _handle_wizard_command(void);
 //
 
 #ifdef USE_SDL
-#include <SDL_main.h>
+# include <SDL_main.h>
+# ifdef __GNUC__
+// SDL plays nasty tricks with main() (actually, _SDL_main()), which for
+// Windows builds somehow fail with -fwhole-program.  Thus, exempt SDL_main()
+// from this treatment.
+__attribute__((externally_visible))
+# endif
 #endif
 
 int main(int argc, char *argv[])
@@ -236,9 +244,9 @@ int main(int argc, char *argv[])
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
-    _compile_time_asserts();  // Actually, not just compile time.
-
     init_crash_handler();
+
+    _compile_time_asserts();  // Actually, not just compile time.
 
     // Hardcoded initial keybindings.
     init_keybindings();
@@ -532,7 +540,7 @@ static void _god_greeting_message(bool game_start)
 
     std::string result = getSpeakString(msg);
 
-    if(!result.empty())
+    if (!result.empty())
         god_speaks(you.religion, result.c_str());
 }
 
@@ -610,6 +618,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('T'): debug_terp_dlua(); break;
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
+
+    case CONTROL('C'): die("Intentional crash");
 
     case 'O': debug_test_explore();                  break;
     case 'S': wizard_set_skill_level();              break;
@@ -784,6 +794,7 @@ static void _handle_wizard_command(void)
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
 
         you.wizard = true;
+        save_game(false);
         redraw_screen();
 
         if (crawl_state.cmd_repeat_start)
@@ -1312,7 +1323,7 @@ static bool _marker_vetoes_stair()
 // portal, false if the user said no at the prompt.
 static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
 {
-    switch(ftype)
+    switch (ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:
@@ -1360,6 +1371,11 @@ static void _go_upstairs()
         return;
     }
 
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't go up stairs while constricted.");
+        return;
+    }
     if (ygrd == DNGN_ENTER_SHOP)
     {
         if (you.berserk())
@@ -1444,6 +1460,7 @@ static void _go_upstairs()
         end_mislead(true);
 
     you.clear_clinging();
+    you.clear_all_constrictions();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1500,6 +1517,12 @@ static void _go_downstairs()
         return;
     }
 
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't go down stairs while constricted.");
+        return;
+    }
+
     if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
         return;
 
@@ -1524,6 +1547,7 @@ static void _go_downstairs()
         end_mislead(true);
 
     you.clear_clinging();
+    you.clear_all_constrictions();
 
     if (shaft)
     {
@@ -1546,16 +1570,37 @@ static void _experience_check()
          you.experience_level,
          species_name(you.species).c_str(),
          you.class_name.c_str());
+    int perc = get_exp_progress();
 
     if (you.experience_level < 27)
     {
-        mprf("You are %d%% of the way to level %d.", get_exp_progress(),
+        mprf("You are %d%% of the way to level %d.", perc,
               you.experience_level + 1);
     }
     else
     {
         mpr("I'm sorry, level 27 is as high as you can go.");
         mpr("With the way you've been playing, I'm surprised you got this far.");
+    }
+
+    if (you.species == SP_FELID)
+    {
+        int xl = you.experience_level;
+        // calculate the "real" level
+        while (you.experience >= exp_needed(xl + 1))
+            xl++;
+        int nl = you.max_level;
+        // and the next level you'll get a life
+        do nl++; while (!will_gain_life(nl));
+
+        // old value was capped at XL27
+        perc = (you.experience - exp_needed(xl)) * 100
+             / (exp_needed(xl + 1) - exp_needed(xl));
+        perc = (nl - xl) * 100 - perc;
+        mprf(you.lives < 2 ?
+             "You'll get an extra life in %d.%02d levels worth of XP." :
+             "If you died right now, you'd get an extra life in %d.%02d levels worth of XP.",
+             perc / 100, perc % 100);
     }
 
     handle_real_time();
@@ -1759,6 +1804,7 @@ static void _do_list_gold()
 void process_command(command_type cmd)
 {
     apply_berserk_penalty = true;
+    you.has_constricted_this_turn = false;
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -1923,7 +1969,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_CHARACTER_STATUS: display_char_status();          break;
     case CMD_DISPLAY_COMMANDS:         list_commands(0, true);         break;
     case CMD_DISPLAY_INVENTORY:        get_invent(OSEL_ANY);           break;
-    case CMD_DISPLAY_KNOWN_OBJECTS:    check_item_knowledge();         break;
+    case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
     case CMD_DISPLAY_RUNES:            display_runes();                break;
     case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
@@ -1940,9 +1986,14 @@ void process_command(command_type cmd)
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
 
     case CMD_DISPLAY_RELIGION:
+    {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
         describe_god(you.religion, true);
         redraw_screen();
         break;
+    }
 
     case CMD_READ_MESSAGES:
 #ifdef DGL_SIMPLE_MESSAGING
@@ -2844,7 +2895,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
     {
-        int base_val = player_regen();
+        const int base_val = player_regen();
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
@@ -2854,12 +2905,12 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
+    ASSERT(tmp >= 0 && tmp < 100);
+    you.hit_points_regeneration = tmp;
+
     // XXX: Don't let DD use guardian spirit for free HP. (due, dpeg)
     if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
-
-    ASSERT(tmp >= 0 && tmp < 100);
-    you.hit_points_regeneration = tmp;
 
     // XXX: Doing the same as the above, although overflow isn't an
     // issue with magic point regeneration, yet. -- bwr
@@ -2867,7 +2918,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     if (you.magic_points < you.max_magic_points)
     {
-        int base_val = 7 + you.max_magic_points / 2;
+        const int base_val = 7 + you.max_magic_points / 2;
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
@@ -2979,6 +3030,13 @@ static void _player_reacts()
         expose_player_to_element(BEAM_LAVA);
 
     _decrement_durations();
+    // handle no attack constrictions
+    if (!you.has_constricted_this_turn)
+        handle_noattack_constrictions(&you);
+
+    // increment constriction durations
+    you.accum_been_constricted();
+    you.accum_has_constricted();
 
     int capped_time = you.time_taken;
     if (you.walking && capped_time > BASELINE_DELAY)
@@ -3340,7 +3398,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         }
 
         you.turn_is_over = true;
-        fight_melee(&you, mon, true);
+        fight_melee(&you, mon);
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
@@ -4131,7 +4189,7 @@ static void _move_player(coord_def move)
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
             you.turn_is_over = true;
-            fight_melee(&you, targ_monst, true);
+            fight_melee(&you, targ_monst);
 
             // We don't want to create a penalty if there isn't
             // supposed to be one.
@@ -4168,6 +4226,16 @@ static void _move_player(coord_def move)
                     return;
                 }
             }
+        }
+
+        if (!you.attempt_escape()) // false means constricted and did not escape
+        {
+            std::string emsg = "While you don't manage to break free from ";
+            emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+            emsg += ", you feel that another attempt might be more successful.";
+            mpr(emsg);
+            you.turn_is_over = true;
+            return;
         }
 
         std::string verb;
@@ -4235,7 +4303,7 @@ static void _move_player(coord_def move)
     else if (!targ_pass && !attacking)
     {
         if (grd(targ) == DNGN_OPEN_SEA)
-            mpr("You can't go out to sea!");
+            mpr("The ferocious winds and tides of the open sea thwart your progress.");
 
         if (grd(targ) == DNGN_LAVA_SEA)
             mpr("The endless sea of lava is not a nice place.");
@@ -4275,8 +4343,10 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+    // moved and not an attack, clear constriction data
+    if (!attacking)
+        you.clear_all_constrictions();
 }
-
 
 static int _get_num_and_char_keyfun(int &ch)
 {

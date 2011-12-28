@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
@@ -149,8 +150,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
-    if (exists_ray(you.pos(), where) || !exists_ray(you.pos(), where, opc_default))
+    if (exists_ray(you.pos(), where, opc_solid_see)
+        || !exists_ray(you.pos(), where, opc_default))
+    {
         return (false);
+    }
     if (feat == NULL)
         return (true);
     *feat = ray_blocker(you.pos(), where);
@@ -163,6 +167,9 @@ static bool _is_public_key(std::string key)
      || key == "wand_known"
      || key == "feat_type"
      || key == "glyph"
+     || key == "monster_tile"
+     || key == "tile_num"
+     || key == "tile_idx"
      || key == "serpent_of_hell_flavour")
     {
         return true;
@@ -170,6 +177,99 @@ static bool _is_public_key(std::string key)
 
     return false;
 }
+
+static int quantise(int value, int stepsize)
+{
+    return value + stepsize - value % stepsize;
+}
+
+// Returns true if using a directional tentacle tile would leak
+// information the player doesn't have about a tentacle segment's
+// current position.
+static bool _tentacle_pos_unknown(const monster *tentacle,
+                                  const coord_def orig_pos)
+{
+    // We can see the segment, no guessing necessary.
+    if (!tentacle->submerged())
+        return (false);
+
+    const coord_def t_pos = tentacle->pos();
+
+    // Checks whether there are any positions adjacent to the
+    // original tentacle that might also contain the segment.
+    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    {
+        if (*ai == t_pos)
+            continue;
+
+        if (!in_bounds(*ai))
+            continue;
+
+        if (you.pos() == *ai)
+            continue;
+
+        // If there's an adjacent deep water tile, the segment
+        // might be there instead.
+        if (grd(*ai) == DNGN_DEEP_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+            if (mon && you.can_see(mon))
+            {
+                // Could originate from the kraken.
+                if (mon->type == MONS_KRAKEN)
+                    return (true);
+
+                // Otherwise, we know the segment can't be there.
+                continue;
+            }
+            return (true);
+        }
+
+        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+
+            // We know there's no segment there.
+            if (!mon)
+                continue;
+
+            // Disturbance in shallow water -> might be a tentacle.
+            if (mon->type == MONS_KRAKEN || mon->submerged())
+                return (true);
+        }
+    }
+
+    // Using a directional tile leaks no information.
+    return (false);
+}
+
+static void _translate_tentacle_ref(monster_info& mi, const monster* m,
+                                    std::string key)
+{
+    if (m->props.exists(key))
+    {
+        const int h_idx = m->props[key].get_int();
+        monster *other = NULL; // previous or next segment
+        if (h_idx != -1)
+        {
+            ASSERT(!invalid_monster_index(h_idx));
+            other = &menv[h_idx];
+            coord_def h_pos = other->pos();
+            // If the tentacle and the other segment are no longer adjacent
+            // (distortion etc.), just treat them as not connected.
+            if (adjacent(m->pos(), h_pos)
+                && other->type != MONS_KRAKEN
+                && other->type != MONS_ZOMBIE_LARGE
+                && other->type != MONS_SPECTRAL_THING
+                && other->type != MONS_SIMULACRUM_LARGE
+                && !_tentacle_pos_unknown(other, m->pos()))
+            {
+                mi.props[key] = h_pos - m->pos();
+            }
+        }
+    }
+}
+
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
@@ -199,13 +299,17 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
 
-    two_weapons = mons_class_wields_two_weapons(type);
-    if (!two_weapons)
-        two_weapons = mons_class_wields_two_weapons(base_type);
+    if (mons_class_wields_two_weapons(type)
+        || mons_class_wields_two_weapons(base_type))
+    {
+        mb.set(MB_TWO_WEAPONS);
+    }
 
-    no_regen = !mons_class_can_regenerate(type);
-    if (!no_regen)
-        no_regen = !mons_class_can_regenerate(base_type);
+    if (!mons_class_can_regenerate(type)
+        || !mons_class_can_regenerate(base_type))
+    {
+        mb.set(MB_NO_REGEN);
+    }
 
     threat = MTHRT_UNDEF;
 
@@ -221,10 +325,27 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         u.ghost.best_skill = SK_FIGHTING;
         u.ghost.best_skill_rank = 2;
         u.ghost.xl_rank = 3;
+        u.ghost.ac = 5;
+        u.ghost.damage = 5;
     }
 
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
+
+    if (mons_is_unique(type))
+    {
+        if (type == MONS_LERNAEAN_HYDRA
+            || type == MONS_ROYAL_JELLY
+            || type == MONS_SERPENT_OF_HELL)
+        {
+            mb.set(MB_NAME_THE);
+        }
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
 
     props.clear();
 
@@ -235,7 +356,7 @@ monster_info::monster_info(const monster* m, int milev)
 {
     mb.reset();
     attitude = ATT_HOSTILE;
-    pos = grid2player(m->pos());
+    pos = m->pos();
 
     attitude = mons_attitude(m);
 
@@ -268,6 +389,10 @@ monster_info::monster_info(const monster* m, int milev)
             if (_is_public_key(i->first))
                 props[i->first] = i->second;
     }
+
+    // Translate references to tentacles into just their locations
+    _translate_tentacle_ref(*this, m, "inwards");
+    _translate_tentacle_ref(*this, m, "outwards");
 
     if (type_known)
     {
@@ -328,16 +453,18 @@ monster_info::monster_info(const monster* m, int milev)
 
     mname = m->mname;
 
-    if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
+    const uint64_t name_flags = m->flags & MF_NAME_MASK;
+
+    if (name_flags == MF_NAME_SUFFIX)
         mb.set(MB_NAME_SUFFIX);
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
+    else if (name_flags == MF_NAME_ADJECTIVE)
         mb.set(MB_NAME_ADJECTIVE);
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+    else if (name_flags == MF_NAME_REPLACE)
         mb.set(MB_NAME_REPLACE);
 
     const bool need_name_desc =
-        (m->flags & MF_NAME_SUFFIX)
-            || (m->flags & MF_NAME_ADJECTIVE)
+        name_flags == MF_NAME_SUFFIX
+            || name_flags == MF_NAME_ADJECTIVE
             || (m->flags & MF_NAME_DEFINITE);
 
     if (!mname.empty()
@@ -397,13 +524,20 @@ monster_info::monster_info(const monster* m, int milev)
     else
         fly = mons_class_flies(type);
 
-    two_weapons = mons_wields_two_weapons(m);
+    if (mons_wields_two_weapons(m))
+        mb.set(MB_TWO_WEAPONS);
 
     // don't give away regeneration of monsters you're misled about
     if (type_known)
-        no_regen = !mons_can_regenerate(m);
+    {
+        if (!mons_can_regenerate(m))
+            mb.set(MB_NO_REGEN);
+    }
     else
-        no_regen = !mons_class_can_regenerate(type);
+    {
+        if (!mons_class_can_regenerate(type))
+            mb.set(MB_NO_REGEN);
+    }
 
     if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
@@ -512,6 +646,8 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.best_skill = ghost.best_skill;
         u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
+        u.ghost.ac = quantise(ghost.ac, 5);
+        u.ghost.damage = quantise(ghost.damage, 5);
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -528,7 +664,7 @@ monster_info::monster_info(const monster* m, int milev)
         else if (m->props.exists("ash_id") && item_type_known(mitm[m->inv[i]]))
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)
-            ok = two_weapons;
+            ok = wields_two_weapons();
         else if (i == MSLOT_MISSILE)
             ok = false;
         else
@@ -550,6 +686,30 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists("description"))
         description = m->props["description"].get_string();
 
+    // init names of constrictor and constrictees
+    constrictor_name = "";
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
+        constricting_name[idx] = "";
+
+    // name of what this monster is constricted by, if any
+    if (const_cast<monster *>(m)->is_constricted())
+    {
+        if (m->constricted_by == MHITYOU)
+            constrictor_name = "you";
+        else
+            constrictor_name = env.mons[m->constricted_by].
+                               name(DESC_PLAIN, true);
+    }
+    // names of what this monster is constricting, if any
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
+    {
+        if (m->constricting[idx] == MHITYOU)
+            constricting_name[idx] = "you";
+        else if (m->constricting[idx] != NON_ENTITY)
+            constricting_name[idx] = env.mons[m->constricting[idx]].
+                                     name(DESC_PLAIN, true);
+    }
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -557,20 +717,11 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_SAFE);
         else
             mb.set(MB_UNSAFE);
+        if (mons_is_firewood(m))
+            mb.set(MB_FIREWOOD);
     }
 
     client_id = m->get_client_id();
-}
-
-monster* monster_info::mon() const
-{
-    int m = env.mgrid(player2grid(pos));
-    ASSERT(m >= 0);
-#ifdef USE_TILE
-    if (m == NON_MONSTER)
-        return NULL;
-#endif
-    return &env.mons[m];
 }
 
 std::string monster_info::db_name() const
@@ -686,14 +837,13 @@ std::string monster_info::_apply_adjusted_description(description_level_type des
 {
     if (desc == DESC_ITS)
         desc = DESC_THE;
-    if (is(MB_NAME_THE))
-    {
+
+    if (is(MB_NAME_THE) && desc == DESC_A)
         desc = DESC_THE;
-    }
-    if (attitude == ATT_FRIENDLY)
-    {
+
+    if (attitude == ATT_FRIENDLY && desc == DESC_THE)
         desc = DESC_YOUR;
-    }
+
     return apply_description(desc, s);
 }
 
@@ -783,6 +933,13 @@ dungeon_feature_type monster_info::get_mimic_feature() const
     if (!props.exists("feat_type"))
         return DNGN_UNSEEN;
     return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
+}
+
+const item_def* monster_info::get_mimic_item() const
+{
+    ASSERT(mons_is_item_mimic(type));
+
+    return inv[MSLOT_MISCELLANY].get();
 }
 
 std::string monster_info::mimic_name() const
@@ -1180,7 +1337,7 @@ std::string monster_info::wounds_description_sentence() const
     if (wounds.empty())
         return "";
     else
-        return std::string(pronoun(PRONOUN)) + " is " + wounds + ".";
+        return std::string(pronoun(PRONOUN_SUBJECTIVE)) + " is " + wounds + ".";
 }
 
 std::string monster_info::wounds_description(bool use_colour) const
@@ -1196,6 +1353,37 @@ std::string monster_info::wounds_description(bool use_colour) const
     }
     return desc;
 }
+
+std::string monster_info::constriction_description() const
+{
+    std::string cinfo = "";
+    bool bymsg = false;
+
+    if (constrictor_name != "")
+    {
+        cinfo += "constricted by " + constrictor_name;
+        bymsg = true;
+    }
+
+    bool first = true;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (constricting_name[i] != "")
+        {
+            if (first)
+            {
+                if (bymsg)
+                    cinfo += ", ";
+                cinfo += "constricting ";
+            }
+            else
+                cinfo += ", ";
+            first = false;
+            cinfo += constricting_name[i];
+        }
+    return cinfo;
+}
+
+
 
 int monster_info::randarts(artefact_prop_type ra_prop) const
 {
@@ -1257,6 +1445,16 @@ int monster_info::res_magic() const
     return (mr);
 }
 
+bool monster_info::wields_two_weapons() const
+{
+    return is(MB_TWO_WEAPONS);
+}
+
+bool monster_info::can_regenerate() const
+{
+    return !is(MB_NO_REGEN);
+}
+
 size_type monster_info::body_size() const
 {
     const monsterentry *e = get_monster_data(type);
@@ -1286,6 +1484,21 @@ size_type monster_info::body_size() const
     }
 
     return (ret);
+}
+
+bool monster_info::cannot_move() const
+{
+    return is(MB_PARALYSED) || is(MB_PETRIFIED) || is(MB_PREP_RESURRECT);
+}
+
+bool monster_info::airborne() const
+{
+    return (fly == FL_LEVITATE) || (fly == FL_FLY && !cannot_move());
+}
+
+bool monster_info::ground_level() const
+{
+    return (!airborne() && !is(MB_CLINGING));
 }
 
 void get_monster_info(std::vector<monster_info>& mons)

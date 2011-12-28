@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
 
 // WINDOWS INCLUDES GO HERE
 /*
@@ -88,7 +88,6 @@ static int cx = 0, cy = 0;
 static CHAR_INFO *screen = NULL;
 static COORD screensize;
 #define SCREENINDEX(x,y) ((x)+screensize.X*(y))
-static bool buffering = false;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
@@ -175,10 +174,6 @@ void writeChar(ucs_t c)
             chsx = cx;
         chy  = cy;
         chex = cx;
-
-        // if we're not buffering, flush
-        if (!buffering)
-            bFlush();
     }
 
     // update x position
@@ -386,9 +381,6 @@ void console_startup()
     // initialise cursor to NONE.
     _setcursortype_internal(false);
 
-    // buffering defaults to ON -- very important!
-    set_buffering(true);
-
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
 
@@ -411,7 +403,7 @@ void console_startup()
 void console_shutdown()
 {
     // don't do anything if we were never initted
-    if (inbuf == NULL || outbuf == NULL)
+    if (inbuf == NULL && outbuf == NULL && old_outbuf == NULL)
         return;
 
     // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
@@ -429,6 +421,8 @@ void console_shutdown()
     _setcursortype_internal(true);
     textcolor(DARKGREY);
 
+    inbuf = NULL;
+
     delete [] screen;
     screen = NULL;
 
@@ -442,6 +436,7 @@ void console_shutdown()
         SetConsoleActiveScreenBuffer(old_outbuf);
         CloseHandle(outbuf);
         old_outbuf = 0;
+        outbuf = 0;
     }
 }
 
@@ -575,10 +570,6 @@ static void cprintf_aux(const char *s)
         return;
     }
 
-    // turn buffering ON (temporarily)
-    bool oldValue = buffering;
-    set_buffering(true);
-
     // loop through string
     ucs_t c;
     while (int taken = utf8towc(&c, s))
@@ -586,9 +577,6 @@ static void cprintf_aux(const char *s)
         s += taken;
         writeChar(c);
     }
-
-    // reset buffering
-    set_buffering(oldValue);
 
     // flush string
     bFlush();
@@ -859,6 +847,9 @@ bool kbhit()
 
 void delay(unsigned int ms)
 {
+    if (crawl_state.disables[DIS_DELAY])
+        return;
+
     Sleep((DWORD)ms);
 }
 
@@ -885,20 +876,6 @@ void update_screen()
     bFlush();
 }
 
-bool set_buffering(bool value)
-{
-    bool oldValue = buffering;
-
-    if (value == false)
-    {
-        // must flush buffer
-        bFlush();
-    }
-    buffering = value;
-
-    return oldValue;
-}
-
 int get_number_of_lines()
 {
     return (screensize.Y);
@@ -909,4 +886,4 @@ int get_number_of_cols()
     return (screensize.X);
 }
 
-#endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE) */
+#endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL) */

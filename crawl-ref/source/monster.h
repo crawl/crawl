@@ -66,7 +66,7 @@ public:
 
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
-    std::string seen_context;          // Non-standard context for
+    seen_context_type seen_context;    // Non-standard context for
                                        // AI_SEE_MONSTER
 
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
@@ -126,6 +126,12 @@ public:
     // Has the 'priest' flag.
     bool is_priest() const;
 
+    // Has the 'fighter' flag.
+    bool is_fighter() const;
+
+    // Has the 'archer' flag.
+    bool is_archer() const;
+
     // Is an actual wizard-type spellcaster (it can be silenced, Trog
     // will dislike it, etc.).
     bool is_actual_spellcaster() const;
@@ -146,7 +152,7 @@ public:
     void gain_energy(energy_use_type et, int div = 1, int mult = 1);
 
     void scale_hp(int num, int den);
-    bool gain_exp(int exp);
+    bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
@@ -239,7 +245,9 @@ public:
     bool      pickup_weapon(item_def &item, int near, bool force);
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
+    bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
+    bool      drop_item(int eslot, int near);
     void      equip(item_def &item, int slot, int near = -1);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
@@ -279,12 +287,12 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    bool can_bleed() const;
+    bool can_bleed(bool allow_tran = true) const;
     bool mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
-    int mons_species() const;
+    int mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
@@ -406,6 +414,7 @@ public:
     int     shield_block_penalty() const;
     void    shield_block_succeeded(actor *foe);
     int     shield_bypass_ability(int tohit) const;
+    int     missile_deflection() const;
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const { return 0; }
@@ -434,6 +443,14 @@ public:
     void bind_melee_flags();
     void bind_spell_flags();
     void calc_speed();
+    void accum_been_constricted();
+    void accum_has_constricted();
+    bool is_constricted_larger();
+    bool is_constricted();
+    bool attempt_escape();
+    void clear_all_constrictions();
+    void clear_specific_constrictions(int mindex);
+    bool has_usable_tentacle();
 
 private:
     void init_with(const monster& mons);
@@ -449,13 +466,13 @@ private:
 
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
 
-    bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;
     void lose_pickup_energy();
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
+
 };
 
 #endif

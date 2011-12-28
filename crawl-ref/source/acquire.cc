@@ -136,7 +136,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
 
     // Mutation specific problems (horns and antennae allow caps, but not
     // Horns 3 or Antennae 3 (checked below)).
-    if (result == ARM_BOOTS && !player_has_feet()
+    if (result == ARM_BOOTS && !player_has_feet(false)
         || result == ARM_GLOVES && you.has_claws(false) >= 3)
     {
         result = NUM_ARMOURS;
@@ -1154,7 +1154,7 @@ static int _failed_acquirement(bool quiet)
 
 static int _weapon_brand_quality(int brand, bool range)
 {
-    switch(brand)
+    switch (brand)
     {
     case SPWPN_SPEED:
         return range ? 3 : 5;
@@ -1449,11 +1449,6 @@ int acquirement_create_item(object_class_type class_wanted,
     {
         switch (thing.sub_type)
         {
-        case RING_SLAYING:
-            // Make sure plus to damage is >= 1.
-            thing.plus2 = std::max(abs(thing.plus2), 1);
-            // fall through...
-
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_INTELLIGENCE:
@@ -1461,6 +1456,12 @@ int acquirement_create_item(object_class_type class_wanted,
         case RING_EVASION:
             // Make sure plus is >= 1.
             thing.plus = std::max(abs(thing.plus), 1);
+            break;
+
+        case RING_SLAYING:
+            // Two plusses to handle here, and accuracy can be +0.
+            thing.plus = abs(thing.plus);
+            thing.plus2 = std::max(abs(thing.plus2), 2);
             break;
 
         case RING_HUNGER:
@@ -1545,8 +1546,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
         // These can never get egos, and mundane versions are quite common, so
         // guarantee artifact status.  Rarity is a bit low to compensate.
-        if (thing.sub_type == WPN_GIANT_CLUB
-            || thing.sub_type == WPN_GIANT_SPIKED_CLUB)
+        if (is_giant_club_type(thing.sub_type))
         {
             if (!one_chance_in(25))
                 make_item_randart(thing, true);
@@ -1643,7 +1643,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         case 'h':    class_wanted = OBJ_FOOD;       break;
         case 'i':    class_wanted = OBJ_GOLD;       break;
         case 'j':    class_wanted = OBJ_MISSILES;   break;
-        case '\\':   check_item_knowledge();        break;
+        case '\\':   check_item_knowledge(); redraw_screen(); break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)

@@ -610,6 +610,8 @@ static void _note_item_destruction(const item_def &item)
         mprf(MSGCH_WARN, "A great rumbling fills the air... "
              "the Orb of Zot has been destroyed!");
         mark_milestone("orb.destroy", "destroyed the Orb of Zot");
+        env.orb_pos.reset();
+        invalidate_agrid(false);
     }
 }
 
@@ -818,7 +820,7 @@ void item_check(bool verbose)
         {
             item_def it(*items[i]);
             std::string name = get_menu_colour_prefix_tags(it, DESC_A);
-            strm << name << std::endl;
+            mpr_nocap(name);
             _maybe_give_corpse_hint(it);
         }
     }
@@ -1811,7 +1813,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
 
-        mpr("The lords of Pandemonium are not amused; beware!", MSGCH_WARN);
+        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
         if (you.religion == GOD_CHEIBRIADOS)
         {
             mprf(MSGCH_GOD, "%s tells them not to hurry.",
@@ -1844,7 +1846,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    ash_id_item(item);
+    god_id_item(item);
 
     note_inscribe_item(item);
 
@@ -1927,8 +1929,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         return (true);
     }
 
-    if (you.religion == GOD_ASHENZARI && you.see_cell(p))
-        ash_id_item(item);
+    if (you.see_cell(p))
+        god_id_item(item);
 
     // If it's a stackable type...
     if (is_stackable_item(item))
@@ -1979,6 +1981,12 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     // Link item to top of list.
     item.link = igrd(p);
     igrd(p) = ob;
+
+    if (item_is_orb(item))
+    {
+        env.orb_pos = p;
+        invalidate_agrid(true);
+    }
 
     return (true);
 }
@@ -2089,6 +2097,18 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
     return (true);
 }
 
+coord_def item_pos(const item_def &item)
+{
+    coord_def pos = item.pos;
+    if (pos.equals(-2, -2))
+        if (const monster *mon = item.holding_monster())
+            pos = mon->pos();
+        else
+            die("item held by an invalid monster");
+    else if (pos.equals(-1, -1))
+        pos = you.pos();
+    return pos;
+}
 
 //---------------------------------------------------------------
 //
@@ -2183,7 +2203,7 @@ bool drop_item(int item_dropped, int quant_drop)
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
         && you.inv[item_dropped].cursed())
     {
-        mpr("That object is stuck to you!");
+        mprf("%s is stuck to you!", you.inv[item_dropped].name(DESC_THE).c_str());
         return (false);
     }
 
@@ -2478,7 +2498,7 @@ static void _autoinscribe_item(item_def& item)
             // Don't autoinscribe dropped items on ground with
             // "=g".  If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
-            // then the user explictly removed it because they
+            // then the user explicitly removed it because they
             // don't want to autopickup it again.
             std::string str = Options.autoinscriptions[i].second;
             if ((item.flags & ISFLAG_DROPPED) && !in_inventory(item))
@@ -2744,7 +2764,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
         return (true);
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_MISSILES:
@@ -2758,7 +2778,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         break;
     }
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
@@ -2959,58 +2979,6 @@ int item_on_floor(const item_def &item, const coord_def& where)
     return (NON_ITEM);
 }
 
-static bool _find_subtype_by_name(item_def &item,
-                                  object_class_type base_type, int ntypes,
-                                  const std::string &name)
-{
-    // In order to get the sub-type, we'll fill out the base type...
-    // then we're going to iterate over all possible subtype values
-    // and see if we get a winner. -- bwr
-
-    item.base_type = base_type;
-    item.sub_type  = OBJ_RANDOM;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.special   = 0;
-    item.flags     = 0;
-    item.quantity  = 1;
-    // Don't use set_ident_flags in order to avoid triggering notes.
-    // FIXME - is this the proper solution?
-    item.flags |= (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-
-    int type_wanted = -1;
-
-    for (int i = 0; i < ntypes; i++)
-    {
-        item.sub_type = i;
-
-        int npluses = 1;
-        if (base_type == OBJ_BOOKS && i == BOOK_MANUAL)
-            npluses = NUM_SKILLS;
-        else if (base_type == OBJ_MISCELLANY && i == MISC_RUNE_OF_ZOT)
-            npluses = NUM_RUNE_TYPES;
-
-        for (int j = 0; j < npluses; ++j)
-        {
-            item.plus = j;
-
-            if (name == lowercase_string(item.name(DESC_PLAIN, false, false, false)))
-            {
-                type_wanted = i;
-                i = ntypes;
-                break;
-            }
-        }
-    }
-
-    if (type_wanted != -1)
-        item.sub_type = type_wanted;
-    else
-        item.sub_type = OBJ_RANDOM;
-
-    return (item.sub_type != OBJ_RANDOM);
-}
-
 int get_max_subtype(object_class_type base_type)
 {
     static int max_subtype[] =
@@ -3044,42 +3012,6 @@ int get_max_subtype(object_class_type base_type)
     ASSERT(base_type < NUM_OBJECT_CLASSES);
 
     return (max_subtype[base_type]);
-}
-
-// Returns an incomplete item_def with base_type and sub_type set correctly
-// for the given item name. If the name is not found, sets sub_type to
-// OBJ_RANDOM.
-item_def find_item_type(object_class_type base_type, std::string name)
-{
-    item_def item;
-    item.base_type = OBJ_RANDOM;
-    item.sub_type  = OBJ_RANDOM;
-    lowercase(name);
-
-    if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
-        base_type = OBJ_UNASSIGNED;
-
-    if (base_type == OBJ_UNASSIGNED)
-    {
-        for (unsigned i = 0; i < NUM_OBJECT_CLASSES; ++i)
-        {
-            object_class_type cls = static_cast<object_class_type>(i);
-            if (get_max_subtype(cls) == 0)
-                continue;
-
-            if (_find_subtype_by_name(item, cls, get_max_subtype(cls), name))
-            {
-                break;
-            }
-        }
-    }
-    else
-    {
-        _find_subtype_by_name(item, base_type,
-                              get_max_subtype(base_type), name);
-    }
-
-    return (item);
 }
 
 equipment_type item_equip_slot(const item_def& item)
@@ -3260,8 +3192,7 @@ bool item_def::is_mundane() const
     {
     case OBJ_WEAPONS:
         if (sub_type == WPN_CLUB
-            || sub_type == WPN_GIANT_CLUB
-            || sub_type == WPN_GIANT_SPIKED_CLUB)
+            || is_giant_club_type(sub_type))
         {
             return (true);
         }

@@ -58,12 +58,6 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("A translucent wall is in the way.");
-        return SPRET_ABORT;
-    }
-
     if (cell_is_solid(where))
     {
         switch (grd(where))

@@ -29,34 +29,34 @@
 #include <vector>
 #include <cmath>
 
-const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
-const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
-const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";
+static const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
+static const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
+static const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";
 
 static dgn_island_plan _shoals_islands;
 
-const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
+static const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
 
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
 // of X implies that the tide will advance visibly about once in X turns.
-int TIDE_MULTIPLIER = 30;
+static int TIDE_MULTIPLIER = 30;
 
-int LOW_TIDE = -18 * TIDE_MULTIPLIER;
-int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
+static int LOW_TIDE = -18 * TIDE_MULTIPLIER;
+static int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 
 // The highest a tide can be called by a tide caller such as Ilsuiw.
-const int HIGH_CALLED_TIDE = 50;
-const int TIDE_DECEL_MARGIN = 8;
-const int PEAK_TIDE_VELOCITY = 2;
-const int CALL_TIDE_VELOCITY = 21;
+static const int HIGH_CALLED_TIDE = 50;
+static const int TIDE_DECEL_MARGIN = 8;
+static const int PEAK_TIDE_VELOCITY = 2;
+static const int CALL_TIDE_VELOCITY = 21;
 
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
-const int TIDE_CALL_RADIUS = 8;
-const int MAX_SHOAL_PLANTS = 180;
+static const int TIDE_CALL_RADIUS = 8;
+static const int MAX_SHOAL_PLANTS = 180;
 
-const int _shoals_margin = 6;
+static const int _shoals_margin = 6;
 
 enum shoals_height_thresholds
 {

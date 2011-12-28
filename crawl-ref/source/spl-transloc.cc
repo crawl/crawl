@@ -28,6 +28,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-util.h"
+#include "mon-stuff.h"
 #include "orb.h"
 #include "player.h"
 #include "random.h"
@@ -92,6 +93,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
+    }
+    // Check to see if being constricted will prevent a teleport
+    else if (you.is_constricted_larger())
+    {
+        mpr("You can't blink while constricted.");
     }
     else if (you.confused() && !wizard_blink)
     {
@@ -185,7 +191,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                     break;
 
                 mesclr();
-                mpr("You can't blink through translucent walls.");
+                mpr("There's something in the way!");
             }
             else
             {
@@ -219,6 +225,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
+            if (you.is_constricted())
+                monster_teleport_to_player(you.constricted_by, beam.target);
+            for (int i = 0; i < MAX_CONSTRICT; i++)
+                if (you.constricting[i] != NON_ENTITY)
+                    monster_teleport_to_player(you.constricting[i],
+                                               beam.target);
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
@@ -274,6 +286,11 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
 
+        if (you.is_constricted())
+            monster_teleport_to_player(you.constricted_by, target);
+        for (int i = 0; i < MAX_CONSTRICT; i++)
+            if (you.constricting[i] != NON_ENTITY)
+                monster_teleport_to_player(you.constricting[i], target);
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
     }
@@ -413,6 +430,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
+        return (false);
+    }
+
+    // Check to see if being constricted will prevent a teleport
+    if (you.is_constricted_larger())
+    {
+        mpr("Teleport cancelled by constriction.");
         return (false);
     }
 
@@ -559,8 +583,16 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 // Leave a purple cloud.
                 place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
-                // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true);
+
+                // handle constriction effects
+                if (you.is_constricted())
+                    monster_teleport_to_player(you.constricted_by, pos);
+                for (int i = 0; i < MAX_CONSTRICT; i++)
+                    if (you.constricting[i] != NON_ENTITY)
+                        monster_teleport_to_player(you.constricting[i], pos);
+
+                // Controlling teleport contaminates the player. - bwr
                 if (!wizard_tele)
                     contaminate_player(1, true);
             }
@@ -618,6 +650,11 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
+        if (you.is_constricted())
+            monster_teleport_to_player(you.constricted_by, newpos);
+        for (int i = 0; i < MAX_CONSTRICT; i++)
+            if (you.constricting[i] != NON_ENTITY)
+                monster_teleport_to_player(you.constricting[i], newpos);
     }
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
@@ -730,7 +767,7 @@ spret_type cast_portal_projectile(int pow, bool fail)
     // Can't use portal through walls. (That'd be just too cheap!)
     if (you.trans_wall_blocking(target.target))
     {
-        mpr("A translucent wall is in the way.");
+        mpr("There's something in the way!");
         return SPRET_ABORT;
     }
 
@@ -750,7 +787,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     if (you.trans_wall_blocking(where))
     {
-        mpr("Something is in the way.");
+        mpr("There's something in the way!");
         return SPRET_ABORT;
     }
 
@@ -778,15 +815,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     if (crawl_state.game_is_zotdef() && item_is_orb(item))
     {
         mpr("You cannot apport the sacred Orb!");
-        return SPRET_ABORT;
-    }
-
-    // Protect the player from destroying the item.
-    if (feat_virtually_destroys_item(grd(you.pos()), item)
-        && !yesno("Really apport while over this terrain?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
         return SPRET_ABORT;
     }
 
@@ -866,24 +894,29 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
-    coord_def new_spot = beam.path_taken[beam.path_taken.size() - max_dist];
-
-    if (max_dist <= dist)
-    {
-        dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
-
-        if (feat_virtually_destroys_item(grd(new_spot), item))
-        {
-            mpr("Not with that terrain in the way!");
-            return SPRET_SUCCESS;
-        }
-    }
-    // Item mimics land in front of you (and they will be revealed).
-    else if (item.flags & ISFLAG_MIMIC)
-        new_spot =  beam.path_taken[0];
-    // If power is high enough it'll just come straight to you.
-    else
+    int location_on_path = std::max(-1, dist - max_dist);
+    // Don't move mimics under you.
+    if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
+        location_on_path = 0;
+    coord_def new_spot;
+    if (location_on_path == -1)
         new_spot = you.pos();
+    else
+        new_spot = beam.path_taken[location_on_path];
+    // Try to find safe terrain for the item.
+    while (location_on_path < dist)
+    {
+        if (!feat_virtually_destroys_item(grd(new_spot), item))
+            break;
+        location_on_path++;
+        new_spot = beam.path_taken[location_on_path];
+    }
+    if (location_on_path == dist)
+    {
+        mpr("Not with that terrain in the way!");
+        return SPRET_SUCCESS;
+    }
+    dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
     // Actually move the item.
     mprf("Yoink! You pull the item%s towards yourself.",
@@ -902,12 +935,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
     else
         move_top_item(where, new_spot);
-
-    if (item_is_orb(item))
-    {
-        env.orb_pos = new_spot;
-        invalidate_agrid();
-    }
 
     // Mark the item as found now.
     origin_set(new_spot);
@@ -995,7 +1022,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where = where;
         randomized_where.x += random_range(-2, 2);
         randomized_where.y += random_range(-2, 2);
-    } while((!in_bounds(randomized_where) ||
+    } while ((!in_bounds(randomized_where) ||
              grd(randomized_where) != DNGN_FLOOR ||
              monster_at(randomized_where) ||
              !you.see_cell(randomized_where) ||
@@ -1009,7 +1036,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here = you.pos();
         randomized_here.x += random_range(-2, 2);
         randomized_here.y += random_range(-2, 2);
-    } while((!in_bounds(randomized_here) ||
+    } while ((!in_bounds(randomized_here) ||
              grd(randomized_here) != DNGN_FLOOR ||
              monster_at(randomized_here) ||
              !you.see_cell(randomized_here) ||

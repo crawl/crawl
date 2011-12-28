@@ -60,6 +60,7 @@ enum element_type
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_SWAMP_TREE,     // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
+    ETC_SUBTRACTOR,     // subtractor snakes
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -108,7 +109,7 @@ int  element_colour(int element, bool no_random = false,
 bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 unsigned short dos_brand(unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif

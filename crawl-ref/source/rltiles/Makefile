@@ -10,27 +10,33 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
-ifndef CONTRIB_SDL
-SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
-SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
-else
-SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
-SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
-endif
+CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
-ifndef NO_PKGCONFIG
-PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
-PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
-else
-PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
-PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
-endif
+ifdef TILES
+  ifndef CONTRIB_SDL
+    SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
+    SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
+  else
+    SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
+    SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
+  endif
 
-CFLAGS := -O2 $(SDL_CFLAGS) $(PNG_INCLUDE)
-LDFLAGS += $(SDL_LDFLAGS) $(PNG_LIB)
+  ifndef NO_PKGCONFIG
+    PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
+    PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
+  else
+    PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
+    PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
+  endif
+
+  CFLAGS += $(SDL_CFLAGS) $(PNG_INCLUDE)
+  LDFLAGS += $(SDL_LDFLAGS) $(PNG_LIB)
+
+  CFLAGS += -DUSE_TILE
+endif
 
 ifdef DEBUG
-CFLAGS += -DDEBUG -ggdb
+CFLAGS += -O0 -DDEBUG -ggdb
 endif
 
 ifneq (,$(findstring MINGW,$(uname_S)))
@@ -85,9 +91,12 @@ endif
 
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
-all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES) $(JAVASCRIPT)
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(JAVASCRIPT)
+ifdef TILES
+all: $(IMAGES)
+endif
 
-%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt | $(TILEGEN)
+%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
 # CFLAGS difference check
@@ -110,7 +119,8 @@ DEPS := $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d)
 -include $(DEPS)
 
 clean:
-	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS) $(JAVASCRIPT)
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) \
+		$(DEPS) $(JAVASCRIPT) .cflags tiledef-unrand.cc
 
 distclean: clean
 

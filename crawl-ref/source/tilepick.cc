@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
 #include "tilepick.h"
 
 #include "artefact.h"
@@ -70,11 +69,24 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
 
+TextureID get_dngn_tex(tileidx_t idx)
+{
+    assert(idx < TILE_FEAT_MAX);
+    if (idx < TILE_FLOOR_MAX)
+        return (TEX_FLOOR);
+    else if (idx < TILE_WALL_MAX)
+        return (TEX_WALL);
+    else
+        return (TEX_FEAT);
+}
+
+#ifdef USE_TILE
 static tileidx_t _tileidx_monster_base(int type,
                                        bool in_water = false,
                                        int colour = 0,
                                        int number = 0,
                                        int tile_num_prop = 0);
+#endif
 
 static tileidx_t _tileidx_trap(trap_type type)
 {
@@ -361,16 +373,16 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
-    dungeon_feature_type feat = env.grid(gc);
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
     tileidx_t override = env.tile_flv(gc).feat;
-    bool can_override = !feat_is_door(grd(gc))
+    bool can_override = !feat_is_door(feat)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
         return (override);
 
-    const monster* mimic = monster_at(gc);
+    const monster_info* mimic = env.map_knowledge(gc).monsterinfo();
     if (mimic && mons_is_feat_mimic(mimic->type))
         return mimic->props["tile_idx"].get_int();
 
@@ -382,6 +394,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     {
         coord_def door;
         dungeon_feature_type door_feat;
+        // FIXME: This accesses grd directly, instead of map_knowledge
         find_secret_door_info(gc, &door_feat, &door);
 
         // If surrounding tiles from a secret door are using tile
@@ -396,8 +409,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         const coord_def left(gc.x - 1, gc.y);
         const coord_def right(gc.x + 1, gc.y);
 
-        bool door_left  = feat_is_closed_door(grd(left));
-        bool door_right = feat_is_closed_door(grd(right));
+        bool door_left  = feat_is_closed_door(env.map_knowledge(left).feat());
+        bool door_right = feat_is_closed_door(env.map_knowledge(right).feat());
 
         if (door_left || door_right)
         {
@@ -413,7 +426,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-                return (_tileidx_trap(get_trap_type(gc)));
+        return (_tileidx_trap(env.map_knowledge(gc).trap()));
 
     case DNGN_TRAP_WEB:
     {
@@ -431,9 +444,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         };
         int solid = 0;
         for (int i = 0; i < 4; i++)
-            if (feat_is_solid(grd(neigh[i]))
-                || grd(neigh[i]) != DNGN_UNDISCOVERED_TRAP
-                   && get_trap_type(neigh[i]) == TRAP_WEB)
+            if (feat_is_solid(env.map_knowledge(neigh[i]).feat())
+                || env.map_knowledge(neigh[i]).trap() == TRAP_WEB)
             {
                 solid |= 1 << i;
             }
@@ -444,8 +456,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_ENTER_SHOP:
         return (_tileidx_shop(gc));
     case DNGN_DEEP_WATER:
-        if (env.grid_colours(gc) == GREEN
-            || env.grid_colours(gc) == LIGHTGREEN)
+        if (env.map_knowledge(gc).feat_colour() == GREEN
+            || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
         {
             return (TILE_DNGN_DEEP_WATER_MURKY);
         }
@@ -456,20 +468,18 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_SHALLOW_WATER:
         {
             tileidx_t t = TILE_DNGN_SHALLOW_WATER;
-            if (env.grid_colours(gc) == GREEN
-                || env.grid_colours(gc) == LIGHTGREEN)
+            if (env.map_knowledge(gc).feat_colour() == GREEN
+                || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
             {
                 t = TILE_DNGN_SHALLOW_WATER_MURKY;
             }
             else if (player_in_branch(BRANCH_SHOALS))
                 t = TILE_SHOALS_SHALLOW_WATER;
 
-            monster* mon = monster_at(gc);
-            if (mon)
+            if (env.map_knowledge(gc).invisible_monster())
             {
                 // Add disturbance to tile.
-                if (mon->submerged())
-                    t += tile_dngn_count(t);
+                t += tile_dngn_count(t);
             }
 
             return (t);
@@ -479,39 +489,13 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 }
 
-
+#ifdef USE_TILE
 tileidx_t tileidx_out_of_bounds(int branch)
 {
     if (branch == BRANCH_SHOALS)
         return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
     else
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
-}
-
-void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell)
-{
-    *bg = _tileidx_feature_base(cell.feat());
-
-    switch (get_cell_show_class(cell))
-    {
-    default:
-    case SH_NOTHING:
-    case SH_FEATURE:
-        *fg = 0;
-        break;
-    case SH_ITEM:
-        *fg = tileidx_item(*cell.item());
-        break;
-    case SH_CLOUD:
-        *fg = TILE_CLOUD_GREY_SMOKE;
-        break;
-    case SH_INVIS_EXPOSED:
-        *fg = TILE_UNSEEN_MONSTER;
-        break;
-    case SH_MONSTER:
-        *fg = _tileidx_monster_base(cell.monster());
-        break;
-    }
 }
 
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
@@ -599,10 +583,10 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     return TILEP_MONS_SPECTRAL_SMALL;
 }
 
-static tileidx_t _tileidx_monster_zombified(const monster* mon)
+static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 {
-    const int z_type = mon->type;
-    const int subtype = mons_zombie_base(mon);
+    const int z_type = mon.type;
+    const int subtype = mon.base_type;
 
     // TODO: Add tiles and code for these as well.
     switch (z_type)
@@ -621,7 +605,7 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
     const int z_size = mons_zombie_size(subtype);
 
     tileidx_t z_tile;
-    switch (get_mon_shape(mon))
+    switch (get_mon_shape(subtype))
     {
     case MON_SHAPE_HUMANOID:
         if (_is_zombie(z_type) && mons_genus(subtype) == MONS_TROLL)
@@ -678,11 +662,11 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
             if (_is_skeleton(z_type))
             {
                 return TILEP_MONS_SKELETON_HYDRA
-                       + std::min((int)mon->number, 5) - 1;
+                       + std::min((int)mon.number, 5) - 1;
             }
 
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + std::min((int)mon->number, 5) - 1;
+                     + std::min((int)mon.number, 5) - 1;
             break;
         }
         else if (_is_zombie(z_type))
@@ -746,6 +730,9 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
     case MON_SHAPE_ARACHNID:
         z_tile = TILEP_MONS_ZOMBIE_SPIDER;
         break;
+    case MON_SHAPE_MISC:
+        if (mons_genus(subtype) == MONS_OCTOPODE)
+            return TILEP_MONS_ZOMBIE_OCTOPODE;
     default:
         z_tile = TILEP_ERROR;
     }
@@ -758,13 +745,12 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
 
 // Special case for *taurs which have a different tile
 // for when they have a bow.
-static int _bow_offset(const monster* mon)
+static int _bow_offset(const monster_info& mon)
 {
-    int mon_wep = mon->inv[MSLOT_WEAPON];
-    if (mon_wep == NON_ITEM)
+    if (!mon.inv[MSLOT_WEAPON].get())
         return (1);
 
-    switch (mitm[mon_wep].sub_type)
+    switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_BOW:
     case WPN_LONGBOW:
@@ -1159,7 +1145,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
     case MONS_ABOMINATION_SMALL:
-        return TILEP_MONS_ABOMINATION_SMALL;
+        return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, colour);
     case MONS_CRAWLING_CORPSE:
         return TILEP_MONS_CRAWLING_CORPSE;
     case MONS_MACABRE_MASS:
@@ -1216,6 +1202,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ANGEL;
     case MONS_CHERUB:
         return TILEP_MONS_CHERUB;
+    case MONS_SERAPH:
+        return TILEP_MONS_SERAPH;
     case MONS_DAEVA:
         return TILEP_MONS_DAEVA;
     case MONS_PROFANE_SERVITOR:
@@ -1425,10 +1413,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_RAKSHASA_FAKE;
 
     // snakes ('S')
-    case MONS_SMALL_SNAKE:
-        return TILEP_MONS_SMALL_SNAKE;
-    case MONS_SNAKE:
-        return TILEP_MONS_SNAKE;
+    case MONS_BALL_PYTHON:
+        return TILEP_MONS_BALL_PYTHON;
+    case MONS_ADDER:
+        return TILEP_MONS_ADDER;
     case MONS_WATER_MOCCASIN:
         return TILEP_MONS_WATER_MOCCASIN;
     case MONS_BLACK_MAMBA:
@@ -1437,6 +1425,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ANACONDA;
     case MONS_SEA_SNAKE:
         return TILEP_MONS_SEA_SNAKE;
+    case MONS_SUBTRACTOR_SNAKE:
+        return _mon_mod(TILEP_MONS_SUBTRACTOR_SNAKE, you.frame_no);
 
     // trolls ('T')
     case MONS_TROLL:
@@ -2000,66 +1990,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-// Returns true if using a directional tentacle tile would leak
-// information the player doesn't have about a tentacle segment's
-// current position.
-static bool _tentacle_pos_unknown(const monster *tentacle,
-                                  const coord_def orig_pos)
-{
-    // We can see the segment, no guessing necessary.
-    if (!tentacle->submerged())
-        return (false);
-
-    const coord_def t_pos = tentacle->pos();
-
-    // Checks whether there are any positions adjacent to the
-    // original tentacle that might also contain the segment.
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
-    {
-        if (*ai == t_pos)
-            continue;
-
-        if (!in_bounds(*ai))
-            continue;
-
-        if (you.pos() == *ai)
-            continue;
-
-        // If there's an adjacent deep water tile, the segment
-        // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(mon))
-            {
-                // Could originate from the kraken.
-                if (mon->type == MONS_KRAKEN)
-                    return (true);
-
-                // Otherwise, we know the segment can't be there.
-                continue;
-            }
-            return (true);
-        }
-
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-
-            // We know there's no segment there.
-            if (!mon)
-                continue;
-
-            // Disturbance in shallow water -> might be a tentacle.
-            if (mon->type == MONS_KRAKEN || mon->submerged())
-                return (true);
-        }
-    }
-
-    // Using a directional tile leaks no information.
-    return (false);
-}
-
 enum main_dir
 {
     NORTH = 0,
@@ -2187,114 +2117,83 @@ static bool _mons_is_kraken_tentacle(const int mtype)
             || mtype == MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
-static tileidx_t _tileidx_tentacle(const monster *mon)
+static tileidx_t _tileidx_tentacle(const monster_info& mon)
 {
-    ASSERT(mons_is_tentacle(mon->type));
+    ASSERT(mons_is_tentacle(mon.type));
 
     // If the tentacle is submerged, we shouldn't even get here.
-    ASSERT(!mon->submerged());
+    ASSERT(!mon.is(MB_SUBMERGED));
 
     // Get tentacle position.
-    const coord_def t_pos = mon->pos();
+    const coord_def t_pos = mon.pos;
     // No parent tentacle, or the connection to the head is unknown.
-    bool no_head_connect  = false;
+    bool no_head_connect  = !mon.props.exists("inwards");
     coord_def h_pos       = coord_def(); // head position
-    if (mon->props.exists("inwards"))
+    if (!no_head_connect)
     {
-        // Get the parent tentacle.
-        const int h_idx = mon->props["inwards"].get_int();
-        monster *head = NULL;
-        if (h_idx == -1) // mon == head
-            no_head_connect = true;
-        else
-        {
-            ASSERT(!invalid_monster_index(h_idx));
-            head = &menv[h_idx];
-            h_pos = head->pos();  // head position
-            // If the tentacle and its "head" segment are no longer adjacent
-            // (distortion etc.), just treat them as not connected.
-            if (!adjacent(t_pos, h_pos))
-                no_head_connect = true;
-        }
-        if (!no_head_connect)
-        {
-            no_head_connect = (head->type == MONS_KRAKEN
-                               || head->type == MONS_ZOMBIE_LARGE
-                               || head->type == MONS_SPECTRAL_THING
-                               || head->type == MONS_SIMULACRUM_LARGE
-                               || _tentacle_pos_unknown(head, mon->pos()));
-        }
-
-        // Tentacle end only requires checking of head position.
-        if (mons_is_tentacle_end(mon->type))
-        {
-            if (no_head_connect)
-            {
-                if (_mons_is_kraken_tentacle(mon->type))
-                    return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-                return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
-            }
-            ASSERT(mons_is_tentacle_segment(head->type));
-
-            // Different handling according to relative positions.
-            if (h_pos.x == t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_N;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_S;
-            }
-            else if (h_pos.y == t_pos.y)
-            {
-                if (h_pos.x < t_pos.x)
-                    return TILEP_MONS_KRAKEN_TENTACLE_W;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_E;
-            }
-            else if (h_pos.x < t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_NW;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_SW;
-            }
-            else if (h_pos.x > t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_NE;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_SE;
-            }
-            die("impossible kraken direction");
-        }
-        // Only tentacle segments from now on.
-        ASSERT(mons_is_tentacle_segment(mon->type));
+        // Get the parent tentacle's location.
+        h_pos = t_pos + mon.props["inwards"].get_coord();
     }
-    else
+
+    // Tentacle end only requires checking of head position.
+    if (mons_is_tentacle_end(mon.type))
     {
-        if (mons_is_tentacle_end(mon->type))
+        if (no_head_connect)
         {
-            // Can only happen during the database search.
-            if (_mons_is_kraken_tentacle(mon->type))
+            if (_mons_is_kraken_tentacle(mon.type))
                 return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
             return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
         }
+
+        // Different handling according to relative positions.
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_N;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_S;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                return TILEP_MONS_KRAKEN_TENTACLE_W;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_E;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NW;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NE;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SE;
+        }
+        die("impossible kraken direction");
     }
+    // Only tentacle segments from now on.
+    ASSERT(mons_is_tentacle_segment(mon.type));
 
     // For segments, we also need the next segment (or end piece).
-    ASSERT(mon->props.exists("outwards"));
-    const int n_idx = mon->props["outwards"].get_int();
-    ASSERT(!invalid_monster_index(n_idx));
-    const monster next = menv[n_idx];
+    coord_def n_pos;
+    bool no_next_connect = !mon.props.exists("outwards");
+    if (!no_next_connect)
+    {
+        n_pos = t_pos + mon.props["outwards"].get_coord();
+    }
 
-    const coord_def n_pos = next.pos();  // next position
-    if (no_head_connect && next.submerged())
+    if (no_head_connect && no_next_connect)
     {
         // Both head and next are submerged.
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
     }
 
-    if (no_head_connect || _tentacle_pos_unknown(&next, mon->pos()))
+    if (no_head_connect || no_next_connect)
     {
         // One segment end goes into water, the other
         // into the direction of head or next.
@@ -2420,7 +2319,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
         || n_pos.x == t_pos.x && n_pos.y < t_pos.y
            && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
     {
-        _add_tentacle_overlay(t_pos, WEST, _mons_is_kraken_tentacle(mon->type));
+        _add_tentacle_overlay(t_pos, WEST, _mons_is_kraken_tentacle(mon.type));
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
     }
     if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
@@ -2484,17 +2383,16 @@ static bool _tentacle_tile_not_levitating(tileidx_t tile)
             && tile <= TILEP_LAST_TENTACLE_IN_WATER);
 }
 
-static tileidx_t _tileidx_monster_no_props(const monster* mon)
+static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 {
-    bool in_water = feat_is_water(grd(mon->pos()));
-    const bool misled = (!crawl_state.game_is_arena() && you.misled());
+    bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
 
     // Show only base class for detected monsters.
-    if (!misled && mons_is_zombified(mon))
+    if (mons_class_is_zombified(mon.type))
         return _tileidx_monster_zombified(mon);
-    else if (mon->props.exists("monster_tile"))
+    else if (mon.props.exists("monster_tile"))
     {
-        tileidx_t t = mon->props["monster_tile"].get_short();
+        tileidx_t t = mon.props["monster_tile"].get_short();
         if (t == TILEP_MONS_STATUE_GUARDIAN)
             return _mon_random(t);
         else if (t == TILEP_MONS_HELL_WIZARD)
@@ -2505,12 +2403,10 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
     else
     {
         int tile_num = 0;
-        if (mon->props.exists("tile_num"))
-            tile_num = mon->props["tile_num"].get_short();
+        if (mon.props.exists("tile_num"))
+            tile_num = mon.props["tile_num"].get_short();
 
-        int type = mon->type;
-        if (misled)
-            type = mon->get_mislead_type();
+        int type = mon.type;
 
         switch (type)
         {
@@ -2523,12 +2419,12 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_YAKTAUR_CAPTAIN:
             return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
         case MONS_BUSH:
-            if (cloud_type_at(mon->pos()) == CLOUD_FIRE)
+            if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;
             else
                 return TILEP_MONS_BUSH;
         case MONS_BALLISTOMYCETE:
-            if (mon->has_ench(ENCH_SPORE_PRODUCTION))
+            if (mon.number)
                 return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
             else
                 return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
@@ -2538,18 +2434,18 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
 
         case MONS_SNAPPING_TURTLE:
             return TILEP_MONS_SNAPPING_TURTLE
-                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
+                    + (mon.is(MB_WITHDRAWN) ? 1 : 0);
         case MONS_ALLIGATOR_SNAPPING_TURTLE:
             return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE
-                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
+                    + (mon.is(MB_WITHDRAWN) ? 1 : 0);
         case MONS_AGATE_SNAIL:
             return TILEP_MONS_AGATE_SNAIL
-                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
+                    + (mon.is(MB_WITHDRAWN) ? 1 : 0);
 
         case MONS_ITEM_MIMIC:
         {
-            tileidx_t t = tileidx_item(*get_mimic_item(mon));
-            if (mons_is_mimic(mon->type))
+            tileidx_t t = tileidx_item(*mon.get_mimic_item());
+            if (mons_is_mimic(mon.type))
                 t |= TILE_FLAG_MIMIC;
             return t;
         }
@@ -2561,7 +2457,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
-            item_def item = mitm[mon->inv[MSLOT_WEAPON]];
+            const item_def& item = *mon.inv[MSLOT_WEAPON];
             return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
         }
 
@@ -2571,8 +2467,8 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
         {
             tileidx_t tile = _tileidx_tentacle(mon);
-            const bool is_kraken = _mons_is_kraken_tentacle(mon->type);
-            _handle_tentacle_overlay(mon->pos(), tile, is_kraken);
+            const bool is_kraken = _mons_is_kraken_tentacle(mon.type);
+            _handle_tentacle_overlay(mon.pos, tile, is_kraken);
 
             if (!is_kraken && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
@@ -2588,50 +2484,50 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         {
             // Should be always out of LOS, though...
             const tileidx_t t = _tileidx_monster_base(type, in_water,
-                                    mon->colour, mon->number, tile_num);
+                                    mon.colour, mon.number, tile_num);
             if (t == TILEP_MONS_PROGRAM_BUG)
                 return TILE_UNSEEN_MONSTER;
             return t;
         }
 
         default:
-            return _tileidx_monster_base(type, in_water, mon->colour,
-                                         mon->number, tile_num);
+            return _tileidx_monster_base(type, in_water, mon.colour,
+                                         mon.number, tile_num);
         }
     }
 }
 
-tileidx_t tileidx_monster(const monster* mons)
+tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (!mons->ground_level() && !_tentacle_tile_not_levitating(ch))
+    if (!mons.ground_level() && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
-    if (mons->has_ench(ENCH_HELD))
+    if (mons.is(MB_CAUGHT))
         ch |= TILE_FLAG_NET;
-    if (mons->has_ench(ENCH_POISON))
+    if (mons.is(MB_POISONED))
         ch |= TILE_FLAG_POISON;
-    if (mons->has_ench(ENCH_STICKY_FLAME))
+    if (mons.is(MB_BURNING))
         ch |= TILE_FLAG_STICKY_FLAME;
-    if (mons->has_ench(ENCH_INNER_FLAME))
+    if (mons.is(MB_INNER_FLAME))
         ch |= TILE_FLAG_INNER_FLAME;
-    if (mons->berserk())
+    if (mons.is(MB_BERSERK))
         ch |= TILE_FLAG_BERSERK;
 
-    if (mons->friendly())
+    if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
-    else if (mons->good_neutral())
+    else if (mons.attitude == ATT_GOOD_NEUTRAL)
         ch |= TILE_FLAG_GD_NEUTRAL;
-    else if (mons->neutral())
+    else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
-    else if (mons_is_fleeing(mons))
+    else if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
-    else if (mons_looks_stabbable(mons))
+    else if (mons.is(MB_STABBABLE))
         ch |= TILE_FLAG_STAB;
-    else if (mons_looks_distracted(mons))
+    else if (mons.is(MB_DISTRACTED))
         ch |= TILE_FLAG_MAY_STAB;
 
-    mon_dam_level_type damage_level = mons_get_damage_level(mons);
+    mon_dam_level_type damage_level = mons.dam;
 
     switch (damage_level)
     {
@@ -2660,7 +2556,7 @@ tileidx_t tileidx_monster(const monster* mons)
     if (Options.tile_show_demon_tier)
     {
         // FIXME: non-linear bits suck, should be a simple addition
-        switch (mons_demon_tier(mons->type))
+        switch (mons_demon_tier(mons.type))
         {
         case 1:
             ch |= TILE_FLAG_DEMON_1;
@@ -2683,9 +2579,9 @@ tileidx_t tileidx_monster(const monster* mons)
     return ch;
 }
 
-tileidx_t tileidx_draco_base(const monster* mon)
+tileidx_t tileidx_draco_base(const monster_info& mon)
 {
-    int draco = draco_subspecies(mon);
+    int draco = mon.draco_subspecies();
     int colour = 0;
 
     switch (draco)
@@ -2706,9 +2602,9 @@ tileidx_t tileidx_draco_base(const monster* mon)
     return (TILEP_DRACO_BASE + colour);
 }
 
-tileidx_t tileidx_draco_job(const monster* mon)
+tileidx_t tileidx_draco_job(const monster_info& mon)
 {
-    switch (mon->type)
+    switch (mon.type)
     {
         case MONS_DRACONIAN_CALLER:      return (TILEP_DRACO_CALLER);
         case MONS_DRACONIAN_MONK:        return (TILEP_DRACO_MONK);
@@ -3660,10 +3556,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_TWO_HEADED_OGRE;
 
     // snakes ('S')
-    case MONS_SMALL_SNAKE:
-        return TILE_CORPSE_SMALL_SNAKE;
-    case MONS_SNAKE:
-        return TILE_CORPSE_SNAKE;
+    case MONS_BALL_PYTHON:
+        return TILE_CORPSE_BALL_PYTHON;
+    case MONS_ADDER:
+        return TILE_CORPSE_ADDER;
     case MONS_ANACONDA:
         return TILE_CORPSE_ANACONDA;
     case MONS_WATER_MOCCASIN:
@@ -4156,34 +4052,18 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     return (0);
 }
 
-tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
+tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 {
     int type  = cl.type;
-    int decay = cl.decay;
-    std::string override = cl.tile;
     int colour = cl.colour;
 
-    tileidx_t ch  = TILE_ERROR;
-    int dur = decay/20;
-    if (dur < 0)
-        dur = 0;
-    else if (dur > 2)
+    tileidx_t ch = cl.tile;
+    int dur = cl.duration;
+
+    if (type != CLOUD_MAGIC_TRAIL && dur > 2)
         dur = 2;
 
-    if (!override.empty())
-    {
-        tileidx_t index;
-        if (!tile_main_index(override.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", override.c_str());
-        }
-        else
-        {
-            int offset = tile_main_count(index);
-            ch = index + offset;
-        }
-    }
-    else
+    if (ch == 0)
     {
         switch (type)
         {
@@ -4233,8 +4113,6 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
                 break;
 
             case CLOUD_MAGIC_TRAIL:
-                if (decay/20 > 2)
-                    dur = 3;
                 ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 
@@ -4902,21 +4780,17 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 
     return (tile_string);
 }
+#endif
 
 void tile_init_props(monster* mon)
 {
-    // Not necessary.
+    // Only those use tile_num.
+    if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE)
+        return;
+
+    // Already overridden or set.
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
         return;
 
-    // Special-case for monsters masquerading as items.
-    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
-        return;
-
-    // Only add the property for tiles that have several variants.
-    const int base_tile = _tileidx_monster_base(mon->type);
-    if (tile_player_count(base_tile) > 1)
-        mon->props["tile_num"] = short(random2(256));
+    mon->props["tile_num"] = short(random2(256));
 }
-
-#endif

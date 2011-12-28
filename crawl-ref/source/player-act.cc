@@ -370,7 +370,7 @@ std::string player::pronoun(pronoun_type pro, bool) const
     switch (pro)
     {
     default:
-    case PRONOUN:                   return "you";
+    case PRONOUN_SUBJECTIVE:        return "you";
     case PRONOUN_POSSESSIVE:        return "your";
     case PRONOUN_REFLEXIVE:         return "yourself";
     case PRONOUN_OBJECTIVE:         return "you";
@@ -614,9 +614,9 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (is_undead
-        && (is_undead != US_SEMI_UNDEAD || hunger_state <= HS_SATIATED))
+    if (!you.can_bleed(false))
     {
+        // XXX: This message assumes that you're undead.
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
 

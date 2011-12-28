@@ -201,17 +201,16 @@ static void _change_skill_level(skill_type exsk, int n)
         need_reset = true;
     }
 
-    const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_LAST_MAGIC);
-    if (exsk == SK_SPELLCASTING && you.skills[exsk] == n
-        && best_spell == SK_SPELLCASTING && n > 0)
-    {
-        mpr("You're starting to get the hang of this magic thing.");
+    if (exsk == SK_SPELLCASTING && you.skills[exsk] == n && n > 0)
         learned_something_new(HINT_GAINED_SPELLCASTING);
-    }
 
     if (need_reset)
         reset_training();
+
+    // calc_hp() has to be called here because it currently doesn't work
+    // right if you.skills[] hasn't been updated yet.
+    if (exsk == SK_FIGHTING)
+        calc_hp();
     // TODO: also identify rings of wizardry.
 }
 
@@ -245,8 +244,12 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
     }
 
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-        if (best != old_best_skill || old_best_skill == exsk)
-            you.redraw_title = true;
+    if (best != old_best_skill || old_best_skill == exsk)
+    {
+        you.redraw_title = true;
+        // The player symbol depends on best skill title.
+        update_player_symbol();
+    }
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
@@ -355,7 +358,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    std::vector<ability_type> abilities = get_god_abilities();
+    std::vector<ability_type> abilities = get_god_abilities(true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         // Exit early if there's no more skill to check.
@@ -477,6 +480,11 @@ bool training_restricted(skill_type sk)
  */
 void init_can_train()
 {
+    // Clear everything out, in case this isn't the first game.
+    you.start_train.clear();
+    you.stop_train.clear();
+    you.can_train.init(false);
+
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);

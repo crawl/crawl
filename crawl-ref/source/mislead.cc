@@ -14,7 +14,7 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "random.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
 #include "view.h"
@@ -129,7 +129,7 @@ void mons_cast_mislead(monster* mons)
         if (old_value <= 0)
         {
             mpr("But for a moment, strange images dance in front of your eyes.", MSGCH_WARN);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             tiles.add_overlay(you.pos(), tileidx_zap(MAGENTA));
             update_screen();
 #else

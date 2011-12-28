@@ -50,17 +50,19 @@ struct crawl_environment
     FixedArray< map_cell, GXM, GYM >         map_shadow;
     std::set<coord_def> visible;
 
-#ifdef USE_TILE
     // indexed by grid coords
+#ifdef USE_TILE
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
+#endif
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
+#ifdef USE_TILE
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
+#endif
     tile_flavour tile_default;
     std::vector<std::string> tile_names;
-#endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     short cloud_no;

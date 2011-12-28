@@ -1,12 +1,13 @@
 define(["jquery", "client", "./dungeon_renderer", "./minimap",
-        "./monster_list", "./map_knowledge", "./enums", "exports"],
-function ($, c, r, mm, ml, mk, enums, exports) {
+        "./monster_list", "./map_knowledge", "./enums", "./display", "exports"],
+function ($, c, r, mm, ml, mk, enums, display, exports) {
     exports.client = c;
     exports.renderer = r;
     exports.$ = $;
     exports.minimap = mm;
     exports.monster_list = ml;
     exports.map_knowledge = mk;
+    exports.display = display;
 
     window.debug = exports;
 

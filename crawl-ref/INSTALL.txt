@@ -130,6 +130,19 @@ apt-get install ccache
 less /usr/share/doc/ccache/README.Debian
 
 
+Prerequisites (Fedora):
+
+On Fedora, and possibly other RPM-based systems, you can get the dependencies
+by running the following as root:
+yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
+  zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel
+(the last five are needed only for tile builds).  As with Debian, this package
+list avoids the need for the bundled "contribs".
+
+ccache can be installed with:
+yum install ccache
+
+
 Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
@@ -142,7 +155,7 @@ are also fine (edit your makefile appropriately).
 
 You need to link with a curses library that understands Unicode characters,
 usually named libncursesw (the development headers for libncursesw are
-usually in /usr/include/ncursesw.)
+usually in /usr/include/ncursesw).
 
 
 Building:
@@ -186,37 +199,18 @@ Building:
 Building on Mac OS X
 --------------------
 
-For non-graphical builds, you can use the Unix build process described
-above, or you can use Xcode, as described below.
+Mac builds use the Unix build process described above, but require you
+to add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
+graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and
+'CONTRIB_SDL=y'.
 
-For graphical builds, we do not support the use of the Unix build process
-for various reasons.
+So, to build build Crawl on a Mac you could use the following example
+command lines.
 
-* Crawl is officially built and tested under Xcode 3.2 on OS X 10.6.1, but
-  it's highly likely that other versions of Xcode will work fine.
-
-* Make sure Xcode is installed. Xcode should be available on the Mac OS X
-  install DVD if you haven't already installed it.  You can also download
-  Xcode from Apple's website (note that their website often has versions of
-  Xcode that are newer than the versions distributed on their Mac OS X
-  DVDs):  http://developer.apple.com/TOOLS/Xcode/
-
-* Open the Xcode project (Crawl.xcodeproj) under the "source"
-  directory.
-
-* Hit Build in Xcode. This should build all the necessary dependencies,
-  including libpng, freetype, SDL, and SDL_image, and then finally build
-  Crawl itself.  The process may take quite a while, so go grab a coke or a
-  cup of coffee.
-
-* The default build configuration, Release, will build a ppc/i386 Universal
-  binary suitable for play on all OS X 10.4 or newer systems.  The other
-  build configurations are intended for development and may not result in a
-  binary that can be distributed to others.
-
-* If you would like users to be unable to script Crawl with Lua, you can
-  specify NO_LUA_BINDINGS=y when building. See the section on Lua for more
-  information.
+For the console version:
+  make APPLE_GCC=y
+For the graphical version:
+  make APPLE_GCC=y NO_PKGCONFIG=y CONTRIB_SDL=y TILES=y
 
 
 Building on Windows (MinGW)
@@ -236,6 +230,9 @@ run on 9x).
 
   NOTE: Do NOT get any of the versions that do not have 'netinstall' in the
         filename. The 'netinstall' is the only one used by the Crawl team.
+
+  NOTE: msysgit should be installed to a path that does not contain spaces,
+        such as the default location 'c:\msysgit'.
 
 * Start msys by running 'c:\msysgit\msys.bat'. Now you're in a MinGW build
   environment.

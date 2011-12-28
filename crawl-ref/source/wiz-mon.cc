@@ -774,6 +774,19 @@ static bool _force_suitable(const monster* mon)
     return (mon->alive());
 }
 
+void wizard_gain_monster_level(monster* mon)
+{
+    // Give monster as much experience as it can hold,
+    // but cap the levels gained to just 1.
+    bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
+    if (!worked)
+        simple_monster_message(mon, " seems unable to mature further.", MSGCH_WARN);
+
+    // (The gain_exp() method will chop the monster's experience down
+    // to half-way between its new level and the next, so we needn't
+    // worry about it being left with too much experience.)
+}
+
 void wizard_apply_monster_blessing(monster* mon)
 {
     mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? ",
@@ -1206,6 +1219,19 @@ void wizard_polymorph_monster(monster* mon)
     mon->check_redraw(mon->pos());
 
     if (mon->type == old_type)
+    {
+        mpr("Trying harder");
+        change_monster_type(mon, type);
+        if (!mon->alive())
+        {
+            mpr("Polymorph killed monster?", MSGCH_ERROR);
+            return;
+        }
+
+        mon->check_redraw(mon->pos());
+    }
+
+    if (mon->type == old_type)
         mpr("Polymorph failed.");
     else if (mon->type != type)
         mpr("Monster turned into something other than the desired type.");
@@ -1217,7 +1243,7 @@ void debug_pathfind(int mid)
         return;
 
     mpr("Choose a destination!");
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     more();
 #endif
     coord_def dest;
@@ -1272,7 +1298,7 @@ static void _miscast_screen_update()
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
     print_stats();
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     update_monster_pane();
 #endif
 }

@@ -155,6 +155,11 @@ Webtiles
 * Monster list.
 * Webtiles games create a ttyrec, allowing them to be watched from SSH.
 * Scale cells for small screens.
+* "Glyph mode" which shows letters instead of tiles.
+* Tiles in menus; Menus are sized according to each spectator's window, and
+  spectators can scroll independently.
+* Improvements to the lobby: show gods, allow sorting on XL/Character/Level,
+  and show milestones.
 
 Zot Defence
 -----------

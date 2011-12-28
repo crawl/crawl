@@ -702,6 +702,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
+            case GOD_LUGONU:
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;

@@ -65,13 +65,13 @@ enum armour_type
 
 enum armour_property_type
 {
-    PARM_AC,                           //    0
+    PARM_AC,
     PARM_EVASION,
 };
 
 enum boot_type          // used in pluses2
 {
-    TBOOT_BOOTS = 0,
+    TBOOT_BOOTS,
     TBOOT_NAGA_BARDING,
     TBOOT_CENTAUR_BARDING,
     NUM_BOOT_TYPES
@@ -122,7 +122,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 
 enum corpse_type
 {
-    CORPSE_BODY,                       //    0
+    CORPSE_BODY,
     CORPSE_SKELETON,
 };
 
@@ -137,7 +137,7 @@ enum hands_reqd_type
 
 enum helmet_desc_type
 {
-    THELM_DESC_PLAIN    = 0,
+    THELM_DESC_PLAIN,
     THELM_DESC_WINGED,
     THELM_DESC_HORNED,
     THELM_DESC_CRESTED,
@@ -151,51 +151,50 @@ enum helmet_desc_type
 
 enum gloves_desc_type
 {
-    TGLOV_DESC_GLOVES = 0,
+    TGLOV_DESC_GLOVES,
     TGLOV_DESC_GAUNTLETS,
     TGLOV_DESC_BRACERS,
 };
 
 enum jewellery_type
 {
-    RING_FIRST_RING = 0,
-
-    RING_REGENERATION = RING_FIRST_RING, //    0
+    RING_REGENERATION,
+    RING_FIRST_RING = RING_REGENERATION,
     RING_PROTECTION,
     RING_PROTECTION_FROM_FIRE,
     RING_POISON_RESISTANCE,
     RING_PROTECTION_FROM_COLD,
-    RING_STRENGTH,                     //    5
+    RING_STRENGTH,
     RING_SLAYING,
     RING_SEE_INVISIBLE,
     RING_INVISIBILITY,
     RING_HUNGER,
-    RING_TELEPORTATION,                //   10
+    RING_TELEPORTATION,
     RING_EVASION,
     RING_SUSTAIN_ABILITIES,
     RING_SUSTENANCE,
     RING_DEXTERITY,
-    RING_INTELLIGENCE,                 //   15
+    RING_INTELLIGENCE,
     RING_WIZARDRY,
     RING_MAGICAL_POWER,
     RING_LEVITATION,
     RING_LIFE_PROTECTION,
-    RING_PROTECTION_FROM_MAGIC,        //   20
+    RING_PROTECTION_FROM_MAGIC,
     RING_FIRE,
     RING_ICE,
     RING_TELEPORT_CONTROL,
 
-    NUM_RINGS,                         //   24, keep as last ring; can overlap
+    NUM_RINGS,                         //   keep as last ring; can overlap
                                        //   safely with first amulet.
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
     // Currently none.
-    AMU_FIRST_AMULET = 35,
-    AMU_RAGE = AMU_FIRST_AMULET,       //   35
+    AMU_RAGE = 35,
+    AMU_FIRST_AMULET = AMU_RAGE,
     AMU_CLARITY,
     AMU_WARDING,
     AMU_RESIST_CORROSION,
-    AMU_THE_GOURMAND,                  //   40
+    AMU_THE_GOURMAND,
     AMU_CONSERVATION,
     AMU_CONTROLLED_FLIGHT,
     AMU_INACCURACY,
@@ -209,14 +208,14 @@ enum jewellery_type
 
 enum launch_retval
 {
-    LRET_FUMBLED = 0,                  // must be left as 0
+    LRET_FUMBLED,
     LRET_LAUNCHED,
     LRET_THROWN,
 };
 
 enum misc_item_type
 {
-    MISC_BOTTLED_EFREET,               //    0
+    MISC_BOTTLED_EFREET,
 #if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_SEEING,
 #endif
@@ -257,19 +256,19 @@ enum misc_item_type
 
 enum missile_type
 {
-    MI_DART,                           //    0
+    MI_DART,
     MI_NEEDLE,
     MI_ARROW,
     MI_BOLT,
     MI_JAVELIN,
     MI_MAX_RACIAL = MI_JAVELIN,
 
-    MI_STONE,                          //    5
+    MI_STONE,
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
 
-    NUM_MISSILES,                      //    9
+    NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
 
@@ -300,7 +299,7 @@ enum rune_type
 
     RUNE_SPIDER_NEST,
     RUNE_FOREST,
-    NUM_RUNE_TYPES             // should always be last
+    NUM_RUNE_TYPES
 };
 
 enum scroll_type
@@ -340,48 +339,48 @@ enum scroll_type
 
 enum special_armour_type
 {
-    SPARM_FORBID_EGO = -1,             //   -1
-    SPARM_NORMAL,                      //    0
+    SPARM_FORBID_EGO = -1,
+    SPARM_NORMAL,
     SPARM_RUNNING,
     SPARM_FIRE_RESISTANCE,
     SPARM_COLD_RESISTANCE,
     SPARM_POISON_RESISTANCE,
-    SPARM_SEE_INVISIBLE,               //    5
+    SPARM_SEE_INVISIBLE,
     SPARM_DARKNESS,
     SPARM_STRENGTH,
     SPARM_DEXTERITY,
     SPARM_INTELLIGENCE,
-    SPARM_PONDEROUSNESS,               //   10
+    SPARM_PONDEROUSNESS,
     SPARM_LEVITATION,
     SPARM_MAGIC_RESISTANCE,
     SPARM_PROTECTION,
     SPARM_STEALTH,
-    SPARM_RESISTANCE,                  //   15
+    SPARM_RESISTANCE,
     SPARM_POSITIVE_ENERGY,
     SPARM_ARCHMAGI,
     SPARM_PRESERVATION,
     SPARM_REFLECTION,
-    SPARM_SPIRIT_SHIELD,               //   20
+    SPARM_SPIRIT_SHIELD,
     SPARM_ARCHERY,
-    NUM_SPECIAL_ARMOURS                //   22
+    NUM_SPECIAL_ARMOURS
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}
 {
-    SPMSL_FORBID_BRAND = -1,           //   -1
-    SPMSL_NORMAL,                      //    0
+    SPMSL_FORBID_BRAND = -1,
+    SPMSL_NORMAL,
     SPMSL_FLAME,
     SPMSL_FROST,
     SPMSL_POISONED,
     SPMSL_CURARE,                      // Needle-only brand
-    SPMSL_RETURNING,                   //    5
+    SPMSL_RETURNING,
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
 #if TAG_MAJOR_VERSION == 32
     SPMSL_REAPING,
 #endif
     SPMSL_DISPERSAL,
-    SPMSL_EXPLODING,                   //   10
+    SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
     SPMSL_PARALYSIS,                   // paralysis, needle only from here in
@@ -402,7 +401,7 @@ enum special_ring_type // jewellery mitm[].special values
 enum stave_type
 {
     // staves
-    STAFF_WIZARDRY = 0,
+    STAFF_WIZARDRY,
     STAFF_POWER,
     STAFF_FIRE,
     STAFF_COLD,
@@ -414,7 +413,7 @@ enum stave_type
     STAFF_SUMMONING,
     STAFF_AIR,
     STAFF_EARTH,
-    STAFF_CHANNELING,           // 12
+    STAFF_CHANNELING,
     // rods
     STAFF_FIRST_ROD,
     STAFF_SMITING = STAFF_FIRST_ROD,
@@ -426,8 +425,8 @@ enum stave_type
     STAFF_WARDING,
     STAFF_DEMONOLOGY,
     STAFF_STRIKING,
-    STAFF_VENOM,                // 22
-    NUM_STAVES                  // must remain last member {dlb}
+    STAFF_VENOM,
+    NUM_STAVES
 };
 
 enum weapon_type
@@ -516,8 +515,8 @@ enum weapon_type
     NUM_WEAPONS,
 
 // special cases
-    WPN_UNARMED = 500,                 //  500
-    WPN_UNKNOWN = 1000,                // 1000
+    WPN_UNARMED,
+    WPN_UNKNOWN,
     WPN_RANDOM,
     WPN_VIABLE,
 
@@ -530,7 +529,7 @@ enum weapon_type
 
 enum weapon_property_type
 {
-    PWPN_DAMAGE,                       //    0
+    PWPN_DAMAGE,
     PWPN_HIT,
     PWPN_SPEED,
     PWPN_ACQ_WEIGHT,
@@ -605,6 +604,34 @@ enum zap_count_type
     ZAPCOUNT_UNKNOWN     = -2,
     ZAPCOUNT_RECHARGED   = -3,
     ZAPCOUNT_MAX_CHARGED = -4,
+};
+
+enum food_type
+{
+    FOOD_MEAT_RATION,
+    FOOD_BREAD_RATION,
+    FOOD_PEAR,
+    FOOD_APPLE,
+    FOOD_CHOKO,
+    FOOD_HONEYCOMB,
+    FOOD_ROYAL_JELLY,
+    FOOD_SNOZZCUMBER,
+    FOOD_PIZZA,
+    FOOD_APRICOT,
+    FOOD_ORANGE,
+    FOOD_BANANA,
+    FOOD_STRAWBERRY,
+    FOOD_RAMBUTAN,
+    FOOD_LEMON,
+    FOOD_GRAPE,
+    FOOD_SULTANA,
+    FOOD_LYCHEE,
+    FOOD_BEEF_JERKY,
+    FOOD_CHEESE,
+    FOOD_SAUSAGE,
+    FOOD_CHUNK,
+    FOOD_AMBROSIA,
+    NUM_FOODS
 };
 
 #endif

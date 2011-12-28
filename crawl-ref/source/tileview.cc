@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
 #include "tileview.h"
 
 #include "areas.h"
@@ -33,6 +32,7 @@ void tile_new_level(bool first_time, bool init_unseen)
     if (first_time)
         tile_init_flavour();
 
+#ifdef USE_TILE
     if (init_unseen)
     {
         for (unsigned int x = 0; x < GXM; x++)
@@ -61,6 +61,7 @@ void tile_new_level(bool first_time, bool init_unseen)
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
             tiles.update_minimap(coord_def(x, y));
+#endif
 }
 
 void tile_init_default_flavour()
@@ -97,6 +98,10 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_DWARVEN_HALL:
+        flv.wall  = TILE_WALL_HALL;
+        flv.floor = TILE_FLOOR_LIMESTONE;
+        return;
+
     case BRANCH_ELVEN_HALLS:
     case BRANCH_HALL_OF_BLADES:
         flv.wall  = TILE_WALL_HALL;
@@ -149,11 +154,6 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_LAIR;
         return;
 
-    case BRANCH_SPIDER_NEST:
-        flv.wall  = TILE_WALL_LAIR;
-        flv.floor = TILE_FLOOR_HIVE;
-        return;
-
     case BRANCH_SLIME_PITS:
         flv.wall  = TILE_WALL_SLIME;
         flv.floor = TILE_FLOOR_SLIME;
@@ -161,7 +161,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_SNAKE_PIT:
         flv.wall  = TILE_WALL_SNAKE;
-        flv.floor = TILE_FLOOR_SNAKE;
+        flv.floor = TILE_FLOOR_SNAKE_A + random2(3) * 4;
         return;
 
     case BRANCH_SWAMP:
@@ -172,6 +172,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     case BRANCH_SHOALS:
         flv.wall  = TILE_WALL_YELLOW_ROCK;
         flv.floor = TILE_FLOOR_SAND_STONE;
+        return;
+
+    case BRANCH_SPIDER_NEST:
+        flv.wall  = TILE_WALL_LAIR;
+        flv.floor = TILE_FLOOR_SPIDER;
         return;
 
     case BRANCH_HALL_OF_ZOT:
@@ -634,6 +639,56 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
 }
 
+#ifdef USE_TILE
+static tileidx_t _get_floor_bg(const coord_def& gc)
+{
+    tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
+
+    if (map_bounds(gc))
+    {
+        bg = tileidx_feature(gc);
+
+        dungeon_feature_type feat = grid_appearance(gc);
+        if (feat == DNGN_DETECTED_SECRET_DOOR)
+            bg |= TILE_FLAG_WAS_SECRET;
+        else if (is_unknown_stair(gc))
+            bg |= TILE_FLAG_NEW_STAIR;
+    }
+
+    return bg;
+}
+
+void tile_draw_map_cell(const coord_def& gc)
+{
+    env.tile_bk_bg(gc) = _get_floor_bg(gc);
+
+    const map_cell& cell = env.map_knowledge(gc);
+
+    switch (get_cell_show_class(cell))
+    {
+    default:
+    case SH_NOTHING:
+    case SH_FEATURE:
+        env.tile_bk_fg(gc) = 0;
+        break;
+    case SH_ITEM:
+        if (feat_is_stair(cell.feat()))
+            tile_place_item_marker(gc, *cell.item());
+        else
+            tile_place_item(gc, *cell.item());
+        break;
+    case SH_CLOUD:
+        tile_place_cloud(gc, *cell.cloudinfo());
+        break;
+    case SH_INVIS_EXPOSED:
+        tile_place_invisible_monster(gc);
+        break;
+    case SH_MONSTER:
+        tile_place_monster(gc, *cell.monsterinfo());
+        break;
+    }
+}
+
 void tile_draw_floor()
 {
     for (int cy = 0; cy < env.tile_fg.height(); cy++)
@@ -642,19 +697,7 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
-
-            if (you.see_cell(gc))
-            {
-                bg = tileidx_feature(gc);
-
-                dungeon_feature_type feat = grid_appearance(gc);
-                if (feat == DNGN_DETECTED_SECRET_DOOR)
-                     bg |= TILE_FLAG_WAS_SECRET;
-                else if (is_unknown_stair(gc))
-                     bg |= TILE_FLAG_NEW_STAIR;
-            }
-
+            tileidx_t bg = _get_floor_bg(gc);
 
             // init tiles
             env.tile_bg(ep) = bg;
@@ -731,21 +774,20 @@ void tile_place_invisible_monster(const coord_def &gc)
 }
 
 // Called from _update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monster* mon)
+void tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
-    if (!mon)
-        return;
-
     const coord_def ep = grid2show(gc);
 
     tileidx_t t    = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
+    if ((mons_class_is_stationary(mon.type)
+         || mon.is(MB_WITHDRAWN))
+        && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
-        if (you.visible_igrd(gc) != NON_ITEM)
+        if (env.map_knowledge(gc).item())
             t |= TILE_FLAG_S_UNDER;
     }
     else
@@ -762,9 +804,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     env.tile_fg(ep) = t;
 
     // Add name tags.
-    if (!mon->visible_to(&you)
-        || mons_is_lurking(mon)
-        || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
     {
         return;
     }
@@ -777,21 +817,15 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         const int kills = you.kills->num_kills(mon);
         const int limit  = 0;
 
-        if (!mon->is_named() && kills > limit)
+        if (!mon.is_named() && kills > limit)
             return;
     }
-    else if (!mon->is_named())
+    else if (!mon.is_named())
         return;
 
-    if (pref != TAGPREF_NAMED && mon->friendly())
+    if (pref != TAGPREF_NAMED && mon.attitude == ATT_FRIENDLY)
         return;
 
-    // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_LORD
-        || mon->type == MONS_LERNAEAN_HYDRA)
-    {
-        return;
-    }
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
@@ -806,19 +840,16 @@ void tile_reset_feat(const coord_def &gc)
     env.tile_bk_bg(gc) = tileidx_feature(gc);
 }
 
-void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
+void tile_place_cloud(const coord_def &gc, const cloud_info &cl)
 {
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    const monster* mon = monster_at(gc);
     bool disturbance = false;
 
-    if (mon && !mon->visible_to(&you) && you.see_cell(gc)
-        && is_opaque_cloud(env.cgrid(gc))
-        && !mon->is_insubstantial())
+    if (env.map_knowledge(gc).invisible_monster())
     {
         disturbance = true;
     }
@@ -1033,6 +1064,13 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_DNGN_METAL_WALL_DARKGRAY;
     }
+    else if (player_in_branch(BRANCH_GEHENNA))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_DNGN_STONE_WALL_RED;
+        if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_DNGN_METAL_WALL_RED;
+    }
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
@@ -1078,9 +1116,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = orig + flv.special % tile_dngn_count(orig);
     }
     else if (orig < TILE_DNGN_MAX)
-    {
         *bg = _pick_random_dngn_tile(orig, flv.special);
-    }
 
     *bg |= flag;
 }
@@ -1188,5 +1224,4 @@ void tile_forget_map(const coord_def &gc)
     env.tile_bk_bg(gc) = 0;
     tiles.update_minimap(gc);
 }
-
 #endif

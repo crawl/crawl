@@ -56,7 +56,7 @@ void apply_feature_overrides()
 
 static void _init_feat(feature_def &f, dungeon_feature_type feat)
 {
-    switch(feat)
+    switch (feat)
     {
         case DNGN_UNSEEN:
         case DNGN_EXPLORE_HORIZON:

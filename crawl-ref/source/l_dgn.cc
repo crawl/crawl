@@ -23,13 +23,11 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tileview.h"
-#endif
+#include "tiledef-dngn.h"
+#include "tileview.h"
 #include "view.h"
 
-const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
+static const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).
@@ -1121,7 +1119,6 @@ static int dgn_floor_halo(lua_State *ls)
         }
     }
 
-#ifdef USE_TILE
     unsigned int tile = get_tile_idx(ls, 3);
     if (!tile)
         return (0);
@@ -1137,7 +1134,6 @@ static int dgn_floor_halo(lua_State *ls)
     }
 
     tile_floor_halo(target, tile);
-#endif
 
     return (0);
 }

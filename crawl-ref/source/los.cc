@@ -66,7 +66,7 @@
 // precalculations (only positive quadrant used).
 // For the LOS code to work correctly, any LOS shape that
 // is used needs to be contained in bds_precalc.
-const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
+static const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -80,29 +80,29 @@ const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 // These are filled during precomputation (_register_ray).
 // XXX: fullrays is not needed anymore after precomputation.
 struct los_ray;
-std::vector<los_ray> fullrays;
-std::vector<coord_def> ray_coords;
+static std::vector<los_ray> fullrays;
+static std::vector<coord_def> ray_coords;
 
 // These store all unique minimal cellrays. For each i,
 // cellray i ends in cellray_ends[i] and passes through
 // thoses cells p that have blockrays(p)[i] set. In other
 // words, blockrays(p)[i] is set iff an opaque cell p blocks
 // the cellray with index i.
-std::vector<coord_def> cellray_ends;
+static std::vector<coord_def> cellray_ends;
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
-blockrays_t blockrays;
+static blockrays_t blockrays;
 
 // We also store the minimal cellrays by target position
 // for efficient retrieval by find_ray.
 // XXX: Consider condensing this representation.
 struct cellray;
-FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
+static FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-bit_array *dead_rays     = NULL;
-bit_array *smoke_rays    = NULL;
+static bit_array *dead_rays     = NULL;
+static bit_array *smoke_rays    = NULL;
 
 class quadrant_iterator : public rectangle_iterator
 {
@@ -123,7 +123,7 @@ void clear_rays_on_exit()
 }
 
 // Pre-squared LOS radius.
-int _los_radius_sq = LOS_RADIUS_SQ;
+static int _los_radius_sq = LOS_RADIUS_SQ;
 
 static void _handle_los_change();
 
@@ -340,7 +340,7 @@ static std::vector<int> _find_minimal_cellrays()
             for (min_it = min.begin();
                  min_it != min.end() && !dup;)
             {
-                switch(_compare_cellrays(*min_it, c))
+                switch (_compare_cellrays(*min_it, c))
                 {
                 case C_SUBRAY:
                     dup = true;
@@ -530,7 +530,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
         coord_def old = ray.pos();
         if (!ray.advance())
             die("can't advance ray");
-        switch((ray.pos() - old).abs())
+        switch ((ray.pos() - old).abs())
         {
         case 1:
             diags = 0;
@@ -680,7 +680,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
     {
-        ASSERT (you.xray_vision);
+        ASSERT(you.xray_vision);
         return (NUM_FEATURES);
     }
 
@@ -688,12 +688,12 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     int blocked = 0;
     while (ray.pos() != target)
     {
-        blocked += opc_solid(ray.pos());
+        blocked += opc_solid_see(ray.pos());
         if (blocked >= OPC_OPAQUE)
             return (env.grid(ray.pos()));
         ray.advance();
     }
-    ASSERT (false);
+    ASSERT(false);
     return (NUM_FEATURES);
 }
 
@@ -895,13 +895,23 @@ void losight(los_grid& sh, const coord_def& center,
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
-opacity_type mons_opacity(const monster* mon)
+opacity_type mons_opacity(const monster* mon, los_type how)
 {
-    if (mon->type == MONS_BUSH)
+    // no regard for LOS_ARENA
+    if (mon->type == MONS_BUSH && how != LOS_SOLID)
         return OPC_HALF;
 
-    if (mons_is_feat_mimic(mon->type) && feat_is_opaque(get_mimic_feat(mon)))
-        return OPC_OPAQUE;
+    if (mons_is_feat_mimic(mon->type))
+    {
+        dungeon_feature_type feat = get_mimic_feat(mon);
+        if (how == LOS_SOLID)
+            return feat_is_solid(feat) ? OPC_OPAQUE : OPC_CLEAR;
+        if (how == LOS_NO_TRANS)
+            if (feat_is_wall(feat) || feat_is_tree(feat))
+                return OPC_OPAQUE;
+        if (feat_is_opaque(get_mimic_feat(mon)))
+            return OPC_OPAQUE;
+    }
 
     return OPC_CLEAR;
 }
@@ -918,7 +928,8 @@ static void _handle_los_change()
 
 static bool _mons_block_sight(const monster* mons)
 {
-    return mons_opacity(mons) != OPC_CLEAR;
+    // must be the least permissive one
+    return mons_opacity(mons, LOS_SOLID_SEE) != OPC_CLEAR;
 }
 
 void los_actor_moved(const actor* act, const coord_def& oldpos)

@@ -273,14 +273,10 @@ void handle_monster_shouts(monster* mons, bool force)
 
             if (you.can_see(mons))
             {
-                if (mons->type == MONS_AIR_ELEMENTAL)
-                    mons->seen_context = "thin air";
-                else if (mons->type == MONS_TRAPDOOR_SPIDER)
-                    mons->seen_context = "leaps out";
-                else if (!monster_habitable_grid(mons, DNGN_FLOOR))
-                    mons->seen_context = "bursts forth shouting";
+                if (!monster_habitable_grid(mons, DNGN_FLOOR))
+                    mons->seen_context = SC_FISH_SURFACES_SHOUT;
                 else
-                    mons->seen_context = "surfaces";
+                    mons->seen_context = SC_SURFACES;
 
                 // Give interrupt message before shout message.
                 handle_seen_interrupt(mons);
@@ -388,11 +384,6 @@ void item_noise(const item_def &item, std::string msg, int loudness)
         msg = replace_all(msg, "@Your_weapon@", "@The_weapon@");
         msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
     }
-    else
-    {
-        msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
-        msg = replace_all(msg, "@your_weapon@", "your @weapon@");
-    }
 
     // Set appropriate channel (will usually be TALK).
     msg_channel_type channel = MSGCH_TALK;
@@ -434,9 +425,12 @@ void item_noise(const item_def &item, std::string msg, int loudness)
         msg = "You hear a strange noise.";
     }
 
-    // replace weapon references
+    // Replace weapon references.  Can't use DESC_THE because that includes
+    // pluses etc. and we want just the basename.
     msg = replace_all(msg, "@The_weapon@", "The @weapon@");
     msg = replace_all(msg, "@the_weapon@", "the @weapon@");
+    msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
+    msg = replace_all(msg, "@your_weapon@", "your @weapon@");
     msg = replace_all(msg, "@weapon@", item.name(DESC_BASENAME));
 
     // replace references to player name and god
@@ -598,7 +592,7 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
 
     if (player_distance <= range)
     {
-        switch(sense)
+        switch (sense)
         {
         case SENSE_SMELL_BLOOD:
              dprf("Player smells blood, pos: (%d, %d), dist = %d)",
@@ -634,7 +628,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
     circle_def c(where, range, C_CIRCLE);
     for (monster_iterator mi(&c); mi; ++mi)
     {
-        switch(sense)
+        switch (sense)
         {
         case SENSE_SMELL_BLOOD:
             if (!mons_class_flag(mi->type, M_BLOOD_SCENT))

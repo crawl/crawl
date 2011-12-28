@@ -69,7 +69,7 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context(""), client_id(0)
+      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -77,7 +77,15 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
-}
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
+};
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
 monster::~monster()
@@ -128,10 +136,18 @@ void monster::reset()
     travel_target = MTRAV_NONE;
     travel_path.clear();
     ghost.reset(NULL);
-    seen_context = "";
+    seen_context = SC_NONE;
     props.clear();
 
     client_id = 0;
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
 }
 
 void monster::init_with(const monster& mon)
@@ -225,7 +241,7 @@ bool monster::wants_submerge() const
     }
 
     // Don't submerge if we just unsubmerged to shout.
-    if (seen_context == "bursts forth shouting")
+    if (seen_context == SC_FISH_SURFACES_SHOUT)
         return (false);
 
     if (!mons_is_retreating(this) && mons_can_move_towards_target(this))
@@ -886,7 +902,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
                  "firm grip on it.",
                  pronoun(PRONOUN_POSSESSIVE).c_str(),
                  hand_name(true).c_str(),
-                 pronoun(PRONOUN).c_str());
+                 pronoun(PRONOUN_SUBJECTIVE).c_str());
             break;
         case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
@@ -1383,8 +1399,6 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_NIKOLA)
             return (get_weapon_brand(weapon) == SPWPN_ELECTROCUTION);
 
-        // Technically, this includes knives, but it would have to be
-        // a superpowered knife to be an upgrade to a short sword.
         if (mons->type == MONS_DUVESSA)
         {
             return (weapon_skill(weapon) == SK_SHORT_BLADES
@@ -1634,11 +1648,8 @@ bool monster::wants_weapon(const item_def &weap) const
     }
 
     // Nobody picks up giant clubs. Starting equipment is okay, of course.
-    if (weap.sub_type == WPN_GIANT_CLUB
-        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
-    {
+    if (is_giant_club_type(weap.sub_type))
         return (false);
-    }
 
     return (true);
 }
@@ -1979,6 +1990,22 @@ bool monster::pickup_gold(item_def &item, int near)
     return (pickup(item, MSLOT_GOLD, near));
 }
 
+bool monster::pickup_food(item_def &item, int near)
+{
+    // Chunks are used only for Simulacrum.
+    if (item.base_type == OBJ_FOOD
+        && item.sub_type == FOOD_CHUNK
+        && has_spell(SPELL_SIMULACRUM)
+        && mons_class_can_be_zombified(item.plus))
+    {
+        // If a Beoghite monster ever gets Simulacrum, please
+        // add monster type restrictions here.
+        return pickup(item, MSLOT_MISCELLANY, near);
+    }
+
+    return false;
+}
+
 bool monster::pickup_misc(item_def &item, int near)
 {
     // Never pick up runes, except rune mimics.
@@ -2077,6 +2104,8 @@ bool monster::pickup_item(item_def &item, int near, bool force)
         return pickup_armour(item, near, force);
     case OBJ_MISCELLANY:
         return pickup_misc(item, near);
+    case OBJ_FOOD:
+        return pickup_food(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
     // Fleeing monsters won't pick up these.
@@ -2994,6 +3023,12 @@ int monster::shield_bypass_ability(int) const
     return (15 + hit_dice * 2 / 3);
 }
 
+int monster::missile_deflection() const
+{
+    // No temporary effects, no RMsl as well.
+    return mons_class_flag(type, M_DEFLECT_MISSILES) ? 2 : 0;
+}
+
 int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.
@@ -3013,7 +3048,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
 
     if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
-    else if (caught())
+    else if (caught() || const_cast<monster *>(this)->is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
@@ -3084,6 +3119,7 @@ void monster::suicide(int hp)
 
 mon_holy_type monster::holiness() const
 {
+    // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
         return (MH_UNDEAD);
 
@@ -3199,6 +3235,7 @@ bool monster::is_known_chaotic() const
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_KILLER_KLOWN // For their random attacks.
+        || type == MONS_SUBTRACTOR_SNAKE // random attacks, colour changing.
         || type == MONS_TIAMAT)      // For her colour-changing.
     {
         return (true);
@@ -3292,7 +3329,13 @@ int monster::res_steam() const
     int res = get_mons_resists(this).steam;
     if (has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
-    return (res + res_fire() / 2);
+
+    res += (res_fire() + 1) / 2;
+
+    if (res > 3)
+        res = 3;
+
+    return (res);
 }
 
 int monster::res_cold() const
@@ -3410,10 +3453,8 @@ int monster::res_rotting(bool temp) const
 {
     UNUSED(temp);
 
-    int res = get_mons_resists(this).rotting;
-    if (res)
-        return (1);
-    switch(holiness())
+    int res = 0;
+    switch (holiness())
     {
     case MH_NATURAL:
     case MH_PLANT: // was 1 before.  Gardening shows it should be -1 instead...
@@ -3439,7 +3480,10 @@ int monster::res_rotting(bool temp) const
     }
     if (is_insubstantial())
         res = 3;
-    return (res);
+    if (get_mons_resists(this).rotting)
+        res += 1;
+
+    return (std::min(3, res));
 }
 
 int monster::res_holy_energy(const actor *attacker) const
@@ -3582,8 +3626,10 @@ bool monster::is_banished() const
     return (!alive() && flags & MF_BANISHED);
 }
 
-int monster::mons_species() const
+int monster::mons_species(bool zombie_base) const
 {
+    if (zombie_base && mons_class_is_zombified(type))
+        return ::mons_species(base_monster);
     return ::mons_species(type);
 }
 
@@ -3620,6 +3666,8 @@ int monster::skill(skill_type sk, int scale, bool real) const
 
 void monster::blink(bool)
 {
+    if (is_constricted_larger())  // disallow blink if constricted by larger
+        return;
     monster_blink(this);
 }
 
@@ -4061,6 +4109,16 @@ bool monster::is_priest() const
     return (flags & MF_PRIEST);
 }
 
+bool monster::is_fighter() const
+{
+    return (flags & MF_FIGHTER);
+}
+
+bool monster::is_archer() const
+{
+    return (flags & MF_ARCHER);
+}
+
 bool monster::is_actual_spellcaster() const
 {
     return (flags & MF_ACTUAL_SPELLS);
@@ -4125,83 +4183,9 @@ bool monster::bleed(const actor* agent, int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
-/* Removed during merge
- * <<<<<<< HEAD
-    case ENCH_INSANE:
-    case ENCH_BERSERK:
-        // Inflate hp.
-        scale_hp(3, 2);
-
-        if (has_ench(ENCH_SUBMERGED))
-            del_ench(ENCH_SUBMERGED);
-
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
-        calc_speed();
-        break;
-
-    case ENCH_HASTE:
-        calc_speed();
-        break;
-
-    case ENCH_SLOW:
-        calc_speed();
-        break;
-
-    case ENCH_STONESKIN:
-        {
-            // player gets 2+earth/5
-            const int ac_bonus = hit_dice / 2;
-
-            ac += ac_bonus;
-            // the monster may get drained or level up, we need to store the bonus
-            props["stoneskin_ac"].get_byte() = ac_bonus;
-        }
-        break;
-
-    case ENCH_SUBMERGED:
-        mons_clear_trapping_net(this);
-
-        // Don't worry about invisibility.  You should be able to see if
-        // something has submerged.
-        if (!quiet && mons_near(this))
-        {
-            if (type == MONS_AIR_ELEMENTAL)
-            {
-                mprf("%s merges itself into the air.",
-                     name(DESC_A, true).c_str());
-            }
-            else if (type == MONS_TRAPDOOR_SPIDER)
-            {
-                mprf("%s hides itself under the floor.",
-                     name(DESC_A, true).c_str());
-            }
-            else if (seen_context == "surfaces"
-                     || seen_context == "bursts forth"
-                     || seen_context == "emerges")
-            {
-                // The monster surfaced and submerged in the same turn
-                // without doing anything else.
-                interrupt_activity(AI_SEE_MONSTER,
-                                   activity_interrupt_data(this,
-                                                           "surfaced"));
-            }
-            else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_A, true).c_str());
-        }
-
-        // Pacified monsters leave the level when they submerge.
-        if (pacified())
-            make_mons_leave_level(this);
-        break;
-=======*/
         mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
              pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-//>>>>>>> master
 
     add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * 10));
 
@@ -4295,6 +4279,9 @@ bool monster::can_go_berserk() const
     if (mons_intel(this) == I_PLANT)
         return (false);
 
+    if (paralysed() || petrified() || petrifying() || asleep())
+        return (false);
+
     if (berserk() || has_ench(ENCH_FATIGUE))
         return (false);
 
@@ -4373,7 +4360,7 @@ bool monster::visible_to(const actor *looker) const
 bool monster::near_foe() const
 {
     const actor *afoe = get_foe();
-    return (afoe && see_cell(afoe->pos()));
+    return (afoe && see_cell_no_trans(afoe->pos()));
 }
 
 bool monster::has_lifeforce() const
@@ -4395,7 +4382,7 @@ bool monster::can_safely_mutate() const
     return (can_mutate());
 }
 
-bool monster::can_bleed() const
+bool monster::can_bleed(bool /*allow_tran*/) const
 {
     return (mons_has_blood(type));
 }
@@ -4818,9 +4805,10 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
+        case POT_BERSERK_RAGE:
+            return (can_go_berserk());
         case POT_SPEED:
         case POT_MIGHT:
-        case POT_BERSERK_RAGE:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -4849,14 +4837,14 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
         return (hit_points <= max_hit_points / 2);
-    case POT_SPEED:
-        return (!has_ench(ENCH_HASTE));
-    case POT_MIGHT:
-        return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_BERSERK_RAGE:
         // this implies !berserk()
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                 && needs_berserk());
+    case POT_SPEED:
+        return (!has_ench(ENCH_HASTE));
+    case POT_MIGHT:
+        return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -4909,13 +4897,13 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         }
         break;
 
-    case POT_SPEED:
-        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
+    case POT_BERSERK_RAGE:
+        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
             ident = ID_KNOWN_TYPE;
         break;
 
-    case POT_INVISIBILITY:
-        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+    case POT_SPEED:
+        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -4924,8 +4912,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
             ident = ID_KNOWN_TYPE;
         break;
 
-    case POT_BERSERK_RAGE:
-        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
+    case POT_INVISIBILITY:
+        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -5334,4 +5322,172 @@ bool monster::is_web_immune() const
 bool monster::nightvision() const
 {
     return (undead_or_demonic() || god == GOD_YREDELEMNUL);
+}
+
+void monster::accum_been_constricted()
+{
+    if (is_constricted())
+        dur_been_constricted += you.time_taken;
+}
+
+void monster::accum_has_constricted()
+{
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (constricting[i])
+            dur_has_constricted[i] += you.time_taken;
+}
+
+bool monster::is_constricted_larger()
+{
+    size_type csize;
+    size_type msize;
+
+    if (!is_constricted())
+        return false;
+    msize = body_size();
+    if (constricted_by == MHITYOU)
+        csize = you.body_size();
+    else
+        csize = env.mons[constricted_by].body_size();
+    return (csize > msize);
+
+}
+
+bool monster::is_constricted()
+{
+    return (constricted_by != NON_ENTITY);
+}
+
+bool monster::attempt_escape()
+{
+    size_type thesize;
+    int attfactor;
+    int randfact;
+    monster *themonst = 0;
+
+    if (!is_constricted())
+        return true;
+
+    escape_attempts++;
+    // player breaks free if size*attempts > 5 + d(12) + d(HD)
+    // this is inefficient on purpose, simplify after debug
+    thesize = body_size();
+    attfactor = thesize * escape_attempts;
+
+    if (constricted_by != MHITYOU)
+    {
+        randfact = roll_dice(1,5) + 5;
+        themonst = &env.mons[constricted_by];
+        randfact += roll_dice(1, themonst->hit_dice);
+    }
+    else
+    {
+        randfact = roll_dice(1, you.strength());
+    }
+
+    if (attfactor > randfact)
+    {
+        if (constricted_by != MHITYOU)
+        {
+            // update monster's has constricted info
+            for (int i = 0; i < MAX_CONSTRICT; i++)
+                if (themonst->constricting[i] == mindex())
+                    themonst->constricting[i] = NON_ENTITY;
+        }
+        else
+        {
+            for (int i = 0; i < MAX_CONSTRICT; i++)
+                if (you.constricting[i] == mindex())
+                    you.constricting[i] = NON_ENTITY;
+        }
+
+        // update your constricted by info
+        constricted_by = NON_ENTITY;
+        escape_attempts = 0;
+
+        return true;
+    }
+    else
+        return false;
+}
+
+void monster::clear_all_constrictions()
+{
+    int myindex = mindex();
+    monster *mons;
+    std::string rmsg;
+
+    if (constricted_by == MHITYOU)
+        you.clear_specific_constrictions(myindex);
+    else if (constricted_by != NON_ENTITY)
+    {
+        mons = &env.mons[constricted_by];
+        mons->clear_specific_constrictions(myindex);
+    }
+
+    constricted_by = NON_ENTITY;
+    dur_been_constricted = 0;
+    escape_attempts = 0;
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        if (constricting[i] == MHITYOU)
+        {
+            if (alive())
+            {
+                rmsg = name(DESC_THE, true);
+                rmsg += " releases its hold on you.";
+                mpr(rmsg);
+            }
+            you.clear_specific_constrictions(myindex);
+        }
+        else if (constricting[i] != NON_ENTITY)
+        {
+            mons = &env.mons[constricting[i]];
+            if (alive() && mons->alive())
+            {
+                rmsg = name(DESC_THE, true);
+                rmsg += " releases its hold on ";
+                rmsg += mons->name(DESC_THE,true) + ".";
+                mpr(rmsg);
+            }
+            mons->clear_specific_constrictions(myindex);
+        }
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
+}
+
+void monster::clear_specific_constrictions(int mind)
+{
+    if (constricted_by == mind)
+    {
+        constricted_by = NON_ENTITY;
+        dur_been_constricted = 0;
+        escape_attempts = 0;
+    }
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        if (constricting[i] == mind)
+        {
+            constricting[i] = NON_ENTITY;
+            dur_has_constricted[i] = 0;
+        }
+    }
+}
+
+bool monster::has_usable_tentacle()
+{
+    if (mons_species() != MONS_OCTOPODE)
+        return(false);
+
+    int free_tentacles = std::min(8, MAX_CONSTRICT);
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (constricting[i] != NON_ENTITY)
+            free_tentacles--;
+
+    // ignoring monster octopodes with weapons, for now
+    return (free_tentacles > 0);
+
 }

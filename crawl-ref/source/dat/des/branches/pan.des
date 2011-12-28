@@ -620,12 +620,11 @@ NAME:       evilmike_cerebov_lava
 TAGS:       cerebov patrolling uniq_cerebov
 ORIENT:     northwest
 : pan_lord_setup(_G, 'Cerebov')
-SHUFFLE:    NM, XY
-SUBST:      N : L.., M = .
-SUBST:      X : .vvv, Y : ...v
+SHUFFLE:    XY
+SUBST:      X : v, Y : .v
 SUBST:      L : lll.
 SUBST:      U : W., W : V., V : v.
-SUBST:      P : lv
+KPROP:      l = no_cloud_gen
 TILE:       v = dngn_metal_wall_brown
 MONS:       Cerebov, balrug, pit fiend, sun demon
 NSUBST:     Q = 1:3 / 2:|
@@ -648,21 +647,21 @@ xx...vvvv+v.................v+vvvv..lllll...
 xx.....vvv..vVvWvU.B.UvWvVv..vvv....llvll...
 xx.....vv..vv.............vv..vv....lllll...
 xx.....vv.vvB.............Bvv.vv.....lll....
-xx.....vv.V......LLNll......V.vv............
-xx.....vv.v....LLLLNllll....v.vv............
-xx.....vv.W...LLLLLNlllll...W.vvvvvvvvvv....
-xx.....vv.v...LLLLLNllPll...v.vvvvvvvvvvvv..
-xx..vvvvv.U..LLLLLL.llllll..........vllvvv..
-xx..v%%%v...LLvvv.....lllll...vWvWv.v4...vv.
-xx..v|||v..LLvv.v.Y....llPll..2.....+.....4.
+xx.....vv.V.....LLL.lll.....V.vv............
+xx.....vv.v....LLLL.llll....v.vv............
+xx.....vv.W...LLLL...llll...W.vvvvvvvvvv....
+xx.....vv.v...LLLL...llll...v.vvvvvvvvvvvv..
+xx..vvvvv.U..LLLL.....llll..........vllvvv..
+xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
+xx..v|||v..LLvv.v.Y....llll...2.....+.....4.
 xx..v|Q|+..LLvOX3.Y...1lllll.4......+.2....@
-xx..v|||v..LLvv.v.Y....llPll..2.....+.....4.
-xx..v%%%v...LLvvv.....lllll...vWvWv.v4...vv.
-xx..vvvvv.U..LLLLLL.llllll..........vllvvv..
-xx.....vv.v...LLLLLMllPll...v.vvvvvvvvvvvv..
-xx.....vv.W...LLLLLMlllll...W.vvvvvvvvvv....
-xx.....vv.v....LLLLMllll....v.vv............
-xx.....vv.V......LLMll......V.vv............
+xx..v|||v..LLvv.v.Y....llll...2.....+.....4.
+xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
+xx..vvvvv.U..LLLL.....llll..........vllvvv..
+xx.....vv.v...LLLL...llll...v.vvvvvvvvvvvv..
+xx.....vv.W...LLLL...llll...W.vvvvvvvvvv....
+xx.....vv.v....LLLL.llll....v.vv............
+xx.....vv.V.....LLL.lll.....V.vv............
 xx.....vv.vvB.............Bvv.vv.....lll....
 xx.....vv..vv.............vv..vv....lllll...
 xx.....vvv..vVvWvU.B.UvWvVv..vvv....llvll...
@@ -1084,8 +1083,8 @@ MAP
 .............
 xxxxxd+dxxxxx
 xxxxC...Cxxxx
-xxxCC...Cxxxx
-xxxC....CCxxx
+xxxCC...CCxxx
+xxxC.....Cxxx
 xxCC.....CCxx
 xCC..1.1..CCx
 xC..3XcX3..Cx
@@ -1465,6 +1464,7 @@ SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
 # the two center boxes are granted;
 # of the six outer boxes, one or two may be missing
 SUBST:   n = m
+KFEAT:   m = iron_grate
 KMONS:   O = eye of draining
 KITEM:   O = demonic rune of Zot
 MAP
@@ -1516,12 +1516,13 @@ LllllL.1.1.LllllL
 ENDMAP
 
 ###################################
-
+# XXX: Undiggable glass has been converted to grates.
 NAME:    lemuel_hall_of_pain
 TAGS:    pan
 MONS:    pandemonium lord, any demon
 MONS:    smoke demon / weight:1 brimstone fiend
-SHUFFLE: mx/nc
+SHUFFLE: xc
+KFEAT:   m = iron_grate
 SHUFFLE: O1/AB
 SUBST:   A=|, B=|
 KITEM:   O = demonic rune of Zot
@@ -1588,10 +1589,7 @@ ENDMAP
 
 NAME:   pan_surprise
 TAGS:   pan extra
-KMONS: 1 = executioner
-# Axe disabled, it's now Ignacio's gimmick.  If he fails to make it, you can
-# re-enable; otherwise, we'll axe the axe.
-#KITEM: 1 = executioner's axe
+KMONS:  1 = executioner
 # It may be a surprise for the executioner as well if the player has high
 # stealth -- an alarm trap would be found by most chars who dare Pan and thus
 # spoil the fun.
@@ -1683,30 +1681,151 @@ xxxx.........................---------------_..4.x
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-###################################
-
-# Here, the forces good have taken a foothold in the lands of evil, and are
-# ready to smite your rear.
-NAME:   pan_holy
-WEIGHT: 0
-TAGS:   pan
+### Holy Pan Level ############################################################
+#
+# The angels have gained a foothold in pandemonium.
+#
+# This level's main feature is a TSO fortress with a lot of loot. Smaller
+# features are a temple of Zin, a weird Ely pasture in a cave, and a river for
+# some reason. There's also a cave with a pearl dragon and phoenixes.
+#
+# This level has a lot of open space where it mostly is up to the RNG to place
+# monsters.
+#
+# Four exits are given, with one placed randomly and the others in a room safe
+# to teleport into.
+#
+# My opinion is that in the long term this concept would work better as a
+# portal vault (for pan, even).
+#
+NAME:   evilmike_holy_pan
+TAGS:   pan no_pool_fixup
 ORIENT: encompass
-KMONS:  1 = angel
-KMONS:  2 = cherub
-KMONS:  3 = cherub hd:25 name:seraph n_rpl n_spe col:lightmagenta \
-            tile:mons_seraph ; blessed great sword ego:flaming . fire dragon armour \
-            ego:positive_energy
-KMONS:  4 = ophan
-KMONS:  5 = daeva
-KMONS:  6 = pearl dragon
-KMONS:  7 = apis
-KMONS:  8 = shedu band
-# please add more types as they get usable
+NSUBST: . = > / .
+NSUBST: . = 2:6 / *:.
+ITEM:   w:5 any / potion of curing
+ITEM:   any / potion of heal wounds
+ITEM:   acquire any
+ITEM:   potion of cure mutation
+ITEM:   potion of restore abilities
+ITEM:   any
+NSUBST: i = 2=ghh / 3=ghhiii / *:i
+MONS:   angel
+MONS:   cherub
+MONS:   paladin
+MONS:   ophan
+MONS:   ophan
+MONS:   shedu band
+MONS:   daeva
+KMONS:  8 = phoenix
+KMONS:  9 = pearl dragon
+KMONS:  0 = apis
+KMONS:  A = apis
+KMONS:  B = daeva god:Zin
+KMONS:  Z = patrolling silver star
+KMONS:  S = patrolling seraph
+KFEAT:  _ = altar_the_shining_one
+KFEAT:  E = altar_elyvilon
+KFEAT:  Z = altar_zin
+KFEAT:  > = transit_pandemonium
 TILE:   c = wall_church
-: _G.set_random_mon_list("angel / cherub / ophan / daeva / pearl dragon / " ..
-:                        "apis / shedu / apis / shedu / angel")
+COLOUR: cGH = yellow
+TILE:   v = dngn_metal_wall_white
+COLOUR: v& = white
+# Needs a tile!
+# TILE:   GH = dngn_statue_golden
+FTILE:  _124SDcG|*' = floor_limestone
+FTILE:  "E0 = floor_grass
+COLOUR: "0 = green
+FTILE:  -ZBghi&v = floor_vault
+SUBST:  D& = +, '"- = ., H = G, C = c
+MARKER: v = lua:portal_desc { \
+                desc="silver wall", \
+                desc_long="This wall is made of pure silver." }
+MARKER: G = lua:portal_desc { \
+                desc="golden statue", \
+                desc_long="A solid gold statue of a saint." }
+: _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
+:                        "apis / paladin / apis / ophan / angel")
+# Do not place if you are with a holy god. It's just free loot in that case.
+veto {{
+    if you.god() == "The Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then
+        return true
+    else
+        return false
+    end
+}}
 MAP
-.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
+xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
+xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.>.>.>.+...Cxxxxxxxxxxx
+xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C7CCCC+CCCC7C.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
+xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C3C.C3C.+..Cxxxxxxxxxxx
+xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
+xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
+xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
+xCf7333....Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
+xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
+xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
+xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
+xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
+xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
+xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
+xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
+xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
+xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''4wcc.www..cc....xxxxxxxxxx
+xxxxxx....xxx...wwwwwxxwwww....cc......ccw''||||'||||''wcc......cc....xxxxxxxxxx
+xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+cccccccccSccccccccc+ccc..cc.....xxxxxxxxx
+xxxxx....xx....wwwwwwwwww..xx..cc..c'''ccwwwcccc'ccccwwwcc***c..cc.....xxxxxxxxx
+xxxx...........wwwxwwwwww.xxx..cc..c1'1cGw'2'cc1_1cc'2'wGc***c..cc......xxxxxxxx
+xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
+xxxx...xxx....wwwxxxwwww.xxx...cc..ccwwcGw''''c'''c''''wGcwwcc..cc.........xxxxx
+xxxxx..xxx...wwwwxxxwww.xxxx...cc..cc22ccw''''''G''''''wcc22cc..cc..........xxxx
+xxxxx...xxx..wwwxxxwww...xx....cc..cc''D'''''''''''''''''D''cc..cc..........xxxx
+xxxxx...xx...wwwwwwww..........cc.3cc''ccw'''''''''''''wcc''cc3.cc.....xx....xxx
+xxxx...xxx..wwwwwwww...xx......cc..cc''cGw'''''''''''''wGc''cc..cc....xxxx...xxx
+xxx...xxx..wwwwwww...xxxxxx....cc..cc''ccwwwwwwwwwwwwwwwcc''cc..cc....xxxx...xxx
+xxx........wwwwww...xxxxxxx....cc..cc''cccGcGcGcGcGcGcGccc''cc..cc...xxxx....xxx
+xxx.......wwwwww....xxxxxxxx...cc..cc''ccccccccccccccccccc''cc..cc.....x....xxxx
+xxx......wwwwwww...xxxxxxxxx...cc..cc'''''''''''''''''''''''cc..cc..........xxxx
+xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
+xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
+xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
+xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
+xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
+xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
+xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
+xwwwwww.....xxxx.........xx...ccc+.......3.............3.......+ccc.........xxxx
+xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
+xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
+xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
+xxxx..xx...vvv----v-----iv.v................................x..........xxxxxxxxx
+xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
+xxxxx.....vvi-----v-----iv........v.........6.......6......xxx.........xxxxxxxxx
+xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
+xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
+xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.8xx
+xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
+xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.88xxxx8.xxxx..xxx
+xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx8...xxxxxxx....xx
+xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
+xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxx8x
+xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
+xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
+xxxxxxxxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################

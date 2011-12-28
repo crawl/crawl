@@ -99,9 +99,7 @@ typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
                        std::string name, std::string tile, int excl_rad);
 
-int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans = false, actor *agent = NULL,
-                       bool affect_scryed = false);
+int apply_area_visible(cell_func cf, int power, actor *agent = NULL);
 
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
                                  int power);
@@ -111,10 +109,6 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
                                actor *agent = NULL);
 
 int apply_one_neighbouring_square(cell_func cf, int power, actor *agent = NULL);
-
-int apply_area_within_radius(cell_func cf,  const coord_def& where,
-                             int pow, int radius, int ctype,
-                             actor *agent = NULL);
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,

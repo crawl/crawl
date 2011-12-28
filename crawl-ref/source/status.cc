@@ -46,8 +46,8 @@ static duration_def duration_data[] =
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
     { DUR_DEFLECT_MISSILES, true,
       MAGENTA, "DMsl", "deflect missiles", "You deflect missiles." },
-    { DUR_DIVINE_STAMINA, false,
-      0, "", "divinely fortified", "You are divinely fortified." },
+    { DUR_DIVINE_STAMINA, true,
+      WHITE, "Vit", "vitalised", "You are divinely vitalised." },
     { DUR_DIVINE_VIGOUR, false,
       0, "", "divinely vigorous", "You are imbued with divine vigour." },
     { DUR_EXHAUSTED, false,
@@ -272,12 +272,12 @@ void fill_status_info(int status, status_info* inf)
     switch (status)
     {
     case DUR_CONTROL_TELEPORT:
-        if(!allow_control_teleport(true))
+        if (!allow_control_teleport(true))
             inf->light_colour = DARKGREY;
         break;
 
     case DUR_SWIFTNESS:
-        if(you.in_water())
+        if (you.in_water())
             inf->light_colour = DARKGREY;
         break;
 
@@ -485,6 +485,15 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Fball";
             inf->short_text   = "delayed fireball";
             inf->long_text    = "You have a stored fireball ready to release.";
+        }
+        break;
+
+    case STATUS_CONSTRICTED:
+        if (you.is_constricted())
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "Constr";
+            inf->short_text   = "constricted";
         }
         break;
 
@@ -725,14 +734,20 @@ static void _describe_rotting(status_info* inf)
     {
         inf->short_text = "rotting";
         inf->long_text = "Your flesh is rotting";
-        if (you.rotting > 15)
+        int rot = you.rotting;
+        if (you.species == SP_GHOUL)
+            rot += 1 + (1 << std::max(0, HS_SATIATED - you.hunger_state));
+        if (rot > 15)
             inf->long_text += " before your eyes";
-        else if (you.rotting > 8)
+        else if (rot > 8)
             inf->long_text += " away quickly";
-        else if (you.rotting > 4)
+        else if (rot > 4)
             inf->long_text += " badly";
         else if (you.species == SP_GHOUL)
-            inf->long_text += " faster than usual";
+            if (rot > 2)
+                inf->long_text += " faster than usual";
+            else
+                inf->long_text += " at the usual pace";
         inf->long_text += ".";
     }
 }
@@ -764,7 +779,7 @@ static void _describe_nausea(status_info* inf)
     inf->light_colour = BROWN;
     inf->light_text   = "Nausea";
     inf->short_text   = "nauseated";
-    inf->long_text    = (you.hunger_state <= HS_STARVING) ?
+    inf->long_text    = (you.hunger_state <= HS_NEAR_STARVING) ?
                 "You would have trouble eating anything." :
                 "You cannot eat right now.";
 }

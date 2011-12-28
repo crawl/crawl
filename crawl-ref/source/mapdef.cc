@@ -48,10 +48,8 @@
 #include "spl-book.h"
 #include "env.h"
 #include "tags.h"
-#ifdef USE_TILE
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
-#endif
 
 static const char *map_section_names[] = {
     "",
@@ -148,7 +146,6 @@ std::string mapdef_split_key_item(const std::string &s,
     return ("");
 }
 
-#ifdef USE_TILE
 int store_tilename_get_index(const std::string tilename)
 {
     if (tilename.empty())
@@ -167,7 +164,6 @@ int store_tilename_get_index(const std::string tilename)
     env.tile_names.push_back(tilename);
     return (i+1);
 }
-#endif
 
 ///////////////////////////////////////////////
 // level_range
@@ -560,7 +556,6 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 dgn_height_at(gc) = fheight;
             }
 
-#ifdef USE_TILE
             bool has_floor = false, has_rock = false;
             std::string name = (*overlay)(x, y).floortile;
             if (!name.empty())
@@ -621,7 +616,6 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                     env.tile_flv(gc).feat = feat + offset;
                 }
             }
-#endif
         }
 }
 
@@ -1336,7 +1330,6 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
         }
 }
 
-#ifdef USE_TILE
 void map_lines::overlay_tiles(tile_spec &spec)
 {
     if (!overlay.get())
@@ -1360,7 +1353,6 @@ void map_lines::overlay_tiles(tile_spec &spec)
         }
     }
 }
-#endif
 
 void map_lines::nsubst(nsubst_spec &spec)
 {
@@ -1864,7 +1856,6 @@ int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
     return (result);
 }
 
-#ifdef USE_TILE
 bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
@@ -1940,8 +1931,6 @@ std::string tile_spec::get_tile()
     }
     return (chosen);
 }
-
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 // map_lines::iterator
@@ -3690,19 +3679,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         std::string tile = strip_tag_prefix(mon_str, "tile:");
         if (!tile.empty())
         {
-#ifdef USE_TILE
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
-#endif
             // Store name along with the tile.
             mspec.props["monster_tile_name"].get_string() = tile;
-#ifdef USE_TILE
             mspec.props["monster_tile"] = short(index);
-#endif
         }
 
         std::string name = strip_tag_prefix(mon_str, "name:");
@@ -3736,14 +3721,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             // Reasoning for setting more than one flag: suffixes and
             // adjectives need NAME_DESCRIPTOR to get proper grammar,
             // and definite names do nothing with the description unless
-            // NAME_DESCRIPTOR is also set.  Without this, you end up
-            // with bloated vault description lines akin to:
-            // "name:blah_blah name_replace name_descriptor
-            // name_definite".
+            // NAME_DESCRIPTOR is also set.
+            const uint64_t name_flags = mspec.extra_monster_flags & MF_NAME_MASK;
             const bool need_name_desc =
-                (mspec.extra_monster_flags & MF_NAME_SUFFIX)
-                    || (mspec.extra_monster_flags & MF_NAME_ADJECTIVE)
-                    || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
+                name_flags == MF_NAME_SUFFIX
+                   || name_flags == MF_NAME_ADJECTIVE
+                   || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
 
             if (strip_tag(mon_str, "name_descriptor")
                 || strip_tag(mon_str, "n_des")
@@ -3762,6 +3745,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 || strip_tag(mon_str, "n_zom"))
             {
                 mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
+            }
+            if (strip_tag(mon_str, "name_nocorpse")
+                || strip_tag(mon_str, "n_noc"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_NOCORPSE;
             }
         }
 
@@ -5179,8 +5167,8 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
         return ;
     }
 
-    item_def parsed = find_item_type(OBJ_UNASSIGNED, name);
-    if (parsed.sub_type != OBJ_RANDOM)
+    item_kind parsed = item_kind_by_name(name);
+    if (parsed.base_type != OBJ_UNASSIGNED)
     {
         spec.base_type = parsed.base_type;
         spec.sub_type  = parsed.sub_type;
@@ -5571,7 +5559,7 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
-    if (s.find("shop") != std::string::npos
+    if (s.find("shop") != std::string::npos && s != "abandoned_shop"
         || s.find("store") != std::string::npos)
     {
         list.push_back(parse_shop(s, weight));

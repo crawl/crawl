@@ -60,7 +60,7 @@ Nemelex is a strange and unpredictable trickster God, whose powers can be invoke
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
+Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons, though more pious worshippers must find and destroy unholy or evil weapons to gain piety in this way. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
 %%%%
 Lugonu
 
@@ -84,11 +84,11 @@ While it seems inconceivable that the divine could be shackled, Ashenzari is jus
 %%%%
 Jiyva
 
-Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
+Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items, and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
 %%%%
 Zin powers
 
-Zin grants followers the ability to preach to the unenlightened masses, and powers to vitalise their bodies and gain divine stamina, protecting them from various afflictions. Later, followers gain the ability to imprison their foes temporarily. Followers can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutation, and Zin may even occasionally directly intervene to save a follower's life.
+Zin grants followers the ability to preach to the unenlightened masses, and powers to vitalise their bodies and gain divine stamina, protecting them from various afflictions as well as giving sustenance to the hungry. Later, followers gain the ability to imprison their foes temporarily. Followers can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutation, and Zin may even occasionally directly intervene to save a follower's life.
 %%%%
 The Shining One powers
 
@@ -152,7 +152,7 @@ Followers of Cheibriados move more slowly as they gain favour, and are rewarded 
 %%%%
 Jiyva powers
 
-Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange followers' attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
+Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon; rearrange followers' attributes based on their skills, armour, and burden; and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
 %%%%
 Ashenzari powers
 

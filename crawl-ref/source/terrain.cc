@@ -37,9 +37,7 @@
 #include "species.h"
 #include "spl-transloc.h"
 #include "env.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "travel.h"
 #include "transform.h"
 #include "traps.h"
@@ -953,8 +951,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
-    env.tile_flv(dst) = env.tile_flv(src);
 #endif
+    env.tile_flv(dst) = env.tile_flv(src);
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
@@ -1104,9 +1102,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     set_terrain_changed(pos);
 
     // Deal with doors being created by changing features.
-#ifdef USE_TILE
     tile_init_flavour(pos);
-#endif
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
@@ -1383,7 +1379,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     return (true);
 }
 
-bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
+bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
                         bool announce)
 {
     ASSERT(in_bounds(src));
@@ -1391,10 +1387,10 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     const dungeon_feature_type orig_feat = grd(src);
     const actor* orig_actor = actor_at(src);
 
-    if (in_bounds(prefered_dest)
-        && _ok_dest_cell(orig_actor, orig_feat, prefered_dest))
+    if (in_bounds(preferred_dest)
+        && _ok_dest_cell(orig_actor, orig_feat, preferred_dest))
     {
-        ASSERT(prefered_dest != src);
+        ASSERT(preferred_dest != src);
     }
     else
     {
@@ -1404,16 +1400,16 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
             if (_ok_dest_cell(orig_actor, orig_feat, *ai)
                 && one_chance_in(++squares))
             {
-                prefered_dest = *ai;
+                preferred_dest = *ai;
             }
         }
     }
 
-    if (!in_bounds(prefered_dest))
+    if (!in_bounds(preferred_dest))
         return (false);
 
-    ASSERT(prefered_dest != src);
-    return swap_features(src, prefered_dest, false, announce);
+    ASSERT(preferred_dest != src);
+    return swap_features(src, preferred_dest, false, announce);
 }
 
 // Returns true if we manage to scramble free.
@@ -1651,7 +1647,7 @@ std::string stair_climb_verb(dungeon_feature_type feat)
         return "pass through";
 }
 
-const char *dngn_feature_names[] =
+static const char *dngn_feature_names[] =
 {
 "unseen", "closed_door", "detected_secret_door", "secret_door",
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",

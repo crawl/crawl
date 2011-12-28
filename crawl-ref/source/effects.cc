@@ -1084,7 +1084,7 @@ void yell(bool force)
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
 
-    noisy(10, you.pos());
+    noisy(noise_level, you.pos());
 }
 
 inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
@@ -2252,14 +2252,18 @@ void handle_time()
                > (int)exp_needed(you.experience_level + 1))
         {
             you.attribute[ATTR_EVOL_XP] = 0;
-            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
-                   false, false, false, false, false, true);
+            mpr("You feel a genetic drift.");
+            bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                               false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
             {
-                delete_mutation(MUT_EVOLUTION, false);
+                evol |= delete_mutation(MUT_EVOLUTION, false);
             }
+            // interrupt the player only if something actually happened
+            if (evol)
+                more();
         }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
@@ -2797,9 +2801,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 // 8-connectivity.  Could change the expansion pattern by using a
 // priority queue for sequencing (priority = distance from origin under
 // some metric).
-int spawn_corpse_mushrooms(item_def &corpse,
+int spawn_corpse_mushrooms(item_def& corpse,
                            int target_count,
-                           int & seen_targets,
+                           int& seen_targets,
                            beh_type toadstool_behavior,
                            bool distance_as_time)
 

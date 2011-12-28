@@ -1384,7 +1384,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
 
         text += letter;
         text += " - ";
-        switch(weapons[i].first)
+        switch (weapons[i].first)
         {
         case WPN_UNARMED:
             text += "claws";

@@ -7,8 +7,6 @@
 #ifndef MONUTIL_H
 #define MONUTIL_H
 
-#include "mon-util.h"
-
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
@@ -35,9 +33,9 @@ struct mon_attack_def
 
 // Amount of mons->speed_increment used by different actions; defaults
 // to 10.
+#define DEFAULT_ENERGY {10, 10, 10, 10, 10, 10, 10, 100}
 struct mon_energy_usage
 {
-public:
     int8_t move;
     int8_t swim;
     int8_t attack;
@@ -50,17 +48,9 @@ public:
     // to 100%
     int8_t pickup_percent;
 
-public:
-    mon_energy_usage(int mv = 10, int sw = 10, int att = 10, int miss = 10,
-                     int spl = 10, int spc = 10, int itm = 10, int pick = 100)
-        : move(mv), swim(sw), attack(att), missile(miss),
-          spell(spl), special(spc), item(itm), pickup_percent(pick)
-    {
-    }
-
     static mon_energy_usage attack_cost(int cost, int sw = 10)
     {
-        mon_energy_usage me;
+        mon_energy_usage me = DEFAULT_ENERGY;
         me.attack = cost;
         me.swim = sw;
         return me;
@@ -68,38 +58,41 @@ public:
 
     static mon_energy_usage missile_cost(int cost)
     {
-        mon_energy_usage me;
+        mon_energy_usage me = DEFAULT_ENERGY;
         me.missile = cost;
         return me;
     }
 
     static mon_energy_usage swim_cost (int cost)
     {
-        mon_energy_usage me;
+        mon_energy_usage me = DEFAULT_ENERGY;
         me.swim = cost;
         return me;
     }
 
     static mon_energy_usage move_cost(int mv, int sw = 10)
     {
-        const mon_energy_usage me(mv, sw);
+        mon_energy_usage me = DEFAULT_ENERGY;
+        me.move = mv;
+        me.swim = sw;
         return me;
     }
 
     mon_energy_usage operator | (const mon_energy_usage &o) const
     {
-        return mon_energy_usage(combine(move, o.move),
-                                 combine(swim, o.swim),
-                                 combine(attack, o.attack),
-                                 combine(missile, o.missile),
-                                 combine(spell, o.spell),
-                                 combine(special, o.special),
-                                 combine(item, o.item),
-                                 combine(pickup_percent, o.pickup_percent,
-                                         100));
+        mon_energy_usage me;
+        me.move = combine(move, o.move);
+        me.swim = combine(swim, o.swim);
+        me.attack = combine(attack, o.attack);
+        me.missile = combine(missile, o.missile);
+        me.spell = combine(spell, o.spell);
+        me.special = combine(special, o.special);
+        me.item = combine(item, o.item);
+        me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
+        return me;
     }
 private:
-    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const
+    static int8_t combine(int8_t a, int8_t b, int8_t def = 10)
     {
         return (b != def? b : a);
     }
@@ -293,6 +286,7 @@ int mons_colour(const monster* mon);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 
+bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);
 
 void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
@@ -365,7 +359,7 @@ bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
 
-bool herd_monster(const monster * mon);
+bool herd_monster(const monster* mon);
 
 int cheibriados_monster_player_speed_delta(const monster* mon);
 bool cheibriados_thinks_mons_is_fast(const monster* mon);

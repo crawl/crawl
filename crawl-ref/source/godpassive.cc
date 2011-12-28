@@ -12,6 +12,7 @@
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
+#include "goditem.h"
 #include "godprayer.h"
 #include "items.h"
 #include "itemname.h"
@@ -395,69 +396,91 @@ static bool _jewel_auto_id(const item_def& item)
     }
 }
 
-bool ash_id_item(item_def& item, bool silent)
+bool god_id_item(item_def& item, bool silent)
 {
-    if (you.religion != GOD_ASHENZARI)
-        return false;
-
-    // Don't identify runes or the orb, since this has no gameplay purpose
-    // and might mess up other things.
-    if (item_is_rune(item) || item_is_orb(item))
-        return false;
-
-    if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
-        item.props["needs_autopickup"] = true;
-
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
-    iflags_t ided = ISFLAG_KNOW_CURSE;
+    iflags_t ided = 0;
 
-    if (item.base_type == OBJ_WEAPONS
-        || item.base_type == OBJ_ARMOUR
-        || item.base_type == OBJ_STAVES)
+    if (you.religion == GOD_ASHENZARI)
     {
-        ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
-    }
+        // Don't identify runes or the orb, since this has no gameplay purpose
+        // and might mess up other things.
+        if (item_is_rune(item) || item_is_orb(item))
+            return false;
 
-    if (_jewel_auto_id(item))
-    {
-        ided |= ISFLAG_EQ_JEWELLERY_MASK;
-    }
+        ided = ISFLAG_KNOW_CURSE;
 
-    if (item.base_type == OBJ_ARMOUR
-        && you.piety >= piety_breakpoint(0)
-        && _is_slot_cursed(get_armour_slot(item)))
-    {
-        // Armour would id the pluses when worn, unlike weapons.
-        ided |= ISFLAG_KNOW_PLUSES;
-    }
+        if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
+            item.props["needs_autopickup"] = true;
 
-    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
-        && you.piety >= piety_breakpoint(1)
-        && _is_slot_cursed(EQ_WEAPON))
-    {
-        ided |= ISFLAG_KNOW_PLUSES;
-    }
+        if (item.base_type == OBJ_WEAPONS
+            || item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_STAVES)
+        {
+            ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
+        }
 
-    if (you.species != SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
-        && you.piety >= piety_breakpoint(1)
-        && (jewellery_is_amulet(item) ?
-             _is_slot_cursed(EQ_AMULET) :
-             (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
-         ))
-    {
-        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+        if (_jewel_auto_id(item))
+        {
+            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+        }
+
+        if (item.base_type == OBJ_ARMOUR
+            && you.piety >= piety_breakpoint(0)
+            && _is_slot_cursed(get_armour_slot(item)))
+        {
+            // Armour would id the pluses when worn, unlike weapons.
+            ided |= ISFLAG_KNOW_PLUSES;
+        }
+
+        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+            && you.piety >= piety_breakpoint(1)
+            && _is_slot_cursed(EQ_WEAPON))
+        {
+            ided |= ISFLAG_KNOW_PLUSES;
+        }
+
+        if (you.species != SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
+            && you.piety >= piety_breakpoint(1)
+            && (jewellery_is_amulet(item) ?
+                 _is_slot_cursed(EQ_AMULET) :
+                 (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
+             ))
+        {
+            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+        }
+        else if (you.species == SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
+            && you.piety >= piety_breakpoint(1)
+            && (jewellery_is_amulet(item) ?
+                 _is_slot_cursed(EQ_AMULET) :
+                 (_is_slot_cursed(EQ_RING_ONE) && _is_slot_cursed(EQ_RING_TWO) &&
+                  _is_slot_cursed(EQ_RING_THREE) && _is_slot_cursed(EQ_RING_FOUR) &&
+                  _is_slot_cursed(EQ_RING_FIVE) && _is_slot_cursed(EQ_RING_SIX) &&
+                  _is_slot_cursed(EQ_RING_SEVEN) && _is_slot_cursed(EQ_RING_EIGHT))
+             ))
+        {
+            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+        }
     }
-    else if (you.species == SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
-        && you.piety >= piety_breakpoint(1)
-        && (jewellery_is_amulet(item) ?
-             _is_slot_cursed(EQ_AMULET) :
-             (_is_slot_cursed(EQ_RING_ONE) && _is_slot_cursed(EQ_RING_TWO) &&
-              _is_slot_cursed(EQ_RING_THREE) && _is_slot_cursed(EQ_RING_FOUR) &&
-              _is_slot_cursed(EQ_RING_FIVE) && _is_slot_cursed(EQ_RING_SIX) &&
-              _is_slot_cursed(EQ_RING_SEVEN) && _is_slot_cursed(EQ_RING_EIGHT))
-         ))
+    else if (you.religion == GOD_ELYVILON)
     {
-        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+        if (item.base_type == OBJ_STAVES
+            && (is_evil_item(item) || is_unholy_item(item)))
+        {
+            // staff of death, evil rods
+            ided |= ISFLAG_KNOW_TYPE;
+        }
+
+        // Don't use is_{evil,unholy}_item() for weapons -- on demonic weapons
+        // the brand is irrelevant, unrands may have an innocuous brand; let's
+        // still show evil brands on unholy weapons for consistency even if this
+        // gives more information than absolutely needed.
+        brand_type brand = get_weapon_brand(item);
+        if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
+            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING)
+        {
+            ided |= ISFLAG_KNOW_TYPE;
+        }
     }
 
     if (ided & ~old_ided)
@@ -485,16 +508,16 @@ bool ash_id_item(item_def& item, bool silent)
     return false;
 }
 
-void ash_id_inventory()
+void god_id_inventory()
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (you.religion != GOD_ASHENZARI && you.religion != GOD_ELYVILON)
         return;
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
         if (item.defined())
-            ash_id_item(item, false);
+            god_id_item(item, false);
     }
 }
 
@@ -626,7 +649,7 @@ std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         ASSERT(wpn);
 
         // Boost weapon skill.
-        if(wpn->base_type == OBJ_WEAPONS)
+        if (wpn->base_type == OBJ_WEAPONS)
         {
             boost[is_range_weapon(*wpn) ? range_skill(*wpn)
                                         : weapon_skill(*wpn)] = bondage;

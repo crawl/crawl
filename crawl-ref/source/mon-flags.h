@@ -210,5 +210,5 @@ const uint64_t MF_NAME_ZOMBIE         = BIT(32); // mname replaces zombies/skele
                                       // only for already zombified monsters
 const uint64_t MF_SENSED              = BIT(33); // Player has been warned
                                       // about this monster being nearby.
-
+const uint64_t MF_NAME_NOCORPSE       = BIT(34); // mname should not be used for corpses
 #endif

@@ -129,6 +129,15 @@ function (exports, $, key_conversion, chat, comm) {
         lobby(layer == "lobby");
     }
 
+    function register_layer(name)
+    {
+        if (layers.indexOf(name) == -1)
+            layers.push(name);
+    }
+
+    exports.set_layer = set_layer;
+    exports.register_layer = register_layer;
+
     function do_layout()
     {
         $("#loader").height($(window).height());
@@ -153,6 +162,10 @@ function (exports, $, key_conversion, chat, comm) {
                                  so we handle it in keydown */
             (e.which == 9))   /* Tab gives a keypress in Opera even when it is
                                  suppressed in keydown */
+            return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keypress"))
             return;
 
         e.preventDefault();
@@ -186,6 +199,22 @@ function (exports, $, key_conversion, chat, comm) {
         socket.send(s);
     }
 
+    function retrigger_event(ev, new_type)
+    {
+        var new_ev = $.extend({}, ev);
+        new_ev.type = new_type;
+        $(new_ev.target).trigger(new_ev);
+        if (new_ev.isDefaultPrevented())
+            ev.preventDefault();
+        if (new_ev.isPropagationStopped())
+        {
+            ev.stopImmediatePropagation();
+            return false;
+        }
+        else
+            return true;
+    }
+
     function handle_keydown(e)
     {
         if (current_layer == "lobby")
@@ -193,11 +222,15 @@ function (exports, $, key_conversion, chat, comm) {
             if (e.which == 27)
             {
                 e.preventDefault();
-                $(".floating_dialog").hide();
+                hide_dialog();
             }
             return;
         }
         if ($(document.activeElement).hasClass("text")) return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keydown"))
+            return;
 
         if (e.ctrlKey && !e.shiftKey && !e.altKey)
         {
@@ -224,7 +257,7 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (!e.ctrlKey && !e.shiftKey && e.altKey)
         {
-            if (e.which == 18) return;
+            if (e.which < 32) return;
 
             e.preventDefault();
             send_bytes([27, e.which]);
@@ -349,13 +382,32 @@ function (exports, $, key_conversion, chat, comm) {
     function show_dialog(id)
     {
         $(".floating_dialog").hide();
-        $(id).fadeIn(100, function () {
-            $(id).focus();
+        var elem = $(id);
+        elem.fadeIn(100, function () {
+            elem.focus();
         });
-        var w = $(id).width();
-        var ww = $(window).width();
-        $(id).offset({ left: ww / 2 - w / 2, top: 50 });
+        center_element(elem);
+        $("#overlay").show();
     }
+    function center_element(elem)
+    {
+        var left = $(window).width() / 2 - elem.outerWidth() / 2;
+        if (left < 0) left = 0;
+        var top = $(window).height() / 2 - elem.outerHeight() / 2;
+        if (top < 0) top = 0;
+        if (top > 50) top = 50;
+        var offset = elem.offset();
+        if (offset.left != left || offset.top != top)
+            elem.offset({ left: left, top: top });
+    }
+    function hide_dialog()
+    {
+        $(".floating_dialog").blur().hide();
+        $("#overlay").hide();
+    }
+    exports.show_dialog = show_dialog;
+    exports.hide_dialog = hide_dialog;
+    exports.center_element = center_element;
 
     function start_register()
     {
@@ -365,7 +417,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function cancel_register()
     {
-        $("#register").hide();
+        hide_dialog();
     }
 
     function register()
@@ -427,7 +479,7 @@ function (exports, $, key_conversion, chat, comm) {
             game_id: editing_rc,
             contents: $("#rc_file_contents").val()
         });
-        $("#rc_edit").hide();
+        hide_dialog();
         return false;
     }
 
@@ -470,6 +522,8 @@ function (exports, $, key_conversion, chat, comm) {
         location.hash = "#lobby";
 
         set_layer("lobby");
+
+        hide_dialog();
 
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
@@ -520,6 +574,7 @@ function (exports, $, key_conversion, chat, comm) {
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
+        entry.find(".idle_time").data("time", data.idle_time);
         entry.find(".idle_time").data("sort", "" + data.idle_time);
         set("spectator_count", data.spectator_count);
         if (entry.find(".milestone").text() !== data.milestone)
@@ -533,6 +588,23 @@ function (exports, $, key_conversion, chat, comm) {
         if (single)
             lobby_complete();
     }
+
+    var lobby_idle_timer = setInterval(update_lobby_idle_times, 1000);
+    function update_lobby_idle_times()
+    {
+        $("#player_list .idle_time").each(function () {
+            var $this = $(this);
+            var time = $this.data("time");
+            if (time)
+            {
+                time++;
+                $this.html(format_idle_time(time));
+                $this.data("time", time);
+                $this.data("sort", "" + time);
+            }
+        });
+    }
+
     function lobby_remove(data)
     {
         $("#game-" + data.id).remove();
@@ -622,18 +694,18 @@ function (exports, $, key_conversion, chat, comm) {
     function force_terminate_no()
     {
         send_message("force_terminate", { answer: false });
-        $("#force_terminate").hide().blur();
+        hide_dialog();
     }
     function force_terminate_yes()
     {
         send_message("force_terminate", { answer: true });
-        $("#force_terminate").hide().blur();
+        hide_dialog();
     }
     function stale_processes_keydown(ev)
     {
         ev.preventDefault();
         send_message("stop_stale_process_purge");
-        $("#stale_processes_message").hide().blur();
+        hide_dialog();
     }
     function force_terminate_keydown(ev)
     {
@@ -749,6 +821,7 @@ function (exports, $, key_conversion, chat, comm) {
     window.log = log;
     window.set_layer = set_layer;
     window.assert = function () {};
+    window.abs = function (x) { if (x < 0) return -x; else return x; }
 
     comm.register_immediate_handlers({
         "ping": pong,

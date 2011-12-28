@@ -62,6 +62,9 @@ enum tag_minor_version
     TAG_MINOR_TEMPORARY_CLOUDS,    // Clouds are now marked if they're temporary or not.
                                    // XXX: When clearing, check dat/dlua/lm_fog.lua
     TAG_MINOR_PHOENIX_ATTITUDE,    // Store the attitudes of dead phoenixes
+    TAG_MINOR_LESS_TILE_DATA,      // mcache and tile_bk is not saved, but more stuff in map_knowledge
+    TAG_MINOR_CONSTRICTION,        // Constriction available
+    TAG_MINOR_ACTION_COUNTS,       // Count actions made by type.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

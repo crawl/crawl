@@ -372,7 +372,7 @@ int mons_standard_level(int mcls)
 
     case MONS_GIANT_COCKROACH:
     case MONS_OOZE:
-    case MONS_SMALL_SNAKE:
+    case MONS_BALL_PYTHON:
         return 2;
 
     case MONS_BAT:
@@ -389,7 +389,7 @@ int mons_standard_level(int mcls)
         return 5;
 
     case MONS_WORM:
-    case MONS_SNAKE:
+    case MONS_ADDER:
     case MONS_QUOKKA:
     case MONS_GNOLL_SHAMAN:
         return 6;
@@ -651,7 +651,7 @@ int mons_standard_rare(int mcls)
 
     case MONS_CENTAUR_WARRIOR:
     case MONS_WORKER_ANT:
-    case MONS_SNAKE:
+    case MONS_ADDER:
         return 80;
 
     case MONS_MERFOLK:
@@ -765,7 +765,7 @@ int mons_standard_rare(int mcls)
     case MONS_NECROPHAGE:
     case MONS_QUASIT:
     case MONS_SKELETAL_WARRIOR:
-    case MONS_SMALL_SNAKE:
+    case MONS_BALL_PYTHON:
     case MONS_SOUL_EATER:
     case MONS_SPINY_WORM:
     case MONS_VAMPIRE:
@@ -1181,7 +1181,7 @@ int mons_lair_level(int mcls)
     case MONS_GIANT_MITE:
     case MONS_GREEN_RAT:
     case MONS_SCORPION:
-    case MONS_SNAKE:
+    case MONS_ADDER:
         mlev += 2;
         break;
 
@@ -1267,7 +1267,7 @@ int mons_lair_rare(int mcls)
         return 90;
 
     case MONS_PLANT:
-    case MONS_SNAKE:
+    case MONS_ADDER:
         return 80;
 
     case MONS_SPINY_FROG:
@@ -1399,7 +1399,7 @@ int mons_swamp_level(int mcls)
     case MONS_FUNGUS:
     case MONS_NECROPHAGE:
     case MONS_PLANT:
-    case MONS_SNAKE:
+    case MONS_ADDER:
     case MONS_BUTTERFLY:
     case MONS_CROCODILE:
     case MONS_VAMPIRE_MOSQUITO:
@@ -1469,7 +1469,7 @@ int mons_swamp_rare(int mcls)
     case MONS_SLIME_CREATURE:
         return 54;
 
-    case MONS_SNAKE:
+    case MONS_ADDER:
         return 52;
 
     case MONS_INSUBSTANTIAL_WISP:
@@ -1617,8 +1617,8 @@ int mons_pitsnake_level(int mcls)
 
     switch (mcls)
     {
-    case MONS_SMALL_SNAKE:
-    case MONS_SNAKE:
+    case MONS_BALL_PYTHON:
+    case MONS_ADDER:
         mlev++;
         break;
 
@@ -1653,7 +1653,7 @@ int mons_pitsnake_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_SNAKE:
+    case MONS_ADDER:
     case MONS_WATER_MOCCASIN:
         return 99;
 
@@ -1672,7 +1672,7 @@ int mons_pitsnake_rare(int mcls)
 
     case MONS_GREATER_NAGA:
     case MONS_GUARDIAN_SERPENT:
-    case MONS_SMALL_SNAKE:
+    case MONS_BALL_PYTHON:
         return 15;
 
     default:
@@ -2256,6 +2256,7 @@ int mons_hallzot_level(int mcls)
         mlev += 3;
         break;
     case MONS_MOTH_OF_WRATH:
+    case MONS_SUBTRACTOR_SNAKE:
         mlev += 2;
         break;
     case MONS_ORB_OF_FIRE:
@@ -2292,6 +2293,7 @@ int mons_hallzot_rare(int mcls)
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:
     case MONS_CURSE_TOE:
+    case MONS_SUBTRACTOR_SNAKE:
         return 20;
 
     case MONS_MOTTLED_DRACONIAN:
@@ -3029,10 +3031,10 @@ int mons_sewer_rare(int mcls)
     case MONS_GIANT_NEWT:
         return 100;
 
-    case MONS_SMALL_SNAKE:
+    case MONS_BALL_PYTHON:
     case MONS_OOZE:
     case MONS_WORM:
-    case MONS_SNAKE:
+    case MONS_ADDER:
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_MITE:
     case MONS_GIANT_GECKO:

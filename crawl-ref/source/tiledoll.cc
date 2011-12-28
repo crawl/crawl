@@ -277,7 +277,7 @@ void fill_doll_equipment(dolls_data &result)
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.equip[EQ_WEAPON];
+        const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
         {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
@@ -434,9 +434,6 @@ void save_doll_file(writer &dollf)
     char fbuf[80];
     tilep_print_parts(fbuf, result);
     dollf.write(fbuf, strlen(fbuf));
-
-    if (you.attribute[ATTR_HELD] > 0)
-        dollf.write("net\n", 4);
 }
 
 #ifdef USE_TILE_LOCAL

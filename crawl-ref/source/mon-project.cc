@@ -54,9 +54,8 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                 GOD_NO_GOD), true, true);
     if (mind == -1)
     {
-        mpr("Failed to spawn projectile.", MSGCH_WARN);
-        /*canned_msg(MSG_NOTHING_HAPPENS);*/
-        return SPRET_SUCCESS;
+        mpr("Failed to spawn projectile.", MSGCH_ERROR);
+        return SPRET_ABORT;
     }
 
     monster& mon = menv[mind];

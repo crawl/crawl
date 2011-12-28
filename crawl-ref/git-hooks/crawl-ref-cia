@@ -177,6 +177,7 @@ $user =~ s/hyperelliptical/elliptic/;
 $user =~ s/flodiebold/edlothiol/;
 $user =~ s/chriscampbell89/MarvinPA/;
 $user =~ s/naesten/SamB/;
+$user =~ s/neil/|amethyst/;
 
 # Other regular contributorss
 $user =~ s/homelesspete/Twinge/;
@@ -186,7 +187,6 @@ $user =~ s/akbecker/GreatZebu/;
 $user =~ s/pete/mumra/;
 $user =~ s/bstriegs/Wensley/;
 $user =~ s/lothar.dierkes/ldierk/;
-$user =~ s/neil/|amethyst/;
 
 $rev = substr($commit, 0, 12);
 

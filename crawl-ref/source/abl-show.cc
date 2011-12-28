@@ -215,7 +215,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING_OTHERS, ABIL_ELYVILON_PURIFICATION,
+    { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_NON_ABILITY,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
@@ -272,7 +272,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_HELLFIRE, "Hellfire", 0, 250, 200, 0, 0, ABFLAG_NONE},
+    { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
     // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
@@ -424,7 +424,7 @@ static const ability_def Ability_List[] =
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, 0, ABFLAG_NONE},
     { ABIL_CHEIBRIADOS_DISTORTION, "Temporal Distortion",
-      4, 0, 100, 3, 0, ABFLAG_INSTANT},
+      4, 0, 200, 3, 0, ABFLAG_INSTANT},
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, 0, ABFLAG_NONE},
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, 0, ABFLAG_NONE},
@@ -529,7 +529,7 @@ std::string print_abilities()
 static monster_type _monster_for_ability (const ability_def& abil)
 {
     monster_type mtyp = MONS_PROGRAM_BUG;
-    switch(abil.ability)
+    switch (abil.ability)
     {
         case ABIL_MAKE_PLANT:         mtyp = MONS_PLANT;         break;
         case ABIL_MAKE_FUNGUS:        mtyp = MONS_FUNGUS;        break;
@@ -611,7 +611,7 @@ static int _zp_cost(const ability_def& abil)
     int scale10 = 0;        // number of times to scale up by 10%
     int scale20 = 0;        // number of times to scale up by 20%
     int num;
-    switch(abil.ability)
+    switch (abil.ability)
     {
         default:
             return abil.zp_cost;
@@ -935,6 +935,9 @@ static talent _get_talent(ability_type ability, bool check_confused)
     ASSERT(ability != ABIL_NON_ABILITY);
 
     talent result;
+    // Placeholder handling, part 1: The ability we have might be a
+    // placeholder, so convert it into its corresponding ability before
+    // doing anything else, so that we'll handle its flags properly.
     result.which = _fixup_ability(ability);
 
     const ability_def &abil = _get_ability_def(result.which);
@@ -958,8 +961,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         }
     }
 
-    // Look through the table to see if there's a preference, else
-    // find a new empty slot for this ability. -- bwr
+    // Look through the table to see if there's a preference, else find
+    // a new empty slot for this ability. - bwr
     const int index = _find_ability_slot(abil);
     if (index != -1)
         result.hotkey = index_to_letter(index);
@@ -1159,9 +1162,13 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 160 - you.piety;      // starts at 60%
         break;
 
-    case ABIL_YRED_INJURY_MIRROR:
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
+        invoc = true;
+        break;
+
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
+    case ABIL_YRED_INJURY_MIRROR:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -1546,7 +1553,7 @@ static bool _check_ability_possible(const ability_def& abil,
         if (item_blocks_teleport(false, false))
         {
             mpr("You cannot teleport right now.");
-            return(false);
+            return (false);
         }
         return (true);
 
@@ -1703,6 +1710,10 @@ static bool _activate_talent(const talent& tal)
     {
         practise(EX_USED_ABIL, abil.ability);
         _pay_ability_costs(abil, zpcost);
+        if (tal.is_invocation)
+            count_action(CACT_INVOKE, abil.ability);
+        else if (abil_skill(abil.ability) == SK_EVOCATIONS)
+            count_action(CACT_EVOKE, EVOC_ABIL);
     }
 
     return (success);
@@ -1759,7 +1770,7 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return (false);
         }
-        for(adjacent_iterator ai(abild.target); ai; ++ai)
+        for (adjacent_iterator ai(abild.target); ai; ++ai)
         {
             place_monster(mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai,
                           you.pet_target), true);
@@ -1815,7 +1826,7 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return (false);
         }
-        for(adjacent_iterator ai(abild.target); ai; ++ai)
+        for (adjacent_iterator ai(abild.target); ai; ++ai)
         {
             place_monster(mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0,
                           *ai, you.pet_target), true);
@@ -1898,7 +1909,7 @@ static bool _do_ability(const ability_def& abil)
         bool did_restore = restore_stat(STAT_ALL, 0, false);
 
         const int oldhpmax = you.hp_max;
-        unrot_hp(100);
+        unrot_hp(9999);
         if (you.hp_max > oldhpmax)
             did_restore = true;
 
@@ -2132,8 +2143,8 @@ static bool _do_ability(const ability_def& abil)
 
     // DEMONIC POWERS:
     case ABIL_HELLFIRE:
-        if (your_spells(SPELL_HELLFIRE_BURST,
-                        you.experience_level * 5, false) == SPRET_ABORT)
+        if (your_spells(SPELL_HELLFIRE,
+                        you.experience_level * 10, false) == SPRET_ABORT)
             return (false);
         break;
 
@@ -3037,7 +3048,7 @@ std::vector<talent> your_talents(bool check_confused)
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
     else if (player_mutation_level(MUT_SPIT_POISON)
-             || player_mutation_level(MUT_BREATHE_POISON))
+             || you.species == SP_NAGA)
     {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
@@ -3089,6 +3100,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_FLY, check_confused);
     }
     else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
+             // Liches' bone wings and statues' stone wings cannot fly.
              && !form_changed_physiology())
     {
         ASSERT(player_genus(GENPC_DRACONIAN));
@@ -3113,21 +3125,9 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    if (you.religion == GOD_TROG && !silenced(you.pos()))
-        _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.transfer_skill_points > 0)
-        _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
-
-    // Gods take abilities away until penance completed. -- bwr
-    // God abilities generally don't work while silenced (they require
-    // invoking the god), but Nemelex is an exception.
-    if (!player_under_penance() && (!silenced(you.pos())
-                                    || you.religion == GOD_NEMELEX_XOBEH))
-    {
-        std::vector<ability_type> abilities = get_god_abilities();
-        for (unsigned int i = 0; i < abilities.size(); ++i)
-            _add_talent(talents, abilities[i], check_confused);
-    }
+    std::vector<ability_type> abilities = get_god_abilities();
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+        _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced(you.pos()))
@@ -3282,6 +3282,11 @@ void set_god_ability_slots()
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
+    if (you.religion == GOD_ELYVILON)
+    {
+        _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                                'a' + num++);
+    }
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -3293,10 +3298,8 @@ void set_god_ability_slots()
             if (you.religion == GOD_ELYVILON)
             {
                 if (god_abilities[you.religion][i]
-                        == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
+                        == ABIL_ELYVILON_LESSER_HEALING_SELF)
                 {
-                    _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_SELF,
-                                            'a' + num++);
                     _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
                 }
                 else if (god_abilities[you.religion][i]
@@ -3324,7 +3327,12 @@ void set_god_ability_slots()
 static int _find_ability_slot(const ability_def &abil)
 {
     for (int slot = 0; slot < 52; slot++)
-        if (you.ability_letter_table[slot] == abil.ability)
+        // Placeholder handling, part 2: The ability we have might
+        // correspond to a placeholder, in which case the ability letter
+        // table will contain that placeholder.  Convert the latter to
+        // its corresponding ability before comparing the two, so that
+        // we'll find the placeholder's index properly.
+        if (_fixup_ability(you.ability_letter_table[slot]) == abil.ability)
             return (slot);
 
     // No requested slot, find new one and make it preferred.
@@ -3359,15 +3367,31 @@ static int _find_ability_slot(const ability_def &abil)
     return (-1);
 }
 
-std::vector<ability_type> get_god_abilities()
+std::vector<ability_type> get_god_abilities(bool include_unusable)
 {
     std::vector<ability_type> abilities;
+    if (you.religion == GOD_TROG && (include_unusable || !silenced(you.pos())))
+        abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
+    else if (you.religion == GOD_ELYVILON && (include_unusable || !silenced(you.pos())))
+        abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_OTHERS);
+    else if (you.transfer_skill_points > 0)
+        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
+
+    // Remaining abilities are unusable if under penance, or if silenced if not
+    // Nemelex abilities.
+    if (!include_unusable && (player_under_penance()
+                              || silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH))
+    {
+        return abilities;
+    }
+
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (you.piety < piety_breakpoint(i))
             continue;
 
-        ability_type abil = _fixup_ability(god_abilities[you.religion][i]);
+        const ability_type abil =
+            _fixup_ability(god_abilities[you.religion][i]);
         if (abil == ABIL_NON_ABILITY
             || crawl_state.game_is_zotdef()
                && (abil == ABIL_LUGONU_ABYSS_EXIT
@@ -3377,11 +3401,8 @@ std::vector<ability_type> get_god_abilities()
         }
 
         abilities.push_back(abil);
-        if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
-        {
-            abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_SELF);
+        if (abil == ABIL_ELYVILON_LESSER_HEALING_SELF)
             abilities.push_back(ABIL_ELYVILON_LIFESAVING);
-        }
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
         else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)

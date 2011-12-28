@@ -547,22 +547,13 @@ const char *spell_title(spell_type spell)
 
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
-int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans, actor *agent,
-                       bool affect_scryed)
+int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    bool xray = you.xray_vision;
-
-    if (!affect_scryed)
-        you.xray_vision = false;
-
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        if (pass_through_trans || you.see_cell_no_trans(*ri))
+        if (you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
-
-    you.xray_vision = xray;
 
     return (rv);
 }
@@ -756,18 +747,6 @@ int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
     }
 
     return cf(you.pos() + bmove.delta, power, 1, agent);
-}
-
-int apply_area_within_radius(cell_func cf, const coord_def& where,
-                             int pow, int radius, int ctype,
-                             actor *agent)
-{
-    int rv = 0;
-
-    for (radius_iterator ri(where, radius, false, false); ri; ++ri)
-        rv += cf(*ri, pow, ctype, agent);
-
-    return (rv);
 }
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
@@ -1288,9 +1267,6 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
     case SPELL_FRAGMENTATION:
-
-    // Airstrike has LOS_RANGE and can go through glass walls.
-    case SPELL_AIRSTRIKE:
 
     // These bounce and may be aimed elsewhere to bounce at monsters
     // outside range (I guess).

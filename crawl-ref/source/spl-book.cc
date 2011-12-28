@@ -14,6 +14,7 @@
 #include <iomanip>
 
 #include "artefact.h"
+#include "effects.h"
 #include "externs.h"
 #include "species.h"
 #include "cio.h"
@@ -148,7 +149,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         strng[0] = index_to_letter(spelcount);
         strng[1] = 0;
 
-        out.cprintf(strng);
+        out.cprintf("%s", strng);
         out.cprintf(" - ");
 
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
@@ -566,7 +567,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         undead = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
-        rc = true;
+        rc = true, undead = false;
 
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
@@ -581,7 +582,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          // could be useful if it didn't require wielding
          || spell == SPELL_TUKIMAS_DANCE))
     {
-        rc = true;
+        rc = true, undead = false;
     }
 
     return (rc);
@@ -1048,7 +1049,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             new MenuEntry(desc.str(), MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 
@@ -1243,11 +1244,12 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     const int temp_rand2 = random2(4);
 
     mprf("This spell is %s %s to %s.",
-         ((chance >= 80) ? "very" :
-          (chance >= 60) ? "quite" :
-          (chance >= 45) ? "rather" :
-          (chance >= 30) ? "somewhat"
-                         : "not that"),
+         ((chance >= 100) ? "too" :
+           (chance >= 80) ? "very" :
+           (chance >= 60) ? "quite" :
+           (chance >= 45) ? "rather" :
+           (chance >= 30) ? "somewhat"
+                          : "not that"),
          ((temp_rand1 == 0) ? "difficult" :
           (temp_rand1 == 1) ? "tricky"
                             : "challenging"),
@@ -1255,6 +1257,8 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
           (temp_rand2 == 1) ? "commit to memory" :
           (temp_rand2 == 2) ? "learn"
                             : "absorb"));
+    if (chance >= 100)
+        return (false);
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
@@ -1278,7 +1282,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         return (false);
     }
 
-    if (random2(40) + random2(40) + random2(40) < chance)
+    if (random2avg(100, 3) < chance && !one_chance_in(10))
     {
         mpr("You fail to memorise the spell.");
         learned_something_new(HINT_MEMORISE_FAILURE);
@@ -1461,8 +1465,10 @@ int staff_spell(int staff)
     }
 
     // All checks passed, we can cast the spell.
-    if (your_spells(spell, power, false, false)
-            == SPRET_ABORT)
+    if (you.confused())
+        random_uselessness();
+    else if (your_spells(spell, power, false, false)
+                == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);
@@ -2511,7 +2517,7 @@ bool book_has_title(const item_def &book)
 
 bool is_dangerous_spellbook(const int book_type)
 {
-    switch(book_type)
+    switch (book_type)
     {
     case BOOK_NECRONOMICON:
     case BOOK_GRAND_GRIMOIRE:

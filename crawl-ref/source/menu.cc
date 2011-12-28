@@ -22,19 +22,21 @@
 #include "colour.h"
 
 #ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+ #include "tilefont.h"
+ #include "tilereg-crt.h"
+ #include "tilereg-menu.h"
+#endif
+#ifdef USE_TILE
  #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
- #include "tilebuf.h"
- #include "tilefont.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
  #include "tilepick.h"
  #include "tilepick-p.h"
- #include "tilereg-crt.h"
- #include "tilereg-menu.h"
  #include "travel.h"
 #endif
 
@@ -129,62 +131,6 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
 #endif
     mdisplay->set_num_columns(1);
     set_flags(flags);
-}
-
-Menu::Menu(const formatted_string &fs)
- : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
-   action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
-   title2(NULL),
-
-   // This is a text-viewer menu, init flags to be easy on the user.
-   flags(MF_NOSELECT | MF_EASY_EXIT),
-
-   tag(), first_entry(0), y_offset(0), pagesize(0),
-   max_pagesize(0), more("-more-", true), items(), sel(),
-   select_filter(), highlighter(new MenuHighlighter), num(-1),
-   lastch(0), alive(false), last_selected(-1)
-{
-    mdisplay = new MenuDisplayText(this);
-    mdisplay->set_num_columns(1);
-
-    int colour = LIGHTGREY;
-    int last_text_colour = LIGHTGREY;
-    std::string line;
-    for (formatted_string::oplist::const_iterator i = fs.ops.begin();
-         i != fs.ops.end(); ++i)
-    {
-        const formatted_string::fs_op &op(*i);
-        switch (op.type)
-        {
-        case FSOP_COLOUR:
-            colour = op.x;
-            break;
-        case FSOP_TEXT:
-        {
-            line += op.text;
-
-            const std::string::size_type nonblankp =
-                op.text.find_first_not_of(" \t\r\n");
-            const bool nonblank = nonblankp != std::string::npos;
-            const std::string::size_type eolp = op.text.find("\n");
-            const bool starts_with_eol =
-                nonblank && eolp != std::string::npos
-                && eolp < nonblankp;
-
-            if (nonblank && !starts_with_eol)
-                last_text_colour = colour;
-
-            check_add_formatted_line(last_text_colour, colour, line, true);
-
-            if (nonblank && starts_with_eol)
-                last_text_colour = colour;
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    check_add_formatted_line(last_text_colour, colour, line, false);
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
@@ -297,6 +243,9 @@ void Menu::reset()
 
 std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt_enabled(false);
+#endif
     cursor_control cs(false);
 
     if (reuse_selections)
@@ -324,7 +273,15 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (is_set(MF_START_AT_END))
         first_entry = std::max((int)items.size() - pagesize, 0);
 
+#ifdef USE_TILE_WEB
+    tiles.push_menu(this);
+#endif
+
     do_menu();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_menu();
+#endif
 
     return (sel);
 }
@@ -501,6 +458,9 @@ bool Menu::process_key(int keyin)
                 select_index(next, num);
                 get_selected(&sel);
                 draw_select_count(sel.size());
+#ifdef USE_TILE_WEB
+                webtiles_update_title();
+#endif
                 if (get_cursor() < next)
                 {
                     first_entry = 0;
@@ -591,6 +551,9 @@ bool Menu::process_key(int keyin)
             return (false);
 
         draw_select_count(sel.size());
+#ifdef USE_TILE_WEB
+        webtiles_update_title();
+#endif
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -610,7 +573,12 @@ bool Menu::process_key(int keyin)
     if (nav)
     {
         if (repaint)
+        {
+#ifdef USE_TILE_WEB
+            webtiles_update_scroll_pos();
+#endif
             draw_menu();
+        }
         // Easy exit should not kill the menu if there are selected items.
         else if (sel.empty() && is_set(MF_EASY_EXIT))
         {
@@ -687,14 +655,11 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     return (true);
 }
 
-void Menu::draw_select_count(int count, bool force)
+std::string Menu::get_select_count_string(int count) const
 {
-    if (!force && !is_set(MF_MULTISELECT))
-        return;
-
     if (f_selitem)
     {
-        draw_title_suffix(f_selitem(&sel));
+        return f_selitem(&sel);
     }
     else
     {
@@ -704,8 +669,16 @@ void Menu::draw_select_count(int count, bool force)
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
         }
-        draw_title_suffix(buf);
+        return std::string(buf);
     }
+}
+
+void Menu::draw_select_count(int count, bool force)
+{
+    if (!force && !is_set(MF_MULTISELECT))
+        return;
+
+    draw_title_suffix(get_select_count_string(count));
 }
 
 std::vector<MenuEntry*> Menu::selected_entries() const
@@ -732,7 +705,12 @@ void Menu::deselect_all(bool update_view)
         {
             items[i]->select(0);
             if (update_view)
+            {
                 draw_item(i);
+#ifdef USE_TILE_WEB
+                webtiles_update_item(i);
+#endif
+            }
         }
     }
 }
@@ -821,7 +799,7 @@ void Menu::select_items(int key, int qty)
     cgotoxy(x, y);
 }
 
-MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster* mon,
+MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster_info* mon,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
@@ -852,7 +830,7 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
 }
 
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
@@ -880,14 +858,14 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return (false);
 
-    monster* m = (monster*)(data);
+    monster_info* m = (monster_info*)(data);
     if (!m)
         return (false);
 
     MenuEntry::get_tiles(tileset);
 
     const bool    fake = m->props.exists("fake");
-    const coord_def c  = m->pos();
+    const coord_def c  = m->pos;
           tileidx_t ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
@@ -913,15 +891,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             item.quantity  = 1;
         }
         else
-            item = mitm[m->inv[MSLOT_WEAPON]];
+            item = *m->inv[MSLOT_WEAPON];
 
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
         tileset.push_back(tile_def(TILEI_ANIMATED_WEAPON, TEX_ICONS));
     }
     else if (mons_is_draconian(m->type))
     {
-        tileset.push_back(tile_def(tileidx_draco_base(m), TEX_PLAYER));
-        tileidx_t job = tileidx_draco_job(m);
+        tileset.push_back(tile_def(tileidx_draco_base(*m), TEX_PLAYER));
+        tileidx_t job = tileidx_draco_job(*m);
         if (job)
             tileset.push_back(tile_def(job, TEX_PLAYER));
     }
@@ -935,14 +913,14 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         }
         else
         {
-            idx = tileidx_monster(m) & TILE_FLAG_MASK;
+            idx = tileidx_monster(*m) & TILE_FLAG_MASK;
             tileset.push_back(tile_def(idx, TEX_DEFAULT));
         }
         tileset.push_back(tile_def(TILEI_MIMIC, TEX_ICONS));
     }
     else
     {
-        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
+        tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
         tileset.push_back(tile_def(idx, TEX_PLAYER));
     }
 
@@ -962,47 +940,44 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS));
     }
 
-    if (mons_can_display_wounds(m))
-    {
-        std::string damage_desc;
-        mon_dam_level_type damage_level = mons_get_damage_level(m);
+    std::string damage_desc;
+    mon_dam_level_type damage_level = m->dam;
 
-        switch (damage_level)
-        {
-        case MDAM_DEAD:
-        case MDAM_ALMOST_DEAD:
-            tileset.push_back(tile_def(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS));
-            break;
-        case MDAM_SEVERELY_DAMAGED:
-            tileset.push_back(tile_def(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS));
-            break;
-        case MDAM_HEAVILY_DAMAGED:
-            tileset.push_back(tile_def(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS));
-            break;
-        case MDAM_MODERATELY_DAMAGED:
-            tileset.push_back(tile_def(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS));
-            break;
-        case MDAM_LIGHTLY_DAMAGED:
-            tileset.push_back(tile_def(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS));
-            break;
-        case MDAM_OKAY:
-        default:
-            // no flag for okay.
-            break;
-        }
+    switch (damage_level)
+    {
+    case MDAM_DEAD:
+    case MDAM_ALMOST_DEAD:
+        tileset.push_back(tile_def(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS));
+        break;
+    case MDAM_SEVERELY_DAMAGED:
+        tileset.push_back(tile_def(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS));
+        break;
+    case MDAM_HEAVILY_DAMAGED:
+        tileset.push_back(tile_def(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS));
+        break;
+    case MDAM_MODERATELY_DAMAGED:
+        tileset.push_back(tile_def(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS));
+        break;
+    case MDAM_LIGHTLY_DAMAGED:
+        tileset.push_back(tile_def(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS));
+        break;
+    case MDAM_OKAY:
+    default:
+        // no flag for okay.
+        break;
     }
 
-    if (m->friendly())
+    if (m->attitude == ATT_FRIENDLY)
         tileset.push_back(tile_def(TILEI_HEART, TEX_ICONS));
-    else if (m->good_neutral())
+    else if (m->attitude == ATT_GOOD_NEUTRAL)
         tileset.push_back(tile_def(TILEI_GOOD_NEUTRAL, TEX_ICONS));
     else if (m->neutral())
         tileset.push_back(tile_def(TILEI_NEUTRAL, TEX_ICONS));
-    else if (mons_is_fleeing(m))
+    else if (m->is(MB_FLEEING))
         tileset.push_back(tile_def(TILEI_FLEEING, TEX_ICONS));
-    else if (mons_looks_stabbable(m))
+    else if (m->is(MB_STABBABLE))
         tileset.push_back(tile_def(TILEI_STAB_BRAND, TEX_ICONS));
-    else if (mons_looks_distracted(m))
+    else if (m->is(MB_DISTRACTED))
         tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
 
     return (true);
@@ -1105,9 +1080,6 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
 
-    if (player.held_in_net)
-        tileset.push_back(tile_def(TILEP_TRAP_NET, TEX_PLAYER));
-
     return (true);
 }
 #endif
@@ -1132,6 +1104,9 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
     last_selected = idx;
     items[idx]->select(qty);
     draw_item(idx);
+#ifdef USE_TILE_WEB
+    webtiles_update_item(idx);
+#endif
 
     if (draw_cursor)
     {
@@ -1234,6 +1209,10 @@ void Menu::draw_menu()
 
 void Menu::update_title()
 {
+#ifdef USE_TILE_WEB
+    webtiles_update_title();
+#endif
+
     int x = wherex(), y = wherey();
     draw_title();
     cgotoxy(x, y);
@@ -1367,6 +1346,201 @@ bool Menu::line_up()
     }
     return (false);
 }
+
+#ifdef USE_TILE_WEB
+static const int chunk_size = 50; // Should be equal to the one defined in menu.js
+
+void Menu::webtiles_write_menu() const
+{
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "menu");
+    tiles.json_write_string("tag", tag);
+    tiles.json_write_int("flags", flags);
+
+    webtiles_write_title();
+
+    tiles.json_write_string("more", more.to_colour_string());
+
+    bool complete_send = items.size() <= chunk_size * 2;
+    int start;
+    if (is_set(MF_START_AT_END) && !complete_send)
+        start = items.size() - chunk_size;
+    else
+        start = 0;
+
+    int end = start + (complete_send ? items.size() : chunk_size);
+
+    tiles.json_write_int("total_items", items.size());
+    tiles.json_write_int("chunk_start", start);
+
+    tiles.json_open_array("items");
+
+    for (int i = start; i < end; ++i)
+    {
+        webtiles_write_item(i, items[i]);
+    }
+
+    tiles.json_close_array();
+
+    tiles.json_close_object();
+}
+
+void Menu::webtiles_scroll(int first)
+{
+    if (first >= (int) items.size()) first = (int) items.size() - 1;
+    if (first < 0) first = 0;
+
+    if (first_entry != first)
+    {
+        first_entry = first;
+        draw_menu();
+        update_screen();
+        webtiles_update_scroll_pos();
+    }
+}
+
+void Menu::webtiles_handle_item_request(int start, int end)
+{
+    if (start < 0) start = 0;
+    if (start >= (int) items.size()) start = (int) items.size() - 1;
+    if (end < start) end = start;
+    if (end >= start + chunk_size) end = start + chunk_size - 1;
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu_items");
+
+    tiles.json_write_int("chunk_start", start);
+
+    tiles.json_open_array("items");
+
+    for (int i = start; i <= end; ++i)
+    {
+        webtiles_write_item(i, items[i]);
+    }
+
+    tiles.json_close_array();
+
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_update_item(int index) const
+{
+    tiles.json_open_object();
+
+    tiles.json_write_string("msg", "update_menu_items");
+    tiles.json_write_int("chunk_start", index);
+
+    tiles.json_open_array("items");
+    tiles.json_open_object();
+
+    const MenuEntry* me = items[index];
+    if (me->selected_qty)
+        tiles.json_write_int("sq", me->selected_qty);
+    tiles.json_write_string("text", me->get_text());
+    int col = item_colour(index, me);
+    if (col != MENU_ITEM_STOCK_COLOUR)
+        tiles.json_write_int("colour", col);
+
+    tiles.json_close_object();
+    tiles.json_close_array();
+
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_update_title() const
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu");
+    webtiles_write_title();
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_update_scroll_pos() const
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "menu_scroll");
+    tiles.json_write_int("first", first_entry);
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_write_title() const
+{
+    if (!title) return;
+    const bool first = (action_cycle == CYCLE_NONE
+                        || menu_action == ACT_EXECUTE);
+    if (!first)
+        ASSERT(title2);
+
+    const MenuEntry* me = (first ? title : title2);
+
+    tiles.json_write_name("title");
+    webtiles_write_item(-1, me);
+
+    if (is_set(MF_MULTISELECT))
+    {
+        tiles.json_write_string("suffix", get_select_count_string(sel.size()));
+    }
+}
+
+void Menu::webtiles_write_item(int index, const MenuEntry* me) const
+{
+    tiles.json_open_object();
+
+    tiles.json_write_string("text", me->get_text());
+
+    if (me->quantity)
+        tiles.json_write_int("q", me->quantity);
+    if (me->selected_qty)
+        tiles.json_write_int("sq", me->selected_qty);
+
+    int col = item_colour(index, me);
+    if (col != MENU_ITEM_STOCK_COLOUR)
+        tiles.json_write_int("colour", col);
+
+    if (!me->hotkeys.empty())
+    {
+        tiles.json_open_array("hotkeys");
+        for (unsigned i = 0; i < me->hotkeys.size(); ++i)
+            tiles.json_write_int(me->hotkeys[i]);
+        tiles.json_close_array();
+    }
+
+    if (me->level != MEL_NONE)
+        tiles.json_write_int("level", me->level);
+
+    if (me->preselected)
+        tiles.json_write_int("preselected", me->preselected);
+
+    std::vector<tile_def> t;
+    if (me->get_tiles(t) && !t.empty())
+    {
+        tiles.json_open_array("tiles");
+
+        for (unsigned i = 0; i < t.size(); ++i)
+        {
+            tiles.json_open_object();
+
+            tiles.json_write_int("t", t[i].tile);
+            tiles.json_write_int("tex", t[i].tex);
+
+            if (t[i].ymax != TILE_Y)
+                tiles.json_write_int("ymax", t[i].ymax);
+
+            tiles.json_close_object();
+        }
+
+        tiles.json_close_array();
+    }
+
+    tiles.json_close_object();
+}
+#endif // USE_TILE_WEB
 
 /////////////////////////////////////////////////////////////////
 // Menu colouring
@@ -1559,6 +1733,19 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
     else
         static_cast<formatted_string*>(me->data)->display();
 }
+
+#ifdef USE_TILE_WEB
+void formatted_scroller::webtiles_write_item(int index, const MenuEntry* me) const
+{
+    if (me->data == NULL)
+        Menu::webtiles_write_item(index, me);
+    else
+    {
+        formatted_string* fs = static_cast<formatted_string*>(me->data);
+        tiles.json_write_string(fs->to_colour_string());
+    }
+}
+#endif
 
 formatted_scroller::~formatted_scroller()
 {
@@ -1778,6 +1965,12 @@ int ToggleableMenu::pre_process(int key)
 
         // Redraw
         draw_menu();
+
+#ifdef USE_TILE_WEB
+        webtiles_update_title();
+        for (unsigned int i = 0; i < items.size(); ++i)
+            webtiles_update_item(i);
+#endif
 
         // Don't further process the key
         return 0;

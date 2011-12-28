@@ -182,7 +182,7 @@ public:
     virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
-    virtual bool can_bleed() const = 0;
+    virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool mutate() = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
@@ -231,6 +231,7 @@ public:
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *foe);
+    virtual int missile_deflection() const = 0; // 1 = RMsl, 2 = DMsl
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;
@@ -240,7 +241,7 @@ public:
     virtual int armour_tohit_penalty(bool random_factor) const = 0;
     virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
-    virtual int mons_species() const = 0;
+    virtual int mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
@@ -344,6 +345,23 @@ public:
 
     CrawlHashTable props;
 
+    // Constriction stuff
+    unsigned short constricted_by;
+    unsigned short constricting[MAX_CONSTRICT];
+    int escape_attempts;
+    int dur_been_constricted;
+    int dur_has_constricted[MAX_CONSTRICT];
+
+    // handles non-attack turn constrictions, does not need to be saved
+    bool has_constricted_this_turn;
+    virtual void clear_specific_constrictions(int mindex) = 0;
+    virtual bool is_constricted();
+    virtual bool is_constricting();
+    virtual bool has_usable_tentacle()
+    {
+        return false;
+    }
+
 protected:
     // These are here for memory management reasons...
     los_glob los;
@@ -351,5 +369,6 @@ protected:
 };
 
 bool actor_slime_wall_immune(const actor *actor);
+actor *mindex_to_actor(short mindex);
 
 #endif

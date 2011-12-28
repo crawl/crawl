@@ -11,6 +11,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "map_knowledge.h"
+#include "menu.h"
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
@@ -32,6 +33,8 @@
 #include "view.h"
 #include "viewgeom.h"
 
+#include "json.h"
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -50,10 +53,43 @@ static unsigned int get_milliseconds()
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
 
+
+// Helper for json.h
+struct JsonWrapper
+{
+    JsonWrapper(JsonNode* n) : node(n)
+    { }
+
+    ~JsonWrapper()
+    {
+        if (node)
+            json_delete(node);
+    }
+
+    JsonNode* operator->()
+    {
+        return node;
+    }
+
+    void check(JsonTag tag)
+    {
+        if (!node || node->tag != tag)
+        {
+            throw malformed;
+        }
+    }
+
+    JsonNode* node;
+
+    static class MalformedException { } malformed;
+};
+
+
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_crt_enabled(true),
+    : m_crt_mode(CRT_NORMAL),
+      m_controlled_from_web(false),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
@@ -61,6 +97,7 @@ TilesFramework::TilesFramework()
       m_next_flash_colour(BLACK),
       m_need_full_map(true),
       m_text_crt("crt"),
+      m_text_menu("menu_txt"),
       m_text_stat("stats"),
       m_text_message("messages"),
       m_print_fg(15)
@@ -113,10 +150,7 @@ bool TilesFramework::initialise()
 
     _send_version();
 
-    // Do our initialization here.
-    m_active_layer = LAYER_CRT;
-    send_message("{msg:'layer',layer:'crt'}");
-
+    // Initially, switch to CRT.
     cgotoxy(1, 1, GOTO_CRT);
 
     return (true);
@@ -222,34 +256,70 @@ wint_t TilesFramework::_receive_control_message()
     }
 
     std::string data(buf, len);
-    return _handle_control_message(srcaddr, data);
+    try
+    {
+        return _handle_control_message(srcaddr, data);
+    }
+    catch (JsonWrapper::MalformedException&)
+    {
+        dprf("Malformed control message!");
+        return 0;
+    }
 }
 
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string data)
 {
-    // Hack - this needs a real JSON parser
+    JsonWrapper obj = json_decode(data.c_str());
+    obj.check(JSON_OBJECT);
 
-    static const std::string keymsgstart("{\"msg\":\"key\",\"keycode\":");
+    JsonWrapper msg = json_find_member(obj.node, "msg");
+    msg.check(JSON_STRING);
+    std::string msgtype(msg->string_);
 
     int c = 0;
 
-    if (data == "{\"msg\":\"attach\"}")
+    if (msgtype == "attach")
     {
+        JsonWrapper primary = json_find_member(obj.node, "primary");
+        primary.check(JSON_BOOL);
+
         m_dest_addrs.push_back(addr);
+        m_controlled_from_web = primary->bool_;
     }
-    else if (data.compare(0, keymsgstart.size(), keymsgstart) == 0)
+    else if (msgtype == "key")
     {
-        std::stringstream ss(data);
-        ss.ignore(keymsgstart.size());
+        JsonWrapper keycode = json_find_member(obj.node, "keycode");
+        keycode.check(JSON_NUMBER);
 
-        ss >> c;
-
-        if (ss.fail())
-            c = 0;
+        c = (int) keycode->number_;
     }
-    else if (data == "{\"msg\":\"spectator_joined\"}")
+    else if (msgtype == "spectator_joined")
     {
         _send_everything();
+    }
+    else if (msgtype == "menu_scroll")
+    {
+        JsonWrapper first = json_find_member(obj.node, "first");
+        first.check(JSON_NUMBER);
+        // last visible item is sent too, but currently unused
+
+        if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
+        {
+            m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
+        }
+    }
+    else if (msgtype == "*request_menu_range")
+    {
+        JsonWrapper start = json_find_member(obj.node, "start");
+        start.check(JSON_NUMBER);
+        JsonWrapper end = json_find_member(obj.node, "end");
+        end.check(JSON_NUMBER);
+
+        if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
+        {
+            m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
+                                                                   (int) end->number_);
+        }
     }
 
     return c;
@@ -318,12 +388,12 @@ bool TilesFramework::await_input(wint_t& c, bool block)
     }
 }
 
-void TilesFramework::push_prefix(std::string prefix)
+void TilesFramework::push_prefix(const std::string& prefix)
 {
     m_prefixes.push_back(prefix);
 }
 
-void TilesFramework::pop_prefix(std::string suffix)
+void TilesFramework::pop_prefix(const std::string& suffix)
 {
     if (!m_prefixes.empty())
     {
@@ -350,6 +420,62 @@ void TilesFramework::_send_version()
     send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
 #endif
 }
+
+void TilesFramework::push_menu(Menu* m)
+{
+    MenuInfo mi;
+    mi.menu = m;
+    m_menu_stack.push_back(mi);
+    m->webtiles_write_menu();
+    tiles.send_message();
+}
+
+void TilesFramework::push_crt_menu(std::string tag)
+{
+    MenuInfo mi;
+    mi.menu = NULL;
+    mi.tag = tag;
+    m_menu_stack.push_back(mi);
+
+    json_open_object();
+    json_write_string("msg", "menu");
+    json_write_string("type", "crt");
+    json_write_string("tag", tag);
+    json_close_object();
+    send_message();
+}
+
+void TilesFramework::pop_menu()
+{
+    if (m_menu_stack.empty()) return;
+    MenuInfo mi = m_menu_stack.back();
+    m_menu_stack.pop_back();
+    send_message("{msg:'close_menu'}");
+}
+
+void TilesFramework::close_all_menus()
+{
+    while (m_menu_stack.size())
+        pop_menu();
+}
+
+static void _send_ui_state(WebtilesUIState state)
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "ui_state");
+    tiles.json_write_int("state", state);
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void TilesFramework::set_ui_state(WebtilesUIState state)
+{
+    if (m_ui_state == state) return;
+
+    m_ui_state = state;
+    _send_ui_state(state);
+}
+
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
@@ -471,6 +597,19 @@ static bool _needs_flavour(const packed_cell &cell)
     return false;
 }
 
+inline unsigned _get_brand(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
+                                            : CHATTR_NORMAL;
+}
+
 void TilesFramework::_send_cell(const coord_def &gc,
                                 const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                                 const map_cell &current_mc, const map_cell &next_mc,
@@ -490,6 +629,24 @@ void TilesFramework::_send_cell(const coord_def &gc,
         || (get_cell_map_feature(current_mc) != mf))
     {
         write_message("mf:%u,", mf);
+    }
+
+    // Glyph and colour
+    ucs_t glyph = next_sc.glyph;
+    if (force_full ? (glyph != ' ') : (current_sc.glyph != glyph))
+    {
+        if (glyph == '\\')
+            write_message("g:'\\\\',");
+        else if (glyph == '\'')
+            write_message("g:'\\'',");
+        else
+            write_message("g:'%lc',", glyph);
+    }
+    if (force_full ? (next_sc.colour != 7) : (current_sc.colour != next_sc.colour))
+    {
+        int col = next_sc.colour;
+        col = (_get_brand(col) << 4) | (col & 0xF);
+        write_message("col:%d,", col);
     }
 
     push_prefix("t:{");
@@ -768,10 +925,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     m_view_loaded = true;
 
-    if (m_active_layer != LAYER_NORMAL)
+    if (m_ui_state == UI_CRT)
     {
-        m_active_layer = LAYER_NORMAL;
-        send_message("{msg:\"layer\",layer:\"normal\"}");
+        set_ui_state(UI_NORMAL);
     }
 
     m_next_flash_colour = you.flash_colour;
@@ -838,14 +994,18 @@ static const int stat_width = 42;
 
 static void _send_layout_data()
 {
-    tiles.send_message("{msg:\"layout\",view_max_width:%u,view_max_height:%u,\
-force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,   \
-min_stat_height:%u,gxm:%u,gym:%u}",
-                       Options.view_max_width, Options.view_max_height,
-                       Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-                       Options.msg_min_height, stat_width,
-                       min_stat_height + (Options.show_gold_turns ? 1 : 0),
-                       GXM, GYM);
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+
+    tiles.json_write_int("stat_width", crawl_view.hudsz.x);
+    tiles.json_write_int("show_diameter", ENV_SHOW_DIAMETER);
+    tiles.json_write_int("gxm", GXM);
+    tiles.json_write_int("gym", GYM);
+    tiles.json_write_int("msg_height", crawl_view.msgsz.y);
+
+    tiles.json_close_object();
+
+    tiles.send_message();
 }
 
 void TilesFramework::resize()
@@ -856,6 +1016,7 @@ void TilesFramework::resize()
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+    m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
 /*
@@ -864,47 +1025,55 @@ void TilesFramework::resize()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    m_text_crt.send(true);
-    m_text_stat.send(true);
-    m_text_message.send(true);
     _send_layout_data();
+
     send_message("{msg:\"vgrdc\",x:%d,y:%d}",
                  m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
     send_message("{msg:\"flash\",col:%d}", m_current_flash_colour);
+
     _send_map(true);
     finish_message();
+
     send_message("{msg:'redraw'}");
-    switch (m_active_layer)
+
+    // UI State
+    _send_ui_state(m_ui_state);
+
+    // Menus
+    json_open_object();
+    json_write_string("msg", "init_menus");
+    json_open_array("menus");
+    for (unsigned int i = 0; i < m_menu_stack.size(); ++i)
     {
-    case LAYER_CRT:
-        send_message("{msg:'layer',layer:'crt'}");
-        break;
-    case LAYER_NORMAL:
-        send_message("{msg:'layer',layer:'normal'}");
-        break;
-    default:
-        // Cannot happen
-        break;
+        if (m_menu_stack[i].menu)
+            m_menu_stack[i].menu->webtiles_write_menu();
+        else
+        {
+            json_open_object();
+            json_write_string("msg", "menu");
+            json_write_string("type", "crt");
+            json_write_string("tag", m_menu_stack[i].tag);
+            json_close_object();
+        }
     }
+    json_close_array();
+    json_close_object();
+    send_message();
+
+    m_text_crt.send(true);
+    m_text_stat.send(true);
+    m_text_message.send(true);
+    m_text_menu.send(true);
 }
 
 void TilesFramework::clrscr()
 {
     m_text_crt.clear();
+    m_text_menu.clear();
 
     this->cgotoxy(1, 1);
 
     set_need_redraw();
-}
-
-void TilesFramework::set_crt_enabled(bool value)
-{
-    m_crt_enabled = value;
-}
-
-bool TilesFramework::is_crt_enabled()
-{
-    return m_crt_enabled;
 }
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
@@ -914,28 +1083,24 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     switch (region)
     {
     case GOTO_CRT:
-        if (m_crt_enabled > 0)
+        switch (m_crt_mode)
         {
-            if (m_active_layer != LAYER_CRT)
-                send_message("{msg:'layer',layer:'crt'}");
-            m_active_layer = LAYER_CRT;
-            m_print_area = &m_text_crt;
-        }
-        else
-        {
+        case CRT_DISABLED:
             m_print_area = NULL;
+            break;
+        case CRT_NORMAL:
+            set_ui_state(UI_CRT);
+            m_print_area = &m_text_crt;
+            break;
+        case CRT_MENU:
+            m_print_area = &m_text_menu;
+            break;
         }
         break;
     case GOTO_MSG:
-        if (m_active_layer != LAYER_NORMAL)
-            send_message("{msg:'layer',layer:'normal'}");
-        m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_message;
         break;
     case GOTO_STAT:
-        if (m_active_layer != LAYER_NORMAL)
-            send_message("{msg:'layer',layer:'normal'}");
-        m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_stat;
         break;
     default:
@@ -947,9 +1112,12 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 void TilesFramework::redraw()
 {
+    if (!has_receivers()) return;
+
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
+    m_text_menu.send();
 
     if (m_need_redraw)
     {
@@ -1075,7 +1243,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 {
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
 }
 
@@ -1203,5 +1371,115 @@ void TilesFramework::clear_to_end_of_line()
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)
         m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
+}
+
+
+void TilesFramework::write_message_escaped(const std::string& s)
+{
+    m_msg_buf.reserve(m_msg_buf.size() + s.size());
+
+    for (size_t i = 0; i < s.size(); ++i)
+    {
+        char c = s[i];
+        if (c == '"')
+            m_msg_buf.append("\\\"");
+        else if (c == '\\')
+            m_msg_buf.append("\\\\");
+        else if (c == '\n')
+            m_msg_buf.append("\\\n");
+        else
+            m_msg_buf.append(1, c);
+    }
+}
+
+void TilesFramework::json_open_object(const std::string& name)
+{
+    json_write_comma();
+    if (!name.empty())
+        json_write_name(name);
+
+    write_message("{");
+    json_object_level++;
+    need_comma = false;
+}
+
+void TilesFramework::json_close_object()
+{
+    write_message("}");
+    json_object_level--;
+    need_comma = true;
+}
+
+void TilesFramework::json_open_array(const std::string& name)
+{
+    json_write_comma();
+    if (!name.empty())
+        json_write_name(name);
+
+    write_message("[");
+    json_object_level++;
+    need_comma = false;
+}
+
+void TilesFramework::json_close_array()
+{
+    write_message("]");
+    json_object_level--;
+    need_comma = true;
+}
+
+void TilesFramework::json_write_comma()
+{
+    if (json_object_level > 0 && need_comma)
+    {
+        write_message(",");
+        need_comma = false;
+    }
+}
+
+void TilesFramework::json_write_name(const std::string& name)
+{
+    json_write_comma();
+
+    write_message("\"");
+    write_message_escaped(name);
+    write_message("\":");
+}
+
+void TilesFramework::json_write_int(int value)
+{
+    json_write_comma();
+
+    write_message("%d", value);
+
+    need_comma = true;
+}
+
+void TilesFramework::json_write_int(const std::string& name, int value)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_int(value);
+}
+
+void TilesFramework::json_write_string(const std::string& value)
+{
+    json_write_comma();
+
+    write_message("\"");
+    write_message_escaped(value);
+    write_message("\"");
+
+    need_comma = true;
+}
+
+void TilesFramework::json_write_string(const std::string& name,
+                                       const std::string& value)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_string(value);
 }
 #endif

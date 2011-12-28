@@ -169,7 +169,7 @@ ENDMAP
 
 NAME:   hangedman_abyss_mock_shop
 TAGS:   abyss no_monster_gen
-KFEAT:  0 = stone_arch
+KFEAT:  0 = abandoned_shop
 MONS:   patrolling water elemental, statue name:archer tile:mons_statue_archer \
         n_adj; longbow ego:chaos . arrow q:40
 KFEAT:  1 = permadry_fountain
@@ -436,20 +436,19 @@ xxxxxXXXX
 xxxxxXXXX
 ENDMAP
 
-# The altar may be inappropriate here. I'm not sure.
 NAME:  evilmike_abyss_rune_tso_outpost
 TAGS:  abyss_rune allow_dup no_monster_gen
 KITEM: O = abyssal rune of Zot
 KFEAT: _ = altar_the_shining_one
-MONS:  angel, daeva, ophan
+MONS:  angel, cherub, ophan
 MAP
 .......................
 ........ccc...cccccc...
-.cccccGcc3ccGcc....cc..
-.+...ccc...ccc.mmmm+cc.
-.+.T1.+.._..+..m2...Oc.
-.+...ccc...ccc.mmmm+cc.
-.cccccGcc3ccGcc....cc..
+.cccccGcc3ccGcc...2cc..
+.+...ccc...ccc....cccc.
+.+.T1.+.._..+.....+.Oc.
+.+...ccc...ccc....cccc.
+.cccccGcc3ccGcc...2cc..
 ........ccc...cccccc...
 .......................
 ENDMAP
@@ -498,7 +497,7 @@ KMONS:  1 = giant orange brain spells:brain_feed;cause_fear;shadow_creatures;con
 KMONS:  2 = golden eye
 KMONS:  3 = flying skull
 KMONS:  4 = insubstantial wisp
-KMONS:  5 = macabre mass / small abomination w:2
+KMONS:  5 = macabre mass hd:2 / macabre mass hd:3 / small abomination w:4
 KMONS:  6 = neqoxec
 KMONS:  7 = cacodemon
 KMONS:  8 = pulsating lump
@@ -508,6 +507,7 @@ KFEAT:  12 = W
 KFEAT:  * = +
 MARKER: * = lua:restrict_door()
 SUBST:  c = ccv, . = .....W
+KFEAT:  n = iron_grate
 MAP
  .cccccc5 5cccccc.
  cc .. cc8cc .. cc
@@ -568,20 +568,6 @@ MAP
 ..11111..
 .........
  .......
-ENDMAP
-
-NAME:  evilmike_abyss_exit_teleports
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss
-KFEAT: ^ = teleport trap
-SUBST: ^ = ^:40 . x:5,  . = .:80 ^ x
-SUBST: x:xcv
-MAP
-.....
-.^^^.
-.^O^.
-.^^^.
-.....
 ENDMAP
 
 NAME:  evilmike_abyss_exit_1
@@ -1090,7 +1076,7 @@ fffffffffffffffffff
 feeeeeeeeeeeeeeeeef
 fedddddddddddddddef
 fedd....cnc....ddef
-fed..ccccWcccc..def
+fed..ccncWcncc..def
 fed..c1lw0wl2c..def
 fed..clnWWWnlc..def
 fed..cwwWWWwwc..def
@@ -1139,9 +1125,9 @@ dxcc...0...ccxd
  dxc.Mb1bM.cxd
  xxc.MbbbM.cxx
 dxcc.MMMMM.ccxd
-dxxccc...cccxxd
- dxxxx+++xxxxd
-   dcc...ccd
+dxxcc.....ccxxd
+ dxxxn+++nxxxd
+   dc.....cd
       @@@
 ENDMAP
 

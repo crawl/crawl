@@ -23,7 +23,7 @@
 #include "kills.h"
 #include "files.h"
 #include "defines.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilereg-map.h"
 #endif
 #ifdef USE_TILE_WEB
@@ -616,12 +616,10 @@ static std::string _resolve_dir(const char* path, const char* suffix)
 #if defined(DGAMELAUNCH)
     return catpath(path, "");
 #else
-    if (!path[0])
-        return suffix;
     if (path[0] != '~')
-        return std::string(path) + "/" + suffix;
+        return catpath(std::string(path), suffix);
     else
-        return user_home_subpath(std::string(path + 1) + "/" + suffix);
+        return user_home_subpath(catpath(path + 1, suffix));
 #endif
 }
 
@@ -1777,7 +1775,7 @@ std::string game_options::expand_vars(const std::string &field) const
 
         field_out = replace_all(field_out, dollar_plus_name, x->second);
 
-        // Start over at begining
+        // Start over at beginning
         curr_pos = 0;
     }
 
@@ -3517,7 +3515,7 @@ static struct es_command
     { ES_INFO,    "info",    false, 0, 0, },
 };
 
-#define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while(0)
+#define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
 static void _edit_save(int argc, char **argv)
 {
     if (argc <= 1 || !strcmp(argv[1], "help"))
@@ -3585,7 +3583,7 @@ static void _edit_save(int argc, char **argv)
                 sysfail("Can't open \"%s\" for writing", file);
 
             char buf[16384];
-            while(size_t s = inc.read(buf, sizeof(buf)))
+            while (size_t s = inc.read(buf, sizeof(buf)))
                 if (fwrite(buf, 1, s, f) != s)
                     sysfail("Error writing \"%s\"", file);
 
@@ -3610,7 +3608,7 @@ static void _edit_save(int argc, char **argv)
             chunk_writer outc(&save, chunk);
 
             char buf[16384];
-            while(size_t s = fread(buf, 1, sizeof(buf), f))
+            while (size_t s = fread(buf, 1, sizeof(buf), f))
                 outc.write(buf, s);
             if (ferror(f))
                 sysfail("Error reading \"%s\"", file);
@@ -3639,7 +3637,7 @@ static void _edit_save(int argc, char **argv)
                 chunk_reader in(&save, list[i]);
                 chunk_writer out(&save2, list[i]);
 
-                while(len_t s = in.read(buf, sizeof(buf)))
+                while (len_t s = in.read(buf, sizeof(buf)))
                     out.write(buf, s);
             }
             save2.commit();
@@ -3664,7 +3662,7 @@ static void _edit_save(int argc, char **argv)
                 char buf[16384];
                 chunk_reader in(&save, list[i]);
                 len_t clen = 0;
-                while(len_t s = in.read(buf, sizeof(buf)))
+                while (len_t s = in.read(buf, sizeof(buf)))
                     clen += s;
                 printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
             }

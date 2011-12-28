@@ -274,7 +274,7 @@ void wizard_create_spec_object()
     }
 }
 
-const char* _prop_name[] = {
+static const char* _prop_name[] = {
     "Brand",
     "AC",
     "EV",
@@ -315,7 +315,7 @@ const char* _prop_name[] = {
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-int8_t _prop_type[] = {
+static int8_t _prop_type[] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -558,7 +558,7 @@ void wizard_tweak_object(void)
 
         // cursedness might have changed
         ash_check_bondage();
-        ash_id_inventory();
+        god_id_inventory();
     }
 }
 

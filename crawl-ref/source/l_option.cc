@@ -32,6 +32,13 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
     }
 }
 
+static int option_autopick(lua_State *ls, const char *name, void *data,
+                           bool get)
+{
+    lua_pushboolean(ls, Options.autopickup_on>0);
+    return (1);
+}
+
 static option_handler handlers[] =
 {
     // Boolean options come first
@@ -53,7 +60,8 @@ static option_handler handlers[] =
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
     { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                                  option_hboolean }
+                                  option_hboolean },
+    { "autopick_on", NULL, option_autopick }
 };
 
 static const option_handler *get_handler(const char *optname)

@@ -26,6 +26,7 @@ command.o \
 coord.o \
 coord-circle.o \
 coordit.o \
+crash.o \
 ctest.o \
 dactions.o \
 database.o \
@@ -231,19 +232,22 @@ wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
 xom.o \
-zotdef.o
+zotdef.o \
+tilepick.o \
+tileview.o
 
-ifdef TILES
-OBJECTS += \
+TILES_OBJECTS = \
+tiledoll.o \
+tilemcache.o \
+tilepick-p.o \
+tilecell.o
+
+GLTILES_OBJECTS = \
 glwrapper.o \
 libgui.o \
 tilebuf.o \
 tiledgnbuf.o \
-tiledoll.o \
 tilefont.o \
-tilemcache.o \
-tilepick.o \
-tilepick-p.o \
 tilereg.o \
 tilereg-cmd.o \
 tilereg-crt.o \
@@ -264,34 +268,21 @@ tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
 tiletex.o \
-tileview.o \
-tilecell.o
-endif
+windowmanager-sdl.o \
+glwrapper-ogl.o \
+fontwrapper-ft.o
 
-ifdef WEBTILES
-OBJECTS += \
-tiledoll.o \
-tilemcache.o \
-tilepick.o \
-tilepick-p.o \
+WEBTILES_OBJECTS = \
 tileweb.o \
-tileview.o \
-tilecell.o \
-tileweb-text.o
-endif
-
-ifdef SDL
-OBJECTS += windowmanager-sdl.o
-endif
-
-ifdef GL
-OBJECTS += glwrapper-ogl.o
-endif
-
-ifdef FT
-OBJECTS += fontwrapper-ft.o
-endif
+tileweb-text.o \
+json.o
 
 YACC_OBJECTS = \
 util/levcomp.tab.o \
 util/levcomp.lex.o
+
+ALL_OBJECTS = $(OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
+$(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) \
+libw32c.o \
+libunix.o \
+version.o

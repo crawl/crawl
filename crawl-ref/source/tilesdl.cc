@@ -1225,25 +1225,25 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_LORD
-        || mon->type == MONS_LERNAEAN_HYDRA)
+    if (mon.type == MONS_PANDEMONIUM_LORD
+        || mon.type == MONS_LERNAEAN_HYDRA)
     {
         return;
     }
 
-    const coord_def &gc = mon->pos();
+    const coord_def &gc = mon.pos;
 
-    if (mons_is_pghost(mon->type))
+    if (mons_is_pghost(mon.type))
     {
         // Beautification hack.  "Foo's ghost" is a little bit
         // verbose as a tag.  "Foo" on its own should be sufficient.
-        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon.mname, gc);
     }
     else
-        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon.proper_name(DESC_PLAIN), gc);
 }
 
 const coord_def &TilesFramework::get_cursor() const

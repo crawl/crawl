@@ -339,7 +339,7 @@ end
 %%%%
 Wiglaf
 
-A fat dwarf wearing a stupid-looking hat.
+A fat dwarf wearing a stupid-looking hat. In Okawaru's name, he's here to avenge his mountain dwarf kin, who were driven from their lands by hill orcs and others. From the way he looks at you, he also seems to hold you responsible.
 {{
 if you.can_smell() then
     return "\nHe reeks of alcohol."
@@ -356,6 +356,10 @@ An ancient and mighty dragon.
 acid blob
 
 A lump of sickly green flesh, dripping with lethal acid.
+%%%%
+adder
+
+The common dungeon snake.
 %%%%
 agate snail
 
@@ -383,7 +387,7 @@ A lich who, having existed for countless centuries, has grown almost unimaginabl
 %%%%
 angel
 
-A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light. It appears to be weightless and quite agile while flying, despite wearing heavy armour.
+A divine warrior of the Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light. It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 ant larva
 
@@ -404,6 +408,10 @@ A juvenile alligator. While it does not have crushing jaws, nor the strength to 
 ball lightning
 
 An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
+%%%%
+ball python
+
+A small snake that can augment its bite by constricting small creatures.
 %%%%
 ballistomycete
 
@@ -1212,7 +1220,7 @@ A rat that has been subjected to a wizard's terrible experiments. Who knows what
 %%%%
 large abomination
 
-A large and hideous form, created or summoned by some arcane process.
+A large and hideous conglomeration of mangled body parts, demonically possessed and altered in ways that challenge your sanity.
 %%%%
 large simulacrum
 
@@ -1613,7 +1621,7 @@ A brightly coloured snake, very comfortable in the water. It has a highly potent
 %%%%
 seraph
 
-The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts, the mightiest servants of the Good Gods. They have six wings and but one face, and are said to sometimes take form of fiery serpents.
+The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts, the mightiest servants of the Good Gods. They have six wings and but one face, and are said to sometimes take the forms of fiery serpents.
 %%%%
 shadow
 
@@ -1703,11 +1711,7 @@ An icky glob of slime, which slithers along the ground, occasionally merging wit
 %%%%
 small abomination
 
-A hideous form, created or summoned by some arcane process.
-%%%%
-small snake
-
-The lesser dungeon snake.
+A hideous mass of body parts, part animated dead flesh, part demon.
 %%%%
 small simulacrum
 
@@ -1724,10 +1728,6 @@ A corpse raised to undeath by necromancy.
 smoke demon
 
 An infernal demon that manifests itself as a writhing cloud of smoke. Having considerable pyrokinetic powers, it can very effectively attack its enemies from afar.
-%%%%
-snake
-
-The common dungeon snake.
 %%%%
 snapping turtle
 
@@ -1783,6 +1783,10 @@ A deft and surreptitious spriggan that stabs in secret.
 
 These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.
 %%%%
+spriggan baker
+
+A spriggan that has mastered the culinary arts.
+%%%%
 spriggan berserker
 
 A relatively mighty spriggan that plunges recklessly into combat.
@@ -1818,6 +1822,10 @@ A huge animated stone statue.
 storm dragon
 
 A huge and very powerful dragon. Sparks crackle along its enormous scaly wings.
+%%%%
+subtractor snake
+
+A weird deadly snake capable of diminishing your strengths, and dividing you into multiple small pieces.
 %%%%
 sun demon
 
