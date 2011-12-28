@@ -2138,7 +2138,7 @@ void setup_environment_effects()
             const int grid = grd[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
-                        && you.where_are_you == BRANCH_SWAMP))
+                        && player_in_branch(BRANCH_SWAMP)))
             {
                 const coord_def c(x, y);
                 sfx_seeds.push_back(c);

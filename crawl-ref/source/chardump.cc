@@ -629,7 +629,7 @@ static void _sdump_notes(dump_params &par)
 static void _sdump_location(dump_params &par)
 {
     if (you.absdepth0 == -1
-        && you.where_are_you == BRANCH_MAIN_DUNGEON)
+        && player_in_branch(BRANCH_MAIN_DUNGEON))
     {
         par.text += "You escaped";
     }

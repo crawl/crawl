@@ -742,7 +742,7 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele
         && (player_in_branch(BRANCH_LABYRINTH)
-            || you.where_are_you != BRANCH_ABYSS && player_in_a_dangerous_place()))
+            || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
     {
         if (player_in_branch(BRANCH_LABYRINTH) && you.species == SP_MINOTAUR)
             xom_is_stimulated(100);

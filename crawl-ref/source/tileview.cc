@@ -1031,14 +1031,14 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
     }
-    else if (you.where_are_you == BRANCH_CRYPT)
+    else if (player_in_branch(BRANCH_CRYPT))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_CRYPT;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_CRYPT_METAL;
     }
-    else if (you.where_are_you == BRANCH_TOMB)
+    else if (player_in_branch(BRANCH_TOMB))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_TOMB;

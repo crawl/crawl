@@ -2267,7 +2267,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_CENTAUR_WARRIOR:
         natural_leader = true;
     case MONS_CENTAUR:
-        if (power > 9 && one_chance_in(3) && you.where_are_you != BRANCH_SHOALS)
+        if (power > 9 && one_chance_in(3) && !player_in_branch(BRANCH_SHOALS))
         {
             band = BAND_CENTAURS;
             band_size = 2 + random2(4);
@@ -2957,7 +2957,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     {
         interesting = true;
     }
-    else if (you.where_are_you == BRANCH_MAIN_DUNGEON
+    else if (player_in_branch(BRANCH_MAIN_DUNGEON)
              && !crawl_state.game_is_zotdef()
              && mons_level(mons->type) >= you.absdepth0 + Options.ood_interesting
              && mons_level(mons->type) < 99

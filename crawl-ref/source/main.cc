@@ -695,7 +695,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'B':
-        if (you.where_are_you != BRANCH_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
             banished("wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
@@ -2851,7 +2851,7 @@ static void _check_banished()
     if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
-        if (you.where_are_you != BRANCH_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
@@ -3200,7 +3200,7 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && you.where_are_you == BRANCH_MAIN_DUNGEON
+        && player_in_branch(BRANCH_MAIN_DUNGEON)
         && you.num_turns > 100)
     {
         zotdef_bosses_check();
@@ -3239,7 +3239,7 @@ void world_reacts()
         if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
-                || you.where_are_you == BRANCH_MAIN_DUNGEON)
+                || player_in_branch(BRANCH_MAIN_DUNGEON))
             {
                 you.num_turns++;
             }

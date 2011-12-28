@@ -1419,7 +1419,7 @@ static void _give_ammo(monster* mon, int level,
 
         case MONS_ORC_WARRIOR:
             if (one_chance_in(
-                    you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
+                    player_in_branch(BRANCH_ORCISH_MINES)? 9 : 20))
             {
                 weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
                 qty       = random_range(4, 8);

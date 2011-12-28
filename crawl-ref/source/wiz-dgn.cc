@@ -57,9 +57,9 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         else if (depth == 0)
         {
             // Special cases
-            if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
+            if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
                 return DNGN_EXIT_HELL;
-            else if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+            else if (player_in_branch(BRANCH_MAIN_DUNGEON))
                 return DNGN_STONE_STAIRS_UP_I;
 
             dungeon_feature_type stairs = your_branch().exit_stairs;

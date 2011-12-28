@@ -2388,7 +2388,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_rearrange_pieces(sever, debug);
     else if (random2(tension) < 15 && x_chance_in_y(13, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.where_are_you != BRANCH_ABYSS && x_chance_in_y(14, sever))
+    else if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(14, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -3575,7 +3575,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_chaos_upgrade_nearby_monster(debug);
             badness = 2 + coinflip();
         }
-        else if (x_chance_in_y(10, sever) && you.where_are_you != BRANCH_ABYSS)
+        else if (x_chance_in_y(10, sever) && !player_in_branch(BRANCH_ABYSS))
         {
             // Try something else if teleportation is impossible.
             if (!_teleportation_check())
@@ -3657,7 +3657,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
         }
-        else if (one_chance_in(sever) && you.where_are_you != BRANCH_ABYSS)
+        else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
             done    = _xom_do_banishment(debug);
             badness = (done == XOM_BAD_BANISHMENT ? 5 : 1);

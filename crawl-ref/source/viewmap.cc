@@ -1292,7 +1292,7 @@ bool emphasise(const coord_def& where)
     dungeon_feature_type feat = env.map_knowledge(where).feat();
     return (is_unknown_stair(where)
             && (you.absdepth0 || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && !player_in_branch(BRANCH_VESTIBULE_OF_HELL));
 }
 
 #ifndef USE_TILE_LOCAL
