@@ -913,6 +913,17 @@ bool melee_attack::attack()
     adjust_noise();
     handle_noise(defender->pos());
 
+    // Allow monster attacks to draw the ire of the defender.  Player
+    // attacks are handled elsewhere.
+    if (perceived_attack
+        && defender->atype() == ACT_MONSTER
+        && attacker->atype() == ACT_MONSTER
+        && attacker->alive() && defender->alive()
+        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
+    {
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+    }
+
     // If an enemy attacked a friend, set the pet target if it isn't set
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
