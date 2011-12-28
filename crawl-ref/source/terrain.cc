@@ -1355,9 +1355,15 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     mgrd(pos2) = m1;
 
     if (monster_at(pos1))
+    {
         menv[mgrd(pos1)].set_position(pos1);
+        menv[mgrd(pos1)].clear_far_constrictions();
+    }
     if (monster_at(pos2))
+    {
         menv[mgrd(pos2)].set_position(pos2);
+        menv[mgrd(pos2)].clear_far_constrictions();
+    }
 
     // Swap clouds.
     move_cloud(env.cgrid(pos1), temp);
@@ -1367,11 +1373,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (pos1 == you.pos())
     {
         you.set_position(pos2);
+        you.clear_far_constrictions();
         viewwindow();
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
+        you.clear_far_constrictions();
         viewwindow();
     }
 
