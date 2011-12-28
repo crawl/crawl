@@ -198,6 +198,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     mover->set_position(moved_pos);
     moved->set_position(mover_pos);
 
+    mover->clear_far_constrictions();
+    moved->clear_far_constrictions();
+
     mover->check_clinging(true);
     moved->check_clinging(true);
 
@@ -3603,6 +3606,10 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->set_position(n);
     mgrd(n) = mon->mindex();
     m2->set_position(c);
+
+    mon->clear_far_constrictions();
+    m2->clear_far_constrictions();
+
     const int m2i = m2->mindex();
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
@@ -3716,6 +3723,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     coord_def old_pos = mons->pos();
 
     mons->set_position(f);
+    mons->clear_far_constrictions();
 
     mgrd(mons->pos()) = mons->mindex();
 

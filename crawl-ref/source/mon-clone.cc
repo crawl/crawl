@@ -304,6 +304,8 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->set_position(pos);
+    mons->clear_all_constrictions();
+
     mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.

@@ -7115,6 +7115,7 @@ void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
     set_position(c);
+    clear_far_constrictions();
 }
 
 void player::reset_prev_move()

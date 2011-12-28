@@ -2063,6 +2063,7 @@ void move_demon_tentacle(monster* tentacle)
     // the search fails (sometimes), Don't know why. -cao
     tentacle->set_position(new_pos);
     mgrd(tentacle->pos()) = tentacle->mindex();
+    tentacle->clear_far_constrictions();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -2240,6 +2241,7 @@ void move_kraken_tentacles(monster* kraken)
         // the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
+        tentacle->clear_far_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
