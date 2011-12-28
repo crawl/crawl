@@ -1864,11 +1864,8 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-int num_traps_for_place(int level_number, const level_id &place)
+int num_traps_for_place(const level_id &place)
 {
-    if (level_number == -1)
-        level_number = place.absdepth();
-
     switch (place.branch)
     {
     case BRANCH_ECUMENICAL_TEMPLE:
@@ -1946,10 +1943,9 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
     return (type);
 }
 
-trap_type random_trap_for_place(int level_number, const level_id &place)
+trap_type random_trap_for_place(const level_id &place)
 {
-    if (level_number == -1)
-        level_number = place.absdepth();
+    int level_number = place.absdepth();
 
     if (place == BRANCH_SLIME_PITS)
         return _random_trap_slime(level_number);

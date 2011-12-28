@@ -1229,7 +1229,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                                 dummy));
 
         _clear_env_map();
-        builder(you.absdepth0, true, stair_type);
+        builder(true, stair_type);
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()

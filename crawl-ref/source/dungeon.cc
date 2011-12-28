@@ -88,28 +88,25 @@
 #define YOU_DUNGEON_VAULTS_KEY    "you_dungeon_vaults_key"
 
 // DUNGEON BUILDERS
-static bool _build_level_vetoable(int level_number, branch_type branch,
-                                  bool enable_random_maps,
+static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type);
-static void _build_dungeon_level(int level_number, branch_type branch,
-                                 dungeon_feature_type dest_stairs_type);
-static bool _valid_dungeon_level(int level_number, branch_type branch);
+static void _build_dungeon_level(dungeon_feature_type dest_stairs_type);
+static bool _valid_dungeon_level();
 
-static bool _builder_by_type(int level_number, branch_type branch);
-static void _builder_normal(int level_number);
-static void _builder_items(int level_number, int items_wanted);
-static void _builder_monsters(int level_number, int mon_wanted);
+static bool _builder_by_type();
+static void _builder_normal();
+static void _builder_items();
+static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
 static void _place_specific_stair(dungeon_feature_type stair,
-                                  const std::string &tag = "",
-                                  int dl = 0);
-static void _place_branch_entrances(int dlevel, branch_type branch);
+                                  const std::string &tag = "");
+static void _place_branch_entrances();
 static void _place_extra_vaults();
 static void _place_chance_vaults();
 static void _place_minivaults(void);
-static int _place_uniques(int level_number, branch_type branch);
-static void _place_traps(int level_number);
-static void _prepare_water(int level_number);
+static int _place_uniques();
+static void _place_traps();
+static void _prepare_water();
 static void _check_doors();
 static void _hide_doors();
 
@@ -125,16 +122,15 @@ static bool _connect_vault_exit(const coord_def& exit);
 static object_class_type _item_in_shop(shop_type shop_type);
 
 // VAULT FUNCTIONS
-static bool _build_secondary_vault(int level_number, const map_def *vault,
+static bool _build_secondary_vault(const map_def *vault,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
 
-static bool _build_primary_vault(int level_number, const map_def *vault);
+static bool _build_primary_vault(const map_def *vault);
 
 static void _build_postvault_level(vault_placement &place);
-static bool _build_vault_impl(int level_number,
-                              const map_def *vault,
+static bool _build_vault_impl(const map_def *vault,
                               bool build_only = false,
                               bool check_collisions = false,
                               bool make_no_exits = false,
@@ -247,8 +243,7 @@ static callback_map level_type_post_callbacks;
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-bool builder(int level_number,
-             bool enable_random_maps, dungeon_feature_type dest_stairs_type)
+bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 {
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
@@ -271,8 +266,7 @@ bool builder(int level_number,
 
         try
         {
-            if (_build_level_vetoable(level_number, you.where_are_you,
-                                      enable_random_maps, dest_stairs_type))
+            if (_build_level_vetoable(enable_random_maps, dest_stairs_type))
                 return (true);
         }
         catch (map_load_exception &mload)
@@ -306,8 +300,7 @@ bool builder(int level_number,
     return (false);
 }
 
-static bool _build_level_vetoable(int level_number, branch_type branch,
-                                  bool enable_random_maps,
+static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -321,7 +314,7 @@ static bool _build_level_vetoable(int level_number, branch_type branch,
 
     try
     {
-        _build_dungeon_level(level_number, branch, dest_stairs_type);
+        _build_dungeon_level(dest_stairs_type);
     }
     catch (dgn_veto_exception& e)
     {
@@ -334,57 +327,58 @@ static bool _build_level_vetoable(int level_number, branch_type branch,
 
     _dgn_set_floor_colours();
 
-    if (!crawl_state.game_standard_levelgen()
-        || _valid_dungeon_level(level_number, branch))
+    if (crawl_state.game_standard_levelgen()
+        && !_valid_dungeon_level())
     {
+        return false;
+    }
+
 #ifdef DEBUG_MONS_SCAN
-        // If debug_mons_scan() finds a problem while Generating_Level is
-        // still true then it will announce that a problem was caused
-        // during level generation.
-        debug_mons_scan();
+    // If debug_mons_scan() finds a problem while Generating_Level is
+    // still true then it will announce that a problem was caused
+    // during level generation.
+    debug_mons_scan();
 #endif
 
-        if (!env.level_build_method.empty()
-            && env.level_build_method[0] == ' ')
-        {
-            env.level_build_method = env.level_build_method.substr(1);
-        }
-
-        std::string level_layout_type = comma_separated_line(
-            env.level_layout_types.begin(),
-            env.level_layout_types.end(), ", ");
-
-        // Save information in the level's properties hash table
-        // so we can include it in crash reports.
-        env.properties[BUILD_METHOD_KEY] = env.level_build_method;
-        env.properties[LAYOUT_TYPE_KEY]  = level_layout_type;
-        env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
-
-        // Save information in the player's properties has table so
-        // we can include it in the character dump.
-        if (!_you_vault_list.empty())
-        {
-            const std::string lev = level_id::current().describe();
-            CrawlHashTable &all_vaults =
-                you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
-
-            CrawlHashTable &this_level = all_vaults[lev].get_table();
-            this_level = _you_vault_list;
-        }
-
-        _dgn_postprocess_level();
-
-        env.level_layout_types.clear();
-        env.level_uniq_maps.clear();
-        env.level_uniq_map_tags.clear();
-        _dgn_map_colour_fixup();
-
-        // Discard any Lua chunks we loaded.
-        strip_all_maps();
-
-        return (true);
+    if (!env.level_build_method.empty()
+        && env.level_build_method[0] == ' ')
+    {
+        env.level_build_method = env.level_build_method.substr(1);
     }
-    return (false);
+
+    std::string level_layout_type = comma_separated_line(
+        env.level_layout_types.begin(),
+        env.level_layout_types.end(), ", ");
+
+    // Save information in the level's properties hash table
+    // so we can include it in crash reports.
+    env.properties[BUILD_METHOD_KEY] = env.level_build_method;
+    env.properties[LAYOUT_TYPE_KEY]  = level_layout_type;
+    env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
+
+    // Save information in the player's properties has table so
+    // we can include it in the character dump.
+    if (!_you_vault_list.empty())
+    {
+        const std::string lev = level_id::current().describe();
+        CrawlHashTable &all_vaults =
+            you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
+
+        CrawlHashTable &this_level = all_vaults[lev].get_table();
+        this_level = _you_vault_list;
+    }
+
+    _dgn_postprocess_level();
+
+    env.level_layout_types.clear();
+    env.level_uniq_maps.clear();
+    env.level_uniq_map_tags.clear();
+    _dgn_map_colour_fixup();
+
+    // Discard any Lua chunks we loaded.
+    strip_all_maps();
+
+    return (true);
 }
 
 // Things that are bugs where we want to assert rather than to sweep it under
@@ -1111,13 +1105,13 @@ static bool _is_level_stair_connected(dungeon_feature_type feat)
     return (false);
 }
 
-static bool _valid_dungeon_level(int absdepth0, branch_type branch)
+static bool _valid_dungeon_level()
 {
     // D:1 only.
     // Also, what's the point of this check?  Regular connectivity should
     // do that already.
-    if (absdepth0 == 0)
-        return _is_level_stair_connected(branches[branch].exit_stairs);
+    if (you.absdepth0 == 0)
+        return _is_level_stair_connected(branches[BRANCH_MAIN_DUNGEON].exit_stairs);
 
     return (true);
 }
@@ -1234,34 +1228,34 @@ void dgn_reset_level(bool enable_random_maps)
     env.tile_names.clear();
 }
 
-static void _build_layout_skeleton(int level_number, branch_type branch)
+static void _build_layout_skeleton()
 {
-    if (_builder_by_type(level_number, branch))
-        _builder_normal(level_number);
+    if (_builder_by_type())
+        _builder_normal();
 
     if (player_in_branch(BRANCH_SLIME_PITS))
         _slime_connectivity_fixup();
 }
 
-static int _num_items_wanted(int level_number)
+static int _num_items_wanted(int absdepth0)
 {
     if (branches[you.where_are_you].branch_flags & BFLAG_NO_ITEMS)
         return 0;
-    else if (level_number > 5 && one_chance_in(500 - 5 * level_number))
+    else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
         return (10 + random2avg(90, 2)); // rich level!
     else
         return (3 + roll_dice(3, 11));
 }
 
-static int _num_mons_wanted(branch_type branch)
+static int _num_mons_wanted()
 {
-    if (branch == BRANCH_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         return 0;
 
-    if (branch == BRANCH_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         return random2avg(28, 3);
 
-    if (!branch_has_monsters(branch))
+    if (!branch_has_monsters(you.where_are_you))
         return 0;
 
     int mon_wanted = roll_dice(3, 10);
@@ -1793,7 +1787,7 @@ static void _fixup_hatches_dest()
 //   it will randomly pick from vaults tagged "temple_overflow_num",
 //   where "num" is the number of gods in the temple.  Gods are listed
 //   in the order their altars are placed.
-static void _build_overflow_temples(int level_number)
+static void _build_overflow_temples()
 {
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
         // Levels built while in testing mode.
@@ -1802,10 +1796,10 @@ static void _build_overflow_temples(int level_number)
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
     // Are we deeper than the last overflow temple?
-    if (level_number >= levels.size())
+    if (you.absdepth0 >= levels.size())
         return;
 
-    CrawlStoreValue &val = levels[level_number];
+    CrawlStoreValue &val = levels[you.absdepth0];
 
     // Does this level have an overflow temple?
     if (val.get_flags() & SFLAG_UNSET)
@@ -1893,7 +1887,7 @@ static void _build_overflow_temples(int level_number)
             return;
 
         if (!dgn_ensure_vault_placed(
-                _build_secondary_vault(level_number, vault),
+                _build_secondary_vault(vault),
                 false))
         {
 #ifdef DEBUG_TEMPLES
@@ -2034,8 +2028,7 @@ static void _ruin_level(Iterator ri,
   #define FEATURE_MIMIC_DEPTH   10
   #define ITEM_MIMIC_DEPTH       7
 #endif
-static void _place_feature_mimics(int level_number,
-                                  dungeon_feature_type dest_stairs_type)
+static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 {
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
@@ -2045,7 +2038,7 @@ static void _place_feature_mimics(int level_number,
         return;
     }
 
-    if (level_number < FEATURE_MIMIC_DEPTH)
+    if (absdungeon_depth() < FEATURE_MIMIC_DEPTH)
         return;
 
     for (rectangle_iterator ri(1); ri; ++ri)
@@ -2126,10 +2119,10 @@ static void _place_feature_mimics(int level_number,
     }
 }
 
-static void _place_item_mimics(int level_number)
+static void _place_item_mimics()
 {
 
-    if (level_number < ITEM_MIMIC_DEPTH)
+    if (absdungeon_depth() < ITEM_MIMIC_DEPTH)
         return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -2149,11 +2142,11 @@ static void _place_item_mimics(int level_number)
 
 }
 
-static void _build_dungeon_level(int level_number, branch_type branch, dungeon_feature_type dest_stairs_type)
+static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
-    _build_layout_skeleton(level_number, branch);
+    _build_layout_skeleton();
 
-    if (branch == BRANCH_LABYRINTH)
+    if (player_in_branch(BRANCH_LABYRINTH))
         return;
 
     // Now place items, mons, gates, etc.
@@ -2185,7 +2178,7 @@ static void _build_dungeon_level(int level_number, branch_type branch, dungeon_f
     if (player_in_branch(BRANCH_MAIN_DUNGEON)
         && !crawl_state.game_is_tutorial())
     {
-        _build_overflow_temples(level_number);
+        _build_overflow_temples();
     }
 
     // Try to place minivaults that really badly want to be placed. Still
@@ -2194,26 +2187,26 @@ static void _build_dungeon_level(int level_number, branch_type branch, dungeon_f
     {
         _place_chance_vaults();
         _place_minivaults();
-        _place_branch_entrances(level_number, branch);
+        _place_branch_entrances();
         _place_extra_vaults();
 
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
-        _place_uniques(level_number, branch);
+        _place_uniques();
 
-        _place_feature_mimics(level_number, dest_stairs_type);
+        _place_feature_mimics(dest_stairs_type);
 
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
-        _place_traps(level_number);
+        _place_traps();
 
         // Place items.
-        _builder_items(level_number, _num_items_wanted(level_number));
+        _builder_items();
 
         // Place monsters.
         if (!crawl_state.game_is_zotdef())
-            _builder_monsters(level_number, _num_mons_wanted(branch));
+            _builder_monsters();
 
         _fixup_walls();
         _fixup_branch_stairs();
@@ -2223,17 +2216,17 @@ static void _build_dungeon_level(int level_number, branch_type branch, dungeon_f
     _fixup_misplaced_items();
 
     link_items();
-    _place_item_mimics(level_number);
+    _place_item_mimics();
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)
         && !player_in_branch(BRANCH_SHOALS))
     {
-        _prepare_water(level_number);
+        _prepare_water();
     }
 
     // Translate stairs for pandemonium levels.
-    if (branch == BRANCH_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         _fixup_pandemonium_stairs();
 
     if (player_in_hell())
@@ -2347,9 +2340,10 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
 
 // Gives water which is next to ground/shallow water a chance of being
 // shallow. Checks each water space.
-static void _prepare_water(int level_number)
+static void _prepare_water()
 {
     dungeon_feature_type which_grid;   // code compaction {dlb}
+    int absdepth0 = absdungeon_depth();
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -2364,12 +2358,12 @@ static void _prepare_water(int level_number)
 
                 // must come first {dlb}
                 if (which_grid == DNGN_SHALLOW_WATER
-                    && one_chance_in(8 + level_number))
+                    && one_chance_in(8 + absdepth0))
                 {
                     grd(*ri) = DNGN_SHALLOW_WATER;
                 }
                 else if (which_grid >= DNGN_FLOOR
-                         && x_chance_in_y(80 - level_number * 4,
+                         && x_chance_in_y(80 - absdepth0 * 4,
                                           100))
                 {
                     grd(*ri) = DNGN_SHALLOW_WATER;
@@ -2379,7 +2373,7 @@ static void _prepare_water(int level_number)
     }
 }
 
-static void _pan_level(int level_number)
+static void _pan_level()
 {
     const char *pandemon_level_names[] =
         { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
@@ -2411,8 +2405,7 @@ static void _pan_level(int level_number)
 
         ASSERT(vault);
 
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                                 true);
+        dgn_ensure_vault_placed(_build_primary_vault(vault), true);
     }
     else
     {
@@ -2420,36 +2413,32 @@ static void _pan_level(int level_number)
         ASSERT(vault);
 
         if (vault->orient == MAP_ENCOMPASS)
-        {
-            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                    true);
-        }
+            dgn_ensure_vault_placed(_build_primary_vault(vault), true);
         else
         {
             const map_def *layout = random_map_for_tag("layout", true, true);
 
-            dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
-                    true);
+            dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
-            _build_secondary_vault(level_number, vault);
+            _build_secondary_vault(vault);
         }
     }
 }
 
 // Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
 // further generation, and true otherwise.
-static bool _builder_by_type(int level_number, branch_type branch)
+static bool _builder_by_type()
 {
-    if (branch == BRANCH_LABYRINTH)
-        dgn_build_labyrinth_level(level_number);
-    else if (branch == BRANCH_ABYSS)
+    if (player_in_branch(BRANCH_LABYRINTH))
+        dgn_build_labyrinth_level();
+    else if (player_in_branch(BRANCH_ABYSS))
         generate_abyss();
-    else if (branch == BRANCH_PANDEMONIUM)
+    else if (player_in_branch(BRANCH_PANDEMONIUM))
     {
         // Generate a random monster table for Pan.
         init_pandemonium();
         setup_vault_mon_list();
-        _pan_level(level_number);
+        _pan_level();
     }
     else
         return true;
@@ -2879,7 +2868,7 @@ static void _place_chance_vaults()
         {
             dprf("Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
-            _build_secondary_vault(you.absdepth0, map);
+            _build_secondary_vault(map);
         }
     }
 }
@@ -2891,28 +2880,27 @@ static void _place_minivaults(void)
         const map_def *vault = NULL;
 
         if ((vault = random_map_for_place(level_id::current(), true)))
-            _build_secondary_vault(you.absdepth0, vault);
+            _build_secondary_vault(vault);
 
         int tries = 0;
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
             if (vault)
-                _build_secondary_vault(you.absdepth0, vault);
+                _build_secondary_vault(vault);
         } // if ALL maps eligible are "extra" but fail to place, we'd be screwed
         while (vault && vault->has_tag("extra") && tries++ < 10000);
     }
 }
 
-static void _builder_normal(int level_number)
+static void _builder_normal()
 {
     const map_def *vault = _dgn_random_map_for_place(false);
 
     if (vault)
     {
         env.level_build_method += " random_map_for_place";
-        _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
-                                 vault);
+        _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         return;
     }
 
@@ -2926,8 +2914,7 @@ static void _builder_normal(int level_number)
                   || vault->orient == MAP_ENCOMPASS))
     {
         env.level_build_method += " random_map_in_depth";
-        _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
-                                 vault);
+        _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         return;
     }
 
@@ -2936,7 +2923,7 @@ static void _builder_normal(int level_number)
     if (!vault)
         die("Couldn't pick a layout.");
 
-    dgn_ensure_vault_placed(_build_primary_vault(level_number, vault), false);
+    dgn_ensure_vault_placed(_build_primary_vault(vault), false);
 }
 
 // Used to nuke shafts placed in corridors on low levels - it's just
@@ -2953,9 +2940,10 @@ static bool _shaft_is_in_corridor(const coord_def& c)
     return (false);
 }
 
-static void _place_traps(int level_number)
+static void _place_traps()
 {
-    const int num_traps = num_traps_for_place(level_number);
+    const int num_traps = num_traps_for_place();
+    int level_number = absdungeon_depth();
 
     ASSERT(num_traps >= 0);
     ASSERT(num_traps <= MAX_TRAPS);
@@ -2983,7 +2971,7 @@ static void _place_traps(int level_number)
             break;
 
         while (ts.type >= NUM_TRAPS)
-            ts.type = random_trap_for_place(level_number);
+            ts.type = random_trap_for_place();
 
         if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
@@ -2991,7 +2979,7 @@ static void _place_traps(int level_number)
             if (_shaft_is_in_corridor(ts.pos))
             {
                 // Choose again!
-                ts.type = random_trap_for_place(level_number);
+                ts.type = random_trap_for_place();
 
                 // If we get shaft a second time, turn it into an alarm trap, or
                 // if we got nothing.
@@ -3170,25 +3158,26 @@ static coord_def _place_specific_feature(dungeon_feature_type feat)
     return c;
 }
 
-static bool _place_vault_by_tag(const std::string &tag, int dlevel)
+static bool _place_vault_by_tag(const std::string &tag)
 {
     const map_def *vault = random_map_for_tag(tag, true);
     if (!vault)
         return (false);
 
-    return _build_secondary_vault(dlevel, vault);
+    return _build_secondary_vault(vault);
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
-                                  const std::string &tag,
-                                  int dlevel)
+                                  const std::string &tag)
 {
-    if (tag.empty() || !_place_vault_by_tag(tag, dlevel))
+    if (tag.empty() || !_place_vault_by_tag(tag))
         _place_specific_feature(stair);
 }
 
-static void _place_branch_entrances(int dlevel, branch_type branch)
+static void _place_branch_entrances()
 {
+    int dlevel = absdungeon_depth();
+
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
@@ -3217,7 +3206,7 @@ static void _place_branch_entrances(int dlevel, branch_type branch)
             entry_tag += "_entry";
             lowercase(entry_tag);
 
-            _place_specific_stair(b->entry_stairs, entry_tag, dlevel);
+            _place_specific_stair(b->entry_stairs, entry_tag);
         }
     }
 }
@@ -3234,7 +3223,7 @@ static void _place_extra_vaults()
             if (!vault || vault->orient == MAP_ENCOMPASS)
                 break;
 
-            if (vault && _build_secondary_vault(you.absdepth0, vault))
+            if (vault && _build_secondary_vault(vault))
             {
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
@@ -3247,18 +3236,17 @@ static void _place_extra_vaults()
 }
 
 // Place uniques on the level.
-// There is a hidden dependency on the player's actual
-// location (through your_branch()).
 // Return the number of uniques placed.
-static int _place_uniques(int level_number, branch_type branch)
+static int _place_uniques()
 {
     // Unique beasties:
-    if (level_number <= 0 || !your_branch().has_uniques)
+    if (!your_branch().has_uniques)
         return 0;
 
 #ifdef DEBUG_UNIQUE_PLACEMENT
     FILE *ostat = fopen("unique_placement.log", "a");
-    fprintf(ostat, "--- Looking to place uniques on: Level %d of %s ---\n", level_number, your_branch().shortname);
+    fprintf(ostat, "--- Looking to place uniques on %s\n",
+                   level_id::current().describe().c_str());
 #endif
 
     int num_placed = 0;
@@ -3320,12 +3308,12 @@ static int _place_uniques(int level_number, branch_type branch)
 }
 
 static int _place_monster_vector(std::vector<monster_type> montypes,
-                                 int level_number, int num_to_place)
+                                 int num_to_place)
 {
     int result = 0;
 
     mgen_data mg;
-    mg.power     = level_number;
+    mg.power     = -1;
     mg.behaviour = BEH_SLEEP;
     mg.flags    |= MG_PERMIT_BANDS;
     mg.map_mask |= MMT_NO_MONS;
@@ -3360,10 +3348,11 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
 }
 
 
-static void _place_aquatic_monsters(int level_number)
+static void _place_aquatic_monsters()
 {
     int lava_spaces = 0, water_spaces = 0;
     std::vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
+    int level_number = absdungeon_depth();
 
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
@@ -3400,8 +3389,7 @@ static void _place_aquatic_monsters(int level_number)
                 swimming_things[i] = MONS_SALAMANDER;
         }
 
-        _place_monster_vector(swimming_things, level_number,
-                              std::min(random2avg(9, 2)
+        _place_monster_vector(swimming_things, std::min(random2avg(9, 2)
                                        + (random2(lava_spaces) / 10), 15));
     }
 
@@ -3437,8 +3425,7 @@ static void _place_aquatic_monsters(int level_number)
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
 
-        _place_monster_vector(swimming_things, level_number,
-                              std::min(random2avg(9, 2)
+        _place_monster_vector(swimming_things, std::min(random2avg(9, 2)
                                 + (random2(water_spaces) / 10), 15));
     }
 }
@@ -3448,10 +3435,12 @@ bool door_vetoed(const coord_def pos)
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
 }
 
-static void _builder_monsters(int level_number, int mon_wanted)
+static void _builder_monsters()
 {
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
         return;
+
+    int mon_wanted = _num_mons_wanted();
 
     if (player_in_branch(BRANCH_PANDEMONIUM))
     {
@@ -3477,7 +3466,7 @@ static void _builder_monsters(int level_number, int mon_wanted)
     {
         mgen_data mg;
         mg.behaviour              = BEH_SLEEP;
-        mg.power                  = level_number;
+        mg.power                  = -1;
         mg.flags                 |= MG_PERMIT_BANDS;
         mg.map_mask              |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
@@ -3486,14 +3475,15 @@ static void _builder_monsters(int level_number, int mon_wanted)
     }
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
-        _place_aquatic_monsters(level_number);
+        _place_aquatic_monsters();
 }
 
-static void _builder_items(int level_number, int items_wanted)
+static void _builder_items()
 {
     int i = 0;
     object_class_type specif_type = OBJ_RANDOM;
-    int items_levels = level_number;
+    int items_levels = absdungeon_depth();
+    int items_wanted = _num_items_wanted(items_levels);
 
     if (player_in_branch(BRANCH_VAULTS))
     {
@@ -3638,7 +3628,7 @@ bool dgn_place_map(const map_def *mdef,
     }
 
     const int map_index = env.level_vaults.size();
-    did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
+    did_map = _build_secondary_vault(mdef, clobber,
                                      make_no_exits, where);
 
     // Activate any markers within the map.
@@ -3742,14 +3732,14 @@ static void _ruin_vault(const vault_placement &vp)
 
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
-static bool _build_secondary_vault(int level_number, const map_def *vault,
+static bool _build_secondary_vault(const map_def *vault,
                                    bool clobber, bool no_exits,
                                    const coord_def &where)
 {
     const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
                         || player_in_branch(BRANCH_SLIME_PITS);
     const int map_index = env.level_vaults.size();
-    if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
+    if (_build_vault_impl(vault, true, !clobber, no_exits, where))
     {
         if (!no_exits)
         {
@@ -3772,14 +3762,14 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
 //
 // NOTE: minivaults can never be placed as primary vaults.
 //
-static bool _build_primary_vault(int level_number, const map_def *vault)
+static bool _build_primary_vault(const map_def *vault)
 {
-    return _build_vault_impl(level_number, vault);
+    return _build_vault_impl(vault);
 }
 
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
-static bool _build_vault_impl(int level_number, const map_def *vault,
+static bool _build_vault_impl(const map_def *vault,
                               bool build_only, bool check_collisions,
                               bool make_no_exits, const coord_def &where)
 {
@@ -3788,7 +3778,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
     vault_placement place;
 
-    place.level_number = level_number;
+    place.level_number = absdungeon_depth();
 
     if (map_bounds(where))
         place.pos = where;
@@ -4525,7 +4515,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     {
         trap_spec* spec = f.trap.get();
         if (spec && spec->tr_type == TRAP_INDEPTH)
-            place_specific_trap(where, random_trap_for_place(place.level_number));
+            place_specific_trap(where, random_trap_for_place());
         else if (spec)
             place_specific_trap(where, spec);
 
@@ -4538,7 +4528,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
     else if (f.shop.get())
-        place_spec_shop(place.level_number, where, f.shop.get());
+        place_spec_shop(where, f.shop.get());
     else
         grd(where) = DNGN_FLOOR;
 
@@ -4584,7 +4574,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         place_specific_trap(where, TRAP_RANDOM);
         break;
     case '~':
-        place_specific_trap(where, random_trap_for_place(place.level_number));
+        place_specific_trap(where, random_trap_for_place());
         break;
     }
 
@@ -4966,18 +4956,17 @@ static bool _need_varied_selection(shop_type shop)
     return (shop == SHOP_BOOK);
 }
 
-void place_spec_shop(int level_number,
-                      const coord_def& where,
-                      int force_s_type, bool representative)
+void place_spec_shop(const coord_def& where,
+                     int force_s_type, bool representative)
 {
     shop_spec spec(static_cast<shop_type>(force_s_type));
-    place_spec_shop (level_number, where, &spec, representative);
+    place_spec_shop(where, &spec, representative);
 }
 
-void place_spec_shop(int level_number,
-                      const coord_def& where,
-                      shop_spec* spec, bool representative)
+void place_spec_shop(const coord_def& where,
+                     shop_spec* spec, bool representative)
 {
+    int level_number = absdungeon_depth();
     int force_s_type = static_cast<int>(spec->sh_type);
 
     int orb = 0;

@@ -88,7 +88,7 @@ LUAFN(debug_generate_level)
     tile_init_default_flavour();
     tile_clear_flavour();
     tile_new_level(true);
-    builder(you.absdepth0, lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
+    builder(lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
 }
 

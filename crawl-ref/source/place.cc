@@ -124,6 +124,11 @@ int subdungeon_depth(branch_type branch, int depth)
     return d;
 }
 
+int absdungeon_depth()
+{
+    return you.absdepth0;
+}
+
 int player_branch_depth()
 {
     return subdungeon_depth(you.where_are_you, you.absdepth0);
