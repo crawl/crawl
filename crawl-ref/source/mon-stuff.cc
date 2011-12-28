@@ -4389,10 +4389,14 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             monster_teleport_to_player(mons->constricted_by, newpos);
     }
     for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mons->constricting[i] == MHITYOU)
+    {
+        if (mons->constricting[i] == mons->constricted_by)
+            ; // Already moved, do nothing.
+        else if (mons->constricting[i] == MHITYOU)
             player_teleport_to_monster(mons, newpos);
         else if (mons->constricting[i] != NON_ENTITY)
             monster_teleport_to_player(mons->constricting[i], newpos);
+    }
 
     // Now break constrictions.
     mons->clear_far_constrictions();

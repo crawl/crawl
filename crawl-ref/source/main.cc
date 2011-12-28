@@ -4293,6 +4293,9 @@ static void _move_player(coord_def move)
             you.time_taken *= 1.4;
 #endif
 
+        // clear constriction data
+        you.clear_all_constrictions();
+
         move_player_to_grid(targ, true, false);
 
         you.walking = move.abs();
@@ -4363,9 +4366,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    // moved and not an attack, clear constriction data
-    if (!attacking)
-        you.clear_all_constrictions();
 }
 
 static int _get_num_and_char_keyfun(int &ch)

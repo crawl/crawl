@@ -78,10 +78,14 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
             monster_teleport_to_player(constricted_by, dest);
     }
     for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] == MHITYOU)
+    {
+        if (constricting[i] == constricted_by)
+            ; // Already moved, do nothing.
+        else if (constricting[i] == MHITYOU)
             player_teleport_to_monster(this, dest);
         else if (constricting[i] != NON_ENTITY)
             monster_teleport_to_player(constricting[i], dest);
+    }
 
     // Now break our nonadjacent constrictions.
     clear_far_constrictions();

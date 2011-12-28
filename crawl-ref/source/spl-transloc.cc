@@ -228,9 +228,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             if (you.is_constricted())
                 monster_teleport_to_player(you.constricted_by, beam.target);
             for (int i = 0; i < MAX_CONSTRICT; i++)
-                if (you.constricting[i] != NON_ENTITY)
+            {
+                if (you.constricting[i] != NON_ENTITY
+                    && you.constricting[i] != you.constricted_by)
+                {
                     monster_teleport_to_player(you.constricting[i],
                                                beam.target);
+                }
+            }
 
             // Now break your nonadjacent constrictions.
             you.clear_far_constrictions();
@@ -293,8 +298,13 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         if (you.is_constricted())
             monster_teleport_to_player(you.constricted_by, target);
         for (int i = 0; i < MAX_CONSTRICT; i++)
-            if (you.constricting[i] != NON_ENTITY)
+        {
+            if (you.constricting[i] != NON_ENTITY
+                && you.constricting[i] != you.constricted_by)
+            {
                 monster_teleport_to_player(you.constricting[i], target);
+            }
+        }
 
         // Now break your nonadjacent constrictions.
         you.clear_far_constrictions();
@@ -598,8 +608,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 if (you.is_constricted())
                     monster_teleport_to_player(you.constricted_by, pos);
                 for (int i = 0; i < MAX_CONSTRICT; i++)
-                    if (you.constricting[i] != NON_ENTITY)
+                {
+                    if (you.constricting[i] != NON_ENTITY
+                        && you.constricting[i] != you.constricted_by)
+                    {
                         monster_teleport_to_player(you.constricting[i], pos);
+                    }
+                }
 
                 // Now break your nonadjacent constrictions.
                 you.clear_far_constrictions();
@@ -665,8 +680,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         if (you.is_constricted())
             monster_teleport_to_player(you.constricted_by, newpos);
         for (int i = 0; i < MAX_CONSTRICT; i++)
-            if (you.constricting[i] != NON_ENTITY)
+        {
+            if (you.constricting[i] != NON_ENTITY
+                && you.constricting[i] != you.constricted_by)
+            {
                 monster_teleport_to_player(you.constricting[i], newpos);
+            }
+        }
 
         // Now break your nonadjacent constrictions.
         you.clear_far_constrictions();
