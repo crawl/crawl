@@ -306,6 +306,25 @@ void actor::clear_clinging()
         props["clinging"] = false;
 }
 
+void actor::clear_specific_constrictions(int mind)
+{
+    if (constricted_by == mind)
+    {
+        constricted_by = NON_ENTITY;
+        dur_been_constricted = 0;
+        escape_attempts = 0;
+    }
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        if (constricting[i] == mind)
+        {
+            constricting[i] = NON_ENTITY;
+            dur_has_constricted[i] = 0;
+        }
+    }
+}
+
 bool actor::is_constricting()
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
@@ -318,6 +337,15 @@ bool actor::is_constricting()
 bool actor::is_constricted()
 {
     return (constricted_by != NON_ENTITY);
+}
+
+bool actor::is_constricted_larger()
+{
+    if (!is_constricted())
+        return false;
+
+    actor* const constrictor = mindex_to_actor(constricted_by);
+    return (constrictor->body_size() > body_size());
 }
 
 actor *mindex_to_actor(short mindex)

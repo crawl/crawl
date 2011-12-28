@@ -445,11 +445,8 @@ public:
     void calc_speed();
     void accum_been_constricted();
     void accum_has_constricted();
-    bool is_constricted_larger();
-    bool is_constricted();
     bool attempt_escape();
     void clear_all_constrictions();
-    void clear_specific_constrictions(int mindex);
     bool has_usable_tentacle();
 
 private:

@@ -10,6 +10,7 @@ my $CREDITS = $ARGV[0] || 'CREDITS.txt';
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
 
 my $COLLATOR = Unicode::Collate->new();
+exit 1;
 
 binmode STDOUT, ':utf8';
 open my $inf, '<:utf8', $CREDITS
