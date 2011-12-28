@@ -200,7 +200,7 @@ This spell tries to teleport away any monsters directly beside the caster.
 %%%%
 Dragon Form
 
-This spell temporarily transforms the caster into a great, fire-breathing dragon. Draconian casters will instead retain their innate colour and breath weapon once transformed, and find it somewhat easier to cast this spell.
+This spell temporarily transforms the caster into a great, fire-breathing dragon. Draconian casters will instead retain their innate colour and breath weapon once transformed.
 %%%%
 Enslavement
 
