@@ -7,7 +7,6 @@
 
 #include "arena.h"
 #include "artefact.h"
-#include "coord.h"
 #include "directn.h"
 #include "externs.h"
 #include "env.h"

@@ -9,7 +9,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"

@@ -24,7 +24,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "cloud.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"

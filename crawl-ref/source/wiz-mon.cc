@@ -12,7 +12,6 @@
 #include "artefact.h"
 #include "cio.h"
 #include "colour.h"
-#include "coord.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "dungeon.h"

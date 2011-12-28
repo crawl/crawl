@@ -10,7 +10,6 @@
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
-#include "coord.h"
 #include "dungeon.h"
 #include "env.h"
 #include "externs.h"

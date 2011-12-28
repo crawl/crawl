@@ -24,7 +24,6 @@
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dungeon.h"

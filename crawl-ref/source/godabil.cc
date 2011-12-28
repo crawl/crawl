@@ -13,7 +13,6 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"

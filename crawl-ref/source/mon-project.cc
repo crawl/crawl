@@ -16,7 +16,6 @@
 
 #include "cloud.h"
 #include "directn.h"
-#include "coord.h"
 #include "env.h"
 #include "itemprop.h"
 #include "mgen_data.h"

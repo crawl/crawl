@@ -39,7 +39,6 @@
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "options.h"

@@ -27,7 +27,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
-#include "coord.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
