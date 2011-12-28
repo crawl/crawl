@@ -5365,23 +5365,25 @@ bool melee_attack::handle_constriction()
         && defender->constricted_by == NON_ENTITY)
     {
         // calculate to_hit
+        size_type asize = attacker->body_size(PSIZE_BODY);
+        size_type dsize = defender->body_size(PSIZE_BODY);
+        int m_ev = defender->melee_evasion(attacker);
+
         int attackdice, defenddice;
         if (attacker->atype() == ACT_PLAYER)
         {
-            attackdice = roll_dice(3, you.strength()*(you.body_size()+1));
-            defenddice = roll_dice(1, 3*defender->melee_evasion(attacker)*
-                                      (defender->body_size()+1));
+            attackdice = roll_dice(3, you.strength() * (asize + 1));
+            defenddice = roll_dice(1, 3 * m_ev * (dsize + 1));
         }
         else
         {
-            attackdice = roll_dice(1, attacker->as_monster()->hit_dice*
-                                      (attacker->body_size()+1));
-            defenddice = roll_dice(1, defender->melee_evasion(attacker)*
-                                      (defender->body_size()+1));
+            attackdice = roll_dice(1, attacker->as_monster()->hit_dice
+                                       * (asize + 1));
+            defenddice = roll_dice(1, m_ev * (dsize + 1));
         }
 
         // if hit, grab
-        if (attacker->body_size() >= defender->body_size()
+        if (asize >= dsize
             && !defender->is_insubstantial()
             && adjacent(attacker->pos(), defender->pos())
             && attackdice >= defenddice)
@@ -5408,9 +5410,9 @@ bool melee_attack::handle_constriction()
              (attacker->atype() == ACT_PLAYER
                  ? you.strength()
                  : attacker->as_monster()->hit_dice),
-             attacker->body_size(),
+             asize,
              attackdice,
-             defender->melee_evasion(attacker), defender->body_size(),
+             m_ev, dsize,
              defenddice, grabslot);
     }
 
