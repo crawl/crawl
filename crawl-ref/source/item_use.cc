@@ -3732,19 +3732,29 @@ bool remove_ring(int slot, bool announce)
 
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
+    bool has_jewellery = false;
+    const equipment_type first = you.species == SP_OCTOPODE ? EQ_AMULET
+                                                            : EQ_LEFT_RING;
+    const equipment_type last = you.species == SP_OCTOPODE ? EQ_RING_EIGHT
+                                                           : EQ_AMULET;
 
-    const bool left  = player_wearing_slot(EQ_LEFT_RING);
-    const bool right = player_wearing_slot(EQ_RIGHT_RING);
-    const bool amu   = player_wearing_slot(EQ_AMULET);
-    bool octopode_with_ring = false;
-    if (you.species == SP_OCTOPODE)
+    for (int eq = first; eq <= last; eq++)
     {
-        for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
-            if (player_wearing_slot(eq))
-                octopode_with_ring = true;
+        if (player_wearing_slot(eq))
+        {
+            if (has_jewellery)
+            {
+                // At least one other piece, which means we'll have to ask
+                hand_used = EQ_NONE;
+            }
+            else
+                hand_used = (equipment_type) eq;
+
+            has_jewellery = true;
+        }
     }
 
-    if (!left && !right && !amu && !octopode_with_ring)
+    if (!has_jewellery)
     {
         mpr("You aren't wearing any rings or amulets.");
         return (false);
@@ -3758,18 +3768,11 @@ bool remove_ring(int slot, bool announce)
 
     const item_def* gloves = you.slot_item(EQ_GLOVES);
     const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !amu)
+    if (gloves_cursed && !player_wearing_slot(EQ_AMULET))
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
     }
-
-    if (left && !right && !amu)
-        hand_used = EQ_LEFT_RING;
-    else if (!left && right && !amu)
-        hand_used = EQ_RIGHT_RING;
-    else if (!left && !right && !octopode_with_ring && amu)
-        hand_used = EQ_AMULET;
 
     if (hand_used == EQ_NONE)
     {
