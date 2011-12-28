@@ -413,7 +413,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 //
 // stepped     - normal walking moves
 // allow_shift - allowed to scramble in any direction out of lava/water
-void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
+// clear_constrictions - should non-adjacent constrictions be broken?
+void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
+                         bool clear_constrictions)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(in_bounds(p));
@@ -438,7 +440,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
            || fedhas_passthrough(monster_at(p)));
 
     // Move the player to new location.
-    you.moveto(p);
+    you.moveto(p, true, clear_constrictions);
     viewwindow();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);

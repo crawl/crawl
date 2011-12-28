@@ -398,8 +398,10 @@ public:
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
-    void moveto(const coord_def &c, bool clear_net = true);
-    bool move_to_pos(const coord_def &c, bool clear_net = true);
+    void moveto(const coord_def &c, bool clear_net = true,
+                bool check_constrict = true);
+    bool move_to_pos(const coord_def &c, bool clear_net = true,
+                     bool check_constrict = true);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);
@@ -769,7 +771,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
 bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
                   const std::string &msg = "");
-void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
+void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
+                         bool clear_constrictions = true);
 
 bool is_map_persistent(void);
 bool player_in_branch(int branch);

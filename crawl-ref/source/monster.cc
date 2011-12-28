@@ -2653,7 +2653,7 @@ int monster::get_experience_level() const
     return (hit_dice);
 }
 
-void monster::moveto(const coord_def& c, bool clear_net)
+void monster::moveto(const coord_def& c, bool clear_net, bool check_constrict)
 {
     if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
@@ -2667,7 +2667,8 @@ void monster::moveto(const coord_def& c, bool clear_net)
 
     set_position(c);
 
-    clear_far_constrictions();
+    if (check_constrict)
+        clear_far_constrictions();
 }
 
 bool monster::fumbles_attack(bool verbose)
@@ -4584,7 +4585,8 @@ bool monster::self_destructs()
     return (false);
 }
 
-bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net,
+                          bool check_constrict)
 {
     const actor* a = actor_at(newpos);
     if (a && (a != &you || !fedhas_passthrough(this)))
@@ -4597,7 +4599,7 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
         mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
-    moveto(newpos, clear_net);
+    moveto(newpos, clear_net, check_constrict);
 
     // Set new monster grid pointer to this monster.
     mgrd(newpos) = index;
