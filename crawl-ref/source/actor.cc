@@ -345,7 +345,7 @@ bool actor::is_constricted_larger()
         return false;
 
     actor* const constrictor = mindex_to_actor(constricted_by);
-    return (constrictor->body_size() > body_size());
+    return (constrictor->body_size(PSIZE_BODY) > body_size(PSIZE_BODY));
 }
 
 actor *mindex_to_actor(short mindex)

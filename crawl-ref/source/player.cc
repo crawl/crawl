@@ -7366,7 +7366,7 @@ bool player::attempt_escape()
     escape_attempts++;
     // player breaks free if size*attempts > 5 + d(12) + d(HD)
     // this is inefficient on purpose, simplify after debug
-    thesize = transform_size(form);
+    thesize = body_size(PSIZE_BODY);
     attfactor = thesize * escape_attempts;
 
     randfact = roll_dice(1,5) + 5;
