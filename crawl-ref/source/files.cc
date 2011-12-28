@@ -931,7 +931,7 @@ static void _close_level_gates()
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (you.char_direction == GDT_ASCENDING
-            && you.where_are_you != BRANCH_PANDEMONIUM)
+            && !player_in_branch(BRANCH_PANDEMONIUM))
         {
             if (feat_sealable_portal(grd(*ri)))
             {
@@ -1207,7 +1207,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
-            && you.where_are_you == BRANCH_MAIN_DUNGEON)
+            && player_in_branch(BRANCH_MAIN_DUNGEON))
         {
             // If we're leaving the Abyss for the first time as a Chaos
             // Knight of Lugonu (who start out there), force a return
@@ -1263,7 +1263,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Closes all the gates if you're on the way out.
     // Before marker activation since it removes some.
     if (make_changes && you.char_direction == GDT_ASCENDING
-        && you.where_are_you != BRANCH_PANDEMONIUM)
+        && !player_in_branch(BRANCH_PANDEMONIUM))
     {
         _close_level_gates();
     }
@@ -1287,7 +1287,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         _clear_clouds();
-        if (you.where_are_you != BRANCH_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
             _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
         else
             you.moveto(ABYSS_CENTRE);
@@ -2085,7 +2085,7 @@ void save_ghost(bool force)
 
     // No ghosts on levels 1, 2, or the ET.
     if (!force && (you.absdepth0 < 2
-                   || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
+                   || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)))
     {
         return;
     }

@@ -1200,7 +1200,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Set default random monster generation rate (smaller is more often,
     // except that 0 == no random monsters).
-    if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || crawl_state.game_is_tutorial())
     {
         // No random monsters in tutorial or ecu temple
@@ -1690,7 +1690,7 @@ static bool _add_connecting_escape_hatches()
         return (false);
 
     // FIXME: shouldn't depend on branch.
-    if (you.where_are_you != BRANCH_ORCISH_MINES)
+    if (!player_in_branch(BRANCH_ORCISH_MINES))
         return (true);
 
     return (_add_feat_if_missing(_is_upwards_exit_stair, DNGN_ESCAPE_HATCH_UP));

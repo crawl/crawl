@@ -348,7 +348,7 @@ void hints_new_turn()
 
         if (you.attribute[ATTR_HELD])
             learned_something_new(HINT_CAUGHT_IN_NET);
-        else if (i_feel_safe() && you.where_are_you != BRANCH_ABYSS)
+        else if (i_feel_safe() && !player_in_branch(BRANCH_ABYSS))
         {
             // We don't want those "Whew, it's safe to rest now" messages
             // if you were just cast into the Abyss. Right?
