@@ -257,7 +257,7 @@ TAGS:   uniq_ribbit
 NAME:   uniq_prince_ribbit2
 DEPTH:  Lair:1-3
 WEIGHT: 3
-TAGS:   place_unique uniq_ribbit
+TAGS:   place_unique uniq_ribbit transparent
 MONS:   Prince Ribbit, blink frog band
 MAP
 12
@@ -274,7 +274,7 @@ WEIGHT: 1
 
 NAME:   uniq_roxanne
 DEPTH:  14-19, !Lair, !Slime
-TAGS:   place_unique
+TAGS:   place_unique transparent
 MONS:   Roxanne
 MAP
 ...
