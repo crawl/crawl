@@ -115,7 +115,7 @@ CFOPTIMIZE += -flto=jobserver -fwhole-program
 endif
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall -Wformat-security -Werror=format-security
+CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
