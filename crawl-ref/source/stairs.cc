@@ -1312,9 +1312,6 @@ static void _update_level_state()
 
 void new_level(bool restore)
 {
-#ifdef USE_TILE
-    mcache.clear_all();
-#endif
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();
