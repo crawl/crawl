@@ -2070,13 +2070,6 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             continue;
         }
 
-        // Dont mimic guaranteed portals.
-        if (feat == DNGN_ENTER_ABYSS && you.absdepth0 == 24)
-                continue;
-
-        if (feat == DNGN_ENTER_PANDEMONIUM && you.absdepth0 == 23)
-                continue;
-
         // If this is the real branch entry, don't mimic it.
         if (feat_is_branch_stairs(feat)
             && player_branch_depth() == startdepth[get_branch_at(pos)])
