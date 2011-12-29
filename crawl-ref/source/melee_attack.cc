@@ -1978,7 +1978,7 @@ void melee_attack::set_attack_verb()
             else if (damage_done < HIT_STRONG)
                 attack_verb = "bite";
             else
-                attack_verb = "maul";
+                attack_verb = coinflip() ? "maul" : "trample";
             break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
