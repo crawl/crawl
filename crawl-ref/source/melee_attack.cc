@@ -1265,13 +1265,6 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
 
-    // If constriction is available to the species, choose it
-    if (you.species == SP_NAGA)
-        baseattack = UNAT_CONSTRICT;
-
-    if (you.species == SP_OCTOPODE && you.has_usable_tentacle())
-        baseattack = UNAT_CONSTRICT;
-
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH
@@ -1368,8 +1361,7 @@ bool melee_attack::player_aux_unarmed()
     // Unarmed skill gives a chance at getting an aux even without the
     // corresponding mutation.
     if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty)
-        || you.species == SP_NAGA || you.species == SP_OCTOPODE)
+                                   + attacker_shield_tohit_penalty))
     {
         baseattack = player_aux_choose_baseattack();
     }
@@ -4757,7 +4749,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
         return (false);
 
     if (atk == UNAT_CONSTRICT)
-        return (is_base);
+        return (is_base
+                 || you.species == SP_NAGA
+                 || you.species == SP_OCTOPODE && you.has_usable_tentacle());
 
     if (you.strength() + you.dex() <= random2(50))
         return (false);
@@ -4799,9 +4793,6 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
 
     case UNAT_PUNCH:
         return (is_base && !one_chance_in(3));
-
-    case UNAT_CONSTRICT:
-        return (is_base);
 
     default:
         return (false);
