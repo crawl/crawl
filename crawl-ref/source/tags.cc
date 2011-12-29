@@ -3900,7 +3900,6 @@ void tag_read_level_tiles(reader &th)
         if (th.getMinorVersion() >= TAG_MINOR_MONSTER_TILES)
             unmarshallInt(th); // TILEP_PLAYER_MAX
     }
-    mcache.clear_all();
 # else
     // there wasn't a minor tag there, being overinclusive doesn't hurt
     if (th.getMinorVersion() < TAG_MINOR_CONSTRICTION)
@@ -3919,11 +3918,14 @@ void tag_read_level_tiles(reader &th)
         {
         }
         dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
+        mcache.clear_all();
         tag_missing_level_tiles();
         return;
     }
 # endif
 #endif
+
+    mcache.clear_all();
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
     {
