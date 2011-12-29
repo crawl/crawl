@@ -448,7 +448,6 @@ public:
     void accum_been_constricted();
     void accum_has_constricted();
     bool attempt_escape();
-    void clear_all_constrictions();
     bool has_usable_tentacle();
 
 private:

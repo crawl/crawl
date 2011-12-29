@@ -719,7 +719,6 @@ public:
     void accum_has_constricted();
     bool attempt_escape();
     bool has_usable_tentacle();
-    void clear_all_constrictions();
 
 protected:
     void _removed_beholder();

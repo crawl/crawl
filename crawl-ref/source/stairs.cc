@@ -1247,9 +1247,11 @@ void down_stairs(dungeon_feature_type force_stair,
 
     moveto_location_effects(old_feat);
 
-    // Clear list of beholding monsters.
+    // Clear list of beholding and constricting/constricted monsters.
     you.clear_beholders();
     you.clear_fearmongers();
+    you.stop_constricting_all();
+    you.stop_being_constricted();
 
     if (!allow_control_teleport(true))
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);

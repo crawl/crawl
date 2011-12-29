@@ -306,14 +306,10 @@ void actor::clear_clinging()
         props["clinging"] = false;
 }
 
-void actor::clear_specific_constrictions(int mind)
+void actor::stop_constricting(int mind, bool intentional)
 {
-    if (constricted_by == mind)
-    {
-        constricted_by = NON_ENTITY;
-        dur_been_constricted = 0;
-        escape_attempts = 0;
-    }
+    actor* const constrictee = mindex_to_actor(mind);
+    ASSERT(constrictee);
 
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
@@ -321,41 +317,16 @@ void actor::clear_specific_constrictions(int mind)
         {
             constricting[i] = NON_ENTITY;
             dur_has_constricted[i] = 0;
-        }
-    }
-}
+            constrictee->constricted_by = NON_ENTITY;
+            constrictee->dur_been_constricted = 0;
+            constrictee->escape_attempts = 0;
 
-void actor::clear_far_constrictions()
-{
-    actor* const constrictor = mindex_to_actor(constricted_by);
-
-    if (constrictor && !adjacent(pos(), constrictor->pos()))
-    {
-        clear_specific_constrictions(constricted_by);
-        constrictor->clear_specific_constrictions(mindex());
-        if (you.see_cell(pos()) || you.see_cell(constrictor->pos()))
-        {
-            mprf("%s lose%s %s grip on %s.",
-                    constrictor->name(DESC_THE).c_str(),
-                    constrictor->is_player() ? "" : "s",
-                    constrictor->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                    name(DESC_THE).c_str());
-        }
-    }
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        actor* const constrictee = mindex_to_actor(constricting[i]);
-
-        if (constrictee && !adjacent(pos(), constrictee->pos()))
-        {
-            clear_specific_constrictions(constricting[i]);
-            constrictee->clear_specific_constrictions(mindex());
-            if (you.see_cell(pos()) || you.see_cell(constrictee->pos()))
+            if (alive() && constrictee->alive()
+                && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
             {
-                mprf("%s lose%s %s grip on %s.",
+                mprf("%s %s %s grip on %s.",
                         name(DESC_THE).c_str(),
-                        is_player() ? "" : "s",
+                        conj_verb(intentional ? "release" : "lose").c_str(),
                         pronoun(PRONOUN_POSSESSIVE).c_str(),
                         constrictee->name(DESC_THE).c_str());
             }
@@ -363,10 +334,45 @@ void actor::clear_far_constrictions()
     }
 }
 
-bool actor::is_constricting()
+void actor::stop_constricting_all(bool intentional)
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
+            stop_constricting(constricting[i], intentional);
+}
+
+void actor::stop_being_constricted()
+{
+    actor* const constrictor = mindex_to_actor(constricted_by);
+
+    if (constrictor)
+        constrictor->stop_constricting(mindex(), false);
+
+    // Just in case the constrictor no longer exists.
+    constricted_by = NON_ENTITY;
+    dur_been_constricted = 0;
+    escape_attempts = 0;
+}
+
+void actor::clear_far_constrictions()
+{
+    actor* const constrictor = mindex_to_actor(constricted_by);
+
+    if (!constrictor || !adjacent(pos(), constrictor->pos()))
+        stop_being_constricted();
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        actor* const constrictee = mindex_to_actor(constricting[i]);
+        if (constrictee && !adjacent(pos(), constrictee->pos()))
+            stop_constricting(constricting[i], false);
+    }
+}
+
+bool actor::is_constricting()
+{
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mindex_to_actor(constricting[i]))
             return true;
 
     return false;
@@ -374,7 +380,7 @@ bool actor::is_constricting()
 
 bool actor::is_constricted()
 {
-    return (constricted_by != NON_ENTITY);
+    return (mindex_to_actor(constricted_by));
 }
 
 bool actor::is_constricted_larger()

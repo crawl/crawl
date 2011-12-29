@@ -5395,35 +5395,6 @@ bool monster::attempt_escape()
         return false;
 }
 
-void monster::clear_all_constrictions()
-{
-    int myindex = mindex();
-    std::string rmsg;
-
-    actor* const constrictor = mindex_to_actor(constricted_by);
-    if (constrictor)
-        constrictor->clear_specific_constrictions(myindex);
-
-    constricted_by = NON_ENTITY;
-    dur_been_constricted = 0;
-    escape_attempts = 0;
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        actor* const constrictee = mindex_to_actor(constricting[i]);
-        if (constrictee && alive() && constrictee->alive())
-        {
-            rmsg = name(DESC_THE, true);
-            rmsg += " releases its hold on ";
-            rmsg += constrictee->name(DESC_THE,true) + ".";
-            mpr(rmsg);
-            constrictee->clear_specific_constrictions(myindex);
-        }
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
-}
-
 bool monster::has_usable_tentacle()
 {
     if (mons_species() != MONS_OCTOPODE)
