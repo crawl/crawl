@@ -366,7 +366,7 @@ std::string describe_mutations()
         if (!player_mutation_level(MUT_BREATHE_POISON))
             result += "You can spit poison.\n";
         result += _annotate_form_based(
-            "You can use your tail to constrict enemies.",
+            "You can use your snake-like lower body to constrict enemies.",
             !form_keeps_mutations());
 
         if (you.experience_level > 2)
