@@ -3902,22 +3902,26 @@ void tag_read_level_tiles(reader &th)
     }
     mcache.clear_all();
 # else
-    // Snarf all remaining data, throwing it out.
-    // Console builds don't know of old mcache formats, it'd be too much work
-    // to properly skip it.  Instead, we snarf the remaining data and throw it
-    // out.  The only thing after mcache is TILE_WALL_MAX, and it's guaranteed
-    // it won't match anyway.
-    try
+    // there wasn't a minor tag there, being overinclusive doesn't hurt
+    if (th.getMinorVersion() < TAG_MINOR_CONSTRICTION)
     {
-        while (1)
-            unmarshallByte(th);
+        // Snarf all remaining data, throwing it out.
+        // Console builds don't know of old mcache formats, it'd be too much work
+        // to properly skip it.  Instead, we snarf the remaining data and throw it
+        // out.  The only thing after mcache is TILE_WALL_MAX, and it's guaranteed
+        // it won't match anyway.
+        try
+        {
+            while (1)
+                unmarshallByte(th);
+        }
+        catch (short_read_exception &E)
+        {
+        }
+        dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
+        tag_missing_level_tiles();
+        return;
     }
-    catch (short_read_exception &E)
-    {
-    }
-    dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
-    tag_missing_level_tiles();
-    return;
 # endif
 #endif
 
