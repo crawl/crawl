@@ -4371,7 +4371,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     if (!silent)
         simple_monster_message(mons, " disappears!");
-    
+
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
