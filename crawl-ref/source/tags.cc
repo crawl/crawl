@@ -3918,14 +3918,11 @@ void tag_read_level_tiles(reader &th)
         {
         }
         dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
-        mcache.clear_all();
         tag_missing_level_tiles();
         return;
     }
 # endif
 #endif
-
-    mcache.clear_all();
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
     {
