@@ -1275,6 +1275,8 @@ bool show_map(level_pos &lpos,
                 }
             }
             start_y = screen_y - half_screen;
+#else
+            (void)scroll_y; // Avoid a compiler warning.
 #endif
             curs_x += move_x;
             curs_y += move_y;
