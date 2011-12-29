@@ -3893,22 +3893,11 @@ void tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
 #if TAG_MAJOR_VERSION == 32
-# ifdef USE_TILE
     if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
-        mcache.read(th);
-        if (th.getMinorVersion() >= TAG_MINOR_MONSTER_TILES)
-            unmarshallInt(th); // TILEP_PLAYER_MAX
-    }
-# else
-    // there wasn't a minor tag there, being overinclusive doesn't hurt
-    if (th.getMinorVersion() < TAG_MINOR_CONSTRICTION)
-    {
         // Snarf all remaining data, throwing it out.
-        // Console builds don't know of old mcache formats, it'd be too much work
-        // to properly skip it.  Instead, we snarf the remaining data and throw it
-        // out.  The only thing after mcache is TILE_WALL_MAX, and it's guaranteed
-        // it won't match anyway.
+        // There's no need to read the mcache just to discard it, the only thing
+        // after mcache is TILE_WALL_MAX which is guaranteed to not match anyway.
         try
         {
             while (1)
@@ -3919,9 +3908,9 @@ void tag_read_level_tiles(reader &th)
         }
         dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
         tag_missing_level_tiles();
+        tag_init_tile_bk();
         return;
     }
-# endif
 #endif
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
