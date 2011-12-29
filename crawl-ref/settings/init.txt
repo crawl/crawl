@@ -258,7 +258,7 @@ include = standard_colours.txt
 #   magenta    = dangerous to use, mutagenic       ($dangerous, $mutagenic)
 #   red        = considered "evil" by your deity   ($evil)
 #   lightgreen = poisonous                         ($poisonous)
-#   brown      = contaminated, may cause sickness  ($contaminated)
+#   brown      = contaminated, may cause nausea    ($contaminated)
 #
 # You can change colours by using something like
 # $contaminated := magenta
