@@ -908,6 +908,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(2, 6);
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_PETRIFYING_CLOUD;
+        beam.foe_ratio = 30;
         beam.is_beam  = true;
         break;
 
