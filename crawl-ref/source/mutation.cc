@@ -365,6 +365,9 @@ std::string describe_mutations()
         // Breathe poison replaces spit poison.
         if (!player_mutation_level(MUT_BREATHE_POISON))
             result += "You can spit poison.\n";
+        result += _annotate_form_based(
+            "You can use your tail to constrict enemies.",
+            !form_keeps_mutations());
 
         if (you.experience_level > 2)
         {
@@ -515,6 +518,9 @@ std::string describe_mutations()
         result += "You cannot wear most types of armour.\n";
         result += "You can wear up to eight rings at the same time.\n";
         result += "You are amphibious.\n";
+        result += _annotate_form_based(
+            "You can use your tentacles to constrict many enemies at once.",
+            !form_keeps_mutations());
         have_any = true;
         break;
 

@@ -2136,6 +2136,8 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("spit poison");
           else
               mutations.push_back("breathe poison");
+          mutations.push_back(_annotate_form_based("constrict 1",
+                                                   !form_keeps_mutations()));
           break;
 
       case SP_GHOUL:
@@ -2242,6 +2244,9 @@ static std::string _status_mut_abilities(int sw)
     {
         mutations.push_back("almost no armour");
         mutations.push_back("amphibious");
+        mutations.push_back(_annotate_form_based(
+            make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
+            !form_keeps_mutations()));
     }
 
     if (beogh_water_walk())
