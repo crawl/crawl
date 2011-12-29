@@ -1094,7 +1094,7 @@ bool melee_attack::check_unrand_effects()
 /* Setup all unarmed (non attack_type) variables
  *
  * Clears any previous unarmed attack information and sets everything from
- * noise_factor to verb and damage. Called after player_aux_choose_baseattack
+ * noise_factor to verb and damage. Called after player_aux_choose_uc_attack
  */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
 {
@@ -1252,51 +1252,51 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-/* Selects the unarmed attack type
+/* Selects the unarmed attack type given by Unarmed Combat skill
  *
  * Selects at random, but then takes into accout various combinations of player
  * species, transformations, and other stuff to determine whether the randomly
  * selected unarmed attack type is appropriate (eg, no kicking for octopodes...
- * who technically lack legs.
+ * who technically lack legs).
  */
-unarmed_attack_type melee_attack::player_aux_choose_baseattack()
+unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
 {
-    unarmed_attack_type baseattack =
+    unarmed_attack_type uc_attack =
         random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
 
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH
+    if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
             && !you.has_usable_offhand())
-        baseattack = UNAT_NO_ATTACK;
+        uc_attack = UNAT_NO_ATTACK;
 
     // With fangs, replace head attacks with bites.
     if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
-        && baseattack == UNAT_HEADBUTT)
+        && uc_attack == UNAT_HEADBUTT)
     {
-        baseattack = UNAT_BITE;
+        uc_attack = UNAT_BITE;
     }
 
     // Felids turn kicks into bites.
-    if (you.species == SP_FELID && baseattack == UNAT_KICK)
-        baseattack = UNAT_BITE;
+    if (you.species == SP_FELID && uc_attack == UNAT_KICK)
+        uc_attack = UNAT_BITE;
 
     // Nagas turn kicks into headbutts.
-    if (you.species == SP_NAGA && baseattack == UNAT_KICK)
-        baseattack = UNAT_HEADBUTT;
+    if (you.species == SP_NAGA && uc_attack == UNAT_KICK)
+        uc_attack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
+    if (you.species == SP_OCTOPODE && uc_attack == UNAT_KICK
         && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
     {
-        baseattack = UNAT_PUNCH;
+        uc_attack = UNAT_PUNCH;
     }
 
-    if (_tran_forbid_aux_attack(baseattack))
-        baseattack = UNAT_NO_ATTACK;
+    if (_tran_forbid_aux_attack(uc_attack))
+        uc_attack = UNAT_NO_ATTACK;
 
-    return (baseattack);
+    return (uc_attack);
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1353,17 +1353,17 @@ bool melee_attack::player_aux_unarmed()
     unwind_var<brand_type> save_brand(damage_brand);
 
     /*
-     * baseattack is the auxiliary unarmed attack the player gets
+     * uc_attack is the auxiliary unarmed attack the player gets
      * for unarmed combat skill, which doesn't require a mutation to use
      * but still needs to pass the other checks in _extra_aux_attack().
      */
-    unarmed_attack_type baseattack = UNAT_NO_ATTACK;
+    unarmed_attack_type uc_attack = UNAT_NO_ATTACK;
     // Unarmed skill gives a chance at getting an aux even without the
     // corresponding mutation.
     if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
                                    + attacker_shield_tohit_penalty))
     {
-        baseattack = player_aux_choose_baseattack();
+        uc_attack = player_aux_choose_uc_attack();
     }
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
@@ -1373,7 +1373,7 @@ bool melee_attack::player_aux_unarmed()
 
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
-        if (!_extra_aux_attack(atk, (baseattack == atk)))
+        if (!_extra_aux_attack(atk, (uc_attack == atk)))
             continue;
 
         // Determine and set damage and attack words.
@@ -4742,14 +4742,14 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
     }
 }
 
-bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
+bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 {
     // No extra unarmed attacks for disabled mutations.
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
     if (atk == UNAT_CONSTRICT)
-        return (is_base
+        return (is_uc
                  || you.species == SP_NAGA
                  || you.species == SP_OCTOPODE && you.has_usable_tentacle());
 
@@ -4759,40 +4759,40 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
     switch (atk)
     {
     case UNAT_KICK:
-        return (is_base
+        return (is_uc
                  || player_mutation_level(MUT_HOOVES)
                  || you.has_usable_talons()
                  || player_mutation_level(MUT_TENTACLE_SPIKE));
 
     case UNAT_HEADBUTT:
-        return ((is_base
+        return ((is_uc
                  || player_mutation_level(MUT_HORNS)
                  || player_mutation_level(MUT_BEAK))
                 && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_tail())
                 && coinflip());
 
     case UNAT_PSEUDOPODS:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_pseudopods())
                 && !one_chance_in(3));
 
     case UNAT_TENTACLES:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_tentacles())
                 && !one_chance_in(3));
 
     case UNAT_BITE:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_fangs()
                  || player_mutation_level(MUT_ACIDIC_BITE))
                 && x_chance_in_y(2, 5));
 
     case UNAT_PUNCH:
-        return (is_base && !one_chance_in(3));
+        return (is_uc && !one_chance_in(3));
 
     default:
         return (false);
