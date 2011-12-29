@@ -304,7 +304,8 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->set_position(pos);
-    mons->clear_all_constrictions();
+    // The monster copy constructor doesn't copy constriction, so no need to
+    // worry about that.
 
     mgrd(pos)    = mons->mindex();
 

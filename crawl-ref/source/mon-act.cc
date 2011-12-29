@@ -2592,6 +2592,8 @@ void handle_monsters(bool with_noise)
             // Clear list of mesmerising monsters.
             you.clear_beholders();
             you.clear_fearmongers();
+            you.stop_constricting_all();
+            you.stop_being_constricted();
             break;
         }
     }
@@ -3723,14 +3725,16 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     coord_def old_pos = mons->pos();
 
     mons->set_position(f);
-    mons->clear_far_constrictions();
 
     mgrd(mons->pos()) = mons->mindex();
 
     mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
 
-    mons->clear_all_constrictions(); // moved, let go any constrictions
+    // Let go of all constrictees; only stop *being* constricted if we are now
+    // too far away.
+    mons->stop_constricting_all(true);
+    mons->clear_far_constrictions();
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

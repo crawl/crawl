@@ -1473,7 +1473,8 @@ static void _go_upstairs()
         end_mislead(true);
 
     you.clear_clinging();
-    you.clear_all_constrictions();
+    you.stop_constricting_all(true);
+    you.stop_being_constricted();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1567,7 +1568,8 @@ static void _go_downstairs()
         end_mislead(true);
 
     you.clear_clinging();
-    you.clear_all_constrictions();
+    you.stop_constricting_all(true);
+    you.stop_being_constricted();
 
     if (shaft)
     {
@@ -4294,7 +4296,8 @@ static void _move_player(coord_def move)
 #endif
 
         // clear constriction data
-        you.clear_all_constrictions();
+        you.stop_constricting_all(true);
+        you.stop_being_constricted();
 
         move_player_to_grid(targ, true, false);
 

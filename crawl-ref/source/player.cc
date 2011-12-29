@@ -7399,40 +7399,6 @@ bool player::attempt_escape()
         return false;
 }
 
-void player::clear_all_constrictions()
-{
-    int myindex = MHITYOU;
-    monster *mons;
-
-    if (constricted_by != NON_ENTITY)
-    {
-        mons = &env.mons[constricted_by];
-        if (mons->alive())
-            mons->clear_specific_constrictions(myindex);
-    }
-
-    constricted_by = NON_ENTITY;
-    dur_been_constricted = 0;
-    escape_attempts = 0;
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (constricting[i] != NON_ENTITY)
-        {
-            mons = &env.mons[constricting[i]];
-            if (mons->alive())
-            {
-                std::string rmsg = "You release your hold on ";
-                rmsg += mons->name(DESC_THE,true) + ".";
-                mpr(rmsg);
-                mons->clear_specific_constrictions(myindex);
-            }
-        }
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
-}
-
 /*
  * Check if the player is about to die from levitation/form expiration.
  *
