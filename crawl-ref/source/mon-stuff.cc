@@ -2896,6 +2896,14 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (old_mon_caught)
         check_net_will_hold_monster(mons);
 
+    // Even if the new form can constrict, it might be with a different
+    // body part.  Likewise, the new form might be too large for its
+    // current constrictor.  Rather than trying to handle these as special
+    // cases, just stop the constriction entirely.  The usual message about
+    // evaporating and reforming justifies this behaviour.
+    mons->stop_constricting_all(false);
+    mons->stop_being_constricted();
+
     mons->check_clinging(false);
 }
 
