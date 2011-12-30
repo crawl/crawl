@@ -3196,13 +3196,14 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    redraw_screen();
                     _draconian_scale_colour_message();
 
                     // We check if any skill has changed level because of
                     // changed aptitude
                     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
                         check_skill_level_change(static_cast<skill_type>(i));
+
+                    redraw_screen();
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
