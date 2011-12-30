@@ -4390,6 +4390,9 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Move it to its new home, but don't break constrictions yet.
     mons->moveto(newpos, true, false);
 
+    // And slot it back into the grid.
+    mgrd(mons->pos()) = mons->mindex();
+
     // handle constriction, if any
     if (mons->is_constricted())
     {
@@ -4410,9 +4413,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     // Now break constrictions.
     mons->clear_far_constrictions();
-
-    // And slot it back into the grid.
-    mgrd(mons->pos()) = mons->mindex();
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)
