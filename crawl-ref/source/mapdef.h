@@ -589,8 +589,8 @@ public:
     void clear();
 
     item_spec get_item(int index);
-    item_spec random_item ();
-    item_spec random_item_weighted ();
+    item_spec random_item();
+    item_spec random_item_weighted();
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
@@ -781,8 +781,8 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
-    shop_spec (shop_type sh, std::string n="", std::string t="",
-               std::string s="", int g=-1, int ni=-1, bool u=false)
+    shop_spec(shop_type sh, std::string n="", std::string t="",
+              std::string s="", int g=-1, int ni=-1, bool u=false)
         : sh_type(sh), name(n), type(t), suffix(s),
           greed(g), num_items(ni), items(), use_all(u) { }
 };
@@ -798,7 +798,7 @@ struct shop_spec
 struct trap_spec
 {
     trap_type tr_type; /*> One of the trap_type enum values. */
-    trap_spec (trap_type tr)
+    trap_spec(trap_type tr)
         : tr_type(static_cast<trap_type>(tr)) { }
 };
 
@@ -826,7 +826,7 @@ struct feature_spec
     feature_spec(int f, int wt = 10, int _mimic = 0, bool _no_mimic = false);
     feature_spec(const feature_spec& other);
     feature_spec& operator = (const feature_spec& other);
-    void init_with (const feature_spec& other);
+    void init_with(const feature_spec& other);
 };
 
 typedef std::vector<feature_spec> feature_spec_list;

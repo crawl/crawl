@@ -1072,7 +1072,7 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
-    
+
     // Stop being constricted if we are now too large.
     if (you.is_constricted())
     {
