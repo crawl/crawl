@@ -3426,6 +3426,10 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
 {
     stair_distances.clear();
 
+    // Fix up the grid for the placeholder stair.
+    for (int i = 0, sz = stairs.size(); i < sz; ++i)
+        stairs[i].grid = grd(stairs[i].position);
+
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
     {
