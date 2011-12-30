@@ -4953,6 +4953,9 @@ void dec_poison_player()
 
         if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
             reduce_poison_player(1);
+
+        if (!you.duration[DUR_POISONING] && you.hp * 12 < you.hp_max)
+            xom_is_stimulated(you.hp == 1 ? 50 : 20);
     }
 }
 
