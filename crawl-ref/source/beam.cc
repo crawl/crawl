@@ -3251,7 +3251,10 @@ void bolt::affect_player_enchantment()
             mpr("This is polymorph other only!");
         }
         else
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            msg_generated = true; // to avoid duplicate "nothing happens"
+        }
         break;
 
     case BEAM_SLOW:
