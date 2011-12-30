@@ -4926,36 +4926,33 @@ void dec_poison_player()
     if (player_res_poison() >= 3)
         return;
 
-    if (you.duration[DUR_POISONING] > 0)
+    if (x_chance_in_y(you.duration[DUR_POISONING], 5))
     {
-        if (x_chance_in_y(you.duration[DUR_POISONING], 5))
+        int hurted = 1;
+        msg_channel_type channel = MSGCH_PLAIN;
+        const char *adj = "";
+
+        if (you.duration[DUR_POISONING] > 10
+            && random2(you.duration[DUR_POISONING]) >= 8)
         {
-            int hurted = 1;
-            msg_channel_type channel = MSGCH_PLAIN;
-            const char *adj = "";
-
-            if (you.duration[DUR_POISONING] > 10
-                && random2(you.duration[DUR_POISONING]) >= 8)
-            {
-                hurted = random2(10) + 5;
-                channel = MSGCH_DANGER;
-                adj = "extremely ";
-            }
-            else if (you.duration[DUR_POISONING] > 5 && coinflip())
-            {
-                hurted = coinflip() ? 3 : 2;
-                channel = MSGCH_WARN;
-                adj = "very ";
-            }
-
-            int oldhp = you.hp;
-            ouch(hurted, NON_MONSTER, KILLED_BY_POISON);
-            if (you.hp < oldhp)
-                mprf(channel, "You feel %ssick.", adj);
-
-            if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
-                reduce_poison_player(1);
+            hurted = random2(10) + 5;
+            channel = MSGCH_DANGER;
+            adj = "extremely ";
         }
+        else if (you.duration[DUR_POISONING] > 5 && coinflip())
+        {
+            hurted = coinflip() ? 3 : 2;
+            channel = MSGCH_WARN;
+            adj = "very ";
+        }
+
+        int oldhp = you.hp;
+        ouch(hurted, NON_MONSTER, KILLED_BY_POISON);
+        if (you.hp < oldhp)
+            mprf(channel, "You feel %ssick.", adj);
+
+        if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
+            reduce_poison_player(1);
     }
 }
 
