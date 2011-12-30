@@ -489,7 +489,14 @@ void fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_CONSTRICTED:
-        if (you.is_constricted())
+        if (you.is_constricted_larger())
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "Constr -Tele";
+            inf->short_text   = "very constricted";
+            inf->long_text    = "Being constricted prevents you from teleporting.";
+        }
+        else if (you.is_constricted())
         {
             inf->light_colour = YELLOW;
             inf->light_text   = "Constr";
