@@ -94,9 +94,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
     }
-    // Check to see if being constricted will prevent a teleport
     else if (you.is_constricted_larger())
     {
+        // Check to see if being constricted will prevent a teleport.
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("You can't blink while constricted.");
     }
     else if (you.confused() && !wizard_blink)
@@ -455,7 +457,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     // Check to see if being constricted will prevent a teleport
     if (you.is_constricted_larger())
     {
-        mpr("Teleport cancelled by constriction.");
+        mprf("%s prevents you from teleporting.",
+             mindex_to_actor(you.constricted_by)->name(DESC_THE).c_str());
         return (false);
     }
 

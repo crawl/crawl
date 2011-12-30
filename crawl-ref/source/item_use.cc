@@ -4013,7 +4013,8 @@ void zap_wand(int slot)
     if (alreadyknown && zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
-            && item_blocks_teleport(false, false))
+            && (item_blocks_teleport(false, false)
+                || you.is_constricted_larger()))
         {
             mpr("You cannot teleport right now.");
             return;
@@ -5042,7 +5043,8 @@ void read_scroll(int slot)
         {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            if (item_blocks_teleport(false, false))
+            if (item_blocks_teleport(false, false)
+                || you.is_constricted_larger())
             {
                 mpr("You cannot teleport right now.");
                 return;

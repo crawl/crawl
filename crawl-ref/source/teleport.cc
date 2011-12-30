@@ -38,6 +38,15 @@ bool player::blink_to(const coord_def& dest, bool quiet)
             canned_msg(MSG_STRANGE_STASIS);
         return (false);
     }
+    else if (you.is_constricted_larger())
+    {
+        if (!quiet)
+        {
+            mprf("%s prevents you from blinking.",
+                 mindex_to_actor(you.constricted_by)->name(DESC_THE).c_str());
+        }
+        return (false);
+    }
 
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
