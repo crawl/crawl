@@ -744,6 +744,14 @@ toenail golem
  defense against—whom?"
     -Jorge Luis Borges
 %%%%
+ugly thing
+"Beauty is no quality in things themselves: It exists merely in the mind which
+ contemplates them; and each mind perceives a different beauty. One person may
+ even perceive deformity, where another is sensible of beauty; and every
+ individual ought to acquiesce in his own sentiment, without pretending to
+ regulate those of others."
+    -David Hume
+%%%%
 worm
 
 "While the angels, all pallid and wan,
