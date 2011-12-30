@@ -2615,7 +2615,8 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
         you.duration[DUR_LIQUEFYING] = 1;
 
-    if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
+    if (_decrement_a_duration(DUR_LIQUEFYING, delay,
+                              "The ground is no longer liquid beneath you."))
     {
         invalidate_agrid();
     }
@@ -2809,7 +2810,8 @@ static void _decrement_durations()
 
     dec_disease_player(delay);
 
-    dec_poison_player();
+    if (you.duration[DUR_POISONING])
+        dec_poison_player();
 
     if (you.duration[DUR_DEATHS_DOOR])
     {
