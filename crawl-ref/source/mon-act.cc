@@ -1930,6 +1930,9 @@ static void _monster_add_energy(monster* mons)
 #endif
 void handle_noattack_constrictions(actor *attacker)
 {
+    if (is_sanctuary(attacker->pos()))
+        attacker->stop_constricting_all(true);
+
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         actor* const defender = mindex_to_actor(attacker->constricting[i]);
