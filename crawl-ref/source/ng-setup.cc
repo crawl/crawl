@@ -330,7 +330,6 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_TENTACLES]       = 3;
-        you.mutation[MUT_BEAK]            = 1;
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;

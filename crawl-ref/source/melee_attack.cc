@@ -1293,6 +1293,10 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
         uc_attack = UNAT_PUNCH;
     }
 
+    // Octopodes turn headbutts into punches too.
+    if (you.species == SP_OCTOPODE && uc_attack == UNAT_HEADBUTT)
+        uc_attack = UNAT_PUNCH;
+
     if (_tran_forbid_aux_attack(uc_attack))
         uc_attack = UNAT_NO_ATTACK;
 
