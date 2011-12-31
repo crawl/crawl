@@ -16,6 +16,7 @@ extern const coord_def ABYSS_CENTRE;
 struct abyss_state
 {
     coord_def major_coord;
+    double phase;
     double depth;
 };
 void abyss_morph(double duration);

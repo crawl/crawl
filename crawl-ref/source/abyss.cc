@@ -1196,6 +1196,7 @@ static void _initialize_abyss_state()
 {
     abyssal_state.major_coord.x = random2(0x7FFFFFFF);
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
+    abyssal_state.phase = 0.0;
     abyssal_state.depth = 0.0;
 }
 
@@ -1320,8 +1321,26 @@ void abyss_morph(double duration)
     if (you.level_type != LEVEL_ABYSS)
         return;
 
-    abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0)
-                        / (you.religion == GOD_CHEIBRIADOS ? 40000.0 : 20000.0);
+    // Between .02 and .07 per ten ticks, half that for Chei worshippers.
+    double delta_t = you.time_taken * (you.abyss_speed + 40.0) / 20000.0;
+    if (you.religion == GOD_CHEIBRIADOS)
+        delta_t /= 2.0;
+
+    const double theta = abyssal_state.phase;
+
+    // Up to 3 times the old rate of change, as low as zero, with an average
+    // of 74% of the old rate.  Period of 2*pi, so from 90 to 314 turns
+    // depending on abyss speed (double for Chei worshippers).  Starts in the
+    // middle of a cool period.
+    // Increasing the power reduces the lengths of the unstable periods.  It
+    // should be an even integer.
+    abyssal_state.depth += delta_t * (3.0 * pow(sin(theta/2), 10.0));
+
+    // Phase mod pi.
+    abyssal_state.phase += delta_t;
+    if (abyssal_state.phase > M_PI)
+        abyssal_state.phase -= M_PI;
+
     map_mask abyss_genlevel_mask;
     _abyss_invert_mask(&abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
