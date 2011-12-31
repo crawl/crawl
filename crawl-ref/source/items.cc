@@ -3639,8 +3639,7 @@ bool get_item_by_name(item_def *item, char* specs,
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);
-            int max_spells = 5 + level/3;
-            make_book_level_randart(*item, level, max_spells);
+            make_book_level_randart(*item, level);
         }
         break;
 

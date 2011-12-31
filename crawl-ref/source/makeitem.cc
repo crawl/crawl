@@ -2830,8 +2830,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     {
         int max_level  = std::min(9, std::max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
-        int max_spells = 5 + spl_level/3;
-        make_book_level_randart(item, spl_level, max_spells);
+        make_book_level_randart(item, spl_level);
     }
 }
 

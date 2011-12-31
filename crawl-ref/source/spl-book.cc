@@ -1678,7 +1678,11 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     ASSERT(level > 0 && level <= 9);
 
     if (num_spells == -1)
-        num_spells = SPELLBOOK_SIZE;
+    {
+        //555666421
+        num_spells = std::min(5 + (level - 1)/3, 18 - 2*level);
+        num_spells = std::max(1, num_spells);
+    }
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     book.plus  = level;
@@ -1696,6 +1700,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (spells.empty())
     {
+        if (level > 1)
+            return make_book_level_randart(book, level - 1);
         char buf[80];
 
         if (god_discard > 0 && uncastable_discard == 0)
@@ -1724,23 +1730,14 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (num_spells > (int) spells.size())
     {
-        // Some gods (Elyvilon) dislike a lot of the higher level spells,
-        // so try a lower level.
-        if (god != GOD_NO_GOD && god != GOD_XOM)
-            return make_book_level_randart(book, level - 1, num_spells);
-
         num_spells = spells.size();
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        // Not many level 8 or 9 spells
-        if (level < 8)
-        {
-            mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
-                             "randart spellbook than there are valid spells.",
-                 level);
-            mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
-                             "%d spells due to being disliked by %s.",
-                 uncastable_discard, god_discard, god_name(god).c_str());
-        }
+        mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
+                         "randart spellbook than there are valid spells.",
+             level);
+        mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
+                         "%d spells due to being disliked by %s.",
+             uncastable_discard, god_discard, god_name(god).c_str());
 #endif
     }
 
