@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Some spellbook related functions.
+ * @brief Spellbook/rod contents array and management functions
 **/
 
 
