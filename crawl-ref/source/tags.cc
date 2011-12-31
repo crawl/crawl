@@ -1319,6 +1319,7 @@ static void tag_construct_you(writer &th)
 
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
+    marshallFloat(th, abyssal_state.phase);
 
     marshallShort(th, you.constricted_by);
     marshallInt(th, you.escape_attempts);
@@ -2365,6 +2366,10 @@ static void tag_read_you(reader &th)
     abyssal_state.depth = unmarshallFloat(th);
 #if TAG_MAJOR_VERSION == 32
     }
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_PHASE)
+#endif
+    abyssal_state.phase = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 32
 
     if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
     {
