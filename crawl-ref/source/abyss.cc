@@ -995,11 +995,17 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
     const dungeon_feature_type terrain_elements[] =
     {
         DNGN_ROCK_WALL,
+        DNGN_ROCK_WALL,
+        DNGN_ROCK_WALL,
+        DNGN_ROCK_WALL,
+        DNGN_STONE_WALL,
         DNGN_STONE_WALL,
         DNGN_METAL_WALL,
+        DNGN_GREEN_CRYSTAL_WALL,
         DNGN_LAVA,
-        DNGN_SHALLOW_WATER,
         DNGN_DEEP_WATER,
+        DNGN_SHALLOW_WATER,
+        DNGN_SHALLOW_WATER,
     };
 
     if (one_chance_in(3) && !morph)
@@ -1063,7 +1069,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
                                                        abyss_depth / 10);
 
         int dist = noise.distance[0] * 100;
-        bool isWall = (dist > 118 || dist < 40);
+        bool isWall = (dist > 118 || dist < 30);
 
         if (noise.id[0] + noise.id[1] % 2  == 0)
             isWall = sub_noise.id[0] % 2;
