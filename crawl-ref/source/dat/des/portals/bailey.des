@@ -387,7 +387,6 @@ NAME:   bailey_axe_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 #
 ITEM:   any good_item w:10 / nothing w:5
 #
@@ -510,7 +509,6 @@ NAME:   bailey_axe_3
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 SUBST:  ' : +".
 SUBST:  " : wW"
 SUBST:  " = wwW
@@ -577,7 +575,6 @@ NAME:    bailey_axe_4
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS:  no_tele_control
 #
 ITEM:    any good_item
 ITEM:    potion of levitation ident:type
@@ -739,7 +736,6 @@ NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate
-LFLAGS: no_tele_control
 NSUBST: D = 1:= / *:c
 NSUBST: E = 1:= / *:c
 : orc_with_polearm(_G)
@@ -919,7 +915,6 @@ NAME:   bailey_polearm_4
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 ITEM:   any good_item / nothing
 MONS:   orc warrior ; crossbow . bolt | halberd
 : orc_with_polearm(_G)
@@ -958,7 +953,6 @@ NAME:   bailey_polearm_5
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
             potion of speed w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\

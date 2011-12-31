@@ -1155,7 +1155,6 @@ ENDMAP
 
 NAME:   ice_cave_statue_garden_02
 TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
-LFLAGS: no_tele_control
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
