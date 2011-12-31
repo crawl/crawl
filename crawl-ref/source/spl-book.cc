@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Spellbook/Staff contents array and management functions
+ * @brief Spellbook/rod contents array and management functions
 **/
 
 #include "AppHdr.h"
