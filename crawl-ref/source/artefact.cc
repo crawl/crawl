@@ -1222,7 +1222,7 @@ static bool _init_artefact_book(item_def &book)
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
             // The parameters to this call are in book.plus and plus2.
-            book_good = make_book_level_randart(book, book.plus, book.plus2);
+            book_good = make_book_level_randart(book, book.plus);
         else
             book_good = make_book_theme_randart(book);
 
