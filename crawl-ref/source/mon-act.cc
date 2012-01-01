@@ -3731,7 +3731,7 @@ static void _heated_area(monster* mons)
     if (mons->is_fiery())
         return;
 
-    const int base_damage = roll_dice(2, 11);
+    const int base_damage = random2(11);
 
     // Timescale, like with clouds:
     const int speed = mons->speed > 0? mons->speed : 10;
