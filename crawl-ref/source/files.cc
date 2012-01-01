@@ -1138,7 +1138,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
 #ifdef DEBUG_LEVEL_LOAD
     mprf(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
-                            you.where_are_you, you.absdepth0);
+                            you.where_are_you, you.depth);
 #endif
 
     // Destination position for hatch.
@@ -1210,10 +1210,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             && player_in_branch(BRANCH_MAIN_DUNGEON))
         {
             // If we're leaving the Abyss for the first time as a Chaos
-            // Knight of Lugonu (who start out there), force a return
-            // into the first dungeon level and enable normal monster
+            // Knight of Lugonu (who start out there), enable normal monster
             // generation.
-            you.absdepth0 = 0;
             you.char_direction = GDT_DESCENDING;
         }
 
@@ -1233,7 +1231,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()
-            && you.absdepth0 > 1
+            && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -1825,7 +1823,7 @@ static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
-    you.absdepth0 =     level.absdepth();
+    you.depth =         level.depth;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
@@ -2015,9 +2013,7 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
             return false;
         }
         else
-        {
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
-        }
     }
 
     crawl_state.minorVersion = inf.getMinorVersion();
@@ -2083,8 +2079,8 @@ void save_ghost(bool force)
 
 #endif // BONES_DIAGNOSTICS
 
-    // No ghosts on levels 1, 2, or the ET.
-    if (!force && (you.absdepth0 < 2
+    // No ghosts on D:1, D:2, or the Temple.
+    if (!force && (you.depth < 3 && player_in_branch(BRANCH_MAIN_DUNGEON)
                    || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)))
     {
         return;

@@ -22,6 +22,7 @@
 #include "spl-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
+#include "place.h"
 #include "player.h"
 #include "religion.h"
 
@@ -927,7 +928,7 @@ void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    if (you.absdepth0 < 10)
+    if (absdungeon_depth() < 10)
         return (0);
 
     return (MAX_GHOSTS - 1);

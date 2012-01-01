@@ -233,11 +233,8 @@ bool is_unknown_stair(const coord_def &p)
 
     // While the stairs out of the dungeon are not precisely known
     // to the travel cache, the player does know where they lead.
-    if (player_branch_depth() == 1
-        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
-    {
+    if (you.depth == 1 && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
         return (false);
-    }
 
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
@@ -1976,7 +1973,8 @@ static int _get_nearest_level_depth(uint8_t branch)
             || player_in_branch(BRANCH_DIS)
             || player_in_branch(BRANCH_GEHENNA)))
     {
-        return you.hell_exit + 1;
+        // BUG: hell gates in the Lair
+        return you.hell_exit;
     }
 
     level_id id = level_id::current();
@@ -2999,8 +2997,7 @@ void arrange_features(std::vector<coord_def> &features)
 
 level_id level_id::current()
 {
-    const level_id id(you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.absdepth0));
+    const level_id id(you.where_are_you, you.depth);
     return id;
 }
 

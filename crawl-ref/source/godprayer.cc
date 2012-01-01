@@ -26,6 +26,7 @@
 #include "monster.h"
 #include "notes.h"
 #include "options.h"
+#include "place.h"
 #include "random.h"
 #include "religion.h"
 #include "stash.h"
@@ -458,7 +459,7 @@ int zin_tithe(item_def& item, int quant, bool quiet)
             }
             // Avg gold pile value: 10 + depth/2.
             tithe *= 47;
-            denom *= 20 + you.absdepth0;
+            denom *= 20 + absdungeon_depth();
         }
         gain_piety(tithe * 3, denom);
     }

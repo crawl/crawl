@@ -1110,7 +1110,7 @@ static bool _valid_dungeon_level()
     // D:1 only.
     // Also, what's the point of this check?  Regular connectivity should
     // do that already.
-    if (you.absdepth0 == 0)
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1)
         return _is_level_stair_connected(branches[BRANCH_MAIN_DUNGEON].exit_stairs);
 
     return (true);
@@ -1288,13 +1288,11 @@ static void _fixup_walls()
 
     case BRANCH_VAULTS:
     {
-        const int bdepth = player_branch_depth();
-
-        if (bdepth > 6 && one_chance_in(10))
+        if (you.depth > 6 && one_chance_in(10))
             wall_type = DNGN_GREEN_CRYSTAL_WALL;
-        else if (bdepth > 4)
+        else if (you.depth > 4)
             wall_type = DNGN_METAL_WALL;
-        else if (bdepth > 2)
+        else if (you.depth > 2)
             wall_type = DNGN_STONE_WALL;
 
         break;
@@ -1356,7 +1354,7 @@ static void _fixup_branch_stairs()
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
     if (your_branch().exit_stairs != NUM_FEATURES
-        && player_branch_depth() == 1
+        && you.depth == 1
         && player_in_connected_branch())
     {
         const dungeon_feature_type exit = your_branch().exit_stairs;
@@ -1796,10 +1794,10 @@ static void _build_overflow_temples()
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
     // Are we deeper than the last overflow temple?
-    if (you.absdepth0 >= levels.size())
+    if (you.depth >= levels.size() + 1)
         return;
 
-    CrawlStoreValue &val = levels[you.absdepth0];
+    CrawlStoreValue &val = levels[you.depth - 1];
 
     // Does this level have an overflow temple?
     if (val.get_flags() & SFLAG_UNSET)
@@ -2072,7 +2070,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
         // If this is the real branch entry, don't mimic it.
         if (feat_is_branch_stairs(feat)
-            && player_branch_depth() == startdepth[get_branch_at(pos)])
+            && you.depth == startdepth[get_branch_at(pos)])
         {
             continue;
         }
@@ -2153,7 +2151,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     if (player_in_branch(BRANCH_LAIR))
     {
-        int depth = player_branch_depth() + 1;
+        int depth = you.depth + 1;
         do
         {
             _ruin_level(rectangle_iterator(1), MMT_VAULT,
@@ -2992,7 +2990,7 @@ static void _place_traps()
     {
         int max_webs = 400 - num_traps - 50;
         // Adjust for branch depth
-        max_webs = max_webs / (6 - player_branch_depth()) / 2;
+        max_webs = max_webs / (6 - you.depth) / 2;
         // Vary from 1/2 to full max amount
         place_webs(max_webs + random2(max_webs));
     }
@@ -3184,13 +3182,13 @@ static void _place_branch_entrances()
         const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
                            && dlevel >= FEATURE_MIMIC_DEPTH
-                           && player_branch_depth() >= b->mindepth
-                           && player_branch_depth() <= b->maxdepth
+                           && you.depth >= b->mindepth
+                           && you.depth <= b->maxdepth
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
 
         if (b->entry_stairs != NUM_FEATURES
             && player_in_branch(b->parent_branch)
-            && (player_branch_depth() == startdepth[i] || mimic))
+            && (you.depth == startdepth[i] || mimic))
         {
             // Place a stair.
             dprf("Placing stair to %s", b->shortname);
@@ -3356,7 +3354,7 @@ static void _place_aquatic_monsters()
     if (player_in_branch(BRANCH_SHOALS)
         || player_in_branch(BRANCH_ABYSS)
         || (player_in_branch(BRANCH_MAIN_DUNGEON)
-            && you.absdepth0 < 5))
+            && level_number < 5))
     {
         return;
     }
@@ -3847,7 +3845,7 @@ static void _build_postvault_level(vault_placement &place)
     if (place.map.has_tag("dis"))
         dgn_build_chaotic_city_level(DNGN_METAL_WALL);
     else if (player_in_branch(BRANCH_SWAMP))
-        dgn_build_swamp_level(place.level_number);
+        dgn_build_swamp_level();
     else
     {
         dgn_build_rooms_level(random_range(25, 100));
@@ -3879,7 +3877,7 @@ int dgn_item_corpse(const item_spec &ispec, const coord_def where)
     {
         if (tries > 200)
             return NON_ITEM;
-        int mindex = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
+        int mindex = dgn_place_monster(mspec, -1, coord_def(), true);
         if (invalid_monster_index(mindex))
             continue;
         menv[mindex].position = where;
@@ -3922,7 +3920,7 @@ int dgn_place_item(const item_spec &spec,
         return (NON_ITEM);
 
     if (level == INVALID_ABSDEPTH)
-        level = you.absdepth0;
+        level = absdungeon_depth();
 
     object_class_type base_type = spec.base_type;
     bool acquire = false;
@@ -4222,6 +4220,9 @@ int dgn_place_monster(mons_spec &mspec,
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
+
+    if (monster_level == -1)
+        monster_level = absdungeon_depth();
 
     const int mlev = mspec.mlevel;
     if (mlev)
@@ -5875,8 +5876,8 @@ static bool _fixup_interlevel_connectivity()
         return (true);
 
     StairConnectivity prev_con;
-    if (player_branch_depth() > 1)
-        prev_con = connectivity[your_branch().id][player_branch_depth() - 2];
+    if (you.depth > 1)
+        prev_con = connectivity[your_branch().id][you.depth - 2];
     StairConnectivity this_con;
 
     FixedVector<coord_def, 3> up_gc;
@@ -6125,9 +6126,9 @@ static bool _fixup_interlevel_connectivity()
     }
 
     // Save the connectivity.
-    if (player_branch_depth() > 1)
-        connectivity[your_branch().id][player_branch_depth() - 2] = prev_con;
-    connectivity[your_branch().id][player_branch_depth() - 1] = this_con;
+    if (you.depth > 1)
+        connectivity[your_branch().id][you.depth - 2] = prev_con;
+    connectivity[your_branch().id][you.depth - 1] = this_con;
 
     return (true);
 }

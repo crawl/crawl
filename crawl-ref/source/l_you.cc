@@ -24,6 +24,7 @@
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "place.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -173,11 +174,12 @@ LUARET1(you_lives, number, you.lives)
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
-LUARET1(you_subdepth, number, level_id::current().depth)
+LUARET1(you_depth, number, you.depth)
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
-LUARET1(you_absdepth, number, you.absdepth0 + 1)
+// [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
+LUARET1(you_absdepth, number, absdungeon_depth() + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
@@ -387,7 +389,7 @@ static const struct luaL_reg you_clib[] =
 
     { "where",        you_where },
     { "branch",       you_branch },
-    { "subdepth",     you_subdepth },
+    { "depth",        you_depth },
     { "absdepth",     you_absdepth },
 
     { "can_smell",         you_can_smell },

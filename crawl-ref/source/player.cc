@@ -5409,8 +5409,6 @@ void player::init()
 
     pet_target      = MHITNOT;
 
-    absdepth0       = 0;
-
     duration.init(0);
     rotting         = 0;
     berserk_penalty = 0;
@@ -5466,6 +5464,7 @@ void player::init()
     kills = new KillMaster();
 
     where_are_you    = BRANCH_MAIN_DUNGEON;
+    depth            = 1;
 
     branch_stairs.init(0);
 
@@ -7296,7 +7295,9 @@ void player::set_duration(duration_type dur, int turns,
 void player::goto_place(const level_id &lid)
 {
     where_are_you = static_cast<branch_type>(lid.branch);
-    absdepth0 = absdungeon_depth(lid.branch, lid.depth);
+    depth = lid.depth;
+    ASSERT(depth >= 1);
+    ASSERT(depth <= brdepth[you.where_are_you]);
 }
 
 void player::accum_been_constricted()

@@ -1045,11 +1045,11 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.max_level);
     marshallByte(th, you.where_are_you);
+    marshallByte(th, you.depth);
     marshallByte(th, you.char_direction);
     marshallByte(th, you.opened_zot);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
-    marshallByte(th, you.absdepth0);
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
@@ -1766,6 +1766,8 @@ static void tag_read_you(reader &th)
     you.max_level         = unmarshallByte(th);
     you.where_are_you     = static_cast<branch_type>(unmarshallUByte(th));
     ASSERT(you.where_are_you < NUM_BRANCHES);
+    you.depth             = unmarshallByte(th);
+    ASSERT(you.depth > 0);
     you.char_direction    = static_cast<game_direction_type>(unmarshallUByte(th));
     ASSERT(you.char_direction <= GDT_ASCENDING);
 
@@ -1773,7 +1775,6 @@ static void tag_read_you(reader &th)
     you.royal_jelly_dead = unmarshallBoolean(th);
     you.transform_uncancellable = unmarshallBoolean(th);
 
-    you.absdepth0         = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallUByte(th));
     ASSERT(you.is_undead <= US_SEMI_UNDEAD);
     you.unrand_reacts     = unmarshallShort(th);
@@ -2572,6 +2573,7 @@ static void tag_read_you_dungeon(reader &th)
         brdepth[j]    = unmarshallInt(th);
         startdepth[j] = unmarshallInt(th);
     }
+    ASSERT(you.depth <= brdepth[you.where_are_you]);
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,

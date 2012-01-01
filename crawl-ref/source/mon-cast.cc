@@ -38,6 +38,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "place.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -2139,7 +2140,7 @@ void mons_cast_spectral_orcs(monster* mons)
             orc->number = (int) mon;
 
             // give gear using the base type
-            give_item(created, you.absdepth0, true, true);
+            give_item(created, absdungeon_depth(), true, true);
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
@@ -2908,7 +2909,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
+                          mons->colour, -1, PROX_CLOSE_TO_PLAYER));
 
             if (tentacle != -1)
             {

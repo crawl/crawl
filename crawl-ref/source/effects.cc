@@ -2267,7 +2267,7 @@ void handle_time()
         }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(20 / (6 - player_branch_depth())), true);
+        place_webs(random2(20 / (6 - you.depth)), true);
 }
 
 // Move monsters around to fake them walking around while player was
@@ -3140,9 +3140,7 @@ void recharge_rods(int aut, bool level_only)
 
 void slime_wall_damage(actor* act, int delay)
 {
-    const int depth = player_in_branch(BRANCH_SLIME_PITS)
-                      ? player_branch_depth()
-                      : 1;
+    const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
 
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)

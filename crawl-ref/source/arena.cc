@@ -200,7 +200,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const int imon = dgn_place_monster(spec, you.absdepth0,
+                const int imon = dgn_place_monster(spec, -1,
                                                    loc, false, true, false);
                 if (imon == -1)
                 {
@@ -238,7 +238,7 @@ namespace arena
         if (place.is_valid())
         {
             you.where_are_you = place.branch;
-            you.absdepth0     = place.absdepth();
+            you.depth         = place.depth;
         }
 
         dgn_reset_level();
@@ -758,8 +758,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            int idx = dgn_place_monster(spec, you.absdepth0, pos, false,
-                                        true);
+            int idx = dgn_place_monster(spec, -1, pos, false, true);
 
             if (idx == -1 && fac.active_members == 0
                 && monster_at(pos))
@@ -790,8 +789,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                idx = dgn_place_monster(spec, you.absdepth0, pos, false,
-                                        true);
+                idx = dgn_place_monster(spec, -1, pos, false, true);
             }
 
             if (idx != -1)
