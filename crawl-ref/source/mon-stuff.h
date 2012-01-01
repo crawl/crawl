@@ -226,10 +226,13 @@ int count_allies();
 void record_monster_defeat(monster* mons, killer_type killer);
 
 int temperature();
+int temperature_last();
 void temperature_check();
 void temperature_increment(float degree);
 void temperature_decrement(float degree);
-void temperature_changed(bool inc_temp);
+void temperature_changed(float change);
+void temperature_decay();
+bool temperature_tier(int which);
 bool temperature_effect(int which);
 int temperature_colour(int temp);
 std::string temperature_string(int temp);

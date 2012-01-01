@@ -4674,18 +4674,27 @@ int temperature()
     return (int) you.temperature;
 }
 
+int temperature_last()
+{
+    return (int) you.temperature_last;
+}
+
 void temperature_check()
 {
-    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int tension = get_tension(GOD_NO_GOD);
-    double tension_b = tension / (1 + factor);
-    double tension_c = sqrt(tension_b);
-    float tempchange = .5 + tension_c / (1 + you.temperature);
+    float factor = sqrt(1 + exp_needed(you.experience_level) / 30.0);
+    int tension = get_tension(GOD_NO_GOD); // Raw tension
+    float tension_b = tension / (1 + factor); // Scaled to your level
+    float tension_c = sqrt(tension_b); // Sqrt'd too
 
-//    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
+    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f", factor, tension, tension_b, tension_c);
 
-    // Increment temp to full if you're in lava,
-    // and don't muck with it otherwise.
+    // First, your temperature naturally decays.
+    temperature_decay();
+
+    // Next, add temperature from tension.
+    temperature_increment(tension_c);
+
+    // Then, increment temp to full if you're in lava.
     if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
     {
         // If you're already very hot, no message,
@@ -4695,45 +4704,42 @@ void temperature_check()
             mpr("The lava instantly superheats you.");
         temperature_increment(TEMP_MAX*TEMP_MAX);
     }
-    else
-    {
-        // Off from 1 so that there's less seesawing.
-        if ((tempchange - .9) > 0)
-            temperature_increment(tempchange);
-        else if ((tempchange - 1.1) < 0)
-            temperature_decrement(tempchange);
-
-        if (feat_is_water(env.grid(you.pos())) && you.ground_level()
+    // Alternately, cool you off by 1 additional each turn until
+    // you're not hot enough to boil water.
+    else if (feat_is_water(env.grid(you.pos())) && you.ground_level()
             && temperature_effect(LORC_PASSIVE_HEAT))
-        {
-            // Cools you off by 1 each turn until you're
-            // not hot enough to boil water.
-            temperature_decrement(1);
+    {
+        temperature_decrement(1);
 
-            for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            const coord_def p(*ai);
+            if (in_bounds(p)
+                && env.cgrid(p) == EMPTY_CLOUD
+                && one_chance_in(5))
             {
-                const coord_def p(*ai);
-                if (in_bounds(p)
-                    && env.cgrid(p) == EMPTY_CLOUD
-                    && one_chance_in(5))
-                {
-                    place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
-                }
+                place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
             }
         }
     }
 
-    // Occurs *after* lava heat-up or water cool-down:
-    if (temperature_effect(LORC_HEAT_AURA))
-        invalidate_agrid(true);
+    // Handled any effects that change with temperature.
+    float tempchange = you.temperature - you.temperature_last;
+    temperature_changed(tempchange);
+
+    // Save your new temp as your new 'old' temperature.
+    you.temperature_last = you.temperature;
 }
 
 void temperature_increment(float degree)
 {
+    // No warming up while you're exhausted!
+    if (you.duration[DUR_EXHAUSTED])
+        return;
+
     you.temperature += sqrt(degree);
     if (temperature() >= TEMP_MAX)
         you.temperature = TEMP_MAX;
-    temperature_changed(true);
 }
 
 void temperature_decrement(float degree)
@@ -4742,24 +4748,19 @@ void temperature_decrement(float degree)
     if (you.duration[DUR_BERSERK])
         return;
 
-    you.temperature -= sqrt(degree);
+    you.temperature -= degree;
     if (temperature() <= TEMP_MIN)
         you.temperature = TEMP_MIN;
-    temperature_changed(false);
 }
 
-void temperature_changed(bool inc_temp) {
+void temperature_changed(float change) {
 
-    // Okay, so here's how it works - it gets your current temperature, and it knows
-    // whether that temperature has just risen by one or not.
-    int new_temp = temperature();
-    int old_temp = temperature() + 1;
-
-    if (inc_temp)
-        old_temp -= 2;
+    // Arbitrary - how big does a swing in a turn have to be?
+    float pos_threshold = .05;
+    float neg_threshold = -1 * pos_threshold;
 
     // Reached the temp that kills off stoneskin.
-    if (inc_temp && new_temp == TEMP_WARM)
+    if (change > pos_threshold && temperature_tier(TEMP_WARM))
     {
         // Handles condensation shield, ozo's armour, icemail.
         expose_player_to_element(BEAM_FIRE, 0);
@@ -4771,36 +4772,32 @@ void temperature_changed(bool inc_temp) {
         // Stoneskin melts.
         you.set_duration(DUR_STONESKIN, 0);
         mpr("Your stony skin melts.", MSGCH_DURATION);
-
         you.redraw_armour_class = true;
     }
 
     // Cooled down enough for stoneskin to kick in again.
-    if (!inc_temp && old_temp == TEMP_WARM)
+    if (change < neg_threshold && temperature_tier(TEMP_WARM))
     {
-        if (you.duration[DUR_STONESKIN] < 500)
-        {
             you.set_duration(DUR_STONESKIN, 500);
             mpr("Your skin cools and hardens.", MSGCH_DURATION);
             you.redraw_armour_class = true;
-        }
     }
 
     // Passive heat stuff.
-    if (inc_temp && new_temp == TEMP_HOT)
+    if (change > pos_threshold && temperature_tier(TEMP_FIRE))
         mpr("You're getting fired up.", MSGCH_DURATION);
 
-    if (!inc_temp && old_temp == TEMP_HOT)
+    if (change < neg_threshold && temperature_tier(TEMP_FIRE))
         mpr("You're cooling off.", MSGCH_DURATION);
 
     // Heat aura stuff.
-    if (inc_temp && new_temp == TEMP_FIRE)
+    if (change > pos_threshold && temperature_tier(TEMP_MAX))
     {
         mpr("You blaze with the fury of an erupting volcano!", MSGCH_DURATION);
         invalidate_agrid(true);
     }
 
-    if (!inc_temp && old_temp == TEMP_FIRE)
+    if (change < neg_threshold && temperature_tier(TEMP_MAX))
     {
         mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
         invalidate_agrid(true);
@@ -4808,6 +4805,24 @@ void temperature_changed(bool inc_temp) {
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
+    // Just do this every turn to be safe. Can be fixed later if there
+    // any performance issues.
+    invalidate_agrid(true);
+}
+
+void temperature_decay() {
+    temperature_decrement(you.temperature / 10);
+}
+
+// Just a helper function to save space. Returns true if a
+// threshold was crossed.
+bool temperature_tier (int which) {
+    if (temperature() >= which && temperature_last() <= which)
+        return true;
+    else if (temperature() <= which && temperature_last() >= which)
+        return true;
+    else
+        return false;
 }
 
 bool temperature_effect(int which) {
