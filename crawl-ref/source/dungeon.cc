@@ -6345,6 +6345,10 @@ void vault_placement::apply_grid()
                 // Have to link items each square at a time, or
                 // dungeon_terrain_changed could blow up.
                 link_items();
+                // Init tile flavour -- dungeon_terrain_changed does
+                // this too, but only if oldgrid != newgrid, so we
+                // make sure here.
+                tile_init_flavour(*ri);
                 const dungeon_feature_type newgrid = grd(*ri);
                 grd(*ri) = oldgrid;
                 dungeon_terrain_changed(*ri, newgrid, true, true);
