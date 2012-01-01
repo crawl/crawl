@@ -683,7 +683,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 mpr("A huge blade swings out and slices into you!");
-                const int damage = (absdungeon_depth() * 2) + random2avg(29, 2)
+                const int damage = (env.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
                 std::string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
@@ -1027,7 +1027,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 int trap_def::max_damage(const actor& act)
 {
-    int level = absdungeon_depth();
+    int level = env.absdepth0;
 
     // Trap damage to monsters is not a function of level, because
     // they are fairly stupid and tend to have fewer hp than
@@ -1176,11 +1176,11 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(absdungeon_depth() + 5))
+    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(env.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) > 5 + random2(5 + absdungeon_depth()))
-            practise(EX_TRAP_DISARM_FAIL, absdungeon_depth());
+        if (random2(you.dex()) > 5 + random2(5 + env.absdepth0))
+            practise(EX_TRAP_DISARM_FAIL, env.absdepth0);
         else
         {
             if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
@@ -1202,7 +1202,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        practise(EX_TRAP_DISARM, absdungeon_depth());
+        practise(EX_TRAP_DISARM, env.absdepth0);
     }
 }
 
@@ -1574,7 +1574,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (absdungeon_depth()*2)) * random2(200) / 100;
+    int trap_hit = (20 + (env.absdepth0*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 

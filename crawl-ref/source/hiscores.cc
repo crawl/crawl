@@ -1266,7 +1266,7 @@ void scorefile_entry::init(time_t dt)
     branch     = you.where_are_you;  // no adjustments necessary.
     dlvl       = you.depth;
 
-    absdepth   = absdungeon_depth() + 1;  // 1-based absolute depth.
+    absdepth   = env.absdepth0 + 1;  // 1-based absolute depth.
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {

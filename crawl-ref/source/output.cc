@@ -23,6 +23,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
+#include "env.h"
 #include "format.h"
 #include "godabil.h"
 #include "initfile.h"
@@ -927,7 +928,7 @@ void print_stats_level()
 
     textcolor(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("(%d) ", absdungeon_depth() + 1);
+    cprintf("(%d) ", env.absdepth0 + 1);
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();

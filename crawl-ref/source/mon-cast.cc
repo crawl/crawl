@@ -38,7 +38,6 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "place.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -2140,7 +2139,7 @@ void mons_cast_spectral_orcs(monster* mons)
             orc->number = (int) mon;
 
             // give gear using the base type
-            give_item(created, absdungeon_depth(), true, true);
+            give_item(created, env.absdepth0, true, true);
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);

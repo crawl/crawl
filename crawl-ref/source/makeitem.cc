@@ -28,7 +28,6 @@
 #include "misc.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "spl-book.h"
@@ -1629,7 +1628,7 @@ brand_ok:
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
-                _determine_weapon_brand(item, 2 + 2 * absdungeon_depth()));
+                _determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
         item.plus  -= 1 + random2(3);
         item.plus2 -= 1 + random2(3);
@@ -2375,7 +2374,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_ARMOUR,
                 _determine_armour_ego(item, item.sub_type,
-                2 + 2 * absdungeon_depth()));
+                2 + 2 * env.absdepth0));
         }
 
         item.plus -= 1 + random2(3);

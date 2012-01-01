@@ -3386,6 +3386,7 @@ static void tag_read_level(reader &th)
 
     env.elapsed_time = unmarshallInt(th);
     env.old_player_pos = unmarshallCoord(th);
+    env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
     // Map grids.
     // how many X?

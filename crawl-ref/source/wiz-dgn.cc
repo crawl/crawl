@@ -147,7 +147,7 @@ void wizard_level_travel(bool down)
 static void _wizard_go_to_level(const level_pos &pos)
 {
     dungeon_feature_type stair_taken =
-        absdungeon_depth(pos.id.branch, pos.id.depth) > absdungeon_depth() ?
+        absdungeon_depth(pos.id.branch, pos.id.depth) > env.absdepth0 ?
         DNGN_STONE_STAIRS_DOWN_I : DNGN_STONE_STAIRS_UP_I;
 
     if (pos.id.depth == brdepth[pos.id.branch])

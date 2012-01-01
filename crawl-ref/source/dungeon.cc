@@ -1144,6 +1144,7 @@ void dgn_reset_level(bool enable_random_maps)
     // Set up containers for storing some level generation info.
     env.properties[LEVEL_VAULTS_KEY].new_table();
     env.properties[LEVEL_EXTRAS_KEY].new_table();
+    env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
@@ -2036,7 +2037,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         return;
     }
 
-    if (absdungeon_depth() < FEATURE_MIMIC_DEPTH)
+    if (env.absdepth0 < FEATURE_MIMIC_DEPTH)
         return;
 
     for (rectangle_iterator ri(1); ri; ++ri)
@@ -2113,7 +2114,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 static void _place_item_mimics()
 {
 
-    if (absdungeon_depth() < ITEM_MIMIC_DEPTH)
+    if (env.absdepth0 < ITEM_MIMIC_DEPTH)
         return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -2334,7 +2335,7 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
 static void _prepare_water()
 {
     dungeon_feature_type which_grid;   // code compaction {dlb}
-    int absdepth0 = absdungeon_depth();
+    int absdepth0 = env.absdepth0;
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -2934,7 +2935,7 @@ static bool _shaft_is_in_corridor(const coord_def& c)
 static void _place_traps()
 {
     const int num_traps = num_traps_for_place();
-    int level_number = absdungeon_depth();
+    int level_number = env.absdepth0;
 
     ASSERT(num_traps >= 0);
     ASSERT(num_traps <= MAX_TRAPS);
@@ -3167,7 +3168,7 @@ static void _place_specific_stair(dungeon_feature_type stair,
 
 static void _place_branch_entrances()
 {
-    int dlevel = absdungeon_depth();
+    int dlevel = env.absdepth0;
 
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -3343,7 +3344,7 @@ static void _place_aquatic_monsters()
 {
     int lava_spaces = 0, water_spaces = 0;
     std::vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
-    int level_number = absdungeon_depth();
+    int level_number = env.absdepth0;
 
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
@@ -3473,7 +3474,7 @@ static void _builder_items()
 {
     int i = 0;
     object_class_type specif_type = OBJ_RANDOM;
-    int items_levels = absdungeon_depth();
+    int items_levels = env.absdepth0;
     int items_wanted = _num_items_wanted(items_levels);
 
     if (player_in_branch(BRANCH_VAULTS))
@@ -3769,7 +3770,7 @@ static bool _build_vault_impl(const map_def *vault,
 
     vault_placement place;
 
-    place.level_number = absdungeon_depth();
+    place.level_number = env.absdepth0;
 
     if (map_bounds(where))
         place.pos = where;
@@ -3920,7 +3921,7 @@ int dgn_place_item(const item_spec &spec,
         return (NON_ITEM);
 
     if (level == INVALID_ABSDEPTH)
-        level = absdungeon_depth();
+        level = env.absdepth0;
 
     object_class_type base_type = spec.base_type;
     bool acquire = false;
@@ -4222,7 +4223,7 @@ int dgn_place_monster(mons_spec &mspec,
     const bool m_band           = mspec.band;
 
     if (monster_level == -1)
-        monster_level = absdungeon_depth();
+        monster_level = env.absdepth0;
 
     const int mlev = mspec.mlevel;
     if (mlev)
@@ -4960,7 +4961,7 @@ void place_spec_shop(const coord_def& where,
 void place_spec_shop(const coord_def& where,
                      shop_spec* spec, bool representative)
 {
-    int level_number = absdungeon_depth();
+    int level_number = env.absdepth0;
     int force_s_type = static_cast<int>(spec->sh_type);
 
     int orb = 0;

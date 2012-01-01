@@ -39,7 +39,6 @@
 #include "mutation.h"
 #include "options.h"
 #include "jobs.h"
-#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -4675,7 +4674,7 @@ bool hints_monster_interesting(const monster* mons)
         return (true);
 
     // The monster is (seriously) out of depth.
-    return (mons_level(mons->type) >= absdungeon_depth() + 8);
+    return (mons_level(mons->type) >= env.absdepth0 + 8);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4721,7 +4720,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             // Since I'm too lazy to come up with any measurement of my own
             // I'll simply reuse that one.
             const int level_diff = mons_level(mi.type)
-                                 - (absdungeon_depth() + 8);
+                                 - (env.absdepth0 + 8);
 
             if (level_diff >= 0)
             {
