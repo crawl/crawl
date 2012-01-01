@@ -4686,7 +4686,8 @@ void temperature_check()
     float tension_b = tension / (1 + factor); // Scaled to your level
     float tension_c = sqrt(tension_b); // Sqrt'd too
 
-    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f", factor, tension, tension_b, tension_c);
+// For testing, but super handy for that!
+//    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f", factor, tension, tension_b, tension_c);
 
     // First, your temperature naturally decays.
     temperature_decay();
