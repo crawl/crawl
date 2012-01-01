@@ -1771,6 +1771,8 @@ static const facet_def _demon_facets[] =
     { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
+    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
+      { 3, 3, 3 } },
     // Tier 2 facets
     { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
       { 2, 2, 2 } },
@@ -2281,4 +2283,18 @@ int handle_pbd_corpses(bool do_rot)
     }
 
     return (corpse_count);
+}
+
+int augmentation_amount()
+{
+	int amount = 0;
+	const int level = player_mutation_level(MUT_AUGMENTATION) + 1;
+
+	for (int i = 1; i < level; ++i)
+	{
+		if (you.hp <= (i * you.hp_max) / level)
+		    amount++;
+	}
+
+	return amount;
 }

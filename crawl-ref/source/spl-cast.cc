@@ -496,6 +496,8 @@ int spell_enhancement(unsigned int typeflags)
     if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         enhanced++;
 
+    enhanced += augmentation_amount();
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;

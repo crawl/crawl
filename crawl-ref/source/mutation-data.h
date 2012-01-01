@@ -1145,6 +1145,22 @@
   "powered by pain"
 },
 
+{ MUT_AUGMENTATION,            0,  3, false, false, false,
+  "augmentation",
+
+  {"Your magical and physical power is slightly enhanced as your life falls.",
+   "Your magical and physical power is enhanced as your life falls.",
+   "Your magical and physical power is greatly enhanced as your life falls."},
+
+  {"You feel power flowing into your body.",
+   "You feel power rushing into your body.",
+   "You feel saturated with power."},
+
+  {"", "", ""},
+
+  "augmentation"
+},
+
 // Jiyva only mutations
 { MUT_GELATINOUS_BODY,            0,  3, false, true, true,
   NULL,

@@ -4058,6 +4058,7 @@ void display_char_status()
         STATUS_BACKLIT,
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
+        STATUS_AUGMENTED,
     };
 
     status_info inf;
@@ -4253,6 +4254,7 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
     }
 
     ret += std::min(you.duration[DUR_SLAYING] / (13 * BASELINE_DELAY), 6);
+    ret += 3 * augmentation_amount();
 
     return (ret);
 }

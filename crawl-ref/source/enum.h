@@ -2707,6 +2707,7 @@ enum mutation_type
     MUT_FOUL_STENCH,
 #endif
     MUT_EVOLUTION,
+    MUT_AUGMENTATION,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

@@ -353,6 +353,20 @@ void fill_status_info(int status, status_info* inf)
         _describe_speed(inf);
         break;
 
+    case STATUS_AUGMENTED:
+    {
+		int level = augmentation_amount();
+
+		if (level > 0)
+		{
+		    inf->light_colour = (level == 3) ? WHITE :
+		                        (level == 2) ? LIGHTBLUE : BLUE;
+
+		    inf->light_text = "Aug";
+		}
+		break;
+	}
+
     case DUR_CONFUSING_TOUCH:
     {
         const int dur = you.duration[DUR_CONFUSING_TOUCH];
