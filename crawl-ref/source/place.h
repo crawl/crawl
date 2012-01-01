@@ -28,17 +28,11 @@ std::string place_name(unsigned short place, bool long_name = false,
 std::string prep_branch_level_name(unsigned short packed_place);
 std::string prep_branch_level_name();
 
-// Get displayable depth in the current branch, given the absolute
-// depth.
-int subdungeon_depth(branch_type branch, int depth);
-
-// Get absolute depth given the displayable depth in the branch.
-int absdungeon_depth(branch_type branch, int subdepth);
-
-int absdungeon_depth();
-
-// Get displayable depth in the current branch.
-int player_branch_depth();
+// Get some kind of "absolute depth" given the depth in the branch.
+// It's mostly the difficulty of a given level and the quality of items
+// you can find.
+int absdungeon_depth(branch_type branch = you.where_are_you,
+                     int depth = you.depth);
 
 bool single_level_branch(branch_type branch);
 

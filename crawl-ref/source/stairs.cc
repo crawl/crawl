@@ -110,7 +110,7 @@ static void _player_change_level_reset()
 static void _player_change_level_upstairs(dungeon_feature_type stair_find)
 {
     if (player_in_connected_branch())
-        you.absdepth0--;
+        you.depth--;
 
     // Make sure we return to our main dungeon level... labyrinth entrances
     // in the abyss or pandemonium are a bit trouble (well the labyrinth does
@@ -124,31 +124,27 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find)
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         you.where_are_you = you.hell_branch;
-        you.absdepth0 = you.hell_exit;
+        you.depth = you.hell_exit;
     }
 
     if (player_in_hell())
     {
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
-        you.absdepth0 = 27;
+        you.depth = 1;
     }
 
-    // Did we take a branch stair?
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    if (you.depth == 0)
     {
-        if (branches[i].exit_stairs == stair_find
-            && you.where_are_you == i)
+        you.depth = startdepth[you.where_are_you];
+        if (you.depth == -1)
         {
-            you.where_are_you = branches[i].parent_branch;
-
-            // If leaving a branch which wasn't generated in this
-            // particular game (like the Swamp or Shoals), then
-            // its startdepth is set to -1; compensate for that,
-            // so we don't end up on "level -1".
-            if (brdepth[i] == -1)
-                you.absdepth0 += 2;
-            break;
+            // Wizmode, the branch wasn't generated this game.
+            // Pick the middle of the range instead.
+            you.depth = (branches[you.where_are_you].mindepth
+                       + branches[you.where_are_you].maxdepth) / 2;
         }
+        you.where_are_you = branches[you.where_are_you].parent_branch;
+        ASSERT(you.where_are_you < NUM_BRANCHES);
     }
 }
 
@@ -284,7 +280,7 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
 {
     if (player_in_branch(BRANCH_ZIGGURAT)
         && stair_used == DNGN_EXIT_PORTAL_VAULT
-        && player_branch_depth() == 27)
+        && you.depth == 27)
     {
         you.zigs_completed++;
     }
@@ -450,11 +446,9 @@ void up_stairs(dungeon_feature_type force_stair)
         old_level_info.update();
     }
 
-    _player_change_level_reset();
-    _player_change_level_upstairs(stair_find);
-
-    if (you.absdepth0 < 0)
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1)
     {
+        you.depth = 0;
         mpr("You have escaped!");
 
         for (int i = 0; i < ENDOFPACK; i++)
@@ -468,6 +462,9 @@ void up_stairs(dungeon_feature_type force_stair)
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
     }
+
+    _player_change_level_reset();
+    _player_change_level_upstairs(stair_find);
 
     if (old_level.branch == BRANCH_VESTIBULE_OF_HELL
         && !player_in_branch(BRANCH_VESTIBULE_OF_HELL))
@@ -557,7 +554,7 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
 
     case DNGN_ENTER_HELL:
         you.hell_branch = you.where_are_you;
-        you.hell_exit = you.absdepth0;
+        you.hell_exit = you.depth;
         return level_id(BRANCH_VESTIBULE_OF_HELL);
 
     default:
@@ -578,7 +575,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
                                             const std::string &dst)
 {
     level_id lev = _downstairs_destination(stair_find, dst);
-    you.absdepth0     = lev.absdepth();
+    you.depth         = lev.depth;
     you.where_are_you = lev.branch;
 }
 
@@ -607,7 +604,6 @@ void down_stairs(dungeon_feature_type force_stair)
                             && get_trap_type(you.pos()) == TRAP_SHAFT
                         || force_stair == DNGN_TRAP_NATURAL);
     level_id shaft_dest;
-    int      shaft_level = -1;
 
     // Up and down both work for shops.
     if (stair_find == DNGN_ENTER_SHOP)
@@ -686,9 +682,8 @@ void down_stairs(dungeon_feature_type force_stair)
             _maybe_destroy_trap(you.pos());
             return;
         }
-        shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
 
-        if (!known_trap && shaft_level - you.absdepth0 > 1)
+        if (!known_trap && shaft_dest.depth - you.depth > 1)
             mark_milestone("shaft", "fell down a shaft to " +
                                     short_place_name(shaft_dest) + ".");
 
@@ -800,13 +795,10 @@ void down_stairs(dungeon_feature_type force_stair)
         _mark_portal_return_point(you.pos());
     }
 
-    const int shaft_depth = (shaft ? shaft_level - you.absdepth0 : 1);
+    const int shaft_depth = (shaft ? shaft_dest.depth - you.depth : 1);
     _player_change_level_reset();
     if (shaft)
-    {
-        you.absdepth0     = shaft_level;
-        you.where_are_you = shaft_dest.branch;
-    }
+        you.depth         = shaft_dest.depth;
     else
         _player_change_level_downstairs(stair_find, dst);
 
@@ -1062,7 +1054,7 @@ void new_level(bool restore)
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
 
     if (player_in_branch(BRANCH_ZIGGURAT))
-        you.zig_max = std::max(you.zig_max, player_branch_depth());
+        you.zig_max = std::max(you.zig_max, you.depth);
 }
 
 // Returns a hatch or stair (up or down)
@@ -1077,7 +1069,7 @@ dungeon_feature_type random_stair(bool do_place_check)
                 DNGN_STONE_STAIRS_UP_I+random2(
                     DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_UP_I+1)));
         }
-        else if (player_branch_depth() == 1)
+        else if (you.depth == 1)
         {
             return (static_cast<dungeon_feature_type>(
                 DNGN_STONE_STAIRS_DOWN_I+random2(

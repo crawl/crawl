@@ -19,21 +19,16 @@ const Branch& your_branch()
 
 bool at_branch_bottom()
 {
-    return brdepth[you.where_are_you] == player_branch_depth();
+    return brdepth[you.where_are_you] == you.depth;
 }
 
 level_id branch_entry_level(branch_type branch)
 {
     // Hell and its subbranches need obnoxious special-casing:
     if (branch == BRANCH_VESTIBULE_OF_HELL)
-    {
-        return level_id(you.hell_branch,
-                        subdungeon_depth(you.hell_branch, you.hell_exit));
-    }
+        return level_id(you.hell_branch, you.hell_exit);
     else if (is_hell_subbranch(branch))
-    {
         return level_id(BRANCH_VESTIBULE_OF_HELL, 1);
-    }
 
     const branch_type parent = branches[branch].parent_branch;
     const int subdepth = startdepth[branch];

@@ -98,8 +98,6 @@ public:
 
   unsigned short pet_target;
 
-  int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
-
   durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
@@ -170,6 +168,7 @@ public:
   KillMaster* kills;
 
   branch_type where_are_you;
+  int depth;
 
   FixedVector<uint8_t, 30> branch_stairs;
 

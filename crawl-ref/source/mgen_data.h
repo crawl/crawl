@@ -128,7 +128,7 @@ struct mgen_data
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
-              int monpower = you.absdepth0,
+              int monpower = -1,
               proximity_type prox = PROX_ANYWHERE,
               level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
@@ -182,7 +182,7 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, BLACK, you.absdepth0,
+                         genflags, ngod, base, 0, BLACK, -1,
                          PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
                          RANDOM_MONSTER);
     }

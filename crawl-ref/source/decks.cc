@@ -3147,10 +3147,9 @@ void shuffle_all_decks_on_level()
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on level %d, branch %d",
+            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on %s",
                  item.name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
+                 level_id::current().describe().c_str());
 #endif
             _unmark_and_shuffle_deck(item);
         }

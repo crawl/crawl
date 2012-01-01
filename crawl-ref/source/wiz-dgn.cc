@@ -41,7 +41,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
     if (player_in_connected_branch())
     {
-        int depth = subdungeon_depth(you.where_are_you, you.absdepth0);
+        int depth = you.depth;
         if (down)
             depth++;
         else
@@ -146,10 +146,9 @@ void wizard_level_travel(bool down)
 
 static void _wizard_go_to_level(const level_pos &pos)
 {
-    const int abs_depth = absdungeon_depth(pos.id.branch, pos.id.depth);
     dungeon_feature_type stair_taken =
-        abs_depth > you.absdepth0? DNGN_STONE_STAIRS_DOWN_I
-                                  : DNGN_STONE_STAIRS_UP_I;
+        absdungeon_depth(pos.id.branch, pos.id.depth) > absdungeon_depth() ?
+        DNGN_STONE_STAIRS_DOWN_I : DNGN_STONE_STAIRS_UP_I;
 
     if (pos.id.depth == brdepth[pos.id.branch])
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
@@ -164,7 +163,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     const bool keep_travel_data = can_travel_interlevel();
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
-    you.absdepth0    = abs_depth;
+    you.depth         = pos.id.depth;
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     tile_new_level(newlevel);

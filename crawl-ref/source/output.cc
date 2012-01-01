@@ -909,7 +909,7 @@ static std::string _level_description_string_hud()
     std::string short_name = branches[place.branch].shortname;
 
     if (brdepth[place.branch] > 1)
-        short_name += make_stringf(":%d", player_branch_depth());
+        short_name += make_stringf(":%d", you.depth);
     // Definite articles
     else if (place.branch == BRANCH_ABYSS)
         short_name.insert(0, "The ");
@@ -927,7 +927,7 @@ void print_stats_level()
 
     textcolor(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("(%d) ", you.absdepth0 + 1);
+    cprintf("(%d) ", absdungeon_depth() + 1);
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();

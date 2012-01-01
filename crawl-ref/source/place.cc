@@ -9,8 +9,8 @@
 
 #include "branch.h"
 #include "libutil.h"
-#include "place.h"
 #include "player.h"
+#include "place.h"
 #include "travel.h"
 
 std::string short_place_name(level_id id)
@@ -35,8 +35,7 @@ unsigned short get_packed_place(branch_type branch, int subdepth)
 
 unsigned short get_packed_place()
 {
-    return get_packed_place(you.where_are_you,
-                            subdungeon_depth(you.where_are_you, you.absdepth0));
+    return get_packed_place(you.where_are_you, you.depth);
 }
 
 bool single_level_branch(branch_type branch)
@@ -101,37 +100,14 @@ int absdungeon_depth(branch_type branch, int subdepth)
 {
     if (branch >= BRANCH_VESTIBULE_OF_HELL && branch <= BRANCH_LAST_HELL)
         return subdepth + 27 - (branch == BRANCH_VESTIBULE_OF_HELL);
-    else
+
+    --subdepth;
+    while (branch != BRANCH_MAIN_DUNGEON && branch != NUM_BRANCHES)
     {
-        --subdepth;
-        while (branch != BRANCH_MAIN_DUNGEON && branch != NUM_BRANCHES)
-        {
-            subdepth += startdepth[branch];
-            branch = branches[branch].parent_branch;
-        }
+        subdepth += startdepth[branch];
+        branch = branches[branch].parent_branch;
     }
     return subdepth;
-}
-
-int subdungeon_depth(branch_type branch, int depth)
-{
-    int d = depth - absdungeon_depth(branch, 0);
-    // FIXME: assert instead once bugs are gone
-    if (d < 1)
-        d = 1;
-    else if (d > brdepth[branch])
-        d = brdepth[branch];
-    return d;
-}
-
-int absdungeon_depth()
-{
-    return you.absdepth0;
-}
-
-int player_branch_depth()
-{
-    return subdungeon_depth(you.where_are_you, you.absdepth0);
 }
 
 // Returns true if exits from this type of level involve going upstairs.

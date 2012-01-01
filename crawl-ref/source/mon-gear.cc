@@ -2133,6 +2133,8 @@ void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_or
 
 void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
 {
+    ASSERT(level_number > -1); // debugging absdepth0 changes
+
     monster* mons = &menv[mid];
 
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)

@@ -162,8 +162,8 @@ static bool mg_build_dungeon()
     for (int i = 0, size = places.size(); i < size; ++i)
     {
         const level_id &lid = places[i];
-        you.absdepth0 = absdungeon_depth(lid.branch, lid.depth);
         you.where_are_you = lid.branch;
+        you.depth = lid.depth;
         if (!mg_do_build_level(1))
             return (false);
     }

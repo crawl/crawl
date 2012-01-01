@@ -376,7 +376,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     static int cache_seed = -1;
 
     int seed = random ? -1 :
-        (static_cast<int>(you.where_are_you) << 8) + you.absdepth0 - 1731813538;
+        (static_cast<int>(you.where_are_you) << 8) + you.depth - 1731813538;
 
     if (seed == cache_seed && !random)
     {

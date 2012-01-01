@@ -1263,11 +1263,10 @@ void scorefile_entry::init(time_t dt)
         penance = you.penance[you.religion];
     }
 
-    // main dungeon: level is simply level
-    dlvl       = player_branch_depth();
     branch     = you.where_are_you;  // no adjustments necessary.
+    dlvl       = you.depth;
 
-    absdepth   = you.absdepth0 + 1;  // 1-based absolute depth.
+    absdepth   = absdungeon_depth() + 1;  // 1-based absolute depth.
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {

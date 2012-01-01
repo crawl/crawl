@@ -100,8 +100,8 @@ static void _dump_level_info(FILE* file)
 
     fprintf(file, "Place info:\n");
 
-    fprintf(file, "absdepth0 = %d, branch = %d\n\n",
-            you.absdepth0, (int) you.where_are_you);
+    fprintf(file, "branch = %d, depth = %d\n\n",
+            (int)you.where_are_you, you.depth);
 
     std::string place = level_id::current().describe();
     std::string orig_place;

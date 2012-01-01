@@ -363,7 +363,7 @@ TAGS:    overwritable layout allow_dup unrand
         end
     end
 
-    if (you.in_branch("D") and you.subdepth() > 21 or you.where() == "Pan")
+    if (you.in_branch("D") and you.depth() > 21 or you.where() == "Pan")
       and crawl.coinflip()
     then
         mapgrd[40][36] = 'O'

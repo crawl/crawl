@@ -34,6 +34,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -752,7 +753,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 // which for a portal vault using its own definition
                 // of random monsters means "the depth of whatever place
                 // we're using for picking the random monster".
-                if (*lev_mons == you.absdepth0)
+                if (*lev_mons == absdungeon_depth())
                     *lev_mons = place.absdepth();
                 // pick_random_monster() is called below
             }
@@ -780,7 +781,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             // from where we were.
             place.branch = BRANCH_MAIN_DUNGEON;
             place.depth  = startdepth[you.where_are_you];
-            *lev_mons = you.absdepth0;
+            *lev_mons = absdungeon_depth();
         }
 
         int tries = 0;
@@ -867,7 +868,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     coord_def dummy(GXM - 1, GYM - 1);
     unwind_var<dungeon_feature_type> dummgrid(grd(dummy), feat);
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int level = you.absdepth0;
+    int level = absdungeon_depth();
     bool chose_ood = false;
 
     return _resolve_monster_type(mon_type, PROX_ANYWHERE, base,
@@ -956,7 +957,7 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 // OOD packs, based on depth and time spent on-level.
 static bool _in_ood_pack_protected_place()
 {
-    return (env.turns_on_level < 1400 - you.absdepth0 * 117);
+    return (env.turns_on_level < 1400 - absdungeon_depth() * 117);
 }
 
 int place_monster(mgen_data mg, bool force_pos, bool dont_place)
@@ -972,6 +973,9 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // (1) Early out (summoned to occupied grid).
     if (mg.use_position() && monster_at(mg.pos))
         return (-1);
+
+    if (mg.power == -1)
+        mg.power = absdungeon_depth();
 
     bool chose_ood_monster = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
@@ -2235,7 +2239,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 4 + random2(4);
         break;
     case MONS_GNOLL:
-        if (you.absdepth0 != 0)
+        if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
         {
             band = BAND_GNOLLS;
             band_size = (coinflip() ? 3 : 2);
@@ -2959,7 +2963,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     }
     else if (player_in_branch(BRANCH_MAIN_DUNGEON)
              && !crawl_state.game_is_zotdef()
-             && mons_level(mons->type) >= you.absdepth0 + Options.ood_interesting
+             && mons_level(mons->type) >= absdungeon_depth() + Options.ood_interesting
              && mons_level(mons->type) < 99
              && !(mons->type >= MONS_EARTH_ELEMENTAL
                   && mons->type <= MONS_AIR_ELEMENTAL)
@@ -3071,9 +3075,9 @@ int mons_place(mgen_data mg)
     if (mg.cls == MONS_DANCING_WEAPON && mg.summoner)
         ; // It's an animated weapon, don't touch the power
     else if (crawl_state.game_is_zotdef())
-        mg.power =  you.num_turns / (CYCLE_LENGTH * 3);
+        mg.power = you.num_turns / (CYCLE_LENGTH * 3);
     else
-        mg.power = you.absdepth0;
+        mg.power = -1;
 
     if (mg.behaviour == BEH_COPY)
     {
