@@ -34,7 +34,6 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
-#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -753,7 +752,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 // which for a portal vault using its own definition
                 // of random monsters means "the depth of whatever place
                 // we're using for picking the random monster".
-                if (*lev_mons == absdungeon_depth())
+                if (*lev_mons == env.absdepth0)
                     *lev_mons = place.absdepth();
                 // pick_random_monster() is called below
             }
@@ -781,7 +780,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             // from where we were.
             place.branch = BRANCH_MAIN_DUNGEON;
             place.depth  = startdepth[you.where_are_you];
-            *lev_mons = absdungeon_depth();
+            *lev_mons = env.absdepth0;
         }
 
         int tries = 0;
@@ -868,7 +867,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     coord_def dummy(GXM - 1, GYM - 1);
     unwind_var<dungeon_feature_type> dummgrid(grd(dummy), feat);
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int level = absdungeon_depth();
+    int level = env.absdepth0;
     bool chose_ood = false;
 
     return _resolve_monster_type(mon_type, PROX_ANYWHERE, base,
@@ -957,7 +956,7 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 // OOD packs, based on depth and time spent on-level.
 static bool _in_ood_pack_protected_place()
 {
-    return (env.turns_on_level < 1400 - absdungeon_depth() * 117);
+    return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
 int place_monster(mgen_data mg, bool force_pos, bool dont_place)
@@ -975,7 +974,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
         return (-1);
 
     if (mg.power == -1)
-        mg.power = absdungeon_depth();
+        mg.power = env.absdepth0;
 
     bool chose_ood_monster = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
@@ -2963,7 +2962,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     }
     else if (player_in_branch(BRANCH_MAIN_DUNGEON)
              && !crawl_state.game_is_zotdef()
-             && mons_level(mons->type) >= absdungeon_depth() + Options.ood_interesting
+             && mons_level(mons->type) >= env.absdepth0 + Options.ood_interesting
              && mons_level(mons->type) < 99
              && !(mons->type >= MONS_EARTH_ELEMENTAL
                   && mons->type <= MONS_AIR_ELEMENTAL)

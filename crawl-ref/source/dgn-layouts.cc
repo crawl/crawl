@@ -8,7 +8,6 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "libutil.h"
-#include "place.h"
 #include "traps.h"
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
@@ -45,7 +44,7 @@ static void _build_lake(dungeon_feature_type lake_type);
 
 void dgn_build_basic_level()
 {
-    int level_number = absdungeon_depth();
+    int level_number = env.absdepth0;
 
     env.level_build_method += " basic";
     env.level_layout_types.insert("basic");

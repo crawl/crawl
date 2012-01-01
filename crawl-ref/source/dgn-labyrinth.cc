@@ -15,7 +15,6 @@
 #include "misc.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "place.h"
 
 typedef std::list<coord_def> coord_list;
 
@@ -109,7 +108,7 @@ static void _labyrinth_place_items(const coord_def &end)
 
         const int treasure_item =
             items(1, glopop, OBJ_RANDOM, true,
-                   one_chance_in(3)? absdungeon_depth() * 3 : MAKE_GOOD_ITEM,
+                   one_chance_in(3)? env.absdepth0 * 3 : MAKE_GOOD_ITEM,
                    MAKE_ITEM_RANDOM_RACE);
 
         if (treasure_item != NON_ITEM)

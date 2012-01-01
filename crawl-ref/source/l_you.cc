@@ -24,7 +24,6 @@
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
-#include "place.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -179,7 +178,7 @@ LUARET1(you_depth, number, you.depth)
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
-LUARET1(you_absdepth, number, absdungeon_depth() + 1)
+LUARET1(you_absdepth, number, env.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS

@@ -31,8 +31,7 @@ std::string prep_branch_level_name();
 // Get some kind of "absolute depth" given the depth in the branch.
 // It's mostly the difficulty of a given level and the quality of items
 // you can find.
-int absdungeon_depth(branch_type branch = you.where_are_you,
-                     int depth = you.depth);
+int absdungeon_depth(branch_type branch, int depth);
 
 bool single_level_branch(branch_type branch);
 

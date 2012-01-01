@@ -9,8 +9,8 @@
 
 #include "branch.h"
 #include "libutil.h"
-#include "player.h"
 #include "place.h"
+#include "player.h"
 #include "travel.h"
 
 std::string short_place_name(level_id id)
