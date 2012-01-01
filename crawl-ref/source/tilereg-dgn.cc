@@ -28,6 +28,7 @@
 #include "terrain.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
+#include "tiledef-dngn.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -1003,6 +1004,14 @@ bool DungeonRegion::update_tip_text(std::string &tip)
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
+
+        tip += make_stringf("\nFLV: floor: %d (%s)\n     wall:  %d (%s)\n     feat:  %d (%s)\n",
+                            env.tile_flv(gc).floor,
+                            tile_dngn_name(env.tile_flv(gc).floor),
+                            env.tile_flv(gc).wall,
+                            tile_dngn_name(env.tile_flv(gc).wall),
+                            env.tile_flv(gc).feat,
+                            tile_dngn_name(env.tile_flv(gc).feat));
 
         ret = true;
     }
