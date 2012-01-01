@@ -628,6 +628,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
         DUR_DIVINE_STAMINA,
+        STATUS_AUGMENTED,
     };
 
     status_info inf;
@@ -2073,6 +2074,7 @@ static std::string _status_mut_abilities(int sw)
         STATUS_BACKLIT,
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
+        STATUS_AUGMENTED,
     };
 
     status_info inf;
