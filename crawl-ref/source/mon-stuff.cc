@@ -4691,9 +4691,6 @@ void temperature_check()
     // First, your temperature naturally decays.
     temperature_decay();
 
-    // Next, add temperature from tension.
-    temperature_increment(tension_c);
-
     // Then, increment temp to full if you're in lava.
     if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
     {
@@ -4722,6 +4719,9 @@ void temperature_check()
             }
         }
     }
+
+    // Next, add temperature from tension. Can override water!
+    temperature_increment(tension_c);
 
     // Handled any effects that change with temperature.
     float tempchange = you.temperature - you.temperature_last;
@@ -4759,6 +4759,8 @@ void temperature_changed(float change) {
     float pos_threshold = .05;
     float neg_threshold = -1 * pos_threshold;
 
+    // For INCREMENTS:
+
     // Reached the temp that kills off stoneskin.
     if (change > pos_threshold && temperature_tier(TEMP_WARM))
     {
@@ -4775,20 +4777,9 @@ void temperature_changed(float change) {
         you.redraw_armour_class = true;
     }
 
-    // Cooled down enough for stoneskin to kick in again.
-    if (change < neg_threshold && temperature_tier(TEMP_WARM))
-    {
-            you.set_duration(DUR_STONESKIN, 500);
-            mpr("Your skin cools and hardens.", MSGCH_DURATION);
-            you.redraw_armour_class = true;
-    }
-
     // Passive heat stuff.
     if (change > pos_threshold && temperature_tier(TEMP_FIRE))
         mpr("You're getting fired up.", MSGCH_DURATION);
-
-    if (change < neg_threshold && temperature_tier(TEMP_FIRE))
-        mpr("You're cooling off.", MSGCH_DURATION);
 
     // Heat aura stuff.
     if (change > pos_threshold && temperature_tier(TEMP_MAX))
@@ -4797,11 +4788,23 @@ void temperature_changed(float change) {
         invalidate_agrid(true);
     }
 
+    // For DECREMENTS (reverse order):
     if (change < neg_threshold && temperature_tier(TEMP_MAX))
     {
         mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
-        invalidate_agrid(true);
     }
+
+    if (change < neg_threshold && temperature_tier(TEMP_FIRE))
+        mpr("You're cooling off.", MSGCH_DURATION);
+
+    // Cooled down enough for stoneskin to kick in again.
+    if (change < neg_threshold && temperature_tier(TEMP_WARM))
+    {
+            you.set_duration(DUR_STONESKIN, 500);
+            mpr("Your skin cools and hardens.", MSGCH_DURATION);
+            you.redraw_armour_class = true;
+    }
+
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
@@ -4817,9 +4820,9 @@ void temperature_decay() {
 // Just a helper function to save space. Returns true if a
 // threshold was crossed.
 bool temperature_tier (int which) {
-    if (temperature() >= which && temperature_last() <= which)
+    if (temperature() > which && temperature_last() <= which)
         return true;
-    else if (temperature() <= which && temperature_last() >= which)
+    else if (temperature() < which && temperature_last() >= which)
         return true;
     else
         return false;
