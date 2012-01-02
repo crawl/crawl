@@ -1364,13 +1364,12 @@ void abyss_morph(double duration)
     const double theta = abyssal_state.phase;
     const double old_depth = abyssal_state.depth;
 
-    // Up to 3 times the old rate of change, as low as zero, with an average
-    // of 74% of the old rate.  Period of 2*pi, so from 90 to 314 turns
-    // depending on abyss speed (double for Chei worshippers).  Starts in the
-    // middle of a cool period.
-    // Increasing the power reduces the lengths of the unstable periods.  It
+    // Up to 3 times the old rate of change, as low as 1/5, with an average of
+    // 89%.  Period of 2*pi, so from 90 to 314 turns depending on abyss speed
+    // (double for Chei worshippers).  Starts in the middle of a cool period.
+    // Increasing the exponent reduces the lengths of the unstable periods.  It
     // should be an even integer.
-    abyssal_state.depth += delta_t * (3.0 * pow(sin(theta/2), 10.0));
+    abyssal_state.depth += delta_t * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
 
     // Phase mod pi.
     abyssal_state.phase += delta_t;
