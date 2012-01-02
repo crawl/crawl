@@ -2180,6 +2180,8 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
 #if TAG_MAJOR_VERSION == 32
+    if (you.mutation[MUT_DEFORMED] > 1)
+        you.mutation[MUT_DEFORMED] = 1;
     if (th.getMinorVersion() < TAG_MINOR_SPECIES_HP_NO_MUT)
     {
         you.mutation[MUT_FRAIL] -= you.innate_mutations[MUT_FRAIL];
