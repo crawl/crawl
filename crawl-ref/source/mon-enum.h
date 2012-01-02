@@ -107,7 +107,9 @@ enum attack_flavour
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
+#if TAG_MAJOR_VERSION == 32
     AF_SUBTRACTOR,
+#endif
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
