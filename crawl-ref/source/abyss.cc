@@ -989,8 +989,8 @@ static bool _abyss_teleport_within_level()
     return (false);
 }
 
-static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
-                                 bool morph = false)
+static dungeon_feature_type _abyss_grid(double x, double y, double depth,
+                                        cloud_type &cloud, int &cloud_lifetime)
 {
     const dungeon_feature_type terrain_elements[] =
     {
@@ -1007,23 +1007,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         DNGN_SHALLOW_WATER,
         DNGN_SHALLOW_WATER,
     };
-
-    if (one_chance_in(3) && !morph)
-        _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
-
-    const int exit_chance = _abyss_exit_chance();
-
-    // Except for the altar on the starting position, don't place any altars.
-    const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
-
     const int n_terrain_elements = ARRAYSZ(terrain_elements);
-    int exits_wanted  = 0;
-    int altars_wanted = 0;
-    bool use_abyss_exit_map = true;
-
-    const coord_def major_coord = abyssal_state.major_coord;
-    const double abyss_depth = abyssal_state.depth;
-    const double scale = 2.2;
 
     const int NUM_CLOUDS = 6;
     const cloud_type clouds[NUM_CLOUDS] =
@@ -1036,9 +1020,64 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         CLOUD_MIST
     };
 
+    const double scale = 1.0 / 2.2;
+    const double sub_scale_x = 17.0;
+    const double sub_scale_y = 31.0;
+    const double sub_scale_depth = 0.1;
+
+    worley::noise_datum noise = worley::worley(x * scale, y * scale, depth);
+    dungeon_feature_type feat = DNGN_FLOOR;
+
+    worley::noise_datum sub_noise = worley::worley(x * sub_scale_x,
+                                                   y * sub_scale_y,
+                                                   depth * sub_scale_depth);
+
+    int dist = noise.distance[0] * 100;
+    bool isWall = (dist > 118 || dist < 30);
+
+    if (noise.id[0] + noise.id[1] % 2  == 0)
+        isWall = sub_noise.id[0] % 2;
+
+    if (sub_noise.id[0] % 3 == 0)
+        isWall = isWall ^ true;
+
+    if (isWall)
+    {
+        int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
+        int id = (noise.id[0] + fuzz) % n_terrain_elements;
+        feat = terrain_elements[id];
+    }
+
+    if (feat == DNGN_FLOOR && !(noise.id[1] % 3))
+    {
+        // Only used if the feature actually changed.
+        cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
+        cloud_lifetime = (noise.id[1] % 4)+2;
+    }
+
+    return feat;
+}
+
+static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
+                                 bool morph = false, double old_depth = 0.0)
+{
+    if (one_chance_in(3) && !morph)
+        _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
+
+    const int exit_chance = _abyss_exit_chance();
+
+    // Except for the altar on the starting position, don't place any altars.
+    const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
+
+    int exits_wanted  = 0;
+    int altars_wanted = 0;
+    bool use_abyss_exit_map = true;
+
+    const coord_def major_coord = abyssal_state.major_coord;
+    const double abyss_depth = abyssal_state.depth;
+
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-
         const coord_def p(*ri);
 
         if (you.pos() == p || !abyss_genlevel_mask(p))
@@ -1056,41 +1095,31 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (grd(p) == DNGN_STONE_ARCH || feat_is_altar(grd(p)))
             continue;
 
-        double x = (p.x + major_coord.x);
-        double y = (p.y + major_coord.y);
-        worley::noise_datum noise = worley::worley(x / scale, y / scale,
-                                                   abyss_depth);
-        dungeon_feature_type feat = DNGN_FLOOR;
-
         if (grd(p) != DNGN_UNSEEN && !morph)
             continue;
 
-        worley::noise_datum sub_noise = worley::worley(x * 17, y * 31,
-                                                       abyss_depth / 10);
+        double x = (p.x + major_coord.x);
+        double y = (p.y + major_coord.y);
 
-        int dist = noise.distance[0] * 100;
-        bool isWall = (dist > 118 || dist < 30);
+        cloud_type cloud = CLOUD_NONE;
+        int cloud_lifetime = 0;
 
-        if (noise.id[0] + noise.id[1] % 2  == 0)
-            isWall = sub_noise.id[0] % 2;
+        // What should have been there previously?  It might not be because
+        // of external changes such as digging.
+        const dungeon_feature_type oldfeat = _abyss_grid(x, y, old_depth,
+                                                         cloud, cloud_lifetime);
+        const dungeon_feature_type feat = _abyss_grid(x, y, abyss_depth,
+                                                      cloud, cloud_lifetime);
 
-        if (sub_noise.id[0] % 3 == 0)
-            isWall = isWall ^ true;
-
-        if (isWall)
+        // If the selected grid is already there, *or* if we're morphing and
+        // the selected grid should have been there, do nothing.
+        if (feat != grd(p) && (!morph || feat != oldfeat))
         {
-            int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
-            int id = (noise.id[0] + fuzz) % n_terrain_elements;
-            feat = terrain_elements[id];
-        }
+            // _abyss_grid is responsible for ensuring clouds are selected
+            // only on floor grids.
+            if (cloud != CLOUD_NONE && in_los_bounds_g(p))
+                check_place_cloud(cloud, p, cloud_lifetime, 0);
 
-        if (feat != grd(p))
-        {
-            if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
-            {
-                cloud_type cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
-                check_place_cloud(cloud, p, (noise.id[1] % 4)+2, 0);
-            }
             grd(p) = feat;
 
             monster* mon = monster_at(p);
@@ -1333,6 +1362,7 @@ void abyss_morph(double duration)
         delta_t /= 2.0;
 
     const double theta = abyssal_state.phase;
+    const double old_depth = abyssal_state.depth;
 
     // Up to 3 times the old rate of change, as low as zero, with an average
     // of 74% of the old rate.  Period of 2*pi, so from 90 to 314 turns
@@ -1350,7 +1380,7 @@ void abyss_morph(double duration)
     map_mask abyss_genlevel_mask;
     _abyss_invert_mask(&abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
-    _abyss_apply_terrain(abyss_genlevel_mask, true);
+    _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
     _place_displaced_monsters();
     _push_items();
     los_changed();
