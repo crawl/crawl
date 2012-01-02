@@ -117,6 +117,7 @@ coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);
+bool can_spawn_mushrooms(coord_def where);
 
 void spawn_random_monsters();
 
