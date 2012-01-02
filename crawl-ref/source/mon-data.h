@@ -3718,6 +3718,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     MONS_SUBTRACTOR_SNAKE, 'S', ETC_SUBTRACTOR, "subtractor snake",
     M_COLD_BLOOD | M_NO_POLY_TO,
@@ -3729,6 +3730,7 @@ static monsterentry mondata[] = {
     I_REPTILE, HT_LAND, FL_NONE, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
+#endif
 
 // trolls ('T')
 {
