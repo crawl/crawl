@@ -536,6 +536,7 @@ void init_element_colours()
                             90,  WHITE,
                             30,  LIGHTGREY,
                         0));
+#if TAG_MAJOR_VERSION == 32
     add_element_colour(_create_random_element_colour_calc(
                             ETC_SUBTRACTOR, "subtractor",
                             24,  CYAN,
@@ -544,6 +545,7 @@ void init_element_colours()
                             24,  LIGHTRED,
                             24,  YELLOW,
                         0));
+#endif
     add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, "elven_brick", _etc_elven_brick
                        ));
