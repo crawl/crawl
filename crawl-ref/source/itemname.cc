@@ -3347,7 +3347,8 @@ void init_item_name_cache()
 
                 if (item_names_cache.find(name) == item_names_cache.end())
                 {
-                    item_kind kind = {base_type, sub_type, item.plus, 0};
+                    item_kind kind = {base_type, (uint8_t)sub_type,
+                                      (int8_t)item.plus, 0};
                     item_names_cache[name] = kind;
                     if (g.ch)
                         item_names_by_glyph_cache[g.ch].push_back(name);
