@@ -32,6 +32,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-iter.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "mon-util.h"
@@ -66,19 +67,20 @@ static std::list<monster*> displaced_monsters;
 static void abyss_area_shift(void);
 
 // If not_seen is true, don't place the feature where it can be seen from
-// the centre.
-static bool _place_feature_near(const coord_def &centre,
-                                int radius,
-                                dungeon_feature_type candidate,
-                                dungeon_feature_type replacement,
-                                int tries, bool not_seen = false)
+// the centre.  Returns the chosen location, or INVALID_COORD if it
+// could not be placed.
+static coord_def _place_feature_near(const coord_def &centre,
+                                     int radius,
+                                     dungeon_feature_type candidate,
+                                     dungeon_feature_type replacement,
+                                     int tries, bool not_seen = false)
 {
+    coord_def cp = INVALID_COORD;
     const int radius2 = radius * radius + 1;
     for (int i = 0; i < tries; ++i)
     {
-        const coord_def &cp =
-            centre + coord_def(random_range(-radius, radius),
-                               random_range(-radius, radius));
+        cp = centre + coord_def(random_range(-radius, radius),
+                                random_range(-radius, radius));
 
         if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
             continue;
@@ -92,10 +94,10 @@ static bool _place_feature_near(const coord_def &centre,
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
             grd(cp) = replacement;
-            return (true);
+            return (cp);
         }
     }
-    return (false);
+    return (INVALID_COORD);
 }
 
 //#define DEBUG_ABYSS
@@ -1308,6 +1310,36 @@ static void _abyss_generate_new_area()
     place_transiting_items();
 }
 
+// Ensure that there is a path between the abyss centre and an exit location,
+// by morphing the abyss until there is.
+void _abyss_make_path(const coord_def &to)
+{
+    const int ntries = 30;  // Rarely do we need more than one.
+    for (int i = 1; i <= ntries; ++i)
+    {
+        ASSERT(grd(to) == DNGN_EXIT_ABYSS);
+
+        monster_pathfind pf;
+        if (pf.init_pathfind(ABYSS_CENTRE, to))
+        {
+            if (i > 1)
+                dprf("_abyss_make_path needed %d attempts", i);
+            return;
+        }
+
+        // Try to morph.
+        const double old_depth = abyssal_state.depth;
+        abyssal_state.depth += 0.1;
+        map_mask abyss_genlevel_mask;
+        _abyss_invert_mask(&abyss_genlevel_mask);
+
+        // Assumes that abyss morphing won't remove the exit.
+        _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
+    }
+    die("Could not create path to exit at (%d, %d) after %d attempts.",
+        to.x, to.y, ntries);
+}
+
 // Generate the initial (proto) Abyss level. The proto Abyss is where
 // the player lands when they arrive in the Abyss from elsewhere.
 // _generate_area generates all other Abyss areas.
@@ -1334,8 +1366,13 @@ void generate_abyss()
     if (you.char_direction == GDT_GAME_START)
     {
         grd(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
-        _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
-                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true);
+        const coord_def eloc = _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
+                                                   DNGN_FLOOR, DNGN_EXIT_ABYSS,
+                                                   50, true);
+        // Now make sure there is a path from the abyss centre to the exit.
+        // If for some reason an exit could not be placed, don't bother.
+        if (eloc != INVALID_COORD)
+            _abyss_make_path(eloc);
     }
     else
     {
