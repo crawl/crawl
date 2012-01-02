@@ -752,7 +752,7 @@ COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
-DESC:     This bow has the color of dark rain clouds, and the smell of wet ozone.
+DESC:     This bow has the colour of dark rain clouds, and the smell of wet ozone.
 
 NAME:    shield of Ignorance
 APPEAR:  dull large shield

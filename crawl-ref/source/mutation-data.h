@@ -1440,7 +1440,7 @@
 { MUT_CAMOUFLAGE,           1,   3, false, true, true,
   "camouflage",
 
-  {"Your skin changes color to match your surroundings (Stlth).",
+  {"Your skin changes colour to match your surroundings (Stlth).",
    "Your skin blends seamlessly with your surroundings (Stlth).",
    "Your skin perfectly mimics your surroundings (Stlth)."},
 
