@@ -297,14 +297,17 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true, false);
 
-        if (you.is_constricted())
-            monster_teleport_to_player(you.constricted_by, target);
-        for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (!override_stasis)
         {
-            if (you.constricting[i] != NON_ENTITY
-                && you.constricting[i] != you.constricted_by)
+            if (you.is_constricted())
+                monster_teleport_to_player(you.constricted_by, target);
+            for (int i = 0; i < MAX_CONSTRICT; i++)
             {
-                monster_teleport_to_player(you.constricting[i], target);
+                if (you.constricting[i] != NON_ENTITY
+                    && you.constricting[i] != you.constricted_by)
+                {
+                    monster_teleport_to_player(you.constricting[i], target);
+                }
             }
         }
 
