@@ -1911,7 +1911,7 @@ int fedhas_fungal_bloom()
     for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
         monster* target = monster_at(*i);
-        if (!is_harmless_cloud(cloud_type_at(*i)))
+        if (!can_spawn_mushrooms(*i))
             continue;
 
         if (target && target->mons_species() != MONS_TOADSTOOL)

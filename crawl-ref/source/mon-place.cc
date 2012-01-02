@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -3277,6 +3278,22 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
+bool can_spawn_mushrooms(coord_def where)
+{
+    int cl = env.cgrid(where);
+    if (cl == EMPTY_CLOUD)
+        return true;
+
+    cloud_struct &cloud = env.cloud[env.cgrid(where)];
+    if (you.religion == GOD_FEDHAS
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
+    {
+        return true;
+    }
+
+    return is_harmless_cloud(cloud.type);
+}
+
 conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
@@ -3382,6 +3399,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                                                             : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
+            dummy.behaviour    = mg.behaviour;
 
             // Monsters that have resistance info in the ghost
             // structure cannot be handled as dummies, so treat them

@@ -3640,6 +3640,13 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     if (!extra_careful && mons->berserk())
         return (false);
 
+    if (you.religion == GOD_FEDHAS && fedhas_protects(mons)
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
+        && (mons->friendly() || mons->neutral()))
+    {
+        return false;
+    }
+
     switch (cl_type)
     {
     case CLOUD_MIASMA:
