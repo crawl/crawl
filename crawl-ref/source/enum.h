@@ -2494,7 +2494,9 @@ enum monster_type                      // (int) menv[].type
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
     MONS_SERAPH,
+#if TAG_MAJOR_VERSION == 32
     MONS_SUBTRACTOR_SNAKE,
+#endif
 
     NUM_MONSTERS,                      // used for polymorph
 
