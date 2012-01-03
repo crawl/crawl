@@ -53,6 +53,11 @@ LUAFN(moninf_get_is)
 {
     MONINF(ls, 1, mi);
     int num = luaL_checknumber(ls, 2);
+    if (num < 0 || num >= NUM_MB_FLAGS)
+    {
+        luaL_argerror(ls, 2, "mb:is() out of bounds");
+        return 0;
+    }
     lua_pushboolean(ls, mi->is(num));
     return (1);
 }
