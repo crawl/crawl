@@ -3322,13 +3322,13 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         {
             pick = *i;
 
-            if (pick.mid < 0 && pick.fix_mons)
-                pick.mid = i->mid = fix_demon(pick.mid);
+            if (pick.type < 0 && pick.fix_mons)
+                pick.type = i->type = fix_demon(pick.type);
         }
     }
 
-    if (pick.mid < 0)
-        pick = fix_demon(pick.mid);
+    if (pick.type < 0)
+        pick = fix_demon(pick.type);
 
     if (slot.fix_slot)
     {
@@ -3801,13 +3801,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             // have a monster modifier, in which case we set the
             // modifier in monbase.
             const mons_spec nspec = mons_by_name("orc " + mon_str);
-            if (nspec.mid != MONS_PROGRAM_BUG)
+            if (nspec.type != MONS_PROGRAM_BUG)
             {
                 // Is this a modified monster?
                 if (nspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_zombified(nspec.mid))
+                    && mons_class_is_zombified(nspec.type))
                 {
-                    mspec.monbase = static_cast<monster_type>(nspec.mid);
+                    mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
             }
         }
@@ -3815,14 +3815,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             const mons_spec nspec = mons_by_name(mon_str);
 
-            if (nspec.mid == MONS_PROGRAM_BUG)
+            if (nspec.type == MONS_PROGRAM_BUG)
             {
                 error = make_stringf("unknown monster: \"%s\"",
                                      mon_str.c_str());
                 return (slot);
             }
 
-            mspec.mid     = nspec.mid;
+            mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
             if (nspec.colour && !mspec.colour)
@@ -3831,22 +3831,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
         if (!mspec.items.empty())
         {
-            monster_type mid = (monster_type)mspec.mid;
-            if (mid == RANDOM_DRACONIAN
-                || mid == RANDOM_BASE_DRACONIAN
-                || mid == RANDOM_NONBASE_DRACONIAN)
+            monster_type type = (monster_type)mspec.type;
+            if (type == RANDOM_DRACONIAN
+                || type == RANDOM_BASE_DRACONIAN
+                || type == RANDOM_NONBASE_DRACONIAN)
             {
-                mid = MONS_DRACONIAN;
+                type = MONS_DRACONIAN;
             }
 
-            if (mid >= NUM_MONSTERS)
+            if (type >= NUM_MONSTERS)
             {
                 error = "Can't give spec items to a random monster.";
                 return (slot);
             }
-            else if (mons_class_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
+            else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT)
             {
-                if (mid != MONS_DANCING_WEAPON || mspec.items.size() > 1)
+                if (type != MONS_DANCING_WEAPON || mspec.items.size() > 1)
                     error = make_stringf("Monster '%s' can't use items.",
                                          mon_str.c_str());
             }
@@ -3925,7 +3925,7 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         }
         else
         {
-            spec.mid = MONS_PROGRAM_BUG;
+            spec.type = MONS_PROGRAM_BUG;
             return;
         }
     }
@@ -3937,24 +3937,24 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
     trim_string(s);
 
     mons_spec base_monster = mons_by_name(s);
-    if (base_monster.mid < 0)
-        base_monster.mid = MONS_PROGRAM_BUG;
-    spec.monbase = static_cast<monster_type>(base_monster.mid);
+    if (base_monster.type < 0)
+        base_monster.type = MONS_PROGRAM_BUG;
+    spec.monbase = static_cast<monster_type>(base_monster.type);
     spec.number = base_monster.number;
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
     {
-        spec.mid = MONS_PROGRAM_BUG;
+        spec.type = MONS_PROGRAM_BUG;
         return;
     }
     if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
     {
-        spec.mid = MONS_PROGRAM_BUG;
+        spec.type = MONS_PROGRAM_BUG;
         return;
     }
 
-    spec.mid = zombie_montypes[mod][zombie_size - 1];
+    spec.type = zombie_montypes[mod][zombie_size - 1];
 }
 
 mons_spec mons_list::get_hydra_spec(const std::string &name) const
@@ -4032,13 +4032,13 @@ mons_spec mons_list::drac_monspec(std::string name) const
 {
     mons_spec spec;
 
-    spec.mid = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name, true);
 
     // Check if it's a simple drac name, we're done.
-    if (spec.mid != MONS_PROGRAM_BUG)
+    if (spec.type != MONS_PROGRAM_BUG)
         return (spec);
 
-    spec.mid = RANDOM_DRACONIAN;
+    spec.type = RANDOM_DRACONIAN;
 
     // Request for any draconian?
     if (starts_with(name, "any "))
@@ -4052,7 +4052,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
     }
     else if (starts_with(name, "nonbase "))
     {
-        spec.mid = RANDOM_NONBASE_DRACONIAN;
+        spec.type = RANDOM_NONBASE_DRACONIAN;
         name = name.substr(8);
     }
 
@@ -4080,14 +4080,14 @@ mons_spec mons_list::drac_monspec(std::string name) const
         return (MONS_PROGRAM_BUG);
 
     name = trimmed_string(name.substr(wordend + 1));
-    spec.mid = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name, true);
 
     // We should have a non-base draconian here.
-    if (spec.mid == MONS_PROGRAM_BUG
-        || mons_genus(spec.mid) != MONS_DRACONIAN
-        || spec.mid == MONS_DRACONIAN
-        || (spec.mid >= MONS_BLACK_DRACONIAN
-            && spec.mid <= MONS_PALE_DRACONIAN))
+    if (spec.type == MONS_PROGRAM_BUG
+        || mons_genus(spec.type) != MONS_DRACONIAN
+        || spec.type == MONS_DRACONIAN
+        || (spec.type >= MONS_BLACK_DRACONIAN
+            && spec.type <= MONS_PALE_DRACONIAN))
     {
         return (MONS_PROGRAM_BUG);
     }
@@ -4182,7 +4182,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     mons_spec spec;
     get_zombie_type(name, spec);
-    if (spec.mid != MONS_PROGRAM_BUG)
+    if (spec.type != MONS_PROGRAM_BUG)
         return (spec);
 
     if (name.find("draconian") != std::string::npos)
@@ -4586,7 +4586,7 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
 
     // Get the actual monster spec:
     mons_spec spec = mlist.get_monster(0);
-    monster_type mtype = static_cast<monster_type>(spec.mid);
+    monster_type mtype = static_cast<monster_type>(spec.type);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
     {
         error = make_stringf("Requested corpse '%s' is invalid",

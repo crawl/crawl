@@ -632,7 +632,7 @@ private:
 class mons_spec
 {
  public:
-    int mid;
+    int type;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
@@ -666,12 +666,12 @@ class mons_spec
 
     CrawlHashTable props;
 
-    mons_spec(int id = RANDOM_MONSTER,
+    mons_spec(int t = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
               int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false, bool patrol = false)
-        : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
+        : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
