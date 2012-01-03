@@ -795,24 +795,24 @@ int zotdef_spawn(bool boss)
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 
-    int mid = mons_place(mg);
+    int idx = mons_place(mg);
 
     // Boss monsters which aren't uniques are named, and beefed a bit further
-    if (mid != -1 && boss && !mons_is_unique(mt))
+    if (idx != -1 && boss && !mons_is_unique(mt))
     {
         // Use the proper name function: if that fails, fall back
         // to the randart name generator
-        if (!menv[mid].is_named())        // Don't rename uniques!
+        if (!menv[idx].is_named())        // Don't rename uniques!
         {
-            if (!give_monster_proper_name(&menv[mid], false))
-                menv[mid].mname = make_name(random_int(), false);
+            if (!give_monster_proper_name(&menv[idx], false))
+                menv[idx].mname = make_name(random_int(), false);
         }
 
-        menv[mid].hit_points = (menv[mid].hit_points * 3) / 2;
-        menv[mid].max_hit_points = menv[mid].hit_points;
+        menv[idx].hit_points = (menv[idx].hit_points * 3) / 2;
+        menv[idx].max_hit_points = menv[idx].hit_points;
     }
 
-    return mid;
+    return idx;
 }
 
 static rune_type _get_rune(int runenumber)
