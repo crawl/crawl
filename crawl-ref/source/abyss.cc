@@ -1056,6 +1056,11 @@ static dungeon_feature_type _abyss_grid(double x, double y, double depth,
         cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
         cloud_lifetime = (noise.id[1] % 4)+2;
     }
+    else
+    {
+        cloud = CLOUD_NONE;
+        cloud_lifetime = 0;
+    }
 
     return feat;
 }
