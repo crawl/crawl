@@ -714,7 +714,7 @@ COLOUR: m = blue
 COLOUR: = = blue
 NSUBST: " = 1:= / *:x
 NSUBST: ' = 1:= / *:x
-# Rock is actually diggable for those people driven made by hatred.
+# Rock is actually diggable for those people driven mad by hatred.
 MONS:   vampire
 # 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
