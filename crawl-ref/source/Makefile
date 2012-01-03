@@ -1037,11 +1037,10 @@ endif
 # Dependencies
 
 DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
+VALID_DEPS := $(shell for x in $(DEPS); \
+                do if [ "$${x%%.d}".cc -ot "$$x" ]; then echo "$$x";fi; done)
+-include $(VALID_DEPS)
 
--include $(DEPS)
-
-# Only serves to check if all .d files can be built
-depend: $(DEPS)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
@@ -1216,7 +1215,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(GAME_DEPENDS)
+$(GAME): $(GAME_DEPENDS) $(DEPS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
@@ -1238,15 +1237,7 @@ ifndef NO_INLINE_DEPGEN
 INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$*.d,-MT,$@
 endif
 
-ifdef NO_INLINE_DEPGEN
-$(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
-
-%.d: %.cc .cflags $(GENERATED_HEADERS)
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
-else
-%.d: %.cc .cflags $(GENERATED_HEADERS)
-	@$(RM) $@
-endif
+$(DEPS): %.d: %.cc
 
 # Precompiled headers
 #
@@ -1276,7 +1267,10 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 %.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc .cflags | $(GENERATED_HEADERS)
+%.o: %.cc %.d .cflags | $(GENERATED_HEADERS)
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+endif
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
