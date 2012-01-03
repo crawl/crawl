@@ -3672,9 +3672,9 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         }
         else
         {
-            ASSERT(!_is_random_monster(spec.mid)
+            ASSERT(!_is_random_monster(spec.type)
                    && !_is_random_monster(spec.monbase));
-            type_vec[i] = spec.mid;
+            type_vec[i] = spec.type;
             base_vec[i] = spec.monbase;
         }
         weight_vec[i] = spec.genweight;
@@ -3719,9 +3719,9 @@ static void _get_vault_mon_list(std::vector<mons_spec> &list)
         }
         else
         {
-            spec.mid     = type;
+            spec.type    = type;
             spec.monbase = (monster_type) base;
-            ASSERT(!_is_random_monster(spec.mid)
+            ASSERT(!_is_random_monster(spec.type)
                    && !_is_random_monster(spec.monbase));
         }
         spec.genweight = weight_vec[i];
@@ -3754,11 +3754,11 @@ void setup_vault_mon_list()
         }
         else
         {
-            vault_mon_types[i] = list[i].mid;
+            vault_mon_types[i] = list[i].type;
             vault_mon_bases[i] = list[i].monbase;
             // hack for Pandemonium
             if (i < 10)
-                env.mons_alloc[i] = (monster_type)list[i].mid;
+                env.mons_alloc[i] = (monster_type)list[i].type;
         }
         vault_mon_weights[i] = list[i].genweight;
     }

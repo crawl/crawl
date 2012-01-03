@@ -197,14 +197,14 @@ void wizard_create_spec_monster_name()
     }
 
     mons_spec mspec = mlist.get_monster(0);
-    if (mspec.mid == -1)
+    if (mspec.type == -1)
     {
         mpr("Such a monster couldn't be found.", MSGCH_DIAGNOSTICS);
         return;
     }
 
-    int type = mspec.mid;
-    if (mons_class_is_zombified(mspec.mid))
+    int type = mspec.type;
+    if (mons_class_is_zombified(mspec.type))
         type = mspec.monbase;
 
     coord_def place = find_newmons_square(type, you.pos());
@@ -249,8 +249,8 @@ void wizard_create_spec_monster_name()
 
     // Wizmode users should be able to conjure up uniques even if they
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
-    if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
-        you.unique_creatures[mspec.mid] = false;
+    if (mons_is_unique(mspec.type) && you.unique_creatures[mspec.type])
+        you.unique_creatures[mspec.type] = false;
 
     if (dgn_place_monster(mspec, you.absdepth0, place, true, false) == -1)
     {
@@ -258,7 +258,7 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.mid == MONS_KRAKEN)
+    if (mspec.type == MONS_KRAKEN)
     {
         unsigned short idx = mgrd(place);
 
@@ -282,7 +282,7 @@ void wizard_create_spec_monster_name()
 
     // FIXME: This is a bit useless, seeing how you cannot set the
     // ghost's stats, brand or level, among other things.
-    if (mspec.mid == MONS_PLAYER_GHOST)
+    if (mspec.type == MONS_PLAYER_GHOST)
     {
         unsigned short idx = mgrd(place);
 

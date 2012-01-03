@@ -4241,7 +4241,7 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      const int mindex,
-                                     const int mid,
+                                     const int type,
                                      const int monster_level)
 {
     monster& mon(menv[mindex]);
@@ -4260,11 +4260,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
     item_make_species_type racial = MAKE_ITEM_RANDOM_RACE;
 
-    if (mons_genus(mid) == MONS_ORC)
+    if (mons_genus(type) == MONS_ORC)
         racial = MAKE_ITEM_ORCISH;
-    else if (mons_genus(mid) == MONS_DWARF)
+    else if (mons_genus(type) == MONS_DWARF)
         racial = MAKE_ITEM_DWARVEN;
-    else if (mons_genus(mid) == MONS_ELF)
+    else if (mons_genus(type) == MONS_ELF)
         racial = MAKE_ITEM_ELVEN;
 
     item_list &list = mspec.items;
@@ -4365,10 +4365,10 @@ int dgn_place_monster(mons_spec &mspec,
                       int monster_level, const coord_def& where,
                       bool force_pos, bool generate_awake, bool patrolling)
 {
-    if (mspec.mid == -1)
+    if (mspec.type == -1)
         return -1;
 
-    const monster_type mid = static_cast<monster_type>(mspec.mid);
+    const monster_type type = static_cast<monster_type>(mspec.type);
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
@@ -4384,19 +4384,19 @@ int dgn_place_monster(mons_spec &mspec,
             monster_level += 5;
     }
 
-    if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
+    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)
-        if (mons_is_unique(mid) && you.unique_creatures[mid]
+        if (mons_is_unique(type) && you.unique_creatures[type]
             && !crawl_state.game_is_arena())
         {
             return (-1);
         }
 
-        const monster_type montype = mons_class_is_zombified(mid)
+        const monster_type montype = mons_class_is_zombified(type)
                                                          ? mspec.monbase
-                                                         : mid;
+                                                         : type;
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
@@ -4407,7 +4407,7 @@ int dgn_place_monster(mons_spec &mspec,
         }
     }
 
-    mgen_data mg(mid);
+    mgen_data mg(type);
 
     if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
     {
@@ -4500,7 +4500,7 @@ int dgn_place_monster(mons_spec &mspec,
     monster& mons(menv[mindex]);
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+        _dgn_give_mon_spec_items(mspec, mindex, type, monster_level);
 
     if (mspec.explicit_spells)
         mons.spells = mspec.spells[random2(mspec.spells.size())];
@@ -4784,7 +4784,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
             monster_type_thing = place.map.mons.get_monster(slot);
-            monster_type mt = static_cast<monster_type>(monster_type_thing.mid);
+            monster_type mt = static_cast<monster_type>(monster_type_thing.type);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (place.map.place.is_valid()

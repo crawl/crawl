@@ -1303,7 +1303,7 @@ void arena_monster_died(monster* mons, killer_type killer,
             // specifically a slime, and not a random monster which
             // happens to be a slime.
             if (mons->type == MONS_SLIME_CREATURE
-                && (fac->members.get_monster(member_idx).mid
+                && (fac->members.get_monster(member_idx).type
                     == MONS_SLIME_CREATURE))
             {
                 for (unsigned int i = 1; i < mons->number; i++)
