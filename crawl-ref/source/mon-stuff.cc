@@ -4341,10 +4341,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    // if constricted by larger, abort
-    if (mons->is_constricted_larger())
-        return;
-
     if (mons_is_shedu(mons) && shedu_pair_alive(mons))
     {
         // find a location close to its mate instead.
@@ -4393,32 +4389,11 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
-    // Move it to its new home, but don't break constrictions yet.
-    mons->moveto(newpos, true, false);
+    // Move it to its new home.
+    mons->moveto(newpos, true);
 
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
-
-    // handle constriction, if any
-    if (mons->is_constricted())
-    {
-        if (mons->constricted_by == MHITYOU)
-            player_teleport_to_monster(mons, newpos);
-        else
-            monster_teleport_to_player(mons->constricted_by, newpos);
-    }
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (mons->constricting[i] == mons->constricted_by)
-            ; // Already moved, do nothing.
-        else if (mons->constricting[i] == MHITYOU)
-            player_teleport_to_monster(mons, newpos);
-        else if (mons->constricting[i] != NON_ENTITY)
-            monster_teleport_to_player(mons->constricting[i], newpos);
-    }
-
-    // Now break constrictions.
-    mons->clear_far_constrictions();
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)
@@ -4449,79 +4424,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
-}
-
-void monster_teleport_to_player(int mindex, coord_def playerpos)
-{
-    coord_def target;
-    coord_def newpos;
-    monster *mons = &env.mons[mindex];
-
-    int tries = 0;
-    while (tries++ < 30)
-    {
-        target = coord_def(random_range(playerpos.x - 1, playerpos.x + 1),
-                           random_range(playerpos.y - 1, playerpos.y + 1));
-
-        if (!_monster_space_valid(mons, target, false))
-            continue;
-
-        newpos = target;
-        break;
-    }
-
-    // XXX: If the above function didn't find a good spot, return now
-    // rather than continue by slotting the monster (presumably)
-    // back into its old location (previous behaviour). This seems
-    // to be much cleaner and safer than relying on what appears to
-    // have been a mistake.
-    if (newpos.origin())
-        return;
-
-    const coord_def oldplace = mons->pos();
-
-    mons->move_to_pos(newpos);
-
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
-
-    simple_monster_message(mons, " comes along for the ride!");
-
-    mons->check_redraw(newpos);
-    mons->apply_location_effects(newpos);
-
-    mons_relocated(mons);
-}
-
-void player_teleport_to_monster(monster *mons, coord_def monsterpos)
-{
-    coord_def target;
-    coord_def newpos;
-
-    int tries = 0;
-    while (tries++ < 30)
-    {
-        target = coord_def(random_range(monsterpos.x - 1, monsterpos.x + 1),
-                           random_range(monsterpos.y - 1, monsterpos.y + 1));
-
-        if (!_monster_space_valid(mons, target, false))
-            continue;
-
-        newpos = target;
-        break;
-    }
-
-    // XXX: If the above function didn't find a good spot, return now
-    // rather than continue by slotting the monster (presumably)
-    // back into its old location (previous behaviour). This seems
-    // to be much cleaner and safer than relying on what appears to
-    // have been a mistake.
-    if (newpos.origin())
-        return;
-
-    // Move it to its new home.
-    you.moveto(newpos);
-
-    mpr("You come along for the ride!");
 }
 
 void mons_clear_trapping_net(monster* mon)

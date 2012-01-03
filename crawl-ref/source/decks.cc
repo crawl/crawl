@@ -1474,12 +1474,6 @@ static void _warp_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_STRANGE_STASIS);
         return;
     }
-    else if (you.is_constricted_larger())
-    {
-        mprf("%s prevents you from blinking.",
-             mindex_to_actor(you.constricted_by)->name(DESC_THE).c_str());
-        return;
-    }
 
     const int control_level = get_power_level(power, rarity);
     if (control_level >= 2)
