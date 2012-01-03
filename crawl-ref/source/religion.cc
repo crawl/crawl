@@ -850,7 +850,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_JIYVA:
-        really_dislikes.push_back("you attack your fellow slimes");
+        really_dislikes.push_back("you attack fellow slimes");
         break;
 
     case GOD_FEDHAS:
