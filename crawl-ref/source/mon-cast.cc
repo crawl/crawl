@@ -1261,7 +1261,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
 // Currently, this only happens if the player is in the middle of butchering
 // a corpse (infuriating), or if they are less than satiated.  Only applies
 // to friendly corpse animators. {due}
-static bool _animate_dead_okay()
+static bool _animate_dead_okay(spell_type spell)
 {
     // It's always okay in the arena.
     if (crawl_state.game_is_arena())
@@ -1271,6 +1271,9 @@ static bool _animate_dead_okay()
         return (false);
 
     if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
+        return (false);
+
+    if (god_hates_spell(spell, you.religion))
         return (false);
 
     return (true);
@@ -1746,7 +1749,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
@@ -1758,7 +1761,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to raise crawling corpses: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_TWISTED_RESURRECTION)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
@@ -1770,7 +1773,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Ditto for simulacrum.
         else if (spell_cast == SPELL_SIMULACRUM)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!monster_simulacrum(mons, false))
@@ -2472,7 +2475,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
         // see special handling in mon-stuff::handle_spell() {dlb}
-        if (mons->friendly() && !_animate_dead_okay())
+        if (mons->friendly() && !_animate_dead_okay(spell_cast))
             return (true);
         break;
 
