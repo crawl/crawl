@@ -383,15 +383,6 @@ bool actor::is_constricted()
     return (mindex_to_actor(constricted_by));
 }
 
-bool actor::is_constricted_larger()
-{
-    if (!is_constricted())
-        return false;
-
-    actor* const constrictor = mindex_to_actor(constricted_by);
-    return (constrictor->body_size(PSIZE_BODY) > body_size(PSIZE_BODY));
-}
-
 actor *mindex_to_actor(short mindex)
 {
     if (mindex == MHITYOU)

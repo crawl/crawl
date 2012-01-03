@@ -365,8 +365,8 @@ move_again:
                 dprf("iood: Swapping with a submerged monster.");
                 mons->set_position(mon.pos());
                 mon.set_position(pos);
-                mons->clear_far_constrictions();
-                mon.clear_far_constrictions();
+                ASSERT(!mons->is_constricted());
+                ASSERT(!mons->is_constricting());
                 mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 

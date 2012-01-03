@@ -1180,8 +1180,6 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_TELEPORT_SELF:
         if (item_blocks_teleport(false, false))
             return true;
-        if (transient && you.is_constricted_larger())
-            return true;
         break;
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB

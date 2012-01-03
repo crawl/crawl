@@ -107,10 +107,8 @@ public:
                                 int killernum = -1);
     bool self_destructs();
 
-    void moveto(const coord_def& c, bool clear_net = true,
-                bool check_constrict = true);
-    bool move_to_pos(const coord_def &newpos, bool clear_net = true,
-                     bool check_constrict = true);
+    void moveto(const coord_def& c, bool clear_net = true);
+    bool move_to_pos(const coord_def &newpos, bool clear_net = true);
     bool blink_to(const coord_def& c, bool quiet = false);
 
     kill_category kill_alignment() const;

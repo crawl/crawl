@@ -38,15 +38,6 @@ bool player::blink_to(const coord_def& dest, bool quiet)
             canned_msg(MSG_STRANGE_STASIS);
         return (false);
     }
-    else if (you.is_constricted_larger())
-    {
-        if (!quiet)
-        {
-            mprf("%s prevents you from blinking.",
-                 mindex_to_actor(you.constricted_by)->name(DESC_THE).c_str());
-        }
-        return (false);
-    }
 
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
@@ -75,29 +66,8 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         seen_context = SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest, true, false))
+    if (!move_to_pos(dest, true))
         return (false);
-
-    // handle constriction, if any
-    if (is_constricted())
-    {
-        if (constricted_by == MHITYOU)
-            player_teleport_to_monster(this, dest);
-        else
-            monster_teleport_to_player(constricted_by, dest);
-    }
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (constricting[i] == constricted_by)
-            ; // Already moved, do nothing.
-        else if (constricting[i] == MHITYOU)
-            player_teleport_to_monster(this, dest);
-        else if (constricting[i] != NON_ENTITY)
-            monster_teleport_to_player(constricting[i], dest);
-    }
-
-    // Now break our nonadjacent constrictions.
-    clear_far_constrictions();
 
     // Leave a purple cloud.
     if (!jump)
