@@ -2121,19 +2121,19 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int idx = items(0, OBJ_GOLD, 0, true, level, 0);
-    _give_monster_item(mon, idx);
+    const int it = items(0, OBJ_GOLD, 0, true, level, 0);
+    _give_monster_item(mon, it);
 }
 
-void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(int idx, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster *mons = &menv[mid];
+    monster *mons = &menv[idx];
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
-void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(int idx, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster* mons = &menv[mid];
+    monster* mons = &menv[idx];
 
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);

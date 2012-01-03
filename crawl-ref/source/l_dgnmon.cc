@@ -209,11 +209,11 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        const int mid = dgn_place_monster(mspec, you.absdepth0, c,
+        const int idx = dgn_place_monster(mspec, you.absdepth0, c,
                                           false, false, false);
-        if (mid != -1)
+        if (idx != -1)
         {
-            push_monster(ls, &menv[mid]);
+            push_monster(ls, &menv[idx]);
             return (1);
         }
     }

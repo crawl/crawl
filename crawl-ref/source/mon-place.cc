@@ -3103,13 +3103,13 @@ int mons_place(mgen_data mg)
                             : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
     }
 
-    int mid = place_monster(mg);
-    if (mid == -1)
+    int idx = place_monster(mg);
+    if (idx == -1)
         return (-1);
 
-    dprf("Created %s.", menv[mid].base_name(DESC_A, true).c_str());
+    dprf("Created %s.", menv[idx].base_name(DESC_A, true).c_str());
 
-    monster* creation = &menv[mid];
+    monster* creation = &menv[idx];
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
@@ -3139,7 +3139,7 @@ int mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
-    return (mid);
+    return (idx);
 }
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)
