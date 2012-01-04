@@ -1187,7 +1187,7 @@ void scorefile_entry::init(time_t dt)
         pt += 250000; // the Orb
         pt += num_runes * 2000 + 4000;
         pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-            / (1+you.num_turns);
+            / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
     }
     pt += num_runes * 10000;
     pt += num_runes * (num_runes + 2) * 1000;
