@@ -3049,7 +3049,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
 
     if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
-    else if (caught() || const_cast<monster *>(this)->is_constricted())
+    else if (caught() || is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
@@ -5392,7 +5392,7 @@ bool monster::attempt_escape()
         return false;
 }
 
-bool monster::has_usable_tentacle()
+bool monster::has_usable_tentacle() const
 {
     if (mons_species() != MONS_OCTOPODE)
         return(false);

@@ -446,7 +446,7 @@ public:
     void accum_been_constricted();
     void accum_has_constricted();
     bool attempt_escape();
-    bool has_usable_tentacle();
+    bool has_usable_tentacle() const;
 
 private:
     void init_with(const monster& mons);

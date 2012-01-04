@@ -369,7 +369,7 @@ void actor::clear_far_constrictions()
     }
 }
 
-bool actor::is_constricting()
+bool actor::is_constricting() const
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (mindex_to_actor(constricting[i]))
@@ -378,7 +378,7 @@ bool actor::is_constricting()
     return false;
 }
 
-bool actor::is_constricted()
+bool actor::is_constricted() const
 {
     return (mindex_to_actor(constricted_by));
 }

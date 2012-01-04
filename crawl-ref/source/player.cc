@@ -6841,7 +6841,7 @@ bool player::has_usable_offhand() const
             || weapon_skill(*wp) == SK_STAVES);
 }
 
-bool player::has_usable_tentacle()
+bool player::has_usable_tentacle() const
 {
     if (species != SP_OCTOPODE)
         return(false);
