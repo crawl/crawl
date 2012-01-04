@@ -46,7 +46,7 @@ LUAFN(l_feature_is_traversable)
 {
     const std::string &name = luaL_checkstring(ls, 1);
     const dungeon_feature_type feat = dungeon_feature_by_name(name);
-    PLUARET(boolean, feat_is_traversable(feat));
+    PLUARET(boolean, feat_is_traversable_now(feat));
 }
 
 LUAFN(l_find_deepest_explored)

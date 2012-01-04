@@ -1041,9 +1041,6 @@ void game_options::reset_options()
     kill_map[KC_FRIENDLY] = KC_FRIENDLY;
     kill_map[KC_OTHER] = KC_OTHER;
 
-    // Setup travel information. What's a better place to do this?
-    initialise_travel();
-
     // Forget any files we remembered as included.
     included.clear();
 

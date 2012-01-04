@@ -57,7 +57,7 @@ LUAFN(view_is_safe_square)
         return (1);
     }
     dungeon_feature_type f = env.map_knowledge(p).feat();
-    if (f != DNGN_UNSEEN && !feat_is_traversable(f))
+    if (f != DNGN_UNSEEN && !feat_is_traversable_now(f))
     {
         PLUARET(boolean, false);
         return (1);

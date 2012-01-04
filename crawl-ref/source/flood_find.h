@@ -64,7 +64,7 @@ flood_find<fgrd, bound_check>::find_first_from(
 {
     set_floodseed(c);
     vaults = &vlts;
-    return pathfind(RMODE_EXPLORE);
+    return pathfind(RMODE_CONNECTIVITY);
 }
 
 template <typename fgrd, typename bound_check>

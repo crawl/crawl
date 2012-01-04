@@ -5564,7 +5564,6 @@ struct nearest_point
 static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    init_travel_terrain_check(false);
     nearest_point np(base_pos);
     for (rectangle_iterator ri(0); ri; ++ri)
     {
