@@ -118,12 +118,12 @@ bool g_Slime_Wall_Check = true;
 
 static uint8_t curr_waypoints[GXM][GYM];
 
-const int8_t TRAVERSABLE = 1;
-const int8_t IMPASSABLE  = 0;
-const int8_t FORBIDDEN   = -1;
+// If true, feat_is_traversable_now() returns the same as feat_is_traversable().
+// FIXME: eliminate this.  It's needed for RMODE_CONNECTIVITY.
+static bool ignore_player_traversability = false;
 
-// Map of terrain types that are traversable.
-static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
+// Map of terrain types that are forbidden.
+static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
 static std::set<std::string> portal_names;
 
@@ -244,10 +244,53 @@ bool is_unknown_stair(const coord_def &p)
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
 
-// Returns true if the character can cross this dungeon feature.
-bool feat_is_traversable(dungeon_feature_type grid)
+// Returns true if the character can cross this dungeon feature, and
+// the player hasn't requested that travel avoid the feature.
+bool feat_is_traversable_now(dungeon_feature_type grid)
 {
-    return (traversable_terrain[grid] == TRAVERSABLE);
+    if (!ignore_player_traversability)
+    {
+        // If the feature is in travel_avoid_terrain, respect that.
+        if (forbidden_terrain[grid])
+            return (false);
+
+        // Swimmers get deep water.
+        if (grid == DNGN_DEEP_WATER && player_likes_water(true))
+            return (true);
+
+        // Permanently levitating players can cross most hostile terrain.
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
+            || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_NATURAL)
+        {
+            return (you.permanent_levitation() || you.permanent_flight());
+        }
+
+        // You can't open doors in bat form.
+        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_DETECTED_SECRET_DOOR)
+            return player_can_open_doors();
+    }
+
+    return feat_is_traversable(grid);
+}
+
+// Returns true if a generic character can cross this dungeon feature.
+// Ignores swimming, flying, and travel_avoid_terrain.
+bool feat_is_traversable(dungeon_feature_type feat)
+{
+#if TAG_MAJOR_VERSION == 32
+    if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
+        || feat == DNGN_TRAP_WEB)
+#else
+    if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
+#endif
+        return false;
+    else if (feat >= DNGN_FLOOR_MIN || feat == DNGN_DETECTED_SECRET_DOOR
+             || feat == DNGN_CLOSED_DOOR || feat == DNGN_SHALLOW_WATER)
+    {
+        return true;
+    }
+    else
+        return false;
 }
 
 static const char *_run_mode_name(int runmode)
@@ -340,7 +383,6 @@ public:
         if (!_travel_safe_grid.get())
         {
             did_compute = true;
-            init_travel_terrain_check();
             std::auto_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
             travel_safe_grid &safegrid(*tsgrid);
             for (rectangle_iterator ri(1); ri; ++ri)
@@ -428,7 +470,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    return (feat_is_traversable(grid));
+    return (feat_is_traversable_now(grid));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains
@@ -461,58 +503,6 @@ static bool _is_safe_move(const coord_def& c)
     return _is_safe_cloud(c);
 }
 
-static void _set_pass_feature(dungeon_feature_type grid, signed char pass)
-{
-    if (traversable_terrain[grid] != FORBIDDEN)
-        traversable_terrain[grid] = pass;
-}
-
-// Sets traversable terrain based on the character's role and whether or not he
-// has permanent levitation
-void init_travel_terrain_check(bool check_race_equip)
-{
-    if (check_race_equip)
-    {
-        // Swimmers get deep water.
-        int8_t water = (player_likes_water(true) ? TRAVERSABLE : IMPASSABLE);
-
-        // If the player has overridden deep water already, we'll respect that.
-        _set_pass_feature(DNGN_DEEP_WATER, water);
-
-        // Permanently levitating players can cross most hostile terrain.
-        const int8_t trav = (you.permanent_levitation()
-                             || you.permanent_flight() ? TRAVERSABLE
-                                                       : IMPASSABLE);
-
-        if (water != TRAVERSABLE)
-            _set_pass_feature(DNGN_DEEP_WATER, trav);
-        _set_pass_feature(DNGN_LAVA, trav);
-        _set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
-        // Shafts can also be levitated over.
-        _set_pass_feature(DNGN_TRAP_NATURAL, trav);
-
-        // You can't open doors in bat form, but we need to make sure
-        // autotravel will go through doors once you're back in your
-        // normal form.
-        if (!player_can_open_doors())
-        {
-            _set_pass_feature(DNGN_CLOSED_DOOR, IMPASSABLE);
-            _set_pass_feature(DNGN_DETECTED_SECRET_DOOR, IMPASSABLE);
-        }
-        else
-        {
-            _set_pass_feature(DNGN_CLOSED_DOOR, TRAVERSABLE);
-            _set_pass_feature(DNGN_DETECTED_SECRET_DOOR, TRAVERSABLE);
-        }
-    }
-    else
-    {
-        _set_pass_feature(DNGN_DEEP_WATER, IMPASSABLE);
-        _set_pass_feature(DNGN_LAVA, IMPASSABLE);
-        _set_pass_feature(DNGN_TRAP_MECHANICAL, IMPASSABLE);
-    }
-}
-
 void travel_init_load_level()
 {
     curr_excludes.clear();
@@ -532,27 +522,6 @@ void travel_init_new_level()
     travel_init_load_level();
 
     explore_stopped_pos.reset();
-}
-
-// Sets up travel-related stuff.
-void initialise_travel()
-{
-    for (int feat = DNGN_FLOOR_MIN; feat < NUM_FEATURES; feat++)
-    {
-#if TAG_MAJOR_VERSION == 32
-        if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
-            || feat == DNGN_TRAP_WEB)
-#else
-        if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
-#endif
-            continue;
-
-        traversable_terrain[feat] = TRAVERSABLE;
-    }
-    // A few special cases...
-    traversable_terrain[DNGN_CLOSED_DOOR] =
-    traversable_terrain[DNGN_DETECTED_SECRET_DOOR] =
-    traversable_terrain[DNGN_SHALLOW_WATER] = TRAVERSABLE;
 }
 
 // Given a dungeon feature description, returns the feature number. This is a
@@ -575,7 +544,7 @@ void prevent_travel_to(const std::string &feature)
 {
     int feature_type = _get_feature_type(feature);
     if (feature_type != -1)
-        traversable_terrain[feature_type] = FORBIDDEN;
+        forbidden_terrain[feature_type] = 1;
 }
 
 bool is_branch_stair(const coord_def& pos)
@@ -779,7 +748,7 @@ static void _explore_find_target_square()
                 feature = grd(target);
             }
             while (_is_travelsafe_square(target)
-                   && feat_is_traversable(feature)
+                   && feat_is_traversable_now(feature)
                    && _feature_traverse_cost(feature) == 1);
 
             target -= delta;
@@ -1237,16 +1206,17 @@ const coord_def travel_pathfind::unexplored_square() const
 // Allison - used with his permission.
 coord_def travel_pathfind::pathfind(run_mode_type rmode)
 {
+    unwind_bool saved_ipt(ignore_player_traversability);
+
     if (rmode == RMODE_INTERLEVEL)
         rmode = RMODE_TRAVEL;
 
     runmode = rmode;
 
-    // Check whether species or levitation permits travel through terrain such
-    // as deep water.
-    init_travel_terrain_check();
+    if (runmode == RMODE_CONNECTIVITY)
+        ignore_player_traversability = true;
 
-    need_for_greed = (rmode == RMODE_EXPLORE_GREEDY && can_autopickup());
+    need_for_greed = (runmode == RMODE_EXPLORE_GREEDY && can_autopickup());
 
     if (!ls && (annotate_map || need_for_greed))
         ls = StashTrack.find_current_level();
@@ -1362,7 +1332,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
         {
             // Don't reseed unless we've found no target for explore, OR
             // we're doing map annotation or feature tracking.
-            if ((runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY)
+            if ((runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY
+                 || runmode == RMODE_CONNECTIVITY)
                 && double_flood
                 && !ignore_hostile
                 && !features
@@ -1404,8 +1375,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
         }
     }
 
-    return (rmode == RMODE_TRAVEL ? travel_move()
-                                  : explore_target());
+    return (runmode == RMODE_TRAVEL ? travel_move()
+                                    : explore_target());
 }
 
 void travel_pathfind::get_features()
@@ -1780,7 +1751,7 @@ void find_travel_pos(const coord_def& youpos,
             // happen by manual movement, so I don't think we need to worry
             // about this. (jpeg)
             if (!_is_travelsafe_square(new_dest)
-                || !feat_is_traversable(env.map_knowledge(new_dest).feat()))
+                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
             {
                 new_dest = dest;
             }
