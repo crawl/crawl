@@ -546,9 +546,6 @@ endif
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
 
-# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types
-$(OBJECTS:%.o=%.cc): | $(TILEDEFHDRS)
-
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
@@ -1036,7 +1033,7 @@ endif
 ##########################################################################
 # Dependencies
 
-DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
+DEPS := $(ALL_OBJECTS:.o=.d)
 VALID_DEPS := $(shell for x in $(DEPS); \
                 do if [ "$${x%%.d}".cc -ot "$$x" ]; then echo "$$x";fi; done)
 -include $(VALID_DEPS)
@@ -1215,7 +1212,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(GAME_DEPENDS) $(DEPS)
+$(GAME): $(GAME_DEPENDS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
@@ -1267,7 +1264,7 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 %.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc %.d .cflags | $(GENERATED_HEADERS)
+%.o: %.cc %.d .cflags | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
