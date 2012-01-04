@@ -1016,13 +1016,16 @@ ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 #
 
 TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
+OLD_CFLAGS = $(shell cat .cflags 2>/dev/null)
+ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
+  NEED_REBUILD = y
+endif
 
 .cflags: .force-cflags
-	@FLAGS='$(TRACK_CFLAGS)'; \
-    if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * rebuilding crawl: new build flags or prefix"; \
-        echo "$$FLAGS" > .cflags; \
-    fi
+ifdef NEED_REBUILD
+	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo '$(TRACK_CFLAGS)' > .cflags
+endif
 
 .PHONY: .force-cflags
 
@@ -1034,8 +1037,11 @@ endif
 # Dependencies
 
 DEPS := $(ALL_OBJECTS:.o=.d)
-VALID_DEPS := $(shell for x in $(DEPS); \
-                do if [ "$${x%%.d}".cc -ot "$$x" ]; then echo "$$x";fi; done)
+ifndef NEED_REBUILD
+  VALID_DEPS := $(shell for x in $(DEPS); \
+                do if [ "$${x%%.d}".cc -ot "$$x" -a "$$x" -nt .cflags ]; \
+                     then echo "$$x";fi; done)
+endif
 -include $(VALID_DEPS)
 
 
