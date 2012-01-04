@@ -3767,6 +3767,7 @@ static void tag_read_level_monsters(reader &th)
         // place monster
         if (m.alive())
         {
+            env.mid_cache[m.mid] = i;
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
             if (invalid_monster_type(m.type))
             {
