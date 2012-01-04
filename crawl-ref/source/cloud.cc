@@ -1041,12 +1041,12 @@ static int _cloud_timescale_damage(const actor *act, int damage)
         damage = 0;
     // Can we have a uniform player/monster speed system yet?
     if (act->is_player())
-        return div_rand_round(damage * you.time_taken, 10);
+        return div_rand_round(damage * you.time_taken, BASELINE_DELAY);
     else
     {
         const monster *mons = act->as_monster();
-        const int speed = mons->speed > 0? mons->speed : 10;
-        return div_rand_round(damage * 10, speed);
+        const int speed = mons->speed > 0? mons->speed : BASELINE_DELAY;
+        return div_rand_round(damage * BASELINE_DELAY, speed);
     }
 }
 
