@@ -50,6 +50,30 @@ ShoppingList shopping_list;
 
 static bool _in_shop_now = false;
 
+enum ordering_mode
+{
+    ORDER_MODE_DEFAULT,
+    ORDER_MODE_PRICE,
+    ORDER_MODE_ALPHABETICAL,
+    ORDER_MODE_TYPE,
+    NUM_ORDER_MODES
+};
+
+static ordering_mode operator++(ordering_mode &x)
+{
+    x = static_cast<ordering_mode>(x + 1);
+    if (x == NUM_ORDER_MODES)
+        x = ORDER_MODE_DEFAULT;
+    return x;
+}
+
+static ordering_mode shopping_order = ORDER_MODE_DEFAULT;
+
+static const char * const shopping_order_names[NUM_ORDER_MODES] =
+{
+    "default", "price", "name", "type"
+};
+
 static bool _purchase(int shop, int item_got, int cost, bool id);
 
 static void _shop_print(const char *shoppy, int line)
@@ -197,6 +221,15 @@ static void _list_shop_keys(bool viewing, int total_stock
     fs = formatted_string::parse_string(keys.c_str());
     fs.display();
 
+    // ///////// SORT MODE //////////
+    // strlen("[/] sort (default)") = 18
+    cgotoxy(1, numlines, GOTO_CRT);
+    ASSERT_RANGE(shopping_order, ORDER_MODE_DEFAULT, NUM_ORDER_MODES);
+    string sortmode = make_stringf("[<w>/</w>] sort (%s)",
+                                   shopping_order_names[shopping_order]);
+    fs = formatted_string::parse_string(sortmode.c_str());
+    _draw_shop_fs('/', fs, freeform);
+
     // ///////// MAKE PURCHASE //////////
     // set cursor [last line], align with 21 from line above
     cgotoxy(21, numlines, GOTO_CRT);
@@ -217,8 +250,6 @@ static void _list_shop_keys(bool viewing, int total_stock
     fs.display();
 }
 
-//fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
-
 static vector<int> _shop_get_stock(int shopidx)
 {
     vector<int> result;
@@ -236,6 +267,47 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
     return max(result, 1);
 }
 
+// Comparator for sorting a permutation list according to the shop, the
+// original list of item IDs, and the current ordering mode.
+class ShopSorter {
+public:
+    ShopSorter(const shop_struct &shop, const vector<int>& stocklist)
+        : stock(stocklist), id(shoptype_identifies_stock(shop.type)),
+          greed(shop.greed)
+    {}
+
+    bool operator()(int a_index, int b_index) const
+    {
+        item_def& a = mitm[stock[a_index]];
+        item_def& b = mitm[stock[b_index]];
+
+        switch (shopping_order)
+        {
+        case ORDER_MODE_PRICE:
+            // Greed will affect all items equally (other than rounding
+            // error), so don't bother taking the shop's actual greed level.
+            return _shop_get_item_value(a, greed, id)
+                   < _shop_get_item_value(b, greed, id);
+        case ORDER_MODE_ALPHABETICAL:
+            return a.name(DESC_PLAIN, false, id)
+                   < b.name(DESC_PLAIN, false, id);
+        case ORDER_MODE_TYPE:
+            if (a.base_type == b.base_type)
+                return a.sub_type < b.sub_type;
+            else
+                return a.base_type < b.base_type;
+        case ORDER_MODE_DEFAULT:
+        default:
+            return a_index < b_index;
+        }
+    }
+private:
+    const vector<int>& stock;
+    const bool id;
+    const int greed;
+};
+static vector<int> stock_order;
+
 static void _shop_print_stock(const vector<int>& stock,
                               const vector<bool>& selected,
                               const vector<bool>& in_list,
@@ -251,14 +323,21 @@ static void _shop_print_stock(const vector<int>& stock,
 #ifdef USE_TILE_LOCAL
     TextItem* tmp = NULL;
 #endif
+
+    stock_order.clear();
     for (unsigned int i = 0; i < stock.size(); ++i)
+        stock_order.push_back(i);
+    stable_sort(stock_order.begin(), stock_order.end(),
+                ShopSorter(shop, stock));
+    for (unsigned int index = 0; index < stock_order.size(); ++index)
     {
+        unsigned int i = stock_order[index];
         const item_def& item = mitm[stock[i]];
         const int gp_value = _shop_get_item_value(item, shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
-        cgotoxy(1, i+1, GOTO_CRT);
-        const char c = i + 'a';
+        cgotoxy(1, index + 1, GOTO_CRT);
+        const char c = index + 'a';
 
         // Colour stock as follows:
         //  * lightcyan, if on the shopping list.
@@ -646,6 +725,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             //_shop_more();
             continue;
         }
+        else if (key == '/')
+            ++shopping_order;
         else if (key == '!' || key == '?')
         {
             // Toggle between browsing and shopping.
@@ -721,6 +802,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 _shop_more();
                 continue;
             }
+            key = stock_order[key];
 
             item_def& item = mitm[stock[key]];
             if (viewing && !to_shoplist)
