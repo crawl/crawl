@@ -765,6 +765,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (true);
 
     // All checks done, transformation will take place now.
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
@@ -849,7 +850,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             }
 
             you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
         }
         break;
 
@@ -926,6 +926,7 @@ void untransform(bool skip_wielding, bool skip_move)
 {
     const flight_type old_flight = you.flight_mode();
 
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
