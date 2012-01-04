@@ -4187,9 +4187,10 @@ monster *monster_by_mid(mid_t m)
 {
     if (m == MID_ANON_FRIEND)
         return &menv[ANON_FRIENDLY_MONSTER];
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].mid == m && menv[i].alive())
-            return &menv[i];
+
+    std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
+    if (mc != env.mid_cache.end())
+        return &menv[mc->second];
     return 0;
 }
 

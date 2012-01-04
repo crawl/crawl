@@ -3873,6 +3873,7 @@ void monster::set_ghost(const ghost_demon &g)
 void monster::set_new_monster_id()
 {
     mid = ++you.last_mid;
+    env.mid_cache[mid] = mindex();
 }
 
 void monster::ghost_init(bool need_pos)

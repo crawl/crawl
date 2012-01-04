@@ -2546,6 +2546,7 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
+    env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
 
