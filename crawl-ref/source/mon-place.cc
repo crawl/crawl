@@ -88,8 +88,8 @@ static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
 
-static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
-                              bool force_pos = false, bool dont_place = false);
+static monster* _place_monster_aux(const mgen_data &mg, bool first_band_member,
+                               bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
@@ -966,7 +966,7 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - you.absdepth0 * 117);
 }
 
-int place_monster(mgen_data mg, bool force_pos, bool dont_place)
+monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
@@ -974,11 +974,10 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int id = -1;
 
     // (1) Early out (summoned to occupied grid).
     if (mg.use_position() && monster_at(mg.pos))
-        return (-1);
+        return 0;
 
     bool chose_ood_monster = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
@@ -987,7 +986,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
                                    &chose_ood_monster);
 
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
-        return (-1);
+        return 0;
 
     bool create_band = mg.permit_bands();
     // If we drew an OOD monster and there hasn't been much time spent
@@ -1013,7 +1012,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     } // end proximity check
 
     if (mg.cls == MONS_PROGRAM_BUG)
-        return (-1);
+        return 0;
 
     // (3) Decide on banding (good lord!)
     int band_size = 1;
@@ -1084,9 +1083,8 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
         while (true)
         {
-            // Dropped number of tries from 60.
             if (tries++ >= 45)
-                return (-1);
+                return 0;
 
             // Placement already decided for PROX_NEAR_STAIRS.
             // Else choose a random point on the map.
@@ -1168,20 +1166,19 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     else if (!_valid_monster_generation_location(mg) && !dont_place)
     {
         // Sanity check that the specified position is valid.
-        return (-1);
+        return 0;
     }
-
-    id = _place_monster_aux(mg, true, force_pos, dont_place);
 
     // Reset the (very) ugly thing band colour.
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    // Bail out now if we failed.
-    if (id == -1)
-        return (-1);
+    monster* mon = _place_monster_aux(mg, true, force_pos, dont_place);
 
-    monster* mon = &menv[id];
+    // Bail out now if we failed.
+    if (!mon)
+        return 0;
+
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR
             && !testbits(mon->flags, MF_BAND_MEMBER)))
@@ -1198,8 +1195,8 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     {
         std::string msg;
 
-        if (menv[id].visible_to(&you))
-            msg = menv[id].name(DESC_A);
+        if (mon->visible_to(&you))
+            msg = mon->name(DESC_A);
         else if (shoved)
             msg = "Something";
 
@@ -1236,14 +1233,14 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // too many monsters already, or we successfully placed by stairs.
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
-    if (id >= MAX_MONSTERS - 30
+    if (mon->mindex() >= MAX_MONSTERS - 30
         || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
-        || (crawl_state.game_is_zotdef() && you.num_turns<2000))
-        return (id);
+        || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
+        return mon;
 
     // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
     if (band_size > 1)
-        menv[id].flags |= MF_BAND_MEMBER;
+        mon->flags |= MF_BAND_MEMBER;
 
     const bool priest = mon->is_priest();
 
@@ -1251,7 +1248,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (leader && !mg.summoner)
     {
-        band_template.summoner = &menv[id];
+        band_template.summoner = mon;
         band_template.flags |= MG_BAND_MINION;
     }
 
@@ -1272,37 +1269,37 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        const int band_id = _place_monster_aux(band_template, false);
-        if (band_id != -1 && band_id != NON_MONSTER)
+        monster *member = _place_monster_aux(band_template, false);
+        if (member)
         {
-            menv[band_id].flags |= MF_BAND_MEMBER;
-            menv[band_id].props["band_leader"].get_int() = menv[id].mid;
+            member->flags |= MF_BAND_MEMBER;
+            member->props["band_leader"].get_int() = mon->mid;
 
             // Priestly band leaders should have an entourage of the
             // same religion, unless members of that entourage already
             // have a different one.
-            if (priest && menv[band_id].god == GOD_NO_GOD)
-                menv[band_id].god = mon->god;
+            if (priest && member->god == GOD_NO_GOD)
+                member->god = mon->god;
 
             if (mon->type == MONS_PIKEL)
             {
                 // Don't give XP for the slaves to discourage hunting.  Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
-                menv[band_id].flags |= MF_NO_REWARD;
-                menv[band_id].props["pikel_band"] = true;
+                member->flags |= MF_NO_REWARD;
+                member->props["pikel_band"] = true;
             }
             if (mon->type == MONS_SHEDU)
             {
                 // We store these here for later resurrection, etc.
-                menv[band_id].number = menv[id].mid;
-                menv[id].number = menv[band_id].mid;
+                member->number = mon->mid;
+                mon->number = member->mid;
             }
         }
     }
 
     // Placement of first monster, at least, was a success.
-    return (id);
+    return mon;
 }
 
 monster* get_free_monster()
@@ -1338,9 +1335,9 @@ static void _place_twister_clouds(monster *mon)
     tornado_damage(mon, -10);
 }
 
-static int _place_monster_aux(const mgen_data &mg,
-                              bool first_band_member, bool force_pos,
-                              bool dont_place)
+static monster* _place_monster_aux(const mgen_data &mg,
+                                   bool first_band_member, bool force_pos,
+                                   bool dont_place)
 {
     coord_def fpos;
 
@@ -1358,7 +1355,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     monster* mon = get_free_monster();
     if (!mon)
-        return (-1);
+        return 0;
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                                   : mg.cls);
@@ -1366,9 +1363,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
     if (dont_place)
-    {
         fpos.reset();
-    }
     else if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
             || mons_is_mimic(montype))
@@ -1393,7 +1388,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
         // Did we really try 1000 times?
         if (i == 1000)
-            return (-1);
+            return 0;
     }
 
     ASSERT(!monster_at(fpos));
@@ -1401,7 +1396,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena()
         && arena_veto_place_monster(mg, first_band_member, fpos))
     {
-        return (-1);
+        return 0;
     }
 
     // Now, actually create the monster. (Wheeee!)
@@ -1414,7 +1409,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (!dont_place && !mon->move_to_pos(fpos))
     {
         mon->reset();
-        return (-1);
+        return 0;
     }
 
     if (mg.props.exists("serpent_of_hell_flavour"))
@@ -1603,9 +1598,7 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
     else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
-    {
         mon->add_ench(ENCH_EXPLODING);
-    }
 
     if (mg.cls == MONS_TWISTER)
     {
@@ -1651,7 +1644,7 @@ static int _place_monster_aux(const mgen_data &mg,
             mon->destroy_inventory();
             mon->reset();
             mgrd(fpos) = NON_MONSTER;
-            return (-1);
+            return 0;
         }
         else
             mon->colour = wpn->colour;
@@ -1854,7 +1847,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mon->type == MONS_TWISTER)
         _place_twister_clouds(mon);
 
-    return (mon->mindex());
+    return mon;
 }
 
 monster_type pick_random_zombie()
@@ -3103,13 +3096,11 @@ int mons_place(mgen_data mg)
                             : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
     }
 
-    int idx = place_monster(mg);
-    if (idx == -1)
-        return (-1);
+    monster* creation = place_monster(mg);
+    if (!creation)
+        return -1;
 
-    dprf("Created %s.", menv[idx].base_name(DESC_A, true).c_str());
-
-    monster* creation = &menv[idx];
+    dprf("Created %s.", creation->base_name(DESC_A, true).c_str());
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
@@ -3139,7 +3130,7 @@ int mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
-    return (idx);
+    return creation->mindex();
 }
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)

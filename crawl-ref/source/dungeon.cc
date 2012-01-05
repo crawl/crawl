@@ -3487,7 +3487,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
 
         else
             mg.base_type = MONS_NO_MONSTER;
-        if (place_monster(mg) != -1)
+        if (place_monster(mg))
             ++result;
     }
 
@@ -4241,22 +4241,20 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
-                                     const int mindex,
+                                     monster *mon,
                                      const int type,
                                      const int monster_level)
 {
-    monster& mon(menv[mindex]);
-
-    unwind_var<int> save_speedinc(mon.speed_increment);
+    unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (mon.inv[i] != NON_ITEM)
+        if (mon->inv[i] != NON_ITEM)
         {
-            item_def &item(mitm[mon.inv[i]]);
-            mon.unequip(item, i, 0, true);
-            destroy_item(mon.inv[i], true);
-            mon.inv[i] = NON_ITEM;
+            item_def &item(mitm[mon->inv[i]]);
+            mon->unequip(item, i, 0, true);
+            destroy_item(mon->inv[i], true);
+            mon->inv[i] = NON_ITEM;
         }
 
     item_make_species_type racial = MAKE_ITEM_RANDOM_RACE;
@@ -4348,16 +4346,16 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             if (mspec.abjuration_duration != 0)
                 item.flags |= ISFLAG_SUMMONED;
 
-            if (!mon.pickup_item(item, 0, true))
+            if (!mon->pickup_item(item, 0, true))
                 destroy_item(item_made, true);
         }
     }
 
     // Pre-wield ranged weapons.
-    if (mon.inv[MSLOT_WEAPON] == NON_ITEM
-        && mon.inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+    if (mon->inv[MSLOT_WEAPON] == NON_ITEM
+        && mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
     {
-        mon.swap_weapons(false);
+        mon->swap_weapons(false);
     }
 }
 
@@ -4495,57 +4493,56 @@ monster* dgn_place_monster(mons_spec &mspec,
         mg.props["serpent_of_hell_flavour"] =
             mspec.props["serpent_of_hell_flavour"].get_int();
 
-    const int mindex = place_monster(mg, true, force_pos && place.origin());
-    if (mindex == -1)
+    monster *mons = place_monster(mg, true, force_pos && place.origin());
+    if (!mons)
         return 0;
-    monster& mons(menv[mindex]);
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mindex, type, monster_level);
+        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
 
     if (mspec.explicit_spells)
-        mons.spells = mspec.spells[random2(mspec.spells.size())];
+        mons->spells = mspec.spells[random2(mspec.spells.size())];
 
     if (mspec.props.exists("monster_tile"))
     {
-        mons.props["monster_tile"] =
+        mons->props["monster_tile"] =
             mspec.props["monster_tile"].get_short();
     }
     if (mspec.props.exists("monster_tile_name"))
     {
-        mons.props["monster_tile_name"].get_string() =
+        mons->props["monster_tile_name"].get_string() =
             mspec.props["monster_tile_name"].get_string();
     }
 
     if (mspec.props.exists("always_corpse"))
-        mons.props["always_corpse"] = true;
+        mons->props["always_corpse"] = true;
 
     // These are applied earlier to prevent issues with renamed monsters
     // and "<monster> comes into view" (see delay.cc:_monster_warning).
-    //mons.flags |= mspec.extra_monster_flags;
+    //mons->flags |= mspec.extra_monster_flags;
 
     // Monsters with gods set by the spec aren't god gifts
     // unless they have the "god_gift" tag.  place_monster(),
     // by default, marks any monsters with gods as god gifts,
     // so unmark them here.
     if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
-        mons.flags &= ~MF_GOD_GIFT;
+        mons->flags &= ~MF_GOD_GIFT;
 
-    if (mons.is_priest() && mons.god == GOD_NO_GOD)
-        mons.god = GOD_NAMELESS;
+    if (mons->is_priest() && mons->god == GOD_NO_GOD)
+        mons->god = GOD_NAMELESS;
 
-    if (mons.type == MONS_DANCING_WEAPON)
+    if (mons->type == MONS_DANCING_WEAPON)
     {
-        item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
+        item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons.ghost->init_dancing_weapon(*wpn, 180);
-        mons.ghost_demon_init();
+        mons->ghost->init_dancing_weapon(*wpn, 180);
+        mons->ghost_demon_init();
     }
 
     for (unsigned int i = 0; i < mspec.ench.size(); i++)
-        mons.add_ench(mspec.ench[i]);
+        mons->add_ench(mspec.ench[i]);
 
-    return &mons;
+    return mons;
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
