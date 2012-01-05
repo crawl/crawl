@@ -2507,6 +2507,9 @@ void bolt::affect_ground()
             if (crawl_state.game_is_arena())
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
 
+            const god_type god = this->agent() ? this->agent()->deity()
+                                               : GOD_NO_GOD;
+
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
                                          NULL,
@@ -2514,7 +2517,8 @@ void bolt::affect_ground()
                                          0,
                                          pos(),
                                          MHITNOT,
-                                         MG_FORCE_PLACE)))
+                                         MG_FORCE_PLACE,
+                                         god)))
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))
