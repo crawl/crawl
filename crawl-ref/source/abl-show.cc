@@ -1880,14 +1880,14 @@ static bool _do_ability(const ability_def& abil)
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
-                         0)) != -1)
+                         0)))
         {
             mpr("You create a living grenade.");
         }
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
-                         0)) != -1)
+                         0)))
         {
             mpr("You create a living grenade.");
         }
@@ -2645,7 +2645,7 @@ static bool _do_ability(const ability_def& abil)
 
         mg.non_actor_summoner = "Jiyva";
 
-        if (create_monster(mg) == -1)
+        if (!create_monster(mg))
             return (false);
         break;
     }

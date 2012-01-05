@@ -281,18 +281,18 @@ static bool _efreet_flask(int slot)
 
     mpr("You open the flask...");
 
-    const int mons =
+    monster *mons =
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
-    if (mons != -1)
+    if (mons)
     {
         mpr("...and a huge efreet comes out.");
 
-        if (player_angers_monster(&menv[mons]))
+        if (player_angers_monster(mons))
             friendly = false;
 
         if (silenced(you.pos()))
@@ -474,7 +474,7 @@ void tome_of_power(int slot)
         if (create_monster(
                 mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
                     "a tome of Destruction",
-                    true, 6, 0, you.pos())) != -1)
+                    true, 6, 0, you.pos())))
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
@@ -605,7 +605,7 @@ static bool _box_of_beasts(item_def &box)
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           2 + random2(4), 0,
                           you.pos(),
-                          MHITYOU)) != -1)
+                          MHITYOU)))
         {
             success = true;
 

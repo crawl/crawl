@@ -2340,7 +2340,7 @@ void handle_time()
                          MHITNOT, 0, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
-            if (create_monster(mg) != -1)
+            if (create_monster(mg))
                 success = true;
         }
 
@@ -2769,14 +2769,10 @@ int place_ring(std::vector<coord_def> &ring_points,
 
         prototype.pos = ring_points.at(i);
 
-        const int mushroom = create_monster(prototype, false);
-
-        if (mushroom != -1)
-        {
+        if (create_monster(prototype, false))
             spawned_count++;
             if (you.see_cell(ring_points.at(i)))
                 seen_count++;
-        }
     }
 
     return (spawned_count);
@@ -2995,7 +2991,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
         if (!mons)
         {
-            const int mushroom = create_monster(
+            monster *mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
                                   toadstool_behavior,
                                   0,
@@ -3010,7 +3006,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
                                   corpse.colour),
                                   false);
 
-            if (mushroom != -1)
+            if (mushroom)
             {
                 // Going to explicitly override the die-off timer in
                 // this case (this condition means we got called from
@@ -3029,14 +3025,14 @@ int spawn_corpse_mushrooms(item_def& corpse,
                     time_left *= 10;
 
                     mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-                    env.mons[mushroom].update_ench(temp_en);
+                    mushroom->update_ench(temp_en);
                 }
 
                 placed_targets++;
                 if (current == you.pos())
                 {
                     mprf("A toadstool grows at your feet.");
-                    current=  env.mons[mushroom].pos();
+                    current = mushroom->pos();
                 }
                 else if (you.see_cell(current))
                     seen_targets++;

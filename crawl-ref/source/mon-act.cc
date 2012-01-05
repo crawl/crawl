@@ -903,20 +903,18 @@ static bool _handle_scroll(monster* mons)
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
-            const int mon = create_monster(
+            read = true;
+            if (monster *mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(mons),
                           mons, 0, 0, mons->pos(), mons->foe,
-                          MG_FORCE_BEH));
-
-            read = true;
-            if (mon != -1)
+                          MG_FORCE_BEH)))
             {
-                if (you.can_see(&menv[mon]))
+                if (you.can_see(mon))
                 {
-                    mprf("%s appears!", menv[mon].name(DESC_A).c_str());
+                    mprf("%s appears!", mon->name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
                 }
-                player_angers_monster(&menv[mon]);
+                player_angers_monster(mon);
             }
             else if (you.can_see(mons))
                 canned_msg(MSG_NOTHING_HAPPENS);

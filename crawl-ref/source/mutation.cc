@@ -2181,17 +2181,17 @@ void check_demonic_guardian()
             die("Invalid demonic guardian level: %d", mutlevel);
         }
 
-        const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
-                                                      2, 0, you.pos(),
-                                                      MHITYOU, MG_FORCE_BEH));
+        monster *guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
+                                                     2, 0, you.pos(),
+                                                     MHITYOU, MG_FORCE_BEH));
 
-        if (guardian == -1)
+        if (!guardian)
             return;
 
-        menv[guardian].flags |= MF_NO_REWARD;
-        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
+        guardian->flags |= MF_NO_REWARD;
+        guardian->flags |= MF_DEMONIC_GUARDIAN;
 
-        menv[guardian].add_ench(ENCH_LIFE_TIMER);
+        guardian->add_ench(ENCH_LIFE_TIMER);
 
         // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));

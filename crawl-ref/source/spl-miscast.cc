@@ -739,7 +739,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.summon_type = MON_SUMM_MISCAST;
     }
 
-    return (create_monster(data) != -1);
+    return (create_monster(data));
 }
 
 // hair or hair-equivalent (like bandages)

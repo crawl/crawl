@@ -2125,16 +2125,13 @@ static void _give_gold(monster* mon, int level)
     _give_monster_item(mon, it);
 }
 
-void give_weapon(int idx, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster *mons = &menv[idx];
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
-void give_item(int idx, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster* mons = &menv[idx];
-
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);
 

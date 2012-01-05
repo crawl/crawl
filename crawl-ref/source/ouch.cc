@@ -1044,7 +1044,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
                 mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
                              foe, 0, GOD_JIYVA);
 
-                if (create_monster(mg) != -1)
+                if (create_monster(mg))
                     count_created++;
             }
 

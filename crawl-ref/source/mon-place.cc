@@ -1634,7 +1634,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
         else
-            give_item(mon->mindex(), mg.power, summoned);
+            give_item(mon, mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1651,10 +1651,10 @@ static monster* _place_monster_aux(const mgen_data &mg,
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item(mon->mindex(), mg.power, summoned);
+        give_item(mon, mg.power, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_weapon(mon->mindex(), mg.power, summoned);
+            give_weapon(mon, mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
@@ -3033,7 +3033,7 @@ static monster_type _pick_zot_exit_defender()
     return static_cast<monster_type>(mon_type);
 }
 
-int mons_place(mgen_data mg)
+monster* mons_place(mgen_data mg)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in mons_place()", MSGCH_DIAGNOSTICS);
@@ -3046,7 +3046,7 @@ int mons_place(mgen_data mg)
     if (mg.cls == WANDERING_MONSTER)
     {
         if (mon_count > MAX_MONSTERS - 50)
-            return (-1);
+            return 0;
 
 #ifdef DEBUG_MON_CREATION
         mpr("Set class RANDOM_MONSTER", MSGCH_DIAGNOSTICS);
@@ -3056,7 +3056,7 @@ int mons_place(mgen_data mg)
 
     // All monsters have been assigned? {dlb}
     if (mon_count >= MAX_MONSTERS - 1)
-        return (-1);
+        return 0;
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
@@ -3098,7 +3098,7 @@ int mons_place(mgen_data mg)
 
     monster* creation = place_monster(mg);
     if (!creation)
-        return -1;
+        return 0;
 
     dprf("Created %s.", creation->base_name(DESC_A, true).c_str());
 
@@ -3130,7 +3130,7 @@ int mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
-    return creation->mindex();
+    return creation;
 }
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)
@@ -3363,12 +3363,12 @@ bool player_angers_monster(monster* mon)
     return (false);
 }
 
-int create_monster(mgen_data mg, bool fail_msg)
+monster* create_monster(mgen_data mg, bool fail_msg)
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
 
-    int summd = -1;
+    monster *summd = 0;
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
@@ -3407,7 +3407,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                 mg.pos = find_newmons_square(montype, mg.pos);
             }
             if (!in_bounds(mg.pos))
-                return (-1);
+                return 0;
 
             const int cloud_num = env.cgrid(mg.pos);
             // Don't place friendly god gift in a damaging cloud created by
@@ -3417,7 +3417,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                 && god_hates_attacking_friend(you.religion, &dummy)
                 && YOU_KILL(env.cloud[cloud_num].killer))
             {
-                return (-1);
+                return 0;
             }
         }
     }
@@ -3430,13 +3430,9 @@ int create_monster(mgen_data mg, bool fail_msg)
             fail_msg = false;
     }
 
-    // Determine whether creating a monster is successful (summd != -1) {dlb}:
-    // then handle the outcome. {dlb}:
-    if (fail_msg && summd == -1 && you.see_cell(mg.pos))
+    if (!summd && fail_msg && you.see_cell(mg.pos))
         mpr("You see a puff of smoke.");
 
-    // The return value is either -1 (failure of some sort)
-    // or the index of the monster placed (if I read things right). {dlb}
     return (summd);
 }
 

@@ -1522,8 +1522,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
 
-        const int mid = create_monster(mg);
-        return !invalid_monster_index(mid);
+        return create_monster(mg);
     }
 
     return (false);
