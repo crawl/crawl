@@ -81,4 +81,5 @@ bool expose_player_to_element(beam_type flavour, int strength = 0,
                               bool damage_inventory = true);
 
 void screen_end_game(std::string text);
+int timescale_damage(const actor *act, int damage);
 #endif
