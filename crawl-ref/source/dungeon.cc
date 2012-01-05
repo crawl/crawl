@@ -4030,15 +4030,15 @@ int dgn_item_corpse(const item_spec &ispec, const coord_def where)
     {
         if (tries > 200)
             return NON_ITEM;
-        int mindex = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
-        if (invalid_monster_index(mindex))
+        monster *mon = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
+        if (!mon)
             continue;
-        menv[mindex].position = where;
-        if (mons_class_can_leave_corpse(menv[mindex].type))
-            corpse_index = place_monster_corpse(&menv[mindex], true, true);
+        mon->position = where;
+        if (mons_class_can_leave_corpse(mon->type))
+            corpse_index = place_monster_corpse(mon, true, true);
         // Dismiss the monster we used to place the corpse.
-        menv[mindex].flags |= MF_HARD_RESET;
-        monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER, false, true);
+        mon->flags |= MF_HARD_RESET;
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
 
         if (corpse_index != -1 && corpse_index != NON_ITEM)
             break;
@@ -4362,12 +4362,12 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 }
 
 
-int dgn_place_monster(mons_spec &mspec,
-                      int monster_level, const coord_def& where,
-                      bool force_pos, bool generate_awake, bool patrolling)
+monster* dgn_place_monster(mons_spec &mspec,
+                           int monster_level, const coord_def& where,
+                           bool force_pos, bool generate_awake, bool patrolling)
 {
     if (mspec.type == -1)
-        return -1;
+        return 0;
 
     const monster_type type = static_cast<monster_type>(mspec.type);
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
@@ -4392,7 +4392,7 @@ int dgn_place_monster(mons_spec &mspec,
         if (mons_is_unique(type) && you.unique_creatures[type]
             && !crawl_state.game_is_arena())
         {
-            return (-1);
+            return 0;
         }
 
         const monster_type montype = mons_class_is_zombified(type)
@@ -4497,7 +4497,7 @@ int dgn_place_monster(mons_spec &mspec,
 
     const int mindex = place_monster(mg, true, force_pos && place.origin());
     if (mindex == -1)
-        return -1;
+        return 0;
     monster& mons(menv[mindex]);
 
     if (!mspec.items.empty())
@@ -4545,7 +4545,7 @@ int dgn_place_monster(mons_spec &mspec,
     for (unsigned int i = 0; i < mspec.ench.size(); i++)
         mons.add_ench(mspec.ench[i]);
 
-    return (mindex);
+    return &mons;
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
@@ -4557,8 +4557,8 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    return (-1 != dgn_place_monster(mspec, monster_level, where, false,
-                                    generate_awake, patrolling));
+    return dgn_place_monster(mspec, monster_level, where, false,
+                             generate_awake, patrolling);
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,

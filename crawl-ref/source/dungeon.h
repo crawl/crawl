@@ -250,10 +250,10 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
 class mons_spec;
-int dgn_place_monster(mons_spec &mspec,
-                      int monster_level, const coord_def& where,
-                      bool force_pos = false, bool generate_awake = false,
-                      bool patrolling = false);
+monster *dgn_place_monster(mons_spec &mspec,
+                           int monster_level, const coord_def& where,
+                           bool force_pos = false, bool generate_awake = false,
+                           bool patrolling = false);
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level = INVALID_ABSDEPTH);
