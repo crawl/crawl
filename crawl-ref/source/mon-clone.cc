@@ -105,11 +105,9 @@ static void _mons_summon_monster_illusion(monster* caster,
 
     unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
     bool cloning_visible = false;
-    const int clone_idx = clone_mons(foe, true, &cloning_visible);
-    if (clone_idx != NON_MONSTER)
+    if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
         const std::string clone_id = _monster_clone_id_for(foe);
-        monster* clone = &menv[clone_idx];
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
@@ -265,14 +263,14 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     return (true);
 }
 
-int clone_mons(const monster* orig, bool quiet, bool* obvious,
-               coord_def pos)
+monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
+                    coord_def pos)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
 
     if (!mons)
-        return (NON_MONSTER);
+        return 0;
 
     if (!in_bounds(pos))
     {
@@ -292,7 +290,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
         }
 
         if (squares == 0)
-            return (NON_MONSTER);
+            return 0;
     }
 
     ASSERT(!actor_at(pos));
@@ -348,5 +346,5 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mons);
 
-    return (mons->mindex());
+    return mons;
 }

@@ -2449,9 +2449,8 @@ void melee_attack::chaos_affects_defender()
         ASSERT(can_clone && clone_chance > 0);
         ASSERT(defender->atype() == ACT_MONSTER);
 
-        int clone_idx = clone_mons(defender->as_monster(), true,
-                                   &obvious_effect);
-        if (clone_idx != NON_MONSTER)
+        if (monster *clone = clone_mons(defender->as_monster(), true,
+                                        &obvious_effect))
         {
             if (obvious_effect)
             {
@@ -2460,13 +2459,12 @@ void melee_attack::chaos_affects_defender()
                                  def_name(DESC_THE).c_str());
             }
 
-            monster& clone(menv[clone_idx]);
             // The player shouldn't get new permanent followers from cloning.
-            if (clone.attitude == ATT_FRIENDLY && !clone.is_summoned())
-                clone.mark_summoned(6, true, MON_SUMM_CLONE);
+            if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
+                clone->mark_summoned(6, true, MON_SUMM_CLONE);
 
             // Monsters being cloned is interesting.
-            xom_is_stimulated(clone.friendly() ? 12 : 25);
+            xom_is_stimulated(clone->friendly() ? 12 : 25);
         }
         break;
     }
