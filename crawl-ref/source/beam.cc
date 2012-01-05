@@ -2505,9 +2505,7 @@ void bolt::affect_ground()
             beh_type beh = attitude_creation_behavior(this->attitude);
 
             if (crawl_state.game_is_arena())
-            {
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
-            }
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
