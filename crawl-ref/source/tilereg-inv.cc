@@ -703,6 +703,9 @@ void InventoryRegion::update()
                 }
             }
 
+            if (item_is_active_manual(you.inv[i]))
+                desc.flag |= TILEI_FLAG_EQUIP;
+
             inv_shown[i] = true;
             m_items.push_back(desc);
         }
