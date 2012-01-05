@@ -1047,7 +1047,7 @@ ifndef NEED_REBUILD
                           x="$${x_d%%.d}"; x_cc="$${x}.cc"; \
                           if [ "$$x_cc" -ot "$$x_d" \
                                -a "$$x_d" -nt .cflags ]; \
-                          then echo "$$x"; \
+                          then echo "$$x_d"; \
                           fi; \
                         done)
 endif
