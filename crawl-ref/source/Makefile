@@ -1001,8 +1001,10 @@ webserver:
 endif
 
 
+# There might not have been any goals passed on the commandline, so...
+GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
 # Unless these are the only goals...
-ifneq ($(MAKECMDGOALS),$(filter clean test %-windows,$(MAKECMDGOALS)))
+ifneq ($(GOALS),$(filter clean test %-windows,$(GOALS)))
 
 #
 # CFLAGS difference check
