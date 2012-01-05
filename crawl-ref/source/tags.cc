@@ -3744,6 +3744,7 @@ static void tag_read_level_monsters(reader &th)
 
     for (i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
+    env.mid_cache.clear();
 
     // how many mons_alloc?
     count = unmarshallByte(th);

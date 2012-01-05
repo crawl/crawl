@@ -277,6 +277,7 @@ bool follower::place(bool near_player)
         m->flags |= MF_JUST_SUMMONED;
 
         restore_mons_items(*m);
+        env.mid_cache[m->mid] = m->mindex();
         return (true);
     }
 
