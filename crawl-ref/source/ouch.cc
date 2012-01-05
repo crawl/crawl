@@ -1577,3 +1577,18 @@ int actor_to_death_source(const actor* agent)
     else
         return (NON_MONSTER);
 }
+
+int timescale_damage(const actor *act, int damage)
+{
+    if (damage < 0)
+        damage = 0;
+    // Can we have a uniform player/monster speed system yet?
+    if (act->is_player())
+        return div_rand_round(damage * you.time_taken, BASELINE_DELAY);
+    else
+    {
+        const monster *mons = act->as_monster();
+        const int speed = mons->speed > 0? mons->speed : BASELINE_DELAY;
+        return div_rand_round(damage * BASELINE_DELAY, speed);
+    }
+}

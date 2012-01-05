@@ -1950,6 +1950,8 @@ void handle_noattack_constrictions(actor *attacker)
             DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
             DIAG_ONLY(int acdam = damage);
+            damage = timescale_damage(attacker, damage);
+            DIAG_ONLY(int timescale_dam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
             DIAG_ONLY(int infdam = damage);
@@ -1997,10 +1999,10 @@ void handle_noattack_constrictions(actor *attacker)
                      exclams.c_str());
             }
 
-            dprf("constrict at: %s df: %s base %d dur %d ac %d inf %d",
+            dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
-                 basedam, durdam, acdam, infdam);
+                 basedam, durdam, acdam, timescale_dam, infdam);
 
             if (defender->atype() == ACT_MONSTER
                 && defender->as_monster()->hit_points < 1)
