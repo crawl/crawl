@@ -26,6 +26,7 @@ enum status_type
     STATUS_BACKLIT,
     STATUS_UMBRA,
     STATUS_CONSTRICTED,
+    STATUS_MANUAL,
 };
 
 struct status_info

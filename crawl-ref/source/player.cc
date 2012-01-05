@@ -4002,6 +4002,7 @@ void display_char_status()
         DUR_PETRIFYING,
         DUR_TRANSFORMATION,
         STATUS_BURDEN,
+        STATUS_MANUAL,
         DUR_SAGE,
         DUR_BARGAIN,
         DUR_BREATH_WEAPON,

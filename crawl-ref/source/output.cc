@@ -2045,6 +2045,7 @@ static std::string _status_mut_abilities(int sw)
         STATUS_AIRBORNE,
         DUR_BARGAIN,
         DUR_SLAYING,
+        STATUS_MANUAL,
         DUR_SAGE,
         DUR_MAGIC_SHIELD,
         DUR_FIRE_SHIELD,
