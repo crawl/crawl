@@ -1001,9 +1001,8 @@ webserver:
 endif
 
 
-ifeq (,$(findstring clean,$(MAKECMDGOALS)))
-ifeq (,$(findstring test,$(MAKECMDGOALS)))
-ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
+# Unless these are the only goals...
+ifneq ($(MAKECMDGOALS),$(filter clean test %-windows,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -1029,8 +1028,6 @@ endif
 
 .PHONY: .force-cflags
 
-endif
-endif
 endif
 
 ##########################################################################
