@@ -4967,14 +4967,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!in_bounds(jpos))
                 continue;
 
-            const int nmons = mons_place(
+            if (monster *mons = mons_place(
                                   mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, 0, god));
-
-            if (nmons != -1 && nmons != NON_MONSTER)
+                                            jpos, foe, 0, god)))
             {
                 // Don't allow milking the royal jelly.
-                menv[nmons].flags |= MF_NO_REWARD;
+                mons->flags |= MF_NO_REWARD;
                 spawned++;
             }
         }

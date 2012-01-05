@@ -448,7 +448,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
 };
 
-typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
+typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
 static void _delayed_monster(const mgen_data &mg,
                              delayed_callback callback = NULL);
@@ -1197,7 +1197,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
 
         for (; how_many > 0; --how_many)
         {
-            if (create_monster(mg) != -1)
+            if (create_monster(mg))
                 created++;
         }
     }
@@ -1710,18 +1710,16 @@ static bool _tso_blessing_friendliness(monster* mon)
                                    base_increase + random2(base_increase));
 }
 
-static void _beogh_reinf_callback(const mgen_data &mg, int &midx, int placed)
+static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed)
 {
     ASSERT(mg.god == GOD_BEOGH);
 
     // Beogh tries a second time to place reinforcements.
-    if (midx == -1)
-        midx = create_monster(mg);
+    if (!mon)
+        mon = create_monster(mg);
 
-    if (midx == -1)
+    if (!mon)
         return;
-
-    monster* mon = &menv[midx];
 
     mon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -2029,7 +2027,7 @@ blessing_done:
     return (true);
 }
 
-static void _delayed_gift_callback(const mgen_data &mg, int &midx,
+static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
                                    int placed)
 {
     if (placed <= 0)
@@ -4315,12 +4313,12 @@ static void _place_delayed_monsters()
             prev_god = mg.god;
         }
 
-        int midx = create_monster(mg);
+        monster *mon = create_monster(mg);
 
         if (cback)
-            (*cback)(mg, midx, placed);
+            (*cback)(mg, mon, placed);
 
-        if (midx != -1)
+        if (mon)
             placed++;
 
         if (!_delayed_done_trigger_pos.empty()
@@ -4359,7 +4357,7 @@ static void _place_delayed_monsters()
             if (msg == "")
             {
                 if (cback)
-                    (*cback)(mg, midx, placed);
+                    (*cback)(mg, mon, placed);
                 continue;
             }
 
@@ -4373,7 +4371,7 @@ static void _place_delayed_monsters()
             god_speaks(mg.god, msg.c_str());
 
             if (cback)
-                (*cback)(mg, midx, placed);
+                (*cback)(mg, mon, placed);
         }
     }
 

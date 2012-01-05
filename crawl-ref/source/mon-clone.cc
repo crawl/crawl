@@ -198,16 +198,13 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
     if (foe->atype() == ACT_PLAYER)
     {
         ASSERT(foe == &you);
-        const int midx =
-            create_monster(
+        if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          6, spell_cast, mons->pos(), mons->foe, 0));
-        if (midx != -1)
+                          6, spell_cast, mons->pos(), mons->foe, 0)))
         {
             mpr("There is a horrible, sudden wrenching feeling in your soul!",
                 MSGCH_WARN);
 
-            monster* clone = &menv[midx];
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(

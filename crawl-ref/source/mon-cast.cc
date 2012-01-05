@@ -2107,9 +2107,7 @@ void mons_cast_spectral_orcs(monster* mons)
         fpos = menv[mons->foe].pos();
     }
 
-    int created;
     const int abj = 3;
-    monster* orc;
 
     for (int i = random2(3) + 1; i > 0; --i)
     {
@@ -2123,15 +2121,11 @@ void mons_cast_spectral_orcs(monster* mons)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        created = create_monster(
+        if (monster *orc = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
-                          0, mons->god, mon));
-
-        if (created != -1)
+                          0, mons->god, mon)))
         {
-            orc = &menv[created];
-
             // set which base type this orc is pretending to be for gear
             // purposes
             if (mon != MONS_ORC)
@@ -2142,7 +2136,7 @@ void mons_cast_spectral_orcs(monster* mons)
             orc->number = (int) mon;
 
             // give gear using the base type
-            give_item(created, you.absdepth0, true, true);
+            give_item(orc, you.absdepth0, true, true);
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
@@ -2505,8 +2499,8 @@ static void _clone_monster(monster* mons, monster_type clone_type,
                   mons, 3, summon_type, mons->pos(),
                   mons->foe, 0, mons->god);
 
-    int created = create_monster(summ_mon);
-    if (created == -1)
+    monster *new_fake = create_monster(summ_mon);
+    if (!new_fake)
         return;
 
     // Reset client id so that no information about who the original monster
@@ -2515,7 +2509,6 @@ static void _clone_monster(monster* mons, monster_type clone_type,
 
     // Mara's clones are special; they have the same stats as him, and
     // are exact clones, so they are created damaged if necessary.
-    monster* new_fake = &menv[created];
     if (clone_hp)
     {
         new_fake->hit_points = mons->hit_points;
@@ -2768,7 +2761,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (create_monster(
                     mgen_data(sum, SAME_ATTITUDE(mons), mons,
                               5, spell_cast, mons->pos(), mons->foe,
-                              0, god)) != -1)
+                              0, god)))
             {
                 i++;
             }
@@ -2907,19 +2900,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (int i=0;i<possible_count;++i)
         {
-            int tentacle = create_monster(
+            if (monster *tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
-
-            if (tentacle != -1)
+                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER)))
             {
                 created_count++;
-                menv[tentacle].props["inwards"].get_int() = kraken_index;
+                tentacle->props["inwards"].get_int() = kraken_index;
 
                 if (mons->holiness() == MH_UNDEAD)
-                    menv[tentacle].flags |= MF_FAKE_UNDEAD;
+                    tentacle->flags |= MF_FAKE_UNDEAD;
             }
         }
 

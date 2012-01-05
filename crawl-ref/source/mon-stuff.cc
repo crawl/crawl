@@ -1413,14 +1413,11 @@ static void _make_spectral_thing(monster* mons, bool quiet)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        const int spectre =
-            create_monster(
+        if (monster *spectre = create_monster(
                 mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
                     0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                    mons->type, mons->number));
-
-        if (spectre != -1)
+                    mons->type, mons->number)))
         {
             if (!quiet)
                 mpr("A glowing mist starts to gather...");
@@ -1428,16 +1425,15 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             // If the original monster has been drained or levelled up,
             // its HD might be different from its class HD, in which
             // case its HP should be rerolled to match.
-            if (menv[spectre].hit_dice != mons->hit_dice)
+            if (spectre->hit_dice != mons->hit_dice)
             {
-                menv[spectre].hit_dice = std::max(mons->hit_dice, 1);
-                roll_zombie_hp(&menv[spectre]);
+                spectre->hit_dice = std::max(mons->hit_dice, 1);
+                roll_zombie_hp(spectre);
             }
 
-            name_zombie(&menv[spectre], mons);
+            name_zombie(spectre, mons);
 
-            monster* mon = &menv[spectre];
-            mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            spectre->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
         }
     }
 }
@@ -4537,14 +4533,12 @@ static bool _mons_reaped(actor *killer, monster* victim)
         hitting = mon->foe;
     }
 
-    int midx = NON_MONSTER;
+    monster *zombie = 0;
     if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, killer, "",
-                        GOD_NO_GOD, true, true, true, &midx) <= 0)
+                        GOD_NO_GOD, true, true, true, &zombie) <= 0)
     {
         return (false);
     }
-
-    monster* zombie = &menv[midx];
 
     if (you.can_see(victim))
         mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());

@@ -5220,14 +5220,13 @@ void read_scroll(int slot)
 
     case SCR_SUMMONING:
     {
-        const int mons = create_monster(
+        if (monster *mons = create_monster(
                             mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
                                       &you, 0, 0, you.pos(), MHITYOU,
-                                      MG_FORCE_BEH));
-        if (mons != -1)
+                                      MG_FORCE_BEH)))
         {
             mpr("A horrible Thing appears!");
-            player_angers_monster(&menv[mons]);
+            player_angers_monster(mons);
         }
         else
         {

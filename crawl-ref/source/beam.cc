@@ -2509,16 +2509,14 @@ void bolt::affect_ground()
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
             }
 
-            int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                              beh,
-                                              NULL,
-                                              0,
-                                              0,
-                                              pos(),
-                                              MHITNOT,
-                                              MG_FORCE_PLACE));
-
-            if (rc != -1)
+            if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                         beh,
+                                         NULL,
+                                         0,
+                                         0,
+                                         pos(),
+                                         MHITNOT,
+                                         MG_FORCE_PLACE)))
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))

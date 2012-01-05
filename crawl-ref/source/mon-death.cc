@@ -497,12 +497,10 @@ void spirit_fades (monster *spirit)
     if (spirit->alive())
         monster_die(spirit, KILL_MISC, NON_MONSTER, true);
 
-    int mon_id = create_monster(mon);
+    monster *new_mon = create_monster(mon);
 
-    if (mon_id == -1)
+    if (!new_mon)
         return;
-
-    monster *new_mon = &menv[mon_id];
 
     if (mons_near(new_mon))
         simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);

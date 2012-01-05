@@ -1937,17 +1937,15 @@ void timeout_malign_gateways (int duration)
                 if (!is_player)
                     mg.non_actor_summoner = mmark->summoner_string;
 
-                int tentacle_idx = create_monster(mg);
-
-                if (tentacle_idx >= 0)
+                if (monster *tentacle = create_monster(mg))
                 {
-                    menv[tentacle_idx].flags |= MF_NO_REWARD;
-                    menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                    tentacle->flags |= MF_NO_REWARD;
+                    tentacle->add_ench(ENCH_PORTAL_TIMER);
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
                         caster, (random2avg(mmark->power, 6)-random2(4))*10);
-                    menv[tentacle_idx].props["base_position"].get_coord()
-                                        = menv[tentacle_idx].pos();
-                    menv[tentacle_idx].add_ench(kduration);
+                    tentacle->props["base_position"].get_coord()
+                                        = tentacle->pos();
+                    tentacle->add_ench(kduration);
 
                     mmark->monster_summoned = true;
                 }

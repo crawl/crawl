@@ -777,7 +777,7 @@ std::string zotdef_debug_wave_desc()
     return list + "]";
 }
 
-int zotdef_spawn(bool boss)
+monster* zotdef_spawn(bool boss)
 {
     monster_type mt = env.mons_alloc[random2(NSLOTS)];
     if (boss)
@@ -788,31 +788,31 @@ int zotdef_spawn(bool boss)
             mt = env.mons_alloc[0];        // grab slot 0 as crap alternative
     }
     if (mt == MONS_PROGRAM_BUG)
-        return -1;
+        return 0;
 
     // Generate a monster of the appropriate branch and strength
     mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 
-    int idx = mons_place(mg);
+    monster *mon  = mons_place(mg);
 
     // Boss monsters which aren't uniques are named, and beefed a bit further
-    if (idx != -1 && boss && !mons_is_unique(mt))
+    if (mon && boss && !mons_is_unique(mt))
     {
         // Use the proper name function: if that fails, fall back
         // to the randart name generator
-        if (!menv[idx].is_named())        // Don't rename uniques!
+        if (!mon->is_named())        // Don't rename uniques!
         {
-            if (!give_monster_proper_name(&menv[idx], false))
-                menv[idx].mname = make_name(random_int(), false);
+            if (!give_monster_proper_name(mon, false))
+                mon->mname = make_name(random_int(), false);
         }
 
-        menv[idx].hit_points = (menv[idx].hit_points * 3) / 2;
-        menv[idx].max_hit_points = menv[idx].hit_points;
+        mon->hit_points = mon->hit_points * 3 / 2;
+        mon->max_hit_points = mon->hit_points;
     }
 
-    return idx;
+    return mon;
 }
 
 static rune_type _get_rune(int runenumber)
@@ -1035,8 +1035,8 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
             canned_msg(MSG_OK);
         return (false);
     }
-    if (mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
-                   you.pet_target)) == -1)
+    if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
+                   you.pet_target)))
     {
         mpr("You can't create it there!");
         return (false);
@@ -1049,9 +1049,7 @@ void zotdef_bosses_check()
 {
     if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
     {
-        int mon = zotdef_spawn(true);        // boss monster=true
-
-        if (mon > -1)
+        if (monster *mon = zotdef_spawn(true))        // boss monster=true
         {
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
@@ -1065,7 +1063,7 @@ void zotdef_bosses_check()
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
                     mitm[ip].plus = which_rune;
-                    move_item_to_grid(item_made, menv[mon].pos());
+                    move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }
             }
