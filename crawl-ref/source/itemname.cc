@@ -257,6 +257,8 @@ std::string item_def::name(description_level_type descrip,
             equipped = true;
             buff << " (quivered)";
         }
+        else if (item_is_active_manual(*this))
+            buff << " (studied)";
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
@@ -3232,6 +3234,11 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     case OBJ_STAVES:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
+            prefixes.push_back("equipped");
+        break;
+
+    case OBJ_BOOKS:
+        if (item_is_active_manual(item))
             prefixes.push_back("equipped");
         break;
 
