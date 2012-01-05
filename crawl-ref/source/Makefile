@@ -1035,9 +1035,13 @@ endif
 
 DEPS := $(ALL_OBJECTS:.o=.d)
 ifndef NEED_REBUILD
-  VALID_DEPS := $(shell for x in $(DEPS); \
-                do if [ "$${x%%.d}".cc -ot "$$x" -a "$$x" -nt .cflags ]; \
-                     then echo "$$x";fi; done)
+  VALID_DEPS := $(shell for x_d in $(DEPS); do \
+                          x="$${x_d%%.d}"; x_cc="$${x}.cc"; \
+                          if [ "$$x_cc" -ot "$$x_d" \
+                               -a "$$x_d" -nt .cflags ]; \
+                          then echo "$$x"; \
+                          fi; \
+                        done)
 endif
 -include $(VALID_DEPS)
 
