@@ -425,11 +425,20 @@ void fill_status_info(int status, status_info* inf)
     case DUR_SAGE:
     {
         std::string sk = skill_name(you.sage_bonus_skill);
-        inf->short_text = "studying " + sk;
+        inf->short_text = "studious about " + sk;
         inf->long_text = "You are " + inf->short_text + ".";
         _mark_expiring(inf, dur_expiring(DUR_SAGE));
         break;
     }
+
+    case STATUS_MANUAL:
+        if (!is_invalid_skill(you.manual_skill))
+        {
+            std::string sk = skill_name(you.manual_skill);
+            inf->short_text = "studying " + sk;
+            inf->long_text = "You are " + inf->short_text + ".";
+        }
+        break;
 
     case DUR_SURE_BLADE:
     {
