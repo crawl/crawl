@@ -837,15 +837,14 @@ void discover_mimic(const coord_def& pos)
         mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
     }
 
-    const int midx = place_monster(mg, true, true);
-    if (midx == -1)
+    monster *mimic = place_monster(mg, true, true);
+    if (!mimic)
     {
         mpr("Too many monsters on level, can't place mimic.", MSGCH_ERROR);
         if (item)
             destroy_item(*item, true);
         return;
     }
-    monster* mimic = &menv[midx];
 
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
@@ -860,7 +859,7 @@ void discover_mimic(const coord_def& pos)
 
     // Friendly monsters don't appreciate being pushed away.
     if (mon && mon->friendly())
-        behaviour_event(mon, ME_WHACK, midx);
+        behaviour_event(mon, ME_WHACK, mimic->mindex());
 
     // Announce the mimic.
     if (mons_near(mimic))
