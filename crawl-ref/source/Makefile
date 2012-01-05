@@ -1034,6 +1034,14 @@ endif
 # Dependencies
 
 DEPS := $(ALL_OBJECTS:.o=.d)
+
+# Any stale .d files are worse than useless, as they can break builds by
+# telling make a header or file no longer present is needed.  This is very
+# likely to happen if the compilation mode changes (normal vs debug, tiles
+# vs console vs webtiles) or if the compiler itself changes (gcc vs
+# gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
+#
+# In such cases, the dependency forces a rebuild of that file.
 ifndef NEED_REBUILD
   VALID_DEPS := $(shell for x_d in $(DEPS); do \
                           x="$${x_d%%.d}"; x_cc="$${x}.cc"; \
