@@ -328,7 +328,7 @@ function (exports, $, key_conversion, chat, comm) {
         var username = data.username;
         $("#login_message").html("Logged in as " + username);
         current_user = username;
-        $("#register").hide();
+        hide_dialog();
         $("#login_form").hide();
         $("#reg_link").hide();
         $("#logout_link").show();
