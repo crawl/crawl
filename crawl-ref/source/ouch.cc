@@ -1530,7 +1530,7 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory(true);
+    browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
