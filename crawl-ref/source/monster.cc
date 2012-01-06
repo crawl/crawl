@@ -2145,6 +2145,10 @@ void monster::swap_weapons(int near)
     if (weap && !unequip(*weap, MSLOT_WEAPON, near))
     {
         // Item was cursed.
+        // A centaur may randomly decide to not shoot you, but bashing people with
+        // a ranged weapon is a dead giveaway.
+        if (weap->cursed() && you.can_see(this) && is_range_weapon(*weap))
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
 

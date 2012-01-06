@@ -361,22 +361,6 @@ bool melee_attack::handle_phase_attempted()
 
     attack_occurred = true;
 
-    /* TODO Permanently remove this? Commented out for temporary removal
-     *
-     * The only scenario this handles that isn't handled elsewhere (later on)
-     * is identifying a ranged, cursed weapon wielded by a monster...which
-     * seems like an information leak and very much a special-case. -Cryptic
-    if (attacker->atype() == ACT_MONSTER)
-    {
-        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-        if (weap && you.can_see(attacker) && weap->cursed()
-            && is_range_weapon(*weap))
-        {
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-        }
-    }
-     */
-
     // Check for player practicing dodging
     if (one_chance_in(3) && defender == &you)
         practise(EX_MONSTER_MAY_HIT);
