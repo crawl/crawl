@@ -358,6 +358,7 @@ static void _sdump_visits(dump_params &par)
         for (unsigned int i = 0; i < vaults.size(); i++)
         {
             std::string name = vaults[i].get_string();
+            name = replace_all(name, "_", " ");
 
             if (name.find("Ziggurat") != std::string::npos)
             {
