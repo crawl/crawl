@@ -198,7 +198,10 @@ bool melee_attack::handle_phase_attempted()
                 if (yesno(prompt.c_str(), true, 'n'))
                     you.received_weapon_warning = true;
                 else
+                {
+                    cancel_attack = true;
                     return (false);
+                }
             }
             else
             {
