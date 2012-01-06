@@ -2435,21 +2435,27 @@ static void _pan_level(int level_number)
     const char *pandemon_level_names[] =
         { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
     int which_demon = -1;
-    // Could do spotty_level, but that doesn't always put all paired
-    // stairs reachable from each other which isn't a problem in normal
-    // dungeon but could be in Pandemonium.
-    if (one_chance_in(4))
+    PlaceInfo &place_info = you.get_place_info();
+    bool all_demons_generated = true;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (!you.uniq_map_tags.count(std::string("uniq_") + pandemon_level_names[i]))
+        {
+            all_demons_generated = false;
+            break;
+        }
+    }
+
+    // Unique pan lords become more common as you travel through pandemonium.
+    // On average it takes 27 levels to see all four, and you're likely to see
+    // your first one after about 10 levels.
+    if (x_chance_in_y(1 + place_info.levels_seen, 65 + place_info.levels_seen * 2)
+        && !all_demons_generated)
     {
         do
         {
             which_demon = random2(4);
-
-            // Makes these things less likely as you find more.
-            if (one_chance_in(4))
-            {
-                which_demon = -1;
-                break;
-            }
         }
         while (you.uniq_map_tags.count(std::string("uniq_")
                                      + pandemon_level_names[which_demon]));
