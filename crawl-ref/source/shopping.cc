@@ -605,7 +605,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             viewing = !viewing;
         }
         else if (key == '?')
-            browse_inventory(false);
+            browse_inventory();
         else if (key == '$')
         {
             if (viewing || (num_selected == 0 && num_in_list == 0)

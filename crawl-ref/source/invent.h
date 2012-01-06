@@ -75,19 +75,15 @@ private:
     invtitle_annotator titlefn;
 };
 
-class InvShowPrices;
 class InvEntry : public MenuEntry
 {
 private:
     static bool show_prices;
     static bool show_glyph;
     static bool show_cursor;
-    static void set_show_prices(bool doshow);
 
     mutable std::string basename;
     mutable std::string qualname;
-
-    friend class InvShowPrices;
 
 public:
     const item_def *item;
@@ -122,13 +118,6 @@ public:
 
 private:
     void add_class_hotkeys(const item_def &i);
-};
-
-class InvShowPrices
-{
-public:
-    InvShowPrices(bool doshow = true);
-    ~InvShowPrices();
 };
 
 class InvMenu : public Menu
@@ -232,7 +221,7 @@ unsigned char invent_select(
                    Menu::selitem_tfn fn = NULL,
                    const std::vector<SelItem> *pre_select = NULL);
 
-void browse_inventory(bool show_price);
+void browse_inventory();
 unsigned char get_invent(int invent_type);
 
 bool in_inventory(const item_def &i);
