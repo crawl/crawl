@@ -3108,6 +3108,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (!you.skill(SK_FIRE_MAGIC));
         case MISC_AIR_ELEMENTAL_FAN:
             return (!you.skill(SK_AIR_MAGIC));
+        case MISC_HORN_OF_GERYON:
+            return item.plus2;
         default:
             return (false);
         }
