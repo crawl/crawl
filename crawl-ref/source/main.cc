@@ -2025,7 +2025,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_CHARACTER_DUMP:
-        if (!dump_char(you.your_name, false))
+        if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
