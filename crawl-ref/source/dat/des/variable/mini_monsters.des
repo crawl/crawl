@@ -1250,6 +1250,45 @@ MAP
 ...............
 ENDMAP
 
+NAME:   evilmike_dwarf_trog_shrine
+DEPTH:  D:14-23, Vault, Elf
+MONS:   deep dwarf berserker
+: if you.absdepth() < 19 then
+NSUBST: 1 = 2:2 / *:1
+: end
+SUBST:  2 = 1'
+KMONS:  _ = deep dwarf berserker
+KFEAT:  _ = altar_trog
+SUBST:  C : c', B : +', D : +', E : +c
+SUBST:  = = ccc=
+FTILE:  *|_1+'c = floor_hall
+FTILE:  # = floor_rough_lightred
+MARKER:  # = lua:fog_machine { cloud_type = "flame", \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1 }
+SUBST:  '# = .
+MAP
+.................
+.ccccccccccccccc.
+.ccccc#ccc#ccccc.
+.c*1''''_''''1|c.
+.c'''''''''''''c.
+.c''''''C''''''c.
+.ccccccBcBcccccc.
+....ccc'C'ccc....
+   ..cc'''cc..
+    ..='2'=..
+   ..cc'''cc..
+ ...ccc'c'ccc...
+ .cccccDcDccccc.
+ .c'''''c'''''c.
+ .c'''c'''c'''c.
+ .c'1'c'''c'1'c.
+ .cccccE+Eccccc.
+ .ccc#c...c#ccc.
+ ...............
+   .....@.....
+ENDMAP
 
 ################################################################################
 #
