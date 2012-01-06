@@ -105,15 +105,12 @@ struct dump_params
 {
     std::string &text;
     std::string section;
-    bool show_prices;
     bool full_id;
     const scorefile_entry *se;
 
     dump_params(std::string &_text, const std::string &sec = "",
-                bool prices = false, bool id = false,
-                const scorefile_entry *s = NULL)
-        : text(_text), section(sec), show_prices(prices), full_id(id),
-          se(s)
+                bool id = false, const scorefile_entry *s = NULL)
+        : text(_text), section(sec), full_id(id), se(s)
     {
     }
 };
@@ -170,14 +167,14 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const std::string &fname, bool show_prices, bool full_id,
+bool dump_char(const std::string &fname, bool full_id,
                const scorefile_entry *se)
 {
     // Start with enough room for 100 80 character lines.
     std::string text;
     text.reserve(100 * 80);
 
-    dump_params par(text, "", show_prices, full_id, se);
+    dump_params par(text, "", full_id, se);
 
     for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
     {
@@ -699,7 +696,7 @@ static void _sdump_religion(dump_params &par)
     }
 }
 
-static bool _dump_item_origin(const item_def &item, int value)
+static bool _dump_item_origin(const item_def &item)
 {
 #define fs(x) (flags & (x))
     const int flags = Options.dump_item_origins;
@@ -751,9 +748,7 @@ static bool _dump_item_origin(const item_def &item, int value)
     const int refpr = Options.dump_item_origin_price;
     if (refpr == -1)
         return (false);
-    if (value == -1)
-        value = item_value(item, false);
-    return (value >= refpr);
+    return ((int)item_value(item, false) >= refpr);
 #undef fs
 }
 
@@ -828,15 +823,8 @@ static void _sdump_inventory(dump_params &par)
 
                         inv_count--;
 
-                        int ival = -1;
-                        if (par.show_prices)
-                        {
-                            text += make_stringf(" (%d gold)",
-                                        ival = item_value(you.inv[j], true));
-                        }
-
                         if (origin_describable(you.inv[j])
-                            && _dump_item_origin(you.inv[j], ival))
+                            && _dump_item_origin(you.inv[j]))
                         {
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
