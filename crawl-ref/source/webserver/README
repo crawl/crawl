@@ -11,7 +11,10 @@ not been tested). If you install Tornado by hand, make sure Python can
 find it (you may need to set PYTHONPATH before running the server).
 
 You'll need to compile Crawl passing WEBTILES=y to make to get a
-suitable binary.
+suitable binary. For publicly accessible servers, you should also use
+USE_DGAMELAUNCH=y; this disables some things like Wizmode, and enables
+the milestone and player location display in the lobby.
+
 
 [1] http://www.tornadoweb.org/
 
@@ -22,6 +25,11 @@ Compile Crawl with WEBTILES=y, make sure you've got Python and
 Tornado, then run "python webserver/server.py" from the source
 directory. Then open localhost:8080 with a browser, and you should see
 the lobby.
+
+To actually get Crawl to start, you will still need to make sure that
+the paths for rc files, game sockets and recordings exist. To create
+the default paths, do (in the source directory) "mkdir rcs rcs/running
+rcs/ttyrecs".
 
 
 3. Running a real server
@@ -36,7 +44,3 @@ You will also need a script that initializes user-specific data, like
 copying a default rc file if the user doesn't yet have one --
 currently this is not done by the server. You can have the script be
 run on every login by setting init_player_program.
-
-For publicly accessible servers, Crawl should be compiled with
-USE_DGAMELAUNCH=y; this disables some things like Wizmode, and enables
-the milestone and player location display in the lobby.
