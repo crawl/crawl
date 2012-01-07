@@ -1707,7 +1707,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner flame", "roused", "breath timer", "deaths_door", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
