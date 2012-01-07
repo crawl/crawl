@@ -907,15 +907,18 @@ void SkillMenu::toggle(skill_menu_switch sw)
     if (!m_switches[sw]->toggle())
         return;
 
+    // XXX: should use a pointer instead.
+    FixedVector<int8_t, NUM_SKILLS> tmp;
+
     switch (sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
 
-        // Skills are on by default in auto mode and off in manual.
-        for (int i = 0; i < NUM_SKILLS; ++i)
-            if (!you.train_set[i])
-                you.train[i] = you.auto_training;
+        // Switch the skill train state with the saved version.
+        tmp = you.train;
+        you.train = you.train_alt;
+        you.train_alt = tmp;
 
         reset_training();
         if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)

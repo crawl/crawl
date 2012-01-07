@@ -117,6 +117,7 @@ public:
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
   FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
   FixedVector<bool, NUM_SKILLS> train_set; //!< Has the player set this skill

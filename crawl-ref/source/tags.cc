@@ -1153,6 +1153,7 @@ static void tag_construct_you(writer &th)
     {
         marshallUByte(th, you.skills[j]);
         marshallByte(th, you.train[j]);
+        marshallByte(th, you.train_alt[j]);
         marshallInt(th, you.training[j]);
 #if TAG_MAJOR_VERSION == 32
         marshallBoolean(th, you.can_train[j]);
@@ -2071,6 +2072,10 @@ static void tag_read_you(reader &th)
         {
 #endif
             you.train[j]    = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+            if (th.getMinorVersion() >= TAG_MINOR_SKILL_MODE_STATE)
+#endif
+                you.train_alt[j]    = unmarshallByte(th);
             you.training[j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
         }
@@ -2099,6 +2104,18 @@ static void tag_read_you(reader &th)
     {
 #endif
         you.auto_training = unmarshallBoolean(th);
+
+#if TAG_MAJOR_VERSION == 32
+    for (i = 0; i < NUM_SKILLS; i++)
+        if (th.getMinorVersion() < TAG_MINOR_SKILL_MODE_STATE)
+        {
+            if (you.can_train[i] && you.skill_points[i])
+                you.train_alt[i] = you.train[i];
+            else
+                you.train_alt[i] = !you.auto_training;
+        }
+#endif
+
         count = unmarshallByte(th);
         for (i = 0; i < count; i++)
             you.exercises.push_back((skill_type)unmarshallInt(th));
