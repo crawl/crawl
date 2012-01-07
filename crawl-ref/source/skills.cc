@@ -504,9 +504,13 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
-            you.train[i] = you.train_set[i] = true;
+            you.train[i] = you.train_alt[i] = you.train_set[i] = true;
         else
+        {
+            // Skills are on by default in auto mode and off in manual.
             you.train[i] = you.auto_training;
+            you.train_alt[i] = !you.auto_training;
+        }
 }
 
 static bool _cmp_rest(const std::pair<skill_type,int>& a,
