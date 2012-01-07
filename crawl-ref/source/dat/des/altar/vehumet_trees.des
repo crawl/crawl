@@ -1,0 +1,85 @@
+# Vehumet wants you to burn the damn trees down.
+NAME:    dk_vehumet_trees
+DEPTH:   2-10
+TAGS:    temple_overflow_vehumet mini_float
+KFEAT:   _ = altar_vehumet
+: if crawl.one_chance_in(10) then
+SUBST:   x = G
+: elseif crawl.one_chance_in(4) then
+SUBST:   x = t
+: end
+{{
+function callback.dk_vehumet_trees(data, triggerable, triggerer, marker, ev)
+  if data.finished then
+    return
+  end
+
+  -- Run only once per turn, even if we have 17 markers...
+  if data.turn == you.turns() then
+    return
+  end
+  data.turn = you.turns()
+
+  if triggerer.type == "player_move" then
+    if data.stepped == false and data.tree_died == false then
+      crawl.god_speaks("Vehumet", "In a voice like roaring flames, Vehumet " ..
+                                  "offers to free you in exchange for your " ..
+                                  "pious devotion to destruction.")
+      data.stepped = true
+    end
+  elseif triggerer.type == "feat_change" then
+    local x,y = marker:pos()
+    if you.see_cell(x,y) then
+      data.tree_died = true
+    end
+  elseif triggerer.type == "turn" and
+        triggerer.sub_type == "countdown" and
+        data.tree_died == false and
+        data.finished == false then
+    local altar_pos = dgn.find_marker_positions_by_prop("altar", 1)[1]
+    if you.see_cell(altar_pos.x, altar_pos.y) then
+        if you.god() == "Vehumet" then
+        crawl.mpr("Suddenly, the trees start to burn!")
+        for slave in iter.slave_iterator("tree", 1) do
+          dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+          dgn.place_cloud(slave.x, slave.y, "flame", crawl.random2(15) + 5)
+        end
+        data.finished = true
+        data.tree_died = true
+      end
+    end
+  end
+end
+
+local master_marker = TriggerableFunction:new{
+  func="callback.dk_vehumet_trees",
+  repeated=true,
+  data={stepped=false,
+        tree_died=false,
+        finished=false,
+        turn=0} }
+
+master_marker:add_triggerer(DgnTriggerer:new {
+  type="player_move"})
+master_marker:add_triggerer(DgnTriggerer:new {
+  type="feat_change"})
+master_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=10,
+  delay_max=10})
+
+lua_marker(':', master_marker)
+lua_marker('t', master_marker)
+lua_marker('t', props_marker {tree=1})
+lua_marker('_', master_marker)
+lua_marker('_', props_marker {altar=1})
+}}
+MAP
+.......
+.xtxtx.
+.t:::t.
+.x:_:x.
+.t:::t.
+.xtxtx.
+.......
+ENDMAP
