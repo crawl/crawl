@@ -1709,6 +1709,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
 
+    mon->stop_constricting_all(false);
+    mon->stop_being_constricted();
+
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
 }
