@@ -127,7 +127,7 @@ function ($, cr, map_knowledge) {
 
         fit_to: function(width, height, min_diameter)
         {
-            if (this.glyph_mode)
+            if (this.display_mode == "glyphs")
             {
                 this.ctx.font = this.glyph_mode_font_name();
                 var metrics = this.ctx.measureText("@");

@@ -29,8 +29,15 @@
 
 <div id="settings" style="display: none;" class="floating_dialog">
   <div class="title">Settings</div>
-  <input type="checkbox" name="setting_glyph_mode"
-         data-setting="glyph_mode">Glyph mode</input>
+  <p>
+    Display:
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="tiles">Tiles</input>
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="glyphs">Glyphs</input>
+    <input type="radio" name="setting_glyph_mode"
+           data-setting="display_mode" value="hybrid">Glyphs+Icons</input>
+  </p>
   <a id="close_settings" href="javascript:">(close)</a>
 </div>
 

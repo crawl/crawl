@@ -35,7 +35,8 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             elem.on("click.menu_item", item_click_handler);
         }
 
-        if (item.tiles && item.tiles.length > 0 && !dungeon_renderer.glyph_mode)
+        if (item.tiles && item.tiles.length > 0
+            && dungeon_renderer.display_mode == "tiles")
         {
             var renderer = new cr.DungeonCellRenderer();
             var canvas = $("<canvas>");

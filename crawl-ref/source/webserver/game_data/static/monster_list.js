@@ -155,7 +155,7 @@ function ($, map_knowledge, cr, dungeon_renderer) {
                                    dungeon_renderer.cell_height);
             for (key in dungeon_renderer)
             {
-                if (key.match(/^glyph_mode/))
+                if (key.match(/^glyph_mode/) || key == "display_mode")
                     renderer[key] = dungeon_renderer[key];
             }
             var w = renderer.cell_width;
