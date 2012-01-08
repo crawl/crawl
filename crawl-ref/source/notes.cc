@@ -90,6 +90,7 @@ static bool _is_noteworthy_dlevel(unsigned short place)
 
     if (lev == _dungeon_branch_depth(branch)
         || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
+        || branch == BRANCH_MAIN_DUNGEON && lev == 14
         || branch != BRANCH_MAIN_DUNGEON && lev == 1)
     {
         return (true);
@@ -452,6 +453,11 @@ void Note::check_milestone() const
 
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
+        if (place_type(packed_place) == LEVEL_PANDEMONIUM)
+        {
+            mark_milestone("br.enter", "entered Pandemonium.");
+            return;
+        }
         const int br = place_branch(packed_place),
                  dep = place_depth(packed_place);
 
@@ -463,7 +469,7 @@ void Note::check_milestone() const
 
             if (dep == 1)
                 mark_milestone("br.enter", "entered " + branch + ".", true);
-            else if (dep == _dungeon_branch_depth(br))
+            else if (dep == _dungeon_branch_depth(br) || dep == 14)
             {
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
@@ -471,7 +477,7 @@ void Note::check_milestone() const
 
                 std::ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone("br.end", branch_finale.str());
+                mark_milestone(dep == 14 ? "br.mid" : "br.end", branch_finale.str());
             }
         }
     }
