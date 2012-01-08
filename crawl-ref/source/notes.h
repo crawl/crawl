@@ -34,7 +34,7 @@ enum NOTE_TYPES
     NOTE_GAIN_SKILL,            /* needs: skill id, level */
     NOTE_LOSE_SKILL,            /* needs: skill id, level */
     NOTE_SEEN_MONSTER,          /* needs: monster name (string) */
-    NOTE_KILL_MONSTER,          /* needs: monster name (string) */
+    NOTE_DEFEAT_MONSTER,        /* needs: monster name, defeat verb (strings) */
     NOTE_POLY_MONSTER,          /* needs: monster name (string) */
     NOTE_USER_NOTE,             /* needs: description string */
     NOTE_MESSAGE,               /* needs: message string */
@@ -50,7 +50,6 @@ enum NOTE_TYPES
     NOTE_PARALYSIS,             /* needs: paralysis source (string) */
     NOTE_NAMED_ALLY,            /* needs: ally name (string) */
     NOTE_ALLY_DEATH,            /* needs: ally name (string) */
-    NOTE_BANISH_MONSTER,        /* needs: monster name (string) */
     NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_NUM_TYPES
 };

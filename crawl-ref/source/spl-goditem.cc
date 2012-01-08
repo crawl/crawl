@@ -318,6 +318,7 @@ static int _healing_spell(int healed, bool divine_ability,
         else
         {
             simple_monster_message(mons, " turns neutral.");
+            record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.

@@ -508,21 +508,33 @@ static void _hints_inspect_kill()
 
 static std::string _milestone_kill_verb(killer_type killer)
 {
-    return (killer == KILL_BANISHED ? "banished " : "killed ");
+    return (killer == KILL_BANISHED ? "banished" :
+            killer == KILL_PACIFIED ? "pacified" :
+            killer == KILL_ENSLAVED ? "enslaved" : "killed");
 }
 
-static void _check_kill_milestone(const monster* mons,
-                                  killer_type killer, int i)
+void record_monster_defeat(monster* mons, killer_type killer)
 {
+    if (crawl_state.game_is_arena())
+        return;
+    if (killer == KILL_RESET || killer == KILL_DISMISSED)
+        return;
+    if (mons->has_ench(ENCH_FAKE_ABJURATION))
+        return;
+    if (MONST_INTERESTING(mons))
+    {
+        take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
+                       mons->full_name(DESC_A).c_str(),
+                       _milestone_kill_verb(killer).c_str()));
+    }
     // XXX: See comment in monster_polymorph.
     bool is_unique = mons_is_unique(mons->type);
     if (mons->props.exists("original_was_unique"))
         is_unique = mons->props["original_was_unique"].get_bool();
-
     if (mons->type == MONS_PLAYER_GHOST)
     {
         monster_info mi(mons);
-        std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
+        std::string milestone = _milestone_kill_verb(killer) + " the ghost of ";
         milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
@@ -532,6 +544,7 @@ static void _check_kill_milestone(const monster* mons,
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
+                       + " "
                        + mons->name(DESC_THE, true)
                        + ".");
     }
@@ -811,6 +824,7 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
+        record_monster_defeat(mons, KILL_ENSLAVED);
         yred_make_enslaved_soul(mons, player_under_penance());
         return (true);
     }
@@ -1394,6 +1408,10 @@ static std::string _killer_type_name(killer_type killer)
         return ("unsummoned");
     case KILL_TIMEOUT:
         return ("timeout");
+    case KILL_PACIFIED:
+        return ("pacified");
+    case KILL_ENSLAVED:
+        return ("enslaved");
     }
     die("invalid killer type");
 }
@@ -1561,9 +1579,6 @@ int monster_die(monster* mons, killer_type killer,
     bool in_transit          = false;
     bool was_banished        = (killer == KILL_BANISHED);
 
-    if (!crawl_state.game_is_arena())
-        _check_kill_milestone(mons, killer, killer_index);
-
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -1585,15 +1600,8 @@ int monster_die(monster* mons, killer_type killer,
         you.montiers[mons_threat_level(mons, true)]++;
 #endif
 
-    // Take note!
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena()
-        && MONST_INTERESTING(mons))
-    {
-        take_note(Note(killer == KILL_BANISHED ? NOTE_BANISH_MONSTER
-                                               : NOTE_KILL_MONSTER,
-                       mons->type, mons->friendly(),
-                       mons->full_name(DESC_A).c_str()));
-    }
+    // Take notes and mark milestones.
+    record_monster_defeat(mons, killer);
 
     // From time to time Trog gives you a little bonus.
     if (killer == KILL_YOU && you.berserk())
@@ -2783,7 +2791,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // XXX: mons_is_unique should be converted to monster::is_unique, and that
     // function should be testing the value of props["original_was_unique"]
     // which would make things a lot simpler.
-    // See also _check_kill_milestone.
+    // See also record_monster_defeat.
     bool old_mon_unique           = mons_is_unique(mons->type);
     if (mons->props.exists("original_was_unique"))
         if (mons->props["original_was_unique"].get_bool())

@@ -114,7 +114,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_BUY_ITEM
         || note.type == NOTE_DONATE_MONEY
         || note.type == NOTE_SEEN_MONSTER
-        || note.type == NOTE_KILL_MONSTER
+        || note.type == NOTE_DEFEAT_MONSTER
         || note.type == NOTE_POLY_MONSTER
         || note.type == NOTE_USER_NOTE
         || note.type == NOTE_MESSAGE
@@ -127,7 +127,6 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
         || note.type == NOTE_ALLY_DEATH
-        || note.type == NOTE_BANISH_MONSTER
         || note.type == NOTE_FEAT_MIMIC)
     {
         return (true);
@@ -349,11 +348,11 @@ std::string Note::describe(bool when, bool where, bool what) const
         case NOTE_SEEN_MONSTER:
             result << "Noticed " << name;
             break;
-        case NOTE_KILL_MONSTER:
+        case NOTE_DEFEAT_MONSTER:
             if (second)
-                result << name << " (ally) was defeated";
+                result << name << " (ally) was " << desc;
             else
-                result << "Defeated " << name;
+                result << uppercase_first(desc) << " " << name;
             break;
         case NOTE_POLY_MONSTER:
             result << name << " changed into " << desc;
@@ -408,19 +407,13 @@ std::string Note::describe(bool when, bool where, bool what) const
         case NOTE_ALLY_DEATH:
             result << "Your ally " << name << " died";
             break;
-        case NOTE_BANISH_MONSTER:
-            if (second)
-                result << name << " (ally) was banished";
-            else
-                result << "Banished " << name;
-            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
         }
     }
 
-    if (type == NOTE_SEEN_MONSTER || type == NOTE_KILL_MONSTER)
+    if (type == NOTE_SEEN_MONSTER || type == NOTE_DEFEAT_MONSTER)
     {
         if (what && first == MONS_PANDEMONIUM_LORD)
             result << " the pandemonium lord";
