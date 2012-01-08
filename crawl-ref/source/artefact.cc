@@ -2018,6 +2018,67 @@ static void _make_faerie_armour(item_def &item)
     item.plus = 2 + random2(5);
 }
 
+static void _make_octoring(item_def &item)
+{
+    // Choose a random ring, but redo if already handed out
+    int which = random2(8);
+    int tries = 1000;
+
+    // To prevent getting locked out on 8th+ ring
+    while (you.octopus_king_rings[which] && tries > 0)
+    {
+        which = random2(8);
+        tries--;
+    }
+
+    // Default to regeneration
+    if (!tries)
+    {
+        item.sub_type = RING_REGENERATION;
+        return;
+    }
+
+    // Find the random portion of the ring otherwise
+    switch (which)
+    {
+    case 0:
+        item.sub_type  = RING_REGENERATION;
+        break;
+    case 1:
+        item.sub_type  = RING_PROTECTION_FROM_FIRE;
+        break;
+    case 2:
+        item.sub_type  = RING_PROTECTION_FROM_COLD;
+        break;
+    case 3:
+        item.sub_type  = RING_SUSTAIN_ABILITIES;
+        break;
+    case 4:
+        item.sub_type  = RING_SUSTENANCE;
+        break;
+    case 5:
+        item.sub_type  = RING_WIZARDRY;
+        break;
+    case 6:
+        item.sub_type  = RING_MAGICAL_POWER;
+        break;
+    case 7:
+        item.sub_type  = RING_LIFE_PROTECTION;
+        break;
+    }
+
+    // Save that we've found that particular type
+    you.octopus_king_rings[which] = UNIQ_EXISTS;
+
+    // If there are any types left, unset the 'already found' flag
+    for (int j = 0; j < 8; ++j)
+        if (!you.octopus_king_rings[j])
+        {
+            set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+            break;
+        }
+}
+
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT(unrand_index > UNRAND_START);
@@ -2062,6 +2123,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     }
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
+    else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
+        _make_octoring(item);
 
     return (true);
 }

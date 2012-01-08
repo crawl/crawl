@@ -234,6 +234,8 @@ public:
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitArray<NUM_MISCELLANY>      seen_misc;
 
+  FixedVector<bool, 8>               octopus_king_rings;
+
   uint8_t normal_vision;        // how far the species gets to see
   uint8_t current_vision;       // current sight radius (cells)
 
