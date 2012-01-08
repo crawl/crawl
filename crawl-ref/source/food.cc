@@ -743,6 +743,8 @@ static bool _has_edible_chunks()
 
 void end_nausea()
 {
+    you.duration[DUR_NAUSEA] = 0;
+
     const char *add = "";
     // spoilable food, need to interrupt before it can go bad
     if (_has_edible_chunks())

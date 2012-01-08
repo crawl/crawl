@@ -34,6 +34,7 @@
 #include "errors.h"
 #include "exercise.h"
 #include "fight.h"
+#include "food.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h"
@@ -5203,7 +5204,7 @@ void dec_haste_player(int delay)
 
 void dec_disease_player(int delay)
 {
-    if (you.disease > 0)
+    if (you.disease || you.duration[DUR_NAUSEA])
     {
         int rr = 50;
 
@@ -5218,12 +5219,20 @@ void dec_disease_player(int delay)
         if (you.species == SP_KOBOLD)
             rr += 100;
 
-        you.disease -= div_rand_round(rr * delay, 50);
-        if (you.disease < 0)
-            you.disease = 0;
+        rr = div_rand_round(rr * delay, 50);
 
-        if (you.disease == 0)
-            mpr("You feel your health improve.", MSGCH_RECOVERY);
+        if (you.disease)
+        {
+            you.disease -= rr;
+            if (you.disease < 0)
+                you.disease = 0;
+
+            if (you.disease == 0)
+                mpr("You feel your health improve.", MSGCH_RECOVERY);
+        }
+
+        if ((you.duration[DUR_NAUSEA] -= rr) <= 0)
+            end_nausea();
     }
 }
 

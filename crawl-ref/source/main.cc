@@ -2361,9 +2361,6 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
 
-    if (_decrement_a_duration(DUR_NAUSEA, delay))
-        end_nausea();
-
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
