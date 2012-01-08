@@ -51,7 +51,7 @@ Species
 * Felids gain lives every three levels.
 * Minotaurs instinctively retaliate in melee.
 * Demonspawn can get Foul Stench and Ignite Blood.
-* Kenku are now called Tengu.
+* Kenku are now called Tengu, and get more MP.
 * Mountain Dwarves are no more.
 * Minotaur and Hill Orc aptitudes are a lot better.
 
