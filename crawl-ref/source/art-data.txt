@@ -1260,6 +1260,22 @@ COLOUR:   ETC_HEAL
 BOOL:     nogen
 DESC:     This opalescent cloak gleams with all dragon colours.
 
+ENUM:     OCTOPUS_KING_RING
+NAME:     ring of the Octopus King
+APPEAR:   coral ring
+OBJ:      OBJ_JEWELLERY/RING_HUNGER
+COLOUR:   ETC_WATER
+TILE:     urand_octopus_king_ring
+AC:       1
+EV:       1
+STR:      1
+INT:      1
+DEX:      1
+DESC_END: "A mermaid who fancied to sing,\n
+           Roused lust in the Octopus King.\n
+           Her squiggly suitor,\n
+           Tried hard to woo her,\n
+           But she couldn't wear all his rings."
 
 # This entry must always be last.
 ENUM:   DUMMY2
