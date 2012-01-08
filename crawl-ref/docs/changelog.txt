@@ -6,6 +6,7 @@ Stone Soup 0.10 (????????)
 * New species: Octopodes, sentient land-capable octopuses.
 * Skill training system reworked. Dancing is really gone this time!
 * All polearms have reaching.
+* Constriction (nagas, octopodes, some snakes, tentacled monstrosities).
 
 Branches, portal vaults, levels
 -------------------------------
@@ -39,24 +40,33 @@ Gods
 * TSO: piety decays; gain piety for spotting non-evil monsters.
 * Elyvilon: piety decays; piety for pacifications doubled.
 * Elyvilon has piety loss for ally deaths instead of penance.
+* Elyvilon doesn't grant piety for non-evil weapons past *** (even if you
+  drop lower later!).  Evil weapons get identified on sight.
 
 Species
 -------
 * Octopodes.
 * Draconians cannot wear body armour anymore, can wear gloves and boots.
+* Centaurs can survive longer on vegetarian food.
+* Felids gain lives every three levels.
+* Minotaurs instinctively retaliate in melee.
+* Demonspawn can get Foul Stench and Ignite Blood.
+* Kenku are now called Tengu.
+* Mountain Dwarves are no more.
+* Minotaur and Hill Orc aptitudes are a lot better.
 
 Character
 ---------
 * Wild Magic mutation: reduced spell success, increased power.
-* Always gain nutrition from brown chunks.
-* Restrictions for eating unfitting food at high satiation with herbi/carnivore.
-* Eating chunks beyond satiated depends on level of carnivorousness.
+* Always gain partial nutrition from brown chunks.
+* Bad food causes nausea instead of sickness.
+* Non-full carnivores cannot eat up to "engorged" without gourmand.
 * A little score increase from runes for non-winners.
 * Poison resistance is only 90% effective.
 
 Spells
 ------
-* New: Beastly Appendage (Transmutation 1).
+* New: Beastly Appendage (Transmutation 1), Inner Flame (Hex 3).
 * Ozocubu's Refrigeration no longer works through glass walls.
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
@@ -75,12 +85,16 @@ Spells
 * Lee's Rapid Deconstruction: prevent abuse.
 * Summon Greater Demon only has tier 1 demons turn hostile over time.
 * Spider form is susceptible to poison.
+* Shatter doesn't work through walls, unless it manages to destroy them.
+* No spells work through glass or trees anymore.
+* Metabolic Englaciation slows down enemies.
 
 Backgrounds
 -----------
 * Arcane Marksmen are back, with a Hex-based spellbook.
 * Artificers get a weaker staff and skills, but an extra wand.
 * Transmuters lose Fulsome Destillation and Evaporate, gain Beastly Appendage.
+* Necromancers lose Dispel Undead, gain Control Undead.
 * Monks get ** piety upon taking on their first god.
 
 Skills
@@ -137,7 +151,7 @@ Items
   "quarterstaff".  Gladiators get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
-  ring of Vitality, autumn katana, shillelagh "Devastator".
+  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
 * The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
   demons (instead of random conjurations or hostile demons).
 * Scrolls of enchant and vorpalise weapon identified upon use.
@@ -149,6 +163,9 @@ Items
 * Early weapons tend to be better.
 * Rename potion of healing to potion of curing.
 * Rename wand of healing to wand of heal wounds.
+* Known properties of unique enemies' gear are pre-identified.
+* Medium armour is better.
+* Banded mail are no more, plate mail has been renamed to plate armour.
 
 Webtiles
 --------
