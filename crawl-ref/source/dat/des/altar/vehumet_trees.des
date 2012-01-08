@@ -1,15 +1,5 @@
 # Vehumet wants you to burn the damn trees down.
-NAME:    dk_vehumet_trees
-DEPTH:   2-10
-# Disabled until some problems can be sorted out.
-WEIGHT:  0
-TAGS:    temple_overflow_vehumet mini_float
-KFEAT:   _ = altar_vehumet
-: if crawl.one_chance_in(10) then
-SUBST:   x = G
-: elseif crawl.one_chance_in(4) then
-SUBST:   x = t
-: end
+
 {{
 function callback.dk_vehumet_trees(data, triggerable, triggerer, marker, ev)
   if data.finished then
@@ -40,7 +30,7 @@ function callback.dk_vehumet_trees(data, triggerable, triggerer, marker, ev)
         data.finished == false then
     local altar_pos = dgn.find_marker_positions_by_prop("altar", 1)[1]
     if you.see_cell(altar_pos.x, altar_pos.y) then
-        if you.god() == "Vehumet" then
+      if you.god() == "Vehumet" then
         crawl.mpr("Suddenly, the trees start to burn!")
         for slave in iter.slave_iterator("tree", 1) do
           dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
@@ -52,7 +42,20 @@ function callback.dk_vehumet_trees(data, triggerable, triggerer, marker, ev)
     end
   end
 end
+}}
 
+NAME:    dk_vehumet_trees
+DEPTH:   2-10
+# Disabled until some problems can be sorted out.
+WEIGHT:  0
+TAGS:    temple_overflow_vehumet mini_float
+KFEAT:   _ = altar_vehumet
+: if crawl.one_chance_in(10) then
+SUBST:   x = G
+: elseif crawl.one_chance_in(4) then
+SUBST:   x = t
+: end
+{{
 local master_marker = TriggerableFunction:new{
   func="callback.dk_vehumet_trees",
   repeated=true,
