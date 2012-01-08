@@ -237,6 +237,8 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
         { "MR",     ARTP_MAGIC,                 2 },
 
         // Quantitative attributes
+        { "HP",     ARTP_HP,                    0 },
+        { "MP",     ARTP_MAGICAL_POWER,         0 },
         { "AC",     ARTP_AC,                    0 },
         { "EV",     ARTP_EVASION,               0 },
         { "Str",    ARTP_STRENGTH,              0 },
@@ -246,8 +248,6 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
         { "Dam",    ARTP_DAMAGE,                0 },
 
         // Qualitative attributes
-        { "HP",     ARTP_HP,                    0 },
-        { "MP",     ARTP_MAGICAL_POWER,         0 },
         { "SInv",   ARTP_EYESIGHT,              2 },
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
         { "Curse",  ARTP_CURSED,                2 },
