@@ -1331,6 +1331,8 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.dur_has_constricted[k]);
     }
 
+    marshallUByte(th, you.octopus_king_rings);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2401,7 +2403,13 @@ static void tag_read_you(reader &th)
     }
 #if TAG_MAJOR_VERSION == 32
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_OCTO_RING)
+        you.octopus_king_rings = 0;
+    else
 #endif
+    you.octopus_king_rings = unmarshallUByte(th);
+
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",

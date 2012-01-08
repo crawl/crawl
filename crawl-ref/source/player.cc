@@ -5524,7 +5524,7 @@ void player::init()
     seen_armour.init(0);
     seen_misc.reset();
 
-    octopus_king_rings.init(false);
+    octopus_king_rings = 0;
 
     normal_vision    = LOS_RADIUS;
     current_vision   = LOS_RADIUS;
