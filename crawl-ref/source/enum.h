@@ -1807,6 +1807,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_BANISHED,                     // monsters what got banished
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
+    KILL_PACIFIED,                     // only used by milestones and notes
+    KILL_ENSLAVED,                     // only used by milestones and notes
 };
 
 enum flight_type
