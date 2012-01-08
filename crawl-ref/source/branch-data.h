@@ -15,7 +15,7 @@ const Branch branches[NUM_BRANCHES] = {
     //  mons rarity function, mons level function
     //  travel shortcut, upstairs exit branch, dangerous branch end, ambient noise level
 
-    { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1,
+    { BRANCH_MAIN_DUNGEON, NUM_BRANCHES, 0, 0,
           BRANCH_DUNGEON_DEPTH, 0, 0,
       NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",

@@ -3173,9 +3173,8 @@ static void _place_branch_entrances()
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        // Vestibule of Hell startdepth is set only to prevent mimics.
-        // Entries are placed with vaults.
-        if (i == BRANCH_VESTIBULE_OF_HELL)
+        // Vestibule and hells are placed by other means.
+        if (i >= BRANCH_VESTIBULE_OF_HELL && i <= BRANCH_LAST_HELL)
             continue;
 
         const Branch *b = &branches[i];
