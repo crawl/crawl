@@ -102,7 +102,7 @@ int absdungeon_depth(branch_type branch, int subdepth)
         return subdepth + 27 - (branch == BRANCH_VESTIBULE_OF_HELL);
 
     --subdepth;
-    while (branch != BRANCH_MAIN_DUNGEON && branch != NUM_BRANCHES)
+    while (branch != NUM_BRANCHES)
     {
         subdepth += startdepth[branch];
         branch = branches[branch].parent_branch;
