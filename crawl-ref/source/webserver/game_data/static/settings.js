@@ -56,6 +56,10 @@ function ($, client) {
             {
                 $(this).attr("checked", value);
             }
+            else if ($(this).attr("type") == "radio")
+            {
+                $(this).val([value]);
+            }
             else
             {
                 $(this).val(value);
