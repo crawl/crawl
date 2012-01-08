@@ -642,12 +642,16 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
         switch (chr)
         {
-        case "<":
         case "-":
+            if (menu.tag == "inventory")
+                return true; // Don't capture - for wield prompts
+
+        case "<":
         case ";":
             page_up();
             event.preventDefault();
             return false;
+
         case ">":
         case "+":
         case " ":
