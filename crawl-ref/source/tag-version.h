@@ -67,6 +67,7 @@ enum tag_minor_version
     TAG_MINOR_ACTION_COUNTS,       // Count actions made by type.
     TAG_MINOR_ABYSS_PHASE,         // Jerky abyss.
     TAG_MINOR_SKILL_MODE_STATE,    // Auto and manual modes have separate skill activation status.
+    TAG_MINOR_OCTO_RING,           // Ring of the Octopus King.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
