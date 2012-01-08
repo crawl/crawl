@@ -1,6 +1,8 @@
 # Vehumet wants you to burn the damn trees down.
 NAME:    dk_vehumet_trees
 DEPTH:   2-10
+# Disabled until some problems can be sorted out.
+WEIGHT:  0
 TAGS:    temple_overflow_vehumet mini_float
 KFEAT:   _ = altar_vehumet
 : if crawl.one_chance_in(10) then
