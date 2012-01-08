@@ -165,7 +165,7 @@ Items
 * Rename wand of healing to wand of heal wounds.
 * Known properties of unique enemies' gear are pre-identified.
 * Medium armour is better.
-* Banded mail are no more, plate mail has been renamed to plate armour.
+* Banded mail is no more, plate mail has been renamed to plate armour.
 
 Webtiles
 --------
