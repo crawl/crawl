@@ -1265,7 +1265,7 @@ NAME:     ring of the Octopus King
 APPEAR:   coral ring
 OBJ:      OBJ_JEWELLERY/RING_HUNGER
 COLOUR:   ETC_WATER
-TILE:     urand_octopus_king_ring
+#TILE:    urand_octopus_king_ring
 AC:       1
 EV:       1
 STR:      1
