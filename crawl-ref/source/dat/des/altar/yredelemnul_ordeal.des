@@ -7,9 +7,8 @@ function callback.dk_yredelemnul_ordeal_los(data, triggerable, triggerer, marker
   if data.triggered == true then
     return
   end
-  crawl.god_speaks("Yredelemnul", "You see the helpless living being trapped " ..
-                                  "before you, and sense a divine malevolence " ..
-                                  "urging you to kill it.")
+  crawl.god_speaks("Yredelemnul", "You sense Yredelemnul urging you " ..
+                                  "to kill the trapped human.")
   data.triggered = true
 end
 
@@ -34,8 +33,9 @@ TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul mini_float
 DEPTH:  D:2-10
 MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
         goblin skeleton / kobold skeleton / human skeleton / jackal skeleton
-KMONS:  h = generate_awake orc / generate_awake gnoll / generate_awake kobold / \
-            generate_awake goblin / generate_awake hobgoblin
+# Uses a neutral human to make the player feel extra evil. Neutral also means
+# good gods will get mad if you choose to obey Yred.
+KMONS:  h = generate_awake human hd:2 att:neutral
 MARKER: h = lua:portal_desc {slave_name="victim"}
 MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 MARKER: + = lua:restrict_door()
