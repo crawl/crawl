@@ -53,8 +53,8 @@ function pan_lord_setup(_G, name)
 
     -- Set level colours / tiles, and the rune.
     if name == "Mnoleg" then
-        _G.lfloorcol("yellow")
-        _G.lrockcol("red")
+        _G.lfloorcol("lightred")
+        _G.lrockcol("yellow")
         _G.lfloortile("floor_nerves")
         _G.lrocktile("wall_zot_yellow")
         _G.kitem("O = glowing rune of Zot")
