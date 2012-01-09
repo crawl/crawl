@@ -780,7 +780,41 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-
+###################################################
+# Based on zotdef III. Idea from kilobyte.
+NAME:   evilmike_crystal_ball_defense
+TAGS:   no_rotate no_monster_gen
+DEPTH:  Zot:1-4
+ORIENT: float
+MONS:   oklob sapling / oklob plant / burning bush / lightning spire / nothing
+MONS:   ice statue / silver statue / orange crystal statue / curse skull / w:5 nothing
+# Not quite the orb, but but close enough
+ITEM:   crystal ball of energy
+SUBST:  . = .:9 ~:1
+KFEAT:  ~ = dart trap / arrow trap / bolt trap / axe trap / blade trap / \
+            needle trap / spear trap / net trap
+SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
+MAP
+        xxxxxxxxx
+        xxx.2.xxx
+        xxx...xxx
+        xx..1..xx
+xxxxxxxxx1.....1xxxxxxxxx
+xxxxxxx.....).....xxxxxxx
+xxx.....1..}d]..1.....xxx
+xx...xx.....>.....xx...xx
+@x..xxxxx1.....1xxxxx..x@
+.x.1xxxxxx..1..xxxxxx1.x.
+.x..xxxxxxx...xxxxxxx..x.
+.x..xxxxxxx...xxxxxxx..x.
+.x..xxxxxxxx.xxxxxxxx..x.
+.x..xxxxxxxx2xxxxxxxx..x.
+.x..xxxxxxxx.xxxxxxxx..x.
+.xx1.................1xx.
+...x.................x...
+...x......1.1.1......x...
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##############################################################################
 ##############################################################################
