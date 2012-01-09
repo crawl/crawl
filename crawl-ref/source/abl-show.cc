@@ -1148,7 +1148,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // These three are Trog abilities... Invocations means nothing -- bwr
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
-        failure = 30 - you.piety;       // starts at 0%
+        failure = 0;
         break;
 
     case ABIL_TROG_REGEN_MR:            // piety >= 50
