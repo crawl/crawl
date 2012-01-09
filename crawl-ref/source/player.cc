@@ -5231,7 +5231,7 @@ void dec_disease_player(int delay)
                 mpr("You feel your health improve.", MSGCH_RECOVERY);
         }
 
-        if ((you.duration[DUR_NAUSEA] -= rr) <= 0)
+        if (you.duration[DUR_NAUSEA] && (you.duration[DUR_NAUSEA] -= rr) <= 0)
             end_nausea();
     }
 }
