@@ -1732,8 +1732,7 @@ TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
-# Needs a tile!
-# TILE:   GH = dngn_statue_golden
+TILE:   GH = dngn_golden_statue
 FTILE:  _124SDcG|*' = floor_limestone
 FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
