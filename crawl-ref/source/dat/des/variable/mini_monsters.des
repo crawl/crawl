@@ -272,6 +272,7 @@ NAME:   minmay_brainsmasher
 DEPTH:  D:8-26
 WEIGHT: 3
 MONS:   brain worm
+KFEAT:  n = iron_grate
 MAP
   .....
  .......
