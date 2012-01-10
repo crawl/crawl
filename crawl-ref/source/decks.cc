@@ -41,6 +41,7 @@
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "ouch.h"
 #include "player.h"
@@ -2044,6 +2045,14 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
                     new_base[i] - you.base_stats[i],
                     true, cause.c_str(), true);
     }
+
+    char buf[128];
+    snprintf(buf, sizeof(buf),
+             "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
+             you.base_stats[STAT_STR], you.strength(),
+             you.base_stats[STAT_INT], you.intel(),
+             you.base_stats[STAT_DEX], you.dex());
+    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
 }
 
 static void _experience_card(int power, deck_rarity_type rarity)
