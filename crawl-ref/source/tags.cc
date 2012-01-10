@@ -2373,6 +2373,24 @@ static void tag_read_you(reader &th)
     {
         caction_type caction = (caction_type)unmarshallShort(th);
         int subtype = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_ABILITY_COUNTS)
+        {
+            if (caction >= CACT_ABIL)
+                caction = (caction_type)((int)caction + 1);
+            if (caction == CACT_EVOKE)
+            {
+                if (!subtype)
+                {
+                    for (j = 0; j < 27; j++)
+                        (void) unmarshallInt(th);
+                    continue;
+                }
+                else
+                    subtype--;
+            }
+        }
+#endif
         for (j = 0; j < 27; j++)
             you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }

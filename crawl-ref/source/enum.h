@@ -481,6 +481,7 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_THROW,      // missile_type
     CACT_CAST,       // spell_type
     CACT_INVOKE,     // ability_type
+    CACT_ABIL,       // ability_type
     CACT_EVOKE,      // evoc_type
     CACT_USE,        // object_class_type
     NUM_CACTIONS,
@@ -1020,7 +1021,6 @@ enum description_level_type
 
 enum evoc_type
 {
-    EVOC_ABIL,
     EVOC_WAND,
     EVOC_ROD,
     EVOC_DECK,
