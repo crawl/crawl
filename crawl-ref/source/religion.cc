@@ -1396,7 +1396,7 @@ static bool _give_nemelex_gift(bool forced = false)
             more();
             canned_msg(MSG_SOMETHING_APPEARS);
 
-            you.attribute[ATTR_CARD_COUNTDOWN] = 10;
+            you.attribute[ATTR_CARD_COUNTDOWN] = 5;
             _inc_gift_timeout(5 + random2avg(9, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
@@ -3900,8 +3900,6 @@ void handle_god_time()
             // Nemelex is relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
-            if (you.attribute[ATTR_CARD_COUNTDOWN] > 0 && coinflip())
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
             break;
 
         case GOD_SIF_MUNA:
