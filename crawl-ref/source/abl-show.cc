@@ -942,7 +942,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     const ability_def &abil = _get_ability_def(result.which);
 
     int failure = 0;
-    bool perfect = false;  // is perfect
     bool invoc = false;
 
     if (check_confused)
@@ -973,7 +972,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1008,7 +1006,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_GRENADES:
     case ABIL_MAKE_SAGE:
     case ABIL_REMOVE_CURSE:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1061,7 +1058,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_BOTTLE_BLOOD:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1077,15 +1073,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
         // end demonic powers {dlb}
 
     case ABIL_BLINK:
-        // Allowing perfection makes the third level matter much more
-        perfect = true;
         failure = 48 - (12 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
         break;
 
         // begin transformation abilities {dlb}
     case ABIL_END_TRANSFORMATION:
-        perfect = true;
         failure = 0;
         break;
         // end transformation abilities {dlb}
@@ -1099,7 +1092,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_EVOKE_TURN_VISIBLE:
     case ABIL_EVOKE_STOP_LEVITATING:
     case ABIL_STOP_FLYING:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1141,7 +1133,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         invoc = true;
-        perfect = true;
         failure = 0;
         break;
 
@@ -1264,13 +1255,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_NEMELEX_DRAW_ONE:
         invoc = true;
-        perfect = true;         // Tactically important to allow perfection
         failure = 50 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
-        perfect = true;
         failure = 0;
         break;
 
@@ -1280,10 +1269,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
     }
 
-    // Perfect abilities are things which can go down to a 0%
-    // failure rate (e.g., Renounce Religion.)
-    if (failure <= 0 && !perfect)
-        failure = 1;
+    if (failure < 0)
+        failure = 0;
 
     if (failure > 100)
         failure = 100;
