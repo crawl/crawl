@@ -112,6 +112,10 @@ machine_tukima DNGN_MACHINE_TUKIMA
 the_teleporter_vaults DNGN_THE_TELEPORTER_VAULTS
 the_teleporter_ice_cave DNGN_THE_TELEPORTER_ICE_CAVE
 
+## golden statues for the holy Pan level
+golden_statue_1 DNGN_GOLDEN_STATUE
+golden_statue_2
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
@@ -121,8 +125,6 @@ dc-misc/error PLACEHOLDER3
 dc-misc/error PLACEHOLDER4
 dc-misc/error PLACEHOLDER5
 dc-misc/error PLACEHOLDER6
-dc-misc/error PLACEHOLDER7
-dc-misc/error PLACEHOLDER8
 
 %sdir dc-dngn/traps
 ## traps
