@@ -243,13 +243,6 @@ static void _update_item_at(const coord_def &gp)
             more_items = true;
     }
     env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
-
-#ifdef USE_TILE
-    if (feat_is_stair(env.grid(gp)))
-        tile_place_item_marker(gp, eitem);
-    else
-        tile_place_item(gp, eitem);
-#endif
 }
 
 static void _update_cloud(int cloudno)
@@ -282,10 +275,6 @@ static void _update_cloud(int cloudno)
 
     cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp);
     env.map_knowledge(gp).set_cloud(ci);
-
-#ifdef USE_TILE
-    tile_place_cloud(gp, *env.map_knowledge(gp).cloudinfo());
-#endif
 }
 
 static void _check_monster_pos(const monster* mons)
@@ -360,9 +349,6 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 static void _mark_invisible_monster(const coord_def &where)
 {
     env.map_knowledge(where).set_invisible_monster();
-#ifdef USE_TILE
-    tile_place_invisible_monster(where);
-#endif
 }
 
 /**
@@ -447,10 +433,6 @@ static void _update_monster(monster* mons)
     mons->ensure_has_client_id();
     monster_info mi(mons);
     env.map_knowledge(gp).set_monster(mi);
-
-#ifdef USE_TILE
-    tile_place_monster(mons->pos(), *env.map_knowledge(gp).monsterinfo());
-#endif
 }
 
 void show_update_at(const coord_def &gp, bool terrain_only)
@@ -465,26 +447,27 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
 
-    if (terrain_only)
-        return;
-
     // If there's items on the boundary (shop inventory),
     // we don't show them.
-    if (!in_bounds(gp))
-        return;
-
-    monster* mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster(mons);
-
-    const int cloud = env.cgrid(gp);
-    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
-        && env.cloud[cloud].pos == gp)
+    if (!terrain_only && in_bounds(gp))
     {
-        _update_cloud(cloud);
+        monster* mons = monster_at(gp);
+        if (mons && mons->alive())
+            _update_monster(mons);
+
+        const int cloud = env.cgrid(gp);
+        if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
+            && env.cloud[cloud].pos == gp)
+        {
+            _update_cloud(cloud);
+        }
+
+        _update_item_at(gp);
     }
 
-    _update_item_at(gp);
+#ifdef USE_TILE
+    tile_draw_map_cell(gp, true);
+#endif
 }
 
 void show_init(bool terrain_only)

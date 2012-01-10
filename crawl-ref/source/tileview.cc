@@ -647,9 +647,10 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     return bg;
 }
 
-void tile_draw_map_cell(const coord_def& gc)
+void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 {
-    env.tile_bk_bg(gc) = _get_floor_bg(gc);
+    if (!foreground_only)
+        env.tile_bk_bg(gc) = _get_floor_bg(gc);
 
     const map_cell& cell = env.map_knowledge(gc);
 
