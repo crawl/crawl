@@ -1219,6 +1219,8 @@ static std::string _describe_action(caction_type type)
         return " Cast";
     case CACT_INVOKE:
         return "Invok";
+    case CACT_ABIL:
+        return " Abil";
     case CACT_EVOKE:
         return "Evoke";
     case CACT_USE:
@@ -1241,12 +1243,11 @@ static std::string _describe_action_subtype(caction_type type, int subtype)
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
+    case CACT_ABIL:
         return ability_name((ability_type)subtype);
     case CACT_EVOKE:
         switch ((evoc_type)subtype)
         {
-        case EVOC_ABIL:
-            return "Ability";
         case EVOC_WAND:
             return "Wand";
         case EVOC_ROD:
