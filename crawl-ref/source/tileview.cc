@@ -647,38 +647,6 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     return bg;
 }
 
-void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
-{
-    if (!foreground_only)
-        env.tile_bk_bg(gc) = _get_floor_bg(gc);
-
-    const map_cell& cell = env.map_knowledge(gc);
-
-    switch (get_cell_show_class(cell))
-    {
-    default:
-    case SH_NOTHING:
-    case SH_FEATURE:
-        env.tile_bk_fg(gc) = 0;
-        break;
-    case SH_ITEM:
-        if (feat_is_stair(cell.feat()))
-            tile_place_item_marker(gc, *cell.item());
-        else
-            tile_place_item(gc, *cell.item());
-        break;
-    case SH_CLOUD:
-        tile_place_cloud(gc, *cell.cloudinfo());
-        break;
-    case SH_INVIS_EXPOSED:
-        tile_place_invisible_monster(gc);
-        break;
-    case SH_MONSTER:
-        tile_place_monster(gc, *cell.monsterinfo());
-        break;
-    }
-}
-
 void tile_draw_floor()
 {
     for (int cy = 0; cy < env.tile_fg.height(); cy++)
@@ -695,11 +663,11 @@ void tile_draw_floor()
         }
 }
 
-// Called from _update_item_at in show.cc
-void tile_place_item(const coord_def &gc, const item_def &item)
+static void _tile_place_item(const coord_def &gc, const item_def &item,
+                             bool more_items)
 {
     tileidx_t t = tileidx_item(item);
-    if (item.link != NON_ITEM)
+    if (more_items)
         t |= TILE_FLAG_S_UNDER;
 
     if (you.see_cell(gc))
@@ -722,8 +690,7 @@ void tile_place_item(const coord_def &gc, const item_def &item)
     }
 }
 
-// Called from _update_item_at in show.cc
-void tile_place_item_marker(const coord_def &gc, const item_def &item)
+static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
     if (you.see_cell(gc))
     {
@@ -735,7 +702,7 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
     }
     else
     {
-        // env.tile_bk_fg(gc) |= TILE_FLAG_S_UNDER;
+        env.tile_bk_fg(gc) = ((tileidx_t) env.tile_bk_fg(gc)) | TILE_FLAG_S_UNDER;
 
         if (item_needs_autopickup(item))
             env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
@@ -747,7 +714,7 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
  *
  * @param gc    The disturbance's map position.
 **/
-void tile_place_invisible_monster(const coord_def &gc)
+static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
 
@@ -763,8 +730,7 @@ void tile_place_invisible_monster(const coord_def &gc)
     env.tile_fg(ep) = t;
 }
 
-// Called from _update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monster_info& mon)
+static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
     const coord_def ep = grid2show(gc);
 
@@ -830,7 +796,7 @@ void tile_reset_feat(const coord_def &gc)
     env.tile_bk_bg(gc) = tileidx_feature(gc);
 }
 
-void tile_place_cloud(const coord_def &gc, const cloud_info &cl)
+static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
 {
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
@@ -888,6 +854,37 @@ void tile_draw_rays(bool reset_count)
 
     if (reset_count)
         num_tile_rays = 0;
+}
+
+void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
+{
+    if (!foreground_only)
+        env.tile_bk_bg(gc) = _get_floor_bg(gc);
+
+    const map_cell& cell = env.map_knowledge(gc);
+
+    switch (get_cell_show_class(cell))
+    {
+    default:
+    case SH_NOTHING:
+    case SH_FEATURE:
+        env.tile_bk_fg(gc) = 0;
+        if (cell.item())
+            _tile_place_item_marker(gc, *cell.item());
+        break;
+    case SH_ITEM:
+        _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
+        break;
+    case SH_CLOUD:
+        _tile_place_cloud(gc, *cell.cloudinfo());
+        break;
+    case SH_INVIS_EXPOSED:
+        _tile_place_invisible_monster(gc);
+        break;
+    case SH_MONSTER:
+        _tile_place_monster(gc, *cell.monsterinfo());
+        break;
+    }
 }
 
 void tile_wizmap_terrain(const coord_def &gc)
