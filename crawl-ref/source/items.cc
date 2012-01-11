@@ -3934,6 +3934,8 @@ item_info get_item_info(const item_def& item)
 
     if (item_type_known(item))
     {
+        ii.flags |= ISFLAG_KNOW_TYPE;
+
         if (item.props.exists(ARTEFACT_NAME_KEY))
             ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
     }
