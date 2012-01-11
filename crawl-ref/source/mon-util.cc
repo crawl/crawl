@@ -1281,6 +1281,13 @@ bool name_zombie(monster* mon, int mc, const std::string &mon_name)
         mon->mname = "Lernaean";
         mon->flags |= MF_NAME_ADJECTIVE;
     }
+    // Also for the Enchantress: treat Enchantress as an adjective to
+    // avoid mentions of "the Enchantress the spriggan zombie".
+    else if (mc == MONS_THE_ENCHANTRESS)
+    {
+        mon->mname = "Enchantress";
+        mon->flags |= MF_NAME_ADJECTIVE;
+    }
     // Also for the Serpent of Hell: treat Serpent of Hell as an
     // adjective to avoid mentions of "the Serpent of Hell the dragon
     // zombie".
