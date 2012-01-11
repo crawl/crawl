@@ -1194,7 +1194,8 @@ void monster_info::to_string(int count, std::string& desc,
         out << full_name();
     else
     {
-        // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
+        // TODO: this should be done in a much cleaner way, with code to
+        // merge multiple monster_infos into a single common structure
         out << count << " " << pluralised_name(fullname);
     }
 
