@@ -192,7 +192,7 @@ struct monster_info : public monster_info_base
     dungeon_feature_type get_mimic_feature() const;
     const item_def* get_mimic_item() const;
     std::string mimic_name() const;
-    std::string pluralized_name(bool fullname = true) const;
+    std::string pluralised_name(bool fullname = true) const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
     std::string proper_name(description_level_type desc = DESC_PLAIN) const;
     std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;

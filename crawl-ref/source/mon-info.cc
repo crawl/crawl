@@ -1153,7 +1153,7 @@ static std::string _verbose_info(const monster_info& mi)
     return inf;
 }
 
-std::string monster_info::pluralized_name(bool fullname) const
+std::string monster_info::pluralised_name(bool fullname) const
 {
     // Don't pluralise uniques, ever.  Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
@@ -1195,7 +1195,7 @@ void monster_info::to_string(int count, std::string& desc,
     else
     {
         // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
-        out << count << " " << pluralized_name(fullname);
+        out << count << " " << pluralised_name(fullname);
     }
 
 #ifdef DEBUG_DIAGNOSTICS
