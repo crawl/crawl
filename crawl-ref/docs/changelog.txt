@@ -67,7 +67,6 @@ Character
 Spells
 ------
 * New: Beastly Appendage (Transmutation 1), Inner Flame (Hex 3).
-* Ozocubu's Refrigeration no longer works through glass walls.
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
 * Abjuration becomes single-target, its old version (Mass Abj.) is
