@@ -2143,6 +2143,7 @@ static std::string _status_mut_abilities(int sw)
 
       case SP_GHOUL:
           mutations.push_back("rotting body");
+          break;
 
       case SP_TENGU:
           if (you.experience_level > 4)
@@ -2175,6 +2176,7 @@ static std::string _status_mut_abilities(int sw)
       case SP_VAMPIRE:
           if (you.experience_level >= 6)
               mutations.push_back("bottle blood");
+          break;
 
       case SP_DEEP_DWARF:
           mutations.push_back("damage resistance");
