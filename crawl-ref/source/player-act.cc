@@ -130,7 +130,8 @@ bool player::extra_balanced() const
     return (grid == DNGN_SHALLOW_WATER
              && (species == SP_NAGA                      // tails, not feet
                  || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                    && !form_changed_physiology());
+                    && (form == TRAN_LICH || form == TRAN_STATUE
+                        || !form_changed_physiology()));
 }
 
 int player::get_experience_level() const
