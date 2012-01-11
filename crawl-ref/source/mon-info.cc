@@ -270,7 +270,6 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
     }
 }
 
-
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb.reset();
