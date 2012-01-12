@@ -979,17 +979,11 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (cancel_at_self)
-            {
-                mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
-                return (false);
-            }
-
             if (!may_target_self && (mode == TARG_ENEMY
                                      || mode == TARG_HOSTILE
                                      || mode == TARG_HOSTILE_SUBMERGED))
             {
-                if (Options.allow_self_target == CONFIRM_CANCEL)
+                if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
                     return (false);
@@ -998,6 +992,12 @@ bool direction_chooser::move_is_ok() const
                 {
                     return yesno("Really target yourself?", false, 'n');
                 }
+            }
+
+            if (cancel_at_self)
+            {
+                mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
+                return (false);
             }
         }
     }

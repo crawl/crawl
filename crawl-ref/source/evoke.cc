@@ -83,6 +83,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     args.mode = TARG_HOSTILE;
     args.range = 2;
     args.top_prompt = "Attack whom?";
+    args.cancel_at_self = true;
     targetter_reach hitfunc(&you, REACH_TWO);
     args.hitfunc = &hitfunc;
 
