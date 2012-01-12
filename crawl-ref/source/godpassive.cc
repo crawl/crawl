@@ -1,4 +1,5 @@
 #include "AppHdr.h"
+#include <math.h>
 
 #include "godpassive.h"
 
@@ -18,7 +19,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "player.h"
