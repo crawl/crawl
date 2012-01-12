@@ -176,6 +176,7 @@ alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
 homunculus HOMUNCULUS
+beastly_appendage BEASTLY_APPENDAGE
 
 %sdir gui/spells
 memorise MEMORISE
