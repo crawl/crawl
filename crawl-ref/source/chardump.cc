@@ -950,7 +950,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Success   Level  Hunger" "\n";
+        text += " Your Spells              Type           Power        Failure   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -986,7 +986,9 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 54);
 
-                spell_line += failure_rate_to_string(spell_fail(spell));
+                char* failure = failure_rate_to_string(spell_fail(spell));
+                spell_line += failure;
+                free(failure);
 
                 spell_line = chop_string(spell_line, 66);
 

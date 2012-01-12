@@ -2818,10 +2818,10 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability - do what?                 "
-                      "Cost                       Success"));
+                      "Cost                       Failure"));
     abil_menu.set_title(
         new MenuEntry("  Ability - describe what?           "
-                      "Cost                       Success"), false);
+                      "Cost                       Failure"), false);
 
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);
@@ -2918,11 +2918,14 @@ static std::string _describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
+    char* failure = failure_rate_to_string(tal.fail);
+
     std::ostringstream desc;
     desc << std::left
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 27)
-         << chop_string(failure_rate_to_string(tal.fail), 10);
+         << chop_string(failure, 10);
+    free(failure);
     return desc.str();
 }
 

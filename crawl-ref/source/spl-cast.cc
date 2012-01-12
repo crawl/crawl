@@ -109,9 +109,11 @@ static std::string _spell_base_description(spell_type spell, bool viewing)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
-    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
+    char* failure = failure_rate_to_string(spell_fail(spell));
+    desc << chop_string(failure, 12)
          << spell_difficulty(spell);
     desc << "</" << colour_to_str(highlight) <<">";
+    free(failure);
 
     return desc.str();
 }
@@ -164,7 +166,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " Your Spells                       Type          "
-                "                Success   Level",
+                "                Failure   Level",
                 " Your Spells                       Power         "
                 "Range           Hunger    Level",
                 MEL_ITEM);
@@ -175,7 +177,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " Your Spells                       Type          "
-            "                Success   Level",
+            "                Failure   Level",
             " Your Spells                       Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
@@ -1685,18 +1687,65 @@ static spret_type _do_cast(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-const char* failure_rate_to_string(int fail)
+
+// _tetrahedral_number: returns the nth tetrahedral number.
+// Called only by get_true_fail_rate.
+static int _tetrahedral_number(int n)
 {
-    return (fail == 100) ? "Useless"   : // 0% success chance
-           (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 59)   ? "Very Poor" : // 5-30%
-           (fail > 50)   ? "Poor"      : // 30-50%
-           (fail > 40)   ? "Fair"      : // 50-70%
-           (fail > 35)   ? "Good"      : // 70-80%
-           (fail > 28)   ? "Very Good" : // 80-90%
-           (fail > 22)   ? "Great"     : // 90-95%
-           (fail >  0)   ? "Excellent"   // 95-100%
-                         : "Perfect";    // 100%
+    return n * (n+1) * (n+2) / 6;
+}
+
+// get_true_fail_rate: Takes the raw failure to-beat number
+// and converts it to actual failure rate percentage for display.
+// Should probably use more constants, though I doubt the spell
+// success algorithms will really change *that* much.
+// Called only by failure_rate_to_string.
+double get_true_fail_rate(int raw_fail)
+{
+    //Three d100 rolls.  Need average to be less than raw_fail.
+    //Fun with tetrahedral numbers!
+
+    int target = raw_fail * 3;
+
+    if(target <= 100)
+    {
+        return (double) _tetrahedral_number(target)/1030301;
+    }
+    if(target < 200)
+    {
+        //PIE: the negative term takes the maximum of 100 into
+        //consideration.  Note that only one term can exceed 100 in this case,
+        //which is why this works.
+        return (double) (_tetrahedral_number(target) - 3*_tetrahedral_number(target-100))/1030301;
+    }
+    //Target is between 201 and 300 inclusive.  Note that finding the number of ways
+    //you can go below, say, 207 is equivalent to finding the number of ways you
+    //can go >= 208... which is equal to the number of ways to go below
+    //300 - 207 = 93.
+    return (double) (1030301 - _tetrahedral_number(300 - target))/1030301;
+
+}
+
+//Converts the raw failure to-beat number into a more intuitive string.
+//Note that this char[] is allocated on the heap, so anything calling
+//this function will also need to call free()!
+char* failure_rate_to_string(int fail)
+{
+    char *buffer = (char *)malloc(9);
+
+    if (fail == 0)
+        sprintf(buffer, "0%%");
+    else if (fail == 100)
+        sprintf(buffer, "100%%");
+    else
+    {
+        int failure_chance = (int) (100 * get_true_fail_rate(fail));
+
+        // If failure is between 0% and 1%, round up to 1%.
+        sprintf(buffer, "%d%%", failure_chance > 0 ? failure_chance : 1);
+    }
+
+    return buffer;
 }
 
 const char* spell_hunger_string(spell_type spell, bool rod)
