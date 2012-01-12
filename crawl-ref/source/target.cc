@@ -137,8 +137,6 @@ targetter_reach::targetter_reach(const actor* act, reach_type ran) :
 
 bool targetter_reach::valid_aim(coord_def a)
 {
-    if (origin == a)
-        return notify_fail("That would be overly suicidal.");
     if (!cell_see_cell(origin, a, LOS_DEFAULT))
         return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
