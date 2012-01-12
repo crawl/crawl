@@ -4357,9 +4357,11 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
 
     // Transmutation
+    case SPELL_BEASTLY_APPENDAGE:        return TILEG_BEASTLY_APPENDAGE;
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
+    case SPELL_HOMUNCULUS:               return TILEG_HOMUNCULUS;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
     case SPELL_POLYMORPH_OTHER:          return TILEG_POLYMORPH_OTHER;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
