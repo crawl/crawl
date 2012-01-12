@@ -2923,7 +2923,7 @@ static void _append_spell_stats(const spell_type spell,
         const std::string schools = spell_schools_string(spell);
         char* failure = failure_rate_to_string(spell_fail(spell));
         snprintf(info, INFO_SIZE,
-                 "\nLevel: %d        School%s:  %s    (%s)",
+                 "\nLevel: %d        School%s: %s        Fail: %s",
                  spell_difficulty(spell),
                  schools.find("/") != std::string::npos ? "s" : "",
                  schools.c_str(),
