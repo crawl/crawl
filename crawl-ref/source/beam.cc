@@ -1350,7 +1350,7 @@ void bolt::do_fire()
     if (item && !is_tracer && flavour == BEAM_MISSILE)
     {
         const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
+        tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
     }
 #endif
 
