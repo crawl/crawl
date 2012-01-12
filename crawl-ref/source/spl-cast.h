@@ -73,7 +73,7 @@ void do_cast_spell_cmd(bool force);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                        bool check_range = true);
 
-const char* failure_rate_to_string(int fail);
+char* failure_rate_to_string(int fail);
 
 std::string spell_power_string(spell_type spell, bool rod = false);
 std::string spell_range_string(spell_type spell, bool rod = false);

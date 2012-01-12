@@ -946,7 +946,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     {
         MenuEntry* me =
             new MenuEntry("     Spells                        Type          "
-                          "                Success  Level",
+                          "                Failure  Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -954,12 +954,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
 #else
     spell_menu.set_title(
         new MenuEntry("     Spells (Memorisation)         Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE));
 
     spell_menu.set_title(
         new MenuEntry("     Spells (Description)          Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE), false);
 #endif
 
@@ -1040,8 +1040,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
-        desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
+        char* failure = failure_rate_to_string(spell_fail(spell));
+        desc << chop_string(failure, 12)
              << spell_difficulty(spell);
+        free(failure);
 
         desc << "</" << colour_to_str(colour) << ">";
 
