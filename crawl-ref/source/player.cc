@@ -6857,7 +6857,7 @@ bool player::has_usable_offhand() const
 bool player::has_usable_tentacle() const
 {
     if (species != SP_OCTOPODE)
-        return(false);
+        return (false);
 
     int free_tentacles = std::min(8, MAX_CONSTRICT);
     for (int i = 0; i < MAX_CONSTRICT; i++)
@@ -6875,7 +6875,6 @@ bool player::has_usable_tentacle() const
     }
 
     return (free_tentacles > 0);
-
 }
 
 int player::has_pseudopods(bool allow_tran) const
@@ -7396,6 +7395,7 @@ bool player::attempt_escape()
         emsg += env.mons[you.constricted_by].name(DESC_THE,true);
         emsg += "'s grasp.";
         mpr(emsg);
+
         // update monster's has constricted info
         for (int i = 0; i < MAX_CONSTRICT; i++)
             if (themonst->constricting[i] == MHITYOU)
@@ -7461,6 +7461,7 @@ std::string _constriction_description()
         constrictor_name = env.mons[you.constricted_by].
                                name(DESC_A);
     }
+
     // names of what this monster is constricting, if any
     for (int idx = 0; idx < MAX_CONSTRICT; idx++)
     {
@@ -7475,9 +7476,7 @@ std::string _constriction_description()
     std::vector<std::string> constricting;
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting_name[i] != "")
-        {
             constricting.push_back(constricting_name[i]);
-        }
 
     if (!constricting.empty())
     {
