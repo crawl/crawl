@@ -3966,7 +3966,7 @@ static void _display_attack_delay()
 }
 
 // forward declaration
-std::string _constriction_description();
+static std::string _constriction_description();
 
 void display_char_status()
 {
@@ -7444,7 +7444,7 @@ bool need_expiration_warning(coord_def p)
            || need_expiration_warning(DUR_TRANSFORMATION, p);
 }
 
-std::string _constriction_description()
+static std::string _constriction_description()
 {
     std::string cinfo = "";
     std::string constrictor_name;
