@@ -524,7 +524,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (quantity <= 0)
         return (false);
 
-    tileidx_t idx = tileidx_item(*item);
+    tileidx_t idx = tileidx_item(get_item_info(*item));
     if (!idx)
         return (false);
 

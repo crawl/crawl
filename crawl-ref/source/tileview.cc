@@ -663,7 +663,7 @@ void tile_draw_floor()
         }
 }
 
-static void _tile_place_item(const coord_def &gc, const item_def &item,
+static void _tile_place_item(const coord_def &gc, const item_info &item,
                              bool more_items)
 {
     tileidx_t t = tileidx_item(item);

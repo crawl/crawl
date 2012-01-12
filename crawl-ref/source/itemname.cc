@@ -2158,6 +2158,8 @@ void check_item_knowledge(bool unknown_items)
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
                     ptmp->quantity  = 1;
+                    if (!unknown_items)
+                        ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);

@@ -3780,7 +3780,7 @@ item_info get_item_info(const item_def& item)
         ii.pos = coord_def(-1, -1);
     }
     else
-        ii.pos = grid2player(item.pos);
+        ii.pos = item.pos;
 
     // keep god number
     if (item.orig_monnum < 0)
