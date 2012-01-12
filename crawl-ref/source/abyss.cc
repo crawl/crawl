@@ -420,6 +420,7 @@ void push_features_to_abyss()
                 break;
             case DNGN_CLEAR_PERMAROCK_WALL:
                 feature = DNGN_CLEAR_ROCK_WALL;
+                break;
             case DNGN_SLIMY_WALL:
                 feature = DNGN_GREEN_CRYSTAL_WALL;
             default:
