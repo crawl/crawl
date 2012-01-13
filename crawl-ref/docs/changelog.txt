@@ -127,7 +127,7 @@ Monsters
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
 * Unique Pandemonium lords can hunt you on the Orb run if you've stolen
-  their runes. Violate the 5th Commandment not 7th!
+  their runes.  Violate the 5th Commandment not 7th!
 * More emergency spell usage.
 * Gnoll shamans and sergeants are actual monsters.
 * Breath timeout for dragons, draconians, drakes.
