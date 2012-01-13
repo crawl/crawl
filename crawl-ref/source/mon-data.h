@@ -2275,6 +2275,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_CRAWLING_CORPSE, 'x', BROWN, "crawling corpse",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -2287,6 +2288,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_MACABRE_MASS, 'x', BROWN, "macabre mass",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
