@@ -42,6 +42,8 @@ Gods
 * Elyvilon has piety loss for ally deaths instead of penance.
 * Elyvilon doesn't grant piety for non-evil weapons past *** (even if you
   drop lower later!).  Evil weapons get identified on sight.
+* Deaths of plants and non-living beings no longer count as friend deaths for
+  god conduct purposes.
 
 Species
 -------
@@ -185,7 +187,6 @@ Zot Defence
 * Disable useless gods.
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
-* Plants and non-livings dying don't count as friend dying (also in Crawl).
 * Start with some consumables (as in Sprint) to make the early game a little
   easier.
 
