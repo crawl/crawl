@@ -133,6 +133,8 @@ Monsters
 * Breath timeout for dragons, draconians, drakes.
 * Most monster summoning spells toned down slightly.
 * Monsters flee at lower health thresholds, and less predictably.
+* Killer bee larvae turn into killer bees if they eat honeycombs or royal
+  jellies.
 
 Items
 -----
