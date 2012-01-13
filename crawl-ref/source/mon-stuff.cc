@@ -1095,7 +1095,8 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
-static void _setup_inner_flame_explosion(bolt & beam, const monster& origin)
+static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
+                                         actor* agent)
 {
     _setup_base_explosion(beam, origin);
     const int size = origin.body_size(PSIZE_BODY);
@@ -1106,7 +1107,7 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin)
     beam.name      = "fiery explosion";
     beam.colour    = RED;
     beam.ex_size   = (size > SIZE_BIG) ? 2 : 1;
-    beam.thrower   = KILL_YOU;
+    beam.set_agent(agent);
 }
 
 static bool _explode_monster(monster* mons, killer_type killer,
@@ -1122,6 +1123,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     bolt beam;
     const int type = mons->type;
     const char* sanct_msg = NULL;
+    actor* agent = mons;
 
     if (type == MONS_GIANT_SPORE)
     {
@@ -1137,7 +1139,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        _setup_inner_flame_explosion(beam, *mons);
+        mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
+        ASSERT(i_f.ench == ENCH_INNER_FLAME);
+        agent = actor_by_mid(i_f.source);
+        _setup_inner_flame_explosion(beam, *mons, agent);
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion "
                           "is contained.";
@@ -1175,8 +1180,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD && !one_chance_in(5))
-                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), mons);
+            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+                && !one_chance_in(5))
+            {
+                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
+            }
     }
 
     // Detach monster from the grid first, so it doesn't get hit by
