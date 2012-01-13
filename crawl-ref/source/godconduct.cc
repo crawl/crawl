@@ -130,7 +130,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!known && thing_done != DID_ATTACK_HOLY && thing_done != DID_DESECRATE_HOLY_REMAINS)
+                if (!known && thing_done != DID_ATTACK_HOLY
+                    && thing_done != DID_DESECRATE_HOLY_REMAINS)
                 {
                     simple_god_message(" forgives your inadvertent unholy act, "
                                        "just this once.");
@@ -272,7 +273,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_SOULED_FRIEND_DIED:
             if (victim && you.religion != GOD_FEDHAS
                 && (victim->holiness() == MH_NONLIVING
-                 || victim->holiness() == MH_PLANT))
+                    || victim->holiness() == MH_PLANT))
             {
                 // For everyone but Fedhas, plants are items not creatures,
                 // and animated items are, well, items as well.
