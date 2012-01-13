@@ -637,6 +637,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0);
                 status_shift += 8;
             }
+            if (fg & enums.TILE_FLAG_CONSTRICTED)
+            {
+                this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
+                status_shift += 13;
+            }
 
             if (fg & enums.TILE_FLAG_ANIM_WEP)
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
