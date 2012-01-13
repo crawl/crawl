@@ -186,7 +186,8 @@ Zot Defence
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
 * Plants and non-livings dying don't count as friend dying (also in Crawl).
-* Start with some consumables (as in Sprint) to make the early game a little easier.
+* Start with some consumables (as in Sprint) to make the early game a little
+  easier.
 
 Technical
 ---------
