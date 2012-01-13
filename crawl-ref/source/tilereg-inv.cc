@@ -787,7 +787,7 @@ void InventoryRegion::update()
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, mitm[i]);
+            _fill_item_info(desc, get_item_info(mitm[i]));
             desc.idx = i;
             ground_shown[i] = true;
 
