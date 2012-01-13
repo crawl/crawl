@@ -4067,15 +4067,17 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
         bool was_asleep = mon->asleep();
-        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+        special_missile_type m_brand = SPMSL_FORBID_BRAND;
+        if (item && item->base_type == OBJ_MISSILES)
+            m_brand = get_ammo_brand(*item);
+
+        // Don't immediately turn insane monsters hostile.
+        if (m_brand != SPMSL_RAGE)
+            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
         // Don't allow needles of sleeping to awaken monsters.
-        if (item && item->base_type == OBJ_MISSILES
-            && get_ammo_brand(*item) == SPMSL_SLEEP
-            && was_asleep && !mon->asleep())
-        {
+        if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
             mon->put_to_sleep(agent(), 0);
-        }
     }
 
     // Sticky flame.
