@@ -3357,6 +3357,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     if (th.getMinorVersion() >= TAG_MINOR_MINFO_PROP)
 #endif
         mi.props.read(th);
+#if TAG_MAJOR_VERSION == 32
+    if (mi.props.exists("mislead_as") && mi.props["mislead_as"].get_type() != SV_MONST)
+        mi.props.erase("mislead_as");
+#endif
 }
 
 static void tag_construct_level_monsters(writer &th)
@@ -3776,6 +3780,10 @@ void unmarshallMonster(reader &th, monster& m)
         else // Update monster tile.
             m.props["monster_tile"] = short(index);
     }
+#if TAG_MAJOR_VERSION == 32
+    if (m.props.exists("mislead_as") && m.props["mislead_as"].get_type() != SV_MONST)
+        m.props.erase("mislead_as");
+#endif
 
     m.check_speed();
 }
