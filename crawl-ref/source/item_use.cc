@@ -813,7 +813,7 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            const char* how_many = you.has_tentacles(false) == 3 ? "nine"
+            const char* how_many = you.has_tentacles(false) == 3 ? "five"
                                                                  : "three";
             mprf("You'd need %s %s to do that!", how_many,
                  you.hand_name(true).c_str());
