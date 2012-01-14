@@ -121,9 +121,7 @@ end
 }}
 
 NAME:   dk_crumbling
-{{
-  init_crumbling(_G)
-}}
+: init_crumbling(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xMx0x1x2x3x4x5x6x7x8x9xx
@@ -133,9 +131,7 @@ xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   dk_crumbling_2
-{{
-  init_crumbling(_G)
-}}
+: init_crumbling(_G)
 MAP
        xx+xx
        xx.xx
@@ -163,9 +159,7 @@ xxxxxxxxx.xxxxxxxxxxxx
 ENDMAP
 
 NAME:   dk_crumbling_3
-{{
-  init_crumbling(_G)
-}}
+: init_crumbling(_G)
 MAP
     xx+xx
    xx...xx
@@ -183,9 +177,7 @@ xx.5.....6.xx
 ENDMAP
 
 NAME:   dk_crumbling_4
-{{
-  init_crumbling(_G)
-}}
+: init_crumbling(_G)
 MAP
     xx+xx
    xx0.1xx
