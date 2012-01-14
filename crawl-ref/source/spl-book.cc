@@ -467,6 +467,10 @@ int read_book(item_def &book, read_book_action_type action)
         return (0);
     }
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "read_book");
+#endif
+
     // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents(book, action);
 
