@@ -2519,6 +2519,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
          ei != mons->enchantments.end(); ++ei)
     {
         new_fake->enchantments.insert(*ei);
+        new_fake->ench_cache.set(ei->second.ench);
     }
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
