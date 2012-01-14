@@ -3034,12 +3034,15 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 //---------------------------------------------------------------
 void describe_spell(spell_type spelled, const item_def* item)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_spell");
+#endif
+
     std::string desc;
     int mem_or_forget = _get_spell_description(spelled, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
-
     char ch;
     if ((ch = getchm()) == 0)
         ch = getchm();
