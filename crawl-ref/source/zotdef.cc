@@ -458,7 +458,8 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD,
+                MONS_IGNACIO, END};
     monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_BRIMSTONE_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
@@ -479,6 +480,8 @@ static void _pan_wave(int power)
             case '1': if (pow > 12) continue; break;
             default: continue;
             }
+            if (mons_is_unique(mon_type))
+                continue;
             env.mons_alloc[i] = mon_type;
         }
     }
@@ -547,7 +550,6 @@ void debug_waves()
     {
         you.num_turns += CYCLE_LENGTH;
         zotdef_set_wave();
-        // debuglog("%i: %s\n", i, zotdef_debug_wave_desc().c_str());
     }
 }
 
