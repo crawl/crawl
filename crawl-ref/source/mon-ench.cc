@@ -27,6 +27,38 @@
 #include "view.h"
 #include "xom.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+bool monster::has_ench(enchant_type ench) const
+{
+    mon_enchant e = get_ench(ench);
+    if (e.ench == ench)
+    {
+        if (!ench_cache[ench])
+        {
+            die("monster %s has ench '%s' not in cache",
+                name(DESC_PLAIN).c_str(),
+                std::string(e).c_str());
+        }
+    }
+    else if (e.ench == ENCH_NONE)
+    {
+        if (ench_cache[ench])
+        {
+            die("monster %s has no ench '%s' but cache says it does",
+                name(DESC_PLAIN).c_str(),
+                std::string(mon_enchant(ench)).c_str());
+        }
+    }
+    else
+    {
+        die("get_ench returned '%s' when asked for '%s'",
+            std::string(e).c_str(),
+            std::string(mon_enchant(ench)).c_str());
+    }
+    return ench_cache[ench];
+}
+#endif
+
 bool monster::has_ench(enchant_type ench, enchant_type ench2) const
 {
     if (ench2 == ENCH_NONE)

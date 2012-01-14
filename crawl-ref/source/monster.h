@@ -139,7 +139,11 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
+#ifdef DEBUG_DIAGNOSTICS
+    bool has_ench(enchant_type ench) const; // same but validated
+#else
     bool has_ench(enchant_type ench) const { return ench_cache[ench]; }
+#endif
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
