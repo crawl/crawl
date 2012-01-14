@@ -129,16 +129,18 @@ MAP
  xxxxxxx
 ENDMAP
 
-# 20k (min 16k)
+# 25k (min 20k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 10%
 TAGS:   uniq_second_food extra chance_second_food
 KMONS:  A = jelly
-KMONS:  BC = ooze
+KMONS:  B = ooze
+: if you.absdepth() > 10 then
+KMONS:  C = slime creature
+: end
 KITEM:  C = royal jelly q:4 / royal jelly q:6
-KFEAT:  AB = net trap w:2 / .
-KFEAT:  C = altar_jiyva w:1 / net trap w:1 / . w:20
+KFEAT:  C = altar_jiyva w:1 / . w:20
 MARKER: + = lua:restrict_door()
 MAP
  .Wxxxxx
@@ -189,7 +191,6 @@ NSUBST: T = 1:. / 1:t
 KMONS:  1 = wandering mushroom
 KMONS:  2 = oklob sapling
 KITEM:  12A_ = apricot q:2 / pear q:2 / apple q:2 / banana q:2 / lemon q:2 / orange q:2
-KITEM:  B = cloak
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
@@ -207,15 +208,14 @@ ENDMAP
 NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-14
 CHANCE: 100% (D:14), 10%
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_item_gen
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
 MONS:   shadow imp
 : if you.absdepth() < 13 then
-KMONS:  A = vapour spells:shock;shock;shock;.;.;.; name:brume n_rpl n_des w:5 / \
-        unseen horror / nothing w:3
+KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 : else
-KMONS:  A = vapour w:4 / unseen horror / nothing w:1
+KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:1
 : end
 ITEM:   sultana w:8 q:1 / potion of water
 ITEM:   honeycomb q:2, bread ration q:3
@@ -229,14 +229,13 @@ ITEM:   honeycomb q:2, bread ration q:3
 : else
 :     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
 : end
-KFEAT:  C = c
 NSUBST: D = 1:A / 2:d / 2:e / 1:g, g = 1:g / .
 MAP
- cccccCCCCC
-ccxx1xg+DDC
-c.x.x..mDDC
-@.d.x2.mDDC
-c.x.x..CC+C
+ cccccccccc
+ccxx1xg+DDc
+c.x.x..mDDc
+@.d.x2.mDDc
+c.x.x..cc+c
 ccxx1x.+3fc
  cccccccccc
 ENDMAP
