@@ -147,6 +147,9 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item_brand == SPWPN_REAPING);
         break;
     }
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_SUMMONING);
+        break;
     case OBJ_BOOKS:
         retval = (is_corpse_violating_spellbook(item));
         break;
