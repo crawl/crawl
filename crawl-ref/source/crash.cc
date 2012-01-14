@@ -78,12 +78,17 @@ static mutex_t crash_mutex;
 
 static void _crash_signal_handler(int sig_num)
 {
-    // We rely on mutexes ignoring locks held by the same process, on some
-    // platforms this must be explicitely enabled (and we do so).
+    // We rely on mutexes ignoring locks held by the same thread.
+    // On some platforms, this must be explicitely enabled (which we do).
 
     // This mutex is never unlocked again -- the first thread to crash will
     // do a dump then terminate the process while everyone else waits here
     // forever.
+
+    // XXX: This is a bit dangerous: if we catch a signal while any
+    // non-asynch-signal-safe function is executing, and then call
+    // pthread_mutex_lock() (which is also not asynch-signal-safe),
+    // the behaviour is undefined.
     mutex_lock(crash_mutex);
 
     if (crawl_state.game_crashed)
