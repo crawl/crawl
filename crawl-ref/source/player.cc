@@ -5744,6 +5744,10 @@ bool player::can_swim(bool permanently) const
 
 int player::visible_igrd(const coord_def &where) const
 {
+    // shop hack, etc.
+    if (where.x == 0)
+        return (NON_ITEM);
+
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && species != SP_MERFOLK && species != SP_GREY_DRACONIAN
