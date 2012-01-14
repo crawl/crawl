@@ -89,6 +89,8 @@ Spells
 * Shatter doesn't work through walls, unless it manages to destroy them.
 * No spells work through glass or trees anymore.
 * Metabolic Englaciation slows down enemies.
+* Twisted Resurrection is improved: corpses merge into abominations on their
+  own without needing to be stacked.
 
 Backgrounds
 -----------
@@ -137,6 +139,7 @@ Monsters
 * Monsters flee at lower health thresholds, and less predictably.
 * Killer bee larvae turn into killer bees if they eat honeycombs or royal
   jellies.
+* All abominations are now both demonic and undead.
 
 Items
 -----
