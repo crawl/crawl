@@ -554,7 +554,6 @@ void debug_waves()
 static monster_type _get_zotdef_monster(level_id &place, int power)
 {
     monster_type mon_type;
-    monster_type mon_type_ret = MONS_PROGRAM_BUG;
     for (int i = 0; i <= 10000; ++i)
     {
         int count = 0;
@@ -568,7 +567,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         }
         while (rarity == 0 && count < 2000);
 
-        if (count == 2000)
+        if (rarity == 0)
             return (MONS_PROGRAM_BUG);
 
         // Calculate strength
@@ -642,15 +641,11 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
                      : branches[place.branch].shortname,
                  mentry->name, rarity, power,
                  strength, lev_mons, chance);
-            mon_type_ret = mon_type;
-            break;
+            return mon_type;
         }
-
-        if (i == 10000)
-            return (MONS_PROGRAM_BUG);
     }
 
-    return mon_type_ret;
+    return (MONS_PROGRAM_BUG);
 }
 
 static void _zotdef_set_random_branch_wave(int power)
