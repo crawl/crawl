@@ -2193,6 +2193,7 @@ void define_monster(monster* mons)
 
     // Reset monster enchantments.
     mons->enchantments.clear();
+    mons->ench_cache.reset();
     mons->ench_countdown = 0;
 
     // NOTE: For player ghosts and (very) ugly things this just ensures
