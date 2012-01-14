@@ -489,3 +489,57 @@ x  .ww"ttccwu2u'u1uuu2u'u2ucc2u'uucctt
 ""ttttttttcccctttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttt
 ENDMAP
+
+##########################################################################
+# HangedMan's hellswamp: an abandoned, overgrown, flooded temple,
+# occupied by demons, beasts, messes of flesh, and other vile tricks.
+NAME:    swamp_vile
+PLACE:   Swamp:5
+TAGS:    no_pool_fixup no_monster_gen
+ORIENT:  southeast
+MONS:    tentacled monstrosity, hell beast / death ooze, \
+         green death, hairy devil / rotting devil / orange demon, \
+         large abomination / very ugly thing, rotting hulk / ugly thing, \
+         oklob plant
+KMONS:   8 = hydra / swamp dragon
+KITEM:   r = decaying rune of zot
+KFEAT:   8f = shallow_water
+KFEAT:   t = swamp_tree
+MARKER:  f = lua:fog_machine {cloud_type = "black smoke", \
+             pow_min = 7, pow_max = 11, delay_min = 100, delay_max = 200, \
+             size = 2, spread_rate= 30, start_clouds = 1 }
+SHUFFLE: yz, '"
+SUBST:   y = x, z = .wwwwWWW, ' = ...W, " = wWW
+MAP
+ @   xxccxcxcctWW
+  Wxfx'""'..WcctWW
+  xWxWx''"zyW.xctWW
+  fxWx"wwwyzwxWcctWW
+ xxWx.x6wwzyw.x.xctWWW
+tx'x"x4wwwyzwx6W.ccttWW
+xt"'w6w48wzywx56xWccttWW
+ct"'www88wyxwxxx.x.xtttWW
+tx'"wwwww.c.wwwwwwWWctttW
+tc.yzyzyzcxw.zyzyzWx8xctWW
+xt.zyzyzx.wf.yzyzy.fxWcctWW
+ct"'wwwwWw..wWW.WWw.WWWcctWW
+tx"'wxxxWWzyWwcwc.WyzWwWxctWW
+tc'"wx6xWWyzWcf4wcWzywWx.cctWW
+xt"'wx5WxWzy.w47.w.yzwx56.xctW
+ct'"wx6xWWyzWcw.3cWzywx65xWcct
+tx"'wxxWwWzyW.cwcfWyzwxxxWwWcc
+tc"'WWWwWf..wWW.WWw.WWwwwwwwWc
+ctfzyzyzxW.w.yzyzy.W.Wxzyzyzfc
+xt.yzyzyzxw..zyzyzW..xzyzyzy.x
+tc"'wwww.WxWfWWWWWWWxcWW..w'"c
+tc"'wxxWW.yxWWWxWwWxyWfWxx."'c
+ct'"xx4xWwzywxx6xWwyzWWc.cx'"c
+xt'"x.w4xwyzwx565xWzy.x..2x"'x
+cct8x3.xxwyzwxxxxxWyz.xc1rc'"c
+ tt'xxxxwwzywwwwwWwzyw.xxcc8Wt
+ tcW'8""''yz""'7'""yz'"'"'8ftc
+ Wcctt''""f.''"'"''f."'"'"Wttt
+  Wttccxcccxccxcccxccccccxtctt
+                              t
+                               t
+ENDMAP
