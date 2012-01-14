@@ -1318,6 +1318,22 @@ xxxxx+xxxx..1xxxxxx
      xxxxxx
 ENDMAP
 
+NAME: lookout_dungeons_type
+DEPTH: D:4-14
+TAGS: extra no_pool_fixup layout_rooms layout_city
+MONS: w:1 generate_awake centaur / w:4 nothing
+MAP
+....@....
+.........
+.........
+...www...
+...w1w...
+...x+x...
+   x.x
+   x=x
+    @
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead

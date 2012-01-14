@@ -1549,6 +1549,50 @@ MAP
 O
 ENDMAP
 
+NAME:   hex_intersection
+DEPTH:  D, Elf, Crypt
+TAGS:   extra allow_dup luniq layout_rooms
+MAP
+  @xxxxx@
+  x.xxx.x
+  xx.x.xx
+xxxx...xxxx
+@.........@
+xxxx...xxxx
+  xx.x.xx
+  x.xxx.x
+  @xxxxx@
+ENDMAP
+
+NAME:   interstate_on_off
+DEPTH:  D
+TAGS:   extra layout_rooms
+MAP
+     x@x
+  xxxx.xxxxx
+ xxx.....xxx
+xx..xx.xx..xx
+x.xxxx=xxxx.x
+@...........@
+xxxxxx=xxxxxx
+@...........@
+x.xxxx=xxxx.x
+xx..xx.xx..xx
+ xxx.....xxx
+ xxxxx.xxxx
+     x@x
+ENDMAP
+
+NAME:   moated_statue
+DEPTH:  D, Elf, Crypt
+TAGS:   extra allow_dup mini_float
+MAP
+xxxxxxx
+.WWGWW.
+..WWW..
+ .....
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

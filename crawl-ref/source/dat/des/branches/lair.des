@@ -1259,6 +1259,23 @@ MAP
 .......
 ENDMAP
 
+###############################################################################
+# Catoblepas lookout (blackcustard)
+NAME: lookout_lair_type
+DEPTH: Lair:6-8
+TAGS: extra no_pool_fixup
+MONS: w:1 generate_awake catoblepas / w:4 nothing
+SUBST: a = w W .
+MAP
+  aaa aa
+ aawwwwaa
+ aaw1.wa
+aaaw..ww
+ aaw...Wa
+  awwwww@
+  a aaaa
+     aa
+ENDMAP
 
 ###############################################################################
 # Lair endings
