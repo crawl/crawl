@@ -2287,14 +2287,14 @@ int handle_pbd_corpses(bool do_rot)
 
 int augmentation_amount()
 {
-	int amount = 0;
-	const int level = player_mutation_level(MUT_AUGMENTATION) + 1;
+    int amount = 0;
+    const int level = player_mutation_level(MUT_AUGMENTATION) + 1;
 
-	for (int i = 1; i < level; ++i)
-	{
-		if (you.hp <= (i * you.hp_max) / level)
-		    amount++;
-	}
+    for (int i = 1; i < level; ++i)
+    {
+        if (you.hp <= (i * you.hp_max) / level)
+            amount++;
+    }
 
-	return amount;
+    return amount;
 }
