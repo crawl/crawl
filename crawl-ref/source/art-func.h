@@ -84,6 +84,7 @@ static bool _evoke_sceptre_of_asmodeus()
     mgen_data mg(mon, BEH_CHARMED, &you,
                  0, 0, you.pos(), MHITYOU,
                  MG_FORCE_BEH, you.religion);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     monster *m = create_monster(mg);
 
