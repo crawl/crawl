@@ -22,6 +22,8 @@ Branches, portal vaults, levels
 * A "twisting cavern" map layout.
 * Custom shops.
 * Many vaults, including large altar vaults, Abyss vaults and Pan lords maps.
+* A number of branches have a completely new set of tiles: Snake Pit,
+  Labyrinth, Vestibule of Hell, Crypt, Dis, Tartarus, Cocytus, Pandemonium.
 
 Gods
 ----
