@@ -1080,8 +1080,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = STAFF_STRIKING;
+            item.base_type = OBJ_WANDS;
+            item.sub_type  = random_choose_weighted(10, WAND_FROST,
+                                                    10, WAND_FLAME,
+                                                    8, WAND_MAGIC_DARTS,
+                                                    4, WAND_LIGHTNING,
+                                                    4, WAND_FIRE,
+                                                    4, WAND_COLD,
+                                                    0);
         }
         break;
 
