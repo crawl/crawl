@@ -786,8 +786,11 @@ NAME:   evilmike_crystal_ball_defense
 TAGS:   no_rotate no_monster_gen
 DEPTH:  Zot:1-4
 ORIENT: float
-MONS:   oklob sapling / oklob plant / burning bush / lightning spire / nothing
-MONS:   ice statue / silver statue / orange crystal statue / curse skull / w:5 nothing
+MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
+        w:6 lightning spire / nothing
+MONS:   ice statue / silver statue / orange crystal statue / \
+        curse skull / w:5 nothing
+SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
 SUBST:  . = .:9 ~:1
@@ -804,15 +807,15 @@ xxxxxxx.....).....xxxxxxx
 xxx.....1..}d]..1.....xxx
 xx...xx.....>.....xx...xx
 @x..xxxxx1.....1xxxxx..x@
-.x.1xxxxxx..1..xxxxxx1.x.
+.x.3xxxxxx..1..xxxxxx3.x.
 .x..xxxxxxx...xxxxxxx..x.
 .x..xxxxxxx...xxxxxxx..x.
 .x..xxxxxxxx.xxxxxxxx..x.
 .x..xxxxxxxx2xxxxxxxx..x.
 .x..xxxxxxxx.xxxxxxxx..x.
-.xx1.................1xx.
+.xx3.................3xx.
 ...x.................x...
-...x......1.1.1......x...
+...x......3.3.3......x...
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
