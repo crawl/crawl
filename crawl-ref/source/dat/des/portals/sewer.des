@@ -1049,6 +1049,7 @@ NSUBST:  H = 1:. / *:c
 NSUBST:  I = 1:. / *:c
 SUBST:   LMKJ = c
 #      randomize environment
+KPROP:   V2 = no_tele_into
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
