@@ -2277,8 +2277,11 @@ static void tag_read_you(reader &th)
 
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>(unmarshallByte(th));
-    ASSERT(you.hell_branch <= NUM_BRANCHES);
-    ASSERT(you.hell_branch != NUM_BRANCHES || !player_in_hell());
+#if TAG_MAJOR_VERSION == 32
+    if (you.hell_branch == NUM_BRANCHES)
+        you.hell_branch = BRANCH_MAIN_DUNGEON;
+#endif
+    ASSERT(you.hell_branch < NUM_BRANCHES);
 
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_ASH_PENANCE)
