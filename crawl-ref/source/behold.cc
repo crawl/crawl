@@ -33,7 +33,7 @@ void player::add_beholder(const monster* mon, bool axe)
             if (you.can_see(mon))
             {
                 mprf("%s's singing sounds muted, and has no effect on you.",
-                     mon->name(DESC_CAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
             {
@@ -44,7 +44,7 @@ void player::add_beholder(const monster* mon, bool axe)
         {
             if (you.can_see(mon))
             {
-                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             }
             else
             {
@@ -62,7 +62,7 @@ void player::add_beholder(const monster* mon, bool axe)
         if (!axe)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
         }
     }
     else
@@ -161,7 +161,7 @@ static void _removed_beholder_msg(const monster* mon)
             if (you.can_see(mon))
             {
                 mprf("%s's singing becomes strangely muted.",
-                     mon->name(DESC_CAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
                 mpr("Something's singing becomes strangely muted.");
@@ -170,7 +170,7 @@ static void _removed_beholder_msg(const monster* mon)
         {
             if (you.can_see(mon))
             {
-                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             }
             else
             {
@@ -188,7 +188,7 @@ static void _removed_beholder_msg(const monster* mon)
             if (_mermaid_beholder(mon))
             {
                 mprf("You can no longer hear %s's singing!",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
             {
@@ -198,9 +198,9 @@ static void _removed_beholder_msg(const monster* mon)
         }
 
         if (_mermaid_beholder(mon))
-            mprf("%s stops singing.", mon->name(DESC_CAP_THE).c_str());
+            mprf("%s stops singing.", mon->name(DESC_THE).c_str());
         else
-            mprf("%s is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+            mprf("%s is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
 
         return;
     }
@@ -271,11 +271,11 @@ bool player::possible_beholder(const monster* mon) const
          && !mon->wont_attack() && !mon->pacified()
          && ((mons_genus(mon->type) == MONS_MERMAID
               || mon->has_spell(SPELL_MESMERISE))
-         && !silenced(pos()) && !silenced(mon->pos())
-         && !mon->has_ench(ENCH_MUTE)
-         && !mon->confused()
-         && !mon->asleep() && !mon->cannot_move()
-         && !mon->berserk() && !mons_is_fleeing(mon)
-         && !is_sanctuary(you.pos())
-         || player_equip_unrand(UNRAND_DEMON_AXE)));
+             && !silenced(pos()) && !silenced(mon->pos())
+             && !mon->has_ench(ENCH_MUTE)
+             && !mon->confused()
+             && !mon->asleep() && !mon->cannot_move()
+             && !mon->berserk() && !mons_is_fleeing(mon)
+             && !is_sanctuary(you.pos())
+           || player_equip_unrand(UNRAND_DEMON_AXE)));
 }

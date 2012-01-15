@@ -54,15 +54,12 @@ void handle_god_time(void);
 int god_colour(god_type god);
 uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
-bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int had_gods();
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
-std::string god_hates_your_god_reaction(god_type god,
-                                        god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monster* mon);
 bool god_likes_fresh_corpses(god_type god);
@@ -75,7 +72,6 @@ int elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool fedhas_protects(const monster* target);
-bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monster* target);
 void print_sacrifice_message(god_type, const item_def &,
                              piety_gain_t, bool = false);

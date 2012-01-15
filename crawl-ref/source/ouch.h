@@ -14,6 +14,8 @@
 #include "beam.h"
 
 // Keep in sync with names in hiscores.cc.
+// Note that you can't ever remove entries from here -- not even when a major
+// save tag is bumped, or listing scores will break.  The order doesn't matter.
 enum kill_method_type
 {
     KILLED_BY_MONSTER,
@@ -51,6 +53,7 @@ enum kill_method_type
     KILLED_BY_SELF_AIMED,
     KILLED_BY_FALLING_THROUGH_GATE,
     KILLED_BY_DISINT,
+    KILLED_BY_HEADBUTT,
 
     NUM_KILLBY
 };
@@ -78,4 +81,5 @@ bool expose_player_to_element(beam_type flavour, int strength = 0,
                               bool damage_inventory = true);
 
 void screen_end_game(std::string text);
+int timescale_damage(const actor *act, int damage);
 #endif

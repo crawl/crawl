@@ -25,10 +25,10 @@ int get_los_radius_sq(); // XXX
 #define BDS_CONSTANT (circle_def(LOS_MAX_RANGE, C_ROUND))
 
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, const opacity_func &opc = opc_solid,
+              ray_def& ray, const opacity_func &opc,
               const circle_def &bds = BDS_CONSTANT, bool cycle = false);
 bool exists_ray(const coord_def& source, const coord_def& target,
-                const opacity_func &opc = opc_solid,
+                const opacity_func &opc,
                 const circle_def &bds = BDS_CONSTANT);
 dungeon_feature_type ray_blocker(const coord_def& source, const coord_def& target);
 
@@ -55,5 +55,5 @@ void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_cloud_changed(const coord_def& p);
 void los_changed();
-opacity_type mons_opacity(const monster* mon);
+opacity_type mons_opacity(const monster* mon, los_type how);
 #endif

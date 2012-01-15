@@ -17,7 +17,7 @@ DEPTH: D
 WEIGHT: 0
 MARKER: O = lua:one_way_stair { \
               dst="multilevel portal vault", \
-              desc="An entrance to a multilevel portal vault" \
+              desc="an entrance to a multilevel portal vault" \
             }
 KFEAT: O = enter_portal_vault
 MAP

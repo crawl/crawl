@@ -1,6 +1,8 @@
 import tornado.web
 import os.path
 
+import config
+
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
         super(GameDataHandler, self).initialize(".")
@@ -13,6 +15,10 @@ class GameDataHandler(tornado.web.StaticFileHandler):
             raise tornado.web.HTTPError(404)
         self.root = GameDataHandler._client_paths[version]
         super(GameDataHandler, self).get(path, include_body)
+
+    def set_extra_headers(self, path):
+        if config.game_data_no_cache:
+            self.set_header("Cache-Control", "no-cache")
 
     _client_paths = {}
 

@@ -83,6 +83,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     args.mode = TARG_HOSTILE;
     args.range = 2;
     args.top_prompt = "Attack whom?";
+    args.cancel_at_self = true;
     targetter_reach hitfunc(&you, REACH_TWO);
     args.hitfunc = &hitfunc;
 
@@ -97,6 +98,11 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return (false);
     }
 
+    if (you.confused())
+    {
+        beam.confusion_fuzz(2);
+    }
+
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
@@ -105,29 +111,33 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
         mons = NULL;
 
-    const int x_first_middle = std::min(beam.target.x, you.pos().x)
-                            + (x_distance / 2);
-    const int y_first_middle = std::min(beam.target.y, you.pos().y)
-                            + (y_distance / 2);
-    const int x_second_middle = std::max(beam.target.x, you.pos().x)
-                            - (x_distance / 2);
-    const int y_second_middle = std::max(beam.target.y, you.pos().y)
-                            - (y_distance / 2);
+    const int x_first_middle = you.pos().x + (delta.x)/2;
+    const int y_first_middle = you.pos().y + (delta.y)/2;
+    const int x_second_middle = beam.target.x - (delta.x)/2;
+    const int y_second_middle = beam.target.y - (delta.y)/2;
     const coord_def first_middle(x_first_middle, y_first_middle);
     const coord_def second_middle(x_second_middle, y_second_middle);
 
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
-        return (false);
+        return (false); // Shouldn't happen with confused swings
     }
     else if (grd(first_middle) <= DNGN_MAX_NONREACH
              && grd(second_middle) <= DNGN_MAX_NONREACH)
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
-        mpr("There's a wall in the way.");
-        return (false);
+        if (you.confused())
+        {
+            mpr("You swing wildly and hit a wall.");
+            return (true);
+        }
+        else
+        {
+            mpr("There's a wall in the way.");
+            return (false);
+        }
     }
 
     // Failing to hit someone due to a friend blocking is infuriating,
@@ -174,7 +184,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         else
         {
             mprf("%s is in the way.",
-                 mons->observable() ? mons->name(DESC_CAP_THE).c_str()
+                 mons->observable() ? mons->name(DESC_THE).c_str()
                                     : "Something you can't see");
         }
     }
@@ -183,10 +193,16 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters.
-        mpr("You attack empty space.");
+
+        if (you.confused())
+            mprf("You swing wildly%s", beam.isMe() ?
+                                       " and almost hit yourself!" : ".");
+        else
+            mpr("You attack empty space.");
         return (true);
     }
-    you_attack(mons->mindex(), false);
+    else
+        fight_melee(&you, mons);
 
     return (true);
 }
@@ -266,18 +282,18 @@ static bool _efreet_flask(int slot)
 
     mpr("You open the flask...");
 
-    const int mons =
+    monster *mons =
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
-    if (mons != -1)
+    if (mons)
     {
         mpr("...and a huge efreet comes out.");
 
-        if (player_angers_monster(&menv[mons]))
+        if (player_angers_monster(mons))
             friendly = false;
 
         if (silenced(you.pos()))
@@ -422,6 +438,7 @@ void tome_of_power(int slot)
 
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
+    count_action(CACT_EVOKE, EVOC_MISC);
 
     if (x_chance_in_y(7, 50))
     {
@@ -458,7 +475,7 @@ void tome_of_power(int slot)
         if (create_monster(
                 mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
                     "a tome of Destruction",
-                    true, 6, 0, you.pos())) != -1)
+                    true, 6, 0, you.pos())))
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
@@ -568,7 +585,7 @@ static bool _box_of_beasts(item_def &box)
     {
         const monster_type beasts[] = {
             MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
-            MONS_RAT,       MONS_ICE_BEAST, MONS_SNAKE,
+            MONS_RAT,       MONS_ICE_BEAST, MONS_ADDER,
             MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
             MONS_CROCODILE, MONS_HELL_HOUND
         };
@@ -589,7 +606,7 @@ static bool _box_of_beasts(item_def &box)
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           2 + random2(4), 0,
                           you.pos(),
-                          MHITYOU)) != -1)
+                          MHITYOU)))
         {
             success = true;
 
@@ -704,7 +721,10 @@ bool evoke_item(int slot)
     {
         ASSERT(item_is_equipped(item));
         if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
+        {
+            count_action(CACT_EVOKE, EVOC_MISC);
             return (did_work);
+        }
     }
     else switch (item.base_type)
     {
@@ -740,6 +760,7 @@ bool evoke_item(int slot)
                 return (false);
 
             did_work = true;  // staff_spell() will handle messages
+            count_action(CACT_EVOKE, EVOC_ROD);
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
@@ -758,6 +779,7 @@ bool evoke_item(int slot)
                 pract = 1;
                 did_work = true;
                 ident = true;
+                count_action(CACT_EVOKE, EVOC_MISC);
             }
         }
         else
@@ -774,6 +796,7 @@ bool evoke_item(int slot)
             ASSERT(wielded);
             evoke_deck(item);
             pract = 1;
+            count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }
 
@@ -870,6 +893,8 @@ bool evoke_item(int slot)
             unevokable = true;
             break;
         }
+        if (did_work)
+            count_action(CACT_EVOKE, EVOC_MISC);
         break;
 
     default:
@@ -888,7 +913,7 @@ bool evoke_item(int slot)
         set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
         mprf("You are wielding %s.",
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_A).c_str());
 
         you.wield_change = true;
     }

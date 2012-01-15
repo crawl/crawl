@@ -15,9 +15,9 @@
 #include "format.h"
 #include "defines.h"
 #include "libutil.h"
+#include "mon-info.h"
 
-#ifdef USE_TILE_LOCAL
- #include "tilebuf.h"
+#ifdef USE_TILE
  #include "tiledoll.h"
 #endif
 
@@ -77,7 +77,7 @@ public:
     bool preselected;
     void *data;
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     std::vector<tile_def> tiles;
 #endif
 
@@ -159,7 +159,7 @@ public:
         return get_text();
     }
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
@@ -184,14 +184,14 @@ public:
 class MonsterMenuEntry : public MenuEntry
 {
 public:
-    MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
+    MonsterMenuEntry(const std::string &str, const monster_info* mon, int hotkey);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 class PlayerMenuEntry : public MenuEntry
 {
 public:
@@ -211,7 +211,7 @@ public:
     FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
                      int hotkey);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
@@ -298,17 +298,6 @@ public:
     Menu(int flags = MF_MULTISELECT, const std::string& tagname = "",
          bool text_only = true);
 
-    // Initialises a Menu from a formatted_string as follows:
-    //
-    // 1) Splits the formatted_string on EOL.
-    // 2) Picks the most recently used non-whitespace colour as the colour
-    //    for the next line (so it can't do multiple colours on one line).
-    // 3) Ignores all cursor movement ops in the formatted_string.
-    //
-    // These are limitations that should be fixed eventually.
-    //
-    Menu(const formatted_string &fs);
-
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
@@ -343,7 +332,7 @@ public:
         select_filter = filter;
     }
 
-    unsigned char getkey() const { return lastch; }
+    int getkey() const { return lastch; }
 
     void reset();
     std::vector<MenuEntry *> show(bool reuse_selections = false);
@@ -357,7 +346,7 @@ public:
     virtual int item_colour(int index, const MenuEntry *me) const;
     int get_y_offset() const { return y_offset; }
     int get_pagesize() const { return pagesize; }
-public:
+
     typedef std::string (*selitem_tfn)(const std::vector<MenuEntry*> *sel);
     typedef void (*drawitem_tfn)(int index, const MenuEntry *me);
     typedef int (*keyfilter_tfn)(int keyin);
@@ -369,6 +358,11 @@ public:
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
 
+#ifdef USE_TILE_WEB
+    void webtiles_write_menu() const;
+    void webtiles_scroll(int first);
+    void webtiles_handle_item_request(int start, int end);
+#endif
 protected:
     MenuEntry *title;
     MenuEntry *title2;
@@ -390,7 +384,7 @@ protected:
 
     int num;
 
-    unsigned char lastch;
+    int lastch;
 
     bool alive;
 
@@ -402,10 +396,20 @@ protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   std::string &line, bool check_eol);
     void do_menu();
+    virtual std::string get_select_count_string(int count) const;
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
+
+#ifdef USE_TILE_WEB
+    void webtiles_update_item(int index) const;
+    void webtiles_update_title() const;
+    void webtiles_update_scroll_pos() const;
+
+    virtual void webtiles_write_title() const;
+    virtual void webtiles_write_item(int index, const MenuEntry *me) const;
+#endif
 
     virtual void draw_title();
     virtual void write_title();
@@ -512,6 +516,10 @@ protected:
     virtual void draw_index_item(int index, const MenuEntry* me) const;
     virtual bool process_key(int keyin);
     bool jump_to(int linenum);
+
+#ifdef USE_TILE_WEB
+    virtual void webtiles_write_item(int index, const MenuEntry* me) const;
+#endif
 };
 
 /**
@@ -655,7 +663,7 @@ public:
 };
 
 /**
- * Holds an arbitary number of tiles, currently rendered on top of each other
+ * Holds an arbitrary number of tiles, currently rendered on top of each other
  */
 #ifdef USE_TILE_LOCAL
 class TextTileItem : public TextItem

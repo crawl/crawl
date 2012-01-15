@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "delay.h"
 #include "env.h"
 #include "fprop.h"
 #include "item_use.h"
@@ -41,6 +42,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
 
+    stop_delay(true);
+
     const coord_def origin = pos();
     move_player_to_grid(dest, false, true);
 
@@ -60,10 +63,10 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         simple_monster_message(this, jump ? " leaps!" : " blinks!");
 
     if (!(flags & MF_WAS_IN_VIEW))
-        seen_context = "thin air";
+        seen_context = SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest))
+    if (!move_to_pos(dest, true))
         return (false);
 
     // Leave a purple cloud.

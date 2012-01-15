@@ -4,15 +4,13 @@
  *        the crawl_environment that are shown to the player.
 **/
 
-#ifndef TILEDRAW_H
-#define TILEDRAW_H
-
-#ifdef USE_TILE
+#ifndef TILEVIEW_H
+#define TILEVIEW_H
 
 #include "target.h"
 #include "tiledef_defines.h"
 
-struct cloud_struct;
+struct cloud_info;
 struct coord_def;
 struct dolls_data;
 struct item_def;
@@ -48,15 +46,11 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 // Tile view related
 void tile_draw_floor();
-void tile_place_item(const coord_def &gc, const item_def &item);
-void tile_place_item_marker(const coord_def &gc, const item_def &item);
-void tile_place_invisible_monster(const coord_def &gc);
-void tile_place_monster(const coord_def &gc, const monster* mons);
 void tile_clear_monster(const coord_def &gc);
 void tile_reset_feat(const coord_def &gc);
-void tile_place_cloud(const coord_def &gc, const cloud_struct &cl);
 void tile_place_ray(const coord_def &gc, aff_type in_range);
 void tile_draw_rays(bool reset_count);
+void tile_draw_map_cell(const coord_def &gc, bool foreground_only = false);
 void tile_wizmap_terrain(const coord_def &gc);
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
@@ -65,5 +59,4 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell);
 void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);
 
-#endif
 #endif

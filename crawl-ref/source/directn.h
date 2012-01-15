@@ -58,7 +58,9 @@ public:
     dist();
 
     bool isMe() const;
-    void confusion_fuzz(); // modify target as if the player is confused.
+
+    // modify target as if the player is confused.
+    void confusion_fuzz(int range = 6);
 
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?
@@ -291,14 +293,15 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
 void describe_floor();
 std::string get_monster_equipment_desc(const monster_info& mi,
+                                //bool full_desc = true,
                                 mons_equip_desc_level_type level = DESC_FULL,
-                                description_level_type mondtype = DESC_CAP_A,
+                                description_level_type mondtype = DESC_A,
                                 bool print_attitude = false);
 
 int dos_direction_unmunge(int doskey);
 
 std::string feature_description(const coord_def& where, bool covering = false,
-                                description_level_type dtype = DESC_CAP_A,
+                                description_level_type dtype = DESC_A,
                                 bool add_stop = true, bool base_desc = false);
 std::string raw_feature_description(dungeon_feature_type grid,
                                     trap_type tr = NUM_TRAPS,
@@ -306,7 +309,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS,
                                 const std::string & cover_desc = "",
-                                description_level_type dtype = DESC_CAP_A,
+                                description_level_type dtype = DESC_A,
                                 bool add_stop = true, bool base_desc = false);
 
 void set_feature_desc_short(dungeon_feature_type grid,

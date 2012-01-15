@@ -1,10 +1,15 @@
-monster_list = function ()
-{
-    var monsters = {};
-    var $list = $("#monster_list");
-    var monster_groups = [];
+define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer"],
+function ($, map_knowledge, cr, dungeon_renderer) {
+    var monsters, $list, monster_groups, max_rows;
 
-    var max_rows = 5;
+    function init()
+    {
+        monsters = {};
+        $list = $("#monster_list");
+        monster_groups = [];
+        max_rows = 5;
+    }
+    $(document).bind("game_init", init);
 
     function update_loc(loc)
     {
@@ -23,6 +28,13 @@ monster_list = function ()
     function can_combine(monster1, monster2)
     {
         return (monster_sort(monster1, monster2) == 0);
+    }
+
+    function is_excluded(monster)
+    {
+        return (monster.typedata.no_exp &&
+                !(monster.name == "active ballistomycete"
+                  || monster.name.match(/tentacle$/)));
     }
 
     function monster_sort(m1, m2)
@@ -55,8 +67,11 @@ monster_list = function ()
     {
         var monster_list = [];
 
-        for (loc in monsters)
+        for (var loc in monsters)
+        {
+            if (is_excluded(monsters[loc].mon)) continue;
             monster_list.push(monsters[loc]);
+        }
 
         monster_list.sort(function (m1, m2) {
             return monster_sort(m1.mon, m2.mon);
@@ -117,7 +132,7 @@ monster_list = function ()
                               </span>");
                 $list.append(node);
                 canvas = node.find("canvas")[0];
-                renderer = new DungeonCellRenderer(canvas);
+                renderer = new cr.DungeonCellRenderer();
                 group = {
                     node: node,
                     canvas: canvas,
@@ -138,6 +153,11 @@ monster_list = function ()
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
+            for (key in dungeon_renderer)
+            {
+                if (key.match(/^glyph_mode/) || key == "display_mode")
+                    renderer[key] = dungeon_renderer[key];
+            }
             var w = renderer.cell_width;
             var displayed_monsters = Math.min(monsters.length, 6);
             var needed_width = w * displayed_monsters;
@@ -146,7 +166,7 @@ monster_list = function ()
             {
                 canvas.width = needed_width;
                 canvas.height = dungeon_renderer.cell_height;
-                renderer.init();
+                renderer.init(canvas);
             }
 
             for (var j = 0; j < displayed_monsters; ++j)
@@ -205,4 +225,4 @@ monster_list = function ()
         clear: clear,
         get: function () { return monster_groups; }
     };
-} ();
+});

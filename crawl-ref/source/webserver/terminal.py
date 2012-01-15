@@ -10,13 +10,14 @@ import time
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, id_header, logger, io_loop):
+    def __init__(self, command, filename, id_header, logger, io_loop, termsize):
         self.io_loop = io_loop
         self.command = command
         self.ttyrec = open(filename, "w", 0)
         self.id = id
         self.returncode = None
         self.output_buffer = ""
+        self.termsize = termsize
 
         self.pid = None
         self.child_fd = None
@@ -43,8 +44,7 @@ class TerminalRecorder(object):
         if self.pid == 0:
             # We're the child
             # Set window size
-            cols = 80
-            lines = 24
+            cols, lines = self.get_terminal_size()
             s = struct.pack("HHHH", lines, cols, 0, 0)
             fcntl.ioctl(sys.stdout.fileno(), termios.TIOCSWINSZ, s)
 
@@ -169,6 +169,9 @@ class TerminalRecorder(object):
                     self.end_callback()
 
         return self.returncode
+
+    def get_terminal_size(self):
+        return self.termsize
 
     def write_input(self, data):
         if self.poll() is not None: return

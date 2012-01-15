@@ -4,6 +4,8 @@ import os, os.path
 import time
 import warnings
 
+from tornado.escape import json_encode
+
 from config import server_socket_path
 
 class WebtilesSocketConnection(object):
@@ -16,7 +18,7 @@ class WebtilesSocketConnection(object):
 
         self.msg_buffer = None
 
-    def connect(self):
+    def connect(self, primary = True):
         if not os.path.exists(self.crawl_socketpath):
             # Wait until the socket exists
             self.io_loop.add_timeout(time.time() + 1, self.connect)
@@ -44,7 +46,12 @@ class WebtilesSocketConnection(object):
                                  self._handle_read,
                                  self.io_loop.ERROR | self.io_loop.READ)
 
-        self.socket.sendto('{"msg":"attach"}', self.crawl_socketpath)
+        msg = json_encode({
+                "msg": "attach",
+                "primary": primary
+                })
+
+        self.socket.sendto(msg, self.crawl_socketpath)
 
     def _handle_read(self, fd, events):
         if events & self.io_loop.READ:

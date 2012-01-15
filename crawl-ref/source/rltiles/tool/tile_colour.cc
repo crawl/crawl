@@ -3,7 +3,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
-#include <png.h>
+#ifdef USE_TILE
+ #include <png.h>
+#endif
 
 tile_colour tile_colour::background(71, 108, 108, 255);
 tile_colour tile_colour::transparent(0, 0, 0, 0);
@@ -249,6 +251,7 @@ void tile_colour::change_lum(int lum_percent)
     set_from_hsl(hue, sat, lum);
 }
 
+#ifdef USE_TILE
 bool write_png(const char *filename, tile_colour *pixels,
                unsigned int width, unsigned int height)
 {
@@ -298,3 +301,4 @@ bool write_png(const char *filename, tile_colour *pixels,
 
     return (true);
 }
+#endif

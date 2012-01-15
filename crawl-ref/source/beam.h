@@ -43,12 +43,10 @@ struct tracer_info
 
 struct bolt;
 
-typedef bool (*range_used_func)(const bolt& beam, const actor* victim,
-                                int &used);
+typedef bool (*range_used_func)(const bolt& beam, int &used);
 typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
                                  std::string &dmg_msg);
-typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg,
-                              int corpse);
+typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
 typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
 typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
 
@@ -225,7 +223,7 @@ private:
 
     int beam_source_as_target() const;
 
-    int range_used_on_hit(const actor* victim) const;
+    int range_used_on_hit() const;
 
     std::string zapper() const;
 
@@ -235,7 +233,7 @@ private:
     bool hit_wall();
 
     bool damage_ignores_armour() const;
-    bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
+    bool apply_hit_funcs(actor* victim, int dmg);
     bool apply_dmg_funcs(actor* victim, int &dmg,
                          std::vector<std::string> &messages);
 
@@ -310,9 +308,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const std::string &how);
 
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
-                            int *m_succumbed = NULL, int *m_attempted = NULL,
-                            bool fail = false);
+spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail = false);
 
 bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);

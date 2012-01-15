@@ -17,9 +17,6 @@ int maybe_random_div(int nom, int denom, bool random_factor);
 int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
-const char* random_choose_string(const char* first, ...);
-int random_choose(int first, ...);
-int random_choose_weighted(int weight, int first, ...);
 double random_real();
 
 int random2avg(int max, int rolls);
@@ -29,6 +26,60 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
+
+// Chooses one of the numbers passed in at random. The list of numbers
+// must be terminated with -1.
+template <typename T>
+T random_choose(T first, ...)
+{
+    va_list args;
+    va_start(args, first);
+
+    T chosen = first;
+    int count = 1;
+    int nargs = 100; // a hard limit to catch unterminated uses
+
+    while (nargs-- > 0)
+    {
+        const int pick = va_arg(args, int);
+        if (pick == -1)
+            break;
+        if (one_chance_in(++count))
+            chosen = static_cast<T>(pick);
+    }
+
+    va_end(args);
+    ASSERT(nargs > 0);
+    return (chosen);
+}
+
+template <>
+const char* random_choose<const char*>(const char* first, ...);
+
+template <typename T>
+T random_choose_weighted(int weight, T first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    T chosen = first;
+    int cweight = weight, nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        const int nweight = va_arg(args, int);
+        if (!nweight)
+            break;
+
+        const int choice = va_arg(args, int);
+        if (random2(cweight += nweight) < nweight)
+            chosen = static_cast<T>(choice);
+    }
+
+    va_end(args);
+    ASSERT(nargs > 0);
+
+    return (chosen);
+}
 
 struct dice_def
 {

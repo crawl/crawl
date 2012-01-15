@@ -93,6 +93,7 @@ static spell_type search_order_third[] = {
     SPELL_SWIFTNESS,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
+    SPELL_TWISTED_RESURRECTION,
     SPELL_INVISIBILITY,
     SPELL_SUMMON_SCORPIONS,
     SPELL_CALL_IMP,
@@ -101,6 +102,8 @@ static spell_type search_order_third[] = {
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
+    // No Simulacrum: iffy for pghosts (picking up material components),
+    // largely useless on Pan lords.
 };
 
 // Order for looking for enchants for the 4th & 5th spell slots.  If
@@ -169,7 +172,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Non-spellcasters get some boosts to their melee and speed instead.
-    spellcaster = !one_chance_in(10);
+    spellcaster = !one_chance_in(3);
 
     see_invis = !one_chance_in(10);
 
@@ -204,7 +207,7 @@ void ghost_demon::init_random_demon()
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;
 
-    if (!one_chance_in(3) || !spellcaster)
+    if (one_chance_in(3) || !spellcaster)
     {
         do
         {
@@ -229,6 +232,11 @@ void ghost_demon::init_random_demon()
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
+
+    // Non-caster demons are likely to be fast, casters may get haste.
+    speed = (!spellcaster ? 11 + roll_dice(2, 4) :
+             one_chance_in(3) ? 10 :
+             8 + roll_dice(2, 5));
 
     // Does demon cycle colours?
     cycle_colours = one_chance_in(10);
@@ -339,10 +347,10 @@ static int _player_ghost_base_movement_speed()
 {
     int speed = 10;
 
-    if (player_mutation_level(MUT_FAST))
-        speed += player_mutation_level(MUT_FAST) + 1;
-    if (player_mutation_level(MUT_SLOW))
-        speed -= player_mutation_level(MUT_SLOW) + 1;
+    if (player_mutation_level(MUT_FAST, false))
+        speed += player_mutation_level(MUT_FAST, false) + 1;
+    if (player_mutation_level(MUT_SLOW, false))
+        speed -= player_mutation_level(MUT_SLOW, false) + 1;
 
     if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;
@@ -456,7 +464,7 @@ static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
     return (colour);
 }
 
-static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
+static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav)
 {
     switch (u_att_flav)
     {
@@ -479,9 +487,9 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
     return (u_att_flav);
 }
 
-static mon_attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
+static attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
-    mon_attack_flavour u_att_flav = AF_PLAIN;
+    attack_flavour u_att_flav = AF_PLAIN;
 
     switch (make_low_colour(u_colour))
     {
@@ -545,7 +553,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
         max_hp = hit_points(xl, 3, 5);
     }
 
-    const mon_attack_type att_types[] =
+    const attack_type att_types[] =
     {
         AT_BITE, AT_STING, AT_ENGULF, AT_CLAW, AT_PECK, AT_HEADBUTT, AT_PUNCH,
         AT_KICK, AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP
@@ -597,7 +605,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-static mon_resist_def _ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
+static mon_resist_def _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 {
     mon_resist_def resists;
     resists.elec = 0;
@@ -645,7 +653,7 @@ static mon_resist_def _ugly_thing_resists(bool very_ugly, mon_attack_flavour u_a
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
-                                            mon_attack_flavour u_att_flav)
+                                            attack_flavour u_att_flav)
 {
     resists = _ugly_thing_resists(very_ugly, u_att_flav);
 }
@@ -1148,7 +1156,7 @@ void ghost_demon::init_labrat (uint8_t force_colour)
     case LIGHTMAGENTA: // mutated
     {
         att_flav = AF_MUTATE;
-        const mon_attack_type possibles[] = { AT_CLAW, AT_PECK,
+        const attack_type possibles[] = { AT_CLAW, AT_PECK,
                 AT_TENTACLE_SLAP, AT_TRUNK_SLAP, AT_SNAP, AT_SPLASH };
         att_type = RANDOM_ELEMENT(possibles);
         break;

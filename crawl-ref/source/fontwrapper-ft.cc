@@ -625,7 +625,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 {
     const char *sp = str.c_str();
     ucs_t c;
-    while(int s = utf8towc(&c, sp))
+    while (int s = utf8towc(&c, sp))
     {
         sp += s;
         if (c == '\n')

@@ -40,13 +40,13 @@ static void _extra_hp(int amount_extra);
 bool form_can_wield(transformation_type form)
 {
     return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-         || form == TRAN_APPENDAGE);
+            || form == TRAN_APPENDAGE);
 }
 
 bool form_can_fly(transformation_type form)
 {
     if ((form == TRAN_NONE || form == TRAN_LICH || form == TRAN_APPENDAGE)
-        && you.species == SP_KENKU
+        && you.species == SP_TENGU
         && (you.experience_level >= 15 || you.airborne()))
     {
         return (true);
@@ -85,10 +85,11 @@ bool form_can_butcher_barehanded(transformation_type form)
             || form == TRAN_ICE_BEAST);
 }
 
-// Used to mark transformations which override species/mutation intrinsics.
+// Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
-    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS && form != TRAN_APPENDAGE);
+    return (form != TRAN_NONE && form != TRAN_APPENDAGE
+            && form != TRAN_BLADE_HANDS);
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
@@ -136,6 +137,22 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     }
 }
 
+// Used to mark forms which keep most form-based mutations.
+bool form_keeps_mutations(transformation_type form)
+{
+    switch (form)
+    {
+    case TRAN_NONE:
+    case TRAN_BLADE_HANDS:
+    case TRAN_STATUE:
+    case TRAN_LICH:
+    case TRAN_APPENDAGE:
+        return true;
+    default:
+        return false;
+    }
+}
+
 static std::set<equipment_type>
 _init_equipment_removal(transformation_type form)
 {
@@ -178,7 +195,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
                 unequip = true;
         }
 
-        mprf("%s %s%s %s", equip->name(DESC_CAP_YOUR).c_str(),
+        mprf("%s %s%s %s", equip->name(DESC_YOUR).c_str(),
              unequip ? "fall" : "meld",
              equip->quantity > 1 ? "" : "s",
              unequip ? "away!" : "into your body.");
@@ -251,7 +268,7 @@ static void _unmeld_equipment_type(equipment_type e)
         if (you.slot_item(EQ_SHIELD)
             && is_shield_incompatible(item, you.slot_item(EQ_SHIELD)))
         {
-            mpr(item.name(DESC_CAP_YOUR) + " is pushed off your body!");
+            mpr(item.name(DESC_YOUR) + " is pushed off your body!");
             unequip_item(e);
         }
         else
@@ -275,7 +292,7 @@ static void _unmeld_equipment_type(equipment_type e)
         if (force_remove)
         {
             mprf("%s is pushed off your body!",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
             unequip_item(e);
         }
         else
@@ -348,7 +365,7 @@ static bool _abort_or_fizzle(bool just_check)
 
 monster_type transform_mons()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_SPIDER:
         return MONS_SPIDER;
@@ -384,7 +401,7 @@ std::string blade_parts(bool terse)
 
 monster_type dragon_form_dragon_type()
 {
-    switch(you.species)
+    switch (you.species)
     {
         case SP_WHITE_DRACONIAN:
              return MONS_ICE_DRAGON;
@@ -411,7 +428,7 @@ monster_type dragon_form_dragon_type()
 // with a denominator of 10
 int form_hp_mod()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_STATUE:
         return 13;
@@ -716,7 +733,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (!just_check)
         {
             you.attribute[ATTR_APPENDAGE] = app;
-            switch(app)
+            switch (app)
             {
             case MUT_HORNS:
                 msg = "You grow a pair of large bovine horns.";
@@ -748,6 +765,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (true);
 
     // All checks done, transformation will take place now.
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
@@ -832,7 +850,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             }
 
             you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
         }
         break;
 
@@ -866,6 +883,22 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     }
 
+    // Stop constricting if we can no longer constrict.  If any size-changing
+    // transformations were to allow constriction, we would have to check
+    // relative sizes as well.  Likewise, if any transformations were to allow
+    // normally non-constricting players to constrict, this would need to
+    // be changed.
+    if (!form_keeps_mutations(which_trans))
+        you.stop_constricting_all(false);
+
+    // Stop being constricted if we are now too large.
+    if (you.is_constricted())
+    {
+        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
+            you.stop_being_constricted();
+    }
+
     you.check_clinging(false);
 
     // This only has an effect if the transformation happens passively,
@@ -893,6 +926,7 @@ void untransform(bool skip_wielding, bool skip_move)
 {
     const flight_type old_flight = you.flight_mode();
 
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
@@ -1027,7 +1061,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
-             armour->name(DESC_CAP_YOUR).c_str());
+             armour->name(DESC_YOUR).c_str());
     }
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
@@ -1039,6 +1073,14 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
+
+    // Stop being constricted if we are now too large.
+    if (you.is_constricted())
+    {
+        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
+            you.stop_being_constricted();
+    }
 
     if (!skip_wielding)
         handle_interrupted_swap(true, false);

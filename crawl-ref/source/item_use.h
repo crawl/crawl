@@ -78,8 +78,6 @@ bool wield_weapon(bool auto_wield, int slot = -1,
 
 void zap_wand(int slot = -1);
 
-bool puton_item(int slot);
-
 bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
@@ -94,8 +92,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
 
 void prompt_inscribe_item();
-int launcher_shield_slowdown(const item_def &launcher,
-                             const item_def *shield);
 int launcher_final_speed(const item_def &launcher,
                          const item_def *shield);
 

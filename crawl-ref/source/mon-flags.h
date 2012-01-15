@@ -126,7 +126,7 @@ const uint64_t M_FLEEING           = (uint64_t)1<<37;
 // is an artificial being
 const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
 
-// doesn't need to breathe; immune to asphyxiation and Mephitic Cloud
+// can survive without breathing; immune to asphyxiation and Mephitic Cloud
 const uint64_t M_UNBREATHING       = (uint64_t)1<<39;
 
 // not fully coded; causes a warning
@@ -210,5 +210,5 @@ const uint64_t MF_NAME_ZOMBIE         = BIT(32); // mname replaces zombies/skele
                                       // only for already zombified monsters
 const uint64_t MF_SENSED              = BIT(33); // Player has been warned
                                       // about this monster being nearby.
-
+const uint64_t MF_NAME_NOCORPSE       = BIT(34); // mname should not be used for corpses
 #endif

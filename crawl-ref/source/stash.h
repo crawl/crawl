@@ -100,14 +100,6 @@ private:
 
     std::vector<item_def> items;
 
-    /*
-     * If true (the default), the stash-tracker is a lot more likely to consider
-     * squares that the player is not standing on as correctly-verified. This
-     * will lead to cleaner dumps, but the chance of stashes not accurately
-     * reflecting what's in the dungeon also increases.
-     */
-    static bool aggressive_verify;
-
     static bool are_items_same(const item_def &, const item_def &);
 
     friend class LevelStashes;

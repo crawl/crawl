@@ -205,7 +205,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             return (false);
 
         if (crawl_state.cmd_repeat_started_unsafe
-            && at.context != "newly seen")
+            && at.context != SC_NEWLY_SEEN)
         {
             return (false);
         }
@@ -213,11 +213,12 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         crawl_state.cancel_cmd_repeat();
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (at.context == "newly seen")
+        if (at.context == SC_NEWLY_SEEN)
         {
+            monster_info mi(mon);
             set_auto_exclude(mon);
 
-            std::string text = get_monster_equipment_desc(mon, DESC_WEAPON);
+            std::string text = get_monster_equipment_desc(mi, DESC_WEAPON);
             text += " comes into view.";
             mpr(text, MSGCH_WARN);
         }

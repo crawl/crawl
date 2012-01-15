@@ -23,7 +23,6 @@ struct trap_def
     int max_damage(const actor& act);
 
 private:
-    void message_trap_entry();
     void shoot_ammo(actor& act, bool was_known);
     item_def generate_trap_item();
     int shot_damage(actor& act);

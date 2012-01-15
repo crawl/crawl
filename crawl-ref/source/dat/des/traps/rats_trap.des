@@ -1,0 +1,81 @@
+##############################################################################
+# There are rats in the wall!
+#
+# When the player steps on the presure plate, the walls will crumble and
+# release a horde of rats. Since the trap is always in a corridor, this
+# should not be too hard, even for low-level chars.
+#
+# Inspriration taken from the H.P. Lovecraft-themed rougue-like Infra Arcana
+{{
+function callback.rats_trap_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+
+  if data.triggered == true then
+     return
+   end
+
+  if dgn.mons_at(x,y) then
+    if not you.see_cell(x, y) then
+      return
+    else
+      data.triggered = true
+      dgn.grid(x,y,"floor")
+      crawl.mpr("You hear a faint click.")
+      return
+    end
+  end
+
+  data.triggered = true
+  dgn.grid(x, y, "floor")
+
+  for slave in iter.slave_iterator("hole", 1) do
+      if not dgn.is_passable(slave.x,slave.y) then
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.create_item(slave.x, slave.y, "stone q:3 / stone q:2 / stone")
+      else
+        crawl.mpr("You hear a click.")
+        return
+      end
+  end
+
+  crawl.mpr("You step on to a pressure plate.")
+  crawl.mpr("Suddenly a wall slides open!")
+
+end
+
+}}
+
+NAME:   dk_rats_in_the_wall
+DEPTH:  D:4-10
+TAGS:   no_monster_gen
+KPROP:  R = no_rtele_into
+MONS:   generate_awake rat, generate_awake green rat
+SUBST:  R = 112
+KFEAT:  ^ = pressure plate trap
+# some chance for a big hole in the wall
+: if crawl.one_chance_in(4) then
+SUBST:  Z : z
+: else
+SUBST:  Z : x
+: end
+{{
+local tm = TriggerableFunction:new{func="callback.rats_trap_stepped",
+                                   repeated=true, data={triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+lua_marker('z', props_marker { hole=1 })
+}}
+SUBST:  z : x
+MAP
+xxxxxxxxx
+xxxxxxxxx
+xxxxxxxxx
+xxxxxxxxx
+xxxxxxxxx
+@...^...@
+xxxZzZxxx
+xRRRRRRRx
+xRRRRRRRx
+xRRRRRRRx
+xxxxxxxxx
+ENDMAP

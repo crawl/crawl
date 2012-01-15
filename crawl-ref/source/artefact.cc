@@ -217,9 +217,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ASHENZARI:
-        // Cursed god: no holy wrath (since that brand repels curses).
+        // Cursed god: no holy wrath (since that brand repels curses) or
+        // pearl dragon armour (since that armour type repels curses).
         if (brand == SPWPN_HOLY_WRATH)
             return (false);
+
         break;
 
     default:
@@ -429,12 +431,33 @@ void artefact_desc_properties(const item_def &item,
 
     artefact_wpn_properties(item, proprt, known);
 
-    if (item.base_type == OBJ_ARMOUR
-        && item.sub_type == ARM_GOLD_DRAGON_ARMOUR)
+    if (item.base_type == OBJ_ARMOUR)
     {
-        ++proprt[ARTP_POISON];
-        ++proprt[ARTP_FIRE];
-        ++proprt[ARTP_COLD];
+        switch (item.sub_type)
+        {
+        case ARM_SWAMP_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            break;
+        case ARM_FIRE_DRAGON_ARMOUR:
+            proprt[ARTP_FIRE] += 2;
+            --proprt[ARTP_COLD];
+            break;
+        case ARM_ICE_DRAGON_ARMOUR:
+            --proprt[ARTP_FIRE];
+            proprt[ARTP_COLD] += 2;
+            break;
+        case ARM_PEARL_DRAGON_ARMOUR:
+            ++proprt[ARTP_NEGATIVE_ENERGY];
+            break;
+        case ARM_STORM_DRAGON_ARMOUR:
+            ++proprt[ARTP_ELECTRICITY];
+            break;
+        case ARM_GOLD_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            ++proprt[ARTP_FIRE];
+            ++proprt[ARTP_COLD];
+            break;
+        }
     }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
@@ -456,10 +479,6 @@ void artefact_desc_properties(const item_def &item,
     {
     case RING_INVISIBILITY:
         fake_rap = ARTP_INVISIBLE;
-        break;
-
-    case RING_TELEPORTATION:
-        fake_rap = ARTP_CAUSE_TELEPORTATION;
         break;
 
     case RING_MAGICAL_POWER:
@@ -1082,7 +1101,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1097,7 +1117,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1201,7 +1222,7 @@ static bool _init_artefact_book(item_def &book)
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
             // The parameters to this call are in book.plus and plus2.
-            book_good = make_book_level_randart(book, book.plus, book.plus2);
+            book_good = make_book_level_randart(book, book.plus);
         else
             book_good = make_book_theme_randart(book);
 
@@ -1448,7 +1469,7 @@ std::string make_artefact_name(const item_def &item, bool appearance)
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *unrand = _seekunrandart(item);
-        if (item_type_known(item))
+        if (!appearance)
             return unrand->name;
         if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
             return unrand->unid_name;
@@ -1559,7 +1580,7 @@ std::string get_artefact_name(const item_def &item, bool force_known)
     // print artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         return item.props[ARTEFACT_APPEAR_KEY].get_string();
-    return make_artefact_name(item, false);
+    return make_artefact_name(item, true);
 }
 
 void set_artefact_name(item_def &item, const std::string &name)
@@ -1797,6 +1818,9 @@ static bool _randart_is_conflicting(const item_def &item,
         return (true);
     }
 
+    if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
+        return (true);
+
     artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
 
     switch (item.sub_type)
@@ -1994,6 +2018,35 @@ static void _make_faerie_armour(item_def &item)
     item.plus = 2 + random2(5);
 }
 
+static jewellery_type octoring_types[8] =
+{
+    RING_REGENERATION, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
+    RING_SUSTAIN_ABILITIES, RING_SUSTENANCE, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_LIFE_PROTECTION
+};
+
+static void _make_octoring(item_def &item)
+{
+    if (you.octopus_king_rings == 255)
+    {
+        ASSERT(you.wizard);
+        item.sub_type = octoring_types[random2(8)];
+        return;
+    }
+
+    int which = 0;
+    do which = random2(8); while (you.octopus_king_rings & (1 << which));
+
+    item.sub_type = octoring_types[which];
+
+    // Save that we've found that particular type
+    you.octopus_king_rings |= 1 << which;
+
+    // If there are any types left, unset the 'already found' flag
+    if (you.octopus_king_rings != 255)
+        set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+}
+
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT(unrand_index > UNRAND_START);
@@ -2038,6 +2091,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     }
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
+    else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
+        _make_octoring(item);
 
     return (true);
 }

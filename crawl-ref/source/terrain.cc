@@ -37,9 +37,7 @@
 #include "species.h"
 #include "spl-transloc.h"
 #include "env.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "travel.h"
 #include "transform.h"
 #include "traps.h"
@@ -55,7 +53,7 @@ actor* actor_at(const coord_def& c)
     return (monster_at(c));
 }
 
-int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type))
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
 {
     int count = 0;
     for (adjacent_iterator ai(c); ai; ++ai)
@@ -66,17 +64,17 @@ int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feat
     return count;
 }
 
-bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
+bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
 {
     return (checker(feat));
 }
 
-bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type))
+bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type))
 {
     return (checker(grd(c)));
 }
 
-bool feat_is_malign_gateway_suitable (dungeon_feature_type feat)
+bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
 }
@@ -983,8 +981,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
-    env.tile_flv(dst) = env.tile_flv(src);
 #endif
+    env.tile_flv(dst) = env.tile_flv(src);
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
@@ -1134,9 +1132,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     set_terrain_changed(pos);
 
     // Deal with doors being created by changing features.
-#ifdef USE_TILE
     tile_init_flavour(pos);
-#endif
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
@@ -1145,7 +1141,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     const std::string orig_name =
         feature_description(dest_pos, false,
-                            you.see_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            you.see_cell(orig_pos) ? DESC_THE : DESC_A,
                             false);
 
     std::string prep = feat_preposition(orig_feat, false);
@@ -1156,7 +1152,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(orig_pos))
     {
         if (you.can_see(m))
-            orig_actor = m->name(DESC_NOCAP_THE);
+            orig_actor = m->name(DESC_THE);
     }
 
     if (dest_pos == you.pos())
@@ -1164,7 +1160,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(dest_pos))
     {
         if (you.can_see(m))
-            dest_actor = m->name(DESC_NOCAP_THE);
+            dest_actor = m->name(DESC_THE);
     }
 
     std::ostringstream str;
@@ -1359,9 +1355,15 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     mgrd(pos2) = m1;
 
     if (monster_at(pos1))
+    {
         menv[mgrd(pos1)].set_position(pos1);
+        menv[mgrd(pos1)].clear_far_constrictions();
+    }
     if (monster_at(pos2))
+    {
         menv[mgrd(pos2)].set_position(pos2);
+        menv[mgrd(pos2)].clear_far_constrictions();
+    }
 
     // Swap clouds.
     move_cloud(env.cgrid(pos1), temp);
@@ -1371,11 +1373,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (pos1 == you.pos())
     {
         you.set_position(pos2);
+        you.clear_far_constrictions();
         viewwindow();
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
+        you.clear_far_constrictions();
         viewwindow();
     }
 
@@ -1413,7 +1417,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     return (true);
 }
 
-bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
+bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
                         bool announce)
 {
     ASSERT(in_bounds(src));
@@ -1421,10 +1425,10 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     const dungeon_feature_type orig_feat = grd(src);
     const actor* orig_actor = actor_at(src);
 
-    if (in_bounds(prefered_dest)
-        && _ok_dest_cell(orig_actor, orig_feat, prefered_dest))
+    if (in_bounds(preferred_dest)
+        && _ok_dest_cell(orig_actor, orig_feat, preferred_dest))
     {
-        ASSERT(prefered_dest != src);
+        ASSERT(preferred_dest != src);
     }
     else
     {
@@ -1434,16 +1438,16 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
             if (_ok_dest_cell(orig_actor, orig_feat, *ai)
                 && one_chance_in(++squares))
             {
-                prefered_dest = *ai;
+                preferred_dest = *ai;
             }
         }
     }
 
-    if (!in_bounds(prefered_dest))
+    if (!in_bounds(preferred_dest))
         return (false);
 
-    ASSERT(prefered_dest != src);
-    return swap_features(src, prefered_dest, false, announce);
+    ASSERT(preferred_dest != src);
+    return swap_features(src, preferred_dest, false, announce);
 }
 
 // Returns true if we manage to scramble free.
@@ -1681,7 +1685,7 @@ std::string stair_climb_verb(dungeon_feature_type feat)
         return "pass through";
 }
 
-const char *dngn_feature_names[] =
+static const char *dngn_feature_names[] =
 {
 "unseen", "closed_door", "detected_secret_door", "secret_door",
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
@@ -1717,7 +1721,8 @@ const char *dngn_feature_names[] =
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
 "return_from_forest", "return_reserved_1", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+"malign_gateway", "expired_portal", "", "", "", "", "",
+"", "", "", "", "", "", "", "", "",
 "", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",

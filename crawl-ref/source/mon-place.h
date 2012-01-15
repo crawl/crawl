@@ -19,13 +19,13 @@ struct mgen_data;
  * position like a summon.
  * Returns -1 on failure, index into env.mons otherwise.
  * *********************************************************************** */
-int create_monster(mgen_data mg, bool fail_msg = true);
+monster* create_monster(mgen_data mg, bool fail_msg = true);
 
 /* ***********************************************************************
  * Primary function to create monsters. See mgen_data for details on monster
  * placement.
  * *********************************************************************** */
-int mons_place(mgen_data mg);
+monster* mons_place(mgen_data mg);
 
 /* ***********************************************************************
  * This isn't really meant to be a public function.  It is a low level
@@ -33,7 +33,7 @@ int mons_place(mgen_data mg);
  * mons_place().  If you need to put a monster somewhere, use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-int place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
+monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
 
 monster_type pick_random_zombie();
 
@@ -54,6 +54,8 @@ void roll_zombie_hp(monster* mon);
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
+bool downgrade_zombie_to_skeleton(monster* mon);
+
 // Converts a monster_type involving RANDOM_MONSTER and similar into an
 // explicit monster type usable on the current level.
 monster_type resolve_monster_type(monster_type mon_type,
@@ -71,13 +73,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
                                            bool super_ood,
                                            bool want_corpse_capable);
 
-// Converts a randomised monster_type into a concrete monster_type, optionally
-// choosing monsters suitable for generation at the supplied place.
-monster_type resolve_corpse_monster_type(monster_type mon_type,
-                                         dungeon_feature_type feat,
-                                         level_id place);
-
-
 class level_id;
 
 monster_type pick_random_monster(const level_id &place,
@@ -89,14 +84,8 @@ monster_type pick_random_monster(const level_id &place,
                                  bool *chose_ood_monster,
                                  bool force_mobile = false);
 
-bool player_will_anger_monster(monster_type type, bool *holy = NULL,
-                               bool *unholy = NULL, bool *lawful = NULL,
-                               bool *antimagical = NULL);
-
-bool player_will_anger_monster(monster* mon, bool *holy = NULL,
-                               bool *unholy = NULL, bool *lawful = NULL,
-                               bool *antimagical = NULL);
-
+conduct_type player_will_anger_monster(monster_type type);
+conduct_type player_will_anger_monster(monster* mon);
 bool player_angers_monster(monster* mon);
 
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
@@ -128,12 +117,11 @@ coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);
+bool can_spawn_mushrooms(coord_def where);
 
 void spawn_random_monsters();
 
 void set_vault_mon_list(const std::vector<mons_spec> &list);
-
-void get_vault_mon_list(std::vector<mons_spec> &list);
 
 void setup_vault_mon_list();
 

@@ -24,8 +24,8 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-shoals.h"
 #include "dgnevent.h"
@@ -80,10 +80,10 @@
 #include "viewchar.h"
 #include "xom.h"
 
-int holy_word_player(int pow, int caster, actor *attacker)
+void holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!you.undead_or_demonic())
-        return (0);
+        return;
 
     int hploss;
 
@@ -94,7 +94,7 @@ int holy_word_player(int pow, int caster, actor *attacker)
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (!hploss)
-        return (0);
+        return;
 
     mpr("You are blasted by holy energy!");
 
@@ -125,27 +125,22 @@ int holy_word_player(int pow, int caster, actor *attacker)
 
     ouch(hploss, caster, type, aux);
 
-    return (1);
+    return;
 }
 
-int holy_word_monsters(coord_def where, int pow, int caster,
-                       actor *attacker)
+void holy_word_monsters(coord_def where, int pow, int caster,
+                        actor *attacker)
 {
     pow = std::min(300, pow);
 
-    int retval = 0;
-
     // Is the player in this cell?
     if (where == you.pos())
-        retval = holy_word_player(pow, caster, attacker);
+        holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
-    if (mons == NULL)
-        return (retval);
-
-    if (!mons->alive() || !mons->undead_or_demonic())
-        return (retval);
+    if (!mons || !mons->alive() || !mons->undead_or_demonic())
+        return;
 
     int hploss;
 
@@ -160,53 +155,41 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (hploss && caster == HOLY_WORD_ZIN)
         simple_monster_message(mons, " is blasted by Zin's holy word!");
 
-    mons->hurt(attacker, hploss, BEAM_MISSILE, false);
+    mons->hurt(attacker, hploss, BEAM_MISSILE);
 
-    if (hploss)
+    if (!hploss || !mons->alive())
+        return;
+    // Holy word won't annoy, slow, or frighten its user.
+    if (attacker != mons)
     {
-        retval = 1;
+        // Currently, holy word annoys the monsters it affects
+        // because it can kill them, and because hostile
+        // monsters don't use it.
+        if (attacker != NULL)
+            behaviour_event(mons, ME_ANNOY, attacker->mindex());
 
-        if (mons->alive())
-        {
-            // Holy word won't annoy, slow, or frighten its user.
-            if (attacker != mons)
-            {
-                // Currently, holy word annoys the monsters it affects
-                // because it can kill them, and because hostile
-                // monsters don't use it.
-                if (attacker != NULL)
-                    behaviour_event(mons, ME_ANNOY, attacker->mindex());
+        if (mons->speed_increment >= 25)
+            mons->speed_increment -= 20;
 
-                if (mons->speed_increment >= 25)
-                    mons->speed_increment -= 20;
-
-                mons->add_ench(ENCH_FEAR);
-            }
-        }
-        else
-            mons->hurt(attacker, INSTANT_DEATH);
+        mons->add_ench(ENCH_FEAR);
     }
-
-    return (retval);
 }
 
-int holy_word(int pow, int caster, const coord_def& where, bool silent,
-              actor *attacker)
+void holy_word(int pow, int caster, const coord_def& where, bool silent,
+               actor *attacker)
 {
     if (!silent && attacker)
     {
         mprf("%s %s a Word of immense power!",
-             attacker->name(DESC_CAP_THE).c_str(),
+             attacker->name(DESC_THE).c_str(),
              attacker->conj_verb("speak").c_str());
     }
 
     // We could use actor.get_los(), but maybe it's NULL.
     los_def los(where);
     los.update();
-    int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
-        r += holy_word_monsters(*ri, pow, caster, attacker);
-    return (r);
+        holy_word_monsters(*ri, pow, caster, attacker);
 }
 
 int torment_player(actor *attacker, int taux)
@@ -846,7 +829,7 @@ void random_uselessness(int scroll_slot)
         if (you.weapon())
         {
             mprf("%s glows %s for a moment.",
-                 you.weapon()->name(DESC_CAP_YOUR).c_str(),
+                 you.weapon()->name(DESC_YOUR).c_str(),
                  weird_glowing_colour().c_str());
         }
         else
@@ -944,7 +927,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                 mpr(pre_msg->c_str());
 
             mprf("%s %s for a moment%s.",
-                 wand.name(DESC_CAP_YOUR).c_str(),
+                 wand.name(DESC_YOUR).c_str(),
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
@@ -989,7 +972,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
             if (pre_msg)
                 mpr(pre_msg->c_str());
 
-            mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
+            mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
         }
 
         you.wield_change = true;
@@ -1227,7 +1210,7 @@ void yell(bool force)
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
 
-    noisy(10, you.pos());
+    noisy(noise_level, you.pos());
 }
 
 inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
@@ -1275,43 +1258,20 @@ static void _hell_effects()
         return;
     }
 
-    int temp_rand = random2(17);
+    std::string msg = getMiscString("hell_effect");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+    msg_channel_type chan = MSGCH_PLAIN;
+    strip_channel_prefix(msg, chan);
+    mpr(msg.c_str(), chan);
+    if (chan == MSGCH_SOUND)
+        noisy(15, you.pos());
+
     spschool_flag_type which_miscast = SPTYP_RANDOM;
     bool summon_instead = false;
     monster_type which_beastie = MONS_NO_MONSTER;
 
-    mpr((temp_rand ==  0) ? "\"You will not leave this place.\"" :
-        (temp_rand ==  1) ? "\"Die, mortal!\"" :
-        (temp_rand ==  2) ? "\"We do not forgive those who trespass against us!\"" :
-        (temp_rand ==  3) ? "\"Trespassers are not welcome here!\"" :
-        (temp_rand ==  4) ? "\"You do not belong in this place!\"" :
-        (temp_rand ==  5) ? "\"Leave now, before it is too late!\"" :
-        (temp_rand ==  6) ? "\"We have you now!\"" :
-        // plain messages
-        (temp_rand ==  7) ? (you.can_smell()) ? "You smell brimstone."
-                                                 : "Brimstone rains from above." :
-        (temp_rand ==  8) ? "You feel lost and a long, long way from home..." :
-        (temp_rand ==  9) ? "You shiver with fear." :
-        // warning
-        (temp_rand == 10) ? "You feel a terrible foreboding..." :
-        (temp_rand == 11) ? "Something frightening happens." :
-        (temp_rand == 12) ? "You sense an ancient evil watching you..." :
-        (temp_rand == 13) ? "You suddenly feel all small and vulnerable." :
-        (temp_rand == 14) ? "You sense a hostile presence." :
-        // sounds
-        (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
-        (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
-                          : "You hear diabolical laughter!",
-        (temp_rand <  7 ? MSGCH_TALK :
-         temp_rand < 10 ? MSGCH_PLAIN :
-         temp_rand < 15 ? MSGCH_WARN
-                        : MSGCH_SOUND));
-
-    if (temp_rand >= 15)
-        noisy(15, you.pos());
-
-    temp_rand = random2(27);
-
+    int temp_rand = random2(27);
     if (temp_rand > 17)     // 9 in 27 odds {dlb}
     {
         temp_rand = random2(8);
@@ -2385,7 +2345,7 @@ void handle_time()
                          MHITNOT, 0, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
-            if (create_monster(mg) != -1)
+            if (create_monster(mg))
                 success = true;
         }
 
@@ -2416,6 +2376,26 @@ void handle_time()
 
     if (you.religion == GOD_JIYVA && one_chance_in(25))
         jiyva_eat_offlevel_items();
+
+    if (int lev = player_mutation_level(MUT_EVOLUTION))
+        if (one_chance_in(100 / lev)
+            && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
+               > (int)exp_needed(you.experience_level + 1))
+        {
+            you.attribute[ATTR_EVOL_XP] = 0;
+            mpr("You feel a genetic drift.");
+            bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                               false, false, false, false, false, true);
+            // it would kill itself anyway, but let's speed that up
+            if (one_chance_in(10)
+                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+            {
+                evol |= delete_mutation(MUT_EVOLUTION, false);
+            }
+            // interrupt the player only if something actually happened
+            if (evol)
+                more();
+        }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
         place_webs(random2(20 / (6 - player_branch_depth())), true);
@@ -2794,14 +2774,10 @@ int place_ring(std::vector<coord_def> &ring_points,
 
         prototype.pos = ring_points.at(i);
 
-        const int mushroom = create_monster(prototype, false);
-
-        if (mushroom != -1)
-        {
+        if (create_monster(prototype, false))
             spawned_count++;
             if (you.see_cell(ring_points.at(i)))
                 seen_count++;
-        }
     }
 
     return (spawned_count);
@@ -2952,9 +2928,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 // 8-connectivity.  Could change the expansion pattern by using a
 // priority queue for sequencing (priority = distance from origin under
 // some metric).
-int spawn_corpse_mushrooms(item_def &corpse,
+int spawn_corpse_mushrooms(item_def& corpse,
                            int target_count,
-                           int & seen_targets,
+                           int& seen_targets,
                            beh_type toadstool_behavior,
                            bool distance_as_time)
 
@@ -3013,14 +2989,14 @@ int spawn_corpse_mushrooms(item_def &corpse,
         // Is this square occupied by a non mushroom?
         if (mons && mons->mons_species() != MONS_TOADSTOOL
             || player_occupant && you.religion != GOD_FEDHAS
-            || !is_harmless_cloud(cloud_type_at(current)))
+            || !can_spawn_mushrooms(current))
         {
             continue;
         }
 
         if (!mons)
         {
-            const int mushroom = create_monster(
+            monster *mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
                                   toadstool_behavior,
                                   0,
@@ -3035,7 +3011,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
                                   corpse.colour),
                                   false);
 
-            if (mushroom != -1)
+            if (mushroom)
             {
                 // Going to explicitly override the die-off timer in
                 // this case (this condition means we got called from
@@ -3054,14 +3030,14 @@ int spawn_corpse_mushrooms(item_def &corpse,
                     time_left *= 10;
 
                     mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-                    env.mons[mushroom].update_ench(temp_en);
+                    mushroom->update_ench(temp_en);
                 }
 
                 placed_targets++;
                 if (current == you.pos())
                 {
                     mprf("A toadstool grows at your feet.");
-                    current=  env.mons[mushroom].pos();
+                    current = mushroom->pos();
                 }
                 else if (you.see_cell(current))
                     seen_targets++;
@@ -3330,7 +3306,7 @@ void slime_wall_damage(actor* act, int delay)
          if (dam > 0 && you.can_see(mon))
          {
              mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
-                  mon->name(DESC_NOCAP_THE).c_str());
+                  mon->name(DESC_THE).c_str());
          }
          mon->hurt(NULL, dam, BEAM_ACID);
     }

@@ -42,8 +42,10 @@
    This can be fixed by increasing the internal points-per-cube
    density in the source code, at the expense of slower
    computation. The book lists the details of this tuning.  */
-namespace worley {
-struct noise_datum {
+namespace worley
+{
+struct noise_datum
+{
     double distance[2];
     uint32_t id[2];
 };

@@ -51,7 +51,7 @@ static bool _confirm_pray_sacrifice(god_type god)
             && needs_handle_warning(*si, OPER_PRAY))
         {
             std::string prompt = "Really sacrifice stack with ";
-            prompt += si->name(DESC_NOCAP_A);
+            prompt += si->name(DESC_A);
             prompt += " in it?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
@@ -116,7 +116,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return (false);
     }
 
-    std::string prompt = "Do you wish to have " + wpn.name(DESC_NOCAP_YOUR)
+    std::string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
     if (brand == SPWPN_PAIN)
         prompt += "bloodied with pain";
@@ -131,7 +131,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
-    std::string old_name = wpn.name(DESC_NOCAP_A);
+    std::string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
@@ -174,7 +174,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
                                               : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_NOCAP_A).c_str(), desc.c_str()));
+              wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
 
     mpr("Your weapon shines brightly!", MSGCH_GOD);
@@ -195,9 +195,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     if (god == GOD_KIKUBAAQUDGHA)
     {
-        you.gift_timeout = 0; // no protection during pain branding weapon
+        you.gift_timeout = 1; // no protection during pain branding weapon
 
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
+
+        you.gift_timeout = 0; // protection after pain branding weapon
 
         // Bloodify surrounding squares (75% chance).
         for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
@@ -205,7 +207,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
                 maybe_bloodify_square(*ri);
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     delay(1000);
 #endif
@@ -369,7 +371,7 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    switch(you.religion)
+    switch (you.religion)
     {
     case GOD_JIYVA:
         you.duration[DUR_JELLY_PRAYER] = 200;
@@ -584,26 +586,21 @@ static void _ashenzari_sac_scroll(const item_def& item)
 // Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
-    // Artefacts, including most randarts.
-    if (random2(value) >= random2(250))
+    // Once you've reached *** once, don't accept weapon sacrifices ever
+    // again just because of value.
+    if (you.piety_max[GOD_ELYVILON] >= piety_breakpoint(2))
+        return (false);
+
+    // value/500 chance of piety normally
+    if (value > random2(500))
         return (true);
 
-    // Medium valuable items are more likely to net piety at low piety,
-    // more so for missiles, since they're worth less as single items.
-    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
-        && one_chance_in(1 + you.piety / 50))
+    // But all non-missiles are acceptable if you've never reached *.
+    if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
+        && type != OBJ_MISSILES)
     {
         return (true);
     }
-
-    // If not for the above, missiles shouldn't yield piety.
-    if (type == OBJ_MISSILES)
-        return (false);
-
-    // Weapons, on the other hand, are always acceptable to boost low
-    // piety.
-    if (you.piety < piety_breakpoint(0) || player_under_penance())
-        return (true);
 
     return (false);
 }
@@ -647,7 +644,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         return _sac_corpse(item);
 
     // item_value() multiplies by quantity.
-    const int shop_value = item_value(item) / item.quantity;
+    const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (is_worthless_consumable(item) ? 1 : shop_value);
@@ -743,7 +740,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         gain_piety(piety_change, piety_denom);
 
         // Preserving the old behaviour of giving the big message for
-        // artifacts and artifacts only.
+        // artefacts and artefacts only.
         relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
                                 is_artefact(item) ?
                                   PIETY_LOTS : PIETY_SOME : PIETY_NONE;
@@ -902,7 +899,7 @@ static bool _offer_items()
             && (item.inscription.find("=p") != std::string::npos))
         {
             const std::string msg =
-                  "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
+                  "Really sacrifice " + item.name(DESC_A) + "?";
 
             if (!yesno(msg.c_str(), false, 'n'))
             {

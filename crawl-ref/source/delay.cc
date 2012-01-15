@@ -319,6 +319,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
             bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
                              delay.duration, false);
 
+            const item_def corpse = item;
+
             if (mons_skeleton(item.plus) && one_chance_in(3))
                 turn_corpse_into_skeleton(item);
             else
@@ -328,12 +330,14 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                 else
                     dec_mitm_item_quantity(delay.parm2, 1);
             }
+
+            maybe_drop_monster_hide(corpse);
         }
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
         delay.duration = 0;
         _pop_delay();
@@ -348,7 +352,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         // all of which can be stopped when complete.  This is a fairly
         // reasonable behaviour, although perhaps the character should have
         // the option of reversing the current action if it would take less
-        // time to get out of the plate mail that's half on than it would
+        // time to get out of the plate armour that's half on than it would
         // take to continue.  Probably too much trouble, and we'd have to
         // have a prompt... this works just fine. -- bwr
         break;
@@ -662,8 +666,8 @@ void handle_delay()
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
                 mprf(MSGCH_MULTITURN_ACTION,
-                     "You start bottling blood from the %s.",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+                     "You start bottling blood from %s.",
+                     mitm[delay.parm1].name(DESC_THE).c_str());
             }
             else
             {
@@ -677,8 +681,8 @@ void handle_delay()
                 default: tool = you.inv[delay.parm3].name(DESC_QUALNAME);
                 }
                 mprf(MSGCH_MULTITURN_ACTION,
-                     "You start butchering the %s with your %s.",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str(), tool.c_str());
+                     "You start butchering %s with your %s.",
+                     mitm[delay.parm1].name(DESC_THE).c_str(), tool.c_str());
             }
             break;
 
@@ -871,12 +875,12 @@ void handle_delay()
         {
         case DELAY_ARMOUR_ON:
             mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_ARMOUR_OFF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_BUTCHER:
@@ -1010,7 +1014,7 @@ static void _finish_delay(const delay_queue_item &delay)
         ASSERT(you.equip[slot] == delay.parm1);
 
         mprf("You finish taking off %s.",
-             you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[delay.parm1].name(DESC_YOUR).c_str());
         unequip_item(slot);
 
         break;
@@ -1044,6 +1048,8 @@ static void _finish_delay(const delay_queue_item &delay)
         // vampire_nutrition_per_turn did a stop_delay already:
         if (is_vampire_feeding())
         {
+            const item_def corpse = item;
+
             if (mons_skeleton(item.plus) && one_chance_in(3))
             {
                 turn_corpse_into_skeleton(item);
@@ -1056,12 +1062,14 @@ static void _finish_delay(const delay_queue_item &delay)
                 else
                     dec_mitm_item_quantity(delay.parm2, 1);
             }
+
+            maybe_drop_monster_hide(corpse);
         }
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         break;
     }
 
@@ -1107,7 +1115,11 @@ static void _finish_delay(const delay_queue_item &delay)
             {
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
-                    ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
+                {
+                    mpr("...yet there is something new on the other side. "
+                        "You quickly turn back.");
+                    goto passwall_aborted;
+                }
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
@@ -1119,20 +1131,28 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way.
-            monster* m = monster_at(pass);
-            if (m)
+            if (monster* m = monster_at(pass))
             {
                 // One square, a few squares, anywhere...
                 if (!shift_monster(m) && !monster_blink(m, true))
                     monster_teleport(m, true, true);
+                // Might still fail.
+                if (monster_at(pass))
+                {
+                    mpr("...and sense your way blocked. You quickly turn back.");
+                    goto passwall_aborted;
+                }
+
+                move_player_to_grid(pass, false, true);
+
+                // Wake the monster if it's asleep.
+                if (m)
+                    behaviour_event(m, ME_ALERT, MHITYOU);
             }
+            else
+                move_player_to_grid(pass, false, true);
 
-            move_player_to_grid(pass, false, true);
-
-            // Wake the monster if it's asleep.
-            if (m)
-                behaviour_event(m, ME_ALERT, MHITYOU);
-
+        passwall_aborted:
             redraw_screen();
         }
         break;
@@ -1174,13 +1194,13 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
             else
             {
-                mprf("You finish %s the %s into pieces.",
+                mprf("You finish %s %s into pieces.",
                      delay.parm3 <= SLOT_CLAWS ? "ripping" : "chopping",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+                     mitm[delay.parm1].name(DESC_THE).c_str());
 
                 if (god_hates_cannibalism(you.religion)
                     && is_player_same_species(item.plus))
@@ -1204,10 +1224,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
                 const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
-                if (mons_skeleton(item.plus) && one_chance_in(3))
-                    turn_corpse_into_skeleton_and_chunks(item);
-                else
-                    turn_corpse_into_chunks(item);
+                butcher_corpse(item);
 
                 if (you.berserk()
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
@@ -1219,7 +1236,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another
@@ -1312,7 +1329,7 @@ static void _armour_wear_effects(const int item_slot)
         if (Options.autoinscribe_artefacts && is_artefact(arm))
             add_autoinscription(arm, artefact_auto_inscription(arm));
     }
-    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
+    mprf("You finish putting on %s.", arm.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -1564,7 +1581,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     // Don't interrupt player on monster's turn, they might wander off.
     if (you.turn_is_over
-        && (at.context == "already seen" || at.context == "uncharm"))
+        && (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM))
     {
         return false;
     }
@@ -1616,7 +1633,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
         && !(atype == DELAY_NOT_DELAYED))
         return false;
-    if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
+    if (at.context != SC_NEWLY_SEEN && atype == DELAY_NOT_DELAYED)
         return false;
 
     const monster* mon = static_cast<const monster* >(at.data);
@@ -1631,7 +1648,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (mons_is_mimic(mon->type))
         return false;
 
-    if (at.context == "already seen" || at.context == "uncharm")
+    if (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM)
     {
         // Only say "comes into view" if the monster wasn't in view
         // during the previous turn.
@@ -1639,14 +1656,14 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             && !(atype == DELAY_NOT_DELAYED))
         {
             mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_CAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
     }
-    else if (mon->seen_context == "just seen")
+    else if (mon->seen_context == SC_JUST_SEEN)
         return false;
     else
     {
-        std::string text = mon->full_name(DESC_CAP_A);
+        std::string text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
@@ -1654,22 +1671,25 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         }
         set_auto_exclude(mon);
 
-        if (starts_with(at.context, "open"))
-            text += " " + at.context;
-        else if (at.context == "thin air")
-        {
-            if (mon->type == MONS_AIR_ELEMENTAL)
-                text += " forms itself from the air.";
-            else
-                text += " appears from thin air!";
-        }
+        if (at.context == SC_DOOR)
+            text += " opens the door.";
+        else if (at.context == SC_GATE)
+            text += " opens the gate.";
+        else if (at.context == SC_TELEPORT_IN)
+            text += " appears from thin air!";
         // The monster surfaced and submerged in the same turn without
         // doing anything else.
-        else if (at.context == "surfaced")
+        else if (at.context == SC_SURFACES_BRIEFLY)
             text += "surfaces briefly.";
-        else if (at.context == "surfaces")
-            text += " surfaces.";
-        else if (at.context.find("bursts forth") != std::string::npos)
+        else if (at.context == SC_SURFACES)
+            if (mon->type == MONS_AIR_ELEMENTAL)
+                text += " forms itself from the air.";
+            else if (mon->type == MONS_TRAPDOOR_SPIDER)
+                text += " leaps out from its hiding place under the floor!";
+            else
+                text += " surfaces.";
+        else if (at.context == SC_FISH_SURFACES_SHOUT
+              || at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
             if (mons_primary_habitat(mon) == HT_LAVA)
@@ -1680,18 +1700,8 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 text += "realm of bugdom";
             text += ".";
         }
-        else if (at.context.find("emerges") != std::string::npos)
+        else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
             text += " emerges from the water.";
-        else if (at.context.find("leaps out") != std::string::npos)
-        {
-            if (mon->type == MONS_TRAPDOOR_SPIDER)
-            {
-                text += " leaps out from its hiding place under the "
-                        "floor!";
-            }
-            else
-                text += " leaps out from hiding!";
-        }
         else
             text += " comes into view.";
 
@@ -1699,9 +1709,11 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
         std::string ash_warning;
 
+        monster_info mi(mon);
+
         const std::string mweap =
-            get_monster_equipment_desc(mon, ash_id ? DESC_IDENTIFIED
-                                                   : DESC_WEAPON,
+            get_monster_equipment_desc(mi, ash_id ? DESC_IDENTIFIED
+                                                  : DESC_WEAPON,
                                        DESC_NONE);
 
         if (!mweap.empty())
@@ -1709,8 +1721,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (ash_id)
                 ash_warning = "Ashenzari warns you:";
 
-            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN_CAP)
-                                             + " is" + mweap + ".";
+            (ash_id ? ash_warning : text) +=
+                " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
+                + mweap + ".";
         }
 
         if (msgs_buf)
@@ -1721,7 +1734,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (ash_id)
                 mpr(ash_warning, MSGCH_GOD);
         }
-        const_cast<monster* >(mon)->seen_context = "just seen";
+        const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }
 
     if (crawl_state.game_is_hints())
@@ -1790,8 +1803,11 @@ bool interrupt_activity(activity_interrupt_type ai,
     }
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (delay_is_run(delay) && ai == AI_HUNGRY && prompt_eat_chunks(true) == 1)
+    if (delay_is_run(delay) && ai == AI_HUNGRY
+        && Options.auto_eat_chunks && prompt_eat_chunks(true) == 1)
+    {
         return false;
+    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
@@ -1886,7 +1902,7 @@ static const char *delay_names[] =
 // name must be lowercased already!
 delay_type get_delay(const std::string &name)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
+    COMPILE_CHECK(ARRAYSZ(delay_names) == NUM_DELAYS);
 
     for (int i = 0; i < NUM_DELAYS; ++i)
     {
@@ -1901,7 +1917,7 @@ delay_type get_delay(const std::string &name)
     if (name == "armor_off")
         return (DELAY_ARMOUR_OFF);
 
-    if (name == "memorise")
+    if (name == "memorize")
         return (DELAY_MEMORISE);
 
     if (name == "jewelry_on")
@@ -1912,8 +1928,6 @@ delay_type get_delay(const std::string &name)
 
 const char *delay_name(int delay)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
-
     if (delay < 0 || delay >= NUM_DELAYS)
         return ("");
 

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Spellbook/Staff contents array and management functions
+ * @brief Spellbook/rod contents array and management functions
 **/
 
 #include "AppHdr.h"
@@ -14,6 +14,7 @@
 #include <iomanip>
 
 #include "artefact.h"
+#include "effects.h"
 #include "externs.h"
 #include "species.h"
 #include "cio.h"
@@ -84,15 +85,6 @@ spell_type which_spell_in_book(int sbook_type, int spl)
     return spellbook_template_array[sbook_type][spl];
 }
 
-int player_spell_skills()
-{
-    int sum = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
-        sum += you.skills[i];
-
-    return (sum);
-}
-
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
 int spellbook_contents(item_def &book, read_book_action_type action,
@@ -104,14 +96,12 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
     const int spell_levels = player_spell_levels();
 
-    bool spell_skills = player_spell_skills();
-
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
 
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
-    out.cprintf("%s", book.name(DESC_CAP_THE).c_str());
+    out.cprintf("%s", book.name(DESC_THE).c_str());
 
     out.cprintf("\n\n Spells                             Type                      Level\n");
 
@@ -142,7 +132,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
             else if (you_cannot_memorise(stype)
                 || you.experience_level < level_diff
                 || spell_levels < levels_req
-                || !spell_skills
                 || book.base_type == OBJ_BOOKS
                    && !player_can_memorise_from_spellbook(book))
             {
@@ -160,7 +149,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         strng[0] = index_to_letter(spelcount);
         strng[1] = 0;
 
-        out.cprintf(strng);
+        out.cprintf("%s", strng);
         out.cprintf(" - ");
 
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
@@ -478,6 +467,10 @@ int read_book(item_def &book, read_book_action_type action)
         return (0);
     }
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "read_book");
+#endif
+
     // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents(book, action);
 
@@ -578,7 +571,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         undead = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
-        rc = true;
+        rc = true, undead = false;
 
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
@@ -593,7 +586,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          // could be useful if it didn't require wielding
          || spell == SPELL_TUKIMAS_DANCE))
     {
-        rc = true;
+        rc = true, undead = false;
     }
 
     return (rc);
@@ -957,7 +950,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     {
         MenuEntry* me =
             new MenuEntry("     Spells                        Type          "
-                          "                Success  Level",
+                          "                Failure  Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -965,12 +958,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
 #else
     spell_menu.set_title(
         new MenuEntry("     Spells (Memorisation)         Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE));
 
     spell_menu.set_title(
         new MenuEntry("     Spells (Description)          Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE), false);
 #endif
 
@@ -1051,8 +1044,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
-        desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
+        char* failure = failure_rate_to_string(spell_fail(spell));
+        desc << chop_string(failure, 12)
              << spell_difficulty(spell);
+        free(failure);
 
         desc << "</" << colour_to_str(colour) << ">";
 
@@ -1060,7 +1055,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             new MenuEntry(desc.str(), MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 
@@ -1103,16 +1098,6 @@ bool can_learn_spell(bool silent)
     {
         if (!silent)
             mpr("Your brain is not functional enough to learn spells.");
-        return (false);
-    }
-
-    if (!player_spell_skills())
-    {
-        if (!silent)
-        {
-            mpr("You can't use spell magic! I'm afraid it's scrolls only "
-                "for now.");
-        }
         return (false);
     }
 
@@ -1250,7 +1235,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         prompt += make_stringf("is %s, a dangerous spellbook which will "
                                "strike back at you if your memorisation "
                                "attempt fails. Attempt to memorise anyway?",
-                               fakebook.name(DESC_NOCAP_THE).c_str());
+                               fakebook.name(DESC_THE).c_str());
 
         // Deactivate choice from tile inventory.
         mouse_control mc(MOUSE_MODE_MORE);
@@ -1265,11 +1250,12 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     const int temp_rand2 = random2(4);
 
     mprf("This spell is %s %s to %s.",
-         ((chance >= 80) ? "very" :
-          (chance >= 60) ? "quite" :
-          (chance >= 45) ? "rather" :
-          (chance >= 30) ? "somewhat"
-                         : "not that"),
+         ((chance >= 100) ? "too" :
+           (chance >= 80) ? "very" :
+           (chance >= 60) ? "quite" :
+           (chance >= 45) ? "rather" :
+           (chance >= 30) ? "somewhat"
+                          : "not that"),
          ((temp_rand1 == 0) ? "difficult" :
           (temp_rand1 == 1) ? "tricky"
                             : "challenging"),
@@ -1277,6 +1263,8 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
           (temp_rand2 == 1) ? "commit to memory" :
           (temp_rand2 == 2) ? "learn"
                             : "absorb"));
+    if (chance >= 100)
+        return (false);
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
@@ -1300,7 +1288,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         return (false);
     }
 
-    if (random2(40) + random2(40) + random2(40) < chance)
+    if (random2avg(100, 3) < chance && !one_chance_in(10))
     {
         mpr("You fail to memorise the spell.");
         learned_something_new(HINT_MEMORISE_FAILURE);
@@ -1353,7 +1341,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     prompt += make_stringf("Forgetting %s from %s will destroy the book! "
                            "Are you sure?",
                            spell_title(spell),
-                           book->name(DESC_NOCAP_THE).c_str());
+                           book->name(DESC_THE).c_str());
 
     // Deactivate choice from tile inventory.
     mouse_control mc(MOUSE_MODE_MORE);
@@ -1483,8 +1471,10 @@ int staff_spell(int staff)
     }
 
     // All checks passed, we can cast the spell.
-    if (your_spells(spell, power, false, false)
-            == SPRET_ABORT)
+    if (you.confused())
+        random_uselessness();
+    else if (your_spells(spell, power, false, false)
+                == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);
@@ -1694,7 +1684,11 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     ASSERT(level > 0 && level <= 9);
 
     if (num_spells == -1)
-        num_spells = SPELLBOOK_SIZE;
+    {
+        //555666421
+        num_spells = std::min(5 + (level - 1)/3, 18 - 2*level);
+        num_spells = std::max(1, num_spells);
+    }
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     book.plus  = level;
@@ -1712,6 +1706,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (spells.empty())
     {
+        if (level > 1)
+            return make_book_level_randart(book, level - 1);
         char buf[80];
 
         if (god_discard > 0 && uncastable_discard == 0)
@@ -1740,23 +1736,14 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (num_spells > (int) spells.size())
     {
-        // Some gods (Elyvilon) dislike a lot of the higher level spells,
-        // so try a lower level.
-        if (god != GOD_NO_GOD && god != GOD_XOM)
-            return make_book_level_randart(book, level - 1, num_spells);
-
         num_spells = spells.size();
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        // Not many level 8 or 9 spells
-        if (level < 8)
-        {
-            mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
-                             "randart spellbook than there are valid spells.",
-                 level);
-            mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
-                             "%d spells due to being disliked by %s.",
-                 uncastable_discard, god_discard, god_name(god).c_str());
-        }
+        mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
+                         "randart spellbook than there are valid spells.",
+             level);
+        mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
+                         "%d spells due to being disliked by %s.",
+             uncastable_discard, god_discard, god_name(god).c_str());
 #endif
     }
 
@@ -2533,7 +2520,7 @@ bool book_has_title(const item_def &book)
 
 bool is_dangerous_spellbook(const int book_type)
 {
-    switch(book_type)
+    switch (book_type)
     {
     case BOOK_NECRONOMICON:
     case BOOK_GRAND_GRIMOIRE:

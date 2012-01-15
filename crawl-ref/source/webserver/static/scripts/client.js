@@ -1,11 +1,14 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
-        "contrib/jquery.cookie", "contrib/jquery.tablesorter"],
+        "contrib/jquery.cookie", "contrib/jquery.tablesorter",
+        "contrib/jquery.waitforimages"],
 function (exports, $, key_conversion, chat, comm) {
 
     // Need to keep this global for backwards compatibility :(
     window.current_layer = "crt";
 
-    exports.log_messages = true;
+    window.debug_mode = false;
+
+    exports.log_messages = false;
     exports.log_message_size = false;
 
     var delay_timeout = undefined;
@@ -18,10 +21,40 @@ function (exports, $, key_conversion, chat, comm) {
 
     var send_message = comm.send_message;
 
-    function log(text)
+    window.log = function (text)
     {
         if (window.console && window.console.log)
             window.console.log(text);
+    }
+
+    function handle_message(msg)
+    {
+        if (typeof msg === "string")
+        {
+            // Javascript code
+            eval(msg);
+        }
+        else
+        {
+            comm.handle_message(msg);
+        }
+    }
+
+    function enqueue_message(msgtext)
+    {
+        if (msgtext.match(/^{/))
+        {
+            // JSON message
+            var msgobj = eval("(" + msgtext + ")");
+            if (!comm.handle_message_immediately(msgobj))
+                message_queue.push(msgobj);
+        }
+        else
+        {
+            // Javascript code
+            message_queue.push(msgtext);
+        }
+        handle_message_backlog();
     }
 
     function handle_message_backlog()
@@ -29,23 +62,23 @@ function (exports, $, key_conversion, chat, comm) {
         while (message_queue.length
                && (message_inhibit == 0))
         {
-            msg = message_queue.shift();
-            try
+            var msg = message_queue.shift();
+            if (window.debug_mode)
             {
-                if (msg.match(/^{/))
-                {
-                    // JSON message
-                    comm.handle_message(msg);
-                }
-                else
-                {
-                    // Javascript code
-                    eval(msg);
-                }
+                handle_message(msg);
             }
-            catch (err)
+            else
             {
-                console.error("Error in message: " + msg + " - " + err);
+                try
+                {
+                    handle_message(msg);
+                }
+                catch (err)
+                {
+                    console.error("Error in message: " + msg);
+                    console.error(err.message);
+                    console.error(err.stack);
+                }
             }
         }
     }
@@ -61,6 +94,9 @@ function (exports, $, key_conversion, chat, comm) {
         handle_message_backlog();
     }
 
+    exports.inhibit_messages = inhibit_messages;
+    exports.uninhibit_messages = uninhibit_messages;
+
     function delay(ms)
     {
         clearTimeout(delay_timeout);
@@ -74,22 +110,39 @@ function (exports, $, key_conversion, chat, comm) {
         uninhibit_messages();
     }
 
-    var layers = ["crt", "normal", "lobby"]
+    exports.delay = delay;
+
+    var layers = ["crt", "normal", "lobby", "loader"]
 
     function set_layer(layer)
     {
         if (showing_close_message) return;
 
-        $.each(layers, function (i, l)
-               {
-                   if (l == layer)
-                       $("#" + l).show();
-                   else
-                       $("#" + l).hide();
-               });
+        $.each(layers, function (i, l) {
+            if (l == layer)
+                $("#" + l).show();
+            else
+                $("#" + l).hide();
+        });
         current_layer = layer;
 
         lobby(layer == "lobby");
+    }
+
+    function register_layer(name)
+    {
+        if (layers.indexOf(name) == -1)
+            layers.push(name);
+    }
+
+    exports.set_layer = set_layer;
+    exports.register_layer = register_layer;
+
+    function do_layout()
+    {
+        $("#loader").height($(window).height());
+        if (window.do_layout)
+            window.do_layout();
     }
 
     function handle_keypress(e)
@@ -104,18 +157,21 @@ function (exports, $, key_conversion, chat, comm) {
             return;
         }
 
-        if (e.which == 0) return;
-        if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
-        // so we handle it in keydown
+        if ((e.which == 0) ||
+            (e.which == 8) || /* Backspace gets a keypress in FF, but not Chrome
+                                 so we handle it in keydown */
+            (e.which == 9))   /* Tab gives a keypress in Opera even when it is
+                                 suppressed in keydown */
+            return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keypress"))
+            return;
 
         e.preventDefault();
 
         var s = String.fromCharCode(e.which);
-        if (s == "_")
-        {
-            chat.focus();
-        }
-        else if (s == "{")
+        if (s == "{")
         {
             send_bytes(["{".charCodeAt(0)]);
         }
@@ -143,6 +199,22 @@ function (exports, $, key_conversion, chat, comm) {
         socket.send(s);
     }
 
+    function retrigger_event(ev, new_type)
+    {
+        var new_ev = $.extend({}, ev);
+        new_ev.type = new_type;
+        $(new_ev.target).trigger(new_ev);
+        if (new_ev.isDefaultPrevented())
+            ev.preventDefault();
+        if (new_ev.isPropagationStopped())
+        {
+            ev.stopImmediatePropagation();
+            return false;
+        }
+        else
+            return true;
+    }
+
     function handle_keydown(e)
     {
         if (current_layer == "lobby")
@@ -150,12 +222,15 @@ function (exports, $, key_conversion, chat, comm) {
             if (e.which == 27)
             {
                 e.preventDefault();
-                $("#register").hide();
-                $("#rc_edit").hide();
+                hide_dialog();
             }
             return;
         }
         if ($(document.activeElement).hasClass("text")) return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keydown"))
+            return;
 
         if (e.ctrlKey && !e.shiftKey && !e.altKey)
         {
@@ -182,7 +257,7 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (!e.ctrlKey && !e.shiftKey && e.altKey)
         {
-            if (e.which == 18) return;
+            if (e.which < 32) return;
 
             e.preventDefault();
             send_bytes([27, e.which]);
@@ -193,6 +268,11 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 e.preventDefault();
                 location.hash = "#lobby";
+            }
+            else if (e.which == 123)
+            {
+                e.preventDefault();
+                chat.focus();
             }
             else if (e.which in key_conversion.simple)
             {
@@ -248,7 +328,7 @@ function (exports, $, key_conversion, chat, comm) {
         var username = data.username;
         $("#login_message").html("Logged in as " + username);
         current_user = username;
-        $("#register").hide();
+        hide_dialog();
         $("#login_form").hide();
         $("#reg_link").hide();
         $("#logout_link").show();
@@ -301,11 +381,33 @@ function (exports, $, key_conversion, chat, comm) {
 
     function show_dialog(id)
     {
-        $(id).fadeIn(100);
-        var w = $(id).width();
-        var ww = $(window).width();
-        $(id).offset({ left: ww / 2 - w / 2, top: 50 });
+        $(".floating_dialog").hide();
+        var elem = $(id);
+        elem.fadeIn(100, function () {
+            elem.focus();
+        });
+        center_element(elem);
+        $("#overlay").show();
     }
+    function center_element(elem)
+    {
+        var left = $(window).width() / 2 - elem.outerWidth() / 2;
+        if (left < 0) left = 0;
+        var top = $(window).height() / 2 - elem.outerHeight() / 2;
+        if (top < 0) top = 0;
+        if (top > 50) top = 50;
+        var offset = elem.offset();
+        if (offset.left != left || offset.top != top)
+            elem.offset({ left: left, top: top });
+    }
+    function hide_dialog()
+    {
+        $(".floating_dialog").blur().hide();
+        $("#overlay").hide();
+    }
+    exports.show_dialog = show_dialog;
+    exports.hide_dialog = hide_dialog;
+    exports.center_element = center_element;
 
     function start_register()
     {
@@ -315,7 +417,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function cancel_register()
     {
-        $("#register").hide();
+        hide_dialog();
     }
 
     function register()
@@ -377,13 +479,14 @@ function (exports, $, key_conversion, chat, comm) {
             game_id: editing_rc,
             contents: $("#rc_file_contents").val()
         });
-        $("#rc_edit").hide();
+        hide_dialog();
         return false;
     }
 
     function pong(data)
     {
         send_message("pong");
+        return true;
     }
 
     function connection_closed(data)
@@ -393,6 +496,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat").hide();
         $("#crt").html(msg + "<br><br>");
         showing_close_message = true;
+        return true;
     }
 
     function play_now(id)
@@ -402,8 +506,15 @@ function (exports, $, key_conversion, chat, comm) {
         });
     }
 
-    var lobby_update_timeout = undefined;
-    var lobby_update_rate = 30000;
+    function show_loading_screen()
+    {
+        var imgs = $("#loader img");
+        imgs.hide();
+        var count = imgs.length;
+        var rand_index = Math.floor(Math.random() * count);
+        $(imgs[rand_index]).show();
+        set_layer("loader");
+    }
 
     function go_lobby()
     {
@@ -412,6 +523,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         set_layer("lobby");
 
+        hide_dialog();
+
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         $("#username").focus();
@@ -419,42 +532,210 @@ function (exports, $, key_conversion, chat, comm) {
         chat.clear();
 
         watching = false;
-
-        lobby_update();
     }
 
     function lobby(enable)
     {
-        if (enable && lobby_update_timeout == undefined)
-        {
-            lobby_update_timeout = setInterval(lobby_update, lobby_update_rate);
-        }
-        else if (!enable && lobby_update_timeout != undefined)
-        {
-            clearInterval(lobby_update_timeout);
-        }
-
         $("#chat").toggle(!enable);
     }
-    function lobby_update()
+
+    var new_list = null;
+
+    function lobby_entry(data)
     {
-        send_message("update_lobby");
+        var single = false;
+        if (new_list == null)
+        {
+            single = true;
+            new_list = $("#player_list").clone();
+        }
+
+        var id = "game-" + data.id;
+        var entry = new_list.find("#" + id);
+        if (entry.length == 0)
+        {
+            entry = $("#game_entry_template").clone();
+            entry.attr("id", id);
+            new_list.append(entry);
+        }
+
+        function set(key, value)
+        {
+            entry.find("." + key).html(value);
+        }
+
+        var username_entry = $(make_watch_link(data));
+        username_entry.text(data.username);
+        set("username", username_entry);
+        set("game_id", data.game_id);
+        set("xl", data.xl);
+        set("char", data.char);
+        set("place", data.place);
+        set("god", data.god || "");
+        set("title", data.title);
+        set("idle_time", format_idle_time(data.idle_time));
+        entry.find(".idle_time").data("time", data.idle_time);
+        entry.find(".idle_time").data("sort", "" + data.idle_time);
+        set("spectator_count", data.spectator_count);
+        if (entry.find(".milestone").text() !== data.milestone)
+        {
+            if (single)
+                roll_in_new_milestone(entry, data.milestone);
+            else
+                set("milestone", data.milestone);
+        }
+
+        if (single)
+            lobby_complete();
     }
-    function lobby_data(data)
+
+    var lobby_idle_timer = setInterval(update_lobby_idle_times, 1000);
+    function update_lobby_idle_times()
     {
-        var old_list = $("#player_list");
-        var l = old_list.clone();
-        l.find("tbody").html(data.content);
-        l.tablesorter({
-            sortList: old_list[0].config.sortList,
-            headers: {
-                3: {
-                    sorter: "timespan"
-                }
+        $("#player_list .idle_time").each(function () {
+            var $this = $(this);
+            var time = $this.data("time");
+            if (time)
+            {
+                time++;
+                $this.html(format_idle_time(time));
+                $this.data("time", time);
+                $this.data("sort", "" + time);
             }
         });
-        old_list.replaceWith(l);
     }
+
+    function lobby_remove(data)
+    {
+        $("#game-" + data.id).remove();
+        if ($("#player_list tbody tr").length == 0)
+            $("#lobby_body").hide();
+    }
+
+    function lobby_clear()
+    {
+        new_list = $("#player_list").clone();
+        new_list.find("tbody").html("");
+    }
+    function lobby_complete()
+    {
+        var old_list = $("#player_list");
+        var sortlist;
+        if (new_list.find("tbody tr").length > 0)
+        {
+            $("#lobby_body").show();
+            if (old_list[0].config)
+                sortlist = old_list[0].config.sortList;
+            else
+                sortlist = [[0, 0]];
+            new_list.tablesorter({
+                sortList: sortlist,
+                textExtraction: extract_text_or_data
+            });
+        }
+        else
+            $("#lobby_body").hide();
+        old_list.replaceWith(new_list);
+        new_list = null;
+    }
+
+    function make_watch_link(data)
+    {
+        return "<a href='#watch-" + data.username + "'></a>";
+    }
+
+    function format_idle_time(seconds)
+    {
+        var elem = $("<span></span>");
+        if (seconds == 0)
+        {
+            elem.text("");
+        }
+        else if (seconds < 120)
+        {
+            elem.text(seconds + " s");
+        }
+        else if (seconds < (60 * 60))
+        {
+            elem.text(Math.round(seconds / 60) + " min");
+        }
+        else
+        {
+            elem.text(Math.round(seconds / (60 * 60)) + " h");
+        }
+        return elem;
+    }
+
+    function extract_text_or_data(elem)
+    {
+        var $elem = $(elem);
+        if ($elem.data("sort"))
+            return $elem.data("sort");
+        else
+            return $elem.text();
+    }
+
+    function roll_in_new_milestone(row, milestone)
+    {
+        var td = row.find(".milestone_col");
+        if (td.length == 0) return;
+
+        var new_milestone = td.find(".new_milestone");
+        new_milestone.text(milestone);
+
+        var milestones = td.find(".new_milestone, .milestone");
+        milestones.animate({ top: "-1.1em" }, function () {
+            milestones.text(milestone);
+            milestones.css({ top: 0 });
+        });
+    }
+
+
+    function force_terminate_no()
+    {
+        send_message("force_terminate", { answer: false });
+        hide_dialog();
+    }
+    function force_terminate_yes()
+    {
+        send_message("force_terminate", { answer: true });
+        hide_dialog();
+    }
+    function stale_processes_keydown(ev)
+    {
+        ev.preventDefault();
+        send_message("stop_stale_process_purge");
+        hide_dialog();
+    }
+    function force_terminate_keydown(ev)
+    {
+        ev.preventDefault();
+        if (ev.which == "y".charCodeAt(0))
+            force_terminate_yes();
+        else
+            force_terminate_no();
+    }
+    function handle_stale_processes(data)
+    {
+        $(".game_name").html(data.game);
+        $(".recover_timeout").html("" + data.timeout);
+        show_dialog("#stale_processes_message");
+    }
+    function handle_stale_process_fail(data)
+    {
+        $("#message_box").html(data.content);
+        show_dialog("#message_box");
+    }
+    function handle_force_terminate(data)
+    {
+        show_dialog("#force_terminate");
+    }
+
+    comm.register_handlers({
+        "stale_processes": handle_stale_processes,
+        "stale_process_fail": handle_stale_process_fail,
+        "force_terminate?": handle_force_terminate
+    });
 
     var watching = false;
     function watching_started()
@@ -515,27 +796,52 @@ function (exports, $, key_conversion, chat, comm) {
     function receive_game_client(data)
     {
         inhibit_messages();
+        show_loading_screen();
         $("#game").html(data.content);
-        $(document).ready(uninhibit_messages);
+        $(document).ready(function () {
+            $("#game").waitForImages(uninhibit_messages);
+        });
     }
+
+    function do_set_layer(data)
+    {
+        set_layer(data.layer);
+    }
+
+    function handle_multi_message(data)
+    {
+        var msg;
+        while (msg = data.msgs.pop())
+            message_queue.unshift(msg);
+    }
+
+
 
     // Global functions for backwards compatibility (HACK)
     window.log = log;
     window.set_layer = set_layer;
     window.assert = function () {};
+    window.abs = function (x) { if (x < 0) return -x; else return x; }
+
+    comm.register_immediate_handlers({
+        "ping": pong,
+        "close": connection_closed,
+    });
 
     comm.register_handlers({
+        "multi": handle_multi_message,
+
         "set_game_links": set_game_links,
         "html": set_html,
-        "lobby": lobby_data,
 
-        "ping": pong,
+        "lobby_clear": lobby_clear,
+        "lobby_entry": lobby_entry,
+        "lobby_remove": lobby_remove,
+        "lobby_complete": lobby_complete,
 
         "go_lobby": go_lobby,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
-
-        "close": connection_closed,
 
         "login_success": logged_in,
         "login_fail": login_failed,
@@ -547,6 +853,8 @@ function (exports, $, key_conversion, chat, comm) {
         "rcfile_contents": rcfile_contents,
 
         "game_client": receive_game_client,
+
+        "layer": do_set_layer,
     });
 
     $(document).ready(function () {
@@ -576,7 +884,12 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#rc_edit_form").bind("submit", send_rc);
 
-        $("#lobby_update_link").bind("click", lobby_update);
+        $("#force_terminate_no").click(force_terminate_no);
+        $("#force_terminate_yes").click(force_terminate_yes);
+        $("#stale_processes_message").keydown(stale_processes_keydown);
+        $("#force_terminate").keydown(force_terminate_keydown);
+
+        do_layout();
 
         if ("MozWebSocket" in window)
         {
@@ -611,8 +924,7 @@ function (exports, $, key_conversion, chat, comm) {
                 {
                     console.log("Message size: " + msg.data.length);
                 }
-                message_queue.push(msg.data);
-                handle_message_backlog();
+                enqueue_message(msg.data);
             };
 
             socket.onerror = function ()
@@ -641,22 +953,6 @@ function (exports, $, key_conversion, chat, comm) {
                     showing_close_message = true;
                 }
             };
-
-            $.tablesorter.addParser({
-                id: 'timespan',
-                is: function(s) {
-                    return false;
-                },
-                format: function(s) {
-                    return s.substring(0, s.length - 1);
-                },
-                type: 'numeric'
-            });
-
-
-            $("#player_list").tablesorter({
-                sortList: [[0, 0]]
-            });
         }
         else
         {

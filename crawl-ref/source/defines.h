@@ -230,6 +230,8 @@ const int ANTITRAIN_PENALTY = 2;
 
 #define MAX_MONSTER_HP 10000
 
+#define MAX_CONSTRICT 8
+
 // some shortcuts:
 #define menv   env.mons
 #define mitm   env.item

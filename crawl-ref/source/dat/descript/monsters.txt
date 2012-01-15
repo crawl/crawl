@@ -76,7 +76,7 @@ Donald
 {{
 local descript = "An adventurer just like you, trying to find the Orb."
 
-if you.race() ~= "Merfolk" then
+if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
     descript = descript .. " Unlike you, and d"
 else
     descript = descript .. " D"
@@ -135,7 +135,7 @@ A voracious and surprisingly intelligent slug, devoted to eating everything and 
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of Vestibule of Hell. Legends say that his silver horn is used to throw open the gates of Hell themselves.
+A huge, three-headed arch-demon, guardian of the Vestibule of Hell. Legends say that his silver horn is used to throw open the gates of Hell themselves.
 %%%%
 Gloorx Vloq
 
@@ -339,7 +339,7 @@ end
 %%%%
 Wiglaf
 
-A fat dwarf wearing a stupid-looking hat.
+A fat dwarf wearing a stupid-looking hat. In Okawaru's name, he's here to avenge his mountain dwarf kin, who were driven from their lands by hill orcs and others. From the way he looks at you, he also seems to hold you responsible.
 {{
 if you.can_smell() then
     return "\nHe reeks of alcohol."
@@ -356,6 +356,10 @@ An ancient and mighty dragon.
 acid blob
 
 A lump of sickly green flesh, dripping with lethal acid.
+%%%%
+adder
+
+The common dungeon snake.
 %%%%
 agate snail
 
@@ -383,7 +387,7 @@ A lich who, having existed for countless centuries, has grown almost unimaginabl
 %%%%
 angel
 
-A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light. It appears to be weightless and quite agile while flying, despite wearing heavy armour.
+A divine warrior of the Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light. It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 ant larva
 
@@ -404,6 +408,10 @@ A juvenile alligator. While it does not have crushing jaws, nor the strength to 
 ball lightning
 
 An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
+%%%%
+ball python
+
+A small snake that can augment its bite by constricting small creatures.
 %%%%
 ballistomycete
 
@@ -528,6 +536,10 @@ Behold! A throne-bearer of the Gods, whose head is beset by four faces: one of a
 clay golem
 
 A huge animated clay statue.
+%%%%
+crawling corpse
+
+A corpse weakly animated by necromancy. It is easily destroyed, but capable of merging with others to form more potent horrors.
 %%%%
 crimson imp
 
@@ -722,6 +734,10 @@ dwarf
 
 A short stout fella with a beard.
 %%%%
+dwarf mountain bat
+
+A species of bat that lives in mountain caves. How it got into the dungeon is a mystery - probably something related to the sudden demise of dwarves in those lands. But don't worry, an eradication team is on the way.
+%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by inhabiting a lump of earth and rocks.
@@ -771,6 +787,11 @@ A two-headed giant, able to land devastating blows left and right.
 Executioner
 
 A horribly powerful and swift demon, its shape obscured by a cloud of swirling scythe-like blades.
+%%%%
+experimental stone golem
+
+This golem has been imbued with fire as part of some insane experiment. It looks as though it's going to explode at any moment.
+
 %%%%
 eye of devastation
 
@@ -1166,7 +1187,7 @@ jumping spider
 
 A large spider with an extraordinary ability to leap to its prey from a great distance.
 %%%%
-kenku
+tengu
 
 A bird-brained creature that looks at you with hatred.
 %%%%
@@ -1204,7 +1225,7 @@ A rat that has been subjected to a wizard's terrible experiments. Who knows what
 %%%%
 large abomination
 
-A large and hideous form, created or summoned by some arcane process.
+A large and hideous conglomeration of mangled body parts, demonically possessed and altered in ways that challenge your sanity.
 %%%%
 large simulacrum
 
@@ -1245,6 +1266,10 @@ This contraption, made from a coil and a rod, is buzzing with electricity and ca
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
+%%%%
+macabre mass
+
+A fused and twisted collection of body parts, weakly animated by necromancy. It is easily destroyed, but capable of merging with others to form more potent horrors.
 %%%%
 mad acolyte of Lugonu
 
@@ -1601,7 +1626,7 @@ A brightly coloured snake, very comfortable in the water. It has a highly potent
 %%%%
 seraph
 
-The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts, the mightiest servants of the Good Gods. They have six wings and but one face, and are said to sometimes take form of fiery serpents.
+The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts, the mightiest servants of the Good Gods. They have six wings and but one face, and are said to sometimes take the forms of fiery serpents.
 %%%%
 shadow
 
@@ -1691,11 +1716,7 @@ An icky glob of slime, which slithers along the ground, occasionally merging wit
 %%%%
 small abomination
 
-A hideous form, created or summoned by some arcane process.
-%%%%
-small snake
-
-The lesser dungeon snake.
+A hideous mass of body parts, part animated dead flesh, part demon.
 %%%%
 small simulacrum
 
@@ -1712,10 +1733,6 @@ A corpse raised to undeath by necromancy.
 smoke demon
 
 An infernal demon that manifests itself as a writhing cloud of smoke. Having considerable pyrokinetic powers, it can very effectively attack its enemies from afar.
-%%%%
-snake
-
-The common dungeon snake.
 %%%%
 snapping turtle
 
@@ -1771,6 +1788,10 @@ A deft and surreptitious spriggan that stabs in secret.
 
 These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.
 %%%%
+spriggan baker
+
+A spriggan that has mastered the culinary arts.
+%%%%
 spriggan berserker
 
 A relatively mighty spriggan that plunges recklessly into combat.
@@ -1806,6 +1827,10 @@ A huge animated stone statue.
 storm dragon
 
 A huge and very powerful dragon. Sparks crackle along its enormous scaly wings.
+%%%%
+subtractor snake
+
+A weird deadly snake capable of diminishing your strengths, and dividing you into multiple small pieces.
 %%%%
 sun demon
 
@@ -2013,7 +2038,7 @@ A winged demon covered in shiny metallic scales. It has a legion of imp minions 
 # Vault-defined monsters
 air elemental statue
 
-A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+A delicate statue of a tengu gliding through the air. It looks quite insubstantial.
 %%%%
 ancient champion
 

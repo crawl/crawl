@@ -21,7 +21,6 @@
 #
 ###############################################################################
 ###############################################################################
-
 %%%%
 shield of the gong
 
@@ -52,7 +51,6 @@ SHROANNG!
 #
 ###############################################################################
 ###############################################################################
-
 %%%%
 noisy weapon
 
@@ -71,7 +69,6 @@ SOUND:You hear @weapon_noise@
 ###############################################################################
 # Weapon chatter.
 ###############################################################################
-
 %%%%
 weapon_chatter
 
@@ -121,7 +118,6 @@ weapon_chatter
 
 w:30
 @rare_chatter@
-
 %%%%
 rare_chatter
 
@@ -138,11 +134,9 @@ rare_chatter
 @Your_weapon@ asks, "Did you take a vow of silence?"
 
 @Your_weapon@ says, "You can tell me everything! I can keep a secret!"
-
 ###############################################################################
 # Weapon noises.
 ###############################################################################
-
 %%%%
 weapon_noises
 
@@ -235,11 +229,9 @@ weapon_noises
 @Your_weapon@ makes a tutting noise.
 
 @Your_weapon@ parrots the noises around you.
-
 ###############################################################################
 # Instrumental noises.
 ###############################################################################
-
 %%%%
 instrumental_noises
 
@@ -270,11 +262,9 @@ instrumental_noises
 @Your_weapon@ goes toot-toot!
 
 @Your_weapon@ does a drum roll.
-
 ###############################################################################
 # Noises for weapons with NOISES property (not used for the Singing Sword)
 ###############################################################################
-
 %%%%
 weapon_noise
 
@@ -353,8 +343,6 @@ an echo.
 the wailing of sirens.
 
 a flourish of trumpets!
-
-
 ###############################################################################
 ###############################################################################
 #
@@ -362,7 +350,7 @@ a flourish of trumpets!
 #
 ###############################################################################
 ###############################################################################
-
+#
 # The Sword operates in three modes: no tension, low tension, high tension.
 #
 # No tension:
@@ -410,7 +398,6 @@ a flourish of trumpets!
 #
 ###############################################################################
 
-
 ###############################################################################
 # Weights for different types of message, depending on tension.
 
@@ -457,7 +444,6 @@ w:70
 
 w:100
 @weapon_chatter@
-
 ######### low tension ############
 %%%%
 singing sword low_tension
@@ -485,7 +471,6 @@ w:70
 
 w:160
 @weapon_noises_low-high_tension@
-
 ######### high tension ############
 %%%%
 singing sword high_tension
@@ -507,18 +492,14 @@ w:30
 
 w:360
 @weapon_noises_low-high_tension@
-
 ######### SCREAM (high tension + double damage) ############
 %%%%
 singing sword SCREAM
 
 @SCREAM@
-
-
 ###############################################################################
 # Weapon noises for the Singing Sword at low and high tension.
 ###############################################################################
-
 %%%%
 weapon_noises_low-high_tension
 
@@ -536,13 +517,11 @@ w:100
 @The_weapon@ laughs in a fit of madness.
 
 @The_weapon@ makes a horrifying noise.
-
 ###############################################################################
 # Singing or other making of music
 # The Singing Sword will happily sing a song during work (i.e. at low tension).
 # But it will practise only when properly bored (i.e. at no tension).
 ###############################################################################
-
 ############ singing, no tension ############
 %%%%
 singing_no_tension
@@ -569,7 +548,6 @@ singing_no_tension
 @The_weapon@ sings @several@ chords at once.
 
 @The_weapon@ repeatedly practises counterpoints.
-
 ############ singing, no or low tension ############
 %%%%
 singing_no-low_tension
@@ -681,12 +659,10 @@ w:25
 
 @The_weapon@ @composes_or_sings@ a ballad about your adventures.
 
-@Your_weapon@ prematurely composes your obituary.
-
+@The_weapon@ prematurely composes your obituary.
 ###############################################################################
 # Speaking
 ###############################################################################
-
 ############ speaking, no tension ############
 %%%%
 speaking_no_tension
@@ -695,7 +671,6 @@ speaking_no_tension
 
 w:1
 @rare_speaking_no_tension@
-
 %%%%
 common_speaking_no_tension
 
@@ -764,7 +739,6 @@ common_speaking_no_tension
 @The_weapon@ compliments you on your taste in weapons.
 
 @The_weapon@ attempts to teach you some tongue twisters.
-
 %%%%
 rare_speaking_no_tension
 
@@ -807,7 +781,6 @@ w:5
 @The_weapon@ laments, "What are you waiting for? I am doing all the work."
 
 @The_weapon@ explains, "Killing is an art, not a pastime."
-
 ############ speaking, low tension ############
 %%%%
 speaking_low_tension
@@ -836,7 +809,6 @@ w:1
 @The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
 
 @The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
-
 ############ speaking, low or high tension -- possible damage ############
 %%%%
 speaking_low-high_tension
@@ -852,7 +824,6 @@ speaking_low-high_tension
 @The_weapon@ shouts, "Kill! Crush! Destroy!"
 
 @The_weapon@ states, "Their screams, my satisfaction."
-
 ############ speaking, high tension -- damage! ############
 %%%%
 speaking_high_tension
@@ -888,7 +859,6 @@ w:1
 @The_weapon@ @screams@, "Go for the jugular!"
 
 @The_weapon@ @screams@, "My instinct to kill is stronger than their will to live!"
-
 ############ SCREAMING -- lots of damage!! #########################
 %%%%
 SCREAM
@@ -947,12 +917,9 @@ w:1
 
 w:1
 @The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
-
-
 ###############################################################################
 # Lines from real songs.
 ###############################################################################
-
 ############ real songs, no tension ############
 %%%%
 real_song_no_tension
@@ -994,7 +961,6 @@ real_song_no_tension
 
 # Eminem
 @The_weapon@ sings, "Kill for the laughter, Kill for the tears..."
-
 ############ real songs, low tension ############
 %%%%
 real_song_low_tension
@@ -1022,7 +988,6 @@ real_song_low_tension
 
 #song by the Misfits
 @The_weapon@ asks plaintively, "@player_name@, can I go out and kill tonight?"
-
 ############ real songs, low or high tension -- possibly damage! ############
 %%%%
 real_song_low-high_tension
@@ -1035,7 +1000,6 @@ real_song_low-high_tension
 
 # Gloria Gaynor
 @The_weapon@ sings, "I will survive!"
-
 ############ real songs, high tension -- damage! ############
 %%%%
 real_song_high_tension
@@ -1048,25 +1012,21 @@ real_song_high_tension
 
 # Frank Sinatra (or Sid Vicious)
 @The_weapon@ sings, "I did it my way!"
-
 ###############################################################################
 # synonyms used above
 ###############################################################################
-
 %%%%
 sings_or_hums
 
 sings
 
 hums
-
 %%%%
 sings_or_whistles
 
 sings
 
 whistles
-
 %%%%
 sings_hums_whistles
 
@@ -1075,14 +1035,12 @@ sings
 hums
 
 whistles
-
 %%%%
 composes_or_sings
 
 composes
 
 sings
-
 %%%%
 screams
 
@@ -1109,7 +1067,6 @@ shrieks
 vociferates
 
 thunders
-
 %%%%
 screams_how
 
@@ -1122,7 +1079,6 @@ angrily
 
 w:60
 @loudly@
-
 %%%%
 loudly
 
@@ -1133,7 +1089,6 @@ deafening
 ear-piercing
 
 ear-splitting
-
 %%%%
 beastly_adjective
 
@@ -1146,7 +1101,6 @@ raging
 furious
 
 irate
-
 %%%%
 beast
 
@@ -1166,7 +1120,6 @@ beast of prey
 predator
 
 carnivore
-
 %%%%
 what_kind
 
@@ -1175,7 +1128,6 @@ little
 catchy
 
 merry
-
 %%%%
 strikes_up_what
 
@@ -1185,14 +1137,12 @@ a slow and mournful tune
 a merry @tune_or_melody@
 
 a funeral march
-
 %%%%
 hymn_or_song
 
 hymn
 
 song
-
 %%%%
 several
 
@@ -1201,7 +1151,6 @@ several
 three or four
 
 a multitude of
-
 %%%%
 kind_of_scales
 
@@ -1210,7 +1159,6 @@ pentatonic
 chromatic
 
 diatonic
-
 %%%%
 not_swords
 
@@ -1221,14 +1169,12 @@ axes
 polearms
 
 staves
-
 %%%%
 points_out
 
 points out
 
 remarks in passing on
-
 %%%%
 dance
 
@@ -1237,70 +1183,60 @@ bossanova
 waltz
 
 menuet
-
 %%%%
 an_aria_or_fugue
 
 an aria
 
 a fugue
-
 %%%%
 nearly_or_clearly
 
 nearly
 
 clearly
-
 %%%%
 hits_or_misses
 
 hits
 
 misses
-
 %%%%
 tune_or_melody
 
 tune
 
 melody
-
 %%%%
 unpleasant_or_sudden
 
 an unpleasant
 
 a sudden
-
 %%%%
 demise_or_death
 
 demise
 
 death
-
 %%%%
 questionable
 
 questionable
 
 doubtful
-
 %%%%
 double_or_triple
 
 double
 
 triple
-
 %%%%
 audition
 
 audition
 
 concerto
-
 %%%%
 rhyme_word
 
@@ -1309,7 +1245,6 @@ fountain of blood
 killing spree
 
 battlefield
-
 %%%%
 song_theme
 
@@ -1330,7 +1265,6 @@ the history of music
 the theory of melody
 
 rhythms and time
-
 %%%%
 silent
 
@@ -1343,7 +1277,6 @@ quiet
 silent
 
 boring
-
 %%%%
 coward
 
@@ -1358,7 +1291,6 @@ faintheart
 poltroon
 
 wuss
-
 %%%%
 #### "...makes a @sad@ impression."
 sad
@@ -1370,9 +1302,8 @@ disoriented
 forlorn
 
 hopeless
-
 %%%%
-#### "....looks @exasperated@."
+#### "...looks @exasperated@."
 exasperated
 
 exasperated
@@ -1392,7 +1323,6 @@ truculent
 refractory
 
 recalcitrant
-
 %%%%
 #### "...turns @crimson@."
 crimson
@@ -1409,7 +1339,6 @@ ensanguined
 
 w:1
 violet
-
 %%%%
 MISCREANTS
 
@@ -1422,7 +1351,6 @@ SCUM
 
 w:1
 FILTH
-
 %%%%
 PETS
 
@@ -1434,15 +1362,14 @@ PUSSY CATS
 
 POODLES
 
-w:1 SPERM WHALES
-
+w:1
+SPERM WHALES
 %%%%
 dine
 
 dine
 
 feast
-
 %%%%
 corpses
 

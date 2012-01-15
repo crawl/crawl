@@ -23,6 +23,7 @@ struct coord_def;
 
 std::string debug_coord_str(const coord_def &pos);
 
+void debug_dump_constriction(const actor *act);
 void debug_dump_mon(const monster* mon, bool recurse);
 
 std::string debug_mon_str(const monster* mon);

@@ -40,25 +40,42 @@
     #include <sys/resource.h>
 #endif
 
+unsigned int isqrt(unsigned int a)
+{
+    unsigned int rem = 0, root = 0;
+    for (int i = 0; i < 16; i++)
+    {
+        root <<= 1;
+        rem = (rem << 2) + (a >> 30);
+        a <<= 2;
+        if (++root <= rem)
+            rem -= root++;
+        else
+            root--;
+    }
+    return (root >> 1);
+}
+
+int isqrt_ceil(int x)
+{
+    if (x <= 0)
+        return 0;
+    return isqrt(x - 1) + 1;
+}
+
 description_level_type description_type_by_name(const char *desc)
 {
     if (!desc)
         return DESC_PLAIN;
 
-    if (!strcmp("The", desc))
-        return DESC_CAP_THE;
-    else if (!strcmp("the", desc))
-        return DESC_NOCAP_THE;
-    else if (!strcmp("A", desc))
-        return DESC_CAP_A;
-    else if (!strcmp("a", desc))
-        return DESC_NOCAP_A;
-    else if (!strcmp("Your", desc))
-        return DESC_CAP_YOUR;
-    else if (!strcmp("your", desc))
-        return DESC_NOCAP_YOUR;
+    if (!strcmp("The", desc) || !strcmp("the", desc))
+        return DESC_THE;
+    else if (!strcmp("A", desc) || !strcmp("a", desc))
+        return DESC_A;
+    else if (!strcmp("Your", desc) || !strcmp("your", desc))
+        return DESC_YOUR;
     else if (!strcmp("its", desc))
-        return DESC_NOCAP_ITS;
+        return DESC_ITS;
     else if (!strcmp("worn", desc))
         return DESC_INVENTORY_EQUIP;
     else if (!strcmp("inv", desc))
@@ -73,7 +90,7 @@ description_level_type description_type_by_name(const char *desc)
     return DESC_PLAIN;
 }
 
-std::string number_to_string(unsigned number, bool in_words)
+static std::string _number_to_string(unsigned number, bool in_words)
 {
     return (in_words? number_in_words(number) : make_stringf("%u", number));
 }
@@ -84,19 +101,12 @@ std::string apply_description(description_level_type desc,
 {
     switch (desc)
     {
-    case DESC_CAP_THE:
-        return ("The " + name);
-    case DESC_NOCAP_THE:
+    case DESC_THE:
         return ("the " + name);
-    case DESC_CAP_A:
-        return (quantity > 1 ? number_to_string(quantity, in_words) + name
-                             : article_a(name, false));
-    case DESC_NOCAP_A:
-        return (quantity > 1 ? number_to_string(quantity, in_words) + name
+    case DESC_A:
+        return (quantity > 1 ? _number_to_string(quantity, in_words) + name
                              : article_a(name, true));
-    case DESC_CAP_YOUR:
-        return ("Your " + name);
-    case DESC_NOCAP_YOUR:
+    case DESC_YOUR:
         return ("your " + name);
     case DESC_PLAIN:
     default:
@@ -372,18 +382,6 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     return (argument);
 }
 
-// Get a boolean flag from embedded tags in a string, using "<flag>"
-// for true and "no_<flag>" for false. If neither tag is found,
-// returns the default value.
-bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
-{
-    if (strip_tag(s, name))
-        return (true);
-    if (strip_tag(s, "no_" + name))
-        return (false);
-    return (defval);
-}
-
 int strip_number_tag(std::string &s, const std::string &tagprefix)
 {
     const std::string num = strip_tag_prefix(s, tagprefix);
@@ -471,7 +469,7 @@ std::string pluralise(const std::string &name,
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
-    else if (ends_with(name, "mosquito"))
+    else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
     {
         return name + "es";
     }
@@ -523,7 +521,8 @@ std::string pluralise(const std::string &name,
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
              || ends_with(name, "folk") || ends_with(name, "spawn")
-             || ends_with(name, "kenku") || ends_with(name, "shedu")
+             || ends_with(name, "tengu") || ends_with(name, "shedu")
+             || ends_with(name, "swine")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
@@ -551,8 +550,9 @@ std::string pluralise(const std::string &name,
         return "feet";
     else if (name == "ophan" || name == "cherub" || name == "seraph")
     {
-        // unlike "angel" which is fully assimilated and "cherub" which may be
-        // pluralized both ways, "ophan" always uses hebrew pluralization
+        // Unlike "angel" which is fully assimilated, and "cherub" and "seraph"
+        // which may be pluralised both ways, "ophan" always uses Hebrew
+        // pluralisation.
         return name + "im";
     }
 
@@ -906,7 +906,7 @@ bool version_is_stable(const char *v)
 }
 
 #ifndef USE_TILE_LOCAL
-coord_def cgettopleft(GotoRegion region)
+static coord_def _cgettopleft(GotoRegion region)
 {
     switch (region)
     {
@@ -927,7 +927,7 @@ coord_def cgettopleft(GotoRegion region)
 coord_def cgetpos(GotoRegion region)
 {
     const coord_def where = coord_def(wherex(), wherey());
-    return (where - cgettopleft(region) + coord_def(1, 1));
+    return (where - _cgettopleft(region) + coord_def(1, 1));
 }
 
 static GotoRegion _current_region = GOTO_CRT;
@@ -935,7 +935,7 @@ static GotoRegion _current_region = GOTO_CRT;
 void cgotoxy(int x, int y, GotoRegion region)
 {
     _current_region = region;
-    const coord_def tl = cgettopleft(region);
+    const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
     ASSERT_SAVE(x >= 1 && x <= sz.x);
@@ -1067,7 +1067,7 @@ int get_taskbar_size()
 
 static BOOL WINAPI console_handler(DWORD sig)
 {
-    switch(sig)
+    switch (sig)
     {
     case CTRL_C_EVENT:
     case CTRL_BREAK_EVENT:

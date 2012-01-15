@@ -19,6 +19,7 @@ msc = $danger:You are engulfed in calcifying dust
 msc = $danger:is moving more slowly
 msc = $danger:It .* you
 msc = $danger:You block its attack
+msc = $danger:constricts you
 
 msc = $item_dmg:acid corrodes
 msc = $item_dmg:catch(es)? fire

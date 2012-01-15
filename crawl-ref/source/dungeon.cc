@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <list>
+#include <map>
 #include <set>
 #include <sstream>
 #include <algorithm>
@@ -19,7 +20,6 @@
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
-#include "coord.h"
 #include "coordit.h"
 #include "defines.h"
 #include "dgn-shoals.h"
@@ -68,10 +68,8 @@
 #include "state.h"
 #include "tags.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tileview.h"
-#endif
+#include "tiledef-dngn.h"
+#include "tileview.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -192,8 +190,8 @@ static void _calc_density();
 
 // A mask of vaults and vault-specific flags.
 std::vector<vault_placement> Temp_Vaults;
-FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
-FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
+static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_mask *Vault_Placement_Mask = NULL;
 
@@ -413,7 +411,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 static void _builder_assertions()
 {
 #ifdef ASSERTS
-    for(rectangle_iterator ri(0); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
         if (!in_bounds(*ri))
             if (!is_valid_border_feat(grd(*ri)))
             {
@@ -1041,7 +1039,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.rock_colour != BLACK)
         env.rock_colour = place.map.rock_colour;
 
-#ifdef USE_TILE
     if (!place.map.rock_tile.empty())
     {
         tileidx_t rock;
@@ -1065,7 +1062,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
             env.tile_default.floor = floor;
         }
     }
-#endif
 
     env.level_vaults.push_back(new vault_placement(place));
     if (register_vault)
@@ -1192,6 +1188,7 @@ void dgn_reset_level(bool enable_random_maps)
         init_item(i);
 
     // Reset all monsters.
+    env.mid_cache.clear();
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
     init_anon();
@@ -1263,12 +1260,10 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear exclusions
     clear_excludes();
 
-#ifdef USE_TILE
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
-#endif
 }
 
 static void _build_layout_skeleton(int level_number, level_area_type level_type)
@@ -1957,7 +1952,9 @@ static void _ruin_level(Iterator ri,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    std::vector<coord_def> to_replace;
+    typedef std::pair<coord_def, dungeon_feature_type> coord_feat;
+    typedef std::vector<coord_feat> coord_feats;
+    coord_feats to_replace;
 
     for (; ri; ++ri)
     {
@@ -1977,31 +1974,59 @@ static void _ruin_level(Iterator ri,
         if (map_masked(*ri, vault_mask))
             continue;
 
+        // Pick a random adjacent non-wall, non-door, non-statue
+        // feature, and count the number of such features.
+        dungeon_feature_type replacement = DNGN_FLOOR;
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
-                floor_count++;
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
+                && !feat_is_statue_or_idol(grd(*ai))
+                // Shouldn't happen, but just in case.
+                && grd(*ai) != DNGN_MALIGN_GATEWAY)
+            {
+                if (one_chance_in(++floor_count))
+                    replacement = grd(*ai);
+            }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
-         * floor tiles */
+         * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(*ri);
+        {
+            to_replace.push_back(coord_feat(*ri, replacement));
+        }
     }
 
-    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+    for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
+        const coord_def &p(it->first);
+        dungeon_feature_type replacement = it->second;
+
+        // Don't replace doors with impassable features.
+        if (feat_is_door(grd(p)))
+        {
+            if (feat_is_water(replacement))
+                replacement = DNGN_SHALLOW_WATER;
+            else
+                replacement = DNGN_FLOOR;
+        }
+        else if (feat_has_solid_floor(replacement)
+                 && replacement != DNGN_SHALLOW_WATER)
+        {
+            // Exclude traps, shops, stairs, portals, altars, fountains.
+            // The first four, especially, are a big deal.
+            replacement = DNGN_FLOOR;
+        }
+
         /* only remove some doors, to preserve tactical options */
-        /* XXX: should this pick a random adjacent floor type, rather than
-         * just hardcoding DNGN_FLOOR? */
-        if (feat_is_wall(grd(*it)) || coinflip() && feat_is_door(grd(*it)))
-            grd(*it) = DNGN_FLOOR;
+        if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+            grd(p) = replacement;
 
         /* but remove doors if we've removed all adjacent walls */
-        for (adjacent_iterator wai(*it); wai; ++wai)
+        for (adjacent_iterator wai(p); wai; ++wai)
         {
             if (feat_is_door(grd(*wai)))
             {
@@ -2011,19 +2036,21 @@ static void _ruin_level(Iterator ri,
                     if (feat_is_wall(grd(*dai)))
                         remove = false;
                 }
+                // It's always safe to replace a door with floor.
                 if (remove)
                     grd(*wai) = DNGN_FLOOR;
             }
         }
 
         /* replace some ruined walls with plants/fungi/bushes */
-        if (plant_density && one_chance_in(plant_density))
+        if (plant_density && one_chance_in(plant_density)
+            && feat_has_solid_floor(replacement))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
                      coinflip()        ? MONS_PLANT :
                      MONS_FUNGUS;
-            mg.pos = *it;
+            mg.pos = p;
             mons_place(mgen_data(mg));
         }
     }
@@ -2069,10 +2096,6 @@ static void _place_feature_mimics(int level_number,
         if (!is_valid_mimic_feat(feat))
             continue;
 
-        // Don't mess up tomb's layout.
-        if (player_in_branch(BRANCH_TOMB) && feat_is_stone_stair(feat))
-            continue;
-
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
             continue;
@@ -2081,10 +2104,13 @@ static void _place_feature_mimics(int level_number,
         if (door_vetoed(pos))
             continue;
 
-        // Don't mimic escape hatches in vaults since they are often used
-        // to prevent trapping the player.
-        if (feat_is_escape_hatch(feat) && map_masked(pos, MMT_VAULT))
+        // Don't mimic staircases in vaults to avoid trapping the player or
+        // breaking vault layouts.
+        if (map_masked(pos, MMT_VAULT)
+            && (feat_is_escape_hatch(feat) || feat_is_stone_stair(feat)))
+        {
             continue;
+        }
 
         // Dont mimic guaranteed portals.
         if (feat == DNGN_ENTER_ABYSS && you.absdepth0 == 24)
@@ -2409,21 +2435,27 @@ static void _pan_level(int level_number)
     const char *pandemon_level_names[] =
         { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
     int which_demon = -1;
-    // Could do spotty_level, but that doesn't always put all paired
-    // stairs reachable from each other which isn't a problem in normal
-    // dungeon but could be in Pandemonium.
-    if (one_chance_in(4))
+    PlaceInfo &place_info = you.get_place_info();
+    bool all_demons_generated = true;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (!you.uniq_map_tags.count(std::string("uniq_") + pandemon_level_names[i]))
+        {
+            all_demons_generated = false;
+            break;
+        }
+    }
+
+    // Unique pan lords become more common as you travel through pandemonium.
+    // On average it takes 27 levels to see all four, and you're likely to see
+    // your first one after about 10 levels.
+    if (x_chance_in_y(1 + place_info.levels_seen, 65 + place_info.levels_seen * 2)
+        && !all_demons_generated)
     {
         do
         {
             which_demon = random2(4);
-
-            // Makes these things less likely as you find more.
-            if (one_chance_in(4))
-            {
-                which_demon = -1;
-                break;
-            }
         }
         while (you.uniq_map_tags.count(std::string("uniq_")
                                      + pandemon_level_names[which_demon]));
@@ -2441,15 +2473,23 @@ static void _pan_level(int level_number)
     }
     else
     {
-        const map_def *layout = random_map_for_tag("layout", true, true);
-
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
-                                 true);
-
         const map_def *vault = random_map_for_tag("pan", true);
         ASSERT(vault);
 
-        _build_secondary_vault(level_number, vault);
+        if (vault->orient == MAP_ENCOMPASS)
+        {
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+                    true);
+        }
+        else
+        {
+            const map_def *layout = random_map_for_tag("layout", true, true);
+
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
+                    true);
+
+            _build_secondary_vault(level_number, vault);
+        }
     }
 }
 
@@ -2673,7 +2713,7 @@ static int _min_transitive_label(map_component & component)
         label = current->label;
 
         current = current->min_equivalent;
-    } while(current);
+    } while (current);
 
     return label;
 }
@@ -3112,8 +3152,6 @@ static void _place_traps(int level_number)
     }
     else if (player_in_branch(BRANCH_CRYPT))
         place_webs(random2(20));
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.absdepth0 == 12)
-        place_webs(300);
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
@@ -3437,7 +3475,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     {
         mg.cls = montypes[random2(montypes.size())];
 
-        if (player_in_branch(BRANCH_COCYTUS) &&
+        if (player_in_hell() &&
             mons_class_can_be_zombified(mg.cls))
         {
             static const monster_type lut[3][2] =
@@ -3455,7 +3493,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
 
         else
             mg.base_type = MONS_NO_MONSTER;
-        if (place_monster(mg) != -1)
+        if (place_monster(mg))
             ++result;
     }
 
@@ -3518,7 +3556,7 @@ static void _place_aquatic_monsters(int level_number, level_area_type level_type
 
             if (player_in_branch(BRANCH_SWAMP) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
-            else if (player_in_branch(BRANCH_COCYTUS))
+            else if (player_in_hell())
             {
                 // Eels are useless when zombified
                 if (swimming_things[i] == MONS_ELECTRIC_EEL)
@@ -3998,15 +4036,15 @@ int dgn_item_corpse(const item_spec &ispec, const coord_def where)
     {
         if (tries > 200)
             return NON_ITEM;
-        int mindex = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
-        if (invalid_monster_index(mindex))
+        monster *mon = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
+        if (!mon)
             continue;
-        menv[mindex].position = where;
-        if (mons_class_can_leave_corpse(menv[mindex].type))
-            corpse_index = place_monster_corpse(&menv[mindex], true, true);
+        mon->position = where;
+        if (mons_class_can_leave_corpse(mon->type))
+            corpse_index = place_monster_corpse(mon, true, true);
         // Dismiss the monster we used to place the corpse.
-        menv[mindex].flags |= MF_HARD_RESET;
-        monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER, false, true);
+        mon->flags |= MF_HARD_RESET;
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
 
         if (corpse_index != -1 && corpse_index != NON_ITEM)
             break;
@@ -4209,31 +4247,29 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
-                                     const int mindex,
-                                     const int mid,
+                                     monster *mon,
+                                     const int type,
                                      const int monster_level)
 {
-    monster& mon(menv[mindex]);
-
-    unwind_var<int> save_speedinc(mon.speed_increment);
+    unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (mon.inv[i] != NON_ITEM)
+        if (mon->inv[i] != NON_ITEM)
         {
-            item_def &item(mitm[mon.inv[i]]);
-            mon.unequip(item, i, 0, true);
-            destroy_item(mon.inv[i], true);
-            mon.inv[i] = NON_ITEM;
+            item_def &item(mitm[mon->inv[i]]);
+            mon->unequip(item, i, 0, true);
+            destroy_item(mon->inv[i], true);
+            mon->inv[i] = NON_ITEM;
         }
 
     item_make_species_type racial = MAKE_ITEM_RANDOM_RACE;
 
-    if (mons_genus(mid) == MONS_ORC)
+    if (mons_genus(type) == MONS_ORC)
         racial = MAKE_ITEM_ORCISH;
-    else if (mons_genus(mid) == MONS_DWARF)
+    else if (mons_genus(type) == MONS_DWARF)
         racial = MAKE_ITEM_DWARVEN;
-    else if (mons_genus(mid) == MONS_ELF)
+    else if (mons_genus(type) == MONS_ELF)
         racial = MAKE_ITEM_ELVEN;
 
     item_list &list = mspec.items;
@@ -4316,28 +4352,28 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             if (mspec.abjuration_duration != 0)
                 item.flags |= ISFLAG_SUMMONED;
 
-            if (!mon.pickup_item(item, 0, true))
+            if (!mon->pickup_item(item, 0, true))
                 destroy_item(item_made, true);
         }
     }
 
     // Pre-wield ranged weapons.
-    if (mon.inv[MSLOT_WEAPON] == NON_ITEM
-        && mon.inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+    if (mon->inv[MSLOT_WEAPON] == NON_ITEM
+        && mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
     {
-        mon.swap_weapons(false);
+        mon->swap_weapons(false);
     }
 }
 
 
-int dgn_place_monster(mons_spec &mspec,
-                      int monster_level, const coord_def& where,
-                      bool force_pos, bool generate_awake, bool patrolling)
+monster* dgn_place_monster(mons_spec &mspec,
+                           int monster_level, const coord_def& where,
+                           bool force_pos, bool generate_awake, bool patrolling)
 {
-    if (mspec.mid == -1)
-        return -1;
+    if (mspec.type == -1)
+        return 0;
 
-    const monster_type mid = static_cast<monster_type>(mspec.mid);
+    const monster_type type = static_cast<monster_type>(mspec.type);
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
@@ -4353,19 +4389,19 @@ int dgn_place_monster(mons_spec &mspec,
             monster_level += 5;
     }
 
-    if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
+    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)
-        if (mons_is_unique(mid) && you.unique_creatures[mid]
+        if (mons_is_unique(type) && you.unique_creatures[type]
             && !crawl_state.game_is_arena())
         {
-            return (-1);
+            return 0;
         }
 
-        const monster_type montype = mons_class_is_zombified(mid)
+        const monster_type montype = mons_class_is_zombified(type)
                                                          ? mspec.monbase
-                                                         : mid;
+                                                         : type;
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
@@ -4376,7 +4412,7 @@ int dgn_place_monster(mons_spec &mspec,
         }
     }
 
-    mgen_data mg(mid);
+    mgen_data mg(type);
 
     if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
     {
@@ -4463,57 +4499,56 @@ int dgn_place_monster(mons_spec &mspec,
         mg.props["serpent_of_hell_flavour"] =
             mspec.props["serpent_of_hell_flavour"].get_int();
 
-    const int mindex = place_monster(mg, true, force_pos && place.origin());
-    if (mindex == -1)
-        return -1;
-    monster& mons(menv[mindex]);
+    monster *mons = place_monster(mg, true, force_pos && place.origin());
+    if (!mons)
+        return 0;
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
 
     if (mspec.explicit_spells)
-        mons.spells = mspec.spells[random2(mspec.spells.size())];
+        mons->spells = mspec.spells[random2(mspec.spells.size())];
 
     if (mspec.props.exists("monster_tile"))
     {
-        mons.props["monster_tile"] =
+        mons->props["monster_tile"] =
             mspec.props["monster_tile"].get_short();
     }
     if (mspec.props.exists("monster_tile_name"))
     {
-        mons.props["monster_tile_name"].get_string() =
+        mons->props["monster_tile_name"].get_string() =
             mspec.props["monster_tile_name"].get_string();
     }
 
     if (mspec.props.exists("always_corpse"))
-        mons.props["always_corpse"] = true;
+        mons->props["always_corpse"] = true;
 
     // These are applied earlier to prevent issues with renamed monsters
     // and "<monster> comes into view" (see delay.cc:_monster_warning).
-    //mons.flags |= mspec.extra_monster_flags;
+    //mons->flags |= mspec.extra_monster_flags;
 
     // Monsters with gods set by the spec aren't god gifts
     // unless they have the "god_gift" tag.  place_monster(),
     // by default, marks any monsters with gods as god gifts,
     // so unmark them here.
     if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
-        mons.flags &= ~MF_GOD_GIFT;
+        mons->flags &= ~MF_GOD_GIFT;
 
-    if (mons.is_priest() && mons.god == GOD_NO_GOD)
-        mons.god = GOD_NAMELESS;
+    if (mons->is_priest() && mons->god == GOD_NO_GOD)
+        mons->god = GOD_NAMELESS;
 
-    if (mons.type == MONS_DANCING_WEAPON)
+    if (mons->type == MONS_DANCING_WEAPON)
     {
-        item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
+        item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons.ghost->init_dancing_weapon(*wpn, 180);
-        mons.dancing_weapon_init();
+        mons->ghost->init_dancing_weapon(*wpn, 180);
+        mons->ghost_demon_init();
     }
 
     for (unsigned int i = 0; i < mspec.ench.size(); i++)
-        mons.add_ench(mspec.ench[i]);
+        mons->add_ench(mspec.ench[i]);
 
-    return (mindex);
+    return mons;
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
@@ -4525,8 +4560,8 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    return (-1 != dgn_place_monster(mspec, monster_level, where, false,
-                                    generate_awake, patrolling));
+    return dgn_place_monster(mspec, monster_level, where, false,
+                             generate_awake, patrolling);
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,
@@ -4705,14 +4740,14 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         }
         else if (vgrid == '|')
         {
-            which_class = static_cast<object_class_type>(random_choose_weighted(
+            which_class = random_choose_weighted(
                             2, OBJ_WEAPONS,
                             1, OBJ_ARMOUR,
                             1, OBJ_JEWELLERY,
                             1, OBJ_BOOKS,
                             1, OBJ_STAVES,
                             1, OBJ_MISCELLANY,
-                            0));
+                            0);
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
@@ -4753,7 +4788,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
             monster_type_thing = place.map.mons.get_monster(slot);
-            monster_type mt = static_cast<monster_type>(monster_type_thing.mid);
+            monster_type mt = static_cast<monster_type>(monster_type_thing.type);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (place.map.place.is_valid()
@@ -4763,7 +4798,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             {
                 mprf(MSGCH_ERROR, "ERROR: %s already generated somewhere "
                      "else; please file a bug report.",
-                     mons_type_name(mt, DESC_CAP_THE).c_str());
+                     mons_type_name(mt, DESC_THE).c_str());
                 // Force it to be generated anyway.
                 you.unique_creatures[mt] = false;
             }
@@ -5237,8 +5272,8 @@ void place_spec_shop(int level_number,
                 && mitm[orb].base_type != OBJ_GOLD
                 && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
-                        && mitm[orb].base_type != OBJ_FOOD
-                        && spec->items.empty())))
+                        && mitm[orb].base_type != OBJ_FOOD)
+                    || !spec->items.empty()))
             {
                 break;
             }
@@ -5533,7 +5568,6 @@ struct nearest_point
 static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    init_travel_terrain_check(false);
     nearest_point np(base_pos);
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -6302,9 +6336,7 @@ void vault_placement::apply_grid()
                 env.grid_colours(*ri) = 0;
                 env.pgrid(*ri) = 0;
                 // what about heightmap?
-#ifdef USE_TILE
                 tile_clear_flavour(*ri);
-#endif
             }
 
             keyed_mapspec *mapsp = map.mapspec_at(dp);
@@ -6315,6 +6347,10 @@ void vault_placement::apply_grid()
                 // Have to link items each square at a time, or
                 // dungeon_terrain_changed could blow up.
                 link_items();
+                // Init tile flavour -- dungeon_terrain_changed does
+                // this too, but only if oldgrid != newgrid, so we
+                // make sure here.
+                tile_init_flavour(*ri);
                 const dungeon_feature_type newgrid = grd(*ri);
                 grd(*ri) = oldgrid;
                 dungeon_terrain_changed(*ri, newgrid, true, true);

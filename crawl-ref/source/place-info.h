@@ -11,7 +11,6 @@ public:
     unsigned int levels_seen;
 
     unsigned int mon_kill_exp;
-    unsigned int mon_kill_exp_avail;
     unsigned int mon_kill_num[KC_NCATEGORIES];
 
     int turns_total;

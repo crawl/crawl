@@ -412,13 +412,6 @@ void macro_sendkeys_end_add_expanded(int key)
     SendKeysBuffer.push_back(key);
 }
 
-// Effectively the same as macro_sendkeys_end_add_expanded, but adding to
-// the front of the keybuffer.
-void macro_sendkeys_start_add_expanded(int key)
-{
-    macro_buf_add(key, true, true);
-}
-
 static void _macro_inject_sent_keys()
 {
     if (Buffer.empty() && !SendKeysBuffer.empty())

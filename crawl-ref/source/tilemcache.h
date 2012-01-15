@@ -52,12 +52,9 @@ public:
     virtual int info(tile_draw_info *dinfo) const { return 0; }
     virtual const dolls_data *doll() const { return NULL; }
 
-    virtual void construct(writer &th);
-
     virtual bool transparent() const { return false; }
 
 protected:
-    mcache_entry(reader &th);
 
     // ref count in backstore
     int m_ref_count;
@@ -68,14 +65,12 @@ class mcache_manager
 public:
     ~mcache_manager();
 
-    unsigned int register_monster(const monster* mon);
+    unsigned int register_monster(const monster_info& mon);
     mcache_entry *get(tileidx_t idx);
 
     void clear_nonref();
     void clear_all();
 
-    void read(reader &th);
-    void construct(writer &th);
     bool empty() { return m_entries.empty(); }
 
 protected:

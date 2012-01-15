@@ -20,7 +20,8 @@
 #include <stdint.h>
 #include "cellular.h"  /* Function prototype */
 
-namespace worley {
+namespace worley
+{
     /* This macro is a *lot* faster than using (int32_t)floor() on an x86 CPU.
        It actually speeds up the entire Worley() call with almost 10%.
        Added by Stefan Gustavson, October 2003. */

@@ -7,11 +7,11 @@
 
 PlaceInfo::PlaceInfo()
     : level_type(-2), branch(-2), num_visits(0),
-      levels_seen(0), mon_kill_exp(0), mon_kill_exp_avail(0),
-      turns_total(0), turns_explore(0), turns_travel(0), turns_interlevel(0),
-      turns_resting(0), turns_other(0), elapsed_total(0),
-      elapsed_explore(0), elapsed_travel(0), elapsed_interlevel(0),
-      elapsed_resting(0), elapsed_other(0)
+      levels_seen(0), mon_kill_exp(0), turns_total(0), turns_explore(0),
+      turns_travel(0), turns_interlevel(0), turns_resting(0),
+      turns_other(0), elapsed_total(0), elapsed_explore(0),
+      elapsed_travel(0), elapsed_interlevel(0), elapsed_resting(0),
+      elapsed_other(0)
 {
     for (int i = 0; i < KC_NCATEGORIES; i++)
         mon_kill_num[i] = 0;
@@ -94,7 +94,6 @@ const PlaceInfo &PlaceInfo::operator += (const PlaceInfo &other)
     levels_seen += other.levels_seen;
 
     mon_kill_exp       += other.mon_kill_exp;
-    mon_kill_exp_avail += other.mon_kill_exp_avail;
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
         mon_kill_num[i] += other.mon_kill_num[i];
@@ -122,7 +121,6 @@ const PlaceInfo &PlaceInfo::operator -= (const PlaceInfo &other)
     levels_seen -= other.levels_seen;
 
     mon_kill_exp       -= other.mon_kill_exp;
-    mon_kill_exp_avail -= other.mon_kill_exp_avail;
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
         mon_kill_num[i] -= other.mon_kill_num[i];

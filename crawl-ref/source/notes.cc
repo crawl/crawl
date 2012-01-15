@@ -90,6 +90,7 @@ static bool _is_noteworthy_dlevel(unsigned short place)
 
     if (lev == _dungeon_branch_depth(branch)
         || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
+        || branch == BRANCH_MAIN_DUNGEON && lev == 14
         || branch != BRANCH_MAIN_DUNGEON && lev == 1)
     {
         return (true);
@@ -114,7 +115,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_BUY_ITEM
         || note.type == NOTE_DONATE_MONEY
         || note.type == NOTE_SEEN_MONSTER
-        || note.type == NOTE_KILL_MONSTER
+        || note.type == NOTE_DEFEAT_MONSTER
         || note.type == NOTE_POLY_MONSTER
         || note.type == NOTE_USER_NOTE
         || note.type == NOTE_MESSAGE
@@ -127,7 +128,6 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
         || note.type == NOTE_ALLY_DEATH
-        || note.type == NOTE_BANISH_MONSTER
         || note.type == NOTE_FEAT_MIMIC)
     {
         return (true);
@@ -349,11 +349,11 @@ std::string Note::describe(bool when, bool where, bool what) const
         case NOTE_SEEN_MONSTER:
             result << "Noticed " << name;
             break;
-        case NOTE_KILL_MONSTER:
+        case NOTE_DEFEAT_MONSTER:
             if (second)
-                result << name << " (ally) was defeated";
+                result << name << " (ally) was " << desc;
             else
-                result << "Defeated " << name;
+                result << uppercase_first(desc) << " " << name;
             break;
         case NOTE_POLY_MONSTER:
             result << name << " changed into " << desc;
@@ -408,19 +408,13 @@ std::string Note::describe(bool when, bool where, bool what) const
         case NOTE_ALLY_DEATH:
             result << "Your ally " << name << " died";
             break;
-        case NOTE_BANISH_MONSTER:
-            if (second)
-                result << name << " (ally) was banished";
-            else
-                result << "Banished " << name;
-            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
         }
     }
 
-    if (type == NOTE_SEEN_MONSTER || type == NOTE_KILL_MONSTER)
+    if (type == NOTE_SEEN_MONSTER || type == NOTE_DEFEAT_MONSTER)
     {
         if (what && first == MONS_PANDEMONIUM_LORD)
             result << " the pandemonium lord";
@@ -459,6 +453,11 @@ void Note::check_milestone() const
 
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
+        if (place_type(packed_place) == LEVEL_PANDEMONIUM)
+        {
+            mark_milestone("br.enter", "entered Pandemonium.");
+            return;
+        }
         const int br = place_branch(packed_place),
                  dep = place_depth(packed_place);
 
@@ -470,7 +469,7 @@ void Note::check_milestone() const
 
             if (dep == 1)
                 mark_milestone("br.enter", "entered " + branch + ".", true);
-            else if (dep == _dungeon_branch_depth(br))
+            else if (dep == _dungeon_branch_depth(br) || dep == 14)
             {
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
@@ -478,7 +477,7 @@ void Note::check_milestone() const
 
                 std::ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone("br.end", branch_finale.str());
+                mark_milestone(dep == 14 ? "br.mid" : "br.end", branch_finale.str());
             }
         }
     }
@@ -508,7 +507,7 @@ void Note::load(reader& inf)
     unmarshallString4(inf, desc);
 }
 
-bool notes_active = false;
+static bool notes_active = false;
 
 bool notes_are_active()
 {

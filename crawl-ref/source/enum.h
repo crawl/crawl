@@ -39,7 +39,7 @@ enum ability_type
     ABIL_THROW_FROST,
 #endif
     ABIL_HELLFIRE,
-    // Kenku, Draconians
+    // Tengu, Draconians
     ABIL_FLY,
     ABIL_FLY_II,
     ABIL_STOP_FLYING,
@@ -141,6 +141,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_STEP = 201,
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
+    ABIL_CHEIBRIADOS_DISTORTION,
     // Ashenzari
     ABIL_ASHENZARI_SCRYING = 210,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
@@ -180,6 +181,7 @@ enum ability_type
     ABIL_MAKE_OKLOB_PLANT,
     ABIL_MAKE_BURNING_BUSH,
     ABIL_REMOVE_CURSE,
+    NUM_ABILITIES
 };
 
 enum activity_interrupt_type
@@ -246,11 +248,13 @@ enum attribute_type
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
-    ATTR_PERM_LEVITATION,      // Kenku flight or boots of lev are on.
+    ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
+    ATTR_EVOL_XP,              // XP gained since last evolved mutation
+    ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     NUM_ATTRIBUTES
 };
 
@@ -266,6 +270,8 @@ enum transformation_type
     TRAN_BAT,
     TRAN_PIG,
     TRAN_APPENDAGE,
+    // no NUM_TRANSFORMS due to too many switch statements
+    LAST_FORM = TRAN_APPENDAGE
 };
 
 enum beam_type                  // beam[].flavour
@@ -311,7 +317,7 @@ enum beam_type                  // beam[].flavour
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
-    BEAM_CHARM,
+    BEAM_ENSLAVE,
     BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_SOUL,
@@ -462,10 +468,23 @@ enum branch_type                // you.where_are_you
 };
 
 enum burden_state_type          // you.burden_state
-{
-    BS_UNENCUMBERED,            //    0
-    BS_ENCUMBERED = 2,          //    2
-    BS_OVERLOADED = 5,          //    5
+{   // these values increase hunger and divide stealth
+    BS_UNENCUMBERED = 0,
+    BS_ENCUMBERED   = 2,
+    BS_OVERLOADED   = 5,
+};
+
+enum caction_type    // Primary categorization of counted actions.
+{                    // A subtype will also be given in each case:
+    CACT_MELEE,      // weapon_type
+    CACT_FIRE,       // weapon_type
+    CACT_THROW,      // missile_type
+    CACT_CAST,       // spell_type
+    CACT_INVOKE,     // ability_type
+    CACT_ABIL,       // ability_type
+    CACT_EVOKE,      // evoc_type
+    CACT_USE,        // object_class_type
+    NUM_CACTIONS,
 };
 
 enum canned_message_type
@@ -914,10 +933,17 @@ enum conduct_type
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
-    DID_VIOLATE_HOLY_CORPSE,              // Zin/Ely/TSO butchering holy
+    DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO
     DID_SEE_MONSTER,                      // TSO
 
     NUM_CONDUCTS
+};
+
+enum confirm_butcher_type
+{
+    CONFIRM_NEVER,
+    CONFIRM_ALWAYS,
+    CONFIRM_AUTO,
 };
 
 enum confirm_prompt_type
@@ -976,14 +1002,11 @@ enum delay_type
 
 enum description_level_type
 {
-    DESC_CAP_THE,
-    DESC_NOCAP_THE,
-    DESC_CAP_A,
-    DESC_NOCAP_A,
-    DESC_CAP_YOUR,
-    DESC_NOCAP_YOUR,
+    DESC_THE,
+    DESC_A,
+    DESC_YOUR,
     DESC_PLAIN,
-    DESC_NOCAP_ITS,
+    DESC_ITS,
     DESC_INVENTORY_EQUIP,
     DESC_INVENTORY,
 
@@ -995,6 +1018,14 @@ enum description_level_type
                                        // description in the db.
 
     DESC_NONE
+};
+
+enum evoc_type
+{
+    EVOC_WAND,
+    EVOC_ROD,
+    EVOC_DECK,
+    EVOC_MISC,
 };
 
 enum game_direction_type
@@ -1257,6 +1288,7 @@ enum dungeon_feature_type
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
     DNGN_MALIGN_GATEWAY,
+    DNGN_EXPIRED_PORTAL,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_FIRST_GOD = 180,        // 180
@@ -1383,6 +1415,7 @@ enum duration_type
     DUR_PETRIFYING,
     DUR_SHROUD_OF_GOLUBRIA,
     DUR_TORNADO_COOLDOWN,
+    DUR_NAUSEA,
     NUM_DURATIONS
 };
 
@@ -1599,8 +1632,8 @@ enum god_type
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
-    GOD_NAMELESS = 101,                // for monsters with non-player gods
-    GOD_VIABLE = 102,
+    GOD_NAMELESS,                      // for monsters with non-player gods
+    GOD_VIABLE,
 };
 
 enum holy_word_source_type
@@ -1689,6 +1722,7 @@ enum item_type_id_state_type
     ID_TRIED_TYPE,
     ID_TRIED_ITEM_TYPE,
     ID_KNOWN_TYPE,
+    NUM_ID_STATE_TYPES
 };
 
 enum job_type
@@ -1730,8 +1764,8 @@ enum job_type
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,
-    JOB_RANDOM  = 101,
-    JOB_VIABLE  = 102,
+    JOB_RANDOM,
+    JOB_VIABLE,
 };
 
 enum KeymapContext
@@ -1774,6 +1808,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_BANISHED,                     // monsters what got banished
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
+    KILL_PACIFIED,                     // only used by milestones and notes
+    KILL_ENSLAVED,                     // only used by milestones and notes
 };
 
 enum flight_type
@@ -1900,8 +1936,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GILA_MONSTER,
 #endif
     MONS_KOMODO_DRAGON,
-    MONS_SMALL_SNAKE,
-    MONS_SNAKE,
+    MONS_BALL_PYTHON,
+    MONS_ADDER,
     MONS_WATER_MOCCASIN,
 #if TAG_MAJOR_VERSION == 32
     MONS_VIPER,
@@ -2144,7 +2180,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_FIREFLY,
-    MONS_KENKU,
+    MONS_TENGU,
     MONS_MINOTAUR,
     MONS_NAGA,
     MONS_NAGA_WARRIOR,
@@ -2458,6 +2494,12 @@ enum monster_type                      // (int) menv[].type
     MONS_PROFANE_SERVITOR,
     MONS_GNOLL_SHAMAN,
     MONS_GNOLL_SERGEANT,
+    MONS_CRAWLING_CORPSE,
+    MONS_MACABRE_MASS,
+    MONS_SERAPH,
+#if TAG_MAJOR_VERSION == 32
+    MONS_SUBTRACTOR_SNAKE,
+#endif
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2547,7 +2589,7 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 
@@ -2592,9 +2634,15 @@ enum mutation_type
     MUT_FAST_METABOLISM,
     MUT_FLEXIBLE_WEAK,
     MUT_FRAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_FOUL_STENCH,
+#endif
     MUT_GOURMAND,
     MUT_HIGH_MAGIC,
     MUT_ICEMAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_IGNITE_BLOOD,
+#endif
     MUT_LOW_MAGIC,
     MUT_MAGIC_RESISTANCE,
     MUT_MUTATION_RESISTANCE,
@@ -2653,13 +2701,17 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 32
     MUT_POWERED_BY_PAIN,
     MUT_CAMOUFLAGE,
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
     MUT_WILD_MAGIC,
+    MUT_IGNITE_BLOOD,
+    MUT_FOUL_STENCH,
 #endif
+    MUT_EVOLUTION,
+    MUT_AUGMENTATION,
     NUM_MUTATIONS,
 
-    RANDOM_MUTATION = NUM_MUTATIONS + 1,
+    RANDOM_MUTATION,
     RANDOM_XOM_MUTATION,
     RANDOM_GOOD_MUTATION,
     RANDOM_BAD_MUTATION,
@@ -2780,12 +2832,10 @@ enum potion_type
 
 enum pronoun_type
 {
-    PRONOUN_CAP,
-    PRONOUN_NOCAP,
-    PRONOUN_CAP_POSSESSIVE,
-    PRONOUN_NOCAP_POSSESSIVE,
-    PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
-    PRONOUN_OBJECTIVE,                  // objective is always lowercase
+    PRONOUN_SUBJECTIVE,
+    PRONOUN_POSSESSIVE,
+    PRONOUN_REFLEXIVE,
+    PRONOUN_OBJECTIVE,
 };
 
 enum artefact_prop_type
@@ -2997,7 +3047,7 @@ enum species_type
     SP_MINOTAUR,
     SP_DEMONSPAWN,
     SP_GHOUL,
-    SP_KENKU,
+    SP_TENGU,
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,
@@ -3507,10 +3557,39 @@ enum disable_type
     DIS_PLAYER_REGEN,
     DIS_HUNGER,
     DIS_DEATH,
+    DIS_DELAY,
     NUM_DISABLEMENTS
 };
 
-#ifdef USE_TILE
+// these are an unholy mess
+enum seen_context_type
+{
+    SC_NONE,
+    SC_JUST_SEEN,       // \TODO: find out and describe what's the difference
+    SC_NEWLY_SEEN,      // /between these two
+    SC_ALREADY_SEEN,
+    SC_TELEPORT_IN,
+    SC_SURFACES,                      // land-capable
+    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
+    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
+    SC_FISH_SURFACES,                 // water/lava-only
+    SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
+    SC_UNCHARM,
+    SC_DOOR,
+    SC_GATE,
+};
+
+enum los_type
+{
+    LOS_ARENA        = 0,
+    LOS_DEFAULT      = (1 << 0),
+    LOS_NO_TRANS     = (1 << 1),
+    LOS_SOLID        = (1 << 2),
+    LOS_SOLID_SEE    = (1 << 3),
+};
+
+// Tiles stuff.
+
 enum screen_mode
 {
     SCREENMODE_WINDOW = 0,
@@ -3569,6 +3648,7 @@ enum tile_flags
     TILE_FLAG_STICKY_FLAME = 0x00200000,
     TILE_FLAG_BERSERK    = 0x00400000,
     TILE_FLAG_INNER_FLAME= 0x40000000,
+    TILE_FLAG_CONSTRICTED= 0x80000000,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x03800000,
@@ -3656,8 +3736,6 @@ enum
 {
     NUM_MAX_DOLLS = 10,
 };
-
-#endif
 
 #ifdef WIZARD
 

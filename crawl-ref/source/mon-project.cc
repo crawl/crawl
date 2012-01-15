@@ -16,7 +16,6 @@
 
 #include "cloud.h"
 #include "directn.h"
-#include "coord.h"
 #include "env.h"
 #include "itemprop.h"
 #include "mgen_data.h"
@@ -42,7 +41,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     int mtarg = !beam ? MHITNOT :
                 beam->target == you.pos() ? MHITYOU : mgrd(beam->target);
 
-    int mind = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
+    monster *mon = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (is_player) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
@@ -52,14 +51,12 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                 mtarg,
                 0,
                 GOD_NO_GOD), true, true);
-    if (mind == -1)
+    if (!mon)
     {
-        mpr("Failed to spawn projectile.", MSGCH_WARN);
-        /*canned_msg(MSG_NOTHING_HAPPENS);*/
-        return SPRET_SUCCESS;
+        mpr("Failed to spawn projectile.", MSGCH_ERROR);
+        return SPRET_ABORT;
     }
 
-    monster& mon = menv[mind];
     if (beam)
     {
         beam->choose_ray();
@@ -70,43 +67,43 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
             beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
             beam->ray.r.dir.x, beam->ray.r.dir.y);
 #endif
-        mon.props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
-        mon.props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-        mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
-        mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
-        _fuzz_direction(mon, pow);
+        mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
+        mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
+        mon->props["iood_vx"].get_float() = beam->ray.r.dir.x;
+        mon->props["iood_vy"].get_float() = beam->ray.r.dir.y;
+        _fuzz_direction(*mon, pow);
     }
     else
     {
         // Multi-orb: spread the orbs a bit, otherwise diagonal ones might
         // fail to leave the cardinal direction: orb A moves -0.4,+0.9 and
         // orb B +0.4,+0.9, both rounded to 0,1.
-        mon.props["iood_x"].get_float() = caster->pos().x + 0.4 * vx;
-        mon.props["iood_y"].get_float() = caster->pos().y + 0.4 * vy;
-        mon.props["iood_vx"].get_float() = vx;
-        mon.props["iood_vy"].get_float() = vy;
+        mon->props["iood_x"].get_float() = caster->pos().x + 0.4 * vx;
+        mon->props["iood_y"].get_float() = caster->pos().y + 0.4 * vy;
+        mon->props["iood_vx"].get_float() = vx;
+        mon->props["iood_vy"].get_float() = vy;
     }
 
-    mon.props["iood_kc"].get_byte() = (is_player) ? KC_YOU :
+    mon->props["iood_kc"].get_byte() = (is_player) ? KC_YOU :
         ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
-    mon.props["iood_pow"].get_short() = pow;
-    mon.flags &= ~MF_JUST_SUMMONED;
-    mon.props["iood_caster"].get_string() = caster->as_monster()
+    mon->props["iood_pow"].get_short() = pow;
+    mon->flags &= ~MF_JUST_SUMMONED;
+    mon->props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
         : "";
-    mon.props["iood_mid"].get_int() = caster->mid;
+    mon->props["iood_mid"].get_int() = caster->mid;
 
     // Move away from the caster's square.
-    iood_act(mon, true);
+    iood_act(*mon, true);
     // We need to take at least one full move (for the above), but let's
     // randomize it and take more so players won't get guaranteed instant
     // damage.
-    mon.lose_energy(EUT_MOVE, 2, random2(3)+2);
+    mon->lose_energy(EUT_MOVE, 2, random2(3)+2);
 
     // Multi-orbs don't home during the first move, they'd likely
     // immediately explode otherwise.
     if (foe != MHITNOT)
-        mon.foe = foe;
+        mon->foe = foe;
 
     return SPRET_SUCCESS;
 }
@@ -341,8 +338,8 @@ move_again:
         if (cell_is_solid(pos))
         {
             if (you.see_cell(pos))
-                mprf("%s hits %s", mon.name(DESC_CAP_THE, true).c_str(),
-                     feature_description(pos, false, DESC_NOCAP_A).c_str());
+                mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
+                     feature_description(pos, false, DESC_A).c_str());
         }
 
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
@@ -367,6 +364,8 @@ move_again:
                 dprf("iood: Swapping with a submerged monster.");
                 mons->set_position(mon.pos());
                 mon.set_position(pos);
+                ASSERT(!mons->is_constricted());
+                ASSERT(!mons->is_constricting());
                 mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 
@@ -387,12 +386,12 @@ move_again:
             {
                 if (victim->atype() == ACT_PLAYER)
                 {
-                    mprf("You block %s.", mon.name(DESC_NOCAP_THE, true).c_str());
+                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 }
                 else
                 {
                     simple_monster_message(mons, (" blocks "
-                        + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
+                        + mon.name(DESC_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
                 _iood_dissipate(mon);
@@ -403,7 +402,7 @@ move_again:
             {
                 mprf("Your %s reflects %s!",
                     shield->name(DESC_PLAIN).c_str(),
-                    mon.name(DESC_NOCAP_THE, true).c_str());
+                    mon.name(DESC_THE, true).c_str());
                 ident_reflector(shield);
             }
             else if (you.see_cell(pos))
@@ -411,16 +410,16 @@ move_again:
                 if (victim->observable())
                 {
                     mprf("%s reflects %s with %s %s!",
-                        victim->name(DESC_CAP_THE, true).c_str(),
-                        mon.name(DESC_NOCAP_THE, true).c_str(),
-                        mon.pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                        victim->name(DESC_THE, true).c_str(),
+                        mon.name(DESC_THE, true).c_str(),
+                        mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
                         shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);
                 }
                 else
                 {
                     mprf("%s bounces off thin air!",
-                        mon.name(DESC_CAP_THE, true).c_str());
+                        mon.name(DESC_THE, true).c_str());
                 }
             }
             victim->shield_block_succeeded(&mon);
@@ -439,7 +438,7 @@ move_again:
 
         // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
         if (victim == &you)
-            mprf("%s hits you!", mon.name(DESC_CAP_THE, true).c_str());
+            mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))
             return (true);

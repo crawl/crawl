@@ -90,7 +90,7 @@ define(function() {
         120: -1019,
         121: -1020,
         //    122: -1021, // Don't occupy F11, it's used for fullscreen
-        123: -1022
+        //    123: -1022, // used for chat
     };
 
     if (!$.browser.mozilla)

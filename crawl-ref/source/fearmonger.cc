@@ -25,7 +25,7 @@ bool player::add_fearmonger(const monster* mon)
         if (you.can_see(mon))
         {
             mprf("%s's aura of fear is muted, and has no effect on you.",
-                 mon->name(DESC_CAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
         else
             mpr("The fearful aura is strangely muted, and has no effect on you.");
@@ -38,7 +38,7 @@ bool player::add_fearmonger(const monster* mon)
         you.set_duration(DUR_AFRAID, 7, 12);
         fearmongers.push_back(mon->mindex());
         mprf(MSGCH_WARN, "You are terrified of %s!",
-                         mon->name(DESC_NOCAP_THE).c_str());
+                         mon->name(DESC_THE).c_str());
     }
     else
     {

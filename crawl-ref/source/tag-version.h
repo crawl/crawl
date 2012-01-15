@@ -59,7 +59,16 @@ enum tag_minor_version
     TAG_MINOR_DISABLED_SKILLS,     // Track practise events of disabled skills.
     TAG_MINOR_CHERUB_ATTACKS,      // Give Cherubs a new attack flavour.
     TAG_MINOR_FOOD_MUTATIONS_BACK, // Revert the food experiment mutations.
-
+    TAG_MINOR_TEMPORARY_CLOUDS,    // Clouds are now marked if they're temporary or not.
+                                   // XXX: When clearing, check dat/dlua/lm_fog.lua
+    TAG_MINOR_PHOENIX_ATTITUDE,    // Store the attitudes of dead phoenixes
+    TAG_MINOR_LESS_TILE_DATA,      // mcache and tile_bk is not saved, but more stuff in map_knowledge
+    TAG_MINOR_CONSTRICTION,        // Constriction available
+    TAG_MINOR_ACTION_COUNTS,       // Count actions made by type.
+    TAG_MINOR_ABYSS_PHASE,         // Jerky abyss.
+    TAG_MINOR_SKILL_MODE_STATE,    // Auto and manual modes have separate skill activation status.
+    TAG_MINOR_OCTO_RING,           // Ring of the Octopus King.
+    TAG_MINOR_ABILITY_COUNTS,      // Count ability usage better.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

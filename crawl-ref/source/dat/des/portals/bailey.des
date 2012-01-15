@@ -49,9 +49,11 @@ function bailey_portal(e, ptype)
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
+        feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
+  e.tile("O = dngn_portal_bailey")
   e.tile("c = wall_stone_brick")
 end
 
@@ -128,9 +130,8 @@ function orc_warrior_with_polearm(e)
           scale mail race:orcish    | scale mail |\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
-          plate mail race:orcish    | plate mail |\
-          crystal plate mail w:1")
+          plate armour race:orcish  | plate armour |\
+          crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
@@ -141,9 +142,9 @@ function orc_knight_with_polearm(e)
           bardiche w:1 | bardiche w:1 race:orcish .\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
-          plate mail race:orcish    | plate mail |\
-          crystal plate mail w:1")
+          chain mail race:orcish    | chain mail |\
+          plate armour race:orcish  | plate armour |\
+          crystal plate armour w:1")
 end
 
 -- defined but not used, since the depth for the current entry vaults is 7-16
@@ -153,9 +154,9 @@ function orc_warlord_with_polearm(e)
           glaive       | glaive race:orcish |\
           bardiche w:1 | bardiche w:1 race:orcish . \
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
-          plate mail race:orcish    | plate mail |\
-          crystal plate mail w:1")
+          chain mail race:orcish    | chain mail |\
+          plate armour race:orcish  | plate armour |\
+          crystal plate armour w:1")
 end
 
 }}
@@ -386,7 +387,6 @@ NAME:   bailey_axe_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 #
 ITEM:   any good_item w:10 / nothing w:5
 #
@@ -509,7 +509,6 @@ NAME:   bailey_axe_3
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 SUBST:  ' : +".
 SUBST:  " : wW"
 SUBST:  " = wwW
@@ -554,7 +553,7 @@ xxxxxxxxxcc.....ccxxxxxxxxx
 xxxxxxxxxc<d.3.d<cxxxxxxxxx
 xxxxxxxxxc...G...cxxxxxxxxx
 xxxxxxxxxcc.....ccxxxxxxxxx
-xxxxxxxxxxccc=cccxxxxxxxxxx
+xxxxxxxxxxcvv=vvcxxxxxxxxxx
 xxxxxxxxvvvv...vvvvxxxxxxxx
 xxxxxxvvv.........vvvxxxxxx
 xxxxxvv.............vvxxxxx
@@ -576,11 +575,10 @@ NAME:    bailey_axe_4
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen
-LFLAGS:  no_tele_control
 #
 ITEM:    any good_item
-ITEM:    potion of levitation
-ITEM:    ring of levitation
+ITEM:    potion of levitation ident:type
+ITEM:    ring of levitation ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
@@ -683,7 +681,7 @@ tttttcc1...1cc.1.....1.cc1...1ccttttt
 tttttc.......+....2....+.......cttttt
 ttttcc.......cc.1...1.cc.......cctttt
 ttttc.........c.......c.........ctttt
-tttcc...1.1...ccG...Gcc...1.1...ccttt
+tttcc...1.1...ccGG.GGcc...1.1...ccttt
 tttc1....T....1ccc=ccc1....T....1cttt
 tttcc...1.1...ccc...ccc...1.1...ccttt
 ttttc.........c1.....1c.........ctttt
@@ -738,7 +736,6 @@ NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate
-LFLAGS: no_tele_control
 NSUBST: D = 1:= / *:c
 NSUBST: E = 1:= / *:c
 : orc_with_polearm(_G)
@@ -746,7 +743,7 @@ NSUBST: E = 1:= / *:c
 : orc_knight_with_polearm(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
-ITEM:   good_item crystal plate mail / good_item plate mail race:orcish /\
+ITEM:   good_item crystal plate armour / good_item plate armour race:orcish /\
         good_item gold dragon armour w:5 / good_item ice dragon armour w:5 /\
         good_item fire dragon armour w:5 / good_item steam dragon armour w:5
 # XXX: Which armour pieces can be orcish?
@@ -834,11 +831,11 @@ x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
 x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
 x......WWWWWWWWccWWc=c=cWWccWWWWWWWW......x
 x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
-x......WWWWWWWccWcccccccccWccWWWWWWW......x
-x......WWWWWWWccW=2cd4dc2=WccWWWWWWW......x
-x......WWWWWWWccWccc4X4cccWccWWWWWWW......x
-x......WWWWWWWccW=2c.4.c2=WccWWWWWWW......x
-x......WWWWWWWccWcccc=ccccWccWWWWWWW......x
+x......WWWWWWWccWccvvvvvccWccWWWWWWW......x
+x......WWWWWWWccW=2vd4dv2=WccWWWWWWW......x
+x......WWWWWWWccWccv4X4vccWccWWWWWWW......x
+x......WWWWWWWccW=2v.4.v2=WccWWWWWWW......x
+x......WWWWWWWccWccvv=vvccWccWWWWWWW......x
 x......WWWWWWWccWWcc<d<ccWWcWWWWWWWW......x
 x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
 x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x
@@ -918,7 +915,6 @@ NAME:   bailey_polearm_4
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 ITEM:   any good_item / nothing
 MONS:   orc warrior ; crossbow . bolt | halberd
 : orc_with_polearm(_G)
@@ -957,7 +953,6 @@ NAME:   bailey_polearm_5
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-LFLAGS: no_tele_control
 KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
             potion of speed w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\

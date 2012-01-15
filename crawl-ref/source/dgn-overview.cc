@@ -558,7 +558,7 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             colour = "magenta";
         else if (you.religion == god)
             colour = "yellow";
-        else if (god_likes_your_god(god))
+        else if (god_likes_your_god(god) && has_altar_been_seen)
             colour = "brown";
 
         if (!print_unseen && !strcmp(colour, "darkgrey"))
@@ -836,6 +836,9 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 
     default:
         const portal_type portal = _feature_to_portal(which_thing);
+        // hell upstairs are never interesting
+        if (portal == PORTAL_HELL && player_in_hell())
+            break;
         if (portal != PORTAL_NONE)
             portals_present[where] = portal;
         break;
@@ -876,29 +879,49 @@ static void _update_unique_annotation(level_id level)
     set_level_unique_annotation(note, level);
 }
 
+static std::string unique_name(monster* mons)
+{
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    else
+    {
+        if (strstr(name.c_str(), "royal jelly")
+            || strstr(name.c_str(), "Royal Jelly"))
+            name = "Royal Jelly";
+        if (strstr(name.c_str(), "Lernaean hydra"))
+            name = "Lernaean hydra";
+        if (strstr(name.c_str(), "Serpent of Hell"))
+            name = "Serpent of Hell";
+        if (strstr(name.c_str(), "Blork"))
+            name = "Blork the orc";
+    }
+    return name;
+}
+
 void set_unique_annotation(monster* mons, const level_id level)
 {
     // Abyss persists its denizens.
     if (level.level_type != LEVEL_DUNGEON && level.level_type != LEVEL_ABYSS)
         return;
-    if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
+    if (!mons_is_unique(mons->type)
+        && !(mons->props.exists("original_was_unique")
+            && mons->props["original_was_unique"].get_bool())
+        && mons->type != MONS_PLAYER_GHOST)
+    {
         return;
+    }
 
     remove_unique_annotation(mons);
-    std::string name = mons->name(DESC_PLAIN, true);
-    if (mons->type == MONS_PLAYER_GHOST)
-        name += ", " + short_ghost_description(mons, true);
     auto_unique_annotations.insert(std::make_pair(
-                name, level));
+                unique_name(mons), level));
     _update_unique_annotation(level);
 }
 
 void remove_unique_annotation(monster* mons)
 {
     std::set<level_id> affected_levels;
-    std::string name = mons->name(DESC_PLAIN, true);
-    if (mons->type == MONS_PLAYER_GHOST)
-        name += ", " + short_ghost_description(mons, true);
+    std::string name = unique_name(mons);
     for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {

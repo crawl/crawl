@@ -27,15 +27,19 @@
 void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     seed_asg(seed_key, num_keys);
+
+    // for std::random_shuffle()
+    uint32_t oneseed = 0;
+    for (size_t i = 0; i < num_keys; ++i)
+        oneseed += seed_key[i];
+
+    srand(oneseed);
 }
 
 void seed_rng(uint32_t seed)
 {
     uint32_t sarg[1] = { seed };
     seed_rng(sarg, 1);
-
-    // for std::random_shuffle()
-    srand(seed);
 }
 
 void seed_rng()
@@ -82,7 +86,7 @@ uint32_t hash(const void *data, int len)
 
     const uint8_t *d = (const uint8_t*)data;
     // Mix 4 bytes at a time into the hash
-    while(len >= 4)
+    while (len >= 4)
     {
         uint32_t k = htole32(*(uint32_t *)d);
 
@@ -98,7 +102,7 @@ uint32_t hash(const void *data, int len)
     }
 
     // Handle the last few bytes of the input array
-    switch(len)
+    switch (len)
     {
     case 3: h ^= (uint32_t)d[2] << 16;
     case 2: h ^= (uint32_t)d[1] << 8;

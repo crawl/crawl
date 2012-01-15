@@ -20,6 +20,8 @@ bool form_can_butcher_barehanded(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,
                         transformation_type form = you.form);
+// Does the form keep the benefits of resistance, scale, and aux mutations?
+bool form_keeps_mutations(transformation_type form = you.form);
 
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat);

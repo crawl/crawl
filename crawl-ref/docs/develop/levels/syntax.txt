@@ -875,6 +875,11 @@ MONS:     (list of monsters)
           name_zombie can be used to redefine already zombified monsters
           (including skeletons, simulacra and spectrals).
 
+          Finally, name_nocorpse will cause the name to be completely ignored
+          for corpses.  For example:
+              MONS: wizard name:sad name_adjective name_nocorpse
+          will result in "a sad wizard" that leaves "a wizard corpse".
+
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
 
@@ -885,6 +890,7 @@ MONS:     (list of monsters)
               name_descriptor -> n_des
               name_definite   -> n_the
               name_zombie     -> n_zom
+              name_nocorpse   -> n_noc
 
           Monster names should be used very sparingly.
 

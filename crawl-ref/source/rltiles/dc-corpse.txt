@@ -151,12 +151,13 @@ spiny_frog CORPSE_SPINY_FROG
 sky_beast CORPSE_SKY_BEAST
 
 ## Snakes ('S')
-small_snake CORPSE_SMALL_SNAKE
-snake CORPSE_SNAKE
+ball_python CORPSE_BALL_PYTHON
+adder CORPSE_ADDER
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
 sea_snake CORPSE_SEA_SNAKE
+snake_yellow CORPSE_SUBTRACTOR_SNAKE
 
 ## Bears ('U')
 black_bear CORPSE_BLACK_BEAR
@@ -280,7 +281,7 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
-kenku CORPSE_KENKU
+tengu CORPSE_TENGU
 holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')

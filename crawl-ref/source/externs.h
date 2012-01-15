@@ -27,8 +27,6 @@
 #include "pattern.h"
 #include "store.h"
 
-#ifdef USE_TILE
-
 #include "tiledef_defines.h"
 
 struct tile_flavour
@@ -59,13 +57,16 @@ protected:
 };
 
 
-#endif
-
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
 
+#if TAG_MAJOR_VERSION == 32
 #define MAX_NUM_GODS    21
+#else
+// FIXME: remove after save bump
+#define MAX_NUM_GODS NUM_GODS
+#endif
 
 #define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
 
@@ -255,10 +256,13 @@ struct coord_def
     {
         return (xi == x && yi == y);
     }
+
+    int range() const;
+    int range(const coord_def other) const;
 };
 
-const coord_def INVALID_COORD(-1, -1);
-const coord_def NO_CURSOR(-1, -1);
+extern const coord_def INVALID_COORD;
+extern const coord_def NO_CURSOR;
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -286,14 +290,17 @@ struct cloud_struct
     int           colour;
     std::string   name;
     std::string   tile;
+    int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
                      whose(KC_OTHER), killer(KILL_NONE), colour(-1),
-                     name(""), tile("")
+                     name(""), tile(""), excl_rad(-1)
     {
     }
 
     bool defined() const { return type != CLOUD_NONE; }
+    bool temporary() const { return excl_rad == -1; }
+    int exclusion_radius() const { return excl_rad; }
 
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);

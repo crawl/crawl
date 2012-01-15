@@ -39,13 +39,13 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2",
          Jiyva="stone q:10-20 / large rock q:2-4",
          Kikubaaqudgha="book of Necromancy / rat corpse w:5 /\
-              kobold corpse w:5 / snake corpse w:5",
+              kobold corpse w:5 / adder corpse w:5",
          Lugonu="no",
          Makhleb="tome of destruction / rod of demonology",
          ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
          Okawaru="randbook owner:Lugonu spells:summon_butterflies numspells:1 /\
               book of Callings / scroll of summoning q:2-3",
-         ["Sif Muna"]="staff of channeling / good_item plate mail",
+         ["Sif Muna"]="staff of channeling / good_item plate armour",
          ["The Shining One"]="wand of invisibility w:20 / rod of venom /\
               book of Envenomations / Young Poisoner's Handbook /\
               potion of invisibility q:3-6",

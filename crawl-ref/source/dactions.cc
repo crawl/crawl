@@ -48,7 +48,7 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
     if (!mon || !mon->alive())
         return (false);
 
-    switch(act)
+    switch (act)
     {
     case DACT_ALLY_HOLY:
         return (mon->wont_attack() && is_good_god(mon->god));
@@ -121,7 +121,7 @@ static void _apply_daction(daction_type act)
     ASSERT(act >= 0 && act < NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
 
-    switch(act)
+    switch (act)
     {
     case DACT_ALLY_HOLY:
     case DACT_ALLY_UNHOLY_EVIL:

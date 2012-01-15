@@ -27,6 +27,38 @@
 #include "view.h"
 #include "xom.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+bool monster::has_ench(enchant_type ench) const
+{
+    mon_enchant e = get_ench(ench);
+    if (e.ench == ench)
+    {
+        if (!ench_cache[ench])
+        {
+            die("monster %s has ench '%s' not in cache",
+                name(DESC_PLAIN).c_str(),
+                std::string(e).c_str());
+        }
+    }
+    else if (e.ench == ENCH_NONE)
+    {
+        if (ench_cache[ench])
+        {
+            die("monster %s has no ench '%s' but cache says it does",
+                name(DESC_PLAIN).c_str(),
+                std::string(mon_enchant(ench)).c_str());
+        }
+    }
+    else
+    {
+        die("get_ench returned '%s' when asked for '%s'",
+            std::string(e).c_str(),
+            std::string(mon_enchant(ench)).c_str());
+    }
+    return ench_cache[ench];
+}
+#endif
+
 bool monster::has_ench(enchant_type ench, enchant_type ench2) const
 {
     if (ench2 == ENCH_NONE)
@@ -161,25 +193,25 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             if (type == MONS_AIR_ELEMENTAL)
             {
                 mprf("%s merges itself into the air.",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
             }
             else if (type == MONS_TRAPDOOR_SPIDER)
             {
                 mprf("%s hides itself under the floor.",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
             }
-            else if (seen_context == "surfaces"
-                     || seen_context == "bursts forth"
-                     || seen_context == "emerges")
+            else if (seen_context == SC_SURFACES)
             {
                 // The monster surfaced and submerged in the same turn
                 // without doing anything else.
                 interrupt_activity(AI_SEE_MONSTER,
                                    activity_interrupt_data(this,
-                                                           "surfaced"));
+                                                           SC_SURFACES_BRIEFLY));
+                // Why does this handle only land-capables?  I'd imagine this
+                // to happen mostly (only?) for fish. -- 1KB
             }
             else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_CAP_A, true).c_str());
+                mprf("%s submerges.", name(DESC_A, true).c_str());
         }
 
         // Pacified monsters leave the level when they submerge.
@@ -212,6 +244,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             firing_pos.reset();
         }
         mons_att_changed(this);
+        // clear any constrictions on/by you
+        stop_constricting(MHITYOU, true);
+        you.stop_constricting(mindex(), true);
+
+        // TODO -- and friends
+
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
@@ -271,8 +309,8 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         }
         else
             mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
-                 "%s (see bug 2293518)", mon->name(DESC_CAP_THE, true).c_str(),
-                 mon->name(DESC_NOCAP_A, true).c_str());
+                 "%s (see bug 2293518)", mon->name(DESC_THE, true).c_str(),
+                 mon->name(DESC_A, true).c_str());
     }
 
     // Monster un-submerging while under player or another monster.  Try to
@@ -373,7 +411,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (alive())
                 simple_monster_message(this, " becomes audible again.");
             else
-                mprf("As %s dies, the sound returns.", name(DESC_NOCAP_THE).c_str());
+                mprf("As %s dies, the sound returns.", name(DESC_THE).c_str());
         break;
 
     case ENCH_MIGHT:
@@ -402,7 +440,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_TEMP_PACIF:
         if (!quiet)
             simple_monster_message(this, (" seems to come to "
-                + pronoun(PRONOUN_NOCAP_POSSESSIVE) + " senses.").c_str());
+                + pronoun(PRONOUN_POSSESSIVE) + " senses.").c_str());
         // Yeah, this _is_ offensive to Zin, but hey, he deserves it (1KB).
 
         behaviour_event(this, ME_EVAL);
@@ -432,7 +470,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (!mons_is_tentacle(type))
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
-                     pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
+                     pronoun(PRONOUN_POSSESSIVE, true).c_str());
         }
 
         if (!quiet)
@@ -460,7 +498,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
             {
                 mprf("%s appears from thin air!",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
                 autotoggle_autopickup(false);
             }
 
@@ -476,7 +514,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
-                               activity_interrupt_data(this, "uncharm"));
+                               activity_interrupt_data(this, SC_UNCHARM));
         }
 
         if (is_patrolling())
@@ -500,7 +538,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             else if (has_ench(ENCH_INVIS) && mons_near(this))
             {
                 mprf("%s stops glowing and disappears.",
-                     name(DESC_CAP_THE, true).c_str());
+                     name(DESC_THE, true).c_str());
             }
         }
         break;
@@ -566,7 +604,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (you.pos() == pos())
         {
             mprf(MSGCH_ERROR, "%s is on the same square as you!",
-                 name(DESC_CAP_A).c_str());
+                 name(DESC_A).c_str());
         }
 
         if (you.can_see(this))
@@ -574,32 +612,28 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
                 // Already set somewhere else.
-                if (!seen_context.empty())
+                if (seen_context)
                     return;
 
-                if (type == MONS_AIR_ELEMENTAL)
-                    seen_context = "thin air";
-                else if (type == MONS_TRAPDOOR_SPIDER)
-                    seen_context = "leaps out";
-                else if (!monster_habitable_grid(this, DNGN_FLOOR))
-                    seen_context = "bursts forth";
+                if (!monster_habitable_grid(this, DNGN_FLOOR))
+                    seen_context = SC_FISH_SURFACES;
                 else
-                    seen_context = "surfaces";
+                    seen_context = SC_SURFACES;
             }
             else if (!quiet)
             {
                 if (type == MONS_AIR_ELEMENTAL)
                 {
                     mprf("%s forms itself from the air!",
-                         name(DESC_CAP_A, true).c_str());
+                         name(DESC_A, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {
                     mprf("%s leaps out from its hiding place under the floor!",
-                         name(DESC_CAP_A, true).c_str());
+                         name(DESC_A, true).c_str());
                 }
                 else if (crawl_state.game_is_arena())
-                    mprf("%s surfaces.", name(DESC_CAP_A, true).c_str());
+                    mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
         }
         else if (mons_near(this)
@@ -1160,7 +1194,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                     if (visible_to(&you))
                     {
                         mprf("The net rips apart, and %s comes free!",
-                             name(DESC_NOCAP_THE).c_str());
+                             name(DESC_THE).c_str());
                     }
                     else
                     {
@@ -1258,7 +1292,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (mons_near(this) && visible_to(&you))
             {
                 mprf("The flames covering %s go out.",
-                     name(DESC_NOCAP_THE, false).c_str());
+                     name(DESC_THE, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
             break;
@@ -1280,7 +1314,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {
-                        mprf("%s catches fire!", mon->name(DESC_CAP_A).c_str());
+                        mprf("%s catches fire!", mon->name(DESC_A).c_str());
                         const int dur = me.degree/2 + 1 + random2(me.degree);
                         mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
                                                   me.agent()));
@@ -1314,8 +1348,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             {
                 if (type == MONS_PILLAR_OF_SALT)
                 {
-                     mprf("The %s crumbles away.",
-                          name(DESC_PLAIN, false).c_str());
+                     mprf("%s crumbles away.",
+                          name(DESC_THE, false).c_str());
                 }
                 else
                 {
@@ -1359,19 +1393,17 @@ void monster::apply_enchantment(const mon_enchant &me)
                 {
                     beh_type created_behavior = SAME_ATTITUDE(this);
 
-                    int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+                    if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
                                                       NULL,
                                                       0,
                                                       0,
                                                       adjacent,
                                                       MHITNOT,
-                                                      MG_FORCE_PLACE));
-
-                    if (rc != -1)
+                                                      MG_FORCE_PLACE)))
                     {
-                        env.mons[rc].behaviour = BEH_WANDER;
-                        env.mons[rc].number = 20;
+                        rc->behaviour = BEH_WANDER;
+                        rc->number = 20;
 
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
@@ -1434,7 +1466,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // Do a thing.
             if (you.see_cell(base_position))
             {
-                mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
+                mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
             }
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
@@ -1496,7 +1528,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
         // an assert about it. -cao
-        if (!(flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS)
+            && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_GLOWING_SHAPESHIFTER
                 || one_chance_in(4)))
         {
@@ -1505,7 +1538,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SHAPESHIFTER:         // This ench never runs out!
-        if (!(flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS)
+            && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
                 || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
         {
@@ -1705,7 +1739,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner flame", "roused", "breath timer", "deaths_door", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1902,7 +1936,7 @@ int mon_enchant::calc_duration(const monster* mons,
         // This may be a little too direct but the randomization at the end
         // of this function is excessive for toadstools. -cao
         return (2 * FRESHEST_CORPSE + random2(10))
-                  * speed_to_duration(mons->speed) * mons->speed / 10;
+                  * speed_to_duration(mons->speed);
     case ENCH_SPORE_PRODUCTION:
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.

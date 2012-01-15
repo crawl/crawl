@@ -90,11 +90,11 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell)
+static std::string _spell_base_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -109,18 +109,20 @@ static std::string _spell_base_description(spell_type spell)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
-    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
+    char* failure = failure_rate_to_string(spell_fail(spell));
+    desc << chop_string(failure, 12)
          << spell_difficulty(spell);
     desc << "</" << colour_to_str(highlight) <<">";
+    free(failure);
 
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell)
+static std::string _spell_extra_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -164,7 +166,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " Your Spells                       Type          "
-                "                Success   Level",
+                "                Failure   Level",
                 " Your Spells                       Power         "
                 "Range           Hunger    Level",
                 MEL_ITEM);
@@ -175,7 +177,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " Your Spells                       Type          "
-            "                Success   Level",
+            "                Failure   Level",
             " Your Spells                       Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
@@ -241,11 +243,11 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                           || allow_preselect && you.last_cast_spell == spell);
 
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_spell_base_description(spell),
-                                    _spell_extra_description(spell),
+            new ToggleableMenuEntry(_spell_base_description(spell, viewing),
+                                    _spell_extra_description(spell, viewing),
                                     MEL_ITEM, 1, letter, preselect);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
         spell_menu.add_entry(me);
@@ -298,10 +300,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.duration[DUR_BRILLIANCE])
         fail_reduce = fail_reduce * 67 / 100;
 
-    // Draconians get a boost to dragon-form.
-    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
-        fail_reduce = fail_reduce * 70 / 100;
-
     // Hard cap on fail rate reduction.
     if (fail_reduce < 50)
         fail_reduce = 50;
@@ -312,7 +310,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 int spell_fail(spell_type spell)
 {
     int chance = 60;
-    int chance2 = 0;
 
     // Don't cap power for failure rate purposes.
     chance -= 6 * calc_spell_power(spell, false, true, false);
@@ -339,7 +336,7 @@ int spell_fail(spell_type spell)
     default: chance += 750; break;
     }
 
-    chance2 = chance;
+    int chance2 = chance;
 
     const int chance_breaks[][2] = {
         {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
@@ -498,6 +495,8 @@ int spell_enhancement(unsigned int typeflags)
 
     if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         enhanced++;
+
+    enhanced += augmentation_amount();
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -737,9 +736,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             practise(EX_DID_CAST, spell);
             did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-            if (you.spell_usage.find(spell) == you.spell_usage.end())
-                you.spell_usage[spell].init(0);
-            you.spell_usage[spell][you.experience_level - 1]++;
+            count_action(CACT_CAST, spell);
         }
         else
             practise(EX_DID_MISCAST, spell);
@@ -835,10 +832,10 @@ static bool _vampire_cannot_cast(spell_type spell)
 
 bool is_prevented_teleport(spell_type spell)
 {
-    return ((spell == SPELL_BLINK
-           || spell == SPELL_CONTROLLED_BLINK
-           || spell == SPELL_TELEPORT_SELF)
-           && item_blocks_teleport(false, false));
+    return (spell == SPELL_BLINK
+             || spell == SPELL_CONTROLLED_BLINK
+             || spell == SPELL_TELEPORT_SELF)
+            && item_blocks_teleport(false, false);
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
@@ -936,7 +933,7 @@ static int _setup_evaporate_cast()
     else
     {
         mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
-             you.inv[rc].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[rc].name(DESC_YOUR).c_str());
     }
     return rc;
 }
@@ -986,12 +983,6 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
-    {
-        mpr("Only one passage may be opened at a time.");
-        return (true);
-    }
-
     if (spell == SPELL_MALIGN_GATEWAY && !can_cast_malign_gateway())
     {
         mpr("The dungeon can only cope with one malign gateway at a time!");
@@ -1010,7 +1001,7 @@ static bool _spellcasting_aborted(spell_type spell,
 
 static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
-    switch(spell)
+    switch (spell)
     {
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
@@ -1041,7 +1032,7 @@ spret_type your_spells(spell_type spell, int powc,
     beam.origin_spell = spell;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
-    // succeeded must be performed after the switch().
+    // succeeded must be performed after the switch.
     if (_spellcasting_aborted(spell, check_range, wiz_cast))
         return (SPRET_ABORT);
 
@@ -1068,9 +1059,6 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_DISPEL_UNDEAD)
             targ = TARG_HOSTILE_UNDEAD;
-
-        if (spell == SPELL_FRAGMENTATION)
-            targ = TARG_ANY;
 
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
@@ -1456,28 +1444,28 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_confusing_touch(powc, fail);
 
     case SPELL_CAUSE_FEAR:
-        return mass_enchantment(ENCH_FEAR, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_FEAR, powc, fail);
 
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);
 
     case SPELL_MASS_CONFUSION:
-        return mass_enchantment(ENCH_CONFUSION, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CONFUSION, powc, fail);
 
     case SPELL_ENGLACIATION:
-        return cast_mass_sleep(powc, fail);
+        return cast_englaciation(powc, fail);
 
     case SPELL_CONTROL_UNDEAD:
-        return mass_enchantment(ENCH_CHARM, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_ABJURATION:
-        return cast_abjuration(powc, monster_at(target), fail);
+        return cast_abjuration(powc, beam.target, fail);
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return cast_toxic_radiance(false, fail);
+        return cast_toxic_radiance(powc, false, fail);
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
@@ -1701,18 +1689,65 @@ static spret_type _do_cast(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-const char* failure_rate_to_string(int fail)
+
+// _tetrahedral_number: returns the nth tetrahedral number.
+// Called only by get_true_fail_rate.
+static int _tetrahedral_number(int n)
 {
-    return (fail == 100) ? "Useless"   : // 0% success chance
-           (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 59)   ? "Very Poor" : // 5-30%
-           (fail > 50)   ? "Poor"      : // 30-50%
-           (fail > 40)   ? "Fair"      : // 50-70%
-           (fail > 35)   ? "Good"      : // 70-80%
-           (fail > 28)   ? "Very Good" : // 80-90%
-           (fail > 22)   ? "Great"     : // 90-95%
-           (fail >  0)   ? "Excellent"   // 95-100%
-                         : "Perfect";    // 100%
+    return n * (n+1) * (n+2) / 6;
+}
+
+// get_true_fail_rate: Takes the raw failure to-beat number
+// and converts it to actual failure rate percentage for display.
+// Should probably use more constants, though I doubt the spell
+// success algorithms will really change *that* much.
+// Called only by failure_rate_to_string.
+double get_true_fail_rate(int raw_fail)
+{
+    //Three d100 rolls.  Need average to be less than raw_fail.
+    //Fun with tetrahedral numbers!
+
+    int target = raw_fail * 3;
+
+    if(target <= 100)
+    {
+        return (double) _tetrahedral_number(target)/1030301;
+    }
+    if(target < 200)
+    {
+        //PIE: the negative term takes the maximum of 100 into
+        //consideration.  Note that only one term can exceed 100 in this case,
+        //which is why this works.
+        return (double) (_tetrahedral_number(target) - 3*_tetrahedral_number(target-100))/1030301;
+    }
+    //Target is between 201 and 300 inclusive.  Note that finding the number of ways
+    //you can go below, say, 207 is equivalent to finding the number of ways you
+    //can go >= 208... which is equal to the number of ways to go below
+    //300 - 207 = 93.
+    return (double) (1030301 - _tetrahedral_number(300 - target))/1030301;
+
+}
+
+//Converts the raw failure to-beat number into a more intuitive string.
+//Note that this char[] is allocated on the heap, so anything calling
+//this function will also need to call free()!
+char* failure_rate_to_string(int fail)
+{
+    char *buffer = (char *)malloc(9);
+
+    if (fail == 0)
+        sprintf(buffer, "0%%");
+    else if (fail == 100)
+        sprintf(buffer, "100%%");
+    else
+    {
+        int failure_chance = (int) (100 * get_true_fail_rate(fail));
+
+        // If failure is between 0% and 1%, round up to 1%.
+        sprintf(buffer, "%d%%", failure_chance > 0 ? failure_chance : 1);
+    }
+
+    return buffer;
 }
 
 const char* spell_hunger_string(spell_type spell, bool rod)
@@ -1796,21 +1831,6 @@ std::string spell_noise_string(spell_type spell)
         return desc;
 }
 
-int spell_power_colour(spell_type spell)
-{
-    const int powercap = spell_power_cap(spell);
-    if (powercap == 0)
-        return DARKGREY;
-    const int power = calc_spell_power(spell, true);
-    if (power >= powercap)
-        return WHITE;
-    if (power * 3 < powercap)
-        return RED;
-    if (power * 3 < powercap * 2)
-        return YELLOW;
-    return GREEN;
-}
-
 static int _power_to_barcount(int power)
 {
     if (power == -1)
@@ -1820,7 +1840,7 @@ static int _power_to_barcount(int power)
     return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
-int spell_power_bars(spell_type spell, bool rod)
+static int _spell_power_bars(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
@@ -1847,7 +1867,7 @@ std::string spell_power_string(spell_type spell, bool rod)
         return _wizard_spell_power_numeric_string(spell, rod);
 #endif
 
-    const int numbars = spell_power_bars(spell, rod);
+    const int numbars = _spell_power_bars(spell, rod);
     const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
     if (numbars < 0)

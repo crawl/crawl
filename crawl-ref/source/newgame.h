@@ -16,8 +16,6 @@ void choose_tutorial_character(newgame_def* ng_choice);
 bool choose_game(newgame_def *ng, newgame_def* choice,
                  const newgame_def& defaults);
 
-void make_rod(item_def &item, stave_type rod_type, int ncharges);
-
 #define JOB_GROUP_SIZE 9
 /*
  * A structure for grouping backgrounds by category.

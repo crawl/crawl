@@ -64,12 +64,12 @@ inline void __DUMMY_TRACE__(...)
 
 #endif
 
-NORETURN void die(const char *file, int line, const char *format, ...);
+NORETURN void die(const char *file, int line, PRINTF(2, ));
 #define die(...) die(__FILE__, __LINE__, __VA_ARGS__)
 
-NORETURN void die_noline(const char *format, ...);
+NORETURN void die_noline(PRINTF(0, ));
 
 #ifdef DEBUG
-void debuglog(const char *format, ...);
+void debuglog(PRINTF(0, ));
 #endif
 #endif

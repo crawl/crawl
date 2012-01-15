@@ -274,7 +274,7 @@ void wizard_create_spec_object()
     }
 }
 
-const char* _prop_name[ARTP_NUM_PROPERTIES] = {
+static const char* _prop_name[] = {
     "Brand",
     "AC",
     "EV",
@@ -304,16 +304,18 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Curse",
     "Stlth",
     "MP",
-    "Slow",
+    "Delay",
     "HP",
     "Clar",
+    "BAcc",
+    "BDam",
 };
 
 #define ARTP_VAL_BOOL 0
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
+static int8_t _prop_type[] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -352,6 +354,9 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
 
 static void _tweak_randart(item_def &item)
 {
+    COMPILE_CHECK(ARRAYSZ(_prop_name) == ARTP_NUM_PROPERTIES);
+    COMPILE_CHECK(ARRAYSZ(_prop_type) == ARTP_NUM_PROPERTIES);
+
     if (item_is_equipped(item))
     {
         mpr("You can't tweak the randart properties of an equipped item.",
@@ -410,7 +415,6 @@ static void _tweak_randart(item_def &item)
         return;
 
     unsigned int prop = choice_to_prop[choice];
-    ASSERT(prop >= 0);
     ASSERT(prop < ARRAYSZ(_prop_type));
 
     int val;
@@ -471,7 +475,7 @@ void wizard_tweak_object(void)
 
         while (true)
         {
-            mpr(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+            mpr_nocap(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
             if (is_art)
             {
@@ -554,7 +558,7 @@ void wizard_tweak_object(void)
 
         // cursedness might have changed
         ash_check_bondage();
-        ash_id_inventory();
+        god_id_inventory();
     }
 }
 
@@ -598,6 +602,9 @@ void wizard_value_artefact()
 
 void wizard_create_all_artefacts()
 {
+    you.octopus_king_rings = 0;
+    int octorings = 8;
+
     // Create all unrandarts.
     for (int i = 0; i < NO_UNRANDARTS; ++i)
     {
@@ -617,10 +624,14 @@ void wizard_create_all_artefacts()
         item.quantity = 1;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
-        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
                                         << " (" << debug_art_val_str(item)
                                         << ")" << std::endl;
         move_item_to_grid(&islot, you.pos());
+
+        // Make all eight.
+        if (index == UNRAND_OCTOPUS_KING_RING && --octorings)
+            i--;
     }
 
     // Create Horn of Geryon
@@ -637,7 +648,7 @@ void wizard_create_all_artefacts()
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         move_item_to_grid(&islot, you.pos());
 
-        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
                                         << std::endl;
     }
 }
@@ -726,7 +737,7 @@ void wizard_make_object_randart()
     if (eq != EQ_NONE)
         equip_item(eq, invslot);
 
-    mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 // Returns whether an item of this type can be cursed.

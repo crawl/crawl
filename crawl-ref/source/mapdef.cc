@@ -48,10 +48,8 @@
 #include "spl-book.h"
 #include "env.h"
 #include "tags.h"
-#ifdef USE_TILE
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
-#endif
 
 static const char *map_section_names[] = {
     "",
@@ -148,7 +146,6 @@ std::string mapdef_split_key_item(const std::string &s,
     return ("");
 }
 
-#ifdef USE_TILE
 int store_tilename_get_index(const std::string tilename)
 {
     if (tilename.empty())
@@ -167,7 +164,6 @@ int store_tilename_get_index(const std::string tilename)
     env.tile_names.push_back(tilename);
     return (i+1);
 }
-#endif
 
 ///////////////////////////////////////////////
 // level_range
@@ -572,7 +568,6 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 dgn_height_at(gc) = fheight;
             }
 
-#ifdef USE_TILE
             bool has_floor = false, has_rock = false;
             std::string name = (*overlay)(x, y).floortile;
             if (!name.empty())
@@ -633,7 +628,6 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                     env.tile_flv(gc).feat = feat + offset;
                 }
             }
-#endif
         }
 }
 
@@ -1348,7 +1342,6 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
         }
 }
 
-#ifdef USE_TILE
 void map_lines::overlay_tiles(tile_spec &spec)
 {
     if (!overlay.get())
@@ -1372,7 +1365,6 @@ void map_lines::overlay_tiles(tile_spec &spec)
         }
     }
 }
-#endif
 
 void map_lines::nsubst(nsubst_spec &spec)
 {
@@ -1876,7 +1868,6 @@ int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
     return (result);
 }
 
-#ifdef USE_TILE
 bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
@@ -1952,8 +1943,6 @@ std::string tile_spec::get_tile()
     }
     return (chosen);
 }
-
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 // map_lines::iterator
@@ -2250,7 +2239,8 @@ std::string map_def::desc_or_name() const
 void map_def::write_full(writer& outf) const
 {
     cache_offset = outf.tell();
-    marshallShort(outf, MAP_CACHE_VERSION);   // Level indicator.
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallString4(outf, name);
     prelude.write(outf);
     mapchunk.write(outf);
@@ -2270,9 +2260,10 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     // reloading the index), but it's easier to save the game at this
     // point and let the player reload.
 
-    const short fp_version = unmarshallShort(inf);
+    const uint8_t major = unmarshallUByte(inf);
+    const uint8_t minor = unmarshallUByte(inf);
 
-    if (check_cache_version && fp_version != MAP_CACHE_VERSION)
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         throw map_load_exception(name);
 
     std::string fp_name;
@@ -3331,13 +3322,13 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         {
             pick = *i;
 
-            if (pick.mid < 0 && pick.fix_mons)
-                pick.mid = i->mid = fix_demon(pick.mid);
+            if (pick.type < 0 && pick.fix_mons)
+                pick.type = i->type = fix_demon(pick.type);
         }
     }
 
-    if (pick.mid < 0)
-        pick = fix_demon(pick.mid);
+    if (pick.type < 0)
+        pick = fix_demon(pick.type);
 
     if (slot.fix_slot)
     {
@@ -3701,19 +3692,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         std::string tile = strip_tag_prefix(mon_str, "tile:");
         if (!tile.empty())
         {
-#ifdef USE_TILE
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
-#endif
             // Store name along with the tile.
             mspec.props["monster_tile_name"].get_string() = tile;
-#ifdef USE_TILE
             mspec.props["monster_tile"] = short(index);
-#endif
         }
 
         std::string name = strip_tag_prefix(mon_str, "name:");
@@ -3747,14 +3734,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             // Reasoning for setting more than one flag: suffixes and
             // adjectives need NAME_DESCRIPTOR to get proper grammar,
             // and definite names do nothing with the description unless
-            // NAME_DESCRIPTOR is also set.  Without this, you end up
-            // with bloated vault description lines akin to:
-            // "name:blah_blah name_replace name_descriptor
-            // name_definite".
+            // NAME_DESCRIPTOR is also set.
+            const uint64_t name_flags = mspec.extra_monster_flags & MF_NAME_MASK;
             const bool need_name_desc =
-                (mspec.extra_monster_flags & MF_NAME_SUFFIX)
-                    || (mspec.extra_monster_flags & MF_NAME_ADJECTIVE)
-                    || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
+                name_flags == MF_NAME_SUFFIX
+                   || name_flags == MF_NAME_ADJECTIVE
+                   || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
 
             if (strip_tag(mon_str, "name_descriptor")
                 || strip_tag(mon_str, "n_des")
@@ -3773,6 +3758,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 || strip_tag(mon_str, "n_zom"))
             {
                 mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
+            }
+            if (strip_tag(mon_str, "name_nocorpse")
+                || strip_tag(mon_str, "n_noc"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_NOCORPSE;
             }
         }
 
@@ -3811,13 +3801,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             // have a monster modifier, in which case we set the
             // modifier in monbase.
             const mons_spec nspec = mons_by_name("orc " + mon_str);
-            if (nspec.mid != MONS_PROGRAM_BUG)
+            if (nspec.type != MONS_PROGRAM_BUG)
             {
                 // Is this a modified monster?
                 if (nspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_zombified(nspec.mid))
+                    && mons_class_is_zombified(nspec.type))
                 {
-                    mspec.monbase = static_cast<monster_type>(nspec.mid);
+                    mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
             }
         }
@@ -3825,14 +3815,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             const mons_spec nspec = mons_by_name(mon_str);
 
-            if (nspec.mid == MONS_PROGRAM_BUG)
+            if (nspec.type == MONS_PROGRAM_BUG)
             {
                 error = make_stringf("unknown monster: \"%s\"",
                                      mon_str.c_str());
                 return (slot);
             }
 
-            mspec.mid     = nspec.mid;
+            mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
             if (nspec.colour && !mspec.colour)
@@ -3841,22 +3831,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
         if (!mspec.items.empty())
         {
-            monster_type mid = (monster_type)mspec.mid;
-            if (mid == RANDOM_DRACONIAN
-                || mid == RANDOM_BASE_DRACONIAN
-                || mid == RANDOM_NONBASE_DRACONIAN)
+            monster_type type = (monster_type)mspec.type;
+            if (type == RANDOM_DRACONIAN
+                || type == RANDOM_BASE_DRACONIAN
+                || type == RANDOM_NONBASE_DRACONIAN)
             {
-                mid = MONS_DRACONIAN;
+                type = MONS_DRACONIAN;
             }
 
-            if (mid >= NUM_MONSTERS)
+            if (type >= NUM_MONSTERS)
             {
                 error = "Can't give spec items to a random monster.";
                 return (slot);
             }
-            else if (mons_class_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
+            else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT)
             {
-                if (mid != MONS_DANCING_WEAPON || mspec.items.size() > 1)
+                if (type != MONS_DANCING_WEAPON || mspec.items.size() > 1)
                     error = make_stringf("Monster '%s' can't use items.",
                                          mon_str.c_str());
             }
@@ -3935,7 +3925,7 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         }
         else
         {
-            spec.mid = MONS_PROGRAM_BUG;
+            spec.type = MONS_PROGRAM_BUG;
             return;
         }
     }
@@ -3947,24 +3937,24 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
     trim_string(s);
 
     mons_spec base_monster = mons_by_name(s);
-    if (base_monster.mid < 0)
-        base_monster.mid = MONS_PROGRAM_BUG;
-    spec.monbase = static_cast<monster_type>(base_monster.mid);
+    if (base_monster.type < 0)
+        base_monster.type = MONS_PROGRAM_BUG;
+    spec.monbase = static_cast<monster_type>(base_monster.type);
     spec.number = base_monster.number;
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
     {
-        spec.mid = MONS_PROGRAM_BUG;
+        spec.type = MONS_PROGRAM_BUG;
         return;
     }
     if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
     {
-        spec.mid = MONS_PROGRAM_BUG;
+        spec.type = MONS_PROGRAM_BUG;
         return;
     }
 
-    spec.mid = zombie_montypes[mod][zombie_size - 1];
+    spec.type = zombie_montypes[mod][zombie_size - 1];
 }
 
 mons_spec mons_list::get_hydra_spec(const std::string &name) const
@@ -4042,13 +4032,13 @@ mons_spec mons_list::drac_monspec(std::string name) const
 {
     mons_spec spec;
 
-    spec.mid = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name, true);
 
     // Check if it's a simple drac name, we're done.
-    if (spec.mid != MONS_PROGRAM_BUG)
+    if (spec.type != MONS_PROGRAM_BUG)
         return (spec);
 
-    spec.mid = RANDOM_DRACONIAN;
+    spec.type = RANDOM_DRACONIAN;
 
     // Request for any draconian?
     if (starts_with(name, "any "))
@@ -4062,7 +4052,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
     }
     else if (starts_with(name, "nonbase "))
     {
-        spec.mid = RANDOM_NONBASE_DRACONIAN;
+        spec.type = RANDOM_NONBASE_DRACONIAN;
         name = name.substr(8);
     }
 
@@ -4090,14 +4080,14 @@ mons_spec mons_list::drac_monspec(std::string name) const
         return (MONS_PROGRAM_BUG);
 
     name = trimmed_string(name.substr(wordend + 1));
-    spec.mid = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name, true);
 
     // We should have a non-base draconian here.
-    if (spec.mid == MONS_PROGRAM_BUG
-        || mons_genus(spec.mid) != MONS_DRACONIAN
-        || spec.mid == MONS_DRACONIAN
-        || (spec.mid >= MONS_BLACK_DRACONIAN
-            && spec.mid <= MONS_PALE_DRACONIAN))
+    if (spec.type == MONS_PROGRAM_BUG
+        || mons_genus(spec.type) != MONS_DRACONIAN
+        || spec.type == MONS_DRACONIAN
+        || (spec.type >= MONS_BLACK_DRACONIAN
+            && spec.type <= MONS_PALE_DRACONIAN))
     {
         return (MONS_PROGRAM_BUG);
     }
@@ -4192,7 +4182,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     mons_spec spec;
     get_zombie_type(name, spec);
-    if (spec.mid != MONS_PROGRAM_BUG)
+    if (spec.type != MONS_PROGRAM_BUG)
         return (spec);
 
     if (name.find("draconian") != std::string::npos)
@@ -4457,7 +4447,9 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "returning",
         "chaos",
         "penetration",
+#if TAG_MAJOR_VERSION == 32
         "reaping",
+#endif
         "dispersal",
         "exploding",
         "steel",
@@ -4594,7 +4586,7 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
 
     // Get the actual monster spec:
     mons_spec spec = mlist.get_monster(0);
-    monster_type mtype = static_cast<monster_type>(spec.mid);
+    monster_type mtype = static_cast<monster_type>(spec.type);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
     {
         error = make_stringf("Requested corpse '%s' is invalid",
@@ -5188,8 +5180,8 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
         return ;
     }
 
-    item_def parsed = find_item_type(OBJ_UNASSIGNED, name);
-    if (parsed.sub_type != OBJ_RANDOM)
+    item_kind parsed = item_kind_by_name(name);
+    if (parsed.base_type != OBJ_UNASSIGNED)
     {
         spec.base_type = parsed.base_type;
         spec.sub_type  = parsed.sub_type;
@@ -5580,7 +5572,7 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
-    if (s.find("shop") != std::string::npos
+    if (s.find("shop") != std::string::npos && s != "abandoned_shop"
         || s.find("store") != std::string::npos)
     {
         list.push_back(parse_shop(s, weight));

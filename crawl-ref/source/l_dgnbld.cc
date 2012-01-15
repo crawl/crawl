@@ -925,6 +925,64 @@ LUAFN(dgn_delve)
     return (0);
 }
 
+LUAFN(dgn_farthest_from)
+{
+    LINES(ls, 1, lines);
+    const char *beacons = luaL_checkstring(ls, 2);
+
+    ASSERT(lines.width() <= GXM);
+    ASSERT(lines.height() <= GYM);
+    FixedArray<bool, GXM, GYM> visited;
+    visited.init(false);
+    std::vector<coord_def> queue;
+    unsigned int dc_prev = 0, dc_next; // indices where dist changes to the next value
+
+    for (int x = lines.width(); x >= 0; x--)
+        for (int y = lines.height(); y >= 0; y--)
+        {
+            coord_def c(x, y);
+            if (lines.in_map(c) && strchr(beacons, lines(c)))
+            {
+                queue.push_back(c);
+                visited(c) = true;
+            }
+        }
+
+    dc_next = queue.size();
+    if (!dc_next)
+    {
+        // Not a single beacon, nowhere to go.
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+        return (2);
+    }
+
+    for (unsigned int dc = 0; dc < queue.size(); dc++)
+    {
+        if (dc >= dc_next)
+        {
+            dc_prev = dc_next;
+            dc_next = dc;
+        }
+
+        coord_def c = queue[dc];
+        for (adjacent_iterator ai(c); ai; ++ai)
+            if (lines.in_map(*ai) && !visited(*ai)
+                && strchr(traversable_glyphs, lines(*ai)))
+            {
+                queue.push_back(*ai);
+                visited(*ai) = true;
+            }
+    }
+
+    ASSERT(dc_next > dc_prev);
+    // There may be multiple farthest cells, pick one at random.
+    coord_def loc = queue[dc_prev + random2(dc_next - dc_prev)];
+    lua_pushnumber(ls, loc.x);
+    lua_pushnumber(ls, loc.y);
+    return (2);
+}
+
 /* Wrappers for C++ layouts, to facilitate choosing of layouts by weight and
  * depth */
 
@@ -988,6 +1046,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "delve", &dgn_delve },
     { "width", dgn_width },
     { "layout_type", &dgn_layout_type },
+    { "farthest_from", &dgn_farthest_from },
 
     { "layout_basic", &dgn_layout_basic },
     { "layout_bigger_room", &dgn_layout_bigger_room },

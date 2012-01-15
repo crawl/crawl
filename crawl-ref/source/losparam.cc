@@ -14,6 +14,14 @@
 #include "state.h"
 #include "terrain.h"
 
+const opacity_default opc_default = opacity_default();
+const opacity_fullyopaque opc_fullyopaque = opacity_fullyopaque();
+const opacity_no_trans opc_no_trans = opacity_no_trans();
+const opacity_immob opc_immob = opacity_immob();
+const opacity_solid opc_solid = opacity_solid();
+const opacity_solid_see opc_solid_see = opacity_solid_see();
+const opacity_no_actor opc_no_actor = opacity_no_actor();
+
 opacity_type opacity_default::operator()(const coord_def& p) const
 {
     // Secret doors in translucent walls shouldn't block LOS,
@@ -21,12 +29,12 @@ opacity_type opacity_default::operator()(const coord_def& p) const
     dungeon_feature_type f = grid_appearance(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
-    else if (is_opaque_cloud(env.cgrid(p)))
-        return OPC_HALF;
     else if (f == DNGN_TREE || f == DNGN_SWAMP_TREE)
         return OPC_HALF;
+    else if (is_opaque_cloud(env.cgrid(p)))
+        return OPC_HALF;
     if (const monster *mon = monster_at(p))
-        return mons_opacity(mon);
+        return mons_opacity(mon, LOS_DEFAULT);
     return OPC_CLEAR;
 }
 
@@ -40,16 +48,14 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
 
 opacity_type opacity_no_trans::operator()(const coord_def& p) const
 {
-    opacity_type base = opc_default(p);
-
-    dungeon_feature_type f = env.grid(p);
-    if (feat_is_opaque(f) || feat_is_wall(f)
-        || f == DNGN_TREE || f == DNGN_SWAMP_TREE)
-    {
+    dungeon_feature_type f = grid_appearance(p);
+    if (feat_is_opaque(f) || feat_is_wall(f) || feat_is_tree(f))
         return OPC_OPAQUE;
-    }
-    else
-        return base;
+    else if (is_opaque_cloud(env.cgrid(p)))
+        return OPC_HALF;
+    if (const monster *mon = monster_at(p))
+        return mons_opacity(mon, LOS_NO_TRANS);
+    return OPC_CLEAR;
 }
 
 static bool mons_block_immob(const monster* mons)
@@ -84,19 +90,26 @@ opacity_type opacity_immob::operator()(const coord_def& p) const
         return base;
 }
 
+opacity_type opacity_solid::operator()(const coord_def& p) const
+{
+    dungeon_feature_type f = env.grid(p);
+    if (feat_is_solid(f))
+        return OPC_OPAQUE;
+
+    return OPC_CLEAR;
+}
+
 // Make anything solid block in addition to normal LOS.
 // That's just granite statues in addition to opacity_no_trans.
-opacity_type opacity_solid::operator()(const coord_def& p) const
+opacity_type opacity_solid_see::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = env.grid(p);
     if (feat_is_solid(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
-    else if (f == DNGN_TREE || f == DNGN_SWAMP_TREE)
-        return OPC_HALF;
     else if (const monster *mon = monster_at(p))
-        return mons_opacity(mon);
+        return mons_opacity(mon, LOS_SOLID_SEE);
 
     return OPC_CLEAR;
 }

@@ -19,6 +19,7 @@
 #include "newgame.h"
 #include "ng-setup.h"
 #include "mapmark.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "jobs.h"
@@ -33,6 +34,12 @@
 #include "stuff.h"
 #include "transform.h"
 #include "travel.h"
+
+/*
+--- Player-related bindings.
+
+module "you"
+*/
 
 /////////////////////////////////////////////////////////////////////
 // Bindings to get information on the player (clua).
@@ -65,17 +72,48 @@ static const char *transform_name()
     }
 }
 
+/*
+--- Has player done something that takes time?
+function turn_is_over() */
 LUARET1(you_turn_is_over, boolean, you.turn_is_over)
+/*
+--- Get player's name
+function name() */
 LUARET1(you_name, string, you.your_name.c_str())
+/*
+--- Get name of player's race
+function race() */
 LUARET1(you_race, string, species_name(you.species).c_str())
+/*
+--- Get name of player's background
+function class() */
 LUARET1(you_class, string, get_job_name(you.char_class))
+/*
+--- Is player in wizard mode?
+function wizard() */
+LUARET1(you_wizard, boolean, you.wizard)
+/*
+--- Get name of player's god
+function god() */
 LUARET1(you_god, string, god_name(you.religion).c_str())
+/*
+--- Is this [player's] god good?
+-- @param god defaults to you.god()
+function good_god(god) */
 LUARET1(you_good_god, boolean,
         lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
         : is_good_god(you.religion))
+/*
+--- Is this [player's] god evil?
+-- @param god defaults to you.god()
+function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Does this [player's] god like fresh corpses?
+-- @param god defaults to you.god()
+function god_likes_fresh_corpses(god) */
 LUARET1(you_god_likes_fresh_corpses, boolean,
         lua_isstring(ls, 1) ?
         god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
@@ -86,9 +124,8 @@ LUARET1(you_hunger, string, hunger_level())
 LUARET2(you_strength, number, you.strength(), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
-LUARET1(you_exp, number, you.experience_level)
-LUARET1(you_exp_pool, number, you.exp_available)
-LUARET1(you_exp_points, number, you.experience)
+LUARET1(you_xl, number, you.experience_level)
+LUARET1(you_xl_progress, number, get_exp_progress())
 LUARET1(you_skill, number,
         lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
                             : 0)
@@ -103,6 +140,7 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible(false, true))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
@@ -112,7 +150,10 @@ LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
 LUARET1(you_transform, string, transform_name())
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
+LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
+LUARET1(you_swift, boolean, you.duration[DUR_SWIFTNESS])
 LUARET1(you_paralysed, boolean, you.paralysed())
+LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -121,9 +162,12 @@ LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
+LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_contaminated, number, get_contamination_level())
+LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
 
@@ -279,6 +323,7 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
+    { "wizard"      , you_wizard },
     { "god"         , you_god },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
@@ -290,9 +335,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
-    { "xl"          , you_exp },
-    { "exp_pool"    , you_exp_pool },
-    { "exp"         , you_exp_points },
+    { "xl"          , you_xl },
+    { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
     { "res_cold"    , you_res_cold   },
@@ -300,6 +344,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
+    { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },
     { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
@@ -310,6 +355,9 @@ static const struct luaL_reg you_clib[] =
     { "berserk",      you_berserk },
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
+    { "shrouded",     you_shrouded },
+    { "swift",        you_swift },
+    { "caught",       you_caught },
     { "asleep",       you_asleep },
     { "hasted",       you_hasted },
     { "slowed",       you_slowed },
@@ -318,9 +366,12 @@ static const struct luaL_reg you_clib[] =
     { "poisoned",     you_poisoned },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
+    { "nauseous",     you_nauseous },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
+    { "contaminated", you_contaminated },
+    { "feel_safe",    you_feel_safe },
     { "deaths",       you_deaths },
     { "lives",        you_lives },
     { "piety_rank",   you_piety_rank },

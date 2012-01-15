@@ -26,7 +26,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "makeitem.h"
 #include "mon-stuff.h"
 #include "mutation.h"
@@ -47,8 +46,6 @@
 #include "xom.h"
 
 #include <sstream>
-
-#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
 
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
@@ -79,7 +76,7 @@ static bool _yred_random_zombified_hostile()
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    return (create_monster(temp, false) != -1);
+    return create_monster(temp, false);
 }
 
 static bool _okawaru_random_servant()
@@ -105,7 +102,7 @@ static bool _okawaru_random_servant()
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    return (create_monster(temp, false) != -1);
+    return create_monster(temp, false);
 }
 
 static bool _tso_retribution()
@@ -365,7 +362,7 @@ static bool _cheibriados_retribution()
     if (one_chance_in(5 - wrath_type))
         glammer = true;
 
-    switch(wrath_type)
+    switch (wrath_type)
     {
     // Very high tension wrath
     case 4:
@@ -422,14 +419,14 @@ static bool _makhleb_retribution()
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
         mgen_data temp =
-            mgen_data::hostile_at(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
+            mgen_data::hostile_at(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                                   MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                                   "the fury of Makhleb",
                                   true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false) != -1;
+        bool success = create_monster(temp, false);
 
         simple_god_message(success ? " sends a greater servant after you!"
                                    : "'s greater servant is unavoidably "
@@ -443,7 +440,7 @@ static bool _makhleb_retribution()
         for (; how_many > 0; --how_many)
         {
             mgen_data temp =
-                mgen_data::hostile_at(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+                mgen_data::hostile_at(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                                       MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
                                       MONS_YNOXINUL, -1),
                                       "the fury of Makhleb",
@@ -451,10 +448,8 @@ static bool _makhleb_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 count++;
-            }
         }
 
         simple_god_message(count > 1 ? " sends minions to punish you." :
@@ -692,24 +687,23 @@ static bool _beogh_retribution()
                                                     : WPN_HALBERD);
 
             // Now create monster.
-            const int mon =
+            if (monster *mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
                         "the wrath of Beogh",
-                        true, 0, 0, you.pos(), 0, god));
-
-            if (mon != -1)
+                        true, 0, 0, you.pos(), 0, god)))
             {
-                ASSERT(menv[mon].weapon() != NULL);
-                item_def& wpn(*menv[mon].weapon());
+                ASSERT(mon->weapon() != NULL);
+                item_def& wpn(*mon->weapon());
 
-                // FIXME: Mega-hack (breaks encapsulation too).
-                wpn.flags &= ~ISFLAG_RACIAL_MASK;
                 if (am_orc)
+                {
+                    set_equip_race(wpn, ISFLAG_NO_RACE);
                     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ORC_SLAYING);
+                }
                 else
                 {
-                    wpn.flags |= ISFLAG_ORCISH;
+                    set_equip_race(wpn, ISFLAG_ORCISH);
                     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
                 }
 
@@ -724,14 +718,14 @@ static bool _beogh_retribution()
 
                 item_colour(wpn);
 
-                menv[mon].flags |= (MF_NO_REWARD | MF_HARD_RESET);
+                mon->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
                 ghost_demon newstats;
                 newstats.init_dancing_weapon(wpn,
                                              you.experience_level * 50 / 9);
 
-                menv[mon].set_ghost(newstats);
-                menv[mon].dancing_weapon_init();
+                mon->set_ghost(newstats);
+                mon->ghost_demon_init();
 
                 num_created++;
             }
@@ -777,15 +771,15 @@ static bool _beogh_retribution()
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        int mons = create_monster(temp, false);
+        monster *mons = create_monster(temp, false);
 
         // sometimes name band leader
-        if (mons != -1 && one_chance_in(3))
-            give_monster_proper_name(&menv[mons]);
+        if (mons && one_chance_in(3))
+            give_monster_proper_name(mons);
 
         simple_god_message(
-            mons != -1 ? " sends forth an army of orcs."
-                       : " is still gathering forces against you.", god);
+            mons ? " sends forth an army of orcs."
+                 : " is still gathering forces against you.", god);
     }
     }
 
@@ -889,15 +883,14 @@ static bool _lugonu_retribution()
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
         mgen_data temp =
-            mgen_data::hostile_at(random_mons(MONS_GREEN_DEATH,
+            mgen_data::hostile_at(random_choose(MONS_GREEN_DEATH,
                                   MONS_BLIZZARD_DEMON, MONS_BALRUG, -1),
                                   "the touch of Lugonu",
                                   true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false) != -1;
-
+        bool success = create_monster(temp, false);
         simple_god_message(success ? " sends a demon after you!"
                                    : "'s demon is unavoidably detained.", god);
     }
@@ -909,7 +902,7 @@ static bool _lugonu_retribution()
         for (; how_many > 0; --how_many)
         {
             mgen_data temp =
-                mgen_data::hostile_at(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+                mgen_data::hostile_at(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                                       MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
                                       MONS_YNOXINUL, -1),
                                       "the touch of Lugonu",
@@ -917,10 +910,8 @@ static bool _lugonu_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 success = true;
-            }
         }
 
         simple_god_message(success ? " sends minions to punish you."
@@ -991,8 +982,8 @@ static bool _jiyva_retribution()
 
         if (found_one)
         {
-            mprf(MSGCH_GOD, "Jiyva's putrescence saturates the %s!",
-                 mon->name(DESC_NOCAP_THE).c_str());
+            mprf(MSGCH_GOD, "Jiyva's putrescence saturates %s!",
+                 mon->name(DESC_THE).c_str());
 
             slimify_monster(mon, true);
         }
@@ -1047,10 +1038,8 @@ static bool _jiyva_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 success = true;
-            }
         }
 
         god_speaks(god, success ? "Some slimes ooze up out of the ground!"
@@ -1187,7 +1176,7 @@ static bool _fedhas_retribution()
                 temp.cls = coinflip() ?
                            MONS_WANDERING_MUSHROOM : MONS_OKLOB_PLANT;
 
-                if (create_monster(temp, false) != -1)
+                if (create_monster(temp, false))
                     success = true;
             }
         }

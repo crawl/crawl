@@ -13,7 +13,6 @@ enum exer_type
     EX_BEAM_WILL_HIT,        // beam was not blocked or dodged
     EX_WILL_STAB,
     EX_WILL_HIT,             // melee
-    EX_WILL_HIT_HELPLESS,    // meleeing plants
     EX_MONSTER_MAY_HIT,      // melee attack was not blocked
     EX_MONSTER_WILL_HIT,     // melee attack was not blocked or dodged
     EX_WILL_LAUNCH,          // launchers
@@ -24,9 +23,7 @@ enum exer_type
     EX_USED_ABIL,
     EX_DID_CAST,
     EX_DID_MISCAST,
-    EX_WILL_READ_SCROLL,
     EX_SHIELD_BLOCK,
-    EX_SHIELD_TRAP,
     EX_DODGE_TRAP,
     EX_SHIELD_BEAM_FAIL,
     EX_FOUND_SECRET_DOOR,

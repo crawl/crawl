@@ -27,7 +27,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
-#include "coord.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
@@ -179,14 +178,20 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         break;
 
     case BEAM_POISON:
-
         if (doEffects)
-            resist = poison_player(coinflip() ? 2 : 1, source, kaux);
+        {
+            resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
-        if (resist == 0 && doEffects)
+            if (resist > 0)
             canned_msg(MSG_YOU_RESIST);
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour, player_res_poison(),
+                                          hurted, true);
+        }
         break;
 
     case BEAM_POISON_ARROW:
@@ -196,7 +201,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
         resist = player_res_poison();
 
-        if (doEffects) {
+        if (doEffects)
+        {
             int poison_amount = 2 + random2(3);
             poison_amount += (resist ? 0 : 2);
             poison_player(poison_amount, source, kaux, true);
@@ -441,7 +447,7 @@ static void _item_corrode(int slot)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
+        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
              || get_equip_race(item) == ISFLAG_DWARVEN)
             && !one_chance_in(5))
         {
@@ -485,9 +491,9 @@ static void _item_corrode(int slot)
     if (!suppress_msg)
     {
         if (it_resists)
-            mprf("%s resists.", item.name(DESC_CAP_YOUR).c_str());
+            mprf("%s resists.", item.name(DESC_YOUR).c_str());
         else
-            mprf("The acid corrodes %s!", item.name(DESC_NOCAP_YOUR).c_str());
+            mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
     }
 
     if (!it_resists)
@@ -1038,7 +1044,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
                 mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
                              foe, 0, GOD_JIYVA);
 
-                if (create_monster(mg) != -1)
+                if (create_monster(mg))
                     count_created++;
             }
 
@@ -1152,9 +1158,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
         if (you.petrified())
-            dam /= 3;
+            dam /= 2;
         else if (you.petrifying())
-            dam = dam * 1000 / 1732;
+            dam = dam * 10 / 15;
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
@@ -1189,7 +1195,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 return;
         }
 
-        if (dam >= you.hp && god_protects_from_harm())
+        if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
             return;
@@ -1506,7 +1512,7 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(_morgue_name(se.get_death_time()), false, true, &se))
+    if (!dump_char(_morgue_name(se.get_death_time()), true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1524,7 +1530,7 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory(true);
+    browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
@@ -1570,4 +1576,19 @@ int actor_to_death_source(const actor* agent)
         return (agent->as_monster()->mindex());
     else
         return (NON_MONSTER);
+}
+
+int timescale_damage(const actor *act, int damage)
+{
+    if (damage < 0)
+        damage = 0;
+    // Can we have a uniform player/monster speed system yet?
+    if (act->is_player())
+        return div_rand_round(damage * you.time_taken, BASELINE_DELAY);
+    else
+    {
+        const monster *mons = act->as_monster();
+        const int speed = mons->speed > 0? mons->speed : BASELINE_DELAY;
+        return div_rand_round(damage * BASELINE_DELAY, speed);
+    }
 }

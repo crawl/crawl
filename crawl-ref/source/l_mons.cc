@@ -556,7 +556,7 @@ static const char *_monster_behaviour_names[] = {
 
 static const char* _behaviour_name(beh_type beh)
 {
-    if (0 <= beh && beh < static_cast<int>(ARRAYSZ(_monster_behaviour_names)))
+    if (0 <= beh && beh < NUM_BEHAVIOURS)
         return (_monster_behaviour_names[beh]);
     else
         return ("invalid");
@@ -564,9 +564,9 @@ static const char* _behaviour_name(beh_type beh)
 
 static beh_type behaviour_by_name(const std::string &name)
 {
-    ASSERT(ARRAYSZ(_monster_behaviour_names) == NUM_BEHAVIOURS);
+    COMPILE_CHECK(ARRAYSZ(_monster_behaviour_names) == NUM_BEHAVIOURS);
 
-    for (unsigned i = 0; i < ARRAYSZ(_monster_behaviour_names); ++i)
+    for (unsigned i = 0; i < NUM_BEHAVIOURS; ++i)
         if (name == _monster_behaviour_names[i])
             return static_cast<beh_type>(i);
 

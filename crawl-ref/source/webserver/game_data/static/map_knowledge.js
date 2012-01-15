@@ -1,10 +1,16 @@
-map_knowledge = function ()
-{
-    var k = {};
-    var monster_table = {};
-    var dirty_locs = [];
-    var bounds = null;
-    var bounds_changed = false;
+define(["jquery", "./enums"], function ($, enums) {
+    var k, monster_table, dirty_locs, bounds, bounds_changed;
+
+    function init()
+    {
+        k = {};
+        monster_table = {};
+        dirty_locs = [];
+        bounds = null;
+        bounds_changed = false;
+    }
+
+    $(document).bind("game_init", init);
 
     function set(x, y, val)
     {
@@ -28,7 +34,7 @@ map_knowledge = function ()
     function visible(x, y)
     {
         var cell = get(x, y);
-        if (cell.t && ((cell.t.bg & TILE_FLAG_UNSEEN) == 0))
+        if (cell.t && ((cell.t.bg & enums.TILE_FLAG_UNSEEN) == 0))
             return true;
         return false;
     }
@@ -99,7 +105,7 @@ map_knowledge = function ()
 
     function clean_monster_table()
     {
-        for (id in monster_table)
+        for (var id in monster_table)
         {
             if (!monster_table[id].refs)
                 delete monster_table[id];
@@ -110,7 +116,7 @@ map_knowledge = function ()
 
     function merge(val)
     {
-        var x;
+        var x, y;
         if (val.x === undefined)
             x = merge_last_x + 1;
         else
@@ -206,4 +212,4 @@ map_knowledge = function ()
             return bc;
         },
     };
-} ();
+});

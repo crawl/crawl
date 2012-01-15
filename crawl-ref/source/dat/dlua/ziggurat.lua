@@ -117,6 +117,7 @@ function ziggurat_portal(e, portal_only)
       dstname_abbrev = "Zig:1",
       dstorigin = "on level 1 of a ziggurat",
       floor = "stone_arch",
+      feat_tile = "dngn_portal_ziggurat_gone",
       onclimb = "callback.ziggurat_initialiser"
     }
   end
@@ -127,6 +128,7 @@ function ziggurat_portal(e, portal_only)
 
   e.lua_marker("O", stair)
   e.kfeat("O = enter_portal_vault")
+  e.tile("O = dngn_portal_ziggurat")
 end
 
 -- Common setup for ziggurat levels.
@@ -341,13 +343,15 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Geh:$", { weight = 5 }),
      with_props("place:Dis:$", { weight = 5 }),
      with_props("place:Tar:$", { weight = 5 }),
-     with_props("daeva / angel / cherub / pearl dragon / shedu band / ophan / apis / holy swine", { weight = 2 }),
+     with_props("daeva / angel / cherub / pearl dragon / ophan / " ..
+                "apis / paladin / phoenix / w:5 silver star", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "dragon / fire giant / orb of fire", { weight = 2 }),
      with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / place:D:$ simulacrum", { weight = 2 }),
+                "frost giant / ice devil / ice fiend / place:D:$ simulacrum / " ..
+                "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem", { weight = 2 }),
      with_props("clay golem / earth elemental / stone golem / iron golem / " ..

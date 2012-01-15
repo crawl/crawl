@@ -243,7 +243,7 @@ enum prefix_type
 };
 
 // Could also go with coloured glyphs.
-glyph prefix_glyph(prefix_type p)
+static glyph _prefix_glyph(prefix_type p)
 {
     glyph g;
     switch (p)
@@ -382,7 +382,7 @@ class message_window
         if (next_line > 0)
         {
             formatted_string line;
-            line.add_glyph(prefix_glyph(prompt));
+            line.add_glyph(_prefix_glyph(prompt));
             lines[next_line-1].del_char();
             line += lines[next_line-1];
             lines[next_line-1] = line;
@@ -487,7 +487,7 @@ public:
             temp_line -= make_space(1);
             formatted_string line;
             if (use_first_col())
-                line.add_glyph(prefix_glyph(first_col));
+                line.add_glyph(_prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
@@ -539,7 +539,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            glyph g = prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            glyph g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
             formatted_string f;
             f.add_glyph(g);
             f.display();
@@ -858,7 +858,7 @@ int channel_to_colour(msg_channel_type channel, int param)
     return colour_msg(channel_to_msgcol(channel, param));
 }
 
-static void do_message_print(msg_channel_type channel, int param,
+static void do_message_print(msg_channel_type channel, int param, bool cap,
                              const char *format, va_list argp)
 {
     va_list ap;
@@ -866,24 +866,47 @@ static void do_message_print(msg_channel_type channel, int param,
     char buff[200];
     size_t len = vsnprintf(buff, sizeof(buff), format, argp);
     if (len < sizeof(buff))
-    {
-        mpr(buff, channel, param);
-    }
+        mpr(buff, channel, param, false, cap);
     else
     {
         char *heapbuf = (char*)malloc(len + 1);
         vsnprintf(heapbuf, len + 1, format, ap);
-        mpr(heapbuf, channel, param);
+        mpr(heapbuf, channel, param, false, cap);
         free(heapbuf);
     }
     va_end(ap);
+}
+
+void mprf_nocap(msg_channel_type channel, int param, const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, param, false, format, argp);
+    va_end(argp);
+}
+
+void mprf_nocap(msg_channel_type channel, const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, channel == MSGCH_GOD ? you.religion : 0,
+                     false, format, argp);
+    va_end(argp);
+}
+
+void mprf_nocap(const char *format, ...)
+{
+    va_list  argp;
+    va_start(argp, format);
+    do_message_print(MSGCH_PLAIN, 0, false, format, argp);
+    va_end(argp);
 }
 
 void mprf(msg_channel_type channel, int param, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
-    do_message_print(channel, param, format, argp);
+    do_message_print(channel, param, true, format, argp);
     va_end(argp);
 }
 
@@ -892,7 +915,7 @@ void mprf(msg_channel_type channel, const char *format, ...)
     va_list argp;
     va_start(argp, format);
     do_message_print(channel, channel == MSGCH_GOD ? you.religion : 0,
-                     format, argp);
+                     true, format, argp);
     va_end(argp);
 }
 
@@ -900,7 +923,7 @@ void mprf(const char *format, ...)
 {
     va_list  argp;
     va_start(argp, format);
-    do_message_print(MSGCH_PLAIN, 0, format, argp);
+    do_message_print(MSGCH_PLAIN, 0, true, format, argp);
     va_end(argp);
 }
 
@@ -909,7 +932,7 @@ void dprf(const char *format, ...)
 {
     va_list  argp;
     va_start(argp, format);
-    do_message_print(MSGCH_DIAGNOSTICS, 0, format, argp);
+    do_message_print(MSGCH_DIAGNOSTICS, 0, false, format, argp);
     va_end(argp);
 }
 #endif
@@ -964,6 +987,48 @@ static void debug_channel_arena(msg_channel_type channel)
     }
 }
 
+bool strip_channel_prefix(std::string &text, msg_channel_type &channel, bool silence)
+{
+    std::string::size_type pos = text.find(":");
+    if (pos == std::string::npos)
+        return false;
+
+    std::string param = text.substr(0, pos);
+    bool sound = false;
+
+    if (param == "WARN")
+        channel = MSGCH_WARN, sound = true;
+    else if (param == "VISUAL WARN")
+        channel = MSGCH_WARN;
+    else if (param == "SOUND")
+        channel = MSGCH_SOUND, sound = true;
+    else if (param == "VISUAL")
+        channel = MSGCH_TALK_VISUAL;
+    else if (param == "SPELL")
+        channel = MSGCH_MONSTER_SPELL, sound = true;
+    else if (param == "VISUAL SPELL")
+        channel = MSGCH_MONSTER_SPELL;
+    else if (param == "ENCHANT")
+        channel = MSGCH_MONSTER_ENCHANT, sound = true;
+    else if (param == "VISUAL ENCHANT")
+        channel = MSGCH_MONSTER_ENCHANT;
+    else
+    {
+        param = replace_all(param, " ", "_");
+        lowercase(param);
+        int ch = str_to_channel(param);
+        if (ch == -1)
+            return false;
+        channel = static_cast<msg_channel_type>(ch);
+    }
+
+    if (sound && silence)
+        text = "";
+    else
+        text = text.substr(pos + 1);
+    return true;
+}
+
 void msgwin_set_temporary(bool temp)
 {
     flush_prev_message();
@@ -983,7 +1048,7 @@ void msgwin_clear_temporary()
 
 static long _last_msg_turn = -1; // Turn of last message.
 
-void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
+void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, bool cap)
 {
     if (_msg_dump_file != NULL)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -1013,6 +1078,10 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
     if (channel == MSGCH_GOD && param == 0)
         param = you.religion;
 
+    // Ugly hack.
+    if (channel == MSGCH_DIAGNOSTICS || channel == MSGCH_ERROR)
+        cap = false;
+
     msg_colour_type colour = prepare_message(text, channel, param);
 
     if (colour == MSGCOL_MUTED)
@@ -1021,6 +1090,11 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
 
+    // Must do this before converting to formatted string and back;
+    // that doesn't preserve close tags!
+    std::string col = colour_to_str(colour_msg(colour));
+    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+
     if (you.duration[DUR_QUAD_DAMAGE])
     {
         // No sound, so we simulate the reverb with all caps.
@@ -1028,9 +1102,14 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
         fs.all_caps();
         text = fs.to_colour_string();
     }
+    else if (cap)
+    {
+        // Hate, hate, hate tagged strings.
+        formatted_string fs = formatted_string::parse_string(text);
+        fs.capitalize();
+        text = fs.to_colour_string();
+    }
 
-    std::string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
     message_item msg = message_item(text, channel, param, join);
     messages.add(msg);
     _last_msg_turn = msg.turn;
@@ -1420,7 +1499,7 @@ void replay_messages(void)
                 {
                     p = P_TURN_END;
                 }
-                line.add_glyph(prefix_glyph(p));
+                line.add_glyph(_prefix_glyph(p));
                 line += parts[j];
                 hist.add_item_formatted_string(line);
             }

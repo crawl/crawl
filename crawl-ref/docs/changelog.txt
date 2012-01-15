@@ -5,6 +5,8 @@ Stone Soup 0.10 (????????)
 ---------------
 * New species: Octopodes, sentient land-capable octopuses.
 * Skill training system reworked. Dancing is really gone this time!
+* All polearms have reaching.
+* Constriction (nagas, octopodes, some snakes, tentacled monstrosities).
 
 Branches, portal vaults, levels
 -------------------------------
@@ -38,25 +40,35 @@ Gods
 * TSO: piety decays; gain piety for spotting non-evil monsters.
 * Elyvilon: piety decays; piety for pacifications doubled.
 * Elyvilon has piety loss for ally deaths instead of penance.
+* Elyvilon doesn't grant piety for non-evil weapons past *** (even if you
+  drop lower later!).  Evil weapons get identified on sight.
+* Deaths of plants and non-living beings no longer count as friend deaths for
+  god conduct purposes.
 
 Species
 -------
 * Octopodes.
 * Draconians cannot wear body armour anymore, can wear gloves and boots.
+* Centaurs can survive longer on vegetarian food.
+* Felids gain lives every three levels.
+* Minotaurs instinctively retaliate in melee.
+* Demonspawn can get Foul Stench and Ignite Blood.
+* Kenku are now called Tengu, and get more MP.
+* Mountain Dwarves are no more.
+* Minotaur and Hill Orc aptitudes are a lot better.
 
 Character
 ---------
 * Wild Magic mutation: reduced spell success, increased power.
-* Always gain nutrition from brown chunks.
-* Restrictions for eating unfitting food at high satiation with herbi/carnivore.
-* Eating chunks beyond satiated depends on level of carnivorousness.
+* Always gain partial nutrition from brown chunks.
+* Bad food causes nausea instead of sickness.
+* Non-full carnivores cannot eat up to "engorged" without gourmand.
 * A little score increase from runes for non-winners.
 * Poison resistance is only 90% effective.
 
 Spells
 ------
-* New: Beastly Appendage (Transmutation 1).
-* Ozocubu's Refrigeration no longer works through glass walls.
+* New: Beastly Appendage (Transmutation 1), Inner Flame (Hex 3).
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
 * Abjuration becomes single-target, its old version (Mass Abj.) is
@@ -74,12 +86,18 @@ Spells
 * Lee's Rapid Deconstruction: prevent abuse.
 * Summon Greater Demon only has tier 1 demons turn hostile over time.
 * Spider form is susceptible to poison.
+* Shatter doesn't work through walls, unless it manages to destroy them.
+* No spells work through glass or trees anymore.
+* Metabolic Englaciation slows down enemies.
+* Twisted Resurrection is improved: corpses merge into abominations on their
+  own without needing to be stacked.
 
 Backgrounds
 -----------
 * Arcane Marksmen are back, with a Hex-based spellbook.
 * Artificers get a weaker staff and skills, but an extra wand.
 * Transmuters lose Fulsome Destillation and Evaporate, gain Beastly Appendage.
+* Necromancers lose Dispel Undead, gain Control Undead.
 * Monks get ** piety upon taking on their first god.
 
 Skills
@@ -113,12 +131,15 @@ Monsters
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
 * Unique Pandemonium lords can hunt you on the Orb run if you've stolen
-  their runes. Violate the 5th Commandment not 7th!
+  their runes.  Violate the 5th Commandment not 7th!
 * More emergency spell usage.
 * Gnoll shamans and sergeants are actual monsters.
 * Breath timeout for dragons, draconians, drakes.
 * Most monster summoning spells toned down slightly.
 * Monsters flee at lower health thresholds, and less predictably.
+* Killer bee larvae turn into killer bees if they eat honeycombs or royal
+  jellies.
+* All abominations are now both demonic and undead.
 
 Items
 -----
@@ -136,7 +157,7 @@ Items
   "quarterstaff".  Gladiators get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
-  ring of Vitality, autumn katana, shillelagh "Devastator".
+  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
 * The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
   demons (instead of random conjurations or hostile demons).
 * Scrolls of enchant and vorpalise weapon identified upon use.
@@ -148,12 +169,20 @@ Items
 * Early weapons tend to be better.
 * Rename potion of healing to potion of curing.
 * Rename wand of healing to wand of heal wounds.
+* Known properties of unique enemies' gear are pre-identified.
+* Medium armour is better.
+* Banded mail is no more, plate mail has been renamed to plate armour.
 
 Webtiles
 --------
 * Monster list.
 * Webtiles games create a ttyrec, allowing them to be watched from SSH.
 * Scale cells for small screens.
+* "Glyph mode" which shows letters instead of tiles.
+* Tiles in menus; Menus are sized according to each spectator's window, and
+  spectators can scroll independently.
+* Improvements to the lobby: show gods, allow sorting on XL/Character/Level,
+  and show milestones.
 
 Zot Defence
 -----------
@@ -161,8 +190,8 @@ Zot Defence
 * Disable useless gods.
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
-* Plants and non-livings dying don't count as friend dying (also in Crawl).
-* Start with some consumables (as in Sprint) to make the early game a little easier.
+* Start with some consumables (as in Sprint) to make the early game a little
+  easier.
 
 Technical
 ---------

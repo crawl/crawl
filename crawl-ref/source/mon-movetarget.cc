@@ -84,7 +84,8 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON)
+    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON
+        && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
     {
         if (you.wizard)
         {
@@ -152,7 +153,7 @@ bool try_pathfind(monster* mon)
     if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
         && mons_has_ranged_attack(mon)
-        && cell_see_cell(mon->pos(), PLAYER_POS, LOS_SOLID))
+        && cell_see_cell(mon->pos(), PLAYER_POS, LOS_SOLID_SEE))
     {
         need_pathfind = false;
     }

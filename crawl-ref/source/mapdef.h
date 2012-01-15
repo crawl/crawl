@@ -227,7 +227,6 @@ public:
     map_featheight_list fheights;
 };
 
-#ifdef USE_TILE
 typedef std::pair<std::string, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_tile>
 {
@@ -257,7 +256,6 @@ public:
     std::string fixed_tile;
     map_tile_list tiles;
 };
-#endif
 
 class map_marker_spec
 {
@@ -349,11 +347,9 @@ public:
     void write_maplines(writer &) const;
     void read_maplines(reader&);
 
-#ifdef USE_TILE
     std::string add_floortile(const std::string &s);
     std::string add_rocktile(const std::string &s);
     std::string add_spec_tile(const std::string &s);
-#endif
 
     std::vector<coord_def> find_glyph(const std::string &glyphs) const;
     std::vector<coord_def> find_glyph(int glyph) const;
@@ -458,9 +454,7 @@ private:
     void merge_cell(int x, int y, const map_def &vault, int vx, int vy,
                     int keyspec_idx);
 
-#ifdef USE_TILE
     void overlay_tiles(tile_spec &);
-#endif
     void check_borders();
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
@@ -475,9 +469,7 @@ private:
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
 
-#ifdef USE_TILE
     std::string add_tile(const std::string &sub, bool is_floor, bool is_feat);
-#endif
 
     std::string add_key_field(
         const std::string &s,
@@ -597,8 +589,8 @@ public:
     void clear();
 
     item_spec get_item(int index);
-    item_spec random_item ();
-    item_spec random_item_weighted ();
+    item_spec random_item();
+    item_spec random_item_weighted();
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
@@ -640,7 +632,7 @@ private:
 class mons_spec
 {
  public:
-    int mid;
+    int type;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
@@ -674,12 +666,12 @@ class mons_spec
 
     CrawlHashTable props;
 
-    mons_spec(int id = RANDOM_MONSTER,
+    mons_spec(int t = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
               int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false, bool patrol = false)
-        : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
+        : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
@@ -789,8 +781,8 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
-    shop_spec (shop_type sh, std::string n="", std::string t="",
-               std::string s="", int g=-1, int ni=-1, bool u=false)
+    shop_spec(shop_type sh, std::string n="", std::string t="",
+              std::string s="", int g=-1, int ni=-1, bool u=false)
         : sh_type(sh), name(n), type(t), suffix(s),
           greed(g), num_items(ni), items(), use_all(u) { }
 };
@@ -806,7 +798,7 @@ struct shop_spec
 struct trap_spec
 {
     trap_type tr_type; /*> One of the trap_type enum values. */
-    trap_spec (trap_type tr)
+    trap_spec(trap_type tr)
         : tr_type(static_cast<trap_type>(tr)) { }
 };
 
@@ -834,7 +826,7 @@ struct feature_spec
     feature_spec(int f, int wt = 10, int _mimic = 0, bool _no_mimic = false);
     feature_spec(const feature_spec& other);
     feature_spec& operator = (const feature_spec& other);
-    void init_with (const feature_spec& other);
+    void init_with(const feature_spec& other);
 };
 
 typedef std::vector<feature_spec> feature_spec_list;

@@ -7,11 +7,13 @@
 --   lua_file = lua/stash.lua
 --
 -- Available annotations:
+-- {throwable} for items you can throw.
 -- {artefact} for artefacts.
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
--- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
---               food, scroll, jewellery, potion, book, magical staff, orb, misc
+-- { <class> } - item class: gold, weapon, missile, wand, carrion, food,
+--               scroll, jewellery, potion, book, magical staff, orb, misc,
+--               <armourtype> armour
 -- {stick} for items suitable for "sticks to snakes"
 -- {fruit} for fruit
 --
@@ -37,6 +39,10 @@ function ch_stash_search_annotate_item(it)
 
   if ch_annotate_item_dropped and it.dropped then
     annot = annot .. "{dropped} "
+  end
+
+  if it.is_throwable then
+    annot = annot .. "{throwable} "
   end
 
   if it.artefact then

@@ -34,13 +34,48 @@ function ice_cave_portal(e)
                                "$F{The} is almost completely melted.")
     }
 
-  -- There are actually two kinds of ice caves: easy and hard ones. Players
-  -- that enter the portal deeper in the dungeon end up in the hard ones.
-  -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4.
-  -- Hard ice caves are in D:14-19, Elf:1-5 and Vault:1-7. Those depths are
-  -- set in the entry vault default-depth.
-  --
-  -- Now, first default to easy destinations.
+  local difficulty = ice_cave_difficulty()
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The archway melts and disappears.",
+        desc = "frozen archway",
+        desc_long = desc_long,
+        entity = 'archway',
+        dst = difficulty,
+        dstname = "ice_cave",
+        dstname_abbrev = "IceCv",
+        dstorigin = "in an ice cave",
+        overview = "frozen archway",
+        turns = timeout_turns_long,
+        turns_short = timeout_turns_short,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_ice_cave_gone",
+        msg = messager })
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = white")
+  e.tile("O = dngn_portal_ice_cave")
+  e.colour("X = white")
+  e.kfeat("X = x")
+  e.rtile("X = wall_zot_cyan")
+  e.colour(".1234 = blue")
+  e.ftile(".1234O+ = floor_ice")
+
+  dgn.set_lt_callback(difficulty, "ice_cave_feat_descs")
+
+end
+
+}}
+
+{{
+-- Figure out if an easy or a hard ice cave should be used. Players
+-- that enter the portal deeper in the dungeon end up in the hard ones.
+-- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4.
+-- Hard ice caves are in D:14-19, Elf:1-5 and Vault:1-7. Those depths are
+-- set in the entry vault default-depth.
+function ice_cave_difficulty()
+
+  -- First default to easy destinations.
   local difficulty = "ice_cave_easy"
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
@@ -57,31 +92,9 @@ function ice_cave_portal(e)
       difficulty = "ice_cave_hard"
   end
 
-  e.lua_marker('O',
-      timed_marker {
-        disappear = "The archway melts and disappears.",
-        desc = "A frozen archway",
-        desc_long = desc_long,
-        entity = 'archway',
-        dst = difficulty,
-        dstname = "ice_cave",
-        dstname_abbrev = "IceCv",
-        dstorigin = "in an ice cave",
-        overview = "frozen archway",
-        turns = timeout_turns_long,
-        turns_short = timeout_turns_short,
-        floor = "floor",
-        msg = messager })
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = white")
-  e.tile("O = dngn_portal_ice_cave")
-  e.colour("X = white")
-  e.kfeat("X = x")
-  e.rtile("X = wall_ice")
-  e.colour(".1234 = blue")
-  e.ftile(".1234O+ = floor_ice")
-end
+  return difficulty
 
+end
 }}
 
 {{
@@ -114,8 +127,6 @@ function ice_cave_feat_descs()
     dgn.set_feature_desc_long("Some deep water",
                               "It looks freezing!");
 end
-
-dgn.set_lt_callback("ice_cave", "ice_cave_feat_descs")
 }}
 
 # For destination (not entry) vaults, use the following line after all
@@ -128,7 +139,7 @@ function ice_cave_colours(e)
   e.tile("< = dngn_portal_ice_cave")
   e.lrockcol("white")
   e.lfloorcol("blue")
-  e.lrocktile("wall_ice")
+  e.lrocktile("wall_zot_cyan")
   e.lfloortile("floor_ice")
 end
 }}
@@ -140,7 +151,7 @@ end
 function place_fog(e, type, strength)
    e.lua_marker("!", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
-                     start_clouds = 1 } )
+                     start_clouds = 1, excl_rad = -1 } )
 end
 }}
 
@@ -300,7 +311,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-20, Lair:4-7, Orc:3-4
+DEPTH:  D:14-19, Lair:4-8, Orc:3-4
 : ice_cave_portal(_G)
 MONS:   wolf / yak w:5 / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1
@@ -326,7 +337,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-20, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
@@ -346,7 +357,7 @@ ENDMAP
 NAME:   portal_ice_cave_demonic_guard
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-20, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
@@ -366,7 +377,7 @@ NAME:   portal_ice_cave_entry_ice_statue_01
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:11-20, Elf:1-5, Vault:1-7
+DEPTH:  D:11-19, Elf:1-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -384,7 +395,7 @@ NAME:   portal_ice_cave_entry_ice_statue_02
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:14-20, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -453,9 +464,9 @@ ITEM:    battleaxe ego:freezing / glaive ego:freezing / halberd ego:freezing / \
          great sword ego:freezing / battleaxe ego:freezing good_item / \
          glaive ego:freezing good_item / halberd ego:freezing good_item / \
          great sword ego:freezing good_item / nothing w:80
-ITEM:    cap ego:cold_resistance w:9 / cap ego:resistance w:1 / \
-         cloak ego:cold_resistance w:9 / cloak ego:resistance w:1 / \
-         shield ego:cold_resistance w:9 / shield ego:protection w:1 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
+         shield ego:cold_resistance w:10 / \
          large shield ego:cold_resistance w:5 / \
          animal skin ego:cold_resistance / nothing w:60
 ITEM:    potion of resistance w:5 / potion of gain strength / \
@@ -605,13 +616,11 @@ ITEM:    nothing
 ITEM:    book of ice / book of frost / book of conjurations
 ITEM:    book of ice / book of frost / book of conjurations
 : end
-ITEM:    cap ego:cold_resistance w:9 / \
-         pair of gloves ego:cold_resistance w:9 / \
-         cloak ego:cold_resistance w:9 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         pair of gloves ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
          naga barding ego:cold_resistance w:5 / \
          centaur barding ego:cold_resistance w:5 / \
-         cap ego:resistance w:1 / pair of gloves ego:resistance w:1 / \
-         cloak ego:resistance w:1 / \
          buckler ego:cold_resistance / helmet ego:cold_resistance
 MAP
                           xxxxxx
@@ -710,12 +719,12 @@ ITEM: demon whip good_item / demon blade good_item / demon trident good_item
 ITEM: cap ego:cold_resistance / pair of gloves ego:cold_resistance / \
       cloak ego:cold_resistance / buckler ego:cold_resistance / \
       pair of boots ego:cold_resistance
-ITEM: crystal plate mail ego:cold_resistance / \
+ITEM: crystal plate armour ego:cold_resistance / \
       troll leather armour ego:cold_resistance / \
       ice dragon armour good_item / robe ego:resistance / \
       naga barding ego:cold_resistance good_item w:5 / \
       centaur barding ego:cold_resistance good_item w:5 / \
-      crystal plate mail ego:cold_resistance good_item / \
+      crystal plate armour ego:cold_resistance good_item / \
       troll leather armour ego:cold_resistance good_item
 MAP
                     xxxxxx
@@ -1146,7 +1155,6 @@ ENDMAP
 
 NAME:   ice_cave_statue_garden_02
 TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
-LFLAGS: no_tele_control
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue

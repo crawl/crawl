@@ -17,7 +17,6 @@ void gotoxy_sys(int x, int y);
 void textcolor(int c);
 void textbackground(int c);
 void cprintf(const char *format, ...);
-bool set_buffering(bool value);
 
 int wherex(void);
 int wherey(void);

@@ -26,9 +26,7 @@
 #include "place.h"
 #include "religion.h"
 #include "stairs.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
 
@@ -88,11 +86,9 @@ LUAFN(debug_generate_level)
     no_messages mx;
     env.map_knowledge.init(map_cell());
     los_changed();
-#ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
     tile_new_level(true);
-#endif
     builder(you.absdepth0, you.level_type,
             lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
@@ -146,7 +142,7 @@ LUAFN(debug_bouncy_beam)
     beam.draw_delay = 0;
 
     if (findray)
-        beam.chose_ray = find_ray(source, target, beam.ray);
+        beam.chose_ray = find_ray(source, target, beam.ray, opc_solid_see);
 
     beam.name       = "debug lightning beam";
     beam.short_name = "DEBUG";
@@ -192,6 +188,20 @@ LUAFN(debug_dismiss_adjacent)
         {
             mon->flags |= MF_HARD_RESET;
             monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        }
+    }
+
+    return (0);
+}
+
+LUAFN(debug_dismiss_monsters)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi)
+        {
+            mi->flags |= MF_HARD_RESET;
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
 
@@ -318,6 +328,7 @@ static const char* disablements[] =
     "player_regen",
     "hunger",
     "death",
+    "delay",
 };
 
 LUAFN(debug_disable)
@@ -354,6 +365,7 @@ const struct luaL_reg debug_dlib[] =
 { "bouncy_beam", debug_bouncy_beam },
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
+{ "dismiss_monsters", debug_dismiss_monsters},
 { "god_wrath", debug_god_wrath},
 { "handle_monster_move", debug_handle_monster_move },
 { "save_uniques", debug_save_uniques },

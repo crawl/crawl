@@ -1,0 +1,77 @@
+# Vehumet wants you to burn the damn trees down.
+
+{{
+function callback.dk_vehumet_trees_move(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.dk_vt_stepped and not dgn.persist.dk_vt_tree_died then
+    crawl.god_speaks("Vehumet", "Vehumet offers to free you in exchange " ..
+                                "for your devotion to destruction.")
+    dgn.persist.dk_vt_stepped = true
+  end
+end
+
+function callback.dk_vehumet_trees_died(data, triggerable, triggerer, marker, ev)
+  local x,y = marker:pos()
+  if you.see_cell(x, y) then
+    dgn.persist.dk_vt_tree_died = true
+  end
+end
+
+function callback.dk_vehumet_trees_los(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.dk_vt_tree_died and you.god() == "Vehumet" then
+    crawl.mpr("Suddenly, the trees start to burn!")
+    for slave in iter.slave_iterator("tree", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.place_cloud(slave.x, slave.y, "flame", crawl.random2(15) + 5)
+    end
+    triggerable:remove(marker)
+  end
+end
+}}
+
+NAME:    dk_vehumet_trees
+DEPTH:   2-10
+TAGS:    temple_overflow_vehumet mini_float
+KFEAT:   _ = altar_vehumet
+SUBST:   x : G:1 t:1 x:8
+{{
+dgn.persist.dk_vt_stepped = false
+dgn.persist.dk_vt_tree_died = false
+
+local move_marker = TriggerableFunction:new{
+  func="callback.dk_vehumet_trees_move",
+  repeated=true
+}
+move_marker:add_triggerer(DgnTriggerer:new {
+  type="player_move"})
+
+local tree_marker = TriggerableFunction:new{
+  func="callback.dk_vehumet_trees_died",
+  repeated=true
+}
+tree_marker:add_triggerer(DgnTriggerer:new {
+  type="feat_change"})
+
+local los_marker = TriggerableFunction:new{
+  func="callback.dk_vehumet_trees_los",
+  repeated=true
+}
+los_marker:add_triggerer(DgnTriggerer:new {
+  type="player_los"})
+
+lua_marker(':', move_marker)
+lua_marker('t', tree_marker)
+lua_marker('x', tree_marker)
+lua_marker('G', tree_marker)
+lua_marker('t', props_marker {tree=1})
+lua_marker('_', los_marker)
+lua_marker('_', props_marker {altar=1})
+}}
+MAP
+.......
+.xtxtx.
+.t:::t.
+.x:_:x.
+.t:::t.
+.xtxtx.
+.......
+ENDMAP

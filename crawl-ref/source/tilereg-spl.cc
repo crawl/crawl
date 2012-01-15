@@ -3,6 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-spl.h"
+#include "process_desc.h"
 
 #include "cio.h"
 #include "libutil.h"
@@ -42,10 +43,12 @@ void SpellRegion::draw_tag()
         return;
 
     const spell_type spell = (spell_type) idx;
+    char* failure = failure_rate_to_string(spell_fail(spell));
     std::string desc = make_stringf("%d MP    %s    (%s)",
                                     spell_difficulty(spell),
                                     spell_title(spell),
-                                    failure_rate_to_string(spell_fail(spell)));
+                                    failure);
+    free(failure);
     draw_desc(desc.c_str());
 }
 

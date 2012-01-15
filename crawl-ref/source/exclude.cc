@@ -72,6 +72,10 @@ void set_auto_exclude(const monster* mon)
     if (!is_map_persistent())
         return;
 
+    // Something of a speed hack, but some vaults have a TON of plants.
+    if (mon->type == MONS_PLANT)
+        return;
+
     if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         int rad = _get_full_exclusion_radius();
@@ -83,7 +87,7 @@ void set_auto_exclude(const monster* mon)
         //        annoying. (jpeg)
         mprf(MSGCH_WARN,
              "Marking area around %s as unsafe for travelling.",
-             mon->name(DESC_NOCAP_THE).c_str());
+             mon->name(DESC_THE).c_str());
 
 #ifdef USE_TILE
         viewwindow();

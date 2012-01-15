@@ -8,6 +8,7 @@
 #include "debug.h"
 
 #include <errno.h>
+#include <signal.h>
 
 #include "clua.h"
 #include "coord.h"
@@ -36,9 +37,10 @@
 #include "state.h"
 #include "travel.h"
 #include "hiscores.h"
+#include "view.h"
 #include "zotdef.h"
 
-#if defined(USE_TILE_LOCAL) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
 #define NOPROFILER        /* Profiler APIs */
@@ -70,8 +72,13 @@
 #define NOMCX             /* Modem Configuration Extensions */
 #include <windows.h>
 #undef max
+
+#ifdef USE_TILE_LOCAL
 #include <SDL/SDL_syswm.h>
 #endif
+#endif
+
+#include "threads.h"
 
 static std::string _assert_msg;
 
@@ -161,6 +168,8 @@ static void _dump_player(FILE *file)
         fprintf(file, "Standing on/in/over feature: %s\n",
                 raw_feature_description(feat, NUM_TRAPS, true).c_str());
     }
+
+    debug_dump_constriction(&you);
     fprintf(file, "\n");
 
     if (you.running.runmode != RMODE_NOT_RUNNING)
@@ -201,8 +210,6 @@ static void _dump_player(FILE *file)
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
-        if (is_invalid_skill(sk))
-            continue;
         int needed_min = 0, needed_max = 0;
         if (sk >= 0 && you.skills[sk] <= 27)
             needed_min = skill_exp_needed(you.skills[sk], sk);
@@ -617,7 +624,10 @@ void do_crash_dump()
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
 
-    if (file == NULL || errno != 0)
+    // The errno values are only relevant when the function in
+    // question has returned a value indicating (possible) failure, so
+    // only freak out if freopen() returned NULL!
+    if (!file)
     {
         fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
@@ -689,6 +699,10 @@ void do_crash_dump()
     debug_mons_scan();
 #endif
 
+    // Now a screenshot
+    fprintf(file, "\nScreenshot:\n");
+    fprintf(file, "%s\n", screenshot().c_str());
+
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
     fprintf(file, "clua stack:\n");
@@ -727,7 +741,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(USE_TILE_LOCAL) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+#if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
     if (SDL_GetWMInfo(&SysInfo) > 0)
@@ -738,23 +752,24 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
     }
     // Print the message to STDERR in addition to the above message box,
     // so it's in the message history if we call Crawl from a shell.
-    fprintf(stderr, "%s", mesg);
+#endif
+    fprintf(stderr, "%s\n", mesg);
 
-    int* p = NULL;
-    *p = 0;
-    abort();
+#if defined(TARGET_OS_WINDOWS)
+    OutputDebugString(mesg);
+    if (IsDebuggerPresent())
+        DebugBreak();
+#endif
 
-#elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
-    fprintf(stderr, "%s", mesg);
+#if defined(TARGET_OS_MACOSX)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
-    abort();                    // just to be sure
-
-#else
-    fprintf(stderr, "%s\n", mesg);
-    abort();
 #endif
+
+    // MSVCRT's abort() give's a funny message ...
+    raise(SIGABRT);
+    abort();
 }
 
 #ifdef ASSERTS

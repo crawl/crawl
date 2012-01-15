@@ -39,6 +39,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 
 MIRET1(number, damage_level, dam)
 MIRET1(boolean, is_safe, is(MB_SAFE))
+MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
 MIRET1(number, holiness, holi)
 MIRET1(number, attitude, attitude)
 MIRET1(number, threat, threat)
@@ -52,11 +53,25 @@ LUAFN(moninf_get_is)
 {
     MONINF(ls, 1, mi);
     int num = luaL_checknumber(ls, 2);
+    if (num < 0 || num >= NUM_MB_FLAGS)
+    {
+        luaL_argerror(ls, 2, "mb:is() out of bounds");
+        return 0;
+    }
     lua_pushboolean(ls, mi->is(num));
     return (1);
 }
 
-LUAFN(moninf_get_is_unique) {
+LUAFN(moninf_get_is_very_stabbable)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) ||
+                        mi->is(MB_PARALYSED));
+    return (1);
+}
+
+LUAFN(moninf_get_is_unique)
+{
     MONINF(ls, 1, mi);
     // XXX: A bit of a hack to prevent using this to determine which is fake.
     if (mi->type == MONS_MARA_FAKE)
@@ -94,6 +109,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(mname),
     MIREG(is),
     MIREG(is_safe),
+    MIREG(is_firewood),
+    MIREG(is_very_stabbable),
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),

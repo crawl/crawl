@@ -56,10 +56,10 @@
       {
        SPELL_PAIN,
        SPELL_DISPEL_UNDEAD,
-       SPELL_NO_SPELL,
-       SPELL_ANIMATE_DEAD,
-       SPELL_VAMPIRIC_DRAINING, // offense
-       SPELL_VAMPIRIC_DRAINING  // and defensive
+       SPELL_SIMULACRUM,
+       SPELL_VAMPIRIC_DRAINING,
+       SPELL_AGONY,
+       SPELL_VAMPIRIC_DRAINING
       }
     },
 
@@ -91,9 +91,9 @@
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
        SPELL_MIRROR_DAMAGE,
-       SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
+       SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
-       SPELL_MIRROR_DAMAGE
+       SPELL_DRAIN_LIFE
       }
     },
 
@@ -312,7 +312,7 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_ANIMATE_DEAD,
+       SPELL_SIMULACRUM,
        SPELL_NO_SPELL
       }
     },
@@ -642,7 +642,7 @@
        SPELL_CANTRIP,
        SPELL_MINOR_HEALING,
        SPELL_SMITING,
-       SPELL_ANIMATE_DEAD,
+       SPELL_TWISTED_RESURRECTION,
        SPELL_MINOR_HEALING
       }
     },
@@ -653,7 +653,7 @@
        SPELL_HELLFIRE_BURST,
        SPELL_MINOR_HEALING,
        SPELL_SMITING,
-       SPELL_ANIMATE_DEAD,
+       SPELL_TWISTED_RESURRECTION,
        SPELL_MINOR_HEALING
       }
     },
@@ -696,8 +696,8 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_BOLT_OF_DRAINING,
        SPELL_VAMPIRIC_DRAINING,
-       SPELL_ANIMATE_DEAD,
-       SPELL_ANIMATE_DEAD,
+       SPELL_TWISTED_RESURRECTION,
+       SPELL_TWISTED_RESURRECTION,
        SPELL_VAMPIRIC_DRAINING
       }
     },
@@ -1337,7 +1337,7 @@
        SPELL_MAJOR_HEALING,
        SPELL_BLINK_RANGE,
        SPELL_BLINK_RANGE,
-       SPELL_BLINK_AWAY
+       SPELL_ICE_STORM
       }
     },
 

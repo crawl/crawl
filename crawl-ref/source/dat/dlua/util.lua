@@ -302,7 +302,9 @@ function util.Timer:mark(what)
   self.last = now
 end
 
--- Turn contents of a table into a human readable string
+-- Turn contents of a table into a human readable string.
+-- Used (indirectly) by dbg-asrt.cc:do_crash_dump().
+-- TODO: Maybe replace this with http://www.hpelbers.org/lua/print_r ?
 function table_to_string(table, depth)
   depth = depth or 0
 
@@ -336,8 +338,10 @@ function table_to_string(table, depth)
     typ = type(value)
     if typ == "table" then
       str = str .. "\n" .. table_to_string(value, depth + 1)
-    elseif typ == "number" or typ == "string" or typ == "boolen" then
+    elseif typ == "number" or typ == "string" then
       str = str .. value
+    elseif typ == "boolean" then
+      str = str .. tostring(value)
     else
       str = str .. "[type " .. typ .. "]"
     end

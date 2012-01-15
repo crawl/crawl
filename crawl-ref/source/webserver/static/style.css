@@ -20,6 +20,7 @@ body {
 #player_list {
     width: 100%;
     text-align: left;
+    line-height: 1.1em;
 }
 
 #player_list th.header {
@@ -41,8 +42,51 @@ body {
     padding-right: 1px;
 }
 
+#player_list th.xl.header {
+    width: 2em;
+    text-align: right;
+    padding-left: 17px;
+    padding-right: 5px;
+}
+#player_list th.xl.headerSortDown,
+#player_list th.xl.headerSortUp {
+    padding-right: 5px;
+}
+#player_list td.xl {
+    text-align: right;
+    padding-right: 5px;
+}
+#player_list th.char {
+    width: 3em;
+}
+#player_list th.place {
+    width: 3em;
+}
+
+#player_list th.idle_time {
+    width: 3em;
+}
+#player_list th.spectator_count {
+    width: 1em;
+}
+
+#player_list th.milestone_col {
+    width: 20em;
+}
+
 #player_list tr:hover {
     background-color: #101010;
+}
+
+#player_list .milestone_container {
+    overflow-y: hidden;
+    height: 1.1em;
+}
+#player_list .milestone {
+    position: relative;
+}
+#player_list .new_milestone {
+    position: relative;
 }
 
 .floating_dialog {
@@ -50,9 +94,15 @@ body {
     left: 50px;
     top: 50px;
 
-    border: 1px solid white;
+    border: 1px solid lightgray;
     padding: 10px;
     background-color: black;
+
+    z-index: 3000;
+}
+
+.floating_dialog .title {
+    text-align: center;
 }
 
 #register label {
@@ -91,6 +141,7 @@ body {
     padding: 5px;
     border: 1px solid #626262;
 
+    z-index: 3000;
 }
 
 #chat_caption {
@@ -137,6 +188,30 @@ a:link, a:active, a:visited {
 a:hover {
     color: lightgrey;
     font-weight: bold;
+}
+
+#loader {
+    display: table;
+    text-align: center;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+#loader_center {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.7;
+    z-index: 2000;
 }
 
 .fg0 { color: rgb(  0,   0,   0); }

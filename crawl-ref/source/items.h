@@ -50,7 +50,6 @@ bool items_stack(const item_def &item1, const item_def &item2,
 void merge_item_stacks(item_def &source, item_def &dest,
                        int quant = -1);
 
-item_def find_item_type(object_class_type base_type, std::string name);
 item_def *find_floor_item(object_class_type cls, int sub_type);
 int item_on_floor(const item_def &item, const coord_def& where);
 
@@ -75,7 +74,6 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-int item_name_specialness(const item_def& item);
 void item_list_on_square(std::vector<const item_def*>& items,
                           int obj, bool force_squelch = false);
 
@@ -83,6 +81,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
                         int quant_drop = -1,    // item.quantity by default
                         bool mark_dropped = false,
                         bool silent = false);
+coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
 
@@ -121,7 +120,6 @@ void origin_set_inventory(void (*oset)(item_def &item));
 bool origin_is_god_gift(const item_def& item, god_type *god = NULL);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = NULL);
-std::string origin_monster_name(const item_def &item);
 
 bool item_needs_autopickup(const item_def &);
 bool can_autopickup();
@@ -137,6 +135,7 @@ void autoinscribe();
 
 bool item_is_equipped(const item_def &item, bool quiver_too = false);
 bool item_is_melded(const item_def& item);
+bool item_is_active_manual(const item_def &item);
 equipment_type item_equip_slot(const item_def &item);
 
 void item_was_lost(const item_def &item);

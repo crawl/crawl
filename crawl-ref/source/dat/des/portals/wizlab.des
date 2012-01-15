@@ -27,7 +27,7 @@
 #    loot:   books, staff of wucad mu
 #    xp:     9000+
 #    layout: temple-esque!
-#    colour: dark walls, red and orangge.
+#    colour: dark walls, red and orange.
 #
 # Cigotuvi's Fleshworks
 #    threat: lumps, uglies, abominations
@@ -114,6 +114,7 @@ function wizlab_portal (e)
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
+        feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
@@ -1067,27 +1068,27 @@ ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly name_adjective tile:mons_deformed_human / \
-            human name:monstrous name_adjective tile:mons_deformed_human  / \
-            human name:deformed name_adjective tile:mons_deformed_human   / \
-            human name:twisted name_adjective tile:mons_deformed_human    / \
-            human name:grotesque name_adjective tile:mons_deformed_human  / \
-            human name:hideous name_adjective tile:mons_deformed_human    / \
-            human name:febrile name_adjective tile:mons_deformed_human
-KMONS:      b = elf name:sickly name_adjective tile:mons_deformed_elf     / \
-            elf name:monstrous name_adjective tile:mons_deformed_elf      / \
-            elf name:deformed name_adjective tile:mons_deformed_elf       / \
-            elf name:twisted name_adjective tile:mons_deformed_elf        / \
-            elf name:grotesque name_adjective tile:mons_deformed_elf      / \
-            elf name:hideous name_adjective tile:mons_deformed_elf        / \
-            elf name:febrile name_adjective tile:mons_deformed_elf
-KMONS:      d = orc name:sickly name_adjective tile:mons_deformed_orc     / \
-            orc name:monstrous name_adjective tile:mons_deformed_orc      / \
-            orc name:deformed name_adjective tile:mons_deformed_orc       / \
-            orc name:twisted name_adjective tile:mons_deformed_orc        / \
-            orc name:grotesque name_adjective tile:mons_deformed_orc      / \
-            orc name:hideous name_adjective tile:mons_deformed_orc        / \
-            orc name:febrile name_adjective tile:mons_deformed_orc
+KMONS:      a = human name:sickly n_adj n_spe tile:mons_deformed_human / \
+            human name:monstrous n_adj n_spe tile:mons_deformed_human  / \
+            human name:deformed n_adj n_spe tile:mons_deformed_human   / \
+            human name:twisted n_adj n_spe tile:mons_deformed_human    / \
+            human name:grotesque n_adj n_spe tile:mons_deformed_human  / \
+            human name:hideous n_adj n_spe tile:mons_deformed_human    / \
+            human name:febrile n_adj n_noc tile:mons_deformed_human
+KMONS:      b = elf name:sickly n_adj n_spe tile:mons_deformed_elf     / \
+            elf name:monstrous n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:deformed n_adj n_spe tile:mons_deformed_elf       / \
+            elf name:twisted n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:grotesque n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:hideous n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:febrile n_adj n_spe n_noc tile:mons_deformed_elf
+KMONS:      d = orc name:sickly n_adj n_spe tile:mons_deformed_orc     / \
+            orc name:monstrous n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:deformed n_adj n_spe tile:mons_deformed_orc       / \
+            orc name:twisted n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:grotesque n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:hideous n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:febrile n_adj n_noc tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
 KMONS:      U = very ugly thing
 KMONS:      J = pulsating lump
@@ -1106,13 +1107,13 @@ MARKER:     d = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotu
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 15, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 20, \
-                 size_buildup_time = 500, cloud_type = "mutagenic fog" \
-             }
+                 size_buildup_time = 500, cloud_type = "mutagenic fog", \
+                 excl_rad = -1 }
 MARKER:     ? = lua:fog_machine { \
                  pow_max = 20, delay_min = 10, delay_max = 40, \
                  size = 5, size_buildup_amnt = 10, \
-                 size_buildup_time = 25, cloud_type = "mutagenic fog" \
-             }
+                 size_buildup_time = 25, cloud_type = "mutagenic fog", \
+                 excl_rad = -1 }
 LFLOORCOL:  magenta
 LFLOORTILE: floor_nerves
 LROCKTILE:  wall_flesh
@@ -1717,7 +1718,8 @@ SUBST:      u = 3
 MARKER:     f = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "flame" }
+                size_buildup_time = 25, cloud_type = "flame", \
+                excl_rad = -1 }
 KMONS:      2 = w:1 Lorocyproca / hell beast / reaper /\
             w:20 ice devil / w:20 sun demon / hellion
 KMONS:      3 = blue devil / iron devil / soul eater / neqoxec /\

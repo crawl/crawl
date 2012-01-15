@@ -185,8 +185,6 @@ static void _fully_identify_item(item_def *item)
 // Stash
 // ----------------------------------------------------------------------
 
-bool Stash::aggressive_verify = true;
-
 Stash::Stash(int xp, int yp) : enabled(true), items()
 {
     // First, fix what square we're interested in
@@ -316,7 +314,7 @@ void Stash::update()
         item_def *pitem = &mitm[you.visible_igrd(p)];
         hints_first_item(*pitem);
 
-        ash_id_item(*pitem);
+        god_id_item(*pitem);
         const item_def& item = *pitem;
 
         if (!_grid_has_perceived_multiple_items(p))
@@ -340,24 +338,21 @@ void Stash::update()
         // Compare these items
         if (!are_items_same(first, item))
         {
-            if (aggressive_verify)
+            // See if 'item' matches any of the items we have. If it does,
+            // we'll just make that the first item and leave 'verified'
+            // unchanged.
+
+            // Start from 1 because we've already checked items[0]
+            for (int i = 1, count = items.size(); i < count; ++i)
             {
-                // See if 'item' matches any of the items we have. If it does,
-                // we'll just make that the first item and leave 'verified'
-                // unchanged.
-
-                // Start from 1 because we've already checked items[0]
-                for (int i = 1, count = items.size(); i < count; ++i)
+                if (are_items_same(items[i], item))
                 {
-                    if (are_items_same(items[i], item))
-                    {
-                        // Found it. Swap it to the front of the vector.
-                        std::swap(items[i], items[0]);
+                    // Found it. Swap it to the front of the vector.
+                    std::swap(items[i], items[0]);
 
-                        // We don't set verified to true. If this stash was
-                        // already unverified, it remains so.
-                        return;
-                    }
+                    // We don't set verified to true. If this stash was
+                    // already unverified, it remains so.
+                    return;
                 }
             }
 
@@ -398,7 +393,7 @@ static short _min_rot(const item_def &item)
 // stash-tracking pre/suffixes.
 std::string Stash::stash_item_name(const item_def &item)
 {
-    std::string name = item.name(DESC_NOCAP_A);
+    std::string name = item.name(DESC_A);
 
     if (!_is_rottable(item))
         return name;
@@ -650,7 +645,7 @@ void Stash::_update_corpses(int rot_time)
 void Stash::_update_identification()
 {
     for (int i = items.size() - 1; i >= 0; i--)
-        ash_id_item(items[i]);
+        god_id_item(items[i]);
 }
 
 void Stash::add_item(const item_def &item, bool add_to_front)
@@ -1890,8 +1885,8 @@ std::string ShopInfo::get_shop_item_name(const item_def& search_item) const
     return "";
 }
 
-void _stash_flatten_results(const std::vector<stash_search_result> &in,
-                            std::vector<stash_search_result> &out)
+static void _stash_flatten_results(const std::vector<stash_search_result> &in,
+                                   std::vector<stash_search_result> &out)
 {
     // Creates search results vector with at most one item in each entry
     out.clear();

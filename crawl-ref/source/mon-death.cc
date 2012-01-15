@@ -8,6 +8,7 @@
 #include "mon-death.h"
 
 #include "areas.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "dactions.h"
@@ -181,7 +182,7 @@ void hogs_to_humans()
             mpr("The hog vanishes!");
         else if (!could_see && can_see)
             mprf("%s appears from out of thin air!",
-                 mi->name(DESC_CAP_A).c_str());
+                 mi->name(DESC_A).c_str());
     }
 
     if (any == 1)
@@ -318,8 +319,8 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
-    std::string key = "_" + mons->name(DESC_CAP_THE, true) + "_"
-                          + twin->name(DESC_CAP_THE) + "_dies_";
+    std::string key = "_" + mons->name(DESC_THE, true) + "_"
+                          + twin->name(DESC_THE) + "_dies_";
 
     if (mons_near(mons) && !mons->observable())
         key += "invisible_";
@@ -419,6 +420,7 @@ void elven_twins_pacify (monster* twin)
     if (mons_near(mons))
         simple_monster_message(mons, " likewise turns neutral.");
 
+    record_monster_defeat(mons, KILL_PACIFIED);
     mons_pacify(mons, ATT_NEUTRAL);
 }
 
@@ -477,6 +479,7 @@ void elven_twins_unpacify (monster* twin)
 **/
 void spirit_fades (monster *spirit)
 {
+    // XXX: No check for silence; summoned?
     if (mons_near(spirit))
         simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
     else
@@ -484,29 +487,202 @@ void spirit_fades (monster *spirit)
 
     const coord_def c = spirit->pos();
 
-    mgen_data mon = mgen_data(static_cast<monster_type>(random_choose_weighted(
-                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
-                        10, MONS_APIS,        5,  MONS_DAEVA,
-                        2,  MONS_PEARL_DRAGON,
-                      0)), SAME_ATTITUDE(spirit),
+    mgen_data mon = mgen_data(random_choose_weighted(
+                        10, MONS_ANGEL, 10, MONS_CHERUB,
+                        5, MONS_APIS, 2, MONS_PHOENIX,
+                        1, MONS_DAEVA, 1, MONS_PEARL_DRAGON,
+                      0), SAME_ATTITUDE(spirit),
                       NULL, 0, 0, c,
                       spirit->foe, 0);
 
     if (spirit->alive())
         monster_die(spirit, KILL_MISC, NON_MONSTER, true);
 
-    int mon_id = create_monster(mon);
+    monster *new_mon = create_monster(mon);
 
-    if (mon_id == -1)
+    if (!new_mon)
         return;
-
-    monster *new_mon = &menv[mon_id];
 
     if (mons_near(new_mon))
         simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
     else
         mpr("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
 
+}
+
+/**
+ * Phoenix death effects
+ *
+ * When a phoenix dies, a short time later, its corpse will go up in flames and
+ * the phoenix will be reborn. This is similar to a shedu being resurrected,
+ * only it uses a level-specific marker.
+**/
+
+/**
+ * Determine if a monster is a phoenix.
+ *
+ * Monsters that were previously phoenixes are not considered phoenixes for phoenix resurrection purposes, I suppose.
+ *
+ * @param mons      The monster to check.
+ * @returns         True if Phoenix, False otherwise.
+**/
+bool mons_is_phoenix (const monster* mons)
+{
+    return (mons->type == MONS_PHOENIX);
+}
+
+/**
+ * Perform phoenix death effect
+ *
+ * @param mons      The monster that just died.
+**/
+void phoenix_died (monster* mons)
+{
+    int durt = (random2(10) + random2(5) + 10) * BASELINE_DELAY;
+    env.markers.add(new map_phoenix_marker(mons->pos(),
+                        durt,
+                        static_cast<int>(mons->mid),
+                        mons->behaviour,
+                        mons->attitude,
+                        mons->deity(),
+                        mons->pos()));
+    env.markers.clear_need_activate();
+}
+
+/**
+ * Get vector of phoenix markers
+ *
+ * @returns     Vector of map_phoenix_markers.
+**/
+std::vector<map_phoenix_marker*> get_phoenix_markers ()
+{
+    std::vector<map_phoenix_marker*> mm_markers;
+
+    std::vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() != MAT_PHOENIX)
+            continue;
+
+        map_phoenix_marker *mmark = dynamic_cast<map_phoenix_marker*>(mark);
+
+        mm_markers.push_back(mmark);
+    }
+
+    return mm_markers;
+}
+
+/**
+ * Timeout phoenix markers
+ *
+ * @param duration      Duration.
+**/
+void timeout_phoenix_markers (int duration)
+{
+    std::vector<map_phoenix_marker*> markers = get_phoenix_markers();
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_phoenix_marker *mmark = markers[i];
+
+        if (duration)
+            mmark->duration -= duration;
+
+        if (mmark->duration < 0)
+        {
+            // Now, look for the corpse
+            bool found_body;
+            coord_def place_at;
+            bool from_inventory;
+
+            for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
+            {
+                for (stack_iterator si(*ri); si; ++si)
+                    if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                        && si->props.exists(MONSTER_MID)
+                        && si->props[MONSTER_MID].get_int() == mmark->mon_num)
+                    {
+                        place_at = *ri;
+                        destroy_item(si->index());
+                        found_body = true;
+                        break;
+                    }
+            }
+
+            if (!found_body)
+            {
+                for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
+                {
+                    if (!you.inv[slot].defined())
+                        continue;
+
+                    item_def* si = &you.inv[slot];
+                    if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                        && si->props.exists(MONSTER_MID)
+                        && si->props[MONSTER_MID].get_int() == mmark->mon_num)
+                    {
+                        // it was in the player's inventory
+                        place_at = coord_def(-1, -1);
+                        dec_inv_item_quantity(slot, 1, false);
+                        found_body = true;
+                        from_inventory = true;
+                        break;
+                    }
+                }
+
+                if (found_body)
+                    place_at = you.pos();
+            }
+
+            if (!found_body || place_at.origin())
+            {
+                // Actually time-out this marker; we didn't find a body, too bad.
+                env.markers.remove(mmark);
+                continue;
+            }
+
+            // Okay, we have a corpse, which we've destroyed. We'll place a cloud!
+            mgen_data new_pho;
+            new_pho.cls = MONS_PHOENIX;
+            new_pho.behaviour = mmark->behaviour;
+            new_pho.god = mmark->god;
+
+            monster* mons = 0;
+
+            for (distance_iterator di(place_at, true, false); di; ++di)
+            {
+                if (monster_at(*di) || !monster_habitable_grid(MONS_PHOENIX, grd(*di)))
+                    continue;
+
+                new_pho.pos = *di;
+                if (mons = place_monster(new_pho, true))
+                    break;
+            }
+
+            // give up
+            if (!mons)
+            {
+                dprf("Couldn't place new phoenix!");
+                // We couldn't place it, so nuke the marker.
+                env.markers.remove(mmark);
+                continue;
+            }
+
+            mons->attitude = mmark->attitude;
+
+            // We no longer need the marker now, so free it.
+            env.markers.remove(mmark);
+
+            if (from_inventory)
+                simple_monster_message(mons, " is reborn from your pack in a blaze of fire!");
+            else if (you.can_see(mons))
+                simple_monster_message(mons, " is reborn in a blaze of fire!");
+
+            // Now, place a cloud to compensate
+            place_cloud(CLOUD_FIRE, place_at, 4+random2(10), NULL);
+        }
+    }
 }
 
 /**
@@ -666,25 +842,24 @@ void shedu_do_actual_resurrection (monster* mons)
     new_shedu.foe = mons->foe;
     new_shedu.god = mons->god;
 
-    int id = -1;
+    monster* my_pair = 0;
     for (distance_iterator di(place_at, true, false); di; ++di)
     {
         if (monster_at(*di) || !monster_habitable_grid(mons, grd(*di)))
             continue;
 
         new_shedu.pos = *di;
-        if ((id = place_monster(new_shedu, true)) != -1)
+        if (my_pair = place_monster(new_shedu, true))
             break;
     }
 
     // give up
-    if (id == -1)
+    if (!my_pair)
     {
         dprf("Couldn't place new shedu!");
         return;
     }
 
-    monster* my_pair = &menv[id];
     my_pair->number = mons->mid;
     mons->number = my_pair->mid;
     my_pair->flags |= MF_BAND_MEMBER;

@@ -7,7 +7,6 @@
 
 #include "arena.h"
 #include "artefact.h"
-#include "coord.h"
 #include "directn.h"
 #include "externs.h"
 #include "env.h"
@@ -54,19 +53,19 @@ static bool _monster_clone_exists(monster* mons)
     return (false);
 }
 
-bool mons_is_illusion(monster* mons)
+static bool _mons_is_illusion(monster* mons)
 {
     return (mons->type == MONS_PLAYER_ILLUSION
             || mons->type == MONS_MARA_FAKE
             || mons->props.exists(clone_slave_key));
 }
 
-bool mons_is_illusion_cloneable(monster* mons)
+static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return (!mons_is_illusion(mons) && !_monster_clone_exists(mons));
+    return (!_mons_is_illusion(mons) && !_monster_clone_exists(mons));
 }
 
-bool player_is_illusion_cloneable()
+static bool _player_is_illusion_cloneable()
 {
     for (monster_iterator mi; mi; ++mi)
     {
@@ -81,11 +80,11 @@ bool actor_is_illusion_cloneable(actor *target)
     if (target->atype() == ACT_PLAYER)
     {
         ASSERT(target == &you);
-        return player_is_illusion_cloneable();
+        return _player_is_illusion_cloneable();
     }
     else
     {
-        return mons_is_illusion_cloneable(target->as_monster());
+        return _mons_is_illusion_cloneable(target->as_monster());
     }
 }
 
@@ -93,7 +92,7 @@ static void _mons_summon_monster_illusion(monster* caster,
                                           monster* foe)
 {
     // If the monster's clone is still kicking around, don't clone it again.
-    if (!mons_is_illusion_cloneable(foe))
+    if (!_mons_is_illusion_cloneable(foe))
         return;
 
     // [ds] Bind the original target's attitude before calling
@@ -106,15 +105,13 @@ static void _mons_summon_monster_illusion(monster* caster,
 
     unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
     bool cloning_visible = false;
-    const int clone_idx = clone_mons(foe, true, &cloning_visible);
-    if (clone_idx != NON_MONSTER)
+    if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
         const std::string clone_id = _monster_clone_id_for(foe);
-        monster* clone = &menv[clone_idx];
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
-                       "woven by " + caster->name(DESC_NOCAP_THE));
+                       "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
 
@@ -130,12 +127,12 @@ static void _mons_summon_monster_illusion(monster* caster,
         {
             if (!you.can_see(caster))
                 mprf("%s seems to step out of %s!",
-                     foe->name(DESC_CAP_THE).c_str(),
+                     foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
             else
                 mprf("%s seems to draw %s out of %s!",
-                     caster->name(DESC_CAP_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str(),
+                     caster->name(DESC_THE).c_str(),
+                     foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
         }
     }
@@ -156,7 +153,7 @@ static void _init_player_illusion_properties(monsterentry *me)
 // that are (presumably) internal to the body, like haste and
 // poisoning, and specifically not external effects like corona and
 // sticky flame.
-enchant_type player_duration_to_mons_enchantment(duration_type dur)
+static enchant_type _player_duration_to_mons_enchantment(duration_type dur)
 {
     switch (dur)
     {
@@ -182,7 +179,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
         {
             const duration_type dur(static_cast<duration_type>(i));
             const enchant_type ench =
-                player_duration_to_mons_enchantment(dur);
+                _player_duration_to_mons_enchantment(dur);
             if (ench == ENCH_NONE)
                 continue;
             target->add_ench(mon_enchant(ench,
@@ -199,16 +196,13 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
     if (foe->atype() == ACT_PLAYER)
     {
         ASSERT(foe == &you);
-        const int midx =
-            create_monster(
+        if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          6, spell_cast, mons->pos(), mons->foe, 0));
-        if (midx != -1)
+                          6, spell_cast, mons->pos(), mons->foe, 0)))
         {
             mpr("There is a horrible, sudden wrenching feeling in your soul!",
                 MSGCH_WARN);
 
-            monster* clone = &menv[midx];
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
@@ -269,14 +263,14 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     return (true);
 }
 
-int clone_mons(const monster* orig, bool quiet, bool* obvious,
-               coord_def pos)
+monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
+                    coord_def pos)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
 
     if (!mons)
-        return (NON_MONSTER);
+        return 0;
 
     if (!in_bounds(pos))
     {
@@ -296,7 +290,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
         }
 
         if (squares == 0)
-            return (NON_MONSTER);
+            return 0;
     }
 
     ASSERT(!actor_at(pos));
@@ -304,6 +298,9 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->set_position(pos);
+    // The monster copy constructor doesn't copy constriction, so no need to
+    // worry about that.
+
     mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
@@ -349,5 +346,5 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mons);
 
-    return (mons->mindex());
+    return mons;
 }

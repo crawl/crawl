@@ -71,7 +71,7 @@ void invalidate_los()
 
 static void _update_globallos_at(const coord_def& p, los_type l)
 {
-    switch(l)
+    switch (l)
     {
     case LOS_DEFAULT:
         {
@@ -90,6 +90,13 @@ static void _update_globallos_at(const coord_def& p, los_type l)
     case LOS_SOLID:
         {
             los_def los(p, opc_solid);
+            los.update();
+            _save_los(&los, l);
+            break;
+        }
+    case LOS_SOLID_SEE:
+        {
+            los_def los(p, opc_solid_see);
             los.update();
             _save_los(&los, l);
             break;

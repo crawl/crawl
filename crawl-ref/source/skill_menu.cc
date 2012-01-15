@@ -118,8 +118,11 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO))
+    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO)
+        && !is_set(SKMF_RESKILL_FROM))
+    {
         return false;
+    }
 
     if (mastered())
     {
@@ -266,6 +269,12 @@ COLORS SkillMenuEntry::get_colour() const
         return YELLOW;
     else if (!you.training[m_sk])
         return DARKGREY;
+    else if (you.manual_skill == m_sk)
+    {
+        if (is_set(SKMF_APTITUDE))
+            return LIGHTGREEN;
+        return you.train[m_sk] ? LIGHTGREEN : GREEN;
+    }
     else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
         return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_APTITUDE))
@@ -301,9 +310,15 @@ void SkillMenuEntry::set_aptitude()
 {
     std::string text = "<red>";
 
+    const bool manual = you.manual_skill == m_sk;
     const int apt = species_apt(m_sk, you.species);
-    const int ct_bonus = crosstrain_bonus(m_sk);
     const bool show_all = m_skm->get_state(SKM_SHOW) == SKM_SHOW_ALL;
+
+    // Crosstraining + manuals aptitude bonus.
+    int ct_bonus = manual ? 4 : 0;
+
+    for (int ct_mult = crosstrain_bonus(m_sk); ct_mult > 1; ct_mult /= 2)
+        ct_bonus += 4;
 
     if (apt != 0)
         text += make_stringf("%+d", apt);
@@ -312,26 +327,32 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</red>";
 
-    if (crosstrain_other(m_sk, show_all) || ct_bonus > 1)
-    {
-        m_skm->set_flag(SKMF_CROSSTRAIN);
-        text += "<green>";
-        text += crosstrain_other(m_sk, show_all) ? "*" : " ";
-
-        if ( ct_bonus > 1)
-            text += make_stringf("+%d", ct_bonus * 2);
-
-        text += "</green>";
-    }
-    else if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
+    if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
         m_skm->set_flag(SKMF_ANTITRAIN);
         text += "<magenta>";
         text += antitrain_other(m_sk, show_all) ? "*" : " ";
         if (is_antitrained(m_sk))
-            text += "-4";
+            text += make_stringf("-%d", ct_bonus - 4);
 
         text += "</magenta>";
+    }
+    else if (crosstrain_other(m_sk, show_all) || ct_bonus)
+    {
+        m_skm->set_flag(SKMF_CROSSTRAIN);
+        text += manual ? "<lightgreen>" : "<green>";
+        text += crosstrain_other(m_sk, show_all) ? "*" : " ";
+
+        if (ct_bonus)
+        {
+            // Only room for two characters.
+            if (ct_bonus < 10)
+                text += make_stringf("+%d", ct_bonus);
+            else
+                text += make_stringf("%d", ct_bonus);
+        }
+
+        text += manual ? "</lightgreen>" : "</green>";
     }
 
     m_aptitude->set_text(text);
@@ -778,8 +799,11 @@ bool SkillMenu::exit()
             break;
         }
 
-        if (you.skills[i] < 27 && !is_useless_skill((skill_type)i))
+        if (you.skills[i] < 27 && you.can_train[i]
+            && !is_useless_skill((skill_type) i))
+        {
             maxed_out = false;
+        }
     }
 
     if (!enabled_skill && !maxed_out)
@@ -883,15 +907,18 @@ void SkillMenu::toggle(skill_menu_switch sw)
     if (!m_switches[sw]->toggle())
         return;
 
+    // XXX: should use a pointer instead.
+    FixedVector<int8_t, NUM_SKILLS> tmp;
+
     switch (sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
 
-        // Skills are on by default in auto mode and off in manual.
-        for (int i = 0; i < NUM_SKILLS; ++i)
-            if (!you.train_set[i])
-                you.train[i] = you.auto_training;
+        // Switch the skill train state with the saved version.
+        tmp = you.train;
+        you.train = you.train_alt;
+        you.train_alt = tmp;
 
         reset_training();
         if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
@@ -1364,6 +1391,10 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "skills");
+#endif
+
     clrscr();
     SkillMenu skm(flag, exp);
     int keyn;

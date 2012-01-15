@@ -40,6 +40,9 @@ static bool _in_water(const packed_cell &cell)
 static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
                                   bool in_water)
 {
+    if (you.melded[EQ_WEAPON])
+        return;
+
     const int item = you.equip[EQ_WEAPON];
     if (item == -1)
         return;
@@ -383,6 +386,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     {
         m_buf_icons.add(TILEI_INNER_FLAME, x, y, -status_shift, 0);
         status_shift += 8;
+    }
+    if (fg & TILE_FLAG_CONSTRICTED)
+    {
+        m_buf_icons.add(TILEI_CONSTRICTED, x, y, -status_shift, 0);
+        status_shift += 13;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)

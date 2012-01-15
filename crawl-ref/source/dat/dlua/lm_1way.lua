@@ -20,7 +20,10 @@ end
 
 function OneWayStair:disappear(marker, affect_player, x, y)
   dgn.terrain_changed(x, y, self.props.floor or 'floor', affect_player, false)
-  dgn.tile_feat_changed(x, y, self.props.floor_tile or nil)
+  dgn.tile_feat_changed(x, y, self.props.feat_tile or nil)
+  if self.props.floor_tile ~= nil then
+    dgn.tile_floor_changed(x, y, self.props.floor_tile)
+  end
   dgn.remove_listener(marker, x, y)
   dgn.remove_marker(marker)
 end

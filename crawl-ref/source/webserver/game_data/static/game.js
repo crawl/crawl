@@ -1,239 +1,184 @@
-var dungeon_renderer;
 
-var minimap_ctx;
-var minimap_cell_w, minimap_cell_h;
-var minimap_x = 0, minimap_y = 0;
-var minimap_display_x = 0, minimap_display_y = 0;
+define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
+        "./settings", "./enums",
+        "./text", "./menu"],
+function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) {
+    var layout_parameters, ui_state;
 
-$(document).ready(function () {
-    dungeon_renderer = new DungeonViewRenderer($("#dungeon")[0]);
-});
-
-// Text area handling ----------------------------------------------------------
-function get_text_area_line(name, line)
-{
-    var area = $("#" + name);
-    var current_line = line;
-    var append = "";
-    do
+    function init()
     {
-        var line_span = $("#" + name + "-" + current_line);
-        if (line_span[0])
-            break;
+        layout_parameters = null;
+        ui_state = -1;
+    }
 
-        append = "<span id='" + name + "-" + current_line + "'></span>" + append;
+    $(document).bind("game_init", init);
 
-        if (current_line == 0)
+    function layout_params_differ(old_params, new_params)
+    {
+        if (!old_params) return true;
+        for (var param in new_params)
         {
-            // first line didn't exist, so this wasn't handled by this function before
-            // -> clean up first
-            $("#" + name).html("");
-            break;
+            if (old_params.hasOwnProperty(param) &&
+                old_params[param] != new_params[param])
+                return true;
+        }
+        return false;
+    }
+
+    function layout(params, force)
+    {
+        var window_width = params.window_width = $(window).width();
+        var window_height = params.window_height = $(window).height();
+        log(params);
+
+        if (!force && !layout_params_differ(layout_parameters, params))
+            return false;
+
+        layout_parameters = params;
+
+        var state = ui_state;
+        set_ui_state(enums.ui.NORMAL);
+
+        // Determine width of stats area
+        var old_html = $("#stats").html();
+        var s = "";
+        for (var i = 0; i < layout_parameters.stat_width; i++)
+            s = s + "&nbsp;";
+        $("#stats").html(s);
+        var stat_width_px = $("#stats").outerWidth();
+        $("#stats").html(old_html);
+
+        // Determine height of messages area
+        old_html = $("#messages").html();
+        s = "";
+        for (var i = 0; i < layout_parameters.msg_height; i++)
+            s = s + "<br>";
+        $("#messages").html(s);
+        var msg_height_px = $("#messages").outerHeight();
+        $("#messages").html(old_html);
+
+        var remaining_width = window_width - stat_width_px;
+        var remaining_height = window_height - msg_height_px;
+
+        layout_parameters.remaining_width = remaining_width;
+        layout_parameters.remaining_height = remaining_height;
+
+        // Position controls
+        client.set_layer("normal");
+        dungeon_renderer.fit_to(remaining_width, remaining_height,
+                                layout_parameters.show_diameter);
+
+        minimap.fit_to(stat_width_px, layout_parameters);
+
+        $("#monster_list").width(stat_width_px);
+
+        // Go back to the old layer
+        set_ui_state(state);
+
+        // Update the view
+        display.invalidate(true);
+        display.display();
+        minimap.update_overlay();
+    }
+
+    function toggle_full_window_dungeon_view(full)
+    {
+        // Toggles the dungeon view for X map mode
+        if (full)
+        {
+            dungeon_renderer.fit_to(layout_parameters.window_width - 5,
+                                    layout_parameters.window_height - 5,
+                                    layout_parameters.show_diameter);
+            $("#right_column").hide();
+            $("#messages").hide();
         }
         else
         {
-            append = "<br>" + append;
+            dungeon_renderer.fit_to(layout_parameters.remaining_width,
+                                    layout_parameters.remaining_height,
+                                    layout_parameters.show_diameter);
+            $("#right_column").show();
+            $("#messages").show();
         }
-
-        current_line--;
+        display.invalidate(true);
+        display.display();
     }
-    while (true);
 
-    if (append !== "")
-        $("#" + name).append(append);
+    function set_ui_state(state)
+    {
+        if (state == ui_state) return;
+        var old_state = ui_state;
+        ui_state = state;
+        switch (ui_state)
+        {
+        case enums.ui.NORMAL:
+            client.set_layer("normal");
+            if (old_state == enums.ui.VIEW_MAP)
+                toggle_full_window_dungeon_view(false);
+            break;
 
-    return $("#" + name + "-" + line);
-}
+        case enums.ui.CRT:
+            client.set_layer("crt");
+            break;
 
-function set_text_area_line(name, line, content)
-{
-    get_text_area_line(name, line).html(content);
-}
+        case enums.ui.VIEW_MAP:
+            toggle_full_window_dungeon_view(true);
+            break;
+        }
+    }
 
-function txt(name, lines)
-{
-    for (line in lines)
-        set_text_area_line(name, line, lines[line]);
-}
+    function handle_set_ui_state(data)
+    {
+        set_ui_state(data.state);
+    }
 
-// Layout ----------------------------------------------------------------------
-var layout_parameters;
-var current_layout;
+    function handle_delay(data)
+    {
+        client.delay(data.t);
+    }
 
-function layout(params, need_response)
-{
-    layout_parameters = params;
-    current_layout = undefined;
+    var game_version;
+    function handle_version(data)
+    {
+        game_version = data;
+        document.title = data.text;
+    }
 
-    do_layout();
-}
-
-function do_layout()
-{
-    var window_width = $(window).width();
-    var window_height = $(window).height();
-
-    if (!layout_parameters)
-        return false;
-
-    var layer = current_layer;
-    set_layer("normal");
-
-    // Determine width/height of stats area
-    var old_html = $("#stats").html();
-    var s = "";
-    for (var i = 0; i < layout_parameters.stat_width; i++)
-        s = s + "&nbsp;";
-    for (var i = 0; i < layout_parameters.min_stat_height; i++)
-        s = s + "<br>";
-    $("#stats").html(s);
-    var stat_width_pixels = $("#stats").outerWidth();
-    var stat_height_pixels = $("#stats").outerHeight();
-    $("#stats").html(old_html);
-
-    // Determine height of messages area
-    old_html = $("#messages").html();
-    s = "";
-    for (var i = 0; i < layout_parameters.msg_min_height; i++)
-        s = s + "<br>";
-    $("#messages").html(s);
-    var msg_height_pixels = $("#messages").outerHeight();
-    $("#messages").html(old_html);
-
-    var remaining_width = window_width - stat_width_pixels;
-    var remaining_height = window_height - msg_height_pixels;
-
-    // Determine the maximum size for the CRT layer
-    set_layer("crt");
-    old_html = $("#crt").html();
-    var test_size = 20;
-    s = "";
-    for (var i = 0; i < test_size; i++)
-        s = "&nbsp;" + s + "<br>";
-    $("#crt").html(s);
-    var char_w = $("#crt").width() / test_size;
-    var char_h = $("#crt").height() / test_size;
-    $("#crt").html(old_html);
-
-    var layout = {
-        stats_height: layout_parameters.min_stat_height,
-        msg_width: 80
+    var glyph_mode_settings = {
+        display_mode: "tiles",
+        glyph_mode_font_size: 24,
+        glyph_mode_font: "monospace"
     };
 
-    layout.crt_width = Math.floor((window_width - 30) / char_w);
-    layout.crt_height = Math.floor((window_height - 15) / char_h);
+    settings.set_defaults(glyph_mode_settings);
+    $.extend(dungeon_renderer, glyph_mode_settings);
 
-    // Position controls
-    set_layer("normal");
-    var minimap_display = $("#minimap").css("display");
-    $("#minimap, #minimap_overlay").show();
-
-    dungeon_renderer.fit_to(remaining_width, remaining_height,
-                            layout_parameters.show_diameter);
-
-    var minimap_block = $("#minimap_block");
-    var minimap_canvas = $("#minimap")[0];
-    minimap_block.width(stat_width_pixels);
-    minimap_canvas.width = stat_width_pixels;
-    minimap_cell_w = minimap_cell_h = Math.floor(stat_width_pixels / layout_parameters.gxm);
-    minimap_block.height(layout_parameters.gym * minimap_cell_h);
-    minimap_canvas.height = layout_parameters.gym * minimap_cell_h;
-    minimap_ctx = minimap_canvas.getContext("2d");
-
-    var minimap_overlay = $("#minimap_overlay")[0];
-    minimap_overlay.width = minimap_canvas.width;
-    minimap_overlay.height = minimap_canvas.height;
-
-    $("#monster_list").width(stat_width_pixels);
-
-    // Go back to the old layer, re-hide the minimap if necessary
-    $("#minimap, #minimap_overlay").css("display", minimap_display);
-    set_layer(layer);
-
-    // Update the view
-    force_full_render(true);
-    display();
-    update_minimap_overlay();
-
-    // Send the layout
-    if (current_layout &&
-        layout.stats_height == current_layout.stats_height &&
-        layout.crt_width == current_layout.crt_width &&
-        layout.crt_height == current_layout.crt_height &&
-        layout.msg_width == current_layout.msg_width)
-        return false;
-
-    current_layout = layout;
-    return true;
-}
-
-// View area -------------------------------------------------------------------
-function vgrdc(x, y)
-{
-    dungeon_renderer.set_view_center(x, y);
-
-    update_minimap_overlay();
-}
-
-function update_minimap_overlay()
-{
-    // Update the minimap overlay
-    var minimap_overlay = $("#minimap_overlay")[0];
-    var ctx = minimap_overlay.getContext("2d");
-    var view = dungeon_renderer.view;
-    ctx.clearRect(0, 0, minimap_overlay.width, minimap_overlay.height);
-    ctx.strokeStyle = "yellow";
-    ctx.strokeRect(minimap_display_x + (view.x - minimap_x) * minimap_cell_w + 0.5,
-                   minimap_display_y + (view.y - minimap_y) * minimap_cell_h + 0.5,
-                   dungeon_renderer.cols * minimap_cell_w - 1,
-                   dungeon_renderer.rows * minimap_cell_h - 1);
-}
-
-// Minimap controls ------------------------------------------------------------
-var farview_old_vc;
-var farview_old_map_cursor;
-function minimap_farview(ev)
-{
-    if (ev.which == 3 || farview_old_vc)
-    {
-        var offset = $("#minimap").offset();
-        if (farview_old_vc === undefined)
+    $(document).off("settings_changed.game");
+    $(document).on("settings_changed.game", function (ev, map) {
+        var relayout = false;
+        for (key in glyph_mode_settings)
         {
-            farview_old_vc = {
-                x: dungeon_renderer.view_center.x,
-                y: dungeon_renderer.view_center.y
+            if (key in map)
+            {
+                dungeon_renderer[key] = settings.get(key);
+                relayout = true;
             }
-            farview_old_map_cursor = cursor_locs[CURSOR_MAP];
         }
-        var x = Math.round((ev.pageX - minimap_display_x - offset.left)
-                           / minimap_cell_w
-                           + minimap_x - 0.5);
-        var y = Math.round((ev.pageY - minimap_display_y - offset.top)
-                           / minimap_cell_h
-                           + minimap_y - 0.5);
-        vgrdc(x, y);
-        place_cursor(CURSOR_MAP, x, y);
-    }
-}
+        if (relayout && layout_parameters)
+            layout(layout_parameters, true);
+    });
 
-function stop_minimap_farview(ev)
-{
-    if (farview_old_vc !== undefined)
-    {
-        vgrdc(farview_old_vc.x, farview_old_vc.y);
-        farview_old_vc = undefined;
-        if (farview_old_map_cursor)
-            place_cursor(CURSOR_MAP, farview_old_map_cursor.x,
-                         farview_old_map_cursor.y);
-        else
-            remove_cursor(CURSOR_MAP);
-    }
-}
+    $(document).ready(function () {
+        $(window).resize(function () {
+            var params = $.extend({}, layout_parameters);
+            layout(params);
+        });
+    });
 
-$(document).ready(function () {
-    $("#minimap_overlay")
-        .mousedown(minimap_farview)
-        .mousemove(minimap_farview)
-        .mouseup(stop_minimap_farview)
-        .bind("contextmenu", function(ev) { ev.preventDefault(); });
+    comm.register_handlers({
+        "layout": layout,
+        "delay": handle_delay,
+        "version": handle_version,
+        "ui_state": handle_set_ui_state,
+    });
 });

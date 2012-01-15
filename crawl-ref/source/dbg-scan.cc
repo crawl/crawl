@@ -153,7 +153,7 @@ void debug_item_scan(void)
                     if (menv[j].inv[k] == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
-                             j, menv[j].name(DESC_CAP_A, true).c_str(),
+                             j, menv[j].name(DESC_A, true).c_str(),
                              menv[j].pos().x, menv[j].pos().y);
                     }
                 }
@@ -309,7 +309,7 @@ void debug_mons_scan()
             else if (!m->alive())
             {
                 _announce_level_prob(warned);
-                mprf(MSGCH_WARN,
+                mprf_nocap(MSGCH_WARN,
                      "mgrd at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
@@ -445,7 +445,17 @@ void debug_mons_scan()
                     mpr("Other monster isn't holding it, though.", MSGCH_WARN);
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+
+        ASSERT(monster_by_mid(m->mid) == m);
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
+
+    for (std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
+         mc != env.mid_cache.end(); ++mc)
+    {
+        unsigned short idx = mc->second;
+        ASSERT(!invalid_monster_index(idx));
+        ASSERT(menv[idx].mid == mc->first);
+    }
 
     // No problems?
     if (!warned)

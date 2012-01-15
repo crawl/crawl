@@ -27,7 +27,7 @@ syn include @desLua syntax/lua.vim
 syn case match
 
 syn match desLuaBlock /\(lua\)\?\s\+{{/ contained
-syn match desOtherLuaBlock /^\(prelude\|lua\|validate\|epilogue\)\?\s*{{/ contained
+syn match desOtherLuaBlock /^\(prelude\|lua\|validate\|epilogue\|veto\)\?\s*{{/ contained
 syn match desLuaBlockEnd /}}/ contained
 "syn match desColonLine /^\s*:/ contained
 
@@ -38,6 +38,7 @@ syn region desLuaCol start=/^\s*:/ end=/$/ contains=@desLuaGroup,@desLua keepend
 syn region desVal start=/^\s*validate\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,@desLua keepend
 syn region desPre start=/^\s*prelude\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,@desLua keepend
 syn region desEpi start=/^\s*epilogue\?\s*{{/ end=/}}\s*$/ contains=@desLuagroup,@deslua keepend
+syn region desVet start=/^\s*veto\?\s*{{/ end=/}}\s*$/ contains=@desLuagroup,@deslua keepend
 
 setlocal iskeyword+=:
 setlocal iskeyword+=-

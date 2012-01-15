@@ -10,7 +10,6 @@
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
-#include "coord.h"
 #include "dungeon.h"
 #include "env.h"
 #include "externs.h"
@@ -158,12 +157,10 @@ namespace arena
         }
     }
 
-    void list_eq(int imon)
+    void list_eq(const monster *mon)
     {
         if (!Options.arena_list_eq || file == NULL)
             return;
-
-        const monster* mon = &menv[imon];
 
         std::vector<int> items;
 
@@ -200,17 +197,17 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const int imon = dgn_place_monster(spec, you.absdepth0,
-                                                   loc, false, true, false);
-                if (imon == -1)
+                const monster* mon = dgn_place_monster(spec, you.absdepth0,
+                                                       loc, false, true, false);
+                if (!mon)
                 {
                     game_ended_with_error(
                         make_stringf(
                             "Failed to create monster at (%d,%d) grd: %s",
                             loc.x, loc.y, dungeon_feature_name(grd(loc))));
                 }
-                list_eq(imon);
-                to_respawn[imon] = i;
+                list_eq(mon);
+                to_respawn[mon->mindex()] = i;
             }
         }
     }
@@ -262,6 +259,7 @@ namespace arena
             throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());
 
 #ifdef USE_TILE
+        // Arena is never saved, so we can skip this.
         tile_init_default_flavour();
         tile_clear_flavour();
 #endif
@@ -769,19 +767,17 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            int idx = dgn_place_monster(spec, you.absdepth0, pos, false,
-                                        true);
+            monster *mon = dgn_place_monster(spec, you.absdepth0, pos,
+                                             false, true);
 
-            if (idx == -1 && fac.active_members == 0
-                && monster_at(pos))
+            if (!mon && fac.active_members == 0 && monster_at(pos))
             {
                 // We have no members left, so to prevent the round
                 // from ending attempt to displace whatever is in
                 // our position.
-                int       midx  = mgrd(pos);
-                monster* other = &menv[midx];
+                monster* other = monster_at(pos);
 
-                if (to_respawn[midx] == -1)
+                if (to_respawn[other->mindex()] == -1)
                 {
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
@@ -801,20 +797,20 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                idx = dgn_place_monster(spec, you.absdepth0, pos, false,
+                mon = dgn_place_monster(spec, you.absdepth0, pos, false,
                                         true);
             }
 
-            if (idx != -1)
+            if (mon)
             {
                 // We succeeded, so remove from list.
                 fac.respawn_list.erase(fac.respawn_list.begin() + i);
                 fac.respawn_pos.erase(fac.respawn_pos.begin() + i);
 
-                to_respawn[idx] = spec_idx;
+                to_respawn[mon->mindex()] = spec_idx;
 
                 if (move_respawns)
-                    monster_teleport(&menv[idx], true, true);
+                    monster_teleport(mon, true, true);
             }
             else
             {
@@ -1173,7 +1169,7 @@ void arena_placed_monster(monster* mons)
 
 #ifdef ARENA_VERBOSE
     mprf("%s %s!",
-         mons->full_name(DESC_CAP_A, true).c_str(),
+         mons->full_name(DESC_A, true).c_str(),
          arena::is_respawning                ? "respawns" :
          (summoned && ! arena::real_summons) ? "is summoned"
                                              : "enters the arena");
@@ -1303,7 +1299,7 @@ void arena_monster_died(monster* mons, killer_type killer,
             // specifically a slime, and not a random monster which
             // happens to be a slime.
             if (mons->type == MONS_SLIME_CREATURE
-                && (fac->members.get_monster(member_idx).mid
+                && (fac->members.get_monster(member_idx).type
                     == MONS_SLIME_CREATURE))
             {
                 for (unsigned int i = 1; i < mons->number; i++)

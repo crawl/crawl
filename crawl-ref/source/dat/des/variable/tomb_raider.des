@@ -1,0 +1,130 @@
+# Tomb raiding (by Ragdoll, tons of help and lua by evilmike)
+# Can contain the ring of vitality.
+# TODO: Statues should be sarcophagi.
+
+{{
+function callback.release_the_mummies(data, triggerable, triggerer, marker, ev)
+    if data.trig == true then
+        return
+    else
+        data.trig = true
+    end
+
+    local x, y = marker:pos()
+    local you_x, you_y = you.pos()
+
+    if not you.see_cell(x, y) then
+        return
+    end
+
+    if triggerer.type == "pressure_plate" then
+        crawl.mpr("You hear a click.")
+    elseif triggerer.type == "item_moved" then
+        crawl.mpr("A pressure plate that was under the item clicks.")
+    end
+
+    for slave in iter.slave_iterator("stone_door", 1) do
+        if (dgn.mons_at(slave.x, slave.y) ~= nil or (slave.x == you_x and slave.y == you_y)) then
+            crawl.mpr("The walls vibrate for a moment.")
+        else
+            dgn.terrain_changed(slave.x, slave.y, "stone_wall", false, false, false)
+            if (you.see_cell(slave.x, slave.y)) then
+                -- This can happen, in theory (combination of LRD + apportation is needed)
+                crawl.mpr("You see a stone wall slide shut!")
+            else
+                crawl.mpr("You hear a loud grinding somewhere in the distance, followed by a thud.")
+            end
+        end
+    end
+
+    for slave in iter.slave_iterator("closet", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+
+    for slave in iter.slave_iterator("plate", 1) do
+        dgn.grid(slave.x, slave.y, "floor")
+    end
+    crawl.mpr("A number of walls slide open! You sense an ancient evil...", "warning")
+end
+}}
+
+NAME:   ragdoll_tomb_raider
+DEPTH:  D:14-26, Vault:1-7, Crypt:1-4
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+KFEAT:  $ = pressure plate trap
+KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any
+KITEM:  1234 = gold / any / nothing
+KITEM:  M4 = superb_item / any
+SUBST:  . = .:10 ~:1
+COLOUR: G = yellow
+COLOUR: c = yellow
+TILE:   c = wall_lab_stone
+COLOUR: C = white
+TILE:   C = wall_sandstone
+COLOUR: X = brown
+TILE:   X = dngn_stone_wall_brown
+FTILE:  .!~>cCXG1234M$ = floor_sandstone
+: if you.absdepth() <= 17 then
+KMONS: 1 = mummy / guardian mummy / nothing
+KMONS: 2 = mummy / guardian mummy / nothing
+KMONS: 3 = mummy / guardian mummy / mummy priest
+KMONS: 4 = mummy priest
+SUBST: H = .
+: else
+KMONS: 1 = mummy / guardian mummy
+KMONS: 2 = guardian mummy / mummy priest / nothing
+KMONS: 3 = guardian mummy / mummy priest / greater mummy
+KMONS: 4 = mummy priest / greater mummy
+KMONS: H = sphinx / nothing
+: end
+: if you.branch() == "Crypt" then
+KMONS: M = Khufu, greater mummy
+: elseif you.absdepth() <= 17 then
+KMONS: M = Menkaure, mummy priest
+: else
+KMONS: M = mummy priest
+: end
+{{
+    local tm = TriggerableFunction:new{func="callback.release_the_mummies",
+               repeated=true, data={trig=false} }
+    tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+    tm:add_triggerer(DgnTriggerer:new{type="item_moved", target="auto"})
+    tm:add_triggerer(DgnTriggerer:new{type="item_pickup", target="auto"})
+    lua_marker('$', tm)
+    lua_marker('$', props_marker {plate=1})
+    lua_marker('!', props_marker {stone_door=1})
+    lua_marker('X', props_marker {closet=1})
+    lua_marker('X', portal_desc {
+        desc="an engraved stone wall",
+        desc_long="The wall is carved with many mysterious symbols."})
+    lua_marker('C', portal_desc {
+        desc="an engraved stone pillar",
+        desc_long="A stone pillar, carved with strange symbols."})
+}}
+SUBST:  ! = .
+SUBST:  XC = c
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccx
+xc1cccGcccMcccGccc1cx
+xcXc.....cXc.....cXcx
+xcc...c...X...c...ccx
+xccc.ccc.....ccc.cccx
+xcc...ccc...ccc...ccx
+xcGc...cc...cc...cGcx
+xccc....cC.Cc....cccx
+xc2Xc...c.$.c...cX2cx
+xccccc.ccC.Ccc.cccccx
+xc2Xc...ccGcc...cX2cx
+xccc.....ccc.....cccx
+xccG..C.......C..Gccx
+xccc.....cXc.....cccx
+xccXc...cc4cc...cXccx
+xc3ccc...ccc...ccc3cx
+xccccGc...c...cGcc>cx
+xccccccc.....cccccccx
+xccHHHcccC!CcccHHHccx
+xc,,,,,cc,,,cc,,,,,cx
+x,,,,,,,,,@,,,,,,,,,x
+ENDMAP

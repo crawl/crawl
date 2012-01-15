@@ -77,7 +77,7 @@ InvEntry::InvEntry(const item_def &i) : MenuEntry("", MEL_ITEM), item(&i)
         text = i.name(DESC_INVENTORY_EQUIP, false).substr(4);
     }
     else
-        text = i.name(DESC_NOCAP_A, false);
+        text = i.name(DESC_A, false);
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(index_to_letter(i.link));
@@ -216,7 +216,7 @@ std::string InvEntry::get_text(bool need_cursor) const
     //XXX There should be a better way to determine this, for now we simply
     //estimate it by the following heuristics {kittel}.
     unsigned max_chars_in_line = get_number_of_cols() - 2;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons && Options.show_inventory_weights)
         max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
 #endif
@@ -232,13 +232,6 @@ std::string InvEntry::get_text(bool need_cursor) const
     }
     else
         tstr << text;
-
-    if (InvEntry::show_prices)
-    {
-        const int value = item_value(*item, show_prices);
-        if (value > 0)
-            tstr << " (" << value << " gold)";
-    }
 
     if (Options.show_inventory_weights)
     {
@@ -337,26 +330,10 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     }
 }
 
-bool InvEntry::show_prices = false;
-void InvEntry::set_show_prices(bool doshow)
-{
-    show_prices = doshow;
-}
-
 bool InvEntry::show_cursor = false;
 void InvEntry::set_show_cursor(bool doshow)
 {
     show_cursor = doshow;
-}
-
-InvShowPrices::InvShowPrices(bool doshow)
-{
-    InvEntry::set_show_prices(doshow);
-}
-
-InvShowPrices::~InvShowPrices()
-{
-    InvEntry::set_show_prices(false);
 }
 
 bool InvEntry::show_glyph = false;
@@ -414,6 +391,11 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
+#ifdef USE_TILE_WEB
+        // Webtiles handles menus specially, so disable the crt
+        tiles_crt_control crt_enabled(false);
+#endif
+
         // We're not printing anything yet, but this select the crt layer
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
@@ -474,7 +456,7 @@ static std::string _no_selectables_message(int item_selector)
         if (_has_melded_armour())
             return ("Your armour is currently melded into you.");
         else if (_has_tran_unwearable_armour())
-            return("You aren't carrying any armour you can wear in your "
+            return ("You aren't carrying any armour you can wear in your "
                    "current form.");
         else
             return "You aren't carrying any armour.";
@@ -484,7 +466,7 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_RECHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
-        return("You aren't carrying any armour which can be enchanted "
+        return ("You aren't carrying any armour which can be enchanted "
                "further.");
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
@@ -533,7 +515,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
@@ -542,7 +524,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (quantity <= 0)
         return (false);
 
-    tileidx_t idx = tileidx_item(*item);
+    tileidx_t idx = tileidx_item(get_item_info(*item));
     if (!idx)
         return (false);
 
@@ -1224,11 +1206,12 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v,
     }
 }
 
-bool any_items_to_select(int selector, bool msg)
+bool any_items_to_select(int selector, bool msg, int excluded_slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()
+            && you.inv[i].link != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
             return (true);
@@ -1275,9 +1258,8 @@ unsigned char invent_select(const char *title,
     return (menu.getkey());
 }
 
-void browse_inventory(bool show_price)
+void browse_inventory()
 {
-    InvShowPrices show_item_prices(show_price);
     get_invent(OSEL_ANY);
 }
 
@@ -1676,9 +1658,16 @@ bool check_warning_inscriptions(const item_def& item,
         if (oper == OPER_DESTROY)
             return (false);
 
-        if (oper == OPER_WEAR)
+        if (oper == OPER_WIELD)
         {
-            if (item.base_type != OBJ_ARMOUR)
+            // Can't use can_wield in item_use.cc because it wants
+            // a non-const item_def.
+            if (!you.can_wield(item))
+                return (true);
+        }
+        else if (oper == OPER_WEAR)
+        {
+            if (!can_wear_armour(item, false, false))
                 return (true);
 
             // Don't ask if item already worn.
@@ -1717,7 +1706,7 @@ bool check_warning_inscriptions(const item_def& item,
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
-                                      : item.name(DESC_NOCAP_A));
+                                      : item.name(DESC_A));
         if (_nasty_stasis(item, oper))
             prompt += std::string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
@@ -1750,13 +1739,16 @@ int prompt_invent_item(const char *prompt,
                         operation_types oper,
                         bool allow_list_known)
 {
-    if (!any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
-        && oper == OPER_FIRE && mtype == MT_INVLIST)
+    if (!any_items_to_select(type_expect, false, excluded_slot)
+        && type_expect == OSEL_THROWABLE
+        && (oper == OPER_FIRE || oper == OPER_QUIVER)
+        && mtype == MT_INVLIST)
     {
         type_expect = OSEL_ANY;
     }
 
-    if (!any_items_to_select(type_expect) && type_expect != OSEL_WIELD
+    if (!any_items_to_select(type_expect, false, excluded_slot)
+        && type_expect != OSEL_WIELD
         && type_expect != OSEL_BUTCHERY && mtype == MT_INVLIST)
     {
         mprf(MSGCH_PROMPT, "%s",

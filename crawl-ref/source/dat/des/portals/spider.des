@@ -33,7 +33,7 @@ function spiders_nest_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The entrance crumbles away.",
-        desc = "A crumbling entrance",
+        desc = "crumbling entrance",
         desc_long = desc_long,
         entity = 'archway',
         dst = "spiders_nest",
@@ -42,11 +42,11 @@ function spiders_nest_portal(e)
         overview = "crumbling entrance",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
-        floor = "floor",
+        floor = "expired_portal",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
-  e.tile("O = dngn_portal")
+  e.tile("O = dngn_portal_spider")
 end
 }}
 
@@ -57,7 +57,6 @@ end
 function spiders_nest_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
-  e.tile("< = dngn_portal")
   e.lrockcol("yellow")
   e.lfloorcol("brown")
   e.lrocktile("wall_yellow_rock")

@@ -831,7 +831,7 @@ MAP
 ENDMAP
 
 NAME: layout_delve
-DEPTH: Spider, D:13
+DEPTH: Spider
 CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

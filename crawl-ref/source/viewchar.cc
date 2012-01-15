@@ -15,7 +15,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
         0x2302, // CP437 but "optional" in WGL4
 #else
         0x2206, // WGL4 and DEC

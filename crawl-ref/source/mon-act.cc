@@ -42,7 +42,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -84,10 +83,6 @@ static int _compass_idx(const coord_def& mov)
             return (i);
     return (-1);
 }
-
-// A probably needless optimization: convert the C string "just seen" to
-// a C++ string just once, instead of twice every time a monster moves.
-static const std::string _just_seen("just seen");
 
 static bool immobile_monster[MAX_MONSTERS];
 
@@ -147,6 +142,16 @@ static bool _swap_monsters(monster* mover, monster* moved)
         && moved->type != MONS_KRAKEN_TENTACLE)
         return (false);
 
+    // If the target monster is constricted it is stuck
+    // and not eligible to be swapped with
+    if (moved->is_constricted())
+    {
+        dprf("%s fails to swap with %s, constricted.",
+            mover->name(DESC_THE).c_str(),
+            moved->name(DESC_THE).c_str());
+            return (false);
+    }
+
     // Swapping is a purposeful action.
     if (mover->confused())
         return (false);
@@ -192,6 +197,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     mover->set_position(moved_pos);
     moved->set_position(mover_pos);
 
+    mover->clear_far_constrictions();
+    moved->clear_far_constrictions();
+
     mover->check_clinging(true);
     moved->check_clinging(true);
 
@@ -200,8 +208,8 @@ static bool _swap_monsters(monster* mover, monster* moved)
 
     if (you.can_see(mover) && you.can_see(moved))
     {
-        mprf("%s and %s swap places.", mover->name(DESC_CAP_THE).c_str(),
-             moved->name(DESC_NOCAP_THE).c_str());
+        mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
+             moved->name(DESC_THE).c_str());
     }
 
     return (true);
@@ -665,11 +673,11 @@ static void _handle_movement(monster* mons)
         return;
 
     // Did we just come into view?
-    if (mons->seen_context != _just_seen)
-        return;
+    // TODO: This doesn't seem to work right. Fix, or remove?
 
-    // If the player can't see us, it doesn't matter.
-    if (!(mons->flags & MF_WAS_IN_VIEW))
+    if (mons->seen_context != SC_JUST_SEEN)
+        return;
+    if (testbits(mons->flags, MF_WAS_IN_VIEW))
         return;
 
     const coord_def old_pos  = mons->pos();
@@ -804,14 +812,21 @@ static bool _handle_reaching(monster* mons)
         && in_bounds(foepos))
     {
         ret = true;
-        monster_attack_actor(mons, foe, false);
+
+        ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
+
+        fight_melee(mons, foe);
 
         if (mons->alive())
         {
             // Player saw the item reach.
             item_def *wpn = mons->weapon(0);
-            if (wpn && !is_artefact(*wpn) && you.can_see(mons))
+            if (wpn && !is_artefact(*wpn) && you.can_see(mons)
+                // Don't auto-identify polearm brands
+                && get_weapon_brand(*wpn) == SPWPN_REACHING)
+            {
                 set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+            }
         }
     }
 
@@ -888,20 +903,18 @@ static bool _handle_scroll(monster* mons)
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
-            const int mon = create_monster(
+            read = true;
+            if (monster *mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(mons),
                           mons, 0, 0, mons->pos(), mons->foe,
-                          MG_FORCE_BEH));
-
-            read = true;
-            if (mon != -1)
+                          MG_FORCE_BEH)))
             {
-                if (you.can_see(&menv[mon]))
+                if (you.can_see(mon))
                 {
-                    mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
+                    mprf("%s appears!", mon->name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
                 }
-                player_angers_monster(&menv[mon]);
+                player_angers_monster(mon);
             }
             else if (you.can_see(mons))
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -1384,9 +1397,6 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
-    const bool skilled = mons->flags & MF_FIGHTER;
-    const bool archer  = mons->flags & MF_ARCHER;
-
     mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
 
@@ -1421,7 +1431,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     ammoDamBonus = item.plus2;
 
     // Archers get a boost from their melee attack.
-    if (archer)
+    if (mons->is_archer())
     {
         const mon_attack_def attk = mons_attack_spec(mons, 0);
         if (attk.type == AT_SHOOT)
@@ -1607,7 +1617,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    std::string msg = mons->name(DESC_CAP_THE);
+    std::string msg = mons->name(DESC_THE);
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!pbolt.name.empty() && projected == LRET_LAUNCHED)
@@ -1615,7 +1625,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     else
     {
         // build shoot message
-        msg += item.name(DESC_NOCAP_A, false, false, false);
+        msg += item.name(DESC_A, false, false, false);
 
         // build beam name
         pbolt.name = item.name(DESC_PLAIN, false, false, false);
@@ -1638,13 +1648,13 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     {
         pbolt.aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_NOCAP_A).c_str());
+                 mons->name(DESC_A).c_str());
     }
     else
     {
         pbolt.aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_NOCAP_A).c_str());
+                 mons->name(DESC_A).c_str());
     }
 
     // And restore it here.
@@ -1687,8 +1697,8 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
              pbolt.damage.num, pbolt.damage.size);
     }
 
-    // Skilled archers get better to-hit and damage.
-    if (skilled)
+    // Skilled fighters get better to-hit and damage.
+    if (mons->is_fighter())
     {
         pbolt.hit         = pbolt.hit * 120 / 100;
         pbolt.damage.size = pbolt.damage.size * 120 / 100;
@@ -1732,7 +1742,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         {
             msg::stream << "The weapon returns "
                         << (you.can_see(mons)?
-                              ("to " + mons->name(DESC_NOCAP_THE))
+                              ("to " + mons->name(DESC_THE))
                             : "from whence it came")
                         << "!" << std::endl;
         }
@@ -1788,10 +1798,10 @@ static bool _handle_throw(monster* mons, bolt & beem)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
-    const bool archer = mons->flags & MF_ARCHER;
+    const bool archer = mons->is_archer();
 
     // Highly-specialised archers are more likely to shoot than talk. (?)
-    if (one_chance_in(archer? 9 : 5))
+    if (one_chance_in(archer ? 9 : 5))
         return (false);
 
     // Don't allow offscreen throwing for now.
@@ -1910,8 +1920,102 @@ static void _monster_add_energy(monster* mons)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
+#ifdef DEBUG_DIAGNOSTICS
+# define DIAG_ONLY(x) x
+#else
+# define DIAG_ONLY(x) (void)0
+#endif
+void handle_noattack_constrictions(actor *attacker)
+{
+    if (is_sanctuary(attacker->pos()))
+        attacker->stop_constricting_all(true);
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        actor* const defender = mindex_to_actor(attacker->constricting[i]);
+        if (defender)
+        {
+            // Constriction should have stopped the moment the actors
+            // became non-adjacent.
+            ASSERT(adjacent(attacker->pos(), defender->pos()));
+
+            int damage;
+
+            if (attacker->atype() == ACT_PLAYER)
+                damage = (you.strength() - roll_dice(1,3)) / 3;
+            else
+                damage = (attacker->as_monster()->hit_dice + 1) / 2;
+            DIAG_ONLY(int basedam = damage);
+            damage += roll_dice(1, attacker->dur_has_constricted[i] / 10 + 1);
+            DIAG_ONLY(int durdam = damage);
+            damage -= random2(1 + (defender->armour_class() / 2));
+            DIAG_ONLY(int acdam = damage);
+            damage = timescale_damage(attacker, damage);
+            DIAG_ONLY(int timescale_dam = damage);
+
+            damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
+            DIAG_ONLY(int infdam = damage);
+
+            std::string exclams;
+            if (damage <= 0 && attacker->atype() == ACT_PLAYER
+                && you.can_see(defender))
+            {
+                exclams = ", but do no damage.";
+            }
+            else if (damage < HIT_WEAK)
+                exclams = ".";
+            else if (damage < HIT_MED)
+                exclams = "!";
+            else if (damage < HIT_STRONG)
+                exclams = "!!";
+            else
+                exclams = "!!!";
+
+            if (you.can_see(attacker) || attacker == &you)
+            {
+                mprf("%s %s %s%s%s",
+                     (attacker->atype() == ACT_PLAYER
+                         ? "You"
+                         : attacker->name(DESC_THE).c_str()),
+                     attacker->conj_verb("constrict").c_str(),
+                     defender->name(DESC_THE).c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                     make_stringf(" for %d", damage).c_str(),
+#else
+                     "",
+#endif
+                     exclams.c_str());
+            }
+            else if (you.can_see(defender) || defender == &you)
+            {
+                mprf("%s %s constricted%s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                     make_stringf(" for %d", damage).c_str(),
+#else
+                     "",
+#endif
+                     exclams.c_str());
+            }
+
+            dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN, true).c_str(),
+                 basedam, durdam, acdam, timescale_dam, infdam);
+
+            if (defender->atype() == ACT_MONSTER
+                && defender->as_monster()->hit_points < 1)
+            {
+                monster_die(defender->as_monster(), attacker);
+            }
+        }
+    }
+}
+
 void handle_monster_move(monster* mons)
 {
+    mons->has_constricted_this_turn = false;
     mons->hit_points = std::min(mons->max_hit_points,
                                    mons->hit_points);
 
@@ -1950,6 +2054,10 @@ void handle_monster_move(monster* mons)
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
         _mons_in_cloud(mons);
+
+    // Update constriction durations
+    mons->accum_been_constricted();
+    mons->accum_has_constricted();
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -2245,10 +2353,10 @@ void handle_monster_move(monster* mons)
                     && newcell != mons->pos()
                     && !is_sanctuary(mons->pos()))
                 {
-                    if (monsters_fight(mons, enemy))
+                    if (fight_melee(mons, enemy))
                     {
                         mmov.reset();
-                        DEBUG_ENERGY_USE("monsters_fight()");
+                        DEBUG_ENERGY_USE("fight_melee()");
                         continue;
                     }
                     else
@@ -2351,14 +2459,14 @@ void handle_monster_move(monster* mons)
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    monster_attack(mons);
+                    fight_melee(mons, &you);
 
                     if (mons_is_batty(mons))
                     {
                         mons->behaviour = BEH_WANDER;
                         set_random_target(mons);
                     }
-                    DEBUG_ENERGY_USE("monster_attack()");
+                    DEBUG_ENERGY_USE("fight_melee()");
                     mmov.reset();
                     continue;
                 }
@@ -2397,7 +2505,7 @@ void handle_monster_move(monster* mons)
                 // Figure out if they fight.
                 else if ((!mons_is_firewood(targ)
                           || mons->type == MONS_KRAKEN_TENTACLE)
-                              && monsters_fight(mons, targ))
+                              && fight_melee(mons, targ))
                 {
                     if (mons_is_batty(mons))
                     {
@@ -2407,7 +2515,7 @@ void handle_monster_move(monster* mons)
                     }
 
                     mmov.reset();
-                    DEBUG_ENERGY_USE("monsters_fight()");
+                    DEBUG_ENERGY_USE("fight_melee()");
                     continue;
                 }
             }
@@ -2447,6 +2555,9 @@ void handle_monster_move(monster* mons)
         move_kraken_tentacles(mons);
     }
 
+    if (!mons->has_constricted_this_turn)
+        handle_noattack_constrictions(mons);
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
@@ -2483,6 +2594,8 @@ void handle_monsters(bool with_noise)
             // Clear list of mesmerising monsters.
             you.clear_beholders();
             you.clear_fearmongers();
+            you.stop_constricting_all();
+            you.stop_being_constricted();
             break;
         }
     }
@@ -2715,24 +2828,12 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
 
     if (nearby)
     {
-        mprf("%s eats %s.", mons->name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_THE).c_str());
+        mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
+             item.name(DESC_THE).c_str());
     }
 
-    // Assume that eating a corpse requires butchering it.  Use logic
-    // from misc.cc:turn_corpse_into_chunks() and the butchery-related
-    // delays in delay.cc:stop_delay().
-
-    const int max_chunks = get_max_corpse_chunks(mt);
-
-    // Only fresh corpses bleed enough to colour the ground.
-    if (!food_is_rotten(item))
-        bleed_onto_floor(mons->pos(), mt, max_chunks, true);
-
-    if (mons_skeleton(mt) && one_chance_in(3))
-        turn_corpse_into_skeleton(item);
-    else
-        destroy_item(item.index());
+    // Butcher the corpse without leaving chunks.
+    butcher_corpse(item, B_MAYBE, false);
 
     return (true);
 }
@@ -2781,21 +2882,33 @@ static bool _monster_eat_food(monster* mons, bool nearby)
         {
             if (si->sub_type != FOOD_HONEYCOMB
                 && si->sub_type != FOOD_ROYAL_JELLY)
-                return false;
+            {
+                return (false);
+            }
 
             if (!nearby)
-                mprf(MSGCH_SOUND, "You hear a distant popping sound.");
+                mpr("You hear a distant popping sound.", MSGCH_SOUND);
             else
-                mprf("%s devours %s.", mons->name(DESC_CAP_THE).c_str(),
-                    quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+            {
+                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
+                     quant_name(*si, 1, DESC_THE).c_str());
+            }
+
             dec_mitm_item_quantity(si.link(), 1);
+
+            std::string old_name_the = mons->name(DESC_THE);
+
+            mons->upgrade_type(MONS_KILLER_BEE, true, true);
+
             if (!nearby)
-                mprf(MSGCH_SOUND, "You hear a distant popping sound.");
+                mpr("You hear a distant bursting sound.", MSGCH_SOUND);
             else
-                mprf("%s devours %s.", mons->name(DESC_CAP_THE).c_str(),
-                    quant_name(*si, 1, DESC_NOCAP_THE).c_str());
-            monster_polymorph(mons, MONS_KILLER_BEE);
-            return true;
+            {
+                mprf("%s metamorphoses into %s!",
+                     old_name_the.c_str(), mons->name(DESC_A).c_str());
+            }
+
+            return (true);
         }
 
         if (free_to_eat && coinflip())
@@ -2804,8 +2917,8 @@ static bool _monster_eat_food(monster* mons, bool nearby)
             {
                 if (nearby)
                 {
-                    mprf("%s eats %s.", mons->name(DESC_CAP_THE).c_str(),
-                         quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+                    mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
+                         quant_name(*si, 1, DESC_THE).c_str());
                 }
 
                 dec_mitm_item_quantity(si.link(), 1);
@@ -2844,7 +2957,7 @@ static bool _handle_pickup(monster* mons)
 
     // Hack - Harpies fly over water, but we don't have a general
     // system for monster igrd yet.  Flying intelligent monsters
-    // (kenku!) would also count here.
+    // (tengu!) would also count here.
     dungeon_feature_type feat = grd(mons->pos());
 
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && !mons->flight_mode())
@@ -3051,7 +3164,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         {
             mprf("%s was actually a secret door!",
                  feature_description(grid, NUM_TRAPS, "",
-                                     DESC_CAP_THE, false).c_str());
+                                     DESC_THE, false).c_str());
             learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
         }
 
@@ -3060,7 +3173,8 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         open_str += noun;
         open_str += ".";
 
-        mons->seen_context = open_str;
+        // Should this be conditionalized on you.can_see(mons?)
+        mons->seen_context = (all_door.size() <= 2) ? SC_DOOR : SC_GATE;
 
         if (!you.can_see(mons))
         {
@@ -3069,7 +3183,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         }
         else if (!you_are_delayed())
         {
-            mprf("%s %s", mons->name(DESC_CAP_A).c_str(),
+            mprf("%s %s", mons->name(DESC_A).c_str(),
                  open_str.c_str());
         }
     }
@@ -3496,6 +3610,10 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->set_position(n);
     mgrd(n) = mon->mindex();
     m2->set_position(c);
+
+    mon->clear_far_constrictions();
+    m2->clear_far_constrictions();
+
     const int m2i = m2->mindex();
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
@@ -3514,8 +3632,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.
-    mon->seen_context.clear();
-    m2->seen_context.clear();
+    mon->seen_context = SC_NONE;
+    m2->seen_context = SC_NONE;
 
     return (false);
 }
@@ -3529,15 +3647,26 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     if (f == you.pos())
     {
-        monster_attack(mons);
+        fight_melee(mons, &you);
         return (true);
     }
 
     // This includes the case where the monster attacks itself.
     if (monster* def = monster_at(f))
     {
-        monsters_fight(mons, def);
+        fight_melee(mons, def);
         return (true);
+    }
+
+    if (mons->is_constricted())
+    {
+        if (mons->attempt_escape())
+            simple_monster_message(mons, " escapes!");
+        else
+        {
+            simple_monster_message(mons, " struggles to escape constriction.");
+            return(true);
+        }
     }
 
     if (mons_can_open_door(mons, f))
@@ -3569,7 +3698,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (mons->seen_context == _just_seen && !you.see_cell(f))
+    if (mons->seen_context == SC_JUST_SEEN && !you.see_cell(f))
         simple_monster_message(mons, " moves out of view.");
     else if (crawl_state.game_is_hints() && (mons->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
@@ -3578,7 +3707,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     }
 
     // The seen context no longer applies if the monster is moving normally.
-    mons->seen_context.clear();
+    mons->seen_context = SC_NONE;
 
     // This appears to be the real one, ie where the movement occurs:
 #ifdef EUCLIDEAN
@@ -3590,7 +3719,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
     {
-        mons->seen_context = "emerges from the water";
+        // er, what?  Seems impossible.
+        mons->seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
     mgrd(mons->pos()) = NON_MONSTER;
 
@@ -3602,6 +3732,11 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
+
+    // Let go of all constrictees; only stop *being* constricted if we are now
+    // too far away.
+    mons->stop_constricting_all(true);
+    mons->clear_far_constrictions();
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);
@@ -3677,7 +3812,7 @@ static bool _monster_move(monster* mons)
                 if (one_chance_in(10))
                 {
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
-                         mons->name(DESC_CAP_THE).c_str());
+                         mons->name(DESC_THE).c_str());
                 }
                 noisy(noise_level, mons->pos(), mons->mindex());
             }
@@ -3843,7 +3978,7 @@ static bool _monster_move(monster* mons)
                     const bool actor_visible = you.can_see(mons);
                     mprf("%s knocks down a tree!",
                          actor_visible?
-                         mons->name(DESC_CAP_THE).c_str() : "Something");
+                         mons->name(DESC_THE).c_str() : "Something");
                     noisy(25, target);
                 }
                 else
@@ -3868,7 +4003,7 @@ static bool _monster_move(monster* mons)
         // Check for attacking player.
         if (mons->pos() + mmov == you.pos())
         {
-            ret = monster_attack(mons);
+            ret = fight_melee(mons, &you);
             mmov.reset();
         }
 
@@ -3891,7 +4026,7 @@ static bool _monster_move(monster* mons)
                 mmov.reset();
 
                 dprf("%s is skipping movement in order to follow.",
-                     mons->name(DESC_CAP_THE).c_str());
+                     mons->name(DESC_THE).c_str());
             }
         }
 
@@ -3904,7 +4039,7 @@ static bool _monster_move(monster* mons)
                 ret = _monster_swaps_places(mons, mmov);
             else
             {
-                monsters_fight(mons, targ);
+                fight_melee(mons, targ);
                 ret = true;
             }
 
@@ -3938,7 +4073,7 @@ static bool _monster_move(monster* mons)
         monster* targ = monster_at(mons->pos() + mmov);
         if (!mmov.origin() && targ && _may_cutdown(mons, targ))
         {
-            monsters_fight(mons, targ);
+            fight_melee(mons, targ);
             ret = true;
         }
 

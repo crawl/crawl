@@ -3,7 +3,6 @@
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "dgn-shoals.h"
@@ -29,34 +28,34 @@
 #include <vector>
 #include <cmath>
 
-const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
-const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
-const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";
+static const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
+static const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
+static const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";
 
 static dgn_island_plan _shoals_islands;
 
-const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
+static const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
 
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
 // of X implies that the tide will advance visibly about once in X turns.
-int TIDE_MULTIPLIER = 30;
+static int TIDE_MULTIPLIER = 30;
 
-int LOW_TIDE = -18 * TIDE_MULTIPLIER;
-int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
+static int LOW_TIDE = -18 * TIDE_MULTIPLIER;
+static int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 
 // The highest a tide can be called by a tide caller such as Ilsuiw.
-const int HIGH_CALLED_TIDE = 50;
-const int TIDE_DECEL_MARGIN = 8;
-const int PEAK_TIDE_VELOCITY = 2;
-const int CALL_TIDE_VELOCITY = 21;
+static const int HIGH_CALLED_TIDE = 50;
+static const int TIDE_DECEL_MARGIN = 8;
+static const int PEAK_TIDE_VELOCITY = 2;
+static const int CALL_TIDE_VELOCITY = 21;
 
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
-const int TIDE_CALL_RADIUS = 8;
-const int MAX_SHOAL_PLANTS = 180;
+static const int TIDE_CALL_RADIUS = 8;
+static const int MAX_SHOAL_PLANTS = 180;
 
-const int _shoals_margin = 6;
+static const int _shoals_margin = 6;
 
 enum shoals_height_thresholds
 {
@@ -793,7 +792,7 @@ static void _clear_net_trapping_status(coord_def c)
     {
         monster* mvictim = victim->as_monster();
         if (you.can_see(mvictim))
-            mprf("The net is swept off %s.", mvictim->name(DESC_NOCAP_THE).c_str());
+            mprf("The net is swept off %s.", mvictim->name(DESC_THE).c_str());
         mons_clear_trapping_net(mvictim);
     }
     else
@@ -969,17 +968,11 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     if (!tide_caller)
         return base_tide;
 
-    // try to avoid the costly sqrt() call
-    const int rl_distance = grid_distance(pos, tide_caller_pos);
-    if (rl_distance > TIDE_CALL_RADIUS)
+    pos -= tide_caller->pos();
+    if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
         return base_tide;
 
-    const int distance =
-        static_cast<int>(sqrt((float)(pos - tide_caller->pos()).abs()));
-    if (distance > TIDE_CALL_RADIUS)
-        return base_tide;
-
-    return (base_tide + std::max(0, tide_called_peak - distance * 3));
+    return (base_tide + std::max(0, tide_called_peak - pos.range() * 3));
 }
 
 static std::vector<coord_def> _shoals_extra_tide_seeds()
@@ -1152,7 +1145,7 @@ void shoals_release_tide(monster* mons)
         if (player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "The tide is released from %s call.",
-                 apostrophise(mons->name(DESC_NOCAP_YOUR, true)).c_str());
+                 apostrophise(mons->name(DESC_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
                 flash_view_delay(ETC_WATER, 150);
         }

@@ -217,16 +217,43 @@ bog_green1
 bog_green2
 bog_green3
 
-snake0 FLOOR_SNAKE
-snake1
-snake2
-snake3
+%weight 10
+snake-a0 FLOOR_SNAKE_A
+%weight 3
+snake-a1
+snake-a2
+snake-a3
+%weight 10
+snake-c0 FLOOR_SNAKE_C
+%weight 3
+snake-c1
+snake-c2
+snake-c3
+%weight 10
+snake-d0 FLOOR_SNAKE_D
+%weight 3
+snake-d1
+snake-d2
+snake-d3
 
 ## swamp also doesn't have any unique walls...
 swamp0 FLOOR_SWAMP
 swamp1
 swamp2
 swamp3
+
+spider00 FLOOR_SPIDER
+spider01
+spider02
+spider03
+spider04
+spider05
+spider06
+spider07
+spider08
+spider09
+spider10
+spider11
 
 tomb0 FLOOR_TOMB
 tomb1
@@ -598,3 +625,105 @@ crypt4
 crypt5
 crypt6
 crypt7
+
+iron0 FLOOR_IRON
+%weight 1
+iron1
+iron2
+iron3
+iron4
+iron5
+
+%weight 10
+black_cobalt01 FLOOR_BLACK_COBALT
+black_cobalt02
+black_cobalt03
+black_cobalt04
+black_cobalt05
+black_cobalt06
+black_cobalt07
+black_cobalt08
+black_cobalt09
+black_cobalt10
+black_cobalt11
+black_cobalt12
+
+frozen0 FLOOR_FROZEN
+frozen1
+frozen2
+frozen3
+frozen4
+frozen5
+frozen6
+frozen7
+
+%lum 0 -5
+%weight 50
+demonic_red1 FLOOR_DEMONIC FLOOR_DEMONIC_RED
+%weight 5
+demonic_red2
+demonic_red3
+demonic_red4
+%weight 10
+demonic_red5
+demonic_red6
+demonic_red7
+demonic_red8
+%weight 2
+demonic_red9
+
+%variation FLOOR_DEMONIC blue
+%hue 0 240
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BLUE
+%resetcol
+
+%variation FLOOR_DEMONIC green
+%lum 0 -7
+%hue 0 90
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_GREEN
+%resetcol
+
+%variation FLOOR_DEMONIC cyan
+%lum 0 -10
+%hue 0 180
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_CYAN
+%resetcol
+
+%variation FLOOR_DEMONIC magenta
+%lum 0 -8
+%hue 0 300
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_MAGENTA
+%resetcol
+
+%variation FLOOR_DEMONIC brown
+%lum 0 -8
+%hue 0 30
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BROWN
+%resetcol
+
+%variation FLOOR_DEMONIC lightgray
+%desat 0
+%lum 0 -9
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGRAY
+%resetcol
+
+%variation FLOOR_DEMONIC darkgray
+%desat 0
+%lum 0 -17
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
+%resetcol
+
+%weight 10
+green_bones01 FLOOR_GREEN_BONES
+green_bones02
+green_bones03
+green_bones04
+green_bones05
+green_bones06
+green_bones07
+green_bones08
+%weight 3
+green_bones09
+green_bones10
+green_bones11
+green_bones12

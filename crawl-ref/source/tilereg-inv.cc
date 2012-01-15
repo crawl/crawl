@@ -3,6 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-inv.h"
+#include "process_desc.h"
 
 #include "cio.h"
 #include "describe.h"
@@ -282,7 +283,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             tip += " - ";
         }
 
-        tip += item.name(DESC_NOCAP_A);
+        tip += item.name(DESC_A);
 
         if (!display_actions)
             return (true);
@@ -593,7 +594,7 @@ void InventoryRegion::activate()
     }
 }
 
-static void _fill_item_info(InventoryTile &desc, const item_def &item)
+static void _fill_item_info(InventoryTile &desc, const item_info &item)
 {
     desc.tile = tileidx_item(item);
 
@@ -621,7 +622,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
-    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
+    if (item.cursed())
         desc.flag |= TILEI_FLAG_CURSE;
     if (item_type_tried(item))
         desc.flag |= TILEI_FLAG_TRIED;
@@ -688,7 +689,7 @@ void InventoryRegion::update()
             }
 
             InventoryTile desc;
-            _fill_item_info(desc, you.inv[i]);
+            _fill_item_info(desc, get_item_info(you.inv[i]));
             desc.idx = i;
 
             for (int eq = 0; eq < NUM_EQUIP; ++eq)
@@ -701,6 +702,9 @@ void InventoryRegion::update()
                     break;
                 }
             }
+
+            if (item_is_active_manual(you.inv[i]))
+                desc.flag |= TILEI_FLAG_EQUIP;
 
             inv_shown[i] = true;
             m_items.push_back(desc);
@@ -783,7 +787,7 @@ void InventoryRegion::update()
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, mitm[i]);
+            _fill_item_info(desc, get_item_info(mitm[i]));
             desc.idx = i;
             ground_shown[i] = true;
 

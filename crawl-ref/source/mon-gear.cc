@@ -27,8 +27,7 @@
 
 static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false,
-                               bool (monster::*pickupfn)(item_def&, int) = NULL,
-                               bool keep_ident = false)
+                               bool (monster::*pickupfn)(item_def&, int) = NULL)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -41,9 +40,6 @@ static void _give_monster_item(monster* mon, int thing,
 
     mthing.pos.reset();
     mthing.link = NON_ITEM;
-
-    if (!keep_ident)
-        unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
     if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
         && (is_blessed(mthing)
@@ -96,7 +92,7 @@ void give_specific_item(monster* mon, const item_def& tpl)
         return;
 
     mitm[thing] = tpl;
-    _give_monster_item(mon, thing, true, NULL, true);
+    _give_monster_item(mon, thing, true, NULL);
 }
 
 static void _give_scroll(monster* mon, int level)
@@ -155,8 +151,8 @@ static void _give_wand(monster* mon, int level)
         if (no_high_tier && is_high_tier_wand(wand.sub_type))
         {
             dprf("Destroying %s because %s doesn't want a high tier wand.",
-                 wand.name(DESC_NOCAP_A).c_str(),
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 wand.name(DESC_A).c_str(),
+                 mon->name(DESC_THE).c_str());
             destroy_item(idx, true);
         }
         else
@@ -417,7 +413,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GNOLL_SERGEANT:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SPEAR;
+        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         break;
@@ -443,6 +439,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CRAZY_YIUF:
@@ -453,6 +450,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
         item.plus        += 2 + random2(3);
         item.plus2       += 2 + random2(3);
+        item.flags       |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_JOSEPH:
@@ -608,7 +606,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
-    case MONS_KENKU:
+    case MONS_TENGU:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -764,6 +762,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.special = SPWPN_FREEZING;
         item.plus = random_range(-1, 6, 2);
         item.plus2 = random_range(-1, 6, 2);
+        item.flags |= ISFLAG_KNOW_TYPE;
         force_item = true;
         break;
 
@@ -855,6 +854,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.special   = SPWPN_FLAME;
         item.plus     += 1 + random2(3);
         item.plus2    += 1 + random2(3);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         force_item     = true;
         break;
 
@@ -874,6 +874,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_SCIMITAR;
         item.plus      = random2(5);
         item.plus2     = random2(5);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
@@ -889,6 +890,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CHERUB:
@@ -910,8 +912,23 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_BLESSED_SCIMITAR,
                                        WPN_BLESSED_FALCHION,
                                        -1);
+        item.plus  = random2(5);
+        item.plus2 = random2(5);
         // but flaming not holy wrath
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        item.flags |= ISFLAG_KNOW_TYPE;
+        break;
+
+    case MONS_SERAPH:
+        item_race  = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_BLESSED_GREAT_SWORD;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        // highly enchanted, we're top rank
+        item.plus  = 3 + random2(6);
+        item.plus2 = 3 + random2(6);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_PALADIN:
@@ -931,6 +948,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_PROFANE_SERVITOR:
@@ -944,6 +962,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_equip_desc(item, ISFLAG_GLOWING);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_DONALD:
@@ -1016,6 +1035,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_GREAT_SWORD;
         item.plus      = 0;
         item.plus2     = 0;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
@@ -1026,6 +1046,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_BATTLEAXE;
         item.plus      = 0;
         item.plus2     = 0;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         break;
 
@@ -1049,12 +1070,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        if (coinflip())
-        {
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = STAFF_STRIKING;
-        }
-        else if (one_chance_in(100))
+        if (one_chance_in(25))
         {
             dprf("generating a rare rod");
             const int rand_staff = random2(NUM_STAVES - STAFF_FIRST_ROD)
@@ -1064,9 +1080,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item_race = MAKE_ITEM_DWARVEN;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = ((one_chance_in(3))? WPN_HAND_AXE: WPN_BROAD_AXE);
+            item.base_type = OBJ_WANDS;
+            item.sub_type  = random_choose_weighted(10, WAND_FROST,
+                                                    10, WAND_FLAME,
+                                                    8, WAND_MAGIC_DARTS,
+                                                    4, WAND_LIGHTNING,
+                                                    4, WAND_FIRE,
+                                                    4, WAND_COLD,
+                                                    0);
         }
         break;
 
@@ -1091,6 +1112,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
                                                      0));
+            item.plus  = random2(5);
+            item.plus2 = random2(5);
+            item.props["autoinscribe"] = "Psyche";
         }
         break;
 
@@ -1118,6 +1142,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                  2, SPWPN_VENOM,
                                                  1, SPWPN_DRAINING,
                                                  0));
+        item.props["autoinscribe"] = "Sonja";
         break;
 
     case MONS_MAURICE:
@@ -1140,6 +1165,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
         item.plus      = random2(5);
         item.plus2     = random2(5);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CEREBOV:
@@ -1180,6 +1206,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         item.plus   = random2(5);
         item.plus2  = random2(5);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_SPRIGGAN:
@@ -1247,6 +1274,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
         item.plus      = 2 + random2(7);
         item.plus2     = 2 + random2(7);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     default:
@@ -1600,7 +1628,7 @@ void give_shield(monster* mon, int level)
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
-    case MONS_KENKU:
+    case MONS_TENGU:
     case MONS_GNOLL_SERGEANT:
         if (one_chance_in(3))
         {
@@ -1650,6 +1678,7 @@ void give_shield(monster* mon, int level)
             {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
                 set_equip_desc(*shield, ISFLAG_GLOWING);
+                shield->props["autoinscribe"] = "Donald";
             }
         }
 
@@ -1733,12 +1762,11 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         if (x_chance_in_y(2, 5))
         {
             item.base_type = OBJ_ARMOUR;
-
-            const int temp_rand = random2(8);
-            item.sub_type = ((temp_rand  < 4) ? ARM_LEATHER_ARMOUR :
-                             (temp_rand  < 6) ? ARM_RING_MAIL :
-                             (temp_rand == 6) ? ARM_SCALE_MAIL
-                                              : ARM_CHAIN_MAIL);
+            item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
+                                                    2, ARM_RING_MAIL,
+                                                    1, ARM_SCALE_MAIL,
+                                                    1, ARM_CHAIN_MAIL,
+                                                    0);
         }
         else
             return;
@@ -1786,12 +1814,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_RUPERT:
     {
         item.base_type = OBJ_ARMOUR;
-
-        const int temp_rand = random2(4);
-        item.sub_type = ((temp_rand == 0) ? ARM_LEATHER_ARMOUR :
-                         (temp_rand == 1) ? ARM_RING_MAIL :
-                         (temp_rand == 2) ? ARM_SCALE_MAIL
-                                          : ARM_CHAIN_MAIL);
+        item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_RING_MAIL,
+                                       ARM_SCALE_MAIL,     ARM_CHAIN_MAIL, -1);
         break;
     }
 
@@ -1802,8 +1826,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
             level = MAKE_GOOD_ITEM;
 
         item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
-                            3, ARM_BANDED_MAIL, 3, ARM_SPLINT_MAIL,
-                            10, ARM_PLATE_MAIL, 1, ARM_CRYSTAL_PLATE_MAIL,
+                            5, ARM_SPLINT_MAIL, 10, ARM_PLATE_ARMOUR,
+                            1, ARM_CRYSTAL_PLATE_ARMOUR,
                             0);
         break;
 
@@ -1831,12 +1855,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_VAULT_GUARD:
     {
         item.base_type = OBJ_ARMOUR;
-
-        const int temp_rand = random2(4);
-        item.sub_type = ((temp_rand == 0) ? ARM_CHAIN_MAIL :
-                         (temp_rand == 1) ? ARM_SPLINT_MAIL :
-                         (temp_rand == 2) ? ARM_BANDED_MAIL
-                                          : ARM_PLATE_MAIL);
+        item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
+                                       ARM_PLATE_ARMOUR, -1);
         break;
     }
 
@@ -1858,9 +1878,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
-                                               1, ARM_SPLINT_MAIL,
-                                               1, ARM_BANDED_MAIL,
-                                               1, ARM_PLATE_MAIL,
+                                               2, ARM_SPLINT_MAIL,
+                                               1, ARM_PLATE_ARMOUR,
                                                0);
         break;
 
@@ -1895,6 +1914,15 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ROBE;
         break;
 
+    case MONS_SERAPH:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        // obscenely good, don't ever place them randomly
+        item.sub_type  = coinflip() ? ARM_PEARL_DRAGON_ARMOUR
+                                    : ARM_FIRE_DRAGON_ARMOUR;
+        level = MAKE_GOOD_ITEM;
+        break;
+
     // Centaurs sometimes wear barding.
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
@@ -1917,9 +1945,9 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         if (one_chance_in(mon->type == MONS_NAGA         ?  800 :
-                            mon->type == MONS_NAGA_WARRIOR ?  300 :
-                            mon->type == MONS_NAGA_MAGE    ?  200
-                                                           :  100))
+                          mon->type == MONS_NAGA_WARRIOR ?  300 :
+                          mon->type == MONS_NAGA_MAGE    ?  200
+                                                         :  100))
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;
@@ -2099,20 +2127,17 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int idx = items(0, OBJ_GOLD, 0, true, level, 0);
-    _give_monster_item(mon, idx);
+    const int it = items(0, OBJ_GOLD, 0, true, level, 0);
+    _give_monster_item(mon, it);
 }
 
-void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster *mons = &menv[mid];
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
-void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster* mons = &menv[mid];
-
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);
 

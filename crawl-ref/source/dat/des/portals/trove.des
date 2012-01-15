@@ -168,12 +168,14 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
             overview = "Trove",
             dst = "trove",
             dstorigin = "in a treasure trove",
-            floor = "floor",
+            floor = "expired_portal",
+            feat_tile = "dngn_portal_trove_gone",
         }
     end
     e.lua_marker("O", stair)
     e.kfeat("O = enter_portal_vault")
     e.colour("O = blue")
+    e.tile("O = dngn_portal_trove")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -712,12 +714,13 @@ COLOUR: m = blue
 COLOUR: = = blue
 NSUBST: " = 1:= / *:x
 NSUBST: ' = 1:= / *:x
-# Rock is actually diggable for those people driven made by hatred.
+# Rock is actually diggable for those people driven mad by hatred.
 MONS:   vampire
 # 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
+KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -802,11 +805,11 @@ WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
- randart plate mail w:50                                                     /\
-         plate mail unrand:maxwells_patent_armour                            /\
+ randart plate armour w:50                                                   /\
+         plate armour unrand:maxwells_patent_armour                          /\
  randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
- randart crystal plate mail                                                  /\
+ randart crystal plate armour                                                /\
  randart robe w:50                                                           /\
          leather armour unrand:salamander_hide_armour / robe unrand:robe_of_night /\
          robe unrand:robe_of_misfortune / animal skin unrand:skin_of_zhor    /\
@@ -833,7 +836,7 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          pair of gloves unrand:gauntlets_of_war                              /\
          pair of gloves unrand:fencers_gloves
 ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
-         dagger unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
+         dagger unrand:spriggans_knife / long sword unrand:sword_of_jihad    /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
          great sword unrand:sword_of_power / long sword unrand:bloodbane     /\
          scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\

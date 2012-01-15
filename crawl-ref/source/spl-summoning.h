@@ -1,5 +1,5 @@
-#ifndef SPL_SUMMONING
-#define SPL_SUMMONING
+#ifndef SPL_SUMMONING_H
+#define SPL_SUMMONING_H
 
 #include "enum.h"
 #include "itemprop-enum.h"
@@ -48,10 +48,6 @@ spret_type cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 
 spret_type cast_call_imp(int pow, god_type god, bool fail);
-bool summon_lesser_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
-                         bool quiet = false);
-bool summon_common_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
-                         bool quiet = false);
 bool summon_greater_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                           bool quiet = false);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
@@ -68,13 +64,12 @@ spret_type cast_malign_gateway(actor* caster, int pow,
 coord_def find_gateway_location (actor* caster, bool (
         *environment_checker)(dungeon_feature_type) = feat_is_malign_gateway_suitable);
 
-void equip_undead(const coord_def &a, int corps, int monster, int monnum);
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = NULL, std::string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
                     bool quiet = false, bool force_beh = false,
-                    int* mon_index = NULL, int* motions = NULL);
+                    monster** mon = NULL, int* motions = NULL);
 
 spret_type cast_animate_skeleton(god_type god, bool fail);
 spret_type cast_animate_dead(int pow, god_type god, bool fail);
@@ -83,10 +78,15 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail);
+bool monster_simulacrum(monster *caster, bool actual);
+
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail);
+bool twisted_resurrection(actor *caster, int pow, beh_type beha,
+                          unsigned short foe, god_type god, bool actual = true);
+
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
-spret_type cast_abjuration(int pow, monster *mon = NULL, bool fail = false);
+spret_type cast_abjuration(int pow, const coord_def& where, bool fail = false);
 spret_type cast_mass_abjuration(int pow, bool fail = false);
 
 #endif

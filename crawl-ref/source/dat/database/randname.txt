@@ -259,7 +259,7 @@ of @jewellery_special_name@
 of @suspicion_name@
 
 # as defined for weapons (see rand_wpn.txt)
-of @people_name@
+of the @people_name@
 
 w:17
 of @balance_or_order@

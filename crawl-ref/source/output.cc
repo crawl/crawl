@@ -51,7 +51,7 @@
 #include "showsymb.h"
 #include "spl-transloc.h"
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 #include "directn.h"
 #endif
 
@@ -161,12 +161,12 @@ class colour_bar
     int m_request_redraw_after; // force a redraw at this turn count
 };
 
-colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
+static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
-colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
+static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
-colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
+static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
 // ----------------------------------------------------------------------
@@ -598,6 +598,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_MISLED,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_ROT,
         STATUS_NET,
         STATUS_CONTAMINATION,
@@ -626,6 +627,9 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
+        DUR_DIVINE_STAMINA,
+        STATUS_AUGMENTED,
     };
 
     status_info inf;
@@ -638,7 +642,7 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if(!allow_control_teleport(true) && Options.show_no_ctele)
+    if (!allow_control_teleport(true) && Options.show_no_ctele)
         out.push_back(status_light(RED,"-cTele"));
 }
 
@@ -978,11 +982,6 @@ void draw_border(void)
 // Monster pane
 // ----------------------------------------------------------------------
 
-static bool _mons_hostile(const monster* mon)
-{
-    return (!mon->friendly() && !mon->neutral());
-}
-
 static std::string _get_monster_name(const monster_info& mi,
                                      int count, bool fullname)
 {
@@ -1018,31 +1017,6 @@ static std::string _get_monster_name(const monster_info& mi,
 
     desc += monpane_desc;
     return (desc);
-}
-
-// Returns true if the first monster is more aggressive (in terms of
-// hostile/neutral/friendly) than the second, or, if both monsters share the
-// same attitude, if the first monster has a lower type.
-// If monster type and attitude are the same, return false.
-bool compare_monsters_attitude(const monster* m1, const monster* m2)
-{
-    if (_mons_hostile(m1) && !_mons_hostile(m2))
-        return (true);
-
-    if (m1->neutral())
-    {
-        if (m2->friendly())
-            return (true);
-        if (_mons_hostile(m2))
-            return (false);
-    }
-
-    if (m1->friendly() && !m2->friendly())
-        return (false);
-
-    // If we get here then monsters have the same attitude.
-    // FIXME: replace with difficulty comparison
-    return (m1->type < m2->type);
 }
 
 // If past is true, the messages should be printed in the past tense
@@ -1123,7 +1097,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             monster_info mi = mons[i_mon];
-            glyph g = get_mons_glyph(mi.mon());
+            glyph g = get_mons_glyph(mi);
             textcolor(g.col);
             cprintf("%s", stringize_glyph(g.ch).c_str());
             ++printed;
@@ -1569,7 +1543,7 @@ static std::string _god_powers(bool simple)
             std::string asterisks = std::string(prank, '*')
                                     + std::string(6 - prank, '.');
             if (simple)
-                return(asterisks);
+                return (asterisks);
             godpowers = chop_string(godpowers, 20, false)
                       + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
@@ -1765,8 +1739,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
     bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
-    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
-                                                       || dragonskin);
+    bool cloak_was_melded = you.melded[EQ_CLOAK];
+    if (dragonskin)
+        you.melded[EQ_CLOAK] = true; // hack!
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -1878,6 +1853,8 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rlevi, 1), _itosym1(rlevi),
              _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
+
+    you.melded[EQ_CLOAK] = cloak_was_melded;
 
     _print_overview_screen_equip(cols, equip_chars);
 
@@ -2012,6 +1989,20 @@ std::string magic_res_adjective(int mr)
     return prefix + " resistant";
 }
 
+static std::string _annotate_form_based(std::string desc, bool suppressed)
+{
+    if (suppressed)
+        return ("<darkgrey>(" + desc + ")</darkgrey>");
+    else
+        return (desc);
+}
+
+static std::string _dragon_abil(std::string desc)
+{
+    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    return _annotate_form_based(desc, supp);
+}
+
 // Creates rows of short descriptions for current
 // status, mutations and abilities.
 static std::string _status_mut_abilities(int sw)
@@ -2056,11 +2047,13 @@ static std::string _status_mut_abilities(int sw)
         STATUS_AIRBORNE,
         DUR_BARGAIN,
         DUR_SLAYING,
+        STATUS_MANUAL,
         DUR_SAGE,
         DUR_MAGIC_SHIELD,
         DUR_FIRE_SHIELD,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_CONTAMINATION,
         STATUS_ROT,
         DUR_CONFUSING_TOUCH,
@@ -2081,6 +2074,8 @@ static std::string _status_mut_abilities(int sw)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
+        STATUS_AUGMENTED,
     };
 
     status_info inf;
@@ -2128,7 +2123,15 @@ static std::string _status_mut_abilities(int sw)
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
       case SP_MERFOLK:
-          mutations.push_back("change form in water");
+          mutations.push_back(_annotate_form_based("change form in water",
+                                                   form_changed_physiology()));
+          mutations.push_back(_annotate_form_based("swift swim",
+                                                   form_changed_physiology()));
+          break;
+
+      case SP_MINOTAUR:
+          mutations.push_back(_annotate_form_based("retaliatory headbutt",
+                                                   !form_keeps_mutations()));
           break;
 
       case SP_NAGA:
@@ -2137,15 +2140,22 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("spit poison");
           else
               mutations.push_back("breathe poison");
+          mutations.push_back(_annotate_form_based("constrict 1",
+                                                   !form_keeps_mutations()));
           break;
 
-      case SP_KENKU:
+      case SP_GHOUL:
+          mutations.push_back("rotting body");
+          break;
+
+      case SP_TENGU:
           if (you.experience_level > 4)
           {
               std::string help = "able to fly";
               if (you.experience_level > 14)
                   help += " continuously";
-              mutations.push_back(help);
+              mutations.push_back(_annotate_form_based(help,
+                                                       player_is_shapechanged()));
           }
           break;
 
@@ -2159,14 +2169,21 @@ static std::string _status_mut_abilities(int sw)
                   help = "strongly " + help;
               mutations.push_back(help);
           }
+          mutations.push_back("restore body");
           break;
 
       case SP_KOBOLD:
           mutations.push_back("disease resistance");
           break;
 
+      case SP_VAMPIRE:
+          if (you.experience_level >= 6)
+              mutations.push_back("bottle blood");
+          break;
+
       case SP_DEEP_DWARF:
           mutations.push_back("damage resistance");
+          mutations.push_back("recharge devices");
           break;
 
       case SP_FELID:
@@ -2174,20 +2191,22 @@ static std::string _status_mut_abilities(int sw)
           break;
 
       case SP_RED_DRACONIAN:
-          mutations.push_back("breathe fire");
+          mutations.push_back(_dragon_abil("breathe fire"));
           break;
 
       case SP_WHITE_DRACONIAN:
-          mutations.push_back("breathe frost");
+          mutations.push_back(_dragon_abil("breathe frost"));
           break;
 
       case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe noxious fumes");
+          mutations.push_back(_dragon_abil("breathe noxious fumes"));
           break;
 
       case SP_YELLOW_DRACONIAN:
-          mutations.push_back("spit acid");
-          mutations.push_back("acid resistance");
+          mutations.push_back(_dragon_abil("spit acid"));
+          mutations.push_back(_annotate_form_based("acid resistance",
+                                                   !form_keeps_mutations()
+                                                    && you.form != TRAN_DRAGON));
           break;
 
       case SP_GREY_DRACONIAN:
@@ -2195,19 +2214,19 @@ static std::string _status_mut_abilities(int sw)
           break;
 
       case SP_BLACK_DRACONIAN:
-          mutations.push_back("breathe lightning");
+          mutations.push_back(_dragon_abil("breathe lightning"));
           break;
 
       case SP_PURPLE_DRACONIAN:
-          mutations.push_back("breathe power");
+          mutations.push_back(_dragon_abil("breathe power"));
           break;
 
       case SP_MOTTLED_DRACONIAN:
-          mutations.push_back("breathe sticky flames");
+          mutations.push_back(_dragon_abil("breathe sticky flames"));
           break;
 
       case SP_PALE_DRACONIAN:
-          mutations.push_back("breathe steam");
+          mutations.push_back(_dragon_abil("breathe steam"));
           break;
 
       default:
@@ -2231,6 +2250,9 @@ static std::string _status_mut_abilities(int sw)
     {
         mutations.push_back("almost no armour");
         mutations.push_back("amphibious");
+        mutations.push_back(_annotate_form_based(
+            make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
+            !form_keeps_mutations()));
     }
 
     if (beogh_water_walk())
@@ -2239,9 +2261,10 @@ static std::string _status_mut_abilities(int sw)
     std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        int level = player_mutation_level((mutation_type) i);
-        if (!level)
+        if (!you.mutation[i])
             continue;
+
+        int level = player_mutation_level((mutation_type) i);
 
         const bool lowered = (level < you.mutation[i]);
         const mutation_def& mdef = get_mutation_def((mutation_type) i);
@@ -2260,7 +2283,7 @@ static std::string _status_mut_abilities(int sw)
                 current += ostr.str();
             }
         }
-        else
+        else if (level)
         {
             switch (i)
             {
@@ -2354,7 +2377,6 @@ static std::string _status_mut_abilities(int sw)
                 break;
             case MUT_SLIMY_GREEN_SCALES:
                 AC_change += level;
-                EV_change -= level-1;
                 break;
             case MUT_THIN_METALLIC_SCALES:
                 AC_change += level;
@@ -2377,13 +2399,17 @@ static std::string _status_mut_abilities(int sw)
 
         if (!current.empty())
         {
+            if (level == 0)
+                current = "(" + current + ")";
             if (lowered)
                 current = "<darkgrey>" + current + "</darkgrey>";
             mutations.push_back(current);
         }
     }
 
-    if (AC_change)
+    // Statue form does not get AC benefits from scales etc.  It does
+    // get changes to EV and SH.
+    if (AC_change && you.form != TRAN_STATUE)
     {
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
         mutations.push_back(info);

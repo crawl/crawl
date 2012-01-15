@@ -316,19 +316,19 @@ MAP
 xxxxxxxG@Gxxxxxxx
 x...............x
 x...............x
-x.d..e.....f..d.x
+x.d.e.......f.d.x
 x...............x
 x...............x
 x...............x
-x.e..f.....d..e.x
+x.e.f.......d.e.x
 x...............x
 x...............x
 x...............x
-x.f..d.....e..f.x
+x.f.d.......e.f.x
 x...............x
 x...............x
 x...............x
-x.d..e.....f..d.x
+x.d.e.......f.d.x
 x...............x
 x.......O.......x
 xxxxxxxxxxxxxxxxx
@@ -353,28 +353,29 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
               pow_min = 2, pow_max = 7, delay = 79, start_clouds = 1, \
               size = 2, walk_dist = 2, spread_rate= 0 }
 COLOUR:  g = yellow
+FTILE:   g = floor_pebble_darkgray
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
-x...f..ggg....e.x
+x..f...ggg....e.x
 x......ggg......x
-x.d....ggg..f...x
+x.d....ggg...f..x
 x......ggg......x
-x...e..ggg....d.x
+x..e...ggg....d.x
 x......ggg......x
-x.e....ggg..d...x
+x.e....ggg...d..x
 x......ggg......x
-x...f..ggg....e.x
+x..f...ggg....e.x
 x......ggg......x
-x.f....ggg..e...x
+x.f....ggg...e..x
 x......ggg......x
-x...d..ggg....f.x
+x..d...ggg....f.x
 x......ggg......x
-x.d....ggg..f...x
+x.d....ggg...f..x
 x......ggg......x
-x...e..gOg....d.x
+x..e...gOg....d.x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -825,7 +826,6 @@ TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 5
 KFEAT:  O = enter_temple
-KFEAT:  } = no_mimic }
 MAP
       @
 ccccccncc
@@ -841,7 +841,6 @@ TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 2
 KFEAT:  O = enter_temple
-KFEAT:  } = no_mimic }
 MAP
          @
 cccccccccnccc
@@ -895,7 +894,7 @@ ENDMAP
 # Circular temples
 #   Total weight: 65 = 40+10+5+5+5
 #   The classical shape, so highest weight.
-#   Several versions, to accomodate differing numbers of gods.
+#   Several versions, to accommodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
 
 # 12 gods

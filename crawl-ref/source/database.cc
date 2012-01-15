@@ -16,11 +16,13 @@
 
 #include "clua.h"
 #include "database.h"
+#include "errors.h"
 #include "files.h"
 #include "libutil.h"
 #include "random.h"
 #include "stuff.h"
 #include "syscalls.h"
+#include "threads.h"
 #include "unicode.h"
 
 static std::string _query_database(DBM *db, std::string key,
@@ -253,15 +255,39 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
+static void* init_db(void *arg)
+{
+    AllDBs[(intptr_t)arg].init();
+    return 0;
+}
+
+#define NUM_DB ARRAYSZ(AllDBs)
+
 void databaseSystemInit()
 {
-    for (unsigned int i = 0; i < ARRAYSZ(AllDBs); i++)
-        AllDBs[i].init();
+    // Note: if you're building contrib libraries initially checked out
+    // before 2011-12-28 and this assertion fails, please make sure you have
+    // the current version ("git submodule sync;git submodule update --init").
+    ASSERT(sqlite3_threadsafe());
+
+    thread_t th[NUM_DB];
+    for (unsigned int i = 0; i < NUM_DB; i++)
+#ifndef DGAMELAUNCH
+        if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
+#endif
+        {
+            // if thread creation fails, do it serially
+            th[i] = 0;
+            AllDBs[i].init();
+        }
+    for (unsigned int i = 0; i < NUM_DB; i++)
+        if (th[i])
+            thread_join(th[i]);
 }
 
 void databaseSystemShutdown()
 {
-    for (unsigned int i = 0; i < ARRAYSZ(AllDBs); i++)
+    for (unsigned int i = 0; i < NUM_DB; i++)
         AllDBs[i].shutdown();
 }
 

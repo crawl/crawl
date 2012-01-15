@@ -70,8 +70,7 @@ void initialise_branch_depths()
 
     // Disable one of the Swamp/Shoals/Snake Pit.
     const branch_type disabled_branch =
-        static_cast<branch_type>(
-            random_choose(BRANCH_SWAMP, BRANCH_SHOALS, BRANCH_SNAKE_PIT, -1));
+            random_choose(BRANCH_SWAMP, BRANCH_SHOALS, BRANCH_SNAKE_PIT, -1);
 
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;

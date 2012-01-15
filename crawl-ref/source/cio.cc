@@ -107,7 +107,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
 // cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     coord_def ep(x, y);
     coord_def gc = crawl_view.screen2grid(ep);
     tiles.place_cursor(CURSOR_MOUSE, gc);
@@ -429,7 +429,7 @@ void line_reader::killword()
     calc_pos();
 
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", buffer, ew);
+    wrapcprintf(wrapcol, "%s%*s", buffer, ew, "");
     cursorto(pos);
 }
 
@@ -560,6 +560,7 @@ int line_reader::process_key(int ch)
         cursorto(pos);
         break;
     case CK_MOUSE_CLICK:
+        // FIXME: ought to move cursor to click location, if it's within the input
         return (-1);
     default:
         if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))

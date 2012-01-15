@@ -150,8 +150,9 @@ class map_phoenix_marker : public map_marker
 {
 public:
     map_phoenix_marker (const coord_def& pos = coord_def(0, 0),
-                    int tst = 0, int tso = 0, beh_type bh = BEH_HOSTILE,
-                    god_type gd = GOD_NO_GOD, coord_def cp = coord_def(-1, -1)
+                    int dur = 0, int mnum = 0, beh_type bh = BEH_HOSTILE,
+                    mon_attitude_type at = ATT_HOSTILE, god_type gd = GOD_NO_GOD,
+                    coord_def cp = coord_def(-1, -1)
                     );
 
     void write (writer &) const;
@@ -162,9 +163,10 @@ public:
     static map_marker *read(reader &, map_marker_type);
 
 public:
-    int turn_start;
-    int turn_stop;
+    int duration;
+    int mon_num;
     beh_type behaviour;
+    mon_attitude_type attitude;
     god_type god;
     coord_def corpse_pos;
 };

@@ -147,12 +147,9 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item_brand == SPWPN_REAPING);
         break;
     }
-    case OBJ_MISSILES:
-    {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_REAPING);
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_SUMMONING);
         break;
-    }
     case OBJ_BOOKS:
         retval = (is_corpse_violating_spellbook(item));
         break;
@@ -187,12 +184,6 @@ bool is_evil_item(const item_def& item)
                   || item_brand == SPWPN_PAIN
                   || item_brand == SPWPN_VAMPIRICISM
                   || item_brand == SPWPN_REAPING);
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_REAPING);
         }
         break;
     case OBJ_WANDS:
@@ -613,7 +604,7 @@ conduct_type good_god_hates_item_handling(const item_def &item)
         return (DID_NOTHING);
     }
 
-    if (item_type_known(item))
+    if (item_type_known(item) || is_unrandom_artefact(item))
     {
         if (is_evil_item(item))
             return (DID_NECROMANCY);
@@ -710,7 +701,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         // into a state where attacking them would be unchivalrous.
         if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
             || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
-            || spell == SPELL_HIBERNATION   || spell == SPELL_ENGLACIATION)
+            || spell == SPELL_HIBERNATION)
         {
             return (true);
         }

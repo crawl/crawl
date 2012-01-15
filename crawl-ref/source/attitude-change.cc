@@ -57,7 +57,7 @@ void good_god_follower_attitude_change(monster* mons)
                     || is_evil_item(*wpn))
                 && coinflip()) // 50% chance of conversion failing
             {
-                msg::stream << mons->name(DESC_CAP_THE)
+                msg::stream << mons->name(DESC_THE)
                             << " glares at your weapon."
                             << std::endl;
                 good_god_holy_fail_attitude_change(mons);
@@ -100,7 +100,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
                 && get_weapon_brand(*you.weapon()) == SPWPN_ORC_SLAYING
                 && coinflip()) // 50% chance of conversion failing
             {
-                msg::stream << mons->name(DESC_CAP_THE)
+                msg::stream << mons->name(DESC_THE)
                             << " flinches from your weapon."
                             << std::endl;
                 return;
@@ -309,6 +309,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
     if (!msg.empty())
     {
         msg = do_mon_str_replacements(msg, mon);
+        strip_channel_prefix(msg, channel);
         mpr(msg.c_str(), channel);
     }
 }
@@ -373,6 +374,7 @@ static void _print_converted_orc_speech(const std::string key,
     if (!msg.empty())
     {
         msg = do_mon_str_replacements(msg, mon);
+        strip_channel_prefix(msg, channel);
         mpr(msg.c_str(), channel);
     }
 }
@@ -462,12 +464,12 @@ static void _jiyva_convert_slime(monster* slime)
             mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
                             "then relaxes.",
 
-            slime->name(DESC_CAP_THE).c_str());
+            slime->name(DESC_THE).c_str());
         }
         else
         {
             mprf(MSGCH_GOD, "%s trembles before you.",
-                 slime->name(DESC_CAP_THE).c_str());
+                 slime->name(DESC_THE).c_str());
         }
     }
 
@@ -479,7 +481,7 @@ static void _jiyva_convert_slime(monster* slime)
         slime->add_ench(ENCH_EAT_ITEMS);
 
         mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
-             slime->name(DESC_CAP_THE).c_str());
+             slime->name(DESC_THE).c_str());
     }
 
     mons_make_god_gift(slime, GOD_JIYVA);

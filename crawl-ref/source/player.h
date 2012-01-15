@@ -23,6 +23,8 @@
 #include "tiledoll.h"
 #endif
 
+class targetter;
+
 int check_stealth(void);
 
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
@@ -60,7 +62,6 @@ public:
   FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
   FixedVector<std::string, NUM_STATS> stat_zero_cause;
-  stat_type last_chosen;
 
   int hunger;
   int disease;
@@ -117,6 +118,7 @@ public:
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
   FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
   FixedVector<bool, NUM_SKILLS> train_set; //!< Has the player set this skill
@@ -232,6 +234,7 @@ public:
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitArray<NUM_MISCELLANY>      seen_misc;
+  uint8_t                            octopus_king_rings;
 
   uint8_t normal_vision;        // how far the species gets to see
   uint8_t current_vision;       // current sight radius (cells)
@@ -290,8 +293,8 @@ public:
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
-  // Count of spells cast.
-  std::map<spell_type, FixedVector<int, 27> > spell_usage;
+  // Count of various types of actions made.
+  std::map<std::pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
   // Non-saved UI state:
   unsigned short prev_targ;
@@ -334,6 +337,7 @@ public:
   bool redraw_evasion;
 
   uint8_t flash_colour;
+  targetter *flash_where;
 
   int time_taken;
 
@@ -369,6 +373,8 @@ public:
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
+  // Same with invisible monsters, for ring auto-id.
+  bool seen_invis;
 
   // Number of viewport refreshes.
   unsigned int frame_no;
@@ -422,6 +428,7 @@ public:
     bool rocky() const;
 
     bool can_cling_to_walls() const;
+    bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
@@ -441,7 +448,6 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    bool are_currently_undead() const;
 
     bool light_flight() const;
     bool travelling_light() const;
@@ -499,17 +505,17 @@ public:
     bool      alive() const;
     bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
 
-    bool      swimming() const;
-    bool      submerged() const;
-    bool      floundering() const;
-    bool      extra_balanced() const;
-    bool      can_pass_through_feat(dungeon_feature_type grid) const;
-    bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
-    size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
-    int       body_weight(bool base = false) const;
-    int       total_weight() const;
-    int       damage_brand(int which_attack = -1);
-    int       damage_type(int which_attack = -1);
+    bool        swimming() const;
+    bool        submerged() const;
+    bool        floundering() const;
+    bool        extra_balanced() const;
+    bool        can_pass_through_feat(dungeon_feature_type grid) const;
+    bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
+    size_type   body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
+    int         body_weight(bool base = false) const;
+    int         total_weight() const;
+    brand_type  damage_brand(int which_attack = -1);
+    int         damage_type(int which_attack = -1);
 
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;
@@ -547,6 +553,7 @@ public:
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
+    bool fights_well_unarmed(int heavy_armour_penalty);
 
     void attacking(actor *other);
     bool can_go_berserk() const;
@@ -556,7 +563,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    bool can_bleed() const;
+    bool can_bleed(bool allow_tran = true) const;
     bool mutate();
     void backlight();
     void banish(const std::string &who = "");
@@ -587,7 +594,7 @@ public:
 
     int warding() const;
 
-    int mons_species() const;
+    int mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
@@ -665,8 +672,16 @@ public:
     int shield_bonus() const;
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;
-
     void shield_block_succeeded(actor *foe);
+    int missile_deflection() const;
+
+    // Combat-related adjusted penalty calculation methods
+    int unadjusted_body_armour_penalty() const;
+    int adjusted_body_armour_penalty(int scale = 1,
+                                     bool use_size = false) const;
+    int adjusted_shield_penalty(int scale = 1) const;
+    int armour_tohit_penalty(bool random_factor) const;
+    int shield_tohit_penalty(bool random_factor) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale =1, bool real = false) const;
@@ -707,7 +722,10 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-
+    void accum_been_constricted();
+    void accum_has_constricted();
+    bool attempt_escape();
+    bool has_usable_tentacle() const;
 
 protected:
     void _removed_beholder();
@@ -715,6 +733,7 @@ protected:
 
     void _removed_fearmonger();
     bool _possible_fearmonger(const monster* mon) const;
+
 };
 
 #ifdef DEBUG_GLOBALS
@@ -738,7 +757,6 @@ struct player_save_info
 
 #ifdef USE_TILE
     dolls_data doll;
-    bool held_in_net;
 #endif
 
     bool save_loadable;
@@ -792,7 +810,6 @@ int player_energy(void);
 
 int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
-int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
@@ -828,7 +845,7 @@ int player_spirit_shield(bool calc_unid = true);
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
 
-int player_mutation_level(mutation_type mut);
+int player_mutation_level(mutation_type mut, bool temp = true);
 
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
@@ -879,6 +896,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
 unsigned int exp_needed(int lev);
+bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
@@ -887,8 +905,7 @@ void display_char_status(void);
 void forget_map(int chance_forgotten = 100, bool force = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
-              unsigned int* actual_avail_gain = NULL);
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
@@ -989,4 +1006,6 @@ void run_macro(const char *macroname = NULL);
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
+
+void count_action(caction_type type, int subtype = 0);
 #endif

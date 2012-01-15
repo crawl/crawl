@@ -421,7 +421,7 @@ void formatted_string::del_char()
     {
         if (i->type != FSOP_TEXT)
             continue;
-        switch(strwidth(i->text))
+        switch (strwidth(i->text))
         {
         case 0: // shouldn't happen
             continue;
@@ -496,6 +496,16 @@ void formatted_string::all_caps()
     for (unsigned int i = 0; i < ops.size(); i++)
         if (ops[i].type == FSOP_TEXT)
             uppercase(ops[i].text);
+}
+
+void formatted_string::capitalize()
+{
+    for (unsigned int i = 0; i < ops.size(); i++)
+        if (ops[i].type == FSOP_TEXT && !ops[i].text.empty())
+        {
+            ops[i].text = uppercase_first(ops[i].text);
+            break;
+        }
 }
 
 int count_linebreaks(const formatted_string& fs)

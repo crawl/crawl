@@ -34,33 +34,6 @@ struct demon_data
     tileidx_t wings;
 };
 
-// Custom marshall/unmarshall functions.
-static void unmarshallDoll(reader &th, dolls_data &doll)
-{
-    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        doll.parts[i] = unmarshallInt(th);
-}
-
-static void marshallDoll(writer &th, const dolls_data &doll)
-{
-    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        marshallInt(th, doll.parts[i]);
-}
-
-static void unmarshallDemon(reader &th, demon_data &demon)
-{
-    demon.head = unmarshallInt(th);
-    demon.body = unmarshallInt(th);
-    demon.wings = unmarshallInt(th);
-}
-
-static void marshallDemon(writer &th, const demon_data &demon)
-{
-    marshallInt(th, demon.head);
-    marshallInt(th, demon.body);
-    marshallInt(th, demon.wings);
-}
-
 // Internal mcache classes.  The mcache_manager creates these internally.
 // The only access external clients need is through the virtual
 // info function.
@@ -68,16 +41,13 @@ static void marshallDemon(writer &th, const demon_data &demon)
 class mcache_monster : public mcache_entry
 {
 public:
-    mcache_monster(const monster* mon);
-    mcache_monster(reader &th);
+    mcache_monster(const monster_info& mon);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monster* mon);
+    static bool valid(const monster_info& mon);
 
     static bool get_weapon_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
-
-    virtual void construct(writer &th);
 
 protected:
     tileidx_t m_mon_tile;
@@ -87,14 +57,11 @@ protected:
 class mcache_draco : public mcache_entry
 {
 public:
-    mcache_draco(const monster* mon);
-    mcache_draco(reader &th);
+    mcache_draco(const monster_info& mon);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monster* mon);
-
-    virtual void construct(writer &th);
+    static bool valid(const monster_info& mon);
 
 protected:
     tileidx_t m_mon_tile;
@@ -105,14 +72,11 @@ protected:
 class mcache_ghost : public mcache_entry
 {
 public:
-    mcache_ghost(const monster* mon);
-    mcache_ghost(reader &th);
+    mcache_ghost(const monster_info& mon);
 
     virtual const dolls_data *doll() const;
 
-    static bool valid(const monster* mon);
-
-    virtual void construct(writer &th);
+    static bool valid(const monster_info& mon);
 
     virtual bool transparent() const;
 
@@ -124,13 +88,10 @@ class mcache_demon : public mcache_entry
 {
 public:
     mcache_demon(const monster_info& minf);
-    mcache_demon(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monster* mon);
-
-    virtual void construct(writer &th);
+    static bool valid(const monster_info& mon);
 
 protected:
     demon_data m_demon;
@@ -170,26 +131,21 @@ mcache_manager::~mcache_manager()
     clear_all();
 }
 
-unsigned int mcache_manager::register_monster(const monster* mon)
+unsigned int mcache_manager::register_monster(const monster_info& minf)
 {
-    ASSERT(mon);
-    if (!mon)
-        return 0;
-
     // TODO enne - is it worth it to search against all mcache entries?
     // TODO enne - pool mcache types to avoid too much alloc/dealloc?
 
-    monster_info minf(mon);
     mcache_entry *entry;
 
-    if (mcache_demon::valid(mon))
+    if (mcache_demon::valid(minf))
         entry = new mcache_demon(minf);
-    else if (mcache_ghost::valid(mon))
-        entry = new mcache_ghost(mon);
-    else if (mcache_draco::valid(mon))
-        entry = new mcache_draco(mon);
-    else if (mcache_monster::valid(mon))
-        entry = new mcache_monster(mon);
+    else if (mcache_ghost::valid(minf))
+        entry = new mcache_ghost(minf);
+    else if (mcache_draco::valid(minf))
+        entry = new mcache_draco(minf);
+    else if (mcache_monster::valid(minf))
+        entry = new mcache_monster(minf);
     else
         return 0;
 
@@ -247,95 +203,16 @@ mcache_entry *mcache_manager::get(tileidx_t tile)
     return (entry);
 }
 
-void mcache_manager::read(reader &th)
-{
-    unsigned int size = unmarshallInt(th);
-    m_entries.reserve(size);
-    m_entries.clear();
-
-    for (unsigned int i = 0; i < size; i++)
-    {
-        char type = unmarshallByte(th);
-
-        mcache_entry *entry;
-        switch (type)
-        {
-        case MCACHE_MONSTER:
-            entry = new mcache_monster(th);
-            break;
-        case MCACHE_DRACO:
-            entry = new mcache_draco(th);
-            break;
-        case MCACHE_GHOST:
-            entry = new mcache_ghost(th);
-            break;
-        case MCACHE_DEMON:
-            entry = new mcache_demon(th);
-            break;
-        default:
-            die("Invalid streamed mcache type.");
-        case MCACHE_NULL:
-            entry = NULL;
-            break;
-        }
-
-        m_entries.push_back(entry);
-    }
-}
-
-void mcache_manager::construct(writer &th)
-{
-    marshallInt(th, m_entries.size());
-    for (unsigned int i = 0; i < m_entries.size(); i++)
-    {
-        if (m_entries[i] == NULL)
-        {
-            marshallByte(th, MCACHE_NULL);
-            continue;
-        }
-
-        if (dynamic_cast<mcache_monster*>(m_entries[i]))
-            marshallByte(th, MCACHE_MONSTER);
-        else if (dynamic_cast<mcache_draco*>(m_entries[i]))
-            marshallByte(th, MCACHE_DRACO);
-        else if (dynamic_cast<mcache_ghost*>(m_entries[i]))
-            marshallByte(th, MCACHE_GHOST);
-        else if (dynamic_cast<mcache_demon*>(m_entries[i]))
-            marshallByte(th, MCACHE_DEMON);
-        else
-        {
-            marshallByte(th, MCACHE_NULL);
-            continue;
-        }
-
-        m_entries[i]->construct(th);
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// mcache_entry
-
-mcache_entry::mcache_entry(reader &th)
-{
-    m_ref_count = unmarshallInt(th);
-}
-
-void mcache_entry::construct(writer &th)
-{
-    marshallInt(th, m_ref_count);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // mcache_monster
 
-mcache_monster::mcache_monster(const monster* mon)
+mcache_monster::mcache_monster(const monster_info& mon)
 {
     ASSERT(mcache_monster::valid(mon));
 
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
-    const int mon_wep = mon->inv[MSLOT_WEAPON];
-    m_equ_tile = tilep_equ_weapon(mitm[mon_wep]);
+    m_equ_tile = tilep_equ_weapon(*mon.inv[MSLOT_WEAPON]);
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon
@@ -355,12 +232,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SHADOW_IMP:
     case TILEP_MONS_NORRIS:
     case TILEP_MONS_MAUD:
-    case TILEP_MONS_EDMUND:
     case TILEP_MONS_FRANCES:
     case TILEP_MONS_HAROLD:
     case TILEP_MONS_JOSEPH:
     case TILEP_MONS_JOZEF:
-    case TILEP_MONS_RUPERT:
     case TILEP_MONS_TERENCE:
     case TILEP_MONS_WIGLAF:
     case TILEP_MONS_FREDERICK:
@@ -387,16 +262,19 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SPRIGGAN:
-    case TILEP_MONS_KENKU:
+    case TILEP_MONS_TENGU:
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
+    case TILEP_MONS_ZOMBIE_OCTOPODE:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
     // Shift to the left.
     case TILEP_MONS_GNOLL:
+    case TILEP_MONS_GNOLL_SHAMAN:
+    case TILEP_MONS_GNOLL_SERGEANT:
     case TILEP_MONS_GRUM:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
@@ -443,6 +321,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
     case TILEP_MONS_DEEP_ELF_SORCERER:
     case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
+    case TILEP_MONS_RUPERT:
+    case TILEP_MONS_HELL_KNIGHT:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -506,11 +386,19 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     // Shift upwards and to the right.
+    case TILEP_MONS_NECROMANCER:
+    case TILEP_MONS_WIZARD:
+        *ofs_x = 1;
+        *ofs_y = -1;
+        break;
     case TILEP_MONS_AGNES:
         *ofs_x = 1;
         *ofs_y = -3;
         break;
-    case TILEP_MONS_WIZARD:
+    case TILEP_MONS_LOUISE:
+        *ofs_x = 1;
+        *ofs_y = -4;
+        break;
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_HELL_WIZARD:
@@ -520,14 +408,12 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -2;
         break;
     case TILEP_MONS_RED_DEVIL:
+    case TILEP_MONS_HUMAN:
+    case TILEP_MONS_ELF:
         *ofs_x = 2;
         *ofs_y = -3;
         break;
     // Shift downwards and to the left.
-    case TILEP_MONS_HELL_KNIGHT:
-        *ofs_x = -1;
-        *ofs_y = 3;
-        break;
     case TILEP_MONS_GOBLIN:
     case TILEP_MONS_IJYB:
         *ofs_x = -2;
@@ -546,7 +432,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 3;
         *ofs_y = 2;
         break;
-    case TILEP_MONS_ELF:
     case TILEP_MONS_ZOMBIE_LARGE:
         *ofs_x = 4;
         *ofs_y = 1;
@@ -558,10 +443,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ZOMBIE_SMALL:
         *ofs_x = 4;
         *ofs_y = 3;
-        break;
-    case TILEP_MONS_HUMAN:
-        *ofs_x = 5;
-        *ofs_y = 2;
         break;
     case TILEP_MONS_HILL_GIANT:
         *ofs_x = 6;
@@ -610,12 +491,9 @@ int mcache_monster::info(tile_draw_info *dinfo) const
     return (count);
 }
 
-bool mcache_monster::valid(const monster* mon)
+bool mcache_monster::valid(const monster_info& mon)
 {
-    if (!mon)
-        return (false);
-    int mon_wep = mon->inv[MSLOT_WEAPON];
-    if (mon_wep == NON_ITEM)
+    if (mon.inv[MSLOT_WEAPON].get() == NULL)
         return (false);
 
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
@@ -624,30 +502,16 @@ bool mcache_monster::valid(const monster* mon)
     return get_weapon_offset(mon_tile, &ox, &oy);
 }
 
-mcache_monster::mcache_monster(reader &th) : mcache_entry(th)
-{
-    m_mon_tile = unmarshallInt(th);
-    m_equ_tile = unmarshallInt(th);
-}
-
-void mcache_monster::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallInt(th, m_mon_tile);
-    marshallInt(th, m_equ_tile);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // mcache_draco
 
-mcache_draco::mcache_draco(const monster* mon)
+mcache_draco::mcache_draco(const monster_info& mon)
 {
     ASSERT(mcache_draco::valid(mon));
 
     m_mon_tile = tileidx_draco_base(mon);
-    int mon_wep = mon->inv[MSLOT_WEAPON];
-    m_equ_tile = (mon_wep != NON_ITEM) ? tilep_equ_weapon(mitm[mon_wep]) : 0;
+    const item_info* mon_wep = mon.inv[MSLOT_WEAPON].get();
+    m_equ_tile = (mon_wep != NULL) ? tilep_equ_weapon(*mon_wep) : 0;
     m_job_tile = tileidx_draco_job(mon);
 }
 
@@ -664,58 +528,42 @@ int mcache_draco::info(tile_draw_info *dinfo) const
     return i;
 }
 
-bool mcache_draco::valid(const monster* mon)
+bool mcache_draco::valid(const monster_info& mon)
 {
-    return (mon && mons_is_draconian(mon->type));
-}
-
-mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
-{
-    m_mon_tile = unmarshallInt(th);
-    m_job_tile = unmarshallInt(th);
-    m_equ_tile = unmarshallInt(th);
-}
-
-void mcache_draco::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallInt(th, m_mon_tile);
-    marshallInt(th, m_job_tile);
-    marshallInt(th, m_equ_tile);
+    return (mons_is_draconian(mon.type));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_ghost
 
-mcache_ghost::mcache_ghost(const monster* mon)
+mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const class ghost_demon &ghost = *mon->ghost;
+    const uint32_t seed = hash(&mon.mname[0], mon.mname.size());
+    rng_save_excursion exc;
+    seed_rng(seed);
 
-    unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
-
-    tilep_race_default(ghost.species, ghost.xl, &m_doll);
-    tilep_job_default(ghost.job, &m_doll);
+    tilep_race_default(mon.u.ghost.species, 0, &m_doll);
+    tilep_job_default(mon.u.ghost.job, &m_doll);
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
         if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
         {
-            int part_offset = pseudo_rand % tile_player_part_count[p];
+            int part_offset = random2(tile_player_part_count[p]);
             m_doll.parts[p] = tile_player_part_start[p] + part_offset;
         }
     }
 
-    int ac = ghost.ac;
-    ac *= (5 + (pseudo_rand / 11) % 11);
+    int ac = mon.u.ghost.ac;
+    ac *= (5 + random2(11));
     ac /= 10;
 
     if (ac > 25)
         m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_PLATE_BLACK;
     else if (ac > 20)
-        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_BANDED;
+        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SPLINT;
     else if (ac > 15)
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SCALEMAIL;
     else if (ac > 10)
@@ -725,9 +573,9 @@ mcache_ghost::mcache_ghost(const monster* mon)
     else
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_BLUE;
 
-    int sk = ghost.best_skill;
-    int dam = ghost.damage;
-    dam *= (5 + pseudo_rand % 11);
+    int sk = mon.u.ghost.best_skill;
+    int dam = mon.u.ghost.damage;
+    dam *= (5 + random2(11));
     dam /= 10;
 
     switch (sk)
@@ -823,21 +671,9 @@ const dolls_data *mcache_ghost::doll() const
     return &m_doll;
 }
 
-bool mcache_ghost::valid(const monster* mon)
+bool mcache_ghost::valid(const monster_info& mon)
 {
-    return (mon && mons_is_pghost(mon->type));
-}
-
-mcache_ghost::mcache_ghost(reader &th) : mcache_entry(th)
-{
-    unmarshallDoll(th, m_doll);
-}
-
-void mcache_ghost::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallDoll(th, m_doll);
+    return (mons_is_pghost(mon.type));
 }
 
 bool mcache_ghost::transparent() const
@@ -885,21 +721,9 @@ int mcache_demon::info(tile_draw_info *dinfo) const
     }
 }
 
-bool mcache_demon::valid(const monster* mon)
+bool mcache_demon::valid(const monster_info& mon)
 {
-    return (mon && mon->type == MONS_PANDEMONIUM_LORD);
-}
-
-mcache_demon::mcache_demon(reader &th) : mcache_entry(th)
-{
-    unmarshallDemon(th, m_demon);
-}
-
-void mcache_demon::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallDemon(th, m_demon);
+    return (mon.type == MONS_PANDEMONIUM_LORD);
 }
 
 #endif

@@ -5,7 +5,6 @@
 
 #include "libconsole.h"
 
-bool set_buffering(bool value);
 #endif
 
 #endif

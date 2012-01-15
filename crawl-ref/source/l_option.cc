@@ -32,6 +32,13 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
     }
 }
 
+static int option_autopick(lua_State *ls, const char *name, void *data,
+                           bool get)
+{
+    lua_pushboolean(ls, Options.autopickup_on>0);
+    return (1);
+}
+
 static option_handler handlers[] =
 {
     // Boolean options come first
@@ -41,7 +48,6 @@ static option_handler handlers[] =
     { "easy_open",     &Options.easy_open, option_hboolean },
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
-    { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
     { "default_target",       &Options.default_target, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },
@@ -54,7 +60,8 @@ static option_handler handlers[] =
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
     { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                                  option_hboolean }
+                                  option_hboolean },
+    { "autopick_on", NULL, option_autopick }
 };
 
 static const option_handler *get_handler(const char *optname)

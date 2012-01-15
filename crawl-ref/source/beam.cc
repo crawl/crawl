@@ -24,7 +24,6 @@
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dungeon.h"
@@ -170,7 +169,8 @@ static void _zap_animation(int colour, const monster* mon = NULL,
     {
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
-#else
+#endif
+#ifndef USE_TILE_LOCAL
         view_update();
         cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
@@ -522,8 +522,7 @@ bool bolt::can_affect_wall_actor(const actor *act) const
 
 static beam_type _chaos_beam_flavour()
 {
-    const beam_type flavour = static_cast<beam_type>(
-        random_choose_weighted(
+    const beam_type flavour = random_choose_weighted(
             10, BEAM_FIRE,
             10, BEAM_COLD,
             10, BEAM_ELECTRICITY,
@@ -544,7 +543,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
-            0));
+            0);
 
     return (flavour);
 }
@@ -738,7 +737,7 @@ void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
     {
-        if (!find_ray(source, target, ray))
+        if (!find_ray(source, target, ray, opc_solid_see))
             fallback_ray(source, target, ray);
     }
 }
@@ -765,7 +764,8 @@ void bolt::draw(const coord_def& p)
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
     cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
     put_colour_ch(colour == BLACK ? random_colour()
                                   : element_colour(colour),
@@ -961,9 +961,14 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRATE:
         if (hear)
         {
-            msg = "You hear the screech of bent metal.";
+            if (see)
+                msg = "The grate screeches as it bends and collapses.";
+            else
+                msg = "You hear the screech of bent metal.";
             chan = MSGCH_SOUND;
         }
+        else if (see)
+            msg = "The grate bends and collapses.";
         break;
 
     case DNGN_ORCISH_IDOL:
@@ -1061,17 +1066,9 @@ void bolt::nuke_wall_effect()
     finish_beam();
 }
 
-// integer square root, such that _length((8,1)) == 8.
-static int _length(const coord_def& c)
-{
-    if (c.origin())
-        return (0);
-    return (int)(ceil(sqrt(c.abs()-1)));
-}
-
 int bolt::range_used(bool leg_only) const
 {
-    const int leg_length = _length(pos() - leg_source());
+    const int leg_length = pos().range(leg_source());
     return (leg_only ? leg_length : leg_length + extra_range_used);
 }
 
@@ -1124,7 +1121,11 @@ bool bolt::need_regress() const
 bool bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
-    ASSERT(feat_is_solid(feat));
+
+#ifdef ASSERTS
+    if (!feat_is_solid(feat))
+        die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
+#endif
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
@@ -1140,7 +1141,7 @@ bool bolt::hit_wall()
         const monster* mon = monster_at(target);
 
         if (mon && mon->observable())
-            prompt += mon->name(DESC_NOCAP_THE);
+            prompt += mon->name(DESC_THE);
         else
         {
             prompt += "the targeted "
@@ -1148,7 +1149,7 @@ bool bolt::hit_wall()
         }
 
         prompt += " is blocked by "
-                + feature_description(pos(), false, DESC_NOCAP_A, false);
+                + feature_description(pos(), false, DESC_A, false);
 
         prompt += ". Continue anyway?";
 
@@ -1221,7 +1222,7 @@ void bolt::affect_cell()
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(grd(act->pos())).c_str(),
-                     act->name(DESC_NOCAP_THE).c_str());
+                     act->name(DESC_THE).c_str());
             }
         }
 
@@ -1252,11 +1253,11 @@ void bolt::affect_cell()
         affect_ground();
 }
 
-bool bolt::apply_hit_funcs(actor* victim, int dmg, int corpse)
+bool bolt::apply_hit_funcs(actor* victim, int dmg)
 {
     bool affected = false;
     for (unsigned int i = 0; i < hit_funcs.size(); ++i)
-        affected = (*hit_funcs[i])(*this, victim, dmg, corpse) || affected;
+        affected = (*hit_funcs[i])(*this, victim, dmg) || affected;
 
     return (affected);
 }
@@ -1349,7 +1350,7 @@ void bolt::do_fire()
     if (item && !is_tracer && flavour == BEAM_MISSILE)
     {
         const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
+        tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
     }
 #endif
 
@@ -1360,13 +1361,6 @@ void bolt::do_fire()
         // Take *one* step, so as not to hurt the source.
         ray.advance();
     }
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // Before we start drawing the beam, turn buffering off.
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
 
     while (map_bounds(pos()))
     {
@@ -1477,11 +1471,6 @@ void bolt::do_fire()
             you.pet_target = beam_source;
         }
     }
-
-    // That's it!
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    set_buffering(oldValue);
-#endif
 }
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
@@ -1819,7 +1808,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                     simple_monster_message(mons, " appears unharmed.");
                 else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
-                         mons->name(DESC_NOCAP_THE, true).c_str());
+                         mons->name(DESC_THE, true).c_str());
             }
         }
         else if (original < hurted)
@@ -1931,38 +1920,33 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
-                            int *m_succumbed, int *m_attempted, bool fail)
+spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
     fail_check();
     bool did_msg = false;
 
-    if (m_succumbed)
-        *m_succumbed = 0;
-    if (m_attempted)
-        *m_attempted = 0;
+    // Give mass enchantments a power multiplier.
+    pow *= 3;
+    pow /= 2;
 
     pow = std::min(pow, 200);
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
+        if (!you.see_cell_no_trans(mi->pos()))
+            continue;
+
         if (mi->has_ench(wh_enchant))
             continue;
 
         bool resisted = _monster_resists_mass_enchantment(*mi, wh_enchant,
                                                           pow, &did_msg);
 
-        if (m_attempted && did_msg)
-            ++*m_attempted;
-
         if (resisted)
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
         {
-            if (m_succumbed)
-                ++*m_succumbed;
-
             // Do messaging.
             const char* msg;
             switch (wh_enchant)
@@ -2051,6 +2035,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
         if (hurted)
         {
+            mons->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 0, agent, hurted));
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }
@@ -2070,10 +2055,11 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 bool poison_monster(monster* mons, const actor *who, int levels,
                     bool force, bool verbose)
 {
-    if (!mons->alive())
+    if (!mons->alive() || levels <= 0)
         return (false);
 
-    if ((!force && mons->res_poison() > 0) || levels <= 0)
+    int res = mons->res_poison();
+    if (res >= (force ? 3 : 1))
         return (false);
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
@@ -2225,7 +2211,7 @@ static void _create_feat_at(coord_def center,
         dungeon_terrain_changed(center, newfeat, true, false, true);
 }
 
-static coord_def _random_point_visible_from(const coord_def &c,
+static coord_def _random_point_hittable_from(const coord_def &c,
                                             int radius,
                                             int margin = 1,
                                             int tries = 5)
@@ -2252,7 +2238,7 @@ static void _create_feat_splash(coord_def center,
     _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
-        const coord_def newp(_random_point_visible_from(center, radius));
+        const coord_def newp(_random_point_hittable_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
         _create_feat_at(newp, overwriteable, newfeat);
@@ -2433,7 +2419,7 @@ void bolt::drop_object()
         if (you.see_cell(pos()))
         {
             mprf("%s %s!",
-                 item->name(DESC_CAP_THE).c_str(),
+                 item->name(DESC_THE).c_str(),
                  summoned_poof_msg(beam_source, *item).c_str());
         }
         item_was_destroyed(*item, beam_source);
@@ -2462,7 +2448,7 @@ void bolt::drop_object()
         // Large rocks mulch to stone.
         bool in_view = you.see_cell(pos());
         if (in_view)
-            mprf("%s shatters into pieces!", item->name(DESC_CAP_THE).c_str());
+            mprf("%s shatters into pieces!", item->name(DESC_THE).c_str());
         noisy(12, pos(), in_view ? NULL : "You hear a cracking sound!");
 
         item->sub_type = MI_STONE;
@@ -2519,20 +2505,20 @@ void bolt::affect_ground()
             beh_type beh = attitude_creation_behavior(this->attitude);
 
             if (crawl_state.game_is_arena())
-            {
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
-            }
 
-            int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                              beh,
-                                              NULL,
-                                              0,
-                                              0,
-                                              pos(),
-                                              MHITNOT,
-                                              MG_FORCE_PLACE));
+            const god_type god = this->agent() ? this->agent()->deity()
+                                               : GOD_NO_GOD;
 
-            if (rc != -1)
+            if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                         beh,
+                                         NULL,
+                                         0,
+                                         0,
+                                         pos(),
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         god)))
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))
@@ -2752,12 +2738,7 @@ void bolt::affect_place_explosion_clouds()
 
     if (name == "great blast of fire")
     {
-        int duration = 1 + random2(5) + roll_dice(2, ench_power / 5);
-
-        if (duration > 20)
-            duration = 20 + random2(4);
-
-        place_cloud(CLOUD_FIRE, p, duration, agent());
+        place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
@@ -2768,7 +2749,7 @@ void bolt::affect_place_explosion_clouds()
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
             actor* summ = agent();
-            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 2, SPELL_FIRE_STORM,
+            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 1, SPELL_FIRE_STORM,
                          p, MHITNOT, 0, god);
 
             // Spell-summoned monsters need to have a live summoner.
@@ -2866,28 +2847,20 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
-                           bool deflect, bool repel, defer_rand &r)
+                           int defl, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return (true);
 
-    if (is_beam && deflect)
+    if (is_beam)
     {
-        attack = r[0].random2(attack * 2) / 3;
-    }
-    else if (is_beam && repel)
-    {
-        if (attack >= 2)
+        if (defl > 1)
+            attack = r[0].random2(attack * 2) / 3;
+        else if (defl && attack >= 2) // don't increase acc of 0
             attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
-    else if (deflect)
-    {
-        attack = r[0].random2(attack / 2);
-    }
-    else if (repel)
-    {
-        attack = r[0].random2(attack);
-    }
+    else if (defl)
+        attack = r[0].random2(attack / defl);
 
     dprf("Beam attack: %d, defence: %d", attack, defence);
 
@@ -2987,7 +2960,7 @@ bool bolt::harmless_to_player() const
         return (player_prot_life(false) >= 3);
 
     case BEAM_POISON:
-        return (player_res_poison(false) > 0);
+        return (player_res_poison(false) >= 3);
 
     case BEAM_POTION_STINKING_CLOUD:
         return (player_res_poison(false) > 0 || player_mental_clarity(false)
@@ -3065,8 +3038,10 @@ void bolt::tracer_affect_player()
         // Don't ask if we're aiming at ourselves.
         if (!dont_stop_player && !harmless_to_player())
         {
-            if (yesno("That beam is likely to hit you. Continue anyway?",
-                      false, 'n'))
+            std::string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
+                                              item ? name.c_str() : "beam");
+
+            if (yesno(prompt.c_str(), false, 'n'))
             {
                 friend_info.count++;
                 friend_info.power += you.experience_level;
@@ -3102,7 +3077,7 @@ void bolt::tracer_affect_player()
         mpr(messages[i].c_str(), MSGCH_WARN);
 
     apply_hit_funcs(&you, 0);
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::misses_player()
@@ -3172,26 +3147,19 @@ bool bolt::misses_player()
     defer_rand r;
     bool miss = true;
 
-    bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
-    bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
-                || player_mutation_level(MUT_DISTORTION_FIELD) == 3;
+    int defl = you.missile_deflection();
     if (flavour == BEAM_LIGHT)
-        dmsl = rmsl = false;
+        defl = 0;
 
-    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
-    {
+    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, 0, r))
         mprf("The %s misses you.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, rmsl, r))
-    {
-        mprf("The %s is repelled.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, dmsl, rmsl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge_less, is_beam, defl, r))
     {
         // active voice to imply stronger effect
-        mprf("You deflect the %s!", name.c_str());
+        mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
+             name.c_str());
     }
-    else if (!_test_beam_hit(real_tohit, dodge, is_beam, dmsl, rmsl, r))
+    else if (!_test_beam_hit(real_tohit, dodge, is_beam, defl, r))
     {
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
@@ -3204,14 +3172,10 @@ bool bolt::misses_player()
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
-        if (_test_beam_hit(real_tohit, dodge_more, is_beam, dmsl, rmsl, r))
-        {
+        if (_test_beam_hit(real_tohit, dodge_more, is_beam, defl, r))
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
-        }
         else
-        {
             mprf("Helpless, you fail to dodge the %s.", name.c_str());
-        }
 
         miss = false;
     }
@@ -3224,10 +3188,6 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    // boost paralysis odds a bit, since chain paralysis from beams was removed
-    if (flavour == BEAM_PARALYSIS)
-        ench_power = ench_power * 6 / 5;
-
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
@@ -3252,7 +3212,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
             xom_is_stimulated(200);
 
-        extra_range_used += range_used_on_hit(&you);
+        extra_range_used += range_used_on_hit();
         return;
     }
 
@@ -3290,7 +3250,10 @@ void bolt::affect_player_enchantment()
             mpr("This is polymorph other only!");
         }
         else
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            msg_generated = true; // to avoid duplicate "nothing happens"
+        }
         break;
 
     case BEAM_SLOW:
@@ -3361,7 +3324,7 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -3517,7 +3480,7 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::affect_actor(actor *act)
@@ -3729,7 +3692,7 @@ void bolt::affect_player()
 
     internal_ouch(hurted);
 
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne()))
@@ -3795,7 +3758,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     if (!beam_cancelled)
     {
         apply_hit_funcs(mon, 0);
-        extra_range_used += range_used_on_hit(mon);
+        extra_range_used += range_used_on_hit();
     }
 }
 
@@ -3864,6 +3827,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!damage_ignores_armour())
     {
         int ac = mon->armour_class();
+        // Armour is less useful against electricity.
+        if (flavour == BEAM_ELECTRICITY)
+            ac /= 2;
         if (is_tracer && preac_max_damage > 0)
         {
             tracer_postac_min = std::max(0, preac_min_damage - ac);
@@ -3983,7 +3949,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4088,7 +4054,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     }
 
     apply_hit_funcs(mon, 0);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::monster_post_hit(monster* mon, int dmg)
@@ -4099,7 +4065,20 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
-        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+    {
+        bool was_asleep = mon->asleep();
+        special_missile_type m_brand = SPMSL_FORBID_BRAND;
+        if (item && item->base_type == OBJ_MISSILES)
+            m_brand = get_ammo_brand(*item);
+
+        // Don't immediately turn insane monsters hostile.
+        if (m_brand != SPMSL_RAGE)
+            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+
+        // Don't allow needles of sleeping to awaken monsters.
+        if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
+            mon->put_to_sleep(agent(), 0);
+    }
 
     // Sticky flame.
     if (name == "sticky flame" || name == "splash of liquid fire")
@@ -4116,7 +4095,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
                     grid_distance(mon->pos(), mi->pos()) == 1)
                 {
                     mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_NOCAP_THE).c_str());
+                         mi->name(DESC_THE).c_str());
                     napalm_monster(*mi, agent(), levels);
                 }
             }
@@ -4157,14 +4136,14 @@ void bolt::beam_hits_actor(actor *act)
             if (drac_breath)
             {
                 mprf("%s %s blown backwards by the freezing wind.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
                 knockback_actor(act);
             }
             else
             {
                 mprf("%s %s knocked back by the %s.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str(),
                      this->name.c_str());
             }
@@ -4190,9 +4169,9 @@ bool bolt::attempt_block(monster* mon)
                 if (mon->observable())
                 {
                     mprf("%s reflects the %s off %s %s!",
-                         mon->name(DESC_CAP_THE).c_str(),
+                         mon->name(DESC_THE).c_str(),
                          name.c_str(),
-                         mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);
                 }
@@ -4204,7 +4183,7 @@ bool bolt::attempt_block(monster* mon)
             else if (you.see_cell(pos()))
             {
                 mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(), name.c_str());
+                     mon->name(DESC_THE).c_str(), name.c_str());
                 finish_beam();
             }
 
@@ -4412,34 +4391,34 @@ void bolt::affect_monster(monster* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
-    bool dmsl = mons_class_flag(mon->type, M_DEFLECT_MISSILES);
+    int defl = mon->missile_deflection();
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, dmsl, false, r))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, defl, r))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
             // if it would have hit otherwise...
-            if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
+            if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
+                msg::stream << mon->name(DESC_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       is_beam, false, false, r))
+                                       is_beam, 0, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " momentarily phases "
+                msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
                             << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
             }
             else
             {
                 msg::stream << "The " << name << " misses "
-                            << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
+                            << mon->name(DESC_THE) << '.' << std::endl;
             }
         }
         return;
@@ -4487,7 +4466,7 @@ void bolt::affect_monster(monster* mon)
              name.c_str(),
              hit_verb.c_str(),
              mon->observable() ?
-                 mon->name(DESC_NOCAP_THE).c_str() : "something");
+                 mon->name(DESC_THE).c_str() : "something");
 
     }
     else if (heard && !noise_msg.empty())
@@ -4535,17 +4514,19 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, false);
     }
 
-    int      corpse = -1;
     monster  orig   = *mon;
 
     if (mon->alive())
+    {
+        apply_hit_funcs(mon, final);
         monster_post_hit(mon, final);
+    }
     else
     {
         // Preserve name of the source monster if it winds up killing
         // itself.
         if (mon->mindex() == beam_source && source_name.empty())
-            source_name = orig.name(DESC_NOCAP_A, true);
+            source_name = orig.name(DESC_A, true);
 
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
@@ -4559,26 +4540,18 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            corpse = monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            corpse = monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, beam_source_as_target());
         }
     }
 
-    // Give the callbacks a dead-but-valid monster object.
-    if (mon->type == MONS_NO_MONSTER)
-    {
-        orig.hit_points = -1;
-        mon = &orig;
-    }
-
-    apply_hit_funcs(mon, final, corpse);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::has_saving_throw() const
@@ -4658,7 +4631,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *foe,
 bool enchant_monster_invisible(monster* mon, const std::string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
-    const std::string monster_name = mon->name(DESC_CAP_THE);
+    const std::string monster_name = mon->name(DESC_THE);
 
     if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
     {
@@ -4942,7 +4915,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
     }
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5013,7 +4986,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
 
 // Extra range used on hit.
-int bolt::range_used_on_hit(const actor* victim) const
+int bolt::range_used_on_hit() const
 {
     int used = 0;
 
@@ -5048,7 +5021,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ((*range_funcs[i])(*this, victim, used))
+        if ((*range_funcs[i])(*this, used))
             break;
 
     return (used);
@@ -5326,13 +5299,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     exp_map.init(INT_MAX);
     determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // turn buffering off
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
-
     // We get a bit fancy, drawing all radius 0 effects, then radius
     // 1, radius 2, etc.  It looks a bit better that way.
     const std::vector< std::vector<coord_def> > sweep = _radial_sweep(r);
@@ -5391,11 +5357,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         }
     }
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    if (!is_tracer)
-        set_buffering(oldValue);
-#endif
-
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)
     {
@@ -5421,7 +5382,8 @@ void bolt::explosion_draw_cell(const coord_def& p)
 #ifdef USE_TILE
         if (in_los_bounds_v(drawpos))
             tiles.add_overlay(p, tileidx_bolt(*this));
-#else
+#endif
+#ifndef USE_TILE_LOCAL
         // bounds check
         if (in_los_bounds_v(drawpos))
         {
@@ -5510,7 +5472,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             continue;
 
         // If we were at a wall, only move to visible squares.
-        if (at_wall && !you.see_cell(loc + Compass[i]))
+        if (at_wall && !cell_see_cell(you.pos(), loc + Compass[i], LOS_SOLID))
             continue;
 
         int cadd = 5;
@@ -5741,7 +5703,7 @@ std::string bolt::get_short_name() const
         return (short_name);
 
     if (item != NULL && item->defined())
-        return item->name(DESC_NOCAP_A, false, false, false, false,
+        return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
@@ -5819,7 +5781,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return ("digging");
     case BEAM_TELEPORT:              return ("teleportation");
     case BEAM_POLYMORPH:             return ("polymorph");
-    case BEAM_CHARM:                 return ("enslave");
+    case BEAM_ENSLAVE:               return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");
@@ -5864,7 +5826,7 @@ std::string bolt::get_source_name() const
         return source_name;
     const actor *a = agent();
     if (a)
-        return a->name(DESC_NOCAP_A, true);
+        return a->name(DESC_A, true);
     return "";
 }
 

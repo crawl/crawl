@@ -57,6 +57,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_DRAIN_LIFE:
@@ -78,6 +79,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_CHEIBRIADOS_DISTORTION:
         return (SK_INVOCATIONS);
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -149,6 +151,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BANISH:
     case ABIL_JIYVA_SLIMIFY:
+    case ABIL_CHEIBRIADOS_DISTORTION:
         return (3 + random2(5));
     case ABIL_TSO_CLEANSING_FLAME:
         return (3 + random2(6));
@@ -319,16 +322,9 @@ static void _exercise_passive()
     }
 }
 
-static void _exercise(skill_type sk, int degree, int limit)
-{
-    if (limit < 0 || you.skills[sk] < limit)
-        exercise(sk, degree);
-}
-
 void practise(exer_type ex, int param1)
 {
     skill_type sk = SK_NONE;
-    int limit = -1;
     int deg = 0;
 
     switch (ex)
@@ -339,13 +335,11 @@ void practise(exer_type ex, int param1)
         exercise(sk, deg);
         break;
 
-    case EX_WILL_HIT_HELPLESS:
-        limit = 1;
     case EX_WILL_HIT:
         sk = static_cast<skill_type>(param1);
-        _exercise(sk, 1, limit);
+        exercise(sk, 1);
         if (coinflip())
-            _exercise(SK_FIGHTING, 1, limit);
+            exercise(SK_FIGHTING, 1);
         break;
 
     case EX_MONSTER_WILL_HIT:
@@ -415,10 +409,6 @@ void practise(exer_type ex, int param1)
                         ex == EX_DID_CAST);
         break;
 
-    case EX_WILL_READ_SCROLL:
-        _exercise(SK_SPELLCASTING, coinflip() ? 2 : 1, 1);
-        break;
-
     case EX_FOUND_SECRET_DOOR:
     case EX_TRAP_FOUND:
         exercise(SK_TRAPS_DOORS, 1 + random2(2));
@@ -452,7 +442,6 @@ void practise(exer_type ex, int param1)
         break;
 
     case EX_SHIELD_BLOCK:
-    case EX_SHIELD_TRAP:
         if (coinflip())
             exercise(SK_SHIELDS, 1);
         break;

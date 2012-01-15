@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use Encode;
+use Text::Tabs;
 
 open FLIST, "git ls-files|" or die "Can't run git ls-files";
 
@@ -21,11 +22,6 @@ while(<FLIST>)
     my $cont=$_=<F>;
     close F;
 
-    $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
-    print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
-    print "tab: $file\n" if !$tab && s/ {0,7}\t/        /sg;
-    print "spaces at eol: $file\n" if s/ +\n/\n/sg;
-    print "CR: $file\n" if s/\r//sg;
     eval{decode("UTF-8", "$_", Encode::FB_CROAK)};
     if ($@)
     {
@@ -34,6 +30,11 @@ while(<FLIST>)
         # frenchman/german/finn.  Sorry, polacks and russkies.
         Encode::from_to($_, "CP1252", "UTF-8");
     }
+    $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
+    print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
+    $_=expand $_, print "tab: $file\n" if !$tab && /\t/;
+    print "spaces at eol: $file\n" if s/ +\n/\n/sg;
+    print "CR: $file\n" if s/\r//sg;
 
     if ($_ ne $cont)
     {

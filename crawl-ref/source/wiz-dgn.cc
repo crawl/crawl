@@ -30,9 +30,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "travel.h"
 #include "traps.h"
 #include "view.h"
@@ -214,11 +212,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     you.absdepth0    = abs_depth;
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
-#ifdef USE_TILE
     tile_new_level(newlevel);
-#else
-    UNUSED(newlevel);
-#endif
     if (!crawl_state.test)
         save_game_state();
     new_level();
@@ -360,12 +354,9 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat_is_portal(feat))
         return wizard_create_portal(pos);
 
-#ifdef USE_TILE
     env.tile_flv(pos).special = 0;
     const dungeon_feature_type old_feat = grd(pos);
-#endif
     dungeon_terrain_changed(pos, feat, false);
-#ifdef USE_TILE
     // Update gate tiles, if existing.
     if (feat_is_door(old_feat) || feat_is_door(feat))
     {
@@ -376,7 +367,6 @@ bool wizard_create_feature(const coord_def& pos)
         if (map_bounds(right) && feat_is_door(grd(right)))
             tile_init_flavour(right);
     }
-#endif
 
     return true;
 }
@@ -667,11 +657,9 @@ static void debug_load_map_by_name(std::string name)
     if (dgn_place_map(toplace, true, false, where))
     {
         mprf("Successfully placed %s.", toplace->name.c_str());
-#ifdef USE_TILE
         // Fix up doors from vaults and any changes to the default walls
         // and floors from the vault.
         tile_init_flavour();
-#endif
     }
     else
         mprf("Failed to place %s.", toplace->name.c_str());
@@ -828,11 +816,7 @@ void wizard_recreate_level()
         you.get_place_info().levels_seen--;
     Generated_Levels.erase(lev);
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
-#ifdef USE_TILE
     tile_new_level(newlevel);
-#else
-    UNUSED(newlevel);
-#endif
     if (!crawl_state.test)
         save_game_state();
     new_level();

@@ -68,6 +68,8 @@ void player::moveto(const coord_def &c, bool clear_net)
     crawl_view.set_player_at(c);
     set_position(c);
 
+    clear_far_constrictions();
+
     if (player_has_orb())
     {
         env.orb_pos = c;
@@ -128,7 +130,8 @@ bool player::extra_balanced() const
     return (grid == DNGN_SHALLOW_WATER
              && (species == SP_NAGA                      // tails, not feet
                  || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                    && !form_changed_physiology());
+                    && (form == TRAN_LICH || form == TRAN_STATUE
+                        || !form_changed_physiology()));
 }
 
 int player::get_experience_level() const
@@ -227,9 +230,9 @@ int player::damage_type(int)
     return (DVORP_CRUSHING);
 }
 
-int player::damage_brand(int)
+brand_type player::damage_brand(int)
 {
-    int ret = SPWPN_NORMAL;
+    brand_type ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
 
     if (wpn != -1 && !you.melded[EQ_WEAPON])
@@ -265,7 +268,7 @@ int player::damage_brand(int)
         }
     }
 
-    return (ret);
+    return (static_cast<brand_type>(ret));
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
@@ -366,28 +369,19 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-static std::string _pronoun_you(description_level_type desc)
+std::string player::name(description_level_type dt, bool) const
 {
-    switch (desc)
+    switch (dt)
     {
     case DESC_NONE:
         return "";
-    case DESC_CAP_A: case DESC_CAP_THE:
-        return "You";
-    case DESC_NOCAP_A: case DESC_NOCAP_THE:
+    case DESC_A: case DESC_THE:
     default:
         return "you";
-    case DESC_CAP_YOUR:
-        return "Your";
-    case DESC_NOCAP_YOUR:
-    case DESC_NOCAP_ITS:
+    case DESC_YOUR:
+    case DESC_ITS:
         return "your";
     }
-}
-
-std::string player::name(description_level_type dt, bool) const
-{
-    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const
@@ -395,10 +389,8 @@ std::string player::pronoun(pronoun_type pro, bool) const
     switch (pro)
     {
     default:
-    case PRONOUN_CAP:               return "You";
-    case PRONOUN_NOCAP:             return "you";
-    case PRONOUN_CAP_POSSESSIVE:    return "Your";
-    case PRONOUN_NOCAP_POSSESSIVE:  return "your";
+    case PRONOUN_SUBJECTIVE:        return "you";
+    case PRONOUN_POSSESSIVE:        return "your";
     case PRONOUN_REFLEXIVE:         return "yourself";
     case PRONOUN_OBJECTIVE:         return "you";
     }
@@ -503,7 +495,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
         adj = "scaled";
-    else if (species == SP_KENKU)
+    else if (species == SP_TENGU)
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";
@@ -641,9 +633,9 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (is_undead
-        && (is_undead != US_SEMI_UNDEAD || hunger_state <= HS_SATIATED))
+    if (!you.can_bleed(false))
     {
+        // XXX: This message assumes that you're undead.
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
 
@@ -661,7 +653,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         {
             const item_def *amulet = you.slot_item(EQ_AMULET, false);
             mprf("You cannot go berserk with %s on.",
-                 amulet? amulet->name(DESC_NOCAP_YOUR).c_str() : "your amulet");
+                 amulet? amulet->name(DESC_YOUR).c_str() : "your amulet");
         }
         return (false);
     }

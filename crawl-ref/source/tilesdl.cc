@@ -1156,61 +1156,6 @@ void TilesFramework::redraw()
     m_last_tick_redraw = wm->get_ticks();
 }
 
-static map_feature get_cell_map_feature(const map_cell& cell)
-{
-    map_feature mf = MF_SKIP;
-    if (cell.invisible_monster())
-        mf = MF_MONS_HOSTILE;
-    else if (cell.monster() != MONS_NO_MONSTER)
-    {
-        switch (cell.monsterinfo() ? cell.monsterinfo()->attitude : ATT_HOSTILE)
-        {
-        case ATT_FRIENDLY:
-            mf = MF_MONS_FRIENDLY;
-            break;
-        case ATT_GOOD_NEUTRAL:
-            mf = MF_MONS_PEACEFUL;
-            break;
-        case ATT_NEUTRAL:
-        case ATT_STRICT_NEUTRAL:
-            mf = MF_MONS_NEUTRAL;
-            break;
-        case ATT_HOSTILE:
-        default:
-            if (mons_class_flag(cell.monster(), M_NO_EXP_GAIN))
-                mf = MF_MONS_NO_EXP;
-            else
-                mf = MF_MONS_HOSTILE;
-            break;
-        }
-    }
-    else if (cell.cloud())
-    {
-        show_type show;
-        show.cls = SH_CLOUD;
-        mf = get_feature_def(show).minimap;
-    }
-
-    if (mf == MF_SKIP && cell.item())
-        mf = get_feature_def(*cell.item()).minimap;
-    if (mf == MF_SKIP)
-        mf = get_feature_def(cell.feat()).minimap;
-    if (mf == MF_SKIP)
-        mf = MF_UNSEEN;
-
-    if (mf == MF_WALL || mf == MF_FLOOR)
-    {
-        if (cell.known() && !cell.seen()
-            || cell.detected_item()
-            || cell.detected_monster())
-        {
-            mf = (mf == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
-        }
-    }
-
-    return mf;
-}
-
 void TilesFramework::update_minimap(const coord_def& gc)
 {
     if (!m_region_map)
@@ -1280,25 +1225,25 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_LORD
-        || mon->type == MONS_LERNAEAN_HYDRA)
+    if (mon.type == MONS_PANDEMONIUM_LORD
+        || mon.type == MONS_LERNAEAN_HYDRA)
     {
         return;
     }
 
-    const coord_def &gc = mon->pos();
+    const coord_def &gc = mon.pos;
 
-    if (mons_is_pghost(mon->type))
+    if (mons_is_pghost(mon.type))
     {
         // Beautification hack.  "Foo's ghost" is a little bit
         // verbose as a tag.  "Foo" on its own should be sufficient.
-        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon.mname, gc);
     }
     else
-        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon.proper_name(DESC_PLAIN), gc);
 }
 
 const coord_def &TilesFramework::get_cursor() const

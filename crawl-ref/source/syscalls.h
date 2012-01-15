@@ -32,7 +32,6 @@ void usleep(unsigned long time);
 
 int rename_u(const char *oldpath, const char *newpath);
 int unlink_u(const char *pathname);
-int chmod_u(const char *path, mode_t mode);
 FILE *fopen_u(const char *path, const char *mode);
 int mkdir_u(const char *pathname, mode_t mode);
 int open_u(const char *pathname, int flags, mode_t mode);

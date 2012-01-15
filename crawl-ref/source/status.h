@@ -26,6 +26,9 @@ enum status_type
     STATUS_FIREBALL,
     STATUS_BACKLIT,
     STATUS_UMBRA,
+    STATUS_CONSTRICTED,
+    STATUS_MANUAL,
+    STATUS_AUGMENTED,
 };
 
 struct status_info
@@ -35,8 +38,6 @@ struct status_info
     std::string short_text; // @: line
     std::string long_text;  // @ message
 };
-
-int dur_colour(int exp_colour, bool expiring);
 
 // status should be a duration or status_type
 // *info will be filled in as appropriate for current

@@ -21,9 +21,7 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
-#ifdef USE_TILE
 #include "initfile.h"
-#endif
 #include "libutil.h"
 #include "message.h"
 #include "mapdef.h"
@@ -116,6 +114,9 @@ static map_section_type write_vault(map_def &mdef,
 
     while (tries-- > 0)
     {
+        if (place.map.test_lua_veto())
+            break;
+
         if (!resolve_map(place.map))
             continue;
 
@@ -145,6 +146,7 @@ static bool resolve_map_lua(map_def &map)
 {
     dgn_flush_map_environment_for(map.name);
     map.reinit();
+
     std::string err = map.run_lua(true);
     if (!err.empty())
     {
@@ -201,6 +203,9 @@ bool resolve_subvault(map_def &map)
     ASSERT(map.is_subvault());
     if (!map.is_subvault())
         return false;
+
+    if (map.test_lua_veto())
+        return (false);
 
     if (!resolve_map_lua(map))
         return false;
@@ -1105,11 +1110,19 @@ static bool verify_file_version(const std::string &file)
     FILE *fp = fopen_u(file.c_str(), "rb");
     if (!fp)
         return (false);
-    reader inf(fp);
-    const long ver = unmarshallInt(inf);
-    fclose(fp);
-
-    return (ver == MAP_CACHE_VERSION);
+    try
+    {
+        reader inf(fp);
+        const uint8_t major = unmarshallUByte(inf);
+        const uint8_t minor = unmarshallUByte(inf);
+        fclose(fp);
+        return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
+    }
+    catch (short_read_exception &E)
+    {
+        fclose(fp);
+        return (false);
+    }
 }
 
 static bool verify_map_index(const std::string &base)
@@ -1142,8 +1155,11 @@ static bool load_map_index(const std::string& cache, const std::string &base)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
 
     reader inf(fp, TAG_MINOR_VERSION);
-    // Discard version (it's been checked by verify_map_index).
-    (void) unmarshallInt(inf);
+    // Re-check version, might have been modified in the meantime.
+    uint8_t major = unmarshallUByte(inf);
+    uint8_t minor = unmarshallUByte(inf);
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
+        return false;
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
@@ -1175,18 +1191,6 @@ static bool load_map_cache(const std::string &filename, const std::string &cache
     if (is_newer(filename, file_idx) || is_newer(filename, file_dsc))
         return (false);
 
-#ifdef USE_TILE
-    // When the executable is rebuilt for tiles, it's possible that
-    // the tile enums have changed, breaking old cache files.
-    // So, conservatively regenerate cache files after rebuilding.
-    {
-        std::string exe_path = SysEnv.crawl_base + FILE_SEPARATOR
-                               + SysEnv.crawl_exe;
-        if (is_newer(exe_path, file_idx) || is_newer(exe_path, file_dsc))
-            return (false);
-    }
-#endif
-
     if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
         return (false);
 
@@ -1216,7 +1220,8 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    marshallInt(outf, MAP_CACHE_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
     fclose(fp);
@@ -1230,7 +1235,8 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    marshallInt(outf, MAP_CACHE_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
     {

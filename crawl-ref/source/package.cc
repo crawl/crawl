@@ -57,7 +57,7 @@ static len_t htole(len_t x)
 #ifdef DEBUG_PACKAGE
 #define dprintf(...) printf(__VA_ARGS__)
 #else
-#define dprintf(...) do {} while(0)
+#define dprintf(...) do {} while (0)
 #endif
 
 #define PACKAGE_VERSION 1
@@ -162,7 +162,7 @@ void package::load_traces()
 
     free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
 
-    for(directory_t::iterator ch = directory.begin();
+    for (directory_t::iterator ch = directory.begin();
         ch != directory.end(); ++ch)
     {
         trace_chunk(ch->second);
@@ -293,7 +293,7 @@ len_t package::alloc_block(len_t &size)
 {
     fb_t::iterator bl, best_big, best_small;
     len_t bb_size = (len_t)-1, bs_size = 0;
-    for(bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
+    for (bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
     {
         if (bl->second < bb_size && bl->second >= size + sizeof(block_header))
             best_big = bl, bb_size = bl->second;
@@ -383,7 +383,7 @@ void package::collect_blocks()
         len_t at = unlinked_blocks.top();
         unlinked_blocks.pop();
         dprintf("freeing an unlinked chain at %d\n", at);
-        while(at)
+        while (at)
         {
             bm_t::iterator bl = block_map.find(at);
             ASSERT(bl != block_map.end());
@@ -444,13 +444,13 @@ void package::fsck()
            (unsigned int)directory.size(), (unsigned int)block_map.size(),
            (unsigned int)free_blocks.size(), file_len);
 
-    for(fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
+    for (fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
         ++bl)
     {
         printf("<at %u size %u>\n", bl->first, bl->second);
     }
 #endif
-    for(bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
+    for (bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
         ++bl)
     {
 #ifdef FSCK_VERBOSE
@@ -480,11 +480,11 @@ void package::read_directory(len_t start, uint8_t version)
     dprintf("package: reading directory\n");
     chunk_reader rd(this, start);
 
-    switch(version)
+    switch (version)
     {
     case 0:
         dir_entry0 ch0;
-        while(len_t res = rd.read(&ch0, sizeof(dir_entry0)))
+        while (len_t res = rd.read(&ch0, sizeof(dir_entry0)))
         {
             if (res != sizeof(dir_entry0))
                 fail("save file corrupted -- truncated directory");
@@ -497,7 +497,7 @@ void package::read_directory(len_t start, uint8_t version)
     case 1:
         uint8_t name_len;
         len_t bstart;
-        while(len_t res = rd.read(&name_len, sizeof(name_len)))
+        while (len_t res = rd.read(&name_len, sizeof(name_len)))
         {
             if (res != sizeof(name_len))
                 fail("save file corrupted -- truncated directory");
@@ -537,7 +537,7 @@ std::vector<std::string> package::list_chunks()
 
 void package::trace_chunk(len_t start)
 {
-    while(start)
+    while (start)
     {
         block_header bl;
         seek(start);
@@ -593,7 +593,7 @@ len_t package::get_slack()
     load_traces();
 
     len_t slack = 0;
-    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
+    for (fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
         slack += bl->second;
     return slack;
 }
@@ -604,7 +604,7 @@ len_t package::get_chunk_fragmentation(const std::string name)
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
     len_t frags = 0;
     len_t at = directory[name];
-    while(at)
+    while (at)
     {
         bm_t::iterator bl = block_map.find(at);
         ASSERT(bl != block_map.end());
@@ -620,7 +620,7 @@ len_t package::get_chunk_compressed_length(const std::string name)
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
     len_t len = 0;
     len_t at = directory[name];
-    while(at)
+    while (at)
     {
         bm_t::iterator bl = block_map.find(at);
         ASSERT(bl != block_map.end());
@@ -810,7 +810,7 @@ chunk_reader::~chunk_reader()
 len_t chunk_reader::raw_read(void *data, len_t len)
 {
     void *buf = data;
-    while(len)
+    while (len)
     {
         if (!block_left)
         {
@@ -863,7 +863,7 @@ len_t chunk_reader::read(void *data, len_t len)
 
     zs.next_out  = (Bytef*)data;
     zs.avail_out = len;
-    while(zs.avail_out)
+    while (zs.avail_out)
     {
         if (!zs.avail_in)
         {

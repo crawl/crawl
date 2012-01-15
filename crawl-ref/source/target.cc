@@ -50,8 +50,10 @@ aff_type targetter_view::is_affected(coord_def loc)
 
 
 targetter_smite::targetter_smite(const actor* act, int ran,
-                                 int exp_min, int exp_max, bool wall_ok):
-    exp_range_min(exp_min), exp_range_max(exp_max), affects_walls(wall_ok)
+                                 int exp_min, int exp_max, bool wall_ok,
+                                 bool (*affects_pos_func)(const coord_def &)):
+    exp_range_min(exp_min), exp_range_max(exp_max), affects_walls(wall_ok),
+    affects_pos(affects_pos_func)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -64,8 +66,13 @@ targetter_smite::targetter_smite(const actor* act, int ran,
 
 bool targetter_smite::valid_aim(coord_def a)
 {
-    if (a != origin && !cell_see_cell(origin, a, LOS_DEFAULT))
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent && agent->see_cell(a))
+            return notify_fail("There's something in the way.");
         return notify_fail("You cannot see that place.");
+    }
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     if (!affects_walls && feat_is_solid(grd(a)))
@@ -99,6 +106,9 @@ aff_type targetter_smite::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
+    if (affects_pos && !affects_pos(loc))
+        return AFF_NO;
+
     if (loc == aim)
         return AFF_YES;
 
@@ -127,8 +137,6 @@ targetter_reach::targetter_reach(const actor* act, reach_type ran) :
 
 bool targetter_reach::valid_aim(coord_def a)
 {
-    if (origin == a)
-        return notify_fail("That would be overly suicidal.");
     if (!cell_see_cell(origin, a, LOS_DEFAULT))
         return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
@@ -186,8 +194,11 @@ bool targetter_cloud::valid_aim(coord_def a)
     if (!map_bounds(a)
         || agent
            && origin != a
-           && !cell_see_cell(origin, a, LOS_DEFAULT))
+           && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
+        // Scrying/glass/tree/grate.
+        if (agent && agent->see_cell(a))
+            return notify_fail("There's something in the way.");
         return notify_fail("You cannot see that place.");
     }
     if (feat_is_solid(grd(a)))
@@ -221,7 +232,7 @@ bool targetter_cloud::set_aim(coord_def a)
         for (unsigned int i = 0; i < to_place; i++)
         {
             coord_def c = queue[d1][i];
-            for(adjacent_iterator ai(c); ai; ++ai)
+            for (adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai) && seen.find(*ai) == seen.end())
                 {
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);

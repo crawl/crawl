@@ -195,7 +195,7 @@ bool ray_def::advance()
     r.dir = _normalize(r.dir);
     if (on_corner)
     {
-        ASSERT (is_corner(r.start));
+        ASSERT(is_corner(r.start));
         on_corner = false;
         _to_grid(&r, true);
     }

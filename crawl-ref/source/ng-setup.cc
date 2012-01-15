@@ -72,7 +72,7 @@ static void _species_stat_init(species_type which_species)
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
-    case SP_KENKU:              sb =  6; ib =  6; db =  7;      break;  // 19
+    case SP_TENGU:              sb =  6; ib =  6; db =  7;      break;  // 19
 
     case SP_NOME:               sb =  7; ib =  6; db =  5;      break;  // 18
     case SP_KOBOLD:             sb =  5; ib =  4; db =  8;      break;  // 17
@@ -202,10 +202,6 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_INT] += i;
     you.base_stats[STAT_DEX] += d;
 
-    // Used for Jiyva's stat swapping if the player has not reached
-    // experience level 3.
-    you.last_chosen = (stat_type) random2(NUM_STATS);
-
     you.hp_max_perm = hp - 2;
     you.mp_max_perm = mp - 1;
 }
@@ -232,7 +228,7 @@ void unfocus_stats()
 }
 
 // Some consumables to make the starts of Sprint and Zotdef a little easier.
-void _give_bonus_items()
+static void _give_bonus_items()
 {
     newgame_give_item(OBJ_POTIONS, POT_CURING);
     newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
@@ -273,7 +269,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 3;
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
-        you.mutation[MUT_FAST_METABOLISM] = 2;
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        you.mutation[MUT_HERBIVOROUS]     = 1;
         you.mutation[MUT_HOOVES]          = 3;
         break;
     case SP_NAGA:
@@ -303,7 +300,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_HEALING]               = 1;
         you.mutation[MUT_UNBREATHING]                = 1;
         break;
-    case SP_KENKU:
+    case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;
         you.mutation[MUT_TALONS] = 3;
         break;
@@ -334,7 +331,6 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_TENTACLES]       = 3;
-        you.mutation[MUT_BEAK]            = 1;
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
@@ -443,7 +439,7 @@ static void _update_weapon(const newgame_def& ng)
 
     const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
 
-    switch(ng.weapon)
+    switch (ng.weapon)
     {
     case WPN_ROCKS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, plus);
@@ -577,10 +573,13 @@ static void _give_items_skills(const newgame_def& ng)
             you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls/Felids fight unarmed.
         else
         {
-            // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
             if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
-                startwep = (you.species == SP_OGRE) ? WPN_ANKUS : WPN_MACE;
+                startwep = WPN_MACE;
+            else if (species_apt(SK_POLEARMS) > species_apt(SK_AXES))
+                startwep = WPN_SPEAR;
+            else if (species_apt(SK_SHORT_BLADES) > species_apt(SK_AXES))
+                startwep = WPN_SHORT_SWORD;
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }
@@ -1300,6 +1299,7 @@ static void _setup_tutorial(const newgame_def& ng)
  */
 static void _setup_sprint(const newgame_def& ng)
 {
+    // nothing currently
 }
 
 /**

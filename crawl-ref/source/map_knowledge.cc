@@ -83,10 +83,10 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!cell.known() || cell.visible())
             continue;
 
-        if (!clear_detected_items || !cell.detected_item())
+        if (clear_detected_items || !cell.detected_item())
             cell.clear_item();
 
-        if ((!clear_detected_monsters || !cell.detected_monster())
+        if ((clear_detected_monsters || !cell.detected_monster())
             && !mons_class_is_stationary(cell.monster()))
         {
             cell.clear_monster();
@@ -141,7 +141,7 @@ void set_terrain_seen(int x, int y)
         if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc = feature_description(pos, false, DESC_NOCAP_A);
+            std::string desc = feature_description(pos, false, DESC_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }
@@ -181,4 +181,59 @@ void map_cell::set_detected_item()
     _item = new item_info();
     _item->base_type = OBJ_DETECTED;
     _item->colour    = Options.detected_item_colour;
+}
+
+map_feature get_cell_map_feature(const map_cell& cell)
+{
+    map_feature mf = MF_SKIP;
+    if (cell.invisible_monster())
+        mf = MF_MONS_HOSTILE;
+    else if (cell.monster() != MONS_NO_MONSTER)
+    {
+        switch (cell.monsterinfo() ? cell.monsterinfo()->attitude : ATT_HOSTILE)
+        {
+        case ATT_FRIENDLY:
+            mf = MF_MONS_FRIENDLY;
+            break;
+        case ATT_GOOD_NEUTRAL:
+            mf = MF_MONS_PEACEFUL;
+            break;
+        case ATT_NEUTRAL:
+        case ATT_STRICT_NEUTRAL:
+            mf = MF_MONS_NEUTRAL;
+            break;
+        case ATT_HOSTILE:
+        default:
+            if (mons_class_flag(cell.monster(), M_NO_EXP_GAIN))
+                mf = MF_MONS_NO_EXP;
+            else
+                mf = MF_MONS_HOSTILE;
+            break;
+        }
+    }
+    else if (cell.cloud())
+    {
+        show_type show;
+        show.cls = SH_CLOUD;
+        mf = get_feature_def(show).minimap;
+    }
+
+    if (mf == MF_SKIP && cell.item())
+        mf = get_feature_def(*cell.item()).minimap;
+    if (mf == MF_SKIP)
+        mf = get_feature_def(cell.feat()).minimap;
+    if (mf == MF_SKIP)
+        mf = MF_UNSEEN;
+
+    if (mf == MF_WALL || mf == MF_FLOOR)
+    {
+        if (cell.known() && !cell.seen()
+            || cell.detected_item()
+            || cell.detected_monster())
+        {
+            mf = (mf == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
+        }
+    }
+
+    return mf;
 }

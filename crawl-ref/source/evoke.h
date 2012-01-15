@@ -4,8 +4,8 @@
 **/
 
 
-#ifndef IT_USE3_H
-#define IT_USE3_H
+#ifndef EVOKE_H
+#define EVOKE_H
 
 void stop_studying_manual(bool finish = false);
 void skill_manual(int slot);

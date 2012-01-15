@@ -44,7 +44,7 @@ public:
 
     void get_bounding_box(int &x0, int &y0, int &w, int &h);
 
-    tile_colour &get_pixel(unsigned int x, unsigned int y);
+    tile_colour &get_pixel(int x, int y);
 
     void add_variation(int colour, int idx);
     bool get_variation(int colour, int &idx);

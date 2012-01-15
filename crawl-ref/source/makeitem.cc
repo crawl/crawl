@@ -222,7 +222,7 @@ static int _armour_colour(const item_def &item)
       case ARM_ANIMAL_SKIN:
         item_colour = LIGHTGREY;
         break;
-      case ARM_CRYSTAL_PLATE_MAIL:
+      case ARM_CRYSTAL_PLATE_ARMOUR:
         item_colour = WHITE;
         break;
       case ARM_SHIELD:
@@ -751,7 +751,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         WPN_SLING,
         WPN_SPEAR, WPN_HAND_AXE, WPN_MACE,
         WPN_DAGGER, WPN_DAGGER, WPN_CLUB,
-        WPN_HAMMER, WPN_WHIP, WPN_SHORT_SWORD
+        WPN_WHIP, WPN_SHORT_SWORD
     };
 
     const weapon_type good_common_subtypes[] = {
@@ -1491,7 +1491,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_SPEED:
     case SPWPN_VORPAL:
     case SPWPN_CHAOS:
-    case SPWPN_REAPING:
     case SPWPN_HOLY_WRATH:
     case SPWPN_ELECTROCUTION:
         break;
@@ -1509,6 +1508,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_RETURNING:
     case SPWPN_CONFUSE:
     case SPWPN_ANTIMAGIC:
+    case SPWPN_REAPING:
         if (is_range_weapon(item))
             return (false);
         break;
@@ -1599,12 +1599,13 @@ brand_ok:
     if (no_brand)
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
-    // If it's forced to be a good item, upgrade the worst weapons.
+    // If it's forced to be a good item, reroll the worst weapons.
     if (force_good
         && force_type == OBJ_RANDOM
-        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING))
+        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING
+            || item.sub_type == WPN_STAFF))
     {
-        item.sub_type = WPN_LONG_SWORD;
+        item.sub_type = _determine_weapon_subtype(item_level);
     }
 
     item.plus  = 0;
@@ -1725,44 +1726,52 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             break;
         }
 
-        rc = static_cast<special_missile_type>(
-                         random_choose_weighted(20, SPMSL_SLEEP, 20, SPMSL_SLOW,
-                                                20, SPMSL_SICKNESS, 20, SPMSL_CONFUSION,
-                                                10, SPMSL_PARALYSIS, 10, SPMSL_RAGE,
-                                                nw, SPMSL_POISONED, 0));
+        rc = random_choose_weighted(20, SPMSL_SLEEP,
+                                    20, SPMSL_SLOW,
+                                    20, SPMSL_SICKNESS,
+                                    20, SPMSL_CONFUSION,
+                                    10, SPMSL_PARALYSIS,
+                                    10, SPMSL_RAGE,
+                                    nw, SPMSL_POISONED,
+                                    0);
         break;
     case MI_DART:
-        rc = static_cast<special_missile_type>(
-                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                                20, SPMSL_POISONED,
-                                                12, SPMSL_SILVER, 12, SPMSL_STEEL,
-                                                12, SPMSL_DISPERSAL, 20, SPMSL_EXPLODING,
-                                                nw, SPMSL_NORMAL,
-                                                0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    12, SPMSL_SILVER,
+                                    12, SPMSL_STEEL,
+                                    12, SPMSL_DISPERSAL,
+                                    20, SPMSL_EXPLODING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_ARROW:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED,
-                                               15, SPMSL_DISPERSAL,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_DISPERSAL,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_BOLT:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 15, SPMSL_PENETRATION,
-                                               15, SPMSL_SILVER,
-                                               10, SPMSL_STEEL, nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_PENETRATION,
+                                    15, SPMSL_SILVER,
+                                    10, SPMSL_STEEL,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_JAVELIN:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_RETURNING, 32, SPMSL_PENETRATION,
-                                               32, SPMSL_POISONED,
-                                               21, SPMSL_STEEL, 20, SPMSL_SILVER,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_RETURNING,
+                                    32, SPMSL_PENETRATION,
+                                    32, SPMSL_POISONED,
+                                    21, SPMSL_STEEL,
+                                    20, SPMSL_SILVER,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_STONE:
         // deliberate fall through
@@ -1771,18 +1780,20 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = SPMSL_NORMAL;
         break;
     case MI_SLING_BULLET:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED,
-                                               15, SPMSL_STEEL, 15, SPMSL_SILVER,
-                                               20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_STEEL,
+                                    15, SPMSL_SILVER,
+                                    20, SPMSL_EXPLODING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_THROWING_NET:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_STEEL,
+                                    30, SPMSL_SILVER,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     }
 
@@ -1860,7 +1871,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
                 || type == MI_JAVELIN || type == MI_THROWING_NET);
     case SPMSL_PENETRATION:
         return (type == MI_JAVELIN || type == MI_BOLT);
-    case SPMSL_REAPING: // deliberate fall through
     case SPMSL_DISPERSAL:
         return (type == MI_ARROW || type == MI_DART);
     case SPMSL_EXPLODING:
@@ -2091,8 +2101,10 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
         case ARM_SCALE_MAIL:
         case ARM_CHAIN_MAIL:
         case ARM_SPLINT_MAIL:
+#if TAG_MAJOR_VERSION == 32
         case ARM_BANDED_MAIL:
-        case ARM_PLATE_MAIL:
+#endif
+        case ARM_PLATE_ARMOUR:
             if (item.sub_type <= ARM_CHAIN_MAIL && one_chance_in(6))
                 rc = ISFLAG_ELVEN;
             if (item.sub_type >= ARM_RING_MAIL && one_chance_in(5))
@@ -2120,27 +2132,23 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_SHIELD:
     case ARM_LARGE_SHIELD:
     case ARM_BUCKLER:
-        rc = static_cast<special_armour_type>(
-            random_choose_weighted(40, SPARM_RESISTANCE,
+        rc = random_choose_weighted(40, SPARM_RESISTANCE,
                                    120, SPARM_FIRE_RESISTANCE,
                                    120, SPARM_COLD_RESISTANCE,
                                    120, SPARM_POISON_RESISTANCE,
                                    120, SPARM_POSITIVE_ENERGY,
                                    240, SPARM_REFLECTION,
                                    480, SPARM_PROTECTION,
-                                   0));
+                                     0);
         break;
 
     case ARM_CLOAK:
-    {
-        const special_armour_type cloak_egos[] = {
-            SPARM_POISON_RESISTANCE, SPARM_DARKNESS,
-            SPARM_MAGIC_RESISTANCE, SPARM_PRESERVATION
-        };
-
-        rc = RANDOM_ELEMENT(cloak_egos);
+        rc = random_choose(SPARM_POISON_RESISTANCE,
+                           SPARM_DARKNESS,
+                           SPARM_MAGIC_RESISTANCE,
+                           SPARM_PRESERVATION,
+                           -1);
         break;
-    }
 
     case ARM_WIZARD_HAT:
         if (coinflip())
@@ -2161,15 +2169,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-    {
-        const special_armour_type gloves_egos[] = {
-            SPARM_DEXTERITY, SPARM_STRENGTH,
-            SPARM_ARCHERY
-        };
-
-        rc = RANDOM_ELEMENT(gloves_egos);
+        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, -1);
         break;
-    }
 
     case ARM_BOOTS:
     case ARM_NAGA_BARDING:
@@ -2186,14 +2187,13 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     }
 
     case ARM_ROBE:
-        rc = static_cast<special_armour_type>(
-                 random_choose_weighted(1, SPARM_RESISTANCE,
-                                        2, SPARM_COLD_RESISTANCE,
-                                        2, SPARM_FIRE_RESISTANCE,
-                                        2, SPARM_POSITIVE_ENERGY,
-                                        4, SPARM_MAGIC_RESISTANCE,
-                                        4, SPARM_ARCHMAGI,
-                                        0));
+        rc = random_choose_weighted(1, SPARM_RESISTANCE,
+                                    2, SPARM_COLD_RESISTANCE,
+                                    2, SPARM_FIRE_RESISTANCE,
+                                    2, SPARM_POSITIVE_ENERGY,
+                                    4, SPARM_MAGIC_RESISTANCE,
+                                    4, SPARM_ARCHMAGI,
+                                    0);
 
         // Only ever generate robes of archmagi for random pieces of armour,
         // for whatever reason.
@@ -2207,7 +2207,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     default:
         if (armour_is_hide(item, true)
             || item.sub_type == ARM_ANIMAL_SKIN
-            || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+            || item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR)
         {
             rc = SPARM_NORMAL;
             break;
@@ -2224,7 +2224,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         if (one_chance_in(5))
             rc = SPARM_POISON_RESISTANCE;
 
-        if (item.sub_type == ARM_PLATE_MAIL && one_chance_in(15))
+        if (item.sub_type == ARM_PLATE_ARMOUR && one_chance_in(15))
             rc = SPARM_PONDEROUSNESS;
         break;
     }
@@ -2240,7 +2240,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     // Currently being too restrictive results in asserts, being too
     // permissive will generate such items on "any armour ego:XXX".
     // The latter is definitely so much safer -- 1KB
-    switch((special_armour_type)brand)
+    switch ((special_armour_type)brand)
     {
     case SPARM_FORBID_EGO:
     case SPARM_NORMAL:
@@ -2388,7 +2388,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         // Make a good item...
         item.plus += random2(3);
 
-        if (item.sub_type <= ARM_PLATE_MAIL
+        if (item.sub_type <= ARM_PLATE_ARMOUR
             && x_chance_in_y(21 + item_level, 300))
         {
             item.plus += random2(3);
@@ -2399,7 +2399,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             && (force_good
                 || forced_ego
                 || get_equip_race(item) != ISFLAG_ORCISH
-                || item.sub_type <= ARM_PLATE_MAIL && coinflip()))
+                || item.sub_type <= ARM_PLATE_ARMOUR && coinflip()))
         {
             // ...an ego item, in fact.
             set_item_ego_type(item, OBJ_ARMOUR,
@@ -2491,7 +2491,7 @@ static int _wand_max_initial_charges(int subtype)
 
 bool is_high_tier_wand(int type)
 {
-    switch(type)
+    switch (type)
     {
     case WAND_PARALYSIS:
     case WAND_FIRE:
@@ -2683,7 +2683,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
             item.sub_type = random_choose_weighted(
                 1800, SCR_IDENTIFY,
                 1115, SCR_REMOVE_CURSE,
-                 511, SCR_DETECT_CURSE,
+                 381, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
@@ -2706,14 +2706,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+                 140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SILENCE),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-
-                 // Balanced by rarity.
-                 10, SCR_SILENCE,
 
                 // [ds] Zero-weights should always be at the end,
                 // since random_choose_weighted stops at the first
@@ -2832,8 +2830,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     {
         int max_level  = std::min(9, std::max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
-        int max_spells = 5 + spl_level/3;
-        make_book_level_randart(item, spl_level, max_spells);
+        make_book_level_randart(item, spl_level);
     }
 }
 
@@ -3025,11 +3022,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
 deck_rarity_type random_deck_rarity()
 {
-    return static_cast<deck_rarity_type>
-        (random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                20, DECK_RARITY_RARE,
-                                72, DECK_RARITY_COMMON,
-                                0));
+    return random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                 20, DECK_RARITY_RARE,
+                                 72, DECK_RARITY_COMMON,
+                                  0);
 }
 
 
@@ -3086,8 +3082,8 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        item.base_type = static_cast<object_class_type>(
-            random_choose_weighted(5, OBJ_STAVES,
+        item.base_type = random_choose_weighted(
+                                     5, OBJ_STAVES,
                                     15, OBJ_BOOKS,
                                     25, OBJ_JEWELLERY,
                                     35, OBJ_WANDS,
@@ -3098,7 +3094,7 @@ int items(bool allow_uniques,
                                    150, OBJ_MISSILES,
                                    200, OBJ_SCROLLS,
                                    200, OBJ_GOLD,
-                                     0));
+                                     0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 3500))
@@ -3256,7 +3252,7 @@ int items(bool allow_uniques,
 void reroll_brand(item_def &item, int item_level)
 {
     ASSERT(!is_artefact(item));
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
         item.special = _determine_weapon_brand(item, item_level);
@@ -3444,7 +3440,7 @@ armour_type get_random_armour_type(int item_level)
         const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                            ARM_RING_MAIL, ARM_SCALE_MAIL,
                                            ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                           ARM_BANDED_MAIL, ARM_PLATE_MAIL };
+                                           ARM_PLATE_ARMOUR };
 
         armtype = RANDOM_ELEMENT(medarmours);
     }
@@ -3452,7 +3448,7 @@ armour_type get_random_armour_type(int item_level)
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
     {
         // High-level armours, including troll and some dragon armours.
-        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_MAIL,
+        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_ARMOUR,
                                           ARM_TROLL_HIDE,
                                           ARM_TROLL_LEATHER_ARMOUR,
                                           ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
@@ -3483,7 +3479,7 @@ armour_type get_random_armour_type(int item_level)
         armtype = RANDOM_ELEMENT(morehiarmours);
 
         if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
-            armtype = ARM_CRYSTAL_PLATE_MAIL;
+            armtype = ARM_CRYSTAL_PLATE_ARMOUR;
     }
 
     // Secondary armours.
@@ -3588,7 +3584,7 @@ void maybe_set_item_race(item_def &item, int allowed, int num_rolls)
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static int _test_item_level()
 {
-    switch(random2(10))
+    switch (random2(10))
     {
     case 0:
         return MAKE_GOOD_ITEM;

@@ -5,10 +5,10 @@
 **/
 
 #include "AppHdr.h"
-#include <math.h>
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
+#include "libutil.h"
 #include "ouch.h"
 #include "religion.h"
 #include "view.h"
@@ -83,7 +83,7 @@ void fire_final_effects()
             else if (fe.def == MID_PLAYER)
             {
                 simple_god_message(" mirrors your injury!");
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
                 flash_monster_colour(attacker->as_monster(), RED, 200);
 #endif
 
@@ -92,7 +92,7 @@ void fire_final_effects()
                 if (attacker->alive())
                     print_wounds(attacker->as_monster());
 
-                lose_piety(ceil(sqrt((float)fe.x)));
+                lose_piety(isqrt_ceil(fe.x));
             }
             else
             {

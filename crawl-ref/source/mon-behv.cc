@@ -105,7 +105,6 @@ static void _set_firing_pos(monster* mon, coord_def target)
 {
     const int ideal_range = LOS_RADIUS / 2;
     const int current_distance = mon->pos().distance_from(target);
-    const los_type los = mons_has_los_attack(mon) ? LOS_DEFAULT : LOS_NO_TRANS;
 
     // We don't consider getting farther away unless already very close.
     const int max_range = std::max(ideal_range, current_distance);
@@ -119,7 +118,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
         const int range = p.distance_from(target);
 
         if (!in_bounds(p) || range > max_range
-            || !cell_see_cell(p, target, los)
+            || !cell_see_cell(p, target, LOS_NO_TRANS)
             || !mon_can_move_to_pos(mon, p - mon->pos()))
         {
             continue;
@@ -206,8 +205,13 @@ void handle_behaviour(monster* mon)
             {
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
                     MSGCH_DANGER);
+
+                // If the rot would reduce us to <= 0 max HP, attribute the
+                // kill to the monster.
+                if (loss >= you.hp_max_temp)
+                    ouch(loss, mon->mindex(), KILLED_BY_ROTTING);
+
                 rot_hp(loss);
-                ouch(1, mon->mindex(), KILLED_BY_ROTTING);
             }
         }
     }
@@ -283,7 +287,7 @@ void handle_behaviour(monster* mon)
         {
             mon->foe = MHITYOU;
             //mprf("%s resetting target (cantSee)",
-            //     mon->name(DESC_CAP_THE,true).c_str());
+            //     mon->name(DESC_THE,true).c_str());
         }
     }
 
@@ -305,7 +309,7 @@ void handle_behaviour(monster* mon)
             if (you.pet_target != MHITNOT && proxPlayer)
             {
                 //mprf("%s setting target (player target)",
-                //     mon->name(DESC_CAP_THE,true).c_str());
+                //     mon->name(DESC_THE,true).c_str());
                 mon->foe = you.pet_target;
             }
             else
@@ -570,8 +574,7 @@ void handle_behaviour(monster* mon)
                 // If monster is currently getting into firing position and
                 // see the player and can attack him, clear firing_pos.
                 if (!mon->firing_pos.zero()
-                    && (mons_has_los_attack(mon)
-                        || mon->see_cell_no_trans(mon->target)))
+                    && mon->see_cell_no_trans(mon->target))
                 {
                     mon->firing_pos.reset();
                 }
@@ -599,9 +602,7 @@ void handle_behaviour(monster* mon)
                     new_beh  = BEH_WANDER;
                 }
                 else
-                {
                     mon->target = PLAYER_POS;
-                }
             }
             else
             {
@@ -962,6 +963,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
                 mon->behaviour = BEH_RETREAT;
             }
             else if (!mons_is_cornered(mon) && (mon->hit_points > fleeThreshold))
+                mon->behaviour = BEH_SEEK;
+            else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
             if (src == MHITYOU)

@@ -22,7 +22,9 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+%rim 0
 fire_bat MONS_FIRE_BAT
+%rim 1
 raven MONS_RAVEN
 dc-mon/holy/phoenix MONS_PHOENIX
 %sdir dc-mon/vault
@@ -173,14 +175,19 @@ blink_frog MONS_BLINK_FROG
 spiny_frog MONS_SPINY_FROG
 
 ## Snakes ('S')
-small_snake MONS_SMALL_SNAKE
-snake MONS_SNAKE
+ball_python MONS_BALL_PYTHON
+adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
+snake_blue MONS_SUBTRACTOR_SNAKE
+snake_yellow
+snake_cyan
+snake_green
+snake_violet
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR
@@ -346,6 +353,7 @@ very_ugly_thing5
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
 abomination_small MONS_ABOMINATION_SMALL
+abomination_small1
 
 ## Golems ('8')
 %sdir dc-mon/nonliving
@@ -422,7 +430,7 @@ obelisk MONS_DIAMOND_OBELISK
 
 ## Spirey things ('{')
 lightning_spire MONS_LIGHTNING_SPIRE
-%rim 0
+%rim 1
 
 ## Gargoyles ('9')
 %sdir dc-mon/nonliving
@@ -473,9 +481,11 @@ killer_klown_yellow
 slave MONS_SLAVE
 human_slave
 ## From a Lair ending
+%rim 0
 vault/hell_wizard_50 MONS_HELL_WIZARD
 vault/hell_wizard_75
 vault/hell_wizard_100
+%rim 1
 ## From the Wucad Mu wizlab
 vault/human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
@@ -485,7 +495,9 @@ vault/cloud_mage MONS_CLOUD_MAGE
 ## From the Hellbinder wizlab
 vault/hellbinder MONS_HELLBINDER
 ## From a floating vault (mu_elemental_laboratory)
+%rim 0
 vault/master_elementalist MONS_MASTER_ELEMENTALIST
+%rim 1
 ## From an entry vault
 halfling MONS_HALFLING
 demigod MONS_DEMIGOD
@@ -552,10 +564,14 @@ ice_dragon MONS_ICE_DRAGON
 steam_dragon MONS_STEAM_DRAGON
 swamp_dragon MONS_SWAMP_DRAGON
 mottled_dragon MONS_MOTTLED_DRAGON
+%rim 0
 quicksilver_dragon MONS_QUICKSILVER_DRAGON
 iron_dragon MONS_IRON_DRAGON
+%rim 1
 storm_dragon MONS_STORM_DRAGON
+%rim 0
 golden_dragon MONS_GOLDEN_DRAGON
+%rim 1
 shadow_dragon MONS_SHADOW_DRAGON
 dc-mon/undead/bone_dragon MONS_BONE_DRAGON
 dc-mon/holy/pearl_dragon MONS_PEARL_DRAGON
@@ -582,7 +598,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
-kenku MONS_KENKU
+tengu MONS_TENGU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
@@ -621,7 +637,9 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
 %sdir dc-mon/unique
+%rim 0
 boris MONS_BORIS
+%rim 1
 %sdir dc-mon/undead
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -846,13 +864,17 @@ deep_dwarf_artificer MONS_DEEP_DWARF_ARTIFICER
 deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
 deep_dwarf_necromancer MONS_DEEP_DWARF_NECROMANCER
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
 undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
+%rim 1
 # an entry vault
 gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
+%rim 0
 wight MONS_WIGHT
+%rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
@@ -863,6 +885,8 @@ murray MONS_MURRAY
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
+crawling_corpse MONS_CRAWLING_CORPSE
+macabre_mass MONS_MACABRE_MASS
 ## From a special vault (ancient_champions.des)
 dc-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
 
@@ -912,6 +936,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_centaur TRAN_STATUE_CENTAUR
 statue_form_naga TRAN_STATUE_NAGA
+statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -919,6 +944,7 @@ lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_centaur TRAN_LICH_CENTAUR
 lich_form_naga TRAN_LICH_NAGA
+lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 

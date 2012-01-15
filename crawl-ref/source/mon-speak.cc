@@ -824,21 +824,11 @@ bool mons_speaks(monster* mons)
         return (false);
     }
 
-    if (foe == NULL)
-        msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
-    else if (foe->atype() == ACT_MONSTER)
-    {
-        if (you.can_see(foe))
-            msg = replace_all(msg, "__YOU_RESIST", "@The_monster@ resists.");
-        else
-            msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
-    }
-
     return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
 }
 
 bool mons_speaks_msg(monster* mons, const std::string &msg,
-                     const msg_channel_type def_chan, const bool silence)
+                     const msg_channel_type def_chan, bool silence)
 {
     if (!mons_near(mons))
         return (false);
@@ -857,60 +847,30 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
 
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player.  In order to accomodate this
+        // warning to scare the player.  In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
         // [jpeg] Added MSGCH_TALK_VISUAL for silent "chatter".
         msg_channel_type msg_type = def_chan;
 
-        std::string param = "";
-        std::string::size_type pos = line.find(":");
-
-        if (pos != std::string::npos)
-            param = line.substr(0, pos);
-
-        if (!param.empty())
+        if (strip_channel_prefix(line, msg_type, silence))
         {
-            bool match = true;
-
-            if (param == "DANGER")
-                msg_type = MSGCH_DANGER;
-            else if (param == "WARN" && !silence || param == "VISUAL WARN")
-                msg_type = MSGCH_WARN;
-            else if (param == "SOUND")
-                msg_type = MSGCH_SOUND;
-            else if (param == "VISUAL")
-                msg_type = MSGCH_TALK_VISUAL;
-            else if (param == "SPELL" && !silence || param == "VISUAL SPELL")
-            {
-                msg_type = mons->friendly() ? MSGCH_FRIEND_SPELL
-                                                  : MSGCH_MONSTER_SPELL;
-            }
-            else if (param == "ENCHANT" && !silence
-                     || param == "VISUAL ENCHANT")
-            {
-                msg_type = mons->friendly() ? MSGCH_FRIEND_ENCHANT
-                                                  : MSGCH_MONSTER_ENCHANT;
-            }
-            else if (param == "PLAIN")
-                msg_type = MSGCH_PLAIN;
-            else
-                match = false;
-
-            if (match)
-                line = line.substr(pos + 1);
+            if (msg_type == MSGCH_MONSTER_SPELL && mons->friendly())
+                msg_type = MSGCH_FRIEND_SPELL;
+            if (msg_type == MSGCH_MONSTER_ENCHANT && mons->friendly())
+                msg_type = MSGCH_FRIEND_ENCHANT;
+            if (line == "")
+                continue;
         }
 
         const bool old_noticed = noticed;
         noticed = true;         // Only one case is different.
 
         // Except for VISUAL, none of the above influence these.
-        if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
-            canned_msg(MSG_YOU_RESIST);
-        else if (line == "__NOTHING_HAPPENS" && (!silence || param == "VISUAL"))
-            canned_msg(MSG_NOTHING_HAPPENS);
-        else if (line == "__MORE" && (!silence || param == "VISUAL"))
+        if (msg_type == MSGCH_TALK_VISUAL)
+            silence = false;
+        else if (line == "__MORE" && !silence)
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
             noticed = old_noticed;

@@ -1,8 +1,8 @@
 ###############################################################################
 # sprint.des - vaults for the Dungeon Sprint variant
 #
-# These vaults should always have PLACE: D:1 and TAGS: entry. No other dungeon
-# levels will be generated in Dungeon Sprint.
+# These vaults should always have "TAGS: sprint".  No other dungeon levels will
+# be generated in Dungeon Sprint.
 #
 # Note that at the start of the game, the dungeon builder removes all monsters
 # in view of the player. Zero experience monsters like plants are exempt.
@@ -597,7 +597,7 @@ ENDMAP
 NAME: sprint_mu_snake_twists
 TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror no_dup
 MONS: guardian serpent, naga warrior, greater naga, naga
-MONS: snake, water moccasin, black mamba
+MONS: adder, water moccasin, black mamba
 KMONS: 8 = anaconda
 SUBST: 5 = 5..
 SUBST: 5 = 5678
@@ -644,7 +644,7 @@ KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / wand shop
 KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
-MARKER: X = lua:portal_desc { desc="Open sea?", \
+MARKER: X = lua:portal_desc { desc="open sea?", \
             desc_long="Though it exists in stark defiance of every conventional"\
                 .." rule of physics and geometry you know to be true, there"\
                 .." can be no denying that here, in this tiny room, is a vast"\
@@ -694,7 +694,7 @@ KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / wand shop
 KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
-MARKER: X = lua:portal_desc { desc="Open sea?", \
+MARKER: X = lua:portal_desc { desc="open sea?", \
             desc_long="Though it exists in stark defiance of every conventional"\
                 .." rule of physics and geometry you know to be true, there"\
                 .." can be no denying that here, in this tiny room, is a vast"\
@@ -920,7 +920,7 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
-      plate mail ego:fire_resistance . large shield ego:reflection |\
+      plate armour ego:fire_resistance . large shield ego:reflection |\
       shield ego:protection | large shield ego:positive_energy
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
       titan / fire giant / frost giant
@@ -1154,7 +1154,7 @@ KMONS: d = col:lightgrey generate_awake statue name:air_elemental name_adjective
  spells:summon_air_elementals;cantrip
 KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
-       ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+       ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
        battleaxe ego:vorpal | battleaxe ego:pain | \
        w:3 executioner's axe ego:vorpal
 KITEM: e = superb_item, superb_item

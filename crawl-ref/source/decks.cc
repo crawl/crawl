@@ -39,9 +39,9 @@
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "ouch.h"
 #include "player.h"
@@ -211,7 +211,7 @@ static void _check_odd_card(uint8_t flags)
 static bool _card_forbidden(card_type card)
 {
     if (crawl_state.game_is_zotdef())
-        switch(card)
+        switch (card)
         {
         case CARD_TOMB:
         case CARD_WARPWRIGHT:
@@ -403,7 +403,9 @@ static const deck_archetype* _random_sub_deck(uint8_t deck_type)
 static card_type _choose_from_archetype(const deck_archetype* pdeck,
                                         deck_rarity_type rarity)
 {
-    // We assume here that common == 0, rare == 1, legendary == 2.
+    // Random rarity should have been replaced by one of the others by now.
+    ASSERT(rarity >= DECK_RARITY_COMMON);
+    ASSERT(rarity <= DECK_RARITY_LEGENDARY);
 
     // FIXME: We should use one of the various choose_random_weighted
     // functions here, probably with an iterator, instead of
@@ -416,8 +418,8 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
         const card_with_weights& cww = pdeck[i];
         if (_card_forbidden(cww.card))
             continue;
-        totalweight += cww.weight[rarity];
-        if (x_chance_in_y(cww.weight[rarity], totalweight))
+        totalweight += cww.weight[rarity - DECK_RARITY_COMMON];
+        if (x_chance_in_y(cww.weight[rarity - DECK_RARITY_COMMON], totalweight))
             result = cww.card;
     }
     return result;
@@ -592,11 +594,8 @@ static bool _check_buggy_deck(item_def& deck)
             num_cards--;
             num_buggy++;
         }
-        else
-        {
-            if (_flags & CFLAG_MARKED)
-                num_marked++;
-        }
+        else if (_flags & CFLAG_MARKED)
+            num_marked++;
     }
 
     if (num_buggy > 0)
@@ -779,7 +778,7 @@ static void _deck_ident(item_def& deck)
     if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
     {
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-        mprf("This is %s.", deck.name(DESC_NOCAP_A).c_str());
+        mprf("This is %s.", deck.name(DESC_A).c_str());
         you.wield_change = true;
     }
 }
@@ -1042,6 +1041,10 @@ bool deck_stack()
              num_cards);
     }
     more();
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "deck_stack");
+#endif
 
     std::vector<card_type> draws;
     std::vector<uint8_t>   flags;
@@ -1497,12 +1500,12 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if (power_level >= 2)
-        potion_effect(POT_SPEED, random2(power / 4));
-    else if (power_level == 1)
     {
-        cast_fly(random2(power / 4));
+        potion_effect(POT_SPEED, random2(power / 4));
         cast_swiftness(random2(power / 4));
     }
+    else if (power_level == 1)
+        potion_effect(POT_SPEED, random2(power / 4));
     else
         cast_swiftness(random2(power / 4));
 }
@@ -1931,7 +1934,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->name(DESC_YOUR).c_str(),
                  wpn->quantity == 1 ? "s" : "");
         }
         else
@@ -2004,13 +2007,10 @@ static void _focus_card(int power, deck_rarity_type rarity)
         god_type which_god = crawl_state.which_god_acting();
         if (crawl_state.is_god_retribution())
             cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
         else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-                cause = "the 'helpfulness' of " + god_name(which_god);
-        }
+            cause = "the 'helpfulness' of " + god_name(which_god);
     }
 
     modify_stat(best_stat, 1, true, cause.c_str(), true);
@@ -2033,13 +2033,10 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
         god_type which_god = crawl_state.which_god_acting();
         if (crawl_state.is_god_retribution())
             cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
         else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-                cause = "the 'helpfulness' of " + god_name(which_god);
-        }
+            cause = "the 'helpfulness' of " + god_name(which_god);
     }
 
     for (int i = 0; i < NUM_STATS; ++i)
@@ -2048,6 +2045,14 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
                     new_base[i] - you.base_stats[i],
                     true, cause.c_str(), true);
     }
+
+    char buf[128];
+    snprintf(buf, sizeof(buf),
+             "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
+             you.base_stats[STAT_STR], you.strength(),
+             you.base_stats[STAT_INT], you.intel(),
+             you.base_stats[STAT_DEX], you.dex());
+    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
 }
 
 static void _experience_card(int power, deck_rarity_type rarity)
@@ -2376,9 +2381,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         // Generate a portal to something.
         const map_def *map = random_map_for_tag("trowel_portal");
         if (!map)
-        {
             mpr("A buggy portal flickers into view, then vanishes.");
-        }
         else
         {
             {
@@ -2405,7 +2408,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             if (create_monster(
                     mgen_data::hostile_at(
                         RANDOM_ELEMENT(statues), "the Trowel card",
-                        true, 0, 0, you.pos())) != -1)
+                        true, 0, 0, you.pos())))
             {
                 mpr("A menacing statue appears!");
                 num_made++;
@@ -2419,7 +2422,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             if (create_monster(
                     mgen_data(RANDOM_ELEMENT(golems),
                               BEH_FRIENDLY, &you, 5, 0,
-                              you.pos(), MHITYOU)) != -1)
+                              you.pos(), MHITYOU)))
             {
                 mpr("You construct a golem!");
                 num_made++;
@@ -2567,11 +2570,11 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // will never manage to give a position which isn't (-1,-1)
     // and thus not print the message.
     // This hack appears later in this file as well.
-    if (create_monster(
+    if (!create_monster(
             mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
                       std::min(power/50 + 1, 5), 0,
                       you.pos(), MHITYOU),
-            false) == -1)
+            false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2605,9 +2608,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
         monster_type cur_try;
         do
-        {
             cur_try = random_monster_at_grid(you.pos() + delta);
-        }
         while (mons_is_unique(cur_try));
 
         if (mon_chosen == NUM_MONSTERS
@@ -2623,10 +2624,10 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
-    if (create_monster(mgen_data(mon_chosen,
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                 3, 0, chosen_spot, MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(mon_chosen,
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                                  3, 0, chosen_spot, MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2637,7 +2638,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     const bool friendly   = (power_level > 0 || !one_chance_in(4));
 
-    const int mon =
+    monster *mon =
         create_monster(
             mgen_data(MONS_DANCING_WEAPON,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
@@ -2648,14 +2649,13 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
     // piety.
-    if (mon != -1)
+    if (mon)
     {
         // Override the weapon.
-        ASSERT(menv[mon].weapon() != NULL);
-        item_def& wpn(*menv[mon].weapon());
+        ASSERT(mon->weapon() != NULL);
+        item_def& wpn(*mon->weapon());
 
-        // FIXME: Mega-hack (breaks encapsulation too).
-        wpn.flags &= ~ISFLAG_RACIAL_MASK;
+        set_equip_race(wpn, ISFLAG_NO_RACE);
 
         if (power_level == 0)
         {
@@ -2694,13 +2694,13 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 
         item_colour(wpn);
 
-        menv[mon].flags |= MF_HARD_RESET;
+        mon->flags |= MF_HARD_RESET;
 
         ghost_demon newstats;
         newstats.init_dancing_weapon(wpn, power / 4);
 
-        menv[mon].set_ghost(newstats);
-        menv[mon].dancing_weapon_init();
+        mon->set_ghost(newstats);
+        mon->ghost_demon_init();
     }
     else
         mpr("You see a puff of smoke.");
@@ -2746,11 +2746,11 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
     };
 
-    if (create_monster(mgen_data(skeltypes[power_level],
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                 std::min(power/50 + 1, 5), 0,
-                                 you.pos(), MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(skeltypes[power_level],
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                                  std::min(power/50 + 1, 5), 0,
+                                  you.pos(), MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2768,12 +2768,12 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     else
         ugly = MONS_UGLY_THING;
 
-    if (create_monster(mgen_data(ugly,
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                                 &you,
-                                 std::min(power/50 + 1, 6), 0,
-                                 you.pos(), MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(ugly,
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                  &you,
+                                  std::min(power/50 + 1, 6), 0,
+                                  you.pos(), MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2827,9 +2827,7 @@ static int _card_power(deck_rarity_type rarity)
     int result = 0;
 
     if (you.penance[GOD_NEMELEX_XOBEH])
-    {
         result -= you.penance[GOD_NEMELEX_XOBEH];
-    }
     else if (you.religion == GOD_NEMELEX_XOBEH)
     {
         result = you.piety;

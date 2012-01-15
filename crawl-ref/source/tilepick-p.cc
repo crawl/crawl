@@ -23,9 +23,6 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
-    if (you.melded[EQ_WEAPON])
-        return 0;
-
     if (item.base_type == OBJ_STAVES)
     {
         // Can't just use item.special here as STAFF_POWER abuses
@@ -136,7 +133,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
-    case WPN_STAFF:         return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_STAFF:         return TILEP_HAND1_STAFF;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
     case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
@@ -158,9 +155,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
 tileidx_t tilep_equ_shield(const item_def &item)
 {
-    if (you.equip[EQ_SHIELD] == -1)
-        return 0;
-
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
@@ -202,10 +196,12 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
-    case ARM_SPLINT_MAIL:        return TILEP_BODY_BANDED;
-    case ARM_BANDED_MAIL:        return TILEP_BODY_BANDED;
-    case ARM_PLATE_MAIL:         return TILEP_BODY_PLATE_BLACK;
-    case ARM_CRYSTAL_PLATE_MAIL: return TILEP_BODY_CRYSTAL_PLATE;
+    case ARM_SPLINT_MAIL:        return TILEP_BODY_SPLINT;
+#if TAG_MAJOR_VERSION == 32
+    case ARM_BANDED_MAIL:        return TILEP_BODY_SPLINT;
+#endif
+    case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
+    case ARM_CRYSTAL_PLATE_ARMOUR:return TILEP_BODY_CRYSTAL_PLATE;
 
     case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;
     case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
@@ -235,9 +231,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
 
 tileidx_t tilep_equ_cloak(const item_def &item)
 {
-    if (you.equip[EQ_CLOAK] == -1)
-        return 0;
-
     if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_CLOAK)
         return 0;
 
@@ -253,8 +246,6 @@ tileidx_t tilep_equ_cloak(const item_def &item)
 
 tileidx_t tilep_equ_helm(const item_def &item)
 {
-    if (you.equip[EQ_HELMET] == -1)
-        return 0;
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
@@ -331,8 +322,6 @@ tileidx_t tilep_equ_helm(const item_def &item)
 
 tileidx_t tilep_equ_gloves(const item_def &item)
 {
-    if (you.equip[EQ_GLOVES] == -1)
-        return 0;
     if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_GLOVES)
         return 0;
 
@@ -348,8 +337,6 @@ tileidx_t tilep_equ_gloves(const item_def &item)
 
 tileidx_t tilep_equ_boots(const item_def &item)
 {
-    if (you.equip[EQ_BOOTS] == -1)
-        return 0;
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
@@ -394,6 +381,7 @@ tileidx_t tileidx_player()
             case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
             case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
+            case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
             default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
             }
             break;
@@ -406,6 +394,7 @@ tileidx_t tileidx_player()
             case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
             case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
+            case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
             default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
             }
             break;
@@ -523,8 +512,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DEMONSPAWN;
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
-    case SP_KENKU:
-        return TILEP_BASE_KENKU;
+    case SP_TENGU:
+        return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
     case SP_VAMPIRE:

@@ -67,7 +67,7 @@ static bool         _water_is_disturbed(int x, int y);
 
 static int _get_hints_cols()
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     return crawl_view.msgsz.x;
 #else
     int ncols = get_number_of_cols();
@@ -249,7 +249,7 @@ static species_type _get_hints_species(unsigned int type)
           return SP_CENTAUR;
       default:
           // Use something fancy for debugging.
-          return SP_KENKU;
+          return SP_TENGU;
     }
 }
 
@@ -283,13 +283,11 @@ void hints_zap_secret_doors()
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
-#ifndef USE_TILE
     cgotoxy(1, 1);
-#endif
     clrscr();
 
     int width = _get_hints_cols();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Use a more sensible screen width.
     if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
         width = crawl_view.msgsz.x + crawl_view.hudsz.x;
@@ -334,12 +332,10 @@ void hints_starting_screen()
     linebreak_string(text, width);
     display_tagged_block(text);
 
-#ifndef USE_TILE
-    getch_ck();
-#else
-    mouse_control mc(MOUSE_MODE_MORE);
-    getchm();
-#endif
+    {
+        mouse_control mc(MOUSE_MODE_MORE);
+        getchm();
+    }
     redraw_screen();
 }
 
@@ -1008,11 +1004,12 @@ void hints_monster_seen(const monster& mon)
     Hints.hints_just_triggered = true;
 
     std::string text = "That ";
+    monster_info mi(&mon);
 #ifdef USE_TILE
     // need to highlight monster
     const coord_def gc = mon.pos();
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
-    tiles.add_text_tag(TAG_TUTORIAL, &mon);
+    tiles.add_text_tag(TAG_TUTORIAL, mi);
 
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();
@@ -1021,7 +1018,7 @@ void hints_monster_seen(const monster& mon)
             "by hovering your mouse over its tile, and read the monster "
             "description by clicking on it with your <w>right mouse button</w>."
 #else
-    text += glyph_to_tagstr(get_mons_glyph(&mon));
+    text += glyph_to_tagstr(get_mons_glyph(mi));
     text += " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
@@ -1126,7 +1123,7 @@ void hints_first_item(const item_def &item)
 #else
     const coord_def gc = item.pos;
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
-    tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
+    tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_A), gc);
 #endif
 
     text += "is an item. If you move there and press <w>g</w> or "
@@ -1246,7 +1243,7 @@ static std::string _describe_portal(const coord_def &gc)
                 "gathered enough gold to do so) ";
     }
     // For the sake of completeness, though it's very unlikely that a
-    // player will find a bazaar entrance before reahing XL 7.
+    // player will find a bazaar entrance before reaching XL 7.
     else if (desc.find("bazaar") != std::string::npos)
     {
         text << "is a portal to an inter-dimensional bazaar filled with "
@@ -1267,10 +1264,12 @@ static std::string _describe_portal(const coord_def &gc)
 
     text << "stand over the portal and press <w>></w>. To return find "
 #ifdef USE_TILE
-        "a similar looking portal tile "
+            "a similar looking portal tile "
 #else
-        "another <w>\\</w> (though NOT the ancient stone arch you'll start "
-        "out on) "
+            "another <w>"
+         << stringize_glyph(get_feat_symbol(DNGN_EXIT_PORTAL_VAULT))
+         << "</w> (though NOT the ancient stone arch you'll start "
+            "out on) "
 #endif
         "and press <w><<</w>.";
 
@@ -1451,9 +1450,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_SPBOOK:
-        text << "You have picked up a book ";
+        text << "You have picked up a book";
 #ifndef USE_TILE
-        text << "('<w>";
+        text << " ('<w>";
 
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
@@ -1476,11 +1475,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "of hated magic by using the corresponding "
                     "<w>%</w>bility.";
             cmd.push_back(CMD_USE_ABILITY);
-        }
-        else if (!you.skills[SK_SPELLCASTING])
-        {
-            text << "\nHowever, first you will have to get accustomed to "
-                    "spellcasting by reading lots of scrolls.";
         }
         text << "\nIn hint mode you can reread this information at "
                 "any time by "
@@ -1644,7 +1638,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 text << " ";
 #else
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_CAP_A), gc);
+                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
 #endif
 
                 text << "is a corpse.";
@@ -2224,16 +2218,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CONTAMINATED_CHUNK:
         text << "Chunks that are described as <brown>contaminated</brown> will "
-                "occasionally make you sick when eaten. However, since food is "
-                "scarce in the dungeon, you'll often have to risk it.";
-
-        // Break if we've seen the sickness hint before.
-        if (!Hints.hints_events[HINT_YOU_SICK])
+                "occasionally make you nauseated when eaten. However, since food is "
+                "scarce in the dungeon, you'll often have to risk it.\n"
+                "While nauseated, you can't stomach anything, and your attributes "
+                "may occasionally decrease. Just go around, hunt for better food.";
             break;
-
-        // Mark HINT_YOU_SICK as seen, and fall through.
-        text << "\n";
-        Hints.hints_events[HINT_YOU_SICK] = false;
 
     case HINT_YOU_SICK:
         if (crawl_state.game_is_hints())
@@ -2938,7 +2927,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         if (const monster* m = monster_at(gc))
-            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
@@ -2959,7 +2948,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
                 "enemies, though you'll get only part of the experience for "
@@ -2998,7 +2987,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (vis)
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
         }
 #endif
         if (!vis)
@@ -3034,7 +3023,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (!m || !you.can_see(m))
             DELAY_EVENT;
 
-        text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
+        text << m->name(DESC_THE, true) << " didn't vanish, but merely "
                 "moved onto a square which you can't currently see. It's still "
                 "nearby, unless something happens to it in the short amount of "
                 "time it's out of sight.";
@@ -3062,22 +3051,22 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ZERO_EXP_MON:
     {
-        const monster* m = monster_at(gc);
+        const monster_info* mi = env.map_knowledge(gc).monsterinfo();
 
-        if (!m || !you.can_see(m))
+        if (!mi)
             DELAY_EVENT;
 
         text << "That ";
 #ifdef USE_TILE
         // need to highlight monster
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, m);
+        tiles.add_text_tag(TAG_TUTORIAL, *mi);
 
         text << "is a ";
 #else
-        text << glyph_to_tagstr(get_mons_glyph(m)) << " is a ";
+        text << glyph_to_tagstr(get_mons_glyph(*mi)) << " is a ";
 #endif
-        text << m->name(DESC_PLAIN).c_str() << ". ";
+        text << mi->proper_name(DESC_PLAIN).c_str() << ". ";
 
         text << "While <w>technically</w> a monster, it's more like "
                 "dungeon furniture, since it's harmless and doesn't move. "
@@ -3094,7 +3083,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "To increase your chances of survival until you can find the "
                 "exit"
 #ifndef USE_TILE
-                " (a flickering <w>\\</w>)"
+                " (a flickering <w>"
+             << stringize_glyph(get_feat_symbol(DNGN_EXIT_ABYSS))
+             << "</w>)"
 #endif
                 ", keep moving, don't fight any of the monsters, and don't "
                 "bother picking up any items on the ground. If you're "
@@ -3304,8 +3295,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "picked up automatically.";
         break;
     case HINT_GAINED_SPELLCASTING:
-        text << "Great, from now on you'll be able to cast spells!\n"
-                "Press <w>%</w> "
+        text << "As your Spellcasting skill increases, you will be able to "
+             << "memorise more spells, and will suffer less hunger and "
+             << "somewhat fewer failures when you cast them.\n"
+             << "Press <w>%</w> "
 #ifdef USE_TILE
              << "(or click on the <w>skill button</w> in the command panel) "
 #endif
@@ -3453,7 +3446,7 @@ static std::string _hints_abilities(const item_def& item)
     std::vector<command_type> cmd;
     if (!item_is_equipped(item))
     {
-        switch(item.base_type)
+        switch (item.base_type)
         {
         case OBJ_WEAPONS:
             str += "first <w>%</w>ield it";
@@ -3675,7 +3668,7 @@ void hints_describe_item(const item_def &item)
        case OBJ_MISSILES:
             if (is_throwable(&you, item))
             {
-                ostr << item.name(DESC_CAP_YOUR)
+                ostr << item.name(DESC_YOUR)
                      << " can be <w>%</w>ired without the use of a launcher. ";
                 ostr << _hints_throw_stuff(item);
                 cmd.push_back(CMD_FIRE);
@@ -4009,18 +4002,7 @@ void hints_describe_item(const item_def &item)
                     ostr << "This magical item can cause great destruction "
                             "- to you, or your surroundings. Use with care!";
                 }
-                else if (!you.skills[SK_SPELLCASTING])
-                {
-                    ostr << "A spellbook! You could <w>%</w>emorise some "
-                            "spells and then cast them with <w>%</w>. ";
-                    cmd.push_back(CMD_MEMORISE_SPELL);
-                    cmd.push_back(CMD_CAST_SPELL);
-
-                    ostr << "\nFor now, however, that will have to wait until "
-                            "you've learned the basics of Spellcasting by "
-                            "reading lots of scrolls.";
-                }
-                else // You actually can cast spells.
+                else
                 {
                     if (player_can_memorise(item))
                     {
@@ -4790,7 +4772,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                     "mode with <w>x</w> and then press <w>e</w> when your "
                     "cursor is hovering over the monster's grid. Doing so will "
                     "mark this grid and all surrounding ones within a radius "
-                    "of 8 as \"excluded\" ones that explore or travel modus "
+                    "of 8 as \"excluded\" ones that explore or travel modes "
                     "won't enter.";
         }
         else
@@ -4806,7 +4788,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
              && mi.is(MB_STABBABLE))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
              << " has not noticed you - yet. Note that you do not have to "
                 "engage every monster you meet. Sometimes, discretion is the "
                 "better part of valour.";
@@ -4815,7 +4797,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
              && mi.is(MB_DISTRACTED))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
              << " has been distracted by something. You could use this "
                 "opportunity to sneak up on this monster - or to sneak away.";
     }

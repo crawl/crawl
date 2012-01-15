@@ -101,7 +101,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
 
         // Pandemonium lords are pseudo-unique, so don't randomly generate
         // them.
-        if (mon.mid == MONS_PANDEMONIUM_LORD)
+        if (mon.type == MONS_PANDEMONIUM_LORD)
         {
             num_lords++;
             continue;
@@ -123,7 +123,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
         }
         else
         {
-            if (mon.mid == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
+            if (mon.type == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
             {
                 std::string err;
                 err = make_stringf("mon #%d: can't use random monster in "
@@ -131,9 +131,9 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 luaL_argerror(ls, list_pos, err.c_str());
                 return 0;
             }
-            if (mon.mid == -1)
-                mon.mid = MONS_PROGRAM_BUG;
-            name = mons_type_name(mon.mid, DESC_PLAIN);
+            if (mon.type == -1)
+                mon.type = MONS_PROGRAM_BUG;
+            name = mons_type_name(mon.type, DESC_PLAIN);
         }
 
         mons.push_back(mon);
@@ -209,11 +209,10 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        const int mid = dgn_place_monster(mspec, you.absdepth0, c,
-                                          false, false, false);
-        if (mid != -1)
+        if (monster *mon = dgn_place_monster(mspec, you.absdepth0, c,
+                                             false, false, false))
         {
-            push_monster(ls, &menv[mid]);
+            push_monster(ls, mon);
             return (1);
         }
     }

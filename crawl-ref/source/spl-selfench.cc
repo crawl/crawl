@@ -205,20 +205,6 @@ spret_type cast_swiftness(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_levitation(int power, bool fail)
-{
-    if (liquefied(you.pos()) && you.ground_level())
-    {
-        mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-    levitate_player(power);
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_fly(int power, bool fail)
 {
     if (liquefied(you.pos()) && you.ground_level())

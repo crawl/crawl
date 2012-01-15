@@ -75,6 +75,9 @@ void attribute_increase()
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
     mouse_control mc(MOUSE_MODE_MORE);
+    // Calling a user-defined lua function here to let players reply to the
+    // prompt automatically.
+    clua.callfn("choose_stat_gain", 0);
 
     while (true)
     {
@@ -93,19 +96,16 @@ void attribute_increase()
         case 's':
         case 'S':
             modify_stat(STAT_STR, 1, false, "level gain");
-            you.last_chosen = STAT_STR;
             return;
 
         case 'i':
         case 'I':
             modify_stat(STAT_INT, 1, false, "level gain");
-            you.last_chosen = STAT_INT;
             return;
 
         case 'd':
         case 'D':
             modify_stat(STAT_DEX, 1, false, "level gain");
-            you.last_chosen = STAT_DEX;
             return;
         }
     }
@@ -116,16 +116,17 @@ void jiyva_stat_action()
 {
     int cur_stat[3];
     int stat_total = 0;
-    int evp = player_raw_body_armour_evasion_penalty();
     int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {
-        cur_stat[x] = you.max_stat(static_cast<stat_type>(x));
+        cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
         stat_total += cur_stat[x];
     }
-    // Always try for a little more strength, since Jiyva chars need their
-    // carrying capacity.
-    target_stat[0] = std::max(11, 2 + 3 * evp);
+    // Try to avoid burdening people or making their armour difficult to use.
+    int current_capacity = carrying_capacity(BS_UNENCUMBERED);
+    int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 249)/250;
+    int evp = you.unadjusted_body_armour_penalty();
+    target_stat[0] = std::max(std::max(9, 2 + 3 * evp), 2 + carrying_strength);
     target_stat[1] = 9;
     target_stat[2] = 9;
     int remaining = stat_total - 18 - target_stat[0];
@@ -205,7 +206,7 @@ static kill_method_type _statloss_killtype(stat_type stat)
     }
 }
 
-const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
+static const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
     { "strength", "weakened", "weaker", "stronger" },
     { "intelligence", "dopey", "stupid", "clever" },
     { "dexterity", "clumsy", "clumsy", "agile" }
@@ -273,7 +274,7 @@ void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
 void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
-    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
+    std::string name = cause.name(DESC_THE, false, true, false, false,
                                   ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
     std::string verb;
 
@@ -488,7 +489,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
         return lose_stat(which_stat, stat_loss, force, NULL, true);
 
     bool        vis  = you.can_see(cause);
-    std::string name = cause->name(DESC_NOCAP_A, true);
+    std::string name = cause->name(DESC_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))
         name += " (shapeshifter)";
@@ -501,7 +502,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
 bool lose_stat(stat_type which_stat, int8_t stat_loss,
                const item_def &cause, bool removed, bool force)
 {
-    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
+    std::string name = cause.name(DESC_THE, false, true, false, false,
                                   ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
     std::string verb;
 
@@ -711,7 +712,7 @@ void update_stat_zero()
     default:
         if (you.duration[DUR_PARALYSIS])
             break;
-        mprf(MSGCH_WARN, "Your lost attributes cause you to faint.");
+        mpr("Your lost attributes cause you to faint.", MSGCH_WARN);
         you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
         break;
     }

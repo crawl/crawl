@@ -50,13 +50,12 @@ enum run_mode_type
     RMODE_CONTINUE,
     RMODE_START,
     RMODE_REST_DURATION = 100,
+    RMODE_CONNECTIVITY,        // Pathfinding connectivity check, not running.
 };
 
 /* ***********************************************************************
  * Initialises the travel subsystem.
  */
-void initialise_travel();
-void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
 void travel_init_load_level();
 void travel_init_new_level();
@@ -65,6 +64,7 @@ uint8_t is_waypoint(const coord_def &p);
 command_type direction_to_command(int x, int y);
 bool is_resting(void);
 void explore_pickup_event(int did_pickup, int tried_pickup);
+bool feat_is_traversable_now(dungeon_feature_type feat);
 bool feat_is_traversable(dungeon_feature_type feat);
 bool is_unknown_stair(const coord_def &p);
 
@@ -270,7 +270,7 @@ private:
     std::vector<std::string> marked_feats;
 
 private:
-    template <class C> void say_any(const C &coll, const char *stub) const;
+    template <class C> void say_any(const C &coll, const char *category) const;
     template <class citer> bool has_duplicates(citer, citer) const;
 
     std::string cleaned_feature_description(const coord_def &) const;

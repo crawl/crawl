@@ -9,7 +9,9 @@ body {
 #right_column {
     display: inline-block;
     vertical-align: top;
-    float: right;
+    position: absolute;
+    right: 0px;
+    top: 0px;
 }
 
 #stats {
@@ -23,6 +25,18 @@ body {
 
 #minimap, #minimap_overlay {
     position: absolute;
+}
+
+#settings {
+    min-width: 20em;
+    min-height: 5em;
+}
+
+#close_settings {
+    font-size: small;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }
 
 
@@ -70,4 +84,59 @@ body {
 
 #monster_list .ellipse {
     float: right;
+}
+
+/* menus */
+#menu {
+    line-height: 1.2em;
+    min-width: 40em;
+}
+
+#menu_title {
+    white-space: pre;
+}
+
+#menu_suffix {
+    float: right;
+}
+
+#menu_more {
+    white-space: pre;
+}
+
+#menu_contents {
+    overflow: hidden;
+}
+
+#menu_contents ol {
+    list-style: none;
+    padding: 0;
+    margin: 2px;
+}
+
+#menu_contents li {
+    white-space: pre;
+}
+
+#menu_contents li.selectable:hover {
+    outline: 1px solid lightgray;
+    cursor: pointer;
+}
+
+#menu_contents li.placeholder {
+    color: darkgray;
+}
+
+#menu .pattern_select {
+    height: 1em;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+/* A hack to align the columns in the spell menu */
+.menu_spell #menu_title {
+    margin-left: 32px;
 }

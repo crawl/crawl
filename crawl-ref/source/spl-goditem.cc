@@ -56,7 +56,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return(identified);
+            return (identified);
 
         item_def& item(you.inv[item_slot]);
 
@@ -97,7 +97,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         }
 
         // Output identified item.
-        mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
@@ -118,7 +118,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         item_slot = -1;
     }
     while (id_used > identified);
-    return(identified);
+    return (identified);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -281,7 +281,7 @@ static int _healing_spell(int healed, bool divine_ability,
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
-                     mons->pronoun(PRONOUN_NOCAP).c_str());
+                     mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
             }
             else
                 mpr("You cannot pacify this monster!");
@@ -303,6 +303,8 @@ static int _healing_spell(int healed, bool divine_ability,
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
             pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
+        if (!pgain) // Always give a 50% chance of gaining a little piety.
+            pgain = coinflip();
 
         // The feedback no longer tells you if you gained any piety this time,
         // it tells you merely the general rate.
@@ -316,6 +318,7 @@ static int _healing_spell(int healed, bool divine_ability,
         else
         {
             simple_monster_message(mons, " turns neutral.");
+            record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
@@ -326,7 +329,7 @@ static int _healing_spell(int healed, bool divine_ability,
     if (mons->heal(healed))
     {
         did_something = true;
-        mprf("You heal %s.", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You heal %s.", mons->name(DESC_THE).c_str());
 
         if (mons->hit_points == mons->max_hit_points)
             simple_monster_message(mons, " is completely healed.");
@@ -363,7 +366,7 @@ void antimagic()
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_TELEPORT, DUR_CONTROL_TELEPORT,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
@@ -373,13 +376,19 @@ void antimagic()
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
-        && you.duration[DUR_LEVITATION] > 2)
+        && you.duration[DUR_LEVITATION] > 11)
     {
-        you.duration[DUR_LEVITATION] = 2;
+        you.duration[DUR_LEVITATION] = 11;
     }
 
-    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
-        you.duration[DUR_CONTROLLED_FLIGHT] = 1;
+    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
+        you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+
+    if (you.duration[DUR_TELEPORT] > 0)
+    {
+        you.duration[DUR_TELEPORT] = 0;
+        mpr("You feel strangely stable.");
+    }
 
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
@@ -563,7 +572,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 {
     bool used = false;
 
-    while(1)
+    while (1)
     {
         if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
         {
@@ -657,7 +666,7 @@ bool remove_curse(bool alreadyknown, std::string *pre_msg)
 
 static bool _selectively_curse_item(bool armour, std::string *pre_msg)
 {
-    while(1)
+    while (1)
     {
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
@@ -784,7 +793,7 @@ bool detect_curse(int scroll, bool suppress_msg)
                 item.quantity--;
 
             mprf("%s softly glows as it is inspected for curses.",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
         }
         else
             mpr("Your items softly glow as they are inspected for curses.");
@@ -814,7 +823,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
         mon = monster_at(where);
-        targname = mon->name(DESC_NOCAP_THE);
+        targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -971,7 +980,7 @@ bool cast_smiting(int pow, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }

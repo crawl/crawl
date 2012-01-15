@@ -16,9 +16,10 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
-    m_texture(0),
     m_prefix("TILE"),
     m_start_value("0"),
+    m_start_value_module(""),
+    m_texture(0),
     m_variation_idx(-1),
     m_variation_col(-1),
     m_weight(1)
@@ -557,7 +558,12 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_start_value = m_args[1];
             if (m_args.size() > 2)
-                m_include.push_back(m_args[2]);
+            {
+                m_start_value_module = m_args[2];
+                char temp[1024];
+                sprintf(temp, "tiledef-%s.h", m_args[2]);
+                m_include.push_back(temp);
+            }
         }
         else if (strcmp(arg, "pal") == 0)
         {
@@ -582,8 +588,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     if (val < 0 || val > 255)
                     {
                         fprintf(stderr,
-                                "Error (%s:%d): Arg %u must be 0-255.\n",
-                                list_file, line, i);
+                                "Error (%s:%d): Arg %d must be 0-255.\n",
+                                list_file, line, (int)i);
                     }
 
                     cols[col_idx][comp_idx++] = static_cast<unsigned char>(val);
@@ -682,7 +688,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_args.size() > 2)
             {
-                for (int i = 3; i < m_args.size(); ++i)
+                for (unsigned int i = 3; i < m_args.size(); ++i)
                 {
                     // Add enums for additional values.
                     m_page.add_synonym(m_args[2], m_args[i]);
@@ -694,7 +700,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             // Add a synonym without resetting the enum count.
             CHECK_ARG(1);
 
-            for (int i = 1; i < m_args.size(); ++i)
+            for (unsigned int i = 1; i < m_args.size(); ++i)
                 m_page.add_synonym(m_page.m_tiles.size() - 1, m_args[i]);
         }
         else
@@ -766,7 +772,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         // Push tile onto tile page.
         add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
 
-        for (int i = 2; i < m_args.size(); ++i)
+        for (unsigned int i = 2; i < m_args.size(); ++i)
         {
             // Add enums for additional values.
             m_page.add_synonym(m_args[1], m_args[i]);
@@ -824,7 +830,7 @@ static bool _files_differ(FILE *newfile, FILE *oldfile)
         if (newread != oldread)
             return (true);
 
-        if (memcmp(newblock, oldblock, blocksize))
+        if (memcmp(newblock, oldblock, newread))
             return (true);
 
         bool newdone = !!feof(newfile);
@@ -1173,7 +1179,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "#include <cassert>\n");
         fprintf(fp, "using namespace std;\n\n");
 
-        fprintf(fp, "unsigned int _tile_%s_count[%s - %s] =\n{\n",
+        fprintf(fp, "static unsigned int _tile_%s_count[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
             fprintf(fp, "    %u,\n", m_page.m_counts[i]);
@@ -1186,7 +1192,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "tileidx_t _tile_%s_basetiles[%s - %s] =\n{\n",
+        fprintf(fp, "static tileidx_t _tile_%s_basetiles[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_base_tiles.size(); i++)
             fprintf(fp, "    %u,\n", m_page.m_base_tiles[i]);
@@ -1199,7 +1205,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "int _tile_%s_probs[%s - %s] =\n{\n",
+        fprintf(fp, "static int _tile_%s_probs[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
             fprintf(fp, "    %d,\n", m_page.m_probs[i]);
@@ -1213,7 +1219,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "const char *_tile_%s_name[%s - %s] =\n{\n",
+        fprintf(fp, "static const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
 
         std::string old_enum_name = "";
@@ -1248,7 +1254,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "tile_info _tile_%s_info[%s - %s] =\n{\n",
+        fprintf(fp, "static tile_info _tile_%s_info[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
         {
@@ -1273,7 +1279,7 @@ bool tile_list_processor::write_data()
             fprintf(fp, "unsigned int tile_%s_part_count[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
-            for (int i = 0; i < m_ctg_counts.size(); i++)
+            for (unsigned int i = 0; i < m_ctg_counts.size(); i++)
                 fprintf(fp, "    %d,\n", m_ctg_counts[i]);
 
             fprintf(fp, "};\n\n");
@@ -1281,7 +1287,7 @@ bool tile_list_processor::write_data()
             fprintf(fp, "tileidx_t tile_%s_part_start[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
-            for (int i = 0; i < m_categories.size(); i++)
+            for (unsigned int i = 0; i < m_categories.size(); i++)
                 fprintf(fp, "    %u+%s,\n", part_min[i], m_start_value.c_str());
 
             fprintf(fp, "};\n\n");
@@ -1289,7 +1295,7 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "\ntypedef std::pair<const char*, tileidx_t> _name_pair;\n\n");
 
-        fprintf(fp, "_name_pair %s_name_pairs[] =\n"
+        fprintf(fp, "static _name_pair %s_name_pairs[] =\n"
                     "{\n", lcname.c_str());
 
         typedef std::map<std::string, int> sort_map;
@@ -1347,7 +1353,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "\ntypedef std::pair<tile_variation, tileidx_t> _colour_pair;\n\n");
 
         fprintf(fp,
-            "_colour_pair %s_colour_pairs[] =\n"
+            "static _colour_pair %s_colour_pairs[] =\n"
             "{\n"
             "    _colour_pair(tile_variation(0, 0), 0),\n",
             lcname.c_str());
@@ -1580,15 +1586,10 @@ bool tile_list_processor::write_data()
         }
 
         if (!m_page.m_tiles.empty())
-        {
-            fprintf(fp, "%s.png: \\\n",
-                    lcname.c_str(), lcname.c_str(), lcname.c_str());
-        }
+            fprintf(fp, "%s.png: \\\n", lcname.c_str());
 
         for (size_t i = 0; i < m_depends.size(); ++i)
-        {
              fprintf(fp, "  %s \\\n", m_depends[i].c_str());
-        }
 
         // Also generate empty dependencies for each file.
         // This way, if a file gets removed, the dependency file
@@ -1596,9 +1597,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "%s", "\n\n");
 
         for (size_t i = 0; i < m_depends.size(); ++i)
-        {
              fprintf(fp, "%s:\n", m_depends[i].c_str());
-        }
 
         fclose(fp);
     }
@@ -1615,9 +1614,46 @@ bool tile_list_processor::write_data()
             return (false);
         }
 
+        if (m_abstract.size() == 0)
+        {
+            fprintf(fp, "define([");
+            if (m_start_value_module.size() > 0)
+                fprintf(fp, "\"./tileinfo-%s\"",
+                        m_start_value_module.c_str());
+            fprintf(fp, "], function(m) {\n");
+        }
+        else
+        {
+            fprintf(fp, "define([\"jquery\",");
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+            {
+                fprintf(fp, "\"./tileinfo-%s\", ", m_abstract[i].first.c_str());
+            }
+            fprintf(fp, "],\n       function ($, ");
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+            {
+                if (i < m_abstract.size() - 1)
+                    fprintf(fp, "%s, ", m_abstract[i].first.c_str());
+                else
+                    fprintf(fp, "%s", m_abstract[i].first.c_str());
+            }
+            fprintf(fp, ") {\n");
+        }
         fprintf(fp, "// This file has been automatically generated.\n\n");
+        fprintf(fp, "var exports = {};\n");
 
-        fprintf(fp, "val = %s;\n", m_start_value.c_str());
+        if (m_abstract.size() > 0)
+        {
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+            {
+                fprintf(fp, "$.extend(exports, %s);\n", m_abstract[i].first.c_str());
+            }
+        }
+
+        if (m_start_value_module.size() > 0)
+            fprintf(fp, "\nvar val = m.%s;\n", m_start_value.c_str());
+        else
+            fprintf(fp, "\nvar val = %s;\n", m_start_value.c_str());
 
         std::string old_enum_name = "";
         int count = 0;
@@ -1630,19 +1666,19 @@ bool tile_list_processor::write_data()
             {
                 if (old_enum_name.empty())
                 {
-                    fprintf(fp, "%s_%s_FILLER_%d = val++;\n", m_prefix.c_str(),
+                    fprintf(fp, "exports.%s_FILLER_%d = val++;\n",
                             ucname.c_str(), i);
                 }
                 else
                 {
-                    fprintf(fp, "%s_%s_%d = val++;\n", m_prefix.c_str(),
+                    fprintf(fp, "exports.%s_%d = val++;\n",
                             old_enum_name.c_str(), ++count);
                 }
             }
             else if (parts_ctg.empty())
             {
                 const std::string &enumname = m_page.m_tiles[i]->enumname(0);
-                fprintf(fp, "%s_%s = val++;\n", m_prefix.c_str(),
+                fprintf(fp, "exports.%s = val++;\n",
                         enumname.c_str());
                 old_enum_name = enumname;
                 count = 0;
@@ -1650,7 +1686,7 @@ bool tile_list_processor::write_data()
             else
             {
                 const std::string &enumname = m_page.m_tiles[i]->enumname(0);
-                fprintf(fp, "%s_%s_%s = val++;\n", m_prefix.c_str(),
+                fprintf(fp, "exports.%s_%s = val++;\n",
                         parts_ctg.c_str(), enumname.c_str());
                 old_enum_name = enumname;
                 count = 0;
@@ -1663,24 +1699,24 @@ bool tile_list_processor::write_data()
 
                 if (parts_ctg.empty())
                 {
-                    fprintf(fp, "val = %s_%s = %s_%s; val++;\n",
-                            m_prefix.c_str(), enumname.c_str(),
-                            m_prefix.c_str(), basename.c_str());
+                    fprintf(fp, "val = exports.%s = exports.%s; val++;\n",
+                            enumname.c_str(), basename.c_str());
                 }
                 else
                 {
-                    fprintf(fp, "val = %s_%s_%s = %s_%s_%s; val++;\n",
-                            m_prefix.c_str(), parts_ctg.c_str(), enumname.c_str(),
-                            m_prefix.c_str(), parts_ctg.c_str(), basename.c_str());
+                    fprintf(fp, "val = exports.%s_%s = exports.%s_%s; val++;\n",
+                            parts_ctg.c_str(), enumname.c_str(),
+                            parts_ctg.c_str(), basename.c_str());
                 }
             }
         }
 
         if (m_abstract.size() == 0)
         {
-            fprintf(fp, "%s_%s_MAX = val++;\n\n", m_prefix.c_str(), ucname.c_str());
+            fprintf(fp, "exports.%s_MAX = exports.%s_%s_MAX = val++;\n\n",
+                    ucname.c_str(), m_prefix.c_str(), ucname.c_str());
 
-            fprintf(fp, "var _%s_tile_info = [\n", lcname.c_str());
+            fprintf(fp, "var tile_info = [\n");
             for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
             {
                 fprintf(fp, "  {w: %d, h: %d, ox: %d, oy: %d, sx: %d, sy: %d, ex: %d, ey: %d},\n",
@@ -1689,50 +1725,56 @@ bool tile_list_processor::write_data()
                         m_page.m_texcoords[i], m_page.m_texcoords[i+1],
                         m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
             }
-            fprintf(fp, "]\n\n");
+            fprintf(fp, "];\n\n");
 
-            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
-            fprintf(fp, "    return _%s_tile_info[idx - %s];\n",
-                    lcname.c_str(), m_start_value.c_str());
-            fprintf(fp, "}\n\n");
+            fprintf(fp, "exports.get_tile_info = function (idx)\n{\n");
+            fprintf(fp, "    return tile_info[idx - %s%s];\n",
+                    m_start_value_module.size() > 0 ? "m." : "",
+                    m_start_value.c_str());
+            fprintf(fp, "};\n\n");
 
-            fprintf(fp, "var _tile_%s_count =\n[\n", lcname.c_str());
+            fprintf(fp, "var _tile_count =\n[\n");
             for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
                 fprintf(fp, "    %u,\n", m_page.m_counts[i]);
             fprintf(fp, "];\n\n");
 
-            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
-            fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
-                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "exports.tile_count = function (idx)\n{\n");
+            fprintf(fp, "    return _tile_count[idx - %s%s];\n",
+                    m_start_value_module.size() > 0 ? "m." : "",
+                    m_start_value.c_str());
             fprintf(fp, "}\n\n");
+
+            fprintf(fp, "exports.get_img = function (idx) {\n");
+            fprintf(fp, "    return \"%s\";\n", lcname.c_str());
+            fprintf(fp, "};\n\n");
         }
         else
         {
             {
                 size_t last_idx = m_abstract.size() - 1;
 
-                std::string max_enum = m_abstract[last_idx].second;
-                max_enum += "_";
+                std::string max_enum = "";
                 max_enum += m_abstract[last_idx].first;
                 max_enum += "_MAX";
 
                 for (size_t j = 0; j < max_enum.size(); ++j)
                     max_enum[j] = std::toupper(max_enum[j]);
 
-                fprintf(fp, "%s_%s_MAX = %s;\n\n",
-                        m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
+                fprintf(fp, "exports.%s_MAX = window.%s_%s_MAX = %s.%s;\n\n",
+                        ucname.c_str(), m_prefix.c_str(), ucname.c_str()
+                        , m_abstract[last_idx].first.c_str(),
+                        max_enum.c_str());
             }
 
             std::vector<std::string> uc_max_enum;
             for (size_t i = 0; i < m_abstract.size(); ++i)
             {
-                std::string max_enum = m_abstract[i].second;
-                max_enum += "_";
-                max_enum += m_abstract[i].first;
+                std::string max_enum = m_abstract[i].first;
                 max_enum += "_MAX";
-
                 for (size_t j = 0; j < max_enum.size(); ++j)
                     max_enum[j] = std::toupper(max_enum[j]);
+
+                max_enum = m_abstract[i].first + "." + max_enum;
 
                 uc_max_enum.push_back(max_enum);
             }
@@ -1741,18 +1783,20 @@ bool tile_list_processor::write_data()
             for (size_t i = 0; i < m_abstract.size(); ++i)
                 lc_enum.push_back(m_abstract[i].first);
 
-            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
-            add_abstracts(fp, "return (get_%s_tile_info(idx));", lc_enum, uc_max_enum);
-            fprintf(fp, "}\n\n");
+            fprintf(fp, "exports.get_tile_info = function (idx)\n{\n");
+            add_abstracts(fp, "return (%s.get_tile_info(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "};\n\n");
 
-            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
-            add_abstracts(fp, "return (tile_%s_count(idx));", lc_enum, uc_max_enum);
-            fprintf(fp, "}\n\n");
+            fprintf(fp, "exports.tile_count = function (idx)\n{\n");
+            add_abstracts(fp, "return (%s.tile_count(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "};\n\n");
 
-            fprintf(fp, "function get_%s_img(idx) {\n", lcname.c_str());
+            fprintf(fp, "exports.get_img = function (idx) {\n");
             add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
-            fprintf(fp, "}\n\n");
+            fprintf(fp, "};\n\n");
         }
+
+        fprintf(fp, "return exports;\n});\n");
 
         fflush(fp);
         if (!_write_if_changed(filename, fp))

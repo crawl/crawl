@@ -106,7 +106,7 @@ public:
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        always_confirm_butcher; // even if only one corpse
+    int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
@@ -118,6 +118,7 @@ public:
                                    // chunks if no safe ones are present
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
+    bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
@@ -323,8 +324,7 @@ public:
     char        tile_show_items[20]; // show which item types in tile inventory
     bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
-#endif
-#ifdef USE_TILE_LOCAL
+
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;
@@ -347,6 +347,8 @@ public:
     char        tile_excluded_col;
     char        tile_excl_centre_col;
     char        tile_window_col;
+#endif
+#ifdef USE_TILE_LOCAL
     // font settings
     std::string tile_font_crt_file;
     int         tile_font_crt_size;

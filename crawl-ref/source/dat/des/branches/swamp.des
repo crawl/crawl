@@ -4,7 +4,7 @@
 
 ###############################################################################
 # Swamp entries
-##############################################################################3
+###############################################################################
 
 # This is basically the dummy balancer.
 NAME:   swamp_mist
@@ -220,15 +220,20 @@ MAP
   tt"t'
 ENDMAP
 
-################################################################################
+###############################################################################
 # Swamp ending vaults
-################################################################################
+#
+# They come in two flavours: normal and themed. The first three are normal and
+# use regular swamp monsters. The other four have special themes. Each group has
+# a total weight of 12.
+###############################################################################
 
-################################################################################
+###############################################################################
 # Swamp:5 standard
 #
 NAME:    swamp
 PLACE:   Swamp:5
+WEIGHT:  4
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon / nothing
@@ -261,11 +266,12 @@ MAP
        '
 ENDMAP
 
-################################################################################
+###############################################################################
 # Swamp:5 alternative (dp)
 #
 NAME:    swamp_alternative
 PLACE:   Swamp:5
+WEIGHT:  4
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake
@@ -297,9 +303,57 @@ MAP
 ENDMAP
 
 ###############################################################################
+# "Old school" swamp end, by Jude
+#
+NAME:    swamp_old_school
+PLACE:   Swamp:5
+WEIGHT:  4
+TAGS:    no_pool_fixup
+ORIENT:  southeast
+MONS:    swamp dragon, hydra, swamp drake
+MONS:    the lernaean hydra, hydra
+SHUFFLE: ab
+SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
+SHUFFLE: 12
+SUBST:   1=1111., 2=2222., 3=3333.
+KITEM:   O = decaying rune of Zot
+KFEAT:   t = swamp_tree
+MAP
+               t
+    x   "t     t"   x        t
+       "ttt"  tt"    "t"    tt   ttt
+ x    "ttttt"tttt"  tttt"  tttt ttttt
+    ""tttttttttttttttttttttttttttttttt
+ @  "ttt.wtcccccttcccttccttttttccctttt
+.WW"tt.wcccccwwccccwcccccccttcccOccctt
+ .W""'ccccuuwuuwuuwuwuuwccccccwu'ucctt
+ 3.''''ccuu3uuuuuuuuuu3uuwcccwu'uwcctt
+ ....'''''''''''''''''''uuwwccw'cccctt
+ .""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
+@"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
+  "tt.wccccc12u'uu2uu2u'u2uwccabcctttt
+  w"tt.wccccuuu'u1uu1uu'uuwccccabccttt
+  w.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
+   .xw"tccwuuuu'uuuuuuu'uuccccuu'ccctt
+x  .ww"ttccwu2u'u1uuu2u'u2ucc2u'uucctt
+  WxW"ttccwuuuu'uu2uuuu'uuuuuu'1uccttt
+  ww"tttcwuu''''''''''''''''''uucctttt
+   ww""tccwuuuu2uuuuuuu'uuuuu2uu3ccttt
+ 3 WwwW"tccccuuuu1''''''uuuuuuuucctttt
+   xwwWxttcccu1uuu2uuuu''''''uuccctttt
+   Wwww"ttccwuuu3uuuu3u'uuuuuuuuuccttt
+   wWW"ttccwuuwuuccuuuu'ucccuccucctttt
+   ""tttccwuuwcccccccucccw4ccccccttttt
+ "tttttttccwwcccttttcccccccctttttttttt
+""ttttttttcccctttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+###############################################################################
 # Swamp:5 alternative (due)
 NAME:    swamp_fiery
 PLACE:   Swamp:5
+WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
@@ -339,6 +393,7 @@ ENDMAP
 #
 NAME:    swamp_icy
 PLACE:   Swamp:5
+WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  southeast
 SHUFFLE: OR
@@ -386,11 +441,12 @@ tttccccccccccccccccccttttt
 tttttttttttttttttttttttttt
 ENDMAP
 
-##################################################################
+###############################################################################
 # Alternative swamp end, by Lemuel
 #
 NAME:    swamp_pestilence
 PLACE:   Swamp:5
+WEIGHT:  3
 TAGS:    no_pool_fixup
 ORIENT:  southeast
 MONS:    spectral swamp dragon / spectral hydra
@@ -444,48 +500,57 @@ ttttttttttttt""tttttttttt
 ttttttttttttttttttttttttt
 ENDMAP
 
-##################################################################
-# "Old school" swamp end, by Jude
-#
-NAME:    swamp_old_school
+###############################################################################
+# HangedMan's hellswamp: an abandoned, overgrown, flooded temple,
+# occupied by demons, beasts, messes of flesh, and other vile tricks.
+NAME:    swamp_vile
 PLACE:   Swamp:5
-TAGS:    no_pool_fixup
+WEIGHT:  3
+TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  southeast
-MONS:    swamp dragon, hydra, swamp drake
-MONS:    the lernaean hydra, hydra
-SHUFFLE: ab
-SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
-SHUFFLE: 12
-SUBST:   1=1111., 2=2222., 3=3333.
-KITEM:   O = decaying rune of Zot
+MONS:    tentacled monstrosity, hell beast / death ooze, \
+         green death, hairy devil / rotting devil / orange demon, \
+         large abomination / very ugly thing, rotting hulk / ugly thing, \
+         oklob plant
+KMONS:   8 = hydra / swamp dragon
+KITEM:   r = decaying rune of zot
+KFEAT:   8f = shallow_water
 KFEAT:   t = swamp_tree
+MARKER:  f = lua:fog_machine {cloud_type = "black smoke", \
+             pow_min = 7, pow_max = 11, delay_min = 100, delay_max = 200, \
+             size = 2, spread_rate= 30, start_clouds = 1 }
+SHUFFLE: yz, '"
+SUBST:   y = x, z = .wwwwWWW, ' = ...W, " = wWW
 MAP
-               t
-    x   "t     t"   x        t
-       "ttt"  tt"    "t"    tt   ttt
- x    "ttttt"tttt"  tttt"  tttt ttttt
-    ""tttttttttttttttttttttttttttttttt
- @  "ttt.wtcccccttcccttccttttttccctttt
-.WW"tt.wcccccwwccccwcccccccttcccOccctt
- .W""'ccccuuwuuwuuwuwuuwccccccwu'ucctt
- 3.''''ccuu3uuuuuuuuuu3uuwcccwu'uwcctt
- ....'''''''''''''''''''uuwwccw'cccctt
- .""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
-@"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
-  "tt.wccccc12u'uu2uu2u'u2uwccabcctttt
-  w"tt.wccccuuu'u1uu1uu'uuwccccabccttt
-  w.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
-   .xw"tccwuuuu'uuuuuuu'uuccccuu'ccctt
-x  .ww"ttccwu2u'u1uuu2u'u2ucc2u'uucctt
-  WxW"ttccwuuuu'uu2uuuu'uuuuuu'1uccttt
-  ww"tttcwuu''''''''''''''''''uucctttt
-   ww""tccwuuuu2uuuuuuu'uuuuu2uu3ccttt
- 3 WwwW"tccccuuuu1''''''uuuuuuuucctttt
-   xwwWxttcccu1uuu2uuuu''''''uuccctttt
-   Wwww"ttccwuuu3uuuu3u'uuuuuuuuuccttt
-   wWW"ttccwuuwuuccuuuu'ucccuccucctttt
-   ""tttccwuuwcccccccucccw4ccccccttttt
- "tttttttccwwcccttttcccccccctttttttttt
-""ttttttttcccctttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttt
+ @   xxccxcxcctWW
+  Wxfx'""'..WcctWW
+  xWxWx''"zyW.xctWW
+  fxWx"wwwyzwxWcctWW
+ xxWx.x6wwzyw.x.xctWWW
+tx'x"x4wwwyzwx6W.ccttWW
+xt"'w6w48wzywx56xWccttWW
+ct"'www88wyxwxxx.x.xtttWW
+tx'"wwwww.c.wwwwwwWWctttW
+tc.yzyzyzcxw.zyzyzWx8xctWW
+xt.zyzyzx.wf.yzyzy.fxWcctWW
+ct"'wwwwWw..wWW.WWw.WWWcctWW
+tx"'wxxxWWzyWwcwc.WyzWwWxctWW
+tc'"wx6xWWyzWcf4wcWzywWx.cctWW
+xt"'wx5WxWzy.w47.w.yzwx56.xctW
+ct'"wx6xWWyzWcw.3cWzywx65xWcct
+tx"'wxxWwWzyW.cwcfWyzwxxxWwWcc
+tc"'WWWwWf..wWW.WWw.WWwwwwwwWc
+ctfzyzyzxW.w.yzyzy.W.Wxzyzyzfc
+xt.yzyzyzxw..zyzyzW..xzyzyzy.x
+tc"'wwww.WxWfWWWWWWWxcWW..w'"c
+tc"'wxxWW.yxWWWxWwWxyWfWxx."'c
+ct'"xx4xWwzywxx6xWwyzWWc.cx'"c
+xt'"x.w4xwyzwx565xWzy.x..2x"'x
+cct8x3.xxwyzwxxxxxWyz.xc1rc'"c
+ tt'xxxxwwzywwwwwWwzyw.xxcc8Wt
+ tcW'8""''yz""'7'""yz'"'"'8ftc
+ Wcctt''""f.''"'"''f."'"'"Wttt
+  Wttccxcccxccxcccxccccccxtctt
+                              t
+                               t
 ENDMAP

@@ -21,15 +21,15 @@ static species_type species_order[] = {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_DEEP_DWARF,
-    SP_HILL_ORC,       SP_MERFOLK,
+    SP_DEEP_DWARF,     SP_HILL_ORC,
+    SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_NOME,
     // significantly different body type from human
     SP_NAGA,           SP_CENTAUR,
     SP_OGRE,           SP_TROLL,
-    SP_MINOTAUR,       SP_KENKU,
+    SP_MINOTAUR,       SP_TENGU,
     SP_BASE_DRACONIAN,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
@@ -59,8 +59,8 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       "HO", "Ko", "Mu", "Na", "Og", "Tr",
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      "Fe", "No", "No",
+      "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
+      "Fe", "Op", "No",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -171,7 +171,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_CENTAUR:    res = "Centaur";                           break;
         case SP_SPRIGGAN:   res = "Spriggan";                          break;
         case SP_MINOTAUR:   res = "Minotaur";                          break;
-        case SP_KENKU:      res = "Kenku";                             break;
+        case SP_TENGU:      res = "Tengu";                             break;
 
         case SP_HILL_ORC:
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
@@ -184,6 +184,12 @@ std::string species_name(species_type speci, bool genus, bool adj)
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Mountain Dwarf");
             break;
 #endif
+        case SP_FELID:
+            res = (adj ? "Feline" : genus ? "Cat" : "Felid");
+            break;
+        case SP_OCTOPODE:
+            res = (adj ? "Octopoid" : genus ? "Octopus" : "Octopode");
+            break;
 
         case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
         case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
@@ -192,8 +198,6 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-        case SP_FELID:      res = (adj ? "Feline"     : "Felid");      break;
-        case SP_OCTOPODE:   res = (adj ? "Octopoid"   : "Octopode");   break;
         case SP_NOME:       res = (adj ? "Nomish"     : "Nome");       break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
@@ -337,8 +341,8 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_DEMONSPAWN);
     case SP_GHOUL:
         return (MONS_GHOUL);
-    case SP_KENKU:
-        return (MONS_KENKU);
+    case SP_TENGU:
+        return (MONS_TENGU);
     case SP_MERFOLK:
         return (MONS_MERFOLK);
     case SP_VAMPIRE:
@@ -353,6 +357,9 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_GNOME);
     case SP_ELF:
     case SP_HILL_DWARF:
+#if TAG_MAJOR_VERSION != 32
+    case SP_MOUNTAIN_DWARF:
+#endif
     case SP_OGRE_MAGE:
     case SP_GREY_ELF:
     case SP_GNOME:
@@ -389,7 +396,7 @@ int species_exp_modifier(species_type species)
     case SP_OCTOPODE:
         return 12;
     case SP_SPRIGGAN:
-    case SP_KENKU:
+    case SP_TENGU:
 #if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
 #endif
@@ -434,7 +441,7 @@ int species_hp_modifier(species_type species)
     case SP_NOME:
         return -3;
     case SP_DEEP_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
     case SP_KOBOLD:
         return -2;
     case SP_HIGH_ELF:
@@ -488,7 +495,7 @@ int species_mp_modifier(species_type species)
     default:
         return 0;
     case SP_SLUDGE_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:

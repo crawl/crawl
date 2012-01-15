@@ -270,7 +270,7 @@ std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
     if (attribute_to_user)
     {
         return (std::string(you.can_see(act_source)?
-                            act_source->name(DESC_NOCAP_A)
+                            act_source->name(DESC_A)
                             : "something")
                 + " miscasting " + spell_title(spell));
     }
@@ -739,7 +739,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.summon_type = MON_SUMM_MISCAST;
     }
 
-    return (create_monster(data) != -1);
+    return (create_monster(data));
 }
 
 // hair or hair-equivalent (like bandages)
@@ -751,7 +751,7 @@ static bool _has_hair(actor* target)
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
             && you.species != SP_OCTOPODE
-            && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
+            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN));
 }
 
 static std::string _hair_str(actor* target, bool &plural)
@@ -1050,7 +1050,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->atype() == ACT_PLAYER ? 4 : 2))
         {
         case 0:
-            paralyse_player(cause);
+            target->paralyse(act_source, 2 + random2(6), cause);
             break;
         case 1:
             _potion_effect(POT_CONFUSION, 10);
@@ -1570,7 +1570,7 @@ void MiscastEffect::_divination_you(int severity)
 // XXX: Monster divination miscasts.
 void MiscastEffect::_divination_mon(int severity)
 {
-    // Nothing is appropiate for unmoving plants.
+    // Nothing is appropriate for unmoving plants.
     if (mons_is_firewood(target_as_monster()))
         return;
 
@@ -2215,7 +2215,7 @@ void MiscastEffect::_ice(int severity)
          || feat_is_staircase(feat) || feat_is_water(feat));
 
     const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
-        feature_description(target->pos(), false, DESC_NOCAP_THE);
+        feature_description(target->pos(), false, DESC_THE);
 
     int num;
     switch (severity)

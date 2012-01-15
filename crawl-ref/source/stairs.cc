@@ -38,7 +38,7 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
 #include "traps.h"
@@ -231,7 +231,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 
     // Get feature name before sliding stair over.
     std::string stair_str =
-        feature_description(you.pos(), false, DESC_CAP_THE, false);
+        feature_description(you.pos(), false, DESC_THE, false);
 
     if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
         return (false);
@@ -463,7 +463,8 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
 
     _clear_golubria_traps();
 
-    if (grd(you.pos()) == DNGN_EXIT_ABYSS) {
+    if (grd(you.pos()) == DNGN_EXIT_ABYSS)
+    {
         you.level_type_name =
             static_cast<std::string>(you.props["abyss_return_name"]);
         you.level_type_name_abbrev =
@@ -962,7 +963,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
         std::random_shuffle(runes.begin(), runes.end());
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
 #else
@@ -1246,9 +1247,11 @@ void down_stairs(dungeon_feature_type force_stair,
 
     moveto_location_effects(old_feat);
 
-    // Clear list of beholding monsters.
+    // Clear list of beholding and constricting/constricted monsters.
     you.clear_beholders();
     you.clear_fearmongers();
+    you.stop_constricting_all();
+    you.stop_being_constricted();
 
     if (!allow_control_teleport(true))
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);

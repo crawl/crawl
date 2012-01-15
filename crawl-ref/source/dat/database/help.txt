@@ -69,8 +69,9 @@ to find artefacts that have the property.
 If you're using stash.lua (which is the default), you can also search by
 some additional item properties: <w>artefact</w> will find identified artefacts,
 <w>ego</w> will find non-artefacts with a brand and unidentified items which may
-be branded. Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all
-weapons that train that skill.
+be branded, and <w>throwable</w> will find things you can throw. Skill names
+(such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that train
+that skill.
 
 If you're using stash.lua and have set annotate_item_class = true in your
 initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>. For
@@ -93,7 +94,7 @@ For instance, to find rings (jewellery) but not ring mail you could use:
 %%%%
 level-map
 
-<h>Level Map ('<w>X</w><h>' in the main screen):
+<h>Level Map ('<w>X</w>' in the main screen):</h>
 <w>Esc</w>    : Leave level map (also <w>Space</w> or any unused key).
 <w>Dir.</w>   : Move the cursor.
 <w>Shift-Dir.</w> : Move the cursor in larger steps (7 by default).
@@ -103,16 +104,16 @@ level-map
 <w>[</w> or <w>]</w> : Examine the next higher or lower level
 <w>G</w>      : Go to another level by branch and depth
 
-<h>Travel exclusions
+<h>Travel exclusions</h>
 <w>e</w>      : Create a travel exclusion, change its radius, or remove it.
 <w>E</w>      : Cycle through travel exclusions.
 <w>Ctrl-E</w> : Erase all travel exclusions on the level.
 
-<h>Waypoints
+<h>Waypoints</h>
 <w>Ctrl-W</w> : Set waypoint to current position.
 <w>W</w>      : Cycle through all waypoints on the level.
 
-<h>Cycle through features
+<h>Cycle through features</h>
 <w><<</w> or <w>></w> : Cycle through up or down stairs.
 <w>^</w>      : Cycle through traps.
 <w>Tab</w>    : Cycle through shops and portals.
@@ -120,9 +121,14 @@ level-map
 <w>/</w>      : Cycle backward through stashes (by default, all items).
 <w>_</w>      : Cycle through altars.
 
-<h>Other
+<h>Other</h>
 <w>Ctrl-C</w> : Clear item and monster memory.
-<w>Ctrl-F</w> : Forget level map.
+<w>Ctrl-F</w> : Forget level map.{{
+if you.wizard() then
+    return "\n\n"
+          .. "<h>Wizard commands</h>\n"
+          .. "<w>T</w>      : Teleport to cursor."
+end }}
 %%%%
 interlevel-travel.branch.prompt
 
@@ -220,5 +226,4 @@ and Spellcasting can always be trained. For the rest:
 * Spell schools require knowing a spell of the school.
 * Necromancy can also be trained when having a Kikubaaqudgha ability.
 * Invocations requires having at least one divine ability that exercises it.
-
 %%%%

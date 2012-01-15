@@ -530,6 +530,16 @@ IDEF(dropped)
     return (1);
 }
 
+IDEF(is_melded)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    lua_pushboolean(ls, item_is_melded(*item));
+
+    return (1);
+}
+
 IDEF(can_cut_meat)
 {
     if (!item || !item->defined())
@@ -546,6 +556,16 @@ IDEF(is_bad_food)
         return (0);
 
     lua_pushboolean(ls, is_bad_food(*item));
+
+    return (1);
+}
+
+IDEF(is_useless)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    lua_pushboolean(ls, is_useless_item(*item));
 
     return (1);
 }
@@ -997,8 +1017,10 @@ static ItemAccessor item_attrs[] =
     { "is_ranged",         l_item_is_ranged },
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
+    { "is_melded",         l_item_is_melded },
     { "can_cut_meat",      l_item_can_cut_meat },
     { "is_bad_food",       l_item_is_bad_food },
+    { "is_useless",        l_item_is_useless },
     { "pluses",            l_item_pluses },
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },

@@ -30,12 +30,11 @@
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "terrain.h"
-#ifdef USE_TILE
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
-#endif
 
 static int _actor_cloud_damage(actor *act, const cloud_struct &cloud,
                                bool maximum_damage);
@@ -174,7 +173,7 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
                         mid_t source, uint8_t spread_rate, int colour,
-                        std::string name, std::string tile)
+                        std::string name, std::string tile, int excl_rad)
 {
     ASSERT(env.cloud[cloud].type == CLOUD_NONE);
     ASSERT(_killer_whose_match(whose, killer));
@@ -190,7 +189,7 @@ static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
     c.spread_rate = spread_rate;
     c.colour      = colour;
     c.name        = name;
-#ifdef USE_TILE
+    c.excl_rad    = excl_rad;
     if (!tile.empty())
     {
         tileidx_t index;
@@ -200,7 +199,6 @@ static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
             tile = "";
         }
     }
-#endif
     c.tile        = tile;
     env.cgrid(p)  = cloud;
     env.cloud_no++;
@@ -213,7 +211,7 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
                              mid_t source,
                              int spread_rate = -1, int colour = -1,
                              std::string name = "",
-                             std::string tile = "")
+                             std::string tile = "", int excl_rad = -1)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -224,7 +222,7 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
         if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
             _new_cloud(ci, cltype, p, decay, whose, killer, source, spread_rate,
-                       colour, name, tile);
+                       colour, name, tile, excl_rad);
             break;
         }
     }
@@ -258,7 +256,7 @@ static int _spread_cloud(const cloud_struct &cloud)
 
         _place_new_cloud(cloud.type, *ai, newdecay, cloud.whose, cloud.killer,
                          cloud.source, cloud.spread_rate, cloud.colour,
-                         cloud.name, cloud.tile);
+                         cloud.name, cloud.tile, cloud.excl_rad);
 
         extra_decay += 8;
     }
@@ -282,7 +280,7 @@ static void _spread_fire(const cloud_struct &cloud)
         {
             _place_new_cloud(CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
                              cloud.killer, cloud.source, cloud.spread_rate,
-                             cloud.colour, cloud.name, cloud.tile);
+                             cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
         }
 
         // forest fire doesn't spread in all directions at once,
@@ -297,7 +295,7 @@ static void _spread_fire(const cloud_struct &cloud)
             nuke_wall(*ai);
             _place_new_cloud(cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.source, cloud.spread_rate,
-                              cloud.colour, cloud.name, cloud.tile);
+                              cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1);
             else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
@@ -522,7 +520,7 @@ void swap_clouds(coord_def p1, coord_def p2)
 // exist at that point.
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate, int colour,
-                       std::string name, std::string tile)
+                       std::string name, std::string tile, int excl_rad)
 {
     if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
@@ -530,7 +528,8 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(p)))
         return;
 
-    place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile);
+    place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile,
+                excl_rad);
 }
 
 static int _steam_cloud_damage(int decay)
@@ -571,7 +570,7 @@ static bool cloud_is_stronger(cloud_type ct, int cl)
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  const actor *agent, int _spread_rate, int colour,
-                 std::string name, std::string tile)
+                 std::string name, std::string tile, int excl_rad)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -633,7 +632,8 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (cl_new != -1)
     {
         _new_cloud(cl_new, cl_type, ctarget, cl_range * 10,
-                    whose, killer, source, spread_rate, colour, name, tile);
+                    whose, killer, source, spread_rate, colour, name, tile,
+                    excl_rad);
     }
     else
     {
@@ -643,7 +643,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
                 _new_cloud(ci, cl_type, ctarget, cl_range * 10, whose, killer,
-                           source, spread_rate, colour, name, tile);
+                           source, spread_rate, colour, name, tile, excl_rad);
                 break;
             }
         }
@@ -783,12 +783,23 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return (true);
 
     const bool player = act->is_player();
+
+    if (!player
+        && you.religion == GOD_FEDHAS
+        && fedhas_protects(act->as_monster())
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
+        && (act->as_monster()->friendly() || act->as_monster()->neutral()))
+    {
+        return (true);
+    }
+
     switch (cloud.type)
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->is_fiery()
-                || (player && you.duration[DUR_FIRE_SHIELD]);
+                || (player && you.duration[DUR_FIRE_SHIELD])
+                || (player && you.mutation[MUT_IGNITE_BLOOD]);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:
@@ -863,7 +874,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
             if (you.can_see(act))
             {
                 mprf("%s %s in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
             }
@@ -948,7 +959,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         if (player)
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
-            poison_player(1, agent ? agent->name(DESC_NOCAP_A) : "",
+            poison_player(1, agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else
@@ -963,7 +974,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
             if (agent)
-                miasma_player(agent->name(DESC_NOCAP_A), cloud.cloud_name());
+                miasma_player(agent->name(DESC_A), cloud.cloud_name());
             else
                 miasma_player(cloud.cloud_name());
         }
@@ -997,7 +1008,8 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_CHAOS:
         if (coinflip())
         {
-            chaos_affect_actor(act);
+            // TODO: Not have this in melee_attack
+            melee_attack::chaos_affect_actor(act);
             return true;
         }
         break;
@@ -1021,21 +1033,6 @@ static int _actor_cloud_base_damage(actor *act,
     const int cloud_base_damage = (resist == MAG_IMMUNE?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
-}
-
-static int _cloud_timescale_damage(const actor *act, int damage)
-{
-    if (damage < 0)
-        damage = 0;
-    // Can we have a uniform player/monster speed system yet?
-    if (act->is_player())
-        return div_rand_round(damage * you.time_taken, 10);
-    else
-    {
-        const monster *mons = act->as_monster();
-        const int speed = mons->speed > 0? mons->speed : 10;
-        return div_rand_round(damage * 10, speed);
-    }
 }
 
 static int _cloud_damage_output(actor *actor,
@@ -1079,7 +1076,7 @@ static int _actor_cloud_damage(actor *act,
         break;
     }
 
-    return _cloud_timescale_damage(act, final_damage);
+    return timescale_damage(act, final_damage);
 }
 
 // Applies damage and side effects for an actor in a cloud and returns
@@ -1124,7 +1121,7 @@ int actor_apply_cloud(actor *act)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from cloud: %s.",
-             act->name(DESC_CAP_THE).c_str(),
+             act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
              cloud.cloud_name().c_str());
@@ -1355,14 +1352,14 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
             if (act->is_player())
             {
                 mprf("%s %s standing in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
             }
         }
         else
         {
             mprf("%s %s in %s.",
-                 act->name(DESC_CAP_THE).c_str(),
+                 act->name(DESC_THE).c_str(),
                  beneficial ? act->conj_verb("bask").c_str()
                  : (act->conj_verb("are") + " engulfed").c_str(),
                  cloud_name().c_str());
