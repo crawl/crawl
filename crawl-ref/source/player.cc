@@ -5531,7 +5531,7 @@ void player::init()
     normal_vision    = LOS_RADIUS;
     current_vision   = LOS_RADIUS;
 
-    hell_branch      = NUM_BRANCHES;
+    hell_branch      = BRANCH_MAIN_DUNGEON;
     hell_exit        = 0;
 
     real_time        = 0;
