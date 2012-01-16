@@ -1356,3 +1356,109 @@ W3T3WWWWWtTtW
  W3W     WtW
   W       W
 ENDMAP
+
+##############################################################################
+# tarquinn's gardens
+
+NAME:   tarquinn_simple_flora_water_a
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: ({[
+MONS:   plant
+MAP
+ttt@ttttttt
+t{t.......t
+t.11111.t.t
+t.1www1.t.t
+t.1wGw1.t.t
+t.1www1.t.t
+t.11111.t.t
+t.......t.t
+ttttttt.t.t
+t[......t(t
+ttttttttttt
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_b
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {}
+MONS:   plant
+MAP
+xxxxxxxxxxxxx
++...wwwww...+
+xx..xxxxx..xx
+x..tt1{1tt..x
+xx..tt.tt..xx
+xt.........tx
+xt.t.www.t.tx
+xt..wwGww..tx
+xt.t.www.t.tx
+xt.........tx
+xx..tt.tt..xx
+x..tt1}1tt..x
+xx..xxxxx..xx
++...wwwww...+
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_c
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: ([{ABC
+SUBST:  A = }11
+SUBST:  ABC = 1
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xttttt..C.wwwwwwwwwx
+xttA.....ww11wwww..+
+xt...B.www111ww....x
+x.....ww111www...[tx
++....wwwwwww.(...ttx
+xwwwwww..{.....ttttx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_d
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant, fungus
+MAP
+xxxxxxxxxx
++....t1x2xxx
+xWWW..t1x(txx
+xxWG....{txx
+xWWW..t1x[txx
++....t1x2xxx
+xxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_e
+TAGS:   entry no_monster_gen
+ORIENT: float
+FTILE:  1 = floor_grass
+MONS:   plant
+MAP
+  xxx
+xxx[xx
+x1w.tx
+x1w{.+
+x1w.tx
+xxx(xx
+  xxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_f
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: 123wwttt
+MONS:   plant, bush, fungus
+MAP
+xxxxxx+xxx
+x12213.1tx
+xw13.....+
+x{....w12x
+x[(w3132wx
+xxxxxxxxxx
+ENDMAP
