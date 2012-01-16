@@ -25,6 +25,9 @@
 #include "hints.h"
 #include "view.h"
 
+// defined in dgn-overview.cc
+extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
+
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
@@ -597,6 +600,12 @@ std::string exclude_set::get_exclusion_desc()
 
         // Don't count cloud exclusions.
         if (strstr(ex.desc.c_str(), "cloud"))
+            continue;
+
+        // Don't duplicate if there's already an annotation from unique monsters.
+        std::set<std::pair<std::string, level_id> >::iterator ma
+            = auto_unique_annotations.find(std::pair<std::string, level_id>(ex.desc, level_id::current()));
+        if (ma != auto_unique_annotations.end())
             continue;
 
         if (ex.desc != "")
