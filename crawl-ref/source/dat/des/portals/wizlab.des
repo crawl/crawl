@@ -613,7 +613,7 @@ MONS:       dancing weapon
 KFEAT:      M = granite_statue
 TILE:       M = dngn_machine_tukima
 MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
-                                  slaved_to="tukima"}
+                                  veto_shatter="veto", slaved_to="tukima"}
 {{
 local tukima_marker = TriggerableFunction:new {
     func = "tukima_machine",
