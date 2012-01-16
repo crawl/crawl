@@ -1691,6 +1691,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
 
 // _tetrahedral_number: returns the nth tetrahedral number.
+// This is the number of triples of nonnegative integers with sum < n.
 // Called only by get_true_fail_rate.
 static int _tetrahedral_number(int n)
 {
@@ -1698,33 +1699,32 @@ static int _tetrahedral_number(int n)
 }
 
 // get_true_fail_rate: Takes the raw failure to-beat number
-// and converts it to actual failure rate percentage for display.
+// and converts it to the actual chance of failure:
+// the probability that random2avg(100,3) < raw_fail.
 // Should probably use more constants, though I doubt the spell
 // success algorithms will really change *that* much.
 // Called only by failure_rate_to_string.
 double get_true_fail_rate(int raw_fail)
 {
-    //Three d100 rolls.  Need average to be less than raw_fail.
+    //Need random2(101) + random2(101) + random2(100) to be less than 3*raw_fail.
     //Fun with tetrahedral numbers!
 
     int target = raw_fail * 3;
 
-    if(target <= 100)
+    if (target <= 100)
     {
-        return (double) _tetrahedral_number(target)/1030301;
+        return (double) _tetrahedral_number(target)/1020100;
     }
-    if(target < 200)
+    if (target <= 200)
     {
-        //PIE: the negative term takes the maximum of 100 into
-        //consideration.  Note that only one term can exceed 100 in this case,
+        //PIE: the negative term takes the maximum of 100 (or 99) into
+        //consideration.  Note that only one term can exceed it in this case,
         //which is why this works.
-        return (double) (_tetrahedral_number(target) - 3*_tetrahedral_number(target-100))/1030301;
+        return (double) (_tetrahedral_number(target) - 2*_tetrahedral_number(target-101) - _tetrahedral_number(target-100))/1020100;
     }
-    //Target is between 201 and 300 inclusive.  Note that finding the number of ways
-    //you can go below, say, 207 is equivalent to finding the number of ways you
-    //can go >= 208... which is equal to the number of ways to go below
-    //300 - 207 = 93.
-    return (double) (1030301 - _tetrahedral_number(300 - target))/1030301;
+    //The random2avg distribution is symmetric, so the last interval is
+    //essentially the same as the first interval.
+    return (double) (1020100 - _tetrahedral_number(300 - target))/1020100;
 
 }
 
