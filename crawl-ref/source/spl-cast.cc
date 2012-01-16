@@ -1151,7 +1151,7 @@ spret_type your_spells(spell_type spell, int powc,
 
             // The spell still goes through, but you get a miscast anyway.
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                          (you.experience_level / 2) + (spell_mana(spell) * 2),
+                          (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
 
@@ -1191,14 +1191,14 @@ spret_type your_spells(spell_type spell, int powc,
         // badly you missed the spell.  High power spells can be
         // quite nasty: 9 * 9 * 90 / 500 = 15 points of
         // contamination!
-        int nastiness = spell_mana(spell) * spell_mana(spell) * fail + 250;
+        int nastiness = spell_difficulty(spell) * spell_difficulty(spell) * fail + 250;
 
         const int cont_points = div_rand_round(nastiness, 500);
 
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
 
-        MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell), fail);
+        MiscastEffect(&you, NON_MONSTER, spell, spell_difficulty(spell), fail);
 
         return (SPRET_FAIL);
     }
