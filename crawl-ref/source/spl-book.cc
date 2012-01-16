@@ -855,19 +855,6 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
-static int _failure_rate_to_group(int fail)
-{
-    return (fail == 100) ? 100 :
-           (fail > 77)   ?  78 :
-           (fail > 59)   ?  60 :
-           (fail > 50)   ?  51 :
-           (fail > 40)   ?  41 :
-           (fail > 35)   ?  36 :
-           (fail > 28)   ?  29 :
-           (fail > 22)   ?  23 :
-           (fail >  0)   ?   1 : 0;
-}
-
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
     // List spells we can memorize right away first.
@@ -884,8 +871,8 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 
     // Don't sort by failure rate beyond what the player can see in the
     // success descriptions.
-    const int fail_rate_a = _failure_rate_to_group(spell_fail(a));
-    const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
+    const int fail_rate_a = failure_rate_to_int(spell_fail(a));
+    const int fail_rate_b = failure_rate_to_int(spell_fail(b));
     if (fail_rate_a != fail_rate_b)
         return (fail_rate_a < fail_rate_b);
 
@@ -1043,13 +1030,15 @@ static spell_type _choose_mem_spell(spell_list &spells,
         int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
-
-        char* failure = failure_rate_to_string(spell_fail(spell));
-        desc << chop_string(failure, 12)
-             << spell_difficulty(spell);
-        free(failure);
-
         desc << "</" << colour_to_str(colour) << ">";
+
+        colour = failure_rate_colour(spell);
+        desc << "<" << colour_to_str(colour) << ">";
+        char* failure = failure_rate_to_string(spell_fail(spell));
+        desc << chop_string(failure, 12);
+        free(failure);
+        desc << "</" << colour_to_str(colour) << ">";
+        desc << spell_difficulty(spell);
 
         MenuEntry* me =
             new MenuEntry(desc.str(), MEL_ITEM, 1,

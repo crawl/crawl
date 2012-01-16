@@ -107,13 +107,16 @@ static std::string _spell_base_description(spell_type spell, bool viewing)
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
+    desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
+    highlight = failure_rate_colour(spell);
+    desc << "<" << colour_to_str(highlight) << ">";
     char* failure = failure_rate_to_string(spell_fail(spell));
-    desc << chop_string(failure, 12)
-         << spell_difficulty(spell);
-    desc << "</" << colour_to_str(highlight) <<">";
+    desc << chop_string(failure, 12);
     free(failure);
+    desc << "</" << colour_to_str(highlight) << ">";
+    desc << spell_difficulty(spell);
 
     return desc.str();
 }
@@ -1703,7 +1706,7 @@ static int _tetrahedral_number(int n)
 // the probability that random2avg(100,3) < raw_fail.
 // Should probably use more constants, though I doubt the spell
 // success algorithms will really change *that* much.
-// Called only by failure_rate_to_string.
+// Called only by failure_rate_to_int and get_miscast_chance.
 double get_true_fail_rate(int raw_fail)
 {
     //Need random2(101) + random2(101) + random2(100) to be less than 3*raw_fail.
@@ -1728,25 +1731,52 @@ double get_true_fail_rate(int raw_fail)
 
 }
 
-//Converts the raw failure to-beat number into a more intuitive string.
+//Computes the chance of getting a miscast effect of a given severity (or
+//higher).
+//Called only by failure_rate_colour.
+double get_miscast_chance(int raw_fail, int level, int severity)
+{
+    if (severity <= 0)
+        return get_true_fail_rate(raw_fail);
+    double C = 70000.0/(150*level*(10+level));
+    double chance = 0.0;
+    int k = severity + 1;
+    while ((C*k) <= raw_fail)
+    {
+        chance += get_true_fail_rate((int)(raw_fail+1-(C*k)))*severity/(k*(k-1));
+        k++;
+    }
+    return chance;
+}
+
+// Chooses a colour for the failure rate display for a spell. The colour is
+// based on the chance of getting a severity >= 2 miscast.
+int failure_rate_colour(spell_type spell)
+{
+    double chance = get_miscast_chance(spell_fail(spell), spell_difficulty(spell), 2);
+    return ((chance < 0.001) ? LIGHTGREY :
+            (chance < 0.005) ? YELLOW    :
+            (chance < 0.025) ? LIGHTRED  :
+                               RED);
+}
+
+//Converts the raw failure rate into a number to be displayed.
+int failure_rate_to_int(int fail)
+{
+    if (fail == 0)
+        return 0;
+    else if (fail == 100)
+        return 100;
+    else
+        return std::max(1, (int) (100 * get_true_fail_rate(fail)));
+}
+
 //Note that this char[] is allocated on the heap, so anything calling
 //this function will also need to call free()!
 char* failure_rate_to_string(int fail)
 {
     char *buffer = (char *)malloc(9);
-
-    if (fail == 0)
-        sprintf(buffer, "0%%");
-    else if (fail == 100)
-        sprintf(buffer, "100%%");
-    else
-    {
-        int failure_chance = (int) (100 * get_true_fail_rate(fail));
-
-        // If failure is between 0% and 1%, round up to 1%.
-        sprintf(buffer, "%d%%", failure_chance > 0 ? failure_chance : 1);
-    }
-
+    sprintf(buffer, "%d%%", failure_rate_to_int(fail));
     return buffer;
 }
 
