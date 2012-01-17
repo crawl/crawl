@@ -175,6 +175,10 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         {
             scroll_bottom_to_item(menu.items.length - 1, true);
         }
+        else if (menu.jump_to)
+        {
+            scroll_to_item(menu.jump_to, true);
+        }
         // Hide -more- if at the bottom
         menu_scroll_handler();
     }
@@ -470,6 +474,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function open_menu(data)
     {
+        if (data.replace) menu_stack.pop();
         menu_stack.push(data);
         menu = data;
 
@@ -620,9 +625,13 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             event.preventDefault();
             return false;
         case 36: // home
-            scroll_to_item(0);
-            event.preventDefault();
-            return false;
+            if (menu.tag !== "help")
+            {
+                scroll_to_item(0);
+                event.preventDefault();
+                return false;
+            }
+            else break;
         case 38: // up
             line_up();
             event.preventDefault();
