@@ -2887,6 +2887,16 @@ bool melee_attack::apply_damage_brand()
         return false;
     }
 
+    if (!damage_done
+        && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
+            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ORC_SLAYING
+            || brand == SPWPN_DRAGON_SLAYING || brand == SPWPN_VORPAL
+            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_ANTIMAGIC))
+    {
+        // These brands require some regular damage to function.
+        return false;
+    }
+
     switch (brand)
     {
     case SPWPN_FLAMING:
