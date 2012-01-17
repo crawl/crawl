@@ -1892,9 +1892,6 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
                 || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
     }
 
-    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER && !swap_in)
-        return false;
-
     const brand_type brand = get_weapon_brand(item);
     return (brand != SPWPN_DISTORTION
            && (brand != SPWPN_VAMPIRICISM || you.is_undead != US_ALIVE)
