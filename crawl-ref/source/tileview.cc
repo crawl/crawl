@@ -1148,6 +1148,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             }
         }
     }
+    else if (umbraed(gc))
+        cell.halo = HALO_UMBRA;
     else
         cell.halo = HALO_NONE;
 

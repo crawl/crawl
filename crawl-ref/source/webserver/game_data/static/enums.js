@@ -17,6 +17,7 @@ define(function () {
     exports.HALO_NONE = 0;
     exports.HALO_RANGE = 1;
     exports.HALO_MONSTER = 2;
+    exports.HALO_UMBRA = 3;
 
     // Foreground flags
 
