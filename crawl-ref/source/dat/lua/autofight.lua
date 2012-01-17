@@ -213,6 +213,8 @@ function hit_closest()
   local x, y, info = get_target()
   if you.confused() then
     crawl.mpr("You are too confused!")
+  elseif you.caught() then
+    crawl.mpr("You are held in a net!")
   elseif hp_is_low() then
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
@@ -232,6 +234,8 @@ function hit_adjacent()
   local x, y, info = get_target()
   if you.confused() then
     crawl.mpr("You are too confused!")
+  elseif you.caught() then
+    crawl.mpr("You are held in a net!")
   elseif hp_is_low() then
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
