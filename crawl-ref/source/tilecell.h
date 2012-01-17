@@ -6,7 +6,8 @@ enum halo_type
 {
     HALO_NONE = 0,
     HALO_RANGE = 1,
-    HALO_MONSTER = 2
+    HALO_MONSTER = 2,
+    HALO_UMBRA = 3,
 };
 
 struct packed_cell
