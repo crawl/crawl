@@ -566,7 +566,7 @@ static void _abyss_lose_monster(monster& mons)
         mons.set_transit(level_id(LEVEL_ABYSS));
 
     mons.destroy_inventory();
-    mons.reset();
+    monster_cleanup(&mons);
 }
 
 // If a sanctuary exists and is in LOS, moves it to keep it in the
