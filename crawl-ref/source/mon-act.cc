@@ -1942,11 +1942,13 @@ void handle_noattack_constrictions(actor *attacker)
             int damage;
 
             if (attacker->atype() == ACT_PLAYER)
-                damage = (you.strength() - roll_dice(1,3)) / 3;
+                damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
             DIAG_ONLY(int basedam = damage);
-            damage += roll_dice(1, attacker->dur_has_constricted[i] / 10 + 1);
+            damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
+            if (attacker->atype() == ACT_PLAYER)
+                damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
             DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
             DIAG_ONLY(int acdam = damage);
