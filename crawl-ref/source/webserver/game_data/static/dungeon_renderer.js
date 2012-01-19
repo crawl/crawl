@@ -1,5 +1,5 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./tileinfo-dngn"],
-function ($, cr, map_knowledge, settings, dngn) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./tileinfo-dngn", "./player"],
+function ($, cr, map_knowledge, settings, dngn, you) {
     var default_size = { w: 32, h: 32 };
     var global_anim_counter = 0;
 
@@ -167,6 +167,8 @@ function ($, cr, map_knowledge, settings, dngn) {
                 for (var cx = 0; cx < this.cols; cx++)
                     this.render_cell(cx + this.view.x, cy + this.view.y,
                                      cx * cw, cy * ch);
+
+            this.draw_minibars();
         },
 
         fit_to: function(width, height, min_diameter)
@@ -259,6 +261,57 @@ function ($, cr, map_knowledge, settings, dngn) {
                 this.draw_main(idx,
                                (x - this.view.x) * this.cell_width,
                                (y - this.view.y) * this.cell_height);
+        },
+
+        // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
+        draw_minibars: function()
+        {
+            var healthy = "#00FF00";
+            // damaged = "#FFFF00";
+            // wounded = "#960000";
+            var hp_spend= "#FF0000";
+
+            var magic = "#0000FF";
+            var magic_spend = "#000000";
+
+            this.render_loc(you.pos.x, you.pos.y)
+
+            // only draw if player is in view
+            if (!this.in_view(you.pos.x, you.pos.y)) {
+                return;
+            }
+
+            // don't draw if hp and mp is full
+            if(you.hp == you.hp_max && you.magic_points == you.max_magic_points) {
+                return;
+            }
+
+            var player_pos_x = (you.pos.x - this.view.x) * this.cell_width;
+            var player_pos_y = (you.pos.y - this.view.y) * this.cell_height;
+
+            var hp_bar_offset = 2;
+
+            // TODO: use different colors if heavily wounded, like in the tiles version
+            if (you.max_magic_points > 0) {
+                var mp_percent = you.magic_points / you.max_magic_points;
+
+                this.ctx.fillStyle = magic_spend;
+                this.ctx.fillRect(player_pos_x,player_pos_y + this.cell_height - 2,this.cell_width,2);
+
+                this.ctx.fillStyle = magic;
+                this.ctx.fillRect(player_pos_x,player_pos_y + this.cell_height - 2,this.cell_width * mp_percent,1);
+
+                hp_bar_offset += 2;
+            }
+
+            var hp_percent = you.hp / you.hp_max;
+            if(hp_percent < 0) hp_percent = 0;
+
+            this.ctx.fillStyle = hp_spend;
+            this.ctx.fillRect(player_pos_x,player_pos_y + this.cell_height - hp_bar_offset,this.cell_width,2);
+
+            this.ctx.fillStyle = healthy;
+            this.ctx.fillRect(player_pos_x,player_pos_y + this.cell_height - hp_bar_offset,this.cell_width * hp_percent,2);
         },
     });
 

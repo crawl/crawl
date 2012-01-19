@@ -575,6 +575,26 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     tiles.json_close_array();
 }
 
+void TilesFramework::_send_player()
+{
+    json_open_object();
+    json_write_string("msg", "player");
+
+    json_write_int("hp", you.hp);
+    json_write_int("hp_max", you.hp_max);
+    json_write_int("magic_points", you.magic_points);
+    json_write_int("max_magic_points", you.max_magic_points);
+
+    json_open_object("pos");
+    json_write_int("x", you.pos().x - m_origin.x);
+    json_write_int("y", you.pos().y - m_origin.y);
+    json_close_object();
+
+    json_close_object();
+
+    send_message();
+}
+
 static bool _in_water(const packed_cell &cell)
 {
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
@@ -1071,6 +1091,9 @@ void TilesFramework::_send_everything()
     _send_map(true);
     finish_message();
 
+     // Player
+    _send_player();
+
     send_message("{\"msg\":\"redraw\"}");
 
     // UI State
@@ -1186,6 +1209,9 @@ void TilesFramework::redraw()
         {
             _send_map(false);
         }
+
+        // Player
+        _send_player();
 
         if (!json_is_empty())
         {

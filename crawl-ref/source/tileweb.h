@@ -234,6 +234,7 @@ protected:
     void _send_monster(const coord_def &gc, const monster_info* m,
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
+    void _send_player();
 };
 
 // Main interface for tiles functions
