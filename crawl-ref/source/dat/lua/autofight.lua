@@ -209,7 +209,7 @@ local function hp_is_low()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
 end
 
-function hit_closest()
+function attack(allow_movement)
   local x, y, info = get_target()
   if you.confused() then
     crawl.mpr("You are too confused!")
@@ -225,30 +225,19 @@ function hit_closest()
     attack_melee(x,y)
   elseif info.can_hit == 1 then
     attack_reach(x,y)
-  else
+  elseif allow_movement then
     move_towards(x,y)
-  end
-end
-
-function hit_adjacent()
-  local x, y, info = get_target()
-  if you.confused() then
-    crawl.mpr("You are too confused!")
-  elseif you.caught() then
-    crawl.mpr("You are held in a net!")
-  elseif hp_is_low() then
-    crawl.mpr("You are too injured to fight blindly!")
-  elseif info == nil then
-    crawl.mpr("No target in view!")
-  elseif info.can_hit == 3 then
-    attack_fire(x,y)
-  elseif info.can_hit == 2 then
-    attack_melee(x,y)
-  elseif info.can_hit == 1 then
-    attack_reach(x,y)
   else
     crawl.mpr("No target in range!")
   end
+end
+
+function hit_closest()
+  attack(true)
+end
+
+function hit_adjacent()
+  attack(false)
 end
 
 chk_lua_option.autofight_stop = set_stop_level
