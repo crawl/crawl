@@ -442,6 +442,7 @@ static void _check_stop_train()
     if (!skills.empty())
         mpr("You stop training " + _skill_names(skills));
 
+    check_selected_skills();
     reset_training();
     you.stop_train.clear();
 }
