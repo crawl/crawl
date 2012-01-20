@@ -20,6 +20,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "message.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -29,7 +30,7 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-
+#include "stuff.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -442,6 +443,8 @@ static void _check_stop_train()
     if (!skills.empty())
         mpr("You stop training " + _skill_names(skills));
 
+    if (you.num_turns)
+        check_selected_skills();
     reset_training();
     you.stop_train.clear();
 }
@@ -598,25 +601,43 @@ void init_training()
 }
 
 // Make sure at least one skill is selected.
-void check_selected_skills()
+// If not, go to the skill menu and return true.
+bool check_selected_skills()
 {
-    skill_type first_selectable = SK_NONE;
+    bool trainable_skill = false;
+    bool could_train = false;
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
         if (skill_trained(sk))
-            return;
-        if (!you.can_train[sk] || you.skill_points[sk] >= skill_exp_needed(27, sk))
+            return false;
+        if (is_useless_skill(sk) || you.skill_points[sk] >= skill_exp_needed(27, sk))
             continue;
-        if (is_invalid_skill(first_selectable))
-            first_selectable = sk;
+        if (!you.can_train[sk])
+        {
+            could_train = true;
+            continue;
+        }
+        else
+            trainable_skill = true;
     }
 
-    if (!is_invalid_skill(first_selectable))
-        you.train[first_selectable] = 1;
+    if (trainable_skill)
+    {
+        mpr("You need to enable at least one skill for training.");
+        more();
+        reset_training();
+        skill_menu();
+        redraw_screen();
+        return true;
+    }
 
-    // It's possible to have no selectable skills, if they are all at level 0
-    // or level 27, so we don't assert. XP will just accumulate in the pool.
+    if (could_train)
+        mpr("You cannot train any new skill.");
+
+    return false;
+    // It's possible to have no selectable skills, if they are all untrainable
+    // or level 27, so we don't assert.
 }
 
 /*
@@ -720,7 +741,6 @@ static bool _level_up_check(skill_type sk, bool simu)
         you.training[sk] = 0;
         if (!simu)
             you.train[sk] = 0;
-        check_selected_skills();
         return true;
     }
 

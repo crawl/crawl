@@ -19,7 +19,7 @@ void check_skill_cost_change();
 
 bool training_restricted(skill_type sk);
 void reassess_starting_skills();
-void check_selected_skills();
+bool check_selected_skills();
 void init_train();
 void init_can_train();
 void init_training();
