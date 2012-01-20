@@ -215,6 +215,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
+# autofight_stop = 30
+
 ##### 4-j       Messages and Display Enhancements #####
 #
 # hp_warning = 30
