@@ -19,9 +19,9 @@ function init_undead(e)
                                   cloud_type = "black smoke" })
   e.subst('S = .')
 
-  e.tile('t = dngn_tree_yellow w:5 / dngn_tree_lightred w:5 / dngn_tree_red / dngn_tree_dead w:80')
-  e.colour('t = lightgrey / brown / w:5 darkgrey')
-  if you.absdepth() <= 5 then
+  if you.absdepth() <= 3 then
+    e.kmons('.-_ = small zombie / small skeleton / w:300 nothing')
+  elseif you.absdepth() <= 6 then
     e.kmons('.-_ = w:20 small zombie / large zombie / small skeleton / w:300 nothing')
   elseif you.absdepth() <= 12 then
     e.kmons('.-_ = w:5 small zombie / w:5 large zombie / w:4 mummy / wight / \
@@ -30,12 +30,16 @@ function init_undead(e)
     e.kmons('.-_ = w:2 guardian mummy / w:8 mummy / large zombie / small zombie / \
             skeletal warrior / rotting hulk / w:1 ghoul / w:300 nothing')
   end
+  e.kmons('t = w:2 col:darkgrey plant name:withered name_adjective \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant')
   
   e.tile('G = dngn_gravestone')
   e.lua_marker('G', portal_desc { desc = "a gravestone",
                                   desc_long = "An ancient gravestone.\n" })
-  e.lua_marker('t', portal_desc { desc = "a withered tree",
-                                  desc_long = "A dying, withered tree.\n" })
+  e.lua_marker('G', props_marker { veto_fragmentation="veto",
+                                   veto_disintegrate="veto",
+                                   veto_shatter="veto" })
 end
 }}
 
