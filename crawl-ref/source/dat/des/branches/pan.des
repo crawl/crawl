@@ -1738,12 +1738,14 @@ FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
 FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
-MARKER: v = lua:portal_desc { \
-                desc="silver wall", \
-                desc_long="This wall is made of pure silver." }
-MARKER: G = lua:portal_desc { \
-                desc="golden statue", \
-                desc_long="A solid gold statue of a saint." }
+: dgn.set_feature_desc_short("granite statue",
+:                            "golden statue")
+: dgn.set_feature_desc_long("granite statue",
+:                           "A solid gold statue of a saint.")
+: dgn.set_feature_desc_short("metal wall",
+:                            "silver wall")
+: dgn.set_feature_desc_long("metal wall",
+:                           "This wall is made of pure silver.")
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
 :                        "apis / paladin / apis / ophan / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
