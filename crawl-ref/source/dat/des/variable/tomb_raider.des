@@ -1,6 +1,5 @@
 # Tomb raiding (by Ragdoll, tons of help and lua by evilmike)
 # Can contain the ring of vitality.
-# TODO: Statues should be sarcophagi.
 
 {{
 function callback.release_the_mummies(data, triggerable, triggerer, marker, ev)
@@ -58,10 +57,11 @@ KITEM:  1234 = gold / any / nothing
 KITEM:  M4 = superb_item / any
 SUBST:  . = .:10 ~:1
 COLOUR: G = yellow
+TILE:   G = dngn_sarcophagus_sealed
 COLOUR: c = yellow
-TILE:   c = wall_lab_stone
+TILE:   c = wall_tomb
 COLOUR: C = white
-TILE:   C = wall_sandstone
+TILE:   C = wall_lab_stone
 COLOUR: X = brown
 TILE:   X = dngn_stone_wall_brown
 FTILE:  .!~>cCXG1234M$ = floor_sandstone
@@ -95,6 +95,10 @@ KMONS: M = mummy priest
     lua_marker('$', props_marker {plate=1})
     lua_marker('!', props_marker {stone_door=1})
     lua_marker('X', props_marker {closet=1})
+    lua_marker('G', portal_desc {
+        desc = "sealed sarcophagus",
+        desc_long = "This ancient sarcophagus is sealed shut.",
+        veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
 }}
 SUBST:  ! = .
 SUBST:  XC = c
