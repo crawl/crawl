@@ -95,12 +95,6 @@ KMONS: M = mummy priest
     lua_marker('$', props_marker {plate=1})
     lua_marker('!', props_marker {stone_door=1})
     lua_marker('X', props_marker {closet=1})
-    lua_marker('X', portal_desc {
-        desc="an engraved stone wall",
-        desc_long="The wall is carved with many mysterious symbols."})
-    lua_marker('C', portal_desc {
-        desc="an engraved stone pillar",
-        desc_long="A stone pillar, carved with strange symbols."})
 }}
 SUBST:  ! = .
 SUBST:  XC = c
