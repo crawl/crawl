@@ -1313,6 +1313,9 @@ MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
 MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
             desc_long=("This worn granite statue depicts" .. \
                        " elephants standing guard.") }
+MARKER: G = lua:props_marker { veto_fragmentation="veto", \
+                               veto_disintegrate="veto", \
+                               veto_shatter="veto" }
 COLOUR: oG = green
 TILE:   oG = dngn_statue_elephant
 MARKER: o = lua:monster_on_death { \
@@ -1321,9 +1324,8 @@ MARKER: o = lua:monster_on_death { \
             message_unseen="You hear a distant trumpeting.", \
             master_name="elephant", \
             veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_shatter="veto", \
          }
-MARKER:  c = lua:portal_desc { desc="moss-covered stone wall", \
-             desc_long="This stone wall is ancient, and covered in moss." }
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx

@@ -215,9 +215,6 @@ SHUFFLE: {[(
 :        dgn.set_feature_desc_long("granite statue",
 :                                  "This stump of granite was probably " ..
 :                                  "a statue at some point in the past.")
-: lua_marker("G", portal_desc { stump = 1,
-:        desc="granite stump",
-:        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
 MAP
    xxxxxxx
   xx.....xx
