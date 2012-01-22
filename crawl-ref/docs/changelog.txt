@@ -74,7 +74,7 @@ Spells
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
 * Abjuration becomes single-target, its old version (Mass Abj.) is
-  available as a new level 7 spell.
+  available as a new level 6 spell.
 * Swiftness and Flight no longer give an extra boost when cast together.
 * Swiftness halves stealth and makes it harder to detect traps.
 * Flight is now level 3.
@@ -118,6 +118,8 @@ Interface
 * A character dump option: spell_usage, counts spells you have cast.
 * Ctrl-W toggles weight display in inventory and dropping menu.
 * Better ?/G and ?/B menus.
+* Spell success adjectives are replaced with failure rate percentages. Failure
+  rates are coloured based on potential miscast severity.
 
 Monsters
 --------
