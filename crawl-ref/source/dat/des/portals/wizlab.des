@@ -773,7 +773,7 @@ lua_marker("_", grow_marker)
 :           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
 :           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
 :                                     "monster made entirely from vines.\n")
-:           dgn.set_feature_desc_short("stone wall", "crumbing stone wall")
+:           dgn.set_feature_desc_short("stone wall", "crumbling stone wall")
 :           dgn.set_feature_desc_long("stone wall", "It looks ancient.\n")
 :           dgn.set_feature_desc_short("floor", "the grass-covered ground")
 :           dgn.set_feature_desc_long("floor", "Strewn with leaves and twigs that" ..
