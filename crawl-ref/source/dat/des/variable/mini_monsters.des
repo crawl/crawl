@@ -389,11 +389,11 @@ NAME:   goddamned_bats
 DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_des n_spe tile:mons_megabat
-KMONS:  2 = bat name:microbat n_rpl n_des n_spe col:magenta tile:mons_microbat
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
+KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_des n_spe col:lightmagenta tile:mons_fruity_bat
-KMONS:  4 = bat name:giga n_adj n_des n_spe hd:4 col:brown tile:mons_gigabat
+KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
@@ -409,7 +409,7 @@ KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 # Correction, this one, added because of a tile, is not real as well.
 KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 # Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
-KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe
+KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
 MAP
        xxxxx
       xxxxxxx
