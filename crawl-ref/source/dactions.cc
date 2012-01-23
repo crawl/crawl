@@ -177,7 +177,8 @@ static void _apply_daction(daction_type act)
 
                 if (act == DACT_PIKEL_SLAVES)
                 {
-                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
+                                 MF_NAME_NOCORPSE;
                     mi->mname = "freed slave";
                 }
                 else
