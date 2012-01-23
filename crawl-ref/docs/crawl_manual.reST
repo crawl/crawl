@@ -41,11 +41,15 @@ located in Europe):
 akrasiac.org
   :http: ``http://crawl.akrasiac.org``
   :telnet: ``crawl.develz.org``
-  :ssh: ``joshua@crawl.akrasiac.org (password joshua)``
+  :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
 
 develz.org
-  :http: ``http//crawl.develz.org``
+  :http: ``http://crawl.develz.org``
   :telnet: ``crawl.develz.org:345``
+  :ssh: ``crawl@crawl.develz.org (ssh key required)``
+  :tiles: ``https://tiles.crawl.develz.org/``
+
+ssh key can be obtained at https://crawl.akrasiac.org/cao_key
 
 Connecting to these servers opens up several interesting options. You can:
   * watch other players, and even communicate with them
@@ -1248,13 +1252,13 @@ distribution has them in the dat/lua/ directory. Have a look at the single
 scripts for short descriptions.
 
 Generally, Crawl should run swiftly on all machines (it compiles out of the box
-for Linux, Windows, OS X and, to some lesser extent, DOS and Unix). If, for some
+for Linux, Windows, and, to some lesser extent, OS X and other Unices). If, for some
 reason, you find Crawl runs unacceptably slowly on your machine, there are a few
 measures which may improve the situation:
 
-  - avoid greedy autoexplore
   - set travel_delay = -1 to avoid screen redraws during travel (this might be
-    useful if playing on a remote server)
+    especially useful if playing on a remote server)
+  - try playing in console mode rather than tiles
 
 ****************************************
 N. Philosophy (pas de faq)
@@ -1596,6 +1600,8 @@ Minotaurs
 
   Minotaurs are extremely good at all forms of physical combat, but are awful at
   using any type of magic. They can wear all armour except for some headgear.
+  When in close combat, Minotaurs tend to reflexively headbutt those who dare
+  attack them.
 
 Tengu
   The Tengu are an ancient and feared species of bird-people with a legendary
@@ -1689,16 +1695,16 @@ Felids
   The tale of a Felid who had nine lives isn't far from truth, as well.
 
 Octopodes
-  These land-capable relatives of common octopuses can walk about as fast as humans
+  These land-capable relatives of common octopuses can move about as fast as humans
   and yet retain the ability to swim underwater, although their dual adaptation
   is not as good as that of the shapechanging merfolk.
 
-  Octopodes have eight tentacle-shaped legs, and need four of them to walk. While a
+  Octopodes have eight tentacle-shaped legs, and need four of them to move. While a
   tentacle lacks fingers, two tentacles are a rough equivalent of a human's arm where
   item manipulation is concerned - including wielding two-handed weapons with four.
   They can use no armour other than loose hats, but can handle shields just fine.
-
-  Another peculiarity is the ability to wear eight rings, one on each tentacle.
+  Another peculiarity they have is the ability to wear eight rings, one on each
+  tentacle.
 
   Their natural camouflage makes them excel at stealth, and they have good knowledge
   of poisons as well.
@@ -1795,10 +1801,10 @@ variety of colours. This happens at an early stage in their career, and the
 colour is determined by chromosomes, not by behaviour.
 
 Some types of Draconians have breath weapons or special resistances. Draconians
-advance very slowly in levels, but are reasonably good at all skills but armour
-(most types of which they cannot wear) and missile weapons. Still, each colour
-has its own strengths and some have complementary weaknesses, which sometimes
-requires a bit of flexibility on the part of the player.
+cannot wear body armour, advance very slowly in levels, but are reasonably good
+at all skills other than missile weapons. Still, each colour has its own
+strengths and some have complementary weaknesses, which sometimes requires a
+bit of flexibility on the part of the player.
 
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
@@ -2825,17 +2831,14 @@ Very Full
 Engorged
   You can't eat any more for now.
 
-Sick
-  You are sick, usually from bad food. Hit points don't regenerate until cured
-  (wait it out or quaff a potion of healing). Occasionally a primary attribute
-  might drop.
+Nausea
+  Some of the food you ate didn't agree with you. You cannot eat anything in
+  this state, although when Starving or Near Starving you may be able to force
+  something in, at a great penalty. Wait it out or quaff a potion of healing.
 
 Pois
   You are poisoned and continually lose hit points. There are several levels of
   poisoning. Cure with potions of healing or by waiting it out.
-
-Pray
-  You are praying. This can have different effects depending on your religion.
 
 Encumbered
   Your load is heavy enough to slow you down. You also need more food when
@@ -2856,6 +2859,9 @@ Swift
 
 Slow
   All actions are slowed. Note: ending berserking will slow you.
+
+Exh
+  You are too exhausted to go berserk or cast Death's Door.
 
 Special enchantments
 ========================================
@@ -2895,10 +2901,17 @@ Regen
   You regenerate hit points at an unnaturally fast rate. This is only shown for
   temporary regeneration.
 
-Glow
+Contam
   You glow from mutagenic radiation. This can mutate you over time, usually with
-  a bad outcome. The colour indicates the severity: the first level (grey) is
-  only a warning, and no mutation will occur from it.
+  a bad outcome. The colour indicates the severity: the first level (darkgrey) is
+  only a warning, and no mutation or loss of stealth will occur from it.
+
+Glow
+  You emit light; this ruins your stealth and makes you easier to hit.
+
+Umbra
+  You are shrouded in unholy darkness. This helps with stealth and evading attacks
+  from everyone except for the undead and worshippers of Yredelemnul.
 
 RMsl
   You repel missiles, i.e. there's a good chance to evade them.
@@ -2906,6 +2919,11 @@ RMsl
 DMsl
   You deflect missiles, i.e. there's a great chance to evade them. Still, this
   protection is not bulletproof.
+
+Sick
+  You have been sickened by some hostile effect. Hit points don't regenerate
+  until cured (wait it out or quaff a potion of healing). Occasionally a primary
+  attribute might drop.
 
 Rot
   This is a very harmful, necromantic ailment. You will lose maximum hit points
