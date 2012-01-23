@@ -1,3 +1,9 @@
+Stone Soup 0.9.2 (20120124)
+---------------------------
+* A number of crash fixes.
+* Fix new games overwriting existing saves in one case.
+* Fix Temple overflow gods not being randomized.
+
 Stone Soup 0.9.1 (20110904)
 ---------------------------
 * Fix missing portals to Zot on D:27 with restart_after_game after Sprint.
