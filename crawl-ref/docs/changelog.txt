@@ -43,7 +43,7 @@ Gods
 * Elyvilon: piety decays; piety for pacifications doubled.
 * Elyvilon has piety loss for ally deaths instead of penance.
 * Elyvilon doesn't grant piety for non-evil weapons past *** (even if you
-  drop lower later!).  Evil weapons get identified on sight.
+  drop lower later!). Evil weapons get identified on sight.
 * Deaths of plants and non-living beings no longer count as friend deaths for
   god conduct purposes.
 
@@ -124,18 +124,18 @@ Interface
 Monsters
 --------
 * Ignacio no longer uses Torment, he'll appear repeatedly until killed.
-* New monster: profane servitor -- angel corrupted by Yredelemnul (undead).
-* New monster: blizzard demon -- a cold/air rank 2 demon.
+* New monster: profane servitor - an angel corrupted by Yredelemnul (undead).
+* New monster: blizzard demon - a cold/air rank 2 demon.
 * New holy monsters: silver star, cherub.
 * Removed: giant toads, vipers, blue deaths.
-* Renamed: Fiend -> Brimstone Fiend. Imp -> Crimson Imp.
-* Reorganized demon ranks, moving easier 1s to 2.
+* Renamed: Fiend -> Brimstone Fiend, Imp -> Crimson Imp.
+* Reorganized demon ranks, moving easier 1s to 2s.
 * Feature mimics may now masquerade as most features.
 * Item mimics can move once revealed.
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
 * Unique Pandemonium lords can hunt you on the Orb run if you've stolen
-  their runes.  Violate the 5th Commandment not 7th!
+  their runes. Violate the 5th Commandment, not the 7th!
 * More emergency spell usage.
 * Gnoll shamans and sergeants are actual monsters.
 * Breath timeout for dragons, draconians, drakes.
@@ -158,7 +158,7 @@ Items
 * The Crusade card can no longer give you permanent allies.
 * All polearms have the reaching brand built in.
 * Quarterstaves are split into two weapons: weak "staff" and good
-  "quarterstaff".  Gladiators get to start with the latter.
+  "quarterstaff". Gladiators get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
   ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
@@ -232,7 +232,7 @@ loaded in 0.9, you can not go back to 0.8.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
 * New monsters: Ignacio (unique executioner), catoblepas, basilisk.
-* New subgame: Zot Defence.  Consider it of experimental quality, though.
+* New subgame: Zot Defence. Consider it of experimental quality, though.
 
 Skills
 ------
@@ -1372,7 +1372,7 @@ Spells
 * Reduced Poison Arrow's irresistible damage component from 60% to 30%.
 * Semi-controlled blink causes glowing.
 * Fulsome Distillation depends only on corpse type - RNG and rotting influence
-  has been removed.  Also doesn't prompt when only one corpse present.
+  has been removed. Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
@@ -1883,7 +1883,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed secondary monster attacks being branded according to their weapon.
 * Fixed runes not being counted correctly in scoring.
 * Fixed kills by hell effects counting as player kills.
-* Fixed persistent --more-- in wizard mode.
+* Fixed persistent --More-- in wizard mode.
 * Fixed cold/fire always destroying all potions/scrolls on the floor.
 * Fixed Portal Projectile not handling throwing nets or branded ammo correctly.
 * Fixed friendly pickup toggle being inappropriately disallowed.
