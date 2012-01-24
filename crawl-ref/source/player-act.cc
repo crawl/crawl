@@ -11,6 +11,7 @@
 
 #include "areas.h"
 #include "artefact.h"
+#include "coordit.h"
 #include "dgnevent.h"
 #include "env.h"
 #include "food.h"
@@ -683,4 +684,17 @@ bool player::is_web_immune() const
 {
     // Spider form
     return (can_cling_to_walls());
+}
+
+bool player::shove(const char* feat_name)
+{
+    for (distance_iterator di(pos()); di; ++di)
+        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di)))
+        {
+            moveto(*di);
+            mprf("You are pushed out of the %s.", feat_name);
+            dprf("Moved to (%d, %d).", pos().x, pos().y);
+            return true;
+        }
+    return false;
 }

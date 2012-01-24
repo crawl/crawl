@@ -3076,7 +3076,7 @@ static void _player_reacts()
     recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         discover_mimic(*ai);
 
     // Player stealth check.
