@@ -5409,3 +5409,22 @@ bool monster::has_usable_tentacle() const
     return (free_tentacles > 0);
 
 }
+
+// Move the monster to the nearest valid space.
+bool monster::shove(const char* feat_name)
+{
+    for (distance_iterator di(pos()); di; ++di)
+        if (monster_space_valid(this, *di, false))
+        {
+            mgrd(pos()) = NON_MONSTER;
+            moveto(*di);
+            mgrd(*di) = mindex();
+            simple_monster_message(this,
+                make_stringf(" is pushed out of the %s.", feat_name).c_str());
+            dprf("Moved to (%d, %d).", pos().x, pos().y);
+
+            return true;
+        }
+
+    return false;
+}
