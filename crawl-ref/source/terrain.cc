@@ -848,12 +848,12 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
         return false;
 
     if (feat_is_portal(feat) || feat_is_gate(feat))
-        return true;
+        return false;
 
     if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
         || feat_is_branch_stairs(feat))
     {
-        return true;
+        return false;
     }
 
     if (feat_is_fountain(feat))
