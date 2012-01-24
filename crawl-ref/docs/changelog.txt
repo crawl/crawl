@@ -158,7 +158,7 @@ Items
 * The Crusade card can no longer give you permanent allies.
 * All polearms have the reaching brand built in.
 * Quarterstaves are split into two weapons: weak "staff" and good
-  "quarterstaff". Gladiators get to start with the latter.
+  "quarterstaff". Gladiators and Priests get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
   ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
