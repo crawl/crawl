@@ -2303,10 +2303,9 @@ static int _print_toggle_message(const describe_info &inf, int& key)
         const int bottom_line = std::min(30, get_number_of_lines());
         cgotoxy(1, bottom_line);
         formatted_string::parse_string(
-#ifndef USE_TILE_LOCAL
             "Press '<w>!</w>'"
-#else
-            "<w>Right-click</w>"
+#ifdef USE_TILE_LOCAL
+            " or <w>Right-click</w>"
 #endif
             " to toggle between the overview and the extended description.").display();
 
@@ -4348,10 +4347,9 @@ static void _detailed_god_description(god_type which_god)
 
     cgotoxy(1, bottom_line);
     formatted_string::parse_string(
-#ifndef USE_TILE_LOCAL
         "Press '<w>!</w>'"
-#else
-        "<w>Right-click</w>"
+#ifdef USE_TILE_LOCAL
+        " or <w>Right-click</w>"
 #endif
         " to toggle between the overview and the more detailed "
         "description.").display();
@@ -4644,10 +4642,9 @@ void describe_god(god_type which_god, bool give_title)
     cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
     formatted_string::parse_string(
-#ifndef USE_TILE_LOCAL
         "Press '<w>!</w>'"
-#else
-        "<w>Right-click</w>"
+#ifdef USE_TILE_LOCAL
+        " or <w>Right-click</w>"
 #endif
         " to toggle between the overview and the more detailed "
         "description.").display();
