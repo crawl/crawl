@@ -765,6 +765,10 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 {
     // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
+
+	if (feature_mimic_at(c))
+		return false;
+
     switch (grd(c))
     {
     case DNGN_STONE_STAIRS_UP_I:
@@ -799,6 +803,9 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 
 static bool _is_exit_stair(const coord_def &c)
 {
+	if (feature_mimic_at(c))
+		return false;
+
     // Branch entries, portals, and abyss entries are not considered exit
     // stairs here, as they do not provide an exit (in a transitive sense) from
     // the current level.
