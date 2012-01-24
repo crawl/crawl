@@ -182,7 +182,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
 bool is_item_jelly_edible(const item_def &item);
 
 bool monster_space_valid(const monster* mons, coord_def target,
-						 bool forbid_sanctuary);
+                         bool forbid_sanctuary);
 bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,

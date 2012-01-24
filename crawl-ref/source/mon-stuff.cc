@@ -4271,7 +4271,7 @@ bool is_item_jelly_edible(const item_def &item)
 }
 
 bool monster_space_valid(const monster* mons, coord_def target,
-						 bool forbid_sanctuary)
+                         bool forbid_sanctuary)
 {
     if (!in_bounds(target))
         return false;
