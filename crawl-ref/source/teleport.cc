@@ -233,7 +233,6 @@ bool random_near_space(const coord_def& origin, coord_def& target,
             || restrict_los && !you.see_cell(target)
             || grd(target) < limit
             || actor_at(target)
-            || mimic_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
             || forbid_sanctuary && is_sanctuary(target))
         {
