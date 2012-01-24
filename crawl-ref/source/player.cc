@@ -2902,6 +2902,15 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     you.exp_available += exp_gained;
 
     train_skills();
+    while (you.exp_available >= calc_skill_cost(you.skill_cost_level)
+           && check_selected_skills())
+    {
+        train_skills();
+    }
+
+    if (you.exp_available >= calc_skill_cost(you.skill_cost_level))
+        you.exp_available = calc_skill_cost(you.skill_cost_level);
+
     level_change();
 
     if (actual_gain != NULL)
