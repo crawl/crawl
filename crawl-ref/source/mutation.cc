@@ -611,10 +611,9 @@ std::string describe_mutations()
 }
 
 static const std::string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
-#else
-    "<w>Right-click</w>"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
