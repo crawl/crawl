@@ -622,12 +622,15 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_STICKY_FLAME:
+        beam.hit = AUTOMATIC_HIT;
     case SPELL_STICKY_FLAME_SPLASH:
     case SPELL_STICKY_FLAME_RANGE:
+        if (real_spell != SPELL_STICKY_FLAME)
+            beam.hit      = 18 + power / 15;
         beam.colour   = RED;
         beam.name     = "sticky flame";
         beam.damage   = dice_def(3, 3 + power / 50);
-        beam.hit      = 18 + power / 15;
         beam.flavour  = BEAM_FIRE;
         break;
 

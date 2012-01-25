@@ -841,8 +841,6 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return (SPELL_FIREBALL);
     case SPELL_EVAPORATE:
         return (SPELL_MEPHITIC_CLOUD);
-    case SPELL_STICKY_FLAME:
-        return (SPELL_STICKY_FLAME_RANGE);
     default:
         break;
     }

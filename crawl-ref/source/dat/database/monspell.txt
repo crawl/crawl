@@ -141,6 +141,10 @@ Orb of Destruction cast
 
 @The_monster@ launches a ball of destructive magic.
 %%%%
+Sticky Flame cast
+
+@The_monster@ sprays @target@ with burning goo.
+%%%%
 Sunray cast
 
 @The_monster@ raises @possessive@ hand.
