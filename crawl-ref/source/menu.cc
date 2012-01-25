@@ -1371,8 +1371,6 @@ void Menu::webtiles_write_menu(bool replace) const
 
     tiles.json_write_string("more", more.to_colour_string());
 
-    fprintf(stderr, "section: %d-%d\n", webtiles_section_start(), webtiles_section_end());
-
     int count = webtiles_section_end() - webtiles_section_start();
 
     bool complete_send = count <= chunk_size * 2;
@@ -1817,7 +1815,6 @@ bool formatted_scroller::jump_to(int i)
         first_entry = i - 1;
 
 #ifdef USE_TILE_WEB
-    fprintf(stderr, "jumping to: %d\n", first_entry);
     if (first_entry < webtiles_section_start()
         || webtiles_section_end() <= first_entry)
     {
