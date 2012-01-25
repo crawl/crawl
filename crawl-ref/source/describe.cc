@@ -3901,7 +3901,7 @@ static std::string _describe_favour(god_type which_god)
     }
 
     if (which_god == GOD_XOM)
-        return describe_xom_favour(true);
+        return uppercase_first(describe_xom_favour());
 
     const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":

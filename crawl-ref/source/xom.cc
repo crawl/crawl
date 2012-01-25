@@ -149,7 +149,7 @@ static const char *describe_xom_mood()
                              : "a very special plaything of Xom.";
 }
 
-const std::string describe_xom_favour(bool upper)
+const std::string describe_xom_favour()
 {
     std::string favour;
     if (you.religion != GOD_XOM)
@@ -158,9 +158,6 @@ const std::string describe_xom_favour(bool upper)
         favour = "a BORING thing.";
     else
         favour = describe_xom_mood();
-
-    if (upper)
-        favour = uppercase_first(favour);
 
     return (favour);
 }
