@@ -163,7 +163,8 @@ Items
   "quarterstaff". Gladiators and Priests get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
-  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
+  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak,
+  rings of the Octopus King.
 * The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
   demons (instead of random conjurations or hostile demons).
 * Scrolls of enchant and vorpalise weapon are always identified upon use.
