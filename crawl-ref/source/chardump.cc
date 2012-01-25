@@ -691,7 +691,7 @@ static void _sdump_religion(dump_params &par)
                 text += "You were ";
             else
                 text += "You are ";
-            text += describe_xom_favour(false);
+            text += describe_xom_favour();
             text += "\n";
         }
     }
