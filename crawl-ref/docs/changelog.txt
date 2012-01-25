@@ -7,6 +7,7 @@ Stone Soup 0.10 (????????)
 * Skill training system reworked. Dancing is really gone this time!
 * All polearms have reaching.
 * Constriction (nagas, octopodes, some snakes, tentacled monstrosities).
+* New version of the Abyss.
 
 Branches, portal vaults, levels
 -------------------------------
@@ -21,7 +22,8 @@ Branches, portal vaults, levels
 * Web "traps", can briefly entangle those caught.
 * A "twisting cavern" map layout.
 * Custom shops.
-* Many vaults, including large altar vaults, Abyss vaults and Pan lords maps.
+* Many vaults, including large altar vaults, Abyss vaults, Pan Lord maps,
+  and several branch endings.
 * A number of branches have a completely new set of tiles: Snake Pit,
   Labyrinth, Vestibule of Hell, Crypt, Dis, Tartarus, Cocytus, Pandemonium.
 
@@ -54,7 +56,7 @@ Species
 * Centaurs can survive longer on vegetarian food.
 * Felids gain lives every three levels.
 * Minotaurs instinctively retaliate in melee.
-* Demonspawn can get Foul Stench and Ignite Blood.
+* New Demonspawn mutations: Foul Stench, Ignite Blood, and Augmentation.
 * Kenku are now called Tengu, and get more MP.
 * Mountain Dwarves are no more.
 * Minotaur and Hill Orc aptitudes are a lot better.
@@ -70,14 +72,14 @@ Character
 
 Spells
 ------
-* New: Beastly Appendage (Transmutation 1), Inner Flame (Hex 3).
+* New spell: Beastly Appendage (Transmutation 1).
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
-* Abjuration becomes single-target, its old version (Mass Abj.) is
+* Abjuration becomes single-target. The old version (Mass Abj.) is
   available as a new level 6 spell.
 * Swiftness and Flight no longer give an extra boost when cast together.
 * Swiftness halves stealth and makes it harder to detect traps.
-* Flight is now level 3.
+* Flight is now level 3, Dragon Form is now level 7.
 * Summoned Ugly Things are now always friendly.
 * Shadow Creatures don't last as long anymore.
 * Tornado's damage has been slightly improved.
@@ -123,10 +125,10 @@ Interface
 
 Monsters
 --------
-* Ignacio no longer uses Torment, he'll appear repeatedly until killed.
+* Ignacio no longer uses Torment, and he'll appear repeatedly until killed.
 * New monster: profane servitor - an angel corrupted by Yredelemnul (undead).
 * New monster: blizzard demon - a cold/air rank 2 demon.
-* New holy monsters: silver star, cherub.
+* New holy monsters: silver star, cherub, phoenix, paladin.
 * Removed: giant toads, vipers, blue deaths.
 * Renamed: Fiend -> Brimstone Fiend, Imp -> Crimson Imp.
 * Reorganized demon ranks, moving easier 1s to 2s.
@@ -149,11 +151,11 @@ Items
 -----
 * Slaying works like weapon enchantments.
 * Acquirement allows choosing missiles.
-* Nagas and centaur get far better chances to acquire bardings.
-* Staff acquirement more random.
-* Miscellaneous item acquirements gives better decks.
+* Nagas and Centaurs get far better chances to acquire bardings.
+* Staff acquirement is more random.
+* Miscellaneous item acquirement gives better decks.
 * Weapon acquirement avoids useless weapon types.
-* Misc items start identified when there's no doubts about them.
+* Misc items start identified when there are no doubts about them.
 * The Orb of Zot has a slightly mutagenic glow and reduces stealth.
 * The Crusade card can no longer give you permanent allies.
 * All polearms have the reaching brand built in.
@@ -164,7 +166,7 @@ Items
   ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
 * The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
   demons (instead of random conjurations or hostile demons).
-* Scrolls of enchant and vorpalise weapon identified upon use.
+* Scrolls of enchant and vorpalise weapon are always identified upon use.
 * Amulet of guardian spirit draws from HP and MP simultaneously.
 * Remove crystal balls of seeing.
 * Scroll of magic mapping detects secret doors.
@@ -190,7 +192,7 @@ Webtiles
 
 Zot Defence
 -----------
-* Map selection.
+* You can now choose which map to play on.
 * Disable useless gods.
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
