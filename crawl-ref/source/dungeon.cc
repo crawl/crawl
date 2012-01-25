@@ -3344,7 +3344,7 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
         Branch *b = &branches[i];
 
-        const bool mimic = false && !branch_is_unfinished(b->id)
+        const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
                            && dlevel >= FEATURE_MIMIC_DEPTH
                            && player_branch_depth() >= b->mindepth
