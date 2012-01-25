@@ -382,7 +382,7 @@ static bool _fsim_mon_hit_you(FILE *ostat, monster &mon, int)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }
@@ -402,7 +402,7 @@ static bool _fsim_mon_hit_you(FILE *ostat, monster &mon, int)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }
@@ -430,7 +430,7 @@ static bool _fsim_you_hit_mon(FILE *ostat, monster &mon, int missile_slot)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }

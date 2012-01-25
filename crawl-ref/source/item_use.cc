@@ -1008,7 +1008,7 @@ int get_next_fire_item(int current, int direction)
     return fire_order[next];
 }
 
-class fire_target_behaviour : public targeting_behaviour
+class fire_target_behaviour : public targetting_behaviour
 {
 public:
     fire_target_behaviour()
@@ -1020,7 +1020,7 @@ public:
         set_prompt();
     }
 
-    // targeting_behaviour API
+    // targetting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw() const { return need_redraw; }
     virtual void clear_redraw()        { need_redraw = false; }
@@ -1149,7 +1149,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
 
 void fire_target_behaviour::display_help()
 {
-    show_targeting_help();
+    show_targetting_help();
     redraw_screen();
     need_redraw = true;
     set_prompt();
@@ -1169,7 +1169,7 @@ command_type fire_target_behaviour::get_command(int key)
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
-    return targeting_behaviour::get_command(key);
+    return targetting_behaviour::get_command(key);
 }
 
 std::vector<std::string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
@@ -3900,7 +3900,7 @@ void zap_wand(int slot)
     dist zap_wand;
     int item_slot;
 
-    // Unless the character knows the type of the wand, the targeting
+    // Unless the character knows the type of the wand, the targetting
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 

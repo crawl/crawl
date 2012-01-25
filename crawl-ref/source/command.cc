@@ -719,7 +719,7 @@ static bool _cmdhelp_textfilter(const std::string &tag)
     return (false);
 }
 
-static const char *targeting_help_1 =
+static const char *targetting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
@@ -736,15 +736,15 @@ static const char *targeting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-F</w> : monster targeting modes\n"
+    "<w>Ctrl-F</w> : monster targetting modes\n"
 #ifndef USE_TILE_LOCAL
-    "<w>Ctrl-L</w> : targeting via monster list\n"
+    "<w>Ctrl-L</w> : targetting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
 ;
 #ifdef WIZARD
-static const char *targeting_help_wiz =
-    "<h>Wizard targeting commands:</h>\n"
+static const char *targetting_help_wiz =
+    "<h>Wizard targetting commands:</h>\n"
     "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>D</w>: get debugging information about the monster\n"
     "<w>o</w>: give item to monster\n"
@@ -764,8 +764,8 @@ static const char *targeting_help_wiz =
 ;
 #endif
 
-static const char *targeting_help_2 =
-    "<h>Targeting (zap wands, cast spells, etc.):\n"
+static const char *targetting_help_2 =
+    "<h>Targetting (zap wands, cast spells, etc.):\n"
     "Most keys from examine surroundings work.\n"
     "Some keys fire at the target. By default,\n"
     "range is respected and beams don't stop.\n"
@@ -1993,7 +1993,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>F</w>.      Monsters\n"
             "<w>G</w>.      Items\n"
             "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      Targeting\n"
+            "<w>I</w>.      Targetting\n"
             "<w>J</w>.      Religion\n"
             "<w>K</w>.      Mutations\n"
             "<w>L</w>.      Licence, Contact, History\n"
@@ -2078,18 +2078,18 @@ void show_pickup_menu_help()
     _show_specific_help(getHelpString("pick-up"));
 }
 
-void show_targeting_help()
+void show_targetting_help()
 {
     column_composer cols(2, 40);
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    cols.add_formatted(0, targeting_help_1, true, true);
+    cols.add_formatted(0, targetting_help_1, true, true);
 #ifdef WIZARD
     if (you.wizard)
-        cols.add_formatted(0, targeting_help_wiz, true, true);
+        cols.add_formatted(0, targetting_help_wiz, true, true);
 #endif
-    cols.add_formatted(1, targeting_help_2, true, true);
+    cols.add_formatted(1, targetting_help_2, true, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }
 void show_interlevel_travel_branch_help()
@@ -2455,7 +2455,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     std::string text =
             "Many commands have context sensitive "
             "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
-            "form of targeting), <w>%</w>, and <w>%</w>.\n"
+            "form of targetting), <w>%</w>, and <w>%</w>.\n"
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
@@ -2642,7 +2642,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "\n<h>Targeting\n"
+            "\n<h>Targetting\n"
             "<w>Enter</w> or <w>.</w> or <w>Del</w> : confirm target\n"
             "<w>+</w> and <w>-</w> : cycle between targets\n"
             "<w>f</w> or <w>p</w> : shoot at previous target\n"

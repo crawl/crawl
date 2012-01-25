@@ -21,7 +21,7 @@ This amulet makes its wearer less susceptible to external damage, draining magic
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in hand combat and when targeting monsters via ranged attacks or spells.
+This amulet makes its wearer less accurate in hand combat and when targetting monsters via ranged attacks or spells.
 %%%%
 amulet of rage
 

@@ -1134,7 +1134,7 @@ bool bolt::hit_wall()
         && !feat_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
-        // of the player manually targeting something whose line of fire
+        // of the player manually targetting something whose line of fire
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         std::string prompt = "Your line of fire to ";
@@ -2802,7 +2802,7 @@ void bolt::internal_ouch(int dam)
             if (aimed_at_feet && effect_known)
                 ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
             else
-                ouch(dam, NON_MONSTER, KILLED_BY_TARGETING);
+                ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
         }
     }
     else if (MON_KILL(thrower))

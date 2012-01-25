@@ -68,7 +68,7 @@ public:
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
-    bool        mlist_targeting;
+    bool        mlist_targetting;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 
@@ -119,7 +119,7 @@ public:
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
-    bool        default_target;  // start targeting on a real target
+    bool        default_target;  // start targetting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
 
@@ -138,7 +138,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    bool        darken_beyond_range; // for whether targeting is out of range
+    bool        darken_beyond_range; // for whether targetting is out of range
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning

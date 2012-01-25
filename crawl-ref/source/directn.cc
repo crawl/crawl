@@ -126,7 +126,7 @@ static bool _find_square_wrapper(coord_def &mfp, int direction,
                                  int range, targetter *hitfunc, bool wrap,
                                  int los = LOS_ANY);
 
-static int  _targeting_cmd_to_compass(command_type command);
+static int  _targetting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi);
@@ -252,7 +252,7 @@ bool direction_chooser::choose_compass()
             break;
         }
 
-        const int i = _targeting_cmd_to_compass(key_command);
+        const int i = _targetting_cmd_to_compass(key_command);
         if (i != -1)
         {
             moves.delta = Compass[i];
@@ -272,7 +272,7 @@ bool direction_chooser::choose_compass()
     return moves.isValid;
 }
 
-static int _targeting_cmd_to_compass(command_type command)
+static int _targetting_cmd_to_compass(command_type command)
 {
     switch (command)
     {
@@ -330,7 +330,7 @@ monster* direction_chooser::targeted_monster() const
         return NULL;
 }
 
-std::string direction_chooser::build_targeting_hint_string() const
+std::string direction_chooser::build_targetting_hint_string() const
 {
     std::string hint_string;
 
@@ -374,7 +374,7 @@ void direction_chooser::print_key_hints() const
     }
     else
     {
-        const std::string hint_string = build_targeting_hint_string();
+        const std::string hint_string = build_targetting_hint_string();
         switch (restricts)
         {
         case DIR_NONE:
@@ -479,7 +479,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     return (range == -1 || distance(you.pos(), where) <= range*range + 1);
 }
 
-targeting_behaviour direction_chooser::stock_behaviour;
+targetting_behaviour direction_chooser::stock_behaviour;
 
 void direction(dist &moves, const direction_chooser_args& args)
 {
@@ -857,7 +857,7 @@ void full_describe_view()
 //
 //           isValid        a valid target or direction was chosen
 //           isCancel       player hit 'escape'
-//           isTarget       targeting was used
+//           isTarget       targetting was used
 //           choseRay       player wants a specific ray
 //           ray            ...this one
 //           isEndpoint     player wants the ray to stop on the dime
@@ -894,7 +894,7 @@ static void _fill_monster_list(bool full_info)
     }
 }
 
-// Skip all letters that have a special meaning in the targeting interface.
+// Skip all letters that have a special meaning in the targetting interface.
 // FIXME: Probably doesn't work well with redefined keys.
 // XXX: make sure to add exceptions to this and mlist_index_to_letter.
 static int _mlist_letter_to_index(char ltr)
@@ -1047,18 +1047,18 @@ static std::string _targ_mode_name(targ_mode_type mode)
 #ifndef USE_TILE_LOCAL
 static void _update_mlist(bool enable)
 {
-    crawl_state.mlist_targeting = enable;
+    crawl_state.mlist_targetting = enable;
     const int full_info = update_monster_pane();
     if (enable && full_info != -1)
     {
         _fill_monster_list(full_info);
     }
     else
-        crawl_state.mlist_targeting = false;
+        crawl_state.mlist_targetting = false;
 }
 #endif
 
-// Find a good square to start targeting from.
+// Find a good square to start targetting from.
 coord_def direction_chooser::find_default_target() const
 {
     coord_def result = you.pos();
@@ -1389,13 +1389,13 @@ bool direction_chooser::handle_signals()
         moves.isValid  = false;
         moves.isCancel = true;
 
-        mpr("Targeting interrupted by HUP signal.", MSGCH_ERROR);
+        mpr("Targetting interrupted by HUP signal.", MSGCH_ERROR);
         return true;
     }
     return false;
 }
 
-// Print out the initial prompt when targeting starts.
+// Print out the initial prompt when targetting starts.
 // Prompts might get scrolled off if you have too few lines available;
 // we'll live with that.
 void direction_chooser::show_initial_prompt()
@@ -1592,7 +1592,7 @@ void direction_chooser::reinitialize_move_flags()
     moves.choseRay   = false;
 }
 
-// Returns true if we've completed targeting.
+// Returns true if we've completed targetting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
     if (restricts != DIR_TARGET)
@@ -1664,7 +1664,7 @@ bool direction_chooser::looking_at_you() const
 void direction_chooser::handle_movement_key(command_type key_command,
                                             bool* loop_done)
 {
-    const int compass_idx = _targeting_cmd_to_compass(key_command);
+    const int compass_idx = _targetting_cmd_to_compass(key_command);
     if (compass_idx != -1)
     {
         const coord_def& delta = Compass[compass_idx];
@@ -1789,7 +1789,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
-    // Check if our targeting behaviour forces a redraw.
+    // Check if our targetting behaviour forces a redraw.
     if (behaviour->should_redraw())
     {
         need_all_redraw = true;
@@ -1887,16 +1887,16 @@ void direction_chooser::describe_target()
 
 void direction_chooser::show_help()
 {
-    show_targeting_help();
+    show_targetting_help();
     redraw_screen();
     mesclr(true);
     need_all_redraw = true;
 }
 
-void direction_chooser::cycle_targeting_mode()
+void direction_chooser::cycle_targetting_mode()
 {
     mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-    mprf("Targeting mode is now: %s", _targ_mode_name(mode).c_str());
+    mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
 }
 
 // Return false if we should continue looping, true if we're done.
@@ -1919,8 +1919,8 @@ bool direction_chooser::do_main_loop()
 
 #ifndef USE_TILE_LOCAL
     case CMD_TARGET_TOGGLE_MLIST:
-        Options.mlist_targeting = !Options.mlist_targeting;
-        _update_mlist(Options.mlist_targeting);
+        Options.mlist_targetting = !Options.mlist_targetting;
+        _update_mlist(Options.mlist_targetting);
         break;
 #endif
 
@@ -1962,7 +1962,7 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
     case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
 
-    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targeting_mode(); break;
+    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targetting_mode(); break;
 
     case CMD_TARGET_MAYBE_PREV_TARGET:
         loop_done = looking_at_you() ? select_previous_target()
@@ -2067,7 +2067,7 @@ void direction_chooser::finalize_moves()
 bool direction_chooser::choose_direction()
 {
 #ifndef USE_TILE_LOCAL
-    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
+    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targetting)
         _update_mlist(true);
 #endif
 
@@ -4023,40 +4023,40 @@ static void _describe_cell(const coord_def& where, bool in_range)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// targeting_behaviour
+// targetting_behaviour
 
-targeting_behaviour::targeting_behaviour(bool look_around)
+targetting_behaviour::targetting_behaviour(bool look_around)
     : just_looking(look_around), compass(false)
 {
 }
 
-targeting_behaviour::~targeting_behaviour()
+targetting_behaviour::~targetting_behaviour()
 {
 }
 
-int targeting_behaviour::get_key()
+int targetting_behaviour::get_key()
 {
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
     flush_prev_message();
     msgwin_got_input();
-    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
+    return unmangle_direction_keys(getchm(KMC_TARGETTING), KMC_TARGETTING,
                                    false, false);
 }
 
-command_type targeting_behaviour::get_command(int key)
+command_type targetting_behaviour::get_command(int key)
 {
     if (key == -1)
         key = get_key();
 
-    command_type cmd = key_to_command(key, KMC_TARGETING);
+    command_type cmd = key_to_command(key, KMC_TARGETTING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
         return (cmd);
 
 #ifndef USE_TILE_LOCAL
-    // Overrides the movement keys while mlist_targeting is active.
-    if (crawl_state.mlist_targeting && isalower(key))
+    // Overrides the movement keys while mlist_targetting is active.
+    if (crawl_state.mlist_targetting && isalower(key))
         return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
@@ -4067,7 +4067,7 @@ command_type targeting_behaviour::get_command(int key)
     return (cmd);
 }
 
-std::vector<std::string> targeting_behaviour::get_monster_desc(const monster_info& mi)
+std::vector<std::string> targetting_behaviour::get_monster_desc(const monster_info& mi)
 {
     std::vector<std::string> descs;
     if (get_desc_func)
