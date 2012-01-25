@@ -2518,6 +2518,7 @@ SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
 KPROP:   wZ = no_submerge
+KRPOP:   wZ = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
@@ -2540,6 +2541,7 @@ KMONS:  Z = shark / giant goldfish
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge
+KRPOP:  wZ = no_rtele_into
 WEIGHT: 5
 MAP
 xxxxxxxxxxxxxxx
