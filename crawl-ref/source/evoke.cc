@@ -298,13 +298,7 @@ static bool _efreet_flask(int slot)
     return (true);
 }
 
-static bool _is_crystal_ball(const item_def &item)
-{
-    return (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY));
-}
-
-static bool _check_crystal_ball(int subtype, bool known)
+static bool _check_crystal_ball()
 {
     if (you.intel() <= 1)
     {
@@ -318,9 +312,7 @@ static bool _check_crystal_ball(int subtype, bool known)
         return (false);
     }
 
-    if (subtype == MISC_CRYSTAL_BALL_OF_ENERGY
-        && known
-        && you.magic_points == you.max_magic_points)
+    if (you.magic_points == you.max_magic_points)
     {
         mpr("With no energy to recover, the crystal ball of energy is "
             "presently useless to you.");
@@ -783,13 +775,6 @@ bool evoke_item(int slot)
             break;
         }
 
-        if (_is_crystal_ball(item)
-            && !_check_crystal_ball(item.sub_type, item_type_known(item)))
-        {
-            unevokable = true;
-            break;
-        }
-
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
@@ -848,7 +833,9 @@ bool evoke_item(int slot)
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-            if (_ball_of_energy())
+            if (!_check_crystal_ball())
+                unevokable = true;
+            else if (_ball_of_energy())
                 pract = 1, ident = true;
             break;
 
