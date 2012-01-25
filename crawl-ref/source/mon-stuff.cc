@@ -824,6 +824,7 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
+        record_monster_defeat(mons, killer);
         record_monster_defeat(mons, KILL_ENSLAVED);
         yred_make_enslaved_soul(mons, player_under_penance());
         return (true);
