@@ -687,7 +687,6 @@ bool evoke_item(int slot)
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;
-    bool ident      = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
         ? get_unrand_entry(item.special) : NULL;
@@ -739,8 +738,7 @@ bool evoke_item(int slot)
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
-            if (item_type_known(item)
-                && !you.is_undead && you.hunger_state == HS_STARVING)
+            if (!you.is_undead && you.hunger_state == HS_STARVING)
             {
                 canned_msg(MSG_TOO_HUNGRY);
                 return (false);
@@ -753,14 +751,11 @@ bool evoke_item(int slot)
                 make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;
-                ident = true;
                 count_action(CACT_EVOKE, EVOC_MISC);
             }
         }
         else
-        {
             unevokable = true;
-        }
         break;
 
     case OBJ_MISCELLANY:
@@ -785,7 +780,7 @@ bool evoke_item(int slot)
 #if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_SEEING:
             mpr("Nothing happens.");
-            pract = 0, ident = true;
+            pract = 0;
             break;
 #endif
 
@@ -796,7 +791,6 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
-                ident = true;
             }
             break;
 
@@ -807,7 +801,6 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
-                ident = true;
             }
             break;
 
@@ -818,7 +811,6 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_EARTH_ELEMENTAL, 4, 5);
                 pract = (one_chance_in(5) ? 1 : 0);
-                ident = true;
             }
             break;
 
@@ -829,26 +821,26 @@ bool evoke_item(int slot)
 
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
-                pract = 1, ident = true;
+                pract = 1;
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             if (!_check_crystal_ball())
                 unevokable = true;
             else if (_ball_of_energy())
-                pract = 1, ident = true;
+                pract = 1;
             break;
 
 #if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
             mpr("Nothing happens.");
-            pract = 0, ident = true;
+            pract = 0;
             break;
 #endif
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())
-                pract = (coinflip() ? 2 : 1), ident = true;
+                pract = (coinflip() ? 2 : 1);
             break;
 
         case MISC_QUAD_DAMAGE:
@@ -876,17 +868,6 @@ bool evoke_item(int slot)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
         practise(EX_DID_EVOKE_ITEM, pract);
-
-    if (ident && !item_type_known(item))
-    {
-        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
-        set_ident_flags(item, ISFLAG_KNOW_TYPE);
-
-        mprf("You are wielding %s.",
-             item.name(DESC_A).c_str());
-
-        you.wield_change = true;
-    }
 
     if (!unevokable)
         you.turn_is_over = true;
