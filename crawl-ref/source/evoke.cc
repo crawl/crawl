@@ -753,8 +753,12 @@ bool evoke_item(int slot)
                 canned_msg(MSG_TOO_HUNGRY);
                 return (false);
             }
-            else if (you.magic_points < you.max_magic_points
-                     && x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
+            else if (you.magic_points >= you.max_magic_points)
+            {
+                mpr("Your reserves of magic are already full.");
+                return (false);
+            }
+            else if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
             {
                 mpr("You channel some magical energy.");
                 inc_mp(1 + random2(3));
