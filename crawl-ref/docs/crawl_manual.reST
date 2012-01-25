@@ -452,7 +452,7 @@ To access Crawl's help menu, press '?'. To get the list of all commands, press
 Appendix `4. List of Keys and Commands`_ of this text. Various other help texts are
 available as well, including this manual. You can also read the logbook from
 there by pressing ':'. Note that several commands have their own help screens,
-among them are targeting ('f'), level map ('X'), travel ('G' or 'Ctrl-G') and
+among them are targetting ('f'), level map ('X'), travel ('G' or 'Ctrl-G') and
 searching ('Ctrl-F'); again, press '?' when asked for input.
 
 If you don't like the standard keyset (either because some keys do not work
@@ -528,10 +528,10 @@ encounters to their liking.
 There are several other less dangerous methods you can use to kill monsters.
 Hunters and similarly oriented characters will prefer ranged combat to mindless
 bashing. When wielding some launcher, the 'f' and 'F' commands will fire
-appropriate missiles. See the section on Targeting in the Items Chapter for more
+appropriate missiles. See the section on Targetting in the Items Chapter for more
 on this. Likewise, many magicians will prefer to use spells from a safe
 distance. They can use the 'z' command to cast spells previously memorised.
-Again, see the Targeting section.
+Again, see the Targetting section.
 
 Some monsters can be friendly; friendly monsters will follow you around and
 fight on your behalf (but they gain some of the normal experience points for any
@@ -730,7 +730,7 @@ inserting it into the quiver use 'F' instead. Note that non-weapon, non-missile
 items will never be quivered.
 
 The interface for shooting or throwing things is also used for evoking wands and
-casting certain spells, and is described in detail in section I (Targeting).
+casting certain spells, and is described in detail in section I (Targetting).
 
 [ Armour
 ========================================
@@ -829,7 +829,7 @@ function when its charges run out. You must identify a wand to find out how many
 uses it has left. This can be done with a scroll of identify; characters with a
 good Evocations skill may also deduce the number of charges simply upon evoking
 the wand. Wands are aimed in the same way as missile weapons, and you can
-release the power of a wand by evoking it with 'V'. See section I for targeting.
+release the power of a wand by evoking it with 'V'. See section I for targetting.
 There are also a number of wands that may be useful to aim at yourself, but it
 is usually prudent to know what you are evoking before you do so.
 
@@ -1042,7 +1042,7 @@ Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
 
 ****************************************
-I. Targeting
+I. Targetting
 ****************************************
 
 When throwing something, evoking certain wands, or casting spells, you are asked
@@ -1067,7 +1067,7 @@ Otherwise, you use the following commands:
     missiles won't end up in deep water.
   - You can press Escape if you changed your mind - no turns are deducted.
 
-There are some shortcuts while targeting:
+There are some shortcuts while targetting:
 
   - Typing Shift-direction on your keypad fires straight away in that direction.
   - Pressing 'p' or 'f' fires at the previous target (if it is still alive and
@@ -1082,12 +1082,12 @@ of '.', Enter, etc. - except if you want to heal or haste someone else. If you
 target yourself while firing something harmful (which can be sensible at times),
 you will be asked for confirmation.
 
-Finally, there are some more targeting related commands:
+Finally, there are some more targetting related commands:
 
   - '(' and ')' allow to change the ammunition. This is useful when you have
     several types of appropriate ammunition, say poisoned needles and curare
     needles. Your last usage will be remembered. Note that you can use '(' for
-    changing the quiver ammunition even outside of targeting.
+    changing the quiver ammunition even outside of targetting.
   - The ':' key allows you to hide the path of your spell/wand/missile.
   - Ctrl-F changes which monsters are cycled when using '+', '=' or '-':
     hostiles, friends, plants or all monsters.
@@ -1139,7 +1139,7 @@ of a freak they've become and the 'a' command to activate any mutations which
 can be controlled. Many mutations are actually beneficial to the characters, but
 there are plenty of nasty ones as well. Many mutations have three levels, each
 of which counts as a single mutation. Some changes to the primary attributes
-Strength, Intelligence and Dexterity (apart from those by leveling) are also
+Strength, Intelligence and Dexterity (apart from those by levelling) are also
 handled as mutations - in particular, these are not permanent.
 
 You can also become mutated by overusing certain powerful enchantments,
@@ -2212,7 +2212,7 @@ confusing, since there are also several modes; here is the full list. Some
 commands are particularly useful in combination with certain interface options;
 such options are mentioned in the list. For a description of them, please look
 into options_guide.txt. For a more terse list of all commands, use '??' in-game.
-Most modes (targeting, level map, interlevel travel) also have help menus via
+Most modes (targetting, level map, interlevel travel) also have help menus via
 '?' on their own.
 
 Movement
@@ -2748,16 +2748,16 @@ _
 Tab
   Cycle shops and portals.
 
-Targeting
+Targetting
 ========================================
 
-Targeting mode is similar to examining surroundings. It is activated whenever
+Targetting mode is similar to examining surroundings. It is activated whenever
 you fire projectiles, evoke a wand or cast spells which use targets. All of the
 commands described for examination of surroundings work, with the exception of
 Space (which fires).
 
 Esc or x
-  Stop targeting.
+  Stop targetting.
 
 ?
   Special help screen.
@@ -2786,13 +2786,13 @@ Ctrl-F
   target_zero_exp).
 
 (, )
-  These two commands allow you to change ammunition while targeting. The choice
+  These two commands allow you to change ammunition while targetting. The choice
   is subject to the fire_order option. Usually, you change missiles according to
   your launcher; i.e. when wielding a bow, ( and ) will cycle through all stacks
   of arrows in your inventory.
 
 Shift-direction
-  Fire straight in that direction. You can go back to the old targeting mode
+  Fire straight in that direction. You can go back to the old targetting mode
   (allowing straight firing by pressing just the direction key) using the option
   target_unshifted_dirs. Note that target_unshifted_dirs is mutually exclusive
   with default_target.

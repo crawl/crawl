@@ -92,10 +92,10 @@ struct game_state
     bool level_annotation_shown;
 
 #ifndef USE_TILE_LOCAL
-    // Are we currently targeting using the mlist?
+    // Are we currently targetting using the mlist?
     // This is global because the monster pane uses this when
     // drawing.
-    bool mlist_targeting;
+    bool mlist_targetting;
 #else
     bool title_screen;
 #endif

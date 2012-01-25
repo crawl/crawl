@@ -142,7 +142,7 @@ bool fight_melee(actor *attacker, actor *defender)
         if (!defender->alive() || defender->pos() != pos)
         {
             if (attacker == defender
-               || !attacker->as_monster()->has_multitargeting())
+               || !attacker->as_monster()->has_multitargetting())
             {
                 break;
             }

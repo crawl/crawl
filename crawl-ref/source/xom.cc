@@ -4073,7 +4073,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
 
     // Don't protect the player from these.
     case KILLED_BY_SELF_AIMED:
-    case KILLED_BY_TARGETING:
+    case KILLED_BY_TARGETTING:
         return (false);
 
     // Only if not caused by equipment.
