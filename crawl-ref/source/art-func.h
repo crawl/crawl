@@ -747,3 +747,10 @@ static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
 }
+
+///////////////////////////////////////////////////
+static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
+{
+    if (one_chance_in(10))
+        did_god_conduct(DID_UNHOLY, 1);
+}

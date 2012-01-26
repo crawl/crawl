@@ -1204,7 +1204,7 @@ TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 METAB:    -2
-BOOL:     life
+BOOL:     life, evil
 DESC:     You feel sorry for the horse that has to wear this mass of metal.
 DESC_ID:  This gear used to be worn by the personal horse of the Black Knight
           during his reign of terror. Pitch-black, it appears to be made not
