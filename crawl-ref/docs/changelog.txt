@@ -88,7 +88,7 @@ Spells
 * Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
 * Recasting a transformation is no worse than the original cast.
 * Animate Dead animates stacks.
-* Lee's Rapid Deconstruction: prevent abuse.
+* Lee's Rapid Deconstruction: prevent abuse, improve targeting.
 * Summon Greater Demon only has tier 1 demons turn hostile over time.
 * Spider form is susceptible to poison.
 * Shatter doesn't work through walls, unless it manages to destroy them.
@@ -96,7 +96,12 @@ Spells
 * Metabolic Englaciation slows down enemies.
 * Twisted Resurrection is improved: corpses merge into abominations on their
   own without needing to be stacked.
-* Alistair's Intoxication is less reliable.
+* Alistair's Intoxication is less reliable, depends on spell power.
+* Boost the effective power of some hexes: Corona, Slow, Mass Confusion,
+  Cause Fear, Control Undead.
+* Olgreb's Toxic Radiance is more effective at high spell power.
+* Confusing Touch is less reliable.
+* Inner Flame leaves clouds of fire when an affected monster explodes.
 
 Backgrounds
 -----------
