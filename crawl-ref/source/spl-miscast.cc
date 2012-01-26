@@ -1517,11 +1517,12 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            if (you.is_undead)
-                mpr("You suddenly recall your previous life!");
-            else if (_lose_stat(STAT_INT, 1 + random2(3)))
+            if (_lose_stat(STAT_INT, 1 + random2(3)))
             {
-                mpr("You have damaged your brain!");
+                if (you.is_undead)
+                    mpr("You suddenly recall your previous life!");
+                else
+                    mpr("You have damaged your brain!");
             }
             else if (!did_msg)
                 mpr("You have a terrible headache.");
@@ -1551,11 +1552,12 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (you.is_undead)
-                mpr("You suddenly recall your previous life.");
-            else if (_lose_stat(STAT_INT, 3 + random2(3)))
+            if (_lose_stat(STAT_INT, 3 + random2(3)))
             {
-                mpr("You have damaged your brain!");
+                if (you.is_undead)
+                    mpr("You suddenly recall your previous life.");
+                else
+                    mpr("You have damaged your brain!");
             }
             else if (!did_msg)
                 mpr("You have a terrible headache.");
