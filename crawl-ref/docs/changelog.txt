@@ -79,7 +79,8 @@ Spells
   available as a new level 6 spell.
 * Swiftness and Flight no longer give an extra boost when cast together.
 * Swiftness halves stealth and makes it harder to detect traps.
-* Flight is now level 3, Dragon Form is now level 7.
+* Flight lowered to level 3, Dragon Form lowered to level 7.
+* Dispel Undead raised to level 5.
 * Summoned Ugly Things are now always friendly.
 * Shadow Creatures don't last as long anymore.
 * Tornado's damage has been slightly improved.
@@ -95,6 +96,7 @@ Spells
 * Metabolic Englaciation slows down enemies.
 * Twisted Resurrection is improved: corpses merge into abominations on their
   own without needing to be stacked.
+* Alistair's Intoxication is less reliable.
 
 Backgrounds
 -----------
