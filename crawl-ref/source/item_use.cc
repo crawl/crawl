@@ -1613,9 +1613,10 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return (true);
 
-    if (victim->atype() == ACT_PLAYER && item_blocks_teleport(true, true))
+    if (victim->no_tele(true, true))
     {
-        canned_msg(MSG_STRANGE_STASIS);
+        if (victim->is_player())
+            canned_msg(MSG_STRANGE_STASIS);
         return (false);
     }
 
