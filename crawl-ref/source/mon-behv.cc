@@ -1137,6 +1137,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             && mon->holiness() != MH_NONLIVING
             && !mons_class_flag(mon->type, M_NO_FLEE)
             && !mons_is_cornered(mon)
+            && !mon->berserk()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
         {
             mon->behaviour = BEH_FLEE;
