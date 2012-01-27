@@ -982,6 +982,7 @@ static void _orc_battle_cry(monster* chief)
     if (foe
         && (foe != &you || !chief->friendly())
         && !silenced(chief->pos())
+        && !chief->has_ench(ENCH_MUTE)
         && chief->can_see(foe)
         && coinflip())
     {
