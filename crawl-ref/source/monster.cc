@@ -3551,6 +3551,7 @@ int monster::res_torment() const
     const mon_holy_type holy = holiness();
     if (holy == MH_UNDEAD
         || holy == MH_DEMONIC
+        || holy == MH_PLANT
         || holy == MH_NONLIVING)
     {
         return (1);
