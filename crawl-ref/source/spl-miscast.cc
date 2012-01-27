@@ -1555,7 +1555,7 @@ void MiscastEffect::_divination_you(int severity)
             if (_lose_stat(STAT_INT, 3 + random2(3)))
             {
                 if (you.is_undead)
-                    mpr("You suddenly recall your previous life.");
+                    mpr("You suddenly recall your previous life!");
                 else
                     mpr("You have damaged your brain!");
             }
