@@ -792,7 +792,10 @@ void static _get_randart_properties(const item_def &item,
             }
         }
 
-        if (is_demonic(item))
+        // Quarter of the chance of distortion elsewhere.
+        if (!is_range_weapon(item) && one_chance_in(100))
+            proprt[ARTP_BRAND] = SPWPN_DISTORTION;
+        else if (is_demonic(item))
         {
             switch (random2(9))
             {
