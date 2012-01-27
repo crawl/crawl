@@ -4699,18 +4699,24 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     switch (flavour)
     {
     case BEAM_TELEPORT:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         monster_teleport(mon, false);
         return (MON_AFFECTED);
 
     case BEAM_BLINK:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         monster_blink(mon);
         return (MON_AFFECTED);
 
     case BEAM_BLINK_CLOSE:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         blink_other_close(mon, source);

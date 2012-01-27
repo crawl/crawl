@@ -617,6 +617,7 @@ public:
     int res_wind() const;
     int res_petrify(bool temp = true) const;
     int res_magic() const;
+    bool no_tele(bool calc_unid = true, bool permit_id = true);
     bool confusable() const;
     bool slowable() const;
 

@@ -6485,6 +6485,14 @@ int player_res_magic(bool calc_unid, bool temp)
     return (rm);
 }
 
+bool player::no_tele(bool calc_unid, bool permit_id)
+{
+    if (crawl_state.game_is_sprint())
+        return true;
+
+    return item_blocks_teleport(calc_unid, permit_id);
+}
+
 bool player::fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
