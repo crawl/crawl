@@ -4394,6 +4394,9 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
+    if (mons_is_tentacle(type))
+        return false;
+
     const mon_holy_type holi = holiness();
 
     return (holi != MH_UNDEAD && holi != MH_NONLIVING);
