@@ -3618,6 +3618,20 @@ int monster::res_magic() const
     return (u);
 }
 
+bool monster::no_tele(bool calc_unid, bool permit_id)
+{
+    // Plants can't survive without roots, so it's either this or auto-kill.
+    // Statues have pedestals so moving them is weird.
+    if (mons_class_is_stationary(type) && type != MONS_CURSE_SKULL)
+        return true;
+
+    // Might be better to teleport the whole kraken instead...
+    if (mons_is_tentacle(type))
+        return true;
+
+    return false;
+}
+
 flight_type monster::flight_mode() const
 {
     return (mons_flies(this));
