@@ -1362,6 +1362,36 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
+        // Weapons of distortion or vamp are no good if you need to eat.
+        if (agent != GOD_XOM
+            && doodad.base_type == OBJ_WEAPONS
+            && !is_unrandom_artefact(doodad)
+            && (get_weapon_brand(doodad) == SPWPN_DISTORTION
+               || get_weapon_brand(doodad) == SPWPN_VAMPIRICISM)
+            && !can_cut_meat(doodad)
+            // being gloved or transformed is ok here
+            && !you.has_claws(false)
+            && !you.has_fangs(false)
+            && !(you.has_talons(false) && you.mutation[MUT_BEAK])
+            && you.mutation[MUT_HERBIVOROUS] < 3
+            && !you.is_undead)
+        {
+            int runes = 0;
+            if (get_weapon_brand(doodad) == SPWPN_DISTORTION)
+            {
+                // blunt distortion is ok in non-living branches
+                for (int i = 0; i < NUM_RUNE_TYPES; i++)
+                    if (you.runes[i])
+                        runes++;
+            }
+            if (runes < 3)
+            {
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
+        }
+
         // MT - Check: god-gifted weapons and armour shouldn't kill you.
         // Except Xom.
         if ((agent == GOD_TROG || agent == GOD_OKAWARU)
