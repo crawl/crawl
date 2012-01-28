@@ -26,13 +26,18 @@ DEPTH:  D:7-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food
 ITEM:   bread ration q:2
+: if crawl.one_chance_in(8) then
+:   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
+: else
+SUBST: =e = x
+: end
 MONS:   spriggan col:white name:baker n_suf ; robe . dagger
 MAP
-xxxx
-xddx
-x.xx
-x.1x
-x+xx
+xxxxxx
+xdd=ex
+x.xxxx
+x.1xxx
+x+xxxx
 ENDMAP
 
 # 18.6k, min 14k
