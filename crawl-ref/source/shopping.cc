@@ -726,7 +726,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     else
                     {
                         if (_shop_yesno("Remove item from shopping list and "
-                                         "buy it? (Y/n)",  'y'))
+                                         "mark for purchase? (Y/n)",  'y'))
                         {
                             shopping_list.del_thing(item);
                             in_list[key] = false;
