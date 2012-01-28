@@ -79,10 +79,7 @@ A tree
 ####################################################
 Ice Storm
 
-"Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
- Stay These Messengers About Their Sacred Business. Do Not Ask Us About
- Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess
- Czol."
+"Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall Stay These Messengers About Their Sacred Business. Do Not Ask Us About Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol."
     -Anghammarad, "Going Postal", Terry Pratchett.
 %%%%
 ####################################################
@@ -129,10 +126,7 @@ club
 %%%%
 daeva
 
-"Between these twain the Daevas also chose not aright, for infatuation came
- upon them as they took counsel together, so that they chose the Worst
- Thought. Then they rushed together to Violence, that they might enfeeble
- the world of men."
+"Between these twain the Daevas also chose not aright, for infatuation came upon them as they took counsel together, so that they chose the Worst Thought. Then they rushed together to Violence, that they might enfeeble the world of men."
     -the Avesta, Ahunavaiti Gatha 30.6
 %%%%
 dagger
@@ -623,7 +617,6 @@ Menkaure
  Their pleasure, to their feet; and reap their praise,
  The praise of Gods, rich boon! and length of days."
     -Matthew Arnold, _Mycerinus_
-
 %%%%
 manticore
 
