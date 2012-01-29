@@ -3579,6 +3579,28 @@ int monster::res_petrify(bool temp) const
     return 0;
 }
 
+int monster::res_constrict() const
+{
+    // 3 is immunity, 1 or 2 reduces damage
+
+    if (is_insubstantial())
+        return 3;
+    monster_type base = mons_class_is_zombified(type) ? base_monster : type;
+    if (mons_genus(base) == MONS_JELLY)
+        return 3;
+    // theme only, they don't currently do passive damage
+    if (base == MONS_FLAMING_CORPSE || base == MONS_PORCUPINE)
+        return 3;
+
+    // RL constriction works by 1. blocking lung action, 2. increasing blood
+    // pressure (no constrictor has enough strength to crush bones).  Thus,
+    // lacking either of these should reduce the damage, perhaps even to 0
+    // (but still immobilizing) for the unliving.
+    // Not implementing this before discussion.
+
+    return 0;
+}
+
 int monster::res_acid() const
 {
     return (get_mons_resists(this).acid);
