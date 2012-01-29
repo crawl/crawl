@@ -121,16 +121,28 @@ int calc_skill_cost(int skill_cost_level)
 // skill levels.
 void reassess_starting_skills()
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    // go backwards, need to do Dodging before Armour
+    for (int i = NUM_SKILLS - 1; i >= SK_FIRST_SKILL; --i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (you.skills[sk] == 0)
-            continue;
-        ASSERT(!is_useless_skill(sk));
+        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
 
         // Grant the amount of skill points required for a human.
-        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
-        static_cast<species_type>(SP_HUMAN)) + 1;
+        you.skill_points[sk] = you.skills[sk] ?
+            skill_exp_needed(you.skills[sk], sk, SP_HUMAN) + 1 : 0;
+
+        if (sk == SK_DODGING && you.skills[SK_ARMOUR]
+            && (is_useless_skill(SK_ARMOUR) || !you_can_wear(EQ_BODY_ARMOUR)))
+        {
+            // No one who can't wear mundane heavy armour shouldn't start with
+            // the Armour skill -- D:1 dragon armour is too unlikely.
+            you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
+                SK_ARMOUR, SP_HUMAN) + 1;
+            you.skills[SK_ARMOUR] = 0;
+        }
+
+        if (!you.skill_points[sk])
+            continue;
 
         // Find out what level that earns this character.
         you.skills[sk] = 0;

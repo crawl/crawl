@@ -510,11 +510,9 @@ static void _give_items_skills(const newgame_def& ng)
         // Skills.
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 3;
+        you.skills[SK_ARMOUR]   = 3;
 
         weap_skill = (you.species == SP_FELID) ? 4 : 2;
-
-        you.skills[(player_effectively_in_light_armour()
-                   ? SK_DODGING : SK_ARMOUR)] = 3;
 
         break;
 
@@ -597,7 +595,7 @@ static void _give_items_skills(const newgame_def& ng)
         {
             you.skills[SK_DODGING]++;
             if (!is_useless_skill(SK_ARMOUR))
-                you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
+                you.skills[SK_ARMOUR]++; // converted later
         }
         break;
 
@@ -1017,15 +1015,8 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_UNARMED_COMBAT] += you.skills[i];
             you.skills[i] = 0;
         }
-        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
-        you.skills[SK_ARMOUR] = 0;
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
-    }
-    if (you.species == SP_OCTOPODE || you.species == SP_BASE_DRACONIAN)
-    {
-        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
-        you.skills[SK_ARMOUR] = 0;
     }
 
     if (you.religion != GOD_NO_GOD)
