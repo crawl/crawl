@@ -5373,7 +5373,7 @@ bool melee_attack::handle_constriction()
 
         // if hit, grab
         if (asize >= dsize
-            && !defender->is_insubstantial()
+            && defender->res_constrict() < 3
             && adjacent(attacker->pos(), defender->pos())
             && attackdice >= defenddice)
         {
