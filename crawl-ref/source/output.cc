@@ -927,6 +927,8 @@ static std::string _level_description_string_hud()
             else
                 short_name = article_a(uppercase_first(you.level_type_name),
                                        false);
+            if (short_name == "An Ice_cave")
+                short_name = "An ice cave";
         }
         else
             short_name.insert(0, "A ");
