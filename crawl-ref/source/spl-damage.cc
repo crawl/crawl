@@ -1078,6 +1078,9 @@ spret_type cast_shatter(int pow, bool fail)
 
 static int _shatter_player(int pow, actor *wielder)
 {
+    if (wielder == &you)
+        return 0;
+
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
 
     if (you.petrified())
