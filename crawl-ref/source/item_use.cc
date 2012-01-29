@@ -4994,6 +4994,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.confused())
+    {
+        mpr("You're too confused.");
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -5148,13 +5154,6 @@ void read_scroll(int slot)
     }
 
     const bool dangerous = player_in_a_dangerous_place();
-
-    if (you.confused())
-    {
-        random_uselessness(item_slot);
-        dec_inv_item_quantity(item_slot, 1);
-        return;
-    }
 
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
