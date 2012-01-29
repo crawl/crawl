@@ -1397,7 +1397,7 @@ bool scramble(void)
     ASSERT(!crawl_state.game_is_arena());
 
     // Statues are too stiff and heavy to scramble out of the water.
-    if (you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE || you.cannot_move())
         return (false);
 
     const int max_carry = carrying_capacity();
