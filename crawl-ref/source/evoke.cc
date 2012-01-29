@@ -726,6 +726,12 @@ bool evoke_item(int slot)
     case OBJ_STAVES:
         ASSERT(wielded);
 
+        if (you.confused())
+        {
+            mpr("You're too confused.");
+            return false;
+        }
+
         if (item_is_rod(item))
         {
             pract = staff_spell(slot);

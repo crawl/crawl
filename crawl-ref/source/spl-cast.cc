@@ -556,6 +556,12 @@ static bool _can_cast()
         return false;
     }
 
+    if (you.confused())
+    {
+        mpr("You're too confused to cast spells.");
+        return false;
+    }
+
     if (silenced(you.pos()))
     {
         mpr("You cannot cast spells when silenced!");
@@ -723,27 +729,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     const bool staff_energy = player_energy();
-    if (you.confused())
-        random_uselessness();
-    else
+    you.last_cast_spell = spell;
+    const spret_type cast_result = your_spells(spell, 0, true, check_range);
+    if (cast_result == SPRET_ABORT)
     {
-        you.last_cast_spell = spell;
-        const spret_type cast_result = your_spells(spell, 0, true, check_range);
-        if (cast_result == SPRET_ABORT)
-        {
-            crawl_state.zero_turns_taken();
-            return (false);
-        }
-
-        if (cast_result == SPRET_SUCCESS)
-        {
-            practise(EX_DID_CAST, spell);
-            did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-            count_action(CACT_CAST, spell);
-        }
-        else
-            practise(EX_DID_MISCAST, spell);
+        crawl_state.zero_turns_taken();
+        return (false);
     }
+
+    if (cast_result == SPRET_SUCCESS)
+    {
+        practise(EX_DID_CAST, spell);
+        did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
+        count_action(CACT_CAST, spell);
+    }
+    else
+        practise(EX_DID_MISCAST, spell);
 
     dec_mp(spell_mana(spell));
 
