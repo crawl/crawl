@@ -709,11 +709,10 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
 bool monster::can_throw_large_rocks() const
 {
-    return (type == MONS_STONE_GIANT
-            || type == MONS_POLYPHEMUS
-            || type == MONS_CHUCK
-            || ::mons_species(type) == MONS_CYCLOPS
-            || ::mons_species(type) == MONS_OGRE);
+    monster_type species = mons_species(false); // zombies can't
+    return (species == MONS_STONE_GIANT
+         || species == MONS_CYCLOPS
+         || species == MONS_OGRE);
 }
 
 bool monster::can_speak()
@@ -3670,7 +3669,7 @@ bool monster::is_banished() const
     return (!alive() && flags & MF_BANISHED);
 }
 
-int monster::mons_species(bool zombie_base) const
+monster_type monster::mons_species(bool zombie_base) const
 {
     if (zombie_base && mons_class_is_zombified(type))
         return ::mons_species(base_monster);
@@ -3794,7 +3793,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (alive())
     {
         if (amount != INSTANT_DEATH
-            && ::mons_species(mons_base_type(this)) == MONS_DEEP_DWARF)
+            && mons_species(true) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
             int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
