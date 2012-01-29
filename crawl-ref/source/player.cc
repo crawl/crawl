@@ -6557,7 +6557,7 @@ bool player::nightvision() const
            (religion == GOD_YREDELEMNUL && piety > piety_breakpoint(2)));
 }
 
-int player::mons_species(bool zombie_base) const
+monster_type player::mons_species(bool zombie_base) const
 {
     return player_species_to_mons_species(you.species);
 }
