@@ -1752,7 +1752,18 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
-    const mon_holy_type targ_holy = mons->holiness();
+    mon_holy_type targ_holy = mons->holiness();
+
+    // Dual holiness, Trog and Kiku like dead demons but not undead.
+    if ((mons->type == MONS_ABOMINATION_SMALL
+         || mons->type == MONS_ABOMINATION_LARGE
+         || mons->type == MONS_CRAWLING_CORPSE
+         || mons->type == MONS_MACABRE_MASS)
+        && (you.religion == GOD_TROG
+         || you.religion == GOD_KIKUBAAQUDGHA))
+    {
+        targ_holy = MH_DEMONIC;
+    }
 
     switch (killer)
     {
@@ -1821,17 +1832,6 @@ int monster_die(monster* mons, killer_type killer,
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     mons->hit_dice, true, mons);
-                    // Dual holiness, Trog and Kiku like dead demons.
-                    if ((mons->type == MONS_ABOMINATION_SMALL
-                         || mons->type == MONS_ABOMINATION_LARGE
-                         || mons->type == MONS_CRAWLING_CORPSE
-                         || mons->type == MONS_MACABRE_MASS)
-                        && (you.religion == GOD_TROG
-                         || you.religion == GOD_KIKUBAAQUDGHA))
-                    {
-                        did_god_conduct(DID_KILL_DEMON,
-                                        mons->hit_dice, true, mons);
-                    }
                 }
                 else if (targ_holy == MH_DEMONIC)
                 {
