@@ -532,6 +532,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
+            case GOD_TROG:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -599,6 +600,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 break;
 
+            case GOD_TROG:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
