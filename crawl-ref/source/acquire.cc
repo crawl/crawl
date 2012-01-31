@@ -1363,7 +1363,8 @@ int acquirement_create_item(object_class_type class_wanted,
             && doodad.base_type == OBJ_WEAPONS
             && !is_unrandom_artefact(doodad)
             && (get_weapon_brand(doodad) == SPWPN_DISTORTION
-               || get_weapon_brand(doodad) == SPWPN_VAMPIRICISM)
+               || get_weapon_brand(doodad) == SPWPN_VAMPIRICISM
+                  && !crawl_state.game_is_zotdef())
             && !can_cut_meat(doodad)
             // being gloved or transformed is ok here
             && !you.has_claws(false)
