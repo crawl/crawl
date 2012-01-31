@@ -102,6 +102,8 @@ Spells
 * Olgreb's Toxic Radiance is more effective at high spell power.
 * Confusing Touch is less reliable.
 * Inner Flame leaves clouds of fire when an affected monster explodes.
+* Passage of Golubria creates two portals when cast, and allows more than two
+  portals to exist simultaneously.
 
 Backgrounds
 -----------
