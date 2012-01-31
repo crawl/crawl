@@ -1376,7 +1376,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_LARGE_BONE_PLATES:
         {
             const char *arms;
-            if (you.species == SP_OCTOPODE)
+            if (you.mutation[MUT_TENTACLES] >= 3)
                 arms = "tentacles";
             else if (you.species == SP_FELID)
                 arms = "legs";
