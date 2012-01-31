@@ -20,45 +20,45 @@
 #include "transform.h"
 #include "hints.h"
 
-int8_t player::stat(stat_type s, bool nonneg) const
+int player::stat(stat_type s, bool nonneg) const
 {
-    const int8_t val = max_stat(s) - stat_loss[s];
-    return (nonneg ? std::max<int8_t>(val, 0) : val);
+    const int val = max_stat(s) - stat_loss[s];
+    return (nonneg ? std::max(val, 0) : val);
 }
 
-int8_t player::strength() const
+int player::strength() const
 {
     return (stat(STAT_STR));
 }
 
-int8_t player::intel() const
+int player::intel() const
 {
     return (stat(STAT_INT));
 }
 
-int8_t player::dex() const
+int player::dex() const
 {
     return (stat(STAT_DEX));
 }
 
 static int _stat_modifier(stat_type stat);
 
-int8_t player::max_stat(stat_type s) const
+int player::max_stat(stat_type s) const
 {
     return (std::min(base_stats[s] + _stat_modifier(s), 72));
 }
 
-int8_t player::max_strength() const
+int player::max_strength() const
 {
     return (max_stat(STAT_STR));
 }
 
-int8_t player::max_intel() const
+int player::max_intel() const
 {
     return (max_stat(STAT_INT));
 }
 
-int8_t player::max_dex() const
+int player::max_dex() const
 {
     return (max_stat(STAT_DEX));
 }
@@ -217,7 +217,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return (descs[stat][desc]);
 }
 
-void modify_stat(stat_type which_stat, int8_t amount, bool suppress_msg,
+void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -245,7 +245,7 @@ void modify_stat(stat_type which_stat, int8_t amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
                         const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -271,7 +271,7 @@ void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
     std::string name = cause.name(DESC_THE, false, true, false, false,
@@ -436,7 +436,7 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
+bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const char *cause, bool see_source)
 {
     if (which_stat == STAT_RANDOM)
@@ -476,13 +476,13 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
         return (false);
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
+bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const std::string cause, bool see_source)
 {
     return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss,
+bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force)
 {
     if (cause == NULL || invalid_monster(cause))
@@ -499,7 +499,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
     return lose_stat(which_stat, stat_loss, force, name, vis);
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss,
+bool lose_stat(stat_type which_stat, int stat_loss,
                const item_def &cause, bool removed, bool force)
 {
     std::string name = cause.name(DESC_THE, false, true, false, false,
@@ -567,7 +567,7 @@ static stat_type _random_lost_stat()
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
 // completely.
-bool restore_stat(stat_type which_stat, int8_t stat_gain,
+bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery)
 {
     // A bit hackish, but cut me some slack, man! --
