@@ -844,6 +844,7 @@
    "tentacles"
 },
 
+// Octopode only
 { MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,
   "spike",
 

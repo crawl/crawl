@@ -1073,6 +1073,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
         return (true);
 
+    // No bones.
+    if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
+        return (true);
+
     if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
         return (true);
 
