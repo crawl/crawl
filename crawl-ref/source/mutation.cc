@@ -1373,6 +1373,21 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         gain_msg = false;
         break;
 
+    case MUT_LARGE_BONE_PLATES:
+        {
+            const char *arms;
+            if (you.species == SP_OCTOPODE)
+                arms = "tentacles";
+            else if (you.species == SP_FELID)
+                arms = "legs";
+            else
+                break;
+            mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
+                            arms).c_str(), MSGCH_MUTATION);
+            gain_msg = false;
+        }
+        break;
+
     default:
         break;
     }
