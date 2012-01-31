@@ -408,14 +408,14 @@ public:
 
     void reset_prev_move();
 
-    int8_t stat(stat_type stat, bool nonneg=true) const;
-    int8_t strength() const;
-    int8_t intel() const;
-    int8_t dex() const;
-    int8_t max_stat(stat_type stat) const;
-    int8_t max_strength() const;
-    int8_t max_intel() const;
-    int8_t max_dex() const;
+    int stat(stat_type stat, bool nonneg=true) const;
+    int strength() const;
+    int intel() const;
+    int dex() const;
+    int max_stat(stat_type stat) const;
+    int max_strength() const;
+    int max_intel() const;
+    int max_dex() const;
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
