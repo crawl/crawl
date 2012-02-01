@@ -1268,7 +1268,6 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
         you.train[sk] = (you.train[sk] + 1) % 3;
     else
         die("Invalid state.");
-    you.train_set[sk] = true;
     reset_training();
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);

@@ -418,15 +418,23 @@ static void _check_start_train()
         if (is_invalid_skill(*it))
             continue;
 
-        if (!you.can_train[*it] && you.train[*it] && you.train_set[*it])
+        if (!you.can_train[*it] && you.train[*it])
             skills.insert(*it);
         you.can_train[*it] = true;
     }
 
+    reset_training();
+
+    // We're careful of not invalidating the iterator when erasing.
+    for (skill_set_iter it = skills.begin(); it != skills.end();)
+        if (!you.training[*it])
+            skills.erase(it++);
+        else
+            ++it;
+
     if (!skills.empty())
         mpr("You resume training " + _skill_names(skills));
 
-    reset_training();
     you.start_train.clear();
 }
 
@@ -519,7 +527,7 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
-            you.train[i] = you.train_alt[i] = you.train_set[i] = true;
+            you.train[i] = you.train_alt[i] = true;
         else
         {
             // Skills are on by default in auto mode and off in manual.

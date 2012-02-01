@@ -5463,7 +5463,6 @@ void player::init()
     train_alt.init(false);
     training.init(0);
     can_train.init(false);
-    train_set.init(false);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
