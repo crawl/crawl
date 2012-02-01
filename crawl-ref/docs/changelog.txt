@@ -34,8 +34,11 @@ Gods
 * Cheibriados loses the "Make Ponderous" invocation, slows you down all the
   time depending on piety.
 * Cheibriados can slow down Abyss morphing and Orb run monster spawns.
+* New Cheibriados ability: Temporal Distortion, moves nearby monsters forwards
+  in time a few turns.
 * Makhleb's powers use Health instead of Magic.
 * Makhleb gives more Health for killing but no Magic anymore.
+* Makhleb's Greater Destruction costs less piety.
 * Zin followers pay mandatory tithe for piety. No more piety for waiting.
 * Zin takes some gold upon conversion; this gives more piety than donation.
 * Zin's Vitalisation is proactive, protecting from all bad statuses.
@@ -84,7 +87,8 @@ Spells
 * Summoned Ugly Things are now always friendly.
 * Shadow Creatures don't last as long anymore.
 * Tornado's damage has been slightly improved.
-* Conjure Ball Lightning improved.
+* Conjure Ball Lightning improved, ball lightnings explode when their duration
+  expires.
 * Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
 * Recasting a transformation is no worse than the original cast.
 * Animate Dead animates stacks.
@@ -116,8 +120,9 @@ Backgrounds
 Skills
 ------
 * Non-integer values of a skill matter.
-* Stealth is drastically more expensive.
-* Replace unknown skill dance by skill training restrictions.
+* Add skill training restrictions instead of requiring victory dance-style
+  usage of unknown skills.
+* Stealth skill is no longer heavily discounted.
 
 Interface
 ---------
@@ -152,6 +157,7 @@ Monsters
 * Breath timeout for dragons, draconians, drakes.
 * Most monster summoning spells toned down slightly.
 * Monsters flee at lower health thresholds, and less predictably.
+* Queen bees can send nearby killer bees berserk.
 * Killer bee larvae turn into killer bees if they eat honeycombs or royal
   jellies.
 * All abominations are now both demonic and undead.
@@ -174,11 +180,12 @@ Items
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
   ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak,
   rings of the Octopus King.
-* The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
+* The Sceptre of Asmodeus can be evoked for temporary charmed unabjurable
   demons (instead of random conjurations or hostile demons).
 * Scrolls of enchant and vorpalise weapon are always identified upon use.
 * Amulet of guardian spirit draws from HP and MP simultaneously.
 * Remove crystal balls of seeing.
+* Crystal ball of energy restores less MP but has less severe failure effects.
 * Scroll of magic mapping detects secret doors.
 * Tomb card is rarer.
 * Portal card does not give instant teleports.
