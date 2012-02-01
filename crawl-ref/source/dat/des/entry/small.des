@@ -2595,7 +2595,7 @@ ORIENT:  float
 WEIGHT:  1
 TAGS:    entry no_rotate
 NSUBST:  { = { / > / .
-NSUBST:  = = 3== / *=x
+NSUBST:  = = 3=+ / *=x
 SHUFFLE: ABC/DEF/GHI/JKL/MNO/PQR/STU
 NSUBST:  A = 1:=/x, B = *=%$, C = [/x
 NSUBST:  D = 1:=/x, E = *=%$, F = (/x
