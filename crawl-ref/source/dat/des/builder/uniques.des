@@ -358,7 +358,10 @@ NAME:   uniq_ignacio
 DEPTH:  Pan
 CHANCE: 25%
 TAGS:   pan transparent extra allow_dup luniq_ignacio
-{{
+veto {{
+  if you.uniques("Ignacio") then
+    return true -- don't spam the list of vaults
+  end
   if not dgn.persist.ignacio_spawned then
     local runes = 0;
     for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
@@ -370,14 +373,15 @@ TAGS:   pan transparent extra allow_dup luniq_ignacio
       dgn.persist.ignacio_spawned = true
       dgn.persist.ignacio_forbid = crawl.coinflip()
     else
-      return
+      return true
     end
   end
   if dgn.persist.ignacio_forbid then
-    return
+    return true
   end
-  mons("Ignacio")
+  return false
 }}
+MONS: Ignacio
 MAP
 1
 ENDMAP
