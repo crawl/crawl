@@ -747,6 +747,7 @@ iflags_t full_ident_mask(const item_def& item)
             flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES;
         else
             flagset = ISFLAG_KNOW_TYPE;
+        flagset |= ISFLAG_KNOW_CURSE;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
