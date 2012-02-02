@@ -218,7 +218,7 @@ static void _print_version(void)
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_version.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                               "<cyan>[ +/L-click : Page down.   - : Page up."
                               "           Esc/R-click exits.]"));
 #else
