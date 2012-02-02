@@ -1113,6 +1113,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hit_points_regeneration * 100);
     marshallInt(th, you.experience);
+    marshallInt(th, you.total_experience);
     marshallInt(th, you.gold);
 
     marshallInt(th, you.exp_available);
@@ -1870,6 +1871,15 @@ static void tag_read_you(reader &th)
 
     you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_TOTAL_EXPERIENCE)
+#endif
+        you.total_experience = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    else
+        you.total_experience = you.experience; // you get a skill cost discount
+               // if you're upgrading a game in which you've been drained a lot
+#endif
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
@@ -2156,8 +2166,9 @@ static void tag_read_you(reader &th)
     you.transfer_skill_points = unmarshallInt(th);
     you.transfer_total_skill_points = unmarshallInt(th);
 
-    // Set up you.total_skill_points and you.skill_cost_level.
-    calc_total_skill_points();
+    // Set up you.skill_cost_level.
+    you.skill_cost_level = 0;
+    check_skill_cost_change();
 
     // how many durations?
     count = unmarshallUByte(th);

@@ -70,6 +70,7 @@ public:
   uint8_t hit_points_regeneration;
   uint8_t magic_points_regeneration;
   unsigned int experience;
+  unsigned int total_experience; // Unaffected by draining. Used for skill cost.
   int experience_level;
   int gold;
   int zigs_completed, zig_max;
@@ -890,7 +891,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
-unsigned int exp_needed(int lev);
+unsigned int exp_needed(int lev, int exp_apt = 0);
 bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);

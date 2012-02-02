@@ -430,7 +430,7 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
     }
 
     reset_training();
-    calc_total_skill_points();
+    // We're not updating skill cost here since XP hasn't changed.
 
     redraw_skill(skill);
 
@@ -475,7 +475,7 @@ void wizard_set_all_skills(void)
 
         you.redraw_title = true;
 
-        calc_total_skill_points();
+        // We're not updating skill cost here since XP hasn't changed.
 
         calc_hp();
         calc_mp();
@@ -872,17 +872,23 @@ void wizard_edit_durations(void)
 
 static void debug_uptick_xl(int newxl)
 {
+    you.total_experience -= you.experience;
     you.experience = exp_needed(newxl);
+    you.total_experience += you.experience;
     level_change(true);
+    check_skill_cost_change();
 }
 
 static void debug_downtick_xl(int newxl)
 {
     you.hp = you.hp_max;
     you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    you.total_experience -= you.experience;
     you.experience = exp_needed(newxl);
+    you.total_experience += you.experience;
     level_change();
-
+    you.skill_cost_level = 0;
+    check_skill_cost_change();
     // restore maxhp loss
     you.hp_max_perm -= 1000;
     calc_hp();

@@ -23,7 +23,7 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     int skill_cost_level;
-    int total_skill_points;
+    unsigned int total_experience;
     bool auto_training;
     int exp_available;
     int manual_charges;

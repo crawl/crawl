@@ -46,59 +46,14 @@
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 
-int skill_cost_needed(int level)
+// The progress of skill_cost_level depends only on total experience points,
+// it's independent of species. We try to keep close to the old system
+// and use an experience aptitude of 13 as a reference (Tengu).
+// This means that for a species with 13 exp apt, skill_cost_level should be
+// the same as XL (unless the player has been drained).
+unsigned int skill_cost_needed(int level)
 {
-    static bool init = true;
-    static int scn[27];
-
-    if (init)
-    {
-        // The progress of skill_cost_level depends only on total skill points,
-        // it's independent of species. We try to keep close to the old system
-        // and use minotaur as a reference (exp apt: 140). This means that for
-        // a species with 140 exp apt, skill_cost_level will be about the same
-        // as XL (a bit lower in the beginning).
-        // Changed to exp apt 130 to slightly increase mid and late game prices.
-        species_type sp = you.species;
-        you.species = SP_TENGU;
-
-        // The average starting skill total is actually lower, but monks get
-        // about 1200, and they would start around skill cost level 4 if we
-        // used the average.
-        scn[0] = 1200;
-
-        for (int i = 1; i < 27; ++i)
-        {
-            scn[i] = scn[i - 1] + (exp_needed(i + 1) - exp_needed(i)) * 10
-                                  / calc_skill_cost(i);
-        }
-
-        scn[0] = 0;
-        you.species = sp;
-        init = false;
-    }
-
-    return scn[level - 1];
-}
-
-void calc_total_skill_points(void)
-{
-    int i;
-
-    you.total_skill_points = 0;
-
-    for (i = 0; i < NUM_SKILLS; i++)
-        you.total_skill_points += you.skill_points[i];
-
-    for (i = 1; i <= 27; i++)
-        if (you.total_skill_points < skill_cost_needed((skill_type)i))
-            break;
-
-    you.skill_cost_level = i - 1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    you.redraw_experience = true;
-#endif
+    return exp_needed(level, 13);
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters
@@ -787,12 +742,11 @@ void train_skills(bool simu)
             train_skills(exp, cost, simu);
         else
         {
-            // Amount of skill points needed to reach the next skill cost level
-            // divided by 10 (integer divison rounded up).
-            const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
-                                    - you.total_skill_points + 9) / 10;
+            // Amount of experience points needed to reach the next skill cost level
+            const int next_level = skill_cost_needed(you.skill_cost_level + 1)
+                                   - you.total_experience;
             ASSERT(next_level > 0);
-            train_skills(std::min(exp, cost * next_level), cost, simu);
+            train_skills(std::min(exp, next_level + cost - 1), cost, simu);
         }
     }
     while (you.exp_available >= cost && exp != you.exp_available);
@@ -974,17 +928,10 @@ static int _stat_mult(skill_type exsk, int skill_inc)
 
 void check_skill_cost_change()
 {
-    if (you.skill_cost_level < 27
-        && you.total_skill_points
-           >= skill_cost_needed(you.skill_cost_level + 1))
+    while (you.skill_cost_level < 27
+           && you.total_experience >= skill_cost_needed(you.skill_cost_level + 1))
     {
         you.skill_cost_level++;
-    }
-    else if (you.skill_cost_level > 0
-        && you.total_skill_points
-           < skill_cost_needed(you.skill_cost_level))
-    {
-        you.skill_cost_level--;
     }
 }
 
@@ -994,7 +941,6 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
         points = -(int)you.skill_points[sk];
 
     you.skill_points[sk] += points;
-    you.total_skill_points += points;
 
     check_skill_level_change(sk, do_level_up);
 }
@@ -1047,8 +993,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))
                                  * skill_inc;
     you.exp_available -= cost;
+    you.total_experience += cost;
     max_exp -= cost;
-    you.total_skill_points += skill_inc;
 
     redraw_skill(exsk, old_best_skill);
     check_skill_cost_change();

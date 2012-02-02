@@ -4160,7 +4160,7 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid, bool ignore_extrinsic
     return (amu.sub_type == amulet && (calc_unid || item_type_known(amu)));
 }
 
-unsigned int exp_needed(int lev)
+unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
 
@@ -4239,7 +4239,10 @@ unsigned int exp_needed(int lev)
         break;
     }
 
-    return ((level - 1) * species_exp_modifier(you.species) / 10);
+    if (!exp_apt)
+        exp_apt = species_exp_modifier(you.species);
+
+    return ((level - 1) * exp_apt / 10);
 }
 
 // returns bonuses from rings of slaying, etc.
@@ -5411,6 +5414,7 @@ void player::init()
     hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
     experience       = 0;
+    total_experience = 0;
     experience_level = 1;
     gold             = 0;
     zigs_completed   = 0;
@@ -5484,8 +5488,7 @@ void player::init()
     manual_index = -1;
 
     skill_cost_level = 1;
-    total_skill_points = 0;
-    exp_available = 0; // new games get 25
+    exp_available = 0;
     zot_points = 0;
 
     item_description.init(255);
