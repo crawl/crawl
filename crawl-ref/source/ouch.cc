@@ -855,31 +855,24 @@ bool drain_exp(bool announce_full)
     unsigned int total_exp = exp_needed(you.experience_level + 1)
                                   - exp_needed(you.experience_level);
     unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
-    unsigned int pool_drained = std::min(exp_drained,
-                                     (unsigned int)you.exp_available);
 
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
         unsigned int undrained = std::min(exp_drained,
                                       (you.piety * exp_drained) / 150);
-        unsigned int pool_undrained = std::min(pool_drained,
-                                           (you.piety * pool_drained) / 150);
 
-        if (undrained > 0 || pool_undrained > 0)
+        if (undrained > 0)
         {
             simple_god_message(" protects your life force!");
             if (undrained > 0)
                 exp_drained -= undrained;
-            if (pool_undrained > 0)
-                pool_drained -= pool_undrained;
         }
     }
     else if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         exp_drained -= (protection * exp_drained) / 3;
-        pool_drained -= (protection * pool_drained) / 3;
     }
 
     if (exp_drained > 0)
@@ -887,12 +880,8 @@ bool drain_exp(bool announce_full)
         mpr("You feel drained.");
         xom_is_stimulated(15);
         you.experience -= exp_drained;
-        you.exp_available -= pool_drained;
 
-        you.exp_available = std::max(0, you.exp_available);
-
-        dprf("You lose %d experience points, %d from pool.",
-             exp_drained, pool_drained);
+        dprf("You lose %d experience points.", exp_drained);
 
         level_change();
 
