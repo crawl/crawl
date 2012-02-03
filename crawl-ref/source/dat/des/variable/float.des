@@ -1411,7 +1411,7 @@ ENDMAP
 #                   shanties or makeshift dwellings. By Core Xii
 #
 NAME:   corexii_shantytown
-DEPTH:  D:4-13
+DEPTH:  D:4-8
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen
 NSUBST: + = 1:+ / *:=
