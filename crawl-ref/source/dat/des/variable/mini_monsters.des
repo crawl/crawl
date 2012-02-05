@@ -1661,6 +1661,52 @@ xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   hangedman_weighted_door
+DEPTH:  D:9-, Vault, Crypt
+MONS:   large zombie / large skeleton
+KMONS:  A = spectral thing / large simulacrum
+KITEM:  A = any good_item
+KMASK:  .%* = no_monster_gen
+KITEM:  * = star_item
+KITEM:  % = any
+KMASK:  1 = no_item_gen
+MAP
+cccc cccc
+c11ccc**c
+c11cAc%*c
+cn+++++nc
+c@.....@c
+ENDMAP
+
+NAME:   hangedman_blasphemy
+DEPTH:  D:20-, Crypt
+MONS:   phoenix simulacrum / spectral holy swine
+MONS:   shedu zombie / apis skeleton, pearl dragon zombie
+MONS:   profane servitor, deep dwarf death knight
+COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
+FTILE:  t' = FLOOR_PEBBLE_BROWN
+TILE:   t = DNGN_TREE_DEAD, c = WALL_STONE_GRAY
+KFEAT:  _ = altar_yredelemnul
+MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5, \
+                               pow_max = 10, delay = 30, size = 1, walk_dist = 0 }
+MAP
+@@xxxxxxx
+@..t....xxxxx
+x...'''..c.2x
+xt...tc'.c..xxx
+x.'.11c'...G.2x
+x.'t1cc't.....x
+x.'ccc'G...ccxx
+x..'''G'''...x
+xx...t.'_ccc.x
+ xcc...'cc3..x
+ x......c34.xx
+ x2.G.c.c..5x
+ xxx..c...xxx
+   x2.xxxxx
+   xxxx
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -2129,6 +2175,17 @@ MAP
   ...........
 ENDMAP
 
+NAME:   hangedman_glaring_trap
+DEPTH:  D:12-, Vault
+KMASK:  m = no_wall_fixup
+KMONS:  1 = eye of devastation
+KITEM:  1 = star_item / nothing
+MAP
+xxx@x
+x8m.xxxxxx
+xxm....+1x
+xxx@xxxxxx
+ENDMAP
 
 ###################################################################
 #

@@ -2002,3 +2002,62 @@ c.cc.cc.cc.cc.cc.c
 c..M....M.....0.*c
 c@cccccccccccccccc
 ENDMAP
+
+NAME:    hangedman_screamer
+ORIENT:  float
+TAGS:    no_monster_gen
+DEPTH:   D:7-, Crypt
+MONS:    patrolling flying skull
+MONS:    small zombie / large zombie / small skeleton / large skeleton
+: if you.absdepth() > 18 then
+MONS:    vampire knight / ghoul / phantasmal warrior
+KMONS:   4 = Frederick / lich / unborn deep dwarf
+KMONS:   5 = lich / unborn deep dwarf
+: elseif you.absdepth() > 11 then
+MONS:    skeletal warrior / rotting hulk / eidolon
+KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
+KMONS:   5 = vampire mage / deep dwarf necromancer
+: else
+MONS:    wight / necrophage / shadow
+KMONS:   4 = Josephine / skeletal warrior / necromancer
+KMONS:   5 = skeletal warrior / necromancer
+: end
+: if you.branch() == "Crypt" then
+SUBST:   x = c
+: end
+SHUFFLE: ABCDE
+SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., E = x
+MAP
+    xxxxxxxxx
+    x2233322x
+@  xx22x5x22xx  @
+xAAx.x2x=x2x.xCCx
+xAAxx.xx1xx.xxCCx
+xAAxxx.x.x.xxxCCx
+x...............x
+x...............x
+xBBxxx.x.x.xxxDDx
+xBBxx.xx1xx.xxDDx
+xBBx.x2x=x2x.xDDx
+@  xx22x4x22xx  @
+    x2233322x
+    xxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_arrow_trap
+ORIENT:  float
+DEPTH:   D:12-
+SHUFFLE: {( / })
+MAP
+xx=xxxxxxxxxxxx=xx
+x.xxxx|x{(x|xxxx.x
+x..x9x9x..x9x9x..x
+xx..x9xx..xx9x..xx
+xxx..x0x00x0x..xxx
+xxxx..xx00xx..xxxx
+xxxxx..x++x..xxxxx
+xxxxxx......xxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxxx||xxxxxxxx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
