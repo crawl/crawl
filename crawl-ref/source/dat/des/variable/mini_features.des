@@ -1593,6 +1593,24 @@ xxxxxxx
  .....
 ENDMAP
 
+NAME:    hangedman_glass_teeth
+TAGS:    extra no_rotate
+DEPTH:   D, Elf, Vault
+MAP
+@xx                 xx@
+@.xx               xx.@
+@..xxxxxxxxxxxxxxxxx..@
+x..mxmm...mxm...mmxm..x
+x..mmm....mmm....mmm..x
+x..mmm....mmm....mmm..x
+x..mm..m...m...m..mm..x
+xx..m..mm.....mm..m..xx
+ xx....mmm...mmm....xx
+  xx...mxm...mxm...xx
+   xxxxxxm...mxxxxxx
+       xxxxxxxxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
