@@ -327,7 +327,7 @@ static monsterentry mondata[] = {
 {
     MONS_PHOENIX, 'b', RED, "phoenix",
     M_WARM_BLOOD | M_ALWAYS_CORPSE,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_HELLFIRE,
     480, 12, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,
     { {AT_CLAW, AF_HOLY, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 13, 6, 5, 0 },
