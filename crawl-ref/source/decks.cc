@@ -1358,13 +1358,10 @@ void evoke_deck(item_def& deck)
     }
 
     const int amusement   = _xom_check_card(deck, card, flags);
-    const bool no_brownie = (props["non_brownie_draws"].get_byte() > 0);
 
     // Do these before the deck item_def object is gone.
     if (flags & CFLAG_MARKED)
         props["num_marked"]--;
-    if (no_brownie)
-        props["non_brownie_draws"]--;
 
     deck.plus2++;
     _remember_drawn_card(deck, card, allow_id);
@@ -1383,9 +1380,7 @@ void evoke_deck(item_def& deck)
         brownie_points++;
     }
 
-    const bool fake_draw = !card_effect(card, rarity, flags, false);
-    if (fake_draw && !deck_gone)
-        props["non_brownie_draws"]++;
+    card_effect(card, rarity, flags, false);
 
     if (!(flags & CFLAG_MARKED))
     {
@@ -1394,12 +1389,9 @@ void evoke_deck(item_def& deck)
         xom_is_stimulated(amusement);
 
         // Nemelex likes gamblers.
-        if (!no_brownie)
-        {
+        brownie_points++;
+        if (one_chance_in(3))
             brownie_points++;
-            if (one_chance_in(3))
-                brownie_points++;
-        }
 
         // You can't ID off a marked card
         allow_id = false;
@@ -1414,8 +1406,7 @@ void evoke_deck(item_def& deck)
                                       << std::endl;
     }
 
-    if (!fake_draw)
-        did_god_conduct(DID_CARDS, brownie_points);
+    did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has
     // changed.
@@ -1675,11 +1666,8 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     stair_draw_count++;
 }
 
-// Return true if it was a "genuine" draw, i.e., there was a monster
-// to target. This is still exploitable by finding popcorn monsters.
-static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
+static void _damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
-    bool rc = there_are_monsters_nearby(true, false);
     const int power_level = get_power_level(power, rarity);
 
     dist target;
@@ -1716,7 +1704,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         {
             mprf("You have drawn %s.", card_name(card));
             torment(&you, TORMENT_CARDS, you.pos());
-            return (true);
+            return;
         }
         else
             ztype = painzaps[power_level];
@@ -1750,12 +1738,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     {
         // cancelled orb bursts just become uncontrolled
         cast_iood_burst(power/6, coord_def(-1, -1));
-        return true;
     }
-    else
-        rc = false;
-
-    return (rc);
 }
 
 static void _elixir_card(int power, deck_rarity_type rarity)
@@ -2847,12 +2830,11 @@ static int _card_power(deck_rarity_type rarity)
     return (result);
 }
 
-bool card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t flags, bool tell_card)
 {
     ASSERT(!_card_forbidden(which_card));
 
-    bool rc = true;
     const int power = _card_power(rarity);
 
     const god_type god =
@@ -2941,7 +2923,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
         }
         else
-            rc = _damaging_card(which_card, power, rarity);
+            _damaging_card(which_card, power, rarity);
         break;
 
     case CARD_VITRIOL:
@@ -2951,7 +2933,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SPARK:
     case CARD_PAIN:
     case CARD_ORB:
-        rc = _damaging_card(which_card, power, rarity);
+        _damaging_card(which_card, power, rarity);
         break;
 
     case CARD_BARGAIN:
@@ -2998,11 +2980,6 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         mpr("You have drawn a buggy card!");
         break;
     }
-
-    if (you.religion == GOD_NEMELEX_XOBEH && !rc)
-        simple_god_message(" does not approve of your wasteful card use.");
-
-    return rc;
 }
 
 bool top_card_is_known(const item_def &deck)
