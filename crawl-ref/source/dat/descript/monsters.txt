@@ -1693,6 +1693,8 @@ A young woman with a fish tail in place of legs. Sirens are capable of casting a
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
+
+It can heal from electrical damage, although being hit by more than it can handle will have rather violent results.
 %%%%
 skeletal bat
 
