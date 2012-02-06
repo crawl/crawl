@@ -931,7 +931,12 @@ void check_skill_cost_change()
     while (you.skill_cost_level < 27
            && you.total_experience >= skill_cost_needed(you.skill_cost_level + 1))
     {
-        you.skill_cost_level++;
+        ++you.skill_cost_level;
+    }
+    while (you.skill_cost_level > 0
+           && you.total_experience < skill_cost_needed(you.skill_cost_level))
+    {
+        --you.skill_cost_level;
     }
 }
 
@@ -1003,4 +1008,58 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.redraw_experience = true;
 
     return (skill_inc);
+}
+
+void set_skill_level(skill_type skill, int amount)
+{
+    you.ct_skill_points[skill] = 0;
+    you.skills[skill] = amount;
+
+    const unsigned int target = skill_exp_needed(std::min(amount, 27), skill);
+    if (target == you.skills[skill])
+        return;
+
+    // We're updating you.skill_points[skill] and calculating the new
+    // you.total_experience to update skill cost.
+
+    const bool reduced = target < you.skill_points[skill];
+
+#ifdef DEBUG_TRAINING_COST
+    dprf("target: %d.", target);
+#endif
+    while (you.skill_points[skill] != target)
+    {
+        int next_level = reduced ? skill_cost_needed(you.skill_cost_level)
+                                 : skill_cost_needed(you.skill_cost_level + 1);
+        int max_xp = abs(next_level - you.total_experience);
+
+        // When reducing, we don't want to stop right at the limit, unless
+        // we're at skill cost level 0.
+        if (reduced and you.skill_cost_level)
+            ++max_xp;
+
+        int cost = calc_skill_cost(you.skill_cost_level);
+        // Maximum number of skill points to transfer in one go.
+        // It's max_xp*10/cost rounded up.
+        int max_skp = (max_xp * 10 + cost - 1) / cost;
+        int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
+                                      max_skp);
+        int delta_xp = (delta_skp * cost + 9) / 10;
+
+        if (reduced)
+        {
+            delta_skp = -std::min<int>(delta_skp, you.skill_points[skill]);
+            delta_xp = -std::min<int>(delta_xp, you.total_experience);
+        }
+
+#ifdef DEBUG_TRAINING_COST
+        dprf("cost level: %d, total experience: %d, next level: %d, "
+             "skill points: %d, delta_skp: %d, delta_xp: %d.",
+             you.skill_cost_level, you.total_experience, next_level,
+             you.skill_points[skill], delta_skp, delta_xp);
+#endif
+        you.skill_points[skill] += delta_skp;
+        you.total_experience += delta_xp;
+        check_skill_cost_change();
+    }
 }
