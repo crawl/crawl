@@ -323,6 +323,10 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (item.base_type == OBJ_MISSILES)
         return (true);
 
+    // Or any other object, although there's no point here.
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
+        return (true);
+
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
         && !check_weapon_wieldable_size(item,
