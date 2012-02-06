@@ -2304,7 +2304,8 @@ void dgn_set_colours_from_monsters()
     // Don't use silence or halo colours.
     if (env.floor_colour == BLACK
         || env.floor_colour == CYAN
-        || env.floor_colour == YELLOW)
+        || env.floor_colour == YELLOW
+        || env.floor_colour > WHITE) // or elemental floors
     {
         env.floor_colour = LIGHTGREY;
     }
