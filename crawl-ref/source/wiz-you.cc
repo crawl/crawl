@@ -389,8 +389,7 @@ void wizard_exercise_skill(void)
 #endif
 
 #ifdef WIZARD
-// When raw is set, skip the various checks and redraw (used by fsim)
-void wizard_set_skill_level(skill_type skill, int amount, bool raw)
+void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
@@ -401,11 +400,8 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
         return;
     }
 
-    if (amount < 0)
-    {
-        mpr(skill_name(skill));
-        amount = prompt_for_int("To what level? ", true);
-    }
+    mpr(skill_name(skill));
+    int amount = prompt_for_int("To what level? ", true);
 
     if (amount < 0)
     {
@@ -414,14 +410,8 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
     }
 
     const int old_amount = you.skills[skill];
-    const int points = skill_exp_needed(std::min(amount, 27), skill);
 
-    you.skill_points[skill] = points + 1;
-    you.ct_skill_points[skill] = 0;
-    you.skills[skill] = amount;
-
-    if (raw)
-        return;
+    set_skill_level(skill, amount);
 
     if (amount == 27)
     {
@@ -430,7 +420,6 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
     }
 
     reset_training();
-    // We're not updating skill cost here since XP hasn't changed.
 
     redraw_skill(skill);
 

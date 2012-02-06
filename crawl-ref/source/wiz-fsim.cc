@@ -29,7 +29,6 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "wiz-you.h"
 
 #ifdef WIZARD
 static monster* _create_fsim_monster(int mtype, int hp)
@@ -54,17 +53,17 @@ static skill_type _fsim_melee_skill(const item_def *item)
 
 static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
-    wizard_set_skill_level(_fsim_melee_skill(item), skill, true);
-    wizard_set_skill_level(SK_FIGHTING, skill * 15 / 27, true);
-    wizard_set_skill_level(SK_ARMOUR, skill * 15 / 27, true);
-    wizard_set_skill_level(SK_SHIELDS, skill, true);
+    set_skill_level(_fsim_melee_skill(item), skill);
+    set_skill_level(SK_FIGHTING, skill * 15 / 27);
+    set_skill_level(SK_ARMOUR, skill * 15 / 27);
+    set_skill_level(SK_SHIELDS, skill);
     for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_SKILL; ++i)
-        wizard_set_skill_level(skill_type(i), skill, true);
+        set_skill_level(skill_type(i), skill);
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
 {
-    wizard_set_skill_level(range_skill(*item), skill, true);
+    set_skill_level(range_skill(*item), skill);
 }
 
 static void _fsim_item(FILE *out,
@@ -164,8 +163,8 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, monster &mon,
 
 static bool _fsim_mon_melee(FILE *out, int dodge, int armour, monster &mon)
 {
-    wizard_set_skill_level(SK_DODGING, dodge, true);
-    wizard_set_skill_level(SK_ARMOUR, armour, true);
+    set_skill_level(SK_DODGING, dodge);
+    set_skill_level(SK_ARMOUR, armour);
 
     const int yhp  = you.hp;
     const int ymhp = you.hp_max;
