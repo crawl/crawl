@@ -333,7 +333,7 @@ void SkillMenuEntry::set_aptitude()
         text += "<magenta>";
         text += antitrain_other(m_sk, show_all) ? "*" : " ";
         if (is_antitrained(m_sk))
-            text += make_stringf("-%d", ct_bonus - 4);
+            text += make_stringf("%d", ct_bonus - 4);
 
         text += "</magenta>";
     }
