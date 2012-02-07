@@ -170,11 +170,17 @@ static void _DISPATER_melee_effect(item_def* weapon, actor* attacker,
 static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
-        || !enough_mp(5, true))
+    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true))
+    {
+        mpr("You're too close to death to use this item.");
+        *unevokable = true;
+        return true;
+    }
+
+    if (!enough_mp(5, false))
     {
         *unevokable = true;
-        return (false);
+        return true;
     }
 
     *did_work = true;
@@ -449,11 +455,15 @@ static void _WUCAD_MU_world_reacts(item_def *item)
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.magic_points == you.max_magic_points
-        || !x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
+    if (you.magic_points == you.max_magic_points)
     {
-        return (false);
+        mpr("Your reserves of magic are full.");
+        *unevokable = true;
+        return true;
     }
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
+        return (false);
 
     if (one_chance_in(4))
     {
