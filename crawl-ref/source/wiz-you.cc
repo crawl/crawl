@@ -861,20 +861,17 @@ void wizard_edit_durations(void)
 
 static void debug_uptick_xl(int newxl)
 {
-    you.total_experience -= you.experience;
+    you.exp_available += exp_needed(newxl) - you.experience;
+    train_skills();
     you.experience = exp_needed(newxl);
-    you.total_experience += you.experience;
     level_change(true);
-    check_skill_cost_change();
 }
 
 static void debug_downtick_xl(int newxl)
 {
     you.hp = you.hp_max;
     you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
-    you.total_experience -= you.experience;
     you.experience = exp_needed(newxl);
-    you.total_experience += you.experience;
     level_change();
     you.skill_cost_level = 0;
     check_skill_cost_change();
