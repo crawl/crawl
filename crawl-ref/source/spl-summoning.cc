@@ -2176,10 +2176,6 @@ static const char *_count_article(int number, bool definite)
         return ("Some");
 }
 
-// Minimum number of affected corpses before a monster will cast
-// Twisted Resurrection.
-static const int _twisted_res_tracer_min_corpses = 2;
-
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual)
 {
@@ -2275,8 +2271,9 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         }
     }
 
+    // Monsters shouldn't bother casting Twisted Res for just a single corpse.
     if (!actual)
-        return (num_crawlies >= _twisted_res_tracer_min_corpses);
+        return (num_crawlies >= (caster->is_player() ? 1 : 2));
 
     if (num_lost + num_crawlies + num_masses == 0)
         return (false);
