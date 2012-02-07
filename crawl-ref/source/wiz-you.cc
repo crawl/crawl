@@ -28,6 +28,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "view.h"
 #include "xom.h"
 
@@ -960,4 +961,46 @@ void wizard_god_mollify()
         if (you.penance[i])
             dec_penance((god_type) i, you.penance[i]);
     }
+}
+
+void wizard_transform()
+{
+    transformation_type form;
+
+    while (true)
+    {
+        std::string line;
+        for (int i = 0; i <= LAST_FORM; i++)
+        {
+            line += make_stringf("[%c] %-10s ", i + 'a',
+                                 transform_name((transformation_type)i));
+            if (i % 5 == 4 || i == LAST_FORM)
+            {
+                mpr(line, MSGCH_PROMPT);
+                line.clear();
+            }
+        }
+        mpr("Which form (ESC to exit)? ", MSGCH_PROMPT);
+
+        int keyin = tolower(get_ch());
+
+        if (key_is_escape(keyin) || keyin == ' '
+            || keyin == '\r' || keyin == '\n')
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        if (keyin < 'a' || keyin > 'a' + LAST_FORM)
+            continue;
+
+        form = (transformation_type)(keyin - 'a');
+
+        break;
+    }
+
+    if (!transform(200, form) && you.form != form)
+        if (yesno("Transformation failed, force it?", true, 'n'))
+            if (!transform(200, form, true))
+                mpr("The force is weak with this one.");
 }

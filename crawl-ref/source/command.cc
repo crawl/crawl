@@ -2742,6 +2742,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>z</w>      : cast spell by number/name\n"
                        "<w>W</w>      : god wrath\n"
                        "<w>w</w>      : god mollification\n"
+                       "<w>Ctrl-P</w> : polymorph into a form\n"
                        "<w>Ctrl-V</w> : toggle xray vision\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"

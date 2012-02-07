@@ -45,33 +45,6 @@ module "you"
 // Bindings to get information on the player (clua).
 //
 
-static const char *transform_name()
-{
-    switch (you.form)
-    {
-    case TRAN_SPIDER:
-        return "spider";
-    case TRAN_BAT:
-        return "bat";
-    case TRAN_BLADE_HANDS:
-        return "blade";
-    case TRAN_STATUE:
-        return "statue";
-    case TRAN_ICE_BEAST:
-        return "ice";
-    case TRAN_DRAGON:
-        return "dragon";
-    case TRAN_LICH:
-        return "lich";
-    case TRAN_PIG:
-        return "pig";
-    case TRAN_APPENDAGE:
-        return "appendage";
-    default:
-        return "";
-    }
-}
-
 /*
 --- Has player done something that takes time?
 function turn_is_over() */
@@ -147,7 +120,7 @@ LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
 LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
-LUARET1(you_transform, string, transform_name())
+LUARET1(you_transform, string, you.form ? transform_name() : "")
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
