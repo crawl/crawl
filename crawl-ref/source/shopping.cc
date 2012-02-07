@@ -2225,14 +2225,6 @@ bool is_shop_item(const item_def &item)
 
 ////////////////////////////////////////////////////////////////////////
 
-// Setup shopping list after restoring savefile.
-static void _callback(bool saving)
-{
-    if (!saving)
-        shopping_list.refresh();
-}
-static SavefileCallback _register_callback(_callback);
-
 // TODO:
 //   * Let shopping list be modified from with the stash lister.
 //   * Warn if buying something not on the shopping list would put
@@ -2250,11 +2242,7 @@ ShoppingList::ShoppingList()
 }
 
 #define SETUP_POS()                 \
-    if (list == NULL) \
-    { \
-        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR); \
-        return (false); \
-    } \
+    ASSERT(list); \
     level_pos pos;                  \
     if (_pos != NULL)               \
         pos = *_pos;                \
@@ -2539,11 +2527,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
 int ShoppingList::size() const
 {
-    if (list == NULL)
-    {
-        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR);
-        return (0);
-    }
+    ASSERT(list);
 
     return (list->size());
 }
@@ -2593,11 +2577,7 @@ void ShoppingList::forget_pos(const level_pos &pos)
 
 void ShoppingList::gold_changed(int old_amount, int new_amount)
 {
-    if (list == NULL)
-    {
-        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR);
-        return;
-    }
+    ASSERT(list);
 
     if (new_amount > old_amount && new_amount >= min_unbuyable_cost)
     {
