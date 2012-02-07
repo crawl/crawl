@@ -37,6 +37,26 @@
 
 static void _extra_hp(int amount_extra);
 
+static const char* form_names[LAST_FORM + 1] =
+{
+    "none",
+    "spider",
+    "blade",
+    "statue",
+    "ice",
+    "dragon",
+    "lich",
+    "bat",
+    "pig",
+    "appendage",
+};
+
+const char* transform_name(transformation_type form)
+{
+    ASSERT(form >= 0 && form <= LAST_FORM);
+    return form_names[form];
+}
+
 bool form_can_wield(transformation_type form)
 {
     return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
@@ -606,7 +626,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         else
         {
-            if (!force && which_trans != TRAN_PIG)
+            if (!force && which_trans != TRAN_PIG && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
             return (false);
         }
@@ -759,6 +779,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     case TRAN_NONE:
+        tran_name = "null";
+        msg += "your old self.";
         break;
     default:
         msg += "something buggy!";
