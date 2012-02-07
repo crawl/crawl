@@ -696,7 +696,8 @@ bool evoke_item(int slot)
         ASSERT(item_is_equipped(item));
         if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
         {
-            count_action(CACT_EVOKE, EVOC_MISC);
+            if (!unevokable)
+                count_action(CACT_EVOKE, EVOC_MISC);
             return (did_work);
         }
     }
