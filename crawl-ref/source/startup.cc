@@ -38,6 +38,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -204,6 +205,7 @@ static void _post_init(bool newc)
     calc_hp();
     calc_mp();
     food_change(true);
+    shopping_list.refresh();
 
     run_map_local_preludes();
 
