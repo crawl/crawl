@@ -234,10 +234,10 @@ static void _OLGREB_world_reacts(item_def *item)
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
                           bool* unevokable)
 {
-    if (!enough_mp(4, true))
+    if (!enough_mp(4, false))
     {
         *unevokable = true;
-        return (false);
+        return (true);
     }
 
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
