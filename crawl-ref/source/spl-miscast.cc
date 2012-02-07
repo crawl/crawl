@@ -1091,7 +1091,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
-            // Monster messages needed.
+            mon_msg = "There is a strange surge of energy around @the_monster@.";
             break;
         case 4:
             you_msg      = "You spin around.";
@@ -1175,7 +1175,9 @@ void MiscastEffect::_translocation(int severity)
                 you_msg        = "Space warps around you!";
                 mon_msg_seen   = "Space warps around @the_monster@!";
                 mon_msg_unseen = "A piece of empty space twists and writhes.";
-                if (_ouch(5 + random2avg(9, 2)) && target->alive())
+                _ouch(5 + random2avg(9, 2));
+                reroll = false;
+                if (target->alive())
                 {
                     if (one_chance_in(3))
                         target->teleport(true);
