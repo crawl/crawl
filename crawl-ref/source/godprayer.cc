@@ -724,19 +724,10 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         }
         // Nemelex piety gain is fairly fast... at least when you
         // have low piety.
-        int piety_change, piety_denom;
-        if (item.base_type == OBJ_CORPSES)
-        {
-            piety_change = 1;
-            piety_denom = 2 + you.piety/50;
-        }
-        else
-        {
-            piety_change = value/2 + 1;
-            if (is_artefact(item))
-                piety_change *= 2;
-            piety_denom = 30 + you.piety/2;
-        }
+        int piety_change = value/2 + 1;
+        if (is_artefact(item))
+            piety_change *= 2;
+        int piety_denom = 30 + you.piety/2;
 
         gain_piety(piety_change, piety_denom);
 
@@ -752,14 +743,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
             // Count chunks and blood potions towards decks of
             // Summoning.
             you.sacrifice_value[OBJ_CORPSES] += value;
-        }
-        else if (item.base_type == OBJ_CORPSES)
-        {
-#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
-            mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
-                 item_mass(item));
-#endif
-            you.sacrifice_value[item.base_type] += item_mass(item);
         }
         else
             you.sacrifice_value[item.base_type] += value;
