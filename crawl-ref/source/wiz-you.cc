@@ -859,10 +859,13 @@ void wizard_edit_durations(void)
     you.duration[choice] = num;
 }
 
-static void debug_uptick_xl(int newxl)
+static void debug_uptick_xl(int newxl, bool train)
 {
-    you.exp_available += exp_needed(newxl) - you.experience;
-    train_skills();
+    if (train)
+    {
+        you.exp_available += exp_needed(newxl) - you.experience;
+        train_skills();
+    }
     you.experience = exp_needed(newxl);
     level_change(true);
 }
@@ -906,11 +909,13 @@ void wizard_set_xl()
         return;
     }
 
+    const bool train = yesno("Train skills?");
+
     no_messages mx;
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
     else
-        debug_uptick_xl(newxl);
+        debug_uptick_xl(newxl, train);
 }
 
 void wizard_get_god_gift (void)
