@@ -642,6 +642,14 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
     }
 }
 
+static void _set_grd(const coord_def &c, dungeon_feature_type feat)
+{
+    // It might be good to clear some pgrid flags as well.
+    tile_clear_flavour(c);
+    env.grid_colours(c) = 0;
+    grd(c) = feat;
+}
+
 void dgn_register_vault(const map_def &map)
 {
     if (!map.has_tag("allow_dup"))
@@ -917,7 +925,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                         if (travel_point_distance[fx][fy] == nzones
                             && !map_masked(coord_def(fx, fy), MMT_OPAQUE))
                         {
-                            grd[fx][fy] = fill;
+                            _set_grd(coord_def(fx, fy), fill);
                         }
             }
         }
@@ -940,7 +948,7 @@ static void _fixup_hell_stairs()
         if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
             && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
-            grd(*ri) = DNGN_ENTER_HELL;
+            _set_grd(*ri, DNGN_ENTER_HELL);
         }
     }
 }
@@ -953,15 +961,15 @@ static void _fixup_pandemonium_stairs()
             && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
             if (one_chance_in(30))
-                grd(*ri) = DNGN_EXIT_PANDEMONIUM;
+                _set_grd(*ri, DNGN_EXIT_PANDEMONIUM);
             else
-                grd(*ri) = DNGN_FLOOR;
+                _set_grd(*ri, DNGN_FLOOR);
         }
 
         if (grd(*ri) >= DNGN_ENTER_LABYRINTH
             && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
         {
-            grd(*ri) = DNGN_TRANSIT_PANDEMONIUM;
+            _set_grd(*ri, DNGN_TRANSIT_PANDEMONIUM);
         }
     }
 }
@@ -1420,7 +1428,7 @@ static void _fixup_branch_stairs()
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                 }
 
-                grd(*ri) = exit;
+                _set_grd(*ri, exit);
             }
         }
     }
@@ -1435,7 +1443,7 @@ static void _fixup_branch_stairs()
             if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
             {
-                grd(*ri) = feat;
+                _set_grd(*ri, feat);
             }
         }
     }
@@ -1574,7 +1582,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                     if (start == remove)
                         break;
                 }
-                grd(stair_list[remove]) = replace;
+                _set_grd(stair_list[remove], replace);
 
                 stair_list[remove] = stair_list[--num_stairs];
             }
@@ -1602,7 +1610,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             {
                 dprf("Adding stair %d at (%d,%d)", s, gc.x, gc.y);
                 // base gets fixed up to be the right stone stair below...
-                grd(gc) = base;
+                _set_grd(gc, base);
                 stair_list[num_stairs++] = gc;
             }
             else
@@ -1619,8 +1627,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 
             if (grd(stair_list[s1]) == grd(stair_list[s2]))
             {
-                grd(stair_list[s2]) = (dungeon_feature_type)
-                    (base + (grd(stair_list[s2])-base+1) % 3);
+                _set_grd(stair_list[s2], (dungeon_feature_type)
+                    (base + (grd(stair_list[s2])-base+1) % 3));
             }
         }
     }
@@ -1679,7 +1687,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                 if (travel_point_distance[rnd.x][rnd.y] != nzones)
                     continue;
 
-                grd(rnd) = feat;
+                _set_grd(rnd, feat);
                 found_feature = true;
                 break;
             }
@@ -1695,7 +1703,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                 if (travel_point_distance[ri->x][ri->y] != nzones)
                     continue;
 
-                grd(*ri) = feat;
+                _set_grd(*ri, feat);
                 found_feature = true;
                 break;
             }
@@ -2030,7 +2038,7 @@ static void _ruin_level(Iterator ri,
 
         /* only remove some doors, to preserve tactical options */
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
-            grd(p) = replacement;
+            _set_grd(p, replacement);
 
         /* but remove doors if we've removed all adjacent walls */
         for (adjacent_iterator wai(p); wai; ++wai)
@@ -2045,7 +2053,7 @@ static void _ruin_level(Iterator ri,
                 }
                 // It's always safe to replace a door with floor.
                 if (remove)
-                    grd(*wai) = DNGN_FLOOR;
+                    _set_grd(*wai, DNGN_FLOOR);
             }
         }
 
@@ -2358,7 +2366,7 @@ static void _check_doors()
             if (feat_is_solid(grd(*rai)))
                 solid_count++;
 
-        grd(*ri) = (solid_count < 2 ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
+        _set_grd(*ri, solid_count < 2 ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
     }
 }
 
@@ -2378,7 +2386,7 @@ static void _hide_doors()
 
             // If door is attached to more than one wall, hide it. {dlb}
             if (wall_count > 1)
-                grd(*ri) = DNGN_SECRET_DOOR;
+                grd(*ri) = DNGN_SECRET_DOOR; // don't clear tile flavour
         }
     }
 }
@@ -2430,7 +2438,7 @@ static void _prepare_water(int level_number)
                          && x_chance_in_y(80 - level_number * 4,
                                           100))
                 {
-                    grd(*ri) = DNGN_SHALLOW_WATER;
+                    _set_grd(*ri, DNGN_SHALLOW_WATER);
                 }
             }
         }
@@ -3169,7 +3177,7 @@ static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
     if (place.origin())
         throw dgn_veto_exception("Cannot place feature at random floor square.");
     else
-        grd(place) = feat;
+        _set_grd(place, feat);
 }
 
 // Create randomly-placed stone stairs.
@@ -5318,7 +5326,7 @@ void place_spec_shop(int level_number,
     env.shop[i].pos = where;
     env.tgrid(where) = i;
 
-    grd(where) = DNGN_ENTER_SHOP;
+    _set_grd(where, DNGN_ENTER_SHOP);
 
     activate_notes(note_status);
 }
@@ -6274,8 +6282,8 @@ static bool _fixup_interlevel_connectivity()
     // Reassign up stair numbers as needed.
     for (int i = 0; i < 3; i++)
     {
-        grd(up_gc[i]) =
-            (dungeon_feature_type)(DNGN_STONE_STAIRS_UP_I + assign_cur[i]);
+        _set_grd(up_gc[i],
+            (dungeon_feature_type)(DNGN_STONE_STAIRS_UP_I + assign_cur[i]));
     }
 
     // Fill in connectivity and regions.
