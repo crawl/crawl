@@ -416,10 +416,9 @@ void wizard_set_skill_level(skill_type skill)
     if (amount == 27)
     {
         you.train[skill] = 0;
+        reset_training();
         check_selected_skills();
     }
-
-    reset_training();
 
     redraw_skill(skill);
 
@@ -456,6 +455,12 @@ void wizard_set_all_skills(void)
                 continue;
 
             set_skill_level(sk, amount);
+
+            if (amount == 27)
+            {
+                you.train[sk] = 0;
+                you.training[sk] = 0;
+            }
         }
 
         you.redraw_title = true;
