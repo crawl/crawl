@@ -701,6 +701,7 @@ NAME:   lemuel_troll_bridge
 DEPTH:  D:9-18
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
+KPROP:  1 = no_rtele_into
 SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   rock troll
