@@ -455,11 +455,7 @@ void wizard_set_all_skills(void)
             if (is_invalid_skill(sk) || is_useless_skill(sk))
                 continue;
 
-            const int points = skill_exp_needed(amount, sk);
-
-            you.skill_points[sk] = points + 1;
-            you.ct_skill_points[sk] = 0;
-            you.skills[sk] = amount;
+            set_skill_level(sk, amount);
         }
 
         you.redraw_title = true;
