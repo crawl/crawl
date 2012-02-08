@@ -624,12 +624,10 @@ static bool _ball_of_energy(void)
     else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
-        set_mp(0);
+        dec_mp(you.magic_points);
     }
     else if (use < 10)
-    {
         confuse_player(10 + random2(10));
-    }
     else
     {
         int proportional = (you.magic_points * 100) / you.max_magic_points;
@@ -638,7 +636,7 @@ static bool _ball_of_energy(void)
             || one_chance_in(25))
         {
             mpr("You feel your power drain away!");
-            set_mp(0);
+            dec_mp(you.magic_points);
         }
         else
         {
