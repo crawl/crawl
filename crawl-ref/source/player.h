@@ -617,7 +617,7 @@ public:
     int res_torment() const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
-    int res_constrict() const { return 0; };
+    int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;

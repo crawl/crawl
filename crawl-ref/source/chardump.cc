@@ -293,6 +293,15 @@ static void _sdump_transform(dump_params &par)
                                      par.se ? "had" : "have", appendage_name());
             }
             break;
+        case TRAN_TREE:
+            text += "You " + verb + " an animated tree.";
+            break;
+        case TRAN_JELLY:
+            text += "You " + verb + " an acidic jelly.";
+            break;
+        case TRAN_PORCUPINE:
+            text += "You " + verb + " a porcupine.";
+            break;
         case TRAN_NONE:
             break;
         }

@@ -295,8 +295,11 @@ enum transformation_type
     TRAN_BAT,
     TRAN_PIG,
     TRAN_APPENDAGE,
+    TRAN_TREE,
+    TRAN_PORCUPINE,
+    TRAN_JELLY,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_APPENDAGE
+    LAST_FORM = TRAN_JELLY
 };
 
 enum beam_type                  // bolt::flavour
@@ -2509,6 +2512,7 @@ enum monster_type                      // menv[].type
 
     MONS_HELLBINDER,
     MONS_CLOUD_MAGE,
+    MONS_ANIMATED_TREE,
 
     MONS_BEAR,                  // genus
     MONS_ELEMENTAL,             // genus

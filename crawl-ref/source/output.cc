@@ -436,7 +436,14 @@ static void _print_stats_wp(int y)
             break;
         case TRAN_BAT:
         case TRAN_PIG:
+        case TRAN_PORCUPINE:
             col = LIGHTGREY;
+            break;
+        case TRAN_TREE:
+            col = BROWN;
+            break;
+        case TRAN_JELLY:
+            col = LIGHTRED;
             break;
         default:
             break;

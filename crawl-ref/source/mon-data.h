@@ -3625,6 +3625,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
+{   // dummy for transformed display
+    MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
+    M_STATIONARY | M_NO_POLY_TO,
+    MR_RES_POISON | MR_VUL_FIRE,
+    0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
+    { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 20, 3, 5, 0 },
+    25, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_HUGE
+},
+
 // rakshasas and efreet ('R')
 {
     MONS_EFREET, 'R', RED, "efreet",
