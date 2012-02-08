@@ -648,7 +648,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (item.base_type == OBJ_CORPSES ? 50 :
-                       (is_worthless_consumable(item) ? 1 : shop_value);
+                       (is_worthless_consumable(item) ? 1 : shop_value));
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
