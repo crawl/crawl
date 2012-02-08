@@ -2524,7 +2524,7 @@ static bool _do_ability(const ability_def& abil)
 
         // Deflate MP.
         if (you.magic_points)
-            set_mp(random2(you.magic_points));
+            dec_mp(random2(you.magic_points));
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
