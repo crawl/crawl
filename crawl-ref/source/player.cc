@@ -496,6 +496,10 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mon == MONS_BAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
+        case TRAN_TREE:
+            return (mon == MONS_ANIMATED_TREE);
+        case TRAN_PORCUPINE:
+            return (mon == MONS_PORCUPINE);
         // Compare with monster *species*.
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
@@ -506,6 +510,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
         case TRAN_PIG:
             return (mons_genus(mon) == MONS_HOG);
+        case TRAN_JELLY:
+            return (mons_genus(mon) == MONS_JELLY);
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -755,12 +761,15 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (eq == EQ_NONE)
         return true;
 
+    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE)
+        return (false);
+
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
     else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
         eq = EQ_RINGS;
 
-    // Everybody can wear at least some type of armour.
+    // Everybody but jellies and porcupines can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
         return true;
 
@@ -839,6 +848,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
         return false;
     }
+
+    if (you.form == TRAN_TREE)
+        return (eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET);
 
     return true;
 }
@@ -1465,6 +1477,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_ICE_BEAST:
+        case TRAN_TREE:
             rf--;
             break;
         case TRAN_DRAGON:
@@ -1611,6 +1624,9 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
+    if (you.form == TRAN_JELLY)
+        return 1;
+
     if (items && !suppressed())
     {
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1709,6 +1725,7 @@ int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
+            || you.form == TRAN_TREE
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
             || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1775,6 +1792,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
+        case TRAN_TREE:
+        case TRAN_JELLY:
             rp++;
             break;
         default:
@@ -2056,6 +2075,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         case TRAN_STATUE:
             pl++;
             break;
+        case TRAN_TREE:
         case TRAN_LICH:
             pl += 3;
             break;
@@ -2125,6 +2145,8 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
+    else if (you.form == TRAN_JELLY)
+        mv = 11;
     else if (you.fishtail)
         mv = 6;
 
@@ -2203,7 +2225,8 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE || you.form == TRAN_TREE
+        || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -3603,7 +3626,11 @@ int check_stealth(void)
 
     switch (you.form)
     {
+    case TRAN_TREE:
+        race_mod = 27; // masquerading as scenery
+        break;
     case TRAN_SPIDER:
+    case TRAN_JELLY:
         race_mod = 21;
         break;
     case TRAN_ICE_BEAST:
@@ -3614,6 +3641,9 @@ int check_stealth(void)
         break;
     case TRAN_DRAGON:
         race_mod = 6;
+        break;
+    case TRAN_PORCUPINE:
+        race_mod = 12; // small but noisy
         break;
     case TRAN_PIG:
         race_mod = 9; // trotters, oinking...
@@ -6062,6 +6092,10 @@ int player::armour_class() const
                 AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
             break;
 
+        case TRAN_TREE:
+            AC += 2500;
+            break;
+
         default:
             break;
         }
@@ -6115,6 +6149,8 @@ int player::gdr_perc() const
         return 34; // base AC 8
     case TRAN_STATUE:
         return 39; // like plate (AC 10)
+    case TRAN_TREE:
+        return 48;
     default:
         break;
     }
@@ -6207,6 +6243,8 @@ bool player::is_unbreathing() const
     {
     case TRAN_LICH:
     case TRAN_STATUE:
+    case TRAN_TREE:
+    case TRAN_JELLY:
         return true;
     default:
         break;
@@ -6337,6 +6375,13 @@ int player::res_petrify(bool temp) const
 {
     if (temp && you.form == TRAN_STATUE)
         return 1;
+    return 0;
+}
+
+int player::res_constrict() const
+{
+    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE)
+        return 3;
     return 0;
 }
 
@@ -7003,7 +7048,8 @@ bool player::can_bleed(bool allow_tran) const
     {
         // These transformations don't bleed. Lichform is handled as undead.
         if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
-            || you.form == TRAN_SPIDER)
+            || you.form == TRAN_SPIDER || you.form == TRAN_TREE
+            || you.form == TRAN_PORCUPINE)
         {
             return false;
         }

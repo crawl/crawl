@@ -37,7 +37,7 @@
 
 static void _extra_hp(int amount_extra);
 
-static const char* form_names[LAST_FORM + 1] =
+static const char* form_names[] =
 {
     "none",
     "spider",
@@ -49,10 +49,14 @@ static const char* form_names[LAST_FORM + 1] =
     "bat",
     "pig",
     "appendage",
+    "tree",
+    "porcupine",
+    "jelly",
 };
 
 const char* transform_name(transformation_type form)
 {
+    COMPILE_CHECK(ARRAYSZ(form_names) == LAST_FORM + 1);
     ASSERT(form >= 0 && form <= LAST_FORM);
     return form_names[form];
 }
@@ -60,7 +64,7 @@ const char* transform_name(transformation_type form)
 bool form_can_wield(transformation_type form)
 {
     return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-            || form == TRAN_APPENDAGE);
+            || form == TRAN_APPENDAGE || form == TRAN_TREE);
 }
 
 bool form_can_wear(transformation_type form)
@@ -77,8 +81,8 @@ bool form_can_fly(transformation_type form)
 
 bool form_can_swim(transformation_type form)
 {
-    // Ice floats.
-    if (form == TRAN_ICE_BEAST)
+    // Ice floats, scum goes to the top.
+    if (form == TRAN_ICE_BEAST || form == TRAN_JELLY)
         return true;
 
     if (you.species == SP_MERFOLK && !form_changed_physiology(form))
@@ -115,12 +119,15 @@ bool form_changed_physiology(transformation_type form)
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
+    if (form == TRAN_JELLY || form == TRAN_PORCUPINE)
+        return false;
+
     if (item.base_type == OBJ_JEWELLERY)
     {
-        // Everyone can wear amulets.
+        // Everyone but jellies and porcupines can wear amulets.
         if (jewellery_is_amulet(item))
             return true;
-        // And only bats and pigs can't wear rings.
+        // Bats and pigs can't wear rings.
         return (form != TRAN_BAT && form != TRAN_PIG);
     }
 
@@ -150,6 +157,9 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_STATUE:
         return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
              || eqslot == EQ_SHIELD);
+
+    case TRAN_TREE:
+        return (eqslot == EQ_SHIELD || eqslot == EQ_HELMET);
 
     default:                // Bug-catcher.
         die("Unknown transformation type %d in form_can_wear_item", you.form);
@@ -365,12 +375,15 @@ size_type player::transform_size(transformation_type tform, int psize) const
     {
     case TRAN_SPIDER:
     case TRAN_BAT:
+    case TRAN_PORCUPINE:
         return SIZE_TINY;
     case TRAN_PIG:
+    case TRAN_JELLY:
         return SIZE_SMALL;
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
     case TRAN_DRAGON:
+    case TRAN_TREE:
         return SIZE_HUGE;
     default:
         return SIZE_CHARACTER;
@@ -406,6 +419,12 @@ monster_type transform_mons()
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     case TRAN_PIG:
         return MONS_HOG;
+    case TRAN_JELLY:
+        return MONS_JELLY;
+    case TRAN_PORCUPINE:
+        return MONS_PORCUPINE;
+    case TRAN_TREE:
+        return MONS_ANIMATED_TREE;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -459,7 +478,9 @@ int form_hp_mod()
         return 13;
     case TRAN_ICE_BEAST:
         return 12;
+    case TRAN_JELLY:
     case TRAN_DRAGON:
+    case TRAN_TREE:
         return 15;
     default:
         return 10;
@@ -609,6 +630,9 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_ICE_BEAST:
         return min(30 + random2(pow) + random2(pow), 100);
     case TRAN_PIG:
+    case TRAN_PORCUPINE:
+    case TRAN_JELLY:
+    case TRAN_TREE:
         return pow;
     case TRAN_NONE:
         return 0;
@@ -821,6 +845,23 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     }
 
+    case TRAN_JELLY:
+        tran_name = "jelly";
+        msg      += "a lump of acidic jelly.";
+        break;
+
+    case TRAN_PORCUPINE:
+        tran_name = "spider";
+        str       = -3;
+        msg      += "a spiny porcupine.";
+        break;
+
+    case TRAN_TREE:
+        tran_name = "tree";
+        str       = 10;
+        msg      += "an animated tree.";
+        break;
+
     case TRAN_NONE:
         tran_name = "null";
         msg += "your old self.";
@@ -917,6 +958,16 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         break;
 
+    case TRAN_TREE:
+        mpr("Your roots penetrate the ground.");
+        if (you.duration[DUR_TELEPORT])
+        {
+            you.duration[DUR_TELEPORT] = 0;
+            mpr("You feel strangely stable.");
+        }
+        you.duration[DUR_FLIGHT] = 0;
+        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+        // break out of webs/nets as well
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
         {
@@ -1086,6 +1137,8 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_PIG:
+    case TRAN_JELLY:
+    case TRAN_PORCUPINE:
         mpr("Your transformation has ended.", MSGCH_DURATION);
         break;
 
@@ -1102,11 +1155,36 @@ void untransform(bool skip_wielding, bool skip_move)
         }
         break;
 
+    case TRAN_TREE:
+        mpr("You feel less woody.", MSGCH_DURATION);
+        if (grd(you.pos()) == DNGN_DEEP_WATER && you.species == SP_TENGU
+            && you.experience_level >= 5)
+        {
+            // Flight was disabled, need to turn it back NOW.
+            if (you.experience_level >= 15)
+                you.attribute[ATTR_PERM_FLIGHT] = 1;
+            else
+                you.increase_duration(DUR_FLIGHT, 50, 100);
+            mpr("You frantically escape the water.");
+        }
+        notify_stat_change(STAT_STR, -10, true,
+                     "losing the tree transformation");
+        break;
+
     default:
         break;
     }
 
     _unmeld_equipment(melded);
+
+    if (old_form == TRAN_TREE && grd(you.pos()) == DNGN_DEEP_WATER
+        && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+        && !species_likes_water(you.species)
+        && !you.attribute[ATTR_PERM_FLIGHT]) // tengu may have both
+    {
+        you.attribute[ATTR_PERM_FLIGHT] = 1;
+        mpr("You frantically enable flight.");
+    }
 
     // Re-check terrain now that be may no longer be swimming or flying.
     if (!skip_move && (old_flight && !you.flight_mode()
