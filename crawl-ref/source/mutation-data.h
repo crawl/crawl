@@ -4,7 +4,7 @@
 // second number  = maximum levels
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
-// third  boolean = is mutation kept when shapechanged?
+// third  boolean = is mutation suppressed when shapechanged?
 // first  strings = what to show in 'A'
 // second strings = message given when gaining the mutation
 // third  strings = message given when losing the mutation
