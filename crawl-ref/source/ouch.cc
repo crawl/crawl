@@ -530,6 +530,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_COLD:
+    case BEAM_ICE:
     case BEAM_FRAG:
         target_class = OBJ_POTIONS;
         break;
