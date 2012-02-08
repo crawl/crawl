@@ -2517,7 +2517,7 @@ static bool _do_ability(const ability_def& abil)
             you.hp_max = 1;
 
         // Deflate HP.
-        set_hp(1 + random2(you.hp));
+        dec_hp(random2(you.hp), false);
 
         // Lose 1d2 permanent MP.
         rot_mp(coinflip() ? 2 : 1);
