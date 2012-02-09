@@ -2507,6 +2507,13 @@ static void _clone_monster(monster* mons, monster_type clone_type,
     // is is leaked to the client
     mons->reset_client_id();
 
+    // Don't leak the real one with the targetting interface.
+    if (you.prev_targ == mons->mindex())
+    {
+        you.prev_targ = MHITNOT;
+        crawl_state.cancel_cmd_repeat();
+    }
+
     // Mara's clones are special; they have the same stats as him, and
     // are exact clones, so they are created damaged if necessary.
     if (clone_hp)
