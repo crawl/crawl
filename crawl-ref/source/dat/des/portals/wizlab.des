@@ -250,7 +250,9 @@ end
 
 local function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false, false, false)
-    return dgn.create_monster(x, y, spec)
+    local mons =  dgn.create_monster(x, y, spec)
+    mons.set_prop("zonguldrok", 1)
+    return mons
 end
 
 function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
@@ -278,7 +280,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
     end
 
     local mons = dgn.mons_from_index(ev:arg1())
-    if not string.find(mons.full_name, "zombie") then
+    if not mons.has_prop("zonguldrok") then
         return
     end
 
