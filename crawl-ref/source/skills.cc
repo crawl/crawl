@@ -443,8 +443,6 @@ static void _check_stop_train()
     if (!skills.empty())
         mpr("You stop training " + _skill_names(skills));
 
-    if (you.num_turns)
-        check_selected_skills();
     reset_training();
     you.stop_train.clear();
 }
@@ -456,6 +454,8 @@ void update_can_train()
 
     if (!you.start_train.empty())
         _check_start_train();
+
+    check_selected_skills();
 }
 
 bool training_restricted(skill_type sk)
