@@ -2972,6 +2972,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
+        mpr("You sense decay."); // in the state of Denmark?
+        add_daction(DACT_ROT_CORPSES);
         _set_penance(old_god, 30);
         break;
 
