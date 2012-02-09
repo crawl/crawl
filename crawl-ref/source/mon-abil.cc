@@ -647,6 +647,7 @@ static bool _slime_merge(monster* thing)
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
             && other_thing->attitude == thing->attitude
+            && other_thing->has_ench(ENCH_CHARM) == thing->has_ench(ENCH_CHARM)
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
             && !_disabled_merge(other_thing))
