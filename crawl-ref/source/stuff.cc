@@ -784,3 +784,22 @@ int prompt_for_int(const char *prompt, bool nonneg)
 
     return (ret);
 }
+
+double prompt_for_float(const char* prompt)
+{
+    char specs[80];
+
+    msgwin_get_line(prompt, specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return -1;
+
+    char *end;
+    double ret = strtod(specs, &end);
+
+    if (ret == 0 && end == specs)
+        ret = -1;
+
+    return (ret);
+
+}

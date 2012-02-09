@@ -8,6 +8,7 @@
 #include "skills.h"
 
 #include <algorithm>
+#include <math.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -1010,13 +1011,28 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     return (skill_inc);
 }
 
-void set_skill_level(skill_type skill, int amount)
+void set_skill_level(skill_type skill, double amount)
 {
-    you.ct_skill_points[skill] = 0;
-    you.skills[skill] = amount;
+    double level;
+    double fractional = modf(amount, &level);
 
-    const unsigned int target = skill_exp_needed(std::min(amount, 27), skill);
-    if (target == you.skills[skill])
+    you.ct_skill_points[skill] = 0;
+    you.skills[skill] = level;
+
+    if (level >= 27)
+    {
+        level = 27;
+        fractional = 0;
+    }
+
+    unsigned int target = skill_exp_needed(level, skill);
+    if (fractional)
+    {
+        target += (skill_exp_needed(level + 1, skill)
+                  - skill_exp_needed(level, skill)) * fractional;
+    }
+
+    if (target == you.skill_points[skill])
         return;
 
     // We're updating you.skill_points[skill] and calculating the new
