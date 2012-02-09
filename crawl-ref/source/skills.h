@@ -35,5 +35,5 @@ void train_skill(skill_type skill, int exp);
 bool skill_trained(int i);
 inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
 void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE);
-void set_skill_level(skill_type skill, int amount);
+void set_skill_level(skill_type skill, double amount);
 #endif

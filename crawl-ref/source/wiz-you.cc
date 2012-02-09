@@ -401,7 +401,7 @@ void wizard_set_skill_level(skill_type skill)
     }
 
     mpr(skill_name(skill));
-    int amount = prompt_for_int("To what level? ", true);
+    double amount = prompt_for_float("To what level? ");
 
     if (amount < 0)
     {
@@ -422,7 +422,7 @@ void wizard_set_skill_level(skill_type skill)
 
     redraw_skill(skill);
 
-    mprf("%s %s to skill level %d.", (old_amount < amount ? "Increased" :
+    mprf("%s %s to skill level %.1f.", (old_amount < amount ? "Increased" :
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
@@ -439,7 +439,7 @@ void wizard_set_skill_level(skill_type skill)
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {
-    int amount = prompt_for_int("Set all skills to what level? ", true);
+    double amount = prompt_for_float("Set all skills to what level? ");
 
     if (amount < 0)             // cancel returns -1 -- bwr
         canned_msg(MSG_OK);
