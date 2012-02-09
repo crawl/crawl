@@ -5022,7 +5022,7 @@ int melee_attack::calc_damage()
 
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
-        int frenzy_degree = -11;
+        int frenzy_degree = -1;
 
         // Berserk/mighted/frenzied monsters get bonus damage.
         if (as_mon->has_ench(ENCH_MIGHT)
@@ -5040,7 +5040,7 @@ int melee_attack::calc_damage()
             frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
         }
 
-        if (frenzy_degree == -1)
+        if (frenzy_degree != -1)
         {
 #ifdef DEBUG_DIAGNOSTICS
             const int orig_damage = damage;
