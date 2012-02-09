@@ -540,8 +540,7 @@ int detect_creatures(int pow, bool telepathic)
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    if (!telepathic)
-        clear_map(false);
+    clear_map(false);
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
