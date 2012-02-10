@@ -236,6 +236,8 @@ struct map_cell
 
     void set_cloud(const cloud_info& ci)
     {
+        if (_cloud)
+            delete _cloud;
         _cloud = new cloud_info(ci);
     }
 
