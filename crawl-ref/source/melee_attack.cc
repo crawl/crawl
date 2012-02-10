@@ -419,13 +419,12 @@ bool melee_attack::handle_phase_dodged()
     if (attacker != defender &&
         grid_distance(defender->pos(), attacker->pos()) == 1)
     {
-        // Only half the normal chance of retaliation for attacks after the
-        // first one.
         if (attacker->alive()
             && (defender->is_player() ?
                    you.species == SP_MINOTAUR :
                    mons_base_type(defender->as_monster()) == MONS_MINOTAUR)
             && defender->can_see(attacker)
+            // Retaliation only works on the first attack in a round.
             // FIXME: player's attack is -1, even for auxes
             && effective_attack_number <= 0)
         {
