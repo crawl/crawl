@@ -515,7 +515,7 @@ void dgn_erase_unused_vault_placements()
         }
     }
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_ABYSS
     dprf("Extant vaults on level: %d", (int) env.level_vaults.size());
     for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
     {
