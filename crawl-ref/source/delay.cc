@@ -346,15 +346,10 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
 
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
-        // These two have the default action of not being interruptible,
-        // although they will often consist of chained intermediary steps
-        // (remove cloak, remove armour, wear new armour, replace cloak),
-        // all of which can be stopped when complete.  This is a fairly
-        // reasonable behaviour, although perhaps the character should have
-        // the option of reversing the current action if it would take less
-        // time to get out of the plate armour that's half on than it would
-        // take to continue.  Probably too much trouble, and we'd have to
-        // have a prompt... this works just fine. -- bwr
+        mprf("You stop %s your armour.",
+             delay.type == DELAY_ARMOUR_ON ? "putting on"
+                                           : "removing");
+        _pop_delay();
         break;
 
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
