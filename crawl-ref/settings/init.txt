@@ -399,6 +399,9 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # See options_guide.txt for the options
 # cset, feature, mon_glyph
 
+## Highlight the edge of unexplored terrain.
+# feature = explore horizon {',,green}
+
 ##### 6-b   Windows console #######################
 #
 # dos_use_background_intensity = true
