@@ -12,7 +12,8 @@ Stone Soup 0.10 (????????)
 Branches, portal vaults, levels
 -------------------------------
 * Remove Hive. Guarantee some limited food supply in the dungeon.
-* Reworked Abyss transformations.
+* Completely reworked Abyss: it now morphs continuously over time, is mappable,
+  and extends infinitely in all directions.
 * Most abyssal runes are in special vaults.
 * Escaping the Abyss returns to place of banishment.
 * Ziggurats have much more colourful holy levels.
@@ -21,11 +22,12 @@ Branches, portal vaults, levels
 * More Volcano portal vaults.
 * Web "traps", can briefly entangle those caught.
 * A "twisting cavern" map layout.
-* Custom shops.
 * Many vaults, including large altar vaults, Abyss vaults, Pan Lord maps,
   and several branch endings.
 * A number of branches have a completely new set of tiles: Snake Pit,
   Labyrinth, Vestibule of Hell, Crypt, Dis, Tartarus, Cocytus, Pandemonium.
+* The chance of getting a unique Pandemonium level increases for each level of
+  Pan you visit
 
 Gods
 ----
@@ -54,7 +56,7 @@ Gods
 
 Species
 -------
-* Octopodes.
+* Octopodes: sentient octopuses that can wear eight rings.
 * Draconians cannot wear body armour anymore, can wear gloves and boots.
 * Centaurs can survive longer on vegetarian food.
 * Felids gain lives every three levels.
@@ -131,18 +133,20 @@ Interface
 * Throwable starting weapons are autoinscribed with "=f".
 * Leaving an unique Pan level without the rune asks for confirmation.
 * Uniques and player ghosts annotate the level on the overview screen.
-* A character dump option: spell_usage, counts spells you have cast.
+* New character dump options: spell_usage, which counts spells you have cast,
+  and action_counts, which counts non-spell actions.
 * Ctrl-W toggles weight display in inventory and dropping menu.
 * Better ?/G and ?/B menus.
 * Spell success adjectives are replaced with failure rate percentages. Failure
   rates are coloured based on potential miscast severity.
+* Many new monster descriptions and quotes.
 
 Monsters
 --------
 * Ignacio no longer uses Torment, and he'll appear repeatedly until killed.
 * New monster: profane servitor - an angel corrupted by Yredelemnul (undead).
 * New monster: blizzard demon - a cold/air rank 2 demon.
-* New holy monsters: silver star, cherub, phoenix, paladin.
+* New holy monsters: silver star, cherub, phoenix, paladin, seraph.
 * Removed: giant toads, vipers, blue deaths.
 * Renamed: Fiend -> Brimstone Fiend, Imp -> Crimson Imp.
 * Reorganized demon ranks, moving easier 1s to 2s.
@@ -152,8 +156,7 @@ Monsters
   around.
 * Unique Pandemonium lords can hunt you on the Orb run if you've stolen
   their runes. Violate the 5th Commandment, not the 7th!
-* More emergency spell usage.
-* Gnoll shamans and sergeants are actual monsters.
+* Monsters cast emergency spells more often.
 * Breath timeout for dragons, draconians, drakes.
 * Most monster summoning spells toned down slightly.
 * Monsters flee at lower health thresholds, and less predictably.
@@ -220,6 +223,7 @@ Technical
 ---------
 * Tarballs use xz rather than bz2 compression.
 * Wizard mode is compiled in by default unless you specify NOWIZARD=y.
+* Custom shops can be used in vaults.
 
 
 Stone Soup 0.9.1 (20110904)
