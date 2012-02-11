@@ -619,31 +619,31 @@ SHUFFLE: yz, '"
 SUBST:   y = x, z = .wwwwWWW, ' = ...W, " = wWW
 MAP
  @   xxccxcxcctWW
-  Wxfx'""'..WcctWW
+  WxfxW""'..WcctWW
   xWxWx''"zyW.xctWW
   fxWx"wwwyzwxWcctWW
  xxWx.x6wwzyw.x.xctWWW
-tx'x"x4wwwyzwx6W.ccttWW
+txWx"x4wwwyzwx6W.ccttWW
 xt"'w6w48wzywx56xWccttWW
-ct"'www88wyxwxxx.x.xtttWW
-tx'"wwwww.c.wwwwwwWWctttW
-tc.yzyzyzcxw.zyzyzWx8xctWW
-xt.zyzyzx.wf.yzyzy.fxWcctWW
-ct"'wwwwWw..wWW.WWw.WWWcctWW
-tx"'wxxxWWzyWwcwc.WyzWwWxctWW
-tc'"wx6xWWyzWcf4wcWzywWx.cctWW
-xt"'wx5WxWzy.w47.w.yzwx56.xctW
-ct'"wx6xWWyzWcw.3cWzywx65xWcct
-tx"'wxxWwWzyW.cwcfWyzwxxxWwWcc
-tc"'WWWwWf..wWW.WWw.WWwwwwwwWc
-ctfzyzyzxW.w.yzyzy.W.Wxzyzyzfc
-xt.yzyzyzxw..zyzyzW..xzyzyzy.x
-tc"'wwww.WxWfWWWWWWWxcWW..w'"c
-tc"'wxxWW.yxWWWxWwWxyWfWxx."'c
-ct'"xx4xWwzywxx6xWwyzWWc.cx'"c
-xt'"x.w4xwyzwx565xWzy.x..2x"'x
-cct8x3.xxwyzwxxxxxWyz.xc1rc'"c
- tt'xxxxwwzywwwwwWwzyw.xxcc8Wt
+ct"'www88wyxwxxx.xWxtttWW
+tx'"wwwww.cxWwwwwWwWctttW
+tc.yzyzyzcx..zyzyzWx8xctWW
+xt.zyzyzxx.f.yzyzy.fxWcctWW
+ct"'wWWWwW..wWW.WWw.WwWcctWW
+tx"'WxxxWwzyWwcwc.WyzWwWxctWW
+tc'"wx6xWwyzWcf4wcWzywWx.cctWW
+xt"'wx5Wxwzy.w47.w.yzwx56.xctW
+ct'"wx6xWwyzWcw.3cWzywx65xWcct
+tx"'WxxWwWzyW.cwcfWyzwxxxWwWcc
+tc"'wWWwWf..wWW.WWw.wWwWWwWwWc
+ctfzyzyzWW.w.yzyzy.W.WWzyzyzfc
+xt.yzyzyzxw..zyzyzw..xzyzyzy.x
+tc"'wWWw.WxWfwwwwwwWxcWWW.w'"c
+tc"'WxxWW.yWwWWxWwWWyWfWxx."'c
+ct'"xx4xWwzyWxx6xWwyzWWc.cx'"c
+xt'"x.w4xWyzWx565xWzyWx..2x"'x
+cct8x3.xxWyzWxxxxxWyz.xc1rc'"c
+ tt'xxxxWwzywWwwwWwzyw.xxcc8Wt
  tcW'8""''yz""'7'""yz'"'"'8ftc
  Wcctt''""f.''"'"''f."'"'"Wttt
   Wttccxcccxccxcccxccccccxtctt
