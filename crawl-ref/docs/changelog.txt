@@ -69,6 +69,7 @@ Species
 Character
 ---------
 * Wild Magic mutation: reduced spell success, increased power.
+* Evolution mutation: extra mutations as time passes.
 * Always gain partial nutrition from brown chunks.
 * Bad food causes nausea instead of sickness.
 * Non-full carnivores cannot eat up to "engorged" without gourmand.
@@ -224,6 +225,7 @@ Technical
 * Tarballs use xz rather than bz2 compression.
 * Wizard mode is compiled in by default unless you specify NOWIZARD=y.
 * Custom shops can be used in vaults.
+* Multithreading, currently only to speed up database loading.
 
 
 Stone Soup 0.9.1 (20110904)
