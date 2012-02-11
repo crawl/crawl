@@ -1408,11 +1408,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (fake_rap != ARTP_NUM_PROPERTIES)
             artefact_wpn_learn_prop(item, fake_rap);
 
-        if (!item.props.exists("jewellery_tried")
-            || !item.props["jewellery_tried"].get_bool())
-        {
-            item.props["jewellery_tried"].get_bool() = true;
-        }
+        item.flags |= ISFLAG_TRIED;
     }
     else
     {

@@ -1680,7 +1680,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
     ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
-    ISFLAG_RESERVED_3        = 0x00000800,  // reserved
+    ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
     ISFLAG_UNRANDART         = 0x00002000,  // is an unrandart
