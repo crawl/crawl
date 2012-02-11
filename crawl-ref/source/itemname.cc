@@ -2007,16 +2007,8 @@ bool item_type_tried(const item_def& item)
     if (item_type_known(item))
         return (false);
 
-    if (is_artefact(item) && item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.base_type == OBJ_JEWELLERY
-            && item.props.exists("jewellery_tried")
-            && item.props["jewellery_tried"].get_bool())
-        {
-            return (true);
-        }
-        return (false);
-    }
+    if (item.flags & ISFLAG_TRIED)
+        return true;
 
     if (!item_type_has_ids(item.base_type))
         return false;

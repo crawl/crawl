@@ -3947,10 +3947,12 @@ item_info get_item_info(const item_def& item)
         if (item.props.exists(ARTEFACT_NAME_KEY))
             ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
     }
+    else if (item_type_tried(item))
+        ii.flags |= ISFLAG_TRIED;
 
     const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
                                 CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
-                                "jewellery_tried", "drawn_cards"};
+                                "drawn_cards"};
     for (unsigned i = 0; i < (sizeof(copy_props) / sizeof(copy_props[0])); ++i)
     {
         if (item.props.exists(copy_props[i]))

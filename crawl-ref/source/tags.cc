@@ -2928,6 +2928,13 @@ void unmarshallItem(reader &th, item_def &item)
         item.props.erase(ARTEFACT_NAME_KEY);
         ASSERT(!is_artefact(item));
     }
+    if (item.base_type == OBJ_JEWELLERY
+        && item.props.exists("jewellery_tried")
+        && item.props["jewellery_tried"].get_bool())
+    {
+        item.props.erase("jewellery_tried");
+        item.flags |= ISFLAG_TRIED;
+    }
 #endif
 }
 
