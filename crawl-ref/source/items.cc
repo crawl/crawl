@@ -3949,7 +3949,6 @@ item_info get_item_info(const item_def& item)
     }
     else if (item_type_tried(item))
         ii.flags |= ISFLAG_TRIED;
-    debuglog("[%s] flags: %08x -> %08x\n", item.name(DESC_PLAIN, false, true).c_str(), item.flags, ii.flags);
 
     const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
                                 CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
