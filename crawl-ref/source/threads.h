@@ -10,10 +10,10 @@
 // AIX
 # define PTHREAD_CREATE_UNDETACHED
 #endif
-#ifndef PTHREAD_MUTEX_RECURSIVE
-// LinuxThreads, probably gone from any semi-modern system
-# define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
-#endif
+//#ifndef PTHREAD_MUTEX_RECURSIVE
+//// LinuxThreads, probably gone from any semi-modern system
+//# define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
+//#endif
 
 #define mutex_t pthread_mutex_t
 #define mutex_lock(x) pthread_mutex_lock(&x)
