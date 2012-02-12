@@ -843,7 +843,8 @@ regeneration or invisibility make you hunger very quickly when they are
 activated. Use the 'P' command to put on rings, and 'R' to remove them. You can
 wear up to two rings simultaneously, one on each hand; which hand you put a ring
 on is immaterial to its function. If you try to put on a ring while both ring
-fingers are full, you will be asked which one to remove. Some rings function
+fingers are full, you will be asked which one to remove. Octopodes are an
+exception, and may wear up to eight rings on their tentacles. Some rings function
 automatically, while others require activation (the 'a' command).
 
 Amulets are similar to rings, but have a different range of effects (which tend
@@ -944,6 +945,8 @@ same type would. Elven cloaks and boots are particularly useful to those who
 wish to be stealthy. An Elf does a bit better when wearing armour or weapons of
 his own kind.
 
+Demonspawn receive bonuses when using demonic weapons.
+
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a character
 of these species might find a Centaur or Naga barding.
 
@@ -1017,7 +1020,7 @@ section for details on how to target.
 
 Most spells have caps on their effects: no matter how intelligent and proficient
 you are, there is a limit to the damage you can achieve with a Magic Dart. In
-generally, it is a good idea to look at the output of the 'I' and 'II' screens
+general, it is a good idea to look at the output of the 'I' and 'II' screens
 to get a picture on your casting abilities. This is especially useful if you're
 about to change armour or rings.
 
@@ -1025,6 +1028,9 @@ High level spells are difficult to cast, and you may miscast them every once in
 a while (resulting in a waste of magic and possibly dangerous side-effects).
 Your chance of failing to cast a spell properly depends on your skills, your
 intelligence, the level of the spell and whether you are wearing heavy armour.
+The chance of miscasting a spell is displayed on the spell screen, and coloured
+based on potential severity (with yellow representing a moderate chance, and
+red representing a severe chance).
 
 Many of the more powerful spells carry disadvantages or risks; you should read
 the spell description (obtained by reading the spellbook in which you found the
@@ -1139,7 +1145,7 @@ of a freak they've become and the 'a' command to activate any mutations which
 can be controlled. Many mutations are actually beneficial to the characters, but
 there are plenty of nasty ones as well. Many mutations have three levels, each
 of which counts as a single mutation. Some changes to the primary attributes
-Strength, Intelligence and Dexterity (apart from those by levelling) are also
+Strength, Intelligence and Dexterity (apart from those by leveling) are also
 handled as mutations - in particular, these are not permanent.
 
 You can also become mutated by overusing certain powerful enchantments,
@@ -1552,7 +1558,8 @@ Nagas
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Their
   body shape also prevents them from gaining full protection from most armour. A
-  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed.
+  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. They
+  can also use their tails to constrict their foes.
 
   Every now and then, a Naga can spit poison; the range, accuracy and damage of
   this poison increases with the Naga's experience level.
@@ -1667,11 +1674,11 @@ Deep Dwarves
   portrayed as actual spirits by outsiders. They are most at home with the
   magic of earth and death.
 
-  Like all other Dwarves, they are gifted forgers. Their armour and weapons
-  are very well-crafted and much more durable than the products of lesser
-  artisans, and particularly dangerous when in the hands of a true Dwarf. In
-  addition, Deep Dwarves can tinker with gadgets so as to recharge them.
-  However, each time they do so, they lose a bit of their magical essence.
+  Deep Dwarves are gifted forgers. Their armour and weapons are very
+  well-crafted and much more durable than the products of lesser artisans, and
+  particularly dangerous when in the hands of a true Dwarf. In addition, Deep
+  Dwarves can tinker with gadgets so as to recharge them. However, each time
+  they do so, they lose a bit of their magical essence.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1707,7 +1714,8 @@ Octopodes
   tentacle.
 
   Their natural camouflage makes them excel at stealth, and they have good knowledge
-  of poisons as well.
+  of poisons as well. They are also able to use their tentacles to constrict enemies -
+  potentially several at a time!
 
 Elves
 ========================================
@@ -1939,6 +1947,11 @@ Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
   starts with either some throwing weapons or a ranged weapon and some
   ammunition, as well as a melee weapon and a set of leathers.
+
+Arcane Marksmen
+  Arcane Marksmen are Hunters who use debilitating spells to assist their
+  ranged attacks. They are particularly capable of keeping their enemies at
+  a distance.
 
 Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
@@ -2197,9 +2210,6 @@ Evocations
   have certain powers (like crystal balls) work better for characters trained in
   this skill. Like Invocations, Evocations is easier to learn than other skills.
 
-  If your character does not have a particular skill, he or she can gain it by
-  practising the activities mentioned above.
-
 ****************************************
 4. List of keys and commands
 ****************************************
@@ -2311,8 +2321,7 @@ screen.
   Display worn armour.
 
 }
-  Display wielded and secondary weapons, and missiles (to be shot with the 'f'
-  command).
+  Display list of runes collected.
 
 "
   Display worn jewellery.
@@ -2887,8 +2896,13 @@ Fly
   You fly, gaining the benefits of levitation with none of the drawbacks.
 
 Held
-  You are held in a net. You cannot move freely and will instead try to fight
-  your way out of the net.
+  You are held in a net or a spiderweb. You cannot move freely and will instead
+  try to struggle free.
+
+Constr
+  You are being constricted by an enemy and will take an increasing amount of
+  damage every turn. Also, movement away from the enemy is restricted (although
+  you can struggle to escape).
 
 Mesm
   You are mesmerised and cannot move away from the monster(s) mesmerising you.
@@ -3220,6 +3234,9 @@ Wiz
 
 MP
   magical power (additional Magic points)
+
+HP
+  hit points (additional Health)
 
 cTele
   controlled teleport
