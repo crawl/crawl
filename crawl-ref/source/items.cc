@@ -3964,10 +3964,13 @@ item_info get_item_info(const item_def& item)
         CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
         const CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
 
-        for (unsigned i = 0; i < props.size(); ++i)
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
-            if (i >= known.size() || !known[i].get_bool())
-                props[i] = (short)0;
+            for (unsigned i = 0; i < props.size(); ++i)
+            {
+                if (i >= known.size() || !known[i].get_bool())
+                    props[i] = (short)0;
+            }
         }
 
         ii.props[ARTEFACT_PROPS_KEY] = props;
