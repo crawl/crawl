@@ -3507,6 +3507,8 @@ void level_change(bool skip_attribute_increase)
 
 void adjust_level(int diff, bool just_xp)
 {
+    ASSERT((uint64_t)you.experience <= (uint64_t)MAX_EXP_TOTAL);
+
     if (you.experience_level + diff < 1)
         you.experience = 0;
     else if (you.experience_level + diff >= 27)
@@ -3530,12 +3532,14 @@ void adjust_level(int diff, bool just_xp)
              (you.experience - old_min) * 1.0 / (old_max - old_min),
              old_min, old_max, new_min, new_max);
 
-        you.experience = ((uint64_t)(new_max - new_min))
+        you.experience = ((int64_t)(new_max - new_min))
                        * (you.experience - old_min)
                        / (old_max - old_min)
                        + new_min;
         dprf("XP after: %d\n", you.experience);
     }
+
+    ASSERT((uint64_t)you.experience <= (uint64_t)MAX_EXP_TOTAL);
 
     if (!just_xp)
         level_change();
