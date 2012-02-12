@@ -6718,6 +6718,8 @@ void player::paralyse(actor *who, int str, std::string source)
 
     if (paralysis > 13 * BASELINE_DELAY)
         paralysis = 13 * BASELINE_DELAY;
+
+    stop_constricting_all();
 }
 
 void player::petrify(actor *who)
@@ -7189,6 +7191,7 @@ void player::hibernate(int)
         return;
     }
 
+    stop_constricting_all();
     mpr("You fall asleep.");
 
     stop_delay();
@@ -7210,6 +7213,7 @@ void player::put_to_sleep(actor*, int power)
 
     mpr("You fall asleep.");
 
+    stop_constricting_all();
     stop_delay();
     flash_view(DARKGREY);
 
