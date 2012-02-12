@@ -3893,8 +3893,10 @@ item_info get_item_info(const item_def& item)
         if (ii.sub_type == MISC_RUNE_OF_ZOT)
             ii.plus = item.plus; // which rune
 
-        if (ii.sub_type == MISC_DECK_OF_ESCAPE)
+        if (is_deck(item))
         {
+            ii.special = item.special;
+
             const int num_cards = cards_in_deck(item);
             CrawlVector info_cards;
             CrawlVector info_card_flags;
