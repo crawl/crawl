@@ -135,7 +135,7 @@ Interface
 * Leaving an unique Pan level without the rune asks for confirmation.
 * Uniques and player ghosts annotate the level on the overview screen.
 * New character dump options: spell_usage, which counts spells you have cast,
-  and action_counts, which counts non-spell actions.
+  and action_counts, which also counts non-spell actions.
 * Ctrl-W toggles weight display in inventory and dropping menu.
 * Better ?/G and ?/B menus.
 * Spell success adjectives are replaced with failure rate percentages. Failure
