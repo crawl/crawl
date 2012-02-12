@@ -27,7 +27,7 @@ Branches, portal vaults, levels
 * A number of branches have a completely new set of tiles: Snake Pit,
   Labyrinth, Vestibule of Hell, Crypt, Dis, Tartarus, Cocytus, Pandemonium.
 * The chance of getting a unique Pandemonium level increases for each level of
-  Pan you visit
+  Pan you visit.
 
 Gods
 ----
