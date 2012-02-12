@@ -2010,6 +2010,10 @@ bool item_type_tried(const item_def& item)
     if (item.flags & ISFLAG_TRIED)
         return true;
 
+    // artefacts are distinct from their base types
+    if (is_artefact(item))
+        return false;
+
     if (!item_type_has_ids(item.base_type))
         return false;
     return (you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE);
