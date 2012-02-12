@@ -4724,6 +4724,7 @@ void monster::hibernate(int)
     if (!can_hibernate())
         return;
 
+    stop_constricting_all();
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
     add_ench(ENCH_SLEEP_WARY);
@@ -4734,6 +4735,7 @@ void monster::put_to_sleep(actor *attacker, int strength)
     if (!can_sleep())
         return;
 
+    stop_constricting_all();
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
 }
