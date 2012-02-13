@@ -1041,7 +1041,7 @@ static dungeon_feature_type _abyss_grid(double x, double y, double depth,
         isWall = sub_noise.id[0] % 2;
 
     if (sub_noise.id[0] % 3 == 0)
-        isWall = isWall ^ true;
+        isWall = !isWall;
 
     if (isWall)
     {
