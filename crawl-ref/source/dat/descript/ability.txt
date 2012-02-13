@@ -148,7 +148,7 @@ Invoke a huge blast of divine fury centered on you, severely damaging undead and
 %%%%
 Summon Divine Warrior
 
-Summon an angel or daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer or even permanently in this world.
+Summon an angel or daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer in this world.
 %%%%
 # Kikubaaqudgha
 Receive Corpses
