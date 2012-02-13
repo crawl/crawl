@@ -1335,8 +1335,7 @@ bool _abyss_make_path(const coord_def &to)
         // Try to morph.
         const double old_depth = abyssal_state.depth;
         abyssal_state.depth += 0.1;
-        map_mask abyss_genlevel_mask;
-        _abyss_invert_mask(&abyss_genlevel_mask);
+        map_mask abyss_genlevel_mask(1);
 
         // Assumes that abyss morphing won't remove the exit.
         _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
@@ -1362,8 +1361,7 @@ retry:
     // Generate the initial abyss without vaults. Vaults are horrifying.
     _abyss_generate_new_area();
     _write_abyssal_features();
-    map_mask abyss_genlevel_mask;
-    _abyss_invert_mask(&abyss_genlevel_mask);
+    map_mask abyss_genlevel_mask(1);
     _abyss_apply_terrain(abyss_genlevel_mask);
 
     // If we're starting out in the Abyss, make sure the starting grid is
@@ -1420,8 +1418,7 @@ void abyss_morph(double duration)
     if (abyssal_state.phase > M_PI)
         abyssal_state.phase -= M_PI;
 
-    map_mask abyss_genlevel_mask;
-    _abyss_invert_mask(&abyss_genlevel_mask);
+    map_mask abyss_genlevel_mask(1);
     dgn_erase_unused_vault_placements();
     _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
     _place_displaced_monsters();
