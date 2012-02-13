@@ -1317,7 +1317,7 @@ static void _abyss_generate_new_area()
 
 // Ensure that there is a path between the abyss centre and an exit location,
 // by morphing the abyss until there is.
-void _abyss_make_path(const coord_def &to)
+bool _abyss_make_path(const coord_def &to)
 {
     const int ntries = 30;  // Rarely do we need more than one.
     for (int i = 1; i <= ntries; ++i)
@@ -1329,7 +1329,7 @@ void _abyss_make_path(const coord_def &to)
         {
             if (i > 1)
                 dprf("_abyss_make_path needed %d attempts", i);
-            return;
+            return true;
         }
 
         // Try to morph.
@@ -1341,8 +1341,9 @@ void _abyss_make_path(const coord_def &to)
         // Assumes that abyss morphing won't remove the exit.
         _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
     }
-    die("Could not create path to exit at (%d, %d) after %d attempts.",
-        to.x, to.y, ntries);
+    dprf("Could not create path to exit at (%d, %d) after %d attempts.",
+         to.x, to.y, ntries);
+    return false;
 }
 
 // Generate the initial (proto) Abyss level. The proto Abyss is where
@@ -1353,6 +1354,7 @@ void generate_abyss()
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
 
+retry:
     _initialize_abyss_state();
 
     dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
@@ -1376,8 +1378,8 @@ void generate_abyss()
                                                    50, true);
         // Now make sure there is a path from the abyss centre to the exit.
         // If for some reason an exit could not be placed, don't bother.
-        if (eloc != INVALID_COORD)
-            _abyss_make_path(eloc);
+        if (eloc == INVALID_COORD || !_abyss_make_path(eloc))
+            goto retry;
     }
     else
     {
