@@ -761,7 +761,8 @@ static int _noise_attenuation_millis(const coord_def &pos)
 }
 
 noise_cell::noise_cell()
-    : neighbour_delta(0, 0), noise_id(-1), noise_intensity_millis(0)
+    : neighbour_delta(0, 0), noise_id(-1), noise_intensity_millis(0),
+      noise_travel_distance(0)
 {
 }
 
