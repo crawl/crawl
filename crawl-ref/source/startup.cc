@@ -502,10 +502,10 @@ static bool _game_defined(const newgame_def& ng)
 }
 
 static const int SCROLLER_MARGIN_X  = 18;
-static const int NAME_START_Y       = 5;
-static const int GAME_MODES_START_Y = 7;
-static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 1 + NUM_GAME_TYPE;
-static const int MISC_TEXT_START_Y  = 19;
+static const int NAME_START_Y       = 6;
+static const int GAME_MODES_START_Y = 8;
+static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + NUM_GAME_TYPE;
+static const int MISC_TEXT_START_Y  = 20;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;

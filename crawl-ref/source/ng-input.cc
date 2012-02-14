@@ -47,6 +47,8 @@ void opening_screen(void)
     }
 
     msg += "\n";
+    msg += "<lightgreen>Take part in the 2012 survey:</lightgreen> "
+    "http://crawl.develz.org/wordpress/survey\n";
 
     formatted_string::parse_string(msg).display();
     textcolor(LIGHTGREY);
