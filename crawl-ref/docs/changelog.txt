@@ -38,6 +38,7 @@ Gods
 * Cheibriados can slow down Abyss morphing and Orb run monster spawns.
 * New Cheibriados ability: Temporal Distortion, moves nearby monsters forwards
   in time a few turns.
+* Cheibriados doesn't grant resistances anymore.
 * Makhleb's powers use Health instead of Magic.
 * Makhleb gives more Health for killing but no Magic anymore.
 * Makhleb's Greater Destruction costs less piety.
