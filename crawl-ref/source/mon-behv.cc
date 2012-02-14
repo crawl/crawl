@@ -423,6 +423,10 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_LURK:
+            // Lurking mimics stay put when player is away.
+            if (mons_is_mimic(mon->type) && !proxPlayer)
+                break;
+            //Else Fall through
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
