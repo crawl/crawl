@@ -1315,34 +1315,13 @@ static void _abyss_generate_new_area()
     place_transiting_items();
 }
 
-// Ensure that there is a path between the abyss centre and an exit location,
-// by morphing the abyss until there is.
-bool _abyss_make_path(const coord_def &to)
+// Check if there is a path between the abyss centre and an exit location.
+bool _abyss_has_path(const coord_def &to)
 {
-    const int ntries = 30;  // Rarely do we need more than one.
-    for (int i = 1; i <= ntries; ++i)
-    {
-        ASSERT(grd(to) == DNGN_EXIT_ABYSS);
+    ASSERT(grd(to) == DNGN_EXIT_ABYSS);
 
-        monster_pathfind pf;
-        if (pf.init_pathfind(ABYSS_CENTRE, to))
-        {
-            if (i > 1)
-                dprf("_abyss_make_path needed %d attempts", i);
-            return true;
-        }
-
-        // Try to morph.
-        const double old_depth = abyssal_state.depth;
-        abyssal_state.depth += 0.1;
-        map_mask abyss_genlevel_mask(1);
-
-        // Assumes that abyss morphing won't remove the exit.
-        _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
-    }
-    dprf("Could not create path to exit at (%d, %d) after %d attempts.",
-         to.x, to.y, ntries);
-    return false;
+    monster_pathfind pf;
+    return pf.init_pathfind(ABYSS_CENTRE, to);
 }
 
 // Generate the initial (proto) Abyss level. The proto Abyss is where
@@ -1376,7 +1355,7 @@ retry:
                                                    50, true);
         // Now make sure there is a path from the abyss centre to the exit.
         // If for some reason an exit could not be placed, don't bother.
-        if (eloc == INVALID_COORD || !_abyss_make_path(eloc))
+        if (eloc == INVALID_COORD || !_abyss_has_path(eloc))
             goto retry;
     }
     else
