@@ -755,7 +755,7 @@ static bool _mons_is_weapon_mimic(const monster* mon)
             && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
 }
 
-void discover_mimic(const coord_def& pos)
+void discover_mimic(const coord_def& pos, bool wake)
 {
     item_def* item = item_mimic_at(pos);
     const bool feature_mimic = !item && feature_mimic_at(pos);
@@ -810,7 +810,7 @@ void discover_mimic(const coord_def& pos)
 
     // Generate and place the monster.
     mgen_data mg;
-    mg.behaviour = BEH_WANDER;
+    mg.behaviour = wake ? BEH_WANDER : BEH_LURK;
     mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
     if (feature_mimic)
@@ -849,7 +849,8 @@ void discover_mimic(const coord_def& pos)
     if (item && item->base_type == OBJ_ARMOUR)
         mimic->ac += 10;
 
-    behaviour_event(mimic, ME_ALERT, MHITYOU);
+    if (wake)
+        behaviour_event(mimic, ME_ALERT, MHITYOU);
 
     // Friendly monsters don't appreciate being pushed away.
     if (act && !act->is_player() && act->as_monster()->friendly())
