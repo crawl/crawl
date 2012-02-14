@@ -544,7 +544,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri);
+        discover_mimic(*ri, false);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.

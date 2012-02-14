@@ -2229,7 +2229,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri);
+        discover_mimic(*ri, false);
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
