@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <cmath>
 
 #include "externs.h"
 
@@ -2439,9 +2440,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     {
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
-
-        if (cast_healing(3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)), true,
-                         self ? you.pos() : coord_def(0, 0), !self,
+        if (cast_healing(3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)),
+                         3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0),
+                         true, self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
         {
             return (false);
@@ -2459,8 +2460,9 @@ static bool _do_ability(const ability_def& abil)
     {
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
 
-        if (cast_healing(10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)), true,
-                         self ? you.pos() : coord_def(0, 0), !self,
+        if (cast_healing(10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)),
+                         10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0),
+                         true, self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
         {
             return (false);
