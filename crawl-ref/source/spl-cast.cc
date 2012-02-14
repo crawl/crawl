@@ -1459,12 +1459,12 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
-        if (cast_healing(5) < 0)
+        if (cast_healing(5, 5) < 0)
             return (SPRET_ABORT);
         break;
 
     case SPELL_MAJOR_HEALING:
-        if (cast_healing(25) < 0)
+        if (cast_healing(25, 25) < 0)
             return (SPRET_ABORT);
         break;
 

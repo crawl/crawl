@@ -167,7 +167,10 @@ int is_pacifiable(const monster* mon)
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
 // Returns -2, if monster can currently not be pacified (asleep).
-static int _can_pacify_monster(const monster* mon, const int healed)
+// Returns -3, if monster can be pacified but the attempt narrowly failed.
+// Returns -4, if monster can currently not be pacified (too much hp).
+static int _can_pacify_monster(const monster* mon, const int healed,
+                               const int max_healed)
 {
 
    int pacifiable = is_pacifiable(mon);
@@ -191,6 +194,10 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
+    if(mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
+                                        + max_healed) / divisor))
+        return (-4);
+
     int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
                                 / divisor);
 
@@ -200,6 +207,8 @@ static int _can_pacify_monster(const monster* mon, const int healed)
 
     if (mon->max_hit_points < factor * random_factor)
         return (1);
+    if (mon->max_hit_points < factor * random_factor * 1.15)
+        return (-3);
 
     return (0);
 }
@@ -213,7 +222,7 @@ static std::vector<std::string> _desc_mindless(const monster_info& mi)
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
-static int _healing_spell(int healed, bool divine_ability,
+static int _healing_spell(int healed, int max_healed, bool divine_ability,
                           const coord_def& where, bool not_self,
                           targ_mode_type mode)
 {
@@ -262,7 +271,7 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const int can_pacify  = _can_pacify_monster(mons, healed);
+    const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
     const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
@@ -272,7 +281,20 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         if (can_pacify == 0)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            mprf("The light of Elyvilon fails to reach %s.",
+                mons->name(DESC_THE).c_str());
+            return (0);
+        }
+        else if (can_pacify == -3)
+        {
+            mprf("The light of Elyvilon almost touches upon %s.",
+                mons->name(DESC_THE).c_str());
+            return (0);
+        }
+        else if (can_pacify == -4)
+        {
+            mprf("%s is completely unfazed by your meager offer of peace.",
+                mons->name(DESC_THE).c_str());
             return (0);
         }
         else
@@ -346,12 +368,13 @@ static int _healing_spell(int healed, bool divine_ability,
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, bool divine_ability, const coord_def& where,
-                 bool not_self, targ_mode_type mode)
+int cast_healing(int pow, int max_pow, bool divine_ability,
+                 const coord_def& where, bool not_self, targ_mode_type mode)
 {
     pow = std::min(50, pow);
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where,
-                           not_self, mode));
+    max_pow = std::min(50, max_pow);
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
+                           divine_ability, where, not_self, mode));
 }
 
 // Antimagic is sort of an anti-extension... it sets a lot of magical
