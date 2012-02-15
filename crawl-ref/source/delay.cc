@@ -1645,10 +1645,6 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (mon->is_summoned() && atype == DELAY_NOT_DELAYED)
         return false;
 
-    // Mimics announce themselves when revealed.
-    if (mons_is_mimic(mon->type))
-        return false;
-
     if (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM)
     {
         // Only say "comes into view" if the monster wasn't in view
