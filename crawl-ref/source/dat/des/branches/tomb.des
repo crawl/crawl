@@ -13,13 +13,8 @@ TAGS:   tomb_entry no_monster_gen no_item_gen
 MONS:   guardian mummy
 MONS:   sphinx
 # crawl will rotate for the rest of possibilities
-: if crawl.coinflip() then
-KFEAT:  A = =
-KFEAT:  B = c
-: else
-KFEAT:  A = c
-KFEAT:  B = =
-: end
+SHUFFLE: AB
+SUBST:  A = +, B = c
 KFEAT:  O = enter_tomb
 MAP
 cccc.cccc
