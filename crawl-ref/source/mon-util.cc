@@ -858,7 +858,10 @@ void discover_mimic(const coord_def& pos, bool wake)
 
     // Announce the mimic.
     if (mons_near(mimic))
+    {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+        mimic->seen_context = SC_JUST_SEEN;
+    }
 
     // Just in case there's another one.
     if (mimic_at(pos))
