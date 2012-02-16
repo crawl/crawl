@@ -13,37 +13,34 @@ Manual
 A. Overview
 ****************************************
 
-Crawl is a fun game in the grand tradition of games like Rogue, Hack and Moria.
-Your objective is to travel deep into a subterranean cave complex and retrieve
-the Orb of Zot, which is guarded by many horrible and hideous creatures.
+Crawl is a fun game in the grand tradition of similar games like Rogue, Hack
+and Moria. The objective is to travel deep into a subterranean cave complex and
+retrieve the Orb of Zot, guarded by many horrible and hideous creatures.
 
-If you have never played Crawl (or a similar game) before, you may want to pick
-the tutorial from the starting menu. The tutorial explains the interface in five
-easy lessons. Once you're familiar with the controls, you may want to play a few
-games in hints mode.
+If you have never played Crawl (or a similar game) before, select the tutorial
+from the starting menu. The tutorial explains the interface in five easy
+lessons. Once you're familiar with the controls, you may want to play a few
+games using hints mode.
 
 Detailed instructions for playing Crawl follow. To simplify this manual, we
-assume that you use the standard distribution and that you've not changed the
-default options. If you don't want to read the whole manual and would prefer a
-short summary of the important points, look at the quick-start guide
-(quickstart.txt) and learn as you play.
+assume you're using the standard distribution and you've not changed the default
+options. If you don't want to read the whole manual and prefer a short summary
+of the important points, review the quick-start guide file (quickstart.txt) and
+learn as you play.
 
 You can also read these documents while playing Crawl by hitting '?' at the help
-menu. There is also a list of frequently asked questions about gameplay and
-design, best accessed by pressing '?Q' in the game.
+menu. A list of frequently asked questions about gameplay and design can be
+accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can play on a server
-together with many others. These are the relevant webpage and telnet and ssh
-addresses (akrasiac.org is situated in North America, while develz.org is
-located in Europe):
+While Dungeon Crawl is strictly a single player game, you can play with others
+over a server.  The relevant webpage, telnet and ssh addresses are:
 
-
-akrasiac.org
+akrasiac.org (located in North America)
   :http: ``http://crawl.akrasiac.org``
   :telnet: ``crawl.develz.org``
   :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
 
-develz.org
+develz.org (located in Europe)
   :http: ``http://crawl.develz.org``
   :telnet: ``crawl.develz.org:345``
   :ssh: ``crawl@crawl.develz.org (ssh key required)``
@@ -51,15 +48,15 @@ develz.org
 
 ssh key can be obtained at https://crawl.akrasiac.org/cao_key
 
-Connecting to these servers opens up several interesting options. You can:
-  * watch other players, and even communicate with them
+Connecting to a server opens several interesting options. You can:
+  * watch other players and even communicate with them
   * view your past games or those of others
-  * meet ghosts of other players
+  * battle ghosts of other players
   * compete using a common score list
-  * take part in an annual tournament
+  * take part in the annual tournament
   * play the most recent development version on crawl.develz.org
 
-The servers carry no guarantees, though they are pretty much always running and
+The servers carry no guarantees, though they are generally always running and
 no one has lost their save file yet. :) More information is available at the
 URLs above.
 
@@ -3075,7 +3072,7 @@ commands:
   However, it won't protect against lava accidents or hungry jellies.
 
 You can use the autoinscribe option to have some items automatically inscribed.
-See options_guide.txt for details. Some examples are::
+See options_guide.txt for details. Some examples are:
 
   autoinscribe = royal jell:=g
   autoinscribe = wand of healing:!v
