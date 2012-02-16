@@ -2004,7 +2004,9 @@ void bolt::apply_bolt_petrify(monster* mons)
         // If the petrifying is not yet finished, we can force it to happen
         // right away by casting again. Otherwise, the spell has no further
         // effect.
-        mons->del_ench(ENCH_PETRIFYING, true);
+        mons->del_ench(ENCH_PETRIFYING, true, false);
+        // del_ench() would do it, but let's call it ourselves for proper agent
+        // blaming and messaging.
         if (mons->fully_petrify(agent()))
             obvious_effect = true;
     }
