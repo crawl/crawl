@@ -2089,9 +2089,12 @@ bool melee_attack::player_monattk_hit_effects()
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
-    dprf("Special damage to %s: %d, flavour: %d",
-         defender->name(DESC_THE).c_str(),
-         special_damage, special_damage_flavour);
+    if (special_damage || special_damage_flavour)
+    {
+        dprf("Special damage to %s: %d, flavour: %d",
+             defender->name(DESC_THE).c_str(),
+             special_damage, special_damage_flavour);
+    }
 
     special_damage = inflict_damage(special_damage);
 
