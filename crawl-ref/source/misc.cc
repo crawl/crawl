@@ -225,6 +225,7 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
 
 void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
+    item_was_destroyed(item);
     if (!mons_skeleton(item.plus))
         skeleton = B_FALSE;
     if (skeleton == B_TRUE || skeleton == B_MAYBE && one_chance_in(3))

@@ -1469,6 +1469,7 @@ bool trog_burn_spellbooks()
 
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
+            item_was_destroyed(*si);
             destroy_item(si.link());
             count++;
         }
@@ -2006,7 +2007,10 @@ int fedhas_fungal_bloom()
                 if (mons_skeleton(j->plus))
                     turn_corpse_into_skeleton(*j);
                 else
+                {
+                    item_was_destroyed(*j);
                     destroy_item(j->index());
+                }
 
                 seen_mushrooms += seen_per;
 
@@ -2743,7 +2747,10 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         if (mons_skeleton(positions[i]->plus))
             turn_corpse_into_skeleton(*positions[i]);
         else
+        {
+            item_was_destroyed(*positions[i]);
             destroy_item(positions[i]->index());
+        }
     }
 
     viewwindow(false);

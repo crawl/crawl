@@ -617,6 +617,8 @@ static void _note_item_destruction(const item_def &item)
 
 void item_was_destroyed(const item_def &item, int cause)
 {
+    if (item.props.exists("destroy_xp"))
+        gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
     _note_item_destruction(item);
     xom_check_destroyed_item(item, cause);
