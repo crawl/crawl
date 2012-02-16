@@ -68,6 +68,7 @@
 #include "xom.h"
 
 static bool _wounded_damaged(mon_holy_type holi);
+static int _calc_player_experience(const monster* mons);
 
 const item_def* get_mimic_item(const monster* mimic)
 {
@@ -447,6 +448,9 @@ int place_monster_corpse(const monster* mons, bool silent,
     you.montiers[4]++;
 #endif
 
+    if (mons && mons_is_phoenix(mons))
+        corpse.props["destroy_xp"].get_int() = _calc_player_experience(mons);
+
     int o = get_mitm_slot();
 
     // Zotdef corpse creation forces cleanup, otherwise starvation
@@ -466,10 +470,10 @@ int place_monster_corpse(const monster* mons, bool silent,
 
     origin_set_monster(mitm[o], mons);
 
-    if ((mons->flags & MF_EXPLODE_KILL)
-        && explode_corpse(corpse, mons->pos()))
+    if ((mons->flags & MF_EXPLODE_KILL) && explode_corpse(corpse, mons->pos()))
     {
         // We already have a spray of chunks.
+        item_was_destroyed(mitm[o]);
         destroy_item(o);
         return (-1);
     }
@@ -617,8 +621,7 @@ static void _give_monster_experience(int experience, int killer_index)
     }
 }
 
-static int _calc_player_experience(monster* mons, killer_type killer,
-                                   bool pet_kill, int killer_index)
+static int _calc_player_experience(const monster* mons)
 {
     int experience = exper_value(mons);
 
@@ -1575,7 +1578,7 @@ int monster_die(monster* mons, killer_type killer,
     bool unsummoned          = killer == KILL_UNSUMMONED;
     bool timeout             = killer == KILL_TIMEOUT;
     const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
-                                                              M_NO_EXP_GAIN));
+                                M_NO_EXP_GAIN) && !mons_is_phoenix(mons));
 
     bool drop_items    = !hard_reset;
 
@@ -1954,11 +1957,8 @@ int monster_die(monster* mons, killer_type killer,
                 bless_follower();
             }
 
-            if (you.duration[DUR_DEATH_CHANNEL]
-                && gives_xp)
-            {
+            if (you.duration[DUR_DEATH_CHANNEL] && gives_xp)
                 _make_spectral_thing(mons, !death_message);
-            }
             break;
         }
 
@@ -2210,11 +2210,8 @@ int monster_die(monster* mons, killer_type killer,
                     bless_follower(killer_mon);
                 }
 
-                if (you.duration[DUR_DEATH_CHANNEL]
-                    && gives_xp && was_visible)
-                {
+                if (you.duration[DUR_DEATH_CHANNEL] && gives_xp && was_visible)
                     _make_spectral_thing(mons, !death_message);
-                }
             }
             break;
 
@@ -2461,8 +2458,7 @@ int monster_die(monster* mons, killer_type killer,
     unsigned int player_exp = 0, monster_exp = 0;
     if (!mons_reset && !fake_abjuration && !timeout && !unsummoned)
     {
-        player_exp = _calc_player_experience(mons, killer, pet_kill,
-                                             killer_index);
+        player_exp = _calc_player_experience(mons);
         monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
@@ -2542,8 +2538,11 @@ int monster_die(monster* mons, killer_type killer,
         update_screen();
     }
 
-    _give_experience(player_exp, monster_exp, killer, killer_index,
-                     pet_kill, was_visible);
+    if (gives_xp)
+    {
+        _give_experience(player_exp, monster_exp, killer, killer_index,
+                         pet_kill, was_visible);
+    }
 
     return (corpse);
 }

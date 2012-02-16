@@ -1953,6 +1953,7 @@ static void _rot_inventory_food(int time_delta)
                 if (!item.props.exists(ROTTING_WARNED_KEY))
                     num_chunks_gone++;
 
+                item_was_destroyed(item);
                 destroy_item(item);
                 burden_changed_by_rot = true;
 
@@ -1971,6 +1972,7 @@ static void _rot_inventory_food(int time_delta)
                 else
                     num_corpses_gone++;
 
+                item_was_destroyed(item);
                 destroy_item(item);
                 burden_changed_by_rot = true;
                 continue;
@@ -3190,6 +3192,7 @@ void update_corpses(int elapsedTime)
                 if (it.sub_type == CORPSE_SKELETON
                     || !mons_skeleton(it.plus))
                 {
+                    item_was_destroyed(it);
                     destroy_item(c);
                 }
                 else

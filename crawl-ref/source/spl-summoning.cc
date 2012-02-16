@@ -1709,6 +1709,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     _equip_undead(pos, corps, mons, monnum);
 
     // Destroy the monster's corpse, as it's no longer needed.
+    item_was_destroyed(item);
     destroy_item(corps);
 
     if (!force_beh)
@@ -2216,6 +2217,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                     total_mass += mons_weight(si->plus);
 
                 ++num_corpses;
+                item_was_destroyed(*si);
                 destroy_item(si->index());
             }
         }
