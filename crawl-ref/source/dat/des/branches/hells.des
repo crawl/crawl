@@ -8,15 +8,18 @@ function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
    e.lflags("no_tele_control")
-   e.lua_marker('O', item_pickup_change_flags {
-                     level_flags="!no_tele_control", item="auto" } )
-   e.kmask('O = no_item_gen')
-   e.kitem('O = iron rune of Zot')
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
    dgn.set_feature_desc_short("granite statue", "iron statue")
    dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. " ..
                              "You can't help but feel like it's watching you.\n")
+end
+
+function dis_rune(e)
+   e.lua_marker('O', item_pickup_change_flags {
+                     level_flags="!no_tele_control", item="auto" } )
+   e.kmask('O = no_item_gen')
+   e.kitem('O = iron rune of Zot')
 end
 
 function geh_setup(e)
@@ -659,73 +662,120 @@ ENDMAP
 
 
 ##############################################################################
-# Dispater's castle - rest of level filled up with plan_4 (irregular city)
+# Dispater's castle - subvaulted, with two main versions
 ##############################################################################
+NAME:     iron_city_of_dis
+TAGS:     no_rotate
+WEIGHT:   20
+ORIENT:   north
+SUBVAULT: A : dis_castle
+SUBVAULT: B : dis_divider
+: dis_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+ENDMAP
 
 NAME:    dis_old
 ORIENT:  north
-MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+TAGS:    dis_castle no_rotate no_vmirror
+MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, \
+         metal gargoyle, iron dragon
+KMONS:   7 = pit fiend
+KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
-: dis_setup(_G)
+: dis_rune(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxx
-xxxxxxxxv..............................................................vxxxxxxxx
-xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
-xxxxxxxxv..v3.....|v........................................v|.....2v..vxxxxxxxx
-xxxxxxxxv..v.vv+vvvv.v.v.v.v.v.v.v.v.v..v.v.v.v.v.v.v.v.v.v.vvvv+vv.v..vxxxxxxxx
-xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
-xxxxxxxxv..v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v..vxxxxxxxx
-xxxxxxxxv..vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv..vxxxxxxxx
-xxxxxxxxv....vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5...vxxxxxxxx
-xxxxxxxxv...vvv................v.......D.......vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv................+...............+.................vv....vxxxxxxxx
-xxxxxxxxv...vvv+vvvvvvvvvvvvvvvv.v..v..v..v..v.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv....vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv..v.v$$$$$v.....v...............vv|$|$|vv|$|$|$vv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv..v.vvvvvvv.....vvvvv.......vvvvvv$|$|$++$|$|$|vv.vv....vxxxxxxxx
-xxxxxxxxv...vvv..v...............v.vvvv+vvvvvvvvvvvvvvvvvvvvv+vv.vvv...vxxxxxxxx
-xxxxxxxxv....vvv+v..........vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvv+vv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv..v.v..v..v....2vvv+vv5...5vvvvvvv.4.4.vv.4.4.4vv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv.................vv|vvv...vvvvv.++4.4.4++4.4.4.vv.vv....vxxxxxxxx
-xxxxxxxxv...vvv.................1vOvv5...5vvvv.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv....vv.................vv|vvv...vvvvv.vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv.v..v..v..v....3vvv+vv5...5vvvv...................vvv...vxxxxxxxx
-xxxxxxxxv...5vv.............vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvvvvv.vv....vxxxxxxxx
-xxxxxxxxv..vvvv+vvvv.............v.vv5...5vvvvvvvvvvvvvvvvvvvvvv+vvvv..vxxxxxxxx
-xxxxxxxxv..v|v.....vvvvvvvvvvvvvvvvvvv...vvvvvvvvvvvvvvvvvvvv.....v|v..vxxxxxxxx
-xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
-xxxxxxxxv..v.vv+vvvv5.............5.........5..............5vvvv+vv.v..vxxxxxxxx
-xxxxxxxxv..v2.....|v........................................v|.....3v..vxxxxxxxx
-xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
-xxxxxxxxv............................{.[.(.............................vxxxxxxxx
+....................................................................
+.....vvvvvvvvv........................................vvvvvvvvv.....
+.....v3.....|v........................................v|.....2v.....
+.....v.vv+vvvv.v.v.v.v.v.v.v.v.v..v.v.v.v.v.v.v.v.v.v.vvvv+vv.v.....
+.....v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v.....
+.....v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v.....
+.....vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv.....
+.......vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5......
+......vvv................v7.............7vvvvvvvvvvvvvvvvv.vvv......
+......5vv................+...............+.................vv.......
+......vvv+vvvvvvvvvvvvvvvv8v..v..v..v..v8vvvvvvvvvvvvvvvvv.vvv......
+.......vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5......
+......vvv.Dv.v$$$$$v.....v...............vv|$|$|vv|$|$|$vv.vvv......
+......5vv7.v.vvvvvvv.....vvvvv.......vvvvvv$|$|$++$|$|$|vv.vv.......
+......vvv..v...............v.vvvv+vvvvvvvvvvvvvvvvvvvvv+vv.vvv......
+.......vvv+v..........vvvvv4.vvv...vvvvvvvvvvvvvvvvvvvv+vv.vv5......
+......vvv..v.v..v..v....2vvv+vv5...5vvvvvvv.4.4.vv.4.4.4vv.vvv......
+......5vv.................vv|vvv...vvvvv.++4.4.4++4.4.4.vv.vv.......
+......vvv.................1vOvv5...5vvvv.vvvvvvvvvvvvvvvvv.vvv......
+.......vv.................vv|vvv...vvvvv.vvvvvvvvvvvvvvvvv.vv5......
+......vvv.v..v..v..v....3vvv+vv5...5vvvv...................vvv......
+......5vv.............vvvvv4.vvv...vvvvvvvvvvvvvvvvvvvvvvv.vv.......
+.....vvvv+vvvv.............v.vv5...5vvvvvvvvvvvvvvvvvvvvvv+vvvv.....
+.....v|v.....vvvvvvvvvvvvvvvvvvv...vvvvvvvvvvvvvvvvvvvv.....v|v.....
+.....v.v.....vvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv.....v.v.....
+.....v.vv+vvvv5.............5.........5..............5vvvv+vv.v.....
+.....v2.....|v........................................v|.....3v.....
+.....vvvvvvvvv........................................vvvvvvvvv.....
+....................................................................
+....................................................................
 ENDMAP
-
-
-##############################################################################
-# Dispater - new map by Mu, featuring iron golems and iron trolls
-##############################################################################
 
 NAME:    dis_mu
 ORIENT:  north
+TAGS:    dis_castle no_rotate no_vmirror
 KFEAT:   o = granite_statue
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, \
+         metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
+KMONS:   9 = pit fiend
+KMONS:   0 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
-: dis_setup(_G)
+: dis_rune(_G)
 # Use master/slave setup.
 MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
@@ -733,43 +783,189 @@ MARKER:  o = lua:monster_on_death { \
             message_unseen="You hear a grinding sound.", \
             monster_place_feature=dgn.fnum("granite_statue"), \
             veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_shatter="veto" \
          }
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxx
-xxxxxxv..................................................................vxxxxxx
-xxxxxxv..............................................v5v..v5v............vxxxxxx
-xxxxxxv..............................................vvvvvvvv............vxxxxxx
-xxxxxxv..........v5v5v...v5v5v...v5v5v...v5v5v.....vvv...4..vvv..........vxxxxxx
-xxxxxxv..........vvvvv...vvvvv...vvvvv...vvvvv...vvv.+..88..+.vvv........vxxxxxx
-xxxxxxv..........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv.......vxxxxxx
-xxxxxxv..........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv......vxxxxxx
-xxxxxxv..........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
-xxxxxxv........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v.....vxxxxxx
-xxxxxxv.......vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
-xxxxxxv.....vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v....vxxxxxx
-xxxxxxv....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v...v.v...v...vvvv|vvo2......vvv...v5..vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv...vv..vxxxxxx
-xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v...vxxxxxx
-xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6.........+..o.v...vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv...vv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5..vxxxxxx
-xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv..vxxxxxx
-xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v....vxxxxxx
-xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
-xxxxxxv........vvvv+vvW8Wv$$$vvvvvv..v...v..vvv..vvv.........vvvv..v.....vxxxxxx
-xxxxxxv..........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
-xxxxxxv..........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv......vxxxxxx
-xxxxxxv..........v|||v...v|||v...vvvvv...vvvvv..vv...v...4..v...vv.......vxxxxxx
-xxxxxxv..........vvvvv...vvvvv...vvv8v+++v8vvv...vvv.+..88..+.vvv........vxxxxxx
-xxxxxxv..........v5v5v...v5v5v...v.v.v...v.v.v.....vvv...4..vvv..........vxxxxxx
-xxxxxxv..............................................vvvvvvvv............vxxxxxx
-xxxxxxv..........................7...........7.......v5v..v5v............vxxxxxx
-xxxxxxv.........................7....{.[.(....7..........................vxxxxxx
-xxxxxxv..........................7...........7...........................vxxxxxx
+....................................................................
+...............................................v5v..v5v.............
+...............................................vvvvvvvv.............
+...........v5v5v...v5v5v...v5v5v...v5v5v.....vvv...4..vvv...........
+...........vvvvv...vvvvv...vvvvv...vvvvv...vvv.+..88..+.vvv.........
+...........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv........
+...........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv.......
+...........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv......
+.........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v......
+........vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$vvv...vvvv.vv.....
+......vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v.....
+.....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv...
+...vvv.8W..vvvvvvvvvvvvvv$$$v...v9v...v...vvvv|vvo2......vvv...v5...
+...5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv9..vv...
+...vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v....
+...vvv.WW..+................+..5.W.5..v...vvvv|v0.........+..o.v....
+...5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv9..vv...
+...vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5...
+.....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv...
+......vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v.....
+.......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv.....
+.........vvvv+vvW8Wv$$$vvvvvv.0v...v0.vvv..vvv.........vvvv..v......
+...........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv......
+...........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv.......
+...........v|||v...v|||v...vvvvv...vvvvv..vv...v...4..v...vv........
+...........vvvvv...vvvvv...vvv8v+++v8vvv...vvv.+..88..+.vvv.........
+...........v5v5v...v5v5v...v.v.v...v.v.v.....vvv...4..vvv...........
+............................7.........7........vvvvvvvv.............
+...........................7...........7.......v5v..v5v.............
+............................7.........7.............................
 ENDMAP
 
+NAME:    dis_wall_1
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    pit fiend, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv...1..1...vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv..............2...2..2................2..2...2..............vvvv
+ENDMAP
+
+NAME:    dis_wall_2
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    pit fiend, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvnnvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv.1..+............+...1..1...+............+..1.vvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv2...vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv...2vvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv.......2......2......2................2......2......2.......vvvv
+ENDMAP
+
+NAME:    dis_wall_3
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    pit fiend, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv........vvvvvvvvvvvvvvvvvvvv10vvvvvvvvvvvvvvvvvvvvvv........vvvv
+vvvv.v.21.v..............................................v.12.v.vvvv
+vvvv.v....v..............................................v....v.vvvv
+vvvv........vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv........vvvv
+vvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvv
+vvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvv
+vvvv.2....2..............................................2....2.vvvv
+ENDMAP
+
+NAME:    dis_wall_4
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = pit fiend
+KMONS:   2 = iron dragon
+KFEAT:   12 = deep_water
+KMASK:   w = no_monster_gen
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv................vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwwwwwwwwwwwww2wwwwwww..wwwww11wwwww..wwwwwww2wwwwwwwwwwwwwwvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvv....................................................vvvvvvvv
+vvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvv
+vvvvwwww..wwwww2wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww2wwwww..wwwwvvvv
+vvvvwwww..wwwww2wwwwwwwwwwwwwwwww22wwwwwwwwwwwwwwwww2wwwww..wwwwvvvv
+ENDMAP
+
+NAME:    dis_wall_5
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = pit fiend
+KMONS:   2 = iron dragon
+KFEAT:   2 = deep_water
+KMASK:   w = no_monster_gen
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwww2www2wwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwww2wwww2wwwwvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwww....................................................ww2wvvvv
+vvvvww2w.........................11.........................wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+ENDMAP
+
+NAME:    dis_wall_6
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = pit fiend
+KMONS:   2 = iron dragon
+MAP
+....................................................................
+vvvvvvvvvvv+++vvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvv+++vvvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvv.....vvvvvvvvvvvvvvvv......vvvvvvvvvvvvvvvv.....vvvvvvvvvv
+vvvvvvvvvvv.1.vvvvvvvvvvvvvvvvvv..1.vvvvvvvvvvvvvvvvvv.1.vvvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvv2...2vvvvvvvvvvvvvvvv2....2vvvvvvvvvvvvvvvv2...2vvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvvv+++vvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvv+++vvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+NAME:    dis_wall_7
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = pit fiend
+KMONS:   2 = iron dragon
+MAP
+vvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvv...2..vvvvvvvvvv........vvvvvvvvvv..2...vvvvvvvvvvvvvv
+vvvvvvvvvvvvvv..2...vvvvvvvvv..1....1..vvvvvvvvv...2..vvvvvvvvvvvvvv
+vvvvvvvvvvvvvv......vvvvvvvv............vvvvvvvv......vvvvvvvvvvvvvv
+vvvvvvvvvvvvvvv.....+......+............+......+.....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv............vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv.2........2.vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv............vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+NAME:    dis_wall_8
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = pit fiend
+KMONS:   2 = iron dragon
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvv2..vvvv....vvvv..2vvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv2vvv.v........v.vvv2vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv.vvv.....11.....vvv.vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv.vvv.v........v.vvv.vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvv...vvvv2..2vvvv...vvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+##############################################################################
+# City of Dis by st
+##############################################################################
 NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, pit fiend
@@ -784,6 +980,7 @@ NSUBST:  _ = 4:4 / *:.
 COLOUR:  G = cyan
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
+: dis_rune(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v...........................v.....v........v.0...v.............v.....v
