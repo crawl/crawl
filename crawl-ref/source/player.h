@@ -149,7 +149,6 @@ public:
   int manual_index;
 
   int  skill_cost_level;
-  int  total_skill_points;
   int  exp_available;
   int  zot_points; // ZotDef currency
 
