@@ -371,7 +371,7 @@ static void _check_start_train()
     for (skill_set_iter it = you.start_train.begin();
              it != you.start_train.end(); ++it)
     {
-        if (is_invalid_skill(*it))
+        if (is_invalid_skill(*it) || is_useless_skill(*it))
             continue;
 
         if (!you.can_train[*it] && you.train[*it])
