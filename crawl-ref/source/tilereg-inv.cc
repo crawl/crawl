@@ -624,7 +624,7 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     desc.flag = 0;
     if (item.cursed())
         desc.flag |= TILEI_FLAG_CURSE;
-    if (item_type_tried(item))
+    if (item.flags & ISFLAG_TRIED)
         desc.flag |= TILEI_FLAG_TRIED;
     if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
