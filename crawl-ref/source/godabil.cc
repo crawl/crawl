@@ -752,9 +752,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
         return (false);
 
     // To what degree are they eligible for this prayertype?
-    int degree = eligibility[prayertype];
-    bool minor = degree <= ((prayertype == RECITE_HERETIC) ? 2 : 1);
-    int spellpower = power * 2 + degree * 20;
+    const int degree = eligibility[prayertype];
+    const bool minor = degree <= ((prayertype == RECITE_HERETIC) ? 2 : 1);
+    const int spellpower = power * 2 + degree * 20;
     zin_eff effect = ZIN_NOTHING;
 
     switch (prayertype)
