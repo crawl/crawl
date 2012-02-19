@@ -730,7 +730,7 @@ static void _describe_airborne(status_info* inf)
 
     if (wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
-        inf->light_colour = you.light_flight() ? BLUE : MAGENTA;
+        inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
         inf->light_text   = "Fly";
         inf->short_text   = "flying";
         inf->long_text    = "You are flying.";
