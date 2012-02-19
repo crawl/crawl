@@ -1834,14 +1834,18 @@ static void tag_read_you(reader &th)
 
     // How many you.equip?
     count = unmarshallByte(th);
-    ASSERT(count == NUM_EQUIP);
+    ASSERT(count <= NUM_EQUIP);
     for (i = 0; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
         ASSERT(you.equip[i] >= -1 && you.equip[i] < ENDOFPACK);
     }
+    for (i = count; i < NUM_EQUIP; ++i)
+        you.equip[i] = -1;
     for (i = 0; i < count; ++i)
         you.melded[i] = unmarshallBoolean(th);
+    for (i = count; i < NUM_EQUIP; ++i)
+        you.melded[i] = false;
 #if TAG_MAJOR_VERSION == 32
     if (player_genus(GENPC_DRACONIAN))
     {
