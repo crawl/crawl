@@ -729,26 +729,6 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
     return (rv);
 }
 
-// Apply func to one square of player's choice beside the player.
-int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
-{
-    dist bmove;
-    direction_chooser_args args;
-    args.restricts = DIR_DIR;
-    args.mode = TARG_ANY;
-
-    mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction(bmove, args);
-
-    if (!bmove.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
-    return cf(you.pos() + bmove.delta, power, 1, agent);
-}
-
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        const actor *agent,
