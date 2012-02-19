@@ -1099,9 +1099,10 @@ hound
 
 A fearsome hunting dog, lithe and alert. Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
 %%%%
+# Stolen from http://rustyandco.com/frequently-asked-questions/monster-guide/
 human
 
-A remarkably nondescript person. How odd.
+An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as fragile, elves think of them as clumsy, and monsters think of them as tasty.
 %%%%
 hungry ghost
 
