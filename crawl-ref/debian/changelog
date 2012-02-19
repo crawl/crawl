@@ -1,3 +1,18 @@
+crawl (2:0.10.0-1) unstable; urgency=low
+
+  [ Adam Borowski ]
+  * New upstream release.
+  * Obey flags set by dpkg-buildflags.
+  * Work around breakage of quiltless workflows in dpkg 1.16.1.
+  * Correct a symlink to the 32x32 icon. Closes: #647464
+  * Install the SVG icon as well.
+  * Don't request wizmode, it is compiled in by default.
+
+  [ Guus Sliepen ]
+  * Don't let the upstream Makefile strip binaries.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 17 Feb 2012 21:17:51 +0100
+
 crawl (2:0.9.1-1) unstable; urgency=low
 
   * New upstream bugfix release.
