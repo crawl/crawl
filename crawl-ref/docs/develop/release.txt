@@ -22,7 +22,7 @@ for those the list begins with step 3.
     different.
 
 3.  Wait and fix some bugs
-    Wait at least 2-3 weeks for bug reports, and fix all severe old ones. 
+    Wait at least 2-3 weeks for bug reports, and fix all severe old ones.
     When fixing bugs concentrate on the important ones (crashes and
     gamebreakers), but you might also want to handle the trivial ones for
     extra polishing.  Do not EVER add any last minute features unless they

@@ -33,7 +33,7 @@ function init_undead(e)
   e.kmons('t = w:2 col:darkgrey plant name:withered name_adjective \
             tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
             name_adjective tile:mons_withered_plant')
-  
+
   e.tile('G = dngn_gravestone')
   e.lua_marker('G', portal_desc { desc = "a gravestone",
                                   desc_long = "An ancient gravestone.\n" })
