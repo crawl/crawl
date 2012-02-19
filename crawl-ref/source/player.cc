@@ -5058,7 +5058,8 @@ void dec_napalm_player(int delay)
 
         mpr("You are covered in liquid flames!", MSGCH_WARN);
 
-        expose_player_to_element(BEAM_NAPALM, 12);
+        expose_player_to_element(BEAM_NAPALM,
+                                 div_rand_round(delay * 12, BASELINE_DELAY));
 
         const int res_fire = player_res_fire();
 
