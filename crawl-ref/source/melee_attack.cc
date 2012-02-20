@@ -808,7 +808,7 @@ bool melee_attack::attack()
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
     const int ev = defender->melee_evasion(attacker);
-    ev_margin = test_hit(to_hit, ev);
+    ev_margin = test_hit(to_hit, ev, (attacker->atype() != ACT_PLAYER));
     bool shield_blocked = attack_shield_blocked(true);
 
     // Stuff for god conduct, this has to remain here for scope reasons.
@@ -3671,6 +3671,9 @@ int melee_attack::calc_to_hit(bool random)
                  && defender->umbra(true, true))
             mhit -= 2 + random2(4);
     }
+    // Don't delay doing this roll until test_hit().
+    if (attacker->atype() != ACT_PLAYER)
+        mhit = random2(mhit + 1);
 
     dprf("%s: Base to-hit: %d, Final to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(),
@@ -4529,7 +4532,7 @@ void melee_attack::do_spines()
 
     if (mut && attacker->alive() && one_chance_in(evp + 1))
     {
-        if (test_hit(2 + 4 * mut, attacker->melee_evasion(defender)) < 0)
+        if (test_hit(random2(3 + 4 * mut), attacker->melee_evasion(defender), true) < 0)
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
@@ -4863,36 +4866,22 @@ int melee_attack::calc_stat_to_hit_base()
     return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
 }
 
-int melee_attack::test_hit(int to_land, int ev)
+int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
-
+    if (randomise_ev)
+        ev = random2avg(2*ev, 2);
     if (to_land >= AUTOMATIC_HIT)
         return (true);
     else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
-    else if (attacker->atype() == ACT_PLAYER)
-        margin = to_land - ev;
     else
-    {
-        roll = random2(to_land + 1);
-        margin = (roll - random2avg(2*ev, 2));
-    }
+        margin = to_land - ev;
 
 #ifdef DEBUG_DIAGNOSTICS
-    // Giving less info for now, since this is better than giving incorrect
-    // info.
-    if (attacker->atype() == ACT_PLAYER)
-    {
-        dprf("to hit: %d; ev: %d; result: %s (%d)",
+    dprf("to hit: %d; ev: %d; result: %s (%d)",
          to_hit, ev, (margin >= 0) ? "hit" : "miss", margin);
-    }
-    else
-    {
-        dprf("to hit: %d; to hit roll: %d; ev: %d; result: %s (%d)",
-             to_hit, roll, ev, (margin >= 0) ? "hit" : "miss", margin);
-    }
 #endif
 
     return (margin);

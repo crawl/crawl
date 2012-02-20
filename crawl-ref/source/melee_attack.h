@@ -75,7 +75,7 @@ private:
     bool handle_constriction();
 
     /* Combat Calculations */
-    int test_hit(int to_hit, int ev);
+    int test_hit(int to_hit, int ev, bool randomise_ev);
     int calc_base_unarmed_damage();
     int calc_base_weapon_damage();
     int calc_damage();
