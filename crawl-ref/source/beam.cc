@@ -24,7 +24,6 @@
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dungeon.h"
@@ -1135,7 +1134,7 @@ bool bolt::hit_wall()
         && !feat_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
-        // of the player manually targeting something whose line of fire
+        // of the player manually targetting something whose line of fire
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         std::string prompt = "Your line of fire to ";
@@ -1351,7 +1350,7 @@ void bolt::do_fire()
     if (item && !is_tracer && flavour == BEAM_MISSILE)
     {
         const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
+        tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
     }
 #endif
 
@@ -1982,6 +1981,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
     if (!mons_is_immotile(mons)
         && simple_monster_message(mons, " suddenly stops moving!"))
     {
+        mons->stop_constricting_all();
         obvious_effect = true;
     }
 
@@ -2004,7 +2004,9 @@ void bolt::apply_bolt_petrify(monster* mons)
         // If the petrifying is not yet finished, we can force it to happen
         // right away by casting again. Otherwise, the spell has no further
         // effect.
-        mons->del_ench(ENCH_PETRIFYING, true);
+        mons->del_ench(ENCH_PETRIFYING, true, false);
+        // del_ench() would do it, but let's call it ourselves for proper agent
+        // blaming and messaging.
         if (mons->fully_petrify(agent()))
             obvious_effect = true;
     }
@@ -2506,20 +2508,20 @@ void bolt::affect_ground()
             beh_type beh = attitude_creation_behavior(this->attitude);
 
             if (crawl_state.game_is_arena())
-            {
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
-            }
 
-            int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                              beh,
-                                              NULL,
-                                              0,
-                                              0,
-                                              pos(),
-                                              MHITNOT,
-                                              MG_FORCE_PLACE));
+            const god_type god = this->agent() ? this->agent()->deity()
+                                               : GOD_NO_GOD;
 
-            if (rc != -1)
+            if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                         beh,
+                                         NULL,
+                                         0,
+                                         0,
+                                         pos(),
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         god)))
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))
@@ -2803,7 +2805,7 @@ void bolt::internal_ouch(int dam)
             if (aimed_at_feet && effect_known)
                 ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
             else
-                ouch(dam, NON_MONSTER, KILLED_BY_TARGETING);
+                ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
         }
     }
     else if (MON_KILL(thrower))
@@ -3251,7 +3253,10 @@ void bolt::affect_player_enchantment()
             mpr("This is polymorph other only!");
         }
         else
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            msg_generated = true; // to avoid duplicate "nothing happens"
+        }
         break;
 
     case BEAM_SLOW:
@@ -4065,15 +4070,17 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
         bool was_asleep = mon->asleep();
-        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+        special_missile_type m_brand = SPMSL_FORBID_BRAND;
+        if (item && item->base_type == OBJ_MISSILES)
+            m_brand = get_ammo_brand(*item);
+
+        // Don't immediately turn insane monsters hostile.
+        if (m_brand != SPMSL_RAGE)
+            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
         // Don't allow needles of sleeping to awaken monsters.
-        if (item && item->base_type == OBJ_MISSILES
-            && get_ammo_brand(*item) == SPMSL_SLEEP
-            && was_asleep && !mon->asleep())
-        {
+        if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
             mon->put_to_sleep(agent(), 0);
-        }
     }
 
     // Sticky flame.
@@ -4695,18 +4702,24 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     switch (flavour)
     {
     case BEAM_TELEPORT:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         monster_teleport(mon, false);
         return (MON_AFFECTED);
 
     case BEAM_BLINK:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         monster_blink(mon);
         return (MON_AFFECTED);
 
     case BEAM_BLINK_CLOSE:
+        if (mon->no_tele())
+            return (MON_UNAFFECTED);
         if (mon->observable())
             obvious_effect = true;
         blink_other_close(mon, source);
@@ -4915,6 +4928,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
+            obvious_effect = true;
             return (MON_OTHER);
         }
 

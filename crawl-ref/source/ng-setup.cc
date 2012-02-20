@@ -330,7 +330,6 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_TENTACLES]       = 3;
-        you.mutation[MUT_BEAK]            = 1;
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
@@ -511,11 +510,9 @@ static void _give_items_skills(const newgame_def& ng)
         // Skills.
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 3;
+        you.skills[SK_ARMOUR]   = 3;
 
         weap_skill = (you.species == SP_FELID) ? 4 : 2;
-
-        you.skills[(player_effectively_in_light_armour()
-                   ? SK_DODGING : SK_ARMOUR)] = 3;
 
         break;
 
@@ -598,7 +595,7 @@ static void _give_items_skills(const newgame_def& ng)
         {
             you.skills[SK_DODGING]++;
             if (!is_useless_skill(SK_ARMOUR))
-                you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
+                you.skills[SK_ARMOUR]++; // converted later
         }
         break;
 
@@ -1018,15 +1015,8 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_UNARMED_COMBAT] += you.skills[i];
             you.skills[i] = 0;
         }
-        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
-        you.skills[SK_ARMOUR] = 0;
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
-    }
-    if (you.species == SP_OCTOPODE || you.species == SP_BASE_DRACONIAN)
-    {
-        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
-        you.skills[SK_ARMOUR] = 0;
     }
 
     if (you.religion != GOD_NO_GOD)
@@ -1385,7 +1375,6 @@ static void _setup_generic(const newgame_def& ng)
         }
 
     reassess_starting_skills();
-    calc_total_skill_points();
     init_skill_order();
     init_can_train();
     init_train();
@@ -1442,8 +1431,4 @@ static void _setup_generic(const newgame_def& ng)
     // Create the save file.
     you.save = new package(get_savedir_filename(you.your_name).c_str(),
                            true, true);
-
-    // Pretend that a savefile was just loaded, in order to
-    // get things setup properly.
-    SavefileCallback::post_restore();
 }

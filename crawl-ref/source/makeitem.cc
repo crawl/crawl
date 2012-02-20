@@ -188,9 +188,6 @@ static int _armour_colour(const item_def &item)
     std::string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
-    if (is_artefact(item))
-        return (_exciting_colour());
-
     switch (item.sub_type)
     {
       case ARM_CLOAK:
@@ -240,15 +237,15 @@ static int _armour_colour(const item_def &item)
 
 void item_colour(item_def &item)
 {
+    if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
+        return; // unrandarts have already been coloured
+
     int switchnum = 0;
     int temp_value;
 
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
-            break;              // unrandarts have already been coloured
-
         if (is_demonic(item))
             item.colour = random_uncommon_colour();
         else
@@ -260,8 +257,11 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_ARMOUR:
-        if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
-            break;              // unrandarts have already been coloured
+        if (is_artefact(item))
+        {
+            item.colour = _exciting_colour();
+            return;
+        }
 
         switch (item.sub_type)
         {
@@ -305,10 +305,6 @@ void item_colour(item_def &item)
             item.colour = _armour_colour(item);
             break;
         }
-
-        // I don't think this is ever done -- see start of case {dlb}:
-        if (is_random_artefact(item) && one_chance_in(5))
-            item.colour = random_colour();
         break;
 
     case OBJ_WANDS:
@@ -2831,8 +2827,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     {
         int max_level  = std::min(9, std::max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
-        int max_spells = 5 + spl_level/3;
-        make_book_level_randart(item, spl_level, max_spells);
+        make_book_level_randart(item, spl_level);
     }
 }
 

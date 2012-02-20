@@ -39,7 +39,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_default opc_default;
+extern const opacity_default opc_default;
 
 // Default LOS rules, but only consider fully opaque features blocking.
 // In particular, clouds don't affect the result.
@@ -50,7 +50,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_fullyopaque opc_fullyopaque;
+extern const opacity_fullyopaque opc_fullyopaque;
 
 // Make transparent features block in addition to normal LOS.
 // * Translocations opacity: blink, apportation, portal projectile.
@@ -62,7 +62,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_no_trans opc_no_trans;
+extern const opacity_no_trans opc_no_trans;
 
 // Make immobile monsters block in addition to no_trans.
 // This is used for monster movement.
@@ -73,7 +73,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_immob opc_immob;
+extern const opacity_immob opc_immob;
 
 // Line of effect.
 class opacity_solid : public opacity_func
@@ -83,7 +83,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_solid opc_solid;
+extern const opacity_solid opc_solid;
 
 // Both line of sight and line of effect.
 class opacity_solid_see : public opacity_func
@@ -93,7 +93,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_solid_see opc_solid_see;
+extern const opacity_solid_see opc_solid_see;
 
 // Opacity for monster movement, based on the late monster_los.
 class opacity_monmove : public opacity_func
@@ -120,7 +120,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_no_actor opc_no_actor;
+extern const opacity_no_actor opc_no_actor;
 
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between

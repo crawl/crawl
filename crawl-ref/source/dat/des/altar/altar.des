@@ -362,8 +362,8 @@ ENDMAP
 #       access the altar early.
 #
 NAME:  lemuel_hellish_altar
-DEPTH: D:2-21, Crypt, Geh
-TAGS:  no_monster_gen
+DEPTH: D:8-21, Crypt, Geh
+TAGS:  no_monster_gen mini_float
 MONS:  iron devil/orange demon
 MONS:  hell beast/rotting devil
 MONS:  lemure/iron imp
@@ -380,17 +380,18 @@ KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
 KPROP: 1234_ = no_rtele_into
 MAP
-  ..LLllLL....
-  .LllllllLLL..
-..Lll323lllLLL.
-.LLl32123lllLL.
-.LLl33_33llLL..
-..Lll323llLL...
-..LLll3llL.....
-...LLlllL...
-....LLLL....
-   ..LLLLL..
-   ....LLLL.
+....LLLLL.....
+..LlllllllL...
+.LlllllllllLL..
+.Llll323lllLLL.
+LLll32123lllLL.
+LLll33_33llLL..
+.Llll323lllL...
+.Lllll3llllL...
+..LlllllllL...
+...LlllllL...
+ ...LLLLLL..
+   ..LLLLLL.
 ENDMAP
 
 # Distorted/chaotic kobolds, to Lugonu or Xom (Jude)

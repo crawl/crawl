@@ -11,6 +11,7 @@
 
 #include "areas.h"
 #include "artefact.h"
+#include "coordit.h"
 #include "dgnevent.h"
 #include "env.h"
 #include "food.h"
@@ -67,6 +68,8 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     crawl_view.set_player_at(c);
     set_position(c);
+
+    clear_far_constrictions();
 
     if (player_has_orb())
     {
@@ -128,7 +131,8 @@ bool player::extra_balanced() const
     return (grid == DNGN_SHALLOW_WATER
              && (species == SP_NAGA                      // tails, not feet
                  || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                    && !form_changed_physiology());
+                    && (form == TRAN_LICH || form == TRAN_STATUE
+                        || !form_changed_physiology()));
 }
 
 int player::get_experience_level() const
@@ -317,6 +321,10 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     // Anybody can wield missiles to enchant, item_mass permitting
     if (item.base_type == OBJ_MISSILES)
+        return (true);
+
+    // Or any other object, although there's no point here.
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
         return (true);
 
     // Small species wielding large weapons...
@@ -680,4 +688,17 @@ bool player::is_web_immune() const
 {
     // Spider form
     return (can_cling_to_walls());
+}
+
+bool player::shove(const char* feat_name)
+{
+    for (distance_iterator di(pos()); di; ++di)
+        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di)))
+        {
+            moveto(*di);
+            mprf("You are pushed out of the %s.", feat_name);
+            dprf("Moved to (%d, %d).", pos().x, pos().y);
+            return true;
+        }
+    return false;
 }

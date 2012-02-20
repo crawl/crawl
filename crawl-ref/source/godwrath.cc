@@ -26,7 +26,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "makeitem.h"
 #include "mon-stuff.h"
 #include "mutation.h"
@@ -77,7 +76,7 @@ static bool _yred_random_zombified_hostile()
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    return (create_monster(temp, false) != -1);
+    return create_monster(temp, false);
 }
 
 static bool _okawaru_random_servant()
@@ -103,7 +102,7 @@ static bool _okawaru_random_servant()
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    return (create_monster(temp, false) != -1);
+    return create_monster(temp, false);
 }
 
 static bool _tso_retribution()
@@ -427,7 +426,7 @@ static bool _makhleb_retribution()
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false) != -1;
+        bool success = create_monster(temp, false);
 
         simple_god_message(success ? " sends a greater servant after you!"
                                    : "'s greater servant is unavoidably "
@@ -449,10 +448,8 @@ static bool _makhleb_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 count++;
-            }
         }
 
         simple_god_message(count > 1 ? " sends minions to punish you." :
@@ -690,16 +687,14 @@ static bool _beogh_retribution()
                                                     : WPN_HALBERD);
 
             // Now create monster.
-            const int mon =
+            if (monster *mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
                         "the wrath of Beogh",
-                        true, 0, 0, you.pos(), 0, god));
-
-            if (mon != -1)
+                        true, 0, 0, you.pos(), 0, god)))
             {
-                ASSERT(menv[mon].weapon() != NULL);
-                item_def& wpn(*menv[mon].weapon());
+                ASSERT(mon->weapon() != NULL);
+                item_def& wpn(*mon->weapon());
 
                 if (am_orc)
                 {
@@ -723,14 +718,14 @@ static bool _beogh_retribution()
 
                 item_colour(wpn);
 
-                menv[mon].flags |= (MF_NO_REWARD | MF_HARD_RESET);
+                mon->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
                 ghost_demon newstats;
                 newstats.init_dancing_weapon(wpn,
                                              you.experience_level * 50 / 9);
 
-                menv[mon].set_ghost(newstats);
-                menv[mon].ghost_demon_init();
+                mon->set_ghost(newstats);
+                mon->ghost_demon_init();
 
                 num_created++;
             }
@@ -776,15 +771,15 @@ static bool _beogh_retribution()
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        int mons = create_monster(temp, false);
+        monster *mons = create_monster(temp, false);
 
         // sometimes name band leader
-        if (mons != -1 && one_chance_in(3))
-            give_monster_proper_name(&menv[mons]);
+        if (mons && one_chance_in(3))
+            give_monster_proper_name(mons);
 
         simple_god_message(
-            mons != -1 ? " sends forth an army of orcs."
-                       : " is still gathering forces against you.", god);
+            mons ? " sends forth an army of orcs."
+                 : " is still gathering forces against you.", god);
     }
     }
 
@@ -895,8 +890,7 @@ static bool _lugonu_retribution()
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false) != -1;
-
+        bool success = create_monster(temp, false);
         simple_god_message(success ? " sends a demon after you!"
                                    : "'s demon is unavoidably detained.", god);
     }
@@ -916,10 +910,8 @@ static bool _lugonu_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 success = true;
-            }
         }
 
         simple_god_message(success ? " sends minions to punish you."
@@ -1046,10 +1038,8 @@ static bool _jiyva_retribution()
 
             temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            if (create_monster(temp, false) != -1)
-            {
+            if (create_monster(temp, false))
                 success = true;
-            }
         }
 
         god_speaks(god, success ? "Some slimes ooze up out of the ground!"
@@ -1186,7 +1176,7 @@ static bool _fedhas_retribution()
                 temp.cls = coinflip() ?
                            MONS_WANDERING_MUSHROOM : MONS_OKLOB_PLANT;
 
-                if (create_monster(temp, false) != -1)
+                if (create_monster(temp, false))
                     success = true;
             }
         }

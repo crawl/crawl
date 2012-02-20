@@ -142,7 +142,7 @@ private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
     bool player_aux_unarmed();
-    unarmed_attack_type player_aux_choose_baseattack();
+    unarmed_attack_type player_aux_choose_uc_attack();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
@@ -176,7 +176,7 @@ private:
 
     // Added in, were previously static methods of fight.cc
     bool _tran_forbid_aux_attack(unarmed_attack_type atk);
-    bool _extra_aux_attack(unarmed_attack_type atk, bool is_base);
+    bool _extra_aux_attack(unarmed_attack_type atk, bool is_uc);
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,

@@ -716,7 +716,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_points = you.skill_points[tsk];
     int fsk_ct_points = you.ct_skill_points[fsk];
     int tsk_ct_points = you.ct_skill_points[tsk];
-    int total_skill_points = you.total_skill_points;
 
     if (!simu && you.ct_skill_points[fsk] > 0)
         dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
@@ -787,14 +786,12 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.skill_points[tsk] = tsk_points;
         you.ct_skill_points[fsk] = fsk_ct_points;
         you.ct_skill_points[tsk] = tsk_ct_points;
-        you.total_skill_points = total_skill_points;
     }
     else
     {
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
-        check_skill_cost_change();
         if ((int)you.transfer_skill_points < total_skp_lost)
             you.transfer_skill_points = 0;
         else
@@ -821,10 +818,10 @@ void skill_state::save()
     skill_points       = you.skill_points;
     ct_skill_points    = you.ct_skill_points;
     skill_cost_level   = you.skill_cost_level;
-    total_skill_points = you.total_skill_points;
     skill_order        = you.skill_order;
     auto_training      = you.auto_training;
     exp_available      = you.exp_available;
+    total_experience   = you.total_experience;
     if (!is_invalid_skill(you.manual_skill))
         manual_charges  = you.inv[you.manual_index].plus2;
     for (int i = 0; i < NUM_SKILLS; i++)
@@ -840,9 +837,9 @@ void skill_state::restore_levels()
     you.skill_points                = skill_points;
     you.ct_skill_points             = ct_skill_points;
     you.skill_cost_level            = skill_cost_level;
-    you.total_skill_points          = total_skill_points;
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;
+    you.total_experience            = total_experience;
     if (!is_invalid_skill(you.manual_skill))
         you.inv[you.manual_index].plus2 = manual_charges;
 }

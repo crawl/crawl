@@ -240,33 +240,29 @@ void follower::load_mons_items()
 
 bool follower::place(bool near_player)
 {
-    for (int i = 0; i < MAX_MONSTERS - 5; ++i)
+    monster *m = get_free_monster();
+    if (!m)
+        return false;
+
+    // Copy the saved data.
+    *m = mons;
+
+    // Shafts no longer retain the position, if anything else would
+    // want to request a specific one, it should do so here if !near_player
+
+    if (m->find_place_to_live(near_player))
     {
-        // Find first empty slot in menv and copy monster into it.
-        monster& m = menv[i];
-        if (m.alive())
-            continue;
-        m = mons;
+        dprf("Placed follower: %s", m->name(DESC_PLAIN).c_str());
+        m->target.reset();
 
-        // Shafts no longer retain the position, if anything else would
-        // want to request a specific one, it should do so here if !near_player
-
-        if (m.find_place_to_live(near_player))
-        {
-            dprf("Placed follower: %s", m.name(DESC_PLAIN).c_str());
-            m.target.reset();
-
-            m.flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
-            m.flags |= MF_JUST_SUMMONED;
-
-            restore_mons_items(m);
-            return (true);
-        }
-
-        m.reset();
-        break;
+        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
+        m->flags |= MF_JUST_SUMMONED;
+        restore_mons_items(*m);
+        env.mid_cache[m->mid] = m->mindex();
+        return (true);
     }
 
+    m->reset();
     return (false);
 }
 
@@ -302,26 +298,26 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
 
-    monster* fmenv = monster_at(pos);
-    if (fmenv == NULL)
+    monster* fol = monster_at(pos);
+    if (fol == NULL)
         return (false);
 
-    if (!fmenv->alive()
-        || fmenv->speed_increment < 50
-        || fmenv->incapacitated()
-        || mons_is_stationary(fmenv))
+    if (!fol->alive()
+        || fol->speed_increment < 50
+        || fol->incapacitated()
+        || mons_is_stationary(fol))
     {
         return (false);
     }
 
-    if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
+    if (!monster_habitable_grid(fol, DNGN_FLOOR))
         return (false);
 
     // Only non-wandering friendly monsters or those actively
     // seeking the player will follow up/down stairs.
-    if (!fmenv->friendly()
-          && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU)
-        || fmenv->foe == MHITNOT)
+    if (!fol->friendly()
+          && (!mons_is_seeking(fol) || fol->foe != MHITYOU)
+        || fol->foe == MHITNOT)
     {
         return (false);
     }
@@ -330,23 +326,23 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     // stringent checks.
     if ((pos - you.pos()).abs() > 2)
     {
-        if (!fmenv->friendly())
+        if (!fol->friendly())
             return (false);
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
-        if (!_is_religious_follower(fmenv))
+        if (!_is_religious_follower(fol))
             return (false);
     }
 
     // Monsters that can't use stairs can still be marked as followers
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(fmenv))
+    if (!mons_can_use_stairs(fol))
     {
-        if (_is_religious_follower(fmenv))
+        if (_is_religious_follower(fol))
         {
-            fmenv->flags |= MF_TAKING_STAIRS;
+            fol->flags |= MF_TAKING_STAIRS;
             return (true);
         }
         return (false);
@@ -355,17 +351,17 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     real_follower = true;
 
     // Monster is chasing player through stairs.
-    fmenv->flags |= MF_TAKING_STAIRS;
+    fol->flags |= MF_TAKING_STAIRS;
 
     // Clear patrolling/travel markers.
-    fmenv->patrol_point.reset();
-    fmenv->travel_path.clear();
-    fmenv->travel_target = MTRAV_NONE;
+    fol->patrol_point.reset();
+    fol->travel_path.clear();
+    fol->travel_target = MTRAV_NONE;
 
-    fmenv->clear_clinging();
+    fol->clear_clinging();
 
     dprf("%s is marked for following.",
-         fmenv->name(DESC_THE, true).c_str());
+         fol->name(DESC_THE, true).c_str());
 
     return (true);
 }

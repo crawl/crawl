@@ -32,7 +32,6 @@
 #include "terrain.h"
 #include "mislead.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -573,7 +572,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_STRIKING:
         beam.name      = "force bolt",
-        beam.damage    = dice_def(3, 10),
+        beam.damage    = dice_def(1, 8),
         beam.colour    = BLACK,
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;
@@ -623,12 +622,15 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_STICKY_FLAME:
+        beam.hit = AUTOMATIC_HIT;
     case SPELL_STICKY_FLAME_SPLASH:
     case SPELL_STICKY_FLAME_RANGE:
+        if (real_spell != SPELL_STICKY_FLAME)
+            beam.hit      = 18 + power / 15;
         beam.colour   = RED;
         beam.name     = "sticky flame";
         beam.damage   = dice_def(3, 3 + power / 50);
-        beam.hit      = 18 + power / 15;
         beam.flavour  = BEAM_FIRE;
         break;
 
@@ -908,6 +910,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(2, 6);
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_PETRIFYING_CLOUD;
+        beam.foe_ratio = 30;
         beam.is_beam  = true;
         break;
 
@@ -1200,7 +1203,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             pbolt.target = targ->pos();
 #ifdef DEBUG_DIAGNOSTICS
-            mprf("Porkalator: targeting %s instead",
+            mprf("Porkalator: targetting %s instead",
                  targ->name(DESC_PLAIN).c_str());
 #endif
         }
@@ -1261,7 +1264,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
 // Currently, this only happens if the player is in the middle of butchering
 // a corpse (infuriating), or if they are less than satiated.  Only applies
 // to friendly corpse animators. {due}
-static bool _animate_dead_okay()
+static bool _animate_dead_okay(spell_type spell)
 {
     // It's always okay in the arena.
     if (crawl_state.game_is_arena())
@@ -1271,6 +1274,9 @@ static bool _animate_dead_okay()
         return (false);
 
     if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
+        return (false);
+
+    if (god_hates_spell(spell, you.religion))
         return (false);
 
     return (true);
@@ -1746,7 +1752,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
@@ -1758,7 +1764,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to raise crawling corpses: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_TWISTED_RESURRECTION)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
@@ -1770,7 +1776,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Ditto for simulacrum.
         else if (spell_cast == SPELL_SIMULACRUM)
         {
-            if (mons->friendly() && !_animate_dead_okay())
+            if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return (false);
 
             if (!monster_simulacrum(mons, false))
@@ -2104,9 +2110,7 @@ void mons_cast_spectral_orcs(monster* mons)
         fpos = menv[mons->foe].pos();
     }
 
-    int created;
     const int abj = 3;
-    monster* orc;
 
     for (int i = random2(3) + 1; i > 0; --i)
     {
@@ -2120,15 +2124,11 @@ void mons_cast_spectral_orcs(monster* mons)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        created = create_monster(
+        if (monster *orc = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
-                          0, mons->god, mon));
-
-        if (created != -1)
+                          0, mons->god, mon)))
         {
-            orc = &menv[created];
-
             // set which base type this orc is pretending to be for gear
             // purposes
             if (mon != MONS_ORC)
@@ -2139,7 +2139,7 @@ void mons_cast_spectral_orcs(monster* mons)
             orc->number = (int) mon;
 
             // give gear using the base type
-            give_item(created, env.absdepth0, true, true);
+            give_item(orc, env.absdepth0, true, true);
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
@@ -2472,7 +2472,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
         // see special handling in mon-stuff::handle_spell() {dlb}
-        if (mons->friendly() && !_animate_dead_okay())
+        if (mons->friendly() && !_animate_dead_okay(spell_cast))
             return (true);
         break;
 
@@ -2502,17 +2502,23 @@ static void _clone_monster(monster* mons, monster_type clone_type,
                   mons, 3, summon_type, mons->pos(),
                   mons->foe, 0, mons->god);
 
-    int created = create_monster(summ_mon);
-    if (created == -1)
+    monster *new_fake = create_monster(summ_mon);
+    if (!new_fake)
         return;
 
     // Reset client id so that no information about who the original monster
     // is is leaked to the client
     mons->reset_client_id();
 
+    // Don't leak the real one with the targetting interface.
+    if (you.prev_targ == mons->mindex())
+    {
+        you.prev_targ = MHITNOT;
+        crawl_state.cancel_cmd_repeat();
+    }
+
     // Mara's clones are special; they have the same stats as him, and
     // are exact clones, so they are created damaged if necessary.
-    monster* new_fake = &menv[created];
     if (clone_hp)
     {
         new_fake->hit_points = mons->hit_points;
@@ -2523,6 +2529,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
          ei != mons->enchantments.end(); ++ei)
     {
         new_fake->enchantments.insert(*ei);
+        new_fake->ench_cache.set(ei->second.ench);
     }
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -2615,7 +2622,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
-    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || map_bounds(pbolt.target));
+    ASSERT(!(flags & SPFLAG_TARGETTING_MASK) || map_bounds(pbolt.target));
 #endif
 
     if (do_noise)
@@ -2765,7 +2772,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (create_monster(
                     mgen_data(sum, SAME_ATTITUDE(mons), mons,
                               5, spell_cast, mons->pos(), mons->foe,
-                              0, god)) != -1)
+                              0, god)))
             {
                 i++;
             }
@@ -2904,19 +2911,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (int i=0;i<possible_count;++i)
         {
-            int tentacle = create_monster(
+            if (monster *tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, -1, PROX_CLOSE_TO_PLAYER));
-
-            if (tentacle != -1)
+                          mons->colour, -1, PROX_CLOSE_TO_PLAYER)))
             {
                 created_count++;
-                menv[tentacle].props["inwards"].get_int() = kraken_index;
+                tentacle->props["inwards"].get_int() = kraken_index;
 
                 if (mons->holiness() == MH_UNDEAD)
-                    menv[tentacle].flags |= MF_FAKE_UNDEAD;
+                    tentacle->flags |= MF_FAKE_UNDEAD;
             }
         }
 
@@ -3862,7 +3867,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
     else if (pbolt.target == mons->pos())
         target = mons->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
-    // if they're targeting themselves.
+    // if they're targetting themselves.
     else if (mons->foe == MHITNOT && !mons_is_confused(mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
@@ -4065,7 +4070,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     int noise = _noise_level(mons, actual_spell, silent, innate);
 
-    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
+    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible());
 

@@ -51,7 +51,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -132,6 +131,13 @@ melee_attack::melee_attack(actor *attk, actor *defn,
             else
                 attk_type = AT_HIT;
         }
+        else if (attk_type == AT_TRUNK_SLAP
+                 && (attacker->type == MONS_SKELETON_LARGE
+                     || attacker->type == MONS_SKELETON_SMALL))
+        {
+            // Elephant trunks have no bones inside.
+            attk_type = AT_NONE;
+        }
     }
     else
         attk_type = AT_HIT;
@@ -199,7 +205,10 @@ bool melee_attack::handle_phase_attempted()
                 if (yesno(prompt.c_str(), true, 'n'))
                     you.received_weapon_warning = true;
                 else
+                {
+                    cancel_attack = true;
                     return (false);
+                }
             }
             else
             {
@@ -362,22 +371,6 @@ bool melee_attack::handle_phase_attempted()
 
     attack_occurred = true;
 
-    /* TODO Permanently remove this? Commented out for temporary removal
-     *
-     * The only scenario this handles that isn't handled elsewhere (later on)
-     * is identifying a ranged, cursed weapon wielded by a monster...which
-     * seems like an information leak and very much a special-case. -Cryptic
-    if (attacker->atype() == ACT_MONSTER)
-    {
-        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-        if (weap && you.can_see(attacker) && weap->cursed()
-            && is_range_weapon(*weap))
-        {
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-        }
-    }
-     */
-
     // Check for player practicing dodging
     if (one_chance_in(3) && defender == &you)
         practise(EX_MONSTER_MAY_HIT);
@@ -433,13 +426,12 @@ bool melee_attack::handle_phase_dodged()
     if (attacker != defender &&
         grid_distance(defender->pos(), attacker->pos()) == 1)
     {
-        // Only half the normal chance of retaliation for attacks after the
-        // first one.
         if (attacker->alive()
             && (defender->is_player() ?
                    you.species == SP_MINOTAUR :
                    mons_base_type(defender->as_monster()) == MONS_MINOTAUR)
             && defender->can_see(attacker)
+            // Retaliation only works on the first attack in a round.
             // FIXME: player's attack is -1, even for auxes
             && effective_attack_number <= 0)
         {
@@ -913,6 +905,17 @@ bool melee_attack::attack()
     adjust_noise();
     handle_noise(defender->pos());
 
+    // Allow monster attacks to draw the ire of the defender.  Player
+    // attacks are handled elsewhere.
+    if (perceived_attack
+        && defender->atype() == ACT_MONSTER
+        && attacker->atype() == ACT_MONSTER
+        && attacker->alive() && defender->alive()
+        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
+    {
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+    }
+
     // If an enemy attacked a friend, set the pet target if it isn't set
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
@@ -1083,7 +1086,7 @@ bool melee_attack::check_unrand_effects()
 /* Setup all unarmed (non attack_type) variables
  *
  * Clears any previous unarmed attack information and sets everything from
- * noise_factor to verb and damage. Called after player_aux_choose_baseattack
+ * noise_factor to verb and damage. Called after player_aux_choose_uc_attack
  */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
 {
@@ -1241,58 +1244,55 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-/* Selects the unarmed attack type
+/* Selects the unarmed attack type given by Unarmed Combat skill
  *
  * Selects at random, but then takes into accout various combinations of player
  * species, transformations, and other stuff to determine whether the randomly
  * selected unarmed attack type is appropriate (eg, no kicking for octopodes...
- * who technically lack legs.
+ * who technically lack legs).
  */
-unarmed_attack_type melee_attack::player_aux_choose_baseattack()
+unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
 {
-    unarmed_attack_type baseattack =
+    unarmed_attack_type uc_attack =
         random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
 
-    // If constriction is available to the species, choose it
-    if (you.species == SP_NAGA)
-        baseattack = UNAT_CONSTRICT;
-
-    if (you.species == SP_OCTOPODE && you.has_usable_tentacle())
-        baseattack = UNAT_CONSTRICT;
-
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH
+    if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
             && !you.has_usable_offhand())
-        baseattack = UNAT_NO_ATTACK;
+        uc_attack = UNAT_NO_ATTACK;
 
     // With fangs, replace head attacks with bites.
     if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
-        && baseattack == UNAT_HEADBUTT)
+        && uc_attack == UNAT_HEADBUTT)
     {
-        baseattack = UNAT_BITE;
+        uc_attack = UNAT_BITE;
     }
 
     // Felids turn kicks into bites.
-    if (you.species == SP_FELID && baseattack == UNAT_KICK)
-        baseattack = UNAT_BITE;
+    if (you.species == SP_FELID && uc_attack == UNAT_KICK)
+        uc_attack = UNAT_BITE;
 
     // Nagas turn kicks into headbutts.
-    if (you.species == SP_NAGA && baseattack == UNAT_KICK)
-        baseattack = UNAT_HEADBUTT;
+    if (you.species == SP_NAGA && uc_attack == UNAT_KICK)
+        uc_attack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
+    if (you.species == SP_OCTOPODE && uc_attack == UNAT_KICK
         && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
     {
-        baseattack = UNAT_PUNCH;
+        uc_attack = UNAT_PUNCH;
     }
 
-    if (_tran_forbid_aux_attack(baseattack))
-        baseattack = UNAT_NO_ATTACK;
+    // Octopodes turn headbutts into punches too.
+    if (you.species == SP_OCTOPODE && uc_attack == UNAT_HEADBUTT)
+        uc_attack = UNAT_PUNCH;
 
-    return (baseattack);
+    if (_tran_forbid_aux_attack(uc_attack))
+        uc_attack = UNAT_NO_ATTACK;
+
+    return (uc_attack);
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1349,18 +1349,17 @@ bool melee_attack::player_aux_unarmed()
     unwind_var<brand_type> save_brand(damage_brand);
 
     /*
-     * baseattack is the auxiliary unarmed attack the player gets
+     * uc_attack is the auxiliary unarmed attack the player gets
      * for unarmed combat skill, which doesn't require a mutation to use
      * but still needs to pass the other checks in _extra_aux_attack().
      */
-    unarmed_attack_type baseattack = UNAT_NO_ATTACK;
+    unarmed_attack_type uc_attack = UNAT_NO_ATTACK;
     // Unarmed skill gives a chance at getting an aux even without the
     // corresponding mutation.
     if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty)
-        || you.species == SP_NAGA || you.species == SP_OCTOPODE)
+                                   + attacker_shield_tohit_penalty))
     {
-        baseattack = player_aux_choose_baseattack();
+        uc_attack = player_aux_choose_uc_attack();
     }
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
@@ -1370,7 +1369,7 @@ bool melee_attack::player_aux_unarmed()
 
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
-        if (!_extra_aux_attack(atk, (baseattack == atk)))
+        if (!_extra_aux_attack(atk, (uc_attack == atk)))
             continue;
 
         // Determine and set damage and attack words.
@@ -1975,7 +1974,7 @@ void melee_attack::set_attack_verb()
             else if (damage_done < HIT_STRONG)
                 attack_verb = "bite";
             else
-                attack_verb = "maul";
+                attack_verb = coinflip() ? "maul" : "trample";
             break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
@@ -2097,9 +2096,12 @@ bool melee_attack::player_monattk_hit_effects()
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
-    dprf("Special damage to %s: %d, flavour: %d",
-         defender->name(DESC_THE).c_str(),
-         special_damage, special_damage_flavour);
+    if (special_damage || special_damage_flavour)
+    {
+        dprf("Special damage to %s: %d, flavour: %d",
+             defender->name(DESC_THE).c_str(),
+             special_damage, special_damage_flavour);
+    }
 
     special_damage = inflict_damage(special_damage);
 
@@ -2443,9 +2445,8 @@ void melee_attack::chaos_affects_defender()
         ASSERT(can_clone && clone_chance > 0);
         ASSERT(defender->atype() == ACT_MONSTER);
 
-        int clone_idx = clone_mons(defender->as_monster(), true,
-                                   &obvious_effect);
-        if (clone_idx != NON_MONSTER)
+        if (monster *clone = clone_mons(defender->as_monster(), true,
+                                        &obvious_effect))
         {
             if (obvious_effect)
             {
@@ -2454,13 +2455,12 @@ void melee_attack::chaos_affects_defender()
                                  def_name(DESC_THE).c_str());
             }
 
-            monster& clone(menv[clone_idx]);
             // The player shouldn't get new permanent followers from cloning.
-            if (clone.attitude == ATT_FRIENDLY && !clone.is_summoned())
-                clone.mark_summoned(6, true, MON_SUMM_CLONE);
+            if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
+                clone->mark_summoned(6, true, MON_SUMM_CLONE);
 
             // Monsters being cloned is interesting.
-            xom_is_stimulated(clone.friendly() ? 12 : 25);
+            xom_is_stimulated(clone->friendly() ? 12 : 25);
         }
         break;
     }
@@ -2893,6 +2893,16 @@ bool melee_attack::apply_damage_brand()
     {
         // Most brands have no extra effects on just killed enemies, and the
         // effect would be often inappropriate.
+        return false;
+    }
+
+    if (!damage_done
+        && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
+            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ORC_SLAYING
+            || brand == SPWPN_DRAGON_SLAYING || brand == SPWPN_VORPAL
+            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_ANTIMAGIC))
+    {
+        // These brands require some regular damage to function.
         return false;
     }
 
@@ -4732,21 +4742,23 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.form == TRAN_BAT);
 
     case UNAT_CONSTRICT:
-        return (you.form != TRAN_NONE);
+        return (!form_keeps_mutations());
 
     default:
         return (false);
     }
 }
 
-bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
+bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 {
     // No extra unarmed attacks for disabled mutations.
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
     if (atk == UNAT_CONSTRICT)
-        return (is_base);
+        return (is_uc
+                 || you.species == SP_NAGA
+                 || you.species == SP_OCTOPODE && you.has_usable_tentacle());
 
     if (you.strength() + you.dex() <= random2(50))
         return (false);
@@ -4754,43 +4766,40 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
     switch (atk)
     {
     case UNAT_KICK:
-        return (is_base
+        return (is_uc
                  || player_mutation_level(MUT_HOOVES)
                  || you.has_usable_talons()
                  || player_mutation_level(MUT_TENTACLE_SPIKE));
 
     case UNAT_HEADBUTT:
-        return ((is_base
+        return ((is_uc
                  || player_mutation_level(MUT_HORNS)
                  || player_mutation_level(MUT_BEAK))
                 && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_tail())
                 && coinflip());
 
     case UNAT_PSEUDOPODS:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_pseudopods())
                 && !one_chance_in(3));
 
     case UNAT_TENTACLES:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_tentacles())
                 && !one_chance_in(3));
 
     case UNAT_BITE:
-        return ((is_base
+        return ((is_uc
                  || you.has_usable_fangs()
                  || player_mutation_level(MUT_ACIDIC_BITE))
                 && x_chance_in_y(2, 5));
 
     case UNAT_PUNCH:
-        return (is_base && !one_chance_in(3));
-
-    case UNAT_CONSTRICT:
-        return (is_base);
+        return (is_uc && !one_chance_in(3));
 
     default:
         return (false);
@@ -5022,7 +5031,7 @@ int melee_attack::calc_damage()
 
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
-        int frenzy_degree = -11;
+        int frenzy_degree = -1;
 
         // Berserk/mighted/frenzied monsters get bonus damage.
         if (as_mon->has_ench(ENCH_MIGHT)
@@ -5040,7 +5049,7 @@ int melee_attack::calc_damage()
             frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
         }
 
-        if (frenzy_degree == -1)
+        if (frenzy_degree != -1)
         {
 #ifdef DEBUG_DIAGNOSTICS
             const int orig_damage = damage;
@@ -5354,24 +5363,26 @@ bool melee_attack::handle_constriction()
         && defender->constricted_by == NON_ENTITY)
     {
         // calculate to_hit
+        size_type asize = attacker->body_size(PSIZE_BODY);
+        size_type dsize = defender->body_size(PSIZE_BODY);
+        int m_ev = defender->melee_evasion(attacker);
+
         int attackdice, defenddice;
         if (attacker->atype() == ACT_PLAYER)
         {
-            attackdice = roll_dice(3, you.strength()*(you.body_size()+1));
-            defenddice = roll_dice(1, 3*defender->melee_evasion(attacker)*
-                                      (defender->body_size()+1));
+            attackdice = roll_dice(3, you.strength() * (asize + 1));
+            defenddice = roll_dice(1, 3 * m_ev * (dsize + 1));
         }
         else
         {
-            attackdice = roll_dice(1, attacker->as_monster()->hit_dice*
-                                      (attacker->body_size()+1));
-            defenddice = roll_dice(1, defender->melee_evasion(attacker)*
-                                      (defender->body_size()+1));
+            attackdice = roll_dice(1, attacker->as_monster()->hit_dice
+                                       * (asize + 1));
+            defenddice = roll_dice(1, m_ev * (dsize + 1));
         }
 
         // if hit, grab
-        if (attacker->body_size() >= defender->body_size()
-            && !defender->is_insubstantial()
+        if (asize >= dsize
+            && defender->res_constrict() < 3
             && adjacent(attacker->pos(), defender->pos())
             && attackdice >= defenddice)
         {
@@ -5397,9 +5408,9 @@ bool melee_attack::handle_constriction()
              (attacker->atype() == ACT_PLAYER
                  ? you.strength()
                  : attacker->as_monster()->hit_dice),
-             attacker->body_size(),
+             asize,
              attackdice,
-             defender->melee_evasion(attacker), defender->body_size(),
+             m_ev, dsize,
              defenddice, grabslot);
     }
 

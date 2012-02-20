@@ -65,6 +65,12 @@ enum tag_minor_version
     TAG_MINOR_LESS_TILE_DATA,      // mcache and tile_bk is not saved, but more stuff in map_knowledge
     TAG_MINOR_CONSTRICTION,        // Constriction available
     TAG_MINOR_ACTION_COUNTS,       // Count actions made by type.
+    TAG_MINOR_ABYSS_PHASE,         // Jerky abyss.
+    TAG_MINOR_SKILL_MODE_STATE,    // Auto and manual modes have separate skill activation status.
+    TAG_MINOR_OCTO_RING,           // Ring of the Octopus King.
+    TAG_MINOR_ABILITY_COUNTS,      // Count ability usage better.
+    TAG_MINOR_REMOVE_SKILL_SET,    // Remove the useless you.skill_set array.
+    TAG_MINOR_TOTAL_EXPERIENCE,    // Keep track of the total number of XP gained.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

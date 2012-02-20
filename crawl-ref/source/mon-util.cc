@@ -38,7 +38,6 @@
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
@@ -756,7 +755,7 @@ static bool _mons_is_weapon_mimic(const monster* mon)
             && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
 }
 
-void discover_mimic(const coord_def& pos)
+void discover_mimic(const coord_def& pos, bool wake)
 {
     item_def* item = item_mimic_at(pos);
     const bool feature_mimic = !item && feature_mimic_at(pos);
@@ -781,14 +780,8 @@ void discover_mimic(const coord_def& pos)
     tileidx_t tile = tileidx_feature(pos);
 
     // If a monster is standing on top of the mimic, move it out of the way.
-    monster* mon = monster_at(pos);
-    if (mon && shove_monster(mon))
-    {
-        simple_monster_message(mon,
-            make_stringf(" is pushed out of the %s.", name.c_str()).c_str());
-        dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
-    }
-    else if (mon)
+    actor* act = actor_at(pos);
+    if (act && !act->shove(name.c_str()))
     {
         // Not a single habitable place left on the level.  Possible in a Zig
         // or if a paranoid player covers a small Trove with summons.
@@ -817,7 +810,7 @@ void discover_mimic(const coord_def& pos)
 
     // Generate and place the monster.
     mgen_data mg;
-    mg.behaviour = BEH_WANDER;
+    mg.behaviour = wake ? BEH_WANDER : BEH_LURK;
     mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
     if (feature_mimic)
@@ -838,15 +831,14 @@ void discover_mimic(const coord_def& pos)
         mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
     }
 
-    const int midx = place_monster(mg, true, true);
-    if (midx == -1)
+    monster *mimic = place_monster(mg, true, true);
+    if (!mimic)
     {
         mpr("Too many monsters on level, can't place mimic.", MSGCH_ERROR);
         if (item)
             destroy_item(*item, true);
         return;
     }
-    monster* mimic = &menv[midx];
 
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
@@ -857,15 +849,19 @@ void discover_mimic(const coord_def& pos)
     if (item && item->base_type == OBJ_ARMOUR)
         mimic->ac += 10;
 
-    behaviour_event(mimic, ME_ALERT, MHITYOU);
+    if (wake)
+        behaviour_event(mimic, ME_ALERT, MHITYOU);
 
     // Friendly monsters don't appreciate being pushed away.
-    if (mon && mon->friendly())
-        behaviour_event(mon, ME_WHACK, midx);
+    if (act && !act->is_player() && act->as_monster()->friendly())
+        behaviour_event(act->as_monster(), ME_WHACK, mimic->mindex());
 
     // Announce the mimic.
     if (mons_near(mimic))
+    {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+        mimic->seen_context = SC_JUST_SEEN;
+    }
 
     // Just in case there's another one.
     if (mimic_at(pos))
@@ -1283,6 +1279,13 @@ bool name_zombie(monster* mon, int mc, const std::string &mon_name)
         mon->mname = "Lernaean";
         mon->flags |= MF_NAME_ADJECTIVE;
     }
+    // Also for the Enchantress: treat Enchantress as an adjective to
+    // avoid mentions of "the Enchantress the spriggan zombie".
+    else if (mc == MONS_THE_ENCHANTRESS)
+    {
+        mon->mname = "Enchantress";
+        mon->flags |= MF_NAME_ADJECTIVE;
+    }
     // Also for the Serpent of Hell: treat Serpent of Hell as an
     // adjective to avoid mentions of "the Serpent of Hell the dragon
     // zombie".
@@ -1399,6 +1402,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
+#if TAG_MAJOR_VERSION == 32
     else if (attk.flavour == AF_SUBTRACTOR)
     {
         attack_flavour flavours[] =
@@ -1407,6 +1411,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
+#endif
 
     if (attk.flavour == AF_POISON_STAT)
     {
@@ -2186,6 +2191,7 @@ void define_monster(monster* mons)
 
     // Reset monster enchantments.
     mons->enchantments.clear();
+    mons->ench_cache.reset();
     mons->ench_countdown = 0;
 
     // NOTE: For player ghosts and (very) ugly things this just ensures
@@ -2818,7 +2824,7 @@ bool mons_should_fire(struct bolt &beam)
     if (_beneficial_beam_flavour(beam.flavour))
         return (_mons_should_fire_beneficial(beam));
 
-    // Friendly monsters shouldn't be targeting you: this will happen
+    // Friendly monsters shouldn't be targetting you: this will happen
     // often because the default behaviour for charmed monsters is to
     // have you as a target.  While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
@@ -4186,9 +4192,10 @@ monster *monster_by_mid(mid_t m)
 {
     if (m == MID_ANON_FRIEND)
         return &menv[ANON_FRIENDLY_MONSTER];
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].mid == m && menv[i].alive())
-            return &menv[i];
+
+    std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
+    if (mc != env.mid_cache.end())
+        return &menv[mc->second];
     return 0;
 }
 

@@ -118,7 +118,7 @@ public:
 
     // Has a hydra-like variable number of attacks based on mons->number.
     bool has_hydra_multi_attack() const;
-    bool has_multitargeting() const;
+    bool has_multitargetting() const;
 
     // Has the 'spellcaster' flag (may not actually have any spells).
     bool can_use_spells() const;
@@ -139,7 +139,11 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
+#ifdef DEBUG_DIAGNOSTICS
+    bool has_ench(enchant_type ench) const; // same but validated
+#else
     bool has_ench(enchant_type ench) const { return ench_cache[ench]; }
+#endif
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
@@ -206,6 +210,7 @@ public:
     bool        extra_balanced() const;
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
+    bool        shove(const char* name);
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const;
     int         body_weight(bool base = false) const;
@@ -292,7 +297,7 @@ public:
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
-    int mons_species(bool zombie_base = false) const;
+    monster_type mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
@@ -321,7 +326,9 @@ public:
     int res_acid() const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
+    int res_constrict() const;
     int res_magic() const;
+    bool no_tele(bool calc_unid = true, bool permit_id = true);
 
     flight_type flight_mode() const;
     bool is_levitating() const;
@@ -445,12 +452,8 @@ public:
     void calc_speed();
     void accum_been_constricted();
     void accum_has_constricted();
-    bool is_constricted_larger();
-    bool is_constricted();
     bool attempt_escape();
-    void clear_all_constrictions();
-    void clear_specific_constrictions(int mindex);
-    bool has_usable_tentacle();
+    bool has_usable_tentacle() const;
 
 private:
     void init_with(const monster& mons);

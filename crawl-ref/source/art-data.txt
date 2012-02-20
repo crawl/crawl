@@ -752,7 +752,7 @@ COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
-DESC:     This bow has the color of dark rain clouds, and the smell of wet ozone.
+DESC:     This bow has the colour of dark rain clouds, and the smell of wet ozone.
 
 NAME:    shield of Ignorance
 APPEAR:  dull large shield
@@ -1204,7 +1204,7 @@ TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 METAB:    -2
-BOOL:     life
+BOOL:     life, evil
 DESC:     You feel sorry for the horse that has to wear this mass of metal.
 DESC_ID:  This gear used to be worn by the personal horse of the Black Knight
           during his reign of terror. Pitch-black, it appears to be made not
@@ -1260,6 +1260,22 @@ COLOUR:   ETC_HEAL
 BOOL:     nogen
 DESC:     This opalescent cloak gleams with all dragon colours.
 
+ENUM:     OCTOPUS_KING_RING
+NAME:     ring of the Octopus King
+APPEAR:   coral ring
+OBJ:      OBJ_JEWELLERY/RING_HUNGER
+COLOUR:   ETC_WATER
+TILE:     urand_octoring
+AC:       1
+EV:       1
+STR:      1
+INT:      1
+DEX:      1
+DESC_END: "A mermaid who fancied to sing,\n
+           Roused lust in the Octopus King.\n
+           Her squiggly suitor,\n
+           Tried hard to woo her,\n
+           But she couldn't wear all his rings."
 
 # This entry must always be last.
 ENUM:   DUMMY2

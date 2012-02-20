@@ -60,7 +60,9 @@ enum element_type
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_SWAMP_TREE,     // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
+#if TAG_MAJOR_VERSION == 32
     ETC_SUBTRACTOR,     // subtractor snakes
+#endif
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

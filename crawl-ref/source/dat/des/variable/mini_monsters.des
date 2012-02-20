@@ -272,6 +272,7 @@ NAME:   minmay_brainsmasher
 DEPTH:  D:8-26
 WEIGHT: 3
 MONS:   brain worm
+KFEAT:  n = iron_grate
 MAP
   .....
  .......
@@ -388,11 +389,11 @@ NAME:   goddamned_bats
 DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_des n_spe tile:mons_megabat
-KMONS:  2 = bat name:microbat n_rpl n_des n_spe col:magenta tile:mons_microbat
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
+KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_des n_spe col:lightmagenta tile:mons_fruity_bat
-KMONS:  4 = bat name:giga n_adj n_des n_spe hd:4 col:brown tile:mons_gigabat
+KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
@@ -408,7 +409,7 @@ KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 # Correction, this one, added because of a tile, is not real as well.
 KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 # Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
-KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe
+KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
 MAP
        xxxxx
       xxxxxxx
@@ -1250,6 +1251,88 @@ MAP
 ...............
 ENDMAP
 
+NAME:   evilmike_dwarf_trog_shrine
+DEPTH:  D:14-23, Vault, Elf
+MONS:   deep dwarf berserker
+: if you.absdepth() < 19 then
+NSUBST: 1 = 2:2 / *:1
+: end
+SUBST:  2 = 1'
+KMONS:  _ = deep dwarf berserker
+KFEAT:  _ = altar_trog
+SUBST:  C : c', B : +', D : +', E : +c
+SUBST:  = = ccc=
+FTILE:  *|_1+'c = floor_hall
+FTILE:  # = floor_rough_lightred
+MARKER:  # = lua:fog_machine { cloud_type = "flame", \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1 }
+SUBST:  '# = .
+MAP
+.................
+.ccccccccccccccc.
+.ccccc#ccc#ccccc.
+.c*1''''_''''1|c.
+.c'''''''''''''c.
+.c''''''C''''''c.
+.ccccccBcBcccccc.
+....ccc'C'ccc....
+   ..cc'''cc..
+    ..='2'=..
+   ..cc'''cc..
+ ...ccc'c'ccc...
+ .cccccDcDccccc.
+ .c'''''c'''''c.
+ .c'''c'''c'''c.
+ .c'1'c'''c'1'c.
+ .cccccE+Eccccc.
+ .ccc#c...c#ccc.
+ ...............
+   .....@.....
+ENDMAP
+
+NAME:   evilmike_dwarf_pyromaniacs
+DEPTH:  D:13-22, Vault, Elf
+MONS:   deep dwarf artificer ; w:5 wand of flame | wand of fire
+MONS:   stone golem name:experimental n_adj perm_ench:inner_flame
+KMONS:  3 = fire elemental
+KITEM:  3 = gold, gold, gold, gold, star_item
+SUBST:  4 = 2.
+MAP
+     xxxxxx
+    xx....x
+   xx....1x
+   x....2%x
+   x...xxxxxxx
+   x...xxxx.xx
+xxxxx+xxxx..1xxxxxx
+x......xx....2xbbbx
++....1.+......4=3bx
+x......xx....2xbbbx
+xxxxx+xxxx..1xxxxxx
+   x...xxxx.xx
+   x...xxxxxxx
+   x....2%x
+   xx....1x
+    xx....x
+     xxxxxx
+ENDMAP
+
+NAME: lookout_dungeons_type
+DEPTH: D:4-14
+TAGS: extra no_pool_fixup layout_rooms layout_city
+MONS: w:1 generate_awake centaur / w:4 nothing
+MAP
+....@....
+.........
+.........
+...www...
+...w1w...
+...x+x...
+   x.x
+   x=x
+    @
+ENDMAP
 
 ################################################################################
 #
@@ -1576,6 +1659,52 @@ xc.....+''''1'''''cx
 xct....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   hangedman_weighted_door
+DEPTH:  D:9-, Vault, Crypt
+MONS:   large zombie / large skeleton
+KMONS:  A = spectral thing / large simulacrum
+KITEM:  A = any good_item
+KMASK:  .%* = no_monster_gen
+KITEM:  * = star_item
+KITEM:  % = any
+KMASK:  1 = no_item_gen
+MAP
+cccc cccc
+c11ccc**c
+c11cAc%*c
+cn+++++nc
+c@.....@c
+ENDMAP
+
+NAME:   hangedman_blasphemy
+DEPTH:  D:20-, Crypt
+MONS:   phoenix simulacrum / spectral holy swine
+MONS:   shedu zombie / apis skeleton, pearl dragon zombie
+MONS:   profane servitor, deep dwarf death knight
+COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
+FTILE:  t' = FLOOR_PEBBLE_BROWN
+TILE:   t = DNGN_TREE_DEAD, c = WALL_STONE_GRAY
+KFEAT:  _ = altar_yredelemnul
+MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5, \
+                               pow_max = 10, delay = 30, size = 1, walk_dist = 0 }
+MAP
+@@xxxxxxx
+@..t....xxxxx
+x...'''..c.2x
+xt...tc'.c..xxx
+x.'.11c'...G.2x
+x.'t1cc't.....x
+x.'ccc'G...ccxx
+x..'''G'''...x
+xx...t.'_ccc.x
+ xcc...'cc3..x
+ x......c34.xx
+ x2.G.c.c..5x
+ xxx..c...xxx
+   x2.xxxxx
+   xxxx
 ENDMAP
 
 ################################################################################
@@ -2046,6 +2175,17 @@ MAP
   ...........
 ENDMAP
 
+NAME:   hangedman_glaring_trap
+DEPTH:  D:12-, Vault
+KMASK:  m = no_wall_fixup
+KMONS:  1 = eye of devastation
+KITEM:  1 = star_item / nothing
+MAP
+xxx@x
+x8m.xxxxxx
+xxm....+1x
+xxx@xxxxxx
+ENDMAP
 
 ###################################################################
 #

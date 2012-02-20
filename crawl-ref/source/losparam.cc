@@ -14,6 +14,14 @@
 #include "state.h"
 #include "terrain.h"
 
+const opacity_default opc_default = opacity_default();
+const opacity_fullyopaque opc_fullyopaque = opacity_fullyopaque();
+const opacity_no_trans opc_no_trans = opacity_no_trans();
+const opacity_immob opc_immob = opacity_immob();
+const opacity_solid opc_solid = opacity_solid();
+const opacity_solid_see opc_solid_see = opacity_solid_see();
+const opacity_no_actor opc_no_actor = opacity_no_actor();
+
 opacity_type opacity_default::operator()(const coord_def& p) const
 {
     // Secret doors in translucent walls shouldn't block LOS,

@@ -17,6 +17,7 @@ define(function () {
     exports.HALO_NONE = 0;
     exports.HALO_RANGE = 1;
     exports.HALO_MONSTER = 2;
+    exports.HALO_UMBRA = 3;
 
     // Foreground flags
 
@@ -42,6 +43,7 @@ define(function () {
     exports.TILE_FLAG_STICKY_FLAME = 0x00200000;
     exports.TILE_FLAG_BERSERK    = 0x00400000;
     exports.TILE_FLAG_INNER_FLAME  = 0x40000000;
+    exports.TILE_FLAG_CONSTRICTED  = 0x80000000;
 
     // MDAM has 5 possibilities; so uses 3 bits.
     exports.TILE_FLAG_MDAM_MASK  = 0x03800000;

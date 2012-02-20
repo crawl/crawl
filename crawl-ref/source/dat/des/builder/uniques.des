@@ -257,7 +257,7 @@ TAGS:   uniq_ribbit
 NAME:   uniq_prince_ribbit2
 DEPTH:  Lair:1-3
 WEIGHT: 3
-TAGS:   place_unique uniq_ribbit
+TAGS:   place_unique uniq_ribbit transparent
 MONS:   Prince Ribbit, blink frog band
 MAP
 12
@@ -274,7 +274,7 @@ WEIGHT: 1
 
 NAME:   uniq_roxanne
 DEPTH:  14-19, !Lair, !Slime
-TAGS:   place_unique
+TAGS:   place_unique transparent
 MONS:   Roxanne
 MAP
 ...
@@ -359,7 +359,10 @@ DEPTH:  Pan
 CHANCE: 25%
 # TODO: use regular unique code instead?
 TAGS:   pan transparent extra allow_dup luniq_ignacio
-{{
+veto {{
+  if you.uniques("Ignacio") then
+    return true -- don't spam the list of vaults
+  end
   if not dgn.persist.ignacio_spawned then
     local runes = 0;
     for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
@@ -371,14 +374,15 @@ TAGS:   pan transparent extra allow_dup luniq_ignacio
       dgn.persist.ignacio_spawned = true
       dgn.persist.ignacio_forbid = crawl.coinflip()
     else
-      return
+      return true
     end
   end
   if dgn.persist.ignacio_forbid then
-    return
+    return true
   end
-  mons("Ignacio")
+  return false
 }}
+MONS: Ignacio
 MAP
 1
 ENDMAP

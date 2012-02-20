@@ -108,8 +108,6 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int power, int max_targs,
                                actor *agent = NULL);
 
-int apply_one_neighbouring_square(cell_func cf, int power, actor *agent = NULL);
-
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
                       const actor *agent,
@@ -118,7 +116,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict = DIR_NONE,
+                      targetting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_HOSTILE,
                       // pbolt.range if applicable, otherwise LOS_RADIUS
                       int range = 0,

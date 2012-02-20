@@ -788,6 +788,11 @@ Executioner
 
 A horribly powerful and swift demon, its shape obscured by a cloud of swirling scythe-like blades.
 %%%%
+experimental stone golem
+
+This golem has been imbued with fire as part of some insane experiment. It looks as though it's going to explode at any moment.
+
+%%%%
 eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.
@@ -1094,9 +1099,10 @@ hound
 
 A fearsome hunting dog, lithe and alert. Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
 %%%%
+# Stolen from http://rustyandco.com/frequently-asked-questions/monster-guide/
 human
 
-A remarkably nondescript person. How odd.
+An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as fragile, elves think of them as clumsy, and monsters think of them as tasty.
 %%%%
 hungry ghost
 
@@ -1688,6 +1694,8 @@ A young woman with a fish tail in place of legs. Sirens are capable of casting a
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
+
+It can heal from electrical damage, although being hit by more than it can handle will have rather violent results.
 %%%%
 skeletal bat
 
@@ -1759,7 +1767,7 @@ An ordinary orb-weaving spider with a white cross on its back. It's not as grote
 %%%%
 spiny frog
 
-Although slightly smaller than the giant toad, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs, dripping with venom.
+These frogs are the size of a wolf, and are covered in wickedly barbed spines and spurs, dripping with venom. Toad licking anyone?
 %%%%
 spiny worm
 

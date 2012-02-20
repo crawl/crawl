@@ -270,6 +270,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
                 m_buf_feat.add(TILE_HALO_RANGE, x, y);
+            if (cell.halo == HALO_UMBRA)
+                m_buf_feat.add(TILE_UMBRA, x, y);
 
             if (cell.orb_glow)
                 m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
@@ -386,6 +388,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     {
         m_buf_icons.add(TILEI_INNER_FLAME, x, y, -status_shift, 0);
         status_shift += 8;
+    }
+    if (fg & TILE_FLAG_CONSTRICTED)
+    {
+        m_buf_icons.add(TILEI_CONSTRICTED, x, y, -status_shift, 0);
+        status_shift += 13;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)

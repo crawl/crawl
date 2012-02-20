@@ -743,6 +743,8 @@ static bool _has_edible_chunks()
 
 void end_nausea()
 {
+    you.duration[DUR_NAUSEA] = 0;
+
     const char *add = "";
     // spoilable food, need to interrupt before it can go bad
     if (_has_edible_chunks())
@@ -2018,7 +2020,7 @@ static void _eating(object_class_type item_class, int item_type)
                 mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
                              you.pos(), MHITNOT, 0, you.religion);
 
-                if (create_monster(mg) != -1)
+                if (create_monster(mg))
                     mprf("A jelly spawns from your body.");
             }
         }

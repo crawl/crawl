@@ -890,9 +890,9 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         write_message("name:'%s',",
                       replace_all_of(m->full_name(), "'", "\\'").c_str());
 
-    if (force_full || (last->pluralized_name() != m->pluralized_name()))
+    if (force_full || (last->pluralised_name() != m->pluralised_name()))
         write_message("plural:'%s',",
-                      replace_all_of(m->pluralized_name(), "'", "\\'").c_str());
+                      replace_all_of(m->pluralised_name(), "'", "\\'").c_str());
 
     if (force_full || (last->type != m->type))
     {

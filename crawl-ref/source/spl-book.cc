@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Spellbook/Staff contents array and management functions
+ * @brief Spellbook/rod contents array and management functions
 **/
 
 #include "AppHdr.h"
@@ -467,6 +467,10 @@ int read_book(item_def &book, read_book_action_type action)
         return (0);
     }
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "read_book");
+#endif
+
     // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents(book, action);
 
@@ -851,19 +855,6 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
-static int _failure_rate_to_group(int fail)
-{
-    return (fail == 100) ? 100 :
-           (fail > 77)   ?  78 :
-           (fail > 59)   ?  60 :
-           (fail > 50)   ?  51 :
-           (fail > 40)   ?  41 :
-           (fail > 35)   ?  36 :
-           (fail > 28)   ?  29 :
-           (fail > 22)   ?  23 :
-           (fail >  0)   ?   1 : 0;
-}
-
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
     // List spells we can memorize right away first.
@@ -880,8 +871,8 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 
     // Don't sort by failure rate beyond what the player can see in the
     // success descriptions.
-    const int fail_rate_a = _failure_rate_to_group(spell_fail(a));
-    const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
+    const int fail_rate_a = failure_rate_to_int(spell_fail(a));
+    const int fail_rate_b = failure_rate_to_int(spell_fail(b));
     if (fail_rate_a != fail_rate_b)
         return (fail_rate_a < fail_rate_b);
 
@@ -946,7 +937,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     {
         MenuEntry* me =
             new MenuEntry("     Spells                        Type          "
-                          "                Success  Level",
+                          "                Failure  Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -954,12 +945,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
 #else
     spell_menu.set_title(
         new MenuEntry("     Spells (Memorisation)         Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE));
 
     spell_menu.set_title(
         new MenuEntry("     Spells (Description)          Type          "
-                      "                Success  Level",
+                      "                Failure  Level",
             MEL_TITLE), false);
 #endif
 
@@ -1039,11 +1030,15 @@ static spell_type _choose_mem_spell(spell_list &spells,
         int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
-
-        desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
-             << spell_difficulty(spell);
-
         desc << "</" << colour_to_str(colour) << ">";
+
+        colour = failure_rate_colour(spell);
+        desc << "<" << colour_to_str(colour) << ">";
+        char* failure = failure_rate_to_string(spell_fail(spell));
+        desc << chop_string(failure, 12);
+        free(failure);
+        desc << "</" << colour_to_str(colour) << ">";
+        desc << spell_difficulty(spell);
 
         MenuEntry* me =
             new MenuEntry(desc.str(), MEL_ITEM, 1,
@@ -1349,6 +1344,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 
     if (del_spell_from_memory(spell))
     {
+        item_was_destroyed(*book);
         destroy_spellbook(*book);
         dec_inv_item_quantity(book->link, 1);
         you.turn_is_over = true;
@@ -1678,7 +1674,11 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     ASSERT(level > 0 && level <= 9);
 
     if (num_spells == -1)
-        num_spells = SPELLBOOK_SIZE;
+    {
+        //555666421
+        num_spells = std::min(5 + (level - 1)/3, 18 - 2*level);
+        num_spells = std::max(1, num_spells);
+    }
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     book.plus  = level;
@@ -1696,6 +1696,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (spells.empty())
     {
+        if (level > 1)
+            return make_book_level_randart(book, level - 1);
         char buf[80];
 
         if (god_discard > 0 && uncastable_discard == 0)
@@ -1724,23 +1726,14 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     if (num_spells > (int) spells.size())
     {
-        // Some gods (Elyvilon) dislike a lot of the higher level spells,
-        // so try a lower level.
-        if (god != GOD_NO_GOD && god != GOD_XOM)
-            return make_book_level_randart(book, level - 1, num_spells);
-
         num_spells = spells.size();
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        // Not many level 8 or 9 spells
-        if (level < 8)
-        {
-            mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
-                             "randart spellbook than there are valid spells.",
-                 level);
-            mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
-                             "%d spells due to being disliked by %s.",
-                 uncastable_discard, god_discard, god_name(god).c_str());
-        }
+        mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
+                         "randart spellbook than there are valid spells.",
+             level);
+        mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
+                         "%d spells due to being disliked by %s.",
+             uncastable_discard, god_discard, god_name(god).c_str());
 #endif
     }
 

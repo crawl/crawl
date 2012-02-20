@@ -69,7 +69,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     actor *as = NULL, std::string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
                     bool quiet = false, bool force_beh = false,
-                    int* mon_index = NULL, int* motions = NULL);
+                    monster** mon = NULL, int* motions = NULL);
 
 spret_type cast_animate_skeleton(god_type god, bool fail);
 spret_type cast_animate_dead(int pow, god_type god, bool fail);

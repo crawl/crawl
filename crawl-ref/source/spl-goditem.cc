@@ -318,6 +318,7 @@ static int _healing_spell(int healed, bool divine_ability,
         else
         {
             simple_monster_message(mons, " turns neutral.");
+            record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
@@ -539,12 +540,11 @@ int detect_creatures(int pow, bool telepathic)
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    if (!telepathic)
-        clear_map(false);
+    clear_map(false);
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri);
+        discover_mimic(*ri, false);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.

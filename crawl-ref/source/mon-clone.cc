@@ -7,7 +7,6 @@
 
 #include "arena.h"
 #include "artefact.h"
-#include "coord.h"
 #include "directn.h"
 #include "externs.h"
 #include "env.h"
@@ -106,11 +105,9 @@ static void _mons_summon_monster_illusion(monster* caster,
 
     unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
     bool cloning_visible = false;
-    const int clone_idx = clone_mons(foe, true, &cloning_visible);
-    if (clone_idx != NON_MONSTER)
+    if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
         const std::string clone_id = _monster_clone_id_for(foe);
-        monster* clone = &menv[clone_idx];
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
@@ -199,16 +196,13 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
     if (foe->atype() == ACT_PLAYER)
     {
         ASSERT(foe == &you);
-        const int midx =
-            create_monster(
+        if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          6, spell_cast, mons->pos(), mons->foe, 0));
-        if (midx != -1)
+                          6, spell_cast, mons->pos(), mons->foe, 0)))
         {
             mpr("There is a horrible, sudden wrenching feeling in your soul!",
                 MSGCH_WARN);
 
-            monster* clone = &menv[midx];
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
@@ -269,14 +263,14 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     return (true);
 }
 
-int clone_mons(const monster* orig, bool quiet, bool* obvious,
-               coord_def pos)
+monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
+                    coord_def pos)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
 
     if (!mons)
-        return (NON_MONSTER);
+        return 0;
 
     if (!in_bounds(pos))
     {
@@ -296,7 +290,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
         }
 
         if (squares == 0)
-            return (NON_MONSTER);
+            return 0;
     }
 
     ASSERT(!actor_at(pos));
@@ -304,6 +298,9 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->set_position(pos);
+    // The monster copy constructor doesn't copy constriction, so no need to
+    // worry about that.
+
     mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
@@ -349,5 +346,5 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mons);
 
-    return (mons->mindex());
+    return mons;
 }

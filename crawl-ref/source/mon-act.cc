@@ -42,7 +42,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -197,6 +196,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
 
     mover->set_position(moved_pos);
     moved->set_position(mover_pos);
+
+    mover->clear_far_constrictions();
+    moved->clear_far_constrictions();
 
     mover->check_clinging(true);
     moved->check_clinging(true);
@@ -897,20 +899,18 @@ static bool _handle_scroll(monster* mons)
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
-            const int mon = create_monster(
+            read = true;
+            if (monster *mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(mons),
                           mons, 0, 0, mons->pos(), mons->foe,
-                          MG_FORCE_BEH));
-
-            read = true;
-            if (mon != -1)
+                          MG_FORCE_BEH)))
             {
-                if (you.can_see(&menv[mon]))
+                if (you.can_see(mon))
                 {
-                    mprf("%s appears!", menv[mon].name(DESC_A).c_str());
+                    mprf("%s appears!", mon->name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
                 }
-                player_angers_monster(&menv[mon]);
+                player_angers_monster(mon);
             }
             else if (you.can_see(mons))
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -1923,29 +1923,33 @@ static void _monster_add_energy(monster* mons)
 #endif
 void handle_noattack_constrictions(actor *attacker)
 {
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (attacker->constricting[i] != NON_ENTITY)
-        {
-            int damage;
-            actor *defender = mindex_to_actor(attacker->constricting[i]);
+    if (is_sanctuary(attacker->pos()))
+        attacker->stop_constricting_all(true);
 
-            // if not adjacent, stop constricting (and being constricted).
-            if (!adjacent(attacker->pos(), defender->pos()))
-            {
-                attacker->clear_specific_constrictions(attacker->constricting[i]);
-                defender->clear_specific_constrictions(attacker->mindex());
-                continue;
-            }
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        actor* const defender = mindex_to_actor(attacker->constricting[i]);
+        if (defender)
+        {
+            // Constriction should have stopped the moment the actors
+            // became non-adjacent.
+            ASSERT(adjacent(attacker->pos(), defender->pos()));
+
+            int damage;
 
             if (attacker->atype() == ACT_PLAYER)
-                damage = (you.strength() - roll_dice(1,3)) / 3;
+                damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
             DIAG_ONLY(int basedam = damage);
-            damage += roll_dice(1, attacker->dur_has_constricted[i] / 10 + 1);
+            damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
+            if (attacker->atype() == ACT_PLAYER)
+                damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
             DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
             DIAG_ONLY(int acdam = damage);
+            damage = timescale_damage(attacker, damage);
+            DIAG_ONLY(int timescale_dam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
             DIAG_ONLY(int infdam = damage);
@@ -1993,10 +1997,10 @@ void handle_noattack_constrictions(actor *attacker)
                      exclams.c_str());
             }
 
-            dprf("non-melee constrict at: %s df: %s base %d dur %d ac %d inf %d",
+            dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
-                 basedam, durdam, acdam, infdam);
+                 basedam, durdam, acdam, timescale_dam, infdam);
 
             if (defender->atype() == ACT_MONSTER
                 && defender->as_monster()->hit_points < 1)
@@ -2004,6 +2008,7 @@ void handle_noattack_constrictions(actor *attacker)
                 monster_die(defender->as_monster(), attacker);
             }
         }
+    }
 }
 
 void handle_monster_move(monster* mons)
@@ -2587,6 +2592,8 @@ void handle_monsters(bool with_noise)
             // Clear list of mesmerising monsters.
             you.clear_beholders();
             you.clear_fearmongers();
+            you.stop_constricting_all();
+            you.stop_being_constricted();
             break;
         }
     }
@@ -3601,6 +3608,10 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->set_position(n);
     mgrd(n) = mon->mindex();
     m2->set_position(c);
+
+    mon->clear_far_constrictions();
+    m2->clear_far_constrictions();
+
     const int m2i = m2->mindex();
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
@@ -3720,7 +3731,10 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
 
-    mons->clear_all_constrictions(); // moved, let go any constrictions
+    // Let go of all constrictees; only stop *being* constricted if we are now
+    // too far away.
+    mons->stop_constricting_all(true);
+    mons->clear_far_constrictions();
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

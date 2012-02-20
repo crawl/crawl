@@ -335,7 +335,7 @@ public:
     int getkey() const { return lastch; }
 
     void reset();
-    std::vector<MenuEntry *> show(bool reuse_selections = false);
+    virtual std::vector<MenuEntry *> show(bool reuse_selections = false);
     std::vector<MenuEntry *> selected_entries() const;
 
     size_t item_count() const    { return items.size(); }
@@ -359,7 +359,7 @@ public:
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
 
 #ifdef USE_TILE_WEB
-    void webtiles_write_menu() const;
+    void webtiles_write_menu(bool replace = false) const;
     void webtiles_scroll(int first);
     void webtiles_handle_item_request(int start, int end);
 #endif
@@ -409,6 +409,18 @@ protected:
 
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(int index, const MenuEntry *me) const;
+
+    int _webtiles_section_start;
+    int _webtiles_section_end;
+
+    inline int webtiles_section_start() const
+    {
+        return _webtiles_section_start == -1 ? 0 : _webtiles_section_start;
+    }
+    inline int webtiles_section_end() const
+    {
+        return _webtiles_section_end == -1 ? items.size() : _webtiles_section_end;
+    }
 #endif
 
     virtual void draw_title();
@@ -506,6 +518,7 @@ public:
     virtual void add_item_string(const std::string& s, int hotkey = 0);
     virtual void add_text(const std::string& s, bool new_line = false);
     virtual bool jump_to_hotkey(int keyin);
+    virtual std::vector<MenuEntry *> show(bool reuse_selections = false);
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();

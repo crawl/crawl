@@ -738,7 +738,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.summon_type = MON_SUMM_MISCAST;
     }
 
-    return (create_monster(data) != -1);
+    return (create_monster(data));
 }
 
 // hair or hair-equivalent (like bandages)
@@ -1090,7 +1090,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
-            // Monster messages needed.
+            mon_msg = "There is a strange surge of energy around @the_monster@.";
             break;
         case 4:
             you_msg      = "You spin around.";
@@ -1174,7 +1174,9 @@ void MiscastEffect::_translocation(int severity)
                 you_msg        = "Space warps around you!";
                 mon_msg_seen   = "Space warps around @the_monster@!";
                 mon_msg_unseen = "A piece of empty space twists and writhes.";
-                if (_ouch(5 + random2avg(9, 2)) && target->alive())
+                _ouch(5 + random2avg(9, 2));
+                reroll = false;
+                if (target->alive())
                 {
                     if (one_chance_in(3))
                         target->teleport(true);
@@ -1516,11 +1518,12 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            if (you.is_undead)
-                mpr("You suddenly recall your previous life!");
-            else if (_lose_stat(STAT_INT, 1 + random2(3)))
+            if (_lose_stat(STAT_INT, 1 + random2(3)))
             {
-                mpr("You have damaged your brain!");
+                if (you.is_undead)
+                    mpr("You suddenly recall your previous life!");
+                else
+                    mpr("You have damaged your brain!");
             }
             else if (!did_msg)
                 mpr("You have a terrible headache.");
@@ -1550,11 +1553,12 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (you.is_undead)
-                mpr("You suddenly recall your previous life.");
-            else if (_lose_stat(STAT_INT, 3 + random2(3)))
+            if (_lose_stat(STAT_INT, 3 + random2(3)))
             {
-                mpr("You have damaged your brain!");
+                if (you.is_undead)
+                    mpr("You suddenly recall your previous life!");
+                else
+                    mpr("You have damaged your brain!");
             }
             else if (!did_msg)
                 mpr("You have a terrible headache.");

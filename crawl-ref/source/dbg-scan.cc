@@ -445,7 +445,17 @@ void debug_mons_scan()
                     mpr("Other monster isn't holding it, though.", MSGCH_WARN);
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+
+        ASSERT(monster_by_mid(m->mid) == m);
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
+
+    for (std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
+         mc != env.mid_cache.end(); ++mc)
+    {
+        unsigned short idx = mc->second;
+        ASSERT(!invalid_monster_index(idx));
+        ASSERT(menv[idx].mid == mc->first);
+    }
 
     // No problems?
     if (!warned)

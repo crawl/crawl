@@ -182,7 +182,6 @@ water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
-salamander MONS_SALAMANDER
 snake_blue MONS_SUBTRACTOR_SNAKE
 snake_yellow
 snake_cyan
@@ -665,6 +664,7 @@ naga_mage MONS_NAGA_MAGE
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
+salamander MONS_SALAMANDER
 
 ## Ogres ('O')
 %sdir dc-mon/unique

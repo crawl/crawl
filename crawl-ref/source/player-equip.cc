@@ -931,7 +931,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
         case SPARM_SPIRIT_SHIELD:
             if (!unmeld && player_spirit_shield() < 2)
             {
-                set_mp(0);
+                dec_mp(you.magic_points);
                 mpr("You feel spirits watching over you.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
@@ -1335,7 +1335,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case AMU_GUARDIAN_SPIRIT:
         if (player_spirit_shield() < 2 && !unmeld)
         {
-            set_mp(0);
+            dec_mp(you.magic_points);
             mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
@@ -1408,11 +1408,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (fake_rap != ARTP_NUM_PROPERTIES)
             artefact_wpn_learn_prop(item, fake_rap);
 
-        if (!item.props.exists("jewellery_tried")
-            || !item.props["jewellery_tried"].get_bool())
-        {
-            item.props["jewellery_tried"].get_bool() = true;
-        }
+        item.flags |= ISFLAG_TRIED;
     }
     else
     {

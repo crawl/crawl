@@ -94,8 +94,6 @@
 
 #include <dirent.h>
 
-static std::vector<SavefileCallback::callback>* _callback_list = NULL;
-
 static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
@@ -959,12 +957,12 @@ static bool _grab_follower_at(const coord_def &pos)
     if (pos == you.pos())
         return (false);
 
-    monster* fmenv = monster_at(pos);
-    if (!fmenv || !fmenv->alive())
+    monster* fol = monster_at(pos);
+    if (!fol || !fol->alive())
         return (false);
 
     // The monster has to already be tagged in order to follow.
-    if (!testbits(fmenv->flags, MF_TAKING_STAIRS))
+    if (!testbits(fol->flags, MF_TAKING_STAIRS))
         return (false);
 
     // If a monster that can't use stairs was marked as a follower,
@@ -972,19 +970,19 @@ static bool _grab_follower_at(const coord_def &pos)
     // behind it that might want to push through.
     // This means we don't actually send it on transit, but we do
     // return true, so adjacent real followers are handled correctly. (jpeg)
-    if (!mons_can_use_stairs(fmenv))
+    if (!mons_can_use_stairs(fol))
         return (true);
 
     level_id dest = level_id::current();
     if (you.char_direction == GDT_GAME_START)
         dest.depth = 1;
 
-    dprf("%s is following to %s.", fmenv->name(DESC_THE, true).c_str(),
+    dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(fmenv);
-    fmenv->set_transit(dest);
-    fmenv->destroy_inventory();
-    monster_cleanup(fmenv);
+    bool could_see = you.can_see(fol);
+    fol->set_transit(dest);
+    fol->destroy_inventory();
+    monster_cleanup(fol);
     if (could_see)
         view_update_at(pos);
     return (true);
@@ -1001,25 +999,25 @@ static void _grab_followers()
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        monster* fmenv = monster_at(*ai);
-        if (fmenv == NULL)
+        monster* fol = monster_at(*ai);
+        if (fol == NULL)
             continue;
 
-        if (mons_is_duvessa(fmenv) && fmenv->alive())
-            duvessa = fmenv;
+        if (mons_is_duvessa(fol) && fol->alive())
+            duvessa = fol;
 
-        if (mons_is_dowan(fmenv) && fmenv->alive())
-            dowan = fmenv;
+        if (mons_is_dowan(fol) && fol->alive())
+            dowan = fol;
 
-        if (fmenv->wont_attack() && !mons_can_use_stairs(fmenv))
+        if (fol->wont_attack() && !mons_can_use_stairs(fol))
             non_stair_using_allies++;
 
-        if (fmenv->type == MONS_PLAYER_GHOST
-            && fmenv->hit_points < fmenv->max_hit_points / 2)
+        if (fol->type == MONS_PLAYER_GHOST
+            && fol->hit_points < fol->max_hit_points / 2)
         {
-            if (fmenv->visible_to(&you))
+            if (fol->visible_to(&you))
                 mpr("The ghost fades into the shadows.");
-            monster_teleport(fmenv, true);
+            monster_teleport(fol, true);
         }
     }
 
@@ -1536,12 +1534,6 @@ static void _save_game_exit()
     whereis_record("saved");
 #endif
 
-    if (_callback_list != NULL)
-    {
-        delete _callback_list;
-        _callback_list = NULL;
-    }
-
     delete you.save;
     you.save = 0;
 }
@@ -1549,8 +1541,6 @@ static void _save_game_exit()
 void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
-
-    SavefileCallback::pre_save();
 
     // Stack allocated std::string's go in separate function,
     // so Valgrind doesn't complain.
@@ -1815,7 +1805,6 @@ bool restore_game(const std::string& filename)
         load_messages(inf);
     }
 
-    SavefileCallback::post_restore();
     return true;
 }
 
@@ -2190,60 +2179,6 @@ file_lock::~file_lock()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// SavefileCallback
-//
-// Callbacks which are called before a save and after a restore.  Can be used
-// to move stuff in and out of you.props, or on a restore to recalculate data
-// which isn't stored in the savefile.  Declare a SavefileCallback variable
-// using a C++ global constructor to register the callback.
-//
-// XXX: Due to some weirdness with C++ global constructors (see below) I'm
-// not sure if this will work for all compiler/system combos, so make any
-// code which uses this fail gracefully if the callbacks aren't called.
-
-SavefileCallback::SavefileCallback(callback func)
-{
-    ASSERT(func != NULL);
-
-    // XXX: For some reason (at least with GCC 4.3.2 on Linux) if the
-    // callback list is made with a global contructor then it gets emptied
-    // out by the time that pre_save() or post_restore() is called,
-    // probably having something to do with the fact that global
-    // contructors are also used to add the callbacks.  Thus we have to do
-    // it this way.
-    if (_callback_list == NULL)
-        _callback_list = new std::vector<SavefileCallback::callback>();
-
-    _callback_list->push_back(func);
-}
-
-void SavefileCallback::pre_save()
-{
-    ASSERT(crawl_state.saving_game);
-
-    if (_callback_list == NULL)
-        return;
-
-    for (unsigned int i = 0; i < _callback_list->size(); i++)
-    {
-        callback func = (*_callback_list)[i];
-        (*func)(true);
-    }
-}
-
-void SavefileCallback::post_restore()
-{
-    ASSERT(!crawl_state.saving_game);
-
-    if (_callback_list == NULL)
-        return;
-
-    for (unsigned int i = 0; i < _callback_list->size(); i++)
-    {
-        callback func = (*_callback_list)[i];
-        (*func)(false);
-    }
-}
 
 FILE *fopen_replace(const char *name)
 {

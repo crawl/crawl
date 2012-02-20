@@ -314,12 +314,12 @@ function parse_file (filepath, doc)
         -- if module definition is found, store in module hierarchy
         if modulename ~= nil then
                 if modulename == "..." then
-                                modulename = string.gsub (filepath, "%.lua$", "")
-                                modulename = string.gsub (modulename, "/", ".")
+                                modulename = string.gsub(filepath, "%.lua$", "")
+                                modulename = string.gsub(modulename, "/", ".")
                 end
                 if doc.modules[modulename] ~= nil then
                         -- module is already defined, just add the blocks
-                        table.foreachi(blocks, function (_, v)
+                        table.foreachi(blocks, function(_, v)
                                 table.insert(doc.modules[modulename].doc, v)
                         end)
                 else
@@ -467,7 +467,7 @@ function start (files, doc)
         assert(doc.files, "undefined `files' field")
         assert(doc.modules, "undefined `modules' field")
 
-        table.foreachi(files, function (_, path)
+        table.foreachi(files, function(_, path)
                 local attr = lfs.attributes(path)
                 assert(attr, string.format("error stating path `%s'", path))
 

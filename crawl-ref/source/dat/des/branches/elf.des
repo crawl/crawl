@@ -354,16 +354,17 @@ ORIENT: float
 PLACE:  Elf:1
 TAGS:   patrolling
 MONS:   deep elf summoner / deep elf mage / deep elf priest
+KFEAT:  m = iron_grate
 MAP
   xxxxxxx
   x.....x
   x.({[.x
 xxx.....xxx
-@1m.....m1@
+=1m.....m1=
 xxx.....xxx
-@1m.....m1@
+=1m.....m1=
 xxx.....xxx
-@1m.....m1@
+=1m.....m1=
 xxx.....xxx
   x.....x
   x@...@x

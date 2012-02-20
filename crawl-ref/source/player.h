@@ -70,6 +70,7 @@ public:
   uint8_t hit_points_regeneration;
   uint8_t magic_points_regeneration;
   unsigned int experience;
+  unsigned int total_experience; // Unaffected by draining. Used for skill cost.
   int experience_level;
   int gold;
   int zigs_completed, zig_max;
@@ -115,9 +116,9 @@ public:
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
   FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
-  FixedVector<bool, NUM_SKILLS> train_set; //!< Has the player set this skill
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
   FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
                                                     //<!gained by crosstraining
@@ -146,7 +147,6 @@ public:
   int manual_index;
 
   int  skill_cost_level;
-  int  total_skill_points;
   int  exp_available;
   int  zot_points; // ZotDef currency
 
@@ -206,6 +206,7 @@ public:
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitArray<NUM_MISCELLANY>      seen_misc;
+  uint8_t                            octopus_king_rings;
 
   uint8_t normal_vision;        // how far the species gets to see
   uint8_t current_vision;       // current sight radius (cells)
@@ -379,14 +380,14 @@ public:
 
     void reset_prev_move();
 
-    int8_t stat(stat_type stat, bool nonneg=true) const;
-    int8_t strength() const;
-    int8_t intel() const;
-    int8_t dex() const;
-    int8_t max_stat(stat_type stat) const;
-    int8_t max_strength() const;
-    int8_t max_intel() const;
-    int8_t max_dex() const;
+    int stat(stat_type stat, bool nonneg=true) const;
+    int strength() const;
+    int intel() const;
+    int dex() const;
+    int max_stat(stat_type stat) const;
+    int max_strength() const;
+    int max_intel() const;
+    int max_dex() const;
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
@@ -474,6 +475,7 @@ public:
     bool        submerged() const;
     bool        floundering() const;
     bool        extra_balanced() const;
+    bool        shove(const char* feat_name);
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type   body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
@@ -559,7 +561,7 @@ public:
 
     int warding() const;
 
-    int mons_species(bool zombie_base = false) const;
+    monster_type mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
@@ -586,7 +588,9 @@ public:
     int res_torment() const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
+    int res_constrict() const { return 0; };
     int res_magic() const;
+    bool no_tele(bool calc_unid = true, bool permit_id = true);
     bool confusable() const;
     bool slowable() const;
 
@@ -686,11 +690,7 @@ public:
     void accum_been_constricted();
     void accum_has_constricted();
     bool attempt_escape();
-    bool is_constricted_larger();
-    bool is_constricted();
-    bool has_usable_tentacle();
-    void clear_all_constrictions();
-    void clear_specific_constrictions(int mindex);
+    bool has_usable_tentacle() const;
 
 protected:
     void _removed_beholder();
@@ -863,7 +863,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
-unsigned int exp_needed(int lev);
+unsigned int exp_needed(int lev, int exp_apt = 0);
 bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);

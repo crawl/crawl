@@ -13,7 +13,6 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -753,9 +752,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
         return (false);
 
     // To what degree are they eligible for this prayertype?
-    int degree = eligibility[prayertype];
-    bool minor = degree <= ((prayertype == RECITE_HERETIC) ? 2 : 1);
-    int spellpower = power * 2 + degree * 20;
+    const int degree = eligibility[prayertype];
+    const bool minor = degree <= (prayertype == RECITE_HERETIC ? 2 : 1);
+    const int spellpower = power * 2 + degree * 20;
     zin_eff effect = ZIN_NOTHING;
 
     switch (prayertype)
@@ -1193,7 +1192,7 @@ static void _zin_saltify(monster* mon)
     if (corpse != -1)
         destroy_item(corpse);
 
-    const int pillar = create_monster(
+    if (monster *pillar = create_monster(
                         mgen_data(MONS_PILLAR_OF_SALT,
                                   BEH_HOSTILE,
                                   0,
@@ -1204,14 +1203,12 @@ static void _zin_saltify(monster* mon)
                                   MG_FORCE_PLACE,
                                   GOD_NO_GOD,
                                   pillar_type),
-                                  false);
-
-    if (pillar != -1)
+                                  false))
     {
         // Enemies with more HD leave longer-lasting pillars of salt.
         int time_left = (random2(8) + hd) * BASELINE_DELAY;
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-        env.mons[pillar].update_ench(temp_en);
+        pillar->update_ench(temp_en);
     }
 }
 
@@ -1472,6 +1469,7 @@ bool trog_burn_spellbooks()
 
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
+            item_was_destroyed(*si);
             destroy_item(si.link());
             count++;
         }
@@ -1712,6 +1710,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
 
+    mon->stop_constricting_all(false);
+    mon->stop_being_constricted();
+
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
 }
@@ -1911,7 +1912,7 @@ int fedhas_fungal_bloom()
     for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
         monster* target = monster_at(*i);
-        if (!is_harmless_cloud(cloud_type_at(*i)))
+        if (!can_spawn_mushrooms(*i))
             continue;
 
         if (target && target->mons_species() != MONS_TOADSTOOL)
@@ -1955,7 +1956,7 @@ int fedhas_fungal_bloom()
                 // will not give piety in the next loop).
                 if (corpse < 0 && piety)
                 {
-                    const int mushroom = create_monster(
+                    if (create_monster(
                                 mgen_data(MONS_TOADSTOOL,
                                           BEH_GOOD_NEUTRAL,
                                           &you,
@@ -1968,13 +1969,12 @@ int fedhas_fungal_bloom()
                                           MONS_NO_MONSTER,
                                           0,
                                           colour),
-                                          false);
-
-                    if (mushroom != -1)
+                                          false))
+                    {
                         seen_mushrooms++;
+                    }
 
                     processed_count++;
-
                     continue;
                 }
 
@@ -2007,7 +2007,10 @@ int fedhas_fungal_bloom()
                 if (mons_skeleton(j->plus))
                     turn_corpse_into_skeleton(*j);
                 else
+                {
+                    item_was_destroyed(*j);
                     destroy_item(j->index());
+                }
 
                 seen_mushrooms += seen_per;
 
@@ -2042,12 +2045,12 @@ int fedhas_fungal_bloom()
     return (processed_count);
 }
 
-static int _create_plant(coord_def & target, int hp_adjust = 0)
+static bool _create_plant(coord_def & target, int hp_adjust = 0)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
         return (0);
 
-    const int plant = create_monster(mgen_data
+    if (monster *plant = create_monster(mgen_data
                                      (MONS_PLANT,
                                       BEH_FRIENDLY,
                                       &you,
@@ -2056,14 +2059,11 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
                                       target,
                                       MHITNOT,
                                       MG_FORCE_PLACE,
-                                      GOD_FEDHAS));
-
-
-    if (plant != -1)
+                                      GOD_FEDHAS)))
     {
-        env.mons[plant].flags |= MF_ATT_CHANGE_ATTEMPT;
-        env.mons[plant].max_hit_points += hp_adjust;
-        env.mons[plant].hit_points += hp_adjust;
+        plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+        plant->max_hit_points += hp_adjust;
+        plant->hit_points += hp_adjust;
 
         if (you.see_cell(target))
         {
@@ -2075,9 +2075,10 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
             else
                 mpr("A plant grows up from the ground.");
         }
+        return true;
     }
 
-    return (plant != -1);
+    return false;
 }
 
 bool fedhas_sunlight()
@@ -2194,18 +2195,19 @@ bool fedhas_sunlight()
                  && orig_type == DNGN_SHALLOW_WATER)
         {
             // Create a plant.
-            const int plant = create_monster(mgen_data(MONS_PLANT,
-                                                       BEH_HOSTILE,
-                                                       &you,
-                                                       0,
-                                                       0,
-                                                       target,
-                                                       MHITNOT,
-                                                       MG_FORCE_PLACE,
-                                                       GOD_FEDHAS));
-
-            if (plant != -1 && you.see_cell(target))
+            if (create_monster(mgen_data(MONS_PLANT,
+                                         BEH_HOSTILE,
+                                         &you,
+                                         0,
+                                         0,
+                                         target,
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         GOD_FEDHAS))
+                && you.see_cell(target))
+            {
                 plant_count++;
+            }
 
             processed_count++;
         }
@@ -2595,8 +2597,8 @@ int fedhas_rain(const coord_def &target)
                 && ftype >= DNGN_FLOOR_MIN
                 && ftype <= DNGN_FLOOR_MAX)
             {
-                const int plant = create_monster(mgen_data
-                                     (coinflip() ? MONS_PLANT : MONS_FUNGUS,
+                if (create_monster(mgen_data(
+                                      coinflip() ? MONS_PLANT : MONS_FUNGUS,
                                       BEH_GOOD_NEUTRAL,
                                       &you,
                                       0,
@@ -2604,10 +2606,10 @@ int fedhas_rain(const coord_def &target)
                                       *rad,
                                       MHITNOT,
                                       MG_FORCE_PLACE,
-                                      GOD_FEDHAS));
-
-                if (plant != -1)
+                                      GOD_FEDHAS)))
+                {
                     spawned_count++;
+                }
 
                 processed_count++;
             }
@@ -2724,7 +2726,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     for (unsigned i = 0; i < positions.size(); ++i)
     {
         count++;
-        int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+        if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                           behavior,
                                           &you,
                                           0,
@@ -2732,22 +2734,23 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                           positions[i]->pos,
                                           MHITNOT,
                                           MG_FORCE_PLACE,
-                                          GOD_FEDHAS));
-
-        if (rc != -1)
+                                          GOD_FEDHAS)))
         {
-            env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
+            rc->flags |= MF_ATT_CHANGE_ATTEMPT;
             if (behavior == BEH_FRIENDLY)
             {
-                env.mons[rc].behaviour = BEH_WANDER;
-                env.mons[rc].foe = MHITNOT;
+                rc->behaviour = BEH_WANDER;
+                rc->foe = MHITNOT;
             }
         }
 
         if (mons_skeleton(positions[i]->plus))
             turn_corpse_into_skeleton(*positions[i]);
         else
+        {
+            item_was_destroyed(*positions[i]);
             destroy_item(positions[i]->index());
+        }
     }
 
     viewwindow(false);
@@ -2787,13 +2790,9 @@ static bool _possible_evolution(const monster* input,
         break;
 
     case MONS_FUNGUS:
-        possible_monster.new_type = MONS_WANDERING_MUSHROOM;
-        possible_monster.piety_cost = 1;
-        break;
-
     case MONS_TOADSTOOL:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
-        possible_monster.piety_cost = 2;
+        possible_monster.piety_cost = (input->type == MONS_TOADSTOOL ? 2 : 1);
         break;
 
     case MONS_BALLISTOMYCETE:
@@ -2816,7 +2815,7 @@ bool mons_is_evolvable(const monster* mon)
 
 static bool _place_ballisto(const coord_def & pos)
 {
-    const int ballisto = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+    if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   BEH_FRIENDLY,
                                                   &you,
                                                   0,
@@ -2824,9 +2823,7 @@ static bool _place_ballisto(const coord_def & pos)
                                                   pos,
                                                   MHITNOT,
                                                   MG_FORCE_PLACE,
-                                                  GOD_FEDHAS));
-
-    if (ballisto != -1)
+                                                  GOD_FEDHAS)))
     {
         remove_mold(pos);
         mpr("The mold grows into a ballistomycete.");

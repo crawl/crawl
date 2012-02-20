@@ -420,6 +420,7 @@ void elven_twins_pacify (monster* twin)
     if (mons_near(mons))
         simple_monster_message(mons, " likewise turns neutral.");
 
+    record_monster_defeat(mons, KILL_PACIFIED);
     mons_pacify(mons, ATT_NEUTRAL);
 }
 
@@ -497,12 +498,10 @@ void spirit_fades (monster *spirit)
     if (spirit->alive())
         monster_die(spirit, KILL_MISC, NON_MONSTER, true);
 
-    int mon_id = create_monster(mon);
+    monster *new_mon = create_monster(mon);
 
-    if (mon_id == -1)
+    if (!new_mon)
         return;
-
-    monster *new_mon = &menv[mon_id];
 
     if (mons_near(new_mon))
         simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
@@ -649,21 +648,20 @@ void timeout_phoenix_markers (int duration)
             new_pho.behaviour = mmark->behaviour;
             new_pho.god = mmark->god;
 
-            monster* mons;
+            monster* mons = 0;
 
-            int id = -1;
             for (distance_iterator di(place_at, true, false); di; ++di)
             {
                 if (monster_at(*di) || !monster_habitable_grid(MONS_PHOENIX, grd(*di)))
                     continue;
 
                 new_pho.pos = *di;
-                if ((id = place_monster(new_pho, true)) != -1)
+                if (mons = place_monster(new_pho, true))
                     break;
             }
 
             // give up
-            if (id == -1)
+            if (!mons)
             {
                 dprf("Couldn't place new phoenix!");
                 // We couldn't place it, so nuke the marker.
@@ -671,7 +669,6 @@ void timeout_phoenix_markers (int duration)
                 continue;
             }
 
-            mons = &menv[id];
             mons->attitude = mmark->attitude;
 
             // We no longer need the marker now, so free it.
@@ -845,25 +842,24 @@ void shedu_do_actual_resurrection (monster* mons)
     new_shedu.foe = mons->foe;
     new_shedu.god = mons->god;
 
-    int id = -1;
+    monster* my_pair = 0;
     for (distance_iterator di(place_at, true, false); di; ++di)
     {
         if (monster_at(*di) || !monster_habitable_grid(mons, grd(*di)))
             continue;
 
         new_shedu.pos = *di;
-        if ((id = place_monster(new_shedu, true)) != -1)
+        if (my_pair = place_monster(new_shedu, true))
             break;
     }
 
     // give up
-    if (id == -1)
+    if (!my_pair)
     {
         dprf("Couldn't place new shedu!");
         return;
     }
 
-    monster* my_pair = &menv[id];
     my_pair->number = mons->mid;
     mons->number = my_pair->mid;
     my_pair->flags |= MF_BAND_MEMBER;

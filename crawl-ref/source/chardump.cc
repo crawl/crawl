@@ -106,15 +106,12 @@ struct dump_params
 {
     std::string &text;
     std::string section;
-    bool show_prices;
     bool full_id;
     const scorefile_entry *se;
 
     dump_params(std::string &_text, const std::string &sec = "",
-                bool prices = false, bool id = false,
-                const scorefile_entry *s = NULL)
-        : text(_text), section(sec), show_prices(prices), full_id(id),
-          se(s)
+                bool id = false, const scorefile_entry *s = NULL)
+        : text(_text), section(sec), full_id(id), se(s)
     {
     }
 };
@@ -171,14 +168,14 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const std::string &fname, bool show_prices, bool full_id,
+bool dump_char(const std::string &fname, bool full_id,
                const scorefile_entry *se)
 {
     // Start with enough room for 100 80 character lines.
     std::string text;
     text.reserve(100 * 80);
 
-    dump_params par(text, "", show_prices, full_id, se);
+    dump_params par(text, "", full_id, se);
 
     for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
     {
@@ -672,13 +669,13 @@ static void _sdump_religion(dump_params &par)
                 text += "You were ";
             else
                 text += "You are ";
-            text += describe_xom_favour(false);
+            text += describe_xom_favour();
             text += "\n";
         }
     }
 }
 
-static bool _dump_item_origin(const item_def &item, int value)
+static bool _dump_item_origin(const item_def &item)
 {
 #define fs(x) (flags & (x))
     const int flags = Options.dump_item_origins;
@@ -730,9 +727,7 @@ static bool _dump_item_origin(const item_def &item, int value)
     const int refpr = Options.dump_item_origin_price;
     if (refpr == -1)
         return (false);
-    if (value == -1)
-        value = item_value(item, false);
-    return (value >= refpr);
+    return ((int)item_value(item, false) >= refpr);
 #undef fs
 }
 
@@ -807,15 +802,8 @@ static void _sdump_inventory(dump_params &par)
 
                         inv_count--;
 
-                        int ival = -1;
-                        if (par.show_prices)
-                        {
-                            text += make_stringf(" (%d gold)",
-                                        ival = item_value(you.inv[j], true));
-                        }
-
                         if (origin_describable(you.inv[j])
-                            && _dump_item_origin(you.inv[j], ival))
+                            && _dump_item_origin(you.inv[j]))
                         {
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
@@ -940,7 +928,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Success   Level  Hunger" "\n";
+        text += " Your Spells              Type           Power        Failure   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -976,7 +964,9 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 54);
 
-                spell_line += failure_rate_to_string(spell_fail(spell));
+                char* failure = failure_rate_to_string(spell_fail(spell));
+                spell_line += failure;
+                free(failure);
 
                 spell_line = chop_string(spell_line, 66);
 
@@ -1209,6 +1199,8 @@ static std::string _describe_action(caction_type type)
         return " Cast";
     case CACT_INVOKE:
         return "Invok";
+    case CACT_ABIL:
+        return " Abil";
     case CACT_EVOKE:
         return "Evoke";
     case CACT_USE:
@@ -1231,12 +1223,11 @@ static std::string _describe_action_subtype(caction_type type, int subtype)
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
+    case CACT_ABIL:
         return ability_name((ability_type)subtype);
     case CACT_EVOKE:
         switch ((evoc_type)subtype)
         {
-        case EVOC_ABIL:
-            return "Ability";
         case EVOC_WAND:
             return "Wand";
         case EVOC_ROD:

@@ -550,8 +550,9 @@ std::string pluralise(const std::string &name,
         return "feet";
     else if (name == "ophan" || name == "cherub" || name == "seraph")
     {
-        // unlike "angel" which is fully assimilated and "cherub" which may be
-        // pluralized both ways, "ophan" always uses hebrew pluralization
+        // Unlike "angel" which is fully assimilated, and "cherub" and "seraph"
+        // which may be pluralised both ways, "ophan" always uses Hebrew
+        // pluralisation.
         return name + "im";
     }
 

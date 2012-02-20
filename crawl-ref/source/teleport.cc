@@ -66,22 +66,8 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         seen_context = SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest))
+    if (!move_to_pos(dest, true))
         return (false);
-
-    // handle constriction, if any
-    if (is_constricted())
-    {
-        if (constricted_by == MHITYOU)
-            player_teleport_to_monster(this, dest);
-        else
-            monster_teleport_to_player(constricted_by, dest);
-    }
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] == MHITYOU)
-            player_teleport_to_monster(this, dest);
-        else if (constricting[i] != NON_ENTITY)
-            monster_teleport_to_player(constricting[i], dest);
 
     // Leave a purple cloud.
     if (!jump)
@@ -247,7 +233,6 @@ bool random_near_space(const coord_def& origin, coord_def& target,
             || restrict_los && !you.see_cell(target)
             || grd(target) < limit
             || actor_at(target)
-            || mimic_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
             || forbid_sanctuary && is_sanctuary(target))
         {

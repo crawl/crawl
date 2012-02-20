@@ -306,18 +306,81 @@ void actor::clear_clinging()
         props["clinging"] = false;
 }
 
-bool actor::is_constricting()
+void actor::stop_constricting(int mind, bool intentional)
+{
+    actor* const constrictee = mindex_to_actor(mind);
+    ASSERT(constrictee);
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        if (constricting[i] == mind)
+        {
+            constricting[i] = NON_ENTITY;
+            dur_has_constricted[i] = 0;
+            constrictee->constricted_by = NON_ENTITY;
+            constrictee->dur_been_constricted = 0;
+            constrictee->escape_attempts = 0;
+
+            if (alive() && constrictee->alive()
+                && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
+            {
+                mprf("%s %s %s grip on %s.",
+                        name(DESC_THE).c_str(),
+                        conj_verb(intentional ? "release" : "lose").c_str(),
+                        pronoun(PRONOUN_POSSESSIVE).c_str(),
+                        constrictee->name(DESC_THE).c_str());
+            }
+        }
+    }
+}
+
+void actor::stop_constricting_all(bool intentional)
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
+            stop_constricting(constricting[i], intentional);
+}
+
+void actor::stop_being_constricted()
+{
+    actor* const constrictor = mindex_to_actor(constricted_by);
+
+    if (constrictor)
+        constrictor->stop_constricting(mindex(), false);
+
+    // Just in case the constrictor no longer exists.
+    constricted_by = NON_ENTITY;
+    dur_been_constricted = 0;
+    escape_attempts = 0;
+}
+
+void actor::clear_far_constrictions()
+{
+    actor* const constrictor = mindex_to_actor(constricted_by);
+
+    if (!constrictor || !adjacent(pos(), constrictor->pos()))
+        stop_being_constricted();
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        actor* const constrictee = mindex_to_actor(constricting[i]);
+        if (constrictee && !adjacent(pos(), constrictee->pos()))
+            stop_constricting(constricting[i], false);
+    }
+}
+
+bool actor::is_constricting() const
+{
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mindex_to_actor(constricting[i]))
             return true;
 
     return false;
 }
 
-bool actor::is_constricted()
+bool actor::is_constricted() const
 {
-    return (constricted_by != NON_ENTITY);
+    return (mindex_to_actor(constricted_by));
 }
 
 actor *mindex_to_actor(short mindex)

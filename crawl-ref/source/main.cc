@@ -714,8 +714,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case '=':
-        mprf("Cost level: %d  Skill points: %d  Next cost level: %d Skill cost: %d",
-              you.skill_cost_level, you.total_skill_points,
+        mprf("Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d",
+              you.skill_cost_level, you.total_experience,
               skill_cost_needed(you.skill_cost_level + 1),
               calc_skill_cost(you.skill_cost_level));
         break;
@@ -1460,7 +1460,8 @@ static void _go_upstairs()
         end_mislead(true);
 
     you.clear_clinging();
-    you.clear_all_constrictions();
+    you.stop_constricting_all(true);
+    you.stop_being_constricted();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1547,7 +1548,8 @@ static void _go_downstairs()
         end_mislead(true);
 
     you.clear_clinging();
-    you.clear_all_constrictions();
+    you.stop_constricting_all(true);
+    you.stop_being_constricted();
 
     if (shaft)
     {
@@ -2003,7 +2005,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_CHARACTER_DUMP:
-        if (!dump_char(you.your_name, false))
+        if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
@@ -2339,9 +2341,6 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
 
-    if (_decrement_a_duration(DUR_NAUSEA, delay))
-        end_nausea();
-
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
@@ -2593,7 +2592,8 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
         you.duration[DUR_LIQUEFYING] = 1;
 
-    if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
+    if (_decrement_a_duration(DUR_LIQUEFYING, delay,
+                              "The ground is no longer liquid beneath you."))
     {
         invalidate_agrid();
     }
@@ -2754,7 +2754,6 @@ static void _decrement_durations()
                  && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
             you.rotting--;
         }
@@ -2780,7 +2779,6 @@ static void _decrement_durations()
         {
             dprf("rot rate: 1/%d", resilience);
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
             if (you.rotting > 0)
                 you.rotting--;
@@ -2789,7 +2787,8 @@ static void _decrement_durations()
 
     dec_disease_player(delay);
 
-    dec_poison_player();
+    if (you.duration[DUR_POISONING])
+        dec_poison_player();
 
     if (you.duration[DUR_DEATHS_DOOR])
     {
@@ -3018,7 +3017,11 @@ static void _player_reacts()
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
+        {
+            mpr("You are suddenly pulled into a different region of the Abyss!",
+                MSGCH_BANISHMENT);
             you_teleport_now(false, true); // to new area of the Abyss
+        }
     }
 
     actor_apply_cloud(&you);
@@ -3053,7 +3056,7 @@ static void _player_reacts()
     recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         discover_mimic(*ai);
 
     // Player stealth check.
@@ -3066,7 +3069,8 @@ static void _player_reacts()
 static void _player_reacts_to_monsters()
 {
     // In case Maurice managed to steal a needed item for example.
-    update_can_train();
+    if (!you_are_delayed())
+        update_can_train();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
@@ -4273,6 +4277,10 @@ static void _move_player(coord_def move)
             you.time_taken *= 1.4;
 #endif
 
+        // clear constriction data
+        you.stop_constricting_all(true);
+        you.stop_being_constricted();
+
         move_player_to_grid(targ, true, false);
 
         you.walking = move.abs();
@@ -4343,9 +4351,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    // moved and not an attack, clear constriction data
-    if (!attacking)
-        you.clear_all_constrictions();
 }
 
 static int _get_num_and_char_keyfun(int &ch)

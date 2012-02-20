@@ -109,6 +109,9 @@ struct crawl_environment
     // Volatile level flags, not saved.
     uint32_t level_state;
 
+    // Mapping mid->mindex until the transition is finished.
+    std::map<mid_t, unsigned short> mid_cache;
+
     // Temp stuff.
     std::vector<final_effect> final_effects;
 };

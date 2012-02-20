@@ -35,7 +35,8 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             elem.on("click.menu_item", item_click_handler);
         }
 
-        if (item.tiles && item.tiles.length > 0 && !dungeon_renderer.glyph_mode)
+        if (item.tiles && item.tiles.length > 0
+            && dungeon_renderer.display_mode == "tiles")
         {
             var renderer = new cr.DungeonCellRenderer();
             var canvas = $("<canvas>");
@@ -173,6 +174,10 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         if (menu.flags & enums.menu_flag.START_AT_END)
         {
             scroll_bottom_to_item(menu.items.length - 1, true);
+        }
+        else if (menu.jump_to)
+        {
+            scroll_to_item(menu.jump_to, true);
         }
         // Hide -more- if at the bottom
         menu_scroll_handler();
@@ -469,6 +474,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function open_menu(data)
     {
+        if (data.replace) menu_stack.pop();
         menu_stack.push(data);
         menu = data;
 
@@ -619,9 +625,13 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             event.preventDefault();
             return false;
         case 36: // home
-            scroll_to_item(0);
-            event.preventDefault();
-            return false;
+            if (menu.tag !== "help")
+            {
+                scroll_to_item(0);
+                event.preventDefault();
+                return false;
+            }
+            else break;
         case 38: // up
             line_up();
             event.preventDefault();
@@ -641,12 +651,16 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
         switch (chr)
         {
-        case "<":
         case "-":
+            if (menu.tag == "inventory")
+                return true; // Don't capture - for wield prompts
+
+        case "<":
         case ";":
             page_up();
             event.preventDefault();
             return false;
+
         case ">":
         case "+":
         case " ":

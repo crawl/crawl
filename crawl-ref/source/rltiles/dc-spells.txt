@@ -137,6 +137,7 @@ venom_bolt VENOM_BOLT
 
 %sdir gui/spells/summoning
 abjuration ABJURATION
+mass_abjuration MASS_ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 demonic_horde DEMONIC_HORDE
@@ -176,6 +177,7 @@ alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
 homunculus HOMUNCULUS
+beastly_appendage BEASTLY_APPENDAGE
 
 %sdir gui/spells
 memorise MEMORISE

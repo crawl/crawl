@@ -133,16 +133,5 @@ private:
     std::string filename;
 };
 
-class SavefileCallback
-{
-public:
-    typedef void (*callback)(bool saving);
-
-    SavefileCallback(callback func);
-
-    static void pre_save();
-    static void post_restore();
-};
-
 FILE *fopen_replace(const char *name);
 #endif

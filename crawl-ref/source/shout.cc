@@ -761,7 +761,8 @@ static int _noise_attenuation_millis(const coord_def &pos)
 }
 
 noise_cell::noise_cell()
-    : neighbour_delta(0, 0), noise_id(-1), noise_intensity_millis(0)
+    : neighbour_delta(0, 0), noise_id(-1), noise_intensity_millis(0),
+      noise_travel_distance(0)
 {
 }
 
@@ -833,7 +834,9 @@ void noise_grid::propagate_noise()
     if (noises.empty())
         return;
 
+#ifdef DEBUG_NOISE_PROPAGATION
     dprf("noise_grid: %u noises to apply", (unsigned int)noises.size());
+#endif
     std::vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
 
@@ -1062,7 +1065,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
 #include "options.h"
 #include "viewchar.h"
-#include "math.h"
+#include <math.h>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
 static std::string _hue_rgb(int hue)

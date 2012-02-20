@@ -107,11 +107,16 @@ static std::string _spell_base_description(spell_type spell, bool viewing)
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
+    desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
-    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
-         << spell_difficulty(spell);
-    desc << "</" << colour_to_str(highlight) <<">";
+    highlight = failure_rate_colour(spell);
+    desc << "<" << colour_to_str(highlight) << ">";
+    char* failure = failure_rate_to_string(spell_fail(spell));
+    desc << chop_string(failure, 12);
+    free(failure);
+    desc << "</" << colour_to_str(highlight) << ">";
+    desc << spell_difficulty(spell);
 
     return desc.str();
 }
@@ -164,7 +169,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " Your Spells                       Type          "
-                "                Success   Level",
+                "                Failure   Level",
                 " Your Spells                       Power         "
                 "Range           Hunger    Level",
                 MEL_ITEM);
@@ -175,7 +180,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " Your Spells                       Type          "
-            "                Success   Level",
+            "                Failure   Level",
             " Your Spells                       Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
@@ -297,10 +302,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     // Apply Brilliance factor here.
     if (you.duration[DUR_BRILLIANCE])
         fail_reduce = fail_reduce * 67 / 100;
-
-    // Draconians get a boost to dragon-form.
-    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
-        fail_reduce = fail_reduce * 70 / 100;
 
     // Hard cap on fail rate reduction.
     if (fail_reduce < 50)
@@ -498,6 +499,8 @@ int spell_enhancement(unsigned int typeflags)
     if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         enhanced++;
 
+    enhanced += augmentation_amount();
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;
@@ -550,6 +553,12 @@ static bool _can_cast()
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (you.confused())
+    {
+        mpr("You're too confused to cast spells.");
         return false;
     }
 
@@ -720,27 +729,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     const bool staff_energy = player_energy();
-    if (you.confused())
-        random_uselessness();
-    else
+    you.last_cast_spell = spell;
+    const spret_type cast_result = your_spells(spell, 0, true, check_range);
+    if (cast_result == SPRET_ABORT)
     {
-        you.last_cast_spell = spell;
-        const spret_type cast_result = your_spells(spell, 0, true, check_range);
-        if (cast_result == SPRET_ABORT)
-        {
-            crawl_state.zero_turns_taken();
-            return (false);
-        }
-
-        if (cast_result == SPRET_SUCCESS)
-        {
-            practise(EX_DID_CAST, spell);
-            did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-            count_action(CACT_CAST, spell);
-        }
-        else
-            practise(EX_DID_MISCAST, spell);
+        crawl_state.zero_turns_taken();
+        return (false);
     }
+
+    if (cast_result == SPRET_SUCCESS)
+    {
+        practise(EX_DID_CAST, spell);
+        did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
+        count_action(CACT_CAST, spell);
+    }
+    else
+        practise(EX_DID_MISCAST, spell);
 
     dec_mp(spell_mana(spell));
 
@@ -832,10 +836,10 @@ static bool _vampire_cannot_cast(spell_type spell)
 
 bool is_prevented_teleport(spell_type spell)
 {
-    return ((spell == SPELL_BLINK
-           || spell == SPELL_CONTROLLED_BLINK
-           || spell == SPELL_TELEPORT_SELF)
-           && item_blocks_teleport(false, false));
+    return (spell == SPELL_BLINK
+             || spell == SPELL_CONTROLLED_BLINK
+             || spell == SPELL_TELEPORT_SELF)
+            && item_blocks_teleport(false, false);
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
@@ -1046,10 +1050,10 @@ spret_type your_spells(spell_type spell, int powc,
         powc = calc_spell_power(spell, true);
 
     // XXX: This handles only some of the cases where spells need
-    // targeting.  There are others that do their own that will be
+    // targetting.  There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it).  Hopefully, those will eventually be fixed. - bwr
-    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
+    if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
               (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
@@ -1060,7 +1064,7 @@ spret_type your_spells(spell_type spell, int powc,
         if (spell == SPELL_DISPEL_UNDEAD)
             targ = TARG_HOSTILE_UNDEAD;
 
-        targeting_type dir  =
+        targetting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
              testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
              testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
@@ -1151,7 +1155,7 @@ spret_type your_spells(spell_type spell, int powc,
 
             // The spell still goes through, but you get a miscast anyway.
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                          (you.experience_level / 2) + (spell_mana(spell) * 2),
+                          (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
 
@@ -1191,14 +1195,14 @@ spret_type your_spells(spell_type spell, int powc,
         // badly you missed the spell.  High power spells can be
         // quite nasty: 9 * 9 * 90 / 500 = 15 points of
         // contamination!
-        int nastiness = spell_mana(spell) * spell_mana(spell) * fail + 250;
+        int nastiness = spell_difficulty(spell) * spell_difficulty(spell) * fail + 250;
 
         const int cont_points = div_rand_round(nastiness, 500);
 
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
 
-        MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell), fail);
+        MiscastEffect(&you, NON_MONSTER, spell, spell_difficulty(spell), fail);
 
         return (SPRET_FAIL);
     }
@@ -1689,18 +1693,92 @@ static spret_type _do_cast(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-const char* failure_rate_to_string(int fail)
+
+// _tetrahedral_number: returns the nth tetrahedral number.
+// This is the number of triples of nonnegative integers with sum < n.
+// Called only by get_true_fail_rate.
+static int _tetrahedral_number(int n)
 {
-    return (fail == 100) ? "Useless"   : // 0% success chance
-           (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 59)   ? "Very Poor" : // 5-30%
-           (fail > 50)   ? "Poor"      : // 30-50%
-           (fail > 40)   ? "Fair"      : // 50-70%
-           (fail > 35)   ? "Good"      : // 70-80%
-           (fail > 28)   ? "Very Good" : // 80-90%
-           (fail > 22)   ? "Great"     : // 90-95%
-           (fail >  0)   ? "Excellent"   // 95-100%
-                         : "Perfect";    // 100%
+    return n * (n+1) * (n+2) / 6;
+}
+
+// get_true_fail_rate: Takes the raw failure to-beat number
+// and converts it to the actual chance of failure:
+// the probability that random2avg(100,3) < raw_fail.
+// Should probably use more constants, though I doubt the spell
+// success algorithms will really change *that* much.
+// Called only by failure_rate_to_int and get_miscast_chance.
+double get_true_fail_rate(int raw_fail)
+{
+    //Need random2(101) + random2(101) + random2(100) to be less than 3*raw_fail.
+    //Fun with tetrahedral numbers!
+
+    int target = raw_fail * 3;
+
+    if (target <= 100)
+    {
+        return (double) _tetrahedral_number(target)/1020100;
+    }
+    if (target <= 200)
+    {
+        //PIE: the negative term takes the maximum of 100 (or 99) into
+        //consideration.  Note that only one term can exceed it in this case,
+        //which is why this works.
+        return (double) (_tetrahedral_number(target) - 2*_tetrahedral_number(target-101) - _tetrahedral_number(target-100))/1020100;
+    }
+    //The random2avg distribution is symmetric, so the last interval is
+    //essentially the same as the first interval.
+    return (double) (1020100 - _tetrahedral_number(300 - target))/1020100;
+
+}
+
+//Computes the chance of getting a miscast effect of a given severity (or
+//higher).
+//Called only by failure_rate_colour.
+double get_miscast_chance(int raw_fail, int level, int severity)
+{
+    if (severity <= 0)
+        return get_true_fail_rate(raw_fail);
+    double C = 70000.0/(150*level*(10+level));
+    double chance = 0.0;
+    int k = severity + 1;
+    while ((C*k) <= raw_fail)
+    {
+        chance += get_true_fail_rate((int)(raw_fail+1-(C*k)))*severity/(k*(k-1));
+        k++;
+    }
+    return chance;
+}
+
+// Chooses a colour for the failure rate display for a spell. The colour is
+// based on the chance of getting a severity >= 2 miscast.
+int failure_rate_colour(spell_type spell)
+{
+    double chance = get_miscast_chance(spell_fail(spell), spell_difficulty(spell), 2);
+    return ((chance < 0.001) ? LIGHTGREY :
+            (chance < 0.005) ? YELLOW    :
+            (chance < 0.025) ? LIGHTRED  :
+                               RED);
+}
+
+//Converts the raw failure rate into a number to be displayed.
+int failure_rate_to_int(int fail)
+{
+    if (fail == 0)
+        return 0;
+    else if (fail == 100)
+        return 100;
+    else
+        return std::max(1, (int) (100 * get_true_fail_rate(fail)));
+}
+
+//Note that this char[] is allocated on the heap, so anything calling
+//this function will also need to call free()!
+char* failure_rate_to_string(int fail)
+{
+    char *buffer = (char *)malloc(9);
+    sprintf(buffer, "%d%%", failure_rate_to_int(fail));
+    return buffer;
 }
 
 const char* spell_hunger_string(spell_type spell, bool rod)

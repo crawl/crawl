@@ -9,7 +9,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -710,11 +709,10 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
 bool monster::can_throw_large_rocks() const
 {
-    return (type == MONS_STONE_GIANT
-            || type == MONS_POLYPHEMUS
-            || type == MONS_CHUCK
-            || ::mons_species(type) == MONS_CYCLOPS
-            || ::mons_species(type) == MONS_OGRE);
+    monster_type species = mons_species(false); // zombies can't
+    return (species == MONS_STONE_GIANT
+         || species == MONS_CYCLOPS
+         || species == MONS_OGRE);
 }
 
 bool monster::can_speak()
@@ -2146,6 +2144,10 @@ void monster::swap_weapons(int near)
     if (weap && !unequip(*weap, MSLOT_WEAPON, near))
     {
         // Item was cursed.
+        // A centaur may randomly decide to not shoot you, but bashing people with
+        // a ranged weapon is a dead giveaway.
+        if (weap->cursed() && you.can_see(this) && is_range_weapon(*weap))
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
 
@@ -2666,6 +2668,8 @@ void monster::moveto(const coord_def& c, bool clear_net)
     }
 
     set_position(c);
+
+    clear_far_constrictions();
 }
 
 bool monster::fumbles_attack(bool verbose)
@@ -3048,7 +3052,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
 
     if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
-    else if (caught() || const_cast<monster *>(this)->is_constricted())
+    else if (caught() || is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
@@ -3235,7 +3239,9 @@ bool monster::is_known_chaotic() const
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_KILLER_KLOWN // For their random attacks.
+#if TAG_MAJOR_VERSION == 32
         || type == MONS_SUBTRACTOR_SNAKE // random attacks, colour changing.
+#endif
         || type == MONS_TIAMAT)      // For her colour-changing.
     {
         return (true);
@@ -3544,6 +3550,7 @@ int monster::res_torment() const
     const mon_holy_type holy = holiness();
     if (holy == MH_UNDEAD
         || holy == MH_DEMONIC
+        || holy == MH_PLANT
         || holy == MH_NONLIVING)
     {
         return (1);
@@ -3568,6 +3575,28 @@ int monster::res_petrify(bool temp) const
     // Clay, etc, might be incapable of movement when hardened.
     // Skeletons -- NetHack assumes fossilization doesn't hurt, we might
     // want to make it that way too.
+    return 0;
+}
+
+int monster::res_constrict() const
+{
+    // 3 is immunity, 1 or 2 reduces damage
+
+    if (is_insubstantial())
+        return 3;
+    monster_type base = mons_class_is_zombified(type) ? base_monster : type;
+    if (mons_genus(base) == MONS_JELLY)
+        return 3;
+    // theme only, they don't currently do passive damage
+    if (base == MONS_FLAMING_CORPSE || base == MONS_PORCUPINE)
+        return 3;
+
+    // RL constriction works by 1. blocking lung action, 2. increasing blood
+    // pressure (no constrictor has enough strength to crush bones).  Thus,
+    // lacking either of these should reduce the damage, perhaps even to 0
+    // (but still immobilizing) for the unliving.
+    // Not implementing this before discussion.
+
     return 0;
 }
 
@@ -3610,6 +3639,20 @@ int monster::res_magic() const
     return (u);
 }
 
+bool monster::no_tele(bool calc_unid, bool permit_id)
+{
+    // Plants can't survive without roots, so it's either this or auto-kill.
+    // Statues have pedestals so moving them is weird.
+    if (mons_class_is_stationary(type) && type != MONS_CURSE_SKULL)
+        return true;
+
+    // Might be better to teleport the whole kraken instead...
+    if (mons_is_tentacle(type))
+        return true;
+
+    return false;
+}
+
 flight_type monster::flight_mode() const
 {
     return (mons_flies(this));
@@ -3626,7 +3669,7 @@ bool monster::is_banished() const
     return (!alive() && flags & MF_BANISHED);
 }
 
-int monster::mons_species(bool zombie_base) const
+monster_type monster::mons_species(bool zombie_base) const
 {
     if (zombie_base && mons_class_is_zombified(type))
         return ::mons_species(base_monster);
@@ -3666,8 +3709,6 @@ int monster::skill(skill_type sk, int scale, bool real) const
 
 void monster::blink(bool)
 {
-    if (is_constricted_larger())  // disallow blink if constricted by larger
-        return;
     monster_blink(this);
 }
 
@@ -3752,7 +3793,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (alive())
     {
         if (amount != INSTANT_DEATH
-            && ::mons_species(mons_base_type(this)) == MONS_DEEP_DWARF)
+            && mons_species(true) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
             int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
@@ -3872,6 +3913,7 @@ void monster::set_ghost(const ghost_demon &g)
 void monster::set_new_monster_id()
 {
     mid = ++you.last_mid;
+    env.mid_cache[mid] = mindex();
 }
 
 void monster::ghost_init(bool need_pos)
@@ -4088,7 +4130,7 @@ bool monster::has_hydra_multi_attack() const
     return (mons_genus(mons_base_type(this)) == MONS_HYDRA);
 }
 
-bool monster::has_multitargeting() const
+bool monster::has_multitargetting() const
 {
     if (mons_wields_two_weapons(this))
         return (true);
@@ -4372,6 +4414,13 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
+    if (mons_is_tentacle(type))
+        return false;
+
+    // embodiment of Zinniness
+    if (type == MONS_SILVER_STAR)
+        return false;
+
     const mon_holy_type holi = holiness();
 
     return (holi != MH_UNDEAD && holi != MH_NONLIVING);
@@ -4673,6 +4722,7 @@ void monster::hibernate(int)
     if (!can_hibernate())
         return;
 
+    stop_constricting_all();
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
     add_ench(ENCH_SLEEP_WARY);
@@ -4683,6 +4733,7 @@ void monster::put_to_sleep(actor *attacker, int strength)
     if (!can_sleep())
         return;
 
+    stop_constricting_all();
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
 }
@@ -4964,14 +5015,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!in_bounds(jpos))
                 continue;
 
-            const int nmons = mons_place(
+            if (monster *mons = mons_place(
                                   mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, 0, god));
-
-            if (nmons != -1 && nmons != NON_MONSTER)
+                                            jpos, foe, 0, god)))
             {
                 // Don't allow milking the royal jelly.
-                menv[nmons].flags |= MF_NO_REWARD;
+                mons->flags |= MF_NO_REWARD;
                 spawned++;
             }
         }
@@ -5337,27 +5386,6 @@ void monster::accum_has_constricted()
             dur_has_constricted[i] += you.time_taken;
 }
 
-bool monster::is_constricted_larger()
-{
-    size_type csize;
-    size_type msize;
-
-    if (!is_constricted())
-        return false;
-    msize = body_size();
-    if (constricted_by == MHITYOU)
-        csize = you.body_size();
-    else
-        csize = env.mons[constricted_by].body_size();
-    return (csize > msize);
-
-}
-
-bool monster::is_constricted()
-{
-    return (constricted_by != NON_ENTITY);
-}
-
 bool monster::attempt_escape()
 {
     size_type thesize;
@@ -5371,7 +5399,7 @@ bool monster::attempt_escape()
     escape_attempts++;
     // player breaks free if size*attempts > 5 + d(12) + d(HD)
     // this is inefficient on purpose, simplify after debug
-    thesize = body_size();
+    thesize = body_size(PSIZE_BODY);
     attfactor = thesize * escape_attempts;
 
     if (constricted_by != MHITYOU)
@@ -5411,73 +5439,7 @@ bool monster::attempt_escape()
         return false;
 }
 
-void monster::clear_all_constrictions()
-{
-    int myindex = mindex();
-    monster *mons;
-    std::string rmsg;
-
-    if (constricted_by == MHITYOU)
-        you.clear_specific_constrictions(myindex);
-    else if (constricted_by != NON_ENTITY)
-    {
-        mons = &env.mons[constricted_by];
-        mons->clear_specific_constrictions(myindex);
-    }
-
-    constricted_by = NON_ENTITY;
-    dur_been_constricted = 0;
-    escape_attempts = 0;
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (constricting[i] == MHITYOU)
-        {
-            if (alive())
-            {
-                rmsg = name(DESC_THE, true);
-                rmsg += " releases its hold on you.";
-                mpr(rmsg);
-            }
-            you.clear_specific_constrictions(myindex);
-        }
-        else if (constricting[i] != NON_ENTITY)
-        {
-            mons = &env.mons[constricting[i]];
-            if (alive() && mons->alive())
-            {
-                rmsg = name(DESC_THE, true);
-                rmsg += " releases its hold on ";
-                rmsg += mons->name(DESC_THE,true) + ".";
-                mpr(rmsg);
-            }
-            mons->clear_specific_constrictions(myindex);
-        }
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
-}
-
-void monster::clear_specific_constrictions(int mind)
-{
-    if (constricted_by == mind)
-    {
-        constricted_by = NON_ENTITY;
-        dur_been_constricted = 0;
-        escape_attempts = 0;
-    }
-
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        if (constricting[i] == mind)
-        {
-            constricting[i] = NON_ENTITY;
-            dur_has_constricted[i] = 0;
-        }
-    }
-}
-
-bool monster::has_usable_tentacle()
+bool monster::has_usable_tentacle() const
 {
     if (mons_species() != MONS_OCTOPODE)
         return(false);
@@ -5490,4 +5452,23 @@ bool monster::has_usable_tentacle()
     // ignoring monster octopodes with weapons, for now
     return (free_tentacles > 0);
 
+}
+
+// Move the monster to the nearest valid space.
+bool monster::shove(const char* feat_name)
+{
+    for (distance_iterator di(pos()); di; ++di)
+        if (monster_space_valid(this, *di, false))
+        {
+            mgrd(pos()) = NON_MONSTER;
+            moveto(*di);
+            mgrd(*di) = mindex();
+            simple_monster_message(this,
+                make_stringf(" is pushed out of the %s.", feat_name).c_str());
+            dprf("Moved to (%d, %d).", pos().x, pos().y);
+
+            return true;
+        }
+
+    return false;
 }

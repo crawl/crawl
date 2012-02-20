@@ -765,6 +765,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (true);
 
     // All checks done, transformation will take place now.
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
@@ -849,7 +850,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             }
 
             you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
         }
         break;
 
@@ -883,6 +883,22 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     }
 
+    // Stop constricting if we can no longer constrict.  If any size-changing
+    // transformations were to allow constriction, we would have to check
+    // relative sizes as well.  Likewise, if any transformations were to allow
+    // normally non-constricting players to constrict, this would need to
+    // be changed.
+    if (!form_keeps_mutations(which_trans))
+        you.stop_constricting_all(false);
+
+    // Stop being constricted if we are now too large.
+    if (you.is_constricted())
+    {
+        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
+            you.stop_being_constricted();
+    }
+
     you.check_clinging(false);
 
     // This only has an effect if the transformation happens passively,
@@ -910,6 +926,7 @@ void untransform(bool skip_wielding, bool skip_move)
 {
     const flight_type old_flight = you.flight_mode();
 
+    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
@@ -1056,6 +1073,14 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
+
+    // Stop being constricted if we are now too large.
+    if (you.is_constricted())
+    {
+        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
+            you.stop_being_constricted();
+    }
 
     if (!skip_wielding)
         handle_interrupted_swap(true, false);

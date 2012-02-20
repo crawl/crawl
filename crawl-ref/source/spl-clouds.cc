@@ -91,7 +91,7 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
         return SPRET_ABORT;
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
+    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
     monster* mons = monster_at(where);
     if (mons)
     {
@@ -283,7 +283,10 @@ void corpse_rot(actor* caster)
                 {
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->plus))
+                    {
+                        item_was_destroyed(*si);
                         destroy_item(si->index());
+                    }
                     else
                         turn_corpse_into_skeleton(*si);
 

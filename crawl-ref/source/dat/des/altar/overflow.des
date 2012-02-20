@@ -915,28 +915,6 @@ MAP
 .........
 ENDMAP
 
-# Vehumet wants you to burn the damn trees down.
-NAME:    vehumet_trees
-DEPTH:   2-10
-TAGS:    temple_overflow_vehumet
-KFEAT:   _ = altar_vehumet
-SHUFFLE: ><
-# 1KB suggests that instead of a hatch (to make sure the player can escape the
-# vault, if they would get trapped by a teleport or something), make Vehumet
-# burn the trees down when you take the god. If anyone would like to script
-# this in, go ahead! Probably needs "beckoning messages" where Vehumet promises
-# to free the player of the cage of trees. --evk
-MAP
-.......
-.ttttt.
-.t...t.
-.t._.t.
-.t.>.t.
-.t...t.
-.ttttt.
-.......
-ENDMAP
-
 
 ### Xom overflow altars #######################################################
 
@@ -1089,37 +1067,6 @@ X,,o_o,,X
 XX,o.o,XX
  XXX@XXX
 ENDMAP
-
-# This one doesn't work.  The idea is to have the player pick one of the
-# doors, two have goats one has a jelly (as in the "Monty Hall" problem).
-# Yet currently there is nothing to stop people from opening all the doors,
-# and in fact, autoexplore will do that for you unless you place extra
-# exclusions on remaining doors.
-# This vault had "warnings" written on front (but not back) doors, this
-# confused unspoiled players without giving anything.
-NAME:    xom_monty_hall
-TAGS:    no_item_gen no_monster_gen temple_overflow_xom uniq_altar_xom
-DEPTH:   D:2-7
-WEIGHT:  1
-SHUFFLE: DE,FG
-NSUBST:  M = 1:2 / *:1
-SUBST:   E = x, F = x
-SUBST:   D = ., G = .
-SUBST:   x = ccbbvxX
-KFEAT:   _ = altar_xom
-MONS:    jelly
-MONS:    sheep hd:2 / quokka w:1
-SUBST:   / = +
-MAP
- xnxnxnx
-xn.....nx
-n..._...n
-x.......x
-x+xx+xx+x
-xMDEMFGMx
-x/xx/xx/x
-ENDMAP
-
 
 ### Yredelemnul overflow altars ###############################################
 

@@ -1,0 +1,97 @@
+# This Xom vault features the "Monty Hall" problem.
+# There are three doors. The idea is to have the player pick one of the
+# doors, two have jellies, one has a sheep (the sheep is the 'win' here,
+# since it is no threat opposed to the jellies).
+# If the player approaches one door, Xom shows where one jelly is hidden.
+# The player then can choose to open the door or pick the third one.
+{{
+function dk_xom_monty_hall(door_char, sheep_char)
+  local str = "abc"
+
+  str = str:gsub(door_char, "")
+  str = str:gsub(sheep_char, "")
+
+  if #str == 2 then
+    local r = crawl.one_chance_in(2) and 1 or 2
+    str = str:sub(r, r)
+  end
+
+  crawl.god_speaks("Xom", "You feel as though Xom is toying with you.")
+  crawl.mpr("Suddenly, the walls become transparent!")
+  for slave in iter.slave_iterator('char', str) do
+    dgn.terrain_changed(slave.x, slave.y, "clear_rock_wall", false, false, false)
+  end
+
+end
+
+function callback.dk_xom_monty_hall_move(data, triggerable, triggerer, marker, ev)
+  if dgn.persist.dk_xom_monty_hall_triggered then
+    return
+  end
+
+  dk_xom_monty_hall(data.door, data.sheep)
+
+  dgn.persist.dk_xom_monty_hall_triggered = true
+end
+}}
+
+NAME:    dk_xom_monty_hall
+TAGS:    no_item_gen no_monster_gen temple_overflow_xom uniq_altar_xom
+WEIGHT:  3
+DEPTH:   D:2-7
+KFEAT:   _ = altar_xom
+MONS:    generate_awake sheep hd:1
+MONS:    generate_awake jelly
+MARKER: + = lua:restrict_door()
+{{
+dgn.persist.dk_xom_monty_hall_triggered = false
+
+local str = "abc"
+local r = crawl.random2(2) + 1
+local sheep_char = str:sub(r, r)
+
+local mon = {a ='Q',
+             b ='W',
+             c ='E'}
+subst(mon[sheep_char] .. '=1')
+str = str:gsub(sheep_char, "")
+str:gsub(".", function(c)
+  subst(mon[c] .. '=2')
+end)
+
+function get_marker(char)
+  local marker = TriggerableFunction:new{
+    func="callback.dk_xom_monty_hall_move",
+    repeated=true,
+    data={sheep=sheep_char,
+          door=char}
+  }
+
+  marker:add_triggerer(DgnTriggerer:new {
+  type="player_move"})
+
+  return marker
+end
+
+local str = "abc"
+str:gsub(".", function(c)
+    lua_marker(c, get_marker(c))
+    lua_marker(string.upper(c), props_marker {char=c})
+end)
+
+}}
+SUBST:   abc = .
+SUBST:   ABC = x
+SUBST:   x = ccbbvXX
+KPROP:  ._-123 = no_tele_into
+MAP
+ xnxnxnx
+xn-----nx
+n---_---n
+x-------x
+x+xx+xx+x
+AQABWBCEC
+A+AB+BC+C
+aaabbbccc
+@@@@@@@@@
+ENDMAP

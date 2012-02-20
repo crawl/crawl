@@ -13,8 +13,8 @@
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
+#include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -88,8 +88,8 @@ static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
 
-static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
-                              bool force_pos = false, bool dont_place = false);
+static monster* _place_monster_aux(const mgen_data &mg, bool first_band_member,
+                               bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
@@ -959,7 +959,7 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
-int place_monster(mgen_data mg, bool force_pos, bool dont_place)
+monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
@@ -967,11 +967,10 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int id = -1;
 
     // (1) Early out (summoned to occupied grid).
     if (mg.use_position() && monster_at(mg.pos))
-        return (-1);
+        return 0;
 
     if (mg.power == -1)
         mg.power = env.absdepth0;
@@ -983,7 +982,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
                                    &chose_ood_monster);
 
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
-        return (-1);
+        return 0;
 
     bool create_band = mg.permit_bands();
     // If we drew an OOD monster and there hasn't been much time spent
@@ -1009,7 +1008,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     } // end proximity check
 
     if (mg.cls == MONS_PROGRAM_BUG)
-        return (-1);
+        return 0;
 
     // (3) Decide on banding (good lord!)
     int band_size = 1;
@@ -1080,9 +1079,8 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
         while (true)
         {
-            // Dropped number of tries from 60.
             if (tries++ >= 45)
-                return (-1);
+                return 0;
 
             // Placement already decided for PROX_NEAR_STAIRS.
             // Else choose a random point on the map.
@@ -1164,20 +1162,19 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     else if (!_valid_monster_generation_location(mg) && !dont_place)
     {
         // Sanity check that the specified position is valid.
-        return (-1);
+        return 0;
     }
-
-    id = _place_monster_aux(mg, true, force_pos, dont_place);
 
     // Reset the (very) ugly thing band colour.
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    // Bail out now if we failed.
-    if (id == -1)
-        return (-1);
+    monster* mon = _place_monster_aux(mg, true, force_pos, dont_place);
 
-    monster* mon = &menv[id];
+    // Bail out now if we failed.
+    if (!mon)
+        return 0;
+
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR
             && !testbits(mon->flags, MF_BAND_MEMBER)))
@@ -1194,8 +1191,8 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     {
         std::string msg;
 
-        if (menv[id].visible_to(&you))
-            msg = menv[id].name(DESC_A);
+        if (mon->visible_to(&you))
+            msg = mon->name(DESC_A);
         else if (shoved)
             msg = "Something";
 
@@ -1232,14 +1229,14 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // too many monsters already, or we successfully placed by stairs.
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
-    if (id >= MAX_MONSTERS - 30
+    if (mon->mindex() >= MAX_MONSTERS - 30
         || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
-        || (crawl_state.game_is_zotdef() && you.num_turns<2000))
-        return (id);
+        || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
+        return mon;
 
     // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
     if (band_size > 1)
-        menv[id].flags |= MF_BAND_MEMBER;
+        mon->flags |= MF_BAND_MEMBER;
 
     const bool priest = mon->is_priest();
 
@@ -1247,7 +1244,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (leader && !mg.summoner)
     {
-        band_template.summoner = &menv[id];
+        band_template.summoner = mon;
         band_template.flags |= MG_BAND_MINION;
     }
 
@@ -1268,37 +1265,37 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        const int band_id = _place_monster_aux(band_template, false);
-        if (band_id != -1 && band_id != NON_MONSTER)
+        monster *member = _place_monster_aux(band_template, false);
+        if (member)
         {
-            menv[band_id].flags |= MF_BAND_MEMBER;
-            menv[band_id].props["band_leader"].get_int() = menv[id].mid;
+            member->flags |= MF_BAND_MEMBER;
+            member->props["band_leader"].get_int() = mon->mid;
 
             // Priestly band leaders should have an entourage of the
             // same religion, unless members of that entourage already
             // have a different one.
-            if (priest && menv[band_id].god == GOD_NO_GOD)
-                menv[band_id].god = mon->god;
+            if (priest && member->god == GOD_NO_GOD)
+                member->god = mon->god;
 
             if (mon->type == MONS_PIKEL)
             {
                 // Don't give XP for the slaves to discourage hunting.  Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
-                menv[band_id].flags |= MF_NO_REWARD;
-                menv[band_id].props["pikel_band"] = true;
+                member->flags |= MF_NO_REWARD;
+                member->props["pikel_band"] = true;
             }
             if (mon->type == MONS_SHEDU)
             {
                 // We store these here for later resurrection, etc.
-                menv[band_id].number = menv[id].mid;
-                menv[id].number = menv[band_id].mid;
+                member->number = mon->mid;
+                mon->number = member->mid;
             }
         }
     }
 
     // Placement of first monster, at least, was a success.
-    return (id);
+    return mon;
 }
 
 monster* get_free_monster()
@@ -1334,9 +1331,9 @@ static void _place_twister_clouds(monster *mon)
     tornado_damage(mon, -10);
 }
 
-static int _place_monster_aux(const mgen_data &mg,
-                              bool first_band_member, bool force_pos,
-                              bool dont_place)
+static monster* _place_monster_aux(const mgen_data &mg,
+                                   bool first_band_member, bool force_pos,
+                                   bool dont_place)
 {
     coord_def fpos;
 
@@ -1354,7 +1351,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     monster* mon = get_free_monster();
     if (!mon)
-        return (-1);
+        return 0;
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                                   : mg.cls);
@@ -1362,9 +1359,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
     if (dont_place)
-    {
         fpos.reset();
-    }
     else if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
             || mons_is_mimic(montype))
@@ -1389,7 +1384,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
         // Did we really try 1000 times?
         if (i == 1000)
-            return (-1);
+            return 0;
     }
 
     ASSERT(!monster_at(fpos));
@@ -1397,7 +1392,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena()
         && arena_veto_place_monster(mg, first_band_member, fpos))
     {
-        return (-1);
+        return 0;
     }
 
     // Now, actually create the monster. (Wheeee!)
@@ -1410,7 +1405,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (!dont_place && !mon->move_to_pos(fpos))
     {
         mon->reset();
-        return (-1);
+        return 0;
     }
 
     if (mg.props.exists("serpent_of_hell_flavour"))
@@ -1597,9 +1592,7 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
     else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
-    {
         mon->add_ench(ENCH_EXPLODING);
-    }
 
     if (mg.cls == MONS_TWISTER)
     {
@@ -1635,7 +1628,7 @@ static int _place_monster_aux(const mgen_data &mg,
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
         else
-            give_item(mon->mindex(), mg.power, summoned);
+            give_item(mon, mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1645,17 +1638,17 @@ static int _place_monster_aux(const mgen_data &mg,
             mon->destroy_inventory();
             mon->reset();
             mgrd(fpos) = NON_MONSTER;
-            return (-1);
+            return 0;
         }
         else
             mon->colour = wpn->colour;
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item(mon->mindex(), mg.power, summoned);
+        give_item(mon, mg.power, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_weapon(mon->mindex(), mg.power, summoned);
+            give_weapon(mon, mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
@@ -1848,7 +1841,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mon->type == MONS_TWISTER)
         _place_twister_clouds(mon);
 
-    return (mon->mindex());
+    return mon;
 }
 
 monster_type pick_random_zombie()
@@ -3032,7 +3025,7 @@ static monster_type _pick_zot_exit_defender()
     return static_cast<monster_type>(mon_type);
 }
 
-int mons_place(mgen_data mg)
+monster* mons_place(mgen_data mg)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in mons_place()", MSGCH_DIAGNOSTICS);
@@ -3045,7 +3038,7 @@ int mons_place(mgen_data mg)
     if (mg.cls == WANDERING_MONSTER)
     {
         if (mon_count > MAX_MONSTERS - 50)
-            return (-1);
+            return 0;
 
 #ifdef DEBUG_MON_CREATION
         mpr("Set class RANDOM_MONSTER", MSGCH_DIAGNOSTICS);
@@ -3055,7 +3048,7 @@ int mons_place(mgen_data mg)
 
     // All monsters have been assigned? {dlb}
     if (mon_count >= MAX_MONSTERS - 1)
-        return (-1);
+        return 0;
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
@@ -3084,13 +3077,11 @@ int mons_place(mgen_data mg)
                             : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
     }
 
-    int mid = place_monster(mg);
-    if (mid == -1)
-        return (-1);
+    monster* creation = place_monster(mg);
+    if (!creation)
+        return 0;
 
-    dprf("Created %s.", menv[mid].base_name(DESC_A, true).c_str());
-
-    monster* creation = &menv[mid];
+    dprf("Created %s.", creation->base_name(DESC_A, true).c_str());
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
@@ -3120,7 +3111,7 @@ int mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
-    return (mid);
+    return creation;
 }
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)
@@ -3258,6 +3249,22 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
+bool can_spawn_mushrooms(coord_def where)
+{
+    int cl = env.cgrid(where);
+    if (cl == EMPTY_CLOUD)
+        return true;
+
+    cloud_struct &cloud = env.cloud[env.cgrid(where)];
+    if (you.religion == GOD_FEDHAS
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
+    {
+        return true;
+    }
+
+    return is_harmless_cloud(cloud.type);
+}
+
 conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
@@ -3337,12 +3344,12 @@ bool player_angers_monster(monster* mon)
     return (false);
 }
 
-int create_monster(mgen_data mg, bool fail_msg)
+monster* create_monster(mgen_data mg, bool fail_msg)
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
 
-    int summd = -1;
+    monster *summd = 0;
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
@@ -3363,6 +3370,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                                                             : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
+            dummy.behaviour    = mg.behaviour;
 
             // Monsters that have resistance info in the ghost
             // structure cannot be handled as dummies, so treat them
@@ -3380,7 +3388,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                 mg.pos = find_newmons_square(montype, mg.pos);
             }
             if (!in_bounds(mg.pos))
-                return (-1);
+                return 0;
 
             const int cloud_num = env.cgrid(mg.pos);
             // Don't place friendly god gift in a damaging cloud created by
@@ -3390,7 +3398,7 @@ int create_monster(mgen_data mg, bool fail_msg)
                 && god_hates_attacking_friend(you.religion, &dummy)
                 && YOU_KILL(env.cloud[cloud_num].killer))
             {
-                return (-1);
+                return 0;
             }
         }
     }
@@ -3403,13 +3411,9 @@ int create_monster(mgen_data mg, bool fail_msg)
             fail_msg = false;
     }
 
-    // Determine whether creating a monster is successful (summd != -1) {dlb}:
-    // then handle the outcome. {dlb}:
-    if (fail_msg && summd == -1 && you.see_cell(mg.pos))
+    if (!summd && fail_msg && you.see_cell(mg.pos))
         mpr("You see a puff of smoke.");
 
-    // The return value is either -1 (failure of some sort)
-    // or the index of the monster placed (if I read things right). {dlb}
     return (summd);
 }
 
@@ -3635,9 +3639,9 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         }
         else
         {
-            ASSERT(!_is_random_monster(spec.mid)
+            ASSERT(!_is_random_monster(spec.type)
                    && !_is_random_monster(spec.monbase));
-            type_vec[i] = spec.mid;
+            type_vec[i] = spec.type;
             base_vec[i] = spec.monbase;
         }
         weight_vec[i] = spec.genweight;
@@ -3681,9 +3685,9 @@ static void _get_vault_mon_list(std::vector<mons_spec> &list)
         }
         else
         {
-            spec.mid     = type;
+            spec.type    = type;
             spec.monbase = (monster_type) base;
-            ASSERT(!_is_random_monster(spec.mid)
+            ASSERT(!_is_random_monster(spec.type)
                    && !_is_random_monster(spec.monbase));
         }
         spec.genweight = weight_vec[i];
@@ -3716,11 +3720,11 @@ void setup_vault_mon_list()
         }
         else
         {
-            vault_mon_types[i] = list[i].mid;
+            vault_mon_types[i] = list[i].type;
             vault_mon_bases[i] = list[i].monbase;
             // hack for Pandemonium
             if (i < 10)
-                env.mons_alloc[i] = (monster_type)list[i].mid;
+                env.mons_alloc[i] = (monster_type)list[i].type;
         }
         vault_mon_weights[i] = list[i].genweight;
     }

@@ -458,7 +458,8 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD,
+                MONS_IGNACIO, END};
     monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_BRIMSTONE_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
@@ -479,6 +480,8 @@ static void _pan_wave(int power)
             case '1': if (pow > 12) continue; break;
             default: continue;
             }
+            if (mons_is_unique(mon_type))
+                continue;
             env.mons_alloc[i] = mon_type;
         }
     }
@@ -547,14 +550,12 @@ void debug_waves()
     {
         you.num_turns += CYCLE_LENGTH;
         zotdef_set_wave();
-        // debuglog("%i: %s\n", i, zotdef_debug_wave_desc().c_str());
     }
 }
 
 static monster_type _get_zotdef_monster(level_id &place, int power)
 {
     monster_type mon_type;
-    monster_type mon_type_ret = MONS_PROGRAM_BUG;
     for (int i = 0; i <= 10000; ++i)
     {
         int count = 0;
@@ -568,7 +569,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         }
         while (rarity == 0 && count < 2000);
 
-        if (count == 2000)
+        if (rarity == 0)
             return (MONS_PROGRAM_BUG);
 
         // Calculate strength
@@ -642,15 +643,11 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
                      : branches[place.branch].shortname,
                  mentry->name, rarity, power,
                  strength, lev_mons, chance);
-            mon_type_ret = mon_type;
-            break;
+            return mon_type;
         }
-
-        if (i == 10000)
-            return (MONS_PROGRAM_BUG);
     }
 
-    return mon_type_ret;
+    return (MONS_PROGRAM_BUG);
 }
 
 static void _zotdef_set_random_branch_wave(int power)
@@ -777,7 +774,7 @@ std::string zotdef_debug_wave_desc()
     return list + "]";
 }
 
-int zotdef_spawn(bool boss)
+monster* zotdef_spawn(bool boss)
 {
     monster_type mt = env.mons_alloc[random2(NSLOTS)];
     if (boss)
@@ -788,31 +785,31 @@ int zotdef_spawn(bool boss)
             mt = env.mons_alloc[0];        // grab slot 0 as crap alternative
     }
     if (mt == MONS_PROGRAM_BUG)
-        return -1;
+        return 0;
 
     // Generate a monster of the appropriate branch and strength
     mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 
-    int mid = mons_place(mg);
+    monster *mon  = mons_place(mg);
 
     // Boss monsters which aren't uniques are named, and beefed a bit further
-    if (mid != -1 && boss && !mons_is_unique(mt))
+    if (mon && boss && !mons_is_unique(mt))
     {
         // Use the proper name function: if that fails, fall back
         // to the randart name generator
-        if (!menv[mid].is_named())        // Don't rename uniques!
+        if (!mon->is_named())        // Don't rename uniques!
         {
-            if (!give_monster_proper_name(&menv[mid], false))
-                menv[mid].mname = make_name(random_int(), false);
+            if (!give_monster_proper_name(mon, false))
+                mon->mname = make_name(random_int(), false);
         }
 
-        menv[mid].hit_points = (menv[mid].hit_points * 3) / 2;
-        menv[mid].max_hit_points = menv[mid].hit_points;
+        mon->hit_points = mon->hit_points * 3 / 2;
+        mon->max_hit_points = mon->hit_points;
     }
 
-    return mid;
+    return mon;
 }
 
 static rune_type _get_rune(int runenumber)
@@ -1035,8 +1032,8 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
             canned_msg(MSG_OK);
         return (false);
     }
-    if (mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
-                   you.pet_target)) == -1)
+    if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
+                   you.pet_target)))
     {
         mpr("You can't create it there!");
         return (false);
@@ -1049,9 +1046,7 @@ void zotdef_bosses_check()
 {
     if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
     {
-        int mon = zotdef_spawn(true);        // boss monster=true
-
-        if (mon > -1)
+        if (monster *mon = zotdef_spawn(true))        // boss monster=true
         {
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
@@ -1065,7 +1060,7 @@ void zotdef_bosses_check()
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
                     mitm[ip].plus = which_rune;
-                    move_item_to_grid(item_made, menv[mon].pos());
+                    move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }
             }

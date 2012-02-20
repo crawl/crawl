@@ -760,7 +760,10 @@ void static _get_randart_properties(const item_def &item,
             }
         }
 
-        if (is_demonic(item))
+        // Quarter of the chance of distortion elsewhere.
+        if (!is_range_weapon(item) && one_chance_in(100))
+            proprt[ARTP_BRAND] = SPWPN_DISTORTION;
+        else if (is_demonic(item))
         {
             switch (random2(9))
             {
@@ -1190,7 +1193,7 @@ static bool _init_artefact_book(item_def &book)
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
             // The parameters to this call are in book.plus and plus2.
-            book_good = make_book_level_randart(book, book.plus, book.plus2);
+            book_good = make_book_level_randart(book, book.plus);
         else
             book_good = make_book_theme_randart(book);
 
@@ -1986,6 +1989,35 @@ static void _make_faerie_armour(item_def &item)
     item.plus = 2 + random2(5);
 }
 
+static jewellery_type octoring_types[8] =
+{
+    RING_REGENERATION, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
+    RING_SUSTAIN_ABILITIES, RING_SUSTENANCE, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_LIFE_PROTECTION
+};
+
+static void _make_octoring(item_def &item)
+{
+    if (you.octopus_king_rings == 255)
+    {
+        ASSERT(you.wizard);
+        item.sub_type = octoring_types[random2(8)];
+        return;
+    }
+
+    int which = 0;
+    do which = random2(8); while (you.octopus_king_rings & (1 << which));
+
+    item.sub_type = octoring_types[which];
+
+    // Save that we've found that particular type
+    you.octopus_king_rings |= 1 << which;
+
+    // If there are any types left, unset the 'already found' flag
+    if (you.octopus_king_rings != 255)
+        set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+}
+
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT(unrand_index > UNRAND_START);
@@ -2030,6 +2062,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     }
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
+    else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
+        _make_octoring(item);
 
     return (true);
 }

@@ -493,6 +493,7 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_THROW,      // missile_type
     CACT_CAST,       // spell_type
     CACT_INVOKE,     // ability_type
+    CACT_ABIL,       // ability_type
     CACT_EVOKE,      // evoc_type
     CACT_USE,        // object_class_type
     NUM_CACTIONS,
@@ -777,7 +778,7 @@ enum command_type
 
     CMD_MAX_OVERMAP = CMD_MAP_EXIT_MAP,
 
-    // targeting commands
+    // targetting commands
     CMD_TARGET_DOWN_LEFT,
     CMD_MIN_TARGET = CMD_TARGET_DOWN_LEFT,
     CMD_TARGET_DOWN,
@@ -1032,7 +1033,6 @@ enum description_level_type
 
 enum evoc_type
 {
-    EVOC_ABIL,
     EVOC_WAND,
     EVOC_ROD,
     EVOC_DECK,
@@ -1694,7 +1694,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
     ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
-    ISFLAG_RESERVED_3        = 0x00000800,  // reserved
+    ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
     ISFLAG_UNRANDART         = 0x00002000,  // is an unrandart
@@ -1785,7 +1785,7 @@ enum KeymapContext
 {
     KMC_DEFAULT,         // For no-arg getchm(), must be zero.
     KMC_LEVELMAP,        // When in the 'X' level map
-    KMC_TARGETING,       // Only during 'x' and other targeting modes
+    KMC_TARGETTING,       // Only during 'x' and other targetting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 #ifdef USE_TILE
@@ -1821,6 +1821,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_BANISHED,                     // monsters what got banished
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
+    KILL_PACIFIED,                     // only used by milestones and notes
+    KILL_ENSLAVED,                     // only used by milestones and notes
 };
 
 enum flight_type
@@ -1903,7 +1905,7 @@ enum targ_mode_type
     TARG_INJURED_FRIEND, // for healing
     TARG_HOSTILE,
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
-    TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
+    TARG_EVOLVABLE_PLANTS,  // Targetting mode for Fedhas' evolution
     TARG_HOSTILE_UNDEAD,    // For dispel undead
     TARG_NUM_MODES
 };
@@ -2481,7 +2483,9 @@ enum monster_type                      // (int) menv[].type
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
     MONS_SERAPH,
+#if TAG_MAJOR_VERSION == 32
     MONS_SUBTRACTOR_SNAKE,
+#endif
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2690,6 +2694,7 @@ enum mutation_type
     MUT_FOUL_STENCH,
 #endif
     MUT_EVOLUTION,
+    MUT_AUGMENTATION,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3326,12 +3331,12 @@ enum stat_type
     STAT_RANDOM,
 };
 
-enum targeting_type
+enum targetting_type
 {
     DIR_NONE,
     DIR_TARGET, // smite targetting
     DIR_DIR,    // needs a clear line to target
-    DIR_TARGET_OBJECT, // New as of 27-August-2009, for item-targeting spells
+    DIR_TARGET_OBJECT, // New as of 27-August-2009, for item-targetting spells
 };
 
 enum torment_source_type
@@ -3520,6 +3525,7 @@ enum daction_type
     DACT_REAUTOMAP,
     DACT_REMOVE_JIYVA_ALTARS,
     DACT_PIKEL_SLAVES,
+    DACT_ROT_CORPSES,
     NUM_DACTIONS,
 };
 
@@ -3628,6 +3634,7 @@ enum tile_flags
     TILE_FLAG_STICKY_FLAME = 0x00200000,
     TILE_FLAG_BERSERK    = 0x00400000,
     TILE_FLAG_INNER_FLAME= 0x40000000,
+    TILE_FLAG_CONSTRICTED= 0x80000000,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x03800000,

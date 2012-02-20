@@ -513,7 +513,7 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    // Don't update tool tips etc. in targeting mode.
+    // Don't update tool tips etc. in targetting mode.
     const bool mouse_target_mode
                 = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
                    || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
@@ -1228,7 +1228,10 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon.type == MONS_PANDEMONIUM_LORD
+    monster_type genus = mons_genus(mon.type);
+    if (genus == MONS_PANDEMONIUM_LORD
+        || genus == MONS_HELL_LORD
+        || mon.type == MONS_ANTAEUS
         || mon.type == MONS_LERNAEAN_HYDRA)
     {
         return;

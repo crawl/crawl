@@ -172,10 +172,11 @@ yyyyyyyy
 ENDMAP
 
 NAME:   hangedman_abyss_mock_shop
-TAGS:   abyss no_monster_gen
-KFEAT:  0 = abandoned_shop
-MONS:   patrolling water elemental, statue name:archer tile:mons_statue_archer \
+TAGS:   abyss no_monster_gen patrolling
+KMONS:  1 = water elemental / nothing w:5
+KMONS:  2 = statue name:archer tile:mons_statue_archer \
         n_adj; longbow ego:chaos . arrow q:40
+KFEAT:  0 = abandoned_shop
 KFEAT:  1 = permadry_fountain
 SUBST:  x = xcv, . = ..W
 MAP
@@ -230,7 +231,6 @@ KMONS: K = kraken
 KMONS: T = tentacled monstrosity
 SUBST: T = Tw
 KFEAT: KT = w
-KFEAT: O = W
 SUBST: D : cW
 SUBST: . = w., w = WWWw, C = c., c = ccv
 MAP
@@ -470,27 +470,28 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_rune_flesh_and_stone
-TAGS:   abyss_rune no_monster_gen no_item_gen
-MONS:   catoblepas, stone golem, stone giant
-KMONS:  O = stone giant
+TAGS:   abyss_rune no_monster_gen no_item_gen no_pool_fixup
+MONS:   catoblepas, stone golem, earth elemental, stone giant
+KMONS:  O = rock worm
 KITEM:  O = abyssal rune of Zot
 KPROP:  l = no_cloud_gen
-NSUBST: P = 1:O / 1:3
+SUBST:  5 = 23
+NSUBST: P = 1:O / 1:2
 MAP
     .......
 .ccccGclcGcccc.
  .cPccclcccPc.
-  c+c2.l.2c+c
-.cc1ccclccc1cc.
- .clc2.l.2clc.
-  c ccclccc c
-.cc c2.l.2c cc.
- .c ccclccc c.
-  c c2.l.2c c
-.cc.ccclccc.cc.
- .c+c2c.c2c+c.
-  c2  c1c  2c
-.cc2  + +  2cc.
+  c+c5.l.5c+c
+.cc1ccclccc1c.
+ .c4c5.l.5c4c.
+  c.ccclccc.c
+.cc.c5.l.5c.cc.
+ .c.c clc c.c.
+  c.c5.l.5c.c
+.cc ncclccn cc.
+ .c+c2c2c2c+c.
+  c3  c1c  3c
+.cc3  + +  3cc.
  .ccccccccccc.
   .c c. .c c.
 ENDMAP
@@ -986,16 +987,16 @@ KMONS:    H = unseen horror
 NSUBST:   J = 1/2, K = 5/6, L = 9/0, M = C/D
 SHUFFLE:  12/34, 56/78, 90/AB, CD/EF/GH
 KFEAT:    N = exit_abyss
-SUBST:    c = ccv
+SUBST:    xc = ccv
 MAP
 . . . . . . . . . .
- .CC C C C C C C .
+ .xx x x x x x x .
 .ccccccccccccccccc.
 .c +M+ +L+ +K+ +J+.
-.cNcmc.cmc.cmc.cmcm
+.cNcnc.cnc.cnc.cncm
 .c +M+ +L+ +K+ +J+.
 .ccccccccccccccccc.
- .CC C C C C C C .
+ .xx x x x x x x .
 . . . . . . . . . .
 ENDMAP
 

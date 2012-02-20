@@ -1080,8 +1080,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = STAFF_STRIKING;
+            item.base_type = OBJ_WANDS;
+            item.sub_type  = random_choose_weighted(10, WAND_FROST,
+                                                    10, WAND_FLAME,
+                                                    8, WAND_MAGIC_DARTS,
+                                                    4, WAND_LIGHTNING,
+                                                    4, WAND_FIRE,
+                                                    4, WAND_COLD,
+                                                    0);
         }
         break;
 
@@ -2121,21 +2127,18 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int idx = items(0, OBJ_GOLD, 0, true, level, 0);
-    _give_monster_item(mon, idx);
+    const int it = items(0, OBJ_GOLD, 0, true, level, 0);
+    _give_monster_item(mon, it);
 }
 
-void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monster *mons = &menv[mid];
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
-void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
-
-    monster* mons = &menv[mid];
 
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);

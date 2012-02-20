@@ -16,6 +16,8 @@ struct item_def;
 class monster;
 struct show_type;
 
+bool is_door_tile(tileidx_t tile);
+
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
@@ -25,8 +27,8 @@ tileidx_t tileidx_monster(const monster_info& mon);
 tileidx_t tileidx_draco_base(const monster_info& mon);
 tileidx_t tileidx_draco_job(const monster_info& mon);
 
-tileidx_t tileidx_item(const item_def &item);
-tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
+tileidx_t tileidx_item(const item_info &item);
+tileidx_t tileidx_item_throw(const item_info &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
 tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);

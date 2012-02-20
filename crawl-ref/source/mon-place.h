@@ -19,13 +19,13 @@ struct mgen_data;
  * position like a summon.
  * Returns -1 on failure, index into env.mons otherwise.
  * *********************************************************************** */
-int create_monster(mgen_data mg, bool fail_msg = true);
+monster* create_monster(mgen_data mg, bool fail_msg = true);
 
 /* ***********************************************************************
  * Primary function to create monsters. See mgen_data for details on monster
  * placement.
  * *********************************************************************** */
-int mons_place(mgen_data mg);
+monster* mons_place(mgen_data mg);
 
 /* ***********************************************************************
  * This isn't really meant to be a public function.  It is a low level
@@ -33,7 +33,7 @@ int mons_place(mgen_data mg);
  * mons_place().  If you need to put a monster somewhere, use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-int place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
+monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
 
 monster_type pick_random_zombie();
 
@@ -117,6 +117,7 @@ coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);
+bool can_spawn_mushrooms(coord_def where);
 
 void spawn_random_monsters();
 

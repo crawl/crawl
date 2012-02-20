@@ -3,7 +3,6 @@
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "dgn-shoals.h"

@@ -53,8 +53,8 @@ function pan_lord_setup(_G, name)
 
     -- Set level colours / tiles, and the rune.
     if name == "Mnoleg" then
-        _G.lfloorcol("yellow")
-        _G.lrockcol("red")
+        _G.lfloorcol("lightred")
+        _G.lrockcol("yellow")
         _G.lfloortile("floor_nerves")
         _G.lrocktile("wall_zot_yellow")
         _G.kitem("O = glowing rune of Zot")
@@ -1736,19 +1736,20 @@ TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
-# Needs a tile!
-# TILE:   GH = dngn_statue_golden
+TILE:   GH = dngn_golden_statue
 FTILE:  _124SDcG|*' = floor_limestone
 FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
 FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
-MARKER: v = lua:portal_desc { \
-                desc="silver wall", \
-                desc_long="This wall is made of pure silver." }
-MARKER: G = lua:portal_desc { \
-                desc="golden statue", \
-                desc_long="A solid gold statue of a saint." }
+: dgn.set_feature_desc_short("granite statue",
+:                            "golden statue")
+: dgn.set_feature_desc_long("granite statue",
+:                           "A solid gold statue of a saint.")
+: dgn.set_feature_desc_short("metal wall",
+:                            "silver wall")
+: dgn.set_feature_desc_long("metal wall",
+:                           "This wall is made of pure silver.")
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
 :                        "apis / paladin / apis / ophan / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.

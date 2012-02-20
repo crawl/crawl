@@ -115,7 +115,7 @@ CFOPTIMIZE += -flto=jobserver -fwhole-program
 endif
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall -Wformat-security -Werror=format-security
+CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
@@ -546,9 +546,6 @@ endif
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
 
-# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types
-$(OBJECTS:%.o=%.cc): | $(TILEDEFHDRS)
-
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
@@ -952,6 +949,7 @@ GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
 GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
+MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
 
 export SRC_VERSION
 
@@ -981,7 +979,7 @@ webserver/game_data/static/%.png: dat/tiles/%.png
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
-            denzi_undead_warrior omndra_zot_demon omndra_fire_mage \
+            denzi_undead_warrior omndra_zot_demon firemage \
             shadyamish_octm denzi_evil_mage denzi_invasion
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
@@ -1004,9 +1002,10 @@ webserver:
 endif
 
 
-ifeq (,$(findstring clean,$(MAKECMDGOALS)))
-ifeq (,$(findstring test,$(MAKECMDGOALS)))
-ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
+# There might not have been any goals passed on the commandline, so...
+GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
+# Unless these are the only goals...
+ifneq ($(GOALS),$(filter clean test %-windows,$(GOALS)))
 
 #
 # CFLAGS difference check
@@ -1019,29 +1018,44 @@ ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 #
 
 TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
+OLD_CFLAGS = $(shell cat .cflags 2>/dev/null)
+ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
+  NEED_REBUILD = y
+endif
 
 .cflags: .force-cflags
-	@FLAGS='$(TRACK_CFLAGS)'; \
-    if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * rebuilding crawl: new build flags or prefix"; \
-        echo "$$FLAGS" > .cflags; \
-    fi
+ifdef NEED_REBUILD
+	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo '$(TRACK_CFLAGS)' > .cflags
+endif
 
 .PHONY: .force-cflags
 
-endif
-endif
 endif
 
 ##########################################################################
 # Dependencies
 
-DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
+DEPS := $(ALL_OBJECTS:.o=.d)
 
--include $(DEPS)
+# Any stale .d files are worse than useless, as they can break builds by
+# telling make a header or file no longer present is needed.  This is very
+# likely to happen if the compilation mode changes (normal vs debug, tiles
+# vs console vs webtiles) or if the compiler itself changes (gcc vs
+# gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
+#
+# In such cases, the dependency forces a rebuild of that file.
+ifndef NEED_REBUILD
+  VALID_DEPS := $(shell for x_d in $(DEPS); do \
+                          x="$${x_d%%.d}"; x_cc="$${x}.cc"; \
+                          if [ "$$x_cc" -ot "$$x_d" \
+                               -a "$$x_d" -nt .cflags ]; \
+                          then echo "$$x_d"; \
+                          fi; \
+                        done)
+endif
+-include $(VALID_DEPS)
 
-# Only serves to check if all .d files can be built
-depend: $(DEPS)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
@@ -1238,15 +1252,7 @@ ifndef NO_INLINE_DEPGEN
 INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$*.d,-MT,$@
 endif
 
-ifdef NO_INLINE_DEPGEN
-$(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
-
-%.d: %.cc .cflags $(GENERATED_HEADERS)
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
-else
-%.d: %.cc .cflags $(GENERATED_HEADERS)
-	@$(RM) $@
-endif
+$(DEPS): %.d: %.cc
 
 # Precompiled headers
 #
@@ -1276,7 +1282,10 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 %.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc .cflags | $(GENERATED_HEADERS)
+%.o: %.cc %.d .cflags | $(GENERATED_HEADERS) $(TILEDEFHDRS)
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+endif
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
@@ -1407,6 +1416,19 @@ endif
 	mv build-win/crawl.exe build-win/crawl-console.exe
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
+
+package-windows-zips:
+ifneq ($(GAME),crawl.exe)
+	@echo "This is only for Windows; please specify CROSSHOST.";false
+endif
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
+	rm -rf build-win
+	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
+	rm -rf build-win
+	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi
 
 #############################################################################
 # Building Mac app bundles
