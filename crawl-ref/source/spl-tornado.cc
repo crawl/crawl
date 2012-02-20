@@ -1,4 +1,5 @@
 #include "AppHdr.h"
+#include <math.h>
 
 #include "spl-damage.h"
 
@@ -10,7 +11,6 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
-#include "math.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"

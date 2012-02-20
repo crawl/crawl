@@ -1,12 +1,13 @@
 #ifndef MGEN_DATA_H
 #define MGEN_DATA_H
 
+#include "coord.h"
 #include "mgen_enum.h"
 #include "player.h"
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
-const std::string TUKIMA_WEAPON = "tukima-weapon";
+#define TUKIMA_WEAPON "tukima-weapon"
 
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data
@@ -158,7 +159,7 @@ struct mgen_data
 
     // Is there a valid position set on this struct that we want to use
     // when placing the monster?
-    bool use_position() const;
+    bool use_position() const { return in_bounds(pos); };
 
     bool summoned() const { return (abjuration_duration > 0); }
 

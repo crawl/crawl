@@ -55,9 +55,6 @@ public:
     virtual bool transparent() const { return false; }
 
 protected:
-#if TAG_MAJOR_VERSION == 32
-    mcache_entry(reader &th);
-#endif
 
     // ref count in backstore
     int m_ref_count;
@@ -74,9 +71,6 @@ public:
     void clear_nonref();
     void clear_all();
 
-#if TAG_MAJOR_VERSION == 32
-    void read(reader &th);
-#endif
     bool empty() { return m_entries.empty(); }
 
 protected:

@@ -12,7 +12,6 @@
 #include "attitude-change.h"
 #include "cloud.h"
 #include "cluautil.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -69,6 +68,7 @@
 #include "xom.h"
 
 static bool _wounded_damaged(mon_holy_type holi);
+static int _calc_player_experience(const monster* mons);
 
 const item_def* get_mimic_item(const monster* mimic)
 {
@@ -448,6 +448,9 @@ int place_monster_corpse(const monster* mons, bool silent,
     you.montiers[4]++;
 #endif
 
+    if (mons && mons_is_phoenix(mons))
+        corpse.props["destroy_xp"].get_int() = _calc_player_experience(mons);
+
     int o = get_mitm_slot();
 
     // Zotdef corpse creation forces cleanup, otherwise starvation
@@ -467,10 +470,10 @@ int place_monster_corpse(const monster* mons, bool silent,
 
     origin_set_monster(mitm[o], mons);
 
-    if ((mons->flags & MF_EXPLODE_KILL)
-        && explode_corpse(corpse, mons->pos()))
+    if ((mons->flags & MF_EXPLODE_KILL) && explode_corpse(corpse, mons->pos()))
     {
         // We already have a spray of chunks.
+        item_was_destroyed(mitm[o]);
         destroy_item(o);
         return (-1);
     }
@@ -509,21 +512,33 @@ static void _hints_inspect_kill()
 
 static std::string _milestone_kill_verb(killer_type killer)
 {
-    return (killer == KILL_BANISHED ? "banished " : "killed ");
+    return (killer == KILL_BANISHED ? "banished" :
+            killer == KILL_PACIFIED ? "pacified" :
+            killer == KILL_ENSLAVED ? "enslaved" : "killed");
 }
 
-static void _check_kill_milestone(const monster* mons,
-                                  killer_type killer, int i)
+void record_monster_defeat(monster* mons, killer_type killer)
 {
+    if (crawl_state.game_is_arena())
+        return;
+    if (killer == KILL_RESET || killer == KILL_DISMISSED)
+        return;
+    if (mons->has_ench(ENCH_FAKE_ABJURATION))
+        return;
+    if (MONST_INTERESTING(mons))
+    {
+        take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
+                       mons->full_name(DESC_A).c_str(),
+                       _milestone_kill_verb(killer).c_str()));
+    }
     // XXX: See comment in monster_polymorph.
     bool is_unique = mons_is_unique(mons->type);
     if (mons->props.exists("original_was_unique"))
         is_unique = mons->props["original_was_unique"].get_bool();
-
     if (mons->type == MONS_PLAYER_GHOST)
     {
         monster_info mi(mons);
-        std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
+        std::string milestone = _milestone_kill_verb(killer) + " the ghost of ";
         milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
@@ -533,6 +548,7 @@ static void _check_kill_milestone(const monster* mons,
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
+                       + " "
                        + mons->name(DESC_THE, true)
                        + ".");
     }
@@ -605,8 +621,7 @@ static void _give_monster_experience(int experience, int killer_index)
     }
 }
 
-static int _calc_player_experience(monster* mons, killer_type killer,
-                                   bool pet_kill, int killer_index)
+static int _calc_player_experience(const monster* mons)
 {
     int experience = exper_value(mons);
 
@@ -812,6 +827,8 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
+        record_monster_defeat(mons, killer);
+        record_monster_defeat(mons, KILL_ENSLAVED);
         yred_make_enslaved_soul(mons, player_under_penance());
         return (true);
     }
@@ -1082,7 +1099,8 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
-static void _setup_inner_flame_explosion(bolt & beam, const monster& origin)
+static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
+                                         actor* agent)
 {
     _setup_base_explosion(beam, origin);
     const int size = origin.body_size(PSIZE_BODY);
@@ -1093,7 +1111,7 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin)
     beam.name      = "fiery explosion";
     beam.colour    = RED;
     beam.ex_size   = (size > SIZE_BIG) ? 2 : 1;
-    beam.thrower   = KILL_YOU;
+    beam.set_agent(agent);
 }
 
 static bool _explode_monster(monster* mons, killer_type killer,
@@ -1109,6 +1127,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     bolt beam;
     const int type = mons->type;
     const char* sanct_msg = NULL;
+    actor* agent = mons;
 
     if (type == MONS_GIANT_SPORE)
     {
@@ -1124,7 +1143,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        _setup_inner_flame_explosion(beam, *mons);
+        mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
+        ASSERT(i_f.ench == ENCH_INNER_FLAME);
+        agent = actor_by_mid(i_f.source);
+        _setup_inner_flame_explosion(beam, *mons, agent);
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion "
                           "is contained.";
@@ -1162,8 +1184,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD && !one_chance_in(5))
-                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), mons);
+            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+                && !one_chance_in(5))
+            {
+                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
+            }
     }
 
     // Detach monster from the grid first, so it doesn't get hit by
@@ -1395,6 +1420,10 @@ static std::string _killer_type_name(killer_type killer)
         return ("unsummoned");
     case KILL_TIMEOUT:
         return ("timeout");
+    case KILL_PACIFIED:
+        return ("pacified");
+    case KILL_ENSLAVED:
+        return ("enslaved");
     }
     die("invalid killer type");
 }
@@ -1414,14 +1443,11 @@ static void _make_spectral_thing(monster* mons, bool quiet)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        const int spectre =
-            create_monster(
+        if (monster *spectre = create_monster(
                 mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
                     0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                    mons->type, mons->number));
-
-        if (spectre != -1)
+                    mons->type, mons->number)))
         {
             if (!quiet)
                 mpr("A glowing mist starts to gather...");
@@ -1429,16 +1455,15 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             // If the original monster has been drained or levelled up,
             // its HD might be different from its class HD, in which
             // case its HP should be rerolled to match.
-            if (menv[spectre].hit_dice != mons->hit_dice)
+            if (spectre->hit_dice != mons->hit_dice)
             {
-                menv[spectre].hit_dice = std::max(mons->hit_dice, 1);
-                roll_zombie_hp(&menv[spectre]);
+                spectre->hit_dice = std::max(mons->hit_dice, 1);
+                roll_zombie_hp(spectre);
             }
 
-            name_zombie(&menv[spectre], mons);
+            name_zombie(spectre, mons);
 
-            monster* mon = &menv[spectre];
-            mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            spectre->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
         }
     }
 }
@@ -1533,7 +1558,8 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     mons_clear_trapping_net(mons);
-    mons->clear_all_constrictions();
+    mons->stop_constricting_all(false);
+    mons->stop_being_constricted();
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
@@ -1552,7 +1578,7 @@ int monster_die(monster* mons, killer_type killer,
     bool unsummoned          = killer == KILL_UNSUMMONED;
     bool timeout             = killer == KILL_TIMEOUT;
     const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
-                                                              M_NO_EXP_GAIN));
+                                M_NO_EXP_GAIN) && !mons_is_phoenix(mons));
 
     bool drop_items    = !hard_reset;
 
@@ -1564,9 +1590,6 @@ int monster_die(monster* mons, killer_type killer,
 
     bool in_transit          = false;
     bool was_banished        = (killer == KILL_BANISHED);
-
-    if (!crawl_state.game_is_arena())
-        _check_kill_milestone(mons, killer, killer_index);
 
     // Award experience for suicide if the suicide was caused by the
     // player.
@@ -1589,15 +1612,8 @@ int monster_die(monster* mons, killer_type killer,
         you.montiers[mons_threat_level(mons, true)]++;
 #endif
 
-    // Take note!
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena()
-        && MONST_INTERESTING(mons))
-    {
-        take_note(Note(killer == KILL_BANISHED ? NOTE_BANISH_MONSTER
-                                               : NOTE_KILL_MONSTER,
-                       mons->type, mons->friendly(),
-                       mons->full_name(DESC_A).c_str()));
-    }
+    // Take notes and mark milestones.
+    record_monster_defeat(mons, killer);
 
     // From time to time Trog gives you a little bonus.
     if (killer == KILL_YOU && you.berserk())
@@ -1739,7 +1755,18 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
-    const mon_holy_type targ_holy = mons->holiness();
+    mon_holy_type targ_holy = mons->holiness();
+
+    // Dual holiness, Trog and Kiku like dead demons but not undead.
+    if ((mons->type == MONS_ABOMINATION_SMALL
+         || mons->type == MONS_ABOMINATION_LARGE
+         || mons->type == MONS_CRAWLING_CORPSE
+         || mons->type == MONS_MACABRE_MASS)
+        && (you.religion == GOD_TROG
+         || you.religion == GOD_KIKUBAAQUDGHA))
+    {
+        targ_holy = MH_DEMONIC;
+    }
 
     switch (killer)
     {
@@ -1808,17 +1835,6 @@ int monster_die(monster* mons, killer_type killer,
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     mons->hit_dice, true, mons);
-                    // Dual holiness, Trog and Kiku like dead demons.
-                    if ((mons->type == MONS_ABOMINATION_SMALL
-                         || mons->type == MONS_ABOMINATION_LARGE
-                         || mons->type == MONS_CRAWLING_CORPSE
-                         || mons->type == MONS_MACABRE_MASS)
-                        && (you.religion == GOD_TROG
-                         || you.religion == GOD_KIKUBAAQUDGHA))
-                    {
-                        did_god_conduct(DID_KILL_DEMON,
-                                        mons->hit_dice, true, mons);
-                    }
                 }
                 else if (targ_holy == MH_DEMONIC)
                 {
@@ -1941,11 +1957,8 @@ int monster_die(monster* mons, killer_type killer,
                 bless_follower();
             }
 
-            if (you.duration[DUR_DEATH_CHANNEL]
-                && gives_xp)
-            {
+            if (you.duration[DUR_DEATH_CHANNEL] && gives_xp)
                 _make_spectral_thing(mons, !death_message);
-            }
             break;
         }
 
@@ -2197,11 +2210,8 @@ int monster_die(monster* mons, killer_type killer,
                     bless_follower(killer_mon);
                 }
 
-                if (you.duration[DUR_DEATH_CHANNEL]
-                    && gives_xp && was_visible)
-                {
+                if (you.duration[DUR_DEATH_CHANNEL] && gives_xp && was_visible)
                     _make_spectral_thing(mons, !death_message);
-                }
             }
             break;
 
@@ -2448,8 +2458,7 @@ int monster_die(monster* mons, killer_type killer,
     unsigned int player_exp = 0, monster_exp = 0;
     if (!mons_reset && !fake_abjuration && !timeout && !unsummoned)
     {
-        player_exp = _calc_player_experience(mons, killer, pet_kill,
-                                             killer_index);
+        player_exp = _calc_player_experience(mons);
         monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
@@ -2529,8 +2538,11 @@ int monster_die(monster* mons, killer_type killer,
         update_screen();
     }
 
-    _give_experience(player_exp, monster_exp, killer, killer_index,
-                     pet_kill, was_visible);
+    if (gives_xp)
+    {
+        _give_experience(player_exp, monster_exp, killer, killer_index,
+                         pet_kill, was_visible);
+    }
 
     return (corpse);
 }
@@ -2546,6 +2558,7 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
+    env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
 
@@ -2786,7 +2799,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // XXX: mons_is_unique should be converted to monster::is_unique, and that
     // function should be testing the value of props["original_was_unique"]
     // which would make things a lot simpler.
-    // See also _check_kill_milestone.
+    // See also record_monster_defeat.
     bool old_mon_unique           = mons_is_unique(mons->type);
     if (mons->props.exists("original_was_unique"))
         if (mons->props["original_was_unique"].get_bool())
@@ -2894,6 +2907,14 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (old_mon_caught)
         check_net_will_hold_monster(mons);
+
+    // Even if the new form can constrict, it might be with a different
+    // body part.  Likewise, the new form might be too large for its
+    // current constrictor.  Rather than trying to handle these as special
+    // cases, just stop the constriction entirely.  The usual message about
+    // evaporating and reforming justifies this behaviour.
+    mons->stop_constricting_all(false);
+    mons->stop_being_constricted();
 
     mons->check_clinging(false);
 }
@@ -3325,7 +3346,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     {
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? - bwr
-        simple_monster_message(mons, " resists.");
+        simple_monster_message(mons, " cannot make way for you.");
         // FIXME: AI_HIT_MONSTER isn't ideal.
         interrupt_activity(AI_HIT_MONSTER, mons);
     }
@@ -3630,6 +3651,13 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     // dangerous cloud, just to kill you. {due}
     if (!extra_careful && mons->berserk())
         return (false);
+
+    if (you.religion == GOD_FEDHAS && fedhas_protects(mons)
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
+        && (mons->friendly() || mons->neutral()))
+    {
+        return false;
+    }
 
     switch (cl_type)
     {
@@ -4085,6 +4113,7 @@ void seen_monster(monster* mons)
     if (!mons->has_ench(ENCH_ABJ)
         && !mons->has_ench(ENCH_FAKE_ABJURATION)
         && !testbits(mons->flags, MF_NO_REWARD)
+        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
         && !crawl_state.game_is_arena())
     {
         did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
@@ -4241,8 +4270,8 @@ bool is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
-static bool _monster_space_valid(const monster* mons, coord_def target,
-                                 bool forbid_sanctuary)
+bool monster_space_valid(const monster* mons, coord_def target,
+                         bool forbid_sanctuary)
 {
     if (!in_bounds(target))
         return false;
@@ -4270,27 +4299,11 @@ bool monster_random_space(const monster* mons, coord_def& target,
     while (tries++ < 1000)
     {
         target = random_in_bounds();
-        if (_monster_space_valid(mons, target, forbid_sanctuary))
+        if (monster_space_valid(mons, target, forbid_sanctuary))
             return true;
     }
 
     return (false);
-}
-
-// Move the monster to the nearest valid space.
-bool shove_monster(monster* mons)
-{
-    const coord_def pos = mons->pos();
-    for (distance_iterator di(pos); di; ++di)
-        if (_monster_space_valid(mons, *di, false))
-        {
-            mons->moveto(*di);
-            mgrd(pos) = NON_MONSTER;
-            mgrd(*di) = mons->mindex();
-            return true;
-        }
-
-    return false;
 }
 
 bool monster_random_space(monster_type mon, coord_def& target,
@@ -4325,10 +4338,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    // if constricted by larger, abort
-    if (mons->is_constricted_larger())
-        return;
-
     if (mons_is_shedu(mons) && shedu_pair_alive(mons))
     {
         // find a location close to its mate instead.
@@ -4345,7 +4354,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             if (grid_distance(target, pair) >= 10)
                 continue;
 
-            if (!_monster_space_valid(mons, target, !mons->wont_attack()))
+            if (!monster_space_valid(mons, target, !mons->wont_attack()))
                 continue;
 
             newpos = target;
@@ -4372,27 +4381,13 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
-    // handle constriction, if any
-    if (mons->is_constricted())
-    {
-        if (mons->constricted_by == MHITYOU)
-            player_teleport_to_monster(mons, newpos);
-        else
-            monster_teleport_to_player(mons->constricted_by, newpos);
-    }
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mons->constricting[i] == MHITYOU)
-            player_teleport_to_monster(mons, newpos);
-        else if (mons->constricting[i] != NON_ENTITY)
-            monster_teleport_to_player(mons->constricting[i], newpos);
-
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
     // Move it to its new home.
-    mons->moveto(newpos);
+    mons->moveto(newpos, true);
 
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
@@ -4426,143 +4421,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
-}
-
-static void _lose_constriction(actor *att, actor *def)
-{
-    def->clear_specific_constrictions(att->mindex());
-    att->clear_specific_constrictions(def->mindex());
-
-    if (you.see_cell(att->pos()) || you.see_cell(def->pos()))
-    {
-        mprf("%s lose%s %s grip on %s.",
-             att->name(DESC_THE).c_str(),
-             att->is_player() ? "" : "s",
-             att->pronoun(PRONOUN_POSSESSIVE).c_str(),
-             def->name(DESC_THE).c_str());
-    }
-}
-
-void monster_teleport_to_player(int mindex, coord_def playerpos)
-{
-    coord_def target;
-    coord_def newpos;
-    monster *mons = &env.mons[mindex];
-    actor *mons2;
-
-    int tries = 0;
-    while (tries++ < 30)
-    {
-        target = coord_def(random_range(playerpos.x - 1, playerpos.x + 1),
-                           random_range(playerpos.y - 1, playerpos.y + 1));
-
-        if (!_monster_space_valid(mons, target, false))
-            continue;
-
-        newpos = target;
-        break;
-    }
-
-    // XXX: If the above function didn't find a good spot, return now
-    // rather than continue by slotting the monster (presumably)
-    // back into its old location (previous behaviour). This seems
-    // to be much cleaner and safer than relying on what appears to
-    // have been a mistake.
-    if (newpos.origin())
-        return;
-
-    const coord_def oldplace = mons->pos();
-
-    mons->move_to_pos(newpos);
-
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
-
-    // the monster which has just moved could have been constricting more
-    // than one target, clear others if no longer adjacent
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mons->constricting[i] != mindex
-            && mons->constricting[i] != NON_ENTITY)
-        {
-            if (mons->constricting[i] == MHITYOU)
-                mons2 = &you;
-            else
-                mons2 = &env.mons[mons->constricting[i]];
-
-            if (!adjacent(mons->pos(), mons2->pos()))
-                _lose_constriction(mons, mons2);
-        }
-
-    // if it's coming along because it was constricting player, but something
-    // else was constricting it, then the something else loses its grip too
-    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY)
-    {
-        if (mons->constricted_by == MHITYOU)
-            mons2 = &you;
-        else
-            mons2 = &env.mons[mons->constricted_by];
-
-        if (!adjacent(mons->pos(), mons2->pos()))
-            _lose_constriction(mons, mons2);
-    }
-
-    simple_monster_message(mons, " comes along for the ride!");
-
-    mons->check_redraw(newpos);
-    mons->apply_location_effects(newpos);
-
-    mons_relocated(mons);
-}
-
-void player_teleport_to_monster(monster *mons, coord_def monsterpos)
-{
-    coord_def target;
-    coord_def newpos;
-
-    int tries = 0;
-    while (tries++ < 30)
-    {
-        target = coord_def(random_range(monsterpos.x - 1, monsterpos.x + 1),
-                           random_range(monsterpos.y - 1, monsterpos.y + 1));
-
-        if (!_monster_space_valid(mons, target, false))
-            continue;
-
-        newpos = target;
-        break;
-    }
-
-    // XXX: If the above function didn't find a good spot, return now
-    // rather than continue by slotting the monster (presumably)
-    // back into its old location (previous behaviour). This seems
-    // to be much cleaner and safer than relying on what appears to
-    // have been a mistake.
-    if (newpos.origin())
-        return;
-
-    // Move it to its new home.
-    you.moveto(newpos);
-
-    // you could have been constricting more
-    // than one target, clear others if no longer adjacent
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (you.constricting[i] != mons->mindex()
-            && you.constricting[i] != NON_ENTITY
-            && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
-        {
-            _lose_constriction(&you, &env.mons[you.constricting[i]]);
-        }
-
-    // if you're coming along because you're constricting it and something
-    // else was constricting you, then the something else loses its grip too
-
-    if (you.constricted_by != mons->mindex()
-        && you.constricted_by != NON_ENTITY
-        && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
-    {
-        _lose_constriction(&env.mons[you.constricted_by], &you);
-    }
-
-    mpr("You come along for the ride!");
 }
 
 void mons_clear_trapping_net(monster* mon)
@@ -4675,14 +4533,12 @@ static bool _mons_reaped(actor *killer, monster* victim)
         hitting = mon->foe;
     }
 
-    int midx = NON_MONSTER;
+    monster *zombie = 0;
     if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, killer, "",
-                        GOD_NO_GOD, true, true, true, &midx) <= 0)
+                        GOD_NO_GOD, true, true, true, &zombie) <= 0)
     {
         return (false);
     }
-
-    monster* zombie = &menv[midx];
 
     if (you.can_see(victim))
         mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());

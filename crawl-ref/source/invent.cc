@@ -233,13 +233,6 @@ std::string InvEntry::get_text(bool need_cursor) const
     else
         tstr << text;
 
-    if (InvEntry::show_prices)
-    {
-        const int value = item_value(*item, show_prices);
-        if (value > 0)
-            tstr << " (" << value << " gold)";
-    }
-
     if (Options.show_inventory_weights)
     {
         const int mass = item_mass(*item) * item->quantity;
@@ -337,26 +330,10 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     }
 }
 
-bool InvEntry::show_prices = false;
-void InvEntry::set_show_prices(bool doshow)
-{
-    show_prices = doshow;
-}
-
 bool InvEntry::show_cursor = false;
 void InvEntry::set_show_cursor(bool doshow)
 {
     show_cursor = doshow;
-}
-
-InvShowPrices::InvShowPrices(bool doshow)
-{
-    InvEntry::set_show_prices(doshow);
-}
-
-InvShowPrices::~InvShowPrices()
-{
-    InvEntry::set_show_prices(false);
 }
 
 bool InvEntry::show_glyph = false;
@@ -547,7 +524,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (quantity <= 0)
         return (false);
 
-    tileidx_t idx = tileidx_item(*item);
+    tileidx_t idx = tileidx_item(get_item_info(*item));
     if (!idx)
         return (false);
 
@@ -1281,9 +1258,8 @@ unsigned char invent_select(const char *title,
     return (menu.getkey());
 }
 
-void browse_inventory(bool show_price)
+void browse_inventory()
 {
-    InvShowPrices show_item_prices(show_price);
     get_invent(OSEL_ANY);
 }
 
@@ -1652,7 +1628,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
-            && !you.is_undead)
+            && !you.is_undead && !crawl_state.game_is_zotdef())
         {
             return (true);
         }

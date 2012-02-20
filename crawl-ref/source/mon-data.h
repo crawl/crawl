@@ -327,7 +327,7 @@ static monsterentry mondata[] = {
 {
     MONS_PHOENIX, 'b', RED, "phoenix",
     M_WARM_BLOOD | M_ALWAYS_CORPSE,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_HELLFIRE,
     480, 12, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,
     { {AT_CLAW, AF_HOLY, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 13, 6, 5, 0 },
@@ -2275,6 +2275,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_CRAWLING_CORPSE, 'x', BROWN, "crawling corpse",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -2287,6 +2288,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_MACABRE_MASS, 'x', BROWN, "macabre mass",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -3718,6 +3720,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     MONS_SUBTRACTOR_SNAKE, 'S', ETC_SUBTRACTOR, "subtractor snake",
     M_COLD_BLOOD | M_NO_POLY_TO,
@@ -3729,6 +3732,7 @@ static monsterentry mondata[] = {
     I_REPTILE, HT_LAND, FL_NONE, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
+#endif
 
 // trolls ('T')
 {
@@ -4229,10 +4233,10 @@ static monsterentry mondata[] = {
     M_NO_SKELETON | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     700, 10, MONS_OCTOPODE, MONS_OCTOPODE, MH_NATURAL, -1,
-    { {AT_TENTACLE_SLAP, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 10},
-      {AT_CONSTRICT, AF_CRUSH, 30}, AT_NO_ATK },
+    { {AT_TENTACLE_SLAP, AF_PLAIN, 20}, {AT_CONSTRICT, AF_CRUSH, 30},
+      AT_NO_ATK, AT_NO_ATK },
     { 6, 4, 6, 0 },
-    0, 5, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SHOUT,
+    1, 5, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -5586,7 +5590,7 @@ static monsterentry mondata[] = {
     M_UNIQUE | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS | M_PRIEST | M_SPEAKS
         | M_SPELLCASTER,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
-    0, 11, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
+    0, 60, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
     { 12, 0, 0, 180 },
     10, 1, MST_DISSOLUTION, CE_POISON_CONTAM, Z_NOZOMBIE, S_SILENT,

@@ -22,11 +22,11 @@ public:
 };
 
 // An object that modifies the behaviour of the direction prompt.
-class targeting_behaviour
+class targetting_behaviour
 {
 public:
-    targeting_behaviour(bool just_looking = false);
-    virtual ~targeting_behaviour();
+    targetting_behaviour(bool just_looking = false);
+    virtual ~targetting_behaviour();
 
     // Returns a keystroke for the prompt.
     virtual int get_key();
@@ -75,7 +75,7 @@ public:
 struct direction_chooser_args
 {
     targetter *hitfunc;
-    targeting_type restricts;
+    targetting_type restricts;
     targ_mode_type mode;
     int range;
     bool just_looking;
@@ -84,7 +84,7 @@ struct direction_chooser_args
     bool may_target_self;
     const char *target_prefix;
     std::string top_prompt;
-    targeting_behaviour *behaviour;
+    targetting_behaviour *behaviour;
     bool cancel_at_self;
     bool show_floor_desc;
     desc_filter get_desc_func;
@@ -116,7 +116,7 @@ private:
 
     bool do_main_loop();
 
-    // Return the location where targeting should start.
+    // Return the location where targetting should start.
     coord_def find_default_target() const;
 
     void handle_mlist_cycle_command(command_type key_command);
@@ -149,7 +149,7 @@ private:
     // Mark item for pickup, initiate movement.
     bool pickup_item();
 
-    // Return true if we need to abort targeting due to a signal.
+    // Return true if we need to abort targetting due to a signal.
     bool handle_signals();
 
     void reinitialize_move_flags();
@@ -158,7 +158,7 @@ private:
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
-    std::string build_targeting_hint_string() const;
+    std::string build_targetting_hint_string() const;
 
     actor* targeted_actor() const;
     monster* targeted_monster() const;
@@ -168,7 +168,7 @@ private:
 
     // Whatever the caller defines. Typically something like:
     // Casting: Venom Bolt.
-    // Can be modified by the targeting_behaviour.
+    // Can be modified by the targetting_behaviour.
     void print_top_prompt() const;
 
     // Press: ? - help, Shift-Dir - straight line, t - megabat
@@ -209,7 +209,7 @@ private:
     // pointer is in bounds.
     bool tiles_update_target();
 
-    // Display the prompt when beginning targeting.
+    // Display the prompt when beginning targetting.
     void show_initial_prompt();
 
     void toggle_beam();
@@ -225,14 +225,14 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
-    void cycle_targeting_mode();
+    void cycle_targetting_mode();
 
     void describe_target();
     void show_help();
 
     // Parameters.
     dist& moves;                // Output.
-    targeting_type restricts;   // What kind of target do we want?
+    targetting_type restricts;   // What kind of target do we want?
     targ_mode_type mode;        // Hostiles or friendlies?
     int range;                  // Max range to consider
     bool just_looking;
@@ -241,8 +241,8 @@ private:
     bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
     const char *target_prefix;  // A string displayed before describing target
     std::string top_prompt;     // Shown at the top of the message window
-    targeting_behaviour *behaviour; // Can be NULL for default
-    bool cancel_at_self;        // Disallow self-targeting?
+    targetting_behaviour *behaviour; // Can be NULL for default
+    bool cancel_at_self;        // Disallow self-targetting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.
 
@@ -262,7 +262,7 @@ private:
     bool target_unshifted;      // Do unshifted direction keys fire?
 
     // Default behaviour, saved across instances.
-    static targeting_behaviour stock_behaviour;
+    static targetting_behaviour stock_behaviour;
 
 };
 

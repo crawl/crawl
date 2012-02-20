@@ -270,7 +270,6 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
     }
 }
 
-
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb.reset();
@@ -703,11 +702,10 @@ monster_info::monster_info(const monster* m, int milev)
     // names of what this monster is constricting, if any
     for (int idx = 0; idx < MAX_CONSTRICT; idx++)
     {
-        if (m->constricting[idx] == MHITYOU)
-            constricting_name[idx] = "you";
-        else if (m->constricting[idx] != NON_ENTITY)
-            constricting_name[idx] = env.mons[m->constricting[idx]].
-                                     name(DESC_PLAIN, true);
+        actor* const constrictee = mindex_to_actor(m->constricting[idx]);
+
+        if (constrictee)
+            constricting_name[idx] = constrictee->name(DESC_PLAIN, true);
     }
 
     // this must be last because it provides this structure to Lua code
@@ -1155,7 +1153,7 @@ static std::string _verbose_info(const monster_info& mi)
     return inf;
 }
 
-std::string monster_info::pluralized_name(bool fullname) const
+std::string monster_info::pluralised_name(bool fullname) const
 {
     // Don't pluralise uniques, ever.  Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
@@ -1196,8 +1194,9 @@ void monster_info::to_string(int count, std::string& desc,
         out << full_name();
     else
     {
-        // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
-        out << count << " " << pluralized_name(fullname);
+        // TODO: this should be done in a much cleaner way, with code to
+        // merge multiple monster_infos into a single common structure
+        out << count << " " << pluralised_name(fullname);
     }
 
 #ifdef DEBUG_DIAGNOSTICS

@@ -39,7 +39,7 @@ game_state::game_state()
       lua_calls_no_turn(0), stat_gain_prompt(false),
       level_annotation_shown(false),
 #ifndef USE_TILE_LOCAL
-      mlist_targeting(false),
+      mlist_targetting(false),
 #else
       title_screen(true),
 #endif

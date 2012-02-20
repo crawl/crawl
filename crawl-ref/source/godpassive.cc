@@ -1,4 +1,5 @@
 #include "AppHdr.h"
+#include <math.h>
 
 #include "godpassive.h"
 
@@ -18,7 +19,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "player.h"
@@ -96,6 +96,7 @@ void jiyva_eat_offlevel_items()
                 // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
                 sacrifice_item_stack(*si, &js);
+                item_was_destroyed(*si);
                 destroy_item(si.link());
                 jiyva_slurp_message(js);
             }

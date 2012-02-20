@@ -14,7 +14,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #ifdef WIZARD
@@ -150,7 +149,7 @@ static const char *describe_xom_mood()
                              : "a very special plaything of Xom.";
 }
 
-const std::string describe_xom_favour(bool upper)
+const std::string describe_xom_favour()
 {
     std::string favour;
     if (you.religion != GOD_XOM)
@@ -159,9 +158,6 @@ const std::string describe_xom_favour(bool upper)
         favour = "a BORING thing.";
     else
         favour = describe_xom_mood();
-
-    if (upper)
-        favour = uppercase_first(favour);
 
     return (favour);
 }
@@ -487,7 +483,7 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
     {
     case SPELL_BLINK:
     case SPELL_TELEPORT_SELF:
-        return (!item_blocks_teleport(false, false));
+        return !item_blocks_teleport(false, false);
     default:
         return (true);
     }
@@ -1279,7 +1275,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                                              0);
 
     std::vector<bool> is_demonic(numdemons, false);
-    std::vector<int> summons(numdemons);
+    std::vector<monster*> summons(numdemons);
 
     int num_actually_summoned = 0;
 
@@ -1296,7 +1292,7 @@ static int _xom_send_allies(int sever, bool debug = false)
 
         summons[i] = create_monster(mg);
 
-        if (summons[i] != -1)
+        if (summons[i])
         {
             num_actually_summoned++;
             is_demonic[i] = (mons_class_holiness(mon_type) == MH_DEMONIC);
@@ -1339,10 +1335,8 @@ static int _xom_send_allies(int sever, bool debug = false)
 
         for (int i = 0; i < numdemons; ++i)
         {
-            if (summons[i] == -1)
+            if (!summons[i])
                 continue;
-
-            monster* mon = &menv[summons[i]];
 
             if (hostiletype != 0)
             {
@@ -1351,13 +1345,13 @@ static int _xom_send_allies(int sever, bool debug = false)
                     || (is_demonic[i] && hostiletype == 1)
                     || (!is_demonic[i] && hostiletype == 2))
                 {
-                    mon->attitude = ATT_HOSTILE;
+                    summons[i]->attitude = ATT_HOSTILE;
                     // XXX need to reset summon quota here?
-                    behaviour_event(mon, ME_ALERT, MHITYOU);
+                    behaviour_event(summons[i], ME_ALERT, MHITYOU);
                 }
             }
 
-            player_angers_monster(mon);
+            player_angers_monster(summons[i]);
         }
 
         // Take a note.
@@ -1400,22 +1394,20 @@ static int _xom_send_one_ally(int sever, bool debug = false)
 
     mg.non_actor_summoner = "Xom";
 
-    const int summons = create_monster(mg);
-
-    if (summons != -1)
+    if (monster *summons = create_monster(mg))
     {
         if (different)
             god_speaks(GOD_XOM, _get_xom_speech("single holy summon").c_str());
         else
             god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
-        player_angers_monster(&menv[summons]);
+        player_angers_monster(summons);
 
         // Take a note.
         static char summ_buf[80];
         snprintf(summ_buf, sizeof(summ_buf), "summons %s %s",
                  beha == BEH_FRIENDLY ? "friendly" : "hostile",
-                 menv[summons].name(DESC_PLAIN).c_str());
+                 summons->name(DESC_PLAIN).c_str());
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         return (XOM_GOOD_SINGLE_ALLY);
@@ -1823,7 +1815,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             doodad.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
-            mprf("%s reforms as %s", mi->name(DESC_THE).c_str(),
+            mprf("%s reforms as %s.", mi->name(DESC_THE).c_str(),
                  doodad.name(DESC_A).c_str());
 
             // Dismiss monster silently.
@@ -1890,9 +1882,9 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     mg.non_actor_summoner = "Xom";
 
-    const int mons = create_monster(mg);
+    monster *dancing = create_monster(mg);
 
-    if (mons == -1)
+    if (!dancing)
         return (XOM_DID_NOTHING);
 
     // Make the monster unwield its weapon.
@@ -1903,11 +1895,11 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
          apostrophise(mon->name(DESC_THE)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
-    destroy_item(menv[mons].inv[MSLOT_WEAPON]);
+    destroy_item(dancing->inv[MSLOT_WEAPON]);
 
-    menv[mons].inv[MSLOT_WEAPON] = wpn;
-    mitm[wpn].set_holding_monster(mons);
-    menv[mons].colour = mitm[wpn].colour;
+    dancing->inv[MSLOT_WEAPON] = wpn;
+    mitm[wpn].set_holding_monster(dancing->mindex());
+    dancing->colour = mitm[wpn].colour;
 
     return (XOM_GOOD_ANIMATE_MON_WPN);
 }
@@ -1938,7 +1930,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
 
         mpr("Your body is suffused with distortional energy.");
 
-        set_hp(1 + random2(you.hp));
+        dec_hp(random2(you.hp), false);
         deflate_hp(you.hp_max / 2, true);
 
         bool failMsg = true;
@@ -1982,9 +1974,7 @@ static int _xom_send_major_ally(int sever, bool debug = false)
 
     mg.non_actor_summoner = "Xom";
 
-    const int summons = create_monster(mg);
-
-    if (summons != -1)
+    if (monster *summons = create_monster(mg))
     {
         if (is_demonic)
         {
@@ -1997,13 +1987,13 @@ static int _xom_send_major_ally(int sever, bool debug = false)
                        _get_xom_speech("single major holy summon").c_str());
         }
 
-        player_angers_monster(&menv[summons]);
+        player_angers_monster(summons);
 
         // Take a note.
         static char summ_buf[80];
         snprintf(summ_buf, sizeof(summ_buf), "sends permanent %s %s",
                  beha == BEH_FRIENDLY ? "friendly" : "hostile",
-                 menv[summons].name(DESC_PLAIN).c_str());
+                 summons->name(DESC_PLAIN).c_str());
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         return (XOM_GOOD_MAJOR_ALLY);
@@ -3427,7 +3417,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
                     mgen_data::hostile_at(
                         _xom_random_demon(sever), "Xom",
                         true, 4, MON_SUMM_WRATH, you.pos(), 0,
-                        GOD_XOM)) != -1)
+                        GOD_XOM)))
             {
                 num_summoned++;
             }
@@ -4067,7 +4057,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
 
     // Don't protect the player from these.
     case KILLED_BY_SELF_AIMED:
-    case KILLED_BY_TARGETING:
+    case KILLED_BY_TARGETTING:
         return (false);
 
     // Only if not caused by equipment.

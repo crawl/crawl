@@ -25,7 +25,6 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "food.h"          // For evokes
 #include "godconduct.h"    // did_god_conduct
-#include "coord.h"
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-info.h"
@@ -85,15 +84,15 @@ static bool _evoke_sceptre_of_asmodeus()
     mgen_data mg(mon, BEH_CHARMED, &you,
                  0, 0, you.pos(), MHITYOU,
                  MG_FORCE_BEH, you.religion);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-    const int mons = create_monster(mg);
+    monster *m = create_monster(mg);
 
-    if (mons != -1)
+    if (m)
     {
         mpr("The Sceptre summons one of its servants.");
         did_god_conduct(DID_UNHOLY, 3);
 
-        monster* m = &menv[mons];
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
 
         if (!player_angers_monster(m))
@@ -171,11 +170,17 @@ static void _DISPATER_melee_effect(item_def* weapon, actor* attacker,
 static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
-        || !enough_mp(5, true))
+    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true))
+    {
+        mpr("You're too close to death to use this item.");
+        *unevokable = true;
+        return true;
+    }
+
+    if (!enough_mp(5, false))
     {
         *unevokable = true;
-        return (false);
+        return true;
     }
 
     *did_work = true;
@@ -235,10 +240,10 @@ static void _OLGREB_world_reacts(item_def *item)
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
                           bool* unevokable)
 {
-    if (!enough_mp(4, true))
+    if (!enough_mp(4, false))
     {
         *unevokable = true;
-        return (false);
+        return (true);
     }
 
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
@@ -450,11 +455,15 @@ static void _WUCAD_MU_world_reacts(item_def *item)
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.magic_points == you.max_magic_points
-        || !x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
+    if (you.magic_points == you.max_magic_points)
     {
-        return (false);
+        mpr("Your reserves of magic are full.");
+        *unevokable = true;
+        return true;
     }
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
+        return (false);
 
     if (one_chance_in(4))
     {
@@ -747,4 +756,11 @@ static void _DRAGONSKIN_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
+}
+
+///////////////////////////////////////////////////
+static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
+{
+    if (one_chance_in(10))
+        did_god_conduct(DID_UNHOLY, 1);
 }

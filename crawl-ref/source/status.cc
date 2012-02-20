@@ -353,6 +353,21 @@ void fill_status_info(int status, status_info* inf)
         _describe_speed(inf);
         break;
 
+    case STATUS_AUGMENTED:
+    {
+         int level = augmentation_amount();
+
+         if (level > 0)
+         {
+             inf->light_colour = (level == 3) ? WHITE :
+                                 (level == 2) ? LIGHTBLUE
+                                              : BLUE;
+
+             inf->light_text = "Aug";
+         }
+         break;
+    }
+
     case DUR_CONFUSING_TOUCH:
     {
         const int dur = you.duration[DUR_CONFUSING_TOUCH];
@@ -425,11 +440,20 @@ void fill_status_info(int status, status_info* inf)
     case DUR_SAGE:
     {
         std::string sk = skill_name(you.sage_bonus_skill);
-        inf->short_text = "studying " + sk;
+        inf->short_text = "studious about " + sk;
         inf->long_text = "You are " + inf->short_text + ".";
         _mark_expiring(inf, dur_expiring(DUR_SAGE));
         break;
     }
+
+    case STATUS_MANUAL:
+        if (!is_invalid_skill(you.manual_skill))
+        {
+            std::string sk = skill_name(you.manual_skill);
+            inf->short_text = "studying " + sk;
+            inf->long_text = "You are " + inf->short_text + ".";
+        }
+        break;
 
     case DUR_SURE_BLADE:
     {
@@ -706,7 +730,7 @@ static void _describe_airborne(status_info* inf)
 
     if (wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
-        inf->light_colour = you.light_flight() ? BLUE : MAGENTA;
+        inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
         inf->light_text   = "Fly";
         inf->short_text   = "flying";
         inf->long_text    = "You are flying.";

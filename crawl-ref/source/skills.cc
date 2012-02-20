@@ -8,6 +8,7 @@
 #include "skills.h"
 
 #include <algorithm>
+#include <math.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -20,6 +21,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "message.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -29,7 +31,7 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-
+#include "stuff.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -45,59 +47,14 @@
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 
-int skill_cost_needed(int level)
+// The progress of skill_cost_level depends only on total experience points,
+// it's independent of species. We try to keep close to the old system
+// and use an experience aptitude of 13 as a reference (Tengu).
+// This means that for a species with 13 exp apt, skill_cost_level should be
+// the same as XL (unless the player has been drained).
+unsigned int skill_cost_needed(int level)
 {
-    static bool init = true;
-    static int scn[27];
-
-    if (init)
-    {
-        // The progress of skill_cost_level depends only on total skill points,
-        // it's independent of species. We try to keep close to the old system
-        // and use minotaur as a reference (exp apt: 140). This means that for
-        // a species with 140 exp apt, skill_cost_level will be about the same
-        // as XL (a bit lower in the beginning).
-        // Changed to exp apt 130 to slightly increase mid and late game prices.
-        species_type sp = you.species;
-        you.species = SP_TENGU;
-
-        // The average starting skill total is actually lower, but monks get
-        // about 1200, and they would start around skill cost level 4 if we
-        // used the average.
-        scn[0] = 1200;
-
-        for (int i = 1; i < 27; ++i)
-        {
-            scn[i] = scn[i - 1] + (exp_needed(i + 1) - exp_needed(i)) * 10
-                                  / calc_skill_cost(i);
-        }
-
-        scn[0] = 0;
-        you.species = sp;
-        init = false;
-    }
-
-    return scn[level - 1];
-}
-
-void calc_total_skill_points(void)
-{
-    int i;
-
-    you.total_skill_points = 0;
-
-    for (i = 0; i < NUM_SKILLS; i++)
-        you.total_skill_points += you.skill_points[i];
-
-    for (i = 1; i <= 27; i++)
-        if (you.total_skill_points < skill_cost_needed((skill_type)i))
-            break;
-
-    you.skill_cost_level = i - 1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    you.redraw_experience = true;
-#endif
+    return exp_needed(level, 13);
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters
@@ -120,16 +77,28 @@ int calc_skill_cost(int skill_cost_level)
 // skill levels.
 void reassess_starting_skills()
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    // go backwards, need to do Dodging before Armour
+    for (int i = NUM_SKILLS - 1; i >= SK_FIRST_SKILL; --i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (you.skills[sk] == 0)
-            continue;
-        ASSERT(!is_useless_skill(sk));
+        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
 
         // Grant the amount of skill points required for a human.
-        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
-        static_cast<species_type>(SP_HUMAN)) + 1;
+        you.skill_points[sk] = you.skills[sk] ?
+            skill_exp_needed(you.skills[sk], sk, SP_HUMAN) + 1 : 0;
+
+        if (sk == SK_DODGING && you.skills[SK_ARMOUR]
+            && (is_useless_skill(SK_ARMOUR) || !you_can_wear(EQ_BODY_ARMOUR)))
+        {
+            // No one who can't wear mundane heavy armour shouldn't start with
+            // the Armour skill -- D:1 dragon armour is too unlikely.
+            you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
+                SK_ARMOUR, SP_HUMAN) + 1;
+            you.skills[SK_ARMOUR] = 0;
+        }
+
+        if (!you.skill_points[sk])
+            continue;
 
         // Find out what level that earns this character.
         you.skills[sk] = 0;
@@ -402,18 +371,26 @@ static void _check_start_train()
     for (skill_set_iter it = you.start_train.begin();
              it != you.start_train.end(); ++it)
     {
-        if (is_invalid_skill(*it))
+        if (is_invalid_skill(*it) || is_useless_skill(*it))
             continue;
 
-        if (!you.can_train[*it] && you.train[*it] && you.train_set[*it])
+        if (!you.can_train[*it] && you.train[*it])
             skills.insert(*it);
         you.can_train[*it] = true;
     }
 
+    reset_training();
+
+    // We're careful of not invalidating the iterator when erasing.
+    for (skill_set_iter it = skills.begin(); it != skills.end();)
+        if (!you.training[*it])
+            skills.erase(it++);
+        else
+            ++it;
+
     if (!skills.empty())
         mpr("You resume training " + _skill_names(skills));
 
-    reset_training();
     you.start_train.clear();
 }
 
@@ -453,6 +430,8 @@ void update_can_train()
 
     if (!you.start_train.empty())
         _check_start_train();
+
+    check_selected_skills();
 }
 
 bool training_restricted(skill_type sk)
@@ -504,9 +483,13 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
-            you.train[i] = you.train_set[i] = true;
+            you.train[i] = you.train_alt[i] = true;
         else
+        {
+            // Skills are on by default in auto mode and off in manual.
             you.train[i] = you.auto_training;
+            you.train_alt[i] = !you.auto_training;
+        }
 }
 
 static bool _cmp_rest(const std::pair<skill_type,int>& a,
@@ -594,25 +577,43 @@ void init_training()
 }
 
 // Make sure at least one skill is selected.
-void check_selected_skills()
+// If not, go to the skill menu and return true.
+bool check_selected_skills()
 {
-    skill_type first_selectable = SK_NONE;
+    bool trainable_skill = false;
+    bool could_train = false;
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
         if (skill_trained(sk))
-            return;
-        if (!you.can_train[sk] || you.skill_points[sk] >= skill_exp_needed(27, sk))
+            return false;
+        if (is_useless_skill(sk) || you.skill_points[sk] >= skill_exp_needed(27, sk))
             continue;
-        if (is_invalid_skill(first_selectable))
-            first_selectable = sk;
+        if (!you.can_train[sk])
+        {
+            could_train = true;
+            continue;
+        }
+        else
+            trainable_skill = true;
     }
 
-    if (!is_invalid_skill(first_selectable))
-        you.train[first_selectable] = 1;
+    if (trainable_skill)
+    {
+        mpr("You need to enable at least one skill for training.");
+        more();
+        reset_training();
+        skill_menu();
+        redraw_screen();
+        return true;
+    }
 
-    // It's possible to have no selectable skills, if they are all at level 0
-    // or level 27, so we don't assert. XP will just accumulate in the pool.
+    if (could_train)
+        mpr("You cannot train any new skill.");
+
+    return false;
+    // It's possible to have no selectable skills, if they are all untrainable
+    // or level 27, so we don't assert.
 }
 
 /*
@@ -716,7 +717,6 @@ static bool _level_up_check(skill_type sk, bool simu)
         you.training[sk] = 0;
         if (!simu)
             you.train[sk] = 0;
-        check_selected_skills();
         return true;
     }
 
@@ -743,12 +743,11 @@ void train_skills(bool simu)
             train_skills(exp, cost, simu);
         else
         {
-            // Amount of skill points needed to reach the next skill cost level
-            // divided by 10 (integer divison rounded up).
-            const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
-                                    - you.total_skill_points + 9) / 10;
+            // Amount of experience points needed to reach the next skill cost level
+            const int next_level = skill_cost_needed(you.skill_cost_level + 1)
+                                   - you.total_experience;
             ASSERT(next_level > 0);
-            train_skills(std::min(exp, cost * next_level), cost, simu);
+            train_skills(std::min(exp, next_level + cost - 1), cost, simu);
         }
     }
     while (you.exp_available >= cost && exp != you.exp_available);
@@ -930,17 +929,15 @@ static int _stat_mult(skill_type exsk, int skill_inc)
 
 void check_skill_cost_change()
 {
-    if (you.skill_cost_level < 27
-        && you.total_skill_points
-           >= skill_cost_needed(you.skill_cost_level + 1))
+    while (you.skill_cost_level < 27
+           && you.total_experience >= skill_cost_needed(you.skill_cost_level + 1))
     {
-        you.skill_cost_level++;
+        ++you.skill_cost_level;
     }
-    else if (you.skill_cost_level > 0
-        && you.total_skill_points
-           < skill_cost_needed(you.skill_cost_level))
+    while (you.skill_cost_level > 0
+           && you.total_experience < skill_cost_needed(you.skill_cost_level))
     {
-        you.skill_cost_level--;
+        --you.skill_cost_level;
     }
 }
 
@@ -950,7 +947,6 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
         points = -(int)you.skill_points[sk];
 
     you.skill_points[sk] += points;
-    you.total_skill_points += points;
 
     check_skill_level_change(sk, do_level_up);
 }
@@ -1003,8 +999,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))
                                  * skill_inc;
     you.exp_available -= cost;
+    you.total_experience += cost;
     max_exp -= cost;
-    you.total_skill_points += skill_inc;
 
     redraw_skill(exsk, old_best_skill);
     check_skill_cost_change();
@@ -1013,4 +1009,73 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.redraw_experience = true;
 
     return (skill_inc);
+}
+
+void set_skill_level(skill_type skill, double amount)
+{
+    double level;
+    double fractional = modf(amount, &level);
+
+    you.ct_skill_points[skill] = 0;
+    you.skills[skill] = level;
+
+    if (level >= 27)
+    {
+        level = 27;
+        fractional = 0;
+    }
+
+    unsigned int target = skill_exp_needed(level, skill);
+    if (fractional)
+    {
+        target += (skill_exp_needed(level + 1, skill)
+                  - skill_exp_needed(level, skill)) * fractional;
+    }
+
+    if (target == you.skill_points[skill])
+        return;
+
+    // We're updating you.skill_points[skill] and calculating the new
+    // you.total_experience to update skill cost.
+
+    const bool reduced = target < you.skill_points[skill];
+
+#ifdef DEBUG_TRAINING_COST
+    dprf("target: %d.", target);
+#endif
+    while (you.skill_points[skill] != target)
+    {
+        int next_level = reduced ? skill_cost_needed(you.skill_cost_level)
+                                 : skill_cost_needed(you.skill_cost_level + 1);
+        int max_xp = abs(next_level - you.total_experience);
+
+        // When reducing, we don't want to stop right at the limit, unless
+        // we're at skill cost level 0.
+        if (reduced and you.skill_cost_level)
+            ++max_xp;
+
+        int cost = calc_skill_cost(you.skill_cost_level);
+        // Maximum number of skill points to transfer in one go.
+        // It's max_xp*10/cost rounded up.
+        int max_skp = (max_xp * 10 + cost - 1) / cost;
+        int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
+                                      max_skp);
+        int delta_xp = (delta_skp * cost + 9) / 10;
+
+        if (reduced)
+        {
+            delta_skp = -std::min<int>(delta_skp, you.skill_points[skill]);
+            delta_xp = -std::min<int>(delta_xp, you.total_experience);
+        }
+
+#ifdef DEBUG_TRAINING_COST
+        dprf("cost level: %d, total experience: %d, next level: %d, "
+             "skill points: %d, delta_skp: %d, delta_xp: %d.",
+             you.skill_cost_level, you.total_experience, next_level,
+             you.skill_points[skill], delta_skp, delta_xp);
+#endif
+        you.skill_points[skill] += delta_skp;
+        you.total_experience += delta_xp;
+        check_skill_cost_change();
+    }
 }

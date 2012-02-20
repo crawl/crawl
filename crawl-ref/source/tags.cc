@@ -1095,6 +1095,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hit_points_regeneration * 100);
     marshallInt(th, you.experience);
+    marshallInt(th, you.total_experience);
     marshallInt(th, you.gold);
 
     marshallInt(th, you.exp_available);
@@ -1135,11 +1136,9 @@ static void tag_construct_you(writer &th)
     {
         marshallUByte(th, you.skills[j]);
         marshallByte(th, you.train[j]);
+        marshallByte(th, you.train_alt[j]);
         marshallInt(th, you.training[j]);
-#if TAG_MAJOR_VERSION == 32
         marshallBoolean(th, you.can_train[j]);
-#endif
-        marshallBoolean(th, you.train_set[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
@@ -1305,6 +1304,7 @@ static void tag_construct_you(writer &th)
 
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
+    marshallFloat(th, abyssal_state.phase);
 
     marshallShort(th, you.constricted_by);
     marshallInt(th, you.escape_attempts);
@@ -1314,6 +1314,8 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.constricting[k]);
         marshallInt(th, you.dur_has_constricted[k]);
     }
+
+    marshallUByte(th, you.octopus_king_rings);
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
@@ -1807,14 +1809,18 @@ static void tag_read_you(reader &th)
 
     // How many you.equip?
     count = unmarshallByte(th);
-    ASSERT(count == NUM_EQUIP);
+    ASSERT(count <= NUM_EQUIP);
     for (i = 0; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
         ASSERT(you.equip[i] >= -1 && you.equip[i] < ENDOFPACK);
     }
+    for (i = count; i < NUM_EQUIP; ++i)
+        you.equip[i] = -1;
     for (i = 0; i < count; ++i)
         you.melded[i] = unmarshallBoolean(th);
+    for (i = count; i < NUM_EQUIP; ++i)
+        you.melded[i] = false;
 #if TAG_MAJOR_VERSION == 32
     if (player_genus(GENPC_DRACONIAN))
     {
@@ -1844,6 +1850,15 @@ static void tag_read_you(reader &th)
 
     you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_TOTAL_EXPERIENCE)
+#endif
+        you.total_experience = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    else
+        you.total_experience = you.experience; // you get a skill cost discount
+               // if you're upgrading a game in which you've been drained a lot
+#endif
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
@@ -2045,18 +2060,19 @@ static void tag_read_you(reader &th)
         {
 #endif
             you.train[j]    = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+            if (th.getMinorVersion() >= TAG_MINOR_SKILL_MODE_STATE)
+#endif
+                you.train_alt[j]    = unmarshallByte(th);
             you.training[j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
         }
         if (th.getMinorVersion() >= TAG_MINOR_SKILL_RESTRICTIONS)
         {
             you.can_train[j] = unmarshallBoolean(th);
-#endif
-            you.train_set[j] = unmarshallBoolean(th);
-#if TAG_MAJOR_VERSION == 32
+            if (th.getMinorVersion() < TAG_MINOR_REMOVE_SKILL_SET)
+                unmarshallBoolean(th);
         }
-        else if (you.skills[j])
-            you.train_set[j] = true;
 #endif
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
@@ -2073,6 +2089,18 @@ static void tag_read_you(reader &th)
     {
 #endif
         you.auto_training = unmarshallBoolean(th);
+
+#if TAG_MAJOR_VERSION == 32
+    for (i = 0; i < NUM_SKILLS; i++)
+        if (th.getMinorVersion() < TAG_MINOR_SKILL_MODE_STATE)
+        {
+            if (you.can_train[i] && you.skill_points[i])
+                you.train_alt[i] = you.train[i];
+            else
+                you.train_alt[i] = !you.auto_training;
+        }
+#endif
+
         count = unmarshallByte(th);
         for (i = 0; i < count; i++)
             you.exercises.push_back((skill_type)unmarshallInt(th));
@@ -2117,8 +2145,9 @@ static void tag_read_you(reader &th)
     you.transfer_skill_points = unmarshallInt(th);
     you.transfer_total_skill_points = unmarshallInt(th);
 
-    // Set up you.total_skill_points and you.skill_cost_level.
-    calc_total_skill_points();
+    // Set up you.skill_cost_level.
+    you.skill_cost_level = 0;
+    check_skill_cost_change();
 
     // how many durations?
     count = unmarshallUByte(th);
@@ -2155,6 +2184,8 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
 #if TAG_MAJOR_VERSION == 32
+    if (you.mutation[MUT_DEFORMED] > 1)
+        you.mutation[MUT_DEFORMED] = 1;
     if (th.getMinorVersion() < TAG_MINOR_SPECIES_HP_NO_MUT)
     {
         you.mutation[MUT_FRAIL] -= you.innate_mutations[MUT_FRAIL];
@@ -2230,8 +2261,11 @@ static void tag_read_you(reader &th)
 
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>(unmarshallByte(th));
-    ASSERT(you.hell_branch <= NUM_BRANCHES);
-    ASSERT(you.hell_branch != NUM_BRANCHES || !player_in_hell());
+#if TAG_MAJOR_VERSION == 32
+    if (you.hell_branch == NUM_BRANCHES)
+        you.hell_branch = BRANCH_MAIN_DUNGEON;
+#endif
+    ASSERT(you.hell_branch < NUM_BRANCHES);
 
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_ASH_PENANCE)
@@ -2335,6 +2369,24 @@ static void tag_read_you(reader &th)
     {
         caction_type caction = (caction_type)unmarshallShort(th);
         int subtype = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_ABILITY_COUNTS)
+        {
+            if (caction >= CACT_ABIL)
+                caction = (caction_type)((int)caction + 1);
+            if (caction == CACT_EVOKE)
+            {
+                if (!subtype)
+                {
+                    for (j = 0; j < 27; j++)
+                        (void) unmarshallInt(th);
+                    continue;
+                }
+                else
+                    subtype--;
+            }
+        }
+#endif
         for (j = 0; j < 27; j++)
             you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }
@@ -2347,6 +2399,10 @@ static void tag_read_you(reader &th)
     abyssal_state.depth = unmarshallFloat(th);
 #if TAG_MAJOR_VERSION == 32
     }
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_PHASE)
+#endif
+    abyssal_state.phase = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 32
 
     if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
     {
@@ -2361,7 +2417,13 @@ static void tag_read_you(reader &th)
     }
 #if TAG_MAJOR_VERSION == 32
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_OCTO_RING)
+        you.octopus_king_rings = 0;
+    else
 #endif
+    you.octopus_king_rings = unmarshallUByte(th);
+
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
@@ -2857,6 +2919,13 @@ void unmarshallItem(reader &th, item_def &item)
         item.props.erase(ARTEFACT_NAME_KEY);
         ASSERT(!is_artefact(item));
     }
+    if (item.base_type == OBJ_JEWELLERY
+        && item.props.exists("jewellery_tried")
+        && item.props["jewellery_tried"].get_bool())
+    {
+        item.props.erase("jewellery_tried");
+        item.flags |= ISFLAG_TRIED;
+    }
 #endif
 }
 
@@ -3289,6 +3358,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     if (th.getMinorVersion() >= TAG_MINOR_MINFO_PROP)
 #endif
         mi.props.read(th);
+#if TAG_MAJOR_VERSION == 32
+    if (mi.props.exists("mislead_as") && mi.props["mislead_as"].get_type() != SV_MONST)
+        mi.props.erase("mislead_as");
+#endif
 }
 
 static void tag_construct_level_monsters(writer &th)
@@ -3709,6 +3782,10 @@ void unmarshallMonster(reader &th, monster& m)
         else // Update monster tile.
             m.props["monster_tile"] = short(index);
     }
+#if TAG_MAJOR_VERSION == 32
+    if (m.props.exists("mislead_as") && m.props["mislead_as"].get_type() != SV_MONST)
+        m.props.erase("mislead_as");
+#endif
 
     m.check_speed();
 }
@@ -3720,6 +3797,7 @@ static void tag_read_level_monsters(reader &th)
 
     for (i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
+    env.mid_cache.clear();
 
     // how many mons_alloc?
     count = unmarshallByte(th);
@@ -3743,6 +3821,7 @@ static void tag_read_level_monsters(reader &th)
         // place monster
         if (m.alive())
         {
+            env.mid_cache[m.mid] = i;
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
             if (invalid_monster_type(m.type))
             {
@@ -3876,32 +3955,24 @@ void tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
 #if TAG_MAJOR_VERSION == 32
-# ifdef USE_TILE
     if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
-        mcache.read(th);
-        if (th.getMinorVersion() >= TAG_MINOR_MONSTER_TILES)
-            unmarshallInt(th); // TILEP_PLAYER_MAX
+        // Snarf all remaining data, throwing it out.
+        // There's no need to read the mcache just to discard it, the only thing
+        // after mcache is TILE_WALL_MAX which is guaranteed to not match anyway.
+        try
+        {
+            while (1)
+                unmarshallByte(th);
+        }
+        catch (short_read_exception &E)
+        {
+        }
+        dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
+        tag_missing_level_tiles();
+        tag_init_tile_bk();
+        return;
     }
-    mcache.clear_all();
-# else
-    // Snarf all remaining data, throwing it out.
-    // Console builds don't know of old mcache formats, it'd be too much work
-    // to properly skip it.  Instead, we snarf the remaining data and throw it
-    // out.  The only thing after mcache is TILE_WALL_MAX, and it's guaranteed
-    // it won't match anyway.
-    try
-    {
-        while (1)
-            unmarshallByte(th);
-    }
-    catch (short_read_exception &E)
-    {
-    }
-    dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
-    tag_missing_level_tiles();
-    return;
-# endif
 #endif
 
     if (unmarshallInt(th) != TILE_WALL_MAX)

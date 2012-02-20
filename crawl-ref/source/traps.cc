@@ -9,6 +9,7 @@
 #include "trap_def.h"
 
 #include <algorithm>
+#include <math.h>
 
 #include "artefact.h"
 #include "beam.h"
@@ -28,7 +29,6 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "math.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"

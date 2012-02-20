@@ -423,7 +423,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "rotting", "targeting", "spore",
+    "wild_magic", "xom", "rotting", "targetting", "spore",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
@@ -1179,7 +1179,7 @@ void scorefile_entry::init(time_t dt)
         pt += 250000; // the Orb
         pt += num_runes * 2000 + 4000;
         pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-            / (1+you.num_turns);
+            / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
     }
     pt += num_runes * 10000;
     pt += num_runes * (num_runes + 2) * 1000;
@@ -1227,7 +1227,7 @@ void scorefile_entry::init(time_t dt)
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK, STATUS_AIRBORNE,
         DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID, DUR_MIRROR_DAMAGE,
         DUR_SCRYING, STATUS_FIREBALL, DUR_SHROUD_OF_GOLUBRIA,
-        STATUS_CONSTRICTED,
+        STATUS_CONSTRICTED, STATUS_AUGMENTED,
     };
 
     status_info inf;
@@ -1878,8 +1878,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += " (" + death_source_desc() + ")";
         break;
 
-    case KILLED_BY_TARGETING:
-        desc += terse? "shot self" : "Killed themselves with bad targeting";
+    case KILLED_BY_TARGETTING:
+        desc += terse? "shot self" : "Killed themselves with bad targetting";
         needs_damage = true;
         break;
 
@@ -1922,7 +1922,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_SELF_AIMED:
         if (terse)
-            desc += "suicidal targeting";
+            desc += "suicidal targetting";
         else
         {
             desc += "Shot themselves with a ";

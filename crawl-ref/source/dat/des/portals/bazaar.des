@@ -1554,6 +1554,30 @@ xxxxxxxxx.xxx.................xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    bazaar_jpeg_triangle_bulge
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  10
+SHUFFLE: AB
+SUBST:   A = <, B = >
+KFEAT:   C = any shop
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxCxxxxxxxxxxxxxx
+xxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxx.........xxxxxxxxxx
+xxxxxxxx....B...B....xxxxxxxx
+xxxxxx.................xxxxxx
+xxxx....C.....B.....C....xxxx
+xxA.......................Axx
+xxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxx...C...xxxxxxxxxxx
+xxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 # ~3.75 shops
 NAME:     due_bazaar_butterfly
 TAGS:     no_rotate
@@ -1741,30 +1765,6 @@ ENDMAP
 ##########################################################################
 # Expect to never see them in regular games, but for long Nemelex games
 # they'll drown out the competition.
-
-NAME:    bazaar_jpeg_triangle_bulge
-TAGS:    no_rotate allow_dup
-ORIENT:  encompass
-WEIGHT:  1
-SHUFFLE: AB
-SUBST:   A = <, B = >
-KFEAT:   C = any shop
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxCxxxxxxxxxxxxxx
-xxxxxxxxxxxx.....xxxxxxxxxxxx
-xxxxxxxxxx.........xxxxxxxxxx
-xxxxxxxx....B...B....xxxxxxxx
-xxxxxx.................xxxxxx
-xxxx....C.....B.....C....xxxx
-xxA.......................Axx
-xxxxxxxxxxxxx...xxxxxxxxxxxxx
-xxxxxxxxxxxxx...xxxxxxxxxxxxx
-xxxxxxxxxxxx.....xxxxxxxxxxxx
-xxxxxxxxxxx...C...xxxxxxxxxxx
-xxxxxxxxxxxx.....xxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
 
 # A generated bazaar map.
 NAME:   bazaar_kb_twisted_cavern

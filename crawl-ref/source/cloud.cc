@@ -1035,21 +1035,6 @@ static int _actor_cloud_base_damage(actor *act,
     return cloud_base_damage;
 }
 
-static int _cloud_timescale_damage(const actor *act, int damage)
-{
-    if (damage < 0)
-        damage = 0;
-    // Can we have a uniform player/monster speed system yet?
-    if (act->is_player())
-        return div_rand_round(damage * you.time_taken, 10);
-    else
-    {
-        const monster *mons = act->as_monster();
-        const int speed = mons->speed > 0? mons->speed : 10;
-        return div_rand_round(damage * 10, speed);
-    }
-}
-
 static int _cloud_damage_output(actor *actor,
                                 beam_type flavour,
                                 int resist,
@@ -1091,7 +1076,7 @@ static int _actor_cloud_damage(actor *act,
         break;
     }
 
-    return _cloud_timescale_damage(act, final_damage);
+    return timescale_damage(act, final_damage);
 }
 
 // Applies damage and side effects for an actor in a cloud and returns

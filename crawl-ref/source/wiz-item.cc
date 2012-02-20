@@ -602,6 +602,9 @@ void wizard_value_artefact()
 
 void wizard_create_all_artefacts()
 {
+    you.octopus_king_rings = 0;
+    int octorings = 8;
+
     // Create all unrandarts.
     for (int i = 0; i < NO_UNRANDARTS; ++i)
     {
@@ -625,6 +628,10 @@ void wizard_create_all_artefacts()
                                         << " (" << debug_art_val_str(item)
                                         << ")" << std::endl;
         move_item_to_grid(&islot, you.pos());
+
+        // Make all eight.
+        if (index == UNRAND_OCTOPUS_KING_RING && --octorings)
+            i--;
     }
 
     // Create Horn of Geryon
@@ -791,7 +798,7 @@ void wizard_unidentify_pack()
     you.redraw_quiver = true;
 
     // Forget things that nearby monsters are carrying, as well.
-    // (For use with the "give monster an item" wizard targeting
+    // (For use with the "give monster an item" wizard targetting
     // command.)
     for (monster_iterator mon(you.get_los()); mon; ++mon)
     {

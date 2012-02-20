@@ -24,7 +24,6 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -309,7 +308,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
 
     int hploss = std::max(0, mons->hit_points / 2 - 1);
 
-    if (hploss && !mons_is_firewood(mons))
+    if (hploss)
     {
         simple_monster_message(mons, " convulses!");
 
@@ -1823,6 +1822,7 @@ static void _rot_inventory_food(int time_delta)
                 if (!item.props.exists(ROTTING_WARNED_KEY))
                     num_chunks_gone++;
 
+                item_was_destroyed(item);
                 destroy_item(item);
                 burden_changed_by_rot = true;
 
@@ -1841,6 +1841,7 @@ static void _rot_inventory_food(int time_delta)
                 else
                     num_corpses_gone++;
 
+                item_was_destroyed(item);
                 destroy_item(item);
                 burden_changed_by_rot = true;
                 continue;
@@ -2214,7 +2215,7 @@ void handle_time()
                          MHITNOT, 0, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
-            if (create_monster(mg) != -1)
+            if (create_monster(mg))
                 success = true;
         }
 
@@ -2643,14 +2644,10 @@ int place_ring(std::vector<coord_def> &ring_points,
 
         prototype.pos = ring_points.at(i);
 
-        const int mushroom = create_monster(prototype, false);
-
-        if (mushroom != -1)
-        {
+        if (create_monster(prototype, false))
             spawned_count++;
             if (you.see_cell(ring_points.at(i)))
                 seen_count++;
-        }
     }
 
     return (spawned_count);
@@ -2862,14 +2859,14 @@ int spawn_corpse_mushrooms(item_def& corpse,
         // Is this square occupied by a non mushroom?
         if (mons && mons->mons_species() != MONS_TOADSTOOL
             || player_occupant && you.religion != GOD_FEDHAS
-            || !is_harmless_cloud(cloud_type_at(current)))
+            || !can_spawn_mushrooms(current))
         {
             continue;
         }
 
         if (!mons)
         {
-            const int mushroom = create_monster(
+            monster *mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
                                   toadstool_behavior,
                                   0,
@@ -2884,7 +2881,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
                                   corpse.colour),
                                   false);
 
-            if (mushroom != -1)
+            if (mushroom)
             {
                 // Going to explicitly override the die-off timer in
                 // this case (this condition means we got called from
@@ -2903,14 +2900,14 @@ int spawn_corpse_mushrooms(item_def& corpse,
                     time_left *= 10;
 
                     mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-                    env.mons[mushroom].update_ench(temp_en);
+                    mushroom->update_ench(temp_en);
                 }
 
                 placed_targets++;
                 if (current == you.pos())
                 {
                     mprf("A toadstool grows at your feet.");
-                    current=  env.mons[mushroom].pos();
+                    current = mushroom->pos();
                 }
                 else if (you.see_cell(current))
                     seen_targets++;
@@ -3064,6 +3061,7 @@ void update_corpses(int elapsedTime)
                 if (it.sub_type == CORPSE_SKELETON
                     || !mons_skeleton(it.plus))
                 {
+                    item_was_destroyed(it);
                     destroy_item(c);
                 }
                 else

@@ -14,12 +14,12 @@ A gateway to a ziggurat
 
 "Captain: Take off every 'zig'!!
  Captain: For great justice."
-   -Zero Wing
+    -Zero Wing
 %%%%
 A gateway to Hell
 
 "Lasciate ogne speranza, voi ch'intrate."
-   -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III. Circa 1315.
+    -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III. Circa 1315.
 %%%%
 A granite statue
 
@@ -42,7 +42,7 @@ A granite statue
 A labyrinth entrance
 
 "Maze-treaders, whose vision ahead and behind is severely constricted and fragmented, suffer confusion, whereas maze-viewers who see the pattern whole, from above or in a diagram, are dazzled by its complex artistry. What you see depends on where you stand, and thus, at one and the same time, labyrinths are single (there is one physical structure) and double: they simultaneously incorporate order and disorder, clarity and confusion, unity and multiplicity, artistry and chaos."
-        -Mark Z. Danielewski, "House of Leaves". 2000.
+    -Mark Z. Danielewski, "House of Leaves". 2000.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
@@ -79,10 +79,7 @@ A tree
 ####################################################
 Ice Storm
 
-"Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
- Stay These Messengers About Their Sacred Business. Do Not Ask Us About
- Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess
- Czol."
+"Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall Stay These Messengers About Their Sacred Business. Do Not Ask Us About Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol."
     -Anghammarad, "Going Postal", Terry Pratchett.
 %%%%
 ####################################################
@@ -129,10 +126,7 @@ club
 %%%%
 daeva
 
-"Between these twain the Daevas also chose not aright, for infatuation came
- upon them as they took counsel together, so that they chose the Worst
- Thought. Then they rushed together to Violence, that they might enfeeble
- the world of men."
+"Between these twain the Daevas also chose not aright, for infatuation came upon them as they took counsel together, so that they chose the Worst Thought. Then they rushed together to Violence, that they might enfeeble the world of men."
     -the Avesta, Ahunavaiti Gatha 30.6
 %%%%
 dagger
@@ -146,8 +140,7 @@ dagger
    'Now stay, my dear,' he cry'd;
  Then strake the dagger untill his heart,
    And fell deid by her side."
-    -English traditional ballad, "Lord Thomas and Fair Annet",
-    circa 1650.
+    -English traditional ballad, "Lord Thomas and Fair Annet", circa 1650.
 %%%%
 gold piece
 
@@ -226,7 +219,7 @@ __r_suffix
 __cap-D_suffix
 
 "On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run. But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow. But there is the dragon. I cannot tell how he mounts on the wind through the clouds, and rises to heaven. Today I have seen Lao-tsze, and can only compare him to the dragon.'"
-     -Life of Confucius
+    -Life of Confucius
 
 "This Dragon had Two furious Wings
    Each one upon each Shoulder;
@@ -603,7 +596,7 @@ jelly
 Khufu
 
 "And then I looked farther, beyond the pallid line of the sands, and I saw a Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me, as a golden thing it greeted me, as a golden miracle I shall remember it."
-  -Robert Hichens, _The Spell of Egypt_
+    -Robert Hichens, _The Spell of Egypt_
 %%%%
 kraken
 
@@ -624,7 +617,6 @@ Menkaure
  Their pleasure, to their feet; and reap their praise,
  The praise of Gods, rich boon! and length of days."
     -Matthew Arnold, _Mycerinus_
-
 %%%%
 manticore
 
@@ -671,7 +663,7 @@ pillar of salt
 player ghost
 
 "Know thyself."
-        -Inscription in the pronaos of the Temple of Apollo at Delphi
+    -Inscription in the pronaos of the Temple of Apollo at Delphi
 %%%%
 Prince Ribbit
 
@@ -744,6 +736,14 @@ toenail golem
  defense against—whom?"
     -Jorge Luis Borges
 %%%%
+ugly thing
+"Beauty is no quality in things themselves: It exists merely in the mind which
+ contemplates them; and each mind perceives a different beauty. One person may
+ even perceive deformity, where another is sensible of beauty; and every
+ individual ought to acquiesce in his own sentiment, without pretending to
+ regulate those of others."
+    -David Hume
+%%%%
 worm
 
 "While the angels, all pallid and wan,
@@ -762,14 +762,14 @@ Cigotuvi's Monster
  eyes they may be called, were fixed on me. His jaws opened,
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks."
-  -Mary Shelley, "Frankenstein"
+    -Mary Shelley, "Frankenstein"
 %%%%
 strange machine
 
 "The machine had stood there a long time. It was several
  hundred feet long and could run on a thimbleful of earth or
  water. It had been working seven and a half million years."
-  -Sweet Their Blood and Sticky, Albert Teichner
+    -Sweet Their Blood and Sticky, Albert Teichner
 %%%%
 mad acolyte of Lugonu
 

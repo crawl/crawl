@@ -53,7 +53,7 @@ actor* actor_at(const coord_def& c)
     return (monster_at(c));
 }
 
-int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type))
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
 {
     int count = 0;
     for (adjacent_iterator ai(c); ai; ++ai)
@@ -64,17 +64,17 @@ int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feat
     return count;
 }
 
-bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
+bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
 {
     return (checker(feat));
 }
 
-bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type))
+bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type))
 {
     return (checker(grd(c)));
 }
 
-bool feat_is_malign_gateway_suitable (dungeon_feature_type feat)
+bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
 }
@@ -1325,9 +1325,15 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     mgrd(pos2) = m1;
 
     if (monster_at(pos1))
+    {
         menv[mgrd(pos1)].set_position(pos1);
+        menv[mgrd(pos1)].clear_far_constrictions();
+    }
     if (monster_at(pos2))
+    {
         menv[mgrd(pos2)].set_position(pos2);
+        menv[mgrd(pos2)].clear_far_constrictions();
+    }
 
     // Swap clouds.
     move_cloud(env.cgrid(pos1), temp);
@@ -1337,11 +1343,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (pos1 == you.pos())
     {
         you.set_position(pos2);
+        you.clear_far_constrictions();
         viewwindow();
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
+        you.clear_far_constrictions();
         viewwindow();
     }
 
@@ -1414,23 +1422,29 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
 
 // Returns true if we manage to scramble free.
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
-                       dungeon_feature_type terrain)
+                      dungeon_feature_type terrain)
 {
     bool escape = false;
     bool clinging = false;
     coord_def empty;
 
-    if (species_likes_water(you.species) && terrain == DNGN_DEEP_WATER
-        && !form_likes_water() && !you.transform_uncancellable)
+    if (terrain == DNGN_DEEP_WATER)
     {
-        // These can happen when we enter deep water directly -- bwr
-        emergency_untransform();
-        return (false);
-    }
+        if (beogh_water_walk())
+            return (false);
 
-    // sanity check
-    if (terrain != DNGN_LAVA && (beogh_water_walk() || you.can_swim()))
-        return (false);
+        if (species_likes_water(you.species))
+        {
+            // These can happen when we enter deep water directly. - bwr
+            if (form_likes_water())
+                return (false);
+            else if (!you.transform_uncancellable)
+            {
+                emergency_untransform();
+                return (false);
+            }
+        }
+    }
 
     mprf("You fall into the %s!",
          (terrain == DNGN_LAVA)       ? "lava" :
@@ -1470,8 +1484,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
         expose_player_to_element(BEAM_LAVA, 14);
     }
 
-    // a distinction between stepping and falling from you.duration[DUR_LEVITATION]
-    // prevents stepping into a thin stream of lava to get to the other side.
+    // A distinction between stepping and falling from
+    // you.duration[DUR_LEVITATION] prevents stepping into a thin stream
+    // of lava to get to the other side.
     if (scramble())
     {
         if (allow_shift)
@@ -1482,17 +1497,15 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
         }
         else
         {
-            // back out the way we came in, if possible
+            // Back out the way we came in, if possible.
             if (grid_distance(you.pos(), entry) == 1
                 && !monster_at(entry))
             {
                 escape = true;
                 empty = entry;
             }
-            else  // zero or two or more squares away, with no way back
-            {
+            else  // Zero or two or more squares away, with no way back.
                 escape = false;
-            }
         }
     }
     else

@@ -27,6 +27,38 @@
 #include "view.h"
 #include "xom.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+bool monster::has_ench(enchant_type ench) const
+{
+    mon_enchant e = get_ench(ench);
+    if (e.ench == ench)
+    {
+        if (!ench_cache[ench])
+        {
+            die("monster %s has ench '%s' not in cache",
+                name(DESC_PLAIN).c_str(),
+                std::string(e).c_str());
+        }
+    }
+    else if (e.ench == ENCH_NONE)
+    {
+        if (ench_cache[ench])
+        {
+            die("monster %s has no ench '%s' but cache says it does",
+                name(DESC_PLAIN).c_str(),
+                std::string(mon_enchant(ench)).c_str());
+        }
+    }
+    else
+    {
+        die("get_ench returned '%s' when asked for '%s'",
+            std::string(e).c_str(),
+            std::string(mon_enchant(ench)).c_str());
+    }
+    return ench_cache[ench];
+}
+#endif
+
 bool monster::has_ench(enchant_type ench, enchant_type ench2) const
 {
     if (ench2 == ENCH_NONE)
@@ -213,8 +245,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         }
         mons_att_changed(this);
         // clear any constrictions on/by you
-        clear_specific_constrictions(MHITYOU);
-        you.clear_specific_constrictions(mindex());
+        stop_constricting(MHITYOU, true);
+        you.stop_constricting(mindex(), true);
 
         // TODO -- and friends
 
@@ -1361,19 +1393,17 @@ void monster::apply_enchantment(const mon_enchant &me)
                 {
                     beh_type created_behavior = SAME_ATTITUDE(this);
 
-                    int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+                    if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
                                                       NULL,
                                                       0,
                                                       0,
                                                       adjacent,
                                                       MHITNOT,
-                                                      MG_FORCE_PLACE));
-
-                    if (rc != -1)
+                                                      MG_FORCE_PLACE)))
                     {
-                        env.mons[rc].behaviour = BEH_WANDER;
-                        env.mons[rc].number = 20;
+                        rc->behaviour = BEH_WANDER;
+                        rc->number = 20;
 
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
@@ -1709,7 +1739,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner flame", "roused", "breath timer", "deaths_door", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

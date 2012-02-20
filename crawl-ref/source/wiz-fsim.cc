@@ -29,24 +29,21 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "wiz-you.h"
 
 #ifdef WIZARD
-static int _create_fsim_monster(int mtype, int hp)
+static monster* _create_fsim_monster(int mtype, int hp)
 {
-    const int mi =
-        create_monster(
+    monster *mon = create_monster(
             mgen_data::hostile_at(
                 static_cast<monster_type>(mtype),
                 "the fight simulator", false, 0, 0, you.pos()));
 
-    if (mi == -1)
-        return (mi);
+    if (!mon)
+        return 0;
 
-    monster* mon = &menv[mi];
     // the monster is never saved, and thus we might allow any 31 bit value
     mon->hit_points = mon->max_hit_points = hp;
-    return (mi);
+    return mon;
 }
 
 static skill_type _fsim_melee_skill(const item_def *item)
@@ -56,17 +53,17 @@ static skill_type _fsim_melee_skill(const item_def *item)
 
 static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
-    wizard_set_skill_level(_fsim_melee_skill(item), skill, true);
-    wizard_set_skill_level(SK_FIGHTING, skill * 15 / 27, true);
-    wizard_set_skill_level(SK_ARMOUR, skill * 15 / 27, true);
-    wizard_set_skill_level(SK_SHIELDS, skill, true);
+    set_skill_level(_fsim_melee_skill(item), skill);
+    set_skill_level(SK_FIGHTING, skill * 15 / 27);
+    set_skill_level(SK_ARMOUR, skill * 15 / 27);
+    set_skill_level(SK_SHIELDS, skill);
     for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_SKILL; ++i)
-        wizard_set_skill_level(skill_type(i), skill, true);
+        set_skill_level(skill_type(i), skill);
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
 {
-    wizard_set_skill_level(range_skill(*item), skill, true);
+    set_skill_level(range_skill(*item), skill);
 }
 
 static void _fsim_item(FILE *out,
@@ -113,10 +110,9 @@ static void _fsim_defence_item(FILE *out, int cum, int hits, int max,
 }
 
 
-static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
+static bool _fsim_ranged_combat(FILE *out, int wskill, monster &mon,
                                 const item_def *item, int missile_slot)
 {
-    monster& mon = menv[mi];
     const monster orig = mon;
     unsigned int cumulative_damage = 0;
     unsigned int time_taken = 0;
@@ -165,10 +161,10 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     return (true);
 }
 
-static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
+static bool _fsim_mon_melee(FILE *out, int dodge, int armour, monster &mon)
 {
-    wizard_set_skill_level(SK_DODGING, dodge, true);
-    wizard_set_skill_level(SK_ARMOUR, armour, true);
+    set_skill_level(SK_DODGING, dodge);
+    set_skill_level(SK_ARMOUR, armour);
 
     const int yhp  = you.hp;
     const int ymhp = you.hp_max;
@@ -180,7 +176,7 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     for (int i = 0; i < Options.fsim_rounds; ++i)
     {
         you.hp = you.hp_max = 5000;
-        fight_melee(&menv[mi], &you);
+        fight_melee(&mon, &you);
         const int damage = you.hp_max - you.hp;
         if (damage)
             hits++;
@@ -192,15 +188,14 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     you.hp = yhp;
     you.hp_max = ymhp;
 
-    _fsim_defence_item(out, cumulative_damage, hits, maxdam, menv[mi].speed,
+    _fsim_defence_item(out, cumulative_damage, hits, maxdam, mon.speed,
                        Options.fsim_rounds);
     return (true);
 }
 
-static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
+static bool _fsim_melee_combat(FILE *out, int wskill, monster &mon,
                                const item_def *item)
 {
-    monster& mon = menv[mi];
     const monster orig = mon;
     unsigned int cumulative_damage = 0;
     unsigned int time_taken = 0;
@@ -234,15 +229,15 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
     return (true);
 }
 
-static bool debug_fight_simulate(FILE *out, int wskill, int mi, int miss_slot)
+static bool debug_fight_simulate(FILE *out, int wskill, monster &m, int miss_slot)
 {
     int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1? &you.inv[weapon] : NULL;
 
     if (iweap && iweap->base_type == OBJ_WEAPONS && is_range_weapon(*iweap))
-        return _fsim_ranged_combat(out, wskill, mi, iweap, miss_slot);
+        return _fsim_ranged_combat(out, wskill, m, iweap, miss_slot);
     else
-        return _fsim_melee_combat(out, wskill, mi, iweap);
+        return _fsim_melee_combat(out, wskill, m, iweap);
 }
 
 static const item_def *_fsim_weap_item()
@@ -321,13 +316,13 @@ static void _fsim_mon_stats(FILE *o, const monster& mon)
     fprintf(o, "EV        : %d\n", mon.ev);
 }
 
-static void _fsim_title(FILE *o, int mon, int ms)
+static void _fsim_title(FILE *o, monster &mon, int ms)
 {
     fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
     fprintf(o, "Combat simulation: %s %s vs. %s (%d rounds) (%s)\n",
             species_name(you.species).c_str(),
             you.class_name.c_str(),
-            menv[mon].name(DESC_PLAIN, true).c_str(),
+            mon.name(DESC_PLAIN, true).c_str(),
             Options.fsim_rounds,
             _fsim_time_string().c_str());
 
@@ -338,7 +333,7 @@ static void _fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Base speed: %d\n", player_speed());
     fprintf(o, "\n");
 
-    _fsim_mon_stats(o, menv[mon]);
+    _fsim_mon_stats(o, mon);
 
     fprintf(o, "\n");
     fprintf(o, "Weapon    : %s\n", _fsim_weapon(ms).c_str());
@@ -347,11 +342,11 @@ static void _fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Skill | Bonus | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
-static void _fsim_defence_title(FILE *o, int mon)
+static void _fsim_defence_title(FILE *o, monster &mon)
 {
     fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
     fprintf(o, "Combat simulation: %s vs. %s %s (%d rounds) (%s)\n",
-            menv[mon].name(DESC_PLAIN).c_str(),
+            mon.name(DESC_PLAIN).c_str(),
             species_name(you.species).c_str(),
             you.class_name.c_str(),
             Options.fsim_rounds,
@@ -362,23 +357,23 @@ static void _fsim_defence_title(FILE *o, int mon)
     fprintf(o, "Dexterity : %d\n", you.dex());
     fprintf(o, "Base speed: %d\n", player_speed());
     fprintf(o, "\n");
-    _fsim_mon_stats(o, menv[mon]);
+    _fsim_mon_stats(o, mon);
     fprintf(o, "\n");
     fprintf(o, "AC | EV | Dod | Arm | Bonus | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
-static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
+static bool _fsim_mon_hit_you(FILE *ostat, monster &mon, int)
 {
-    _fsim_defence_title(ostat, mindex);
+    _fsim_defence_title(ostat, mon);
 
     for (int sk = 0; sk <= 27; ++sk)
     {
         mesclr();
         mprf("Calculating average damage for %s at dodging %d",
-             menv[mindex].name(DESC_PLAIN).c_str(),
+             mon.name(DESC_PLAIN).c_str(),
              sk);
 
-        if (!_fsim_mon_melee(ostat, sk, 0, mindex))
+        if (!_fsim_mon_melee(ostat, sk, 0, mon))
             return (false);
 
         fflush(ostat);
@@ -386,7 +381,7 @@ static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }
@@ -395,10 +390,10 @@ static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
     {
         mesclr();
         mprf("Calculating average damage for %s at armour %d",
-             menv[mindex].name(DESC_PLAIN).c_str(),
+             mon.name(DESC_PLAIN).c_str(),
              sk);
 
-        if (!_fsim_mon_melee(ostat, 0, sk, mindex))
+        if (!_fsim_mon_melee(ostat, 0, sk, mon))
             return (false);
 
         fflush(ostat);
@@ -406,27 +401,27 @@ static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }
 
     mprf("Done defence simulation with %s",
-         menv[mindex].name(DESC_PLAIN).c_str());
+         mon.name(DESC_PLAIN).c_str());
 
     return (true);
 }
 
-static bool _fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
+static bool _fsim_you_hit_mon(FILE *ostat, monster &mon, int missile_slot)
 {
-    _fsim_title(ostat, mindex, missile_slot);
+    _fsim_title(ostat, mon, missile_slot);
     for (int wskill = 0; wskill <= 27; ++wskill)
     {
         mesclr();
         mprf("Calculating average damage for %s at skill %d",
              _fsim_weapon(missile_slot).c_str(), wskill);
 
-        if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
+        if (!debug_fight_simulate(ostat, wskill, mon, missile_slot))
             return (false);
 
         fflush(ostat);
@@ -434,7 +429,7 @@ static bool _fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getchk() == 27)
         {
-            mprf("Canceling simulation\n");
+            mprf("Cancelling simulation\n");
             return (false);
         }
     }
@@ -442,8 +437,8 @@ static bool _fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
     return (true);
 }
 
-static bool debug_fight_sim(int mindex, int missile_slot,
-                            bool (*combat)(FILE *, int mind, int mslot))
+static bool debug_fight_sim(monster &mon, int missile_slot,
+                            bool (*combat)(FILE *, monster &mon, int mslot))
 {
     FILE *ostat = fopen("fight.stat", "a");
     if (!ostat)
@@ -479,7 +474,7 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     if (Options.fsim_dex != -1)
         you.base_stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
 
-    combat(ostat, mindex, missile_slot);
+    combat(ostat, mon, missile_slot);
 
     fprintf(ostat, "-----------------------------------\n\n");
     fclose(ostat);
@@ -553,13 +548,13 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     if (punching_bag == -1 || punching_bag == MONS_NO_MONSTER)
         punching_bag = MONS_WORM;
 
-    int mindex = _create_fsim_monster(punching_bag, 500);
-    if (mindex == -1)
+    monster *mon = _create_fsim_monster(punching_bag, 500);
+    if (!mon)
     {
         mprf("Failed to create punching bag");
         return;
     }
-    menv[mindex].behaviour = BEH_SEEK;
+    mon->behaviour = BEH_SEEK;
 
     you.exp_available = 0;
     unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
@@ -568,7 +563,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
 
     if (!use_defaults || defence)
     {
-        debug_fight_sim(mindex, -1,
+        debug_fight_sim(*mon, -1,
                         defence? _fsim_mon_hit_you : _fsim_you_hit_mon);
     }
     else
@@ -581,11 +576,11 @@ void debug_fight_statistics(bool use_defaults, bool defence)
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
                 break;
             }
-            if (!debug_fight_sim(mindex, missile, _fsim_you_hit_mon))
+            if (!debug_fight_sim(*mon, missile, _fsim_you_hit_mon))
                 break;
         }
     }
-    monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER);
+    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     reset_training();
 }
 

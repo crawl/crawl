@@ -12,7 +12,6 @@
 #include "artefact.h"
 #include "cio.h"
 #include "colour.h"
-#include "coord.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "dungeon.h"
@@ -198,14 +197,14 @@ void wizard_create_spec_monster_name()
     }
 
     mons_spec mspec = mlist.get_monster(0);
-    if (mspec.mid == -1)
+    if (mspec.type == -1)
     {
         mpr("Such a monster couldn't be found.", MSGCH_DIAGNOSTICS);
         return;
     }
 
-    int type = mspec.mid;
-    if (mons_class_is_zombified(mspec.mid))
+    int type = mspec.type;
+    if (mons_class_is_zombified(mspec.type))
         type = mspec.monbase;
 
     coord_def place = find_newmons_square(type, you.pos());
@@ -250,31 +249,31 @@ void wizard_create_spec_monster_name()
 
     // Wizmode users should be able to conjure up uniques even if they
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
-    if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
-        you.unique_creatures[mspec.mid] = false;
+    if (mons_is_unique(mspec.type) && you.unique_creatures[mspec.type])
+        you.unique_creatures[mspec.type] = false;
 
-    if (dgn_place_monster(mspec, -1, place, true, false) == -1)
+    if (!dgn_place_monster(mspec, -1, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
     }
 
-    if (mspec.mid == MONS_KRAKEN)
+    if (mspec.type == MONS_KRAKEN)
     {
-        unsigned short mid = mgrd(place);
+        unsigned short idx = mgrd(place);
 
-        if (mid >= MAX_MONSTERS || menv[mid].type != MONS_KRAKEN)
+        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
         {
-            for (mid = 0; mid < MAX_MONSTERS; mid++)
+            for (idx = 0; idx < MAX_MONSTERS; idx++)
             {
-                if (menv[mid].type == MONS_KRAKEN && menv[mid].alive())
+                if (menv[idx].type == MONS_KRAKEN && menv[idx].alive())
                 {
-                    menv[mid].colour = element_colour(ETC_KRAKEN);
+                    menv[idx].colour = element_colour(ETC_KRAKEN);
                     return;
                 }
             }
         }
-        if (mid >= MAX_MONSTERS)
+        if (idx >= MAX_MONSTERS)
         {
             mpr("Couldn't find player kraken!");
             return;
@@ -283,30 +282,30 @@ void wizard_create_spec_monster_name()
 
     // FIXME: This is a bit useless, seeing how you cannot set the
     // ghost's stats, brand or level, among other things.
-    if (mspec.mid == MONS_PLAYER_GHOST)
+    if (mspec.type == MONS_PLAYER_GHOST)
     {
-        unsigned short mid = mgrd(place);
+        unsigned short idx = mgrd(place);
 
-        if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
+        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_PLAYER_GHOST)
         {
-            for (mid = 0; mid < MAX_MONSTERS; mid++)
+            for (idx = 0; idx < MAX_MONSTERS; idx++)
             {
-                if (menv[mid].type == MONS_PLAYER_GHOST
-                    && menv[mid].alive())
+                if (menv[idx].type == MONS_PLAYER_GHOST
+                    && menv[idx].alive())
                 {
                     break;
                 }
             }
         }
 
-        if (mid >= MAX_MONSTERS)
+        if (idx >= MAX_MONSTERS)
         {
             mpr("Couldn't find player ghost, probably going to crash.");
             more();
             return;
         }
 
-        monster    &mon = menv[mid];
+        monster    &mon = menv[idx];
         ghost_demon ghost;
 
         ghost.name = "John Doe";
@@ -1041,7 +1040,7 @@ static void _move_player(const coord_def& where)
         maybe_shift_abyss_around_player();
 }
 
-static void _move_monster(const coord_def& where, int mid1)
+static void _move_monster(const coord_def& where, int idx1)
 {
     dist moves;
     direction_chooser_args args;
@@ -1052,16 +1051,16 @@ static void _move_monster(const coord_def& where, int mid1)
     if (!moves.isValid || !in_bounds(moves.target))
         return;
 
-    monster* mon1 = &menv[mid1];
+    monster* mon1 = &menv[idx1];
 
-    const int mid2 = mgrd(moves.target);
+    const int idx2 = mgrd(moves.target);
     monster* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
-    mgrd(moves.target) = mid1;
+    mgrd(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
-    mgrd(where) = mid2;
+    mgrd(where) = idx2;
 
     if (mon2 != NULL)
     {
@@ -1085,9 +1084,9 @@ void wizard_move_player_or_monster(const coord_def& where)
 
     already_moving = true;
 
-    int mid = mgrd(where);
+    int idx = mgrd(where);
 
-    if (mid == NON_MONSTER)
+    if (idx == NON_MONSTER)
     {
         if (crawl_state.arena_suspended)
         {
@@ -1098,7 +1097,7 @@ void wizard_move_player_or_monster(const coord_def& where)
         _move_player(where);
     }
     else
-        _move_monster(where, mid);
+        _move_monster(where, idx);
 
     already_moving = false;
 }
@@ -1237,9 +1236,9 @@ void wizard_polymorph_monster(monster* mon)
         mpr("Monster turned into something other than the desired type.");
 }
 
-void debug_pathfind(int mid)
+void debug_pathfind(int idx)
 {
-    if (mid == NON_MONSTER)
+    if (idx == NON_MONSTER)
         return;
 
     mpr("Choose a destination!");
@@ -1257,7 +1256,7 @@ void debug_pathfind(int mid)
         return;
     }
 
-    monster& mon = menv[mid];
+    monster& mon = menv[idx];
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;

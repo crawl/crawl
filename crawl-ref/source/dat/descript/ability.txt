@@ -148,7 +148,7 @@ Invoke a huge blast of divine fury centered on you, severely damaging undead and
 %%%%
 Summon Divine Warrior
 
-Summon an angel or daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer or even permanently in this world.
+Summon an angel or daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer in this world.
 %%%%
 # Kikubaaqudgha
 Receive Corpses
@@ -321,11 +321,11 @@ Draw three cards from any deck in your inventory, look at them, and decide which
 %%%%
 Mark Four
 
-Discard between one and three cards from any deck in your inventory to draw four cards from the deck, mark and remember them, so that you can tell when they are on top, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
+Discard between one and three cards from any unmarked deck in your inventory to draw four cards from the deck, mark and remember them, so that you can tell when they are on top, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
 %%%%
 Stack Five
 
-Draw five cards from any deck in your inventory, losing the rest of the deck. Look at the cards and sort them into any order you'd like. Subsequently, you can draw these cards in the order you chose.
+Draw five cards from any unmarked deck in your inventory, losing the rest of the deck. Look at the cards and sort them into any order you'd like. Subsequently, you can draw these cards in the order you chose.
 %%%%
 # Beogh
 Smiting

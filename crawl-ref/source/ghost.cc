@@ -829,9 +829,9 @@ bool ghost_demon::has_spells() const
 
 // When passed the number for a player spell, returns the equivalent
 // monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
-spell_type ghost_demon::translate_spell(spell_type spel) const
+spell_type ghost_demon::translate_spell(spell_type spell) const
 {
-    switch (spel)
+    switch (spell)
     {
     case SPELL_CONTROLLED_BLINK:
         return (SPELL_BLINK);        // approximate
@@ -841,13 +841,11 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_FIREBALL);
     case SPELL_EVAPORATE:
         return (SPELL_MEPHITIC_CLOUD);
-    case SPELL_STICKY_FLAME:
-        return (SPELL_STICKY_FLAME_RANGE);
     default:
         break;
     }
 
-    return (spel);
+    return (spell);
 }
 
 std::vector<ghost_demon> ghost_demon::find_ghosts()

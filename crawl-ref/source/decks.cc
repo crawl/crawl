@@ -39,9 +39,9 @@
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "ouch.h"
 #include "player.h"
@@ -1358,13 +1358,10 @@ void evoke_deck(item_def& deck)
     }
 
     const int amusement   = _xom_check_card(deck, card, flags);
-    const bool no_brownie = (props["non_brownie_draws"].get_byte() > 0);
 
     // Do these before the deck item_def object is gone.
     if (flags & CFLAG_MARKED)
         props["num_marked"]--;
-    if (no_brownie)
-        props["non_brownie_draws"]--;
 
     deck.plus2++;
     _remember_drawn_card(deck, card, allow_id);
@@ -1383,9 +1380,7 @@ void evoke_deck(item_def& deck)
         brownie_points++;
     }
 
-    const bool fake_draw = !card_effect(card, rarity, flags, false);
-    if (fake_draw && !deck_gone)
-        props["non_brownie_draws"]++;
+    card_effect(card, rarity, flags, false);
 
     if (!(flags & CFLAG_MARKED))
     {
@@ -1394,12 +1389,9 @@ void evoke_deck(item_def& deck)
         xom_is_stimulated(amusement);
 
         // Nemelex likes gamblers.
-        if (!no_brownie)
-        {
+        brownie_points++;
+        if (one_chance_in(3))
             brownie_points++;
-            if (one_chance_in(3))
-                brownie_points++;
-        }
 
         // You can't ID off a marked card
         allow_id = false;
@@ -1414,8 +1406,7 @@ void evoke_deck(item_def& deck)
                                       << std::endl;
     }
 
-    if (!fake_draw)
-        did_god_conduct(DID_CARDS, brownie_points);
+    did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has
     // changed.
@@ -1480,7 +1471,7 @@ static void _warp_card(int power, deck_rarity_type rarity)
     if (control_level >= 2)
         blink(1000, false);
     else if (control_level == 1)
-        cast_semi_controlled_blink(power / 4);
+        cast_semi_controlled_blink(power / 4, false);
     else
         random_blink(false);
 }
@@ -1675,11 +1666,8 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     stair_draw_count++;
 }
 
-// Return true if it was a "genuine" draw, i.e., there was a monster
-// to target. This is still exploitable by finding popcorn monsters.
-static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
+static void _damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
-    bool rc = there_are_monsters_nearby(true, false);
     const int power_level = get_power_level(power, rarity);
 
     dist target;
@@ -1716,7 +1704,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         {
             mprf("You have drawn %s.", card_name(card));
             torment(&you, TORMENT_CARDS, you.pos());
-            return (true);
+            return;
         }
         else
             ztype = painzaps[power_level];
@@ -1750,12 +1738,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     {
         // cancelled orb bursts just become uncontrolled
         cast_iood_burst(power/6, coord_def(-1, -1));
-        return true;
     }
-    else
-        rc = false;
-
-    return (rc);
 }
 
 static void _elixir_card(int power, deck_rarity_type rarity)
@@ -2045,6 +2028,14 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
                     new_base[i] - you.base_stats[i],
                     true, cause.c_str(), true);
     }
+
+    char buf[128];
+    snprintf(buf, sizeof(buf),
+             "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
+             you.base_stats[STAT_STR], you.strength(),
+             you.base_stats[STAT_INT], you.intel(),
+             you.base_stats[STAT_DEX], you.dex());
+    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
 }
 
 static void _experience_card(int power, deck_rarity_type rarity)
@@ -2400,7 +2391,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             if (create_monster(
                     mgen_data::hostile_at(
                         RANDOM_ELEMENT(statues), "the Trowel card",
-                        true, 0, 0, you.pos())) != -1)
+                        true, 0, 0, you.pos())))
             {
                 mpr("A menacing statue appears!");
                 num_made++;
@@ -2414,7 +2405,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             if (create_monster(
                     mgen_data(RANDOM_ELEMENT(golems),
                               BEH_FRIENDLY, &you, 5, 0,
-                              you.pos(), MHITYOU)) != -1)
+                              you.pos(), MHITYOU)))
             {
                 mpr("You construct a golem!");
                 num_made++;
@@ -2562,11 +2553,11 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // will never manage to give a position which isn't (-1,-1)
     // and thus not print the message.
     // This hack appears later in this file as well.
-    if (create_monster(
+    if (!create_monster(
             mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
                       std::min(power/50 + 1, 5), 0,
                       you.pos(), MHITYOU),
-            false) == -1)
+            false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2616,10 +2607,10 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
-    if (create_monster(mgen_data(mon_chosen,
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                 3, 0, chosen_spot, MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(mon_chosen,
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                                  3, 0, chosen_spot, MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2630,7 +2621,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     const bool friendly   = (power_level > 0 || !one_chance_in(4));
 
-    const int mon =
+    monster *mon =
         create_monster(
             mgen_data(MONS_DANCING_WEAPON,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
@@ -2641,11 +2632,11 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
     // piety.
-    if (mon != -1)
+    if (mon)
     {
         // Override the weapon.
-        ASSERT(menv[mon].weapon() != NULL);
-        item_def& wpn(*menv[mon].weapon());
+        ASSERT(mon->weapon() != NULL);
+        item_def& wpn(*mon->weapon());
 
         set_equip_race(wpn, ISFLAG_NO_RACE);
 
@@ -2686,13 +2677,13 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 
         item_colour(wpn);
 
-        menv[mon].flags |= MF_HARD_RESET;
+        mon->flags |= MF_HARD_RESET;
 
         ghost_demon newstats;
         newstats.init_dancing_weapon(wpn, power / 4);
 
-        menv[mon].set_ghost(newstats);
-        menv[mon].ghost_demon_init();
+        mon->set_ghost(newstats);
+        mon->ghost_demon_init();
     }
     else
         mpr("You see a puff of smoke.");
@@ -2738,11 +2729,11 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
     };
 
-    if (create_monster(mgen_data(skeltypes[power_level],
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                 std::min(power/50 + 1, 5), 0,
-                                 you.pos(), MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(skeltypes[power_level],
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                                  std::min(power/50 + 1, 5), 0,
+                                  you.pos(), MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2760,12 +2751,12 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     else
         ugly = MONS_UGLY_THING;
 
-    if (create_monster(mgen_data(ugly,
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                                 &you,
-                                 std::min(power/50 + 1, 6), 0,
-                                 you.pos(), MHITYOU),
-                       false) == -1)
+    if (!create_monster(mgen_data(ugly,
+                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                  &you,
+                                  std::min(power/50 + 1, 6), 0,
+                                  you.pos(), MHITYOU),
+                        false))
     {
         mpr("You see a puff of smoke.");
     }
@@ -2839,12 +2830,11 @@ static int _card_power(deck_rarity_type rarity)
     return (result);
 }
 
-bool card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t flags, bool tell_card)
 {
     ASSERT(!_card_forbidden(which_card));
 
-    bool rc = true;
     const int power = _card_power(rarity);
 
     const god_type god =
@@ -2855,7 +2845,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 
     if (tell_card)
     {
-        // These card types will usually give this message in the targeting
+        // These card types will usually give this message in the targetting
         // prompt, and the cases where they don't are handled specially.
         if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
             && which_card != CARD_FROST && which_card != CARD_HAMMER
@@ -2933,7 +2923,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
         }
         else
-            rc = _damaging_card(which_card, power, rarity);
+            _damaging_card(which_card, power, rarity);
         break;
 
     case CARD_VITRIOL:
@@ -2943,7 +2933,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SPARK:
     case CARD_PAIN:
     case CARD_ORB:
-        rc = _damaging_card(which_card, power, rarity);
+        _damaging_card(which_card, power, rarity);
         break;
 
     case CARD_BARGAIN:
@@ -2990,11 +2980,6 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         mpr("You have drawn a buggy card!");
         break;
     }
-
-    if (you.religion == GOD_NEMELEX_XOBEH && !rc)
-        simple_god_message(" does not approve of your wasteful card use.");
-
-    return rc;
 }
 
 bool top_card_is_known(const item_def &deck)

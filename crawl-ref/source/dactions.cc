@@ -41,6 +41,7 @@ static const char *daction_names[] =
     "reapply passive mapping",
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
+    "corpses rot",
 };
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
@@ -177,7 +178,8 @@ static void _apply_daction(daction_type act)
 
                 if (act == DACT_PIKEL_SLAVES)
                 {
-                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
+                                 MF_NAME_NOCORPSE;
                     mi->mname = "freed slave";
                 }
                 else
@@ -198,6 +200,11 @@ static void _apply_daction(daction_type act)
             if (grd(*ri) == DNGN_ALTAR_JIYVA)
                 grd(*ri) = DNGN_FLOOR;
         }
+        break;
+    case DACT_ROT_CORPSES:
+        for (int i = 0; i < MAX_ITEMS; i++)
+            if (mitm[i].base_type == OBJ_CORPSES && mitm[i].sub_type == CORPSE_BODY)
+                mitm[i].special = 1; // thoroughly rotten
         break;
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:

@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "items.h"

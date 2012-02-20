@@ -24,7 +24,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "cloud.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -350,10 +349,10 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
 // Now it returns index of new slime (-1 if it fails).
-static int _do_split(monster* thing, coord_def & target)
+static monster* _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
-    int slime_idx = create_monster(mgen_data(MONS_SLIME_CREATURE,
+    monster *new_slime = create_monster(mgen_data(MONS_SLIME_CREATURE,
                                              thing->behaviour,
                                              0,
                                              0,
@@ -362,13 +361,8 @@ static int _do_split(monster* thing, coord_def & target)
                                              thing->foe,
                                              MG_FORCE_PLACE));
 
-    if (slime_idx == -1)
-        return (-1);
-
-    monster* new_slime = &env.mons[slime_idx];
-
     if (!new_slime)
-        return (-1);
+        return 0;
 
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
@@ -395,7 +389,7 @@ static int _do_split(monster* thing, coord_def & target)
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
 
-    return (slime_idx);
+    return new_slime;
 }
 
 // Cause a monster to lose a turn.  has_gone should be true if the
@@ -653,6 +647,7 @@ static bool _slime_merge(monster* thing)
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
             && other_thing->attitude == thing->attitude
+            && other_thing->has_ench(ENCH_CHARM) == thing->has_ench(ENCH_CHARM)
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
             && !_disabled_merge(other_thing))
@@ -729,14 +724,13 @@ static bool _slime_can_spawn(const coord_def target)
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
-// Now it returns index of new slime (-1 if it fails).
-static int _slime_split(monster* thing, bool force_split)
+static monster *_slime_split(monster* thing, bool force_split)
 {
     if (!thing || thing->number <= 1
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
         || _disabled_merge(thing))
     {
-        return (-1);
+        return 0;
     }
 
     const coord_def origin  = thing->pos();
@@ -755,7 +749,7 @@ static int _slime_split(monster* thing, bool force_split)
             if (_slime_can_spawn(*ri)
                 && grid_distance(*ri, foe_pos) < old_dist)
             {
-                return (-1);
+                return 0;
             }
         }
     }
@@ -785,7 +779,7 @@ static int _slime_split(monster* thing, bool force_split)
     }
 
    // No free squares.
-   return (-1);
+   return 0;
 }
 
 // See if a given slime creature can split or merge.
@@ -799,13 +793,13 @@ static bool _slime_split_merge(monster* thing)
         return (false);
     }
 
-    if (_slime_split(thing, false) != -1)
+    if (_slime_split(thing, false))
         return (true);
 
     return (_slime_merge(thing));
 }
 
-//Splits and polymorphs merged slime creatures.
+// Splits and polymorphs merged slime creatures.
 bool slime_creature_mutate(monster* slime)
 {
     ASSERT(slime->type == MONS_SLIME_CREATURE);
@@ -815,9 +809,8 @@ bool slime_creature_mutate(monster* slime)
         int count = 0;
         while (slime->number > 1 && count <= 10)
         {
-            int slime_idx = _slime_split(slime, true);
-            if (slime_idx != -1)
-                slime_creature_mutate(&env.mons[slime_idx]);
+            if (monster *splinter = _slime_split(slime, true))
+                slime_creature_mutate(splinter);
             else
                 break;
             count++;
@@ -990,6 +983,7 @@ static void _orc_battle_cry(monster* chief)
     if (foe
         && (foe != &you || !chief->friendly())
         && !silenced(chief->pos())
+        && !chief->has_ench(ENCH_MUTE)
         && chief->can_see(foe)
         && coinflip())
     {
@@ -1301,27 +1295,25 @@ static void _establish_connection(int tentacle,
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
-        int connect = create_monster(
+        if (monster *connect = create_monster(
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER));
-
-        if (connect < 0)
+                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
         {
-            // Big failure mode.
-            return;
+            connect->props["inwards"].get_int()  = -1;
+            connect->props["outwards"].get_int() = -1;
+
+            if (main->holiness() == MH_UNDEAD)
+                connect->flags |= MF_FAKE_UNDEAD;
+
+            connect->max_hit_points = menv[tentacle].max_hit_points;
+            connect->hit_points = menv[tentacle].hit_points;
         }
         else
         {
-            menv[connect].props["inwards"].get_int()  = -1;
-            menv[connect].props["outwards"].get_int() = -1;
-
-            if (main->holiness() == MH_UNDEAD)
-                menv[connect].flags |= MF_FAKE_UNDEAD;
-
-            menv[connect].max_hit_points = menv[tentacle].max_hit_points;
-            menv[connect].hit_points = menv[tentacle].hit_points;
+            // Big failure mode.
+            return;
         }
     }
 
@@ -1342,34 +1334,32 @@ static void _establish_connection(int tentacle,
         if (current_mons)
         {
             // Todo verify current monster type
-            menv[current_mons->mindex()].props["inwards"].get_int() = last_mon_idx;
-            menv[last_mon_idx].props["outwards"].get_int() = current_mons->mindex();
+            current_mons->props["inwards"].get_int() = last_mon_idx;
+            last_mon->props["outwards"].get_int() = current_mons->mindex();
             break;
         }
 
          // place a connector
-        int connect = create_monster(
+        if (monster *connect = create_monster(
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER));
-
-        if (connect >= 0)
+                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
         {
-            menv[connect].max_hit_points = menv[tentacle].max_hit_points;
-            menv[connect].hit_points = menv[tentacle].hit_points;
+            connect->max_hit_points = menv[tentacle].max_hit_points;
+            connect->hit_points = menv[tentacle].hit_points;
 
-            menv[connect].props["inwards"].get_int() = last_mon_idx;
-            menv[connect].props["outwards"].get_int() = -1;
+            connect->props["inwards"].get_int() = last_mon_idx;
+            connect->props["outwards"].get_int() = -1;
 
             if (last_mon->type == connector_type)
-                menv[last_mon_idx].props["outwards"].get_int() = connect;
+                menv[last_mon_idx].props["outwards"].get_int() = connect->mindex();
 
             if (main->holiness() == MH_UNDEAD)
-                menv[connect].flags |= MF_FAKE_UNDEAD;
+                connect->flags |= MF_FAKE_UNDEAD;
 
-            if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
-                menv[connect].add_ench(ENCH_SUBMERGED);
+            if (monster_can_submerge(connect, env.grid(connect->pos())))
+                connect->add_ench(ENCH_SUBMERGED);
         }
         else
         {
@@ -2063,6 +2053,7 @@ void move_demon_tentacle(monster* tentacle)
     // the search fails (sometimes), Don't know why. -cao
     tentacle->set_position(new_pos);
     mgrd(tentacle->pos()) = tentacle->mindex();
+    tentacle->clear_far_constrictions();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -2240,6 +2231,7 @@ void move_kraken_tentacles(monster* kraken)
         // the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
+        tentacle->clear_far_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
@@ -2993,20 +2985,18 @@ void ballisto_on_move(monster* mons, const coord_def & position)
             if (one_chance_in(4))
             {
                 beh_type attitude = actual_same_attitude(*mons);
-                int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                if (monster *rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
                                                   NULL,
                                                   0,
                                                   0,
                                                   position,
                                                   MHITNOT,
-                                                  MG_FORCE_PLACE));
-
-                if (rc != -1)
+                                                  MG_FORCE_PLACE)))
                 {
                     // Don't leave mold on squares we place ballistos on
                     remove_mold(position);
-                    if  (you.can_see(&env.mons[rc]))
+                    if  (you.can_see(rc))
                         mprf("A ballistomycete grows in the wake of the spore.");
                 }
 
@@ -3014,10 +3004,7 @@ void ballisto_on_move(monster* mons, const coord_def & position)
             }
         }
         else
-        {
             mons->number--;
-        }
-
     }
 }
 

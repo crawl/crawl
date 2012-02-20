@@ -215,6 +215,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
+# autofight_stop = 30
+
 ##### 4-j       Messages and Display Enhancements #####
 #
 # hp_warning = 30
@@ -258,7 +260,7 @@ include = standard_colours.txt
 #   magenta    = dangerous to use, mutagenic       ($dangerous, $mutagenic)
 #   red        = considered "evil" by your deity   ($evil)
 #   lightgreen = poisonous                         ($poisonous)
-#   brown      = contaminated, may cause sickness  ($contaminated)
+#   brown      = contaminated, may cause nausea    ($contaminated)
 #
 # You can change colours by using something like
 # $contaminated := magenta
@@ -396,6 +398,9 @@ note_monsters = orb of fire, ancient lich, Sigmund
 
 # See options_guide.txt for the options
 # cset, feature, mon_glyph
+
+## Highlight the edge of unexplored terrain.
+# feature = explore horizon {',,green}
 
 ##### 6-b   Windows console #######################
 #

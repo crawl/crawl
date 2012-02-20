@@ -73,6 +73,7 @@ public:
 
     virtual int       get_experience_level() const = 0;
 
+    virtual bool shove(const char* feat_name) = 0;
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
@@ -241,7 +242,7 @@ public:
     virtual int armour_tohit_penalty(bool random_factor) const = 0;
     virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
-    virtual int mons_species(bool zombie_base = false) const = 0;
+    virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
@@ -268,8 +269,10 @@ public:
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
     virtual int res_petrify(bool temp = true) const = 0;
+    virtual int res_constrict() const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
+    virtual bool no_tele(bool calc_unid = true, bool permit_id = true) = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
@@ -354,13 +357,14 @@ public:
 
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;
-    virtual void clear_specific_constrictions(int mindex) = 0;
-    virtual bool is_constricted();
-    virtual bool is_constricting();
-    virtual bool has_usable_tentacle()
-    {
-        return false;
-    }
+    void stop_constricting(int mindex, bool intentional = false);
+    void stop_constricting_all(bool intentional = false);
+    void stop_being_constricted();
+
+    void clear_far_constrictions();
+    bool is_constricted() const;
+    bool is_constricting() const;
+    virtual bool has_usable_tentacle() const = 0;
 
 protected:
     // These are here for memory management reasons...

@@ -27,7 +27,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
-#include "coord.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
@@ -531,6 +530,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_COLD:
+    case BEAM_ICE:
     case BEAM_FRAG:
         target_class = OBJ_POTIONS;
         break;
@@ -856,31 +856,24 @@ bool drain_exp(bool announce_full)
     unsigned int total_exp = exp_needed(you.experience_level + 1)
                                   - exp_needed(you.experience_level);
     unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
-    unsigned int pool_drained = std::min(exp_drained,
-                                     (unsigned int)you.exp_available);
 
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
         unsigned int undrained = std::min(exp_drained,
                                       (you.piety * exp_drained) / 150);
-        unsigned int pool_undrained = std::min(pool_drained,
-                                           (you.piety * pool_drained) / 150);
 
-        if (undrained > 0 || pool_undrained > 0)
+        if (undrained > 0)
         {
             simple_god_message(" protects your life force!");
             if (undrained > 0)
                 exp_drained -= undrained;
-            if (pool_undrained > 0)
-                pool_drained -= pool_undrained;
         }
     }
     else if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         exp_drained -= (protection * exp_drained) / 3;
-        pool_drained -= (protection * pool_drained) / 3;
     }
 
     if (exp_drained > 0)
@@ -888,12 +881,8 @@ bool drain_exp(bool announce_full)
         mpr("You feel drained.");
         xom_is_stimulated(15);
         you.experience -= exp_drained;
-        you.exp_available -= pool_drained;
 
-        you.exp_available = std::max(0, you.exp_available);
-
-        dprf("You lose %d experience points, %d from pool.",
-             exp_drained, pool_drained);
+        dprf("You lose %d experience points.", exp_drained);
 
         level_change();
 
@@ -908,7 +897,7 @@ static void _xom_checks_damage(kill_method_type death_type,
 {
     if (you.religion == GOD_XOM)
     {
-        if (death_type == KILLED_BY_TARGETING
+        if (death_type == KILLED_BY_TARGETTING
             || death_type == KILLED_BY_BOUNCE
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_SELF_AIMED
@@ -1045,7 +1034,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
                 mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
                              foe, 0, GOD_JIYVA);
 
-                if (create_monster(mg) != -1)
+                if (create_monster(mg))
                     count_created++;
             }
 
@@ -1513,7 +1502,7 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(_morgue_name(se.get_death_time()), false, true, &se))
+    if (!dump_char(_morgue_name(se.get_death_time()), true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1531,7 +1520,7 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory(true);
+    browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
@@ -1577,4 +1566,19 @@ int actor_to_death_source(const actor* agent)
         return (agent->as_monster()->mindex());
     else
         return (NON_MONSTER);
+}
+
+int timescale_damage(const actor *act, int damage)
+{
+    if (damage < 0)
+        damage = 0;
+    // Can we have a uniform player/monster speed system yet?
+    if (act->is_player())
+        return div_rand_round(damage * you.time_taken, BASELINE_DELAY);
+    else
+    {
+        const monster *mons = act->as_monster();
+        const int speed = mons->speed > 0? mons->speed : BASELINE_DELAY;
+        return div_rand_round(damage * BASELINE_DELAY, speed);
+    }
 }

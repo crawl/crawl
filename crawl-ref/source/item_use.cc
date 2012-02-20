@@ -24,7 +24,6 @@
 #include "cloud.h"
 #include "colour.h"
 #include "command.h"
-#include "coord.h"
 #include "coordit.h"
 #include "debug.h"
 #include "decks.h"
@@ -209,6 +208,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!ignore_temporary_disability
         && you.hunger_state < HS_FULL
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
+        && !crawl_state.game_is_zotdef()
         && !you.is_undead)
     {
         if (say_reason)
@@ -814,7 +814,7 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            const char* how_many = you.has_tentacles(false) == 3 ? "nine"
+            const char* how_many = you.has_tentacles(false) == 3 ? "six"
                                                                  : "three";
             mprf("You'd need %s %s to do that!", how_many,
                  you.hand_name(true).c_str());
@@ -1009,7 +1009,7 @@ int get_next_fire_item(int current, int direction)
     return fire_order[next];
 }
 
-class fire_target_behaviour : public targeting_behaviour
+class fire_target_behaviour : public targetting_behaviour
 {
 public:
     fire_target_behaviour()
@@ -1021,7 +1021,7 @@ public:
         set_prompt();
     }
 
-    // targeting_behaviour API
+    // targetting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw() const { return need_redraw; }
     virtual void clear_redraw()        { need_redraw = false; }
@@ -1150,7 +1150,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
 
 void fire_target_behaviour::display_help()
 {
-    show_targeting_help();
+    show_targetting_help();
     redraw_screen();
     need_redraw = true;
     set_prompt();
@@ -1170,7 +1170,7 @@ command_type fire_target_behaviour::get_command(int key)
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
-    return targeting_behaviour::get_command(key);
+    return targetting_behaviour::get_command(key);
 }
 
 std::vector<std::string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
@@ -1614,9 +1614,10 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return (true);
 
-    if (victim->atype() == ACT_PLAYER && item_blocks_teleport(true, true))
+    if (victim->no_tele(true, true))
     {
-        canned_msg(MSG_STRANGE_STASIS);
+        if (victim->is_player())
+            canned_msg(MSG_STRANGE_STASIS);
         return (false);
     }
 
@@ -3732,19 +3733,29 @@ bool remove_ring(int slot, bool announce)
 
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
+    bool has_jewellery = false;
+    const equipment_type first = you.species == SP_OCTOPODE ? EQ_AMULET
+                                                            : EQ_LEFT_RING;
+    const equipment_type last = you.species == SP_OCTOPODE ? EQ_RING_EIGHT
+                                                           : EQ_AMULET;
 
-    const bool left  = player_wearing_slot(EQ_LEFT_RING);
-    const bool right = player_wearing_slot(EQ_RIGHT_RING);
-    const bool amu   = player_wearing_slot(EQ_AMULET);
-    bool octopode_with_ring = false;
-    if (you.species == SP_OCTOPODE)
+    for (int eq = first; eq <= last; eq++)
     {
-        for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
-            if (player_wearing_slot(eq))
-                octopode_with_ring = true;
+        if (player_wearing_slot(eq))
+        {
+            if (has_jewellery)
+            {
+                // At least one other piece, which means we'll have to ask
+                hand_used = EQ_NONE;
+            }
+            else
+                hand_used = (equipment_type) eq;
+
+            has_jewellery = true;
+        }
     }
 
-    if (!left && !right && !amu && !octopode_with_ring)
+    if (!has_jewellery)
     {
         mpr("You aren't wearing any rings or amulets.");
         return (false);
@@ -3758,18 +3769,11 @@ bool remove_ring(int slot, bool announce)
 
     const item_def* gloves = you.slot_item(EQ_GLOVES);
     const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !amu)
+    if (gloves_cursed && !player_wearing_slot(EQ_AMULET))
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
     }
-
-    if (left && !right && !amu)
-        hand_used = EQ_LEFT_RING;
-    else if (!left && right && !amu)
-        hand_used = EQ_RIGHT_RING;
-    else if (!left && !right && !octopode_with_ring && amu)
-        hand_used = EQ_AMULET;
 
     if (hand_used == EQ_NONE)
     {
@@ -3898,7 +3902,7 @@ void zap_wand(int slot)
     dist zap_wand;
     int item_slot;
 
-    // Unless the character knows the type of the wand, the targeting
+    // Unless the character knows the type of the wand, the targetting
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 
@@ -4575,7 +4579,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_ANTIMAGIC:
         mprf("%s repels your magic.", itname.c_str());
-        set_mp(0);
+        dec_mp(you.magic_points);
         success = false;
         break;
 
@@ -4991,6 +4995,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.confused())
+    {
+        mpr("You're too confused.");
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -5146,13 +5156,6 @@ void read_scroll(int slot)
 
     const bool dangerous = player_in_a_dangerous_place();
 
-    if (you.confused())
-    {
-        random_uselessness(item_slot);
-        dec_inv_item_quantity(item_slot, 1);
-        return;
-    }
-
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
     bool id_the_scroll = true;  // to prevent unnecessary repetition
@@ -5218,14 +5221,13 @@ void read_scroll(int slot)
 
     case SCR_SUMMONING:
     {
-        const int mons = create_monster(
+        if (monster *mons = create_monster(
                             mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
                                       &you, 0, 0, you.pos(), MHITYOU,
-                                      MG_FORCE_BEH));
-        if (mons != -1)
+                                      MG_FORCE_BEH)))
         {
             mpr("A horrible Thing appears!");
-            player_angers_monster(&menv[mons]);
+            player_angers_monster(mons);
         }
         else
         {

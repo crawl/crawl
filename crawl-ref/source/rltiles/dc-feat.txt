@@ -52,6 +52,9 @@ fleshy_orifice_open
 %sdir dc-dngn/gateways
 dngn_stone_arch DNGN_STONE_ARCH
 
+# Place new door tiles before this point, otherwise they can't be used as
+# door overrides.
+
 %sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
 # dungeon statues
@@ -109,6 +112,13 @@ machine_tukima DNGN_MACHINE_TUKIMA
 the_teleporter_vaults DNGN_THE_TELEPORTER_VAULTS
 the_teleporter_ice_cave DNGN_THE_TELEPORTER_ICE_CAVE
 
+## golden statues for the holy Pan level
+golden_statue_1 DNGN_GOLDEN_STATUE
+golden_statue_2
+
+## sarcophagus for ragdoll_tomb_raider
+sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
@@ -117,9 +127,6 @@ dc-misc/error PLACEHOLDER2
 dc-misc/error PLACEHOLDER3
 dc-misc/error PLACEHOLDER4
 dc-misc/error PLACEHOLDER5
-dc-misc/error PLACEHOLDER6
-dc-misc/error PLACEHOLDER7
-dc-misc/error PLACEHOLDER8
 
 %sdir dc-dngn/traps
 ## traps
@@ -489,6 +496,7 @@ wall_blood8_e
 %sdir dc-misc
 halo HALO
 effect/halo_range HALO_RANGE
+effect/umbra UMBRA
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 ray RAY

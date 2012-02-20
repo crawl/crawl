@@ -5,7 +5,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
-        this.glyph_mode = false;
+        this.display_mode = "tiles";
         this.glyph_mode_font_size = 24;
         this.glyph_mode_font = "monospace";
     }
@@ -15,27 +15,27 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         return ((cell.bg & enums.TILE_FLAG_WATER) && !(cell.fg & enums.TILE_FLAG_FLYING));
     }
 
-    function term_colour_attr(col)
+    function split_term_colour(col)
     {
-        return (col & 0xF0) >> 4;
+        var fg = col & 0xF;
+        var bg = 0;
+        var attr = (col & 0xF0) >> 4;
+        var param = (col & 0xF000) >> 12;
+        return { fg: fg, bg: bg, attr: attr };
     }
 
     function term_colour_apply_attributes(col)
     {
-        var fg = col & 0xF;
-        var bg = 0;
-        var attr = term_colour_attr(col);
-        if (attr == enums.CHATTR.HILITE)
+        if (col.attr == enums.CHATTR.HILITE)
         {
-            bg = (col & 0xF000) >> 12;
+            col.bg = col.param;
         }
-        if (attr == enums.CHATTR.REVERSE)
+        if (col.attr == enums.CHATTR.REVERSE)
         {
-            var z = bg;
-            bg = fg;
-            fg = z;
+            var z = col.bg;
+            col.bg = col.fg;
+            col.fg = z;
         }
-        return { fg: fg, bg: bg, attr: attr };
     }
 
     function get_img(id)
@@ -135,7 +135,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (!cell)
             {
-                if (!this.glyph_mode)
+                if (this.display_mode != "glyphs")
                     this.render_flash(x, y);
 
                 this.render_cursors(cx, cy, x, y);
@@ -152,45 +152,17 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             map_cell.g = map_cell.g || ' ';
             if (map_cell.col == undefined) map_cell.col = 7;
 
-            if (this.glyph_mode)
+            if (this.display_mode == "glyphs")
             {
-                var col = term_colour_apply_attributes(map_cell.col);
-
-                var prefix = "";
-                if (col.attr == enums.CHATTR.BOLD)
-                {
-                    prefix = "bold ";
-                }
-
-                this.ctx.fillStyle = enums.term_colours[col.bg];
-                this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
-                this.ctx.fillStyle = enums.term_colours[col.fg];
-                this.ctx.font = prefix + this.glyph_mode_font_name();
-                this.ctx.textAlign = "center";
-                this.ctx.textBaseline = "middle";
-
-                this.ctx.save();
-
-                try
-                {
-                    this.ctx.beginPath();
-                    this.ctx.rect(x, y, this.cell_width, this.cell_height);
-                    this.ctx.clip();
-
-                    this.ctx.fillText(map_cell.g,
-                                      x + this.cell_width/2, y + this.cell_height/2);
-                }
-                finally
-                {
-                    this.ctx.restore();
-                }
+                this.render_glyph(x, y, map_cell);
 
                 this.render_cursors(cx, cy, x, y);
                 return;
             }
 
             // cell is basically a packed_cell + doll + mcache entries
-            this.draw_background(x, y, cell);
+            if (this.display_mode == "tiles")
+                this.draw_background(x, y, cell);
 
             var fg_idx = cell.fg & enums.TILE_FLAG_MASK;
             var is_in_water = in_water(cell);
@@ -223,7 +195,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 }
             }
 
-            if (is_in_water)
+            if (is_in_water && this.display_mode == "tiles")
             {
                 this.ctx.save();
                 try
@@ -252,7 +224,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                     this.ctx.restore();
                 }
             }
-            else
+            else if (this.display_mode == "tiles")
             {
                 this.ctx.save();
                 try
@@ -267,7 +239,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 }
             }
 
-            this.draw_foreground(x, y, cell);
+            this.draw_foreground(x, y, map_cell);
 
             this.render_flash(x, y);
 
@@ -300,9 +272,52 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 }
                 catch (err)
                 {
+                    var cx = arguments[0];
+                    var cy = arguments[1];
+                    var cell = arguments[5];
                     console.error("Error while drawing cell " + obj_to_str(cell)
                                   + " at " + cx + "/" + cy + ": " + err);
                 }
+            }
+        },
+
+        render_glyph: function (x, y, map_cell, omit_bg)
+        {
+            var col = split_term_colour(map_cell.col);
+            if (omit_bg && col.attr == enums.CHATTR.REVERSE)
+                col.attr = 0;
+            term_colour_apply_attributes(col);
+
+            var prefix = "";
+            if (col.attr == enums.CHATTR.BOLD)
+            {
+                prefix = "bold ";
+            }
+
+            if (!omit_bg)
+            {
+                this.ctx.fillStyle = enums.term_colours[col.bg];
+                this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+            }
+            this.ctx.fillStyle = enums.term_colours[col.fg];
+            this.ctx.font = prefix + this.glyph_mode_font_name();
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+
+            this.ctx.save();
+
+            try
+            {
+                this.ctx.beginPath();
+                this.ctx.rect(x, y, this.cell_width, this.cell_height);
+                this.ctx.clip();
+
+                this.ctx.fillText(map_cell.g,
+                                  x + this.cell_width/2, y + this.cell_height/2);
+            }
+            finally
+            {
+                this.ctx.restore();
             }
         },
 
@@ -473,6 +488,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
+                    if (cell.halo == enums.HALO_UMBRA)
+                        this.draw_dngn(dngn.UMBRA, x, y);
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
 
@@ -491,14 +508,15 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             }
         },
 
-        draw_foreground: function(x, y, cell)
+        draw_foreground: function(x, y, map_cell)
         {
+            var cell = map_cell.t;
             var fg = cell.fg;
             var bg = cell.bg;
             var fg_idx = cell.fg & enums.TILE_FLAG_MASK;
             var is_in_water = in_water(cell);
 
-            if (fg_idx && fg_idx <= main.MAIN_MAX)
+            if (fg_idx && fg_idx <= main.MAIN_MAX && this.display_mode == "tiles")
             {
                 var base_idx = cell.base;
                 if (is_in_water)
@@ -543,6 +561,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
                     this.draw_main(fg_idx, x, y);
                 }
+            }
+            else if (this.display_mode == "hybrid")
+            {
+                this.render_glyph(x, y, map_cell, true);
             }
 
             if (fg & enums.TILE_FLAG_NET)
@@ -616,6 +638,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             {
                 this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0);
                 status_shift += 8;
+            }
+            if (fg & enums.TILE_FLAG_CONSTRICTED)
+            {
+                this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
+                status_shift += 13;
             }
 
             if (fg & enums.TILE_FLAG_ANIM_WEP)

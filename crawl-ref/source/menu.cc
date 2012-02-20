@@ -131,6 +131,11 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
 #endif
     mdisplay->set_num_columns(1);
     set_flags(flags);
+
+#ifdef USE_TILE_WEB
+    _webtiles_section_start = -1;
+    _webtiles_section_end = -1;
+#endif
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
@@ -1350,7 +1355,7 @@ bool Menu::line_up()
 #ifdef USE_TILE_WEB
 static const int chunk_size = 50; // Should be equal to the one defined in menu.js
 
-void Menu::webtiles_write_menu() const
+void Menu::webtiles_write_menu(bool replace) const
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
@@ -1359,22 +1364,31 @@ void Menu::webtiles_write_menu() const
     tiles.json_write_string("msg", "menu");
     tiles.json_write_string("tag", tag);
     tiles.json_write_int("flags", flags);
+    if (replace)
+        tiles.json_write_int("replace", 1);
 
     webtiles_write_title();
 
     tiles.json_write_string("more", more.to_colour_string());
 
-    bool complete_send = items.size() <= chunk_size * 2;
+    int count = webtiles_section_end() - webtiles_section_start();
+
+    bool complete_send = count <= chunk_size * 2;
     int start;
     if (is_set(MF_START_AT_END) && !complete_send)
-        start = items.size() - chunk_size;
+        start = count - chunk_size;
     else
-        start = 0;
+        start = webtiles_section_start();
 
-    int end = start + (complete_send ? items.size() : chunk_size);
+    int end = start + (complete_send ? count : chunk_size);
 
-    tiles.json_write_int("total_items", items.size());
-    tiles.json_write_int("chunk_start", start);
+    tiles.json_write_int("total_items", count);
+    tiles.json_write_int("chunk_start", start - webtiles_section_start());
+
+    if (first_entry != 0 && !is_set(MF_START_AT_END))
+    {
+        tiles.json_write_int("jump_to", first_entry - webtiles_section_start());
+    }
 
     tiles.json_open_array("items");
 
@@ -1404,14 +1418,18 @@ void Menu::webtiles_scroll(int first)
 
 void Menu::webtiles_handle_item_request(int start, int end)
 {
-    if (start < 0) start = 0;
-    if (start >= (int) items.size()) start = (int) items.size() - 1;
+    start += webtiles_section_start();
+    end += webtiles_section_start();
+    if (start < webtiles_section_start()) start = webtiles_section_start();
+    if (start >= webtiles_section_end()) start = webtiles_section_end() - 1;
     if (end < start) end = start;
-    if (end >= start + chunk_size) end = start + chunk_size - 1;
+    if (end >= std::min(start + chunk_size, webtiles_section_end()))
+        end = std::min(start + chunk_size, webtiles_section_end()) - 1;
+
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu_items");
 
-    tiles.json_write_int("chunk_start", start);
+    tiles.json_write_int("chunk_start", start - webtiles_section_start());
 
     tiles.json_open_array("items");
 
@@ -1796,6 +1814,26 @@ bool formatted_scroller::jump_to(int i)
     else
         first_entry = i - 1;
 
+#ifdef USE_TILE_WEB
+    if (first_entry < webtiles_section_start()
+        || webtiles_section_end() <= first_entry)
+    {
+        _webtiles_section_start = first_entry;
+        while (_webtiles_section_start > 0
+               && items[_webtiles_section_start]->level != MEL_TITLE)
+        {
+            _webtiles_section_start--;
+        }
+        _webtiles_section_end = first_entry + 1;
+        while (_webtiles_section_end < (int) items.size()
+               && items[_webtiles_section_end]->level != MEL_TITLE)
+        {
+            _webtiles_section_end++;
+        }
+    }
+    webtiles_write_menu(true);
+#endif
+
     return (true);
 }
 
@@ -1874,6 +1912,19 @@ bool formatted_scroller::jump_to_hotkey(int keyin)
     return (false);
 }
 
+std::vector<MenuEntry *> formatted_scroller::show(bool reuse_selections)
+{
+#ifdef USE_TILE_WEB
+    _webtiles_section_start = 0;
+    _webtiles_section_end = 1;
+    while (_webtiles_section_end < (int) items.size()
+           && items[_webtiles_section_end]->level != MEL_TITLE)
+    {
+        _webtiles_section_end++;
+    }
+#endif
+    return Menu::show(reuse_selections);
+}
 
 bool formatted_scroller::process_key(int keyin)
 {

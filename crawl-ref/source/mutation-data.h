@@ -4,7 +4,7 @@
 // second number  = maximum levels
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
-// third  boolean = is mutation kept when shapechanged?
+// third  boolean = is mutation suppressed when shapechanged?
 // first  strings = what to show in 'A'
 // second strings = message given when gaining the mutation
 // third  strings = message given when losing the mutation
@@ -365,20 +365,12 @@
   "acute vision"
 },
 
-{ MUT_DEFORMED,                   8,  3,  true,  true, true,
+{ MUT_DEFORMED,                   8,  1,  true,  true, true,
   "deformed body",
 
-  {"Armour fits poorly on your strangely shaped body.",
-   "Armour fits poorly on your deformed body.",
-   "Armour fits poorly on your badly deformed body."},
-
-  {"Your body twists strangely.",
-   "Your body twists and deforms.",
-   "Your body twists and deforms."},
-
-  {"Your body's shape seems more normal.",
-   "Your body's shape seems slightly more normal.",
-   "Your body's shape seems slightly more normal."},
+  {"Armour fits poorly on your strangely shaped body.", "", ""},
+  {"Your body twists and deforms.", "", ""},
+  {"Your body's shape seems more normal.", "", ""},
 
   "deformed"
 },
@@ -852,6 +844,7 @@
    "tentacles"
 },
 
+// Octopode only
 { MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,
   "spike",
 
@@ -1153,6 +1146,22 @@
   "powered by pain"
 },
 
+{ MUT_AUGMENTATION,            0,  3, false, false, false,
+  "augmentation",
+
+  {"Your magical and physical power is slightly enhanced as your life falls.",
+   "Your magical and physical power is enhanced as your life falls.",
+   "Your magical and physical power is greatly enhanced as your life falls."},
+
+  {"You feel power flowing into your body.",
+   "You feel power rushing into your body.",
+   "You feel saturated with power."},
+
+  {"", "", ""},
+
+  "augmentation"
+},
+
 // Jiyva only mutations
 { MUT_GELATINOUS_BODY,            0,  3, false, true, true,
   NULL,
@@ -1448,7 +1457,7 @@
 { MUT_CAMOUFLAGE,           1,   3, false, true, true,
   "camouflage",
 
-  {"Your skin changes color to match your surroundings (Stlth).",
+  {"Your skin changes colour to match your surroundings (Stlth).",
    "Your skin blends seamlessly with your surroundings (Stlth).",
    "Your skin perfectly mimics your surroundings (Stlth)."},
 

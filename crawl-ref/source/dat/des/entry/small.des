@@ -2518,6 +2518,7 @@ SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
 KPROP:   wZ = no_submerge
+KPROP:   wZ = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
@@ -2540,6 +2541,7 @@ KMONS:  Z = shark / giant goldfish
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge
+KPROP:  wZ = no_rtele_into
 WEIGHT: 5
 MAP
 xxxxxxxxxxxxxxx
@@ -2593,7 +2595,7 @@ ORIENT:  float
 WEIGHT:  1
 TAGS:    entry no_rotate
 NSUBST:  { = { / > / .
-NSUBST:  = = 3== / *=x
+NSUBST:  = = 3=+ / *=x
 SHUFFLE: ABC/DEF/GHI/JKL/MNO/PQR/STU
 NSUBST:  A = 1:=/x, B = *=%$, C = [/x
 NSUBST:  D = 1:=/x, E = *=%$, F = (/x

@@ -389,8 +389,7 @@ void wizard_exercise_skill(void)
 #endif
 
 #ifdef WIZARD
-// When raw is set, skip the various checks and redraw (used by fsim)
-void wizard_set_skill_level(skill_type skill, int amount, bool raw)
+void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
@@ -401,11 +400,8 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
         return;
     }
 
-    if (amount < 0)
-    {
-        mpr(skill_name(skill));
-        amount = prompt_for_int("To what level? ", true);
-    }
+    mpr(skill_name(skill));
+    double amount = prompt_for_float("To what level? ");
 
     if (amount < 0)
     {
@@ -414,27 +410,19 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
     }
 
     const int old_amount = you.skills[skill];
-    const int points = skill_exp_needed(std::min(amount, 27), skill);
 
-    you.skill_points[skill] = points + 1;
-    you.ct_skill_points[skill] = 0;
-    you.skills[skill] = amount;
-
-    if (raw)
-        return;
+    set_skill_level(skill, amount);
 
     if (amount == 27)
     {
         you.train[skill] = 0;
+        reset_training();
         check_selected_skills();
     }
 
-    reset_training();
-    calc_total_skill_points();
-
     redraw_skill(skill);
 
-    mprf("%s %s to skill level %d.", (old_amount < amount ? "Increased" :
+    mprf("%s %s to skill level %.1f.", (old_amount < amount ? "Increased" :
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
@@ -451,7 +439,7 @@ void wizard_set_skill_level(skill_type skill, int amount, bool raw)
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {
-    int amount = prompt_for_int("Set all skills to what level? ", true);
+    double amount = prompt_for_float("Set all skills to what level? ");
 
     if (amount < 0)             // cancel returns -1 -- bwr
         canned_msg(MSG_OK);
@@ -466,16 +454,18 @@ void wizard_set_all_skills(void)
             if (is_invalid_skill(sk) || is_useless_skill(sk))
                 continue;
 
-            const int points = skill_exp_needed(amount, sk);
+            set_skill_level(sk, amount);
 
-            you.skill_points[sk] = points + 1;
-            you.ct_skill_points[sk] = 0;
-            you.skills[sk] = amount;
+            if (amount == 27)
+            {
+                you.train[sk] = 0;
+                you.training[sk] = 0;
+            }
         }
 
         you.redraw_title = true;
 
-        calc_total_skill_points();
+        // We're not updating skill cost here since XP hasn't changed.
 
         calc_hp();
         calc_mp();
@@ -870,8 +860,13 @@ void wizard_edit_durations(void)
     you.duration[choice] = num;
 }
 
-static void debug_uptick_xl(int newxl)
+static void debug_uptick_xl(int newxl, bool train)
 {
+    if (train)
+    {
+        you.exp_available += exp_needed(newxl) - you.experience;
+        train_skills();
+    }
     you.experience = exp_needed(newxl);
     level_change(true);
 }
@@ -882,7 +877,8 @@ static void debug_downtick_xl(int newxl)
     you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
     you.experience = exp_needed(newxl);
     level_change();
-
+    you.skill_cost_level = 0;
+    check_skill_cost_change();
     // restore maxhp loss
     you.hp_max_perm -= 1000;
     calc_hp();
@@ -914,11 +910,13 @@ void wizard_set_xl()
         return;
     }
 
+    const bool train = yesno("Train skills?");
+
     no_messages mx;
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
     else
-        debug_uptick_xl(newxl);
+        debug_uptick_xl(newxl, train);
 }
 
 void wizard_get_god_gift (void)

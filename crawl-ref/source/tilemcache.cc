@@ -34,22 +34,6 @@ struct demon_data
     tileidx_t wings;
 };
 
-#if TAG_MAJOR_VERSION == 32
-// Custom unmarshall functions.
-static void unmarshallDoll(reader &th, dolls_data &doll)
-{
-    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        doll.parts[i] = unmarshallInt(th);
-}
-
-static void unmarshallDemon(reader &th, demon_data &demon)
-{
-    demon.head = unmarshallInt(th);
-    demon.body = unmarshallInt(th);
-    demon.wings = unmarshallInt(th);
-}
-#endif
-
 // Internal mcache classes.  The mcache_manager creates these internally.
 // The only access external clients need is through the virtual
 // info function.
@@ -58,9 +42,6 @@ class mcache_monster : public mcache_entry
 {
 public:
     mcache_monster(const monster_info& mon);
-#if TAG_MAJOR_VERSION == 32
-    mcache_monster(reader &th);
-#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
@@ -77,9 +58,6 @@ class mcache_draco : public mcache_entry
 {
 public:
     mcache_draco(const monster_info& mon);
-#if TAG_MAJOR_VERSION == 32
-    mcache_draco(reader &th);
-#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
@@ -95,9 +73,6 @@ class mcache_ghost : public mcache_entry
 {
 public:
     mcache_ghost(const monster_info& mon);
-#if TAG_MAJOR_VERSION == 32
-    mcache_ghost(reader &th);
-#endif
 
     virtual const dolls_data *doll() const;
 
@@ -113,9 +88,6 @@ class mcache_demon : public mcache_entry
 {
 public:
     mcache_demon(const monster_info& minf);
-#if TAG_MAJOR_VERSION == 32
-    mcache_demon(reader &th);
-#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
@@ -230,54 +202,6 @@ mcache_entry *mcache_manager::get(tileidx_t tile)
     mcache_entry *entry = m_entries[idx - TILEP_MCACHE_START];
     return (entry);
 }
-
-#if TAG_MAJOR_VERSION == 32
-void mcache_manager::read(reader &th)
-{
-    unsigned int size = unmarshallInt(th);
-    m_entries.reserve(size);
-    m_entries.clear();
-
-    for (unsigned int i = 0; i < size; i++)
-    {
-        char type = unmarshallByte(th);
-
-        mcache_entry *entry;
-        switch (type)
-        {
-        case MCACHE_MONSTER:
-            entry = new mcache_monster(th);
-            break;
-        case MCACHE_DRACO:
-            entry = new mcache_draco(th);
-            break;
-        case MCACHE_GHOST:
-            entry = new mcache_ghost(th);
-            break;
-        case MCACHE_DEMON:
-            entry = new mcache_demon(th);
-            break;
-        default:
-            die("Invalid streamed mcache type.");
-        case MCACHE_NULL:
-            entry = NULL;
-            break;
-        }
-
-        m_entries.push_back(entry);
-    }
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-// mcache_entry
-
-#if TAG_MAJOR_VERSION == 32
-mcache_entry::mcache_entry(reader &th)
-{
-    m_ref_count = unmarshallInt(th);
-}
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_monster
@@ -578,14 +502,6 @@ bool mcache_monster::valid(const monster_info& mon)
     return get_weapon_offset(mon_tile, &ox, &oy);
 }
 
-#if TAG_MAJOR_VERSION == 32
-mcache_monster::mcache_monster(reader &th) : mcache_entry(th)
-{
-    m_mon_tile = unmarshallInt(th);
-    m_equ_tile = unmarshallInt(th);
-}
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // mcache_draco
 
@@ -616,15 +532,6 @@ bool mcache_draco::valid(const monster_info& mon)
 {
     return (mons_is_draconian(mon.type));
 }
-
-#if TAG_MAJOR_VERSION == 32
-mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
-{
-    m_mon_tile = unmarshallInt(th);
-    m_job_tile = unmarshallInt(th);
-    m_equ_tile = unmarshallInt(th);
-}
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_ghost
@@ -769,13 +676,6 @@ bool mcache_ghost::valid(const monster_info& mon)
     return (mons_is_pghost(mon.type));
 }
 
-#if TAG_MAJOR_VERSION == 32
-mcache_ghost::mcache_ghost(reader &th) : mcache_entry(th)
-{
-    unmarshallDoll(th, m_doll);
-}
-#endif
-
 bool mcache_ghost::transparent() const
 {
     return (true);
@@ -825,12 +725,5 @@ bool mcache_demon::valid(const monster_info& mon)
 {
     return (mon.type == MONS_PANDEMONIUM_LORD);
 }
-
-#if TAG_MAJOR_VERSION == 32
-mcache_demon::mcache_demon(reader &th) : mcache_entry(th)
-{
-    unmarshallDemon(th, m_demon);
-}
-#endif
 
 #endif

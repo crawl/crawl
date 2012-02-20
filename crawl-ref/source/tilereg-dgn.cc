@@ -28,6 +28,7 @@
 #include "terrain.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
+#include "tiledef-dngn.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -353,11 +354,11 @@ void DungeonRegion::on_resize()
 
 // FIXME: If the player is targeted, the game asks the player to target
 // something with the mouse, then targets the player anyway and treats
-// mouse click as if it hadn't come during targeting (moves the player
+// mouse click as if it hadn't come during targetting (moves the player
 // to the clicked cell, whatever).
-static void _add_targeting_commands(const coord_def& pos)
+static void _add_targetting_commands(const coord_def& pos)
 {
-    // Force targeting cursor back onto center to start off on a clean
+    // Force targetting cursor back onto center to start off on a clean
     // slate.
     macro_buf_add_cmd(CMD_TARGET_FIND_YOU);
 
@@ -390,7 +391,7 @@ static const bool _is_appropriate_spell(spell_type spell,
     ASSERT(is_valid_spell(spell));
 
     const unsigned int flags    = get_spell_flags(spell);
-    const bool         targeted = flags & SPFLAG_TARGETING_MASK;
+    const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
 
     // We don't handle grid targeted spells yet.
     if (flags & SPFLAG_GRID)
@@ -543,13 +544,13 @@ static bool _evoke_item_on_target(actor* target)
 
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
-    _add_targeting_commands(target->pos());
+    _add_targetting_commands(target->pos());
     return (true);
 }
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
-    if (!(get_spell_flags(spell) & SPFLAG_TARGETING_MASK))
+    if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
         return (true);
 
     int range = calc_spell_range(spell);
@@ -645,8 +646,8 @@ static bool _cast_spell_on_target(actor* target)
     if (item_slot != -1)
         macro_buf_add(item_slot);
 
-    if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
-        _add_targeting_commands(target->pos());
+    if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
+        _add_targetting_commands(target->pos());
 
     return (true);
 }
@@ -689,7 +690,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
                      && !mon->wont_attack()))
     {
         macro_buf_add_cmd(CMD_FIRE);
-        _add_targeting_commands(mon->pos());
+        _add_targetting_commands(mon->pos());
         return (true);
     }
 
@@ -705,7 +706,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
         if (dist > 2 && weapon && reach_range(weapon_reach(*weapon)) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
-            _add_targeting_commands(mon->pos());
+            _add_targetting_commands(mon->pos());
             return (true);
         }
     }
@@ -1003,6 +1004,14 @@ bool DungeonRegion::update_tip_text(std::string &tip)
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
+
+        tip += make_stringf("\nFLV: floor: %d (%s)\n     wall:  %d (%s)\n     feat:  %d (%s)\n",
+                            env.tile_flv(gc).floor,
+                            tile_dngn_name(env.tile_flv(gc).floor),
+                            env.tile_flv(gc).wall,
+                            tile_dngn_name(env.tile_flv(gc).wall),
+                            env.tile_flv(gc).feat,
+                            tile_dngn_name(env.tile_flv(gc).feat));
 
         ret = true;
     }

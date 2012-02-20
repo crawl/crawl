@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, xhtml_escape
+from tornado.escape import json_encode, json_decode, xhtml_escape, to_unicode
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -437,6 +437,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def write_message(self, msg):
         try:
+            msg = to_unicode(msg)
             if not self.client_terminated:
                 super(CrawlWebSocket, self).write_message(msg)
         except:

@@ -25,20 +25,19 @@ show_more = false
 :                    "require('dlua/stress.lua')" .. eol ..
 :                    "stress.fill_level('floor')" .. eol ..
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
-:                    "you.teleport_to(40, 32)" .. eol .. esc)
+:                    "you.teleport_to(40, 32)" .. eol ..
+:                    "you.piety(200)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
 :     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol)
-:     crawl.sendkeys("&A27" .. eol)
+:     crawl.sendkeys("&A27" .. eol .. "N")
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
 :     end
 :   end
 :   if (you.turns() % 7) == 1 then
-:     crawl.sendkeys("&^200" .. eol .. eol .. eol)
-:     crawl.sendkeys("&" .. string.char(20) ..
-:                    "require('dlua/stress.lua')" .. eol ..
-:                    "stress.boost_monster_hp()" .. eol .. esc)
-:     crawl.sendkeys("&corb" .. eol .. eol .. esc .. esc)
+:     crawl.call_dlua("require('dlua/stress.lua')" .. eol ..
+:                     "stress.boost_monster_hp()")
+:     crawl.sendkeys("&corb" .. eol .. eol)
 :   end
 :   if you.turns() < 1000 then
 :     crawl.sendkeys(".")

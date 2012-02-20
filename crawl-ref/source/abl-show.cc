@@ -943,7 +943,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     const ability_def &abil = _get_ability_def(result.which);
 
     int failure = 0;
-    bool perfect = false;  // is perfect
     bool invoc = false;
 
     if (check_confused)
@@ -974,7 +973,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1009,7 +1007,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_GRENADES:
     case ABIL_MAKE_SAGE:
     case ABIL_REMOVE_CURSE:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1062,7 +1059,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_BOTTLE_BLOOD:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1078,15 +1074,12 @@ static talent _get_talent(ability_type ability, bool check_confused)
         // end demonic powers {dlb}
 
     case ABIL_BLINK:
-        // Allowing perfection makes the third level matter much more
-        perfect = true;
         failure = 48 - (12 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
         break;
 
         // begin transformation abilities {dlb}
     case ABIL_END_TRANSFORMATION:
-        perfect = true;
         failure = 0;
         break;
         // end transformation abilities {dlb}
@@ -1100,7 +1093,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_EVOKE_TURN_VISIBLE:
     case ABIL_EVOKE_STOP_LEVITATING:
     case ABIL_STOP_FLYING:
-        perfect = true;
         failure = 0;
         break;
 
@@ -1142,14 +1134,13 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         invoc = true;
-        perfect = true;
         failure = 0;
         break;
 
     // These three are Trog abilities... Invocations means nothing -- bwr
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
-        failure = 30 - you.piety;       // starts at 0%
+        failure = 0;
         break;
 
     case ABIL_TROG_REGEN_MR:            // piety >= 50
@@ -1265,13 +1256,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_NEMELEX_DRAW_ONE:
         invoc = true;
-        perfect = true;         // Tactically important to allow perfection
         failure = 50 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
-        perfect = true;
         failure = 0;
         break;
 
@@ -1281,10 +1270,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
     }
 
-    // Perfect abilities are things which can go down to a 0%
-    // failure rate (e.g., Renounce Religion.)
-    if (failure <= 0 && !perfect)
-        failure = 1;
+    if (failure < 0)
+        failure = 0;
 
     if (failure > 100)
         failure = 100;
@@ -1710,10 +1697,7 @@ static bool _activate_talent(const talent& tal)
     {
         practise(EX_USED_ABIL, abil.ability);
         _pay_ability_costs(abil, zpcost);
-        if (tal.is_invocation)
-            count_action(CACT_INVOKE, abil.ability);
-        else if (abil_skill(abil.ability) == SK_EVOCATIONS)
-            count_action(CACT_EVOKE, EVOC_ABIL);
+        count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
     }
 
     return (success);
@@ -1881,14 +1865,14 @@ static bool _do_ability(const ability_def& abil)
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
-                         0)) != -1)
+                         0)))
         {
             mpr("You create a living grenade.");
         }
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
-                         0)) != -1)
+                         0)))
         {
             mpr("You create a living grenade.");
         }
@@ -2534,14 +2518,14 @@ static bool _do_ability(const ability_def& abil)
             you.hp_max = 1;
 
         // Deflate HP.
-        set_hp(1 + random2(you.hp));
+        dec_hp(random2(you.hp), false);
 
         // Lose 1d2 permanent MP.
         rot_mp(coinflip() ? 2 : 1);
 
         // Deflate MP.
         if (you.magic_points)
-            set_mp(random2(you.magic_points));
+            dec_mp(random2(you.magic_points));
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
@@ -2646,7 +2630,7 @@ static bool _do_ability(const ability_def& abil)
 
         mg.non_actor_summoner = "Jiyva";
 
-        if (create_monster(mg) == -1)
+        if (!create_monster(mg))
             return (false);
         break;
     }
@@ -2835,10 +2819,10 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability - do what?                 "
-                      "Cost                       Success"));
+                      "Cost                       Failure"));
     abil_menu.set_title(
         new MenuEntry("  Ability - describe what?           "
-                      "Cost                       Success"), false);
+                      "Cost                       Failure"), false);
 
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);
@@ -2935,11 +2919,14 @@ static std::string _describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
+    char* failure = failure_rate_to_string(tal.fail);
+
     std::ostringstream desc;
     desc << std::left
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 27)
-         << chop_string(failure_rate_to_string(tal.fail), 10);
+         << chop_string(failure, 10);
+    free(failure);
     return desc.str();
 }
 

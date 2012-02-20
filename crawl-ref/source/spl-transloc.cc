@@ -94,11 +94,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
     }
-    // Check to see if being constricted will prevent a teleport
-    else if (you.is_constricted_larger())
-    {
-        mpr("You can't blink while constricted.");
-    }
     else if (you.confused() && !wizard_blink)
     {
         if (pre_msg)
@@ -111,8 +106,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+        // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
-            return (cast_semi_controlled_blink(pow));
+            return (cast_semi_controlled_blink(pow, false) ? 1 : 0);
         random_blink(false);
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
@@ -120,8 +116,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
+        // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow));
+            return (cast_semi_controlled_blink(pow, false/*true*/) ? 1 : -1);
         random_blink(false);
     }
     else
@@ -225,12 +222,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
-            if (you.is_constricted())
-                monster_teleport_to_player(you.constricted_by, beam.target);
-            for (int i = 0; i < MAX_CONSTRICT; i++)
-                if (you.constricting[i] != NON_ENTITY)
-                    monster_teleport_to_player(you.constricting[i],
-                                               beam.target);
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
@@ -277,7 +268,8 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
              && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
-        cast_semi_controlled_blink(100);
+        // FIXME: handle aborts here, don't waste the turn
+        cast_semi_controlled_blink(100, false);
         maybe_id_ring_TC();
     }
     else
@@ -286,11 +278,6 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
 
-        if (you.is_constricted())
-            monster_teleport_to_player(you.constricted_by, target);
-        for (int i = 0; i < MAX_CONSTRICT; i++)
-            if (you.constricting[i] != NON_ENTITY)
-                monster_teleport_to_player(you.constricting[i], target);
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
     }
@@ -359,7 +346,7 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool check_monsters = t
                                    bool wizard_tele = false)
 {
     // Monsters always veto teleport.
-    if ((monster_at(cell) || mimic_at(cell)) && check_monsters)
+    if (monster_at(cell) && check_monsters)
         return (true);
 
     // As do all clouds; this may change.
@@ -430,13 +417,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return (false);
-    }
-
-    // Check to see if being constricted will prevent a teleport
-    if (you.is_constricted_larger())
-    {
-        mpr("Teleport cancelled by constriction.");
         return (false);
     }
 
@@ -585,13 +565,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
                 move_player_to_grid(pos, false, true);
 
-                // handle constriction effects
-                if (you.is_constricted())
-                    monster_teleport_to_player(you.constricted_by, pos);
-                for (int i = 0; i < MAX_CONSTRICT; i++)
-                    if (you.constricting[i] != NON_ENTITY)
-                        monster_teleport_to_player(you.constricting[i], pos);
-
                 // Controlling teleport contaminates the player. - bwr
                 if (!wizard_tele)
                     contaminate_player(1, true);
@@ -650,11 +623,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
-        if (you.is_constricted())
-            monster_teleport_to_player(you.constricted_by, newpos);
-        for (int i = 0; i < MAX_CONSTRICT; i++)
-            if (you.constricting[i] != NON_ENTITY)
-                monster_teleport_to_player(you.constricting[i], newpos);
     }
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
@@ -942,18 +910,15 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _quadrant_blink(coord_def where, int pow, int, actor *)
+static bool _quadrant_blink(coord_def dir, int pow)
 {
-    if (where == you.pos())
-        return (1);
-
     if (pow > 100)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
 
     // This is where you would *like* to go.
-    const coord_def base = you.pos() + (where - you.pos()) * dist;
+    const coord_def base = you.pos() + dir * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.
@@ -967,7 +932,8 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
         if (!random_near_space(base, target)
             && !random_near_space(base, target, true))
         {
-            return 0;
+            // Uh oh, WHY should this fail the blink?
+            return false;
         }
 
         // ... which is close enough, but also far enough from us.
@@ -985,7 +951,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     {
         // We've already succeeded at blinking, so the Abyss shouldn't block it.
         random_blink(false, true);
-        return (1);
+        return true;
     }
 
     coord_def origin = you.pos();
@@ -994,18 +960,42 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     // Leave a purple cloud.
     place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
-    return (1);
+    return true;
 }
 
-int cast_semi_controlled_blink(int pow)
+spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
 {
-    int result = apply_one_neighbouring_square(_quadrant_blink, pow);
+    dist bmove;
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    args.mode = TARG_ANY;
 
-    // Controlled blink causes glowing.
-    if (result)
+    while(1)
+    {
+        mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
+        direction(bmove, args);
+
+        if (bmove.isValid && !bmove.delta.origin())
+            break;
+
+        if (cheap_cancel
+            || yesno("Are you sure you want to cancel this blink?", false ,'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+    }
+
+    fail_check();
+
+    // Note: this can silently fail, eating the blink -- WHY?
+    if (_quadrant_blink(bmove.delta, pow))
+    {
+        // Controlled blink causes glowing.
         contaminate_player(1, true);
+    }
 
-    return (result);
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)

@@ -594,7 +594,7 @@ void InventoryRegion::activate()
     }
 }
 
-static void _fill_item_info(InventoryTile &desc, const item_def &item)
+static void _fill_item_info(InventoryTile &desc, const item_info &item)
 {
     desc.tile = tileidx_item(item);
 
@@ -622,9 +622,9 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
-    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
+    if (item.cursed())
         desc.flag |= TILEI_FLAG_CURSE;
-    if (item_type_tried(item))
+    if (item.flags & ISFLAG_TRIED)
         desc.flag |= TILEI_FLAG_TRIED;
     if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
@@ -689,7 +689,7 @@ void InventoryRegion::update()
             }
 
             InventoryTile desc;
-            _fill_item_info(desc, you.inv[i]);
+            _fill_item_info(desc, get_item_info(you.inv[i]));
             desc.idx = i;
 
             for (int eq = 0; eq < NUM_EQUIP; ++eq)
@@ -702,6 +702,9 @@ void InventoryRegion::update()
                     break;
                 }
             }
+
+            if (item_is_active_manual(you.inv[i]))
+                desc.flag |= TILEI_FLAG_EQUIP;
 
             inv_shown[i] = true;
             m_items.push_back(desc);
@@ -784,7 +787,7 @@ void InventoryRegion::update()
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, mitm[i]);
+            _fill_item_info(desc, get_item_info(mitm[i]));
             desc.idx = i;
             ground_shown[i] = true;
 

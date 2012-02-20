@@ -319,7 +319,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "bend time to slow others",
       "",
       "warp the flow of time around you",
-      "inflict damage to those overly hasty",
+      "inflict damage on those overly hasty",
       "step out of the time flow"
     },
     // Ashenzari
@@ -436,7 +436,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "bend time to slow others",
       "",
       "warp the flow of time around you",
-      "inflict damage to those overly hasty",
+      "inflict damage on those overly hasty",
       "step out of the time flow"
     },
     // Ashenzari
@@ -448,7 +448,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
 };
 
-typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
+typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
 static void _delayed_monster(const mgen_data &mg,
                              delayed_callback callback = NULL);
@@ -743,6 +743,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allies kill holy beings");
         break;
 
+    case GOD_TROG:
+        likes.push_back("you or your god-given allies kill holy beings");
+        break;
+
     case GOD_YREDELEMNUL:
         likes.push_back("your undead slaves kill holy beings");
         break;
@@ -850,7 +854,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_JIYVA:
-        really_dislikes.push_back("you attack your fellow slimes");
+        really_dislikes.push_back("you attack fellow slimes");
         break;
 
     case GOD_FEDHAS:
@@ -1197,7 +1201,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
 
         for (; how_many > 0; --how_many)
         {
-            if (create_monster(mg) != -1)
+            if (create_monster(mg))
                 created++;
         }
     }
@@ -1396,7 +1400,7 @@ static bool _give_nemelex_gift(bool forced = false)
             more();
             canned_msg(MSG_SOMETHING_APPEARS);
 
-            you.attribute[ATTR_CARD_COUNTDOWN] = 10;
+            you.attribute[ATTR_CARD_COUNTDOWN] = 5;
             _inc_gift_timeout(5 + random2avg(9, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
@@ -1710,18 +1714,16 @@ static bool _tso_blessing_friendliness(monster* mon)
                                    base_increase + random2(base_increase));
 }
 
-static void _beogh_reinf_callback(const mgen_data &mg, int &midx, int placed)
+static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed)
 {
     ASSERT(mg.god == GOD_BEOGH);
 
     // Beogh tries a second time to place reinforcements.
-    if (midx == -1)
-        midx = create_monster(mg);
+    if (!mon)
+        mon = create_monster(mg);
 
-    if (midx == -1)
+    if (!mon)
         return;
-
-    monster* mon = &menv[midx];
 
     mon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -2029,7 +2031,7 @@ blessing_done:
     return (true);
 }
 
-static void _delayed_gift_callback(const mgen_data &mg, int &midx,
+static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
                                    int placed)
 {
     if (placed <= 0)
@@ -2970,6 +2972,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
+        mpr("You sense decay."); // in the state of Denmark?
+        add_daction(DACT_ROT_CORPSES);
         _set_penance(old_god, 30);
         break;
 
@@ -3902,8 +3906,6 @@ void handle_god_time()
             // Nemelex is relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
-            if (you.attribute[ATTR_CARD_COUNTDOWN] > 0 && coinflip())
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
             break;
 
         case GOD_SIF_MUNA:
@@ -4315,12 +4317,12 @@ static void _place_delayed_monsters()
             prev_god = mg.god;
         }
 
-        int midx = create_monster(mg);
+        monster *mon = create_monster(mg);
 
         if (cback)
-            (*cback)(mg, midx, placed);
+            (*cback)(mg, mon, placed);
 
-        if (midx != -1)
+        if (mon)
             placed++;
 
         if (!_delayed_done_trigger_pos.empty()
@@ -4359,7 +4361,7 @@ static void _place_delayed_monsters()
             if (msg == "")
             {
                 if (cback)
-                    (*cback)(mg, midx, placed);
+                    (*cback)(mg, mon, placed);
                 continue;
             }
 
@@ -4373,7 +4375,7 @@ static void _place_delayed_monsters()
             god_speaks(mg.god, msg.c_str());
 
             if (cback)
-                (*cback)(mg, midx, placed);
+                (*cback)(mg, mon, placed);
         }
     }
 

@@ -13,49 +13,50 @@ Manual
 A. Overview
 ****************************************
 
-Crawl is a fun game in the grand tradition of games like Rogue, Hack and Moria.
-Your objective is to travel deep into a subterranean cave complex and retrieve
-the Orb of Zot, which is guarded by many horrible and hideous creatures.
+Crawl is a fun game in the grand tradition of similar games like Rogue, Hack
+and Moria. The objective is to travel deep into a subterranean cave complex and
+retrieve the Orb of Zot, guarded by many horrible and hideous creatures.
 
-If you have never played Crawl (or a similar game) before, you may want to pick
-the tutorial from the starting menu. The tutorial explains the interface in five
-easy lessons. Once you're familiar with the controls, you may want to play a few
-games in hints mode.
+If you have never played Crawl (or a similar game) before, select the tutorial
+from the starting menu. The tutorial explains the interface in five easy
+lessons. Once you're familiar with the controls, you may want to play a few
+games using hints mode.
 
 Detailed instructions for playing Crawl follow. To simplify this manual, we
-assume that you use the standard distribution and that you've not changed the
-default options. If you don't want to read the whole manual and would prefer a
-short summary of the important points, look at the quick-start guide
-(quickstart.txt) and learn as you play.
+assume you're using the standard distribution and you've not changed the default
+options. If you don't want to read the whole manual and prefer a short summary
+of the important points, review the quick-start guide file (quickstart.txt) and
+learn as you play.
 
 You can also read these documents while playing Crawl by hitting '?' at the help
-menu. There is also a list of frequently asked questions about gameplay and
-design, best accessed by pressing '?Q' in the game.
+menu. A list of frequently asked questions about gameplay and design can be
+accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can play on a server
-together with many others. These are the relevant webpage and telnet and ssh
-addresses (akrasiac.org is situated in North America, while develz.org is
-located in Europe):
+While Dungeon Crawl is strictly a single player game, you can play with others
+over a server.  The relevant webpage, telnet and ssh addresses are:
 
-
-akrasiac.org
+akrasiac.org (located in North America)
   :http: ``http://crawl.akrasiac.org``
   :telnet: ``crawl.develz.org``
-  :ssh: ``joshua@crawl.akrasiac.org (password joshua)``
+  :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
 
-develz.org
-  :http: ``http//crawl.develz.org``
+develz.org (located in Europe)
+  :http: ``http://crawl.develz.org``
   :telnet: ``crawl.develz.org:345``
+  :ssh: ``crawl@crawl.develz.org (ssh key required)``
+  :tiles: ``https://tiles.crawl.develz.org/``
 
-Connecting to these servers opens up several interesting options. You can:
-  * watch other players, and even communicate with them
+ssh key can be obtained at https://crawl.akrasiac.org/cao_key
+
+Connecting to a server opens several interesting options. You can:
+  * watch other players and even communicate with them
   * view your past games or those of others
-  * meet ghosts of other players
+  * battle ghosts of other players
   * compete using a common score list
-  * take part in an annual tournament
+  * take part in the annual tournament
   * play the most recent development version on crawl.develz.org
 
-The servers carry no guarantees, though they are pretty much always running and
+The servers carry no guarantees, though they are generally always running and
 no one has lost their save file yet. :) More information is available at the
 URLs above.
 
@@ -448,7 +449,7 @@ To access Crawl's help menu, press '?'. To get the list of all commands, press
 Appendix `4. List of Keys and Commands`_ of this text. Various other help texts are
 available as well, including this manual. You can also read the logbook from
 there by pressing ':'. Note that several commands have their own help screens,
-among them are targeting ('f'), level map ('X'), travel ('G' or 'Ctrl-G') and
+among them are targetting ('f'), level map ('X'), travel ('G' or 'Ctrl-G') and
 searching ('Ctrl-F'); again, press '?' when asked for input.
 
 If you don't like the standard keyset (either because some keys do not work
@@ -524,10 +525,10 @@ encounters to their liking.
 There are several other less dangerous methods you can use to kill monsters.
 Hunters and similarly oriented characters will prefer ranged combat to mindless
 bashing. When wielding some launcher, the 'f' and 'F' commands will fire
-appropriate missiles. See the section on Targeting in the Items Chapter for more
+appropriate missiles. See the section on Targetting in the Items Chapter for more
 on this. Likewise, many magicians will prefer to use spells from a safe
 distance. They can use the 'z' command to cast spells previously memorised.
-Again, see the Targeting section.
+Again, see the Targetting section.
 
 Some monsters can be friendly; friendly monsters will follow you around and
 fight on your behalf (but they gain some of the normal experience points for any
@@ -726,7 +727,7 @@ inserting it into the quiver use 'F' instead. Note that non-weapon, non-missile
 items will never be quivered.
 
 The interface for shooting or throwing things is also used for evoking wands and
-casting certain spells, and is described in detail in section I (Targeting).
+casting certain spells, and is described in detail in section I (Targetting).
 
 [ Armour
 ========================================
@@ -825,7 +826,7 @@ function when its charges run out. You must identify a wand to find out how many
 uses it has left. This can be done with a scroll of identify; characters with a
 good Evocations skill may also deduce the number of charges simply upon evoking
 the wand. Wands are aimed in the same way as missile weapons, and you can
-release the power of a wand by evoking it with 'V'. See section I for targeting.
+release the power of a wand by evoking it with 'V'. See section I for targetting.
 There are also a number of wands that may be useful to aim at yourself, but it
 is usually prudent to know what you are evoking before you do so.
 
@@ -839,7 +840,8 @@ regeneration or invisibility make you hunger very quickly when they are
 activated. Use the 'P' command to put on rings, and 'R' to remove them. You can
 wear up to two rings simultaneously, one on each hand; which hand you put a ring
 on is immaterial to its function. If you try to put on a ring while both ring
-fingers are full, you will be asked which one to remove. Some rings function
+fingers are full, you will be asked which one to remove. Octopodes are an
+exception, and may wear up to eight rings on their tentacles. Some rings function
 automatically, while others require activation (the 'a' command).
 
 Amulets are similar to rings, but have a different range of effects (which tend
@@ -940,6 +942,8 @@ same type would. Elven cloaks and boots are particularly useful to those who
 wish to be stealthy. An Elf does a bit better when wearing armour or weapons of
 his own kind.
 
+Demonspawn receive bonuses when using demonic weapons.
+
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a character
 of these species might find a Centaur or Naga barding.
 
@@ -1013,7 +1017,7 @@ section for details on how to target.
 
 Most spells have caps on their effects: no matter how intelligent and proficient
 you are, there is a limit to the damage you can achieve with a Magic Dart. In
-generally, it is a good idea to look at the output of the 'I' and 'II' screens
+general, it is a good idea to look at the output of the 'I' and 'II' screens
 to get a picture on your casting abilities. This is especially useful if you're
 about to change armour or rings.
 
@@ -1021,6 +1025,9 @@ High level spells are difficult to cast, and you may miscast them every once in
 a while (resulting in a waste of magic and possibly dangerous side-effects).
 Your chance of failing to cast a spell properly depends on your skills, your
 intelligence, the level of the spell and whether you are wearing heavy armour.
+The chance of miscasting a spell is displayed on the spell screen, and coloured
+based on potential severity (with yellow representing a moderate chance, and
+red representing a severe chance).
 
 Many of the more powerful spells carry disadvantages or risks; you should read
 the spell description (obtained by reading the spellbook in which you found the
@@ -1038,7 +1045,7 @@ Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
 
 ****************************************
-I. Targeting
+I. Targetting
 ****************************************
 
 When throwing something, evoking certain wands, or casting spells, you are asked
@@ -1063,7 +1070,7 @@ Otherwise, you use the following commands:
     missiles won't end up in deep water.
   - You can press Escape if you changed your mind - no turns are deducted.
 
-There are some shortcuts while targeting:
+There are some shortcuts while targetting:
 
   - Typing Shift-direction on your keypad fires straight away in that direction.
   - Pressing 'p' or 'f' fires at the previous target (if it is still alive and
@@ -1078,12 +1085,12 @@ of '.', Enter, etc. - except if you want to heal or haste someone else. If you
 target yourself while firing something harmful (which can be sensible at times),
 you will be asked for confirmation.
 
-Finally, there are some more targeting related commands:
+Finally, there are some more targetting related commands:
 
   - '(' and ')' allow to change the ammunition. This is useful when you have
     several types of appropriate ammunition, say poisoned needles and curare
     needles. Your last usage will be remembered. Note that you can use '(' for
-    changing the quiver ammunition even outside of targeting.
+    changing the quiver ammunition even outside of targetting.
   - The ':' key allows you to hide the path of your spell/wand/missile.
   - Ctrl-F changes which monsters are cycled when using '+', '=' or '-':
     hostiles, friends, plants or all monsters.
@@ -1248,13 +1255,13 @@ distribution has them in the dat/lua/ directory. Have a look at the single
 scripts for short descriptions.
 
 Generally, Crawl should run swiftly on all machines (it compiles out of the box
-for Linux, Windows, OS X and, to some lesser extent, DOS and Unix). If, for some
+for Linux, Windows, and, to some lesser extent, OS X and other Unices). If, for some
 reason, you find Crawl runs unacceptably slowly on your machine, there are a few
 measures which may improve the situation:
 
-  - avoid greedy autoexplore
   - set travel_delay = -1 to avoid screen redraws during travel (this might be
-    useful if playing on a remote server)
+    especially useful if playing on a remote server)
+  - try playing in console mode rather than tiles
 
 ****************************************
 N. Philosophy (pas de faq)
@@ -1548,7 +1555,8 @@ Nagas
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Their
   body shape also prevents them from gaining full protection from most armour. A
-  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed.
+  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. They
+  can also use their tails to constrict their foes.
 
   Every now and then, a Naga can spit poison; the range, accuracy and damage of
   this poison increases with the Naga's experience level.
@@ -1596,6 +1604,8 @@ Minotaurs
 
   Minotaurs are extremely good at all forms of physical combat, but are awful at
   using any type of magic. They can wear all armour except for some headgear.
+  When in close combat, Minotaurs tend to reflexively headbutt those who dare
+  attack them.
 
 Tengu
   The Tengu are an ancient and feared species of bird-people with a legendary
@@ -1661,11 +1671,11 @@ Deep Dwarves
   portrayed as actual spirits by outsiders. They are most at home with the
   magic of earth and death.
 
-  Like all other Dwarves, they are gifted forgers. Their armour and weapons
-  are very well-crafted and much more durable than the products of lesser
-  artisans, and particularly dangerous when in the hands of a true Dwarf. In
-  addition, Deep Dwarves can tinker with gadgets so as to recharge them.
-  However, each time they do so, they lose a bit of their magical essence.
+  Deep Dwarves are gifted forgers. Their armour and weapons are very
+  well-crafted and much more durable than the products of lesser artisans, and
+  particularly dangerous when in the hands of a true Dwarf. In addition, Deep
+  Dwarves can tinker with gadgets so as to recharge them. However, each time
+  they do so, they lose a bit of their magical essence.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1689,19 +1699,20 @@ Felids
   The tale of a Felid who had nine lives isn't far from truth, as well.
 
 Octopodes
-  These land-capable relatives of common octopuses can walk about as fast as humans
+  These land-capable relatives of common octopuses can move about as fast as humans
   and yet retain the ability to swim underwater, although their dual adaptation
   is not as good as that of the shapechanging merfolk.
 
-  Octopodes have eight tentacle-shaped legs, and need four of them to walk. While a
+  Octopodes have eight tentacle-shaped legs, and need four of them to move. While a
   tentacle lacks fingers, two tentacles are a rough equivalent of a human's arm where
   item manipulation is concerned - including wielding two-handed weapons with four.
   They can use no armour other than loose hats, but can handle shields just fine.
-
-  Another peculiarity is the ability to wear eight rings, one on each tentacle.
+  Another peculiarity they have is the ability to wear eight rings, one on each
+  tentacle.
 
   Their natural camouflage makes them excel at stealth, and they have good knowledge
-  of poisons as well.
+  of poisons as well. They are also able to use their tentacles to constrict enemies -
+  potentially several at a time!
 
 Elves
 ========================================
@@ -1795,10 +1806,10 @@ variety of colours. This happens at an early stage in their career, and the
 colour is determined by chromosomes, not by behaviour.
 
 Some types of Draconians have breath weapons or special resistances. Draconians
-advance very slowly in levels, but are reasonably good at all skills but armour
-(most types of which they cannot wear) and missile weapons. Still, each colour
-has its own strengths and some have complementary weaknesses, which sometimes
-requires a bit of flexibility on the part of the player.
+cannot wear body armour, advance very slowly in levels, but are reasonably good
+at all skills other than missile weapons. Still, each colour has its own
+strengths and some have complementary weaknesses, which sometimes requires a
+bit of flexibility on the part of the player.
 
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
@@ -1933,6 +1944,11 @@ Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
   starts with either some throwing weapons or a ranged weapon and some
   ammunition, as well as a melee weapon and a set of leathers.
+
+Arcane Marksmen
+  Arcane Marksmen are Hunters who use debilitating spells to assist their
+  ranged attacks. They are particularly capable of keeping their enemies at
+  a distance.
 
 Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
@@ -2191,9 +2207,6 @@ Evocations
   have certain powers (like crystal balls) work better for characters trained in
   this skill. Like Invocations, Evocations is easier to learn than other skills.
 
-  If your character does not have a particular skill, he or she can gain it by
-  practising the activities mentioned above.
-
 ****************************************
 4. List of keys and commands
 ****************************************
@@ -2206,7 +2219,7 @@ confusing, since there are also several modes; here is the full list. Some
 commands are particularly useful in combination with certain interface options;
 such options are mentioned in the list. For a description of them, please look
 into options_guide.txt. For a more terse list of all commands, use '??' in-game.
-Most modes (targeting, level map, interlevel travel) also have help menus via
+Most modes (targetting, level map, interlevel travel) also have help menus via
 '?' on their own.
 
 Movement
@@ -2305,8 +2318,7 @@ screen.
   Display worn armour.
 
 }
-  Display wielded and secondary weapons, and missiles (to be shot with the 'f'
-  command).
+  Display list of runes collected.
 
 "
   Display worn jewellery.
@@ -2742,16 +2754,16 @@ _
 Tab
   Cycle shops and portals.
 
-Targeting
+Targetting
 ========================================
 
-Targeting mode is similar to examining surroundings. It is activated whenever
+Targetting mode is similar to examining surroundings. It is activated whenever
 you fire projectiles, evoke a wand or cast spells which use targets. All of the
 commands described for examination of surroundings work, with the exception of
 Space (which fires).
 
 Esc or x
-  Stop targeting.
+  Stop targetting.
 
 ?
   Special help screen.
@@ -2780,13 +2792,13 @@ Ctrl-F
   target_zero_exp).
 
 (, )
-  These two commands allow you to change ammunition while targeting. The choice
+  These two commands allow you to change ammunition while targetting. The choice
   is subject to the fire_order option. Usually, you change missiles according to
   your launcher; i.e. when wielding a bow, ( and ) will cycle through all stacks
   of arrows in your inventory.
 
 Shift-direction
-  Fire straight in that direction. You can go back to the old targeting mode
+  Fire straight in that direction. You can go back to the old targetting mode
   (allowing straight firing by pressing just the direction key) using the option
   target_unshifted_dirs. Note that target_unshifted_dirs is mutually exclusive
   with default_target.
@@ -2825,17 +2837,14 @@ Very Full
 Engorged
   You can't eat any more for now.
 
-Sick
-  You are sick, usually from bad food. Hit points don't regenerate until cured
-  (wait it out or quaff a potion of healing). Occasionally a primary attribute
-  might drop.
+Nausea
+  Some of the food you ate didn't agree with you. You cannot eat anything in
+  this state, although when Starving or Near Starving you may be able to force
+  something in, at a great penalty. Wait it out or quaff a potion of healing.
 
 Pois
   You are poisoned and continually lose hit points. There are several levels of
   poisoning. Cure with potions of healing or by waiting it out.
-
-Pray
-  You are praying. This can have different effects depending on your religion.
 
 Encumbered
   Your load is heavy enough to slow you down. You also need more food when
@@ -2856,6 +2865,9 @@ Swift
 
 Slow
   All actions are slowed. Note: ending berserking will slow you.
+
+Exh
+  You are too exhausted to go berserk or cast Death's Door.
 
 Special enchantments
 ========================================
@@ -2881,8 +2893,13 @@ Fly
   You fly, gaining the benefits of levitation with none of the drawbacks.
 
 Held
-  You are held in a net. You cannot move freely and will instead try to fight
-  your way out of the net.
+  You are held in a net or a spiderweb. You cannot move freely and will instead
+  try to struggle free.
+
+Constr
+  You are being constricted by an enemy and will take an increasing amount of
+  damage every turn. Also, movement away from the enemy is restricted (although
+  you can struggle to escape).
 
 Mesm
   You are mesmerised and cannot move away from the monster(s) mesmerising you.
@@ -2895,10 +2912,17 @@ Regen
   You regenerate hit points at an unnaturally fast rate. This is only shown for
   temporary regeneration.
 
-Glow
+Contam
   You glow from mutagenic radiation. This can mutate you over time, usually with
-  a bad outcome. The colour indicates the severity: the first level (grey) is
-  only a warning, and no mutation will occur from it.
+  a bad outcome. The colour indicates the severity: the first level (darkgrey) is
+  only a warning, and no mutation or loss of stealth will occur from it.
+
+Glow
+  You emit light; this ruins your stealth and makes you easier to hit.
+
+Umbra
+  You are shrouded in unholy darkness. This helps with stealth and evading attacks
+  from everyone except for the undead and worshippers of Yredelemnul.
 
 RMsl
   You repel missiles, i.e. there's a good chance to evade them.
@@ -2906,6 +2930,11 @@ RMsl
 DMsl
   You deflect missiles, i.e. there's a great chance to evade them. Still, this
   protection is not bulletproof.
+
+Sick
+  You have been sickened by some hostile effect. Hit points don't regenerate
+  until cured (wait it out or quaff a potion of healing). Occasionally a primary
+  attribute might drop.
 
 Rot
   This is a very harmful, necromantic ailment. You will lose maximum hit points
@@ -3043,7 +3072,7 @@ commands:
   However, it won't protect against lava accidents or hungry jellies.
 
 You can use the autoinscribe option to have some items automatically inscribed.
-See options_guide.txt for details. Some examples are::
+See options_guide.txt for details. Some examples are:
 
   autoinscribe = royal jell:=g
   autoinscribe = wand of healing:!v
@@ -3202,6 +3231,9 @@ Wiz
 
 MP
   magical power (additional Magic points)
+
+HP
+  hit points (additional Health)
 
 cTele
   controlled teleport

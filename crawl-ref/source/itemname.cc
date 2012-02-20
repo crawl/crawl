@@ -128,7 +128,8 @@ std::string item_def::name(description_level_type descrip,
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
         || item_is_orb(*this) || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this)) && is_artefact(*this))
+        || (ident || item_type_known(*this)) && is_artefact(*this)
+            && this->special != UNRAND_OCTOPUS_KING_RING)
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -257,6 +258,8 @@ std::string item_def::name(description_level_type descrip,
             equipped = true;
             buff << " (quivered)";
         }
+        else if (item_is_active_manual(*this))
+            buff << " (studied)";
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
@@ -2004,16 +2007,12 @@ bool item_type_tried(const item_def& item)
     if (item_type_known(item))
         return (false);
 
-    if (is_artefact(item) && item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.base_type == OBJ_JEWELLERY
-            && item.props.exists("jewellery_tried")
-            && item.props["jewellery_tried"].get_bool())
-        {
-            return (true);
-        }
-        return (false);
-    }
+    if (item.flags & ISFLAG_TRIED)
+        return true;
+
+    // artefacts are distinct from their base types
+    if (is_artefact(item))
+        return false;
 
     if (!item_type_has_ids(item.base_type))
         return false;
@@ -2155,6 +2154,8 @@ void check_item_knowledge(bool unknown_items)
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
                     ptmp->quantity  = 1;
+                    if (!unknown_items)
+                        ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
@@ -3106,6 +3107,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (!you.skill(SK_FIRE_MAGIC));
         case MISC_AIR_ELEMENTAL_FAN:
             return (!you.skill(SK_AIR_MAGIC));
+        case MISC_HORN_OF_GERYON:
+            return item.plus2;
         default:
             return (false);
         }
@@ -3235,6 +3238,11 @@ static const std::string _item_prefix(const item_def &item, bool temp,
             prefixes.push_back("equipped");
         break;
 
+    case OBJ_BOOKS:
+        if (item_is_active_manual(item))
+            prefixes.push_back("equipped");
+        break;
+
     default:
         break;
     }
@@ -3347,7 +3355,8 @@ void init_item_name_cache()
 
                 if (item_names_cache.find(name) == item_names_cache.end())
                 {
-                    item_kind kind = {base_type, sub_type, item.plus, 0};
+                    item_kind kind = {base_type, (uint8_t)sub_type,
+                                      (int8_t)item.plus, 0};
                     item_names_cache[name] = kind;
                     if (g.ch)
                         item_names_by_glyph_cache[g.ch].push_back(name);

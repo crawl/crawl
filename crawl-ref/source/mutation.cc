@@ -21,7 +21,6 @@
 #include "delay.h"
 #include "defines.h"
 #include "dactions.h"
-#include "coord.h"
 #include "effects.h"
 #include "env.h"
 #include "format.h"
@@ -365,6 +364,9 @@ std::string describe_mutations()
         // Breathe poison replaces spit poison.
         if (!player_mutation_level(MUT_BREATHE_POISON))
             result += "You can spit poison.\n";
+        result += _annotate_form_based(
+            "You can use your snake-like lower body to constrict enemies.",
+            !form_keeps_mutations());
 
         if (you.experience_level > 2)
         {
@@ -515,6 +517,9 @@ std::string describe_mutations()
         result += "You cannot wear most types of armour.\n";
         result += "You can wear up to eight rings at the same time.\n";
         result += "You are amphibious.\n";
+        result += _annotate_form_based(
+            "You can use your tentacles to constrict many enemies at once.",
+            !form_keeps_mutations());
         have_any = true;
         break;
 
@@ -606,10 +611,9 @@ std::string describe_mutations()
 }
 
 static const std::string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
-#else
-    "<w>Right-click</w>"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
@@ -1069,6 +1073,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
         return (true);
 
+    // No bones.
+    if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
+        return (true);
+
     if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
         return (true);
 
@@ -1363,6 +1371,21 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
         mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
         gain_msg = false;
+        break;
+
+    case MUT_LARGE_BONE_PLATES:
+        {
+            const char *arms;
+            if (you.mutation[MUT_TENTACLES] >= 3)
+                arms = "tentacles";
+            else if (you.species == SP_FELID)
+                arms = "legs";
+            else
+                break;
+            mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
+                            arms).c_str(), MSGCH_MUTATION);
+            gain_msg = false;
+        }
         break;
 
     default:
@@ -1660,15 +1683,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         result = ostr.str();
     }
     else if (mut == MUT_DEFORMED && is_useless_skill(SK_ARMOUR))
-    {
-        switch (level)
-        {
-        case 1: result = ""; break;
-        case 2: result = "very "; break;
-        case 3: result = "horribly "; break;
-        }
-        result = "Your body is " + result + "strangely shaped.";
-    }
+        result = "Your body is misshapen.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
@@ -1773,6 +1788,8 @@ static const facet_def _demon_facets[] =
       { 3, 3, 3 } },
     { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
+      { 3, 3, 3 } },
+    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 3, 3, 3 } },
     // Tier 2 facets
     { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
@@ -2184,17 +2201,17 @@ void check_demonic_guardian()
             die("Invalid demonic guardian level: %d", mutlevel);
         }
 
-        const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
-                                                      2, 0, you.pos(),
-                                                      MHITYOU, MG_FORCE_BEH));
+        monster *guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
+                                                     2, 0, you.pos(),
+                                                     MHITYOU, MG_FORCE_BEH));
 
-        if (guardian == -1)
+        if (!guardian)
             return;
 
-        menv[guardian].flags |= MF_NO_REWARD;
-        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
+        guardian->flags |= MF_NO_REWARD;
+        guardian->flags |= MF_DEMONIC_GUARDIAN;
 
-        menv[guardian].add_ench(ENCH_LIFE_TIMER);
+        guardian->add_ench(ENCH_LIFE_TIMER);
 
         // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));
@@ -2212,7 +2229,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri);
+        discover_mimic(*ri, false);
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
@@ -2284,4 +2301,18 @@ int handle_pbd_corpses(bool do_rot)
     }
 
     return (corpse_count);
+}
+
+int augmentation_amount()
+{
+    int amount = 0;
+    const int level = player_mutation_level(MUT_AUGMENTATION) + 1;
+
+    for (int i = 1; i < level; ++i)
+    {
+        if (you.hp <= (i * you.hp_max) / level)
+            amount++;
+    }
+
+    return amount;
 }

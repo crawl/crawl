@@ -718,29 +718,25 @@ static int _acquirement_misc_subtype()
     if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
         result = MISC_DISC_OF_STORMS;
     if (x_chance_in_y(you.skills[SK_FIRE_MAGIC], 27)
-        && !you.seen_misc[MISC_LAMP_OF_FIRE]
-        && you.skills[SK_EVOCATIONS])
+        && !you.seen_misc[MISC_LAMP_OF_FIRE])
     {
-        result = MISC_LAMP_OF_FIRE; // useless with no skill
+        result = MISC_LAMP_OF_FIRE;
     }
     if (x_chance_in_y(you.skills[SK_AIR_MAGIC], 27)
-        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN]
-        && you.skills[SK_EVOCATIONS])
+        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN])
     {
-        result = MISC_AIR_ELEMENTAL_FAN; // useless with no skill
+        result = MISC_AIR_ELEMENTAL_FAN;
     }
     if (one_chance_in(4)
-        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS]
-        && you.skills[SK_EVOCATIONS])
-    {   // useful for anyone with >= 1 skill, can't practice otherwise
+        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS])
+    {
         result = MISC_STONE_OF_EARTH_ELEMENTALS;
     }
     if (one_chance_in(4) && !you.seen_misc[MISC_LANTERN_OF_SHADOWS])
         result = MISC_LANTERN_OF_SHADOWS;
     if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
         && (x_chance_in_y(std::max(you.skills[SK_SPELLCASTING],
-                                    you.skills[SK_INVOCATIONS]), 27)
-            || player_spirit_shield())
+                                    you.skills[SK_INVOCATIONS]), 27))
         && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
     {
         result = MISC_CRYSTAL_BALL_OF_ENERGY;
@@ -1081,8 +1077,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     case BOOK_RANDART_LEVEL:
     {
         book.sub_type  = BOOK_RANDART_LEVEL;
-        int max_spells = 5 + level/3;
-        if (!make_book_level_randart(book, level, max_spells, owner))
+        if (!make_book_level_randart(book, level, -1, owner))
             return (false);
         break;
     }
@@ -1356,6 +1351,37 @@ int acquirement_create_item(object_class_type class_wanted,
                 || is_unrandom_artefact(doodad)
                    && (doodad.special == UNRAND_TROG
                        || doodad.special == UNRAND_WUCAD_MU))
+            {
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
+        }
+
+        // Weapons of distortion or vamp are no good if you need to eat.
+        if (agent != GOD_XOM
+            && doodad.base_type == OBJ_WEAPONS
+            && !is_unrandom_artefact(doodad)
+            && (get_weapon_brand(doodad) == SPWPN_DISTORTION
+               || get_weapon_brand(doodad) == SPWPN_VAMPIRICISM
+                  && !crawl_state.game_is_zotdef())
+            && !can_cut_meat(doodad)
+            // being gloved or transformed is ok here
+            && !you.has_claws(false)
+            && !you.has_fangs(false)
+            && !(you.has_talons(false) && you.mutation[MUT_BEAK])
+            && you.mutation[MUT_HERBIVOROUS] < 3
+            && !you.is_undead)
+        {
+            int runes = 0;
+            if (get_weapon_brand(doodad) == SPWPN_DISTORTION)
+            {
+                // blunt distortion is ok in non-living branches
+                for (int i = 0; i < NUM_RUNE_TYPES; i++)
+                    if (you.runes[i])
+                        runes++;
+            }
+            if (runes < 3)
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
