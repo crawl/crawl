@@ -5047,50 +5047,47 @@ bool napalm_player(int amount)
 
 void dec_napalm_player(int delay)
 {
-    if (you.duration[DUR_LIQUID_FLAMES] > BASELINE_DELAY)
+    delay = std::min(delay, you.duration[DUR_LIQUID_FLAMES]);
+
+    if (feat_is_watery(grd(you.pos())))
     {
-        if (feat_is_watery(grd(you.pos())))
-        {
-            mpr("The flames go out!", MSGCH_WARN);
-            you.duration[DUR_LIQUID_FLAMES] = 0;
-            return;
-        }
-
-        mpr("You are covered in liquid flames!", MSGCH_WARN);
-
-        expose_player_to_element(BEAM_NAPALM,
-                                 div_rand_round(delay * 12, BASELINE_DELAY));
-
-        const int res_fire = player_res_fire();
-
-        if (res_fire > 0)
-        {
-            ouch((((random2avg(9, 2) + 1) * delay) /
-                    (1 + (res_fire * res_fire))) / BASELINE_DELAY, NON_MONSTER,
-                    KILLED_BY_BURNING);
-        }
-
-        if (res_fire <= 0)
-        {
-            ouch(((random2avg(9, 2) + 1) * delay) / BASELINE_DELAY,
-                 NON_MONSTER, KILLED_BY_BURNING);
-
-            if (res_fire < 0)
-            {
-                ouch(((random2avg(9, 2) + 1) * delay)
-                        / BASELINE_DELAY, NON_MONSTER, KILLED_BY_BURNING);
-            }
-        }
-
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-        if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
+        mpr("The flames go out!", MSGCH_WARN);
+        you.duration[DUR_LIQUID_FLAMES] = 0;
+        return;
     }
 
+    mpr("You are covered in liquid flames!", MSGCH_WARN);
+
+    expose_player_to_element(BEAM_NAPALM,
+                             div_rand_round(delay * 12, BASELINE_DELAY));
+
+    const int res_fire = player_res_fire();
+
+    if (res_fire > 0)
+    {
+        ouch((((random2avg(9, 2) + 1) * delay) /
+                (1 + (res_fire * res_fire))) / BASELINE_DELAY, NON_MONSTER,
+                KILLED_BY_BURNING);
+    }
+
+    if (res_fire <= 0)
+    {
+        ouch(((random2avg(9, 2) + 1) * delay) / BASELINE_DELAY,
+             NON_MONSTER, KILLED_BY_BURNING);
+
+        if (res_fire < 0)
+        {
+            ouch(((random2avg(9, 2) + 1) * delay)
+                    / BASELINE_DELAY, NON_MONSTER, KILLED_BY_BURNING);
+        }
+    }
+
+    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        remove_condensation_shield();
+    if (you.duration[DUR_ICY_ARMOUR] > 0)
+        remove_ice_armour();
+
     you.duration[DUR_LIQUID_FLAMES] -= delay;
-    if (you.duration[DUR_LIQUID_FLAMES] < 0)
-        you.duration[DUR_LIQUID_FLAMES] = 0;
 }
 
 bool slow_player(int turns)
