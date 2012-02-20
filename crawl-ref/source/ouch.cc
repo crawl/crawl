@@ -620,7 +620,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
-                if (x_chance_in_y(strength, 100))
+                if (bernoulli(strength, 0.01))
                 {
                     num_dest++;
 
