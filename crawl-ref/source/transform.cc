@@ -475,7 +475,11 @@ static bool _slot_conflict(equipment_type eq)
     // until they get something that doesn't conflict with their randart
     // of überness.
     if (you.equip[eq] != -1)
-        return true;
+    {
+        // Horns + hat is fine.
+        if (eq != EQ_HELMET || is_hard_helmet(*(you.slot_item(eq))))
+            return true;
+    }
 
     for (int mut = 0; mut < NUM_MUTATIONS; mut++)
         if (you.mutation[mut] && eq == beastly_slot(mut))
@@ -874,7 +878,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             int app = you.attribute[ATTR_APPENDAGE];
             ASSERT(app != NUM_MUTATIONS);
             ASSERT(beastly_slot(app) != EQ_NONE);
-            ASSERT(you.equip[beastly_slot(app)] == -1);
             you.mutation[app] = app == MUT_HORNS ? 2 : 3;
         }
         break;
