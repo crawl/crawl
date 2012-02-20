@@ -1463,12 +1463,13 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
         if (beogh_water_walk())
             return (false);
 
-        if (species_likes_water(you.species))
+        if (species_likes_water(you.species) || form_likes_water())
         {
             // These can happen when we enter deep water directly. - bwr
             if (form_likes_water())
                 return (false);
-            else if (!you.transform_uncancellable)
+
+            if (!form_likes_water() && !you.transform_uncancellable)
             {
                 emergency_untransform();
                 return (false);
