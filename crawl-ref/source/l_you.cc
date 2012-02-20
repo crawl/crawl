@@ -424,8 +424,6 @@ LUARET1(you_see_cell, boolean,
 LUARET1(you_see_cell_no_trans, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
 
-LUARET1(you_piety, number, you.piety)
-
 LUAFN(you_stop_running)
 {
     stop_running();
@@ -507,6 +505,18 @@ static int _you_gold(lua_State *ls)
 }
 
 LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
+
+static int _you_piety(lua_State *ls)
+{
+    if (lua_gettop(ls) >= 1)
+    {
+        const int new_piety = std::min(std::max(luaL_checkint(ls, 1), 0), MAX_PIETY);
+        while (new_piety > you.piety)
+            gain_piety(new_piety - you.piety, 1, true, false);
+        lose_piety(you.piety - new_piety);
+    }
+    PLUARET(number, you.piety);
+}
 
 LUAFN(you_in_branch)
 {
@@ -625,7 +635,7 @@ static const struct luaL_reg you_dlib[] =
 { "num_runes",          you_num_runes },
 { "have_rune",          _you_have_rune },
 { "die",                _you_die },
-{ "piety",              you_piety },
+{ "piety",              _you_piety },
 { "in_branch",          you_in_branch },
 { "shopping_list_has",  _you_shopping_list_has },
 { "shopping_list_add",  _you_shopping_list_add },
