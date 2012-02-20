@@ -1138,7 +1138,6 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.train[j]);
         marshallByte(th, you.train_alt[j]);
         marshallInt(th, you.training[j]);
-        marshallBoolean(th, you.can_train[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
