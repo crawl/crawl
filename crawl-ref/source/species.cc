@@ -55,14 +55,14 @@ species_type get_species(const int index)
 }
 
 static const char * Species_Abbrev_List[NUM_SPECIES] =
-    { "Hu", "HE", "DE", "SE", "MD", "Ha",
+    { "Hu", "HE", "DE", "SE", "Ha",
       "HO", "Ko", "Mu", "Na", "Og", "Tr",
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
       "Fe", "Op",
       // placeholders
-      "El", "HD", "OM", "GE", "Gn" };
+      "El", "HD", "OM", "GE", "Gn", "MD", };
 
 const char *get_species_abbrev(species_type which_species)
 {
