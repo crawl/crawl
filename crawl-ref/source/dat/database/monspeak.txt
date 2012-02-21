@@ -476,6 +476,8 @@ elseif you.transform() == "dragon" then
     return "opal-scaled"
 elseif you.race() == "Felid" then
     return "pillow-pawed"
+elseif you.race() == "Octopode" then
+    return "soft-tentacled"
 else
     return "rosy-lipped"
 end
@@ -1767,6 +1769,8 @@ _player_arms_
 {{
 if you.race() == "Felid" then
     return "paws"
+elseif you.race() == "Octopode" then
+    return "tentacles"
 else
     return "arms"
 end
