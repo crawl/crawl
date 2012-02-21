@@ -146,7 +146,8 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 210,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
-
+    // Vehumet
+    ABIL_VEHUMET_MEMORIZE_SPELL,
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
 
@@ -1431,6 +1432,7 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
     DUR_AMBROSIA,
+    DUR_VEHUMET_GIFT,
     NUM_DURATIONS
 };
 
