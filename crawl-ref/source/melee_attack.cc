@@ -846,7 +846,6 @@ bool melee_attack::attack()
     else
     {
         if (attacker != defender
-            && defender->atype() == ACT_PLAYER
             && grid_distance(defender->pos(), attacker->pos()) == 1)
         {
             // Check for defender Spines
@@ -4526,35 +4525,68 @@ void melee_attack::mons_do_eyeball_confusion()
 
 void melee_attack::do_spines()
 {
-    const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int evp = body ? -property(*body, PARM_EVASION) : 0;
-    const int mut = player_mutation_level(MUT_SPINY);
-
-    if (mut && attacker->alive() && one_chance_in(evp + 1))
+    if (defender->is_player())
     {
-        if (test_hit(random2(3 + 4 * mut), attacker->melee_evasion(defender), true) < 0)
+        const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
+        const int evp = body ? -property(*body, PARM_EVASION) : 0;
+        const int mut = player_mutation_level(MUT_SPINY);
+
+        if (mut && attacker->alive() && one_chance_in(evp + 1))
         {
-            simple_monster_message(attacker->as_monster(),
-                                   " dodges your spines.");
+            if (test_hit(random2(3 + 4 * mut), attacker->melee_evasion(defender), true) < 0)
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " dodges your spines.");
+                return;
+            }
+
+            int dmg = roll_dice(mut, 6);
+            int ac = random2(1 + attacker->armour_class());
+            int hurt = dmg - ac - evp;
+
+            dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+
+            if (hurt <= 0)
+                return;
+
+            if (!defender_invisible)
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " is struck by your spines.");
+            }
+
+            attacker->hurt(&you, hurt);
+        }
+    }
+    else if (defender->as_monster()->is_spiny())
+    {
+        const int level = 1 + div_rand_round(defender->get_experience_level(), 4);
+
+        if (test_hit(random2(3 + 4 * level), attacker->melee_evasion(defender), !attacker->is_player()) < 0)
+        {
+            mprf("%s %s %s spines.", attacker->name(DESC_THE).c_str(),
+                 attacker->conj_verb("dodge").c_str(),
+                 defender->name(DESC_ITS).c_str());
             return;
         }
-
-        int dmg = roll_dice(mut, 6);
-        int ac = random2(1 + attacker->armour_class());
-        int hurt = dmg - ac - evp;
-
-        dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
-
-        if (hurt <= 0)
-            return;
-
-        if (!defender_invisible)
+        else if (attacker->alive())
         {
-            simple_monster_message(attacker->as_monster(),
-                                   " is struck by your spines.");
-        }
+            int dmg = roll_dice(level, 4);
+            int ac = random2(1 + attacker->armour_class());
+            int hurt = dmg - ac;
+            dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
 
-        attacker->hurt(&you, hurt);
+            if (hurt <= 0)
+                return;
+
+            mprf("%s %s struck by %s spines.", attacker->name(DESC_THE).c_str(),
+                 attacker->conj_verb("are").c_str(),
+                 defender->name(DESC_ITS).c_str());
+            if (attacker->is_player())
+                ouch(hurt, defender->mindex(), KILLED_BY_MONSTER);
+            else
+                attacker->hurt(defender, hurt);
+        }
     }
 }
 
@@ -4868,7 +4900,6 @@ int melee_attack::calc_stat_to_hit_base()
 
 int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
 {
-    int   roll = -1;
     int margin = AUTOMATIC_HIT;
     if (randomise_ev)
         ev = random2avg(2*ev, 2);
