@@ -1149,7 +1149,6 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                         || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP))
         {
             std::string msg = getSpeakString("_friendly_imp_greeting");
-            execute_embedded_lua(msg);
             if (msg == "__NONE")
                 msg.clear();
             mons_speaks_msg(demon, msg, MSGCH_TALK, silenced(demon->pos()));

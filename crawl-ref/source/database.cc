@@ -771,7 +771,10 @@ std::string getSpeakString(const std::string &key)
 #ifdef DEBUG_MONSPEAK
     dprf("monster speech lookup for %s", key.c_str());
 #endif
-    return _getRandomisedStr(SpeakDB, key, "", num_replacements);
+    std::string txt = _getRandomisedStr(SpeakDB, key, "", num_replacements);
+    execute_embedded_lua(txt);
+
+    return txt;
 }
 
 /////////////////////////////////////////////////////////////////////////////
