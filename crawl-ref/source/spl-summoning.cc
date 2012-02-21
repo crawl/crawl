@@ -43,6 +43,14 @@
 #include "terrain.h"
 #include "xom.h"
 
+static void _monster_greeting(monster *mons, const std::string &key)
+{
+    std::string msg = getSpeakString(key);
+    if (msg == "__NONE")
+        msg.clear();
+    mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
+}
+
 bool summon_animals(int pow)
 {
     bool success = false;
@@ -1115,7 +1123,8 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
             (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
 
-        player_angers_monster(imp);
+        if (!player_angers_monster(imp))
+            _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1148,10 +1157,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                     && (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
                         || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP))
         {
-            std::string msg = getSpeakString("_friendly_imp_greeting");
-            if (msg == "__NONE")
-                msg.clear();
-            mons_speaks_msg(demon, msg, MSGCH_TALK, silenced(demon->pos()));
+            _monster_greeting(demon, "_friendly_imp_greeting");
         }
     }
 
