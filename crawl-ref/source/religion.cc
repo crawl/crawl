@@ -2059,6 +2059,132 @@ static bool _jiyva_mutate()
         return (mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true));
 }
 
+//
+bool vehumet_is_currently_gifting()
+{
+    if( you.duration[DUR_VEHUMET_GIFT] && you.vehumet_gift_spell != SPELL_NO_SPELL )
+        return (true);
+    return (false);
+}
+void _age_recent_spells()
+{
+    for(int i=0;i<MAX_RECENT_SPELLS-1;++i)
+    {
+        you.vehumet_recent_spells[i] = you.vehumet_recent_spells[i+1];
+    }
+    you.vehumet_recent_spells[MAX_RECENT_SPELLS-1] = SPELL_NO_SPELL;
+}
+void _add_to_recent_spells(spell_type spell)
+{
+    int i = 0;
+    for(;i<MAX_RECENT_SPELLS;++i)
+    {
+        if(you.vehumet_recent_spells[i] != SPELL_NO_SPELL)
+        {
+            you.vehumet_recent_spells[i]=spell;
+            break;
+        }
+    }
+    if(i==MAX_RECENT_SPELLS)
+    {
+        _age_recent_spells();
+        you.vehumet_recent_spells[MAX_RECENT_SPELLS-1] = spell;
+    }
+}
+bool _is_recent_spell(spell_type spell)
+{
+    for(int i=0;i<MAX_RECENT_SPELLS;++i)
+        if(you.vehumet_recent_spells[i]==spell)
+            return true;
+    return false;
+}
+void vehumet_gift_callback(bool accepted)
+{
+    if(accepted && (player_spell_levels()-spell_levels_required(you.vehumet_gift_spell)>=0))
+    {
+		std::string prompt = make_stringf("Do you really want to memorize %s (Level %d)?",
+                                             spell_title(you.vehumet_gift_spell),
+                                             spell_difficulty(you.vehumet_gift_spell));
+	if(yesno(prompt.c_str(), true, 'n'))
+        {
+            add_spell_to_memory(you.vehumet_gift_spell);
+            you.seen_spell[you.vehumet_gift_spell] = true;
+            prompt = make_stringf(" grants you the knowledge of %s.", spell_title(you.vehumet_gift_spell));
+            simple_god_message(prompt.c_str());
+            you.vehumet_gift_spell = SPELL_NO_SPELL;
+            you.duration[DUR_VEHUMET_GIFT] = 0;
+            you.num_current_gifts[you.religion]++;
+            you.num_total_gifts[you.religion]++;
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
+            _inc_gift_timeout(std::max(spell_difficulty(you.vehumet_gift_spell),
+                    (spell_difficulty(you.vehumet_gift_spell)^2)/3));
+        }
+    }
+    else if(accepted && (player_spell_levels()-spell_levels_required(you.vehumet_gift_spell)<0))
+	{
+		mpr("You can't memorise that many levels of magic yet!");
+	}
+	else
+    {
+        std::string prompt = make_stringf(" denies you the knowledge of %s.", spell_title(you.vehumet_gift_spell));
+        simple_god_message(prompt.c_str());
+    }
+}
+
+std::vector<spell_type> _vehumet_eligible_gift_spells()
+{
+    std::vector<spell_type>eligible_spells;
+	// TODO: Find a better way to determine if MAGIC_DART should be gifted
+    if( you.num_current_gifts[you.religion] == 0 && !you.has_spell(SPELL_MAGIC_DART)
+        && !_is_recent_spell(SPELL_MAGIC_DART))
+    {
+        eligible_spells.push_back(SPELL_MAGIC_DART);
+        return eligible_spells;
+    }
+	int max_level = 0;
+	if(you.piety >= 160 )
+        max_level = 9;
+    else if(you.piety >= piety_breakpoint(4))
+		max_level = 7;
+	else if(you.piety >= piety_breakpoint(3))
+		max_level = 4;
+	else if(you.piety >= piety_breakpoint(2))
+		max_level = 3;
+	else if(you.piety >= piety_breakpoint(1))
+		max_level = 2;
+	else if(you.piety >= piety_breakpoint(0))
+		max_level = 1;
+
+	for(int i=0; i<NUM_SPELLS; ++i)
+	{
+		spell_type spell = static_cast<spell_type>(i);
+		if(!is_valid_spell(spell))
+			continue;
+        // TODO: seen spells in destroyed books should be gifted
+		if(vehumet_supports_spell(spell) && !you.has_spell(spell)
+                                         && !you.seen_spell[spell]
+										 && spell_rarity(spell) != -1
+										 && spell_difficulty(spell) <= max_level
+                                         && !_is_recent_spell(spell))
+			eligible_spells.push_back(spell);
+	}
+	return eligible_spells;
+}
+
+spell_type _vehumet_find_spell_gift()
+{
+	std::vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
+	spell_type spell = SPELL_NO_SPELL;
+	// TODO: push the weigthing towards higher level spells
+	for(unsigned int i=1;i<=eligible_spells.size();++i)
+	{
+		if(one_chance_in(i))
+			spell = eligible_spells.at(i-1);
+	}
+	return spell;
+}
+
+///////////////////////////////
 bool do_god_gift(bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -2179,12 +2305,11 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        case GOD_VEHUMET:
-            // Break early if giving a gift now means it would be lost.
+            int gift;
+	        gift = NUM_BOOKS;
+	        // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
-
-            unsigned int gift = NUM_BOOKS;
 
             // Kikubaaqudgha gives the lesser Necromancy books in a quick
             // succession.
@@ -2210,26 +2335,6 @@ bool do_god_gift(bool forced)
             {
                 if (you.religion == GOD_SIF_MUNA)
                     gift = OBJ_RANDOM;
-                else if (you.religion == GOD_VEHUMET)
-                {
-                    if (!you.had_book[BOOK_CONJURATIONS_II])
-                        gift = BOOK_CONJURATIONS_II;
-                    else if (!you.had_book[BOOK_POWER])
-                        gift = BOOK_POWER;
-                    else if (!you.had_book[BOOK_ANNIHILATIONS])
-                        gift = BOOK_ANNIHILATIONS;  // Conjuration books.
-
-                    if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
-                        || gift == NUM_BOOKS)
-                    {
-                        if (!you.had_book[BOOK_CALLINGS])
-                            gift = BOOK_CALLINGS;
-                        else if (!you.had_book[BOOK_SUMMONINGS])
-                            gift = BOOK_SUMMONINGS;
-                        else if (!you.had_book[BOOK_GRAND_GRIMOIRE])
-                            gift = BOOK_GRAND_GRIMOIRE; // Summoning books.
-                    }
-                }
             }
 
             if (gift != NUM_BOOKS)
@@ -2273,10 +2378,6 @@ bool do_god_gift(bool forced)
                     // meaningless for Kiku. evk
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
-                        // Vehumet gives books less readily.
-                        if (you.religion == GOD_VEHUMET)
-                            _inc_gift_timeout(10 + random2(10));
-
                         _inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_current_gifts[you.religion]++;
                         you.num_total_gifts[you.religion]++;
@@ -2285,6 +2386,30 @@ bool do_god_gift(bool forced)
                 }
             }                   // End of giving books.
             break;              // End of book gods.
+	    case GOD_VEHUMET:
+		    if(forced || !vehumet_is_currently_gifting()
+               && you.piety >= piety_breakpoint(0)
+               // TODO: This chance is probably totally off
+               && one_chance_in(you.piety/4))
+            {
+                spell_type spell = _vehumet_find_spell_gift();
+                if(spell != SPELL_NO_SPELL)
+                {
+                    you.vehumet_gift_spell = spell;
+                    _add_to_recent_spells(you.vehumet_gift_spell);
+                    simple_god_message(" grants you a gift! Check the god screen for details.");
+                    you.duration[DUR_VEHUMET_GIFT] = 500;
+                    success=true;
+                }
+                else
+                {
+                    // TODO: Do not only age spells when no gift is found,
+                    // but in a timed manner, or by piety_gain or piety_loss?
+                    _age_recent_spells();
+                    success=false;
+                }
+            }
+	        break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
 

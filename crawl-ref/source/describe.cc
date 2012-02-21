@@ -3885,8 +3885,8 @@ static std::string _religion_help(god_type god)
     case GOD_VEHUMET:
         if (you.piety >= piety_breakpoint(1))
         {
-            result += uppercase_first(god_name(god)) + " assists you in "
-                      "casting Conjurations and Summonings.";
+            result += uppercase_first(god_name(god)) + " assists you in casting "
+                      "Conjurations.";
         }
         break;
 
@@ -4491,6 +4491,17 @@ void describe_god(god_type which_god, bool give_title)
                                            ABIL_ELYVILON_LESSER_HEALING_OTHERS);
             }
         }
+	else if (which_god == GOD_VEHUMET)
+	{
+	    if(vehumet_is_currently_gifting())
+            {
+		have_any = true;
+		_print_final_god_abil_desc(which_god,
+					   "You can memorize " + std::string(spell_title(you.vehumet_gift_spell))+".",
+					   ABIL_VEHUMET_MEMORIZE_SPELL);
+	    }
+	}
+
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
