@@ -279,7 +279,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         return
     end
 
-    local mons = dgn.mons_from_index(ev:arg1())
+    local mons = dgn.mons_from_mid(ev:arg1())
     if not mons.has_prop("zonguldrok") then
         return
     end
