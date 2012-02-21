@@ -4517,6 +4517,16 @@ bool monster::is_skeletal() const
     return (_mons_is_skeletal(type));
 }
 
+static bool _mons_is_spiny(int mc)
+{
+    return (mc == MONS_PORCUPINE);
+}
+
+bool monster::is_spiny() const
+{
+    return (_mons_is_spiny(type));
+}
+
 bool monster::has_action_energy() const
 {
     return (speed_increment >= 80);
