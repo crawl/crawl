@@ -2322,7 +2322,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
-    dec_napalm_player(delay);
+    if (you.duration[DUR_LIQUID_FLAMES])
+        dec_napalm_player(delay);
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
