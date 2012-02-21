@@ -955,7 +955,7 @@ static void _fire_monster_death_event(monster* mons,
 
     dungeon_events.fire_event(
         dgn_event(DET_MONSTER_DIED, mons->pos(), 0,
-                  mons->mindex(), killer));
+                  mons->mid, killer));
     los_monster_died(mons);
 
     if (type == MONS_ROYAL_JELLY && !polymorph)
@@ -1543,10 +1543,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             push_monster(dlua, mons);
             clua_pushcxxstring(dlua, _killer_type_name(killer));
-            lua_pushnumber(dlua, killer_index);
-            lua_pushboolean(dlua, silent);
-            lua_pushboolean(dlua, wizard);
-            dlua.callfn(NULL, 5, 0);
+            dlua.callfn(NULL, 2, 0);
         }
         else
         {
