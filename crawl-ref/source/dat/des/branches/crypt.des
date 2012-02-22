@@ -665,7 +665,8 @@ KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
 # red metal walls
 COLOUR: = = red
 COLOUR: r = red
-SUBST:  r = v
+TILE:   r = wall_hell
+SUBST:  r = c
 # emergency exits; most are closed
 NSUBST: ? = 3:= / *:v
 SUBST:  / = |**
