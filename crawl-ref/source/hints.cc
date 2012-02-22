@@ -3366,8 +3366,9 @@ std::string hints_skills_info()
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     std::string broken = "This screen shows the skill set of your character. "
         "The number next to the skill is your current level, the higher the "
-        "better. The <cyan>cyan percent value</cyan> shows your progress "
-        "towards the next skill level. You can toggle which skills to train by "
+        "better. The <brown>brown percent value</brows> shows how much "
+        "experience is allocated to go towards that skill. "
+        "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will not be trained and ease the training of others. "
         "Press <w>!</w> to learn about skill training and <w>?</w> to read "
