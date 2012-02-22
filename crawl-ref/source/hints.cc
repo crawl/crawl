@@ -181,7 +181,8 @@ void pick_hints(newgame_def* choice)
             Hints.hints_type = keyn - 'a';
             choice->species  = _get_hints_species(Hints.hints_type);
             choice->job = _get_hints_job(Hints.hints_type);
-            choice->weapon = WPN_HAND_AXE; // easiest choice for fighters
+            choice->weapon = choice->job == JOB_HUNTER ? WPN_BOW
+                                                       : WPN_HAND_AXE; // easiest choice for fighters
 
             return;
         }
