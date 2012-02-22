@@ -1460,20 +1460,13 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk())
+        if (beogh_water_walk() || form_likes_water())
             return (false);
 
-        if (species_likes_water(you.species) || form_likes_water())
+        if (species_likes_water(you.species) && !you.transform_uncancellable)
         {
-            // These can happen when we enter deep water directly. - bwr
-            if (form_likes_water())
-                return (false);
-
-            if (!form_likes_water() && !you.transform_uncancellable)
-            {
-                emergency_untransform();
-                return (false);
-            }
+            emergency_untransform();
+            return (false);
         }
     }
 
