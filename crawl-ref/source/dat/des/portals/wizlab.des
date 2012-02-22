@@ -250,7 +250,7 @@ end
 
 local function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false, false, false)
-    local mons =  dgn.create_monster(x, y, spec)
+    local mons = dgn.create_monster(x, y, spec)
     mons.set_prop("zonguldrok", 1)
     return mons
 end
