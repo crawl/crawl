@@ -398,6 +398,8 @@ _friendly_imp_greeting
 
 @The_monster@ says, "I'm here!"
 
+@The_monster@ says, "You called?"
+
 @The_monster@ says, "Let's @_cause_or_spread@ @_mayhem@!"
 
 @The_monster@ says, "I @_truckle@ to your @_vassalage@, @_suck_up_address@ @_suck_up_adj1@ and @_suck_up_adj2@ @_suck_up_noun@!"
