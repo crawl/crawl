@@ -169,8 +169,8 @@ class CrawlProcessHandlerBase(object):
                 try:
                     newwhere = parse_where_data(wheredata)
                 except:
-                    self.logger.warn("Exception while trying to parse where file!",
-                                     exc_info=True)
+                    self.logger.warning("Exception while trying to parse where file!",
+                                        exc_info=True)
                 else:
                     if (newwhere.get("status") == "active" or
                         newwhere.get("status") == "saved"):
@@ -300,8 +300,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
         elif signal == subprocess.signal.SIGTERM:
-            self.logger.warn("Terminating pid %s forcefully!",
-                             self._stale_lockfile, self._stale_pid)
+            self.logger.warning("Terminating pid %s forcefully!",
+                                self._stale_lockfile, self._stale_pid)
         try:
             os.kill(self._stale_pid, signal)
         except OSError, e:
@@ -328,8 +328,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.io_loop.add_timeout(time.time() + 1,
                                              self._check_stale_process)
                 else:
-                    self.logger.warn("Couldn't terminate pid %s gracefully.",
-                                     self._stale_pid)
+                    self.logger.warning("Couldn't terminate pid %s gracefully.",
+                                        self._stale_pid)
                     self.send_to_all("force_terminate?")
 
     def _check_stale_process(self):
@@ -381,6 +381,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
         self.conn.message_callback = self._on_socket_message
         self.conn.connect()
+
+        self.logger.info("Crawl FDs: fd%s, fd%s.",
+                         self.process.child_fd,
+                         self.process.errpipe_read)
 
         self.last_activity_time = time.time()
 
@@ -479,8 +483,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.client_path = self.format_path(msgobj["path"])
                     self.send_client_to_all()
             else:
-                self.logger.warn("Unknown message from the crawl process: %s",
-                                 msgobj["msg"])
+                self.logger.warning("Unknown message from the crawl process: %s",
+                                    msgobj["msg"])
         else:
             self.check_where()
 
@@ -528,6 +532,11 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
                                 self.io_loop.READ | self.io_loop.ERROR)
         self.io_loop.add_handler(self.process.stderr.fileno(), self.on_stderr,
                                 self.io_loop.READ | self.io_loop.ERROR)
+
+        self.logger.info("Crawl FDs: fd%s, fd%s, fd%s",
+                         self.process.stdin.fileno(),
+                         self.process.stdout.fileno(),
+                         self.process.stderr.fileno())
 
         self.last_activity_time = time.time()
 
