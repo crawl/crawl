@@ -159,8 +159,9 @@ class TerminalRecorder(object):
 
             if self.returncode is not None:
                 self.io_loop.remove_handler(self.child_fd)
-                os.close(self.child_fd)
+                self.io_loop.remove_handler(self.errpipe_read)
 
+                os.close(self.child_fd)
                 os.close(self.errpipe_read)
 
                 self.ttyrec.close()
