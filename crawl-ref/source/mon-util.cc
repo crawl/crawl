@@ -701,6 +701,11 @@ bool mons_eats_corpses(const monster* mon)
     return (mons_itemeat(mon) == MONEAT_CORPSES);
 }
 
+bool mons_eats_honey(const monster* mon)
+{
+    return (mons_itemeat(mon) == MONEAT_HONEY);
+}
+
 bool mons_eats_food(const monster* mon)
 {
     return (mons_itemeat(mon) == MONEAT_FOOD);

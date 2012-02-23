@@ -2859,6 +2859,52 @@ static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
     return (eaten > 0);
 }
 
+// XXX: This function assumes that only killer bee larvae eat honey.
+static bool _monster_eat_honey(monster* mons, bool nearby)
+{
+    if (!mons_eats_honey(mons))
+        return (false);
+
+    if (mons_is_fleeing(mons))
+        return (false);
+
+    for (stack_iterator si(mons->pos()); si; ++si)
+    {
+        const bool is_honey = (si->base_type == OBJ_FOOD
+                                  && (si->sub_type == FOOD_HONEYCOMB
+                                      || si->sub_type == FOOD_ROYAL_JELLY));
+
+        if (!is_honey)
+            continue;
+
+        if (!nearby)
+            mpr("You hear a distant popping sound.", MSGCH_SOUND);
+        else
+        {
+            mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
+                 quant_name(*si, 1, DESC_THE).c_str());
+        }
+
+        dec_mitm_item_quantity(si.link(), 1);
+
+        std::string old_name_the = mons->name(DESC_THE);
+
+        mons->upgrade_type(MONS_KILLER_BEE, true, true);
+
+        if (!nearby)
+            mpr("You hear a distant bursting sound.", MSGCH_SOUND);
+        else
+        {
+            mprf("%s metamorphoses into %s!",
+                 old_name_the.c_str(), mons->name(DESC_A).c_str());
+        }
+
+        return (true);
+    }
+
+    return (false);
+}
+
 static bool _monster_eat_food(monster* mons, bool nearby)
 {
     if (!mons_eats_food(mons))
@@ -2874,44 +2920,11 @@ static bool _monster_eat_food(monster* mons, bool nearby)
         const bool is_food = (si->base_type == OBJ_FOOD);
         const bool is_corpse = (si->base_type == OBJ_CORPSES
                                    && si->sub_type == CORPSE_BODY);
-        const bool free_to_eat = mons->wont_attack()
-                || grid_distance(mons->pos(), you.pos()) > 1;
+        const bool free_to_eat = (mons->wont_attack()
+                                  || grid_distance(mons->pos(), you.pos()) > 1);
 
         if (!is_food && !is_corpse)
             continue;
-
-        if (mons->type == MONS_KILLER_BEE_LARVA)
-        {
-            if (si->sub_type != FOOD_HONEYCOMB
-                && si->sub_type != FOOD_ROYAL_JELLY)
-            {
-                return (false);
-            }
-
-            if (!nearby)
-                mpr("You hear a distant popping sound.", MSGCH_SOUND);
-            else
-            {
-                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
-                     quant_name(*si, 1, DESC_THE).c_str());
-            }
-
-            dec_mitm_item_quantity(si.link(), 1);
-
-            std::string old_name_the = mons->name(DESC_THE);
-
-            mons->upgrade_type(MONS_KILLER_BEE, true, true);
-
-            if (!nearby)
-                mpr("You hear a distant bursting sound.", MSGCH_SOUND);
-            else
-            {
-                mprf("%s metamorphoses into %s!",
-                     old_name_the.c_str(), mons->name(DESC_A).c_str());
-            }
-
-            return (true);
-        }
 
         if (free_to_eat && coinflip())
         {
@@ -2983,6 +2996,11 @@ static bool _handle_pickup(monster* mons)
             {
                 return (false);
             }
+        }
+        else if (mons_eats_honey(mons))
+        {
+            if (_monster_eat_honey(mons, nearby))
+                return (false);
         }
         else if (mons_eats_food(mons))
         {

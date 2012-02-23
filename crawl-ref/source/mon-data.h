@@ -123,12 +123,14 @@
    gmon_eat explanation:
      MONEAT_ITEMS,
      MONEAT_CORPSES,
+     MONEAT_HONEY,
      MONEAT_FOOD
 
     Monsters with MONEAT_ITEMS are capable of eating most items,
-    monsters with MONEAT_CORPSES are capable of eating corpses, and
-    monsters with MONEAT_FOOD are capable of eating food (note that
-    corpses also count as food).
+    monsters with MONEAT_CORPSES are capable of eating corpses, monsters
+    with MONEAT_HONEY are capable of eating honeycombs and royal jellies,
+    and monsters with MONEAT_FOOD are capable of eating food (note that
+    corpses, honeycombs and royal jellies also count as food).
 
    size:
      SIZE_TINY,              // rats/bats
@@ -1221,7 +1223,7 @@ static monsterentry mondata[] = {
     { 1, 3, 5, 0 },
     1, 5, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 5, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_FOOD, SIZE_TINY
+    MONUSE_NOTHING, MONEAT_HONEY, SIZE_TINY
 },
 
 {
