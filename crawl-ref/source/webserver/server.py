@@ -6,7 +6,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.template
 
-import logging
+import logging, logging.handlers
 
 from config import *
 from util import *
@@ -121,15 +121,34 @@ def bind_server():
         application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
                            **kwargs)
 
+def init_logging(logging_config):
+    filename = logging_config.get("filename")
+    if filename:
+        max_bytes = logging_config.get("max_bytes", 10*1000*1000)
+        backup_count = logging_config.get("backup_count", 5)
+        hdlr = logging.handlers.RotatingFileHandler(
+            filename, maxBytes=max_bytes, backupCount=backup_count)
+    else:
+        hdlr = logging.StreamHandler(None)
+    fs = logging_config.get("format", "%(levelname)s:%(name)s:%(message)s")
+    dfs = logging_config.get("datefmt", None)
+    fmt = logging.Formatter(fs, dfs)
+    hdlr.setFormatter(fmt)
+    logging.getLogger().addHandler(hdlr)
+    level = logging_config.get("level")
+    if level is not None:
+        logging.getLogger().setLevel(level)
+    logging.getLogger().addFilter(TornadoFilter())
+    logging.addLevelName(logging.DEBUG, "DEBG")
+    logging.addLevelName(logging.WARNING, "WARN")
+
+
 
 if __name__ == "__main__":
     if chroot:
         os.chroot(chroot)
 
-    logging.basicConfig(**logging_config)
-    logging.getLogger().addFilter(TornadoFilter())
-    logging.addLevelName(logging.DEBUG, "DEBG")
-    logging.addLevelName(logging.WARNING, "WARN")
+    init_logging(logging_config)
 
     if daemon:
         daemonize()
