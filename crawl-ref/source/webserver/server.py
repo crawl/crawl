@@ -165,7 +165,8 @@ if __name__ == "__main__":
 
     shed_privileges()
 
-    ensure_user_db_exists()
+    if dgl_mode:
+        ensure_user_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)
