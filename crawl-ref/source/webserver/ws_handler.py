@@ -93,7 +93,7 @@ def handle_new_milestone(line):
     data = parse_where_data(line)
     if "name" not in data: return
     game = find_running_game(data.get("name"), data.get("start"))
-    game.log_milestone(data)
+    if game: game.log_milestone(data)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
