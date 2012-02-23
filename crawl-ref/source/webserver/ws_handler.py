@@ -423,7 +423,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     handler(**obj)
                 elif self.process:
                     self.process.handle_input(message)
-                else:
+                elif not self.watched_game:
                     self.logger.warning("Didn't know how to handle msg: %s",
                                         obj["msg"])
             except:
