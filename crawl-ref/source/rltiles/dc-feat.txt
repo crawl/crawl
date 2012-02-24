@@ -119,14 +119,16 @@ golden_statue_2
 ## sarcophagus for ragdoll_tomb_raider
 sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 
+## sideways sarcophagi for tomb:1
+sarcophagus_pedestal_left DNGN_SARCOPHAGUS_PEDESTAL_LEFT
+sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
 dc-misc/error PLACEHOLDER1
 dc-misc/error PLACEHOLDER2
 dc-misc/error PLACEHOLDER3
-dc-misc/error PLACEHOLDER4
-dc-misc/error PLACEHOLDER5
 
 %sdir dc-dngn/traps
 ## traps
