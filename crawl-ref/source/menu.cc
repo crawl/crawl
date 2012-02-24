@@ -1492,9 +1492,6 @@ void Menu::webtiles_write_title() const
     if (!title) return;
     const bool first = (action_cycle == CYCLE_NONE
                         || menu_action == ACT_EXECUTE);
-    if (!first)
-        ASSERT(title2);
-
     const MenuEntry* me = (first ? title : title2);
 
     tiles.json_write_name("title");
@@ -1510,7 +1507,14 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 {
     tiles.json_open_object();
 
-    tiles.json_write_string("text", me->get_text());
+    if (me)
+        tiles.json_write_string("text", me->get_text());
+    else
+    {
+        tiles.json_write_string("text", "");
+        tiles.json_close_object();
+        return;
+    }
 
     if (me->quantity)
         tiles.json_write_int("q", me->quantity);
