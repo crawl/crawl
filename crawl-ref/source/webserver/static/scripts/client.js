@@ -574,8 +574,12 @@ function (exports, $, key_conversion, chat, comm) {
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
-        entry.find(".idle_time").data("time", data.idle_time);
-        entry.find(".idle_time").data("sort", "" + data.idle_time);
+        entry.find(".idle_time")
+            .data("time", data.idle_time)
+            .attr("data-time", "" + data.idle_time);
+        entry.find(".idle_time")
+            .data("sort", "" + data.idle_time)
+            .attr("data-sort", "" + data.idle_time);
         set("spectator_count", data.spectator_count);
         if (entry.find(".milestone").text() !== data.milestone)
         {
@@ -599,8 +603,10 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 time++;
                 $this.html(format_idle_time(time));
-                $this.data("time", time);
-                $this.data("sort", "" + time);
+                $this.data("time", time)
+                    .attr("data-time", "" + time);
+                $this.data("sort", "" + time)
+                    .attr("data-sort", "" + sort);
             }
         });
     }
