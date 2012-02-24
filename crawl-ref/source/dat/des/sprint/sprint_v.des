@@ -39,6 +39,14 @@ function callback.zig_tele(data, triggerable, triggerer, marker, ev)
   end
 end
 
+function callback.make_hatch(data, triggerable, triggerer, marker, ev)
+    for slave in iter.slave_iterator("hatch", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "escape_hatch_up", false, false, false)
+        dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
+    end
+    crawl.mpr("<magenta>An exit appears before you!</magenta>")
+end
+
 function setup_room(e, id)
   -- Tags
   e.tags("no_item_gen")
@@ -603,6 +611,15 @@ KFEAT: ^ = granite_statue
 COLOUR: .a^{ = magenta
 FTILE:  .a^{< = floor_rough_magenta
 KITEM: { = orb of zot
+{{
+    -- This is so you can't exploit the Abyss.
+    local orb = TriggerableFunction:new{func="callback.make_hatch",
+                repeated=true }
+    orb:add_triggerer(DgnTriggerer:new{type="item_pickup", target="auto"})
+    lua_marker('{', orb)
+    lua_marker('<', props_marker {hatch=1})
+    subst("< = .")
+}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
