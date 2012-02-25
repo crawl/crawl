@@ -938,9 +938,8 @@ void monster::equip_armour(item_def &item, int near)
         ac += property(item, PARM_AC);
 
         const int armour_plus = item.plus;
-        ASSERT(abs(armour_plus) < 20);
-        if (abs(armour_plus) < 20)
-            ac += armour_plus;
+        ASSERT(abs(armour_plus) < 30); // sanity check
+        ac += armour_plus;
     }
 
     // Shields can affect evasion.
