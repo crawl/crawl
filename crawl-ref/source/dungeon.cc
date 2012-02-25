@@ -4220,7 +4220,10 @@ retry:
         if (item.base_type == OBJ_WANDS && props.exists("charges"))
             item.plus = props["charges"].get_int();
         if (props.exists("ident"))
+        {
             item.flags |= props["ident"].get_int();
+            add_autoinscription(item);
+        }
         if (props.exists("unobtainable"))
             item.flags |= ISFLAG_UNOBTAINABLE;
         if (props.exists("mimic"))
