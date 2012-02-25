@@ -152,6 +152,10 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     }
 #endif
 
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
     cio_cleanup();
     msg::deinitialise_mpr_streams();
     clear_globals_on_exit();
