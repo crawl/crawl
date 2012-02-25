@@ -176,7 +176,6 @@ DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
          whether they want it to or not.
 
 NAME:    Wrath of Trog
-APPEAR:  bloodstained battleaxe
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 PLUS:    +3/+11
 COLOUR:  ETC_BLOOD
@@ -189,7 +188,6 @@ DESC_ID: This was the favourite weapon of the old god Trog, before it was
          who uses it to strike another.
 
 NAME:    Mace of Variability
-APPEAR:  great shimmering mace
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    0/0   # Set on generation
 COLOUR:  ETC_RANDOM
@@ -384,7 +382,6 @@ STEALTH: -20
 BOOL:    life, seeinv
 
 NAME:    demon blade "Leech"
-APPEAR:  runed demon blade
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +13/+4
 COLOUR:  MAGENTA
