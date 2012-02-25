@@ -4661,7 +4661,11 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (success)
+    {
         you.wield_change = true;
+        if (wpn.base_type == OBJ_MISSILES)
+            _merge_ammo_in_inventory(letter_to_index(wpn.slot));
+    }
 
     return success;
 }
