@@ -730,8 +730,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(you.inv[i]));
+    add_autoinscription(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)

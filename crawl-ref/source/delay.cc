@@ -1326,10 +1326,7 @@ static void _armour_wear_effects(const int item_slot)
     const equipment_type eq_slot = get_armour_slot(arm);
 
     if (!was_known)
-    {
-        if (Options.autoinscribe_artefacts && is_artefact(arm))
-            add_autoinscription(arm, artefact_auto_inscription(arm));
-    }
+            add_autoinscription(arm);
     mprf("You finish putting on %s.", arm.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
