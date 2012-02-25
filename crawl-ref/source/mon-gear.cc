@@ -756,14 +756,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_ILSUIW:
-        item_race = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_TRIDENT;
-        item.special = SPWPN_FREEZING;
-        item.plus = random_range(-1, 6, 2);
-        item.plus2 = random_range(-1, 6, 2);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        force_item = true;
+        item.sub_type  = WPN_TRIDENT;
+        item.plus      = random_range(-1, 6, 2);
+        item.plus2     = random_range(-1, 6, 2);
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         break;
 
     case MONS_MERFOLK_IMPALER:
@@ -848,14 +848,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_NESSOS:
+        force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_LONGBOW;
-        item.special   = SPWPN_FLAME;
         item.plus     += 1 + random2(3);
         item.plus2    += 1 + random2(3);
         item.flags    |= ISFLAG_KNOW_TYPE;
-        force_item     = true;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAME);
         break;
 
     case MONS_YAKTAUR:
