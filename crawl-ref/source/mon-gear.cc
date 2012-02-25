@@ -584,18 +584,22 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        -1);
         break;
 
+    case MONS_NAGA:
+    case MONS_NAGA_MAGE:
+        item_race = MAKE_ITEM_NO_RACE;
+        // deliberate fall-through {dlb}
+
     case MONS_ORC_WARRIOR:
     case MONS_ORC_HIGH_PRIEST:
     case MONS_BLORK_THE_ORC:
-        item_race = MAKE_ITEM_ORCISH;
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through {dlb}
 
     case MONS_DANCING_WEAPON:   // give_level may have been adjusted above
     case MONS_FRANCES:
     case MONS_HAROLD:
     case MONS_LOUISE:
-    case MONS_NAGA:
-    case MONS_NAGA_MAGE:
     case MONS_SKELETAL_WARRIOR:
     case MONS_PALE_DRACONIAN:
     case MONS_RED_DRACONIAN:
@@ -607,9 +611,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
     case MONS_TENGU:
-        if (mons_genus(mon->type) == MONS_NAGA)
-            item_race = MAKE_ITEM_NO_RACE;
-
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
             10, WPN_LONG_SWORD, 10, WPN_SHORT_SWORD,
