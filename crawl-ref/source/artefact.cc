@@ -383,6 +383,18 @@ bool is_randapp_artefact(const item_def &item)
             && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP));
 }
 
+void autoid_unrand(item_def &item)
+{
+    if (!(item.flags & ISFLAG_UNRANDART || item.flags & ISFLAG_KNOW_TYPE))
+        return;
+    const uint16_t uflags = _seekunrandart(item)->flags;
+    if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
+        return;
+
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    add_autoinscription(item);
+}
+
 unique_item_status_type get_unique_item_status(const item_def& item)
 {
     if (item.flags & ISFLAG_UNRANDART)
