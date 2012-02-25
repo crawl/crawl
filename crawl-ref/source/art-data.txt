@@ -79,6 +79,7 @@
 # * inv:      Lets wearer evoke invisibility ability.
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
+# * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises.  Can be given its own set of noises by
 #             making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
@@ -91,6 +92,7 @@
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
+# * unided:   Properties start unidentified.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
@@ -347,7 +349,7 @@ PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
-BOOL:    nogen
+BOOL:    nogen, unided
 DESC:    Faerie dragons used to be a race of the same species as mottled ones.
          Too bad, their vivid colours became their bane, as they alerted
          potential prey. They are now extinct, and this prized relic is one of
@@ -840,7 +842,7 @@ DEX:      -2
 MUTATE:   5
 CURSED:   1
 STEALTH:  -80
-BOOL:     nospell, rnd_tele, randapp
+BOOL:     nospell, rnd_tele, randapp, unided
 DESC_ID:  A splendid flowing robe of fur and silk.
 
 NAME:     cloak of Flash
@@ -877,7 +879,7 @@ COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
 DEX:     -3
-BOOL:    cursed, nospell, randapp
+BOOL:    cursed, nospell, randapp, unided
 DESC:    A chain mail made of pure gold.
 
 NAME:    skin of Zhor
@@ -932,7 +934,7 @@ TILE:    urand_folly
 TILE_EQ: robe_red2
 INT:     -5
 CURSED:  2
-BOOL:    nospell, randapp
+BOOL:    nospell, randapp, unided
 DESC:    A dull grey robe.
 
 ENUM:    MAXWELL
@@ -1271,6 +1273,7 @@ EV:       1
 STR:      1
 INT:      1
 DEX:      1
+BOOL:     unided
 DESC_END: "A mermaid who fancied to sing,\n
            Roused lust in the Octopus King.\n
            Her squiggly suitor,\n

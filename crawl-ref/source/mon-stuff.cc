@@ -196,6 +196,11 @@ void monster_drop_things(monster* mons,
                     mitm[item].props.erase("autoinscribe");
                 }
 
+                // Unrands held by fixed monsters would give awfully redundant
+                // messages ("Cerebov hits you with the Sword of Cerebov."),
+                // thus delay identification until drop/death.
+                autoid_unrand(mitm[item]);
+
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
                 move_item_to_grid(&item, mons->pos(), mons->swimming());

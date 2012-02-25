@@ -31,6 +31,7 @@ enum unrand_flag_type
     UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
     UNRAND_FLAG_NOGEN            = 0x80,
     UNRAND_FLAG_RANDAPP          =0x100,
+    UNRAND_FLAG_UNIDED           =0x200,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
@@ -84,6 +85,7 @@ bool is_random_artefact(const item_def &item);
 bool is_unrandom_artefact(const item_def &item);
 bool is_special_unrandom_artefact(const item_def &item);
 bool is_randapp_artefact(const item_def &item);
+void autoid_unrand(item_def &item);
 
 void artefact_fixup_props(item_def &item);
 

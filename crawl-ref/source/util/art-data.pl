@@ -59,6 +59,7 @@ my %field_type = (
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
+    UNIDED   => "bool",
     VALUE    => "num",
 
     DESC     => "str",
@@ -237,7 +238,7 @@ sub finish_art
     my $flags = "";
     my $flag;
     foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC",
-                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP")
+                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED")
     {
         if ($artefact->{$flag})
         {
