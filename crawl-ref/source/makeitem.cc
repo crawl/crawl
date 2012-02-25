@@ -1269,6 +1269,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
+            if (one_chance_in(10))
+                rc = SPWPN_VAMPIRICISM;
+
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
 
