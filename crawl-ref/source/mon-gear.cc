@@ -1714,9 +1714,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     int type = mon->type;
 
     if (spectral_orcs)
-    {
         type = mon->number;
-    }
 
     switch (type)
     {
@@ -1820,11 +1818,10 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     }
 
     case MONS_WIGLAF:
-        item_race = MAKE_ITEM_DWARVEN;
-        item.base_type = OBJ_ARMOUR;
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
-
+        item_race      = MAKE_ITEM_DWARVEN;
+        item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
                             5, ARM_SPLINT_MAIL, 10, ARM_PLATE_ARMOUR,
                             1, ARM_CRYSTAL_PLATE_ARMOUR,
@@ -1863,6 +1860,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_UNBORN_DEEP_DWARF:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
+
     case MONS_DEEP_DWARF_NECROMANCER:
     case MONS_DEEP_DWARF_ARTIFICER:
         item_race      = MAKE_ITEM_NO_RACE;
@@ -1875,12 +1873,12 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DEEP_DWARF_SCION:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
-        item_race = MAKE_ITEM_DWARVEN;
+        item_race      = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
-                                               2, ARM_SPLINT_MAIL,
-                                               1, ARM_PLATE_ARMOUR,
-                                               0);
+        item.sub_type  = random_choose_weighted(5, ARM_CHAIN_MAIL,
+                                                2, ARM_SPLINT_MAIL,
+                                                1, ARM_PLATE_ARMOUR,
+                                                0);
         break;
 
     case MONS_MERFOLK_IMPALER:
@@ -1894,13 +1892,13 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_MERFOLK_JAVELINEER:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_LEATHER_ARMOUR;
+        item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
     case MONS_OCTOPODE:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_WIZARD_HAT : ARM_CAP;
         break;
@@ -1909,18 +1907,18 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_CHERUB:
     case MONS_SIGMUND:
     case MONS_WIGHT:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_SERAPH:
-        item_race = MAKE_ITEM_NO_RACE;
+        level          = MAKE_GOOD_ITEM;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         // obscenely good, don't ever place them randomly
         item.sub_type  = coinflip() ? ARM_PEARL_DRAGON_ARMOUR
                                     : ARM_FIRE_DRAGON_ARMOUR;
-        level = MAKE_GOOD_ITEM;
         break;
 
     // Centaurs sometimes wear barding.
@@ -2024,7 +2022,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;
@@ -2048,7 +2046,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_ORC_WIZARD:
     case MONS_BLORK_THE_ORC:
     case MONS_NERGALLE:
-        item_race = MAKE_ITEM_ORCISH;
+        item_race      = MAKE_ITEM_ORCISH;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
@@ -2066,13 +2064,13 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_EUSTACHIO:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_LEATHER_ARMOUR;
+        item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
     case MONS_NESSOS:
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CENTAUR_BARDING;
         break;
