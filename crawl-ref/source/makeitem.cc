@@ -2315,7 +2315,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     else
     {
         int i;
-        for (i=0; i<1000; i++)
+        for (i = 0; i < 1000; ++i)
         {
             item.sub_type = get_random_armour_type(item_level);
             if (is_armour_brand_ok(item.sub_type, item.special, true))
@@ -2327,7 +2327,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item_level == -6)
     {
         int i;
-        for (i=0; i<100; i++)
+        for (i = 0; i < 100; ++i)
             if (_try_make_armour_artefact(item, force_type, 0, true) && is_artefact(item))
                 return;
         // fall back to an ordinary item
@@ -3604,7 +3604,7 @@ void makeitem_tests()
     item_def item;
 
     mpr("Running generate_weapon_item tests.");
-    for (i=0;i<10000;i++)
+    for (i = 0; i < 10000; ++i)
     {
         item.clear();
         level = _test_item_level();
@@ -3621,7 +3621,7 @@ void makeitem_tests()
     }
 
     mpr("Running generate_armour_item tests.");
-    for (i=0;i<10000;i++)
+    for (i = 0; i < 10000; ++i)
     {
         item.clear();
         level = _test_item_level();
