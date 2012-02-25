@@ -433,10 +433,6 @@ void console_startup(void)
 
 void console_shutdown()
 {
-#ifdef USE_TILE_WEB
-    tiles.shutdown();
-#endif
-
     // resetty();
     endwin();
 
