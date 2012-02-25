@@ -391,16 +391,11 @@ std::string artefact_auto_inscription(const item_def& item)
     return insc;
 }
 
-void add_autoinscription(item_def &item, std::string ainscrip)
-{
-    // Remove previous randart inscription.
-    trim_randart_inscrip(item);
-
-    add_inscription(item, ainscrip);
-}
-
 void add_autoinscription(item_def &item)
 {
+    if (!is_artefact(item) || !Options.autoinscribe_artefacts)
+        return;
+
     // Remove previous randart inscription.
     trim_randart_inscrip(item);
 

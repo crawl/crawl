@@ -1398,8 +1398,7 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         return;
 
     known_vec[prop] = static_cast<bool>(true);
-    if (Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(item));
+    add_autoinscription(item);
 }
 
 static std::string _get_artefact_type(const item_def &item,

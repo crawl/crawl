@@ -314,8 +314,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
 
-    if (!alreadyknown && Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(item));
+    if (!alreadyknown)
+        add_autoinscription(item);
 
     if (!alreadyknown && dangerous)
     {
@@ -532,8 +532,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             {
                 item.flags |= ISFLAG_NOTED_ID;
 
-                if (Options.autoinscribe_artefacts)
-                    add_autoinscription(item, artefact_auto_inscription(item));
+                add_autoinscription(item);
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),

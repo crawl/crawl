@@ -1433,12 +1433,7 @@ void _end_game(scorefile_entry &se)
             continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-        if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
-        {
-            std::string inscr = artefact_auto_inscription(you.inv[i]);
-            if (inscr != "")
-                add_autoinscription(you.inv[i], inscr);
-        }
+        add_autoinscription(you.inv[i]);
     }
 
     _delete_files();
