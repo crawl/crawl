@@ -1551,11 +1551,11 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             item.sub_type = _determine_weapon_subtype(item_level);
             if (is_weapon_brand_ok(item.sub_type, item.special, true))
-                goto brand_ok;
+                break;
         }
-        item.sub_type = SPWPN_NORMAL; // fall back to no brand
+        if (i == 1000)
+            item.sub_type = SPWPN_NORMAL; // fall back to no brand
     }
-brand_ok:
 
     // Forced randart.
     if (item_level == -6)
