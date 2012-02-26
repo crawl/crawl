@@ -1558,7 +1558,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
 
     // Forced randart.
-    if (item_level == -6)
+    if (item_level == ISPEC_RANDART)
     {
         int i;
         int ego = item.special;
@@ -1632,7 +1632,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         item.plus  -= 1 + random2(3);
         item.plus2 -= 1 + random2(3);
 
-        if (item_level == -5)
+        if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
     else if ((force_good || is_demonic(item) || forced_ego
@@ -2324,7 +2324,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     // Forced randart.
-    if (item_level == -6)
+    if (item_level == ISPEC_RANDART)
     {
         int i;
         for (i = 0; i < 100; ++i)
@@ -2377,7 +2377,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
 
-        if (item_level == -5)
+        if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
     else if ((forced_ego || item.sub_type == ARM_WIZARD_HAT
@@ -3588,11 +3588,11 @@ static int _test_item_level()
     case 0:
         return MAKE_GOOD_ITEM;
     case 1:
-        return -4; // damaged
+        return ISPEC_DAMAGED;
     case 2:
-        return -5; // cursed
+        return ISPEC_BAD;
     case 3:
-        return -6; // force randart
+        return ISPEC_RANDART;
     default:
         return random2(50);
     }
