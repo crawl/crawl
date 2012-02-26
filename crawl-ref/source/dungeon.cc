@@ -4341,6 +4341,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             case ISPEC_SUPERB:
                 item_level = MAKE_GOOD_ITEM;
                 break;
+            case ISPEC_RANDART:
+                item_level = ISPEC_RANDART;
+                break;
             }
         }
 
