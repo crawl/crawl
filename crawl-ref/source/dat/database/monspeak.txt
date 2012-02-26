@@ -3566,7 +3566,7 @@ _Duvessa_Dowan_dies_distance_bytwin_
 
 @_Duvessa_Dowan_dies_distance_@
 %%%%
-############ EDMUND ### A mercenary guarding the dungeon
+############ EDMUND ### One of Sigmund's nine brothers, no magic
 Edmund
 
 @_Edmund_common_@
@@ -3888,7 +3888,7 @@ You feel a sudden, passing aversion to salt.
 Your skin takes on a slight green cast.
 
 # Doesn't work for Naga and transformed Merfolk.
-# There's a hack in mstuff2.cc to prevent it from being used in those cases.
+# There's a hack in mon-cast.cc to prevent it from being used in those cases.
 Your legs wobble like jelly.
 
 w:5
