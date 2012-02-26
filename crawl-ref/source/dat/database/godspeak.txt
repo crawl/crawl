@@ -342,6 +342,15 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+# random divination (magic mapping, detect items, detect creatures)
+Xom divination
+
+"See what I see, my child!"
+
+Xom grants you insight.
+
+Xom smirks.
+%%%%
 # cast a random spell
 Xom spell effect
 
