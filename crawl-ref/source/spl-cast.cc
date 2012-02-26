@@ -1628,34 +1628,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
 
-    // Only a Xom spell, no failure.
-    case SPELL_DETECT_ITEMS:
-        mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
-                                                       : "nothing.");
-        break;
-
-    // Only a Xom spell, no failure.
-    case SPELL_DETECT_CREATURES:
-    {
-        const int prev_detected = count_detected_mons();
-        const int num_creatures = detect_creatures(powc);
-
-        if (!num_creatures)
-            mpr("You detect nothing.");
-        else if (num_creatures == prev_detected)
-        {
-            // This is not strictly true. You could have cast
-            // Detect Creatures with a big enough fuzz that the detected
-            // glyph is still on the map when the original one has been
-            // killed. Then another one is spawned, so the number is
-            // the same as before. There's no way we can check this however.
-            mpr("You detect no further creatures.");
-        }
-        else
-            mpr("You detect creatures!");
-        break;
-    }
-
     case SPELL_PROJECTED_NOISE:
         return project_noise(fail);
 

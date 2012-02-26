@@ -54,6 +54,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -84,15 +85,11 @@
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
 
-// Define fake magic mapping spell to keep the old behaviour.
-#define FAKE_SPELL_MAGIC_MAPPING    SPELL_NO_SPELL
-
 // Spells to be cast at tension 0 (no or only low-level monsters around),
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    FAKE_SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_DETECT_CREATURES, SPELL_FLY, SPELL_BEASTLY_APPENDAGE,
+    SPELL_SUMMON_BUTTERFLIES, SPELL_FLY, SPELL_BEASTLY_APPENDAGE,
     SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM,
     SPELL_NECROMUTATION
 };
@@ -548,45 +545,9 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     else
     {
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
-        // spellenum will be at least 3, so we don't run into infinite loops
-        // for Detect Creatures/Magic Mapping in fully explored levels.
-        spellenum = std::min(nxomspells, std::max(3 + coinflip(), spellenum));
+        spellenum = std::min(nxomspells, spellenum);
         spell     = _xom_nontension_spells[random2(spellenum)];
 
-        if (spell == FAKE_SPELL_MAGIC_MAPPING || spell == SPELL_DETECT_ITEMS)
-        {
-            // If the level is already mostly explored, there's a chance
-            // we might try something else.
-            const int explored = _exploration_estimate(false, debug);
-            if (explored > 80 && x_chance_in_y(explored, 100))
-                return (XOM_DID_NOTHING);
-        }
-    }
-
-    // Handle magic mapping specially, now that it's no longer a spell.
-    if (spell == FAKE_SPELL_MAGIC_MAPPING)
-    {
-        if (you.level_type == LEVEL_PANDEMONIUM)
-            return (XOM_DID_NOTHING);
-
-        if (debug)
-            return (XOM_GOOD_MAPPING);
-
-        god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-        mprf(MSGCH_DIAGNOSTICS,
-             "_xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
-             spell, spellenum);
-#endif
-
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, "magic mapping"),
-                  true);
-
-        const int power = stepdown_value(sever, 10, 10, 40, 45);
-        magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
-
-        return (XOM_GOOD_MAPPING);
     }
 
     // Don't attempt to cast spells the undead cannot memorise.
@@ -624,6 +585,97 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
 
     your_spells(spell, sever, false);
     return (result);
+}
+
+static int _xom_magic_mapping(int sever, int tension, bool debug = false)
+{
+    // If the level is already mostly explored, try something else.
+    const int explored = _exploration_estimate(false, debug);
+    if (explored > 80 && x_chance_in_y(explored, 100))
+        return (XOM_DID_NOTHING);
+
+    if (debug)
+        return (XOM_GOOD_DIVINATION);
+
+    god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
+              "divination: magic mapping"), true);
+
+    const int power = stepdown_value(sever, 10, 10, 40, 45);
+    magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
+
+    return (XOM_GOOD_DIVINATION);
+}
+
+static int _xom_detect_items(int sever, int tension, bool debug = false)
+{
+    // If the level is already mostly explored, try something else.
+    const int explored = _exploration_estimate(false, debug);
+    if (explored > 80 && x_chance_in_y(explored, 100))
+        return (XOM_DID_NOTHING);
+
+    if (debug)
+        return (XOM_GOOD_DIVINATION);
+
+    god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
+              "divination: detect items"), true);
+
+    if (detect_items(sever) == 0)
+        mpr("You detect nothing.");
+    else
+        mpr("You detect items!");
+
+    return (XOM_GOOD_DIVINATION);
+}
+
+static int _xom_detect_creatures(int sever, int tension, bool debug = false)
+{
+    if (debug)
+        return (XOM_GOOD_DIVINATION);
+
+    god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
+              "divination: detect creatures"), true);
+
+    const int prev_detected = count_detected_mons();
+    const int num_creatures = detect_creatures(sever);
+
+    if (num_creatures == 0)
+        mpr("You detect nothing.");
+    else if (num_creatures == prev_detected)
+    {
+        // This is not strictly true.  You could have cast Detect
+        // Creatures with a big enough fuzz that the detected glyph is
+        // still on the map when the original one has been killed.  Then
+        // another one is spawned, so the number is the same as before.
+        // There's no way we can check this, however.
+        mpr("You detect no further creatures.");
+    }
+    else
+        mpr("You detect creatures!");
+
+    return (XOM_GOOD_DIVINATION);
+}
+
+static int _xom_do_divination(int sever, int tension, bool debug = false)
+{
+    switch (random2(3))
+    {
+    case 0:
+        return (_xom_magic_mapping(sever, tension, debug));
+
+    case 1:
+        return (_xom_detect_items(sever, tension, debug));
+
+    case 2:
+        return (_xom_detect_creatures(sever, tension, debug));
+    }
+
+    return (XOM_DID_NOTHING);
 }
 
 static void _try_brand_switch(const int item_index)
@@ -2350,39 +2402,41 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    // Don't make the player go berserk etc. if there's no danger.
+    // Don't make the player go berserk, etc. if there's no danger.
     if (tension > random2(3) && x_chance_in_y(2, sever))
         done = _xom_do_potion(debug);
     else if (x_chance_in_y(3, sever))
+        done = _xom_do_divination(sever, tension, debug);
+    else if (x_chance_in_y(4, sever))
     {
         // There are a lot less non-tension spells than tension ones,
         // so use them more rarely.
         if (tension > 0 || one_chance_in(3))
             done = _xom_makes_you_cast_random_spell(sever, tension, debug);
     }
-    else if (tension > 0 && x_chance_in_y(4, sever))
+    else if (tension > 0 && x_chance_in_y(5, sever))
         done = _xom_confuse_monsters(sever, debug);
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(5) && x_chance_in_y(5, sever))
+    else if (tension > random2(5) && x_chance_in_y(6, sever))
         done = _xom_send_one_ally(sever, debug);
-    else if (tension < random2(5) && x_chance_in_y(6, sever))
+    else if (tension < random2(5) && x_chance_in_y(7, sever))
         done = _xom_change_scenery(debug);
-    else if (x_chance_in_y(7, sever))
-        done = _xom_snakes_to_sticks(sever, debug);
     else if (x_chance_in_y(8, sever))
+        done = _xom_snakes_to_sticks(sever, debug);
+    else if (x_chance_in_y(9, sever))
         done = _xom_give_item(sever, debug);
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(10) && x_chance_in_y(9, sever))
+    else if (tension > random2(10) && x_chance_in_y(10, sever))
         done = _xom_send_allies(sever, debug);
-    else if (tension > random2(8) && x_chance_in_y(10, sever))
+    else if (tension > random2(8) && x_chance_in_y(11, sever))
         done = _xom_animate_monster_weapon(sever, debug);
-    else if (x_chance_in_y(11, sever))
+    else if (x_chance_in_y(12, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
-    else if (tension > 0 && x_chance_in_y(12, sever))
+    else if (tension > 0 && x_chance_in_y(13, sever))
         done = _xom_rearrange_pieces(sever, debug);
-    else if (random2(tension) < 15 && x_chance_in_y(13, sever))
+    else if (random2(tension) < 15 && x_chance_in_y(14, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(14, sever))
+    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(15, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2425,13 +2479,13 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = XOM_GOOD_TELEPORT;
     }
-    else if (random2(tension) < 5 && x_chance_in_y(15, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(16, sever))
     {
         if (debug)
             return (XOM_GOOD_VITRIFY);
 
         // This can fail with radius 1, or in open areas.
-        if (vitrify_area(random2avg(sever/4, 2) + 1))
+        if (vitrify_area(random2avg(sever / 4, 2) + 1))
         {
             god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
             take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
@@ -2439,15 +2493,15 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             done = XOM_GOOD_VITRIFY;
         }
     }
-    else if (random2(tension) < 5 && x_chance_in_y(16, sever)
+    else if (random2(tension) < 5 && x_chance_in_y(17, sever)
              && x_chance_in_y(16, how_mutated()))
     {
         done = _xom_give_mutations(true, debug);
     }
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(15) && x_chance_in_y(17, sever))
+    else if (tension > random2(15) && x_chance_in_y(18, sever))
         done = _xom_send_major_ally(sever, debug);
-    else if (tension > 0 && x_chance_in_y(18, sever))
+    else if (tension > 0 && x_chance_in_y(19, sever))
         done = _xom_throw_divine_lightning(debug);
 
     return (done);
@@ -4204,18 +4258,18 @@ static const std::string _xom_effect_to_name(int effect)
         "bugginess",
         // good acts
         "nothing", "potion", "spell (tension)", "spell (no tension)",
-        "mapping", "confuse monsters", "single ally", "animate monster weapon",
-        "annoyance gift", "random item gift", "acquirement", "summon allies",
-        "polymorph", "swap monsters", "teleportation", "vitrification",
-        "mutation", "permanent ally", "lightning", "change scenery",
-        "snakes to sticks",
+        "divination", "confuse monsters", "single ally",
+        "animate monster weapon", "annoyance gift", "random item gift",
+        "acquirement", "summon allies", "polymorph", "swap monsters",
+        "teleportation", "vitrification", "mutation", "permanent ally",
+        "lightning", "change scenery", "snakes to sticks",
         // bad acts
         "nothing", "coloured smoke trail", "miscast (pseudo)",
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
-        "stat loss", "teleportation", "swap weapons",
-        "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
-        "draining", "torment", "animate weapon", "summon demons",
-        "banishment (pseudo)", "banishment"
+        "stat loss", "teleportation", "swap weapons", "chaos upgrade",
+        "mutation", "polymorph", "repel stairs", "confusion", "draining",
+        "torment", "animate weapon", "summon demons", "banishment (pseudo)",
+        "banishment"
     };
 
     std::string result = "";
