@@ -1628,6 +1628,16 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
 
+#if TAG_MAJOR_VERSION == 32
+    case SPELL_DETECT_ITEMS:
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+
+    case SPELL_DETECT_CREATURES:
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
+
     case SPELL_PROJECTED_NOISE:
         return project_noise(fail);
 
