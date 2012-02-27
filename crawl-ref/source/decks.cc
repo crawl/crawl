@@ -2209,7 +2209,7 @@ static void _deepen_water(const coord_def& center, int radius)
 {
     for (radius_iterator ri(center, radius, false); ri; ++ri)
     {
-        // FIXME The iteration shouldn't affect the later squares in the
+        // FIXME: The iteration shouldn't affect the later squares in the
         // same iteration, i.e., a newly-flooded square shouldn't count
         // in the decision as to whether to make the next square flooded.
         const coord_def p = *ri;
