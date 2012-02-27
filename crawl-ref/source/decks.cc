@@ -2287,7 +2287,7 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 
     if (things_to_do[0])
-        cast_detect_secret_doors(random2(power/4));
+        detect_secret_doors(random2(power/4));
     if (things_to_do[1])
         detect_traps(random2(power/4));
     if (things_to_do[2])
