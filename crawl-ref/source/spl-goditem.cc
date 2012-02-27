@@ -558,12 +558,9 @@ int detect_creatures(int pow, bool telepathic)
             }
 
             // Assuming that highly intelligent spellcasters can
-            // detect scrying. -- bwr
-            if (mons_intel(mon) == I_HIGH
-                && mons_class_flag(mon->type, M_SPELLCASTER))
-            {
+            // detect scrying. - bwr
+            if (mons_intel(mon) == I_HIGH && mon->can_use_spells())
                 behaviour_event(mon, ME_DISTURB, MHITYOU, you.pos());
-            }
         }
     }
 
