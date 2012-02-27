@@ -372,6 +372,7 @@ static void _print_stats_ac(int x, int y)
     if (you.incapacitated() && player_wearing_slot(EQ_SHIELD))
         textcolor(RED);
     else if (you.duration[DUR_CONDENSATION_SHIELD]
+             || you.duration[DUR_MAGIC_SHIELD]
              || you.duration[DUR_DIVINE_SHIELD])
     {
         textcolor(LIGHTBLUE);
