@@ -865,9 +865,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.duration[DUR_REGENERATION] = 0;
         }
 
-        // silently removed since undead automatically resist poison -- bwr
-        you.duration[DUR_RESIST_POISON] = 0;
-
         you.is_undead = US_UNDEAD;
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         set_redraw_status(REDRAW_HUNGER);
