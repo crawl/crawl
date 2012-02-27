@@ -1720,7 +1720,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         // dragonskin cloak: 0.5 to draconic resistances
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             re++;
-
     }
 
     // mutations:
@@ -1729,6 +1728,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
+        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+            return 3;
+
         if (you.duration[DUR_INSULATION])
             re++;
 
@@ -1736,9 +1738,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (you.form == TRAN_STATUE)
             re += 1;
 
-        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-            re = 3;
-        else if (re > 1)
+        if (re > 1)
             re = 1;
     }
 
