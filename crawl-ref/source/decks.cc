@@ -1814,7 +1814,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
     bool do_phaseshift = false;
     bool do_stoneskin  = false;
     bool do_shield     = false;
-    int num_resists = 0;
+    bool do_resistance = false;
 
     // Chances are cumulative.
     if (power_level >= 2)
@@ -1822,7 +1822,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
         if (coinflip()) do_phaseshift = true;
         if (coinflip()) do_stoneskin  = true;
         if (coinflip()) do_shield     = true;
-        num_resists = random2(4);
+        do_resistance = true;
     }
     if (power_level >= 1)
     {
@@ -1842,31 +1842,11 @@ static void _helm_card(int power, deck_rarity_type rarity)
         cast_phase_shift(random2(power/4));
     if (do_stoneskin)
         cast_stoneskin(random2(power/4));
-    if (num_resists)
+    if (do_resistance)
     {
-        const duration_type possible_resists[4] = {
-            DUR_RESIST_POISON, DUR_INSULATION,
-            DUR_RESIST_FIRE, DUR_RESIST_COLD
-        };
-        const char* resist_names[4] = {
-            "poison", "electricity", "fire", "cold"
-        };
-
-        for (int i = 0; i < 4 && num_resists; ++i)
-        {
-            // If there are n left, of which we need to choose
-            // k, we have chance k/n of selecting the next item.
-            if (x_chance_in_y(num_resists, 4-i))
-            {
-                // Add a temporary resistance.
-                you.increase_duration(possible_resists[i], random2(power/7) +1);
-                msg::stream << "You feel resistant to " << resist_names[i]
-                            << '.' << std::endl;
-                --num_resists;
-            }
-        }
+        mpr("You feel resistant.");
+        you.increase_duration(DUR_RESISTANCE, random2(power/7) + 1);
     }
-
     if (do_shield)
     {
         if (you.duration[DUR_MAGIC_SHIELD] == 0)

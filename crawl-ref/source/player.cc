@@ -1496,7 +1496,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     // spells:
     if (temp)
     {
-        if (you.duration[DUR_RESIST_FIRE] > 0)
+        if (you.duration[DUR_RESISTANCE])
             rf++;
 
         if (you.duration[DUR_FIRE_SHIELD])
@@ -1561,8 +1561,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        // spells:
-        if (you.duration[DUR_RESIST_COLD] > 0)
+        if (you.duration[DUR_RESISTANCE])
             rc++;
 
         if (you.duration[DUR_FIRE_SHIELD])
@@ -1731,7 +1730,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
             return 3;
 
-        if (you.duration[DUR_INSULATION])
+        if (you.duration[DUR_INSULATION] || you.duration[DUR_RESISTANCE])
             re++;
 
         // transformations:
@@ -1811,8 +1810,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        // spells:
-        if (you.duration[DUR_RESIST_POISON] > 0)
+        // potions/cards:
+        if (you.duration[DUR_RESISTANCE])
             rp++;
 
         // transformations:
@@ -3766,9 +3765,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
     case DUR_INSULATION:
-    case DUR_RESIST_POISON:
-    case DUR_RESIST_FIRE:
-    case DUR_RESIST_COLD:
+    case DUR_RESISTANCE:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
@@ -4028,9 +4025,7 @@ void display_char_status()
         DUR_JELLY_PRAYER,
         STATUS_REGENERATION,
         DUR_SWIFTNESS,
-        DUR_RESIST_POISON,
-        DUR_RESIST_COLD,
-        DUR_RESIST_FIRE,
+        DUR_RESISTANCE,
         DUR_INSULATION,
         DUR_TELEPORT,
         DUR_CONTROL_TELEPORT,
