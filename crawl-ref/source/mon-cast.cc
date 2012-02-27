@@ -1842,7 +1842,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons_cast(mons, beem, spell_cast);
             mons->lose_energy(EUT_SPELL);
         }
-    } // end "if mons_class_flag(mons->type, M_SPELLCASTER)
+    } // end "if (mons->can_use_spells())"
 
     return (true);
 }
