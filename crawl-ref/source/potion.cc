@@ -214,17 +214,17 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
     }
 
     case POT_GAIN_STRENGTH:
-        if (mutate(MUT_STRONG, true, false, false, true))
+        if (mutate(MUT_STRONG, "potion of gain strength", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
-        if (mutate(MUT_AGILE, true, false, false, true))
+        if (mutate(MUT_AGILE, "potion of gain dexterity", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
-        if (mutate(MUT_CLEVER, true, false, false, true))
+        if (mutate(MUT_CLEVER, "potion of gain intelligence", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
@@ -419,13 +419,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         mpr("It has a very clean taste.");
         for (int i = 0; i < 7; i++)
             if (random2(9) >= i)
-                delete_mutation(RANDOM_MUTATION, false);
+                delete_mutation(RANDOM_MUTATION, "potion of cure mutation", false);
         break;
 
     case POT_MUTATION:
         mpr("You feel extremely strange.");
         for (int i = 0; i < 3; i++)
-            mutate(RANDOM_MUTATION, false);
+            mutate(RANDOM_MUTATION, "potion of mutation", false);
 
         learned_something_new(HINT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);

@@ -2052,7 +2052,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
 static void _remove_bad_mutation()
 {
     // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, false, false, false, true))
+    if (!delete_mutation(RANDOM_BAD_MUTATION, "helix card", false, false, false, true))
         mpr("You feel transcendent for a moment.");
 }
 
@@ -2065,14 +2065,14 @@ static void _helix_card(int power, deck_rarity_type rarity)
         switch (how_mutated() ? random2(3) : 0)
         {
         case 0:
-            mutate(RANDOM_MUTATION);
+            mutate(RANDOM_MUTATION, "helix card");
             break;
         case 1:
-            delete_mutation(RANDOM_MUTATION);
-            mutate(RANDOM_MUTATION);
+            delete_mutation(RANDOM_MUTATION, "helix card");
+            mutate(RANDOM_MUTATION, "helix card");
             break;
         case 2:
-            delete_mutation(RANDOM_MUTATION);
+            delete_mutation(RANDOM_MUTATION, "helix card");
             break;
         }
     }
@@ -2081,13 +2081,14 @@ static void _helix_card(int power, deck_rarity_type rarity)
         switch (how_mutated() ? random2(3) : 0)
         {
         case 0:
-            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION);
+            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                   "helix card");
             break;
         case 1:
             if (coinflip())
                 _remove_bad_mutation();
             else
-                delete_mutation(RANDOM_MUTATION);
+                delete_mutation(RANDOM_MUTATION, "helix card");
             break;
         case 2:
             if (coinflip())
@@ -2095,18 +2096,18 @@ static void _helix_card(int power, deck_rarity_type rarity)
                 if (coinflip())
                 {
                     _remove_bad_mutation();
-                    mutate(RANDOM_MUTATION);
+                    mutate(RANDOM_MUTATION, "helix card");
                 }
                 else
                 {
-                    delete_mutation(RANDOM_MUTATION);
-                    mutate(RANDOM_GOOD_MUTATION);
+                    delete_mutation(RANDOM_MUTATION, "helix card");
+                    mutate(RANDOM_GOOD_MUTATION, "helix card");
                 }
             }
             else
             {
-                delete_mutation(RANDOM_MUTATION);
-                mutate(RANDOM_MUTATION);
+                delete_mutation(RANDOM_MUTATION, "helix card");
+                mutate(RANDOM_MUTATION, "helix card");
             }
             break;
         }
@@ -2119,7 +2120,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
             _remove_bad_mutation();
             break;
         case 1:
-            mutate(RANDOM_GOOD_MUTATION);
+            mutate(RANDOM_GOOD_MUTATION, "helix card");
             break;
         case 2:
             if (coinflip())
@@ -2127,12 +2128,12 @@ static void _helix_card(int power, deck_rarity_type rarity)
                 // If you get unlucky, you could get here with no bad
                 // mutations and simply get a mutation effect. Oh well.
                 _remove_bad_mutation();
-                mutate(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION, "helix card");
             }
             else
             {
-                delete_mutation(RANDOM_MUTATION);
-                mutate(RANDOM_GOOD_MUTATION);
+                delete_mutation(RANDOM_MUTATION, "helix card");
+                mutate(RANDOM_GOOD_MUTATION, "helix card");
             }
             break;
         }

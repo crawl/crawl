@@ -2923,19 +2923,19 @@ static void _draconian_scale_colour_message()
     case SP_RED_DRACONIAN:
         mpr("Your scales start taking on a fiery red colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_HEAT_RESISTANCE, 1);
+        perma_mutate(MUT_HEAT_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_WHITE_DRACONIAN:
         mpr("Your scales start taking on an icy white colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_COLD_RESISTANCE, 1);
+        perma_mutate(MUT_COLD_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a lurid green colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_POISON_RESISTANCE, 1);
+        perma_mutate(MUT_POISON_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_YELLOW_DRACONIAN:
@@ -2946,13 +2946,13 @@ static void _draconian_scale_colour_message()
     case SP_GREY_DRACONIAN:
         mpr("Your scales start taking on a dull grey colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_UNBREATHING, 1);
+        perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
         break;
 
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start taking on a glossy black colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+        perma_mutate(MUT_SHOCK_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_PURPLE_DRACONIAN:
@@ -3102,13 +3102,13 @@ void level_change(bool skip_attribute_increase)
                 {
                     mpr("You feel somewhat more resistant.",
                         MSGCH_INTRINSIC_GAIN);
-                    perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
+                    perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
                 }
 
                 if ((you.experience_level == 9)
                     || (you.experience_level == 18))
                 {
-                    perma_mutate(MUT_PASSIVE_MAPPING, 1);
+                    perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
                 }
 
                 if (!(you.experience_level % 4))
@@ -3235,13 +3235,13 @@ void level_change(bool skip_attribute_increase)
                     switch (you.species)
                     {
                         case SP_GREEN_DRACONIAN:
-                             perma_mutate(MUT_STINGER, 1);
+                             perma_mutate(MUT_STINGER, 1, "draconian growth");
                              break;
                         case SP_YELLOW_DRACONIAN:
-                             perma_mutate(MUT_ACIDIC_BITE, 1);
+                             perma_mutate(MUT_ACIDIC_BITE, 1, "draconian growth");
                              break;
                         case SP_BLACK_DRACONIAN:
-                             perma_mutate(MUT_BIG_WINGS, 1);
+                             perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
                              break;
                         default:
                              break;
@@ -3329,7 +3329,8 @@ void level_change(bool skip_attribute_increase)
 
                             gave_message = true;
                         }
-                        perma_mutate(you.demonic_traits[i].mutation, 1);
+                        perma_mutate(you.demonic_traits[i].mutation, 1,
+                                     "demonic ancestry");
                     }
                 }
 
@@ -3370,7 +3371,7 @@ void level_change(bool skip_attribute_increase)
                 }
 
                 if (you.experience_level == 6 || you.experience_level == 12)
-                    perma_mutate(MUT_SHAGGY_FUR, 1);
+                    perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
 
                 _felid_extra_life();
                 break;
@@ -7112,7 +7113,7 @@ bool player::can_bleed(bool allow_tran) const
     return (true);
 }
 
-bool player::mutate()
+bool player::mutate(const std::string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7121,14 +7122,14 @@ bool player::mutate()
 
     if (one_chance_in(5))
     {
-        if (::mutate(RANDOM_MUTATION))
+        if (::mutate(RANDOM_MUTATION, reason))
         {
             learned_something_new(HINT_YOU_MUTATED);
             return (true);
         }
     }
 
-    return (give_bad_mutation());
+    return (give_bad_mutation(reason));
 }
 
 bool player::is_icy() const
