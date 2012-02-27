@@ -2705,7 +2705,8 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_MUMMY
+    if (!player_genus(GENPC_DRACONIAN)
+        && you.species != SP_MUMMY && you.species != SP_OCTOPODE
         && !form_changed_physiology())
     {
         messages.push_back("Your eyebrows briefly feel incredibly bushy.");
