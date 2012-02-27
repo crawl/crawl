@@ -555,11 +555,6 @@ int detect_creatures(int pow, bool telepathic)
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
             }
-
-            // Assuming that highly intelligent spellcasters can
-            // detect scrying. - bwr
-            if (mons_intel(mon) == I_HIGH && mon->can_use_spells())
-                behaviour_event(mon, ME_DISTURB, MHITYOU, you.pos());
         }
     }
 
