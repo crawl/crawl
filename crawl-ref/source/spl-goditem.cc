@@ -416,7 +416,7 @@ void cast_detect_secret_doors(int pow)
     }
 
     if (found == 0)
-        mpr("You detect nothing.");
+        canned_msg(MSG_DETECT_NOTHING);
     else
     {
         redraw_screen();
