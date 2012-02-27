@@ -3244,7 +3244,8 @@ void bolt::affect_player_enchantment()
         if (MON_KILL(thrower))
         {
             mpr("Strange energies course through your body.");
-            you.mutate();
+            you.mutate(aux_source.empty() ? get_source_name() :
+                       (get_source_name() + "/" + aux_source));
             obvious_effect = true;
         }
         else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
@@ -4726,7 +4727,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_POLYMORPH:
-        if (mon->mutate())
+        if (mon->mutate("polymorph other")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {

@@ -69,14 +69,17 @@ const mutation_def& get_mutation_def(mutation_type mut);
 
 void fixup_mutations();
 
-bool mutate(mutation_type which_mutation, bool failMsg = true,
+bool mutate(mutation_type which_mutation, const std::string &reason,
+            bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
             bool stat_gain_potion = false, bool demonspawn = false,
             bool no_rot = false);
 
-inline bool give_bad_mutation(bool failMsg = true, bool force_mutation = false)
+inline bool give_bad_mutation(const std::string &reason,
+                              bool failMsg = true,
+                              bool force_mutation = false)
 {
-    return (mutate(RANDOM_BAD_MUTATION, failMsg, force_mutation,
+    return (mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation,
                    false, false, false));
 }
 
@@ -84,11 +87,12 @@ void display_mutations();
 mutation_activity_type mutation_activity_level(mutation_type mut);
 std::string describe_mutations();
 
-bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
+bool delete_mutation(mutation_type which_mutation, const std::string &reason,
+                     bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
                      bool disallow_mismatch = false);
 
-bool delete_all_mutations();
+bool delete_all_mutations(const std::string &reason);
 
 std::string mutation_name(mutation_type which_mutat, int level = -1,
                           bool colour = false);
@@ -96,7 +100,7 @@ std::string mutation_name(mutation_type which_mutat, int level = -1,
 void roll_demonspawn_mutations();
 void adjust_racial_mutation(mutation_type mut, int diff);
 
-bool perma_mutate(mutation_type which_mut, int how_much);
+bool perma_mutate(mutation_type which_mut, int how_much, const std::string &reason);
 int how_mutated(bool all = false, bool levels = false);
 
 void check_demonic_guardian();

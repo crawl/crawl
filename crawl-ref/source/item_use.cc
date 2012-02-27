@@ -4542,7 +4542,7 @@ static bool _vorpalise_weapon(bool already_known)
             if (you.can_safely_mutate())
             {
                 // not funny on the undead
-                mutate(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION, "chaos affixation");
                 break;
             }
         case 1:

@@ -1990,7 +1990,7 @@ void MiscastEffect::_transmutation(int severity)
 
     case 3:         // even nastier
         if (target->atype() == ACT_MONSTER)
-            target->mutate(); // Polymorph the monster, if possible.
+            target->mutate(cause); // Polymorph the monster, if possible.
 
         switch (random2(3))
         {
@@ -2019,7 +2019,7 @@ void MiscastEffect::_transmutation(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 you_msg = "You feel very strange.";
-                delete_mutation(RANDOM_MUTATION, true, false, false, false);
+                delete_mutation(RANDOM_MUTATION, cause, true, false, false, false);
             }
             _ouch(5 + random2avg(23, 2));
             break;
@@ -2040,9 +2040,9 @@ void MiscastEffect::_transmutation(int severity)
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
                 // you take damage).
-                give_bad_mutation(false, false);
+                give_bad_mutation(cause, false, false);
                 if (coinflip())
-                    give_bad_mutation(false, false);
+                    give_bad_mutation(cause, false, false);
             }
             _ouch(5 + random2avg(23, 2));
             break;

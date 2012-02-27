@@ -169,8 +169,8 @@ static void _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true,
-                               true))
+            && delete_mutation(RANDOM_GOOD_MUTATION, "Zin's wrath",
+                               failMsg, false, true, true))
         {
             success = true;
         }
@@ -955,7 +955,7 @@ static bool _jiyva_retribution()
         god_speaks(god, "You feel Jiyva alter your body.");
 
         for (int i = 0; i < mutat; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, false, true);
+            mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
     }
     else if (there_are_monsters_nearby() && coinflip())
     {

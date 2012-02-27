@@ -954,7 +954,8 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 //  0 if we should continue processing;
 // -1 if we should stop processing (failure).
 static int _handle_conflicting_mutations(mutation_type mutation,
-                                         bool override)
+                                         bool override,
+                                         const std::string &reason)
 {
     const int conflict[][3] = {
         { MUT_REGENERATION,     MUT_SLOW_METABOLISM,  0},
@@ -1004,13 +1005,13 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     // Ignore if not forced, otherwise override.
                     // All cases but regen:slowmeta will currently trade off.
                     if (override)
-                        while (delete_mutation(b, true, true))
+                        while (delete_mutation(b, reason, true, true))
                             ;
                     break;
                 case 1:
                     // If we have one of the pair, delete a level of the
                     // other, and that's it.
-                    delete_mutation(b, true, true);
+                    delete_mutation(b, reason, true, true);
                     return (1);     // Nothing more to do.
                 default:
                     die("bad mutation conflict resulution");
@@ -1172,7 +1173,8 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
 }
 
-bool mutate(mutation_type which_mutation, bool failMsg,
+bool mutate(mutation_type which_mutation, const std::string &reason,
+            bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
             bool demonspawn, bool no_rot)
 {
@@ -1259,10 +1261,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr("Your body decomposes!", MSGCH_MUTATION);
 
         if (coinflip())
-            lose_stat(STAT_RANDOM, 1, false, "mutating");
+            lose_stat(STAT_RANDOM, 1, false, reason);
         else
         {
-            ouch(3, NON_MONSTER, KILLED_BY_ROTTING, "mutation");
+            ouch(3, NON_MONSTER, KILLED_BY_ROTTING, reason.c_str());
             rot_hp(roll_dice(1, 3));
         }
 
@@ -1281,7 +1283,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (!one_chance_in(3) && !god_gift && !force_mutation)
                 return (false);
             else
-                return (delete_mutation(RANDOM_MUTATION, failMsg,
+                return (delete_mutation(RANDOM_MUTATION, reason, failMsg,
                                         force_mutation, false));
         }
     }
@@ -1350,7 +1352,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
-    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation);
+    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation, reason);
     if (rc == 1)
         return (true);
     if (rc == -1)
@@ -1465,7 +1467,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
-    take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+    take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
 
     if (crawl_state.game_is_hints()
         && your_talents(false).size() > old_talents)
@@ -1475,7 +1477,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     return (true);
 }
 
-static bool _delete_single_mutation_level(mutation_type mutat)
+static bool _delete_single_mutation_level(mutation_type mutat,
+                                          const std::string &reason)
 {
     if (you.mutation[mutat] == 0)
         return (false);
@@ -1535,12 +1538,13 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
 
-    take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
+    take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
 
     return (true);
 }
 
-bool delete_mutation(mutation_type which_mutation, bool failMsg,
+bool delete_mutation(mutation_type which_mutation, const std::string &reason,
+                     bool failMsg,
                      bool force_mutation, bool god_gift,
                      bool disallow_mismatch)
 {
@@ -1627,14 +1631,14 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
             return false;
     }
 
-    return (_delete_single_mutation_level(mutat));
+    return (_delete_single_mutation_level(mutat, reason));
 }
 
-bool delete_all_mutations()
+bool delete_all_mutations(const std::string &reason)
 {
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        while (_delete_single_mutation_level(static_cast<mutation_type>(i)))
+        while (_delete_single_mutation_level(static_cast<mutation_type>(i), reason))
             ;
     }
 
@@ -2076,7 +2080,8 @@ void adjust_racial_mutation(mutation_type mut, int diff)
     }
 }
 
-bool perma_mutate(mutation_type which_mut, int how_much)
+bool perma_mutate(mutation_type which_mut, int how_much,
+                  const std::string &reason)
 {
     ASSERT(is_valid_mutation(which_mut));
 
@@ -2087,14 +2092,14 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     // clear out conflicting mutations
     int count = 0;
     while (rc == 1 && ++count < 100)
-        rc = _handle_conflicting_mutations(which_mut, true);
+        rc = _handle_conflicting_mutations(which_mut, true, reason);
     ASSERT(rc == 0);
 
     int levels = 0;
     while (how_much-- > 0)
     {
         if (you.mutation[which_mut] < cap)
-            if (!mutate(which_mut, false, true, false, false, true))
+            if (!mutate(which_mut, reason, false, true, false, false, true))
                 return levels; // a partial success was still possible
         levels++;
     }

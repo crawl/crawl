@@ -558,7 +558,7 @@ public:
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool mutate();
+    bool mutate(const std::string &reason);
     void backlight();
     void banish(const std::string &who = "");
     void blink(bool allow_partial_control = true);

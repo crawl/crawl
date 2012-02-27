@@ -2285,9 +2285,9 @@ void handle_time()
 
             // We want to warp the player, not do good stuff!
             if (one_chance_in(5))
-                mutate(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION, "mutagenic glow");
             else
-                give_bad_mutation(true, coinflip());
+                give_bad_mutation("mutagenic glow", true, coinflip());
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
@@ -2386,12 +2386,13 @@ void handle_time()
             you.attribute[ATTR_EVOL_XP] = 0;
             mpr("You feel a genetic drift.");
             bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                               "evolution",
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
                 && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
             {
-                evol |= delete_mutation(MUT_EVOLUTION, false);
+                evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
             }
             // interrupt the player only if something actually happened
             if (evol)

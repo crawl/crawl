@@ -1994,6 +1994,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
         for (int i = num_tries; i > 0; --i)
         {
             if (mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
+                       good ? "Xom's grace" : "Xom's mischief",
                        failMsg, false, true, false, false))
             {
                 rc = true;
@@ -3798,26 +3799,29 @@ static void _handle_accidental_death(const int orig_hp,
 
     // MUT_ROUGH_BLACK_SCALES can statkill you by dex, undo it if necessary
     while (you.dex() <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
-        delete_mutation(MUT_ROUGH_BLACK_SCALES, true, true, true);
+    {
+        delete_mutation(MUT_ROUGH_BLACK_SCALES, "Xom's lifesaving",
+                        true, true, true);
+    }
 
     while (you.dex() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
                   orig_mutation[MUT_FLEXIBLE_WEAK])
     {
-        mutate(MUT_FLEXIBLE_WEAK, true, true, true);
+        mutate(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
     }
 
     while (you.strength() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] >
                   orig_mutation[MUT_FLEXIBLE_WEAK])
     {
-        delete_mutation(MUT_FLEXIBLE_WEAK, true, true, true);
+        delete_mutation(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
     }
     while (you.strength() <= 0
            && you.mutation[MUT_STRONG_STIFF] <
                   orig_mutation[MUT_STRONG_STIFF])
     {
-        mutate(MUT_STRONG_STIFF, true, true, true);
+        mutate(MUT_STRONG_STIFF, "Xom's lifesaving", true, true, true);
     }
 
     mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
@@ -3832,7 +3836,7 @@ static void _handle_accidental_death(const int orig_hp,
             if (you.mutation[bad] > orig_mutation[bad]
                 || you.mutation[good] < orig_mutation[good])
             {
-                mutate(good, true, true, true);
+                mutate(good, "Xom's lifesaving", true, true, true);
             }
             else
             {

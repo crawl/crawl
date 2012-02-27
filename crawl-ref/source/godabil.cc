@@ -1258,7 +1258,7 @@ bool zin_remove_all_mutations()
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations();
+    delete_all_mutations("Zin's power");
 
     return (true);
 }
@@ -1563,7 +1563,7 @@ bool jiyva_remove_bad_mutation()
     }
 
     // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
+    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);

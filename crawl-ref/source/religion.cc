@@ -2053,15 +2053,15 @@ static bool _jiyva_mutate()
     const int rand = random2(100);
 
     if (rand < 10)
-        return (delete_mutation(RANDOM_SLIME_MUTATION, true, false, true));
+        return (delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true));
     else if (rand < 30)
-        return (delete_mutation(RANDOM_NON_SLIME_MUTATION, true, false, true));
+        return (delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true));
     else if (rand < 55)
-        return (mutate(RANDOM_MUTATION, true, false, true));
+        return (mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true));
     else if (rand < 75)
-        return (mutate(RANDOM_SLIME_MUTATION, true, false, true));
+        return (mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true));
     else
-        return (mutate(RANDOM_GOOD_MUTATION, true, false, true));
+        return (mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true));
 }
 
 bool do_god_gift(bool forced)

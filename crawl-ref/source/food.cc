@@ -1784,14 +1784,14 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     {
     case CE_MUTAGEN_RANDOM:
         mpr("This meat tastes really weird.");
-        mutate(RANDOM_MUTATION);
+        mutate(RANDOM_MUTATION, "mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
         break;
 
     case CE_MUTAGEN_BAD:
         mpr("This meat tastes *really* weird.");
-        give_bad_mutation();
+        give_bad_mutation("spoiled mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(random2(200));
         break;
@@ -2290,7 +2290,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             food_value /= 2;
             if (start_feeding)
                 mpr("This blood tastes really weird!");
-            mutate(RANDOM_MUTATION);
+            mutate(RANDOM_MUTATION, "mutagenic blood");
             did_god_conduct(DID_DELIBERATE_MUTATING, 10);
             xom_is_stimulated(100);
             // Sometimes heal by one hp.
@@ -2302,7 +2302,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             food_value /= 2;
             if (start_feeding)
                 mpr("This blood tastes *really* weird!");
-            give_bad_mutation();
+            give_bad_mutation("spoiled mutagenic blood");
             did_god_conduct(DID_DELIBERATE_MUTATING, 10);
             xom_is_stimulated(random2(200));
             // No healing from bad mutagenic blood.

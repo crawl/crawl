@@ -111,36 +111,36 @@ void wizard_change_species(void)
     {
     case SP_RED_DRACONIAN:
         if (you.experience_level >= 7)
-            perma_mutate(MUT_HEAT_RESISTANCE, 1);
+            perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
         break;
 
     case SP_WHITE_DRACONIAN:
         if (you.experience_level >= 7)
-            perma_mutate(MUT_COLD_RESISTANCE, 1);
+            perma_mutate(MUT_COLD_RESISTANCE, 1, "wizard race change");
         break;
 
     case SP_GREEN_DRACONIAN:
         if (you.experience_level >= 7)
-            perma_mutate(MUT_POISON_RESISTANCE, 1);
+            perma_mutate(MUT_POISON_RESISTANCE, 1, "wizard race change");
         if (you.experience_level >= 14)
-            perma_mutate(MUT_STINGER, 1);
+            perma_mutate(MUT_STINGER, 1, "wizard race change");
         break;
 
     case SP_YELLOW_DRACONIAN:
         if (you.experience_level >= 14)
-            perma_mutate(MUT_ACIDIC_BITE, 1);
+            perma_mutate(MUT_ACIDIC_BITE, 1, "wizard race change");
         break;
 
     case SP_GREY_DRACONIAN:
         if (you.experience_level >= 7)
-            perma_mutate(MUT_UNBREATHING, 1);
+            perma_mutate(MUT_UNBREATHING, 1, "wizard race change");
         break;
 
     case SP_BLACK_DRACONIAN:
         if (you.experience_level >= 7)
-            perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+            perma_mutate(MUT_SHOCK_RESISTANCE, 1, "wizard race change");
         if (you.experience_level >= 14)
-            perma_mutate(MUT_BIG_WINGS, 1);
+            perma_mutate(MUT_BIG_WINGS, 1, "wizard race change");
         break;
 
     case SP_DEMONSPAWN:
@@ -161,18 +161,18 @@ void wizard_change_species(void)
 
     case SP_DEEP_DWARF:
         if (you.experience_level >= 9)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
         if (you.experience_level >= 14)
-            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
+            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "wizard race change");
         if (you.experience_level >= 18)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
         break;
 
     case SP_FELID:
         if (you.experience_level >= 6)
-            perma_mutate(MUT_SHAGGY_FUR, 1);
+            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
         if (you.experience_level >= 12)
-            perma_mutate(MUT_SHAGGY_FUR, 1);
+            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
         break;
 
     default:
@@ -548,7 +548,7 @@ bool wizard_add_mutation()
     {
         int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
 
-        success = mutate(mutat, true, force, god_gift);
+        success = mutate(mutat, "wizard power", true, force, god_gift);
 
         if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
             && !force)
@@ -624,13 +624,13 @@ bool wizard_add_mutation()
         else if (levels > 0)
         {
             for (int i = 0; i < levels; ++i)
-                if (mutate(mutat, true, force, god_gift))
+                if (mutate(mutat, "wizard power", true, force, god_gift))
                     success = true;
         }
         else
         {
             for (int i = 0; i < -levels; ++i)
-                if (delete_mutation(mutat, true, force, god_gift))
+                if (delete_mutation(mutat, "wizard power", true, force, god_gift))
                     success = true;
         }
     }
