@@ -484,6 +484,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_TOO_HUNGRY:
         mpr("You're too hungry.");
         break;
+    case MSG_DETECT_NOTHING:
+        mpr("You detect nothing.");
+        break;
     }
 }
 

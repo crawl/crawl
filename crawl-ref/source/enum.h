@@ -514,6 +514,7 @@ enum canned_message_type
     MSG_MANA_DECREASE,
     MSG_DISORIENTED,
     MSG_TOO_HUNGRY,
+    MSG_DETECT_NOTHING,
 };
 
 enum char_set_type

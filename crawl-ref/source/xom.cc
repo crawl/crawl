@@ -624,7 +624,7 @@ static int _xom_detect_items(int sever, int tension, bool debug = false)
               "divination: detect items"), true);
 
     if (detect_items(sever) == 0)
-        mpr("You detect nothing.");
+        canned_msg(MSG_DETECT_NOTHING);
     else
         mpr("You detect items!");
 
@@ -645,7 +645,7 @@ static int _xom_detect_creatures(int sever, int tension, bool debug = false)
     const int num_creatures = detect_creatures(sever);
 
     if (num_creatures == 0)
-        mpr("You detect nothing.");
+        canned_msg(MSG_DETECT_NOTHING);
     else if (num_creatures == prev_detected)
     {
         // This is not strictly true.  You could have cast Detect
