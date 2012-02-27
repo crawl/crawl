@@ -401,32 +401,36 @@ void antimagic()
 }
 
 // The description idea was okay, but this spell just isn't that exciting.
-// So I'm converting it to the more practical expose secret doors. -- bwr
+// So I'm converting it to the more practical expose secret doors. - bwr
 void cast_detect_secret_doors(int pow)
 {
     int found = 0;
 
     for (radius_iterator ri(you.get_los()); ri; ++ri)
+    {
         if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
         {
             reveal_secret_door(*ri);
             found++;
         }
+    }
 
-    if (found)
+    if (found == 0)
+        mpr("You detect nothing.");
+    else
+    {
         redraw_screen();
-
-    mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
+        mpr("You detect secret doors!");
+    }
 }
 
 int detect_traps(int pow)
 {
     pow = std::min(50, pow);
 
-    // Trap detection moved to traps.cc.  -am
-
+    // Trap detection moved to traps.cc. -am
     const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
+    return (reveal_traps(range));
 }
 
 // pow -1 for passive
