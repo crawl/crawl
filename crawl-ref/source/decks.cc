@@ -1130,6 +1130,11 @@ bool deck_stack()
 
                 _redraw_stacked_cards(draws, selected);
             }
+            // If you HUP the game, you lose the opportunity for further
+            // stacking, but you might have already ordered some, no need
+            // to destroy that.
+            else if (c == CK_ESCAPE && crawl_state.seen_hups)
+                break; // TODO: continue on game restore instead?
         }
         redraw_screen();
     }
