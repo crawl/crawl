@@ -53,6 +53,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
 #include "hints.h"
@@ -890,7 +891,10 @@ static bool _handle_scroll(monster* mons)
             && mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
-            monster_blink(mons);
+            if (mons->caught())
+                monster_blink(mons);
+            else if (!blink_away(mons))
+                break;
             read  = true;
             ident = ID_KNOWN_TYPE;
         }
