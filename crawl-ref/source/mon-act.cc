@@ -891,12 +891,14 @@ static bool _handle_scroll(monster* mons)
             && mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
+            read = true;
             if (mons->caught())
+            {
                 monster_blink(mons);
-            else if (!blink_away(mons))
-                break;
-            read  = true;
-            ident = ID_KNOWN_TYPE;
+                ident = ID_KNOWN_TYPE;
+            }
+            else if (blink_away(mons))
+                ident = ID_KNOWN_TYPE;
         }
         break;
 
