@@ -875,13 +875,12 @@ static bool _handle_scroll(monster* mons)
     case SCR_TELEPORTATION:
         if (!mons->has_ench(ENCH_TP))
         {
-            if (mons->caught() || mons_is_fleeing(mons)
-                || mons->pacified())
+            if (mons->caught() || mons_is_fleeing(mons) || mons->pacified())
             {
                 simple_monster_message(mons, " reads a scroll.");
-                monster_teleport(mons, false);
-                read  = true;
+                read = true;
                 ident = ID_KNOWN_TYPE;
+                monster_teleport(mons, false);
             }
         }
         break;
@@ -894,8 +893,8 @@ static bool _handle_scroll(monster* mons)
             read = true;
             if (mons->caught())
             {
-                monster_blink(mons);
                 ident = ID_KNOWN_TYPE;
+                monster_blink(mons);
             }
             else if (blink_away(mons))
                 ident = ID_KNOWN_TYPE;
@@ -914,8 +913,8 @@ static bool _handle_scroll(monster* mons)
             {
                 if (you.can_see(mon))
                 {
-                    mprf("%s appears!", mon->name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
+                    mprf("%s appears!", mon->name(DESC_A).c_str());
                 }
                 player_angers_monster(mon);
             }
