@@ -39,6 +39,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "xom.h"
@@ -1858,7 +1859,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 spret_type cast_animate_skeleton(god_type god, bool fail)
 {
     fail_check();
-    mpr("You attempt to give life to the dead...");
+    canned_msg(MSG_ANIMATE_REMAINS);
 
     // First, we try to animate a skeleton if there is one.
     if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
@@ -1896,7 +1897,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
 spret_type cast_animate_dead(int pow, god_type god, bool fail)
 {
     fail_check();
-    mpr("You call on the dead to rise...");
+    canned_msg(MSG_CALL_DEAD);
 
     if (!animate_dead(&you, pow + 1, BEH_FRIENDLY, MHITYOU, &you, "", god))
         canned_msg(MSG_NOTHING_HAPPENS);
