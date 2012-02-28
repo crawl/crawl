@@ -222,6 +222,32 @@ function ice_cave_caverns_natural_giant_monster_set(e)
 end
 }}
 
+# : ice_cave_caverns_undead_demon_loot(_G)
+{{
+function ice_cave_caverns_undead_demon_loot(e)
+  e.item("cloak ego:cold_resistance good_item / wizard hat good_item / \
+          pair of gloves good_item / pair of boots good_item / nothing")
+  e.item("book of ice / book of unlife / staff of cold / staff of death / \
+          nothing w:30")
+  e.item("ring of ice / ring of protection from cold / \
+          ring of life protection / wand of cold / wand of draining / nothing")
+end
+}}
+
+# : ice_cave_caverns_natura_giant_loot(_G)
+{{
+function ice_cave_caverns_natural_giant_loot(e)
+  e.item("animal skin good_item ego:cold_resistance / \
+          battleaxe good_item ego:freezing w:4 / \
+          glaive good_item ego:freezing w:4 / \
+          great sword good_item ego:freezing w:2 / nothing")
+  e.item("book of ice / crossbow ego:frost good_item no_uniq / \
+          longbow ego:frost good_item no_uniq / nothing w:20")
+  e.item("ring of ice / ring of protection from cold / wand of cold / \
+          arrow ego:ice q:25 / bolt ego:ice q:20 / nothing")
+end
+}}
+
 # Add a milestone for entering the Ice Cave.
 {{
 function ice_cave_milestone(e)
@@ -870,24 +896,11 @@ ice_cave_milestone(_G)
 : if you.level_type_tag() == "ice_cave_hard" then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
 MAP
@@ -930,12 +943,7 @@ ORIENT: encompass
 : if you.level_type_tag() == "ice_cave_hard"  then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 # Take out ';' safety padding.
 SUBST: ; = .
 # Place the fog generators:
@@ -945,15 +953,7 @@ KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 # Place the fog generators. The predetermined ones are mild.
 : place_fog(_G, "freezing vapour", 5)
 # Place a few random, mild ones.
@@ -1011,12 +1011,7 @@ ORIENT: encompass
 : if you.level_type_tag() == "ice_cave_hard" then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 # Place fog generators.
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 25)
@@ -1028,15 +1023,7 @@ KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 # Place fog generators.
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 20)
