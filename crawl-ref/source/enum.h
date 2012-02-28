@@ -515,6 +515,8 @@ enum canned_message_type
     MSG_DISORIENTED,
     MSG_TOO_HUNGRY,
     MSG_DETECT_NOTHING,
+    MSG_CALL_DEAD,
+    MSG_ANIMATE_REMAINS,
 };
 
 enum char_set_type

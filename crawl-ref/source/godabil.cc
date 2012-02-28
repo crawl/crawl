@@ -1590,14 +1590,14 @@ void yred_animate_remains_or_dead()
 {
     if (yred_can_animate_dead())
     {
-        mpr("You call on the dead to rise...");
+        canned_msg(MSG_CALL_DEAD);
 
         animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1, BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
     }
     else
     {
-        mpr("You attempt to give life to the dead...");
+        canned_msg(MSG_ANIMATE_REMAINS);
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
                             MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
