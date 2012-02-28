@@ -886,16 +886,13 @@ static bool _handle_scroll(monster* mons)
         break;
 
     case SCR_BLINKING:
-        if (mons->caught() || mons_is_fleeing(mons)
-            || mons->pacified())
+        if ((mons->caught() || mons_is_fleeing(mons) || mons->pacified())
+            && mons_near(mons))
         {
-            if (mons_near(mons))
-            {
-                simple_monster_message(mons, " reads a scroll.");
-                monster_blink(mons);
-                read  = true;
-                ident = ID_KNOWN_TYPE;
-            }
+            simple_monster_message(mons, " reads a scroll.");
+            monster_blink(mons);
+            read  = true;
+            ident = ID_KNOWN_TYPE;
         }
         break;
 
