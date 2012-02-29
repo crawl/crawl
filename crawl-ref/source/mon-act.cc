@@ -297,7 +297,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
         if (ally == NULL)
             continue;
 
-        if (mons_is_stationary(ally))
+        if (mons_is_stationary(ally) || ally->reach_range())
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
