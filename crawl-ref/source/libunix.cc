@@ -390,7 +390,12 @@ void console_startup(void)
     termio_init();
 
 #ifdef CURSES_USE_KEYPAD
-    write(1, KPADAPP, strlen(KPADAPP));
+    // If hardening is enabled (default on recent distributions), glibc
+    // declares write() with __attribute__((warn_unused_result)) which not
+    // only spams when not relevant, but cannot even be selectively hushed
+    // by (void) casts like all other such warnings.
+    // "if ();" is an unsightly hack...
+    if (write(1, KPADAPP, strlen(KPADAPP)));
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -438,7 +443,8 @@ void console_shutdown()
 
     tcsetattr(0, TCSAFLUSH, &def_term);
 #ifdef CURSES_USE_KEYPAD
-    write(1, KPADCUR, strlen(KPADCUR));
+    // "if ();" to avoid undisableable spurious warning.
+    if (write(1, KPADCUR, strlen(KPADCUR)));
 #endif
 
 #ifdef USE_UNIX_SIGNALS
