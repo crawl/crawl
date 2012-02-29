@@ -776,7 +776,6 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
              coinflip() ? "" : " You feel responsible.");
 
     simple_god_message(info);
-    lose_piety(1);
 
     return (true);
 }
