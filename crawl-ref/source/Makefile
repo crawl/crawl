@@ -1249,7 +1249,7 @@ doxygen-all:
 #
 ifndef NO_INLINE_DEPGEN
 # See info node: (gcc) Preprocessor Options
-INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$*.d,-MT,$@
+INLINE_DEPGEN_CFLAGS = -MMD
 endif
 
 $(DEPS): %.d: %.cc
