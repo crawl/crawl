@@ -771,9 +771,8 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
 
     mons->hit_points = 1;
 
-    snprintf(info, INFO_SIZE, " protects %s from harm!%s",
-             mons->name(DESC_THE).c_str(),
-             coinflip() ? "" : " You feel responsible.");
+    snprintf(info, INFO_SIZE, " protects %s from harm!",
+             mons->name(DESC_THE).c_str());
 
     simple_god_message(info);
 
