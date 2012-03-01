@@ -110,7 +110,6 @@ MARKER: = = lua:restrict_door()
 KFEAT:  ^ = alarm trap / blade trap / axe trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
-KFEAT:  m = iron_grate
 FTILE:  "OnDx = floor_marble
 COLOUR: " = magenta
 TILE:   x = wall_zot_magenta
@@ -128,19 +127,19 @@ MAP
 'wc1....cccccmccccccmccccccmccccc....1cw'
 'wc.""".+....2.............2....+.""".cw'
 'wc."O".cccccccccccc+cccccccccccc."O".cw'
-'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc.""".s..3.....=4w.w4=......3.s.""".cw'
 'wc.....c.3...cccccc.cccccc.""".c.....cw'
 'wccccccc3....+...3"""3...+."x"3ccc+cccw'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 ''''''wm.......c.""""""".c4=..3.s$$$2mww'
-''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''wc.x3x3x2c"""xxx"""cwcccccccccccw''
 ''''''WD"""""""D"""xxx"""+.+^^^^^^^^^+w''
-''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''wc.x3x3x2c"""xxx"""cwcccccccccccw''
 ''''''wm.......c.""""""".c4=..3.s$$$2mww'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 'wccccccc3....+...3"""3...+."x"3ccc+cccw'
 'wc.....c.3...cccccc.cccccc.""".c.....cw'
-'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc.""".s..3.....=4w.w4=......3.s.""".cw'
 'wc."O".cccccccccccc+cccccccccccc."O".cw'
 'wc.""".+....2.............2....+.""".cw'
 'wc1....cccccmccccccmccccccmccccc....1cw'
