@@ -517,7 +517,6 @@ ENDMAP
 #
 NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
-DESC:      Cerebov's castle
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Cerebov')
 MONS:      patrolling Cerebov, Balrug, Pit Fiend
