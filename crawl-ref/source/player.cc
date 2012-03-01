@@ -3063,7 +3063,7 @@ void level_change(bool skip_attribute_increase)
             switch (you.species)
             {
             case SP_HUMAN:
-                if (!(you.experience_level % 5))
+                if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
