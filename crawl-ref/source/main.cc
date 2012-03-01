@@ -1407,15 +1407,8 @@ static void _go_upstairs()
         return;
     }
 
-	if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        std::string emsg = "While you don't manage to break free from ";
-        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-        emsg += ", you feel that another attempt might be more successful.";
-        mpr(emsg);
-        you.turn_is_over = true;
+    if (!you.attempt_escape()) // false means constricted and don't escape
         return;
-    }
 
     if (!_prompt_dangerous_portal(ygrd))
         return;
@@ -1542,15 +1535,8 @@ static void _go_downstairs()
         return;
     }
 
-	if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        std::string emsg = "While you don't manage to break free from ";
-        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-        emsg += ", you feel that another attempt might be more successful.";
-        mpr(emsg);
-        you.turn_is_over = true;
+    if (!you.attempt_escape()) // false means constricted and don't escape
         return;
-    }
 
     if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
         return;
@@ -4258,14 +4244,7 @@ static void _move_player(coord_def move)
         }
 
         if (!you.attempt_escape()) // false means constricted and did not escape
-        {
-            std::string emsg = "While you don't manage to break free from ";
-            emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-            emsg += ", you feel that another attempt might be more successful.";
-            mpr(emsg);
-            you.turn_is_over = true;
             return;
-        }
 
         std::string verb;
         if (you.flight_mode() == FL_FLY)
