@@ -7435,7 +7435,14 @@ bool player::attempt_escape()
         return true;
     }
     else
+    {
+        std::string emsg = "While you don't manage to break free from ";
+        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+        emsg += ", you feel that another attempt might be more successful.";
+        mpr(emsg);
+        you.turn_is_over = true;
         return false;
+    }
 }
 
 /*
