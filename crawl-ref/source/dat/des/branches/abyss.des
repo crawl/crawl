@@ -185,6 +185,25 @@ xxxxx1$1xxxxx
      . .
 ENDMAP
 
+NAME:    hangedman_abyss_shoalhut
+TAGS:    abyss no_pool_fixup patrolling
+MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
+         unseen horror / ynoxinul / snapping turtle skeleton w:15
+NSUBST:  = = 1:x= / *:x
+SUBST:   1 = 1., x = xxxxcccvb, l = wWll
+KMASK:   wWl = no_monster_gen
+MAP
+   l l
+ lxx=xxl
+ xx.1.xx
+lx.1.1.xl
+ =1.|.1=
+lx.1.1.xl
+ xx.1.xx
+ lxx+xxl
+   l l
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################
