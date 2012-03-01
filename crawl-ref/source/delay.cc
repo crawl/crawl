@@ -1026,7 +1026,8 @@ static void _finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_EAT:
-        mprf("You finish eating.");
+        if (delay.parm3 > 0) // If duration was just one turn, don't print.
+            mprf("You finish eating.");
         // For chunks, warn the player if they're not getting much
         // nutrition. Also, print the other eating messages only now.
         if (delay.parm1)

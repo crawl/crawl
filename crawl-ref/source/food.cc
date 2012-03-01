@@ -2001,8 +2001,16 @@ static void _eating(object_class_type item_class, int item_type)
         if (food_value > 0)
         {
             int duration = 1;
+
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
+            {
                 duration = 3;
+            }
+            else if (item_type == FOOD_AMBROSIA || item_type == FOOD_GRAPE
+                     || item_type == FOOD_SULTANA)
+            {
+                duration = 0;
+            }
 
             if (you.duration[DUR_NAUSEA])
             {
@@ -2011,7 +2019,9 @@ static void _eating(object_class_type item_class, int item_type)
                 food_value /= 2;
             }
 
-            start_delay(DELAY_EAT, duration, 0, item_type);
+            // use delay.parm3 to figure out whether to ouput "finish eating"
+            start_delay(DELAY_EAT, duration, 0, item_type, duration);
+
             lessen_hunger(food_value, true);
 
             if (player_mutation_level(MUT_FOOD_JELLY)
