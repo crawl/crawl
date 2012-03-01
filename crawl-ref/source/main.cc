@@ -1377,11 +1377,6 @@ static void _go_upstairs()
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        mpr("You can't go up stairs while constricted.");
-        return;
-    }
     if (ygrd == DNGN_ENTER_SHOP)
     {
         if (you.berserk())
@@ -1409,6 +1404,16 @@ static void _go_upstairs()
             mpr("This shop appears to be closed.");
         else
             mpr("You can't go up here!");
+        return;
+    }
+
+	if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        std::string emsg = "While you don't manage to break free from ";
+        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+        emsg += ", you feel that another attempt might be more successful.";
+        mpr(emsg);
+        you.turn_is_over = true;
         return;
     }
 
@@ -1537,9 +1542,13 @@ static void _go_downstairs()
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
+	if (!you.attempt_escape()) // false means constricted and don't escape
     {
-        mpr("You can't go down stairs while constricted.");
+        std::string emsg = "While you don't manage to break free from ";
+        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+        emsg += ", you feel that another attempt might be more successful.";
+        mpr(emsg);
+        you.turn_is_over = true;
         return;
     }
 
