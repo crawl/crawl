@@ -2019,7 +2019,7 @@ static void _eating(object_class_type item_class, int item_type)
                 food_value /= 2;
             }
 
-            // use delay.parm3 to figure out whether to ouput "finish eating"
+            // use delay.parm3 to figure out whether to output "finish eating"
             start_delay(DELAY_EAT, duration, 0, item_type, duration);
 
             lessen_hunger(food_value, true);
