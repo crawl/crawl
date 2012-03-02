@@ -18,7 +18,6 @@
 // sound goes farther.
 //
 const int BASE_NOISE_ATTENUATION_MILLIS = 850;
-const int NOISE_ATTENUATION_COMPLETE = 250000;
 const int LOWEST_AUDIBLE_NOISE_INTENSITY_MILLIS = 1000;
 
 static inline int noise_is_audible(int noise_intensity_millis)

@@ -737,7 +737,6 @@ void blood_smell(int strength, const coord_def& where)
 // noise machinery
 
 // Currently noise attenuation depends solely on the feature in question.
-// Walls are assumed to completely kill noise.
 static int _noise_attenuation_millis(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
@@ -755,7 +754,7 @@ static int _noise_attenuation_millis(const coord_def &pos)
         if (feat_is_statue_or_idol(feat))
             return BASE_NOISE_ATTENUATION_MILLIS * 2;
         if (feat_is_wall(feat))
-            return NOISE_ATTENUATION_COMPLETE;
+            return BASE_NOISE_ATTENUATION_MILLIS * 12;
         return BASE_NOISE_ATTENUATION_MILLIS;
     }
 }
