@@ -2163,7 +2163,7 @@ FILE *lk_open(const char *mode, const std::string &file)
 
     if (handle && !lock_file_handle(handle, locktype))
     {
-        perror("Could not lock file... ");
+        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
         handle = NULL;
     }
