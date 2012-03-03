@@ -3057,7 +3057,7 @@ static void _player_reacts()
     int food_use = player_hunger_rate();
     food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
-    if (food_use > 0 && you.hunger >= 40)
+    if (food_use > 0 && you.hunger > 0)
     {
         make_hungry(food_use, true);
         if (you.duration[DUR_AMBROSIA])
