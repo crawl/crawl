@@ -382,7 +382,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
 
     case POT_MAGIC:
-        inc_mp((10 + random2avg(28, 3)));
+        inc_mp(10 + random2avg(28, 3));
         mpr("Magic courses through your body.");
         break;
 

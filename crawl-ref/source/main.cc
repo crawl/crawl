@@ -3058,7 +3058,16 @@ static void _player_reacts()
     food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
     if (food_use > 0 && you.hunger >= 40)
+    {
         make_hungry(food_use, true);
+        if (you.duration[DUR_AMBROSIA])
+        {
+            if (food_use > you.duration[DUR_AMBROSIA])
+                food_use = you.duration[DUR_AMBROSIA];
+            you.duration[DUR_AMBROSIA] -= food_use;
+            inc_mp(food_use);
+        }
+    }
 
     _regenerate_hp_and_mp(capped_time);
 
