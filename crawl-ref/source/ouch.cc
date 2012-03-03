@@ -1363,23 +1363,18 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Prevent bogus notes.
     activate_notes(false);
 
-#ifdef SCORE_WIZARD_CHARACTERS
-    // Add this highscore to the score file.
-    hiscores_new_entry(se);
-    logfile_new_entry(se);
-#else
-
-    // Only add non-wizards to the score file.
-    // Never generate bones files of wizard or tutorial characters -- bwr
+#ifndef SCORE_WIZARD_CHARACTERS
     if (!you.wizard)
+#endif
     {
+        // Add this highscore to the score file.
         hiscores_new_entry(se);
         logfile_new_entry(se);
-
-        if (!non_death && !crawl_state.game_is_tutorial())
-            save_ghost();
     }
-#endif
+
+    // Never generate bones files of wizard or tutorial characters -- bwr
+    if (!non_death && !crawl_state.game_is_tutorial() && !you.wizard)
+        save_ghost();
 
     _end_game(se);
 }
