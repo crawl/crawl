@@ -1420,6 +1420,7 @@ enum duration_type
     DUR_SHROUD_OF_GOLUBRIA,
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
+    DUR_AMBROSIA,
     NUM_DURATIONS
 };
 
