@@ -1642,7 +1642,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    && !is_range_weapon(*weapon)
-                   || item_is_rod(*weapon)))
+                   || weapon->base_type == OBJ_STAVES))
     {
         int wpn_damage_plus = weapon->plus2;
 
