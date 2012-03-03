@@ -417,7 +417,7 @@ KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
 SUBST:   b=a, c=a, d=a, e=a, f=a, a=T
 SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
-KFEAT:   Z = stone_arch
+KFEAT:   Z = abandoned_shop
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
@@ -459,7 +459,7 @@ SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
 SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
 SUBST:   y=z, r=z, s=z, j=z, k=z, m=z
 KFEAT:   A = any shop
-KFEAT:   Z = stone_arch
+KFEAT:   Z = abandoned_shop
 SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
