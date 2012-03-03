@@ -186,7 +186,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     logfile = _hs_open("a", log_file_name());
     if (logfile == NULL)
     {
-        perror("Entry not added - failure opening logfile for appending.");
+        mpr("ERROR: failure writing to the logfile.", MSGCH_ERROR);
         return;
     }
 
@@ -358,7 +358,7 @@ std::string hiscores_format_single_long(const scorefile_entry &se,
 // BEGIN private functions
 // --------------------------------------------------------------------------
 
-FILE *_hs_open(const char *mode, const std::string &scores)
+static FILE *_hs_open(const char *mode, const std::string &scores)
 {
     // allow reading from standard input
     if (scores == "-")

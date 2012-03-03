@@ -230,10 +230,7 @@ int actor::body_weight(bool base) const
     case SIZE_HUGE:
         return (2200);
     default:
-        mpr("ERROR: invalid body weight");
-        perror("actor::body_weight(): invalid body weight");
-        end(0);
-        return (0);
+        die("invalid body weight");
     }
 }
 
