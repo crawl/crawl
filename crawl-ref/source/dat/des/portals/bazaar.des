@@ -1763,7 +1763,7 @@ WEIGHT: 10
 KFEAT:  ! = general shop
 MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
              pow_min = 1, pow_max = 3, delay_min = 5, delay_max = 10, \
-             size = 16, walk_dist = 0, spread_rate= 0 }
+             size = 10, walk_dist = 0, spread_rate= 0 }
 ITEM:   nothing
 NSUBST: < = 1:< / *:.
 : bazaar_epilogue(_G)
@@ -1779,7 +1779,7 @@ x.......x.xxx.x.......x
 xxxxxxxx.x.x.x.xxxxxxxx
       x.xx...xx.x
       xx.......xx
-       xx..*..xx
+       xx..d..xx
       xx.......xx
       x.xx...xx.x
 xxxxxxxx.x.x.x.xxxxxxxx
