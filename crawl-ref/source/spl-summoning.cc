@@ -2124,8 +2124,8 @@ bool monster_simulacrum(monster *caster, bool actual)
                 {
                     const char *name = mons_class_name(sim_type);
                     mprf(MSGCH_WARN,
-                         "The vapour coalesces into an ice likeness of %s %s.",
-                         article_a(name).c_str(), name);
+                         "The vapour coalesces into an ice likeness of %s.",
+                         article_a(name).c_str());
                 }
             }
             // if the cast was not visible, you get "comes into view" instead
