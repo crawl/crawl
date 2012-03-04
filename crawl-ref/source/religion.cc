@@ -787,7 +787,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     }
 
     if (likes.empty() && really_likes.empty())
-        text += " %s doesn't like anything? This a bug; please report it.";
+        text += " doesn't like anything? This is a bug; please report it.";
     else
     {
         text += " likes it when ";
