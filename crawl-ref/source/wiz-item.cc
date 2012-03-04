@@ -730,6 +730,12 @@ void wizard_make_object_randart()
         return;
     }
 
+    // Remove curse flag from item, unless worshipping Ashenzari.
+    if (you.religion == GOD_ASHENZARI)
+        do_curse_item(item, true);
+    else
+        do_uncurse_item(item, false);
+
     add_autoinscription(item);
 
     // If it was equipped, requip the item.
