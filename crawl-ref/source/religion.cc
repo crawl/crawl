@@ -1017,8 +1017,7 @@ void dec_penance(god_type god, int val)
             }
             else if (god == GOD_CHEIBRIADOS)
             {
-                mprf(MSGCH_GOD, "%s restores the support of your attributes.",
-                     god_name(you.religion).c_str());
+                simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
                 notify_stat_change("mollifying Cheibriados");
             }
@@ -2714,8 +2713,7 @@ static void _gain_piety_point()
     if (you.religion == GOD_CHEIBRIADOS
         && che_stat_boost(old_piety) < che_stat_boost())
     {
-        mprf(MSGCH_GOD, "%s raises the support of your attributes as your movement slows.",
-                        god_name(you.religion).c_str());
+        simple_god_message(" raises the support of your attributes as your movement slows.");
         notify_stat_change("Cheibriados piety gain");
     }
 
@@ -2852,8 +2850,7 @@ void lose_piety(int pgn)
     if (you.religion == GOD_CHEIBRIADOS
         && che_stat_boost(old_piety) > che_stat_boost())
     {
-        mprf(MSGCH_GOD, "%s reduces the support of your attributes as your movement quickens.",
-                        god_name(you.religion).c_str());
+        simple_god_message(" reduces the support of your attributes as your movement quickens.");
         notify_stat_change("Cheibriados piety loss");
     }
 
@@ -3492,8 +3489,7 @@ void god_pitch(god_type which_god)
     // Chei worshippers start their stat gain immediately.
     if (you.religion == GOD_CHEIBRIADOS)
     {
-        mprf(MSGCH_GOD, "%s begins to support your attributes as your movement slows.",
-                         god_name(you.religion).c_str());
+        simple_god_message(" begins to support your attributes as your movement slows.");
         notify_stat_change("Cheibriados worship");
     }
 

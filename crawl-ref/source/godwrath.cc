@@ -982,9 +982,9 @@ static bool _jiyva_retribution()
 
         if (found_one)
         {
-            mprf(MSGCH_GOD, "Jiyva's putrescence saturates %s!",
-                 mon->name(DESC_THE).c_str());
-
+            simple_god_message(
+                make_stringf("'s putrescence saturates %s!",
+                             mon->name(DESC_THE).c_str()).c_str(), god);
             slimify_monster(mon, true);
         }
     }

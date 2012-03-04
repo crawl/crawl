@@ -4276,8 +4276,9 @@ void bolt::affect_monster(monster* mon)
             // nice.
             if (you.see_cell(mon->pos()))
             {
-                mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
-                     attitude == ATT_FRIENDLY ? "your" : "a");
+                simple_god_message(
+                    make_stringf(" protects %s plant from harm.",
+                        attitude == ATT_FRIENDLY ? "your" : "a").c_str());
             }
         }
         return;
