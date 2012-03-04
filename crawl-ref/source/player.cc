@@ -3840,8 +3840,8 @@ static void _display_vampire_status()
             attrib.push_back("have an extremely slow metabolism");
             attrib.push_back("heal slowly.");
             break;
-        case HS_HUNGRY:
         case HS_VERY_HUNGRY:
+        case HS_HUNGRY:
             attrib.push_back("resist poison");
             attrib.push_back("resist cold");
             attrib.push_back("significantly resist negative energy");
