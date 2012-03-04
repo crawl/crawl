@@ -220,7 +220,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // Cursed god: no holy wrath (since that brand repels curses).
         if (brand == SPWPN_HOLY_WRATH)
             return (false);
-
         break;
 
     default:
@@ -727,7 +726,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
     return (1 + random2(2));
 }
 
-void static _get_randart_properties(const item_def &item,
+static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &proprt)
 {
     const object_class_type aclass = item.base_type;
