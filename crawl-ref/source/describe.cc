@@ -4006,8 +4006,8 @@ static std::string _religion_help(god_type god)
     case GOD_FEDHAS:
         if (you.piety >= piety_breakpoint(0))
         {
-            result += "Evolving plants requires fruit, "
-                      "evolving fungi requires piety.";
+            result += "Evolving plants requires fruit, and evolving "
+                      "fungi requires piety.";
         }
 
     default:
