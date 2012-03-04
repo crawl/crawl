@@ -431,8 +431,8 @@ int zin_tithe(item_def& item, int quant, bool quiet)
         if (item.plus == 1) // seen before worshipping Zin
         {
             tithe = 0;
-            mprf(MSGCH_GOD, "%s is a bit unhappy you did not bring this "
-                            "gold earlier.", god_name(GOD_ZIN).c_str());
+            simple_god_message(" is a bit unhappy you did not bring this "
+                               "gold earlier.");
         }
         // A single scroll can give you more than D:1-18, Lair and Orc
         // together, limit the gains.  You're still required to pay from
