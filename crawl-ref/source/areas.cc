@@ -427,24 +427,24 @@ void create_sanctuary(const coord_def& center, int time)
     // Messaging.
     if (trap_count > 0)
     {
-        mpr("By Zin's power hidden traps are revealed to you.",
+        mpr("By Zin's power, hidden traps are revealed to you.",
             MSGCH_GOD);
     }
 
     if (cloud_count == 1)
     {
-        mpr("By Zin's power the foul cloud within the sanctuary is "
+        mpr("By Zin's power, the foul cloud within the sanctuary is "
             "swept away.", MSGCH_GOD);
     }
     else if (cloud_count > 1)
     {
-        mpr("By Zin's power all foul fumes within the sanctuary are "
+        mpr("By Zin's power, all foul fumes within the sanctuary are "
             "swept away.", MSGCH_GOD);
     }
 
     if (blood_count > 0)
     {
-        mpr("By Zin's power all blood is cleared from the sanctuary.",
+        mpr("By Zin's power, all blood is cleared from the sanctuary.",
             MSGCH_GOD);
     }
 
