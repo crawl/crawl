@@ -214,11 +214,11 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
 
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { "-CAST",  ARTP_PREVENT_SPELLCASTING,  2 },
-        { "-TELE",  ARTP_PREVENT_TELEPORTATION, 2 },
-        { "MUT",    ARTP_MUTAGENIC,             2 }, // handled specially
+        { "-Cast",  ARTP_PREVENT_SPELLCASTING,  2 },
+        { "-Tele",  ARTP_PREVENT_TELEPORTATION, 2 },
+        { "Contam", ARTP_MUTAGENIC,             2 }, // handled specially
         { "*Rage",  ARTP_ANGRY,                 2 },
-        { "*TELE",  ARTP_CAUSE_TELEPORTATION,   2 },
+        { "*Tele",  ARTP_CAUSE_TELEPORTATION,   2 },
         { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
         { "Noisy",  ARTP_NOISES,                2 },
 
