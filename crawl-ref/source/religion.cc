@@ -518,7 +518,8 @@ std::string get_god_powers(god_type which_god)
     if (which_god == GOD_NO_GOD)
         return ("");
 
-    std::string result = getLongDescription(god_name(which_god) + " powers");
+    std::string result = getLongDescription(
+                             uppercase_first(god_name(which_god)) + " powers");
     return (result);
 }
 
@@ -527,7 +528,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return ("");
 
-    std::string text = god_name(which_god);
+    std::string text = uppercase_first(god_name(which_god));
     std::vector<std::string> likes;
     std::vector<std::string> really_likes;
 
@@ -797,7 +798,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         if (!really_likes.empty())
         {
             text += " ";
-            text += god_name(which_god);
+            text += uppercase_first(god_name(which_god));
 
             text += " especially likes it when ";
             text += comma_separated_line(really_likes.begin(),
@@ -940,7 +941,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     if (!dislikes.empty())
     {
-        text += god_name(which_god);
+        text += uppercase_first(god_name(which_god));
         text += " dislikes it when ";
         text += comma_separated_line(dislikes.begin(), dislikes.end(),
                                      " or ", ", ");
@@ -952,7 +953,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     if (!really_dislikes.empty())
     {
-        text += god_name(which_god);
+        text += uppercase_first(god_name(which_god));
         text += " strongly dislikes it when ";
                 text += comma_separated_line(really_dislikes.begin(),
                                              really_dislikes.end(),
@@ -2328,7 +2329,7 @@ std::string god_name(god_type which_god, bool long_name)
     case GOD_NAMELESS:      return "nameless";
     case GOD_VIABLE:        return "viable";
     case GOD_ZIN:           return "Zin";
-    case GOD_SHINING_ONE:   return "The Shining One";
+    case GOD_SHINING_ONE:   return "the Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
     case GOD_YREDELEMNUL:   return "Yredelemnul";
     case GOD_VEHUMET:       return "Vehumet";
@@ -3936,7 +3937,7 @@ void handle_god_time()
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    std::string msg = god_name(which_deity) + event;
+    std::string msg = uppercase_first(god_name(which_deity)) + event;
     msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
@@ -4363,7 +4364,7 @@ static void _place_delayed_monsters()
 
             // Fake its coming from simple_god_message().
             if (msg[0] == ' ' || msg[0] == '\'')
-                msg = god_name(mg.god) + msg;
+                msg = uppercase_first(god_name(mg.god)) + msg;
 
             msg = apostrophise_fixup(msg);
             trim_string(msg);
