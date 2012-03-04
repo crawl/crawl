@@ -1411,7 +1411,7 @@ static bool _tso_holy_revenge()
 static bool _ely_holy_revenge(const monster *victim)
 {
     // It's a mild effect, a relatively big chance is ok.  Keeping it small
-    // though -- we don't want gods to be omniescent.
+    // though -- we don't want gods to be omniscient.
     if (!one_chance_in(3))
         return false;
 
