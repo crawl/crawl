@@ -26,6 +26,7 @@
 #include "defines.h"
 
 #include "cio.h"
+#include "crash.h"
 #include "delay.h"
 #include "enum.h"
 #include "externs.h"
@@ -219,6 +220,10 @@ static int pending = 0;
 
 int getchk()
 {
+    // If we have (or wait for) actual keyboard input, it's not an infinite
+    // loop.
+    watchdog();
+
     if (pending)
     {
         int c = pending;
