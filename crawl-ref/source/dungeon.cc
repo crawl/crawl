@@ -3902,20 +3902,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    bool clobber, bool no_exits,
                                    const coord_def &where)
 {
-    const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
-                        || player_in_branch(BRANCH_SLIME_PITS);
-    const int map_index = env.level_vaults.size();
-    if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
-    {
-        if (!no_exits)
-        {
-            const vault_placement &vp = *env.level_vaults[map_index];
-            ASSERT(vault->name == vp.map.name);
-            vp.connect(spotty);
-        }
-        return (true);
-    }
-    return (false);
+    return _build_vault_impl(level_number, vault, true, !clobber, no_exits, where);
 }
 
 // Builds a primary vault - i.e. a vault that is built before anything
@@ -4002,6 +3989,13 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         dgn_place_stone_stairs(true);
     }
 
+    if (!make_no_exits)
+    {
+        const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
+                            || player_in_branch(BRANCH_SLIME_PITS);
+        place.connect(spotty);
+    }
+
     // Fire any post-place hooks defined for this map; any failure
     // here is an automatic veto. Note that the post-place hook must
     // be run only after _build_postvault_level.
@@ -4022,12 +4016,7 @@ static void _build_postvault_level(vault_placement &place)
     else if (player_in_branch(BRANCH_SWAMP))
         dgn_build_swamp_level(place.level_number);
     else
-    {
         dgn_build_rooms_level(random_range(25, 100));
-
-        // Excavate and connect the vault to the rest of the level.
-        place.connect();
-    }
 }
 
 static const object_class_type _acquirement_item_classes[] =
