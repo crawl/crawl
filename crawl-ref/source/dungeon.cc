@@ -3445,7 +3445,7 @@ static int _place_uniques(int level_number, level_area_type level_type)
             break;
         }
 
-        const bool map_placed = dgn_place_map(uniq_map, false, false);
+        const bool map_placed = _build_secondary_vault(level_number, uniq_map);
         if (map_placed)
         {
             num_placed++;
