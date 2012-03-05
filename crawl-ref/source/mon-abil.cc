@@ -580,7 +580,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
         mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_slime, KILL_MISC, NON_MONSTER, true);
+    monster_die(initial_slime, KILL_RESET, NON_MONSTER, true);
 
     return (true);
 }
