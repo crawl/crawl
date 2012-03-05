@@ -5425,7 +5425,7 @@ static bool _connect_spotty(const coord_def& from)
             if (grd(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if (grd(*ai) != DNGN_ROCK_WALL
+            if ((grd(*ai) != DNGN_ROCK_WALL && grd(*ai) != DNGN_SLIMY_WALL)
                 || flatten.find(*ai) != flatten.end())
             {
                 continue;
