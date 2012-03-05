@@ -3759,8 +3759,8 @@ void unmarshallMonster(reader &th, monster& m)
 #endif
     m.foe_memory = unmarshallInt(th);
 
-    unmarshallShort(th);
-    unmarshallShort(th);
+    m.damage_friendly = unmarshallShort(th);
+    m.damage_total = unmarshallShort(th);
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
