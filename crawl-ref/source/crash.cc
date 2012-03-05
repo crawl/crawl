@@ -7,6 +7,7 @@
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
+#include <sys/time.h>
 #endif
 
 #if defined(UNIX)
@@ -140,6 +141,30 @@ static void _crash_signal_handler(int sig_num)
 #ifndef USE_TILE_LOCAL
     if (crawl_state.io_inited)
         console_shutdown();
+#endif
+
+#ifdef DGAMELAUNCH
+    /* Infinite loop protection.
+
+       Not tickling the watchdog for 60 seconds of user CPU time (not wall
+       time!) means something is terribly wrong.  Even worst hogs like
+       pre-0.6 god renouncement or current Time Step in the Abyss don't take
+       more than several seconds.
+
+       DGL only -- local players will notice the game is stuck and be able
+       to kill it.
+
+       It's likely to die horribly -- it's one of signals that is often
+       received while in non-signal safe functions, especially malloc()
+       which _will_ fuck the process up (remember, C++ can't blink without
+       malloc()ing something).  In such cases, alarm() above will kill us.
+       That's nasty and random, but at least should give us backtraces most
+       of the time, and avoid dragging down the servers.  And even if for
+       some odd reason SIGALRM won't kill us, the worst that can happen is
+       wasting 100% CPU which is precisely what happens right now.
+    */
+    if (sig_num == SIGVTALRM)
+        die_noline("Stuck game with 100%% CPU use\n");
 #endif
 
     do_crash_dump();
@@ -341,3 +366,15 @@ void disable_other_crashes()
     // going down so blocking the other thread is ok.
     mutex_lock(crash_mutex);
 }
+
+#ifdef DGAMELAUNCH
+void watchdog()
+{
+    struct itimerval t;
+    t.it_interval.tv_sec = 0;
+    t.it_interval.tv_usec = 0;
+    t.it_value.tv_sec = 60;
+    t.it_value.tv_usec = 0;
+    setitimer(ITIMER_VIRTUAL, &t, 0);
+}
+#endif
