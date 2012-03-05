@@ -1324,9 +1324,9 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_MAD))
         v.push_back("lost in madness");
     if (is(MB_DEATHS_DOOR))
-       v.push_back("standing in death's doorway");
+        v.push_back("standing in death's doorway");
     if (is(MB_REGENERATION))
-       v.push_back("regenerating");
+        v.push_back("regenerating");
     return v;
 }
 
