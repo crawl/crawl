@@ -1087,7 +1087,9 @@ static BOOL WINAPI console_handler(DWORD sig)
 
 void init_signals()
 {
-    // If there's no console,
+    // If there's no console, this will return an error, which we ignore.
+    // For GUI programs there's no controlling terminal, but there's no hurt in
+    // blindly trying -- this way, we support Cygwin.
     SetConsoleCtrlHandler(console_handler, true);
 }
 
