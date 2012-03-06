@@ -523,7 +523,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
     // Now kill the other monster
-    monster_die(crawlie, KILL_RESET, NON_MONSTER, true);
+    monster_die(crawlie, KILL_DISMISSED, NON_MONSTER, true);
 
     return (true);
 }
@@ -580,7 +580,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
         mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_slime, KILL_RESET, NON_MONSTER, true);
+    monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
 
     return (true);
 }
