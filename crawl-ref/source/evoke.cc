@@ -59,6 +59,12 @@ extern bool apply_berserk_penalty;
 
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
+    if (you.caught())
+    {
+        canned_msg(MSG_HELD_IN_A_NET);
+        return false;
+    }
+
     dist beam;
 
     direction_chooser_args args;
