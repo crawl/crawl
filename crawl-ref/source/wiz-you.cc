@@ -712,9 +712,11 @@ static const char* dur_names[] =
     "gourmand",
     "bargain",
     "insulation",
-    "resist poison",
+    "resistance",
+#if TAG_MAJOR_VERSION == 32
     "resist fire",
     "resist cold",
+#endif
     "slaying",
     "stealth",
     "magic shield",

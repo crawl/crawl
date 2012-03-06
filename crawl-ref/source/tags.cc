@@ -3898,8 +3898,6 @@ void tag_read_level_tiles(reader &th)
     }
 #endif
 
-    unsigned int rle_count = 0;
-
     // Map grids.
     // how many X?
     const int gx = unmarshallShort(th);
@@ -3907,6 +3905,8 @@ void tag_read_level_tiles(reader &th)
     const int gy = unmarshallShort(th);
 
 #if TAG_MAJOR_VERSION == 32
+    unsigned int rle_count = 0;
+
     if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         // Throw away tile_bk data

@@ -799,6 +799,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_DETECT_ITEMS, "Detect Items",
      0,
@@ -811,6 +812,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
@@ -1271,6 +1273,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_DETECT_CREATURES, "Detect Creatures",
      0,
@@ -1283,6 +1286,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_CURE_POISON, "Cure Poison",
