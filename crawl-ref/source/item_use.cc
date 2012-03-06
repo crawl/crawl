@@ -5310,13 +5310,11 @@ void read_scroll(int slot)
                 cancel_scroll = true;
                 break;
             }
-            else if (item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+            else
             {
                 mpr("You feel like taking on a jabberwock.");
                 id_the_scroll = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
         }
         break;
 
