@@ -493,6 +493,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_ANIMATE_REMAINS:
         mpr("You attempt to give life to the dead...");
         break;
+    case MSG_HELD_IN_A_NET:
+        mpr("You're held in a net!");
+        break;
     }
 }
 

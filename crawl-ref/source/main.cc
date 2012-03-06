@@ -1376,7 +1376,7 @@ static void _go_upstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You're held in a net!");
+        canned_msg(MSG_HELD_IN_A_NET);
         return;
     }
 
@@ -1534,7 +1534,7 @@ static void _go_downstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You're held in a net!");
+        canned_msg(MSG_HELD_IN_A_NET);
         return;
     }
 
