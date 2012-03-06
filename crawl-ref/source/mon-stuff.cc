@@ -1608,7 +1608,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
 #if TAG_MAJOR_VERSION <= 33
-    if (gives_xp)
+    if (gives_xp && !mons_reset)
         you.montiers[mons_threat_level(mons, true)]++;
 #endif
 
