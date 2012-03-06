@@ -5380,7 +5380,7 @@ bool monster::is_web_immune() const
 // of Yredelemnul.
 bool monster::nightvision() const
 {
-    return (undead_or_demonic() || god == GOD_YREDELEMNUL);
+    return (holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL);
 }
 
 void monster::accum_been_constricted()

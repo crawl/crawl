@@ -6553,7 +6553,7 @@ bool player::travelling_light() const
 
 bool player::nightvision() const
 {
-    return (undead_or_demonic() ||
+    return (is_undead ||
            (religion == GOD_YREDELEMNUL && piety > piety_breakpoint(2)));
 }
 
