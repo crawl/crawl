@@ -1029,7 +1029,7 @@ void set_skill_level(skill_type skill, double amount)
     if (fractional)
     {
         target += (skill_exp_needed(level + 1, skill)
-                  - skill_exp_needed(level, skill)) * fractional;
+                  - skill_exp_needed(level, skill)) * fractional + 1;
     }
 
     if (target == you.skill_points[skill])
