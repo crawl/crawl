@@ -423,8 +423,7 @@ bool melee_attack::handle_phase_dodged()
         }
     }
 
-    if (attacker != defender &&
-        grid_distance(defender->pos(), attacker->pos()) == 1)
+    if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
     {
         if (attacker->alive()
             && (defender->is_player() ?
@@ -845,8 +844,7 @@ bool melee_attack::attack()
     }
     else
     {
-        if (attacker != defender
-            && grid_distance(defender->pos(), attacker->pos()) == 1)
+        if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
         {
             // Check for defender Spines
             do_spines();
@@ -4470,7 +4468,7 @@ void melee_attack::do_passive_freeze()
 {
     if (you.mutation[MUT_PASSIVE_FREEZE]
         && attacker->alive()
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+        && adjacent(you.pos(), attacker->as_monster()->pos()))
     {
         bolt beam;
         beam.flavour = BEAM_COLD;
@@ -4512,7 +4510,7 @@ void melee_attack::mons_do_eyeball_confusion()
 {
     if (you.mutation[MUT_EYEBALLS]
         && attacker->alive()
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+        && adjacent(you.pos(), attacker->as_monster()->pos())
         && x_chance_in_y(player_mutation_level(MUT_EYEBALLS), 20))
     {
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
@@ -4603,7 +4601,7 @@ void melee_attack::emit_foul_stench()
 
     if (you.mutation[MUT_FOUL_STENCH]
         && attacker->alive()
-        && grid_distance(you.pos(), mon->pos()) == 1)
+        && adjacent(you.pos(), mon->pos()))
     {
         const int mut = player_mutation_level(MUT_FOUL_STENCH);
 
