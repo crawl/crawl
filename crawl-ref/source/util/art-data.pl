@@ -62,9 +62,6 @@ my %field_type = (
     UNIDED   => "bool",
     VALUE    => "num",
 
-    DESC     => "str",
-    DESC_END => "str",
-    DESC_ID  => "str",
     TILE     => "str",
     TILE_EQ  => "str",
     TILERIM  => "bool",
@@ -490,10 +487,6 @@ my @art_order = (
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "}",
-
-    "DESC", "\n",
-    "DESC_ID", "\n",
-    "DESC_END", "\n",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",
     "evoke_func"

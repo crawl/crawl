@@ -2117,18 +2117,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     return (true);
 }
 
-const char *unrandart_descrip(int which_descrip, const item_def &item)
-{
-    // Eventually it would be great to have randomly generated descriptions
-    // for randarts.
-    const unrandart_entry *unrand = _seekunrandart(item);
-
-    return ((which_descrip == 0) ? unrand->desc :
-            (which_descrip == 1) ? unrand->desc_id :
-            (which_descrip == 2) ? unrand->desc_end
-                                 : "Unknown.");
-}
-
 void unrand_reacts()
 {
     item_def*  weapon     = you.weapon();

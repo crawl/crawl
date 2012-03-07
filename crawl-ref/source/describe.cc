@@ -1795,19 +1795,10 @@ std::string get_item_description(const item_def &item, bool verbose,
                         << "]";
             need_base_desc = false;
         }
-        else if (is_unrandom_artefact(item)
-                 && (unrandart_descrip(0, item)[0] != '\0'
-                     || unrandart_descrip(1, item)[1] != '\0'))
+        else if (is_unrandom_artefact(item) && item_type_known(item))
         {
-            const char *desc    = unrandart_descrip(0, item);
-            const char *desc_id = unrandart_descrip(1, item);
-
-            if (item_type_known(item) && desc_id[0] != '\0')
-            {
-                description << desc_id;
-                need_base_desc = false;
-            }
-            else if (desc[0] != '\0')
+            const std::string desc = getLongDescription(get_artefact_name(item));
+            if (!desc.empty())
             {
                 description << desc;
                 need_base_desc = false;
@@ -2125,13 +2116,6 @@ std::string get_item_description(const item_def &item, bool verbose,
 
     default:
         die("Bad item class");
-    }
-
-    if (is_unrandom_artefact(item)
-        && unrandart_descrip(2, item)[0] != '\0')
-    {
-        description << "\n\n";
-        description << unrandart_descrip(2, item);
     }
 
     if (!verbose && item_known_cursed(item))
