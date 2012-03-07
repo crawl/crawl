@@ -382,6 +382,8 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
 glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
                      int colour_mode)
 {
+    // note: this does NOT determine output of the player glyph;
+    // that's handled by itself in _draw_player() in view.cc
     const map_cell& cell = env.map_knowledge(loc);
     const show_class cell_show_class =
         get_cell_show_class(cell, only_stationary_monsters);
