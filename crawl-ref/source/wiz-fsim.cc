@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #include "beam.h"
+#include "coordit.h"
 #include "dbg-util.h"
 #include "env.h"
 #include "fight.h"
@@ -43,6 +44,18 @@ static monster* _create_fsim_monster(int mtype, int hp)
 
     // To prevent distracted stabing.
     mon->foe = MHITYOU;
+
+    // Move the monster next to the player
+    if (!adjacent(mon->pos(), you.pos()))
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (mon->move_to_pos(*ai))
+                break;
+
+    if (!adjacent(mon->pos(), you.pos()))
+    {
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        return 0;
+    }
 
     // the monster is never saved, and thus we might allow any 31 bit value
     mon->hit_points = mon->max_hit_points = hp;
