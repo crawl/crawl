@@ -822,7 +822,7 @@ BOOL:     seeinv, inv
 
 NAME:    armour of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
-PLUS:    +5
+PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
 TILE_EQ: dragonarm_gold
