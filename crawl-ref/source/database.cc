@@ -295,7 +295,7 @@ void databaseSystemShutdown()
 // Main DB functions
 
 
-datum database_fetch(DBM *database, const std::string &key)
+static datum _database_fetch(DBM *database, const std::string &key)
 {
     datum result;
     result.dptr = NULL;
@@ -310,10 +310,10 @@ datum database_fetch(DBM *database, const std::string &key)
     return result;
 }
 
-std::vector<std::string> database_find_keys(DBM *database,
+static std::vector<std::string> _database_find_keys(DBM *database,
                                             const std::string &regex,
                                             bool ignore_case,
-                                            db_find_filter filter)
+                                            db_find_filter filter = NULL)
 {
     text_pattern             tpat(regex, ignore_case);
     std::vector<std::string> matches;
@@ -337,10 +337,10 @@ std::vector<std::string> database_find_keys(DBM *database,
     return (matches);
 }
 
-std::vector<std::string> database_find_bodies(DBM *database,
+static std::vector<std::string> _database_find_bodies(DBM *database,
                                               const std::string &regex,
                                               bool ignore_case,
-                                              db_find_filter filter)
+                                              db_find_filter filter = NULL)
 {
     text_pattern             tpat(regex, ignore_case);
     std::vector<std::string> matches;
@@ -369,7 +369,7 @@ std::vector<std::string> database_find_bodies(DBM *database,
 
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
-void execute_embedded_lua(std::string &str)
+static void _execute_embedded_lua(std::string &str)
 {
     // Execute any lua code found between "{{" and "}}".  The lua code
     // is expected to return a string, with which the lua code and
@@ -546,7 +546,7 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
     lowercase(canonical_key);
 
     // Query the DB.
-    datum result = database_fetch(database, canonical_key);
+    datum result = _database_fetch(database, canonical_key);
 
     if (result.dsize <= 0)
     {
@@ -555,7 +555,7 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
         lowercase(canonical_key);
 
         // Query the DB.
-        result = database_fetch(database, canonical_key);
+        result = _database_fetch(database, canonical_key);
 
         if (result.dsize <= 0)
             return "";
@@ -587,13 +587,6 @@ static std::string _query_weighted_randomised(DBM *database,
     int num_replacements = 0;
     _call_recursive_replacement(result, database, suffix, num_replacements);
     return (result);
-}
-
-std::string getWeightedSpeechString(const std::string &key,
-                                    const std::string &suffix,
-                                    const int weight)
-{
-    return _query_weighted_randomised(SpeakDB, key, suffix, weight);
 }
 
 static std::string _getRandomisedStr(DBM *database, const std::string &key,
@@ -676,12 +669,12 @@ static std::string _query_database(DBM *db, std::string key,
     }
 
     // Query the DB.
-    datum result = database_fetch(db, key);
+    datum result = _database_fetch(db, key);
 
     std::string str((const char *)result.dptr, result.dsize);
 
     if (run_lua)
-        execute_embedded_lua(str);
+        _execute_embedded_lua(str);
 
     return (str);
 }
@@ -722,7 +715,7 @@ std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
         return (empty);
     }
 
-    return database_find_keys(DescriptionDB.get(), regex, true, filter);
+    return _database_find_keys(DescriptionDB.get(), regex, true, filter);
 }
 
 std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
@@ -734,7 +727,7 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
         return (empty);
     }
 
-    return database_find_bodies(DescriptionDB.get(), regex, true, filter);
+    return _database_find_bodies(DescriptionDB.get(), regex, true, filter);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -772,7 +765,7 @@ std::string getSpeakString(const std::string &key)
     dprf("monster speech lookup for %s", key.c_str());
 #endif
     std::string txt = _getRandomisedStr(SpeakDB, key, "", num_replacements);
-    execute_embedded_lua(txt);
+    _execute_embedded_lua(txt);
 
     return txt;
 }
@@ -809,7 +802,7 @@ std::vector<std::string> getAllFAQKeys()
         return (empty);
     }
 
-    return database_find_keys(FAQDB.get(), "^q.+", false);
+    return _database_find_keys(FAQDB.get(), "^q.+", false);
 }
 
 std::string getFAQ_Question(const std::string &key)

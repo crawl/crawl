@@ -96,9 +96,6 @@ std::string get_command_description(const command_type cmd,
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);
 
-void print_quote(const describe_info &inf);
-void print_quote(const std::string &desc);
-
 void trim_randart_inscrip(item_def& item);
 std::string artefact_auto_inscription(const item_def& item);
 void add_autoinscription(item_def &item);

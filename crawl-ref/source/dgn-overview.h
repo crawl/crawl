@@ -25,8 +25,6 @@ void enter_branch(branch_type branch, level_id from);
 void set_level_exclusion_annotation(std::string str,
                                     level_id li = level_id::current());
 void clear_level_exclusion_annotation(level_id li = level_id::current());
-void set_level_unique_annotation(std::string str,
-                                 level_id li = level_id::current());
 void set_unique_annotation(monster* mons,
                            const level_id level = level_id::current());
 void remove_unique_annotation(monster* mons);
