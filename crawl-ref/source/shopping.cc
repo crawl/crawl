@@ -364,6 +364,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
           bool viewing          = false;
           bool first_iter       = true;
 
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items picked up.
+    std::map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     while (true)
     {
         ASSERT(total_cost >= 0);
@@ -748,6 +753,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
         }
     }
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     return (bought_something);
 }
