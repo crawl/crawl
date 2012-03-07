@@ -119,7 +119,7 @@ treasures. According to legend he was lost somewhere in the Dungeon.
 sword of Jihad
 
 A long sword made of one huge piece of crystal.
-This sword was The Shining One's gift to a worshipper.
+Legend says it was The Shining One's gift to a worshipper.
 %%%%
 crossbow "Hellfire"
 
@@ -274,8 +274,7 @@ robe of Night
 
 A long black robe made of strange glossy material.
 
-According to legend, this robe was the gift of Ratri the Goddess
-of the Night to one of her followers.
+According to legend, it was the gift of Ratri the Goddess of the Night to one of her followers.
 %%%%
 #armour of the Dragon King
 %%%%
@@ -350,16 +349,12 @@ ways of taking its wielder under its command...
 %%%%
 lightning scales
 
-# unided: This naga barding is made of some very metallic dragon hide, to
-# the point of confusing you at first glance into thinking that it's
-# actually made of metal.
 These scales have been fashioned into armour for a naga's lower
 body. Faintly crackling with electricity, they have been enchanted
 to allow their wearer to slither at almost a human's pace.
 %%%%
 Black Knight's horse barding
 
-# unided: You feel sorry for the horse that has to wear this mass of metal.
 This gear used to be worn by the personal horse of the Black Knight
 during his reign of terror. Pitch-black, it appears to be made not
 only of some strange black steel, but also of entire plates of
