@@ -65,7 +65,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
 {
     if (defender->atype() == ACT_PLAYER)
     {
@@ -115,6 +115,9 @@ bool fight_melee(actor *attacker, actor *defender)
                 you.turn_is_over = false;
             return (false);
         }
+
+        if (did_hit)
+            *did_hit = attk.did_hit;
 
         return (true);
     }

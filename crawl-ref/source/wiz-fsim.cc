@@ -228,7 +228,9 @@ static bool _fsim_melee_combat(FILE *out, int wskill, monster &mon,
         mon            = orig;
         mon.hit_points = mon.max_hit_points;
         you.time_taken = player_speed();
-        if (fight_melee(&you, &mon))
+        bool did_hit = false;
+        fight_melee(&you, &mon, &did_hit);
+        if (did_hit)
             hits++;
 
         you.hunger = hunger;
