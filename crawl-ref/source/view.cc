@@ -966,7 +966,7 @@ static void _draw_player(screen_cell_t *cell,
     }
     if (Options.use_fake_player_cursor)
         cell->colour |= COLFLAG_REVERSE;
-        
+
     cell->colour = real_colour(cell->colour);
 
 #ifdef USE_TILE
