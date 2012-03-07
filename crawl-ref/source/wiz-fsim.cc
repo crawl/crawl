@@ -41,6 +41,9 @@ static monster* _create_fsim_monster(int mtype, int hp)
     if (!mon)
         return 0;
 
+    // To prevent distracted stabing.
+    mon->foe = MHITYOU;
+
     // the monster is never saved, and thus we might allow any 31 bit value
     mon->hit_points = mon->max_hit_points = hp;
     return mon;
