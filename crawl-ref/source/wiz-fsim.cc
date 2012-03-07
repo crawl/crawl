@@ -155,7 +155,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, monster &mon,
         if (damage > maxdam)
             maxdam = damage;
     }
-    _fsim_item(out, false, item, _fsim_melee_skill(item),
+    _fsim_item(out, false, item, range_skill(*item),
                cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
     return (true);
