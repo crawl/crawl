@@ -1206,7 +1206,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 
     int chance = spell_fail(specspell);
 
-    if (chance > 0 && is_dangerous_spellbook(book))
+    if (chance > 0 && book != NUM_BOOKS && is_dangerous_spellbook(book))
     {
         std::string prompt;
 

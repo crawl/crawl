@@ -24,6 +24,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -224,11 +225,38 @@ void wizard_cast_spec_spell(void)
         }
     }
 
-    if (your_spells(static_cast<spell_type>(spell), 0, false)
-                == SPRET_ABORT)
-    {
+    if (your_spells(static_cast<spell_type>(spell), 0, false) == SPRET_ABORT)
         crawl_state.cancel_cmd_repeat();
+}
+
+void wizard_memorise_spec_spell(void)
+{
+    char specs[80], *end;
+    int spell;
+
+    mpr("Memorise which spell? ", MSGCH_PROMPT);
+    if (cancelable_get_line_autohist(specs, sizeof(specs))
+        || specs[0] == '\0')
+    {
+        canned_msg(MSG_OK);
+        crawl_state.cancel_cmd_repeat();
+        return;
     }
+
+    spell = strtol(specs, &end, 10);
+
+    if (spell < 0 || end == specs)
+    {
+        if ((spell = spell_by_name(specs, true)) == SPELL_NO_SPELL)
+        {
+            mpr("Cannot find that spell.");
+            crawl_state.cancel_cmd_repeat();
+            return;
+        }
+    }
+
+    if (!learn_spell(static_cast<spell_type>(spell)))
+        crawl_state.cancel_cmd_repeat();
 }
 #endif
 

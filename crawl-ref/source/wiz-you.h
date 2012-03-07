@@ -9,7 +9,7 @@
 #include "enum.h"
 
 void wizard_cast_spec_spell(void);
-void wizard_cast_spec_spell_name(void);
+void wizard_memorise_spec_spell(void);
 void wizard_heal(bool super_heal);
 void wizard_set_hunger_state();
 void wizard_set_piety();
