@@ -58,11 +58,6 @@ struct unrandart_entry
 
     short prpty[ART_PROPERTIES];
 
-    // special description added to 'v' command output
-    const char *desc;     // replaces un-ided (and default ided) db entry
-    const char *desc_id;  // replaces ided
-    const char *desc_end; // appended to ided
-
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
     void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
@@ -102,8 +97,6 @@ void set_artefact_name(item_def &item, const std::string &name);
 
 std::string make_artefact_name(const item_def &item, bool appearance = false);
 std::string replace_name_parts(const std::string &name_in, const item_def& item);
-
-const char *unrandart_descrip(int which_descrip, const item_def &item);
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
                         bool in_abyss = false);

@@ -68,6 +68,7 @@ static TextDB AllDBs[] =
             "descript/features.txt",
             "descript/items.txt",
             "descript/unident.txt",
+            "descript/unrand.txt",
             "descript/monsters.txt",
             "descript/spells.txt",
             "descript/gods.txt",
