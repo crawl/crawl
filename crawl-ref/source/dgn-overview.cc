@@ -876,7 +876,10 @@ static void _update_unique_annotation(level_id level)
             note += i->first;
         }
     }
-    set_level_unique_annotation(note, level);
+    if (note.empty())
+        level_uniques.erase(level);
+    else
+        level_uniques[level] = note;
 }
 
 static std::string unique_name(monster* mons)
@@ -938,14 +941,6 @@ void remove_unique_annotation(monster* mons)
         _update_unique_annotation(*i);
 }
 
-void set_level_annotation(std::string str, level_id li)
-{
-    if (str.empty())
-        level_annotations.erase(li);
-    else
-        level_annotations[li] = str;
-}
-
 void set_level_exclusion_annotation(std::string str, level_id li)
 {
     if (str.empty())
@@ -955,14 +950,6 @@ void set_level_exclusion_annotation(std::string str, level_id li)
     }
 
     level_exclusions[li] = str;
-}
-
-void set_level_unique_annotation(std::string str, level_id li)
-{
-    if (str.empty())
-        level_uniques.erase(li);
-    else
-        level_uniques[li] = str;
 }
 
 void clear_level_exclusion_annotation(level_id li)

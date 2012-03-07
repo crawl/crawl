@@ -1316,7 +1316,7 @@ static void _abyss_generate_new_area()
 }
 
 // Check if there is a path between the abyss centre and an exit location.
-bool _abyss_has_path(const coord_def &to)
+static bool _abyss_has_path(const coord_def &to)
 {
     ASSERT(grd(to) == DNGN_EXIT_ABYSS);
 

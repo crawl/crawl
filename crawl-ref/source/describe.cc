@@ -120,13 +120,6 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
-void print_quote(const std::string &body)
-{
-    describe_info inf;
-    inf.quote = body;
-    print_quote(inf);
-}
-
 class default_desc_proc
 {
 public:
@@ -154,7 +147,7 @@ void print_description(const describe_info &inf)
     process_description<default_desc_proc>(proc, inf);
 }
 
-void print_quote(const describe_info &inf)
+static void _print_quote(const describe_info &inf)
 {
     clrscr();
     textcolor(LIGHTGREY);
@@ -2324,7 +2317,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
 #endif
 
     if (show_quote)
-        print_quote(inf);
+        _print_quote(inf);
     else
         print_description(inf);
 
@@ -3675,9 +3668,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     do
     {
         if (show_quote)
-        {
-            print_quote(inf);
-        }
+            _print_quote(inf);
         else
         {
             print_description(inf);
