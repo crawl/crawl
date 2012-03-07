@@ -42,6 +42,10 @@ at the risk of damaging the user's mind.
 %%%%
 Vampire's Tooth
 
+This ivory-like dagger looks like it could actually have been created from
+a tooth of some enormous predatory creature, although obviously not an
+average human-sized bloodsucker.
+
 It is lethally vampiric.
 %%%%
 Scythe of Curses
@@ -79,7 +83,12 @@ the last proofs they ever existed.
 %%%%
 #scimitar of Flaming Death
 %%%%
-#mace of Brilliance
+mace of Brilliance
+
+This mace will let you shine some light into the dungeon, and also will
+make sure enemies are well-warned of your presence. Its light is hated by
+the undead, and can reveal any machinations of those who try to stay
+invisible.
 %%%%
 #demon blade "Leech"
 %%%%
@@ -109,7 +118,10 @@ A wonderful golden bow.
 It once belonged to a foreign god. It works best with special
 arrows which are not generally available.
 %%%%
-#giant club "Skullcrusher"
+giant club "Skullcrusher"
+
+This lovely cudgel can make any ogre overjoyous -- be it a bar brawl,
+genocide, or a mixture of both.
 %%%%
 glaive of the Guard
 
@@ -173,7 +185,9 @@ fey folk.
 %%%%
 plutonium sword
 
-A triple sword made of weird glowing metal.
+A triple sword made of weird glowing metal. You wonder whether it grew its
+two side blades due to its radiation, and whether you'll grow two extra
+heads as well.
 %%%%
 great mace "Undeadhunter"
 
@@ -205,7 +219,9 @@ storm bow
 
 This bow has the colour of dark rain clouds, and the smell of wet ozone.
 %%%%
-#shield of Ignorance
+shield of Ignorance
+
+"An open mind is like a fortress with its gates unbarred and unguarded."
 %%%%
 robe of Augmentation
 
@@ -236,9 +252,7 @@ A vibrating cloak.
 %%%%
 boots of the Assassin
 
-Some soft boots.
-
-These boots were specially designed by the Assassin's Guild.
+Some soft boots, specially designed by the Assassin's Guild.
 %%%%
 Lear's chain mail
 
@@ -276,11 +290,19 @@ A long black robe made of strange glossy material.
 
 According to legend, it was the gift of Ratri the Goddess of the Night to one of her followers.
 %%%%
-#armour of the Dragon King
+armour of the Dragon King
+
+A long time ago, a mighty golden dragon seized the rulership of all dragons
+in her part of the world. Yet her reign didn't last long, stopped by a
+single puny human who then made this armour from the dragon's hide.
 %%%%
 hat of the Alchemist
 
-A dirty hat.
+A dirty hat. It bears signs of surviving many weird explosions, which
+suggests it may have means of protecting the head inside from the risks
+involved with alchemy experiments. And with the kind of protections granted
+by this hat, it's certain some prior head damage was a prerequisite for even
+thinking about such experiments.
 %%%%
 fencer's gloves
 
@@ -288,9 +310,7 @@ A pair of gloves made of white silk.
 %%%%
 cloak of Starlight
 
-A phosphorescent cloak.
-
-A cloak woven of pure light beams.
+A phosphorescent cloak, woven of pure light beams.
 %%%%
 ratskin cloak
 
@@ -302,9 +322,10 @@ from rats of all kinds.
 %%%%
 shield of the gong
 
-# unided was: This is a large gong; you wonder if it could be worn as a shield.
+This is a large bronze gong that can be worn as a shield. According to
+certain mystics, beating on such a gong can grant you spiritual protection.
 
-This shield surely will be heard!
+And this shield surely will be heard!
 %%%%
 #amulet of the Air
 %%%%
