@@ -2116,6 +2116,8 @@ void revive()
 
     mpr("You rejoin the land of the living...");
     more();
+
+    burden_change();
 }
 
 ////////////////////////////////////////////////////////////////////////////
