@@ -2,8 +2,8 @@
 Bronson, Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline,
 Paul Du Bois, Florian Diebold, Michael Gagno, Eino Keskitalo, Vsevolod
 Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza, Jesse Luehrs,
-Neil Middleton, Steven Noonan, Haran Pilpel, Aaron Pixton, David
-Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence
+Neil Middleton, Neil Moore, Steven Noonan, Haran Pilpel, Aaron Pixton,
+David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence
 Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
@@ -43,6 +43,7 @@ Juha Arpiainen
 Arxale
 John 'Poor Yurik' Attea
 Roy Axenov
+Steve 'nfogravity' Balady
 Max Bane
 Bill Beher
 Alexander Beisig
@@ -147,4 +148,5 @@ Evan Williams
 Jeremey Wilson
 Samuel Wilson
 Yelve Yakut
+Zannick
 Zooko
