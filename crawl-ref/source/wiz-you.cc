@@ -31,6 +31,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
+#include "unicode.h"
 #include "xom.h"
 
 #ifdef WIZARD
@@ -1031,4 +1032,60 @@ void wizard_transform()
         if (yesno("Transformation failed, force it?", true, 'n'))
             if (!transform(200, form, true))
                 mpr("The force is weak with this one.");
+}
+
+static void wizard_modify_character(std::string inputdata)
+// for now this just sets skill levels and str dex int
+// (this should be enough to debug with)
+{
+    std::vector<std::string>  tokens = split_string(" ", inputdata);
+    int size = tokens.size();
+    if(size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
+    {
+        skill_type skill = debug_prompt_for_skill(tokens[3].c_str(), true);
+        double amount = atof(tokens[2].c_str());
+        set_skill_level(skill, amount);
+        if (tokens[0] == "+")
+            you.train[skill] = 1;
+        else if (tokens[0] == "*")
+            you.train[skill] = 2;
+        else
+            you.train[skill] = 0;
+
+        redraw_skill(skill);
+
+        return;
+    }
+
+    if(size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
+    {
+        you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[5].c_str()));
+        you.redraw_stats.init(true);
+        you.redraw_evasion = true;
+        return;
+    }
+    if(size > 5 && tokens[0] == "MP")
+    {
+        you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[5].c_str()));
+        you.redraw_stats.init(true);
+        you.redraw_evasion = true;
+        return;
+    }
+    if(size > 5 && tokens[0] == "Gold")
+    {
+        you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[5].c_str()));
+        you.redraw_stats.init(true);
+        you.redraw_evasion = true;
+        return;
+    }
+
+    return;
+}
+
+void wizard_file_input(const char* filename)
+{
+    FileLineInput f(filename);
+    while (!f.eof())
+        wizard_modify_character(f.get_line());
+    return;
 }

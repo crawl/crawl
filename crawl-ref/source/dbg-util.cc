@@ -358,20 +358,20 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
 }
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_skill
-//
-//---------------------------------------------------------------
-skill_type debug_prompt_for_skill(const char *prompt)
+skill_type debug_prompt_for_skill(const char *prompt, bool fileinput)
 {
-    char specs[80];
+    std::string spec;
 
-    msgwin_get_line_autohist(prompt, specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return (SK_NONE);
-    std::string spec = lowercase_string(specs);
+    if(!fileinput)
+    {
+        char specs[80];
+        msgwin_get_line_autohist(prompt, specs, sizeof(specs));
+        if (specs[0] == '\0')
+            return (SK_NONE);
+        spec = lowercase_string(specs);
+    }
+    else
+        spec = lowercase_string(prompt);
 
     skill_type skill = SK_NONE;
 
