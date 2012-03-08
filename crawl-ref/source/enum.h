@@ -2485,7 +2485,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
     MONS_PILLAR_OF_SALT,
+#if TAG_MAJOR_VERSION == 32
     MONS_TERPSICHORE,
+#endif
     MONS_BAT,
     MONS_SPRIGGAN_AIR_MAGE,
     MONS_FIRE_BAT,
@@ -3325,7 +3327,9 @@ enum spell_type
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_HOMUNCULUS,
     SPELL_SUMMON_HYDRA,
+#if TAG_MAJOR_VERSION == 32
     SPELL_TUKIMAS_BALL,
+#endif
     SPELL_DARKNESS,
     SPELL_MESMERISE,
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll

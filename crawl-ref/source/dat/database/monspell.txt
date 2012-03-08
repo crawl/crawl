@@ -181,19 +181,6 @@ unseen Holy Flames cast
 
 Blessed flames are called forth!
 %%%%
-Tukima's Ball
-
-@The_monster@ hums a lilting melody.
-
-@The_monster@ sings a lively tune!
-
-%%%%
-unseen Tukima's Ball
-
-You hear someone hum a lilting melody!
-
-You hear someone hum a lively tune!
-%%%%
 Silver Blast cast
 
 @The_monster@ shoots forth a bolt of silver!

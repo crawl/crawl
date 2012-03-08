@@ -1207,17 +1207,6 @@
       }
     },
 
-    {  MST_TERPSICHORE,
-      {
-       SPELL_TUKIMAS_BALL,
-       SPELL_SWIFTNESS,
-       SPELL_CORONA,
-       SPELL_BLINK,
-       SPELL_CANTRIP,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,

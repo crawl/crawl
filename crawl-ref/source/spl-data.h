@@ -1076,6 +1076,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_TUKIMAS_BALL, "Tukima's Ball",
      SPTYP_HEXES,
@@ -1088,6 +1089,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
