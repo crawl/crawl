@@ -25,7 +25,7 @@ This amulet makes its wearer less accurate in hand combat and when targetting mo
 %%%%
 amulet of rage
 
-This amulet enables its wearer to attempt to enter a state of berserk rage, and increases their chance of successfully doing so. It also partially protects the user from passing out when coming out of that rage.
+This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of resist corrosion
 
