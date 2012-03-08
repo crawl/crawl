@@ -1893,8 +1893,8 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_FRIENDLY_PICKUP: 	_toggle_friendly_pickup(); break;
-    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: 		toggle_viewport_monster_hp(); break;
+    case CMD_TOGGLE_FRIENDLY_PICKUP:     _toggle_friendly_pickup(); break;
+    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
 
 
         // Map commands.
