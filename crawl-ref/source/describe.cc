@@ -65,9 +65,6 @@
 #include "xom.h"
 #include "mon-info.h"
 
-#define LONG_DESC_KEY "long_desc_key"
-#define QUOTE_KEY "quote_key"
-
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -2222,27 +2219,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         custom_desc = true;
     }
 
-    const CrawlHashTable &props = env.properties;
-    if (!custom_desc && props.exists(LONG_DESC_KEY))
-    {
-        const CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
-
-        // First try the modified name, then the base name.
-        std::string key = raw_feature_description(feat);
-        if (!desc_table.exists(key))
-            key = raw_feature_description(feat, NUM_TRAPS, true);
-
-        if (desc_table.exists(key))
-        {
-            long_desc   = desc_table[key].get_string();
-            custom_desc = true;
-        }
-
-        std::string quote = getQuoteString(key);
-        if (!quote.empty())
-            db_name = key;
-    }
-
     inf.body << long_desc;
 
     // For things which require logic
@@ -2250,15 +2226,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         inf.body << _get_feature_description_wide(grd(pos));
 
     inf.quote = getQuoteString(db_name);
-
-    // Quotes don't care about custom descriptions.
-    if (props.exists(QUOTE_KEY))
-    {
-        const CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
-
-        if (quote_table.exists(db_name))
-            inf.quote = quote_table[db_name].get_string();
-    }
 }
 
 // Returns the pressed key in key
@@ -2311,42 +2278,6 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     int key;
     if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
-}
-
-void set_feature_desc_long(const std::string &raw_name,
-                           const std::string &desc)
-{
-    ASSERT(!raw_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(LONG_DESC_KEY))
-        props[LONG_DESC_KEY].new_table();
-
-    CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
-
-    if (desc.empty())
-        desc_table.erase(raw_name);
-    else
-        desc_table[raw_name] = desc;
-}
-
-void set_feature_quote(const std::string &raw_name,
-                       const std::string &quote)
-{
-    ASSERT(!raw_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(QUOTE_KEY))
-        props[QUOTE_KEY].new_table();
-
-    CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
-
-    if (quote.empty())
-        quote_table.erase(raw_name);
-    else
-        quote_table[raw_name] = quote;
 }
 
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
