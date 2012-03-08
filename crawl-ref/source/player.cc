@@ -3971,7 +3971,8 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = std::max(20, avg / 2);
 
-    std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
+    std::string msg = "Your attack speed is " + _attack_delay_desc(avg)
+                      + (you.wizard ? make_stringf(" (%d)", avg) : "") + ".";
 
     mpr(msg);
 }
