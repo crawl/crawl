@@ -688,7 +688,7 @@ std::string getQuoteString(const std::string &key)
     if (!QuotesDB)
         return ("");
 
-    return _query_database(QuotesDB.get(), key, true, true);
+    return unwrap_desc(_query_database(QuotesDB.get(), key, true, true));
 }
 
 /////////////////////////////////////////////////////////////////////////////
