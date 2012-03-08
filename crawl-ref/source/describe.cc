@@ -535,7 +535,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
     "bolt", "net", "Zot", "needle",
-    "shaft", "passage", "pressure plate", "web",
+    "shaft", "passage", "pressure plate", "web", "gas",
 };
 
 std::string trap_name(trap_type trap)

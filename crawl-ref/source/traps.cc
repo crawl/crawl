@@ -1003,6 +1003,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+    case TRAP_GAS:
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
@@ -1688,9 +1689,12 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+    case TRAP_GAS:
     case TRAP_PLATE:
-    default:                    // what *would* be the default? {dlb}
         return (DNGN_TRAP_MECHANICAL);
+
+    default:
+        die("placeholder trap type %d used", type);
     }
 }
 
