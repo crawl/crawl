@@ -125,6 +125,9 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
 
 static int _get_mons_colour(const monster_info& mi)
 {
+    if (crawl_state.viewport_monster_hp) // show hp directly on the monster
+        return (dam_colour(mi) | COLFLAG_ITEM_HEAP);
+
     int col = mi.colour;
 
     if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)

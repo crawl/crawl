@@ -4,6 +4,8 @@
 // Please remove after changing TAG_MAJOR_VERSION
 #include "tag-version.h"
 
+#include "mon-info.h"
+
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
 // str_to_colour!
@@ -110,6 +112,7 @@ int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
+int dam_colour(const monster_info&);
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 unsigned short dos_brand(unsigned short colour,

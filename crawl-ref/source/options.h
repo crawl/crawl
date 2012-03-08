@@ -177,6 +177,8 @@ public:
     std::vector<std::pair<int, int> > hp_colour;
     std::vector<std::pair<int, int> > mp_colour;
     std::vector<std::pair<int, int> > stat_colour;
+    std::vector<int> enemy_hp_colour;
+    bool visual_monster_hp;
 
     std::string map_file_name;   // name of mapping file to use
     std::vector<std::pair<text_pattern, bool> > force_autopickup;
@@ -436,6 +438,7 @@ private:
     void set_fire_order(const std::string &full, bool add);
     void add_fire_order_slot(const std::string &s);
     void set_menu_sort(std::string field);
+    void str_to_enemy_hp_colour(const std::string &);
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;
