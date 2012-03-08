@@ -1333,6 +1333,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
 #if TAG_MAJOR_VERSION == 32
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_TUKIMAS_BALL:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif
@@ -1385,9 +1386,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turns a wielded weapon into a dancing weapon.
         return cast_tukimas_dance(powc, god, false, fail);
-
-    case SPELL_TUKIMAS_BALL:
-        return cast_tukimas_ball(&you, powc, god, fail);
 
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, god, fail);

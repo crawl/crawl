@@ -1050,7 +1050,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // fire_tracer, or beam.
     switch (spell_cast)
     {
-    case SPELL_TUKIMAS_BALL:
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_VAMPIRIC_DRAINING:
@@ -1739,16 +1738,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->lose_energy(EUT_SPELL);
             return (true);
         }
-        // Try to animate weapons: if none are animated, pretend we didn't cast it.
+#if TAG_MAJOR_VERSION == 32
         if (spell_cast == SPELL_TUKIMAS_BALL)
-        {
-            // Friendly monsters cannot cast Tukima's Ball for now.
-            if (mons->friendly())
-                return (false);
-
-            if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD, true))
-                return (false);
-        }
+            return false; // The party's over.
+#endif
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
@@ -2985,6 +2978,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_TUKIMAS_BALL:
         //Tukima's dance NOT handled here.
         //Instead, handle above in handle_mon_spell
@@ -2992,6 +2986,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mpr("Haunting music fills the air, and weapons rise to join the dance!");
         noisy(12, mons->pos(), mons->mindex());
         return;
+#endif
 
     case SPELL_ANIMATE_DEAD:
         animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),
@@ -3313,42 +3308,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
-        if (mons->type == MONS_TERPSICHORE)
-        {
-            std::string dance_compulsion = "";
-            bool has_mon_foe = !invalid_monster_index(mons->foe);
-            if (buff_only || crawl_state.game_is_arena() && !has_mon_foe
-                || friendly && !has_mon_foe || coinflip())
-            {
-                dance_compulsion = getSpeakString("Terpsichore_self_buff");
-                if (!dance_compulsion.empty())
-                {
-                    dance_compulsion = replace_all(dance_compulsion, "@The_monster@",
-                                           mons->name(DESC_THE));
-                    mpr(dance_compulsion.c_str(), channel);
-                }
-            }
-            else if (!friendly && !has_mon_foe)
-            {
-                mons_cast_noise(mons, pbolt, spell_cast);
-                dance_compulsion = getSpeakString("Terpsichore_debuff");
-                if (!dance_compulsion.empty())
-                    mpr(dance_compulsion.c_str());
-            }
-            else
-            {
-                dance_compulsion = getSpeakString("Terpsichore_other_buff");
-                const monster* foe = mons->get_foe()->as_monster();
-
-                if (!dance_compulsion.empty())
-                {
-                    dance_compulsion = replace_all(dance_compulsion,
-                        "@The_monster@", foe->name(DESC_THE));
-                    mpr(dance_compulsion.c_str(), MSGCH_MONSTER_ENCHANT);
-                }
-            }
-        }
-        else if (mons->type == MONS_GASTRONOK)
+        if (mons->type == MONS_GASTRONOK)
         {
             bool has_mon_foe = !invalid_monster_index(mons->foe);
             std::string slugform = "";

@@ -41,8 +41,6 @@ bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
 
-spret_type cast_tukimas_ball(actor *caster, int pow, god_type god = GOD_NO_GOD,
-                             bool force_hostile = false, bool fail = false);
 spret_type cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                               bool force_hostile = false, bool fail = false);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
