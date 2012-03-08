@@ -5,7 +5,7 @@ An altar to Yredelemnul the Dark, worked from columnar basalt.
 %%%%
 A blade trap
 
-You can see an edge of a massive scythe-like blade hidden in a slit; it probably has a counterweight that acts as a pendulum.
+You can see the edge of a massive scythe-like blade hidden in a slit; it probably has a counterweight that acts as a pendulum.
 %%%%
 A bloodstained altar of Trog
 
@@ -80,8 +80,8 @@ This gate leads to the endless halls of Pandemonium. Tales about successful loot
 A gas trap
 
 You're lucky to have noticed this trap, for it would have released a cloud
-of deadly gas at you. What exactly gas it holds, you cannot tell — perhaps
-it is plain poison, perhaps mutagenic fumes, perhaps flammable vapour,
+of deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps
+it is plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or
 perhaps something yet nastier.
 %%%%
 A gate to the Realm of Zot
