@@ -61,7 +61,6 @@ MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
     ASSERT(is_valid_spell(_spell));
     unsigned int schools = get_spell_disciplines(_spell);
     ASSERT(schools != SPTYP_NONE);
-    ASSERT(!(schools & SPTYP_HOLY));
     UNUSED(schools);
 
     init();
@@ -82,7 +81,7 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
-    ASSERT(_school < SPTYP_HOLY || _school == SPTYP_RANDOM);
+    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
     ASSERT(level >= 0 && level <= 3);
 
     init();
@@ -103,7 +102,7 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
-    ASSERT(_school < SPTYP_HOLY || _school == SPTYP_RANDOM);
+    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
 
     init();
     do_miscast();

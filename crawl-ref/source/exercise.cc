@@ -194,9 +194,6 @@ static void _exercise_spell(spell_type spell, bool success)
 
     unsigned int disciplines = get_spell_disciplines(spell);
 
-    //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);
-
     int skillcount = count_bits(disciplines);
 
     if (!success)

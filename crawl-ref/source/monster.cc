@@ -2812,15 +2812,6 @@ bool monster::has_spell(spell_type spell) const
     return (false);
 }
 
-bool monster::has_holy_spell() const
-{
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_holy_spell(spells[i]))
-            return (true);
-
-    return (false);
-}
-
 bool monster::has_unholy_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -3143,9 +3134,6 @@ bool monster::is_holy(bool check_spells) const
 
     // Assume that all unknown gods (GOD_NAMELESS) are not holy.
     if (is_priest() && is_good_god(god) && check_spells)
-        return (true);
-
-    if (has_holy_spell() && (check_spells || !is_actual_spellcaster()))
         return (true);
 
     return (false);

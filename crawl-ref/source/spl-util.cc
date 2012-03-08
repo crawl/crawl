@@ -529,8 +529,7 @@ bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
     const unsigned int combined = disc1 | disc2;
 
     return ((combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
-            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE)
-            || (combined & SPTYP_HOLY)  && (combined & SPTYP_NECROMANCY));
+            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE));
 }
 
 const char *spell_title(spell_type spell)
@@ -824,8 +823,6 @@ const char* spelltype_short_name(int which_spelltype)
         return ("Trmt");
     case SPTYP_NECROMANCY:
         return ("Necr");
-    case SPTYP_HOLY:
-        return ("Holy");
     case SPTYP_SUMMONING:
         return ("Summ");
     case SPTYP_DIVINATION:
@@ -863,8 +860,6 @@ const char* spelltype_long_name(int which_spelltype)
         return ("Transmutation");
     case SPTYP_NECROMANCY:
         return ("Necromancy");
-    case SPTYP_HOLY:
-        return ("Holy");
     case SPTYP_SUMMONING:
         return ("Summoning");
     case SPTYP_DIVINATION:
@@ -902,7 +897,6 @@ skill_type spell_type2skill(unsigned int spelltype)
     case SPTYP_AIR:            return (SK_AIR_MAGIC);
 
     default:
-    case SPTYP_HOLY:
     case SPTYP_DIVINATION:
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return (SK_NONE);

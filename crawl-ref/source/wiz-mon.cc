@@ -1362,12 +1362,6 @@ void debug_miscast(int target_index)
         }
     }
 
-    if (is_holy_spell(spell))
-    {
-        mpr("Can't miscast holy spells.");
-        return;
-    }
-
     if (spell != SPELL_NO_SPELL)
         mprf("Miscasting spell %s.", spell_title(spell));
     else

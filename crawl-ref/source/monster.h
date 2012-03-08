@@ -373,7 +373,6 @@ public:
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
-    bool has_holy_spell() const;
     bool has_unholy_spell() const;
     bool has_evil_spell() const;
     bool has_unclean_spell() const;
