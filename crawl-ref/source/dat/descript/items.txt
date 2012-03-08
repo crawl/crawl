@@ -401,7 +401,7 @@ It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the
 %%%%
 deck of dungeons
 
-A deck of magical cards which deal with shaping the dungeon. Unlike most other decks, the cards from this deck tend to be ignored by Nemelex, who prefers more amusing pursuits.
+A deck of magical cards which deal with shaping the dungeon.
 
 It may contain the following cards: Water, Vitrification, the Map, Dowsing, the Spade, Trowel, the Minefield.
 %%%%
