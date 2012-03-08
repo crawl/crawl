@@ -699,9 +699,10 @@ std::string getLongDescription(const std::string &key)
     if (!DescriptionDB.get())
         return ("");
 
-    return _query_database(DescriptionDB.get(), key, true, true);
+    return unwrap_desc(_query_database(DescriptionDB.get(), key, true, true));
 }
 
+// god names only
 std::string getWeightedRandomisedDescription(const std::string &key)
 {
     return _query_weighted_randomised(DescriptionDB, key);

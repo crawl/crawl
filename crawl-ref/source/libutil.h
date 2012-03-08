@@ -178,6 +178,8 @@ std::string comma_separated_line(Z start, Z end,
     return (text);
 }
 
+std::string unwrap_desc(std::string desc);
+
 inline int sqr(int x)
 {
     return x * x;

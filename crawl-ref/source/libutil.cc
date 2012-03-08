@@ -1003,6 +1003,23 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     return s - src - 1;
 }
 
+std::string unwrap_desc(std::string desc)
+{
+    trim_string_right(desc);
+
+    // An empty line separates paragraphs.
+    desc = replace_all(desc, "\n\n", "\\n\\n");
+    // Indented lines are pre-formatted.
+    desc = replace_all(desc, "\n ", "\\n ");
+
+    // Newlines are still whitespace.
+    desc = replace_all(desc, "\n", " ");
+    // Can force a newline with a literal "\n".
+    desc = replace_all(desc, "\\n", "\n");
+
+    return desc + "\n";
+}
+
 #ifdef TARGET_OS_WINDOWS
 // FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
 // function isn't included in msys, so I don't know how to do that. Instead, I just check
