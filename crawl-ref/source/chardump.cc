@@ -898,7 +898,6 @@ static void _sdump_spells(dump_params &par)
 // this can be tossed as soon as I reorder the enum to the traditional order {dlb}
     const int spell_type_index[] =
     {
-        SPTYP_HOLY,
         SPTYP_POISON,
         SPTYP_FIRE,
         SPTYP_ICE,

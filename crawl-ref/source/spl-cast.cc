@@ -394,9 +394,6 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         unsigned int disciplines = get_spell_disciplines(spell);
 
-        //jmf: evil evil evil -- exclude HOLY bit
-        disciplines &= (~SPTYP_HOLY);
-
         int skillcount = count_bits(disciplines);
         if (skillcount)
         {
@@ -768,9 +765,6 @@ static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
-    if (is_holy_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
-
     if (is_unholy_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
 
@@ -844,12 +838,6 @@ bool is_prevented_teleport(spell_type spell)
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
 {
-    if (you.undead_or_demonic() && is_holy_spell(spell))
-    {
-        msg = "You can't use this type of magic!";
-        return (true);
-    }
-
     // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
     // to be extended here. - bwr
