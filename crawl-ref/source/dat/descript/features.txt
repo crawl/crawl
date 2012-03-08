@@ -3,6 +3,10 @@ A basalt altar of Yredelemnul
 
 An altar to Yredelemnul the Dark, worked from columnar basalt.
 %%%%
+A blade trap
+
+You can see an edge of a massive scythe-like blade hidden in a slit; it probably has a counterweight that acts as a pendulum.
+%%%%
 A bloodstained altar of Trog
 
 An altar to Trog the Wrathful, crudely made by what seem to be the hands of giants and covered with bloodstains.
@@ -72,6 +76,13 @@ This gate leads to yet another region of Pandemonium. There'll always be more.
 A one-way gate leading to the halls of Pandemonium
 
 This gate leads to the endless halls of Pandemonium. Tales about successful lootings of these netherworlds are rare. Even the strongest and most experienced characters can die there. On the other hand, these halls contain several runes and lots of valuable items. It is much easier to get in than to get out.
+%%%%
+A gas trap
+
+You're lucky to have noticed this trap, for it would have released a cloud
+of deadly gas at you. What exactly gas it holds, you cannot tell — perhaps
+it is plain poison, perhaps mutagenic fumes, perhaps flammable vapour,
+perhaps something yet nastier.
 %%%%
 A gate to the Realm of Zot
 
@@ -146,6 +157,10 @@ A natural hazard, although it looks almost as if designed to harm trespassers.
 A metal wall
 
 A wall of bluish-grey metal. As every dungeon electrician knows, this stuff will ground.
+%%%%
+A needle trap
+
+It is damn sure the needles from this trap are doused in something nasty.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
@@ -307,7 +322,6 @@ A translucent unnaturally hard rock wall
 
 This wall is imbued with magic that not only makes it indestructible but also makes it translucent like glass.
 %%%%
-%%%%
 A trap
 
 It's a trap!
@@ -343,6 +357,12 @@ The spider who left this web must have been huge, as it seems to be made for tra
 An abandoned shop
 
 This shop has been abandoned.
+%%%%
+An alarm trap
+
+While this trap does no damage by itself, its loud sound may bring someone
+to do damage to you. Of course, you have the option to do damage to those
+someones yourself.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 
