@@ -883,7 +883,6 @@ MARKER: v = lua:props_marker { veto_fragmentation="veto", veto_disintegrate="vet
 # Final subst
 SUBST:  MV = .
 :       dgn.set_feature_desc_short("granite statue", "iron statue")
-:       dgn.set_feature_desc_long("granite statue", "The statue has no mouth. Creepy!\n")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then

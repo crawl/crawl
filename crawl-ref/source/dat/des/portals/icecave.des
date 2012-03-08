@@ -123,9 +123,6 @@ function ice_cave_feat_descs()
                                "Some ice crusted shallow water")
     dgn.set_feature_desc_short("Some deep water",
                                "Some ice crusted deep water")
-
-    dgn.set_feature_desc_long("Some deep water",
-                              "It looks freezing!");
 end
 }}
 

@@ -2903,7 +2903,6 @@ COLOUR:  t = darkgrey
 COLOUR:  G = white
 SUBST:   t = t.
 : dgn.set_feature_desc_short("granite statue", "adventurer's gravestone")
-: dgn.set_feature_desc_long("granite statue", "The grave of an adventurer who came close to victory.\n")
 MAP
     ....'....
   ...'....'..

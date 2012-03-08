@@ -186,8 +186,6 @@ MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
 MONS:    silver statue / orange crystal statue / ice statue
 #
 : dgn.set_feature_desc_short("granite statue", "sarcophagus")
-: dgn.set_feature_desc_long("granite statue", "An ancient sarcophagus. " ..
-:                           "It appears to be empty.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

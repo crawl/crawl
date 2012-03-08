@@ -1198,10 +1198,7 @@ COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
 :           place_chained_volcano(_G)
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "glass window")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                                     "A pockmarked, ultra-hard glass window.")
+:           dgn.set_feature_desc_short("translucent rock wall", "glass window")
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )

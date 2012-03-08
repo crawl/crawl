@@ -434,3 +434,242 @@ This waist-deep, misty water makes movement and combat cumbersome for landlubber
 The open sea
 
 Nothing but endless wind and waves, and not a lighthouse in sight. You'd be lost beyond all hope in short order - better not risk it.
+%%%%
+########################
+### Vault redefinitions
+########################
+# wizlab: Wucad Mu
+An autumnal tree
+
+These trees, large as they are, appear to be
+permanently locked in an autumnal moment: leaves, coloured red and gold,
+fall from branches and float gracefully to the floor. Before they even
+reach the ground, however, a shadow passes, and when the shimmer is gone,
+the leaves are once more on the branch, ready to fall again.
+%%%%
+A crumbled stone wall
+
+These walls, though they have fallen
+into disrepair, appear as locked in time as the trees, ready to collapse,
+but utterly unable to.
+%%%%
+A strange statue
+
+The features of this statue are strange
+and alien. Is it because the statue is worn and tarnished that it has become
+so unrecognisable? Or is it that the subject was something demonic and evil?
+%%%%
+A timeless floor
+
+Though a thousand feet may have trod these floors,
+they appear timeless and indestructible.
+%%%%
+# wizlab: Tukima
+A crystal clear mirror
+
+A glistening mirror, reflecting everything around it.
+%%%%
+A strange machine
+
+A mechanical contraption, all hisses and pops. It is highly reflective.
+%%%%
+A glistening fountain
+
+The only thing it lacks is water.
+%%%%
+A black marble wall
+
+The marble glistens and shines. It certainly is beautiful!
+%%%%
+A marble floor
+
+Where the walls are black marble, the floor is
+a white and silver, with shades of pink here and there.
+%%%%
+# wizlab: Eringya
+A rose-covered archway
+
+The roses look beautiful!
+%%%%
+A vine-covered statue
+
+It looks almost like a monster made entirely from vines.
+%%%%
+A crumbling stone wall
+
+It looks ancient.
+%%%%
+The grass-covered ground
+
+Strewn with leaves and twigs that
+crunch loudly underfoot, the grass is crisp and fresh.
+%%%%
+# wizlab: Doroklohe
+A strange rock wall
+
+It is decorated with images you might see in a tomb.
+%%%%
+A highly decorated stone wall
+
+It is covered with disturbing, horrifying images.
+%%%%
+A rough-hewn floor
+
+It is rough and uneven in places.
+%%%%
+# wizlab: Cigotuvi
+Viscous fluid
+
+This sticky fluid seems to be secreted by the nearby walls. It looks disgusting.
+%%%%
+A sinewy wall
+
+These walls look strangely organic, but incredibly tough and durable.
+%%%%
+A thin membrane
+
+This strange membrane is thin enough to see through.
+%%%%
+A pulsating floor
+
+This slick floor seems to pulse to an unknown beat.
+%%%%
+# wizlab: Zonguldrok
+Zonguldrok's gravestone
+
+A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.
+%%%%
+A gravestone
+
+A nameless grave. The question remains: is it the grave that is nameless, or
+the person who lies in that grave?
+%%%%
+The ground
+
+No life grows here. It is completely dead.
+%%%%
+# wizlab: Cloud Mage
+A damp floor
+
+Perhaps it is the humidity, or the constant flow of clouds, but the floor
+here remains forever damp.
+%%%%
+#A wall of white crystal
+%%%%
+#A wall of transparent white crystal
+%%%%
+# wizlab: Hellbinder
+A hot floor
+
+Deep below the floor burns a fire hotter than any other fire: the fire of
+hell. The floor is hot to the touch.
+%%%%
+A black wall
+
+Perhaps stone, or solid charcoal, or a substance found only in the deepest hells.
+%%%%
+A carved rock wall
+
+It is decorated with images of death and destruction.
+%%%%
+# evilmike_haunted_forest (Crypt:5)
+A dead tree
+
+This tree is as dead as everything else here.
+%%%%
+# Dis:7
+An iron statue
+
+A heavy-looking iron statue. You can't help but feel like it's watching you.
+%%%%
+# Geh:7
+Ashen ground
+
+With every step, you walk on ash. It is warm and almost comfortable.
+%%%%
+A tempered metal wall
+
+These metal walls emit heat.
+%%%%
+# Coc:7
+An ice-covered rock wall
+
+A rock wall coated in a thick layer of ice.
+%%%%
+An ice-covered stone wall
+
+A stone wall coated in a thick layer of ice.
+%%%%
+Frost-covered floor
+
+Frost-covered floor. It crunches satisfyingly underfoot.
+%%%%
+# Pan: Cerebov
+A cracked metal wall
+
+This metal wall has suffered some damage. Alas, the hole is not big enough
+to crawl through.
+%%%%
+# Pan: the holy level
+A golden statue
+
+A solid gold statue of a saint.
+%%%%
+A silver wall
+
+This wall is made of pure silver.
+%%%%
+# Slime:7
+A rune carved stone wall
+
+This strangely slime-free stone wall is carved all over with countless
+mystical runes. One often repeated set of runes seems to refer to
+'the royal jelly.'
+%%%%
+# Tomb:1
+A sarcophagus
+
+An ancient sarcophagus. It appears to be empty.
+%%%%
+# Vault:8
+A heavily etched metal wall
+
+This metal wall is etched with murals depicting, in great and gruesome
+detail, exactly what will be done to anyone caught stealing from the Vaults.
+It makes you feel queasy.
+%%%%
+A heavily etched wall of green crystal
+
+This wall of green crystal is etched with murals depicting, in great and
+gruesome detail, exactly what will be done to anyone caught stealing from
+the Vaults. It makes you feel queasy.
+%%%%
+# moated_graveyard_entry (D:1)
+An adventurer's gravestone
+
+The grave of an adventurer who came close to victory.
+%%%%
+# minmay_entry_shattered_statue (D:1)
+A granite stump
+
+This stump of granite was probably a statue at some point in the past.
+%%%%
+# Ice Cave
+Some ice crusted deep water
+
+It looks freezing!
+%%%%
+# sewer_minmay_treatment (Sewer)
+A large window
+
+A window embedded in the side of an enormous metal pipe, allowing
+observation of the water flowing inside.
+%%%%
+A glass window
+
+A pockmarked, ultra-hard glass window.
+%%%%
+# due_tower_of_silence
+An iron statue
+
+The statue has no mouth. Creepy!
