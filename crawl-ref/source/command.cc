@@ -1079,11 +1079,6 @@ static void _append_non_item(std::string &desc, std::string key)
         desc += "\nThis is a monster-only spell, only available via the "
                 "&Z wizard command.";
     }
-    else if (flags & SPFLAG_CARD)
-    {
-        desc += "\nThis is a card-effect spell, unavailable in ordinary "
-                "spellbooks.";
-    }
     else
     {
         desc += "\nOdd, this spell can't be found anywhere. Please "

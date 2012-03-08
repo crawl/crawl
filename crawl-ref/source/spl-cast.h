@@ -31,7 +31,7 @@ enum spflag_type
     SPFLAG_AREA                 = 0x008000,      // area affect
     SPFLAG_BATTLE               = 0x010000,      // a non-Conjuration spell that
                                                  // is still a battle spell
-    SPFLAG_CARD                 = 0x020000,      // a card effect spell
+                                //0x020000,
     SPFLAG_MONSTER              = 0x040000,      // monster-only spell
     SPFLAG_INNATE               = 0x080000,      // an innate spell, even if
                                                  // use by a priest/wizard

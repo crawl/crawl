@@ -1427,7 +1427,7 @@ struct spell_desc
 {
     SPELL_DISINTEGRATE, "Disintegrate",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD, // also: wand
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      6,
      200,
      6, 6,
