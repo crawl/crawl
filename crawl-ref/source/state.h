@@ -90,6 +90,7 @@ struct game_state
     std::vector<std::string> startup_errors;
 
     bool level_annotation_shown;
+    bool viewport_monster_hp;
 
 #ifndef USE_TILE_LOCAL
     // Are we currently targetting using the mlist?

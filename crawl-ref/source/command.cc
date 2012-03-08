@@ -611,103 +611,10 @@ void list_jewellery(void)
     }
 }
 
-void list_weapons(void)
+void toggle_viewport_monster_hp()
 {
-    const int weapon_id = you.equip[EQ_WEAPON];
-
-    // Output the current weapon
-    //
-    // Yes, this is already on the screen... I'm outputing it
-    // for completeness and to avoid confusion.
-    std::string wstring = "Current   : ";
-    int         colour;
-
-    if (weapon_id != -1)
-    {
-        wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
-        colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[weapon_id]),
-                             "equip");
-    }
-    else
-    {
-        if (you.form == TRAN_BLADE_HANDS)
-            wstring += "    blade " + blade_parts(true);
-        else if (!you_tran_can_wear(EQ_WEAPON))
-            wstring += "    (currently unavailable)";
-        else
-            wstring += "    empty " + blade_parts(true);
-        colour = menu_colour(wstring, "", "equip");
-    }
-
-    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
-
-    // Print out the swap slots.
-    for (int i = 0; i <= 1; ++i)
-    {
-        // We'll avoid repeating the current weapon for these slots,
-        // in order to keep things clean.
-        if (weapon_id == i)
-            continue;
-
-        if (i == 0)
-            wstring = "Primary   : ";
-        else
-            wstring = "Secondary : ";
-
-        colour = MSGCOL_BLACK;
-        if (you.inv[i].defined()
-            && (you.inv[i].base_type == OBJ_WEAPONS
-                || you.inv[i].base_type == OBJ_STAVES
-                || you.inv[i].base_type == OBJ_MISCELLANY))
-        {
-            wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
-            colour = menu_colour(wstring,
-                                 menu_colour_item_prefix(you.inv[i]),
-                                 "equip");
-        }
-        else
-            wstring += "    none";
-
-        if (colour == MSGCOL_BLACK)
-            colour = menu_colour(wstring, "", "equip");
-
-        mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
-    }
-
-    // Now we print out the current default fire weapon.
-    wstring = "Firing    : ";
-
-    int slot = you.m_quiver->get_fire_item();
-
-    colour = MSGCOL_BLACK;
-    if (slot == -1)
-    {
-        const item_def* item;
-        you.m_quiver->get_desired_item(&item, &slot);
-        if (!item->defined())
-        {
-            wstring += "    nothing";
-        }
-        else
-        {
-            wstring += "  - ";
-            wstring += item->name(DESC_A);
-            wstring += " (empty)";
-        }
-    }
-    else
-    {
-        wstring += you.inv[slot].name(DESC_INVENTORY_EQUIP);
-        colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[slot]),
-                             "equip");
-    }
-
-    if (colour == MSGCOL_BLACK)
-        colour = menu_colour(wstring, "", "equip");
-
-    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
+    crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
+    viewwindow();
 }
 
 static bool _cmdhelp_textfilter(const std::string &tag)
@@ -2383,6 +2290,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
     _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+#ifndef USE_TILE
+    _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
+#endif
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");

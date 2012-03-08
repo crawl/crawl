@@ -887,7 +887,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_INSPECT_FLOOR:
     case CMD_SHOW_TERRAIN:
     case CMD_EXAMINE_OBJECT:
-    case CMD_LIST_WEAPONS:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
     case CMD_LIST_EQUIPMENT:
@@ -1894,7 +1893,9 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_FRIENDLY_PICKUP: _toggle_friendly_pickup(); break;
+    case CMD_TOGGLE_FRIENDLY_PICKUP: 	_toggle_friendly_pickup(); break;
+    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: 		toggle_viewport_monster_hp(); break;
+
 
         // Map commands.
     case CMD_CLEAR_MAP:       _do_clear_map();   break;
@@ -2002,7 +2003,6 @@ void process_command(command_type cmd)
     case CMD_LIST_EQUIPMENT:           get_invent(OSEL_EQUIP);         break;
     case CMD_LIST_GOLD:                _do_list_gold();                break;
     case CMD_LIST_JEWELLERY:           list_jewellery();               break;
-    case CMD_LIST_WEAPONS:             list_weapons();                 break;
     case CMD_MAKE_NOTE:                make_user_note();               break;
     case CMD_REPLAY_MESSAGES: replay_messages(); redraw_screen();      break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
@@ -3161,6 +3161,12 @@ void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
+
+    if(crawl_state.viewport_monster_hp)
+    {
+        crawl_state.viewport_monster_hp = false;
+        viewwindow();
+    }
 
     update_monsters_in_view();
 

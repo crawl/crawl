@@ -7,6 +7,10 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
+#include "mon-stuff.h"
+#include "mon-info.h"
+#include "mon-info.h"
+#include "mon-util.h"
 #include "options.h"
 #include "player.h"
 #include "random.h"
@@ -251,6 +255,24 @@ bool get_orb_phase(const coord_def& loc)
 static int _etc_orb_glow(int, const coord_def& loc)
 {
     return get_orb_phase(loc) ? LIGHTMAGENTA : MAGENTA;
+}
+
+int dam_colour(const monster_info& mi)
+{
+    if (!mons_class_can_display_wounds(mi.type))
+        return Options.enemy_hp_colour[6]; // undead and whatnot
+
+   switch (mi.dam)
+   {
+        case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
+        case MDAM_LIGHTLY_DAMAGED:      return Options.enemy_hp_colour[1];
+        case MDAM_MODERATELY_DAMAGED:   return Options.enemy_hp_colour[2];
+        case MDAM_HEAVILY_DAMAGED:      return Options.enemy_hp_colour[3];
+        case MDAM_SEVERELY_DAMAGED:     return Options.enemy_hp_colour[4];
+        case MDAM_ALMOST_DEAD:          return Options.enemy_hp_colour[5];
+        case MDAM_DEAD:                 return BLACK; // this should never happen
+        default:                        return CYAN; // this should really never happen
+    }
 }
 
 static int _etc_random(int, const coord_def&)

@@ -37,7 +37,7 @@ game_state::game_state()
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
       lua_calls_no_turn(0), stat_gain_prompt(false),
-      level_annotation_shown(false),
+      level_annotation_shown(false), viewport_monster_hp(false),
 #ifndef USE_TILE_LOCAL
       mlist_targetting(false),
 #else

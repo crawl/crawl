@@ -429,6 +429,15 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
+void game_options::str_to_enemy_hp_colour(const std::string &colours)
+{
+    std::vector<std::string> colour_list = split_string(" ", colours, true, true);
+    for (int i = 0, csize = colour_list.size(); i < csize; i++)
+    {
+        enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
+    }
+}
+
 #ifdef USE_TILE
 static FixedVector<const char*, TAGPREF_MAX>
     tag_prefs("none", "tutorial", "named", "enemy");
@@ -1009,6 +1018,15 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(25, RED));
     stat_colour.clear();
     stat_colour.push_back(std::pair<int, int>(3, RED));
+    enemy_hp_colour.clear();
+    enemy_hp_colour.push_back(GREEN); // I think these defaults are pretty ugly but apparently OS X has problems with lighter colours
+    enemy_hp_colour.push_back(GREEN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(MAGENTA);
+    enemy_hp_colour.push_back(RED);
+    enemy_hp_colour.push_back(LIGHTGREY);
+    visual_monster_hp = false;
 
     force_autopickup.clear();
     note_monsters.clear();
@@ -2706,6 +2724,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             stat_colour.push_back(std::pair<int, int>(stat_limit, scolour));
         }
     }
+
+    else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
+    {
+        enemy_hp_colour.clear();
+        str_to_enemy_hp_colour(field);
+    }
+
     else if (key == "note_skill_levels")
     {
         std::vector<std::string> thesplit = split_string(",", field);
