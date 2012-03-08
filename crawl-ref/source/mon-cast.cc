@@ -3320,7 +3320,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (buff_only || crawl_state.game_is_arena() && !has_mon_foe
                 || friendly && !has_mon_foe || coinflip())
             {
-                dance_compulsion = getSpeakString("Tukima_self_buff");
+                dance_compulsion = getSpeakString("Terpsichore_self_buff");
                 if (!dance_compulsion.empty())
                 {
                     dance_compulsion = replace_all(dance_compulsion, "@The_monster@",
@@ -3331,13 +3331,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             else if (!friendly && !has_mon_foe)
             {
                 mons_cast_noise(mons, pbolt, spell_cast);
-                dance_compulsion = getSpeakString("Tukima_debuff");
+                dance_compulsion = getSpeakString("Terpsichore_debuff");
                 if (!dance_compulsion.empty())
                     mpr(dance_compulsion.c_str());
             }
             else
             {
-                dance_compulsion = getSpeakString("Tukima_other_buff");
+                dance_compulsion = getSpeakString("Terpsichore_other_buff");
                 const monster* foe = mons->get_foe()->as_monster();
 
                 if (!dance_compulsion.empty())
