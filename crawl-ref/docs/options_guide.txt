@@ -1293,7 +1293,7 @@ enemy_hp_colour = green green brown brown magenta red lightgrey
 	Colours enemy health appropriately in the monster pane. The
 	colourings correspond to full health, lightly wounded, moderately
 	wounded, heavily wounded, severely wounded, almost dead, and
-	undead (or otherwise inable to be determined).
+	undead (or otherwise unable to be determined).
 
 clear_messages = false
         Setting this option to true will cause messages to cleared
