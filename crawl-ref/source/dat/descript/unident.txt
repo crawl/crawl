@@ -8,10 +8,6 @@ book
 A book of magic spells. Beware, for some of the more powerful grimoires
 are not to be toyed with.
 %%%%
-crystal ball
-
-A sphere of clear crystal.
-%%%%
 deck of cards
 
 A deck of powerful magical cards painted in the ichor of demons. They may have any number of helpful or dangerous effects when drawn.

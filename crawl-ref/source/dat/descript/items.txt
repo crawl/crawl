@@ -217,10 +217,6 @@ book of geomancy
 
 A book of magic spells.
 %%%%
-book of healing
-
-A book of magic spells.
-%%%%
 book of hinderance
 
 A book of magic spells.
