@@ -969,13 +969,7 @@ static bool _spell_filter(std::string key, std::string body)
         return (true);
 
     if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
-    {
-#ifdef WIZARD
         return (!you.wizard);
-#else
-        return (true);
-#endif
-    }
 
     return (false);
 }
@@ -1080,6 +1074,8 @@ static void _append_non_item(std::string &desc, std::string key)
     }
     else if (flags & SPFLAG_MONSTER)
     {
+        // We can get here only in wizmode, the spell isn't listed otherwise.
+        // And only if it has a description -- no monster ones do.
         desc += "\nThis is a monster-only spell, only available via the "
                 "&Z wizard command.";
     }
@@ -1094,17 +1090,10 @@ static void _append_non_item(std::string &desc, std::string key)
                 "file a bug report.";
     }
 
-#ifdef WIZARD
-    if (!you.wizard)
-#else
-    if (true)
-#endif
+    if (!you.wizard && (flags & (SPFLAG_TESTING | SPFLAG_MONSTER)))
     {
-        if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
-        {
-            desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
-                    "seeing this entry. Please file a bug report.";
-        }
+        desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
+                "seeing this entry. Please file a bug report.";
     }
 }
 
