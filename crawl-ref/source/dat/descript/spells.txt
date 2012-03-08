@@ -186,10 +186,6 @@ Dig
 
 This spell forms tunnels through unworked rock by liquefying it.
 %%%%
-Disintegrate
-
-This spell violently rends apart anything in a small volume of space. It can be used to cause severe damage.
-%%%%
 Dispel Undead
 
 This spell uses the very forces that bind an undead creature together to inflict a great deal of damage on it.
