@@ -528,10 +528,6 @@ TILE:       n = dngn_metal_wall_cracked
 TILE:       v = dngn_metal_wall_brown
 :           dgn.set_feature_desc_short("translucent stone wall",
 :                                      "cracked metal wall")
-:           dgn.set_feature_desc_long("translucent stone wall",
-:                                     "This metal wall has suffered some " ..
-:                                     "damage. Alas, the hole is not big " ..
-:                                     "enough to crawl through.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1739,12 +1735,8 @@ FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
 : dgn.set_feature_desc_short("granite statue",
 :                            "golden statue")
-: dgn.set_feature_desc_long("granite statue",
-:                           "A solid gold statue of a saint.")
 : dgn.set_feature_desc_short("metal wall",
 :                            "silver wall")
-: dgn.set_feature_desc_long("metal wall",
-:                           "This wall is made of pure silver.")
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
 :                        "apis / paladin / apis / ophan / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.

@@ -1004,9 +1004,7 @@ KMONS:  F = patrolling reaper
 SUBST:  n : nc
 KFEAT: ABCEFH = .
 : dgn.set_feature_desc_short("granite statue", "gravestone")
-: dgn.set_feature_desc_long("granite statue", "A nameless gravestone.\n")
 : dgn.set_feature_desc_short("tree", "dead tree")
-: dgn.set_feature_desc_long("tree", "This tree is as dead as everything else here.\n")
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
