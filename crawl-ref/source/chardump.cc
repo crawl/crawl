@@ -894,26 +894,6 @@ static void _sdump_spells(dump_params &par)
 {
     std::string &text(par.text);
 
-// This array helps output the spell types in the traditional order.
-// this can be tossed as soon as I reorder the enum to the traditional order {dlb}
-    const int spell_type_index[] =
-    {
-        SPTYP_POISON,
-        SPTYP_FIRE,
-        SPTYP_ICE,
-        SPTYP_EARTH,
-        SPTYP_AIR,
-        SPTYP_CONJURATION,
-        SPTYP_HEXES,
-        SPTYP_CHARMS,
-        SPTYP_DIVINATION,
-        SPTYP_TRANSLOCATION,
-        SPTYP_SUMMONING,
-        SPTYP_TRANSMUTATION,
-        SPTYP_NECROMANCY,
-        0
-    };
-
     int spell_levels = player_spell_levels();
 
     std::string verb = par.se? "had" : "have";
@@ -969,12 +949,11 @@ static void _sdump_spells(dump_params &par)
 
                 bool already = false;
 
-                for (int i = 0; spell_type_index[i] != 0; i++)
+                for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
                 {
-                    if (spell_typematch(spell, spell_type_index[i]))
+                    if (spell_typematch(spell, 1 << i))
                     {
-                        spell_line += spell_type_shortname(spell_type_index[i],
-                                                           already);
+                        spell_line += spell_type_shortname(1 << i, already);
                         already = true;
                     }
                 }
