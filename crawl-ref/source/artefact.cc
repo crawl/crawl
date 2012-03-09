@@ -383,7 +383,7 @@ bool is_randapp_artefact(const item_def &item)
 
 void autoid_unrand(item_def &item)
 {
-    if (!(item.flags & ISFLAG_UNRANDART || item.flags & ISFLAG_KNOW_TYPE))
+    if (!(item.flags & ISFLAG_UNRANDART) || item.flags & ISFLAG_KNOW_TYPE)
         return;
     const uint16_t uflags = _seekunrandart(item)->flags;
     if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
