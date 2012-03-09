@@ -26,6 +26,6 @@ void wizard_toggle_xray_vision();
 void wizard_god_wrath();
 void wizard_god_mollify();
 void wizard_transform();
-void wizard_file_input(const char*);
+void wizard_load_dump_file();
 
 #endif

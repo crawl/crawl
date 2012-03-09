@@ -674,6 +674,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'J': jiyva_eat_offlevel_items();            break;
     case 'W': wizard_god_wrath();                    break;
     case 'w': wizard_god_mollify();                  break;
+    case '#': wizard_load_dump_file();               break;
 
     case 'x':
         you.experience = 1 + exp_needed(1 + you.experience_level);
