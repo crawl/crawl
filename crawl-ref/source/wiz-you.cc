@@ -1082,8 +1082,16 @@ static void _wizard_modify_character(std::string inputdata)
     return;
 }
 
-void wizard_file_input(const char* filename)
+void wizard_load_dump_file()
 {
+    char filename[80];
+    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
+    if (filename[0] == '\0')
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     FileLineInput f(filename);
     while (!f.eof())
         _wizard_modify_character(f.get_line());
