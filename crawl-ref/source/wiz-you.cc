@@ -1042,7 +1042,7 @@ static void _wizard_modify_character(std::string inputdata)
     int size = tokens.size();
     if(size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
     {
-        skill_type skill = debug_prompt_for_skill(tokens[3].c_str(), true);
+        skill_type skill = skill_from_name(tokens[3].c_str());
         double amount = atof(tokens[2].c_str());
         set_skill_level(skill, amount);
         if (tokens[0] == "+")
