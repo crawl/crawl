@@ -1034,7 +1034,7 @@ void wizard_transform()
                 mpr("The force is weak with this one.");
 }
 
-static void wizard_modify_character(std::string inputdata)
+static void _wizard_modify_character(std::string inputdata)
 // for now this just sets skill levels and str dex int
 // (this should be enough to debug with)
 {
@@ -1086,6 +1086,6 @@ void wizard_file_input(const char* filename)
 {
     FileLineInput f(filename);
     while (!f.eof())
-        wizard_modify_character(f.get_line());
+        _wizard_modify_character(f.get_line());
     return;
 }
