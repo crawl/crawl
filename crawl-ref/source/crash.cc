@@ -59,7 +59,6 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 #endif // BACKTRACE_SUPPORTED
 
 #include "crash.h"
-#include "dbg-crsh.h"
 
 #include "externs.h"
 #include "files.h"
