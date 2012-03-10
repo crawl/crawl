@@ -1005,6 +1005,10 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 
 std::string unwrap_desc(std::string desc)
 {
+    // Don't append a newline to an empty description.
+    if (desc == "")
+        return "";
+
     trim_string_right(desc);
 
     // An empty line separates paragraphs.
