@@ -28,7 +28,7 @@ Kijek zawierający jakieś czary.
 %%%%
 scroll
 
-A scroll of paper covered in magical writing.
+Zwój papieru pokryty magicznym pismem.
 %%%%
 magical staff
 
