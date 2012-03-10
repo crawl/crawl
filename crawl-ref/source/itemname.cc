@@ -2241,7 +2241,7 @@ void display_runes()
 
     if (items.empty())
     {
-        mpr("You haven't found any rune yet.");
+        mpr("You haven't found any runes yet.");
         return;
     }
 
