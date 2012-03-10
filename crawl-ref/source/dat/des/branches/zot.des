@@ -513,7 +513,7 @@ ENDMAP
 NAME:   lemuel_draconian_sentries
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   no_rotate
+TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
@@ -539,7 +539,7 @@ ENDMAP
 NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   no_rotate
+TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
