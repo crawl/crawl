@@ -76,7 +76,7 @@ przykład przemianę w kamień.  Nie działa on także na przejścia do innych
 %%%%
 ankus
 
-Jest to oścień słuzący do kierowania słoniem.  Przypomina nadziak lub bosak,
+Jest to oścień służący do kierowania słoniem.  Przypomina nadziak lub bosak,
 z krótką rękojeścią, hakiem i szpikulcem.
 %%%%
 animal skin
@@ -98,7 +98,7 @@ To czym strzelasz z łuku.
 banana
 
 Smakowity żółty owoc, zapewne przywieziony przez jakąś bezduszną korporację
-wykorztującą biednych rolników w odległych krajach.
+wykorzystującą biednych rolników w odległych krajach.
 %%%%
 bardiche
 
@@ -415,7 +415,7 @@ wytrzymałego kryształu.
 dagger
 
 Długi ostry nóż, dobry do walki w zwarciu jak też i do rzucania.  Powoduje
-ogromne obrażenia w czasie ataku z nienacka.
+ogromne obrażenia w czasie ataku znienacka.
 %%%%
 dart
 
@@ -670,7 +670,7 @@ lamp of fire
 Magiczny przedmiot służący do przywoływania żywiołaków ognia.  Nie jest zbyt
 niezawodna, i często wymaga wielu prób zanim zadziała poprawnie.  Do użycia
 potrzebne jest źródło ognia, takie jak lawa lub otwarty płomień.  Kontrola
-nad przywołanymi żywiołakimu wymaga sporych umiejetności w dziedzinie Magii
+nad przywołanymi żywiołakami wymaga sporych umiejętności w dziedzinie Magii
 Ognia.
 %%%%
 lantern of shadows
@@ -762,7 +762,7 @@ Specjalna zbroja noszona przez naga na wężowej dolnej części ich ciała.
 %%%%
 necronomicon
 
-Najmroczniejsza księga jaka kiedykolwiek powstała, poteżna i przeklęta.  To
+Najmroczniejsza księga jaka kiedykolwiek powstała, potężna i przeklęta.  To
 wydanie które masz w ręku jest oprawione w ludzką (lub może elfią?) skórę,
 pisane jest krwią i zawiera diagramy które nawet laik rozpozna jako
 najczarniejszą z czarnych rodzajów magii.  Próba okiełznania mocy opisanych
