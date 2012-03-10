@@ -204,14 +204,14 @@ lx.1.1.xl
    l l
 ENDMAP
 
-NAME:    abyss_fake_rune
+NAME:    abyss_fake_exit
 TAGS:    abyss
 KFEAT:   O = exit_abyss mimic
 MAP
 O
 ENDMAP
 
-NAME:    abyss_fake_exit
+NAME:    abyss_fake_rune
 TAGS:    abyss
 ITEM:    abyssal rune of Zot mimic
 MAP
