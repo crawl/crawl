@@ -12,6 +12,7 @@ void init_crash_handler();
 void dump_crash_info(FILE* file);
 void write_stack_trace(FILE* file, int ignore_count);
 void disable_other_crashes();
+void do_crash_dump();
 
 #ifdef DGAMELAUNCH
 void watchdog();
