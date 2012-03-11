@@ -155,6 +155,7 @@ COLOUR:  .012345DE = lightgreen
 FTILE:   .+m012345DE = FLOOR_MOSS
 SHUFFLE: 12, 34
 : init_research(_G)
+SUBST:   m = n
 MAP
 @,,,@,,,@
 abcn+ncba
@@ -181,6 +182,7 @@ FTILE:   .+m012345D% = FLOOR_TOMB
 SHUFFLE: 1234
 : dgn.delayed_decay(_G, '%', 'ugly thing skeleton')
 : init_research(_G)
+SUBST:   m = n
 MAP
 @,,,@,,,@
 abcn+ncba
