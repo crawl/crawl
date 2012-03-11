@@ -943,7 +943,7 @@ void wizard_set_xl()
         return;
     }
 
-    const bool train = yesno("Train skills?");
+    const bool train = yesno("Train skills?", true, 'n');
 
     no_messages mx;
     if (newxl < you.experience_level)
