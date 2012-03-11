@@ -2649,7 +2649,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         const int speed = launcher_final_speed(launcher, you.shield());
         dprf("Final launcher speed: %d", speed);
-        you.time_taken = speed * you.time_taken / 100;
+        you.time_taken = div_rand_round(speed * you.time_taken, 100);
 
         // [dshaligram] Improving missile weapons:
         //  - Remove the strength/enchantment cap where you need to be strong
