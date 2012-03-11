@@ -1042,7 +1042,7 @@ static void _wizard_modify_character(std::string inputdata)
     int size = tokens.size();
     if(size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
     {
-        skill_type skill = skill_from_name(tokens[3].c_str());
+        skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
         double amount = atof(tokens[2].c_str());
         set_skill_level(skill, amount);
         if (tokens[0] == "+")
@@ -1059,24 +1059,43 @@ static void _wizard_modify_character(std::string inputdata)
 
     if(size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
     {
-        you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[5].c_str()));
-        you.redraw_stats.init(true);
-        you.redraw_evasion = true;
-        return;
+        for(int k = 1; k < size; k++)
+        {
+            if(tokens[k] == "Str")
+            {
+                you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+                you.redraw_stats.init(true);
+                you.redraw_evasion = true;
+                return;
+            }
+        }
     }
+
     if(size > 5 && tokens[0] == "MP")
     {
-        you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[5].c_str()));
-        you.redraw_stats.init(true);
-        you.redraw_evasion = true;
-        return;
+        for(int k = 1; k < size; k++)
+        {
+            if(tokens[k] == "Int")
+            {
+                you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+                you.redraw_stats.init(true);
+                you.redraw_evasion = true;
+                return;
+            }
+        }
     }
     if(size > 5 && tokens[0] == "Gold")
     {
-        you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[5].c_str()));
-        you.redraw_stats.init(true);
-        you.redraw_evasion = true;
-        return;
+        for(int k = 1; k < size; k++)
+        {
+            if(tokens[k] == "Dex")
+            {
+                you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
+                you.redraw_stats.init(true);
+                you.redraw_evasion = true;
+                return;
+            }
+        }
     }
 
     return;
