@@ -1077,12 +1077,13 @@ void MiscastEffect::_translocation(int severity)
         {
         case 0:
             you_msg      = "Space warps around you.";
-            mon_msg_seen = "Space warps around @the_monster@.";
+            mon_msg      = "Space warps around @the_monster@.";
             break;
         case 1:
             you_msg      = "The air around you crackles with energy!";
             mon_msg_seen = "The air around @the_monster@ crackles with "
                            "energy!";
+            mon_msg_unseen = "The air around something crackles with energy!";
             break;
         case 2:
             you_msg      = "You feel a wrenching sensation.";
@@ -1100,6 +1101,8 @@ void MiscastEffect::_translocation(int severity)
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
                            " for a moment.";
+            mon_msg_unseen = "A spot of thin air glows "
+                             + weird_glowing_colour() + " for a moment.";
             break;
         case 6:
             you_msg      = "Your skin tingles.";
