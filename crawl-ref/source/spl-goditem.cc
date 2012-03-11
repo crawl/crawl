@@ -194,9 +194,11 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    if(mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
-                                        + max_healed) / divisor))
+    if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
+                                         + max_healed) / divisor))
+    {
         return (-4);
+    }
 
     int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
                                 / divisor);
@@ -282,19 +284,19 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         if (can_pacify == 0)
         {
             mprf("The light of Elyvilon fails to reach %s.",
-                mons->name(DESC_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             return (0);
         }
         else if (can_pacify == -3)
         {
             mprf("The light of Elyvilon almost touches upon %s.",
-                mons->name(DESC_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             return (0);
         }
         else if (can_pacify == -4)
         {
             mprf("%s is completely unfazed by your meager offer of peace.",
-                mons->name(DESC_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             return (0);
         }
         else
