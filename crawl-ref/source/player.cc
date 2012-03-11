@@ -3963,7 +3963,7 @@ static void _display_attack_delay()
     int avg;
     const item_def* weapon = you.weapon();
     if (weapon && is_range_weapon(*weapon))
-        avg = launcher_final_speed(*weapon, you.shield());
+        avg = launcher_final_speed(*weapon, you.shield(), false);
     else
         avg = 10 * delay;
 

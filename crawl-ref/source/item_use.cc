@@ -1455,7 +1455,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
 // Returns the attack cost of using the launcher, taking skill and shields
 // into consideration. NOTE: You must pass in the shield; if you send in
 // NULL, this function assumes no shield is in use.
-int launcher_final_speed(const item_def &launcher, const item_def *shield)
+int launcher_final_speed(const item_def &launcher, const item_def *shield, bool scaled)
 {
     const int  str_weight   = weapon_str_weight(launcher);
     const int  dex_weight   = 10 - str_weight;
@@ -1503,7 +1503,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed = 2 * speed / 3;
     }
 
-    if (you.duration[DUR_FINESSE])
+    if (scaled && you.duration[DUR_FINESSE])
     {
         ASSERT(!you.duration[DUR_BERSERK]);
         // Need to undo haste by hand.
