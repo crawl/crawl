@@ -3149,8 +3149,12 @@ static void _update_golubria_traps()
         {
             if (--trap->ammo_qty <= 0)
             {
-                mpr("Your passage of Golubria closes.");
+                if (you.see_cell(*it))
+                    mpr("Your passage of Golubria closes with a snap!");
+                else
+                    mpr("You hear a snapping sound.", MSGCH_SOUND);
                 trap->destroy();
+                noisy(8, *it);
             }
         }
     }
