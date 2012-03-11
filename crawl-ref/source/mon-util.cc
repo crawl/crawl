@@ -793,6 +793,14 @@ void discover_mimic(const coord_def& pos, bool wake)
         mpr("There is some commotion, and a hidden mimic gets squished!");
         if (item)
             destroy_item(*item, true);
+        else
+        {
+            unnotice_feature(level_pos(level_id::current(), pos));
+            grd(pos) = DNGN_FLOOR;
+            env.level_map_mask(pos) &= !MMT_MIMIC;
+            set_terrain_changed(pos);
+            remove_markers_and_listeners_at(pos);
+        }
         return;
     }
 
