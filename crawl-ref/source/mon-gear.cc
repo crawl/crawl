@@ -1522,13 +1522,6 @@ static void _give_ammo(monster* mon, int level,
         {
             item_def& w(mitm[thing_created]);
 
-            // Limit returning brand to only one.
-            if (weap_class == OBJ_WEAPONS
-                && get_weapon_brand(w) == SPWPN_RETURNING)
-            {
-                qty = 1;
-            }
-
             if (mon->type == MONS_CHUCK)
                 set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
