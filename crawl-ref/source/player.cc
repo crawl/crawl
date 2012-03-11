@@ -3182,6 +3182,12 @@ void level_change(bool skip_attribute_increase)
                     mpr("Your skin feels tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
                 }
+
+                if (you.experience_level == 13)
+                {
+                    mpr("You can now constrict enemies with your "
+                        "snake-like lower body.", MSGCH_INTRINSIC_GAIN);
+                }
                 break;
 
             case SP_TROLL:
