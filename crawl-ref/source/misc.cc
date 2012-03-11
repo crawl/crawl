@@ -1120,7 +1120,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
                         && you.see_cell(where);
 
     if (ignite_blood)
-        amount *= 3;
+        amount *= 2;
 
     if (x_chance_in_y(amount, 20))
     {
