@@ -1736,6 +1736,10 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     case DNGN_SECRET_DOOR:
         beam.colour = env.rock_colour;
         // fall-through
+    case DNGN_SLIMY_WALL:
+        if (beam.colour == 0)
+            beam.colour = LIGHTGREEN;
+        // fall-through
     case DNGN_STONE_WALL:
         if (beam.colour == 0)
             beam.colour = LIGHTGRAY;
