@@ -574,14 +574,10 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_FELID:
             return (CC_BANNED);
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-        case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_TENGU:
@@ -589,7 +585,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_DEMIGOD:
         case SP_MUMMY:
         case SP_GHOUL:
-        case SP_VAMPIRE:
         case SP_OCTOPODE:
             return (CC_RESTRICTED);
         default:
