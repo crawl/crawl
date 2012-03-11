@@ -3044,8 +3044,8 @@ void level_change(bool skip_attribute_increase)
         {
             if (new_exp == 27)
             {
-               mprf(MSGCH_INTRINSIC_GAIN,
-                    "You have reached level 27, the final one!");
+               mpr("You have reached level 27, the final one!",
+                   MSGCH_INTRINSIC_GAIN);
             }
             else
             {
