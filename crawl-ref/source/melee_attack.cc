@@ -2206,26 +2206,18 @@ bool melee_attack::distortion_affects_defender()
 
     if (one_chance_in(3))
     {
-        if (defender_visible)
-        {
-            special_damage_message =
-                make_stringf(
-                    "Space bends around %s.",
-                def_name(DESC_THE).c_str());
-        }
+        special_damage_message =
+            make_stringf("Space bends around %s.",
+            def_name(DESC_THE).c_str());
         special_damage += 1 + random2avg(7, 2);
         return (false);
     }
 
     if (one_chance_in(3))
     {
-        if (defender_visible)
-        {
-            special_damage_message =
-                make_stringf(
-                    "Space warps horribly around %s!",
-                    def_name(DESC_THE).c_str());
-        }
+        special_damage_message =
+            make_stringf("Space warps horribly around %s!",
+                         def_name(DESC_THE).c_str());
         special_damage += 3 + random2avg(24, 2);
         return (false);
     }
