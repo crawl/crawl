@@ -3829,28 +3829,36 @@ bool god_protects_from_harm()
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
-    if (one_chance_in(100))
+    // First count the number of gods to whom we owe penance.
+    unsigned int penance_count = 0;
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
-        // Choose a god randomly from those to whom we owe penance.
-
-        god_type which_god = GOD_NO_GOD;
+        // Nemelex penance is special: it's only "active"
+        // when penance > 100, else it's passive.
+        if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
+                               || you.penance[i] > 100))
+        {
+            penance_count++;
+        }
+    }
+    // Now roll to see whether we get retribution and from which god.
+    const unsigned int which_penance = random2(100);
+    if (which_penance < penance_count)
+    {
         unsigned int count = 0;
-
         for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
-            // Nemelex penance is special: it's only "active"
-            // when penance > 100, else it's passive.
             if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
                                    || you.penance[i] > 100))
             {
+                if (count == which_penance)
+                {
+                    divine_retribution((god_type)i);
+                    break;
+                }
                 count++;
-                if (one_chance_in(count))
-                    which_god = static_cast<god_type>(i);
             }
         }
-
-        if (which_god != GOD_NO_GOD)
-            divine_retribution(which_god);
     }
 
     // Update the god's opinion of the player.
