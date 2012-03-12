@@ -1832,7 +1832,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
-    else if (!Generating_Level && you.can_see(mon))
+    else if (!Generating_Level && !dont_place && you.can_see(mon))
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
@@ -1844,7 +1844,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
 
     // Area effects can produce additional messages, and thus need to be
     // done after come in view ones.
-    if (mon->type == MONS_TWISTER)
+    if (mon->type == MONS_TWISTER && !dont_place)
         _place_twister_clouds(mon);
 
     return mon;
