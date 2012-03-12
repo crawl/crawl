@@ -1684,34 +1684,37 @@ int mons_spidernest_level(int mcls)
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_MITE:
     case MONS_SCORPION:
-    case MONS_REDBACK:
-    case MONS_WOLF_SPIDER:
-    case MONS_TRAPDOOR_SPIDER:
-    case MONS_VAMPIRE_MOSQUITO:
     case MONS_SPIDER:
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_WORM:
         mlev++;
         break;
 
     case MONS_YELLOW_WASP:
-    case MONS_RED_WASP:
+    case MONS_JUMPING_SPIDER:
+    case MONS_WOLF_SPIDER:
+    case MONS_TRAPDOOR_SPIDER:
     case MONS_GOLIATH_BEETLE:
+    case MONS_ROCK_WORM:
         mlev += 2;
         break;
 
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
-    case MONS_GIANT_CENTIPEDE:
+    case MONS_TARANTELLA:
+    case MONS_SPINY_WORM:
+    case MONS_REDBACK:
         mlev += 3;
         break;
 
     case MONS_EMPEROR_SCORPION:
-    case MONS_JUMPING_SPIDER:
+    case MONS_DEMONIC_CRAWLER:
+    case MONS_RED_WASP:
         mlev += 4;
         break;
 
-    case MONS_TARANTELLA:
     case MONS_GHOST_MOTH:
-    case MONS_DEMONIC_CRAWLER:
+    case MONS_MOTH_OF_WRATH:
         mlev += 5;
         break;
 
@@ -1726,37 +1729,44 @@ int mons_spidernest_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_GIANT_COCKROACH:
-    case MONS_GIANT_MITE:
-        return 60;
-
-    case MONS_SCORPION:
-    case MONS_REDBACK:
     case MONS_WOLF_SPIDER:
-    case MONS_TRAPDOOR_SPIDER:
-        return 50;
-
-    case MONS_VAMPIRE_MOSQUITO:
-        return 40;
-
-    case MONS_YELLOW_WASP:
-    case MONS_RED_WASP:
-        return 20;
-
-    case MONS_GOLIATH_BEETLE:
-    case MONS_BORING_BEETLE:
-    case MONS_BOULDER_BEETLE:
-    case MONS_GIANT_CENTIPEDE:
-    case MONS_EMPEROR_SCORPION:
-    case MONS_SPIDER:
-        return 15;
+        return 90;
 
     case MONS_JUMPING_SPIDER:
-    case MONS_TARANTELLA:
-        return 10;
+        return 82;
 
-    case MONS_GHOST_MOTH:
+    case MONS_TRAPDOOR_SPIDER:
+    case MONS_SCORPION:
+        return 75;
+
+    case MONS_TARANTELLA:
+    case MONS_REDBACK:
     case MONS_DEMONIC_CRAWLER:
+        return 65;
+
+    case MONS_RED_WASP:
+        return 40;
+
+    case MONS_EMPEROR_SCORPION:
+    case MONS_SPIDER:
+        return 35;
+
+    case MONS_WORM:
+    case MONS_ROCK_WORM:
+    case MONS_GOLIATH_BEETLE:
+    case MONS_BOULDER_BEETLE:
+        return 20;
+
+    case MONS_BORING_BEETLE:
+    case MONS_YELLOW_WASP:
+    case MONS_SPINY_WORM:
+    case MONS_GIANT_COCKROACH:
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_GIANT_MITE:
+    case MONS_GHOST_MOTH:
+        return 15;
+
+    case MONS_MOTH_OF_WRATH:
         return 5;
 
     default:
