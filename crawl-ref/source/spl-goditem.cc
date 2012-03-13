@@ -440,9 +440,7 @@ int detect_secret_doors(int pow)
         }
     }
 
-    if (doors_found == 0)
-        canned_msg(MSG_DETECT_NOTHING);
-    else
+    if (doors_found)
         mpr("You detect secret doors!");
 
     return (doors_found);
