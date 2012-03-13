@@ -30,7 +30,7 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 }}
 
-# Flavour text for Spiderweb map ##########################################
+# Flavour text for Spiderweb map
 {{
 function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
     crawl.mpr("Something lightly brushes against you...",1)
@@ -92,6 +92,25 @@ xx^.1.x^^^...
 x^^^^..xxx...
 .xx^^...xxx..
 ..xxx........
+ENDMAP
+
+NAME:   spiders_nest_entry_funnel_web
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = web / floor
+MONS:   spider / wolf spider / w:5 jumping spider / w:5 redback
+MAP
+      xxxxxx
+     xx11.1x
+   xxx.1O1xx
+   x^^^...x
+  xx^^^^^xx
+ xx^^^^^xx
+xx^^^^^xx
+@.^^^xxx
+@.^xxx
+@.xx
+@@x
 ENDMAP
 
 ##############################################################################
@@ -275,7 +294,8 @@ ENDMAP
 #
 # Heavily edited from the original portal vault map.
 NAME:    mumra_spider_spiderweb
-TAGS:    no_item_gen no_monster_gen no_pool_fixup mini_float
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  float
 DEPTH:   Spider:1-4
 NSUBST:  y = 1:y / *:.
 {{
@@ -333,6 +353,50 @@ MAP
           ...xxxx.......WWWWxx.....
             ....xxxxxxxxxxxxxx.
                ........3.......
+ENDMAP
+
+# Some wasp vaults. Wasps eat spiders (and players).
+NAME:   spiders_nest_wasp_nest
+DEPTH:  Spider
+TAGS:   mini_float
+MONS:   red wasp / w:5 yellow wasp
+SUBST:  1 = %1
+SUBST:  a = .a
+MAP
+  ......
+ ..aaaa..
+..AAAAAA..
+.aA1111Aa.
+.aA1111Aa.
+.aA1111Aa.
+.aA1111Aa.
+..AAAAAA..
+ ..aaaa..
+  ......
+ENDMAP
+
+NAME:   lemuel_wasp_nest
+DEPTH:  Spider
+MONS:   yellow wasp / weight:2 red wasp
+WEIGHT: 1
+SUBST:  1=1 .:15
+SUBST:  ?=a.
+MAP
+     a?@?a
+     a?.?a
+  aaaaa.aaaaa
+ aa111a.a111aa
+aa111aa.aa111aa
+a111aaa.aaa111a
+a?1.??a.a??.1?a
+aa?...a.a...?aa
+ aaa?.....?aaa
+   aaa?.?aaa
+     aa.aa
+      a.a
+      a.a
+      a*a
+      aaa
 ENDMAP
 
 ##############################################################################
