@@ -546,7 +546,7 @@ _demon_taunt_
 
 @The_monster@ @says@ @to_foe@, "@demon_taunt@"
 %%%%
-_imp_taunt_
+_says_imp_taunt_
 
 @The_monster@ @says@ @to_foe@, "@imp_taunt@"
 ##########################################
@@ -5841,7 +5841,7 @@ hell lord
 crimson imp
 
 w:1
-@_imp_taunt_@
+@_says_imp_taunt_@
 
 w:2
 @_hostile_imp_@
@@ -5849,7 +5849,7 @@ w:2
 iron imp
 
 w:1
-@_imp_taunt_@
+@_says_imp_taunt_@
 
 w:2
 @_hostile_imp_@
@@ -5857,7 +5857,7 @@ w:2
 shadow imp
 
 w:1
-@_imp_taunt_@
+@_says_imp_taunt_@
 
 w:2
 @_hostile_imp_@
@@ -5865,7 +5865,7 @@ w:2
 white imp
 
 w:1
-@_imp_taunt_@
+@_says_imp_taunt_@
 
 w:2
 @_hostile_imp_@
