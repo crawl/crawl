@@ -6650,27 +6650,27 @@ cherub
 #################################
 # Monsters who worship Zin
 #################################
-_zin_priest_
+zin_priest
 
 w:40
-@The_monster@ recites @axioms_of_law@
+@The_monster@ recites @_axioms_of_law_@
 
-@The_monster@ recites @recite_what@ @recite_subject@
+@The_monster@ recites @_recite_what_@ @_recite_subject_@
 
-@The_monster@ preaches about @recite_subject@
+@The_monster@ preaches about @_recite_subject_@
 
-@The_monster@ @_recites_start_@ a @lecture_modifier@ lecture about @recite_subject@
+@The_monster@ @_recites_start_@ a @_lecture_modifier_@ lecture about @_recite_subject_@
 
-@The_monster@ explains in detail about @recite_subject@
+@The_monster@ explains in detail about @_recite_subject_@
 
-@The_monster@ explains the importance of @important_subject@
+@The_monster@ explains the importance of @_important_subject_@
 
-@The_monster@ @_recites_start_@ a @lecture_modifier@ sermon about @recite_subject@
+@The_monster@ @_recites_start_@ a @_lecture_modifier_@ sermon about @_recite_subject_@
 
-@The_monster@ @_recites_start_@ a @lecture_modifier@ speech about @recite_subject@
+@The_monster@ @_recites_start_@ a @_lecture_modifier_@ speech about @_recite_subject_@
 
 w:5
-@The_monster@ speaks about @recite_subject@
+@The_monster@ speaks about @_recite_subject_@
 %%%%
 _recites_start_
 
@@ -6680,6 +6680,137 @@ launches into
 
 embarks on
 %%%%
+_recite_what_
+
+a poem about
+
+the sacred texts on
+
+the word of Zin on
+
+sonorously on
+
+loudly on
+%%%%
+_lecture_modifier_
+
+lengthy
+
+passionate
+
+righteous
+
+stern
+%%%%
+_axioms_of_law_
+
+Zin's Axioms of Law.
+
+the Axioms of Law.
+
+the books of the Law.
+
+the sacred Law of Zin.
+%%%%
+# used for "explaining the importance of ..."
+_important_subject_
+
+# law
+w:50
+@_axioms_of_law_@
+
+the eternal Law.
+
+obedience to the Law.
+
+the one true way.
+
+# purity
+purity of body and mind.
+
+preserving your bodily integrity.
+
+keeping your body clean and pure.
+
+proper care of body and soul.
+
+# mutations
+avoiding mutations.
+
+just saying no to mutations.
+
+# respecting intelligent beings
+proper burial practice.
+
+# demons
+not dealing with demons.
+
+rejecting the service of demons.
+%%%%
+# the subject of your recital/lecture/whatever
+# needs the full dot or exclamation mark
+_recite_subject_
+
+w:120
+@_important_subject_@
+
+# first, law and order
+w:80
+@_axioms_of_law_@
+
+the Law and the prophets.
+
+the importance of the Law.
+
+# anti-mutation
+mutations, and how to avoid them.
+
+potions of Mutation - the devil's brew!
+
+Neqoxecs and Cacodemons - may they all be destroyed!
+
+# respecting intelligent beings
+a proper diet respecting intelligent beings.
+
+# necromancy and evil
+the evils of necromancy.
+
+undead, and why they are evil.
+
+# the gods
+the fall of Lugonu.
+
+the alliance of Zin and the Shining One.
+
+the alliance of Zin and Elyvilon.
+
+the lawlessness of @_chaotic_god_@.
+
+the evilness of @_evil_god_@.
+%%%%
+_chaotic_god_
+
+Xom
+
+Makhleb
+
+Lugonu
+
+Jiyva
+%%%%
+_evil_god_
+
+Kikubaaqudgha
+
+Makhleb
+
+Yredelemnul
+
+Beogh
+
+Lugonu
+%%%%
+
 ###############################################################################
 # Speech keys used *specifically* in (portal) vaults.
 #

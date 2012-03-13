@@ -1140,6 +1140,7 @@ MONS:   angel god:zin name:glowing n_adj / \
         angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
         angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
         angel god:zin name:glowing n_adj ; mace ego:holy_wrath
+MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"}
 DEPTH:  2-27
 MAP
 xxxxxxxxx
