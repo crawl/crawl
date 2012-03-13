@@ -26,18 +26,6 @@ function place_bazaar_portal(e, perm)
 end
 
 function bazaar_portal(timed)
-  local desc_long =
-"Aside from the vendors who've set up their stores at various places in the " ..
-"dungeon, there are others trying to make a living by traveling from place " ..
-"to place. Bazaars feature a number of different shops and often have " ..
-"better stock than the sedentary ones, sometimes even at a bargain. " ..
-"Once you hear the clinking of coins, be sure to hurry up and find the " ..
-"impromptu marketplace before the caravan moves on! " ..
-"\n\n"..
-"Also be warned that their nomadic lifestyle has taught these sellers to " ..
-"appropriate any items an adventurer might leave behind, and then leave " ..
-"quickly, probably to sell them elsewhere."
-
   local messager =
     timed_msg {
       initmsg = { "You hear coins being counted.",
@@ -55,11 +43,11 @@ function bazaar_portal(timed)
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
                   disappear='The gate to the bazaar disappears!',
-                  desc = pdesc, desc_long = desc_long, dst = 'bazaar',
+                  desc = pdesc, dst = 'bazaar',
                   floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
               }
   else
-    return one_way_stair { desc = 'gateway to a bazaar', desc_long = desc_long,
+    return one_way_stair { desc = 'gateway to a bazaar',
                            dst = 'bazaar', floor = 'stone_arch',
                            feat_tile = 'dngn_portal_bazaar_gone' }
   end

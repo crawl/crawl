@@ -65,12 +65,6 @@
 -- # General setup and design functions: (head to line 382 for the maps)
 
 function volcano_portal (e)
-    local desc_long = "Leading directly into the rock is a dark and " ..
-                      "forbidding tunnel. Every so often air, hot enough " ..
-                      "to singe your face, blasts from within, and, as " ..
-                      "though triggered by the air, rocks fall from the roof " ..
-                      "and sides of the tunnel, slowly filling the entry."
-
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
 
@@ -91,7 +85,6 @@ function volcano_portal (e)
         disappear = "There is a deep roar from within the tunnel. Moments " ..
                     "later, a river of lava pours forth, sealing it permanently.",
         desc = "dark tunnel",
-        desc_long = desc_long,
         entity = 'tunnel',
         dst = "volcano",
         dstname_abbrev = "Volcano",

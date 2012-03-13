@@ -82,7 +82,6 @@ KMONS: M = mummy priest
     lua_marker('X', props_marker {closet=1})
     lua_marker('G', portal_desc {
         desc = "sealed sarcophagus",
-        desc_long = "This ancient sarcophagus is sealed shut.",
         veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
 }}
 SUBST:  ! = .
