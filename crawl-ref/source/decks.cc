@@ -1953,11 +1953,11 @@ static void _focus_card(int power, deck_rarity_type rarity)
     for (int i = 1; i < 3; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
-        const int best_diff = you.max_stat(s) - you.max_stat(best_stat);
+        const int best_diff = you.base_stats[s] - you.base_stats[best_stat];
         if (best_diff > 0 || best_diff == 0 && coinflip())
             best_stat = s;
 
-        const int worst_diff = you.max_stat(s) - you.max_stat(worst_stat);
+        const int worst_diff = you.base_stats[s] - you.base_stats[worst_stat];
         if (worst_diff < 0 || worst_diff == 0 && coinflip())
             worst_stat = s;
     }
