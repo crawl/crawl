@@ -2293,8 +2293,10 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
         magic_mapping(random2(power/8) + 18, random2(power), false);
     if (things_to_do[1])
     {
-        detect_traps(random2(power/4));
-        detect_secret_doors(random2(power/4));
+        if (detect_traps(random2(power/4)))
+            mpr("You sense traps nearby.");
+        if (detect_items(random2(power/4)))
+            mpr("You sense items nearby.");
     }
     if (things_to_do[2])
     {
