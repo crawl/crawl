@@ -650,10 +650,6 @@ meat ration
 
 A filling ration of dried and preserved meats.
 %%%%
-monster manual
-
-A book of magic spells.
-%%%%
 morningstar
 
 A mace covered in spikes.
@@ -1098,10 +1094,6 @@ It is not strong enough to see the interior of rooms sealed with secret doors; o
 scroll of noise
 
 This prank scroll, often slipped into a wizard's backpack by a devious apprentice, causes a loud noise. It is not otherwise noted for its usefulness.
-%%%%
-scroll of paper
-
-Apart from a label, this scroll is blank.
 %%%%
 scroll of random uselessness
 
