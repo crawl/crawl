@@ -644,12 +644,7 @@ KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / wand shop
 KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
-MARKER: X = lua:portal_desc { desc="open sea?", \
-            desc_long="Though it exists in stark defiance of every conventional"\
-                .." rule of physics and geometry you know to be true, there"\
-                .." can be no denying that here, in this tiny room, is a vast"\
-                .." and terrible sea of impossible size.\n\nEither that or it's"\
-                .." a blue wall."}
+MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
 COLOUR: # = yellow
 KFEAT: # = closed_door
@@ -694,12 +689,7 @@ KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / wand shop
 KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
-MARKER: X = lua:portal_desc { desc="open sea?", \
-            desc_long="Though it exists in stark defiance of every conventional"\
-                .." rule of physics and geometry you know to be true, there"\
-                .." can be no denying that here, in this tiny room, is a vast"\
-                .." and terrible sea of impossible size.\n\nEither that or it's"\
-                .." a blue wall."}
+MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
 COLOUR: # = yellow
 KFEAT: # = closed_door

@@ -66,8 +66,7 @@ function setup_room(e, id)
   m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
   e.lua_marker('A', m_marker)
   e.lua_marker('A', portal_desc {
-    desc = "teleporter",
-    desc_long = "Stepping on this teleporter will send you to another room.\n"})
+    desc = "teleporter" })
   e.colour("A = lightmagenta")
   e.tile("A = dngn_the_teleporter_vaults")
   e.subst("A = .")

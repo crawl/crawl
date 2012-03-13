@@ -1307,12 +1307,8 @@ function elephant_statue()
 end
 }}
 MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long=("This worn granite statue depicts" .. \
-                       " elephants standing guard."), \
             slaved_to="elephant" }
-MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long=("This worn granite statue depicts" .. \
-                       " elephants standing guard.") }
+MARKER: G = lua:portal_desc { desc="elephant-shaped statue" }
 MARKER: G = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
