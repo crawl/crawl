@@ -9,13 +9,13 @@ struct cloud_info
     cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0)
     { }
 
-    cloud_info(cloud_type t, uint8_t c,
+    cloud_info(cloud_type t, colour_t c,
                uint8_t dur, unsigned short til, coord_def gc)
         : type(t), colour(c), duration(dur), tile(til), pos(gc)
     { }
 
     cloud_type type:8;
-    uint8_t colour;
+    colour_t colour;
     uint8_t duration; // decay/20, clamped to 0-3
     unsigned short tile;
     coord_def pos;
@@ -280,7 +280,7 @@ private:
 #else
     dungeon_feature_type _feat:8;
 #endif
-    uint8_t _feat_colour;
+    colour_t _feat_colour;
     cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;

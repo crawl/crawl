@@ -3017,13 +3017,13 @@ deck_rarity_type deck_rarity(const item_def &item)
     return static_cast<deck_rarity_type>(item.special);
 }
 
-uint8_t deck_rarity_to_color(deck_rarity_type rarity)
+colour_t deck_rarity_to_color(deck_rarity_type rarity)
 {
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
     {
-        const uint8_t colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
+        const colour_t colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
         return RANDOM_ELEMENT(colours);
     }
 

@@ -1242,7 +1242,7 @@ static void _initialize_abyss_state()
     abyssal_state.depth = 0.0;
 }
 
-static uint8_t _roll_abyss_floor_colour()
+static colour_t _roll_abyss_floor_colour()
 {
     return random_choose_weighted(
          108, BLUE,
@@ -1264,7 +1264,7 @@ static uint8_t _roll_abyss_floor_colour()
     0);
 }
 
-static uint8_t _roll_abyss_rock_colour()
+static colour_t _roll_abyss_rock_colour()
 {
     return random_choose_weighted(
          130, BLUE,
@@ -1720,7 +1720,7 @@ bool is_level_incorruptible()
 
 static void _corrupt_choose_colours(corrupt_env *cenv)
 {
-    int colour = BLACK;
+    colour_t colour = BLACK;
     do
         colour = random_uncommon_colour();
     while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);

@@ -103,7 +103,7 @@ struct monsterentry
     short mc;            // monster number
 
     char basechar;
-    uint8_t colour;
+    colour_t colour;
     const char *name;
 
     uint64_t bitfields;
@@ -380,12 +380,12 @@ bool monster_shover(const monster* m);
 bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monster* mon);
-std::string ugly_thing_colour_name(uint8_t colour);
+std::string ugly_thing_colour_name(colour_t colour);
 std::string ugly_thing_colour_name(const monster* mon);
-uint8_t ugly_thing_random_colour();
+colour_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
-uint8_t random_monster_colour();
-int ugly_thing_colour_offset(const uint8_t colour);
+colour_t random_monster_colour();
+int ugly_thing_colour_offset(colour_t colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 

@@ -96,18 +96,18 @@ protected:
 
 int str_to_colour(const std::string &str, int default_colour = -1,
                   bool accept_number = true);
-const std::string colour_to_str(uint8_t colour);
+const std::string colour_to_str(colour_t colour);
 unsigned int str_to_tile_colour(std::string colour);
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);
 void clear_colours_on_exit();
-uint8_t random_colour();
-uint8_t random_uncommon_colour();
-bool is_low_colour(uint8_t colour);
-bool is_high_colour(uint8_t colour);
-uint8_t make_low_colour(uint8_t colour);
-uint8_t make_high_colour(uint8_t colour);
+colour_t random_colour();
+colour_t random_uncommon_colour();
+bool is_low_colour(colour_t colour);
+bool is_high_colour(colour_t colour);
+colour_t make_low_colour(colour_t colour);
+colour_t make_high_colour(colour_t colour);
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 bool get_tornado_phase(const coord_def& loc);
@@ -116,7 +116,7 @@ int dam_colour(const monster_info&);
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 unsigned short dos_brand(unsigned short colour,
-                          unsigned brand = CHATTR_REVERSE);
+                         unsigned brand = CHATTR_REVERSE);
 #endif
 
 // Applies ETC_ colour substitutions and brands.

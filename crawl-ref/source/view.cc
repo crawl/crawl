@@ -750,12 +750,12 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE_LOCAL
-void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
+void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))
     {
-        uint8_t old_flash_colour = you.flash_colour;
+        colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
 
         you.flash_colour = fmc_colour;
@@ -781,14 +781,14 @@ bool view_update()
     return (false);
 }
 
-void flash_view(uint8_t colour, targetter *where)
+void flash_view(colour_t colour, targetter *where)
 {
     you.flash_colour = colour;
     you.flash_where = where;
     viewwindow(false);
 }
 
-void flash_view_delay(uint8_t colour, int flash_delay, targetter *where)
+void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
 {
     flash_view(colour, where);
     // Scale delay to match change in arena_delay.
