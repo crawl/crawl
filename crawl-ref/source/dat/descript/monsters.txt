@@ -664,7 +664,7 @@ A ferocious and blood-thirsty deep dwarf that revels in the frenzy of combat.
 %%%%
 deep dwarf death knight
 
-A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the dark god and calls the dead to his service.
+A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the dark god and calls forth the dead.
 %%%%
 deep dwarf necromancer
 
@@ -732,7 +732,7 @@ This draconian derives its hellish powers and demonic allies from the worship of
 %%%%
 dragon
 
-A great reptilian beast, covered in thick green scales and with two huge bat-like wings and powerful claws on its limbs. Little trails of smoke spill from its toothy maw.
+A great reptilian beast with powerful claws on its limbs, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw.
 %%%%
 dwarf
 
@@ -849,7 +849,7 @@ An undead skull kept aloft and flitting swiftly about by unholy magic. It period
 %%%%
 freezing wraith
 
-A rimed skeleton surrounded by a cloud of frosty air, likely the remains of some unfortunate adventurer. It now floats slowly through the dungeon, seeking to share its fate with others.
+An incorporeal skeletal form surrounded by a cloud of freezing air, likely the remains of some unfortunate adventurer. It now floats slowly through the dungeon, seeking to share its fate with others.
 %%%%
 frost giant
 
@@ -881,7 +881,7 @@ A truly horrible undead creature, a ghoul is a decayed cadaver, reanimated and a
 %%%%
 giant amoeba
 
-A massive pulsating single-celled organism that uses thick pseudopods of protoplasm to ooze through the dungeons in search of food.
+A massive pulsating organism that uses thick pseudopods of protoplasm to ooze through the dungeons in search of food.
 %%%%
 worker ant
 
@@ -909,7 +909,7 @@ A big brown insect that makes a nasty hissing noise. Contrary to popular myth, t
 %%%%
 giant eyeball
 
-A giant floating eyeball, with a mesmerizing gaze. Some say giant eyeballs are servitors of Jivya.
+A giant floating eyeball, with a mesmerizing gaze. Some say giant eyeballs are servitors of Jiyva.
 %%%%
 giant firefly
 
@@ -917,7 +917,7 @@ This enormous flying bug is large enough to be ridden by some spriggans. Its glo
 %%%%
 giant frog
 
-A large and unusually aggressive ranine that can cover distance rapidly by hopping.
+A large and unusually aggressive amphibian that can cover distance rapidly by hopping.
 %%%%
 giant gecko
 
@@ -1063,7 +1063,7 @@ A huge black dog, with glowing red eyes and smoke pouring from its fanged mouth.
 %%%%
 hell knight
 
-A heavily armoured warrior, in league with the powers of Hell, usually accompanied by other unsavoury beings of his ilk.
+A heavily armoured warrior, in league with the powers of Hell, and usually accompanied by other unsavoury beings of its ilk.
 %%%%
 hell hog
 
@@ -1432,7 +1432,7 @@ An ugly subterranean race, orcs combine the worst features of humans, pigs and s
 %%%%
 orc high priest
 
-An exalted servant of the orc god Beogh and master of the black rites of his cult, to whose aid Beogh will even send beings from the netherworld.
+An exalted servant of the orc god Beogh and a master of many black rites, to whose aid Beogh will even send beings from the netherworld.
 %%%%
 orc knight
 
@@ -1440,19 +1440,19 @@ A heavily armoured orc, covered in scars from many past battles. Orc knights com
 %%%%
 orc priest
 
-A servant of Beogh, the ancient and cruel god of the orcs. Beogh rewards the prayers of his devoted servants by striking down their enemies.
+A servant of Beogh, the ancient and cruel god of the orcs. Beogh rewards the prayers of devoted servants by striking down their enemies.
 %%%%
 orc sorcerer
 
-An exceptionally competent orcish wizard, in league with Hellish and chthonic forces and motivated by the purest imaginable strain of malevolence.
+An exceptionally competent orcish wizard, in league with hellish and chthonic forces and motivated by the purest imaginable strain of malevolence.
 %%%%
 orc warlord
 
-A supreme commander of an orc host, skilled at both melee and ranged combat. Warlords can become enraged in battle.
+A supreme commander of an orc host, skilled at both melee and ranged combat.
 %%%%
 orc warrior
 
-An experienced, armoured and well-armed orc soldier, able to command a small mob of his fellows.
+An experienced, armoured and well-armed orc soldier, able to command a small mob of its fellows.
 %%%%
 orc wizard
 
@@ -1753,7 +1753,7 @@ A tough ant with a disproportionately large head with strong mandibles and a vic
 %%%%
 soul eater
 
-This greater demon looks like a malignantly shifting shadow gliding through the air. It radiates an intense aura of negative force.
+This demon looks like a malignantly shifting shadow gliding through the air. It radiates an intense aura of negative force.
 %%%%
 spatial vortex
 
@@ -2127,5 +2127,5 @@ A smooth, charming statue of a beautiful mermaid bathing in a fountain, sculpted
 %%%%
 zot statue
 
-An utterly bizarre statue, hewn from a single piece dark gabbro scintillating with tiny crystals. It is impossble to tell whether the statue is intended to represent some creature or personage, or is completely abstract. One thing is certain: it is profoundly disturbing.
+An utterly bizarre statue, hewn from a single piece of dark gabbro scintillating with tiny crystals. It is impossble to tell whether the statue is intended to represent some creature or personage, or is completely abstract. One thing is certain: it is profoundly disturbing.
 %%%%
