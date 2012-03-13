@@ -2304,27 +2304,39 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
 
 void dgn_set_colours_from_monsters()
 {
-    if (env.mons_alloc[9] >= 0 && env.mons_alloc[9] != MONS_NO_MONSTER
-        && env.mons_alloc[9] < NUM_MONSTERS)
+    env.floor_colour = LIGHTGREY;
+    env.rock_colour = LIGHTRED;
+    int floor_m = -1;
+
+    for (int m = 9; m >= 0; --m)
     {
-        env.floor_colour = mons_class_colour(env.mons_alloc[9]);
-    }
-    // Don't use silence or halo colours.
-    if (env.floor_colour == BLACK
-        || env.floor_colour == CYAN
-        || env.floor_colour == YELLOW
-        || env.floor_colour > WHITE) // or elemental floors
-    {
-        env.floor_colour = LIGHTGREY;
+        if (env.mons_alloc[m] <= 0 || env.mons_alloc[m] >= NUM_MONSTERS)
+            continue;
+        colour_t col = mons_class_colour(env.mons_alloc[m]);
+
+        // Don't use silence or halo colours, or elemental floors.
+        if (col == BLACK || col == CYAN || col == YELLOW || col > WHITE)
+            continue;
+
+        floor_m = m;
+        env.floor_colour = col;
+        break;
     }
 
-    if (env.mons_alloc[8] >= 0 && env.mons_alloc[8] != MONS_NO_MONSTER
-        && env.mons_alloc[8] < NUM_MONSTERS)
+    for (int m = 9; m >= 0; --m)
     {
-        env.rock_colour = mons_class_colour(env.mons_alloc[8]);
+        if (m == floor_m)
+            continue; // don't use the same mon for floor and rock
+        if (env.mons_alloc[m] <= 0 || env.mons_alloc[m] >= NUM_MONSTERS)
+            continue;
+        colour_t col = mons_class_colour(env.mons_alloc[m]);
+
+        if (col == BLACK || col == LIGHTGREY)
+            continue;
+
+        env.rock_colour = col;
+        break;
     }
-    if (env.rock_colour == BLACK || env.rock_colour == LIGHTGREY)
-        env.rock_colour = coinflip() ? BROWN : LIGHTRED;
 }
 
 static void _dgn_set_floor_colours()
