@@ -144,9 +144,9 @@ const deck_archetype deck_of_enchantments[] = {
 const deck_archetype deck_of_summoning[] = {
     { CARD_CRUSADE,         {5, 5, 5} },
     { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
-    { CARD_SUMMON_DEMON,    {4, 4, 4} },
+    { CARD_SUMMON_DEMON,    {5, 5, 5} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
-    { CARD_SUMMON_FLYING,   {4, 4, 4} },
+    { CARD_SUMMON_FLYING,   {5, 5, 5} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     END_OF_DECK
@@ -2541,8 +2541,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // This hack appears later in this file as well.
     if (!create_monster(
             mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
-                      std::min(power/50 + 1, 5), 0,
-                      you.pos(), MHITYOU),
+                      5 - power_level, 0, you.pos(), MHITYOU),
             false))
     {
         mpr("You see a puff of smoke.");
@@ -2605,12 +2604,10 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    const bool friendly   = (power_level > 0 || !one_chance_in(4));
 
     monster *mon =
         create_monster(
-            mgen_data(MONS_DANCING_WEAPON,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+            mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you,
                       power_level + 2, 0, you.pos(), MHITYOU),
             false);
 
@@ -2680,24 +2677,24 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
 
     const monster_type flytypes[] = {
-        MONS_BUTTERFLY, MONS_BUMBLEBEE, MONS_INSUBSTANTIAL_WISP,
+        MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_BUMBLEBEE,
         MONS_VAMPIRE_MOSQUITO, MONS_VAPOUR, MONS_YELLOW_WASP,
         MONS_RED_WASP
     };
 
     // Choose what kind of monster.
     monster_type result = flytypes[random2(5) + power_level];
+    const int how_many = 2 + random2(3) + power_level * 3;
     bool hostile_invis = false;
 
-    for (int i = 0; i < power_level * 5 + 2; ++i)
+    for (int i = 0; i < how_many; ++i)
     {
-        const bool friendly = (!one_chance_in(power_level + 4));
+        const bool friendly = !one_chance_in(power_level + 4);
 
         create_monster(
             mgen_data(result,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                      std::min(power/50 + 1, 5), 0,
-                      you.pos(), MHITYOU));
+                      3, 0, you.pos(), MHITYOU));
 
         if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible() && !friendly)
             hostile_invis = true;
@@ -2710,7 +2707,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 static void _summon_skeleton(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    const bool friendly = (power_level > 0 || !one_chance_in(4));
+    const bool friendly = !one_chance_in(4 + power_level * 2);
     const monster_type skeltypes[] = {
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
     };
@@ -2728,7 +2725,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
 static void _summon_ugly(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    const bool friendly = (power_level > 0 || !one_chance_in(4));
+    const bool friendly = !one_chance_in(4 + power_level * 2);
     monster_type ugly;
     if (power_level >= 2)
         ugly = MONS_VERY_UGLY_THING;
@@ -2740,7 +2737,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     if (!create_monster(mgen_data(ugly,
                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                   &you,
-                                  std::min(power/50 + 1, 6), 0,
+                                  std::min(power/50 + 1, 5), 0,
                                   you.pos(), MHITYOU),
                         false))
     {
