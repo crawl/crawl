@@ -5051,13 +5051,11 @@ VISUAL:@The_monster@ waves a pair of manacles at you. @player_only@
 # Greedy Pikel
 VISUAL:@The_monster@ checks @possessive@ coin pouch and frowns.
 
-# Original FR speech
 @The_monster@ says, "It's all about the gold, really."
 
 @The_monster@ says, "I just want to get paid!"
 
 @The_monster@ says, "I'm sure they'll be treated well, anyway."
-# End original speech
 
 @The_monster@ says, "I'm sure the Orcish Mines are around here somewhere..."
 
