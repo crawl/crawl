@@ -4,7 +4,39 @@
 
 %sdir dc-dngn/trees
 tree1 DNGN_TREE
+tree1_E
+tree1_N
+tree1_NE
+tree1_NW
+tree1_S
+tree1_SE
+tree1_SW
+tree1_W
 tree2
+tree2_E
+tree2_N
+tree2_NE
+tree2_NW
+tree2_S
+tree2_SE
+tree2_SW
+tree2_W
+tree3
+tree3_E
+tree3_N
+tree3_NE
+tree3_NW
+tree3_S
+tree3_SE
+tree3_SW
+tree3_W
+tree_r1
+tree_r2
+tree_r3
+tree_r4
+tree_r5
+tree_r6
+tree_r7
 
 %variation DNGN_TREE yellow
 tree1_yellow DNGN_TREE_YELLOW
