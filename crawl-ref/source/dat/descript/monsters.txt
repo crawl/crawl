@@ -439,7 +439,7 @@ A kobold that is bigger and tougher than the ordinary kobold, and often armed.
 %%%%
 black bear
 
-A small black bear. Like all ursines the black bear will become enraged if badly hurt or frightened.
+A small black bear. Like all ursines, the black bear will become enraged if badly hurt or frightened.
 %%%%
 black draconian
 
@@ -487,7 +487,7 @@ A huge grey beetle with an almost impenetrable rocky carapace.
 %%%%
 brain worm
 
-A slimy mauve worm with a greatly distended head, this creature feeds on the intellect of sentient beings.
+A slimy mauve worm with a greatly distended head, this creature feeds on the intellects of sentient beings.
 %%%%
 Brimstone Fiend
 
@@ -596,11 +596,11 @@ A larger and beefier relative of the common dungeon yak. Its little red eyes gle
 %%%%
 deep elf annihilator
 
-A deep elf that exults in conjured mayhem and destruction. Widely hated and feared, both for the power and for the precision of its destructive magics.
+A deep elf who exults in conjured mayhem and destruction. It is widely hated and feared, both for the power and for the precision of its destructive magics.
 %%%%
 deep elf blademaster
 
-A champion of the deep elves, who scorns magic and has devoted herself to the study of the sword. A blademaster wields two weapons with astonishing dexterity and speed.
+A champion of the deep elves, who scorns magic and is devoted to the study of the sword. A blademaster wields two weapons with astonishing dexterity and speed.
 %%%%
 deep elf conjurer
 
@@ -608,11 +608,11 @@ A deep elf well-versed in a variety of destructive magics.
 %%%%
 deep elf death mage
 
-A deep elf surrounded by a shimmering aura of negative energy as a result of its practice of necromancy and life-sapping magic.
+A deep elf surrounded by a shimmering aura of negative energy, as a result of its practice of necromancy and life-sapping magic.
 %%%%
 deep elf demonologist
 
-A deep elf that is marked heavily by long years of contact with unnatural demonic forces and the creatures of the Abyss.
+A deep elf who is marked heavily by long years of contact with unnatural demonic forces and the creatures of the Abyss.
 %%%%
 deep elf fighter
 
@@ -636,7 +636,7 @@ A deep elf archer that has devoted a lifetime to the mastery of archery, dismiss
 %%%%
 deep elf priest
 
-This deep elf is a servant of the ancient dark god of the deep elves and has been granted command of torturous energies by its enigmatic lord.
+This deep elf is a servant of the ancient dark god of the deep elves, and has been granted command of torturous energies by its enigmatic lord.
 %%%%
 deep elf soldier
 
@@ -644,7 +644,7 @@ A common soldier of the deep elves, who knows spells useful in combat.
 %%%%
 deep elf sorcerer
 
-A mighty spellcasters who draws power from the very Hells and possesses lethal arcane abilities of destruction, summoning and banishment.
+A mighty spellcaster who draws power from the very Hells, and possesses lethal arcane abilities of destruction, summoning and banishment.
 %%%%
 deep elf summoner
 
@@ -684,7 +684,7 @@ The aura of power around this human-like figure immediately betrays its divine a
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body supported by dozens of short jointed legs and topped with an almost human head.
+A hellish insectoid creature with a long and bloated body, supported by dozens of short jointed legs and topped with an almost human head.
 %%%%
 demonspawn
 
@@ -692,7 +692,7 @@ The offspring of a human and his or her demon lover, a young demonspawn, before 
 %%%%
 diamond obelisk
 
-This obelisk seems to be for all practical purposes indestructible. You'd better find a way around... it might even provide one.
+This obelisk seems to be, for all practical purposes, indestructible. You'd better find a way around... it might even provide one.
 %%%%
 dire elephant
 
@@ -700,7 +700,7 @@ A huge pachyderm, wilder and fiercer than normal elephants, with a very thick hi
 %%%%
 draconian
 
-A bipedal reptilian creature slightly larger than a human. Draconians have fearsome dragonish heads, rudimentary wings, tails, and a covering of tough scales. In their mature form their scales take on a distinct colouring, and they acquire a destructive breath whose nature is signified by their colour. Whether draconians arose naturally, or are the product of twisted experimentation by mad wizards on the crossbreeding of dragons and humans, is a matter of much doubt.
+A bipedal reptilian creature slightly larger than a human. Draconians have fearsome dragonish heads, rudimentary wings, tails, and a covering of tough scales. In their mature form, their scales take on a distinct colouring, and they acquire a destructive breath whose nature is signified by their colour. Whether draconians arose naturally, or are the product of twisted experimentation by mad wizards on the crossbreeding of dragons and humans, is a matter of much doubt.
 %%%%
 draconian annihilator
 
@@ -716,7 +716,7 @@ Protected by both its thick scales and its skill in use of weapons and armour, t
 %%%%
 draconian monk
 
-A draconian who has eschewed the study of weaponry and magic in order to train in the art of unarmed combat. His scaly fists, well-thewed leg, and mighty tail rain blows upon his opponents.
+A draconian who has eschewed the study of weaponry and magic in order to train in the art of unarmed combat. Its scaly fists, well-thewed leg, and mighty tail rain blows upon its opponents.
 %%%%
 draconian scorcher
 
@@ -728,7 +728,7 @@ A draconian master of the warp, who can translocate both itself and anyone else 
 %%%%
 draconian zealot
 
-This draconian derives its hellish powers and demonic allies from the worship of dark gods known to neither men nor dwarves, elves nor orcs.
+This draconian derives its hellish powers and demonic allies from the worship of dark gods unknown to men, dwarves, elves or orcs.
 %%%%
 dragon
 
@@ -877,7 +877,7 @@ Does this bat merely possess the visage of a ghost, or is it a ghost itself?
 %%%%
 ghoul
 
-A truly horrible undead creature, a ghoul is a decayed cadaver, re-animated and accursed with a terrible hunger. It desires nothing but to feed on the flesh of the living, and will fell its victims with its vicious claws or with one of the diseases it is host to.
+A truly horrible undead creature, a ghoul is a decayed cadaver, reanimated and accursed with a terrible hunger. It desires nothing but to feed on the flesh of the living, and will fell its victims with its vicious claws or with one of the diseases it is host to.
 %%%%
 giant amoeba
 
@@ -961,7 +961,7 @@ A huge, bloated bat.
 %%%%
 glowing angel
 
-A towering winged figure with an aura of brilliant white light, the divine agent of Zin's face is, unlike those of other angels, marked by a scowl, as if its zeal against any real or perceived vice overshadows its goodness.
+A towering winged figure with an aura of brilliant white light, the face of this divine agent of Zin is, unlike those of other angels, marked by a scowl, as if its zeal against any real or perceived vice overshadows its goodness.
 %%%%
 glowing shapeshifter
 
@@ -1033,7 +1033,7 @@ A large creature with the hindquarters of a lion and the wings, head and talons 
 %%%%
 grizzly bear
 
-A large grey-furred bear. Like all ursines the grizzly bear will become enraged if badly hurt or frightened.
+A large grey-furred bear. Like all ursines, the grizzly bear will become enraged if badly hurt or frightened.
 %%%%
 guardian mummy
 
@@ -1144,7 +1144,7 @@ A huge frigid demon covered in frost and wreathed in freezing air. It is one of 
 %%%%
 ice statue
 
-An imposing idol of some nameless arctic god, carved in glistening deep blue ice. Freezing vapours swirl about it and a chill pervades the air.
+An imposing idol of some nameless arctic god, carved in glistening deep blue ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
 iguana
 
@@ -1196,7 +1196,7 @@ A pulsating glob of transparent flesh, waiting just below the surface of the wat
 %%%%
 jumping spider
 
-A large venomous spider, which uses its extraordinary ability at leaping to chase and bring down its prey. Those who see it in action and live to tell the tale say the speed with which it leaps is almost supernatural.
+A large venomous spider, which uses its extraordinary ability of leaping to chase and bring down its prey. Those who see it in action and live to tell the tale say the speed with which it leaps is almost supernatural.
 %%%%
 tengu
 
@@ -1216,11 +1216,11 @@ A comical figure full of life and laughter. It looks very happy to see you... bu
 %%%%
 kobold
 
-Kobolds are small, greyish creatures with the looks and temperament of feral dogs. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.
+Kobolds are small, greyish creatures with the looks and temperaments of feral dogs. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.
 %%%%
 kobold demonologist
 
-A kobold that is in league with demonic powers and can call forth beings from the depths of Hell.
+A kobold who is in league with demonic powers and can call forth beings from the depths of Hell.
 %%%%
 komodo dragon
 
@@ -1368,7 +1368,7 @@ A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
 %%%%
 necromancer
 
-An evil wizard who has devoted himself to the practice of death magic, the mastery of unholy energies, and the raising of corpses into a parody of life.
+An evil wizard who is devoted to the practice of death magic, the mastery of unholy energies, and the raising of corpses into a parody of life.
 %%%%
 necrophage
 
@@ -1408,9 +1408,7 @@ A creature from the heavenly realms. It consists of a wheel within a wheel, and 
 %%%%
 orange crystal statue
 
-An intricately carved, brittle looking idol of some nameless godling, hewn of translucent orange crystal. Its lifeless eyes seem to glitter uncannily with a wicked intelligence.
-
-It looks brittle.
+An intricately carved, brittle-looking idol of some nameless godling, hewn of translucent orange crystal. Its lifeless eyes seem to glitter uncannily with a wicked intelligence.
 %%%%
 orange demon
 
@@ -1434,7 +1432,7 @@ An ugly subterranean race, orcs combine the worst features of humans, pigs and s
 %%%%
 orc high priest
 
-An exalted servant of the orc god Beogh and master of the black rites of his cult, to whose aid Beogh will even send beings from the nether world.
+An exalted servant of the orc god Beogh and master of the black rites of his cult, to whose aid Beogh will even send beings from the netherworld.
 %%%%
 orc knight
 
@@ -1458,7 +1456,7 @@ An experienced, armoured and well-armed orc soldier, able to command a small mob
 %%%%
 orc wizard
 
-While orcs generally prefer physical combat, some of their kind gain proficiency in the occult arts--though still for martial purposes.
+While orcs generally prefer physical combat, some of their kind gain proficiency in the occult arts - though still for martial purposes.
 %%%%
 pale draconian
 
@@ -1466,7 +1464,7 @@ A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 paladin
 
-A pious armoured warrior fighting in the service of The Shining One.
+A pious armoured warrior fighting in the service of the Shining One.
 %%%%
 pandemonium lord
 
@@ -1510,11 +1508,11 @@ Few plants can grow in the unpleasant dungeon environment, but some have managed
 %%%%
 player ghost
 
-The apparition of an unfortunate adventurer, which retains many of the skills and abilities the adventurer had in life. It is condemned to haunt this particular level of the dungeons, lashing out violently at the next adventurer to cross its path.
+The apparition of an unfortunate adventurer, retaining many of the skills and abilities the adventurer had in life. It is condemned to haunt this particular level of the dungeons, lashing out violently at the next adventurer to cross its path.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur, habituated to cold conditions. Like all ursines the polar bear will become enraged if badly hurt or frightened.
+A large and very strong bear covered in glistening white fur, habituated to cold conditions. Like all ursines, the polar bear will become enraged if badly hurt or frightened.
 %%%%
 porcupine
 
@@ -1617,7 +1615,7 @@ end
 %%%%%
 rotting hulk
 
-A shambling re-animated corpse. Trapped by evil spellweaving in a grotesque parody of life, this infected decaying body lurches about, seeking retribution on the living.
+A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque parody of life, this infected decaying body lurches about, seeking retribution on the living.
 %%%%
 the royal jelly
 
@@ -1625,7 +1623,7 @@ A particularly rich and golden gelatinous thing.
 %%%%
 salamander
 
-Not the common harmless amphibian, but the far more dangerous mythological beast with which that amphibian shares its name. A flaming red, half-human half-snake creature, whose affinity for flames is legendary.
+Not the common harmless amphibian, but the far more dangerous mythological beast with which that amphibian shares its name. A red, flaming half-human half-snake creature, whose affinity for fire is legendary.
 %%%%
 scorpion
 
@@ -1719,7 +1717,7 @@ A strange aerial creature formed of clouds and tortured flesh that sparkles with
 %%%%
 slave
 
-A once proud human that has been magically enslaved, and is now a timid, simpering creature, ready to perform any deed at its master's command. However, its magical enslavement lasts only as long as its master does, and it would surely appreciate being freed.
+A once proud human who has been magically enslaved, and is now a timid, simpering creature, ready to perform any deed at its master's command. However, its magical enslavement lasts only as long as its master does, and it would surely appreciate being freed.
 %%%%
 slime creature
 
@@ -1813,7 +1811,7 @@ An elite, well-equipped spriggan warrior, renowned for its prowess with advanced
 %%%%
 spriggan druid
 
-A rare spriggan whose connection with the birds and the beasts is exceptionally strong. Revelling in nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
+A rare spriggan whose connection with the birds and the beasts is exceptionally strong. Revelling in nature, these protectors of forests are the doom of anyone who so much as snaps a twig.
 %%%%
 spriggan rider
 
@@ -1829,7 +1827,7 @@ A relatively small grey dragon, with a resilient-looking scaly hide and steam po
 %%%%
 stone giant
 
-A gigantic humanoid with grey skin almost as hard as rock. It carries several boulders and is perfectly capable of flinging them a great distance.
+A gigantic humanoid with grey skin almost as hard as rock. It carries several boulders, and is perfectly capable of flinging them a great distance.
 %%%%
 stone golem
 
@@ -1837,7 +1835,7 @@ A huge magically-animated statue made of incredibly hard basalt.
 %%%%
 storm dragon
 
-A huge and very powerful dragon, with hide of thick matte scales, almost like blue rubber, and enormous scaly wings along which sparks are continually crackling.
+A huge and very powerful dragon, with hide of thick matte scales, almost like blue rubber, and enormous scaly wings, along which sparks are continually crackling.
 %%%%
 subtractor snake
 
@@ -1944,7 +1942,7 @@ A large black bat with vicious fangs that feeds on blood. This is the preferred 
 %%%%
 vampire knight
 
-A powerful vampire noble who complements his combat prowess with dark magic.
+A powerful vampire noble who complements its combat prowess with dark magic.
 %%%%
 vampire mage
 
@@ -1976,7 +1974,7 @@ A huge and vicious dog, trained to kill. Its neck is protected by a massive spik
 %%%%
 warg
 
-A particularly large and evil looking wolf, usually found in the company of orcs.
+A particularly large and evil-looking wolf, usually found in the company of orcs.
 %%%%
 water elemental
 
@@ -2113,7 +2111,7 @@ Mountain dwarves are surface-dwelling relatives of the deep dwarves. After years
 %%%%
 pristine statue
 
-An immaculately sculpted porphyry statue of an archer poised to release an arrow, with a full quiver at his hip. The individually sculpted arrows look almost as if they could be removed one by one and used in a real bow.
+An immaculately sculpted porphyry statue of an archer poised to release an arrow, with a full quiver at the hip. The individually sculpted arrows look almost as if they could be removed one by one and used in a real bow.
 %%%%
 rock troll monk
 
