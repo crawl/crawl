@@ -400,14 +400,14 @@ _friendly_imp_greeting
 
 @The_monster@ says, "You called?"
 
-@The_monster@ says, "Let's @_cause_or_spread@ @_mayhem@!"
+@The_monster@ says, "Let's @_cause_or_spread_@ @_mayhem_@!"
 
-@The_monster@ says, "I @_truckle@ to your @_vassalage@, @_suck_up_address@ @_suck_up_adj1@ and @_suck_up_adj2@ @_suck_up_noun@!"
+@The_monster@ says, "I @_truckle_@ to your @_vassalage_@, @_suck_up_address_@ @_suck_up_adj1_@ and @_suck_up_adj2_@ @_suck_up_noun_@!"
 
 w:970
 __NONE
 %%%%
-_cause_or_spread
+_cause_or_spread_
 
 cause
 
@@ -417,7 +417,7 @@ sow
 
 raise
 %%%%
-_mayhem
+_mayhem_
 
 mayhem
 
@@ -427,7 +427,7 @@ havoc
 
 disruption
 %%%%
-_truckle
+_truckle_
 
 truckle
 
@@ -439,7 +439,7 @@ bow
 
 yield
 %%%%
-_vassalage
+_vassalage_
 
 vassalage
 
@@ -449,13 +449,13 @@ servitude
 
 fealty
 %%%%
-_suck_up_address
+_suck_up_address_
 
 O
 
 my
 %%%%
-_suck_up_adj1
+_suck_up_adj1_
 
 grandiloquent
 
@@ -463,7 +463,7 @@ illustrious
 
 magnificent
 %%%%
-_suck_up_adj2
+_suck_up_adj2_
 
 {{
 if you.race() == "Mummy" then
@@ -491,7 +491,7 @@ greatest
 
 god-like
 %%%%
-_suck_up_noun
+_suck_up_noun_
 
 voivode
 
