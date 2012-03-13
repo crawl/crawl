@@ -4561,10 +4561,13 @@ void melee_attack::do_spines()
 
         if (test_hit(random2(3 + 4 * level), attacker->melee_evasion(defender), !attacker->is_player()) < 0)
         {
-            mprf("%s %s %s spines.", attacker->name(DESC_THE).c_str(),
-                 attacker->conj_verb("dodge").c_str(),
-                 defender->name(DESC_ITS).c_str());
-            return;
+            if (you.can_see(defender))
+            {
+                mprf("%s %s %s spines.", attacker->name(DESC_THE).c_str(),
+                     attacker->conj_verb("dodge").c_str(),
+                     defender->name(DESC_ITS).c_str());
+                return;
+            }
         }
         else if (attacker->alive())
         {
@@ -4575,10 +4578,12 @@ void melee_attack::do_spines()
 
             if (hurt <= 0)
                 return;
-
-            mprf("%s %s struck by %s spines.", attacker->name(DESC_THE).c_str(),
-                 attacker->conj_verb("are").c_str(),
-                 defender->name(DESC_ITS).c_str());
+            if (you.can_see(defender) || attacker->is_player())
+            {
+                mprf("%s %s struck by %s spines.", attacker->name(DESC_THE).c_str(),
+                     attacker->conj_verb("are").c_str(),
+                     defender->name(DESC_ITS).c_str());
+            }
             if (attacker->is_player())
                 ouch(hurt, defender->mindex(), KILLED_BY_MONSTER);
             else

@@ -2287,6 +2287,8 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
         {
         case DESC_THE: case DESC_A: case DESC_PLAIN:
             return ("it");
+        case DESC_ITS:
+            return ("its");
         default:
             return ("it (buggy)");
         }
