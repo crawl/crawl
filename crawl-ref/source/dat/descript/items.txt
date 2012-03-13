@@ -656,16 +656,16 @@ A mace covered in spikes.
 %%%%
 mottled dragon armour
 
-A magical armour made from the scales of a mottled dragon. Although unlike
-the armour made from the scales of some larger dragons it does not provide
-its wearer with much in the way of special magical protection, it is as
-light and relatively uncumbersome as leather armour. It is also remarkable
+A magical armour made from the scales of a mottled dragon. Although it does
+not provide its wearer with much in the way of special magical protection,
+unlike the armour made from the scales of some larger dragons, it is as
+light and relatively uncumbersome as leather armour. It is also remarkably
 smooth, letting sticky flames flow down like water.
 %%%%
 mottled dragon hide
 
 The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
-proper armour by magical means. It's smooth surface does not let sticky
+proper armour by magical means. Its smooth surface does not let sticky
 flames attach.
 %%%%
 naga barding
@@ -1109,8 +1109,8 @@ scroll of recharging
 
 This scroll restores the charges of any magical wand or rod chosen by its
 reader. When used on a rod, it also increases the size of the rod's power
-storage, the rate it regenerates power at, and even improves its melee
-combat qualities.
+storage, increases the rate at which it regenerates power, and even improves
+its melee combat qualities.
 %%%%
 scroll of remove curse
 
@@ -1144,7 +1144,8 @@ scroll of silence
 
 This scroll eliminates all sound near the reader. This makes reading
 scrolls, casting spells, praying or yelling in the reader's vicinity
-impossible. (Applies to reader too, of course.)
+impossible. (It applies to the reader, too, of course.)
+
 This silence will not hide your presence, since its oppressive, unnatural
 effect will almost certainly alert any living creature that something is
 very wrong. Silence starts out with a radius covering half the normal
@@ -1257,7 +1258,7 @@ This staff significantly increases the ability of its wielder to use magical spe
 %%%%
 steam dragon armour
 
-A magical armour, made from the scales of a steam-breathing dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is extremely light and as supple as cloth.
+A magical armour, made from the scales of a steam-breathing dragon. Although it does not provide its wearer with much in the way of special magical protection, unlike the armour made from the scales of some larger dragons, it is extremely light and as supple as cloth.
 %%%%
 steam dragon hide
 
@@ -1333,9 +1334,9 @@ A blessed trident moulded by cleansing flame, with three points symbolising the 
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll. I suppose you could wear it if you
-really wanted to, for its magical regenerative properties, although you
-probably want to enchant it into proper armour first.
+The stiff and knobbly hide of a troll, with magical regenerative properties.
+I suppose you could wear it if you really wanted to, although you probably
+want to enchant it into proper armour first.
 %%%%
 troll leather armour
 
