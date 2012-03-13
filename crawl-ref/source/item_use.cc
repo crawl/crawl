@@ -4132,6 +4132,9 @@ void zap_wand(int slot)
 
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
+    // Mark as empty if necessary.
+    if (wand.plus == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
+        wand.plus2 = ZAPCOUNT_EMPTY;
 
     practise(EX_DID_ZAP_WAND);
     count_action(CACT_EVOKE, EVOC_WAND);
