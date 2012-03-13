@@ -1237,7 +1237,8 @@ int player_bonus_regen()
     rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
     // Troll leather (except for trolls).
-    if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+    if ((player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+         || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         && you.species != SP_TROLL)
     {
         rr += 30;
@@ -1385,8 +1386,11 @@ int player_hunger_rate(void)
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
     {
-        if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
+        if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+            || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
+        {
             hunger += coinflip() ? 2 : 1;
+        }
     }
 
     // randarts

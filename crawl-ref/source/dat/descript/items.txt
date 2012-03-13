@@ -1319,11 +1319,15 @@ A blessed trident moulded by cleansing flame, with three points symbolising the 
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll. I suppose you could wear it if you really wanted to.
+The stiff and knobbly hide of a troll. I suppose you could wear it if you
+really wanted to, for its magical regenerative properties, although you
+probably want to enchant it into proper armour first.
 %%%%
 troll leather armour
 
-A magical armour, made from the stiff and knobbly skin of a common troll. It magically regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
+A magical armour, made from the stiff and knobbly skin of a common troll.
+It magically regenerates its wearer's flesh at a fairly slow rate (unless
+already a troll).
 %%%%
 wand of cold
 
