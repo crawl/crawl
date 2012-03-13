@@ -339,24 +339,50 @@ ENDMAP
 # Rune vaults
 ##############################################################################
 
-# Too primitive to exist, but I need something for tests.
-NAME:  spider_rune_test
-PLACE: Spider:5
-KITEM: O = gossamer rune of Zot
-MONS:  ghost moth, tarantella, jumping spider
-SUBST: . = 0.....
+NAME:   spider_rune_water
+PLACE:  Spider:5
+ORIENT: float
+KITEM:  O = gossamer rune of Zot
+MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
+MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
+MONS:   trapdoor spider / nothing
+MONS:   ghost moth
+NSUBST: 6 = 1:6 / 1:46 / *:4
+COLOUR: c = white
+COLOUR: 123O+' = lightgrey
+FTILE:  123cO+' = floor_pebble_lightgray
+TILE:   c = wall_vines
+SUBST:  x = c
+: if crawl.coinflip() then
+SUBST:  W = WW.
+: else
+SUBST:  W = W..
+: end
+KFEAT:  Ww = shallow_water
 MAP
-      ccccccc
-     cc.....cc
-    cc.......cc
-   cc.........cc
-   c2.........2c
-   c..3..1.....c
-   @.....1....Oc
-   c..3..1.....c
-   c2.........2c
-   cc.........cc
-    cc.......cc
-     cc.....cc
-      ccccccc
+             ........
+   .....   ...xxxxxx.
+ ...xxxx....xxxxWWWx.....
+ .xxxwwxxxxxxx..5.Wxxxxx...
+ .x644wwwxWW..W..W.WWWWxxx......
+ .xx44wwwW..WxxW.xx..5.WWxxxxxx.....
+ ..xx4xxW..Wxxx.WxxWWxW..Wxwwwxxxxx.
+  ..xxxW.5WxxxxW..xxxxxW..Wwwwww46x.
+    .xxW..Wxcccc..ccccxW.5.Wxxw444x.
+   ..xxW.Wxxc1'c''c'1cxxWW..Wxxxx4x.
+   .xxW.Wxxxc'''cc'''cxxxxW.Wxxxxxx.
+   .xW5Wxxxxc''''''''ccccxxW.WWxxxx..
+ ...xW.Wx44xc23322332+'OcxxWW5.Wxxxx.
+..xxx.Wwww4xcccccccccccccxxxwW..Wxxx.
+.xxWW.Wwww4xxxxxxxxxxxxxx44wwwW.Wxxx..
+.xW..Wxx46xxxWWWWxxWWWxxx444xxxW.WWxx.
+.xW5.WxxxxxWW...4WW4..WWxx6xxxxxW..Wx.
+.xxW.WxxxxxW.WxW44444W..WxxxxxxxW5.Wx.
+.xW..WxxxW.5WxxW444WxxW5WxxxxxW...Wxx.
+.xxW..WxW..WxxxxW..WxxW..WxxW..WWWxx.
+..xxW.5.W..WxxxxxW...WxxW..W..WWxxxx.
+  .xxWW...Wxxxxxxx...xxxxWW5WWxxx....
+  ..xxxWWWxxxxxxxx...xxxxxxWxxx...
+    ..xxxxxxxxxxxx...xxxxxxxx...
+     .........................
 ENDMAP
