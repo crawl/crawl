@@ -6810,7 +6810,6 @@ Beogh
 
 Lugonu
 %%%%
-
 ###############################################################################
 # Speech keys used *specifically* in (portal) vaults.
 #
