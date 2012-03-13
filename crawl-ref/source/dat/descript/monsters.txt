@@ -909,7 +909,7 @@ A big brown insect that makes a nasty hissing noise. Contrary to popular myth, t
 %%%%
 giant eyeball
 
-A giant floating eyeball, with a mesmerizing gaze. Some say giant eyeballs are servitors of Jiyva.
+A giant floating eyeball, with a mesmerising gaze. Some say giant eyeballs are servitors of Jiyva.
 %%%%
 giant firefly
 
