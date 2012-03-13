@@ -40,7 +40,7 @@ typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
 typedef std::map<level_pos, std::string> portal_vault_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
-typedef std::map<level_pos, uint8_t> portal_vault_colour_map_type;
+typedef std::map<level_pos, colour_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
 typedef std::pair<std::string, level_id> monster_annotation;
 
@@ -279,7 +279,7 @@ static std::string _portal_vaults_description_string()
             {
                 if (last_id.depth == 10000)
                 {
-                    uint8_t col = portal_vault_colours[ci_portals->first];
+                    colour_t col = portal_vault_colours[ci_portals->first];
                     disp += '<';
                     disp += colour_to_str(col) + '>';
                     disp += vault_names_vec[i];
@@ -821,7 +821,7 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         portal_name = replace_all(portal_name, "_", " ");
         portal_vaults_present[where] = uppercase_first(portal_name);
 
-        uint8_t col;
+        colour_t col;
         if (env.grid_colours(pos) != BLACK)
             col = env.grid_colours(pos);
         else

@@ -168,7 +168,7 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     std::string src = "";
 
-    uint8_t mon_colour = BLACK;
+    colour_t mon_colour = BLACK;
 
     if (!proximity)
         success = true;
@@ -210,9 +210,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
                             if (coinflip())
                             {
-                                const uint8_t ugly_colour =
+                                const colour_t ugly_colour =
                                     make_low_colour(ugly->colour);
-                                const uint8_t ugly_near_colour =
+                                const colour_t ugly_near_colour =
                                     make_low_colour(mon_near->colour);
 
                                 if (ugly_colour != ugly_near_colour)

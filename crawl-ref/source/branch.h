@@ -38,8 +38,8 @@ struct Branch
     const char* abbrevname;     // "Slime"
     const char* entry_message;
     bool has_uniques;
-    uint8_t floor_colour;          // Zot needs special handling.
-    uint8_t rock_colour;
+    colour_t floor_colour;          // Zot needs special handling.
+    colour_t rock_colour;
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
     int travel_shortcut;         // Which key to press for travel.

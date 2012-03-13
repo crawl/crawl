@@ -2329,8 +2329,8 @@ void dgn_set_colours_from_monsters()
 
 static void _dgn_set_floor_colours()
 {
-    uint8_t old_floor_colour = env.floor_colour;
-    uint8_t old_rock_colour  = env.rock_colour;
+    colour_t old_floor_colour = env.floor_colour;
+    colour_t old_rock_colour  = env.rock_colour;
 
     if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
         dgn_set_colours_from_monsters();

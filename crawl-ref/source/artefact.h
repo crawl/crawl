@@ -51,7 +51,7 @@ struct unrandart_entry
     uint8_t           sub_type;
     short             plus;
     short             plus2;
-    uint8_t           colour;       // colour of ura
+    colour_t          colour;
 
     short         value;
     uint16_t      flags;

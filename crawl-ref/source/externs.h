@@ -532,7 +532,7 @@ struct item_def
     short          plus;           // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
     int            special;        // special stuff
-    uint8_t        colour;         // item colour
+    colour_t       colour;         // item colour
     uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
     iflags_t       flags;          // item status flags

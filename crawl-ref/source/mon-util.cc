@@ -1942,9 +1942,9 @@ static void _get_spells(mon_spellbook_type book, monster* mon)
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
-uint8_t random_monster_colour()
+colour_t random_monster_colour()
 {
-    uint8_t col = DARKGREY;
+    colour_t col = DARKGREY;
     while (col == DARKGREY)
         col = random_colour();
 
@@ -1952,9 +1952,9 @@ uint8_t random_monster_colour()
 }
 
 // Butterflies
-static uint8_t _random_butterfly_colour()
+static colour_t _random_butterfly_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted to 'light' colours.
     do
         col = random_monster_colour();
@@ -1964,9 +1964,9 @@ static uint8_t _random_butterfly_colour()
 }
 
 // Abominations.
-static uint8_t _random_large_abomination_colour()
+static colour_t _random_large_abomination_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted colours:
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
@@ -1977,9 +1977,9 @@ static uint8_t _random_large_abomination_colour()
     return (col);
 }
 
-static uint8_t _random_small_abomination_colour()
+static colour_t _random_small_abomination_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted colours:
     //  MAGENTA = unseen horror
     //  BROWN = used for crawling corpses/macabre masses
@@ -2268,7 +2268,7 @@ static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
-std::string ugly_thing_colour_name(uint8_t colour)
+std::string ugly_thing_colour_name(colour_t colour)
 {
     int colour_offset = ugly_thing_colour_offset(colour);
 
@@ -2286,11 +2286,11 @@ std::string ugly_thing_colour_name(const monster* mon)
         return ("buggy");
 }
 
-static const uint8_t ugly_colour_values[] = {
+static const colour_t ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
 
-uint8_t ugly_thing_random_colour()
+colour_t ugly_thing_random_colour()
 {
     return (RANDOM_ELEMENT(ugly_colour_values));
 }
@@ -2304,7 +2304,7 @@ int str_to_ugly_thing_colour(const std::string &s)
     return (BLACK);
 }
 
-int ugly_thing_colour_offset(const uint8_t colour)
+int ugly_thing_colour_offset(colour_t colour)
 {
     for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {

@@ -1127,7 +1127,7 @@ public:
 
     map_def         *original;
 
-    uint8_t         rock_colour, floor_colour;
+    colour_t        rock_colour, floor_colour;
     std::string     rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;

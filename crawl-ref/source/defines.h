@@ -264,6 +264,10 @@ enum COLORS
     MAX_TERM_COLOUR
 };
 
+// Many, MANY places currently hard-code this to 8 bits, but we need to
+// expand it. Please use colour_t in new code.
+typedef uint8_t colour_t;
+
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.
 

@@ -334,7 +334,7 @@ public:
   bool redraw_armour_class;
   bool redraw_evasion;
 
-  uint8_t flash_colour;
+  colour_t flash_colour;
   targetter *flash_where;
 
   int time_taken;

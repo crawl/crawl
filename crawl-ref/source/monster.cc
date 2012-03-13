@@ -3961,7 +3961,7 @@ void monster::ghost_demon_init()
     load_ghost_spells();
 }
 
-void monster::uglything_mutate(uint8_t force_colour)
+void monster::uglything_mutate(colour_t force_colour)
 {
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);
     uglything_init(true);

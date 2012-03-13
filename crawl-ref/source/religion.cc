@@ -3997,7 +3997,7 @@ int god_colour(god_type god) // mv - added
     return (YELLOW);
 }
 
-uint8_t god_message_altar_colour(god_type god)
+colour_t god_message_altar_colour(god_type god)
 {
     int rnd;
 
