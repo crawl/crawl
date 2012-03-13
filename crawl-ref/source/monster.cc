@@ -3226,9 +3226,6 @@ bool monster::is_known_chaotic() const
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_KILLER_KLOWN // For their random attacks.
-#if TAG_MAJOR_VERSION == 32
-        || type == MONS_SUBTRACTOR_SNAKE // random attacks, colour changing.
-#endif
         || type == MONS_TIAMAT)      // For her colour-changing.
     {
         return (true);

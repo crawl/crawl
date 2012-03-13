@@ -1415,16 +1415,6 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
-#if TAG_MAJOR_VERSION == 32
-    else if (attk.flavour == AF_SUBTRACTOR)
-    {
-        attack_flavour flavours[] =
-            {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_ANTIMAGIC, AF_DRAIN_STAT,
-             AF_POISON_STAT};
-
-        attk.flavour = RANDOM_ELEMENT(flavours);
-    }
-#endif
 
     if (attk.flavour == AF_POISON_STAT)
     {

@@ -1436,10 +1436,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ANACONDA;
     case MONS_SEA_SNAKE:
         return TILEP_MONS_SEA_SNAKE;
-#if TAG_MAJOR_VERSION == 32
-    case MONS_SUBTRACTOR_SNAKE:
-        return _mon_mod(TILEP_MONS_SUBTRACTOR_SNAKE, you.frame_no);
-#endif
 
     // trolls ('T')
     case MONS_TROLL:
