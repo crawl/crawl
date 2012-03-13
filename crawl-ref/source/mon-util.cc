@@ -3826,7 +3826,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "whispers",     // S_SOFT
         "says",         // S_NORMAL
         "shouts",       // S_LOUD
-        "screams"       // S_VERY_LOUD
+        "screams",      // S_VERY_LOUD
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
