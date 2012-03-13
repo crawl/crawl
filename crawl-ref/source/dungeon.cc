@@ -22,6 +22,7 @@
 #include "chardump.h"
 #include "coordit.h"
 #include "defines.h"
+#include "dgn-delve.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-labyrinth.h"
@@ -47,7 +48,6 @@
 #include "lev-pand.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -4027,6 +4027,19 @@ static void _build_postvault_level(vault_placement &place)
         dgn_build_chaotic_city_level(DNGN_METAL_WALL);
     else if (player_in_branch(BRANCH_SWAMP))
         dgn_build_swamp_level(place.level_number);
+    else if (player_in_branch(BRANCH_SPIDER_NEST))
+    {
+        int ngb_min = 2;
+        int ngb_max = random_range(3, 8);
+        if (one_chance_in(10))
+            ngb_min = 1, ngb_max = random_range(5, 7);
+        if (one_chance_in(20))
+            ngb_min = 3, ngb_max = 4;
+        delve(0, ngb_min, ngb_max,
+              random_choose(0, 5, 20, 50, 100),
+              -1,
+              random_choose(1, 20, 125, 500, 999999, -1));
+    }
     else
         dgn_build_rooms_level(random_range(25, 100));
 }
