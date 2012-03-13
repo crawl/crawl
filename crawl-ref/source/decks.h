@@ -102,9 +102,13 @@ enum card_type
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
+#if TAG_MAJOR_VERSION == 32
     CARD_MAP,                   // magic mapping
-    CARD_DOWSING,               // detect SD/traps/items/monsters
+#endif
+    CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
+#if TAG_MAJOR_VERSION == 32
     CARD_SPADE,                 // dig
+#endif
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
     CARD_STAIRS,                // moves stairs around

@@ -167,10 +167,8 @@ const deck_archetype deck_of_wonders[] = {
 const deck_archetype deck_of_dungeons[] = {
     { CARD_WATER,     {5, 5, 5} },
     { CARD_GLASS,     {5, 5, 5} },
-    { CARD_MAP,       {5, 5, 5} },
     { CARD_DOWSING,   {5, 5, 5} },
-    { CARD_SPADE,     {5, 5, 5} },
-    { CARD_TROWEL,    {5, 5, 5} },
+    { CARD_TROWEL,    {5, 5, 3} },
     { CARD_MINEFIELD, {5, 5, 5} },
     END_OF_DECK
 };
@@ -2292,9 +2290,12 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 
     if (things_to_do[0])
-        detect_secret_doors(random2(power/4));
+        magic_mapping(random2(power/8) + 18, random2(power), false);
     if (things_to_do[1])
+    {
         detect_traps(random2(power/4));
+        detect_secret_doors(random2(power/4));
+    }
     if (things_to_do[2])
     {
         you.set_duration(DUR_TELEPATHY, random2(power/4), 0,
@@ -2894,7 +2895,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_TROWEL:           _trowel_card(power, rarity); break;
-    case CARD_SPADE:            your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
@@ -2922,11 +2922,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_BARGAIN:
         you.increase_duration(DUR_BARGAIN,
                               random2(power) + random2(power) + 2);
-        break;
-
-    case CARD_MAP:
-        if (!magic_mapping(random2(power/8) + 18, random2(power), true))
-            mpr("The map is blank.");
         break;
 
     case CARD_WILD_MAGIC:
@@ -2957,6 +2952,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             break;
         }
         break;
+
+#if TAG_MAJOR_VERSION == 32
+    case CARD_MAP:
+    case CARD_SPADE:
+        mpr("This card no longer exists!");
+        break;
+#endif
 
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
