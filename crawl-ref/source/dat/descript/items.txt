@@ -656,11 +656,17 @@ A mace covered in spikes.
 %%%%
 mottled dragon armour
 
-A magical armour made from the scales of a mottled dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is as light and relatively uncumbersome as leather armour.
+A magical armour made from the scales of a mottled dragon. Although unlike
+the armour made from the scales of some larger dragons it does not provide
+its wearer with much in the way of special magical protection, it is as
+light and relatively uncumbersome as leather armour. It is also remarkable
+smooth, letting sticky flames flow down like water.
 %%%%
 mottled dragon hide
 
-The weirdly-patterned scaly skin of a mottled dragon. It may be turned into proper armour by magical means.
+The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
+proper armour by magical means. It's smooth surface does not let sticky
+flames attach.
 %%%%
 naga barding
 
@@ -1087,7 +1093,7 @@ Small writing on the back of the scroll reads: "Warning: contents under pressure
 %%%%
 scroll of magic mapping
 
-This scroll reveals the nearby surroundings of one who reads it.
+This scroll reveals the surroundings of one who reads it.
 
 It is not strong enough to see the interior of rooms sealed with secret doors; one needs Traps and Doors skill for that.
 %%%%
@@ -1101,7 +1107,10 @@ It is easy to be blinded to the essential uselessness of this scroll by the sens
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by its reader.
+This scroll restores the charges of any magical wand or rod chosen by its
+reader. When used on a rod, it also increases the size of the rod's power
+storage, the rate it regenerates power at, and even improves its melee
+combat qualities.
 %%%%
 scroll of remove curse
 
@@ -1117,7 +1126,9 @@ Reading the words on this scroll translocates you to a random position.
 %%%%
 scroll of torment
 
-This scroll calls on the powers of darkness to inflict great pain on any nearby creature - including you!
+This scroll calls on the powers of darkness to inflict great pain on any
+nearby creature - including you! This halves the resilience of all living
+creatures, although is never directly fatal.
 %%%%
 scroll of vorpalise weapon
 
@@ -1131,7 +1142,17 @@ This scroll cancels all magical enchantments from the reader and from beings in 
 %%%%
 scroll of silence
 
-This scroll eliminates all sound near the reader. This makes reading scrolls, casting spells, praying or yelling in the reader's vicinity impossible. (Applies to reader too, of course.) This silence will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong. Silence starts out with a radius covering half the normal vision range, which will then shrink, eventually covering only the reader, before the effect times out.
+This scroll eliminates all sound near the reader. This makes reading
+scrolls, casting spells, praying or yelling in the reader's vicinity
+impossible. (Applies to reader too, of course.)
+This silence will not hide your presence, since its oppressive, unnatural
+effect will almost certainly alert any living creature that something is
+very wrong. Silence starts out with a radius covering half the normal
+vision range, which will then shrink, eventually covering only the reader,
+before the effect times out.
+
+Note that demons do not need sound to cast spells; certain necromantic
+fixtures have this property as well.
 %%%%
 scythe
 
@@ -1187,7 +1208,8 @@ This staff increases the power of air spells cast by its wielder, and insulates 
 %%%%
 staff of channeling
 
-This staff allows its caster to channel ambient magical energy for his or her own purposes.
+This staff allows its wielder to channel ambient magical energy for his or
+her own purposes.
 %%%%
 staff of cold
 
@@ -1340,7 +1362,9 @@ A magical device which disrupts the physical structure of anything but the harde
 %%%%
 wand of draining
 
-A magical device which throws a bolt of negative energy which drains the life essences of living creatures, but is useless against the undead.
+A magical device which throws a bolt of negative energy which drains the
+life essences of living creatures, but is useless against the undead,
+demons, artificial creatures and even living plants.
 %%%%
 wand of enslavement
 
