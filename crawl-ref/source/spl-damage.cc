@@ -12,10 +12,12 @@
 #include "areas.h"
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "feature.h"
 #include "food.h"
 #include "fprop.h"
 #include "godconduct.h"
@@ -1734,26 +1736,15 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // Stone and rock terrain
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
-        beam.colour = env.rock_colour;
-        // fall-through
     case DNGN_SLIMY_WALL:
-        if (beam.colour == 0)
-            beam.colour = LIGHTGREEN;
-        // fall-through
     case DNGN_STONE_WALL:
-        if (beam.colour == 0)
-            beam.colour = LIGHTGRAY;
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        if (beam.colour == 0)
-            beam.colour = LIGHTCYAN;
         what = "wall";
         // fall-through
     case DNGN_ORCISH_IDOL:
         if (what == NULL)
             what = "stone idol";
-        if (beam.colour == 0)
-            beam.colour = DARKGREY;
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
         if (what == NULL)
@@ -1761,8 +1752,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
-        if (beam.colour == 0)
-            beam.colour = LIGHTGREY;
 
         if ((grid == DNGN_ORCISH_IDOL
              || grid == DNGN_GRANITE_STATUE
@@ -1786,7 +1775,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     case DNGN_GRATE:
         if (what == NULL)
             what        = "iron grate";
-        beam.colour     = CYAN;
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
@@ -1800,7 +1788,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // Crystal
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
         what            = "crystal wall";
-        beam.colour     = GREEN;
         beam.ex_size    = 2;
         beam.name       = "blast of crystal shards";
         beam.damage.num = 4;
@@ -1827,7 +1814,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             what        = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
-        beam.colour     = LIGHTGREY;
         beam.damage.num = 2;
         break;
 
@@ -1840,6 +1826,11 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // If it was recoloured, use that colour instead.
     if (env.grid_colours(spd.target))
         beam.colour = env.grid_colours(spd.target);
+    else
+    {
+        beam.colour = element_colour(get_feature_def(grid).colour,
+                                     false, spd.target);
+    }
 
   all_done:
 
