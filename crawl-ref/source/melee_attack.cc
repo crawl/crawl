@@ -857,10 +857,7 @@ bool melee_attack::attack()
         if (ev_margin >= 0)
         {
             if (attacker != defender && attack_warded_off())
-                {
-                // A warded-off attack takes half the normal energy.
-                attacker->gain_energy(EUT_ATTACK, 2);
-
+            {
                 perceived_attack = true;
                 return (false);
             }
