@@ -46,6 +46,21 @@ end
 }}
 
 ##############################################################################
+# Compat for the portal vault -- please remove after save break
+##############################################################################
+
+NAME:   old_spider
+ORIENT: encompass
+TAGS:   spiders_nest
+KFEAT:  < = exit_portal_vault
+MONS:   spider
+MAP
+xxxxx
+xA<1x
+xxxxx
+ENDMAP
+
+##############################################################################
 # Spider Nest entry vaults
 ##############################################################################
 
