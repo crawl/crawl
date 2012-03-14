@@ -678,7 +678,7 @@ The statue has no mouth. Creepy!
 A granite statue of a fallen hero
 
 A life-size granite statue of a dwarf standing guard in this hall. You can't
-help but feel like it's watching you.
+help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
@@ -744,14 +744,14 @@ intruders.
 %%%%
 A frozen archway
 
-A permanent cold front seems to surround this
-portal. Whatever lives on the other side, they will be full of
-grim and arctic fury. You note that the archway is melting away.
+A permanent cold front seems to surround this portal. Whatever lives on the
+other side will be full of grim and arctic fury. You note that the archway is
+melting away.
 %%%%
 A sand-covered staircase
 
 You can make out a staircase leading downwards into a small tomb. Sand
-surrounds the staircase and is continuously pouring onto it. Before long the
+surrounds the staircase and is continuously pouring onto it. Before long, the
 staircase will be gone. They say that some distant relatives of the pharaohs
 were entombed here.
 %%%%
@@ -773,23 +773,21 @@ loot them himself, he instead charged an extortionate fee for entry to
 anyone who wanted to rifle through them.
 
 The secrets of the gateways died with him when his fellow thieves, disgusted
-at his betrayal of their 'ideals', had him murdered. With his death, the
+by his betrayal of their 'ideals', had him murdered. With his death, the
 now-uncontrolled portals began moving rapidly from one dimension to the
 next, stopping only long enough to absorb magical energy.
 %%%%
 A dark tunnel
 
-Leading directly into the rock is a dark and
-forbidding tunnel. Every so often air, hot enough
-to singe your face, blasts from within, and, as
-though triggered by the air, rocks fall from the roof
-and sides of the tunnel, slowly filling the entry.
+Leading directly into the rock is a dark and forbidding tunnel. Every so
+often, air hot enough to singe your face blasts from within, and, as though
+triggered by the air, rocks fall from the roof and sides of the tunnel,
+slowly filling the entry.
 %%%%
 A magical portal
 
-This portal has been left open by a careless wizard.
-It might lead to their secret laboratory, but beware!
-Surely it will be guarded by magical traps and
+This portal has been left open by a careless wizard. It might lead to a
+secret laboratory, but beware! Surely it will be guarded by magical traps and
 terrible monsters. It seems to be slowly fading away.
 %%%%
 ###########
@@ -798,12 +796,11 @@ terrible monsters. It seems to be slowly fading away.
 # sprint_mu
 An open sea?
 
-Though it exists in stark defiance of every conventional
-rule of physics and geometry you know to be true, there
-can be no denying that here, in this tiny room, is a vast
-and terrible sea of impossible size.
+Though it exists in stark defiance of every conventional rule of physics and
+geometry you know to be true, there can be no denying that here, in this tiny
+room, is a vast and terrible sea of impossible size.
 
-Either that or it's a blue wall.
+Either that, or it's a blue wall.
 %%%%
 A teleporter
 
