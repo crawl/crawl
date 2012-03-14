@@ -2174,11 +2174,6 @@ std::string get_item_description(const item_def &item, bool verbose,
     return description.str();
 }
 
-static std::string _get_feature_description_wide(int feat)
-{
-    return std::string();
-}
-
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = grd(pos);
@@ -2202,28 +2197,13 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         long_desc = getLongDescription(db_name);
     }
 
-    bool custom_desc = false;
-
     const std::string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
 
     if (!marker_desc.empty())
-    {
-        long_desc   = marker_desc;
-        custom_desc = true;
-    }
-
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
-    {
-        long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
-        custom_desc = true;
-    }
+        long_desc += marker_desc;
 
     inf.body << long_desc;
-
-    // For things which require logic
-    if (!custom_desc)
-        inf.body << _get_feature_description_wide(grd(pos));
 
     inf.quote = getQuoteString(db_name);
 }

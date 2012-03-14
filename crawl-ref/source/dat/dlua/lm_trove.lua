@@ -66,13 +66,13 @@ end
 function TroveMarker:fdesc_long (marker)
   local state
   if self.props.toll_item.base_type == "miscellaneous" then
-    state = "This portal requires the presence of " ..
+    state = "\nThis portal requires the presence of " ..
             self:item_name() .. " to function.\n"
   else
-    state = "This portal needs " ..
+    state = "\nThis portal needs " ..
             self:item_name() .. " to function.\n"
   end
-  return state .. "\n" .. self.props.desc_long
+  return state
 end
 
 function TroveMarker:overview_note (marker)
@@ -179,13 +179,7 @@ function TroveMarker:property(marker, pname)
 end
 
 function TroveMarker:describe(marker)
-  local desc = self:unmangle(self.props.desc_long)
-  if desc then
-    desc = desc .. "\n\n"
-  else
-    desc = ""
-  end
-  return desc .. "The portal requires " .. self.item:name() .. " for entry.\n"
+  return "The portal requires " .. self.item:name() .. " for entry.\n"
 end
 
 function TroveMarker:read(marker, th)
