@@ -25,7 +25,6 @@ NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = NULL));
 NORETURN void game_ended();
 NORETURN void game_ended_with_error(const std::string &message);
 
-bool print_error_screen(PRINTF(0, ));
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);

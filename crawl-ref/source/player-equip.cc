@@ -167,7 +167,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
         you.stop_train.insert(SK_SHIELDS);
 }
 
-void _hp_artefact()
+static void _hp_artefact()
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.

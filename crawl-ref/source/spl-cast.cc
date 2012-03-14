@@ -71,11 +71,13 @@
 #include "transform.h"
 #include "view.h"
 
+static int _spell_enhancement(unsigned int typeflags);
+
 static void _surge_power(spell_type spell)
 {
     int enhanced = 0;
 
-    enhanced += spell_enhancement(get_spell_disciplines(spell));
+    enhanced += _spell_enhancement(get_spell_disciplines(spell));
 
     if (enhanced)               // one way or the other {dlb}
     {
@@ -419,7 +421,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
         if (!fail_rate_check)
-            enhanced = spell_enhancement(disciplines);
+            enhanced = _spell_enhancement(disciplines);
 
         if (enhanced > 0)
         {
@@ -452,8 +454,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     return (power);
 }
 
-
-int spell_enhancement(unsigned int typeflags)
+static int _spell_enhancement(unsigned int typeflags)
 {
     int enhanced = 0;
 
@@ -1674,7 +1675,7 @@ static int _tetrahedral_number(int n)
 // Should probably use more constants, though I doubt the spell
 // success algorithms will really change *that* much.
 // Called only by failure_rate_to_int and get_miscast_chance.
-double get_true_fail_rate(int raw_fail)
+static double _get_true_fail_rate(int raw_fail)
 {
     //Need random2(101) + random2(101) + random2(100) to be less than 3*raw_fail.
     //Fun with tetrahedral numbers!
@@ -1701,16 +1702,16 @@ double get_true_fail_rate(int raw_fail)
 //Computes the chance of getting a miscast effect of a given severity (or
 //higher).
 //Called only by failure_rate_colour.
-double get_miscast_chance(int raw_fail, int level, int severity)
+static double _get_miscast_chance(int raw_fail, int level, int severity)
 {
     if (severity <= 0)
-        return get_true_fail_rate(raw_fail);
+        return _get_true_fail_rate(raw_fail);
     double C = 70000.0/(150*level*(10+level));
     double chance = 0.0;
     int k = severity + 1;
     while ((C*k) <= raw_fail)
     {
-        chance += get_true_fail_rate((int)(raw_fail+1-(C*k)))*severity/(k*(k-1));
+        chance += _get_true_fail_rate((int)(raw_fail+1-(C*k)))*severity/(k*(k-1));
         k++;
     }
     return chance;
@@ -1720,7 +1721,7 @@ double get_miscast_chance(int raw_fail, int level, int severity)
 // based on the chance of getting a severity >= 2 miscast.
 int failure_rate_colour(spell_type spell)
 {
-    double chance = get_miscast_chance(spell_fail(spell), spell_difficulty(spell), 2);
+    double chance = _get_miscast_chance(spell_fail(spell), spell_difficulty(spell), 2);
     return ((chance < 0.001) ? LIGHTGREY :
             (chance < 0.005) ? YELLOW    :
             (chance < 0.025) ? LIGHTRED  :
@@ -1735,7 +1736,7 @@ int failure_rate_to_int(int fail)
     else if (fail == 100)
         return 100;
     else
-        return std::max(1, (int) (100 * get_true_fail_rate(fail)));
+        return std::max(1, (int) (100 * _get_true_fail_rate(fail)));
 }
 
 //Note that this char[] is allocated on the heap, so anything calling

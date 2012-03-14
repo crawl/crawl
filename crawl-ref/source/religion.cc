@@ -1441,15 +1441,11 @@ bool mons_is_god_gift(const monster* mon, god_type god)
     return ((mon->flags & MF_GOD_GIFT) && mon->god == god);
 }
 
-bool is_undead_slave(const monster* mon)
-{
-    return (mon->alive() && mon->holiness() == MH_UNDEAD
-            && mon->attitude == ATT_FRIENDLY);
-}
-
 bool is_yred_undead_slave(const monster* mon)
 {
-    return (is_undead_slave(mon) && mons_is_god_gift(mon, GOD_YREDELEMNUL));
+    return (mon->alive() && mon->holiness() == MH_UNDEAD
+            && mon->attitude == ATT_FRIENDLY
+            && mons_is_god_gift(mon, GOD_YREDELEMNUL));
 }
 
 bool is_orcish_follower(const monster* mon)
@@ -1466,7 +1462,7 @@ bool is_fellow_slime(const monster* mon)
             && mons_is_god_gift(mon, GOD_JIYVA));
 }
 
-bool is_neutral_plant(const monster* mon)
+static bool _is_neutral_plant(const monster* mon)
 {
     return (mon->alive() && mons_is_plant(mon)
             && mon->attitude == ATT_GOOD_NEUTRAL);
@@ -1485,13 +1481,13 @@ static bool _has_jelly()
 bool is_follower(const monster* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
-        return (is_undead_slave(mon));
+        return (is_yred_undead_slave(mon));
     else if (you.religion == GOD_BEOGH)
         return (is_orcish_follower(mon));
     else if (you.religion == GOD_JIYVA)
         return (is_fellow_slime(mon));
     else if (you.religion == GOD_FEDHAS)
-        return (is_neutral_plant(mon));
+        return (_is_neutral_plant(mon));
     else
         return (mon->alive() && mon->friendly());
 }

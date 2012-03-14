@@ -1101,16 +1101,14 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                  quiet);
 }
 
-bool _summon_lesser_demon(int pow, god_type god, int spell,
-                          bool quiet)
+static bool _summon_lesser_demon(int pow, god_type god, int spell, bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool _summon_common_demon(int pow, god_type god, int spell,
-                          bool quiet)
+static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),

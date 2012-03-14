@@ -116,12 +116,12 @@ static bool _is_explore_horizon(const coord_def& c)
 }
 #endif
 
-ucs_t get_sightmap_char(dungeon_feature_type feat)
+static ucs_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-ucs_t get_magicmap_char(dungeon_feature_type feat)
+static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).magic_symbol);
 }
@@ -372,17 +372,6 @@ static int _find_feature(ucs_t feature, int curs_x, int curs_y,
     return 0;
 }
 
-void find_features(const std::vector<coord_def>& features,
-                   ucs_t feature, std::vector<coord_def> *found)
-{
-    for (unsigned feat = 0; feat < features.size(); ++feat)
-    {
-        const coord_def& coord = features[feat];
-        if (is_feature(feature, coord))
-            found->push_back(coord);
-    }
-}
-
 static int _find_feature(const std::vector<coord_def>& features,
                           ucs_t feature, int curs_x, int curs_y,
                           int start_x, int start_y,
@@ -490,8 +479,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                     // XXX: This is a horrible hack.
                     ucs_t bc   = cell->glyph;
                     uint8_t ch = is_waypoint(c);
-                    if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
-                               || bc == get_magicmap_char(DNGN_FLOOR)))
+                    if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
+                               || bc == _get_magicmap_char(DNGN_FLOOR)))
                     {
                         cell->glyph = ch;
                     }

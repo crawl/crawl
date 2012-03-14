@@ -456,7 +456,7 @@ void check_net_will_hold_monster(monster* mons)
         mons->add_ench(ENCH_HELD);
 }
 
-bool player_caught_in_web()
+static bool _player_caught_in_web()
 {
     if (you.attribute[ATTR_HELD])
         return false;
@@ -872,7 +872,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             {
                 mpr("You are caught in the web!");
 
-                if (player_caught_in_web())
+                if (_player_caught_in_web())
                 {
                     check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
                     if (player_in_a_dangerous_place())
