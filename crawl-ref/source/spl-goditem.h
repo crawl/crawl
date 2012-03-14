@@ -8,7 +8,6 @@ int cast_healing(int pow, int max_pow, bool divine_ability = false,
 
 void antimagic();
 
-int detect_secret_doors(int pow);
 int detect_traps(int pow);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);

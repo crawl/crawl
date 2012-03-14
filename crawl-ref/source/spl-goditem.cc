@@ -425,27 +425,6 @@ void antimagic()
     contaminate_player(-1 * (1 + random2(5)));
 }
 
-// The description idea was okay, but this spell just isn't that exciting.
-// So I'm converting it to the more practical expose secret doors. - bwr
-int detect_secret_doors(int pow)
-{
-    int doors_found = 0;
-
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
-        {
-            reveal_secret_door(*ri);
-            doors_found++;
-        }
-    }
-
-    if (doors_found)
-        mpr("You detect secret doors!");
-
-    return (doors_found);
-}
-
 int detect_traps(int pow)
 {
     pow = std::min(50, pow);
