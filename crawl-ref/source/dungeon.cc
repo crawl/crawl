@@ -4364,10 +4364,12 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         int useless_tries = 0;
     retry:
 
-        const int item_made = items(spec.allow_uniques, spec.base_type,
-                                     spec.sub_type, true, item_level,
-                                     spec.race, 0, spec.ego, -1,
-                                     spec.level == ISPEC_MUNDANE);
+        const int item_made = (spec.corpselike() ?
+                               dgn_item_corpse(spec, mon->pos())
+                               : items(spec.allow_uniques, spec.base_type,
+                                       spec.sub_type, true, item_level,
+                                       spec.race, 0, spec.ego, -1,
+                                       spec.level == ISPEC_MUNDANE));
 
         if (item_made != NON_ITEM && item_made != -1)
         {
@@ -4539,11 +4541,12 @@ monster* dgn_place_monster(mons_spec &mspec,
     if (!mons)
         return 0;
 
-    if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
-
+    // Spells before items, so e.g. simulacrum casters can be given chunks.
     if (mspec.explicit_spells)
         mons->spells = mspec.spells[random2(mspec.spells.size())];
+    
+    if (!mspec.items.empty())
+        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
 
     if (mspec.props.exists("monster_tile"))
     {

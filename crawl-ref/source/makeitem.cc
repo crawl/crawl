@@ -2567,6 +2567,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     {
         // Set chunk flavour (default to common dungeon rat steaks):
         item.plus = _choose_random_monster_corpse();
+        item.orig_monnum = item.plus + 1;
         // Set duration.
         item.special = (10 + random2(11)) * 10;
     }
