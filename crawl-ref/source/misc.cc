@@ -162,7 +162,7 @@ void turn_corpse_into_skeleton(item_def &item)
     item.colour   = LIGHTGREY;
 }
 
-void maybe_bleed_monster_corpse(const item_def corpse)
+static void _maybe_bleed_monster_corpse(const item_def corpse)
 {
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(corpse))
@@ -186,7 +186,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 
     // Only fresh corpses bleed enough to colour the ground.
     if (bloodspatter)
-        maybe_bleed_monster_corpse(corpse);
+        _maybe_bleed_monster_corpse(corpse);
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
@@ -234,7 +234,7 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
             _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
         else
         {
-            maybe_bleed_monster_corpse(item);
+            _maybe_bleed_monster_corpse(item);
             maybe_drop_monster_hide(item);
             turn_corpse_into_skeleton(item);
         }
@@ -245,7 +245,7 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
             turn_corpse_into_chunks(item);
         else
         {
-            maybe_bleed_monster_corpse(item);
+            _maybe_bleed_monster_corpse(item);
             maybe_drop_monster_hide(item);
             destroy_item(item.index());
         }
@@ -1868,12 +1868,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     }
 }
 
-int count_malign_gateways ()
-{
-    return get_malign_gateways().size();
-}
-
-std::vector<map_malign_gateway_marker*> get_malign_gateways ()
+static std::vector<map_malign_gateway_marker*> _get_malign_gateways()
 {
     std::vector<map_malign_gateway_marker*> mm_markers;
 
@@ -1892,12 +1887,17 @@ std::vector<map_malign_gateway_marker*> get_malign_gateways ()
     return mm_markers;
 }
 
-void timeout_malign_gateways (int duration)
+int count_malign_gateways()
+{
+    return _get_malign_gateways().size();
+}
+
+void timeout_malign_gateways(int duration)
 {
     // Passing 0 should allow us to just touch the gateway and see
     // if it should decay. This, in theory, should resolve the one
     // turn delay between it timing out and being recastable. -due
-    std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
+    std::vector<map_malign_gateway_marker*> markers = _get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {

@@ -17,9 +17,6 @@ bool mons_near(const monster* mons);
 bool mon_enemies_around(const monster* mons);
 void seen_monsters_react();
 
-void find_features(const std::vector<coord_def>& features,
-                   ucs_t feature, std::vector<coord_def> *found);
-
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
                    coord_def origin = coord_def(-1, -1));

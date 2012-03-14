@@ -1221,7 +1221,7 @@ int player_teleport(bool calc_unid)
 
 // Computes bonuses to regeneration from most sources. Does not handle
 // slow healing, vampireness, or Trog's Hand.
-int player_bonus_regen()
+static int _player_bonus_regen()
 {
     int rr = 0;
 
@@ -1265,7 +1265,7 @@ int player_regen()
         rr = 20 + ((rr - 20) / 2);
 
     // Add in miscellaneous bonuses
-    rr += player_bonus_regen();
+    rr += _player_bonus_regen();
 
     // Before applying other effects, make sure that there's something
     // to heal.
@@ -1847,7 +1847,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     return (rp);
 }
 
-int _maybe_reduce_poison(int amount)
+static int _maybe_reduce_poison(int amount)
 {
     int rp = player_res_poison(true, true, true);
 
@@ -2254,16 +2254,6 @@ int player_mutation_level(mutation_type mut, bool temp)
     return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
 }
 
-
-int player_armour_slots()
-{
-    int armour_slot_count = 0;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
-        if (i != EQ_SHIELD && you_can_wear(i, true))
-            armour_slot_count++;
-    return armour_slot_count;
-}
-
 static int _player_armour_racial_bonus(const item_def& item)
 {
     if (item.base_type != OBJ_ARMOUR)
@@ -2341,7 +2331,7 @@ bool player_is_shapechanged(void)
 
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
-int player_evasion_size_factor()
+static int _player_evasion_size_factor()
 {
     // XXX: you.body_size() implementations are incomplete, fix.
     const size_type size = you.body_size(PSIZE_BODY);
@@ -2388,7 +2378,7 @@ static int _player_para_evasion_bonuses(ev_ignore_type evit)
 
 // Player EV bonuses for various effects and transformations. This
 // does not include tengu/merfolk EV bonuses for flight/swimming.
-int player_evasion_bonuses(ev_ignore_type evit)
+static int _player_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = _player_para_evasion_bonuses(evit);
 
@@ -2417,7 +2407,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
 }
 
 // Player EV scaling for being flying tengu or swimming merfolk.
-int player_scale_evasion(int prescaled_ev, const int scale)
+static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING])
         prescaled_ev /= 2;
@@ -2457,7 +2447,7 @@ int player_scale_evasion(int prescaled_ev, const int scale)
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
-    const int size_factor = player_evasion_size_factor();
+    const int size_factor = _player_evasion_size_factor();
     // Repulsion fields and size are all that matters when paralysed or
     // at 0 dex.
     if ((you.cannot_move() || you.stat_zero[STAT_DEX])
@@ -2507,18 +2497,18 @@ int player_evasion(ev_ignore_type evit)
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
 
-    const int evasion_bonuses = player_evasion_bonuses(evit) * scale;
+    const int evasion_bonuses = _player_evasion_bonuses(evit) * scale;
 
     const int prescaled_evasion =
         poststepdown_evasion + evasion_bonuses;
 
     const int final_evasion =
-        player_scale_evasion(prescaled_evasion, scale);
+        _player_scale_evasion(prescaled_evasion, scale);
 
     return (unscale_round_up(final_evasion, scale));
 }
 
-int player_body_armour_racial_spellcasting_bonus(const int scale)
+static int _player_body_armour_racial_spellcasting_bonus(const int scale)
 {
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
@@ -2548,7 +2538,7 @@ int player_armour_shield_spell_penalty()
 
     const int body_armour_penalty =
         std::max(25 * you.adjusted_body_armour_penalty(scale)
-                    - player_body_armour_racial_spellcasting_bonus(scale),
+                    - _player_body_armour_racial_spellcasting_bonus(scale),
                  0);
 
     const int total_penalty = body_armour_penalty
@@ -2558,7 +2548,7 @@ int player_armour_shield_spell_penalty()
     return (std::max(total_penalty, 0) / scale);
 }
 
-int player_magical_power(void)
+static int _player_magical_power(void)
 {
     int ret = 0;
 
@@ -4691,7 +4681,7 @@ int get_real_mp(bool include_items)
 
     // Now applied after scaling so that power items are more useful -- bwr
     if (include_items)
-        enp += player_magical_power();
+        enp += _player_magical_power();
 
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
@@ -5232,7 +5222,7 @@ void dec_disease_player(int delay)
         int rr = 50;
 
         // Extra regeneration means faster recovery from disease.
-        rr += player_bonus_regen();
+        rr += _player_bonus_regen();
 
         // Trog's Hand.
         if (you.attribute[ATTR_DIVINE_REGENERATION])
@@ -5976,7 +5966,7 @@ int player::adjusted_shield_penalty(int scale) const
     return std::max(0,
                     (base_shield_penalty * scale
                      - you.skill(SK_SHIELDS, scale)
-                     / std::max(1, 5 + player_evasion_size_factor())));
+                     / std::max(1, 5 + _player_evasion_size_factor())));
 }
 
 int player::armour_tohit_penalty(bool random_factor) const

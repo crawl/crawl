@@ -21,14 +21,6 @@
 #endif
 #include "view.h"
 
-void map_knowledge_forget_mons(const coord_def& c)
-{
-    if (!env.map_knowledge(c).detected_monster())
-        return;
-
-    env.map_knowledge(c).clear_monster();
-}
-
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(int x, int y)
 {

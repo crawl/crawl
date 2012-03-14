@@ -817,12 +817,10 @@ int calc_hunger(int food_cost);
 int player_icemail_armour_class();
 
 int player_mag_abil(bool is_weighted);
-int player_magical_power(void);
 
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
-int player_bonus_regen(void);
 int player_regen(void);
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
@@ -874,7 +872,6 @@ int player_spec_poison(void);
 int player_spec_summ(void);
 
 int player_speed(void);
-int player_armour_slots();
 int player_evokable_levitation();
 int player_evokable_invis();
 

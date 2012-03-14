@@ -500,7 +500,7 @@ static bool debug_fight_sim(monster &mon, int missile_slot,
     return (success);
 }
 
-int fsim_kit_equip(const std::string &kit)
+static int _fsim_kit_equip(const std::string &kit)
 {
     int missile_slot = -1;
 
@@ -588,7 +588,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     {
         for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
         {
-            int missile = fsim_kit_equip(Options.fsim_kit[i]);
+            int missile = _fsim_kit_equip(Options.fsim_kit[i]);
             if (missile == -100)
             {
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());

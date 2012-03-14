@@ -28,7 +28,6 @@ void trackers_init_new_level(bool transit);
 void maybe_drop_monster_hide(const item_def corpse);
 int get_max_corpse_chunks(int mons_class);
 void turn_corpse_into_skeleton(item_def &item);
-void maybe_bleed_monster_corpse(const item_def corpse);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);
 void butcher_corpse(item_def &item, maybe_bool skeleton = B_MAYBE,
@@ -88,8 +87,7 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
 
 void timeout_tombs(int duration);
 
-int count_malign_gateways ();
-std::vector<map_malign_gateway_marker*> get_malign_gateways ();
+int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
 void setup_environment_effects();

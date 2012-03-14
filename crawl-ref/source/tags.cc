@@ -610,7 +610,7 @@ void unmarshallMap(reader& th, map& data,
 }
 
 template<typename T>
-T unmarshall_long_as(reader& th)
+static T unmarshall_long_as(reader& th)
 {
     return static_cast<T>(unmarshallInt(th));
 }

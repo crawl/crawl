@@ -83,11 +83,9 @@ void mons_make_god_gift(monster* mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
 
 int yred_random_servants(unsigned int threshold, bool force_hostile = false);
-bool is_undead_slave(const monster* mon);
 bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
-bool is_neutral_plant(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,

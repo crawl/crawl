@@ -309,7 +309,6 @@ void set_terrain_visible(const coord_def &c);
 void clear_terrain_visibility();
 
 int count_detected_mons(void);
-void map_knowledge_forget_mons(const coord_def &c);
 
 void clear_map(bool clear_items = false, bool clear_mons = true);
 
