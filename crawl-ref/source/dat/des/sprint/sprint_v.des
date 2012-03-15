@@ -1,9 +1,6 @@
 ###############################################################################
 # Zig Sprint
 #
-# Needs fixing:
-# - All items are autoidentified, however they are not autoinscribed.
-#
 # General comments:
 # - Obsidian axe, Gong and Maxwells are guaranteed in the equipment room,
 #   this is because of a ##crawl joke/challenge involving beating a zig wearing these items.
