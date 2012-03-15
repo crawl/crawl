@@ -1,3 +1,10 @@
+crawl (2:0.10.0-2) unstable; urgency=low
+
+  * Fix link to .txt files in /usr/share/doc/crawl-common/. Closes: #660388
+  * Fix link to Stone Soup icon. Closes: #647464
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 19 Feb 2012 19:27:10 +0100
+
 crawl (2:0.10.0-1) unstable; urgency=low
 
   [ Adam Borowski ]
