@@ -377,15 +377,16 @@ TAGS:   mini_float
 MONS:   red wasp / w:5 yellow wasp
 SUBST:  1 = %1
 SUBST:  a = .a
+SUBST:  A = a
 MAP
   ......
  ..aaaa..
-..AAAAAA..
+..aAAAAA..
+.aAA111Aa.
 .aA1111Aa.
 .aA1111Aa.
-.aA1111Aa.
-.aA1111Aa.
-..AAAAAA..
+.aAA11AAa.
+..aAAAAa..
  ..aaaa..
   ......
 ENDMAP
