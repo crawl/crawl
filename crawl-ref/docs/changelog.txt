@@ -1,3 +1,16 @@
+Stone Soup 0.10.1 (20120315)
+----------------------------
+* Fix "non tried" question mark in tiles being sometimes missing.
+* Fix grey draconians sometimes drowning.
+* Fix Lua junk appearing in some monster speech.
+* Fix the Slime:6 vault opening soon after banishing the Royal Jelly.
+* Fix pressing <<<<<< getting you scot free from constriction.
+* Fix slaying not working when using magical staves.
+* A bunch of crash fixes.
+* ... including the "hunter" hints mode being totally inoperative.
+* Assorted Webtiles fixes.
+* And a bunch of other minor ones here and there.
+
 Stone Soup 0.10 (20120216)
 --------------------------
 
