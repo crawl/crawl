@@ -614,6 +614,10 @@ deep elf demonologist
 
 A deep elf who is marked heavily by long years of contact with unnatural demonic forces and the creatures of the Abyss.
 %%%%
+deep elf elementalist
+
+The primal forces of the universe dance at this demented wizard's fingertips.
+%%%%
 deep elf fighter
 
 A strong deep elf soldier who wields weapons and battle magic.
@@ -1289,6 +1293,10 @@ An insane follower of Lugonu. Years of living in the abyss have clearly taken th
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
+%%%%
+master elementalist
+
+The primal forces of the universe dance at this demented wizard's fingertips.
 %%%%
 merfolk
 

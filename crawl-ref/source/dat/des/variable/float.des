@@ -1334,8 +1334,6 @@ KMONS:  Z = col:flash wizard hd:15 name_descriptor tile:mons_master_elementalist
         dagger ego:electrocution
 : end
 
-MARKER:     Z = lua:MonPropsMarker:new {description="The primal forces of " \
-            .. "the universe dance at this demented wizard's fingertips.\n"}
 KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
             randbook disc:earth
 KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
