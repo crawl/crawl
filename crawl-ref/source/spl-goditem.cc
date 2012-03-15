@@ -860,7 +860,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!zin && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 3))
             continue;
 
         // The tile is occupied.
@@ -897,11 +897,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
                 marker->set_property("feature_description", "A gleaming silver wall");
-                marker->set_property("prison", "Zin");
+                marker->set_property("tomb", "Zin");
                 env.markers.add(marker);
             }
+            // Tomb card
             else
+            {
                 grd(*ai) = DNGN_ROCK_WALL;
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("tomb", "card");
+                env.markers.add(marker);
+            }
 
             set_terrain_changed(*ai);
             number_built++;
@@ -936,8 +942,18 @@ bool entomb(int pow)
         mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
         return (false);
     }
+    if (_do_imprison(pow, you.pos(), false))
+    {
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(you.pos(),
+                                            tomb_duration,
+                                            you.mindex(),
+                                            you.mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
+        return (true);
+    }
 
-    return (_do_imprison(pow, you.pos(), false));
+    return (false);
 }
 
 bool cast_imprison(int pow, monster* mons, int source)

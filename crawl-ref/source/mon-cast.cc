@@ -3485,6 +3485,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
                 // Actually place the wall.
                 grd(*ai) = DNGN_ROCK_WALL;
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("tomb", "monster");
+                env.markers.add(marker);
                 set_terrain_changed(*ai);
                 sumcount++;
             }
