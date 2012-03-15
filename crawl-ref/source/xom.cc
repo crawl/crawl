@@ -476,6 +476,9 @@ static bool _spell_weapon_check(const spell_type spell)
 
 static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 {
+    if (game_type.game_is_sprint())
+        return false;
+
     switch (spell)
     {
     case SPELL_BLINK:
@@ -3847,7 +3850,7 @@ static void _handle_accidental_death(const int orig_hp,
         }
     }
 
-    if (is_feat_dangerous(feat))
+    if (is_feat_dangerous(feat) && !game_state.game_is_sprint())
         you_teleport_now(false);
 }
 
