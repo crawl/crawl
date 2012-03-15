@@ -3812,7 +3812,7 @@ random_var melee_attack::player_weapon_speed()
         if (min_delay > 7)
             min_delay = 7;
 
-        // never go faster than speed 3 (ie 3 attacks per round)
+        // never go faster than speed 3 (ie 3.33 attacks per round)
         if (min_delay < 3)
             min_delay = 3;
 
