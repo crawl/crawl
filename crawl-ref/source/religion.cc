@@ -518,8 +518,7 @@ std::string get_god_powers(god_type which_god)
     if (which_god == GOD_NO_GOD)
         return ("");
 
-    std::string result = getLongDescription(
-                             uppercase_first(god_name(which_god)) + " powers");
+    std::string result = getLongDescription(god_name(which_god) + " powers");
     return (result);
 }
 

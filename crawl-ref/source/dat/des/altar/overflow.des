@@ -33,7 +33,7 @@
 default-depth: D
 
 # These must feature one of the temple_overflow_* TAGs (see header).
-# Altars are sorted alphabetically by god, with The Shining One coming
+# Altars are sorted alphabetically by god, with the Shining One coming
 # after Zin. At the end, there are altar vaults which can be used for
 # more than just one god.
 

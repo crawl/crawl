@@ -561,11 +561,11 @@ Beogh curses everyone not orcish, especially @player_genus_plural@.
 
 Beogh swears eternal hatred towards @player_god@.
 %%%%
-#####################################
-# TSO rants on killing a holy being #
-#####################################
+#################################################
+# The Shining One rants on killing a holy being #
+#################################################
 # an evil worshipper has killed a holy being
-TSO holy evil
+the Shining One holy evil
 
 The Shining One thunders, "Cease your foul attacks on the divine!"
 
@@ -576,7 +576,7 @@ The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
 The Shining One whispers, "The forces of light will burn you to a crisp."
 %%%%
 # a non-good worshipper or atheist has killed a holy being
-TSO holy other
+the Shining One holy other
 
 The Shining One says, "As holy lives are taken, so shall yours be."
 
@@ -774,11 +774,11 @@ Sif Muna welcome
 
 Sif Muna whispers: I know many secrets...
 %%%%
-The Shining One penance
+the Shining One penance
 
 The Shining One says: Being a martyr may wash away your sin!
 %%%%
-The Shining One welcome
+the Shining One welcome
 
 The Shining One says: Lead the forces of light to victory!
 %%%%

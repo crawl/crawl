@@ -18,7 +18,7 @@ Zin
 
 Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from unholy, evil, unclean or chaotic magic; the use of mutations and the consumption of intelligent beings' flesh. They may preach to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness, demanding a tithe of 1/10 of all gold gained, preferably followed by donations of more. Zin's followers can safely convert to Elyvilon and the Shining One.
 %%%%
-The Shining One
+the Shining One
 
 The Shining One is a powerful deity on a crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy beings. Worshippers must never use unholy or evil magic, and are expected to prove their moral superiority by fighting honourably. The God demands followers to scour the world, examining all of its inhabitants for traces of evil that must be eradicated. The Shining One does not mind shifting worship to Elyvilon or Zin.
 %%%%
@@ -90,7 +90,7 @@ Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and powers to vitalise their bodies and gain divine stamina, protecting them from various afflictions as well as giving sustenance to the hungry. Later, followers gain the ability to imprison their foes temporarily. Followers can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutation, and Zin may even occasionally directly intervene to save a follower's life.
 %%%%
-The Shining One powers
+the Shining One powers
 
 Followers of the Shining One are surrounded by a halo that reveals their enemies to them. They gain power by killing evil beings. The Shining One will keep summoned and charmed allies on their side longer, should the allies prove worthy of the crusade. Followers will gain use of a divine shield to protect them in battle. Later, they can channel blasts of cleansing flame that are particularly damaging to unholy beings. Eventually, they can ask the Shining One to send them powerful divine beings as allies. The Shining One may occasionally directly intervene to save a follower's life. With growing piety the Shining One will protect a follower's life force.
 %%%%
