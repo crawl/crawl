@@ -2003,7 +2003,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
                     description << "\n\nMeat like this may occasionally cause "
-                                   "sickness.";
+                                   "nausea.";
                 }
                 break;
             case CE_POISON_CONTAM:
