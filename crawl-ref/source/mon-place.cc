@@ -234,7 +234,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         case HT_LAVA:
             return (feat == DNGN_LAVA);
         case HT_LAND:
-            // Currently, trapdoor spider only.
+            // Currently, trapdoor spider and air elemental only.
             return (feat_is_floor(feat));
         default:
             return (false);

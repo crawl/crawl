@@ -1082,15 +1082,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-    {
-        // If the monster can't stay submerged in the new terrain and
-        // there aren't any adjacent squares where it can stay
-        // submerged then move it.
-        monster* mon = monster_at(pos);
-        if (mon && !mon->submerged())
-            monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true);
-    }
     else
         you_teleport_now(true, false);
 }
