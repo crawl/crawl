@@ -1983,7 +1983,7 @@ void place_webs(int num, bool is_second_phase)
         {
             if (slot >= MAX_TRAPS)
                 return;
-            if (env.trap[++slot].type == TRAP_UNASSIGNED)
+            if (env.trap[slot].type == TRAP_UNASSIGNED)
                 break;
         };
         trap_def& ts(env.trap[slot]);
