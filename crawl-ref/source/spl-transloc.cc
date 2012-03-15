@@ -700,6 +700,11 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
+    if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return;
+    }
     const bool randtele = _teleport_player(allow_control, new_abyss_area,
                                            wizard_tele);
 
