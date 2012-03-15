@@ -2816,7 +2816,7 @@ w:50
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
 %%%%
-The Shining One Donald
+the Shining One Donald
 
 w:50
 @_generic_Donald_@
@@ -6080,7 +6080,7 @@ _good_god_
 
 Zin
 
-The Shining One
+the Shining One
 
 Elyvilon
 %%%%

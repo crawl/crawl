@@ -1374,7 +1374,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
 // Currently only used when holy beings have been killed.
 static std::string _get_tso_speech(const std::string key)
 {
-    std::string result = getSpeakString("TSO " + key);
+    std::string result = getSpeakString("the Shining One " + key);
 
     if (result.empty())
         return ("The Shining One is angry!");
