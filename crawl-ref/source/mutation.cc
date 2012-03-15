@@ -187,6 +187,14 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
     else if (!form_keeps_mutations())
     {
+        if (you.form == TRAN_DRAGON)
+        {
+            monster_type drag = dragon_form_dragon_type();
+            if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
+                return (MUTACT_FULL);
+            if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
+                return (MUTACT_FULL);
+        }
         // Dex and HP changes are kept in all forms.
         if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
             return (MUTACT_PARTIAL);
