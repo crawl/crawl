@@ -319,7 +319,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     coord_def target_square;
     int       okay_squares = 0;
 
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         if (!actor_at(*ai)
             && monster_can_submerge(mon, grd(*ai))
             && one_chance_in(++okay_squares))
@@ -337,9 +337,9 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
-        if (!monster_at(*ai)
+        if (!actor_at(*ai)
             && monster_habitable_grid(mon, grd(*ai))
             && !find_trap(*ai))
         {
@@ -603,8 +603,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.pos() == pos())
         {
-            mprf(MSGCH_ERROR, "%s is on the same square as you!",
-                 name(DESC_A).c_str());
+            // If, despite our best efforts, it unsubmerged on the same
+            // square as the player, teleport it away.
+            monster_teleport(this, true, false);
+            if (you.pos() == pos())
+            {
+                mprf(MSGCH_ERROR, "%s is on the same square as you!",
+                     name(DESC_A).c_str());
+            }
         }
 
         if (you.can_see(this))
