@@ -2396,7 +2396,7 @@ void handle_monster_move(monster* mons)
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
             const bool friendly_or_near =
-                mons->friendly() || mons->near_foe();
+                mons->friendly() && mons->foe == MHITYOU || mons->near_foe();
             if (friendly_or_near
                 || mons->type == MONS_TEST_SPAWNER
                 // Slime creatures can split when offscreen.
