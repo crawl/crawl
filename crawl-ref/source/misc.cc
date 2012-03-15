@@ -1805,10 +1805,24 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        // "Normal" tomb
+        // "Normal" tomb (card or monster spell)
         if (grd(*ai) == DNGN_ROCK_WALL &&
-            env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")
+            (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
+             || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
         {
+            std::vector<map_marker*> markers = env.markers.get_markers_at(*ai);
+            for (int i = 0, size = markers.size(); i < size; ++i)
+            {
+                map_marker *mark = markers[i];
+                if (mark->property("tomb") == "card"
+                    || mark->property("tomb") == "monster")
+                {
+                    env.markers.remove(mark);
+                }
+            }
+
+            env.markers.clear_need_activate();
+
             grd(*ai) = DNGN_FLOOR;
             set_terrain_changed(*ai);
             count++;
@@ -1818,7 +1832,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
 
         // Zin's Imprison.
         if (grd(*ai) == DNGN_METAL_WALL &&
-            env.markers.property_at(*ai, MAT_ANY, "prison") == "Zin")
+            env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
         {
             zin = true;
 
@@ -1826,7 +1840,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
-                if (mark->property("prison") == "Zin")
+                if (mark->property("tomb") == "Zin")
                     env.markers.remove(mark);
             }
 
@@ -1971,11 +1985,13 @@ void timeout_tombs(int duration)
         map_tomb_marker *cmark = dynamic_cast<map_tomb_marker*>(mark);
         cmark->duration -= duration;
 
-        // Tombs without monsters in them disappear early.
+        // Empty tombs disappear early.
         monster* mon_entombed = monster_at(cmark->pos);
-        if (cmark->duration <= 0 || !mon_entombed)
+        bool empty_tomb = !(mon_entombed || you.pos() == cmark->pos);
+
+        if (cmark->duration <= 0 || empty_tomb)
         {
-            _drop_tomb(cmark->pos, !mon_entombed);
+            _drop_tomb(cmark->pos, empty_tomb);
 
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
