@@ -12,17 +12,6 @@
 #include "mon-util.h"
 #include "place.h"
 
-// NB - When adding new branches or levels above 50, you must
-// change pre-game deletion routine in new_game in newgame.cc
-
-//    New branch must be added in:
-//    - new_game stair location
-//    - down/up stairs (to and back) misc.cc
-//    - new_level (2 places) (misc.cc)
-//    - item_check items.cc
-//    - ouch ouch.cc (death message)
-//    - and here...
-
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_level(int mcls, const level_id &place)
 {
