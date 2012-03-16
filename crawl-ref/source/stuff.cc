@@ -499,6 +499,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_HELD_IN_A_NET:
         mpr("You're held in a net!");
         break;
+    case MSG_DECK_EXHAUSTED:
+        mpr("The deck of cards disappears in a puff of smoke.");
+        break;
     }
 }
 

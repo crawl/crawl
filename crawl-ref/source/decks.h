@@ -47,6 +47,7 @@ enum card_flags_type
     CFLAG_ODDITY = (1 << 0),
     CFLAG_SEEN   = (1 << 1),
     CFLAG_MARKED = (1 << 2),
+    CFLAG_DEALT  = (1 << 4),
 };
 
 enum card_type
@@ -135,6 +136,7 @@ const char* card_name(card_type card);
 void evoke_deck(item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
+bool deck_deal();
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
@@ -142,7 +144,7 @@ void shuffle_all_decks_on_level();
 
 void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
-void draw_from_deck_of_punishment();
+void draw_from_deck_of_punishment(bool deal = false);
 
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
