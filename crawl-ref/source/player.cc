@@ -3036,10 +3036,6 @@ void level_change(bool skip_attribute_increase)
         }
         else  // Character has gained a new level
         {
-            crawl_state.stat_gain_prompt = false;
-            you.experience_level = new_exp;
-            you.max_level = you.experience_level;
-
             // Don't want to see the dead creature at the prompt.
             redraw_screen();
             // There may be more levels left to gain.
@@ -3058,6 +3054,10 @@ void level_change(bool skip_attribute_increase)
 
             if (!(new_exp % 3) && !skip_attribute_increase)
                 attribute_increase();
+
+            crawl_state.stat_gain_prompt = false;
+            you.experience_level = new_exp;
+            you.max_level = you.experience_level;
 
             switch (you.species)
             {
