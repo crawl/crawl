@@ -3039,12 +3039,12 @@ void level_change(bool skip_attribute_increase)
             crawl_state.stat_gain_prompt = false;
             you.experience_level = new_exp;
             you.max_level = you.experience_level;
-            
+
             // Don't want to see the dead creature at the prompt.
             redraw_screen();
             // There may be more levels left to gain.
             you.redraw_experience = true;
-         
+
             if (new_exp == 27)
             {
                mpr("You have reached level 27, the final one!",
