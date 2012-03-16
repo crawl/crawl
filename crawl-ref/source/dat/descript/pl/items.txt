@@ -1575,7 +1575,9 @@ broń sług Świetlistego.
 %%%%
 troll hide
 
-Sztywna i guzowata skóra trolla.  Można z niej zrobić zbroję.
+Sztywna i guzowata skóra trolla.  Daje nosicielowi część zdolności
+regeneracji właściwej trollom (chyba że nosiciel sam jest trollem), a także
+można z niej zrobić zbroję.
 %%%%
 troll leather armour
 
