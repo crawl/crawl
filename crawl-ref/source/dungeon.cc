@@ -4233,6 +4233,17 @@ retry:
         }
         if (item.base_type == OBJ_WANDS && props.exists("charges"))
             item.plus = props["charges"].get_int();
+        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
+             || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
+            && props.exists("plus"))
+        {
+            item.plus = props["plus"].get_int();
+        }
+        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
+            && props.exists("plus2"))
+        {
+            item.plus2 = props["plus2"].get_int();
+        }
         if (props.exists("ident"))
         {
             item.flags |= props["ident"].get_int();
