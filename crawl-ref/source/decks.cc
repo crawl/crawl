@@ -831,7 +831,7 @@ bool deck_peek()
 
     if (num_cards == 1)
     {
-        mpr("There's only one card in the deck!");
+        mprf("There's only one card in the deck! It is: %s.", card_name(card1));
 
         _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
         deck.props["num_marked"]++;
@@ -884,83 +884,6 @@ bool deck_identify_first(int slot)
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return (true);
 
-}
-
-// Mark a deck: look at the next four cards, mark them, and shuffle
-// them back into the deck. The player won't know what order they're
-// in, and if the top card is non-marked then the player won't
-// know what the next card is.  Return false if the operation was
-// failed/aborted along the way.
-bool deck_mark()
-{
-    const int slot = _choose_inventory_deck("Mark which deck?");
-    if (slot == -1)
-    {
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
-    item_def& deck(you.inv[slot]);
-    if (_check_buggy_deck(deck))
-        return (false);
-
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
-    {
-        mpr("The deck is already marked.");
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
-
-    // Lose some cards, but keep at least two.
-    if (cards_in_deck(deck) > 2)
-    {
-        const int num_lost = std::min(cards_in_deck(deck)-2, random2(3) + 1);
-        for (int i = 0; i < num_lost; ++i)
-            _deck_lose_card(deck);
-
-        if (num_lost == 1)
-            mpr("A card falls out of the deck.");
-        else if (num_lost > 1)
-            mpr("Some cards fall out of the deck.");
-    }
-
-    const int num_cards   = cards_in_deck(deck);
-    const int num_to_mark = (num_cards < 4 ? num_cards : 4);
-
-    if (num_cards == 1)
-        mpr("There's only one card left!");
-    else if (num_cards < 4)
-        mprf("The deck only has %d cards.", num_cards);
-
-    std::vector<std::string> names;
-    for (int i = 0; i < num_to_mark; ++i)
-    {
-        uint8_t flags;
-        card_type     card = get_card_and_flags(deck, i, flags);
-
-        flags |= CFLAG_SEEN | CFLAG_MARKED;
-        _set_card_and_flags(deck, i, card, flags);
-
-        names.push_back(card_name(card));
-    }
-    mpr_comma_separated_list("You draw and mark ", names);
-    props["num_marked"] = (char) num_to_mark;
-
-    if (num_cards == 1)
-        ;
-    else if (num_cards < 4)
-    {
-        mprf("You shuffle the deck.");
-        deck.plus2 = -num_cards;
-    }
-    else
-        mprf("You shuffle the cards back into the deck.");
-
-    _shuffle_deck(deck);
-    _deck_ident(deck);
-    you.wield_change = true;
-
-    return (true);
 }
 
 static void _redraw_stacked_cards(const std::vector<card_type>& draws,

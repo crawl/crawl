@@ -135,7 +135,6 @@ const char* card_name(card_type card);
 void evoke_deck(item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
-bool deck_mark();
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
