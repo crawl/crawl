@@ -313,6 +313,8 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
+    const char* lang;           // Translation to use.
+
 #ifdef WIZARD
     // Parameters for fight simulations.
     int         fsim_rounds;
