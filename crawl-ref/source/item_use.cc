@@ -4887,8 +4887,6 @@ static bool _scroll_modify_item(item_def scroll)
     }
     while (item_slot < 0);
 
-    ASSERT_SAVE(item_slot >= 0);
-
     item_def &item = you.inv[item_slot];
 
     switch (scroll.sub_type)
