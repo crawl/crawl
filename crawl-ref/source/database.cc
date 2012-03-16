@@ -56,7 +56,7 @@ class TextDB
     const std::string _directory;
     std::vector<std::string> _input_files;
     DBM* _db;
-    time_t timestamp;
+    std::string timestamp;
 };
 
 // Convenience functions for (read-only) access to generic
@@ -147,7 +147,7 @@ static std::string _db_cache_path(const std::string &db)
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
     : _db_name(db_name), _directory(dir),
-      _db(NULL), timestamp(-1)
+      _db(NULL), timestamp("")
 {
     va_list args;
     va_start(args, dir);
@@ -175,12 +175,8 @@ bool TextDB::open_db()
     if (!_db)
         return false;
 
-    std::string ts = _query_database(_db, "TIMESTAMP", false, false);
-    if (ts.empty())
-        return false;
-    char *err;
-    timestamp = strtol(ts.c_str(), &err, 10);
-    if (*err)
+    timestamp = _query_database(_db, "TIMESTAMP", false, false);
+    if (timestamp.empty())
         return false;
 
     return true;
@@ -209,14 +205,17 @@ void TextDB::shutdown()
 
 bool TextDB::_needs_update() const
 {
+    std::string ts;
+
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
         full_input_path = datafile_path(full_input_path, true);
-        if (file_modtime(full_input_path) > timestamp)
-            return (true);
+        char buf[20];
+        snprintf(buf, sizeof(buf), ":%ld", (long)file_modtime(full_input_path));
+        ts += buf;
     }
-    return (false);
+    return (ts != timestamp);
 }
 
 void TextDB::_regenerate_db()
@@ -240,16 +239,19 @@ void TextDB::_regenerate_db()
     unlink_u(full_db_path.c_str());
 #endif
 
-    std::string now = make_stringf("%ld", (long)time(0));
+    std::string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
         full_input_path = datafile_path(full_input_path, true);
+        char buf[20];
+        snprintf(buf, sizeof(buf), ":%ld", (long)file_modtime(full_input_path));
+        ts += buf;
         _store_text_db(full_input_path, _db);
     }
-    _add_entry(_db, "TIMESTAMP", now);
+    _add_entry(_db, "TIMESTAMP", ts);
 
     dbm_close(_db);
     _db = 0;
