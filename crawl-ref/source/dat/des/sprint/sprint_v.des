@@ -781,12 +781,10 @@ KITEM:    N = wand of draining ident:all charges:5, \
               wand of cold ident:all charges:5, \
               wand of fire ident:all charges:5
 KITEM:    O = crystal ball of energy ident:all, staff of channeling not_cursed ident:all
-KITEM:    P = ring of strength not_cursed ident:all, ring of strength not_cursed ident:all, \
-              ring of strength not_cursed ident:all, ring of strength not_cursed ident:all, \
-              ring of strength not_cursed ident:all, ring of strength not_cursed ident:all, \
-              ring of intelligence not_cursed ident:all, ring of intelligence not_cursed ident:all, \
-              ring of intelligence not_cursed ident:all, ring of intelligence not_cursed ident:all, \
-              ring of intelligence not_cursed ident:all, ring of intelligence not_cursed ident:all
+KITEM:    P = ring of strength not_cursed ident:all plus:6, \
+              ring of strength not_cursed ident:all plus:6, \
+              ring of intelligence not_cursed ident:all plus:6, \
+              ring of intelligence not_cursed ident:all plus:6
 KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
                shield unrand:shield_of_the_gong ident:all, \
                plate armour unrand:maxwells_patent_armour ident:all
