@@ -676,7 +676,7 @@ An evil deep dwarf that has sold its mortal soul in exchange for mastery of the 
 %%%%
 deep dwarf scion
 
-An armoured deep dwarf, experienced in combat.
+An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
@@ -917,7 +917,9 @@ A giant floating eyeball, with a mesmerising gaze. Some say giant eyeballs are s
 %%%%
 giant firefly
 
-This enormous flying bug is large enough to be ridden by some spriggans. Its glow, though, is faint enough to be hardly visible.
+Unlike its mundane counterparts that are merely half an inch big, this
+enormous flying bug is large enough to be ridden by some spriggans. Its
+glow, though, is faint enough to be hardly visible.
 %%%%
 giant frog
 
@@ -1164,7 +1166,9 @@ A hideous humanoid figure with metal skin. While it lacks magical attacks and is
 %%%%
 iron dragon
 
-A very heavy, slow and apparently flightless dragon with iron-hard scales. Small flakes of metal trail from its nostrils.
+A very heavy, slow and apparently flightless dragon. It is named for its
+scales, which are so tough they might be iron. Small flakes of metal trail
+from its nostrils.
 %%%%
 iron elemental
 
@@ -1232,7 +1236,10 @@ An enormous monitor lizard more than capable of preying on large animals. Bits o
 %%%%
 kraken
 
-A gargantuan tentacled sea monster, capable of devouring entire ships.
+A gargantuan sea monster, capable of devouring entire ships. It embraces
+them with its tentacles and draws them into the depths. Fortunately,
+the tentacles are too big to embrace a small creature like you. Wait,
+did I say "fortunately"?
 %%%%
 laboratory rat
 
@@ -1699,7 +1706,10 @@ An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
-A beautiful statue of an unknown malignant creature, wrought delicately of pure silver. Its eyes seem to glow with an otherworldly radiance, and the elaborately detailed workmanship give it a distinctly brittle look.
+A beautiful statue of an unknown malignant creature, glistening with a
+silvery hue. Its eyes glow with an otherworldly radiance.
+
+It looks brittle.
 %%%%
 siren
 
@@ -1819,11 +1829,12 @@ An elite, well-equipped spriggan warrior, renowned for its prowess with advanced
 %%%%
 spriggan druid
 
-A rare spriggan whose connection with the birds and the beasts is exceptionally strong. Revelling in nature, these protectors of forests are the doom of anyone who so much as snaps a twig.
+A spriggan whose connection with the birds and the beasts is exceptionally strong. Revelling in nature, these protectors of forests are the doom of anyone who so much as snaps a twig.
 %%%%
 spriggan rider
 
-A spriggan noble mounted on a giant firefly, this aerial rider has vowed death to all who dare violate the sacred groves of the spriggans.
+Mounted on giant fireflies, these riders make sure no one who dares to
+intrude on the spriggan forests and cairns will be able to just walk away.
 %%%%
 spriggan warper
 
