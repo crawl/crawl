@@ -1470,6 +1470,7 @@ void read_options(const std::string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
+    lang = 0; // FIXME: obtain from gettext
     reset_options();
 }
 
@@ -2177,6 +2178,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             char_set = CSET_DEFAULT;
         else
             fprintf(stderr, "Bad character set: %s\n", field.c_str());
+    }
+    else if (key == "language")
+    {
+        // FIXME: should talk to gettext/etc instead
+        if (field == "pl" || field == "polish" || field == "polski")
+            lang = "pl";
+        else
+        {
+            report_error(make_stringf("No translations for language: %s\n",
+                                      field.c_str()));
+        }
     }
     else if (key == "default_autopickup")
     {
