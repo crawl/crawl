@@ -356,7 +356,8 @@ enum beam_type                  // beam[].flavour
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_BOLT_OF_ZIN,
-    BEAM_LAST_REAL = BEAM_BOLT_OF_ZIN,
+    BEAM_ENSNARE,
+    BEAM_LAST_REAL = BEAM_ENSNARE,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -2511,6 +2512,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SUBTRACTOR_SNAKE,
 #endif
     MONS_ORB_SPIDER,
+    MONS_ARACHNE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -3342,6 +3344,7 @@ enum spell_type
     SPELL_MASS_ABJURATION,
     SPELL_BEASTLY_APPENDAGE,
     SPELL_SILVER_BLAST,
+    SPELL_ENSNARE,
 
     NUM_SPELLS
 };

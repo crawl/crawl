@@ -332,6 +332,16 @@ Confuse Rupert cast
 # Hrm, this could use more variables to sound acceptable.
 @The_monster@ yells loudly, causing @target@ to lose all wits.
 %%%%
+Ensnare Arachne cast
+
+@The_monster@ points her staff at @target@, shooting a whitish beam.
+
+@The_monster@'s staff shoots out a whitish beam.
+%%%%
+unseen Ensnare Arachne cast
+
+A whitish beam shoots out from seemingly nowhere.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

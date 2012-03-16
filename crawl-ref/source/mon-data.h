@@ -5576,6 +5576,20 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE
 },
 
+// "H"ybrids.
+{
+    MONS_ARACHNE, 'H', LIGHTMAGENTA, "Arachne",
+    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS
+        | M_SENSE_INVIS | M_WEB_SENSE,
+    MR_NO_FLAGS, // no rPois- (breathes through the human half)
+    900, 10, MONS_SPIDER, MONS_ARACHNE, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 17, 0, 0, 200 },
+    3, 10, MST_ARACHNE, CE_CONTAMINATED, Z_BIG, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 15, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
+},
+
 // "J"ellies.
 {
     MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
