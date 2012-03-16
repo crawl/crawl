@@ -1085,7 +1085,11 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
     msg_colour_type colour = prepare_message(text, channel, param);
 
     if (colour == MSGCOL_MUTED)
+    {
+        if (channel == MSGCH_PROMPT)
+            msgwin.show();
         return;
+    }
 
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
