@@ -1481,6 +1481,21 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return (false);
     }
 
+    if (type == WPN_BLOWGUN)
+    {
+        switch ((brand_type)brand)
+        {
+        case SPWPN_NORMAL:
+        case SPWPN_PROTECTION:
+        case SPWPN_SPEED:
+        case SPWPN_PENETRATION:
+        case SPWPN_EVASION:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     switch ((brand_type)brand)
     {
     // Universal brands.
