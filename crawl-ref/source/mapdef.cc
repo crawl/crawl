@@ -4742,7 +4742,7 @@ item_spec item_list::parse_single_spec(std::string s)
     if (special != TAG_UNFOUND)
         result.item_special = special;
 
-    // When placing corpses, use place:Elf:7 to choose monsters
+    // When placing corpses, use place:Elf:5 to choose monsters
     // appropriate for that level, as an example.
     const std::string place = strip_tag_prefix(s, "place:");
     if (!place.empty())
@@ -4872,6 +4872,13 @@ item_spec item_list::parse_single_spec(std::string s)
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
         result.props["charges"].get_int() = charges;
+
+    const int plus = strip_number_tag(s, "plus:");
+    if (plus != TAG_UNFOUND)
+        result.props["plus"].get_int() = plus;
+    const int plus2 = strip_number_tag(s, "plus2:");
+    if (plus2 != TAG_UNFOUND)
+        result.props["plus2"].get_int() = plus2;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
