@@ -27,10 +27,11 @@
 #                     dumps).  Can be relative to "prefix", absolute or placed
 #                     in the user's home dir (~).  Remember to protect the ~
 #                     from your shell!
-#                     Warning, shared directories are no longer supported.
+#                     Warning, as of 0.8, directories shared between
+#                     multiple system users are no longer supported.
 #    SHAREDDIR     -- place to hold writeable data common to multiple
-#                     players (scores, the logfile, ghosts).  Will be placed
-#                     inside the SAVEDIR if not specified.
+#                     versions of Crawl (scores, the logfile, ghosts).  Will
+#                     be placed inside the SAVEDIR if not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
@@ -366,7 +367,7 @@ endif
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
-# If you're installing to /usr or /usr/local, we have sane defaults.
+# If you're installing to /usr, /usr/local or /opt, we have sane defaults.
 
 # SAVEDIR := saves/
 # DATADIR := data/
