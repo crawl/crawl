@@ -36,7 +36,7 @@ class TextDB
  public:
     // db_name is the savedir-relative name of the db file,
     // minus the "db" extension.
-    TextDB(const char* db_name, ...);
+    TextDB(const char* db_name, const char* dir, ...);
     ~TextDB() { shutdown(); }
     void init();
     void shutdown();
@@ -52,8 +52,9 @@ class TextDB
 
  private:
     bool open_db();
-    const char* const _db_name;            // relative to savedir
-    std::vector<std::string> _input_files; // relative to datafile dirs
+    const char* const _db_name;
+    const std::string _directory;
+    std::vector<std::string> _input_files;
     DBM* _db;
     time_t timestamp;
 };
@@ -64,64 +65,64 @@ static void _store_text_db(const std::string &in, DBM *db);
 
 static TextDB AllDBs[] =
 {
-    TextDB("descriptions",
-            "descript/features.txt",
-            "descript/items.txt",
-            "descript/unident.txt",
-            "descript/unrand.txt",
-            "descript/monsters.txt",
-            "descript/spells.txt",
-            "descript/gods.txt",
-            "descript/branches.txt",
-            "descript/skills.txt",
-            "descript/ability.txt",
-            "descript/cards.txt",
-            "descript/commands.txt",
+    TextDB("descriptions", "descript/",
+            "features.txt",
+            "items.txt",
+            "unident.txt",
+            "unrand.txt",
+            "monsters.txt",
+            "spells.txt",
+            "gods.txt",
+            "branches.txt",
+            "skills.txt",
+            "ability.txt",
+            "cards.txt",
+            "commands.txt",
             NULL),
 
-    TextDB("gamestart",
-            "descript/species.txt",
-            "descript/backgrounds.txt",
+    TextDB("gamestart", "descript/",
+            "species.txt",
+            "backgrounds.txt",
             NULL),
 
-    TextDB("randart",
-            "database/randname.txt",
-            "database/rand_wpn.txt", // mostly weapons
-            "database/rand_arm.txt", // mostly armour
-            "database/rand_all.txt", // jewellery and general
-            "database/randbook.txt", // artefact books
+    TextDB("randart", "database/",
+            "randname.txt",
+            "rand_wpn.txt", // mostly weapons
+            "rand_arm.txt", // mostly armour
+            "rand_all.txt", // jewellery and general
+            "randbook.txt", // artefact books
             // This doesn't really belong here, but they *are* god gifts...
-            "database/monname.txt",  // orcish names for Beogh to choose from
+            "monname.txt",  // orcish names for Beogh to choose from
             NULL),
 
-    TextDB("speak",
-            "database/monspeak.txt", // monster speech
-            "database/monspell.txt", // monster spellcasting speech
-            "database/monflee.txt",  // monster fleeing speech
-            "database/wpnnoise.txt", // noisy weapon speech
-            "database/insult.txt",   // imp/demon taunts
-            "database/godspeak.txt", // god speech
+    TextDB("speak", "database/",
+            "monspeak.txt", // monster speech
+            "monspell.txt", // monster spellcasting speech
+            "monflee.txt",  // monster fleeing speech
+            "wpnnoise.txt", // noisy weapon speech
+            "insult.txt",   // imp/demon taunts
+            "godspeak.txt", // god speech
             NULL),
 
-    TextDB("shout",
-            "database/shout.txt",
-            "database/insult.txt",   // imp/demon taunts, again
+    TextDB("shout", "database/",
+            "shout.txt",
+            "insult.txt",   // imp/demon taunts, again
             NULL),
 
-    TextDB("misc",
-            "database/miscname.txt", // names for miscellaneous things
+    TextDB("misc", "database/",
+            "miscname.txt", // names for miscellaneous things
             NULL),
 
-    TextDB("quotes",
-            "database/quotes.txt",   // quotes for items and monsters
+    TextDB("quotes", "database/",
+            "quotes.txt",   // quotes for items and monsters
             NULL),
 
-    TextDB("help",               // database for outsourced help texts
-            "database/help.txt",
+    TextDB("help", "database/",
+            "help.txt",     // database for outsourced help texts
             NULL),
 
-    TextDB("FAQ",                // database for Frequently Asked Questions
-            "database/FAQ.txt",
+    TextDB("FAQ", "database/",
+            "FAQ.txt",      // database for Frequently Asked Questions
             NULL),
 };
 
@@ -144,12 +145,12 @@ static std::string _db_cache_path(const std::string &db)
 // TextDB
 // ----------------------------------------------------------------------
 
-TextDB::TextDB(const char* db_name, ...)
-    : _db_name(db_name),
+TextDB::TextDB(const char* db_name, const char* dir, ...)
+    : _db_name(db_name), _directory(dir),
       _db(NULL), timestamp(-1)
 {
     va_list args;
-    va_start(args, db_name);
+    va_start(args, dir);
     while (true)
     {
         const char* input_file = va_arg(args, const char *);
@@ -210,7 +211,8 @@ bool TextDB::_needs_update() const
 {
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
-        std::string full_input_path = datafile_path(_input_files[i], true);
+        std::string full_input_path = _directory + _input_files[i];
+        full_input_path = datafile_path(full_input_path, true);
         if (file_modtime(full_input_path) > timestamp)
             return (true);
     }
@@ -243,7 +245,8 @@ void TextDB::_regenerate_db()
         end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
-        std::string full_input_path = datafile_path(_input_files[i], true);
+        std::string full_input_path = _directory + _input_files[i];
+        full_input_path = datafile_path(full_input_path, true);
         _store_text_db(full_input_path, _db);
     }
     _add_entry(_db, "TIMESTAMP", now);
