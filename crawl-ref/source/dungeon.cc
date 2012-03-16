@@ -4544,7 +4544,7 @@ monster* dgn_place_monster(mons_spec &mspec,
     // Spells before items, so e.g. simulacrum casters can be given chunks.
     if (mspec.explicit_spells)
         mons->spells = mspec.spells[random2(mspec.spells.size())];
-    
+
     if (!mspec.items.empty())
         _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
 
