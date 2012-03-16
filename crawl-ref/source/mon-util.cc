@@ -3091,7 +3091,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     {
         switch (mon_type)
         {
-        case MONS_TERPSICHORE:
         case MONS_JESSICA:
         case MONS_PSYCHE:
         case MONS_JOSEPHINE:
