@@ -2563,6 +2563,48 @@ w:50
 
 @The_monster@ says, "This tentacle just came out of nowhere and touched me. I hate tentacles!"
 %%%%
+Spider Nest Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "There's a spider on your neck!"
+
+@The_monster@ says, "THEY are watching. It's a conspiracy, you know."
+
+@The_monster@ says, "Don't you hate surveillance?"
+
+@The_monster@ says, "Do you have a newspaper for those spiders?"
+
+@The_monster@ says, "I hate crawling things."
+
+@The_monster@ says, "Someone should clean these parts. I hate webs."
+
+@The_monster@ says, "My uncle had bigger webs in his attic. I hated that."
+
+@The_monster@ says, "I hate getting stuck."
+
+@The_monster@ says, "Dancing spiders? With no cane or a top hat?"
+
+@The_monster@ says, "Can't they spell "tarantula" right?"
+
+@The_monster@ says, "Something's up my trousers! Aieee!"
+
+@The_monster@ says, "I hate venom. I hate getting bitten."
+
+@The_monster@ says, "I need some bug spray."
+
+@The_monster@ says, "Can you call pest control?"
+
+@The_monster@ says, "Red wasps, yellow wasps, why not green ones?"
+
+@The_monster@ says, "Arachnophobia is no disease, it's common sense."
+
+@The_monster@ says, "There, on the ceiling! And on that wall!"
+
+# TODO: If the Hellspider is added, you know what to do.
+
+%%%%
 Slime Pits Donald
 
 w:50
