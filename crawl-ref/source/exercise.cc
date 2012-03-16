@@ -32,7 +32,6 @@ skill_type abil_skill(ability_type abil)
     case ABIL_NEMELEX_DRAW_ONE:
     case ABIL_NEMELEX_PEEK_TWO:
     case ABIL_NEMELEX_TRIPLE_DRAW:
-    case ABIL_NEMELEX_MARK_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
         return (SK_EVOCATIONS);
 
@@ -108,8 +107,6 @@ static int _abil_degree(ability_type abil)
         return (2 + random2(2));
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return (3 + random2(3));
-    case ABIL_NEMELEX_MARK_FOUR:
-        return (4 + random2(4));
     case ABIL_NEMELEX_STACK_FIVE:
         return (5 + random2(5));
 
