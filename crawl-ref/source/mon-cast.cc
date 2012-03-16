@@ -933,6 +933,14 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_explosion = true;
         break;
 
+    case SPELL_ENSNARE:
+        beam.name     = "ensnaring beam";
+        beam.colour   = WHITE;
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.flavour  = BEAM_ENSNARE;
+        beam.hit      = 22 + power / 20;
+        break;
+
     default:
         if (check_validity)
         {

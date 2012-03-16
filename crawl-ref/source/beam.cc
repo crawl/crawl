@@ -543,6 +543,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
+             2, BEAM_ENSNARE,
             0);
 
     return (flavour);
@@ -1838,6 +1839,10 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
                 simple_monster_message(mons, " gets badly buffeted.");
         }
+        break;
+
+    case BEAM_ENSNARE:
+        ensnare(mons);
         break;
 
     default:
@@ -3640,6 +3645,9 @@ void bolt::affect_player()
     // Acid.
     if (flavour == BEAM_ACID)
         splash_with_acid(5, affects_items);
+
+    if (flavour == BEAM_ENSNARE)
+        was_affected = ensnare(&you) || was_affected;
 
     if (affects_items)
     {
@@ -5827,6 +5835,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_INNER_FLAME:           return ("inner flame");
     case BEAM_PETRIFYING_CLOUD:      return ("calcifying dust");
     case BEAM_BOLT_OF_ZIN:           return ("silver light");
+    case BEAM_ENSNARE:               return ("magic web");
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

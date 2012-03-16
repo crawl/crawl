@@ -3018,6 +3018,19 @@ struct spell_desc
 },
 
 {
+    SPELL_ENSNARE, "Ensnare",
+     SPTYP_CONJURATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

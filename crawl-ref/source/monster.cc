@@ -5363,7 +5363,9 @@ bool monster::is_web_immune() const
     // Ghosts and other incorporeals
     // Oozes
     // All 'I' (ice / sky beast)
-    return (mons_genus(type) == MONS_SPIDER || is_insubstantial()
+    return (mons_genus(type) == MONS_SPIDER
+            || type == MONS_ARACHNE
+            || is_insubstantial()
             || mons_genus(type) == MONS_JELLY
             || mons_genus(type) == MONS_DEMONIC_CRAWLER);
 }

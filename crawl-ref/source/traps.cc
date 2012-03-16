@@ -2073,3 +2073,60 @@ bool maybe_destroy_web(actor *oaf)
     destroy_trap(oaf->pos());
     return true;
 }
+
+bool ensnare(actor *fly)
+{
+    if (fly->is_web_immune())
+        return false;
+
+    if (fly->caught())
+    {
+        // currently webs are stateless so except for flavour it's a no-op
+        if (fly->is_player())
+            mpr("You are even more entangled.");
+        return false;
+    }
+
+    if (fly->body_size() >= SIZE_GIANT)
+    {
+        if (you.can_see(fly))
+        {
+            if (fly->is_player())
+                mpr("A web splats on you, sticky and dirtying but otherwise harmless.");
+            else
+                mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    // If we're over water, an open door, shop, portal, etc, the web will
+    // fail to attach and you'll be released after a single turn.
+    // Same if we're at max traps already.
+    if (grd(fly->pos()) == DNGN_FLOOR
+        && place_specific_trap(fly->pos(), TRAP_WEB)
+        // succeeded, mark the web known discovered
+        && grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
+        && you.see_cell(fly->pos()))
+    {
+        grd(fly->pos()) = DNGN_TRAP_WEB;
+    }
+
+    if (fly->is_player())
+    {
+        if (_player_caught_in_web()) // no fail, returns false if already held
+            mpr("You are caught in a web!");
+    }
+    else
+    {
+        simple_monster_message(fly->as_monster(), " is caught in a web!");
+        fly->as_monster()->add_ench(ENCH_HELD);
+    }
+
+    // Drowned?
+    if (!fly->alive())
+        return true;
+
+    check_monsters_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
+    check_player_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
+    return true;
+}

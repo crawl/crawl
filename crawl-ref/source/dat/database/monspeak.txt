@@ -1722,6 +1722,21 @@ Antaeus
 @_hell_lord_taunt_@
 ## END Antaeus
 %%%%
+############ ARACHNE ### Half-human half-spider
+Arachne
+
+@The_monster@ says @to_foe@, "Come to my web."
+
+@The_monster@ says @to_foe@, "Come closer, little fly."
+
+@The_monster@ says @to_foe@, "You don't care about a little bondage, do you?"
+
+@The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
+
+@The_monster@ says @to_foe@, "No one escapes my webs."
+
+@The_monster@ says @to_foe@, "You can be the slave of me, the spider queen... or food for my pets."
+%%%%
 ############ AZRAEL ### efreet
 Azrael
 

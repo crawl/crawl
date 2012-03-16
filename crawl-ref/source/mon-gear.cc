@@ -1169,6 +1169,11 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_ARACHNE:
+        item.base_type = OBJ_STAVES;
+        item.sub_type = STAFF_POISON;
+        break;
+
     case MONS_CEREBOV:
         force_item = true;
         make_item_unrandart(item, UNRAND_CEREBOV);
