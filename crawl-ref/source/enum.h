@@ -121,9 +121,7 @@ enum ability_type
     ABIL_NEMELEX_DRAW_ONE = 160,
     ABIL_NEMELEX_PEEK_TWO,
     ABIL_NEMELEX_TRIPLE_DRAW,
-#if TAG_MAJOR_VERSION == 32
-    ABIL_NEMELEX_MARK_FOUR,
-#endif
+    ABIL_NEMELEX_DEAL_FOUR,
     ABIL_NEMELEX_STACK_FIVE,
     // Beogh
     ABIL_BEOGH_SMITING = 170,
@@ -520,6 +518,7 @@ enum canned_message_type
     MSG_CALL_DEAD,
     MSG_ANIMATE_REMAINS,
     MSG_HELD_IN_A_NET,
+    MSG_DECK_EXHAUSTED,
 };
 
 enum char_set_type

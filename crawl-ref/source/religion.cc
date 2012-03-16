@@ -281,7 +281,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "draw cards from decks in your inventory",
       "peek at two random cards from a deck",
       "choose one out of three cards",
-      "",
+      "deal four cards at a time",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
     { "provide lesser healing for yourself",
@@ -398,7 +398,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "draw cards from decks in your inventory",
       "peek at random cards",
       "choose one out of three cards",
-      "",
+      "deal four cards at a time",
       "stack decks" },
     // Elyvilon
     { "provide lesser healing for yourself",

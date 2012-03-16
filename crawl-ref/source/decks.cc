@@ -460,10 +460,12 @@ static card_type _draw_top_card(item_def& deck, bool message,
 
     if (message)
     {
+        const char *verb = (_flags & CFLAG_DEALT) ? "deal" : "draw";
+
         if (_flags & CFLAG_MARKED)
-            mprf("You draw %s.", card_name(card));
+            mprf("You %s %s.", verb, card_name(card));
         else
-            mprf("You draw a card... It is %s.", card_name(card));
+            mprf("You %s a card... It is %s.", verb, card_name(card));
 
         _check_odd_card(_flags);
     }
@@ -584,7 +586,10 @@ static bool _check_buggy_deck(item_def& deck)
     {
         uint8_t card   = cards[i].get_byte();
         uint8_t _flags = flags[i].get_byte();
-        if (card >= NUM_CARDS)
+
+        // Bad card, or "dealt" card not on the top.
+        if (card >= NUM_CARDS
+            || (_flags & CFLAG_DEALT) && i < num_cards - 1)
         {
             cards.erase(i);
             flags.erase(i);
@@ -831,7 +836,7 @@ bool deck_peek()
 
     if (num_cards == 1)
     {
-        mprf("There's only one card in the deck! It is: %s.", card_name(card1));
+        mpr("There's only one card in the deck!");
 
         _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
         deck.props["num_marked"]++;
@@ -884,6 +889,71 @@ bool deck_identify_first(int slot)
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return (true);
 
+}
+
+// Draw the top four cards of an unmarked deck and play them all.
+// Discards the rest of the deck.  Return false if the operation was
+// failed/aborted along the way.
+bool deck_deal()
+{
+    const int slot = _choose_inventory_deck("Deal from which deck?");
+    if (slot == -1)
+    {
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+    item_def& deck(you.inv[slot]);
+    if (_check_buggy_deck(deck))
+        return (false);
+
+    CrawlHashTable &props = deck.props;
+    if (props["num_marked"].get_byte() > 0)
+    {
+        mpr("You cannot deal from marked decks.");
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
+    const int num_cards = cards_in_deck(deck);
+    _deck_ident(deck);
+
+    if (num_cards == 1)
+        mpr("There's only one card left!");
+    else if (num_cards < 4)
+        mprf("The deck only has %d cards.", num_cards);
+    
+    const int num_to_deal = (num_cards < 4 ? num_cards : 4);
+
+    for (int i = 0; i < num_to_deal; ++i)
+    {
+        int last = cards_in_deck(deck) - 1;
+        uint8_t flags;
+
+        // Flag the card as dealt (changes messages and gives no piety).
+        card_type card = get_card_and_flags(deck, last, flags);
+        _set_card_and_flags(deck, last, card, flags | CFLAG_DEALT);
+
+        evoke_deck(deck);
+    }
+
+    // Nemelex doesn't like dealers with inadequate decks.
+    if (num_to_deal < 4)
+    {
+        mpr("Nemelex gives you another card to finish dealing.");
+        draw_from_deck_of_punishment(true);
+    }
+
+    // If the deck had cards left, exhaust it.
+    if (deck.quantity > 0)
+    {
+        canned_msg(MSG_DECK_EXHAUSTED);
+        if (slot == you.equip[EQ_WEAPON])
+            unwield_item();
+
+        dec_inv_item_quantity(slot, 1);
+    }
+
+    return (true);
 }
 
 static void _redraw_stacked_cards(const std::vector<card_type>& draws,
@@ -1171,7 +1241,7 @@ bool deck_triple_draw()
     deck_rarity_type rarity = deck_rarity(deck);
     if (cards_in_deck(deck) == 0)
     {
-        mpr("The deck of cards disappears in a puff of smoke.");
+        canned_msg(MSG_DECK_EXHAUSTED);
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1185,15 +1255,16 @@ bool deck_triple_draw()
     return (true);
 }
 
-// This is Nemelex retribution.
-void draw_from_deck_of_punishment()
+// This is Nemelex retribution.  If deal is true, use the word "deal"
+// rather than "draw" (for the Deal Four out-of-cards situation).
+void draw_from_deck_of_punishment(bool deal)
 {
     bool oddity;
     card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON,
                                   oddity);
 
-    mpr("You draw a card...");
-    card_effect(card, DECK_RARITY_COMMON);
+    mprf("You %s a card...", deal ? "deal" : "draw");
+    card_effect(card, DECK_RARITY_COMMON, deal ? CFLAG_DEALT : 0);
 }
 
 static int _xom_check_card(item_def &deck, card_type card,
@@ -1299,7 +1370,7 @@ void evoke_deck(item_def& deck)
     const bool deck_gone = (cards_in_deck(deck) == 0);
     if (deck_gone)
     {
-        mpr("The deck of cards disappears in a puff of smoke.");
+        canned_msg(MSG_DECK_EXHAUSTED);
         dec_inv_item_quantity(deck.link, 1);
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
@@ -1332,7 +1403,9 @@ void evoke_deck(item_def& deck)
                                       << std::endl;
     }
 
-    did_god_conduct(DID_CARDS, brownie_points);
+    // No piety from Deal Four.
+    if (!(flags & CFLAG_DEALT))
+        did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has
     // changed.
@@ -1592,9 +1665,11 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     stair_draw_count++;
 }
 
-static void _damaging_card(card_type card, int power, deck_rarity_type rarity)
+static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
+                           bool dealt = false)
 {
     const int power_level = get_power_level(power, rarity);
+    const char *participle = dealt ? "dealt" : "drawn";
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
@@ -1628,7 +1703,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity)
     case CARD_PAIN:
         if (power_level == 2)
         {
-            mprf("You have drawn %s.", card_name(card));
+            mprf("You have %s %s.", participle, card_name(card));
             torment(&you, TORMENT_CARDS, you.pos());
             return;
         }
@@ -1640,7 +1715,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity)
         break;
     }
 
-    std::string prompt = "You have drawn ";
+    std::string prompt = "You have ";
+    prompt += participle;
+    prompt += " ";
     prompt += card_name(card);
     prompt += ".";
 
@@ -2744,6 +2821,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 {
     ASSERT(!_card_forbidden(which_card));
 
+    const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
     const int power = _card_power(rarity);
 
     const god_type god =
@@ -2761,7 +2839,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             && which_card != CARD_SPARK && which_card != CARD_PAIN
             && which_card != CARD_VENOM && which_card != CARD_ORB)
         {
-           mprf("You have drawn %s.", card_name(which_card));
+            mprf("You have %s %s.", participle, card_name(which_card));
         }
     }
 
@@ -2827,11 +2905,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_VENOM:
         if (coinflip())
         {
-            mprf("You have drawn %s.", card_name(which_card));
+            mprf("You have %s %s.", participle, card_name(which_card));
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
         }
         else
-            _damaging_card(which_card, power, rarity);
+            _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
         break;
 
     case CARD_VITRIOL:
@@ -2841,7 +2919,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SPARK:
     case CARD_PAIN:
     case CARD_ORB:
-        _damaging_card(which_card, power, rarity);
+        _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
         break;
 
     case CARD_BARGAIN:
@@ -2887,7 +2965,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
-        mpr("You have drawn a buggy card!");
+        mprf("You have %s a buggy card!", participle);
         break;
     }
 }
