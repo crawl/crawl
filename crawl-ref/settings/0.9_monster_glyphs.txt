@@ -5,7 +5,7 @@
 ###########################
 
 # demons
-mon_glyph = hairy devil : lighred 4
+mon_glyph = hairy devil : lightred 4
 mon_glyph = smoke demon : lightgray 3
 mon_glyph = tormentor : yellow 3
 mon_glyph = blue devil : blue 3
