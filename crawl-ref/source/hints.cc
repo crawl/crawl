@@ -4360,8 +4360,8 @@ static void _hints_describe_feature(int x, int y)
        case DNGN_TRAP_NATURAL: // only shafts for now
             ostr << "The dungeon contains a number of natural obstacles such "
                     "as shafts, which lead one to three levels down. They "
-                    "can't be disarmed, but you can safely pass over them "
-                    "if you're levitating or flying.\n"
+                    "can't be disarmed, but once you know the shaft is there, "
+                    "you can safely step over it.\n"
                     "If you want to jump down there, use <w>></w> to do so. "
                     "Be warned that getting back here might be difficult.";
             Hints.hints_events[HINT_SEEN_TRAP] = false;
