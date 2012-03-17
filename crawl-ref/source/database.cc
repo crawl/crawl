@@ -66,7 +66,8 @@ public:
 static void _store_text_db(const std::string &in, DBM *db);
 
 static std::string _query_database(TextDB &db, std::string key,
-                                   bool canonicalise_key, bool run_lua);
+                                   bool canonicalise_key, bool run_lua,
+                                   bool untranslated = false);
 static void _add_entry(DBM *db, const std::string &k, std::string &v);
 
 static TextDB AllDBs[] =
@@ -191,7 +192,7 @@ bool TextDB::open_db()
     if (!_db)
         return false;
 
-    timestamp = _query_database(*this, "TIMESTAMP", false, false);
+    timestamp = _query_database(*this, "TIMESTAMP", false, false, true);
     if (timestamp.empty())
         return false;
 
@@ -712,7 +713,8 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
 }
 
 static std::string _query_database(TextDB &db, std::string key,
-                                   bool canonicalise_key, bool run_lua)
+                                   bool canonicalise_key, bool run_lua,
+                                   bool untranslated)
 {
     if (canonicalise_key)
     {
@@ -724,7 +726,7 @@ static std::string _query_database(TextDB &db, std::string key,
     // Query the DB.
     datum result;
 
-    if (db.translation)
+    if (db.translation && !untranslated)
         result = _database_fetch(db.translation->get(), key);
     if (!result.dptr)
         result = _database_fetch(db.get(), key);
