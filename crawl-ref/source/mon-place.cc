@@ -2576,6 +2576,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_REDBACK;
         band_size = 1 + random2(5);
         break;
+
+    case MONS_SPIDER:
+        band = BAND_SPIDER;
+        band_size = 1 + random2(4);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2931,6 +2936,10 @@ static monster_type _band_member(band_type band, int power)
                                            3, MONS_TARANTELLA,
                                            2, MONS_JUMPING_SPIDER,
                                            0);
+        break;
+
+    case BAND_SPIDER:
+        mon_type = MONS_SPIDER;
         break;
 
     default:

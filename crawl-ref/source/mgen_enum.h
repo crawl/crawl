@@ -65,6 +65,7 @@ enum band_type
     BAND_DEEP_DWARF,
     BAND_SHEDU,
     BAND_REDBACK,
+    BAND_SPIDER,
     NUM_BANDS                   // always last
 };
 
