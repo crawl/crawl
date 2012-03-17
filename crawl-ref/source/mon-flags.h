@@ -140,6 +140,9 @@ const uint64_t M_NO_FLEE           = (uint64_t)1<<42;
 // can sense vibrations in web traps
 const uint64_t M_WEB_SENSE         = (uint64_t)1<<43;
 
+// tries to maintain LOS/2 range from its target
+const uint64_t M_MAINTAIN_RANGE    = (uint64_t)1<<44;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing

@@ -574,12 +574,14 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
-
-                // If monster is currently getting into firing position and
-                // see the player and can attack him, clear firing_pos.
-                if (!mon->firing_pos.zero()
+                
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE))
+                    _set_firing_pos(mon, you.pos());
+                else if (!mon->firing_pos.zero()
                     && mon->see_cell_no_trans(mon->target))
                 {
+                    // If monster is currently getting into firing position and
+                    // sees the player and can attack him, clear firing_pos.
                     mon->firing_pos.reset();
                 }
 
@@ -612,6 +614,10 @@ void handle_behaviour(monster* mon)
             {
                 // We have a foe but it's not the player.
                 mon->target = menv[mon->foe].pos();
+
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE))
+                    _set_firing_pos(mon, mon->target);
+
             }
 
             break;
