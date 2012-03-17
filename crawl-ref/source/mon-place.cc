@@ -2728,14 +2728,14 @@ static monster_type _band_member(band_type band, int power)
         if (one_chance_in(7))
         {
             mon_type = random_choose_weighted(50, MONS_LICH,
-                                       10, MONS_ANCIENT_LICH,
+                                              10, MONS_ANCIENT_LICH,
                                                0);
         }
         else if (one_chance_in(6))
         {
             mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
-                                       40, MONS_ABOMINATION_LARGE,
-                                       10, MONS_TENTACLED_MONSTROSITY,
+                                              40, MONS_ABOMINATION_LARGE,
+                                              10, MONS_TENTACLED_MONSTROSITY,
                                                0);
         }
         else
@@ -2880,9 +2880,9 @@ static monster_type _band_member(band_type band, int power)
     }
     case BAND_ILSUIW:
         mon_type = random_choose_weighted(30, MONS_MERMAID,
-                                   15, MONS_MERFOLK,
-                                   10, MONS_MERFOLK_JAVELINEER,
-                                   10, MONS_MERFOLK_IMPALER,
+                                          15, MONS_MERFOLK,
+                                          10, MONS_MERFOLK_JAVELINEER,
+                                          10, MONS_MERFOLK_IMPALER,
                                            0);
         break;
 
@@ -2911,9 +2911,9 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_MERFOLK_AQUAMANCER:
-        mon_type = random_choose_weighted(8, MONS_MERFOLK,
-                                   10, MONS_ICE_BEAST,
-                                          0);
+        mon_type = random_choose_weighted( 8, MONS_MERFOLK,
+                                          10, MONS_ICE_BEAST,
+                                           0);
         break;
 
     case BAND_MERFOLK_IMPALER:
