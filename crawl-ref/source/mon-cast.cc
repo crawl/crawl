@@ -3707,13 +3707,12 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
         }
     }
 
+    // Before just using generic per-spell and per-monster casts, try
+    // per-monster, per-spell.
+    key_list.push_back(spell_name + " " + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
     key_list.push_back(spell_name + cast_str);
 
     const unsigned int num_spell_keys = key_list.size();
-
-    // Before just using generic per-monster casts, try per-monster,
-    // per-spell.
-    key_list.push_back(spell_name + " " + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
 
     // Next the monster type name, then species name, then genus name.
     key_list.push_back(mons_type_name(mons->type, DESC_PLAIN) + cast_str);
