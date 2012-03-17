@@ -2510,6 +2510,7 @@ enum monster_type                      // (int) menv[].type
 #if TAG_MAJOR_VERSION == 32
     MONS_SUBTRACTOR_SNAKE,
 #endif
+    MONS_ORB_SPIDER,
 
     NUM_MONSTERS,                      // used for polymorph
 

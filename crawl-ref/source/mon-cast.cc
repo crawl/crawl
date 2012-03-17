@@ -3308,7 +3308,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
-        if (mons->type == MONS_GASTRONOK)
+        if (mons->type == MONS_ORB_SPIDER)
+        {
+            std::string msg = getSpeakString("orb_spider_cantrip");
+            if (!msg.empty())
+            {
+                msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+                mpr(msg.c_str(), channel);
+            }
+        }
+        else if (mons->type == MONS_GASTRONOK)
         {
             bool has_mon_foe = !invalid_monster_index(mons->foe);
             std::string slugform = "";

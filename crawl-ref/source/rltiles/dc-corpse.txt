@@ -94,6 +94,7 @@ jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
+orb_spider CORPSE_ORB_SPIDER
 %sdir dc-mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 

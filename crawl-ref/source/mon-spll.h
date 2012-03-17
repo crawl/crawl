@@ -1594,6 +1594,17 @@
       }
     },
 
+    {  MST_ORB_SPIDER,
+      {
+       SPELL_IOOD,
+       SPELL_CANTRIP,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_IOOD
+      }
+    },
+
     {  MST_PEARL_DRAGON,
       {
        SPELL_HOLY_BREATH,
