@@ -1725,7 +1725,7 @@ int mons_spidernest_rare(int mcls)
         return 82;
 
     case MONS_TRAPDOOR_SPIDER:
-    case MONS_SCORPION:
+    case MONS_SPIDER:
         return 75;
 
     case MONS_TARANTELLA:
@@ -1736,7 +1736,7 @@ int mons_spidernest_rare(int mcls)
         return 50;
 
     case MONS_EMPEROR_SCORPION:
-    case MONS_SPIDER:
+    case MONS_SCORPION:
     case MONS_RED_WASP:
         return 35;
 
