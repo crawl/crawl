@@ -575,8 +575,12 @@ void handle_behaviour(monster* mon)
             {
                 // The foe is the player.
                 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE))
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                    && !mon->berserk())
+                {
+                    // Get to firing range even if we are close.
                     _set_firing_pos(mon, you.pos());
+                }
                 else if (!mon->firing_pos.zero()
                     && mon->see_cell_no_trans(mon->target))
                 {
@@ -615,8 +619,11 @@ void handle_behaviour(monster* mon)
                 // We have a foe but it's not the player.
                 mon->target = menv[mon->foe].pos();
 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE))
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                    && !mon->berserk())
+                {
                     _set_firing_pos(mon, mon->target);
+                }
 
             }
 
