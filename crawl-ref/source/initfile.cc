@@ -2184,6 +2184,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // FIXME: should talk to gettext/etc instead
         if (field == "pl" || field == "polish" || field == "polski")
             lang = "pl";
+        else if (field == "de" || field == "german" || field == "deutch")
+            lang = "de";
+        else if (field == "fr" || field == "french" || field == "français")
+            lang = "fr";
         else
         {
             report_error(make_stringf("No translations for language: %s\n",
