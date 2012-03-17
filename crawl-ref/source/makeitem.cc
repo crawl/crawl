@@ -3217,9 +3217,9 @@ int items(bool allow_uniques,
     }
 
     if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, item.special, false)
+          && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
         || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, item.special, false)
+          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
         || item.base_type == OBJ_MISSILES
           && !is_missile_brand_ok(item.sub_type, item.special, false))
     {
