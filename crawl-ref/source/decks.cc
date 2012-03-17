@@ -913,6 +913,12 @@ bool deck_deal()
         crawl_state.zero_turns_taken();
         return (false);
     }
+    if (props["stacked"].get_bool())
+    {
+        mpr("This deck seems insufficiently random for dealing.");
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
 
     const int num_cards = cards_in_deck(deck);
     _deck_ident(deck);
@@ -1064,6 +1070,9 @@ bool deck_stack()
     }
     deck.plus2 = -num_to_stack;
     props["num_marked"] = static_cast<char>(num_to_stack);
+    // Remember that the deck was stacked even if it is later unmarked
+    // (e.g. by Nemelex abandonment).
+    props["stacked"] = true;
     you.wield_change = true;
 
     if (draws.size() > 1)
