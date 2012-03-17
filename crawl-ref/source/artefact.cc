@@ -775,11 +775,8 @@ static void _get_randart_properties(const item_def &item,
                                      (tmp >=  8) ? SPWPN_VENOM
                                                  : SPWPN_VORPAL + random2(3);
 
-                if (atype == WPN_BLOWGUN
-                    && proprt[ARTP_BRAND] != SPWPN_SPEED)
-                {
-                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
-                }
+                if (atype == WPN_BLOWGUN)
+                    proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
 
                 // Removed slings from getting the venom attribute: they can
                 // be branded with it now using Poison Weapon, and perma-branded
