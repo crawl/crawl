@@ -2611,7 +2611,6 @@ w:50
 @The_monster@ says, "There, on the ceiling! And on that wall!"
 
 # TODO: If the Hellspider is added, you know what to do.
-
 %%%%
 Slime Pits Donald
 
