@@ -574,7 +574,7 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
-                
+
                 if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
                     && !mon->berserk())
                 {

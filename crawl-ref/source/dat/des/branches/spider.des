@@ -420,14 +420,14 @@ DEPTH:  Spider:4-5
 MONS:   orb spider
 KFEAT:  W = web trap
 KFEAT:  O = web trap
-KITEM:  O = crystal ball of energy 
+KITEM:  O = crystal ball of energy
 NSUBST: 1 = 1:1 / *:.
 NSUBST: | = 1:| / *:W
 SUBST:  . = ^..
 SUBST:  ^ = W...
 MAP
-  xxxxxxxxxxx  
- xxxxxxxxxxxxx 
+  xxxxxxxxxxx
+ xxxxxxxxxxxxx
 xxxx....1..xxxx
 xxx1.......Wxxx
 xx^^...W...W|xx
@@ -435,8 +435,8 @@ xx^^...W...W|xx
 xx^^...W...W|xx
 xxx1.......Wxxx
 xxxx....1..xxxx
- xxxxxxxxxxxxx 
-  xxxxxxxxxxx  
+ xxxxxxxxxxxxx
+  xxxxxxxxxxx
 ENDMAP
 
 ##############################################################################

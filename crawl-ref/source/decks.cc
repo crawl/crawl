@@ -927,7 +927,7 @@ bool deck_deal()
         mpr("There's only one card left!");
     else if (num_cards < 4)
         mprf("The deck only has %d cards.", num_cards);
-    
+
     const int num_to_deal = (num_cards < 4 ? num_cards : 4);
 
     for (int i = 0; i < num_to_deal; ++i)
