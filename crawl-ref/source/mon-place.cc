@@ -2572,6 +2572,10 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 1;
         break;
 
+    case MONS_REDBACK:
+        band = BAND_REDBACK;
+        band_size = 1 + random2(5);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2918,6 +2922,15 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_SHEDU:
         mon_type = MONS_SHEDU;
+        break;
+
+    case BAND_REDBACK:
+        // Total weight 30
+        mon_type = random_choose_weighted(20, MONS_REDBACK,
+                                           5, MONS_WOLF_SPIDER,
+                                           3, MONS_TARANTELLA,
+                                           2, MONS_JUMPING_SPIDER,
+                                           0);
         break;
 
     default:
