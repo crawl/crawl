@@ -19,6 +19,7 @@
 #include "errors.h"
 #include "files.h"
 #include "libutil.h"
+#include "options.h"
 #include "random.h"
 #include "stuff.h"
 #include "syscalls.h"
@@ -37,9 +38,10 @@ class TextDB
     // db_name is the savedir-relative name of the db file,
     // minus the "db" extension.
     TextDB(const char* db_name, const char* dir, ...);
-    ~TextDB() { shutdown(); }
+    TextDB(TextDB *parent);
+    ~TextDB() { shutdown(true); delete translation; }
     void init();
-    void shutdown();
+    void shutdown(bool recursive = false);
     DBM* get() { return _db; }
 
     // Make it easier to migrate from raw DBM* to TextDB
@@ -53,10 +55,12 @@ class TextDB
  private:
     bool open_db();
     const char* const _db_name;
-    const std::string _directory;
+    std::string _directory;
+    const char* const _lang;
     std::vector<std::string> _input_files;
     DBM* _db;
     std::string timestamp;
+    TextDB *translation, *english;
 };
 
 // Convenience functions for (read-only) access to generic
@@ -136,8 +140,10 @@ static TextDB& QuotesDB      = AllDBs[6];
 static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
 
-static std::string _db_cache_path(const std::string &db)
+static std::string _db_cache_path(std::string db, const char *lang)
 {
+    if (lang)
+        db = db + "." + lang;
     return savedir_versioned_path("db/" + db);
 }
 
@@ -146,8 +152,8 @@ static std::string _db_cache_path(const std::string &db)
 // ----------------------------------------------------------------------
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
-    : _db_name(db_name), _directory(dir),
-      _db(NULL), timestamp("")
+    : _db_name(db_name), _directory(dir), _lang(0),
+      _db(NULL), timestamp(""), translation(0), english(0)
 {
     va_list args;
     va_start(args, dir);
@@ -165,12 +171,20 @@ TextDB::TextDB(const char* db_name, const char* dir, ...)
     va_end(args);
 }
 
+TextDB::TextDB(TextDB *parent)
+    : _db_name(parent->_db_name), _lang(Options.lang),
+      _db(NULL), timestamp(""), translation(0), english(parent)
+{
+    _directory = parent->_directory + _lang + "/";
+    _input_files = parent->_input_files; // FIXME: pointless copy
+}
+
 bool TextDB::open_db()
 {
     if (_db)
         return true;
 
-    const std::string full_db_path = _db_cache_path(_db_name);
+    const std::string full_db_path = _db_cache_path(_db_name, _lang);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
     if (!_db)
         return false;
@@ -184,6 +198,12 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
+    if (Options.lang && !_lang)
+    {
+        translation = new TextDB(this);
+        translation->init();
+    }
+
     open_db();
 
     if (!_needs_update())
@@ -191,30 +211,50 @@ void TextDB::init()
     _regenerate_db();
 
     if (!open_db())
-        end(1, true, "Failed to open DB: %s", _db_cache_path(_db_name).c_str());
+    {
+        end(1, true, "Failed to open DB: %s",
+            _db_cache_path(_db_name, _lang).c_str());
+    }
 }
 
-void TextDB::shutdown()
+void TextDB::shutdown(bool recursive)
 {
     if (_db)
     {
         dbm_close(_db);
         _db = NULL;
     }
+    if (recursive && translation)
+        translation->shutdown(recursive);
 }
 
 bool TextDB::_needs_update() const
 {
     std::string ts;
+    bool no_files = true;
 
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, true);
+        full_input_path = datafile_path(full_input_path, !_lang);
+        long mtime = file_modtime(full_input_path);
+        if (mtime)
+            no_files = false;
         char buf[20];
-        snprintf(buf, sizeof(buf), ":%ld", (long)file_modtime(full_input_path));
+        snprintf(buf, sizeof(buf), ":%ld", mtime);
         ts += buf;
     }
+
+    if (no_files && timestamp.empty())
+    {
+        // No point in empty databases, although for simplicity keep ones
+        // for disappeared translations for now.
+        ASSERT(english);
+        delete english->translation;
+        english->translation = 0;
+        return false;
+    }
+
     return (ts != timestamp);
 }
 
@@ -222,10 +262,13 @@ void TextDB::_regenerate_db()
 {
     shutdown();
 #ifdef DEBUG_DIAGNOSTICS
-    printf("Regenerating db: %s\n", _db_name);
+    if (_lang)
+        printf("Regenerating db: %s [%s]\n", _db_name, _lang);
+    else
+        printf("Regenerating db: %s\n", _db_name);
 #endif
 
-    std::string db_path = _db_cache_path(_db_name);
+    std::string db_path = _db_cache_path(_db_name, _lang);
     std::string full_db_path = db_path + ".db";
 
     {
@@ -245,11 +288,13 @@ void TextDB::_regenerate_db()
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, true);
+        full_input_path = datafile_path(full_input_path, !_lang);
         char buf[20];
-        snprintf(buf, sizeof(buf), ":%ld", (long)file_modtime(full_input_path));
+        long mtime = file_modtime(full_input_path);
+        snprintf(buf, sizeof(buf), ":%ld", mtime);
         ts += buf;
-        _store_text_db(full_input_path, _db);
+        if (mtime || !_lang) // english is mandatory
+            _store_text_db(full_input_path, _db);
     }
     _add_entry(_db, "TIMESTAMP", ts);
 
@@ -294,7 +339,7 @@ void databaseSystemInit()
 void databaseSystemShutdown()
 {
     for (unsigned int i = 0; i < NUM_DB; i++)
-        AllDBs[i].shutdown();
+        AllDBs[i].shutdown(true);
 }
 
 ////////////////////////////////////////////////////////////////////////////
