@@ -1703,10 +1703,8 @@ An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
-A beautiful statue of an unknown malignant creature, glistening with a
-silvery hue. Its eyes glow with an otherworldly radiance.
-
-It looks brittle.
+A beautiful, brittle-looking statue of an unknown malignant creature,
+glistening with a silvery hue. Its eyes glow with an otherworldly radiance.
 %%%%
 siren
 
