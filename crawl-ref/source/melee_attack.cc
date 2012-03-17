@@ -4422,21 +4422,18 @@ void melee_attack::mons_apply_attack_flavour()
         if (!defender->is_player())
             break;
 
-        const bool stolen = expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
+        // The expose_ message doesn't convey the agent.
+        if (needs_message)
+            mprf("%s lunges at you hungrily!", atk_name(DESC_THE).c_str());
+
+        expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
         const bool ground = expose_items_to_element(BEAM_DEVOUR_FOOD, you.pos(),
                                                     10);
-        if (needs_message)
+
+        if (needs_message && ground)
         {
-            if (stolen)
-            {
-                mprf("%s devours some of your food!",
-                     atk_name(DESC_THE).c_str());
-            }
-            else if (ground)
-            {
-                mprf("%s devours some of the food beneath you!",
-                     atk_name(DESC_THE).c_str());
-            }
+            mprf("Some of the food beneath you is devoured!",
+                    atk_name(DESC_THE).c_str());
         }
         break;
     }

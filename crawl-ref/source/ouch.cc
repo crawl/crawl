@@ -660,24 +660,23 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
-                     break;
+                    break;
 
                 case OBJ_FOOD:
-                    // Message handled elsewhere.
-                    if (flavour == BEAM_DEVOUR_FOOD)
-                        break;
-                    mprf("%s %s %s covered with spores!",
+                    mprf("%s %s %s %s!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                     break;
+                         (num_dest == 1) ? "is" : "are",
+                         (flavour == BEAM_DEVOUR_FOOD) ?
+                             "devoured" : "covered with spores");
+                    break;
 
                 default:
                     mprf("%s %s %s destroyed!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
-                     break;
+                    break;
                 }
 
                 total_dest += num_dest;
