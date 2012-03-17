@@ -1011,6 +1011,14 @@ default confused centipede
 VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
 
 VISUAL:@The_monster@ wildly waves @possessive@ antennae.
+%%%%
+orb_spider_cantrip
+
+@The_monster@ spins a strand of pure energy.
+
+@The_monster@ pulsates with a strange energy.
+
+@The_monster@ begins to weave its threads into a brightly glowing ball.
 #########################################
 # Speech strings by monster symbol
 #########################################

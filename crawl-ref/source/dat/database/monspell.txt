@@ -133,6 +133,10 @@ unseen Holy Word cast
 
 @The_something@ calls on the powers of Heaven!
 %%%%
+Orb of Destruction orb spider cast
+
+@The_monster@ weaves a glowing orb of energy.
+%%%%
 Orb of Destruction cast
 
 @The_monster@ conjures a glowing orb.

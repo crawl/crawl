@@ -148,6 +148,7 @@
 #define ACTION_ENERGY(x)   {10, 10,  x,  x,  x,  x,  x, x * 10}
 #define ATTACK_ENERGY(x)   {10, 10,  x, 10, 10, 10, 10, 100}
 #define MISSILE_ENERGY(x)  {10, 10, 10,  x, 10, 10, 10, 100}
+#define SPELL_ENERGY(x)    {10, 10, 10, 10,  x, 10, 10, 100}
 #define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
 
 
@@ -2020,6 +2021,19 @@ static monsterentry mondata[] = {
     10, 6, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_SCREAM,
     I_INSECT, HT_LAND, FL_NONE, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
+},
+
+{
+    MONS_ORB_SPIDER, 's', MAGENTA, "orb spider",
+    M_NO_SKELETON | M_SPELLCASTER | M_FAKE_SPELLS | M_WEB_SENSE
+        | M_MAINTAIN_RANGE,
+    MR_VUL_POISON,
+    300, 15, MONS_SPIDER, MONS_ORB_SPIDER, MH_NATURAL, -6,
+    { {AT_BITE, AF_POISON_MEDIUM, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 4, 5, 0 },
+    3, 10, MST_ORB_SPIDER, CE_POISON_CONTAM, Z_SMALL, S_HISS,
+    I_INSECT, HT_LAND, FL_NONE, 12, SPELL_ENERGY(15),
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
 // testudines and crocodiles ('t')

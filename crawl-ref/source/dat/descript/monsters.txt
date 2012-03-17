@@ -1438,6 +1438,10 @@ orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics, and of twisting the very flesh of creatures who come into its ken.
 %%%%
+orb spider
+
+An eerily glowing spider with strands of pure energy emerging from its spinnerets. It seems to want to keep its distance.
+%%%%
 orc
 
 An ugly subterranean race, orcs combine the worst features of humans, pigs and several other unpleasant creatures. They tend to run in packs or mobs, and delight in outbursts of insane violence.
