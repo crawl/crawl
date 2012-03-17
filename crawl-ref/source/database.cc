@@ -26,10 +26,6 @@
 #include "threads.h"
 #include "unicode.h"
 
-static std::string _query_database(DBM *db, std::string key,
-                                   bool canonicalise_key, bool run_lua);
-static void _add_entry(DBM *db, const std::string &k, std::string &v);
-
 // TextDB handles dependency checking the db vs text files, creating the
 // db, loading, and destroying the DB.
 class TextDB
@@ -60,12 +56,18 @@ class TextDB
     std::vector<std::string> _input_files;
     DBM* _db;
     std::string timestamp;
-    TextDB *translation, *english;
+    TextDB *english;
+public:
+    TextDB *translation;
 };
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
 static void _store_text_db(const std::string &in, DBM *db);
+
+static std::string _query_database(TextDB &db, std::string key,
+                                   bool canonicalise_key, bool run_lua);
+static void _add_entry(DBM *db, const std::string &k, std::string &v);
 
 static TextDB AllDBs[] =
 {
@@ -153,7 +155,7 @@ static std::string _db_cache_path(std::string db, const char *lang)
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
     : _db_name(db_name), _directory(dir), _lang(0),
-      _db(NULL), timestamp(""), translation(0), english(0)
+      _db(NULL), timestamp(""), english(0), translation(0)
 {
     va_list args;
     va_start(args, dir);
@@ -173,7 +175,7 @@ TextDB::TextDB(const char* db_name, const char* dir, ...)
 
 TextDB::TextDB(TextDB *parent)
     : _db_name(parent->_db_name), _lang(Options.lang),
-      _db(NULL), timestamp(""), translation(0), english(parent)
+      _db(NULL), timestamp(""), english(parent), translation(0)
 {
     _directory = parent->_directory + _lang + "/";
     _input_files = parent->_input_files; // FIXME: pointless copy
@@ -189,7 +191,7 @@ bool TextDB::open_db()
     if (!_db)
         return false;
 
-    timestamp = _query_database(_db, "TIMESTAMP", false, false);
+    timestamp = _query_database(*this, "TIMESTAMP", false, false);
     if (timestamp.empty())
         return false;
 
@@ -709,7 +711,7 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
     } // while (pos != std::string::npos)
 }
 
-static std::string _query_database(DBM *db, std::string key,
+static std::string _query_database(TextDB &db, std::string key,
                                    bool canonicalise_key, bool run_lua)
 {
     if (canonicalise_key)
@@ -720,7 +722,12 @@ static std::string _query_database(DBM *db, std::string key,
     }
 
     // Query the DB.
-    datum result = _database_fetch(db, key);
+    datum result;
+
+    if (db.translation)
+        result = _database_fetch(db.translation->get(), key);
+    if (!result.dptr)
+        result = _database_fetch(db.get(), key);
 
     std::string str((const char *)result.dptr, result.dsize);
 
@@ -735,10 +742,7 @@ static std::string _query_database(DBM *db, std::string key,
 
 std::string getQuoteString(const std::string &key)
 {
-    if (!QuotesDB)
-        return ("");
-
-    return unwrap_desc(_query_database(QuotesDB.get(), key, true, true));
+    return unwrap_desc(_query_database(QuotesDB, key, true, true));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -746,10 +750,7 @@ std::string getQuoteString(const std::string &key)
 
 std::string getLongDescription(const std::string &key)
 {
-    if (!DescriptionDB.get())
-        return ("");
-
-    return unwrap_desc(_query_database(DescriptionDB.get(), key, true, true));
+    return unwrap_desc(_query_database(DescriptionDB, key, true, true));
 }
 
 // god names only
@@ -786,10 +787,7 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
 // GameStart DB specific functions.
 std::string getGameStartDescription(const std::string &key)
 {
-    if (!GameStartDB.get())
-        return ("");
-
-    return _query_database(GameStartDB.get(), key, true, true);
+    return _query_database(GameStartDB, key, true, true);
 }
 
 
@@ -841,7 +839,7 @@ std::string getRandNameString(const std::string &itemtype,
 
 std::string getHelpString(const std::string &topic)
 {
-    return _query_database(HelpDB.get(), topic, false, true);
+    return _query_database(HelpDB, topic, false, true);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -859,13 +857,13 @@ std::vector<std::string> getAllFAQKeys()
 
 std::string getFAQ_Question(const std::string &key)
 {
-    return _query_database(FAQDB.get(), key, false, true);
+    return _query_database(FAQDB, key, false, true);
 }
 
 std::string getFAQ_Answer(const std::string &question)
 {
     std::string key = "a" + question.substr(1, question.length()-1);
-    return _query_database(FAQDB.get(), key, false, true);
+    return _query_database(FAQDB, key, false, true);
 }
 
 /////////////////////////////////////////////////////////////////////////////
