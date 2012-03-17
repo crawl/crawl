@@ -445,18 +445,21 @@ ENDMAP
 
 NAME:   spider_rune_water
 PLACE:  Spider:5
-ORIENT: float
+ORIENT: northeast
 KITEM:  O = gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
 MONS:   ghost moth
+MONS:   orb spider
 NSUBST: 6 = 1:6 / 1:46 / *:4
 COLOUR: c = white
-COLOUR: 123O+' = lightgrey
-FTILE:  123cO+' = floor_pebble_lightgray
+COLOUR: 1O+' = lightgrey
+FTILE:  1cO+' = floor_pebble_lightgray
+NSUBST: ' = 3:3 / 4:2 / *:'
 TILE:   c = wall_vines
 SUBST:  x = c
+SUBST:  X = x
 : if crawl.coinflip() then
 SUBST:  W = WW.
 : else
@@ -464,29 +467,30 @@ SUBST:  W = W..
 : end
 KFEAT:  Ww = shallow_water
 MAP
-             ........
-   .....   ...xxxxxx.
- ...xxxx....xxxxWWWx.....
- .xxxwwxxxxxxx..5.Wxxxxx...
- .x644wwwxWW..W..W.WWWWxxx......
- .xx44wwwW..WxxW.xx..5.WWxxxxxx.....
- ..xx4xxW..Wxxx.WxxWWxW..Wxwwwxxxxx.
-  ..xxxW.5WxxxxW..xxxxxW..Wwwwww46x.
-    .xxW..Wxcccc..ccccxW.5.Wxxw444x.
-   ..xxW.Wxxc1'c''c'1cxxWW..Wxxxx4x.
-   .xxW.Wxxxc'''cc'''cxxxxW.Wxxxxxx.
-   .xW5Wxxxxc''''''''ccccxxW.WWxxxx..
- ...xW.Wx44xc23322332+'OcxxWW5.Wxxxx.
-..xxx.Wwww4xcccccccccccccxxxwW..Wxxx.
-.xxWW.Wwww4xxxxxxxxxxxxxx44wwwW.Wxxx..
-.xW..Wxx46xxxWWWWxxWWWxxx444xxxW.WWxx.
-.xW5.WxxxxxWW...4WW4..WWxx6xxxxxW..Wx.
-.xxW.WxxxxxW.WxW44444W..WxxxxxxxW5.Wx.
-.xW..WxxxW.5WxxW444WxxW5WxxxxxW...Wxx.
-.xxW..WxW..WxxxxW..WxxW..WxxW..WWWxx.
-..xxW.5.W..WxxxxxW...WxxW..W..WWxxxx.
-  .xxWW...Wxxxxxxx...xxxxWW5WWxxx....
-  ..xxxWWWxxxxxxxx...xxxxxxWxxx...
-    ..xxxxxxxxxxxx...xxxxxxxx...
-     .........................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxxxxwwxxxxxxx..5.WxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxx644wwwxWW7.W..W.WWWWxxxxxxxxxxxxxxxxxX
+xxxxxxxxxx44wwwW..WxxW.xx.57.WWxxxxxxxxxxxxxxxX
+xxxxxxxxxxx4xxW..Wxxx.WxxWWxW..WxwwwxxxxxxxxxxX
+xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww46xxxxxxX
+xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
+xxxxxxxxxxxxxW.Wxxc1'c++c'1cxxWW..Wxxxx4xxxxxxX
+xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
+xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
+xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
+xxxxxxxxxxx.Wwww4xcccccccccccccxxxwW..WxxxxxxxX
+xxxxxxxxxWW.Wwww4xxxxxxxxxxxxxx44wwwW.WxxxxxxxX
+xxxxxxxxW..Wxx46xxxWWWWxxWWWxxx444xxxW.WWxxxxxX
+xxxxxxxxW5.WxxxxxWW...4WW4..WWxx6xxxxxW..WxxxxX
+xxxxxxxxxW.WxxxxxW.WxW44444W..WxxxxxxxW5.WxxxxX
+xxxxxxxxW..WxxxW.5WxxW.4.WxxW5WxxxxxW...WxxxxxX
+xxxxxxxxxW..WxW..WxxxxW..WxxW..WxxW..WWWxxxxxxX
+xxxxxxxxxxW.5.W..WxxxxxW...WxxW..W..WWxxxxxxXXX
+xxxxxxxxxxxWW...Wxxxxxxx...xxxxWW5WWxxxxxXXXX
+xxxxxxxxxxxxxWWWxxxxxxxx...xxxxxxWxxxxxXXX
+xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
+XXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXX
+XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
