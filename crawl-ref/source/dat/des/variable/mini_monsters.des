@@ -1721,9 +1721,9 @@ x.'t1cc't.....x
 x.'ccc'G...ccxx
 x..'''G'''...x
 xx...t.'_ccc.x
- xcc...'cc3..x
+ xcc...'cc3*.x
  x......c34.xx
- x2.G.c.c..5x
+ x2.G.c.c*.5x
  xxx..c...xxx
    x2.xxxxx
    xxxx
@@ -2446,10 +2446,11 @@ NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
 DEPTH: D:4-, Vault
 SUBST: 8 = 8.......
+MARKER: = = lua:restrict_door()
 MAP
 .......
 .vvvvv.
-.v...v.
+.v.*.v.
 .v.8.v.
 .v...v.
 .vv=vv.
@@ -2460,26 +2461,28 @@ ENDMAP
 NAME:    minmay_three_doors
 TAGS:    mini_float
 DEPTH:   D:4-
-SHUFFLE: 089
+SHUFFLE: 089, ABC
+SUBST:   AB = ., C = *
+MARKER:  G = lua:props_marker { stop_explore = "statue" }
 MAP
 xxxxxxx
-xx...xx
+xxAAAxx
 x.....x
 x..0..x
 x.....x
 xx...xx
 xxx+xxxxxxxxx
 ......xx...xx
-......x.....x
-......+..9..x
-......x.....x
+......x....Bx
+...G..+..9.Bx
+......x....Bx
 ......xx...xx
 xxx+xxxxxxxxx
 xx...xx
 x.....x
 x..8..x
 x.....x
-xx...xx
+xxCCCxx
 xxxxxxx
 ENDMAP
 
@@ -2597,6 +2600,7 @@ KMONS:   q = yellow wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklno
+MARKER:  G = lua:props_marker { stop_explore = "statue" }
 MAP
 .............
 .............
@@ -2608,7 +2612,7 @@ MAP
 ...vpqrimv...
 ...vv+++vv...
 ..v.......v..
-.............
+......G......
 .............
 ENDMAP
 
@@ -3091,6 +3095,8 @@ KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
             death cob / w:5 curse toe / w:5 ancient lich
 : end
+KITEM:  9 = *
+KMONS:  9 = 9
 MAP
 XXXXXXXXXX
 XXXXXXXXXX
@@ -3112,18 +3118,18 @@ MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
 MAP
 xxxxxxxxxxxxxx
-x8...8..8.9.8x
+x8.*.8..8.9.8x
 x.XXXXXXXXXX.x
-x9XXXXXXXXXX.x
+x9XXXXXXXXXX*x
 x.XXXXXXXXXX.x
 x8XXX....XXX8x
 x.XXX.{..XXX.x
 x.XXX....XXX.x
 x8XXX....XXX8x
 x.XXXXXXXXXX.x
-x.XXXXXXXXXX9x
+x*XXXXXXXXXX9x
 x.XXXXXXXXXX.x
-x8.9.8..8...8x
+x8.9.8..8.*.8x
 xxxxxxxxxxxxxx
 ENDMAP
 
