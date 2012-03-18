@@ -1548,6 +1548,8 @@ static void _damnation_card(int power, deck_rarity_type rarity)
 
 static void _warpwright_card(int power, deck_rarity_type rarity)
 {
+    const int power_level = get_power_level(power, rarity);
+
     if (you.level_type == LEVEL_ABYSS)
     {
         mpr("The power of the Abyss blocks your magic.");
@@ -1562,10 +1564,10 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 
     if (count > 0)              // found a spot
     {
-        if (place_specific_trap(f, TRAP_TELEPORT))
+        if (place_specific_trap(f, TRAP_TELEPORT, 1 + random2(5 * power_level)))
         {
             // Mark it discovered if enough power.
-            if (get_power_level(power, rarity) >= 1)
+            if (x_chance_in_y(power_level, 2))
                 find_trap(f)->reveal();
         }
     }
