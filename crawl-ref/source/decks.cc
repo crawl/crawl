@@ -940,6 +940,7 @@ bool deck_deal()
         _set_card_and_flags(deck, last, card, flags | CFLAG_DEALT);
 
         evoke_deck(deck);
+        redraw_screen();
     }
 
     // Nemelex doesn't like dealers with inadequate decks.
