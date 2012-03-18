@@ -106,8 +106,13 @@ void trap_def::hide()
     grd(pos) = DNGN_UNDISCOVERED_TRAP;
 }
 
-void trap_def::prepare_ammo()
+void trap_def::prepare_ammo(int charges)
 {
+    if (charges)
+    {
+        ammo_qty = charges;
+        return;
+    }
     switch (type)
     {
     case TRAP_DART:
@@ -618,7 +623,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // can't use trap_destroyed, as we might recurse into a shaft
             // or be banished by a Zot trap
             if (in_sight)
+            {
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+                mpr("The teleport trap disappears.");
+            }
             disarm();
         }
         triggerer.teleport(true);

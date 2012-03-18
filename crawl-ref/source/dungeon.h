@@ -235,8 +235,8 @@ void level_welcome_messages();
 void run_map_epilogues ();
 
 struct trap_spec;
-bool place_specific_trap(const coord_def& where, trap_type trap_spec);
-bool place_specific_trap(const coord_def& where, trap_spec* spec);
+bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
+bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges = 0);
 
 struct shop_spec;
 void place_spec_shop(int level_number, const coord_def& where,

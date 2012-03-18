@@ -5479,14 +5479,14 @@ static bool _connect_spotty(const coord_def& from)
     return (success);
 }
 
-bool place_specific_trap(const coord_def& where, trap_type spec_type)
+bool place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
 {
     trap_spec spec(spec_type);
 
-    return place_specific_trap(where, &spec);
+    return place_specific_trap(where, &spec, charges);
 }
 
-bool place_specific_trap(const coord_def& where, trap_spec* spec)
+bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges)
 {
     trap_type spec_type = spec->tr_type;
 
@@ -5517,7 +5517,7 @@ bool place_specific_trap(const coord_def& where, trap_spec* spec)
             env.trap[tcount].pos  = where;
             grd(where)            = DNGN_UNDISCOVERED_TRAP;
             env.tgrid(where)      = tcount;
-            env.trap[tcount].prepare_ammo();
+            env.trap[tcount].prepare_ammo(charges);
             return (true);
         }
 
