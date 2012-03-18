@@ -431,6 +431,7 @@ ENDMAP
 NAME:     vestibule_of_hell_mu
 PLACE:    Hell
 ORIENT:   encompass
+WEIGHT:   20
 TAGS:     no_rotate no_dump
 SUBVAULT: A : vestibule_dis
 SUBVAULT: B : vestibule_tar
