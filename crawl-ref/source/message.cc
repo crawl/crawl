@@ -320,6 +320,11 @@ class message_window
         for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
         if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
             cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
+        else if (i < 0)
+        {
+            // If there were no lines, put the cursor at the upper left.
+            cgotoxy(1, 1, GOTO_MSG);
+        }
     }
 
     // Whether to show msgwin-full more prompts.
