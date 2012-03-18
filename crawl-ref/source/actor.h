@@ -3,7 +3,6 @@
 
 #include "itemprop-enum.h"
 #include "los_def.h"
-#include "itemprop-enum.h"
 
 enum ev_ignore_type
 {
