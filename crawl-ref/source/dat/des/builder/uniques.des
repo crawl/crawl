@@ -342,6 +342,11 @@ NAME:   uniq_ilsuiw
 DEPTH:  Shoals:3-
 : place_unique(_G, "Ilsuiw band")
 
+NAME:   uniq_arachne
+DEPTH:  Spider:2-
+WEIGHT: 50
+: place_unique(_G, "Arachne")
+
 NAME:   uniq_khufu
 DEPTH:  Tomb, Crypt
 : place_unique(_G, "Khufu band")
