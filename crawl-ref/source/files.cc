@@ -851,18 +851,21 @@ int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
     }
 
     if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-        && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
+        && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
     {
         // Look for corresponding up stair.
         return stair_taken + DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I;
     }
 
     if (stair_taken >= DNGN_STONE_STAIRS_UP_I
-        && stair_taken <= DNGN_ESCAPE_HATCH_UP)
+        && stair_taken <= DNGN_STONE_STAIRS_UP_III)
     {
         // Look for coresponding down stair.
         return stair_taken + DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I;
     }
+
+    if (feat_is_escape_hatch(stair_taken))
+        return stair_taken;
 
     if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
         && stair_taken < 150) // 20 slots reserved
@@ -1117,16 +1120,6 @@ static void _do_lost_items()
     }
 }
 
-static coord_def _stair_destination_pos()
-{
-    map_marker *marker = env.markers.find(you.pos(), MAT_POSITION);
-    if (!marker)
-        return INVALID_COORD;
-
-    map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-    return posm->dest;
-}
-
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
@@ -1140,12 +1133,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                             you.level_type, you.where_are_you, you.absdepth0);
 #endif
 
-    // Destination position for hatch.
-    coord_def dest_pos = _stair_destination_pos();
-
-    // Shaft destination is random.
-    if (dest_pos == INVALID_COORD)
-        dest_pos = random_in_bounds();
+    // Save position for hatches to place a marker on the destination level.
+    coord_def dest_pos = you.pos();
 
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.

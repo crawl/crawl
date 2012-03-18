@@ -1823,13 +1823,6 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         throw dgn_veto_exception("Failed to ensure interlevel connectivity.");
 }
 
-static void _fixup_hatches_dest()
-{
-    for (rectangle_iterator ri(0); ri; ++ri)
-        if (feat_is_escape_hatch(grd(*ri)))
-            env.markers.add(new map_position_marker(*ri, random_in_bounds()));
-}
-
 // Structure of OVERFLOW_TEMPLES:
 //
 // * A vector, with one cell per dungeon level (unset if there's no
@@ -2279,7 +2272,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
 
         _fixup_walls();
         _fixup_branch_stairs();
-        _fixup_hatches_dest();
     }
 
     _fixup_misplaced_items();
@@ -5614,23 +5606,28 @@ struct nearest_point
     }
 };
 
-// Fill travel_point_distance out from all stone stairs on the level.
-static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
+static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    nearest_point np(base_pos);
-    for (rectangle_iterator ri(0); ri; ++ri)
+    map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
+    if (!marker || shaft)
     {
-        if (!travel_point_distance[ri->x][ri->y]
-            && feat_is_stone_stair(grd(*ri)) && !feature_mimic_at(*ri))
+        coord_def dest_pos;
+        do
+            dest_pos = random_in_bounds();
+        while (grd(dest_pos) != DNGN_FLOOR);
+        if (!shaft)
         {
-            _dgn_fill_zone(*ri, 1, np, dgn_square_travel_ok);
+            env.markers.add(new map_position_marker(base_pos, dest_pos));
+            env.markers.clear_need_activate();
         }
+        return dest_pos;
     }
-
-    return (np.nearest);
+    else
+    {
+        map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
+        return posm->dest;
+    }
 }
-
 
 double dgn_degrees_to_radians(int degrees)
 {
@@ -5725,9 +5722,10 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     // Shafts and hatches.
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
-        || stair_to_find == DNGN_ESCAPE_HATCH_DOWN)
+        || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
+        || stair_to_find == DNGN_TRAP_NATURAL)
     {
-        coord_def pos(_dgn_find_closest_to_stone_stairs(base_pos));
+        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_NATURAL));
         if (player_in_branch(BRANCH_SLIME_PITS))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))

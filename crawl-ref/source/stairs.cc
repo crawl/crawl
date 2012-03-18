@@ -1100,7 +1100,7 @@ void down_stairs(dungeon_feature_type force_stair,
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
 
     if (shaft)
-        stair_taken = DNGN_ESCAPE_HATCH_DOWN;
+        stair_taken = DNGN_TRAP_NATURAL;
 
     switch (you.level_type)
     {
