@@ -2953,6 +2953,14 @@ bool monster::petrifying() const
     return (has_ench(ENCH_PETRIFYING));
 }
 
+int monster::warding() const
+{
+    const item_def *w = primary_weapon();
+    if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
+        return 30;
+    return 0;
+}
+
 bool monster::friendly() const
 {
     return (attitude == ATT_FRIENDLY || has_ench(ENCH_CHARM));

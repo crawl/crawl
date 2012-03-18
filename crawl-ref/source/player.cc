@@ -2661,7 +2661,7 @@ int player_warding(bool calc_unid)
     int ward = 0;
 
     // Note: when adding a new source of warding, please add it to
-    // mons_attack_warded_off() as well.
+    // melee_attack::attack_warded_off() as well.
     ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
 
     ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
