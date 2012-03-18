@@ -333,10 +333,7 @@ public:
             || petrifying();
     }
 
-    virtual int warding() const
-    {
-        return (0);
-    }
+    virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
 
