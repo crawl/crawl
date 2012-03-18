@@ -445,7 +445,7 @@ ENDMAP
 
 NAME:   spider_rune_water
 PLACE:  Spider:5
-ORIENT: northeast
+ORIENT: northwest
 KITEM:  O = gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
