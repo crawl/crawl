@@ -75,6 +75,8 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!cell.known() || cell.visible())
             continue;
 
+        cell.clear_cloud();
+
         if (clear_detected_items || !cell.detected_item())
             cell.clear_item();
 
