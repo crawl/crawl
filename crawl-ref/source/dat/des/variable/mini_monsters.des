@@ -3266,7 +3266,7 @@ ENDMAP
 
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen layout_basic
-CHANCE: 20%
+CHANCE: 10% (Spider), 20%
 DEPTH: 6-30
 {{
     local width = 5 + crawl.random2avg(6, 2)
