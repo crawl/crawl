@@ -241,6 +241,15 @@ struct map_cell
         _cloud = new cloud_info(ci);
     }
 
+    void clear_cloud()
+    {
+        if (_cloud)
+        {
+            delete _cloud;
+            _cloud = 0;
+        }
+    }
+
     bool known() const
     {
         return !!(flags & MAP_GRID_KNOWN);
