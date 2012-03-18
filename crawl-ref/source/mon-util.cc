@@ -826,6 +826,9 @@ void discover_mimic(const coord_def& pos, bool wake)
     mg.behaviour = wake ? BEH_WANDER : BEH_LURK;
     mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
+    if (wake)
+        mg.flags |= MG_DONT_COME;
+
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))
