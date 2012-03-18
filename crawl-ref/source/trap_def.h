@@ -16,7 +16,7 @@ struct trap_def
     void destroy(bool known = true);
     void hide();
     void reveal();
-    void prepare_ammo();
+    void prepare_ammo(int charges = 0);
     bool type_has_ammo() const;
     bool active() const;
     bool defined() const { return active(); }
