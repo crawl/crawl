@@ -795,6 +795,11 @@ static bool _handle_reaching(monster* mons)
     if (mons_aligned(mons, foe))
         return (false);
 
+    // Greatly lowered chances if the monster is fleeing or pacified and
+    // leaving the level.
+    if ((mons_is_fleeing(mons) || mons->pacified()) && !one_chance_in(8))
+        return (false);
+
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
     const int grid_distance(delta.rdist());
