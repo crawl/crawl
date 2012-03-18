@@ -415,30 +415,6 @@ aa?...a.a...?aa
       aaa
 ENDMAP
 
-NAME:   amethyst_orb_spider
-DEPTH:  Spider:4-5
-MONS:   orb spider
-KFEAT:  W = web trap
-KFEAT:  O = web trap
-KITEM:  O = crystal ball of energy
-NSUBST: 1 = 1:1 / *:.
-NSUBST: | = 1:| / *:W
-SUBST:  . = ^..
-SUBST:  ^ = W...
-MAP
-  xxxxxxxxxxx
- xxxxxxxxxxxxx
-xxxx....1..xxxx
-xxx1.......Wxxx
-xx^^...W...W|xx
-@^^^^.WOW.1W|xx
-xx^^...W...W|xx
-xxx1.......Wxxx
-xxxx....1..xxxx
- xxxxxxxxxxxxx
-  xxxxxxxxxxx
-ENDMAP
-
 ##############################################################################
 # Rune vaults
 ##############################################################################
