@@ -1751,11 +1751,11 @@
     {  MST_ARACHNE,
       {
        SPELL_ENSNARE,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
+       SPELL_POISON_ARROW,
+       SPELL_BLINK,
+       SPELL_ENSNARE,
+       SPELL_VENOM_BOLT,
+       SPELL_ENSNARE
       }
     },
 
