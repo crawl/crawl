@@ -590,7 +590,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
 #define MAX_RECURSION_DEPTH 10
 #define MAX_REPLACEMENTS    100
 
-static std::string _getWeightedString(DBM *database, const std::string &key,
+static std::string _getWeightedString(TextDB &db, const std::string &key,
                                       const std::string &suffix,
                                       int fixed_weight = -1)
 {
@@ -600,7 +600,12 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
     lowercase(canonical_key);
 
     // Query the DB.
-    datum result = _database_fetch(database, canonical_key);
+    datum result;
+
+    if (db.translation)
+        result = _database_fetch(db.translation->get(), canonical_key);
+    if (!result.dptr)
+        result = _database_fetch(db.get(), canonical_key);
 
     if (result.dsize <= 0)
     {
@@ -609,7 +614,10 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
         lowercase(canonical_key);
 
         // Query the DB.
-        result = _database_fetch(database, canonical_key);
+        if (db.translation)
+            result = _database_fetch(db.translation->get(), canonical_key);
+        if (!result.dsize <= 0)
+            result = _database_fetch(db.get(), canonical_key);
 
         if (result.dsize <= 0)
             return "";
@@ -621,29 +629,26 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
     return _chooseStrByWeight(str, fixed_weight);
 }
 
-static void _call_recursive_replacement(std::string &str, DBM *database,
+static void _call_recursive_replacement(std::string &str, TextDB &db,
                                         const std::string &suffix,
                                         int &num_replacements,
                                         int recursion_depth = 0);
 
-static std::string _query_weighted_randomised(DBM *database,
+static std::string _query_weighted_randomised(TextDB &db,
                                               const std::string &key,
                                               const std::string &suffix = "",
                                               const int weight = -1)
 {
-    if (!database)
-        return ("");
-
-    std::string result = _getWeightedString(database, key, suffix, weight);
+    std::string result = _getWeightedString(db, key, suffix, weight);
     if (result.empty())
         return "";
 
     int num_replacements = 0;
-    _call_recursive_replacement(result, database, suffix, num_replacements);
+    _call_recursive_replacement(result, db, suffix, num_replacements);
     return (result);
 }
 
-static std::string _getRandomisedStr(DBM *database, const std::string &key,
+static std::string _getRandomisedStr(TextDB &db, const std::string &key,
                                      const std::string &suffix,
                                      int &num_replacements,
                                      int recursion_depth = 0)
@@ -656,9 +661,9 @@ static std::string _getRandomisedStr(DBM *database, const std::string &key,
         return "TOO MUCH RECURSION";
     }
 
-    std::string str = _getWeightedString(database, key, suffix);
+    std::string str = _getWeightedString(db, key, suffix);
 
-    _call_recursive_replacement(str, database, suffix, num_replacements,
+    _call_recursive_replacement(str, db, suffix, num_replacements,
                                 recursion_depth);
 
     return str;
@@ -666,7 +671,7 @@ static std::string _getRandomisedStr(DBM *database, const std::string &key,
 
 // Replace any "@foo@" markers that can be found in this database.
 // Those that can't be found are left alone for the caller to deal with.
-static void _call_recursive_replacement(std::string &str, DBM *database,
+static void _call_recursive_replacement(std::string &str, TextDB &db,
                                         const std::string &suffix,
                                         int &num_replacements,
                                         int recursion_depth)
@@ -692,7 +697,7 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
         std::string marker      = str.substr(pos + 1, end - pos - 1);
 
         std::string replacement =
-            _getRandomisedStr(database, marker, suffix, num_replacements,
+            _getRandomisedStr(db, marker, suffix, num_replacements,
                               recursion_depth);
 
         if (replacement.empty())
@@ -800,17 +805,13 @@ std::string getShoutString(const std::string &monst,
 {
     int num_replacements = 0;
 
-    return _getRandomisedStr(ShoutDB.get(), monst, suffix,
-                             num_replacements);
+    return _getRandomisedStr(ShoutDB, monst, suffix, num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Speak DB specific functions.
 std::string getSpeakString(const std::string &key)
 {
-    if (!SpeakDB)
-        return ("");
-
     int num_replacements = 0;
 
 #ifdef DEBUG_MONSPEAK
@@ -827,13 +828,9 @@ std::string getSpeakString(const std::string &key)
 std::string getRandNameString(const std::string &itemtype,
                               const std::string &suffix)
 {
-    if (!RandartDB)
-        return ("");
-
     int num_replacements = 0;
 
-    return _getRandomisedStr(RandartDB, itemtype, suffix,
-                             num_replacements);
+    return _getRandomisedStr(RandartDB, itemtype, suffix, num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -875,9 +872,6 @@ std::string getMiscString(const std::string &misc,
                           const std::string &suffix)
 
 {
-    if (!MiscDB)
-        return ("");
-
     int num_replacements = 0;
 
     return _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
