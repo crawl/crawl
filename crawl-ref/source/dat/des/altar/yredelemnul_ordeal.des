@@ -24,7 +24,7 @@ function callback.dk_yredelemnul_ordeal(data, triggerable, triggerer, marker, ev
         return
       end
   end
-  crawl.mpr("The hear a strange fizzling.")
+  crawl.mpr("You hear a strange fizzling.")
 end
 }}
 
