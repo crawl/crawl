@@ -775,6 +775,8 @@ std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
         return (empty);
     }
 
+    // FIXME: need to match regex against translated keys, which can't
+    // be done by db only.
     return _database_find_keys(DescriptionDB.get(), regex, true, filter);
 }
 
@@ -787,7 +789,13 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
         return (empty);
     }
 
-    return _database_find_bodies(DescriptionDB.get(), regex, true, filter);
+    // On partial translations, this will match only translated descriptions.
+    // Not good, but otherwise we'd have to check hundreds of keys, with
+    // two queries for each.
+    // SQL can do this in one go, DBM can't.
+    DBM *database = DescriptionDB.translation ?
+        DescriptionDB.translation->get() : DescriptionDB.get();
+    return _database_find_bodies(database, regex, true, filter);
 }
 
 /////////////////////////////////////////////////////////////////////////////
