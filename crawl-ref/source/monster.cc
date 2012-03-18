@@ -3422,6 +3422,10 @@ int monster::res_poison(bool temp) const
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[shld], false);
+
+        const item_def *w = primary_weapon();
+        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_POISON)
+            u++;
     }
 
     // Monsters can have multiple innate levels of poison resistance, but
