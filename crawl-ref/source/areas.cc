@@ -179,7 +179,7 @@ static void _update_agrid()
 static area_centre_type _get_first_area (const coord_def& f)
 {
     uint32_t a = _agrid(f);
-    if (a & APROP_SANCTUARY_2)
+    if (a & APROP_SANCTUARY_1)
         return AREA_SANCTUARY;
     if (a & APROP_SANCTUARY_2)
         return AREA_SANCTUARY;
