@@ -1445,7 +1445,8 @@ bool trog_burn_spellbooks()
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.
             if (feat_is_solid(grd(*ri))
-                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE
+                || si->flags & ISFLAG_MIMIC)
             {
                 totalblocked++;
                 continue;
