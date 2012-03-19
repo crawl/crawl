@@ -2475,26 +2475,28 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             continue;
 
         // Don't prompt to remove rings with strictly better pluses
-        // than the new one.
+        // than the new one.  Also, don't prompt to remove rings with
+        // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {
             const int nplus = ring_has_pluses(item);
             const int delta_p = item.plus - list_item.plus;
             const int delta_p2 = nplus >= 2 ? item.plus2 - list_item.plus2 : 0;
             if (nplus
-                && item_ident(item, ISFLAG_KNOW_PLUSES)
                 && item_ident(list_item, ISFLAG_KNOW_PLUSES)
-                && delta_p <= 0 && delta_p2 <= 0
-                && (delta_p < 0 || delta_p2 < 0))
+                && (!item_ident(item, ISFLAG_KNOW_PLUSES)
+                     || delta_p <= 0 && delta_p2 <= 0
+                        && (delta_p < 0 || delta_p2 < 0)))
             {
                 continue;
             }
         }
 
-        // Don't prompt to remove manuals for different skills.
+        // Don't prompt to remove known manuals when the new one is unknown
+        // or for a different skill.
         if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
-            && item_type_known(item) && item_type_known(list_item)
-            && item.plus != list_item.plus)
+            && item_type_known(list_item)
+            && (!item_type_known(item) || item.plus != list_item.plus))
         {
             continue;
         }
