@@ -116,6 +116,7 @@ static bool _is_explore_horizon(const coord_def& c)
 }
 #endif
 
+#ifndef USE_TILE_LOCAL
 static ucs_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
@@ -125,6 +126,7 @@ static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).magic_symbol);
 }
+#endif
 
 // Determines if the given feature is present at (x, y) in _feat_ coordinates.
 // If you have map coords, add (1, 1) to get grid coords.
