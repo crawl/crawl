@@ -1170,8 +1170,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_ARACHNE:
+        force_item = true;
         item.base_type = OBJ_STAVES;
         item.sub_type = STAFF_POISON;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CEREBOV:
