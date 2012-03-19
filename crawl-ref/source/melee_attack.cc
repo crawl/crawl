@@ -1784,8 +1784,11 @@ void melee_attack::set_attack_verb()
         weap_type = WPN_STAFF;
     else if (item_is_rod(*weapon))
         weap_type = WPN_CLUB;
-    else if (weapon->base_type == OBJ_WEAPONS)
+    else if (weapon->base_type == OBJ_WEAPONS
+             && !is_range_weapon(*weapon))
+    {
         weap_type = weapon->sub_type;
+    }
 
     // All weak hits look the same, except for when the attacker
     // has a non-weapon in hand. - bwr
@@ -1798,6 +1801,7 @@ void melee_attack::set_attack_verb()
             attack_verb = "hit";
         else
             attack_verb = "clumsily bash";
+        return;
     }
 
     // Take normal hits into account.  If the hit is from a weapon with
