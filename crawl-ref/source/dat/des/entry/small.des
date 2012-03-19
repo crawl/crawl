@@ -1949,20 +1949,28 @@ NAME:    dpeg_entry_round_a
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-# Equal chance of passable, blocked at A, and blocked at a.
-: if crawl.random2(3) == 0 then
-:   subst("A = x")
-:   subst("a = +")
-: else
+# Equal chance of passable, blocked at ?, blocked at A, and blocked at a.
+# Blocking the path at two points would create a disconnected bubble.
+: local r = crawl.random2(4)
+: if r == 0 then
+:   subst("? = x")
 :   subst("A = .")
-:   subst("a = '")
+:   subst("a = =")
+: elseif r == 1 then
+:   subst("? = =")
+:   subst("A = .")
+:   subst("a = x")
+: else
+:   subst("? = =")
+:   subst("A = '")
+:   subst("a = =")
 : end
 : if crawl.random2(3) == 0 then
-:   subst("B = x")
-:   subst("b = +")
-: else
 :   subst("B = .")
-:   subst("b = '")
+:   subst("b = x")
+: else
+:   subst("B = '")
+:   subst("b = =")
 : end
 SUBST:   ' = x. , v : cvxxxx
 MAP
