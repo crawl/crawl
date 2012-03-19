@@ -5578,7 +5578,7 @@ static monsterentry mondata[] = {
 
 // "H"ybrids.
 {
-    MONS_ARACHNE, 'H', LIGHTMAGENTA, "Arachne",
+    MONS_ARACHNE, 'H', LIGHTCYAN, "Arachne",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS
         | M_SENSE_INVIS | M_WEB_SENSE,
     MR_NO_FLAGS, // no rPois- (breathes through the human half)
