@@ -2452,7 +2452,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     bool add_item = false;
 
-    std::vector<level_pos> to_del;
+    typedef std::pair<item_def, level_pos> list_pair;
+    std::vector<list_pair> to_del;
 
     // NOTE: Don't modify the shopping list while iterating over it.
     for (unsigned int i = 0; i < list->size(); i++)
@@ -2498,7 +2499,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             continue;
         }
 
-        const level_pos list_pos = thing_pos(thing);
+        list_pair listed(list_item, thing_pos(thing));
 
         // cost = -1, we just found a shop item which is cheaper than
         // one on the shopping list.
@@ -2522,7 +2523,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             if (_shop_yesno(prompt.c_str(), 'y'))
             {
                 add_item = true;
-                to_del.push_back(list_pos);
+                to_del.push_back(listed);
             }
             continue;
         }
@@ -2540,7 +2541,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                              describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
-                to_del.push_back(list_pos);
+                to_del.push_back(listed);
         }
         else
         {
@@ -2549,12 +2550,12 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                              describe_thing(thing, DESC_A).c_str());
 
             _shop_mpr(str.c_str());
-            to_del.push_back(list_pos);
+            to_del.push_back(listed);
         }
     }
 
     for (unsigned int i = 0; i < to_del.size(); i++)
-        del_thing(item, &to_del[i]);
+        del_thing(to_del[i].first, &to_del[i].second);
 
     if (add_item && !on_list)
         add_thing(item, cost);
