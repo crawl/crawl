@@ -113,7 +113,7 @@ NAME:   spiders_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web / floor
-MONS:   spider / wolf spider / w:5 jumping spider / w:5 redback
+MONS:   spider / w:5 wolf spider / jumping spider / redback / nothing
 MAP
       xxxxxx
      xx11.1x
