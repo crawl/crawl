@@ -1885,7 +1885,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     std::vector<int> ok_discs;
     std::vector<skill_type> skills;
     std::vector<int> spellcount;
-    for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
         int disc = 1 << i;
         if (disc & SPTYP_DIVINATION)
@@ -1922,9 +1922,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         return (false);
     }
 
-    int skill_weights[SPTYP_LAST_EXPONENT];
+    int skill_weights[SPTYP_LAST_EXPONENT + 1];
 
-    memset(skill_weights, 0, SPTYP_LAST_EXPONENT * sizeof(int));
+    memset(skill_weights, 0, (SPTYP_LAST_EXPONENT + 1) * sizeof(int));
 
     if (!completely_random)
     {
@@ -2007,7 +2007,7 @@ static void _get_weighted_spells(bool completely_random, god_type god,
 
             int total_skill = 0;
             int num_skills  = 0;
-            for (int j = 0; j < SPTYP_LAST_EXPONENT; j++)
+            for (int j = 0; j <= SPTYP_LAST_EXPONENT; j++)
             {
                 int disc = 1 << j;
 

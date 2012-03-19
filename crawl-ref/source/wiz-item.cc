@@ -1077,8 +1077,8 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         // For spellbooks, for each spell discipline, list the number of
         // unseen and total spells available.
-        std::vector<int> total_spells(SPTYP_LAST_EXPONENT);
-        std::vector<int> unseen_spells(SPTYP_LAST_EXPONENT);
+        std::vector<int> total_spells(SPTYP_LAST_EXPONENT + 1);
+        std::vector<int> unseen_spells(SPTYP_LAST_EXPONENT + 1);
 
         for (int i = 0; i < NUM_SPELLS; ++i)
         {
@@ -1098,7 +1098,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             const bool seen = you.seen_spell[spell];
 
             const unsigned int disciplines = get_spell_disciplines(spell);
-            for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+            for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
             {
                 const int disc = 1 << d;
                 if (disc & SPTYP_DIVINATION)
@@ -1112,7 +1112,7 @@ static void _debug_acquirement_stats(FILE *ostat)
                 }
             }
         }
-        for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+        for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
         {
             const int disc = 1 << d;
             if (disc & SPTYP_DIVINATION)
@@ -1220,6 +1220,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             fprintf(ostat, "Primary disciplines/levels of randart books:\n");
 
             const char* names[] = {
+                "none",
                 "conjuration",
                 "enchantment",
                 "fire magic",
@@ -1232,10 +1233,10 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "poison magic",
                 "earth magic",
                 "air magic",
-                "holy magic"
             };
+            COMPILE_CHECK(ARRAYSZ(names) == SPTYP_LAST_EXPONENT + 1);
 
-            for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
+            for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
             {
                 if (ego_quants[i] > 0)
                 {

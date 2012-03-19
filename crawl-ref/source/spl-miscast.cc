@@ -309,7 +309,7 @@ void MiscastEffect::do_miscast()
     if (spell != SPELL_NO_SPELL)
     {
         std::vector<int> school_list;
-        for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
+        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
             if (spell_typematch(spell, 1 << i))
                 school_list.push_back(i);
 
