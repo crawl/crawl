@@ -1733,11 +1733,11 @@ int mons_spidernest_rare(int mcls)
     case MONS_SPIDER:
         return 65;
 
-    case MONS_ORB_SPIDER:
-        return 60;
-
     case MONS_REDBACK:
         return 50;
+
+    case MONS_ORB_SPIDER:
+        return 45;
 
     case MONS_SCORPION:
     case MONS_RED_WASP:
