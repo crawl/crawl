@@ -604,7 +604,7 @@ static std::string _getWeightedString(TextDB &db, const std::string &key,
 
     if (db.translation)
         result = _database_fetch(db.translation->get(), canonical_key);
-    if (!result.dptr)
+    if (result.dsize <= 0)
         result = _database_fetch(db.get(), canonical_key);
 
     if (result.dsize <= 0)
@@ -733,7 +733,7 @@ static std::string _query_database(TextDB &db, std::string key,
 
     if (db.translation && !untranslated)
         result = _database_fetch(db.translation->get(), key);
-    if (!result.dptr)
+    if (result.dsize <= 0)
         result = _database_fetch(db.get(), key);
 
     std::string str((const char *)result.dptr, result.dsize);
