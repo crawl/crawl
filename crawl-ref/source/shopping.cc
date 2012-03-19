@@ -2473,6 +2473,31 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         if (!item_type_known(list_item) || is_artefact(list_item))
             continue;
 
+        // Don't prompt to remove rings with strictly better pluses
+        // than the new one.
+        if (item.base_type == OBJ_JEWELLERY)
+        {
+            const int nplus = ring_has_pluses(item);
+            const int delta_p = item.plus - list_item.plus;
+            const int delta_p2 = nplus >= 2 ? item.plus2 - list_item.plus2 : 0;
+            if (nplus
+                && item_ident(item, ISFLAG_KNOW_PLUSES)
+                && item_ident(list_item, ISFLAG_KNOW_PLUSES)
+                && delta_p <= 0 && delta_p2 <= 0
+                && (delta_p < 0 || delta_p2 < 0))
+            {
+                continue;
+            }
+        }
+
+        // Don't prompt to remove manuals for different skills.
+        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
+            && item_type_known(item) && item_type_known(list_item)
+            && item.plus != list_item.plus)
+        {
+            continue;
+        }
+
         const level_pos list_pos = thing_pos(thing);
 
         // cost = -1, we just found a shop item which is cheaper than
