@@ -4066,14 +4066,24 @@ void melee_attack::mons_do_poison()
             && one_chance_in(attk_flavour == AF_POISON ? 4 : 3)))
     {
         int amount = 1;
+        bool force = false;
+
         if (attk_flavour == AF_POISON_NASTY)
             amount++;
         else if (attk_flavour == AF_POISON_MEDIUM)
             amount += random2(3);
         else if (attk_flavour == AF_POISON_STRONG)
-            amount += roll_dice(2, 5);
+        {
+            if (defender->res_poison() > 0 && defender->has_lifeforce())
+            {
+                amount += random2(3);
+                force = true;
+            }
+            else
+                amount += roll_dice(2, 5);
+        }
 
-        if (!defender->poison(attacker, amount))
+        if (!defender->poison(attacker, amount, force))
             return;
 
         if (needs_message)
@@ -4081,6 +4091,12 @@ void melee_attack::mons_do_poison()
             mprf("%s poisons %s!",
                  atk_name(DESC_THE).c_str(),
                  defender_name().c_str());
+            if (force)
+            {
+                mprf("%s partially resist%s.",
+                    defender_name().c_str(),
+                    defender->atype() == ACT_PLAYER ? "" : "s");
+            }
         }
     }
 }
