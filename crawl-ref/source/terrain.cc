@@ -476,6 +476,13 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
 }
 
+bool feat_is_branchlike(dungeon_feature_type feat)
+{
+    return (feat_is_branch_stairs(feat)
+            || feat == DNGN_ENTER_HELL || feat == DNGN_ENTER_ABYSS
+            || feat == DNGN_ENTER_PANDEMONIUM);
+}
+
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE);
