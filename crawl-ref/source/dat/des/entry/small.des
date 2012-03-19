@@ -1949,10 +1949,25 @@ NAME:    dpeg_entry_round_a
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-SUBST:   ? = x= , ' = x. , v : cvxxxx
+# Equal chance of passable, blocked at A, and blocked at a.
+: if crawl.random2(3) == 0 then
+:   subst("A = x")
+:   subst("a = +")
+: else
+:   subst("A = .")
+:   subst("a = '")
+: end
+: if crawl.random2(3) == 0 then
+:   subst("B = x")
+:   subst("b = +")
+: else
+:   subst("B = .")
+:   subst("b = '")
+: end
+SUBST:   ' = x. , v : cvxxxx
 MAP
 xxxxxxxxxxxxxxxx.@
-@...xxxxxx.'xx.?..
+@...xxxxxx.Axx.a..
 xxx'.xxxx.xx..xx..
 xxxx.'xxx?xxxxxx..
 xxxxx.xxx.xxxxxx..
@@ -1960,8 +1975,8 @@ xx[x.......xxxxx..
 xx...vvvv..'xxxx..
 x'.vvvvvvv....xx..
 x..vvvvvv..xx'.x..
-xx..vv....xxxx'x..
-x(x'...xx{xxxx.?..
+xx..vv....xxxxBx..
+x(x'...xx{xxxx.b..
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
