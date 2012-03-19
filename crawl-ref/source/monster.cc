@@ -3718,6 +3718,11 @@ int monster::skill(skill_type sk, int scale, bool real) const
         return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hd : hd/2);
 
     case SK_POISON_MAGIC:
+    case SK_FIRE_MAGIC:
+    case SK_ICE_MAGIC:
+    case SK_EARTH_MAGIC:
+    case SK_AIR_MAGIC:
+    case SK_SUMMONINGS:
         return (is_actual_spellcaster() ? hd : hd / 3);
 
     default:

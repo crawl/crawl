@@ -160,8 +160,8 @@ private:
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
     void player_sustain_passive_damage();
-    int  player_staff_damage(skill_type skill);
-    void player_apply_staff_damage();
+    int  staff_damage(skill_type skill);
+    void apply_staff_damage();
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
