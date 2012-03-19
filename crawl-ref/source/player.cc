@@ -6570,7 +6570,8 @@ monster_type player::mons_species(bool zombie_base) const
 
 bool player::poison(actor *agent, int amount, bool force)
 {
-    return ::poison_player(amount, agent? agent->name(DESC_A, true) : "");
+    return ::poison_player(amount, agent? agent->name(DESC_A, true) : "", "",
+                           force);
 }
 
 void player::expose_to_element(beam_type element, int st)

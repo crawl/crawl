@@ -1681,7 +1681,7 @@ int mons_spidernest_level(int mcls)
 
     case MONS_YELLOW_WASP:
     case MONS_JUMPING_SPIDER:
-    case MONS_WOLF_SPIDER:
+    case MONS_REDBACK:
     case MONS_TRAPDOOR_SPIDER:
     case MONS_GOLIATH_BEETLE:
     case MONS_ROCK_WORM:
@@ -1692,14 +1692,14 @@ int mons_spidernest_level(int mcls)
     case MONS_BOULDER_BEETLE:
     case MONS_TARANTELLA:
     case MONS_SPINY_WORM:
-    case MONS_REDBACK:
+    case MONS_WOLF_SPIDER:
+    case MONS_ORB_SPIDER:
         mlev += 3;
         break;
 
     case MONS_EMPEROR_SCORPION:
     case MONS_DEMONIC_CRAWLER:
     case MONS_RED_WASP:
-    case MONS_ORB_SPIDER:
         mlev += 4;
         break;
 
@@ -1720,25 +1720,27 @@ int mons_spidernest_rare(int mcls)
     switch (mcls)
     {
     case MONS_WOLF_SPIDER:
-        return 90;
-
-    case MONS_JUMPING_SPIDER:
-        return 82;
+        return 85;
 
     case MONS_TRAPDOOR_SPIDER:
         return 75;
+
+    case MONS_JUMPING_SPIDER:
+        return 70;
 
     case MONS_TARANTELLA:
     case MONS_DEMONIC_CRAWLER:
     case MONS_SPIDER:
         return 65;
 
+    case MONS_ORB_SPIDER:
+        return 60;
+
     case MONS_REDBACK:
         return 50;
 
     case MONS_SCORPION:
     case MONS_RED_WASP:
-    case MONS_ORB_SPIDER:
         return 35;
 
     case MONS_WORM:
