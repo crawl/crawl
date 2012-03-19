@@ -642,8 +642,8 @@ bool melee_attack::handle_phase_damaged()
         if (attacker != defender && attk_flavour != AF_STEAL
             && defender->alive())
         {
-            if (attacker->atype() == ACT_MONSTER)
-                mons_apply_attack_flavour();
+            mons_apply_attack_flavour();
+            apply_staff_damage();
 
             if (needs_message && !special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
@@ -2088,7 +2088,7 @@ bool melee_attack::player_monattk_hit_effects()
         return (!defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
-    player_apply_staff_damage();
+    apply_staff_damage();
 
     if (!defender->alive())
         return (true);
@@ -3324,18 +3324,18 @@ void melee_attack::player_sustain_passive_damage()
         weapon_acid(5);
 }
 
-int melee_attack::player_staff_damage(skill_type skill)
+int melee_attack::staff_damage(skill_type skill)
 {
-    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 200)
-                    + you.skill(skill, 100), 3000))
+    if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 200)
+                    + attacker->skill(skill, 100), 3000))
     {
-        return random2((you.skill(skill, 100)
-                      + you.skill(SK_EVOCATIONS, 50)) / 80);
+        return random2((attacker->skill(skill, 100)
+                      + attacker->skill(SK_EVOCATIONS, 50)) / 80);
     }
     return 0;
 }
 
-void melee_attack::player_apply_staff_damage()
+void melee_attack::apply_staff_damage()
 {
     special_damage = 0;
 
@@ -3345,20 +3345,21 @@ void melee_attack::player_apply_staff_damage()
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
-        if (damage_done + you.skill_rdiv(SK_AIR_MAGIC) <= random2(20))
+        if (damage_done + attacker->skill_rdiv(SK_AIR_MAGIC) <= random2(20))
             break;
 
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
                                  defender->res_elec(),
-                                 player_staff_damage(SK_AIR_MAGIC));
+                                 staff_damage(SK_AIR_MAGIC));
 
         if (special_damage)
         {
             special_damage_message =
-                make_stringf("%s is electrocuted!",
-                             defender->name(DESC_THE).c_str());
+                make_stringf("%s %s electrocuted!",
+                             defender->name(DESC_THE).c_str(),
+                             defender->is_player() ? "are" : "is");
             special_damage_flavour = BEAM_ELECTRICITY;
         }
 
@@ -3369,26 +3370,30 @@ void melee_attack::player_apply_staff_damage()
             resist_adjust_damage(defender,
                                  BEAM_COLD,
                                  defender->res_cold(),
-                                 player_staff_damage(SK_ICE_MAGIC));
+                                 staff_damage(SK_ICE_MAGIC));
 
         if (special_damage)
         {
             special_damage_message =
                 make_stringf(
-                    "You freeze %s!",
+                    "%s freeze%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
         }
         break;
 
     case STAFF_EARTH:
-        special_damage = player_staff_damage(SK_EARTH_MAGIC);
+        special_damage = staff_damage(SK_EARTH_MAGIC);
         special_damage = apply_defender_ac(special_damage);
 
         if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
-                    "You crush %s!",
+                    "%s crush%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
         }
         break;
@@ -3398,27 +3403,29 @@ void melee_attack::player_apply_staff_damage()
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
                                  defender->res_fire(),
-                                 player_staff_damage(SK_FIRE_MAGIC));
+                                 staff_damage(SK_FIRE_MAGIC));
 
         if (special_damage)
         {
             special_damage_message =
                 make_stringf(
-                    "You burn %s!",
+                    "%s burn%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
         }
         break;
 
     case STAFF_POISON:
     {
-        if (random2(300) >= you.skill(SK_EVOCATIONS, 20) + you.skill(SK_POISON_MAGIC, 10))
+        if (random2(300) >= attacker->skill(SK_EVOCATIONS, 20) + attacker->skill(SK_POISON_MAGIC, 10))
             return;
 
         // Base chance at 50% -- like mundane weapons.
-        if (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC, 10), 80))
+        if (coinflip() || x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 80))
         {
             defender->poison(attacker, 2, defender->has_lifeforce()
-                & x_chance_in_y(you.skill(SK_POISON_MAGIC, 10), 160));
+                & x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 160));
         }
         break;
     }
@@ -3427,14 +3434,15 @@ void melee_attack::player_apply_staff_damage()
         if (defender->res_negative_energy())
             break;
 
-        special_damage = player_staff_damage(SK_NECROMANCY);
+        special_damage = staff_damage(SK_NECROMANCY);
 
         if (special_damage)
         {
             special_damage_message =
                 make_stringf(
-                    "%s convulses in agony!",
-                    defender->name(DESC_THE).c_str());
+                    "%s convulse%s in agony!",
+                    defender->name(DESC_THE).c_str(),
+                    defender->is_player() ? "" : "s");
 
             did_god_conduct(DID_NECROMANCY, 4);
         }
@@ -3444,11 +3452,11 @@ void melee_attack::player_apply_staff_damage()
         if (!defender->is_summoned())
             break;
 
-        if (x_chance_in_y(you.skill(SK_EVOCATIONS, 20)
-                        + you.skill(SK_SUMMONINGS, 10), 300))
+        if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 20)
+                        + attacker->skill(SK_SUMMONINGS, 10), 300))
         {
-            cast_abjuration((you.skill(SK_SUMMONINGS, 100)
-                            + you.skill(SK_EVOCATIONS, 50)) / 80,
+            cast_abjuration((attacker->skill(SK_SUMMONINGS, 100)
+                            + attacker->skill(SK_EVOCATIONS, 50)) / 80,
                             defender->pos());
         }
         break;
@@ -3462,9 +3470,7 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     default:
-        mpr("You're wielding some staff I've never heard of! (melee_attack.cc)",
-            MSGCH_ERROR);
-        break;
+        die("Invalid staff type: %d", weapon->sub_type);
     }
 }
 
