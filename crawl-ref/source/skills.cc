@@ -189,7 +189,7 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
     if (exsk == SK_FIGHTING)
         calc_hp();
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
         calc_mp();
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR)
