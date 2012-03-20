@@ -1241,7 +1241,7 @@ static const char *_terse_cloud_names[] =
     "flame", "noxious fumes", "freezing vapour", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
-    "steam", "gloom", "ink", 
+    "steam", "gloom", "ink",
 #if TAG_MAJOR_VERSION > 32
     "calcifying dust",
 #endif
@@ -1249,7 +1249,7 @@ static const char *_terse_cloud_names[] =
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
 #if TAG_MAJOR_VERSION == 32
-    "calcifying dust", 
+    "calcifying dust",
 #endif
     "sparse dust",
 };
@@ -1267,7 +1267,7 @@ static const char *_verbose_cloud_names[] =
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
 #if TAG_MAJOR_VERSION == 32
-    "calcifying dust", 
+    "calcifying dust",
 #endif
     "sparse dust",
 };

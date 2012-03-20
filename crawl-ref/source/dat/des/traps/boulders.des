@@ -12,7 +12,7 @@ function boulder_generate(x, y, targetx, targety)
 
   -- Set x, y, velocity
   x = x - 0.5
-  y = y - 0.5	
+  y = y - 0.5
   targetx = targetx - 0.5
   targety = targety - 0.5
   boulder.set_prop("boulder_x",x)
@@ -55,8 +55,8 @@ end
 # A grate slams shut, meaning you have to run from the boulder
 # (or destroy it)
 #
-NAME: 	boulder_corridor_run
-DEPTH: 	Lair:1-6
+NAME:   boulder_corridor_run
+DEPTH:  Lair:1-6
 ORIENT: float
 KFEAT: ^ = pressure plate trap
 KITEM: ^ = *
@@ -82,10 +82,10 @@ ENDMAP
 # by mumra
 # Four boulders all go for you in the center of the room
 # -- TODO: Make all the boulders slightly miss each other
-NAME: 	boulder_quad_collide
-DEPTH: 	Lair:4-8
+NAME:   boulder_quad_collide
+DEPTH:  Lair:4-8
 ORIENT: float
-KFEAT: 	^ = pressure plate trap
+KFEAT:  ^ = pressure plate trap
 {{
 local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
                                    repeated=true}
@@ -98,9 +98,9 @@ lua_marker('A', props_marker { boulder=1 })
 KFEAT: A=floor
 KITEM: ^=*
 MAP
-   xxx@xxx   
- xxx.....xxx 
- xA.......Ax 
+   xxx@xxx
+ xxx.....xxx
+ xA.......Ax
 xx.........xx
 x...........x
 x...........x
@@ -108,16 +108,16 @@ x...........x
 x...........x
 x...........x
 xx.........xx
- xA.......Ax 
- xxx....xxxx 
-   xxx@xx    
+ xA.......Ax
+ xxx....xxxx
+   xxx@xx
 ENDMAP
 
 ###################################################
 # "Indie" (mumra)
 # ZorbaBeta's fault
 NAME:   boulder_indie
-DEPTH: 	D:7-14, Snake:1-4
+DEPTH:  D:7-14, Snake:1-4
 ORIENT: float
 {{
 local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
@@ -128,7 +128,7 @@ lua_marker(',', props_marker { grate=1 })
 lua_marker('A', props_marker { boulder=1 })
 lua_marker('B', props_marker { target=1 })
 }}
-KFEAT: 	^ = pressure plate trap
+KFEAT:  ^ = pressure plate trap
 SUBST: 2 = x 1 2
 SUBST: 1 = 1 2 .:5
 KMONS: 1 = ball python
@@ -139,24 +139,24 @@ KFEAT: abAB=floor
 MAP
    xxxxx
   xx222xx
- xx21112xx   
- x211ab12x   
- xx2..12xx   
-  xx...xx    
-   xx.xx       
-    x.xxxxxx 
-    x......x 
-    xxxxxx.x  
-         x.x 
-xxxxxxx  x.x 
-xB....x  x.x 
-x^xxx.x  x.x 
-x^x x.x  x.x 
-x^x x.xxxx.x 
-x.x x......x 
-x.x xxxxxxxx 
-xAx          
-x.x          
-x@x           
+ xx21112xx
+ x211ab12x
+ xx2..12xx
+  xx...xx
+   xx.xx
+    x.xxxxxx
+    x......x
+    xxxxxx.x
+         x.x
+xxxxxxx  x.x
+xB....x  x.x
+x^xxx.x  x.x
+x^x x.x  x.x
+x^x x.xxxx.x
+x.x x......x
+x.x xxxxxxxx
+xAx
+x.x
+x@x
 ENDMAP
 
