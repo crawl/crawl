@@ -1002,6 +1002,7 @@ void melee_attack::adjust_noise()
         case AT_BITE:
         case AT_PECK:
         case AT_CONSTRICT:
+        case AT_POUNCE:
             noise_factor = 100;
             break;
 
@@ -4013,7 +4014,8 @@ std::string melee_attack::mons_attack_verb()
         "trample",
         "trunk-slap",
         "snap closed at",
-        "splash"
+        "splash",
+        "pounce on"
     };
 
     ASSERT(attk_type <
@@ -4479,6 +4481,10 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_PAIN:
         pain_affects_defender();
         break;
+
+    case AF_ENSNARE:
+        if (damage_done > 0 && coinflip())
+            ensnare(defender);
     }
 }
 

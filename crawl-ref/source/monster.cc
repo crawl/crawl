@@ -2352,6 +2352,9 @@ std::string monster::conj_verb(const std::string &verb) const
     if (verb == "snap closed at")
         return ("snaps closed at");
 
+    if (verb == "pounce on")
+        return ("pounces on");
+
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))
     {
