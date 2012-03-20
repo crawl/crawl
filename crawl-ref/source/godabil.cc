@@ -1431,6 +1431,7 @@ bool trog_burn_spellbooks()
 
     int totalpiety = 0;
     int totalblocked = 0;
+    std::vector<coord_def> mimics;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
     {
@@ -1445,10 +1446,16 @@ bool trog_burn_spellbooks()
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.
             if (feat_is_solid(grd(*ri))
-                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE
-                || si->flags & ISFLAG_MIMIC)
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
             {
                 totalblocked++;
+                continue;
+            }
+
+            if (si->flags & ISFLAG_MIMIC)
+            {
+                totalblocked++;
+                mimics.push_back(*ri);
                 continue;
             }
 
@@ -1506,6 +1513,11 @@ bool trog_burn_spellbooks()
         mprf("The spellbook%s fail%s to ignite!",
              totalblocked == 1 ? ""  : "s",
              totalblocked == 1 ? "s" : "");
+        for (std::vector<coord_def>::iterator it = mimics.begin();
+             it != mimics.end(); ++it)
+        {
+            discover_mimic(*it, false);
+        }
         return (false);
     }
     else
