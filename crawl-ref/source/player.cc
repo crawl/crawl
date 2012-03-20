@@ -4672,8 +4672,9 @@ int get_real_mp(bool include_items)
 
     int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level, true) / 4;
     int invoc_extra = you.skill(SK_INVOCATIONS, you.experience_level, true) / 6;
+    int evoc_extra = you.skill(SK_EVOCATIONS, you.experience_level, true) / 6;
 
-    enp += std::max(spell_extra, invoc_extra);
+    enp += std::max(spell_extra, std::max(invoc_extra, evoc_extra));
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
