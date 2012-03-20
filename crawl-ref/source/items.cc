@@ -1814,6 +1814,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     // Can't combine, check for slot space.
     if (inv_count() >= ENDOFPACK)
+        drop_spoiled_chunks(1, true);
+    if (inv_count() >= ENDOFPACK)
         return (-1);
 
     if (!quiet && partial_pickup)
