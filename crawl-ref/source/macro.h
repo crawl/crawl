@@ -89,7 +89,6 @@ std::string  command_to_name(command_type cmd);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
-KeymapContext context_for_command(command_type cmd);
 
 void bind_command_to_key(command_type cmd, int key);
 

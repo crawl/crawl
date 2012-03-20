@@ -228,8 +228,8 @@ formatted_string::operator std::string() const
     return (s);
 }
 
-void replace_all_in_string(std::string& s, const std::string& search,
-                           const std::string& replace)
+static void _replace_all_in_string(std::string& s, const std::string& search,
+                                   const std::string& replace)
 {
     std::string::size_type pos = 0;
     while ((pos = s.find(search, pos)) != std::string::npos)
@@ -250,11 +250,11 @@ std::string formatted_string::html_dump() const
         case FSOP_TEXT:
             tmp = ops[i].text;
             // (very) crude HTMLification
-            replace_all_in_string(tmp, "&", "&amp;");
-            replace_all_in_string(tmp, " ", "&nbsp;");
-            replace_all_in_string(tmp, "<", "&lt;");
-            replace_all_in_string(tmp, ">", "&gt;");
-            replace_all_in_string(tmp, "\n", "<br>");
+            _replace_all_in_string(tmp, "&", "&amp;");
+            _replace_all_in_string(tmp, " ", "&nbsp;");
+            _replace_all_in_string(tmp, "<", "&lt;");
+            _replace_all_in_string(tmp, ">", "&gt;");
+            _replace_all_in_string(tmp, "\n", "<br>");
             s += tmp;
             break;
         case FSOP_COLOUR:

@@ -82,29 +82,6 @@ std::string god_prayer_reaction()
     return (result);
 }
 
-bool god_accepts_prayer(god_type god)
-{
-    if (god_likes_fresh_corpses(god))
-        return (true);
-
-    switch (god)
-    {
-    case GOD_JIYVA:
-        return (jiyva_can_paralyse_jellies());
-
-    case GOD_ELYVILON:
-    case GOD_BEOGH:
-    case GOD_NEMELEX_XOBEH:
-    case GOD_ASHENZARI:
-        return (true);
-
-    default:
-        break;
-    }
-
-    return (false);
-}
-
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     item_def& wpn = *you.weapon();

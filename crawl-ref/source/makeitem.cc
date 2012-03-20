@@ -34,6 +34,8 @@
 #include "state.h"
 #include "travel.h"
 
+static armour_type _get_random_armour_type(int item_level);
+
 int create_item_named(std::string name, coord_def p,
                       std::string *error)
 {
@@ -2337,7 +2339,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         int i;
         for (i = 0; i < 1000; ++i)
         {
-            item.sub_type = get_random_armour_type(item_level);
+            item.sub_type = _get_random_armour_type(item_level);
             if (is_armour_brand_ok(item.sub_type, item.special, true))
                 break;
         }
@@ -3035,17 +3037,14 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         if (force_ego >= DECK_RARITY_COMMON && force_ego <= DECK_RARITY_LEGENDARY)
             item.special = force_ego;
         else
-            item.special = random_deck_rarity();
+        {
+            item.special = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                                 20, DECK_RARITY_RARE,
+                                                 72, DECK_RARITY_COMMON,
+                                                  0);
+        }
         init_deck(item);
     }
-}
-
-deck_rarity_type random_deck_rarity()
-{
-    return random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                 20, DECK_RARITY_RARE,
-                                 72, DECK_RARITY_COMMON,
-                                  0);
 }
 
 
@@ -3425,7 +3424,7 @@ armour_type get_random_body_armour_type(int item_level)
 {
     for (int tries = 100; tries > 0; --tries)
     {
-        const armour_type tr = get_random_armour_type(item_level);
+        const armour_type tr = _get_random_armour_type(item_level);
         if (get_armour_slot(tr) == EQ_BODY_ARMOUR)
             return (tr);
     }
@@ -3433,7 +3432,7 @@ armour_type get_random_body_armour_type(int item_level)
 }
 
 // FIXME: Need to clean up this mess.
-armour_type get_random_armour_type(int item_level)
+static armour_type _get_random_armour_type(int item_level)
 {
     // Default (lowest-level) armours.
     const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,

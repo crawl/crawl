@@ -101,7 +101,7 @@ void map_register_flag(const std::string &flag)
     Map_Flag_Names.insert(flag);
 }
 
-bool map_tag_is_selectable(const std::string &tag)
+static bool _map_tag_is_selectable(const std::string &tag)
 {
     return (Map_Flag_Names.find(tag) == Map_Flag_Names.end()
             && tag.find("luniq_") != 0
@@ -715,7 +715,7 @@ std::string map_lines::parse_glyph_replacements(std::string s,
 }
 
 template<class T>
-std::string parse_weighted_str(const std::string &spec, T &list)
+static std::string _parse_weighted_str(const std::string &spec, T &list)
 {
     std::vector<std::string> speclist = split_string("/", spec);
     for (int i = 0, vsize = speclist.size(); i < vsize; ++i)
@@ -773,7 +773,7 @@ std::string map_lines::add_colour(const std::string &sub)
         return (err);
 
     map_colour_list colours;
-    err = parse_weighted_str<map_colour_list>(substitute, colours);
+    err = _parse_weighted_str<map_colour_list>(substitute, colours);
     if (!err.empty())
         return (err);
 
@@ -825,7 +825,7 @@ std::string map_lines::add_fproperty(const std::string &sub)
         return (err);
 
     map_fprop_list fprops;
-    err = parse_weighted_str<map_fprop_list>(substitute, fprops);
+    err = _parse_weighted_str<map_fprop_list>(substitute, fprops);
     if (!err.empty())
         return (err);
 
@@ -850,7 +850,7 @@ std::string map_lines::add_fheight(const std::string &sub)
         return (err);
 
     map_featheight_list fheights;
-    err = parse_weighted_str(substitute, fheights);
+    err = _parse_weighted_str(substitute, fheights);
     if (!err.empty())
         return (err);
 
@@ -1897,7 +1897,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
         return (err);
 
     map_tile_list list;
-    err = parse_weighted_str<map_tile_list>(substitute, list);
+    err = _parse_weighted_str<map_tile_list>(substitute, list);
     if (!err.empty())
         return (err);
 
@@ -2674,7 +2674,7 @@ std::string map_def::validate_map_placeable()
     bool has_selectable_tag = false;
     for (int i = 0, tsize = tag_pieces.size(); i < tsize; ++i)
     {
-        if (map_tag_is_selectable(tag_pieces[i]))
+        if (_map_tag_is_selectable(tag_pieces[i]))
         {
             has_selectable_tag = true;
             break;
@@ -3132,7 +3132,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
         return ("SUBVAULT does not support '='.  Use ':' instead.");
 
     map_string_list vlist;
-    err = parse_weighted_str<map_string_list>(substitute, vlist);
+    err = _parse_weighted_str<map_string_list>(substitute, vlist);
     if (!err.empty())
         return (err);
 

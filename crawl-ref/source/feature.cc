@@ -28,7 +28,7 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
     return (Features[object]);
 }
 
-void apply_feature_overrides()
+static void _apply_feature_overrides()
 {
     for (int i = 0, size = Options.feature_overrides.size(); i < size; ++i)
     {
@@ -800,7 +800,7 @@ void init_show_table(void)
             f.symbol = Options.char_table[f.dchar];
     }
 
-    apply_feature_overrides();
+    _apply_feature_overrides();
 
     for (feat_map::iterator i = Features.begin(); i != Features.end(); ++i)
     {

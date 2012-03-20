@@ -27,8 +27,6 @@ enum unchivalric_attack_type
 
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL);
 
-int effective_stat_bonus(int wepType = -1);
-
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 

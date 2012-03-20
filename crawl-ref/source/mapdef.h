@@ -301,9 +301,6 @@ public:
     map_string_list strlist;
 };
 
-template<class T>
-std::string parse_weighted_str(const std::string &cspec, T &list);
-
 class map_def;
 class rectangle_iterator;
 struct keyed_mapspec;

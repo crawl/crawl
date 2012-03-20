@@ -128,7 +128,6 @@ item_kind item_kind_by_name(std::string name);
 
 std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 
-const char* wand_type_name(int wandtype);
 const char* rune_type_name(int p);
 
 bool        is_named_corpse(const item_def &corpse);

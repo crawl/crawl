@@ -357,7 +357,7 @@ enum mbn_type
     MBN_BRAND, // plain brand name
 };
 
-const char* missile_brand_name(special_missile_type brand, mbn_type t)
+static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
 {
     switch (brand)
     {
@@ -529,7 +529,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
     }
 }
 
-const char* wand_type_name(int wandtype)
+static const char* _wand_type_name(int wandtype)
 {
     switch (static_cast<wand_type>(wandtype))
     {
@@ -1111,7 +1111,7 @@ std::string sub_type_string(object_class_type type, int sub_type,
     case OBJ_MISSILES: // variable to itemprop.cc.
     case OBJ_ARMOUR:
         return item_base_name(type, sub_type);
-    case OBJ_WANDS: return wand_type_name(sub_type);
+    case OBJ_WANDS: return _wand_type_name(sub_type);
     case OBJ_FOOD: return food_type_name(sub_type);
     case OBJ_SCROLLS: return scroll_type_name(sub_type);
     case OBJ_JEWELLERY: return jewellery_type_name(sub_type);
@@ -1167,7 +1167,7 @@ std::string ego_type_string (const item_def &item)
         else
             return "";
     case OBJ_MISSILES:
-        return missile_brand_name(get_ammo_brand(item), MBN_BRAND);
+        return _missile_brand_name(get_ammo_brand(item), MBN_BRAND);
     default:
         return "";
     }
@@ -1334,7 +1334,7 @@ std::string item_def::name_aux(description_level_type desc,
         }
 
         if (know_brand && !terse && _missile_brand_is_prefix(brand))
-            buff << missile_brand_name(brand, MBN_NAME) << ' ';
+            buff << _missile_brand_name(brand, MBN_NAME) << ' ';
 
         if (know_pluses)
         {
@@ -1350,9 +1350,9 @@ std::string item_def::name_aux(description_level_type desc,
         if (know_brand && brand != SPMSL_NORMAL)
         {
             if (terse)
-                buff << " (" <<  missile_brand_name(brand, MBN_TERSE) << ")";
+                buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
             else if (_missile_brand_is_postfix(brand))
-                buff << " of " << missile_brand_name(brand, MBN_NAME);
+                buff << " of " << _missile_brand_name(brand, MBN_NAME);
         }
 
         // Show "runed" in the quiver (== terse) so you know if
@@ -1493,7 +1493,7 @@ std::string item_def::name_aux(description_level_type desc,
         }
 
         if (know_type)
-            buff << "wand of " << wand_type_name(item_typ);
+            buff << "wand of " << _wand_type_name(item_typ);
         else
         {
             buff << wand_secondary_string(this->special / NDSC_WAND_PRI)
