@@ -58,7 +58,7 @@ The contents of this text are:
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
-                easy_eat_gourmand, easy_eat_contaminated,
+                easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop
 4-j     Message and Display Improvements.
@@ -1085,6 +1085,15 @@ easy_eat_contaminated = false
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
+
+auto_drop_chunks = (never | rotten | yes)
+        If you try to pick something up but cannot due to burden, this
+        option will try dropping useless chunks to make room. Normally,
+        dropping chunks is a waste of time (as the problem will soon rot
+        away) so this is done only at pick up time. If set to "rotten", only
+        spoiled chunks will be considered useless, and only if you are not
+        a saprovore. If fully enabled, chunks that would spoil before you
+        would need them will be dropped as well, ordered by quality and age.
 
 prompt_for_swap = true
         If true, then if an auto-switch butchery is interrupted by a

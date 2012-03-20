@@ -1307,17 +1307,17 @@ int player_regen()
     return (rr);
 }
 
-int player_hunger_rate(void)
+int player_hunger_rate(bool temp)
 {
     int hunger = 3;
 
-    if (player_in_bat_form())
+    if (temp && player_in_bat_form())
         return (1);
 
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
-    if (you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
+    if (temp && you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, you will hunger less.
@@ -1325,7 +1325,7 @@ int player_hunger_rate(void)
         hunger--;
 
     // Moved here from main.cc... maintaining the >= 40 behaviour.
-    if (you.hunger >= 40)
+    if (temp && you.hunger >= 40)
     {
         if (you.duration[DUR_INVIS])
             hunger += 5;
@@ -1397,7 +1397,8 @@ int player_hunger_rate(void)
     hunger += scan_artefacts(ARTP_METABOLISM);
 
     // burden
-    hunger += you.burden_state;
+    if (temp)
+        hunger += you.burden_state;
 
     // sustenance affects things at the end, because it is multiplicative
     for (int s = player_equip(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)

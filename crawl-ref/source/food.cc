@@ -46,6 +46,7 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -2884,4 +2885,155 @@ const char* hunger_cost_string(const int hunger)
 
     return (hunger_descriptions[breakpoint_rank(hunger, breakpoints,
                                                 ARRAYSZ(breakpoints))]);
+}
+
+int _chunks_needed()
+{
+    if (you.form == TRAN_LICH)
+        return 1; // possibly low success rate, so don't drop everything
+
+    int gut = hunger_threshold[HS_HUNGRY + player_likes_chunks()];
+    int hunger = gut - you.hunger;
+
+    int appetite = player_hunger_rate(false);
+    hunger += appetite * FRESHEST_CORPSE * 2;
+
+    bool channeling = you.religion == GOD_SIF_MUNA;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].base_type == OBJ_STAVES
+            && you.inv[i].sub_type == STAFF_CHANNELING)
+        {
+            channeling = true;
+        }
+    }
+
+    if (channeling)
+        hunger += 2000; // a massive food sink!
+
+    int biggest_spell = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+        if (spell_hunger(you.spells[i]) > biggest_spell)
+            biggest_spell = spell_hunger(you.spells[i]);
+    hunger += biggest_spell;
+
+    int needed = 1 + std::max(0, hunger / 666);
+    dprf("want to keep %d chunks", needed);
+
+    return needed;
+}
+
+static bool _compare_second(const std::pair<int, int> &a,
+                            const std::pair<int, int> &b)
+{
+    return a.second < b.second;
+}
+
+static int _chunk_mass()
+{
+    item_def chunk;
+    chunk.base_type = OBJ_FOOD;
+    chunk.sub_type = FOOD_CHUNK;
+    return item_mass(chunk);
+}
+
+/**
+ * Try to make space in the inventory.  Caller must call pickup_burden() later.
+ * @param num_needed Try to free at least that much carrying capacity.
+**/
+maybe_bool drop_spoiled_chunks(int weight_needed)
+{
+    if (Options.auto_drop_chunks == ADC_NEVER)
+        return B_FALSE;
+
+    int num_needed = 1 + (weight_needed - 1) / _chunk_mass();
+
+    bool wants_any = you.has_spell(SPELL_SIMULACRUM)
+                  || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+
+    int nchunks = 0;
+    maybe_bool result = B_FALSE;
+
+    std::vector<std::pair<int, int> > chunk_slots;
+    for (int slot = 0; slot < ENDOFPACK; slot++)
+    {
+        item_def &item(you.inv[slot]);
+
+        if (!item.defined()
+            || item.base_type != OBJ_FOOD
+            || item.sub_type != FOOD_CHUNK)
+        {
+            continue;
+        }
+
+        bool rotten = food_is_rotten(item);
+        if (rotten && !you.mutation[MUT_SAPROVOROUS] && !wants_any)
+        {
+            num_needed -= item.quantity;
+            if (!drop_item(slot, item.quantity))
+                return result; // level full, error out
+            if (num_needed <= 0)
+                return B_TRUE;
+            result = B_MAYBE; // at least a bit lighter
+            continue;
+        }
+
+        corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
+                                                            item.plus),
+                                                        rotten);
+        if (ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_BAD || ce == CE_ROT)
+            continue; // no nutrition from those
+        // We assume that carrying poisonous chunks means you can swap rPois in.
+
+        int contam = _contamination_ratio(ce);
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
+            contam = -contam;
+
+        // Arbitrarily lower the value of poisonous chunks: swapping resistances
+        // is tedious.
+        if (ce == CE_POISONOUS)
+            contam = contam * 3 / 2;
+
+        // Have uses that care about age but not quality?
+        if (wants_any)
+            contam /= 2;
+
+        dprf("%s: to rot %d, contam %d -> badness %d",
+             item.name(DESC_PLAIN).c_str(),
+             item.special - ROTTING_CORPSE, contam,
+             contam - 3 * item.special);
+
+        // Being almost rotten has 480 badness, contamination usually 333.
+        contam -= 3 * item.special;
+
+        nchunks += item.quantity;
+        chunk_slots.push_back(std::pair<int,int>(slot, contam));
+    }
+
+    // No rotten ones to drop, and we're not allowed to drop others.
+    if (Options.auto_drop_chunks == ADC_ROTTEN)
+        return result;
+
+    nchunks -= _chunks_needed();
+
+    std::sort(chunk_slots.begin(), chunk_slots.end(), _compare_second);
+
+    while (nchunks > 0 && !chunk_slots.empty())
+    {
+        int slot = chunk_slots.back().first;
+        chunk_slots.pop_back();
+
+        int quant = std::min<int>(nchunks, you.inv[slot].quantity);
+
+        if (!drop_item(slot, quant))
+            return result; // level full, error out
+
+        if (num_needed -= quant <= 0)
+            return B_TRUE;
+
+        result = B_MAYBE; // at least a bit lighter
+    }
+
+    return result;
 }
