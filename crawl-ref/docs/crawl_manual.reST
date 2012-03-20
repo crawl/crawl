@@ -2048,8 +2048,7 @@ Fighting is the basic skill used in hand-to-hand combat, and applies no matter
 which weapon your character is wielding (if any). Fighting is also the skill
 that determines the number of hit points your character gets as they increase in
 levels (note that this is calculated so that you don't get a long run advantage
-by starting out with a high Fighting skill). The first level of Fighting skill
-can be obtained by training melee combat against plants and fungi.
+by starting out with a high Fighting skill).
 
 Weapon skills affect your ability to fight with specific melee weapons. Weapon
 skills include:
@@ -2090,8 +2089,7 @@ increases the power of those attacks for characters who get them anyway). You
 can practise Unarmed Combat by attacking empty-handed, and it is also exercised
 when you make a secondary attack (a kick, punch, etc.). Unarmed combat is
 particularly difficult to use in combination with heavy armour or shields or
-very big weapons. As with Fighting, the first level of this skill can be
-obtained by training it against plants and fungi.
+very big weapons.
 
 Ranged combat skills
 ========================================
@@ -2106,7 +2104,7 @@ There are a number of individual weapon skills for missile weapons:
 Throwing is the skill for all things hurled without a launcher: axes, spears,
 stones, nets, etc. The other skills refer to various types of missiles shot with
 a launcher. An exception to this are needles: these are launched using blowguns,
-an action which uses and trains the Throwing skill. Since stones can be thrown
+an action which uses the Throwing skill. Since stones can be thrown
 without launchers to good effect, these skills crosstrain:
 
   * Throwing and Slings
@@ -2120,7 +2118,7 @@ every time you increase the Spellcasting skill you gain some magic points and
 spell levels. This skill greatly influences the amount by which casting causes
 hunger. Spellcasting also helps with the power of your spells, but to a lesser
 extent than the more specialised magical skills. This skill is very difficult to
-learn, and requires a large amount of practice and experience.
+learn, and requires a large amount of experience.
 
 There are also individual skills for each different type of magic; the higher
 the skill, the more powerful the spell. Multidisciplinary spells use an average
@@ -2151,24 +2149,21 @@ Armour
   armour's description (from within the inventory), you can see in particular
   show you how cumbersome it is. This is measured by the Evasion modifier.
 
-  Walking and fighting in heavy armour will train the Armour skill. This skill
-  helps to overcome the evasion penalty of body armours, reduces the amount by
-  which heavy armour hamper melee fighting and also mitigates the bad effects of
-  heavy armour on spellcasting. A really high Armour skill increases the AC
-  provided by other types of armour (gloves, cloaks, etc.).
+  This skill helps to overcome the evasion penalty of body armours, reduces the
+  amount by which heavy armour hamper melee fighting and also mitigates the bad
+  effects of heavy armour on spellcasting. A really high Armour skill increases
+  the AC provided by other types of armour (gloves, cloaks, etc.).
 
 Dodging
-  Not getting hit by weapons, missiles and spells trains Dodging. This is easier
-  done in lighter armours. A high Dodging skill helps you to evade attacks
-  better. You also train the Dodging skill when wearing a heavy armour, but more
-  slowly.
+  A high Dodging skill helps you to evade melee and ranged attacks more
+  effectively. This is more easily done in light armour, but can still be useful
+  in heavier armour.
 
 Stealth
-  Helps you avoid being noticed. Try not to wear heavy armour or be encumbered
-  if you want to be stealthy. Large creatures (like Trolls) are bad at stealth.
-  The big exception are Nagas, which are unusually stealthy. Stealth is trained
-  by walking around lightly armoured, and especially by walking around
-  unnoticed.
+  Helps you avoid being noticed, and makes monsters more likely to lose track of
+  you when you leave their line of sight. Try not to wear heavy armour or be
+  encumbered if you want to be stealthy. Large creatures (like Trolls) are bad
+  at stealth. The big exception are Nagas, which are unusually stealthy.
 
 Stabbing
   Lets you make a very powerful first strike against a sleeping/resting monster
