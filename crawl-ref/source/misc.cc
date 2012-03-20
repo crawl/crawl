@@ -2081,7 +2081,7 @@ void revive()
 
     you.disease = 0;
     you.magic_contamination = 0;
-    set_hunger(6000, true);
+    set_hunger(HUNGER_DEFAULT, true);
     restore_stat(STAT_ALL, 0, true);
     you.rotting = 0;
 
