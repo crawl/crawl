@@ -1821,7 +1821,7 @@ struct spell_desc
      SPFLAG_AREA,
      3,
      100,
-     -1, -1,
+     1, 1,
      0,
      NULL,
      false,
