@@ -749,6 +749,7 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
+    auto_drop_chunks       = ADC_NEVER;
     prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
     easy_eat_gourmand      = false;
@@ -2273,6 +2274,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(easy_eat_gourmand);
     else BOOL_OPTION(easy_eat_contaminated);
     else BOOL_OPTION(auto_eat_chunks);
+    else if (key == "auto_drop_chunks")
+    {
+        if (field == "never")
+            auto_drop_chunks = ADC_NEVER;
+        else if (field == "rotten")
+            auto_drop_chunks = ADC_ROTTEN;
+        else if (field == "yes" || field == "true")
+            auto_drop_chunks = ADC_YES;
+        else
+            report_error("Invalid auto_drop_chunks: \"" + field + "\"");
+    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS

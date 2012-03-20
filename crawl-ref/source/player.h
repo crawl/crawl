@@ -809,7 +809,7 @@ int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
 int player_movement_speed(bool ignore_burden = false);
 
-int player_hunger_rate(void);
+int player_hunger_rate(bool temp = true);
 
 int calc_hunger(int food_cost);
 

@@ -1716,7 +1716,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
 
-    const int imass = unit_mass * quant_got;
+    int imass = unit_mass * quant_got;
+    if (!ignore_burden && (you.burden + imass > carrying_capacity()))
+    {
+        if (drop_spoiled_chunks(you.burden + imass - carrying_capacity()))
+            imass = unit_mass * quant_got;
+    }
 
     bool partial_pickup = false;
 
@@ -2886,11 +2891,20 @@ static void _do_autopickup()
         if (item_needs_autopickup(mitm[o]))
         {
             int num_to_take = mitm[o].quantity;
-            if (Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
+            int unit_mass = item_mass(mitm[o]);
+            if (Options.autopickup_no_burden && unit_mass != 0)
             {
-                int num_can_take =
-                    (carrying_capacity(you.burden_state) - you.burden) /
-                        item_mass(mitm[o]);
+                int capacity = carrying_capacity(you.burden_state);
+                int num_can_take = (capacity - you.burden) / unit_mass;
+
+                if (num_can_take < num_to_take
+                    && drop_spoiled_chunks(you.burden
+                           + num_to_take * unit_mass - capacity))
+                {
+                    // Yay, some new space, retry.
+                    // Compare to the old burden capacity, not the new one.
+                    num_can_take = (capacity - you.burden) / unit_mass;
+                }
 
                 if (num_can_take < num_to_take)
                 {
