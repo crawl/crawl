@@ -857,7 +857,7 @@ static std::string _how_hungry()
 
 bool food_change(bool suppress_message)
 {
-    uint8_t newstate = HS_ENGORGED;
+    hunger_state_t newstate = HS_ENGORGED;
     bool state_changed = false;
     bool less_hungry   = false;
 

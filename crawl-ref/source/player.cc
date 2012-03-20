@@ -2240,6 +2240,8 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
             return (std::min(mlevel, 2));
         case HS_SATIATED:
             return (std::min(mlevel, 1));
+        default:
+            return 0;
         }
     }
 

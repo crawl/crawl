@@ -1259,6 +1259,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
             case HS_FULL:      rotting = coinflip();        break;
             case HS_VERY_FULL: rotting = one_chance_in(3);  break;
             case HS_ENGORGED:  rotting = false;             break;
+            default: ;
             }
         }
     }
