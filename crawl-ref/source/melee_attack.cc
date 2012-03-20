@@ -553,9 +553,6 @@ bool melee_attack::handle_phase_hit()
         emit_foul_stench();
     }
 
-    if (attacker->atype() == ACT_PLAYER)
-        player_sustain_passive_damage();
-
     return (true);
 }
 
@@ -862,7 +859,11 @@ bool melee_attack::attack()
                 return (false);
             }
 
-            if (!handle_phase_hit())
+            bool cont = handle_phase_hit();
+
+            attacker_sustain_passive_damage();
+
+            if (!cont)
                 return (false);
         }
         else
@@ -3323,9 +3324,14 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
     return (false);
 }
 
-void melee_attack::player_sustain_passive_damage()
+void melee_attack::attacker_sustain_passive_damage()
 {
-    if (mons_class_flag(defender->type, M_ACID_SPLASH))
+    // If the defender has been cleaned up, it's too late for anything.
+    if (defender->type == MONS_PROGRAM_BUG)
+        return;
+
+    // FIXME: monsters should suffer from attacking jellies
+    if (attacker->is_player() && mons_class_flag(defender->type, M_ACID_SPLASH))
         weapon_acid(5);
 }
 

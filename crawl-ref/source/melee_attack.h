@@ -159,7 +159,7 @@ private:
 
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
-    void player_sustain_passive_damage();
+    void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
