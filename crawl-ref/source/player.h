@@ -65,7 +65,7 @@ public:
 
   int hunger;
   int disease;
-  uint8_t hunger_state;
+  hunger_state_t hunger_state;
   uint8_t max_level;
   uint8_t hit_points_regeneration;
   uint8_t magic_points_regeneration;

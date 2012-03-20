@@ -1654,7 +1654,7 @@ enum holy_word_source_type
     HOLY_WORD_TSO         = -5,  // TSO effect
 };
 
-enum hunger_state                  // you.hunger_state
+enum hunger_state_t                    // you.hunger_state
 {
     HS_STARVING,
     HS_NEAR_STARVING,
