@@ -1321,7 +1321,7 @@ struct spell_desc
      SPTYP_CHARMS | SPTYP_POISON,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      3,
-     0,
+     200,
      -1, -1,
      0,
      NULL,
@@ -1768,7 +1768,7 @@ struct spell_desc
      SPTYP_CHARMS | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // this is high for a reason - Warp brands are very powerful.
-     0,
+     200,
      -1, -1,
      0,
      NULL,
