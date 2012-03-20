@@ -5615,7 +5615,7 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
         coord_def dest_pos;
         do
             dest_pos = random_in_bounds();
-        while (grd(dest_pos) != DNGN_FLOOR);
+        while (grd(dest_pos) != DNGN_FLOOR || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
         if (!shaft)
         {
             env.markers.add(new map_position_marker(base_pos, dest_pos));
