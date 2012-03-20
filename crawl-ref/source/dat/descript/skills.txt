@@ -28,7 +28,7 @@ Being skilled with a particular type of weapon will allow you to attack more qui
 
 Axes have some of the strongest two-handed weapons, although they require a lot of skill to be used effectively.
 
-Being skilled with Axes makes it easier to become more skilled with Polearms, and vice versa.
+Being skilled with Axes makes it easier to become more skilled with Maces & Flails or Polearms, and vice versa.
 %%%%
 Maces & Flails
 
@@ -178,7 +178,7 @@ Earth Magic
 
 Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case spellcasting success and power will depend on the average skill in these schools.
 
-Earth Magic contains spells able to deal large amounts of direct physical damage, which can be mitigated by armour but cannot be fully resisted like fire, cold and lightning damage can. It is also linked with some Transmutations, with spells to liquefy the earth around you, or to turn your enemies to stone.
+Earth Magic contains spells able to deal large amounts of direct physical damage, which cannot be resisted like fire, cold and lightning damage can. It is also linked with some Transmutations, with spells to liquefy the earth around you, or to turn your enemies to stone.
 
 Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
