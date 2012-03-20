@@ -5414,7 +5414,7 @@ void player::init()
     stat_zero.init(0);
     stat_zero_cause.init("");
 
-    hunger          = 6000;
+    hunger          = HUNGER_DEFAULT;
     hunger_state    = HS_SATIATED;
     disease         = 0;
     max_level       = 1;

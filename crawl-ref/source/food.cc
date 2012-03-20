@@ -75,7 +75,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
     if (crawl_state.game_is_zotdef() && you.is_undead != US_SEMI_UNDEAD)
     {
-        you.hunger = 6000;
+        you.hunger = HUNGER_DEFAULT;
         you.hunger_state = HS_SATIATED;
         return;
     }
@@ -855,9 +855,13 @@ static std::string _how_hungry()
     return ("hungry");
 }
 
+static const int hunger_threshold[HS_ENGORGED + 1] =
+    { 1000, 1533, 2055, 2600, 7000, 9000, 11000, 40000 };
+
 bool food_change(bool suppress_message)
 {
-    hunger_state_t newstate = HS_ENGORGED;
+    COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
+
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -865,20 +869,9 @@ bool food_change(bool suppress_message)
     you.hunger = std::min(you_max_hunger(), you.hunger);
 
     // Get new hunger state.
-    if (you.hunger <= 1000)
-        newstate = HS_STARVING;
-    else if (you.hunger <= 1533)
-        newstate = HS_NEAR_STARVING;
-    else if (you.hunger <= 2066)
-        newstate = HS_VERY_HUNGRY;
-    else if (you.hunger <= 2600)
-        newstate = HS_HUNGRY;
-    else if (you.hunger < 7000)
-        newstate = HS_SATIATED;
-    else if (you.hunger < 9000)
-        newstate = HS_FULL;
-    else if (you.hunger < 11000)
-        newstate = HS_VERY_FULL;
+    hunger_state_t newstate = HS_STARVING;
+    while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
+        newstate = (hunger_state_t)(newstate + 1);
 
     if (newstate != you.hunger_state)
     {
@@ -2831,20 +2824,20 @@ int you_max_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return (6000);
+        return HUNGER_DEFAULT;
 
     // Ghouls can never be full or above.
     if (you.species == SP_GHOUL)
-        return (6999);
+        return hunger_threshold[HS_SATIATED];
 
-    return (40000);
+    return hunger_threshold[HS_ENGORGED];
 }
 
 int you_min_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return (6000);
+        return HUNGER_DEFAULT;
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
     if (you.is_undead)
