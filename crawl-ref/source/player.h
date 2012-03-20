@@ -570,7 +570,6 @@ public:
     void expose_to_element(beam_type element, int strength = 0);
     void god_conduct(conduct_type thing_done, int level);
 
-    int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true);
