@@ -29,6 +29,7 @@
 
 static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);
+static void _good_god_holy_fail_attitude_change(monster* holy);
 
 
 void good_god_follower_attitude_change(monster* mons)
@@ -60,14 +61,14 @@ void good_god_follower_attitude_change(monster* mons)
                 msg::stream << mons->name(DESC_THE)
                             << " glares at your weapon."
                             << std::endl;
-                good_god_holy_fail_attitude_change(mons);
+                _good_god_holy_fail_attitude_change(mons);
                 return;
             }
             good_god_holy_attitude_change(mons);
             stop_running();
         }
         else
-            good_god_holy_fail_attitude_change(mons);
+            _good_god_holy_fail_attitude_change(mons);
     }
 }
 
@@ -348,7 +349,7 @@ void good_god_holy_attitude_change(monster* holy)
     mons_att_changed(holy);
 }
 
-void good_god_holy_fail_attitude_change(monster* holy)
+static void _good_god_holy_fail_attitude_change(monster* holy)
 {
     ASSERT(holy->is_holy());
 

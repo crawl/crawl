@@ -489,7 +489,7 @@ bool item_known_cursed(const item_def &item)
             && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed());
 }
 
-bool item_known_uncursed(const item_def &item)
+static bool _item_known_uncursed(const item_def &item)
 {
     return (!(full_ident_mask(item) & ISFLAG_KNOW_CURSE)
             || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed()));
@@ -1200,15 +1200,6 @@ bool jewellery_is_amulet(int sub_type)
     return (sub_type >= AMU_RAGE);
 }
 
-// Returns the basic light status of an armour, ignoring things like the
-// elven bonus... you probably want is_light_armour() most times.
-bool base_armour_is_light(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-
-    return (Armour_prop[ Armour_index[item.sub_type] ].light);
-}
-
 // Returns number of sizes off (0 if fitting).
 int fit_armour_size(const item_def &item, size_type size)
 {
@@ -1480,7 +1471,7 @@ int get_damage_type(const item_def &item)
     return (ret);
 }
 
-bool does_damage_type(const item_def &item, int dam_type)
+static bool _does_damage_type(const item_def &item, int dam_type)
 {
     return (get_damage_type(item) & dam_type);
 }
@@ -1495,7 +1486,7 @@ int single_damage_type(const item_def &item)
 
         for (int i = 1; i <= DAM_MAX_TYPE; i <<= 1)
         {
-            if (!does_damage_type(item, i))
+            if (!_does_damage_type(item, i))
                 continue;
 
             if (one_chance_in(++count))
@@ -1556,7 +1547,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
             fit = cmp_weapon_size(item, size);
 
             // Adjust handedness for non-medium races:
-            // (XX values don't matter, see fit_weapon_wieldable_size)
+            // (XX values don't matter, see _fit_weapon_wieldable_size)
             //
             //         Spriggan Kobold  Human   Ogre    Big     Giant
             // Little      0       0      0      XX     XX      XX
@@ -1881,7 +1872,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     if (get_item_slot(item) != slot)
         return true;
 
-    if (item.base_type == OBJ_ARMOUR || !item_known_uncursed(item))
+    if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
         return false;
 
     if (item.base_type == OBJ_JEWELLERY)
@@ -2069,25 +2060,12 @@ int cmp_weapon_size(const item_def &item, size_type size)
 }
 
 // Returns number of sizes away from being a usable weapon.
-int fit_weapon_wieldable_size(const item_def &item, size_type size)
+static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
 {
-    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
-
     const int fit = cmp_weapon_size(item, size);
 
     return ((fit < -2) ? fit + 2 :
             (fit >  1) ? fit - 1 : 0);
-}
-
-// Returns number of sizes away from being throwable... the window
-// is currently [size - 5, size - 1].
-int fit_item_throwable_size(const item_def &item, size_type size)
-{
-    int ret = item_size(item) - size;
-
-    return ((ret >= 0) ? ret + 1 :
-            (ret > -6) ? 0
-                       : ret + 5);
 }
 
 // Returns true if weapon is usable as a weapon.
@@ -2099,7 +2077,7 @@ bool check_weapon_wieldable_size(const item_def &item, size_type size)
     if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         return (true);
 
-    int fit = fit_weapon_wieldable_size(item, size);
+    int fit = _fit_weapon_wieldable_size(item, size);
 
     // Adjust fit for size.
     if (size < SIZE_SMALL && fit > 0)
@@ -2133,15 +2111,6 @@ missile_type fires_ammo_type(weapon_type wtype)
 bool is_range_weapon(const item_def &item)
 {
     return (fires_ammo_type(item) != MI_NONE);
-}
-
-bool is_range_weapon_type(weapon_type wtype)
-{
-    item_def wpn;
-    wpn.base_type = OBJ_WEAPONS;
-    wpn.sub_type = wtype;
-
-    return (is_range_weapon(wpn));
 }
 
 const char *ammo_name(missile_type ammo)
@@ -2414,7 +2383,7 @@ int food_turns(const item_def &item)
 
 bool can_cut_meat(const item_def &item)
 {
-    return (does_damage_type(item, DAM_SLICE));
+    return (_does_damage_type(item, DAM_SLICE));
 }
 
 bool is_fruit(const item_def & item)
@@ -2437,13 +2406,6 @@ bool food_is_rotten(const item_def &item)
                                        && item.sub_type == CORPSE_BODY
                                     || item.base_type == OBJ_FOOD
                                        && item.sub_type == FOOD_CHUNK);
-}
-
-int corpse_freshness(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_CORPSES);
-    ASSERT(item.special <= FRESHEST_CORPSE);
-    return (item.special);
 }
 
 //

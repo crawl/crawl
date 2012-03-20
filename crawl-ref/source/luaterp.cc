@@ -109,7 +109,7 @@ static int _report(lua_State *ls, int status)
 
 static bool _luaterp_running = false;
 
-void run_clua_interpreter(lua_State *ls)
+static void _run_clua_interpreter(lua_State *ls)
 {
     _luaterp_running = true;
 
@@ -156,7 +156,7 @@ void debug_terp_dlua()
         }
         _loaded_terp_files = true;
     }
-    run_clua_interpreter(dlua);
+    _run_clua_interpreter(dlua);
 }
 
 #endif

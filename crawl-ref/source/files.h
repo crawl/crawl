@@ -64,15 +64,8 @@ bool check_mkdir(const std::string &what, std::string *dir,
 // Find saved games for all game types.
 std::vector<player_save_info> find_all_saved_characters();
 
-// Find saved games for the current game type.
-std::vector<player_save_info> find_saved_characters();
-
-std::string get_savefile_directory(bool ignore_game_type = false);
-std::string get_bonefile_directory(bool ignore_game_type = false);
 std::string get_save_filename(const std::string &name);
 std::string get_savedir_filename(const std::string &name);
-std::string get_base_savedir_path(const std::string &subpath = "");
-std::string get_savedir_path(const std::string &shortpath);
 std::string savedir_versioned_path(const std::string &subdirs = "");
 std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,

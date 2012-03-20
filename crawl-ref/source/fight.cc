@@ -192,20 +192,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
     return (true);
 }
 
-// This function returns the "extra" stats the player gets because of
-// choice of weapon... it's used only for giving warnings when a player
-// wields a less than ideal weapon.
-int effective_stat_bonus(int wepType)
-{
-    int str_weight;
-    if (wepType == -1)
-        str_weight = player_weapon_str_weight();
-    else
-        str_weight = weapon_str_weight(OBJ_WEAPONS, wepType);
-
-    return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
-}
-
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender)
 {

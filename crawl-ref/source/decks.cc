@@ -1422,7 +1422,7 @@ void evoke_deck(item_def& deck)
     you.wield_change = true;
 }
 
-int get_power_level(int power, deck_rarity_type rarity)
+static int _get_power_level(int power, deck_rarity_type rarity)
 {
     int power_level = 0;
     switch (rarity)
@@ -1447,7 +1447,7 @@ int get_power_level(int power, deck_rarity_type rarity)
 // Actual card implementations follow.
 static void _portal_card(int power, deck_rarity_type rarity)
 {
-    const int control_level = get_power_level(power, rarity);
+    const int control_level = _get_power_level(power, rarity);
     bool controlled = false;
 
     if (x_chance_in_y(control_level, 2))
@@ -1476,7 +1476,7 @@ static void _warp_card(int power, deck_rarity_type rarity)
         return;
     }
 
-    const int control_level = get_power_level(power, rarity);
+    const int control_level = _get_power_level(power, rarity);
     if (control_level >= 2)
         blink(1000, false);
     else if (control_level == 1)
@@ -1498,7 +1498,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     if (power_level >= 2)
     {
         potion_effect(POT_SPEED, random2(power / 4));
@@ -1519,7 +1519,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     }
 
     // Calculate how many extra banishments you get.
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     int nemelex_bonus = 0;
     if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
         nemelex_bonus = you.piety;
@@ -1549,7 +1549,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
 
 static void _warpwright_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     if (you.level_type == LEVEL_ABYSS)
     {
@@ -1576,7 +1576,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 
 static void _flight_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     // Assume something _will_ happen.
     bool success = true;
@@ -1616,7 +1616,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
 
 static void _minefield_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const int radius = power_level * 2 + 2;
     for (radius_iterator ri(you.pos(), radius, false, false, false); ri; ++ri)
     {
@@ -1680,7 +1680,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
 static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                            bool dealt = false)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const char *participle = dealt ? "dealt" : "drawn";
 
     dist target;
@@ -1758,7 +1758,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
 static void _elixir_card(int power, deck_rarity_type rarity)
 {
-    int power_level = get_power_level(power, rarity);
+    int power_level = _get_power_level(power, rarity);
 
     if (power_level == 1 && you.hp * 2 > you.hp_max)
         power_level = 0;
@@ -1786,7 +1786,7 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 
 static void _battle_lust_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     if (power_level >= 2)
     {
         you.set_duration(DUR_SLAYING, random2(power/6) + 1,
@@ -1803,7 +1803,7 @@ static void _battle_lust_card(int power, deck_rarity_type rarity)
 
 static void _metamorphosis_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     transformation_type trans;
 
     if (power_level >= 2)
@@ -1825,7 +1825,7 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
 
 static void _helm_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     bool do_phaseshift = false;
     bool do_stoneskin  = false;
     bool do_shield     = false;
@@ -1884,7 +1884,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
 
     wield_weapon(false);
 
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     brand_type brand;
 
     if (power_level >= 2)
@@ -1922,7 +1922,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
 
 static void _shadow_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     if (power_level >= 1)
     {
@@ -1936,7 +1936,7 @@ static void _shadow_card(int power, deck_rarity_type rarity)
 
 static void _potion_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     potion_type pot_effects[] = {
         POT_AGILITY, POT_AGILITY, POT_BRILLIANCE,
         POT_BRILLIANCE, POT_MIGHT, POT_MIGHT,
@@ -2035,7 +2035,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
 
 static void _experience_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     if (you.experience_level < 27)
         mpr("You feel more experienced.");
@@ -2073,7 +2073,7 @@ static void _remove_bad_mutation()
 
 static void _helix_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     if (power_level == 0)
     {
@@ -2157,7 +2157,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
 
 void sage_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     int c;                      // how much to weight your skills
     if (power_level == 0)
         c = 0;
@@ -2245,7 +2245,7 @@ static void _deepen_water(const coord_def& center, int radius)
 
 static void _water_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     if (power_level == 0)
     {
         mpr("You create a pond!");
@@ -2280,7 +2280,7 @@ static void _water_card(int power, deck_rarity_type rarity)
 
 static void _glass_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const int radius = (power_level == 2) ? 1000
                                           : random2(power/40) + 2;
     vitrify_area(radius);
@@ -2288,7 +2288,7 @@ static void _glass_card(int power, deck_rarity_type rarity)
 
 static void _dowsing_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     bool things_to_do[3] = { false, false, false };
     things_to_do[random2(3)] = true;
 
@@ -2352,7 +2352,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         return;
     }
 
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     bool done_stuff = false;
 
     // [ds] FIXME: Remove the LEVEL_DUNGEON restriction once Crawl
@@ -2480,7 +2480,7 @@ static void _godly_wrath()
 
 static void _curse_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     mpr("You feel a malignant aura surround you.");
     if (power_level >= 2)
@@ -2507,7 +2507,7 @@ static void _curse_card(int power, deck_rarity_type rarity)
 
 static void _crusade_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     if (power_level >= 1)
     {
         // A chance to convert opponents.
@@ -2539,7 +2539,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
 
 static void _summon_demon_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     demon_class_type dct;
     if (power_level >= 2)
         dct = DEMON_GREATER;
@@ -2565,7 +2565,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
 
 static void _summon_any_monster(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     monster_type mon_chosen = NUM_MONSTERS;
     coord_def chosen_spot;
     int num_tries;
@@ -2618,7 +2618,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     monster *mon =
         create_monster(
@@ -2689,7 +2689,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 
 static void _summon_flying(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
 
     const monster_type flytypes[] = {
         MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_BUMBLEBEE,
@@ -2721,7 +2721,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
 static void _summon_skeleton(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const bool friendly = !one_chance_in(4 + power_level * 2);
     const monster_type skeltypes[] = {
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
@@ -2739,7 +2739,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
 
 static void _summon_ugly(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     const bool friendly = !one_chance_in(4 + power_level * 2);
     monster_type ugly;
     if (power_level >= 2)
@@ -2762,7 +2762,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
 
 static void _alchemist_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);
+    const int power_level = _get_power_level(power, rarity);
     int gold_used = std::min(you.gold, random2avg(100, 2) * (1 + power_level));
     bool done_stuff = false;
 

@@ -124,13 +124,8 @@ static bool is_save_file_name(const std::string &name)
     return !strcasecmp(name.c_str() + off, SAVE_SUFFIX);
 }
 
-bool save_exists(const std::string& filename)
-{
-    return file_exists(get_savefile_directory() + filename);
-}
-
 // Returns the save_info from the save.
-player_save_info read_character_info(package *save)
+static player_save_info _read_character_info(package *save)
 {
     player_save_info fromfile;
 
@@ -514,22 +509,20 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
 // Get the directory that contains save files for the current game
 // type. This will not be the same as get_base_savedir() for game
 // types such as Sprint.
-std::string get_savefile_directory(bool ignore_game_type)
+std::string _get_savefile_directory()
 {
-    std::string dir = Options.save_dir;
-    if (!ignore_game_type)
-        dir = catpath(dir, crawl_state.game_savedir_path());
+    std::string dir = catpath(Options.save_dir,
+                              crawl_state.game_savedir_path());
     check_mkdir("Save directory", &dir, false);
     if (dir.empty())
         dir = ".";
     return (dir);
 }
 
-std::string get_bonefile_directory(bool ignore_game_type)
+static std::string _get_bonefile_directory()
 {
-    std::string dir = Options.shared_dir;
-    if (!ignore_game_type)
-        dir = catpath(dir, crawl_state.game_savedir_path());
+    std::string dir = catpath(Options.shared_dir,
+                              crawl_state.game_savedir_path());
     check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
@@ -537,28 +530,21 @@ std::string get_bonefile_directory(bool ignore_game_type)
 }
 
 // Returns a subdirectory of the current savefile directory as returned by
-// get_savefile_directory.
-std::string get_savedir_path(const std::string &shortpath)
+// _get_savefile_directory.
+static std::string _get_savedir_path(const std::string &shortpath)
 {
     return canonicalise_file_separator(
-        catpath(get_savefile_directory(), shortpath));
+        catpath(_get_savefile_directory(), shortpath));
 }
 
-// Returns the base save directory that contains all saves and cache
-// directories. Save files for game type != GAME_TYPE_NORMAL may be
-// found in a subdirectory of this dir. Use get_savefile_directory()
-// if you want the directory that contains save games for the current
-// game type.
-std::string get_base_savedir()
+// Returns a subdirectory of the base save directory that contains all saves
+// and cache directories. Save files for game type != GAME_TYPE_NORMAL may
+// be found in a subdirectory of this dir. Use _get_savefile_directory() if
+// you want the directory that contains save games for the current game
+// type.
+static std::string _get_base_savedir_path(const std::string &subpath = "")
 {
-    return Options.save_dir;
-}
-
-// Returns a subdirectory of the base save directory as returned by
-// get_base_savedir.
-std::string get_base_savedir_path(const std::string &shortpath)
-{
-    return canonicalise_file_separator(catpath(get_base_savedir(), shortpath));
+    return canonicalise_file_separator(catpath(Options.save_dir, subpath));
 }
 
 // Given a simple (relative) path, returns the path relative to the
@@ -569,9 +555,9 @@ std::string savedir_versioned_path(const std::string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
     const std::string versioned_dir =
-        get_base_savedir_path("cache." + Version::Long());
+        _get_base_savedir_path("cache." + Version::Long());
 #else
-    const std::string versioned_dir = get_base_savedir_path();
+    const std::string versioned_dir = _get_base_savedir_path();
 #endif
     return catpath(versioned_dir, shortpath);
 }
@@ -626,40 +612,16 @@ static void _fill_player_doll(player_save_info &p, package *save)
 }
 #endif
 
-std::vector<player_save_info> find_all_saved_characters()
-{
-    std::set<std::string> dirs;
-    std::vector<player_save_info> saved_characters;
-    for (int i = 0; i < NUM_GAME_TYPE; ++i)
-    {
-        unwind_var<game_type> gt(
-            crawl_state.type,
-            static_cast<game_type>(i));
-
-        const std::string savedir = get_savefile_directory();
-        if (dirs.find(savedir) != dirs.end())
-            continue;
-
-        dirs.insert(savedir);
-
-        std::vector<player_save_info> chars_in_dir = find_saved_characters();
-        saved_characters.insert(saved_characters.end(),
-                                chars_in_dir.begin(),
-                                chars_in_dir.end());
-    }
-    return (saved_characters);
-}
-
 /*
  * Returns a list of the names of characters that are already saved for the
  * current user.
  */
 
-std::vector<player_save_info> find_saved_characters()
+static std::vector<player_save_info> _find_saved_characters()
 {
     std::vector<player_save_info> chars;
 #ifndef DISABLE_SAVEGAME_LISTS
-    std::string searchpath = get_savefile_directory();
+    std::string searchpath = _get_savefile_directory();
 
     if (searchpath.empty())
         searchpath = ".";
@@ -676,8 +638,8 @@ std::vector<player_save_info> find_saved_characters()
         {
             try
             {
-                package save(get_savedir_path(filename).c_str(), false);
-                player_save_info p = read_character_info(&save);
+                package save(_get_savedir_path(filename).c_str(), false);
+                player_save_info p = _read_character_info(&save);
                 if (!p.name.empty())
                 {
                     p.filename = filename;
@@ -701,9 +663,38 @@ std::vector<player_save_info> find_saved_characters()
     return (chars);
 }
 
+std::vector<player_save_info> find_all_saved_characters()
+{
+    std::set<std::string> dirs;
+    std::vector<player_save_info> saved_characters;
+    for (int i = 0; i < NUM_GAME_TYPE; ++i)
+    {
+        unwind_var<game_type> gt(
+            crawl_state.type,
+            static_cast<game_type>(i));
+
+        const std::string savedir = _get_savefile_directory();
+        if (dirs.find(savedir) != dirs.end())
+            continue;
+
+        dirs.insert(savedir);
+
+        std::vector<player_save_info> chars_in_dir = _find_saved_characters();
+        saved_characters.insert(saved_characters.end(),
+                                chars_in_dir.begin(),
+                                chars_in_dir.end());
+    }
+    return (saved_characters);
+}
+
+bool save_exists(const std::string& filename)
+{
+    return file_exists(_get_savefile_directory() + filename);
+}
+
 std::string get_savedir_filename(const std::string &name)
 {
-    return get_savefile_directory() + get_save_filename(name);
+    return _get_savefile_directory() + get_save_filename(name);
 }
 
 std::string get_save_filename(const std::string &name)
@@ -715,10 +706,10 @@ std::string get_save_filename(const std::string &name)
 std::string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return get_savefile_directory() + "start-"
+    return _get_savefile_directory() + "start-"
            + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
 #else
-    return get_savefile_directory() + "start-ns.prf";
+    return _get_savefile_directory() + "start-ns.prf";
 #endif
 }
 
@@ -814,8 +805,10 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
-                        dungeon_feature_type stair_taken, bool &find_first)
+static int _get_dest_stair_type(level_area_type old_level_type,
+                                branch_type old_branch,
+                                dungeon_feature_type stair_taken,
+                                bool &find_first)
 {
     // Order is important here.
     if (stair_taken == DNGN_EXIT_PANDEMONIUM)
@@ -908,9 +901,9 @@ static void _place_player_on_stair(level_area_type old_level_type,
 {
     bool find_first = true;
     dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level_type, old_branch,
-                                static_cast<dungeon_feature_type>(stair_taken),
-                                find_first));
+            _get_dest_stair_type(old_level_type, old_branch,
+                                 static_cast<dungeon_feature_type>(stair_taken),
+                                 find_first));
 
     if (crawl_state.game_is_zotdef())
     {
@@ -1229,9 +1222,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // XXX: This is ugly.
         bool dummy;
         dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level.level_type, old_level.branch,
-                                static_cast<dungeon_feature_type>(stair_taken),
-                                dummy));
+            _get_dest_stair_type(old_level.level_type, old_level.branch,
+                                 static_cast<dungeon_feature_type>(stair_taken),
+                                 dummy));
 
         _clear_env_map();
         builder(you.absdepth0, you.level_type, true, stair_type);
@@ -1599,7 +1592,7 @@ static std::string _make_ghost_filename()
         suffix = _make_portal_vault_ghost_suffix();
     else
         suffix = replace_all(level_id::current().describe(), ":", "-");
-    return get_bonefile_directory() + "bones." + suffix;
+    return _get_bonefile_directory() + "bones." + suffix;
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -1739,7 +1732,7 @@ bool restore_game(const std::string& filename)
     // it reduces the dungeon to 1 level, making D:1's place name "D"
     // in save chunks.
     initialise_branches_for_game_type();
-    you.save = new package((get_savefile_directory() + filename).c_str(), true);
+    you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
     {

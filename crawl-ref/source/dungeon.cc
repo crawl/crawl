@@ -157,6 +157,7 @@ static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
 static void _dgn_unregister_vault(const map_def &map);
+static void _remember_vault_placement(std::string key, const vault_placement &place);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults.
@@ -1081,9 +1082,9 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     env.level_vaults.push_back(new vault_placement(place));
     if (register_vault)
     {
-        remember_vault_placement(place.map.has_tag("extra")
-                                 ? LEVEL_EXTRAS_KEY: LEVEL_VAULTS_KEY,
-                                 place);
+        _remember_vault_placement(place.map.has_tag("extra")
+                                  ? LEVEL_EXTRAS_KEY: LEVEL_VAULTS_KEY,
+                                  place);
     }
 }
 
@@ -4050,7 +4051,7 @@ static const object_class_type _acquirement_item_classes[] =
 #define NC_KITTEHS           3
 #define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
 
-int dgn_item_corpse(const item_spec &ispec, const coord_def where)
+static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     mons_spec mspec(ispec.corpse_monster_spec());
     int corpse_index = -1;
@@ -4149,7 +4150,7 @@ retry:
         (acquire ?
          acquirement_create_item(base_type, spec.acquirement_source,
                                  true, where)
-         : spec.corpselike() ? dgn_item_corpse(spec, where)
+         : spec.corpselike() ? _dgn_item_corpse(spec, where)
          : items(spec.allow_uniques, base_type,
                   spec.sub_type, true, level, spec.race, 0,
                   spec.ego, -1, spec.level == ISPEC_MUNDANE));
@@ -4368,7 +4369,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     retry:
 
         const int item_made = (spec.corpselike() ?
-                               dgn_item_corpse(spec, mon->pos())
+                               _dgn_item_corpse(spec, mon->pos())
                                : items(spec.allow_uniques, spec.base_type,
                                        spec.sub_type, true, item_level,
                                        spec.race, 0, spec.ego, -1,
@@ -6429,7 +6430,7 @@ void vault_placement::connect(bool spotty) const
     }
 }
 
-void remember_vault_placement(std::string key, const vault_placement &place)
+static void _remember_vault_placement(std::string key, const vault_placement &place)
 {
     // First we store some info on the vault into the level's properties
     // hash table, so that if there's a crash the crash report can list
