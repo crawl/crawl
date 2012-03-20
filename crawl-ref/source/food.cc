@@ -2942,7 +2942,7 @@ static int _chunk_mass()
  * Try to make space in the inventory.  Caller must call pickup_burden() later.
  * @param num_needed Try to free at least that much carrying capacity.
 **/
-maybe_bool drop_spoiled_chunks(int weight_needed)
+maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
 {
     if (Options.auto_drop_chunks == ADC_NEVER)
         return B_FALSE;
@@ -3025,6 +3025,8 @@ maybe_bool drop_spoiled_chunks(int weight_needed)
         chunk_slots.pop_back();
 
         int quant = std::min<int>(nchunks, you.inv[slot].quantity);
+        if (whole_slot && quant < you.inv[slot].quantity)
+            return result;
 
         if (!drop_item(slot, quant))
             return result; // level full, error out
