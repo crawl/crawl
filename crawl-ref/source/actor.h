@@ -118,7 +118,6 @@ public:
                              bool ignore_brand = false,
                              bool ignore_transform = false) const = 0;
 
-    virtual int hunger_level() const { return HS_ENGORGED; }
     virtual void make_hungry(int nutrition, bool silent = true)
     {
     }
