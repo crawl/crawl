@@ -5025,9 +5025,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
     }
 
-    if (!alive())
-        return;
-
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
     {
@@ -5065,9 +5062,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         const bool needs_message = spawned && mons_near(this)
                                    && visible_to(&you);
 
-        if (needs_message)
+        if (!needs_message)
+            return;
+
+        const std::string monnam = name(DESC_THE);
+        if (alive())
         {
-            const std::string monnam = name(DESC_THE);
             mprf("%s shudders%s.", monnam.c_str(),
                  spawned >= 5 ? " alarmingly" :
                  spawned >= 3 ? " violently" :
@@ -5082,8 +5082,19 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                      number_in_words(spawned).c_str());
             }
         }
+        else if (spawned == 1)
+            mprf("One of %s's fragments survives.", monnam.c_str());
+        else
+        {
+            mprf("The dying %s spits out %s more jellies.",
+                 name(DESC_PLAIN).c_str(), number_in_words(spawned).c_str());
+        }
     }
-    else if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
+
+    if (!alive())
+        return;
+
+    if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
     {
         if (!invalid_monster_index(number)
             && mons_base_type(&menv[number]) == MONS_KRAKEN)
