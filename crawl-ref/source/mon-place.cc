@@ -3550,7 +3550,6 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_ORANGE_DEMON,
                 1, MONS_RED_DEVIL,
                 1, MONS_ROTTING_DEVIL,
-                1, MONS_HAIRY_DEVIL,
                 1, MONS_SIXFIRHY,
                 1, MONS_HELLWING,
                 0);

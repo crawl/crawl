@@ -605,8 +605,8 @@ WEIGHT:  3
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  southwest
 MONS:    rotting hulk / ugly thing, large abomination / very ugly thing, \
-         hairy devil / rotting devil / orange demon, green death, \
-         hell beast, death ooze, titanic slime creature
+         rotting devil / orange demon, green death, hell beast, \
+         death ooze, titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KITEM:   r = decaying rune of zot

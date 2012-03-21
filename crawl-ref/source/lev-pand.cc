@@ -48,7 +48,6 @@ void init_pandemonium(void)
                                     MONS_TORMENTOR,
                                     MONS_REAPER,
                                     MONS_SOUL_EATER,
-                                    MONS_HAIRY_DEVIL,
                                     MONS_ICE_DEVIL,
                                     MONS_BLUE_DEVIL,
                                     MONS_HELL_BEAST,

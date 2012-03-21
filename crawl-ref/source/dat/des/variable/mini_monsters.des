@@ -1435,7 +1435,7 @@ ENDMAP
 
 NAME:   minmay_beelzebubs_servants
 DEPTH:  D:6-12
-MONS:   hairy devil / nothing, rotting devil / nothing
+MONS:   orange demon / nothing, rotting devil / nothing
 MAP
 ........................
 ..xxxx....xxxx....xxxx..
@@ -1513,11 +1513,11 @@ MAP
 ..........
 ENDMAP
 
-##### Hairy devils (4) and bears.
+##### Orange demons (4) and bears.
 NAME:  einodemon_hairy_minivault
 DEPTH: D:9-27
 TAGS:  patrolling
-MONS:  hairy devil / nothing w:20
+MONS:  orange demon / nothing w:20
 MONS:  black bear w:20 / grizzly bear / nothing w:20
 MAP
 xxxxxxxxxxxxx

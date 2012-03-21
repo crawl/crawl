@@ -285,7 +285,6 @@ tormentor MONS_TORMENTOR
 ynoxinul MONS_YNOXINUL
 
 # type '4' demons
-hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON

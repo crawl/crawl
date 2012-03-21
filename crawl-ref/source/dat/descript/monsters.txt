@@ -1058,10 +1058,6 @@ guardian serpent
 
 Serpents are distinct and rare members of scaly society. They are light and swift like snakes, yet also intelligent like nagas. Their lack of hands, together with an extreme sense of duty, makes them renowned guardians. It is said that a guardian serpent would rather die in battle than leave anything to an intruder.
 %%%%
-hairy devil
-
-A small humanoid demon covered in brown hair. Watch out - it may have fleas!
-%%%%
 halfling
 
 A humanoid of diminutive stature, member of a race given to domesticity and the simple pleasures of the flesh. Halflings excel at moving silently.
