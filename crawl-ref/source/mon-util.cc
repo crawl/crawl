@@ -3219,7 +3219,7 @@ bool monster_shover(const monster* m)
     // aren't pushers and shovers. Worms and elementals are on the list because
     // all 'w' are currently unrelated.
     return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
-            && mchar != 'G' && mchar != 'w' && mchar != '#');
+            && mchar != 'G' && mchar != 'w' && mchar != 'E');
 }
 
 // Returns true if m1 and m2 are related, and m1 is higher up the totem pole
