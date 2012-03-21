@@ -2359,10 +2359,22 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_MOTH, 'y', WHITE, "moth",
+    M_NO_SKELETON,
+    MR_NO_FLAGS,
+    300, 10, MONS_MOTH, MONS_MOTH, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 9, 3, 5, 0 },
+    0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
+    I_INSECT, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
+{
     MONS_GHOST_MOTH, 'y', MAGENTA, "ghost moth",
     M_NO_SKELETON | M_INVIS,
     MR_RES_POISON | MR_RES_COLD,
-    600, 30, MONS_GHOST_MOTH, MONS_GHOST_MOTH, MH_NATURAL, -6,
+    600, 30, MONS_MOTH, MONS_GHOST_MOTH, MH_NATURAL, -6,
     { {AT_HIT, AF_DRAIN_STAT, 18}, {AT_HIT, AF_DRAIN_STAT, 18},
       {AT_STING, AF_POISON_NASTY, 12}, AT_NO_ATK },
     { 13, 3, 5, 0 },
@@ -2375,7 +2387,7 @@ static monsterentry mondata[] = {
     MONS_MOTH_OF_WRATH, 'y', LIGHTRED, "moth of wrath",
     M_NO_SKELETON,
     MR_NO_FLAGS,
-    300, 10, MONS_MOTH_OF_WRATH, MONS_MOTH_OF_WRATH, MH_NATURAL, -3,
+    300, 10, MONS_MOTH, MONS_MOTH_OF_WRATH, MH_NATURAL, -3,
     { {AT_BITE, AF_RAGE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 5, 0 },
     // XXX: Will be Z_SMALL, but is Z_NOZOMBIE until code for zombie
@@ -2385,6 +2397,31 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
+{
+    MONS_MOTH_OF_SUPPRESSION, 'y', LIGHTGREEN, "moth of suppression",
+    M_NO_SKELETON,
+    MR_NO_FLAGS,
+    300, 10, MONS_MOTH, MONS_MOTH_OF_SUPPRESSION, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 9, 3, 5, 0 },
+    0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
+    I_INSECT, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
+/*
+{
+    MONS_SILENT_SPECTRE, 'p', CYAN, "silent spectre",
+    M_SPEAKS | M_SEE_INVIS | M_INSUBSTANTIAL,
+    mrd(MR_RES_COLD, 3),
+    0, 10, MONS_WRAITH, MONS_SILENT_SPECTRE, MH_UNDEAD, -4,
+    { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 8, 3, 5, 0 },
+    5, 15, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
+},
+*/
 // small zombies, etc. ('z')
 // zombie, skeleton and simulacra species depend on corpse species,
 // or else are chosen randomly

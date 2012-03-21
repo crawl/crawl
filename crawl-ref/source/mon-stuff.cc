@@ -2492,7 +2492,8 @@ int monster_die(monster* mons, killer_type killer,
         invalidate_agrid();
     // Likewise silence and umbras
     if (mons->type == MONS_SILENT_SPECTRE
-        || mons->type == MONS_PROFANE_SERVITOR)
+        || mons->type == MONS_PROFANE_SERVITOR
+        || mons->type == MONS_MOTH_OF_SUPPRESSION)
         invalidate_agrid();
 
     const coord_def mwhere = mons->pos();
