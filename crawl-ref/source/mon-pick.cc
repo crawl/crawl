@@ -441,7 +441,6 @@ int mons_standard_level(int mcls)
     case MONS_HILL_GIANT:
     case MONS_KOMODO_DRAGON:
     case MONS_SOLDIER_ANT:
-    case MONS_WOLF_SPIDER:
     case MONS_WRAITH:
     case MONS_UNSEEN_HORROR:
     case MONS_TRAPDOOR_SPIDER:
@@ -495,6 +494,7 @@ int mons_standard_level(int mcls)
     case MONS_ROCK_TROLL:
     case MONS_TOENAIL_GOLEM:
     case MONS_YAKTAUR:
+    case MONS_WOLF_SPIDER:
         return 19;
 
     case MONS_AIR_ELEMENTAL:
@@ -1188,7 +1188,6 @@ int mons_lair_level(int mcls)
     case MONS_ORANGE_RAT:
     case MONS_SHEEP:
     case MONS_STEAM_DRAGON:
-    case MONS_WOLF_SPIDER:
     case MONS_YAK:
     case MONS_GRIZZLY_BEAR:
         mlev += 4;
@@ -1214,6 +1213,7 @@ int mons_lair_level(int mcls)
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
     case MONS_ELEPHANT:
+    case MONS_WOLF_SPIDER:
         mlev += 6;
         break;
 
