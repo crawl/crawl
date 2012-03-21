@@ -120,8 +120,8 @@ DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / shadow / giant firefly / giant frog / brain worm / jelly / goliath beetle
-MONS:   orange rat w:8 / tarantella / jumping spider / yellow wasp / \
-        rock worm / boring beetle
+MONS:   orange rat w:8 / yellow wasp / rock worm / boring beetle / scorpion / \
+        soldier ant
 MONS:   human / elf / nothing
 ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge
 KITEM:  3 = honeycomb q:6
