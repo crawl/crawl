@@ -10,6 +10,7 @@ enum area_centre_type
     AREA_LIQUID,
     AREA_ORB,
     AREA_UMBRA,
+    AREA_SUPPRESSION,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -36,5 +37,7 @@ bool orb_haloed(const coord_def& p);
 
 // ...or endarkened by an umbra?
 bool umbraed(const coord_def& p);
+
+bool suppressed(const coord_def& p);
 
 #endif

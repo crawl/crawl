@@ -4077,6 +4077,7 @@ void display_char_status()
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
         STATUS_AUGMENTED,
+        STATUS_SUPPRESSED,
     };
 
     status_info inf;

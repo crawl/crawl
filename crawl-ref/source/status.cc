@@ -315,6 +315,16 @@ void fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_SUPPRESSED:
+        if (you.suppressed())
+        {
+            inf->light_colour = LIGHTGREEN;
+            inf->light_text   = "Suppress";
+            inf->short_text   = "magically suppressed";
+            inf->long_text    = "You are enveloped in a field of magical suppression.";
+        }
+        break;
+
     case STATUS_NET:
         if (you.attribute[ATTR_HELD])
         {
