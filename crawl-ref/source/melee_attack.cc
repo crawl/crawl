@@ -4189,9 +4189,9 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_POISON_STR:
     case AF_POISON_INT:
     case AF_POISON_DEX:
-        if (defender->poison(attacker, roll_dice(1, 3)))
+        if (defender->poison(attacker, 1))
         {
-            if (one_chance_in(4))
+            if (one_chance_in(3))
             {
                 stat_type drained_stat = (flavour == AF_POISON_STR ? STAT_STR :
                                           flavour == AF_POISON_INT ? STAT_INT
