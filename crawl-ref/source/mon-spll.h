@@ -1585,11 +1585,11 @@
 
     {  MST_JUMPING_SPIDER,
       {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_AWAY
       }
     },
