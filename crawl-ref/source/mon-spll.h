@@ -1597,9 +1597,9 @@
     {  MST_ORB_SPIDER,
       {
        SPELL_IOOD,
+       SPELL_NO_SPELL,
        SPELL_CANTRIP,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
+       SPELL_IOOD,
        SPELL_NO_SPELL,
        SPELL_IOOD
       }

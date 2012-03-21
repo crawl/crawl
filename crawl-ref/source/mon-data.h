@@ -2028,7 +2028,7 @@ static monsterentry mondata[] = {
 {
     MONS_ORB_SPIDER, 's', MAGENTA, "orb spider",
     M_NO_SKELETON | M_SPELLCASTER | M_FAKE_SPELLS | M_WEB_SENSE
-        | M_MAINTAIN_RANGE,
+        | M_MAINTAIN_RANGE | M_NO_FLEE,
     MR_VUL_POISON,
     300, 15, MONS_SPIDER, MONS_ORB_SPIDER, MH_NATURAL, -6,
     { {AT_BITE, AF_POISON_MEDIUM, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
