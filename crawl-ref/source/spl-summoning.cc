@@ -2241,7 +2241,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         return (fail ? SPRET_FAIL : SPRET_SUCCESS);
     else
     {
-        mpr("There are no corpses here!");
+        mpr("There are no corpses nearby!");
         return SPRET_ABORT;
     }
 }
