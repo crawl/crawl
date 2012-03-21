@@ -120,7 +120,6 @@ int mons_abyss_rare(int mcls)
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_SERPENT:
-    case MONS_HAIRY_DEVIL:
     case MONS_HELLION:
     case MONS_ICE_DEVIL:
     case MONS_CRIMSON_IMP:
@@ -324,7 +323,6 @@ int mons_pan_rare(int mcls)
     case MONS_TORMENTOR:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
-    case MONS_HAIRY_DEVIL:
     case MONS_ICE_DEVIL:
     case MONS_BLUE_DEVIL:
     case MONS_IRON_DEVIL:
@@ -703,7 +701,6 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_EYEBALL:
     case MONS_GIANT_SPORE:
     case MONS_GRIFFON:
-    case MONS_HAIRY_DEVIL:
     case MONS_JACKAL:
     case MONS_MOTTLED_DRAGON:
     case MONS_PHANTOM:
@@ -2349,7 +2346,6 @@ int mons_vestibule_rare(int mcls)
     case MONS_HELL_HOUND:
     case MONS_ORANGE_RAT:
     case MONS_RED_DEVIL:
-    case MONS_HAIRY_DEVIL:
     case MONS_BLUE_DEVIL:
     case MONS_IRON_DEVIL:
     case MONS_LOROCYPROCA:
@@ -2414,7 +2410,6 @@ int mons_dis_level(int mcls)
     case MONS_FLAYED_GHOST:
     case MONS_FREEZING_WRAITH:
     case MONS_DEATH_DRAKE:
-    case MONS_HAIRY_DEVIL:
     case MONS_IRON_DEVIL:
     case MONS_IRON_IMP:
     case MONS_VAMPIRE:
@@ -2510,9 +2505,6 @@ int mons_dis_rare(int mcls)
     case MONS_PHANTOM:
         return 17;
 
-    case MONS_HAIRY_DEVIL:
-        return 15;
-
     case MONS_CLAY_GOLEM:
     case MONS_DANCING_WEAPON:
     case MONS_EFREET:
@@ -2571,7 +2563,6 @@ int mons_gehenna_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_HELL_KNIGHT:
     case MONS_VAMPIRE:
     case MONS_WRAITH:
@@ -2666,7 +2657,6 @@ int mons_gehenna_rare(int mcls)
     case MONS_HELL_KNIGHT:
         return 21;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_PHANTASMAL_WARRIOR:
         return 20;
 
@@ -2728,7 +2718,6 @@ int mons_cocytus_level(int mcls)
         break;
 
     case MONS_FREEZING_WRAITH:
-    case MONS_HAIRY_DEVIL:
     case MONS_HUNGRY_GHOST:
     case MONS_MUMMY:
     case MONS_PHANTASMAL_WARRIOR:
@@ -2810,7 +2799,6 @@ int mons_cocytus_rare(int mcls)
     case MONS_BLIZZARD_DEMON:
         return 30;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_HUNGRY_GHOST:
         return 26;
 
@@ -2896,7 +2884,6 @@ int mons_tartarus_level(int mcls)
         break;
 
     case MONS_ANCIENT_LICH:
-    case MONS_HAIRY_DEVIL:
     case MONS_LICH:
     case MONS_SOUL_EATER:
         mlev += 6;
@@ -2976,7 +2963,6 @@ int mons_tartarus_rare(int mcls)
         return 32;
 
     case MONS_FLAYED_GHOST:
-    case MONS_HAIRY_DEVIL:
         return 30;
 
     case MONS_LICH:

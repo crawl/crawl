@@ -1599,7 +1599,7 @@ ENDMAP
 
 NAME:   pan_captured_pigsty
 TAGS:   pan extra
-MONS:   hairy devil, holy swine
+MONS:   red devil, holy swine
 KFEAT:  o = iron_grate
 {{
 local function swineherd_die(monster, killer_type, killer_index, silent, wizard)

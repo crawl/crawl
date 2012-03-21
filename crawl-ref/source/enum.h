@@ -2312,7 +2312,9 @@ enum monster_type                      // (int) menv[].type
     MONS_TORMENTOR,
     MONS_REAPER,
     MONS_SOUL_EATER,
+#if TAG_MAJOR_VERSION == 32
     MONS_HAIRY_DEVIL,
+#endif
     MONS_ICE_DEVIL,
     MONS_BLUE_DEVIL,
     MONS_HELL_BEAST,

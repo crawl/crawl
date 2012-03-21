@@ -106,7 +106,7 @@ default-depth: D:12-26
 NAME:   hellmouth_1
 TAGS:   no_rotate
 MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
-        hairy devil / hell hound
+        red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
@@ -143,7 +143,7 @@ NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
-MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
+MONS:   hellion / rotting devil / iron devil / red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\

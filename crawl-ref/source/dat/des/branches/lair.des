@@ -1359,7 +1359,7 @@ KFEAT:  _ = altar_makhleb
 KPROP:  Q = bloody
 KFEAT:  L = endless_lava
 MONS:   smoke demon
-MONS:   red devil / rotting devil / hairy devil / hellwing w:50
+MONS:   red devil / rotting devil w:20 / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
