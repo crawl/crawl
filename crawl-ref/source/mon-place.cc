@@ -2729,11 +2729,11 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_BALRUG:
-        mon_type = (coinflip() ? MONS_NEQOXEC : MONS_ORANGE_DEMON);
+        mon_type = (coinflip() ? MONS_SUN_DEMON : MONS_RED_DEVIL);
         break;
 
     case BAND_CACODEMON:
-        mon_type = MONS_LEMURE;
+        mon_type = (coinflip() ? MONS_SIXFIRHY : MONS_ORANGE_DEMON);
         break;
 
     case BAND_EXECUTIONER:
