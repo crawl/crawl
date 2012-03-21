@@ -3276,6 +3276,7 @@ static bool _mons_can_displace(const monster* mpusher,
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
         || mpusher->cannot_move() || mons_is_stationary(mpusher)
+        || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_kraken_parts(mpusher, mpushee)
            && (mpushee->cannot_move()
                || mons_is_stationary(mpushee)))
