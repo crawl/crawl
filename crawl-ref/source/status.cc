@@ -12,6 +12,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "spl-transloc.h"
+#include "stuff.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -320,7 +321,7 @@ void fill_status_info(int status, status_info* inf)
             inf->light_colour = RED;
             inf->light_text   = "Held";
             inf->short_text   = "held";
-            inf->long_text    = "You are held in a net.";
+            inf->long_text    = make_stringf("You are %s.", held_status());
         }
         break;
 

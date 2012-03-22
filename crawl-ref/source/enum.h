@@ -518,7 +518,6 @@ enum canned_message_type
     MSG_DETECT_NOTHING,
     MSG_CALL_DEAD,
     MSG_ANIMATE_REMAINS,
-    MSG_HELD_IN_A_NET,
     MSG_DECK_EXHAUSTED,
 };
 

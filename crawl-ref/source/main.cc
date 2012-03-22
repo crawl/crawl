@@ -1378,7 +1378,7 @@ static void _go_upstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        canned_msg(MSG_HELD_IN_A_NET);
+        mprf("You can't use stairs while %s.", held_status());
         return;
     }
 
@@ -1536,7 +1536,7 @@ static void _go_downstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        canned_msg(MSG_HELD_IN_A_NET);
+        mprf("You can't use stairs while %s.", held_status());
         return;
     }
 
@@ -3815,7 +3815,7 @@ static void _close_door(coord_def move)
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You can't close doors while held in a net.");
+        mprf("You can't close doors while %s.", held_status());
         return;
     }
 
