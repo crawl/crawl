@@ -383,7 +383,7 @@ static short _min_rot(const item_def &item)
     if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
         return 0;
 
-    if (!mons_skeleton(item.plus))
+    if (!mons_skeleton(item.mon_type))
         return 0;
     else
         return -200;

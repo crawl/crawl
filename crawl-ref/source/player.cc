@@ -540,7 +540,7 @@ bool player_genus(genus_type which_genus, species_type species)
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
-bool is_player_same_species(const int mon, bool transform)
+bool is_player_same_species(const monster_type mon, bool transform)
 {
     if (transform)
     {

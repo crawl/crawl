@@ -149,7 +149,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 
 void print_wounds(const monster* mons);
-bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
+bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();

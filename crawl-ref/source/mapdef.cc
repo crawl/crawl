@@ -3805,7 +3805,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 // Is this a modified monster?
                 if (nspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_zombified(nspec.type))
+                    && mons_class_is_zombified(static_cast<monster_type>(nspec.type)))
                 {
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
@@ -4084,7 +4084,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
 
     // We should have a non-base draconian here.
     if (spec.type == MONS_PROGRAM_BUG
-        || mons_genus(spec.type) != MONS_DRACONIAN
+        || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DRACONIAN
         || spec.type == MONS_DRACONIAN
         || (spec.type >= MONS_BLACK_DRACONIAN
             && spec.type <= MONS_PALE_DRACONIAN))

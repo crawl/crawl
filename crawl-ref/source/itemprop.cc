@@ -2863,7 +2863,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_CORPSES:
-        unit_mass = mons_weight(item.plus);
+        unit_mass = mons_weight(item.mon_type);
 
         if (item.sub_type == CORPSE_SKELETON)
             unit_mass /= 10;

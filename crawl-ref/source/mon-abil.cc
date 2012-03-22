@@ -1054,7 +1054,7 @@ static void _orc_battle_cry(monster* chief)
                 }
                 else
                 {
-                    int type = seen_affected[0]->type;
+                    monster_type type = seen_affected[0]->type;
                     for (unsigned int i = 0; i < seen_affected.size(); i++)
                     {
                         if (seen_affected[i]->type != type)
