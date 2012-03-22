@@ -25,6 +25,8 @@ function ready()
   if you.turns() == 0 and bot_start then
     bot_start = false
     crawl.enable_more(false)
+    --# don't let them stop us gearing up
+    crawl.call_dlua("debug.disable('mon_act')")
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
     crawl.sendkeys("&A27" .. eol)
@@ -47,6 +49,9 @@ function ready()
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
     crawl.sendkeys("ag") -- levitation
+    --# re-enable monsters
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('mon_act', false)" .. eol .. esc)
   end
   if you.turns() ~= last_turn then
     command = 1
