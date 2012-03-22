@@ -23,7 +23,7 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
-    virtual bool is_player() const
+    bool is_player() const
     {
         return atype() == ACT_PLAYER;
     }
