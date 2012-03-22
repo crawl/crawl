@@ -882,7 +882,10 @@ std::string monster_info::common_name(description_level_type desc) const
     }
 
     std::string core = _core_name();
-    ss << core;
+    bool nocore = (mons_class_is_zombified(type) && mons_is_unique(base_type)
+                   && base_type == mons_species(base_type));
+    if (!nocore)
+        ss << core;
 
     // Add suffixes.
     switch (type)
@@ -890,20 +893,20 @@ std::string monster_info::common_name(description_level_type desc) const
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " zombie";
+            ss << (nocore ? "" : " ") << "zombie";
         break;
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " skeleton";
+            ss << (nocore ? "" : " ") << "skeleton";
         break;
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " simulacrum";
+            ss << (nocore ? "" : " ") << "simulacrum";
         break;
     case MONS_PILLAR_OF_SALT:
-        ss << " shaped pillar of salt";
+        ss << (nocore ? "" : " ") << "shaped pillar of salt";
         break;
     default:
         break;
