@@ -31,7 +31,9 @@ typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
+  // ---------------
   // Permanent data:
+  // ---------------
   std::string your_name;
   species_type species;
   std::string species_name;
@@ -44,7 +46,9 @@ public:
   time_t        birth_time;           // start time of game
 
 
+  // ----------------
   // Long-term state:
+  // ----------------
   int elapsed_time;        // total amount of elapsed time in the game
   int elapsed_time_at_last_input; // used for elapsed_time delta display
 
@@ -294,7 +298,13 @@ public:
   // Count of various types of actions made.
   std::map<std::pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
+  // For now, only control the speed of abyss morphing.
+  int abyss_speed;
+
+
+  // -------------------
   // Non-saved UI state:
+  // -------------------
   unsigned short prev_targ;
   coord_def      prev_grd_targ;
   coord_def      prev_move;
@@ -315,7 +325,13 @@ public:
   int8_t bondage[NUM_ET];
   std::map<skill_type, int8_t> skill_boost; // Skill bonuses.
 
+  // The last spell cast by the player.
+  spell_type last_cast_spell;
+
+
+  // ---------------------------
   // Volatile (same-turn) state:
+  // ---------------------------
   bool turn_is_over; // flag signaling that player has performed a timed action
 
   // If true, player is headed to the Abyss.
@@ -343,9 +359,6 @@ public:
 
   entry_cause_type entry_cause;
   god_type         entry_cause_god;
-
-  // For now, only control the speed of abyss morphing.
-  int abyss_speed;
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
@@ -377,11 +390,11 @@ public:
   // Number of viewport refreshes.
   unsigned int frame_no;
 
-  // The save file itself.
-  package *save;
 
-  // The last spell cast by the player.
-  spell_type last_cast_spell;
+  // ---------------------
+  // The save file itself.
+  // ---------------------
+  package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
