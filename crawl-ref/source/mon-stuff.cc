@@ -4253,6 +4253,10 @@ bool is_item_jelly_edible(const item_def &item)
     if (is_artefact(item))
         return (false);
 
+    // Don't eat mimics.
+    if (item.flags & ISFLAG_MIMIC)
+        return (false);
+
     // Shouldn't eat stone things
     //   - but what about wands and rings?
     if (item.base_type == OBJ_MISSILES
