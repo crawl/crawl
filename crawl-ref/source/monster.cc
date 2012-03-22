@@ -1662,6 +1662,14 @@ bool monster::wants_armour(const item_def &item) const
         return (false);
     }
 
+    // Spellcasters won't pick up restricting armour, although they can
+    // start with one.  Applies to arcane spells only, of course.
+    if (!pos().origin() && is_actual_spellcaster()
+        && property(item, PARM_EVASION) < -1)
+    {
+        return false;
+    }
+
     // Returns whether this armour is the monster's size.
     return (check_armour_size(item, body_size()));
 }
