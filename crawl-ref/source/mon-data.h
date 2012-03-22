@@ -2409,19 +2409,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-/*
-{
-    MONS_SILENT_SPECTRE, 'p', CYAN, "silent spectre",
-    M_SPEAKS | M_SEE_INVIS | M_INSUBSTANTIAL,
-    mrd(MR_RES_COLD, 3),
-    0, 10, MONS_WRAITH, MONS_SILENT_SPECTRE, MH_UNDEAD, -4,
-    { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    5, 15, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_NORMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
-},
-*/
 // small zombies, etc. ('z')
 // zombie, skeleton and simulacra species depend on corpse species,
 // or else are chosen randomly
