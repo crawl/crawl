@@ -2824,7 +2824,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
-    monster_type mt = static_cast<monster_type>(item.plus);
+    monster_type mt = item.mon_type;
     if (do_heal)
     {
         int base_max = mons_avg_hp(mons->type);

@@ -203,8 +203,8 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    int type = mspec.type;
-    if (mons_class_is_zombified(mspec.type))
+    monster_type type = static_cast<monster_type>(mspec.type);
+    if (mons_class_is_zombified(type))
         type = mspec.monbase;
 
     coord_def place = find_newmons_square(type, you.pos());
@@ -249,8 +249,8 @@ void wizard_create_spec_monster_name()
 
     // Wizmode users should be able to conjure up uniques even if they
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
-    if (mons_is_unique(mspec.type) && you.unique_creatures[mspec.type])
-        you.unique_creatures[mspec.type] = false;
+    if (mons_is_unique(type) && you.unique_creatures[type])
+        you.unique_creatures[type] = false;
 
     if (!dgn_place_monster(mspec, you.absdepth0, place, true, false))
     {

@@ -4285,7 +4285,7 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      monster *mon,
-                                     const int type,
+                                     const monster_type type,
                                      const int monster_level)
 {
     unwind_var<int> save_speedinc(mon->speed_increment);

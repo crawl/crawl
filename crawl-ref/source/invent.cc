@@ -1141,7 +1141,7 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-                && !food_is_rotten(i) && mons_has_blood(i.plus));
+                && !food_is_rotten(i) && mons_has_blood(i.mon_type));
 
     case OSEL_DRAW_DECK:
         return (is_deck(i));

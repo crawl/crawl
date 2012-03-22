@@ -355,7 +355,7 @@ size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
 
 int monster::body_weight(bool /*base*/) const
 {
-    int mc = mons_base_type(this);
+    monster_type mc = mons_base_type(this);
 
     if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return (0);
@@ -414,14 +414,12 @@ int monster::body_weight(bool /*base*/) const
         case MONS_SHADOW_DEMON:
             weight /= 3;
             break;
+
+        default: ;
         }
 
-        switch (mons_base_char(mc))
-        {
-        case 'L':
+        if (mons_base_char(mc) == 'L')
             weight /= 2;
-            break;
-        }
     }
 
     if (mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE)
@@ -1993,7 +1991,7 @@ bool monster::pickup_food(item_def &item, int near)
     if (item.base_type == OBJ_FOOD
         && item.sub_type == FOOD_CHUNK
         && has_spell(SPELL_SIMULACRUM)
-        && mons_class_can_be_zombified(item.plus))
+        && mons_class_can_be_zombified(item.mon_type))
     {
         // If a Beoghite monster ever gets Simulacrum, please
         // add monster type restrictions here.

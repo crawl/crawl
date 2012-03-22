@@ -4006,7 +4006,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
     {
-        int type = mons->type;
+        monster_type type = mons->type;
         if (mons_genus(type) == MONS_DRACONIAN)
             type = draco_subspecies(mons);
 

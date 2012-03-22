@@ -892,7 +892,7 @@ static std::vector<std::string> _get_monster_keys(ucs_t showchar)
 {
     std::vector<std::string> mon_keys;
 
-    for (int i = 0; i < NUM_MONSTERS; i++)
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         if (i == MONS_PROGRAM_BUG)
             continue;

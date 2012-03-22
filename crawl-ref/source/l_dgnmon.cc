@@ -133,7 +133,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
             }
             if (mon.type == -1)
                 mon.type = MONS_PROGRAM_BUG;
-            name = mons_type_name(mon.type, DESC_PLAIN);
+            name = mons_type_name(static_cast<monster_type>(mon.type), DESC_PLAIN);
         }
 
         mons.push_back(mon);

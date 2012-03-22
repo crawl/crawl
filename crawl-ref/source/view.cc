@@ -731,7 +731,7 @@ void view_update_at(const coord_def &pos)
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
         : you.flash_colour;
-    int mons = env.map_knowledge(pos).monster();
+    monster_type mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||

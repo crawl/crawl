@@ -1154,7 +1154,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         letter = mons[0] == '_' ? ' ' : mons[0];
 
     bool found = false;
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
@@ -1163,7 +1163,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (me->basechar == letter || me->name == mons)
         {
             found = true;
-            mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
+            mon_glyph_overrides[i] = mdisp;
         }
     }
     if (!found)

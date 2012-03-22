@@ -343,11 +343,11 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want chunks to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE)
-        && mons_genus(corpse.plus) == MONS_DRAGON)
+    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE)
+        && mons_genus(corpse.mon_type) == MONS_DRAGON)
     {
         // Uh... dragon hide is tough stuff and it keeps the monster in
-        // one piece?  More importantly, it prevents a flavor feature
+        // one piece?  More importantly, it prevents a flavour feature
         // from becoming a trap for the unwary.
 
         return (false);
@@ -355,7 +355,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    const int max_chunks = get_max_corpse_chunks(corpse.plus);
+    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
 
     int nchunks = 1 + random2(max_chunks);
     nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
@@ -3994,7 +3994,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     }
 }
 
-bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
+bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor)
 {
     if (which_descriptor == MDSC_LEAVES_HIDE)
     {

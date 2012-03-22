@@ -970,13 +970,13 @@ namespace arena
 
         expand_mlist(5);
 
-        for (int i = 0; i < NUM_MONSTERS; i++)
+        for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
         {
             if (i == MONS_PLAYER_GHOST)
                 continue;
 
             if (mons_is_unique(i)
-                && !arena_veto_random_monster(static_cast<monster_type>(i)))
+                && !arena_veto_random_monster(i))
             {
                 uniques_list.push_back(i);
             }

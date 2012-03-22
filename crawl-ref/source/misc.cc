@@ -91,7 +91,7 @@ static void _create_monster_hide(const item_def corpse)
     if (corpse.props.exists("never_hide"))
         return;
 
-    int mons_class = corpse.plus;
+    const monster_type mons_class = corpse.mon_type;
 
     int o = get_mitm_slot();
     if (o == NON_ITEM)
@@ -139,11 +139,11 @@ static void _create_monster_hide(const item_def corpse)
 
 void maybe_drop_monster_hide(const item_def corpse)
 {
-    if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         _create_monster_hide(corpse);
 }
 
-int get_max_corpse_chunks(int mons_class)
+int get_max_corpse_chunks(monster_type mons_class)
 {
     return (mons_weight(mons_class) / 150);
 }
@@ -154,7 +154,7 @@ void turn_corpse_into_skeleton(item_def &item)
 
     // Some monsters' corpses lack the structure to leave skeletons
     // behind.
-    if (!mons_skeleton(item.plus))
+    if (!mons_skeleton(item.mon_type))
         return;
 
     item.sub_type = CORPSE_SKELETON;
@@ -170,9 +170,8 @@ static void _maybe_bleed_monster_corpse(const item_def corpse)
         const coord_def pos = item_pos(corpse);
         if (!pos.origin())
         {
-            const monster_type montype = static_cast<monster_type>(corpse.plus);
-            const int max_chunks = get_max_corpse_chunks(corpse.plus);
-            bleed_onto_floor(pos, montype, max_chunks, true);
+            const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
+            bleed_onto_floor(pos, corpse.mon_type, max_chunks, true);
         }
     }
 }
@@ -182,7 +181,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
     const item_def corpse = item;
-    const int max_chunks = get_max_corpse_chunks(item.plus);
+    const int max_chunks = get_max_corpse_chunks(item.mon_type);
 
     // Only fresh corpses bleed enough to colour the ground.
     if (bloodspatter)
@@ -226,7 +225,7 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
 void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
     item_was_destroyed(item);
-    if (!mons_skeleton(item.plus))
+    if (!mons_skeleton(item.mon_type))
         skeleton = B_FALSE;
     if (skeleton == B_TRUE || skeleton == B_MAYBE && one_chance_in(3))
     {
@@ -929,7 +928,7 @@ bool check_blood_corpses_on_ground()
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
             && !food_is_rotten(*si)
-            && mons_has_blood(si->plus))
+            && mons_has_blood(si->mon_type))
         {
             return (true);
         }
@@ -940,7 +939,7 @@ bool check_blood_corpses_on_ground()
 // Deliberately don't check for rottenness here, so this check
 // can also be used to verify whether you *could* have bottled
 // a now rotten corpse.
-bool can_bottle_blood_from_corpse(int mons_class)
+bool can_bottle_blood_from_corpse(monster_type mons_class)
 {
     if (you.species != SP_VAMPIRE || you.experience_level < 6
         || !mons_has_blood(mons_class))
@@ -955,7 +954,7 @@ bool can_bottle_blood_from_corpse(int mons_class)
     return (false);
 }
 
-int num_blood_potions_from_corpse(int mons_class, int chunk_type)
+int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
 {
     if (chunk_type == -1)
         chunk_type = mons_corpse_effect(mons_class);
@@ -984,7 +983,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     ASSERT(!food_is_rotten(item));
 
     const item_def corpse = item;
-    const int mons_class = corpse.plus;
+    const monster_type mons_class = corpse.mon_type;
 
     ASSERT(can_bottle_blood_from_corpse(mons_class));
 
@@ -1008,7 +1007,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
 {
     item_def blood_potions = item;
 
-    if (mons_skeleton(item.plus))
+    if (mons_skeleton(item.mon_type))
         turn_corpse_into_skeleton(item);
 
     int o = get_mitm_slot();
