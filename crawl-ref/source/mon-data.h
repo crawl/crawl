@@ -2358,9 +2358,9 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
-{
+{   // dummy for moth genus
     MONS_MOTH, 'y', WHITE, "moth",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_NO_POLY_TO,
     MR_NO_FLAGS,
     300, 10, MONS_MOTH, MONS_MOTH, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
