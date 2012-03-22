@@ -583,7 +583,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     mid_t source        = 0;
     if (agent && agent->is_player())
         whose = KC_YOU, killer = KILL_YOU_MISSILE, source = MID_PLAYER;
-    else if (agent && agent->atype() == ACT_MONSTER)
+    else if (agent && agent->is_monster())
     {
         if (agent->as_monster()->friendly())
             whose = KC_FRIENDLY;

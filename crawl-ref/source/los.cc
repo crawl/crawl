@@ -934,7 +934,7 @@ static bool _mons_block_sight(const monster* mons)
 
 void los_actor_moved(const actor* act, const coord_def& oldpos)
 {
-    if (act->atype() == ACT_MONSTER && _mons_block_sight(act->as_monster()))
+    if (act->is_monster() && _mons_block_sight(act->as_monster()))
     {
         invalidate_los_around(oldpos);
         invalidate_los_around(act->pos());

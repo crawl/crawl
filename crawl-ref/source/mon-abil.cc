@@ -2905,7 +2905,7 @@ void mon_nearby_ability(monster* mons)
             {
                 if (foe->is_player())
                     canned_msg(MSG_YOU_RESIST);
-                else if (foe->atype() == ACT_MONSTER)
+                else if (foe->is_monster())
                 {
                     const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons,

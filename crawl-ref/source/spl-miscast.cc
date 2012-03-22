@@ -133,7 +133,7 @@ void MiscastEffect::init()
 
     const bool death_curse = (cause.find("death curse") != std::string::npos);
 
-    if (target->atype() == ACT_MONSTER)
+    if (target->is_monster())
         target_known = you.can_see(target);
     else
         target_known = true;
@@ -141,7 +141,7 @@ void MiscastEffect::init()
     kill_source = source;
     if (source == WIELD_MISCAST || source == MELEE_MISCAST)
     {
-        if (target->atype() == ACT_MONSTER)
+        if (target->is_monster())
             kill_source = target->mindex();
         else
             kill_source = NON_MONSTER;
@@ -162,7 +162,7 @@ void MiscastEffect::init()
 
         act_source = guilty = mon_source;
 
-        if (death_curse && target->atype() == ACT_MONSTER
+        if (death_curse && target->is_monster()
             && target_as_monster()->confused_by_you())
         {
             kt = KILL_YOU_CONF;
@@ -201,7 +201,7 @@ void MiscastEffect::init()
         {
             source_known = target_known;
 
-            if (target->atype() == ACT_MONSTER
+            if (target->is_monster()
                 && target_as_monster()->confused_by_you())
             {
                 kt = KILL_YOU_CONF;
@@ -263,7 +263,7 @@ std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
         return str;
     }
 
-    ASSERT(act_source->atype() == ACT_MONSTER);
+    ASSERT(act_source->is_monster());
     ASSERT(act_source == target);
 
     if (attribute_to_user)
@@ -411,7 +411,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
-    if (target->atype() == ACT_MONSTER && !mons_near(target_as_monster()))
+    if (target->is_monster() && !mons_near(target_as_monster()))
         return;
 
     did_msg = true;
@@ -475,7 +475,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     else
         msg = replace_all(msg, "@hand_conj@", "s");
 
-    if (target->atype() == ACT_MONSTER)
+    if (target->is_monster())
     {
         msg = do_mon_str_replacements(msg, target_as_monster(), S_SILENT);
         if (!mons_has_body(target_as_monster()))
@@ -498,7 +498,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 bool MiscastEffect::_ouch(int dam, beam_type flavour)
 {
     // Delay do_msg() until after avoid_lethal().
-    if (target->atype() == ACT_MONSTER)
+    if (target->is_monster())
     {
         monster* mon_target = target_as_monster();
 
@@ -702,7 +702,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     // hostile_at() assumes the monster is hostile to the player,
     // but should be hostile to the target monster unless the miscast
     // is a result of either divine wrath or a Zot trap.
-    if (target->atype() == ACT_MONSTER && you.penance[god] == 0
+    if (target->is_monster() && you.penance[god] == 0
         && source != ZOT_TRAP_MISCAST)
     {
         monster* mon_target = target_as_monster();
@@ -745,7 +745,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
 static bool _has_hair(actor* target)
 {
     // Don't bother for monsters.
-    if (target->atype() == ACT_MONSTER)
+    if (target->is_monster())
         return (false);
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
@@ -1877,7 +1877,7 @@ void MiscastEffect::_necromancy(int severity)
             }
 
             // If we didn't do anything, just flow through if it's the player.
-            if (target->atype() == ACT_MONSTER || did_msg)
+            if (target->is_monster() || did_msg)
                 break;
 
         case 5:
@@ -1991,7 +1991,7 @@ void MiscastEffect::_transmutation(int severity)
         break;
 
     case 3:         // even nastier
-        if (target->atype() == ACT_MONSTER)
+        if (target->is_monster())
             target->mutate(cause); // Polymorph the monster, if possible.
 
         switch (random2(3))

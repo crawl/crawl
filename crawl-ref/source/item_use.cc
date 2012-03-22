@@ -1766,7 +1766,7 @@ static int _blowgun_power_roll(bolt &beam)
 
     int base_power;
     item_def* blowgun;
-    if (agent->atype() == ACT_MONSTER)
+    if (agent->is_monster())
     {
         base_power = agent->get_experience_level();
         blowgun = agent->as_monster()->launcher();
@@ -1786,7 +1786,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     if (victim->holiness() == MH_UNDEAD || victim->holiness() == MH_NONLIVING)
     {
-        if (victim->atype() == ACT_MONSTER)
+        if (victim->is_monster())
             simple_monster_message(victim->as_monster(), " is unaffected.");
         else
             canned_msg(MSG_YOU_UNAFFECTED);
@@ -1795,7 +1795,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     actor* agent = beam.agent();
 
-    if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
+    if (!agent || agent->is_monster() || beam.reflections > 0)
         return (true);
 
     const int skill = you.skill_rdiv(SK_THROWING);
@@ -1815,7 +1815,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     if (resist_roll < victim->get_experience_level())
     {
-        if (victim->atype() == ACT_MONSTER)
+        if (victim->is_monster())
             simple_monster_message(victim->as_monster(), " resists.");
         else
             canned_msg(MSG_YOU_RESIST);
@@ -1898,7 +1898,7 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     if (!_blowgun_check(beam, victim))
         return (false);
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
         victim->as_monster()->go_frenzy();
     else
         victim->go_berserk(false);
@@ -1949,7 +1949,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_brand = SPMSL_NORMAL;
         }
         // Nessos gets to cheat.
-        else if (agent->atype() == ACT_MONSTER)
+        else if (agent->is_monster())
         {
             const monster* mon = static_cast<const monster* >(agent);
             if (mon->type != MONS_NESSOS)

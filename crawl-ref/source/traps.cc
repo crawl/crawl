@@ -181,7 +181,7 @@ bool trap_def::is_known(const actor* act) const
 
     if (act == NULL || act->is_player())
         return (player_knows);
-    else if (act->atype() == ACT_MONSTER)
+    else if (act->is_monster())
     {
         const monster* mons = act->as_monster();
         const int intel = mons_intel(mons);
@@ -1042,7 +1042,7 @@ int trap_def::max_damage(const actor& act)
     // they are fairly stupid and tend to have fewer hp than
     // players -- this choice prevents traps from easily killing
     // large monsters fairly deep within the dungeon.
-    if (act.atype() == ACT_MONSTER)
+    if (act.is_monster())
         level = 0;
 
     switch (type)
@@ -2063,14 +2063,14 @@ bool maybe_destroy_web(actor *oaf)
 
     if (coinflip())
     {
-        if (oaf->atype() == ACT_MONSTER)
+        if (oaf->is_monster())
             simple_monster_message(oaf->as_monster(), " pulls away from the web.");
         else
             mpr("You disentangle yourself.");
         return false;
     }
 
-    if (oaf->atype() == ACT_MONSTER)
+    if (oaf->is_monster())
         simple_monster_message(oaf->as_monster(), " tears the web.");
     else
         mpr("The web tears apart.");

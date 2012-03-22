@@ -947,7 +947,7 @@ bool mons_is_conjured(monster_type mc)
 bool mons_foe_is_mons(const monster* mons)
 {
     const actor *foe = mons->get_foe();
-    return (foe && foe->atype() == ACT_MONSTER);
+    return (foe && foe->is_monster());
 }
 
 int mons_weight(monster_type mc)

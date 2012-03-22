@@ -112,7 +112,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attacker_shield_tohit_penalty =
         attacker->shield_tohit_penalty(true);
 
-    if (attacker->atype() == ACT_MONSTER)
+    if (attacker->is_monster())
     {
         mon_attack_def mon_attk = mons_attack_spec(attacker->as_monster(),
                                                attack_number);
@@ -182,7 +182,7 @@ bool melee_attack::handle_phase_attempted()
         return (false);
     }
 
-    if (attacker->is_player() && defender->atype() == ACT_MONSTER)
+    if (attacker->is_player() && defender->is_monster())
     {
         if ((damage_brand == SPWPN_ELECTROCUTION
                 && _conduction_affected(defender->pos()))
@@ -327,7 +327,7 @@ bool melee_attack::handle_phase_attempted()
 
     // Defending monster protects itself from attacks using the wall
     // it's in. Zotdef: allow a 5% chance of a hit anyway
-    if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
+    if (defender->is_monster() && cell_is_solid(defender->pos())
         && mons_wall_shielded(defender->as_monster())
         && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
     {
@@ -899,8 +899,8 @@ bool melee_attack::attack()
     // Allow monster attacks to draw the ire of the defender.  Player
     // attacks are handled elsewhere.
     if (perceived_attack
-        && defender->atype() == ACT_MONSTER
-        && attacker->atype() == ACT_MONSTER
+        && defender->is_monster()
+        && attacker->is_monster()
         && attacker->alive() && defender->alive()
         && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
     {
@@ -972,7 +972,7 @@ void melee_attack::adjust_noise()
             break;
         }
     }
-    else if (attacker->atype() == ACT_MONSTER && weapon == NULL)
+    else if (attacker->is_monster() && weapon == NULL)
     {
         switch (attk_type)
         {
@@ -1815,7 +1815,7 @@ void melee_attack::set_attack_verb()
             attack_verb = "impale";
         else
         {
-            if (defender->atype() == ACT_MONSTER
+            if (defender->is_monster()
                 && defender_visible
                 && defender_genus == MONS_HOG)
             {
@@ -2140,7 +2140,7 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 
 void melee_attack::drain_defender()
 {
-    if (defender->atype() == ACT_MONSTER && one_chance_in(3))
+    if (defender->is_monster() && one_chance_in(3))
         return;
 
     special_damage = 1 + random2(damage_done)
@@ -2168,7 +2168,7 @@ void melee_attack::rot_defender(int amount, int immediate)
 {
     if (defender->rot(attacker, amount, immediate, true))
     {
-        if (defender->atype() == ACT_MONSTER && defender_visible)
+        if (defender->is_monster() && defender_visible)
         {
             special_damage_message =
                 make_stringf(
@@ -2184,7 +2184,7 @@ bool melee_attack::distortion_affects_defender()
     //jmf: blink frogs *like* distortion
     // I think could be amended to let blink frogs "grow" like
     // jellies do {dlb}
-    if (defender->atype() == ACT_MONSTER
+    if (defender->is_monster()
         && mons_genus(defender->as_monster()->type) == MONS_BLINK_FROG)
     {
         if (one_chance_in(5))
@@ -2336,7 +2336,7 @@ enum chaos_type
 // AF_CHAOS.
 void melee_attack::chaos_affects_defender()
 {
-    const bool mon        = defender->atype() == ACT_MONSTER;
+    const bool mon        = defender->is_monster();
     const bool immune     = mon && mons_immune_magic(defender->as_monster());
     const bool is_natural = mon && defender->holiness() == MH_NATURAL;
     const bool is_shifter = mon && defender->as_monster()->is_shapeshifter();
@@ -2436,7 +2436,7 @@ void melee_attack::chaos_affects_defender()
     case CHAOS_CLONE:
     {
         ASSERT(can_clone && clone_chance > 0);
-        ASSERT(defender->atype() == ACT_MONSTER);
+        ASSERT(defender->is_monster());
 
         if (monster *clone = clone_mons(defender->as_monster(), true,
                                         &obvious_effect))
@@ -2465,7 +2465,7 @@ void melee_attack::chaos_affects_defender()
 
     case CHAOS_POLY_UP:
         ASSERT(can_poly && poly_up_chance > 0);
-        ASSERT(defender->atype() == ACT_MONSTER);
+        ASSERT(defender->is_monster());
 
         obvious_effect = you.can_see(defender);
         monster_polymorph(defender->as_monster(), RANDOM_MONSTER, PPT_MORE);
@@ -2475,7 +2475,7 @@ void melee_attack::chaos_affects_defender()
     {
         ASSERT(can_poly && shifter_chance > 0);
         ASSERT(!is_shifter);
-        ASSERT(defender->atype() == ACT_MONSTER);
+        ASSERT(defender->is_monster());
 
         obvious_effect = you.can_see(defender);
         defender->as_monster()->add_ench(one_chance_in(3) ?
@@ -3223,7 +3223,7 @@ bool melee_attack::chop_hydra_head(int dam,
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
-    if (attacker->atype() == ACT_MONSTER && !one_chance_in(4))
+    if (attacker->is_monster() && !one_chance_in(4))
         return (false);
 
     if ((dam_type == DVORP_SLICING || dam_type == DVORP_CHOPPING
@@ -3306,7 +3306,7 @@ bool melee_attack::chop_hydra_head(int dam,
 
 bool melee_attack::decapitate_hydra(int dam, int damage_type)
 {
-    if (defender->atype() == ACT_MONSTER
+    if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
         && defender->type != MONS_SPECTRAL_THING)
     {
@@ -3486,7 +3486,7 @@ void melee_attack::apply_staff_damage()
  */
 int melee_attack::calc_to_hit(bool random)
 {
-    const bool fighter = attacker->atype() == ACT_MONSTER
+    const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
     const int hd_mult = fighter ? 25 : 15;
     int mhit = attacker->is_player() ?
@@ -4048,7 +4048,7 @@ void melee_attack::announce_hit()
     if (!needs_message)
         return;
 
-    if (attacker->atype() == ACT_MONSTER)
+    if (attacker->is_monster())
     {
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_THE).c_str(),
@@ -5052,7 +5052,7 @@ int melee_attack::calc_base_unarmed_damage()
 
 int melee_attack::calc_damage()
 {
-    if (attacker->atype() == ACT_MONSTER)
+    if (attacker->is_monster())
     {
         monster *as_mon = attacker->as_monster();
 
