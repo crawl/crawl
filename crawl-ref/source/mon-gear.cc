@@ -1846,18 +1846,23 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
-    case MONS_MARGERY:
     case MONS_DONALD:
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
     case MONS_VAULT_GUARD:
-    {
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);
         break;
-    }
+
+    case MONS_MARGERY:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(3, ARM_MOTTLED_DRAGON_ARMOUR,
+                                               1, ARM_SWAMP_DRAGON_ARMOUR,
+                                               6, ARM_FIRE_DRAGON_ARMOUR,
+                                               0);
+        break;
 
     case MONS_UNBORN_DEEP_DWARF:
         if (one_chance_in(6))
