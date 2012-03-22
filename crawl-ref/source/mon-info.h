@@ -30,6 +30,7 @@ enum monster_info_flags
     MB_PARALYSED,
     MB_SICK,
     MB_CAUGHT,
+    MB_WEBBED,
     MB_FRENZIED,
     MB_PETRIFYING,
     MB_PETRIFIED,

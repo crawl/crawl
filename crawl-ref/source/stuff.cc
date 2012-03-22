@@ -488,11 +488,11 @@ void canned_msg(canned_message_type which_message)
     }
 }
 
-const char* held_status()
+const char* held_status(actor *act)
 {
-    if (get_trapping_net(you.pos(), true) != NON_ITEM)
+    if (get_trapping_net(act->pos(), true) != NON_ITEM)
         return "held in a net";
-    else if (get_trap_type(you.pos()) == TRAP_WEB)
+    else if (get_trap_type(act->pos()) == TRAP_WEB)
         return "caught in a web";
     else
         return "buggily held";

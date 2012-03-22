@@ -2516,7 +2516,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
     if (!mons.ground_level() && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
-    if (mons.is(MB_CAUGHT))
+    // FIXME: should probably have a different tile flag for being webbed
+    if (mons.is(MB_CAUGHT) || mons.is(MB_WEBBED))
         ch |= TILE_FLAG_NET;
     if (mons.is(MB_POISONED))
         ch |= TILE_FLAG_POISON;

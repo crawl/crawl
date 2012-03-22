@@ -3312,7 +3312,10 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (mons->caught())
     {
         if (!quiet)
-            simple_monster_message(mons, " is held in a net!");
+        {
+            simple_monster_message(mons,
+                make_stringf(" is %s!", held_status(mons)).c_str());
+        }
         return (false);
     }
 

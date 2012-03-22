@@ -30,6 +30,7 @@
 #include "state.h"
 #include "tagstring.h"
 #include "terrain.h"
+#include "traps.h"
 
 #include <algorithm>
 #include <sstream>
@@ -90,7 +91,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_STICKY_FLAME:
         return MB_BURNING;
     case ENCH_HELD:
-        return MB_CAUGHT;
+        return (get_trapping_net(mons.pos(), true) == NON_ITEM
+                ? MB_WEBBED : MB_CAUGHT);
     case ENCH_PETRIFIED:
         return MB_PETRIFIED;
     case ENCH_PETRIFYING:
@@ -1106,6 +1108,8 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("paralysed");
     if (mi.is(MB_CAUGHT))
         return ("caught");
+    if (mi.is(MB_WEBBED))
+        return ("webbed");
     if (mi.is(MB_PETRIFIED))
         return ("petrified");
     if (mi.is(MB_PETRIFYING))
@@ -1276,6 +1280,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("covered in liquid flames");
     if (is(MB_CAUGHT))
         v.push_back("entangled in a net");
+    if (is(MB_WEBBED))
+        v.push_back("entangled in a web");
     if (is(MB_PETRIFIED))
         v.push_back("petrified");
     if (is(MB_PETRIFYING))
