@@ -2087,7 +2087,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     }
 
     // Finally, take care of deity preferences.
-    if (who->is_player())
+    if (who && who->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
@@ -2105,7 +2105,7 @@ bool miasma_monster(monster* mons, const actor* who)
 
     bool success = poison_monster(mons, who);
 
-    if (who->is_player()
+    if (who && who->is_player()
         && is_good_god(you.religion)
         && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
     {
