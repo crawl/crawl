@@ -189,7 +189,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
     beam.name           = "lightning arc";
     beam.aux_source     = "chain lightning";
     beam.beam_source    = caster->mindex();
-    beam.thrower        = (caster == &you) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1080,7 +1080,7 @@ spret_type cast_shatter(int pow, bool fail)
 
 static int _shatter_player(int pow, actor *wielder)
 {
-    if (wielder == &you)
+    if (wielder->is_player())
         return 0;
 
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.

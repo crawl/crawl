@@ -911,7 +911,7 @@ static bool _silver_statue_effects(monster* mons)
     int abjuration_duration = 5;
 
     // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && foe != &you
+    if (mons->attitude == ATT_FRIENDLY && !foe->is_player()
         && crawl_state.game_is_zotdef())
     {
         if (!one_chance_in(3))
@@ -946,7 +946,7 @@ static bool _orange_statue_effects(monster* mons)
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         // Tone down friendly OCSs for Zotdef.
-        if (mons->attitude == ATT_FRIENDLY && foe != &you
+        if (mons->attitude == ATT_FRIENDLY && !foe->is_player()
             && crawl_state.game_is_zotdef())
         {
             if (foe->check_res_magic(120) > 0)
@@ -957,7 +957,7 @@ static bool _orange_statue_effects(monster* mons)
 
         if (you.can_see(foe))
         {
-            if (foe == &you)
+            if (foe->is_player())
                 mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
             else if (you.can_see(mons))
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
@@ -981,7 +981,7 @@ static void _orc_battle_cry(monster* chief)
     int affected = 0;
 
     if (foe
-        && (foe != &you || !chief->friendly())
+        && (!foe->is_player() || !chief->friendly())
         && !silenced(chief->pos())
         && !chief->has_ench(ENCH_MUTE)
         && chief->can_see(foe)
@@ -1081,7 +1081,7 @@ static void _cherub_hymn(monster* chief)
     int affected = 0;
 
     if (foe
-        && (foe != &you || !chief->friendly())
+        && (!foe->is_player() || !chief->friendly())
         && !silenced(chief->pos())
         && chief->can_see(foe)
         && coinflip())

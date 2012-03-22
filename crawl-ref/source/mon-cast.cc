@@ -3645,7 +3645,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (spell_is_direct_explosion(spell_cast))
     {
         const actor *foe = mons->get_foe();
-        const bool need_more = foe && (foe == &you || you.see_cell(foe->pos()));
+        const bool need_more = foe && (foe->is_player() || you.see_cell(foe->pos()));
         pbolt.in_explosion_phase = false;
         pbolt.explode(need_more);
     }
@@ -4265,7 +4265,7 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
 
     // Keep friendly summoners from spamming summons constantly.
     if (mon->friendly()
-        && (!foe || foe == &you)
+        && (!foe || foe->is_player())
         && spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);
@@ -4296,7 +4296,7 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
                     && grd(foe->pos()) == DNGN_DEEP_WATER));
 
     case SPELL_BRAIN_FEED:
-        ret = (foe != &you);
+        ret = !foe->is_player();
         break;
 
     case SPELL_BOLT_OF_DRAINING:

@@ -819,7 +819,7 @@ static bool _handle_reaching(monster* mons)
     {
         ret = true;
 
-        ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
+        ASSERT(foe->is_player() || foe->atype() == ACT_MONSTER);
 
         fight_melee(mons, foe);
 
@@ -1980,7 +1980,7 @@ void handle_noattack_constrictions(actor *attacker)
             else
                 exclams = "!!!";
 
-            if (you.can_see(attacker) || attacker == &you)
+            if (you.can_see(attacker) || attacker->is_player())
             {
                 mprf("%s %s %s%s%s",
                      (attacker->is_player()
@@ -1995,7 +1995,7 @@ void handle_noattack_constrictions(actor *attacker)
 #endif
                      exclams.c_str());
             }
-            else if (you.can_see(defender) || defender == &you)
+            else if (you.can_see(defender) || defender->is_player())
             {
                 mprf("%s %s constricted%s%s",
                      defender->name(DESC_THE).c_str(),
