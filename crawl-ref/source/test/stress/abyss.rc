@@ -28,6 +28,7 @@ function ready()
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('confirmations')" .. eol ..
+                   "debug.disable('death')" .. eol ..
                    --# don't let them stop us gearing up
                    "debug.disable('mon_act')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
