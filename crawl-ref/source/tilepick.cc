@@ -601,7 +601,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
 static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 {
     const int z_type = mon.type;
-    const int subtype = mon.base_type;
+    const monster_type subtype = mon.base_type;
 
     // TODO: Add tiles and code for these as well.
     switch (z_type)
@@ -4641,7 +4641,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
 
     // Vampires are only interested in fresh blood.
     if (you.species == SP_VAMPIRE
-        && (rotten || !mons_has_blood(item.plus)))
+        && (rotten || !mons_has_blood(item.mon_type)))
     {
         return TILE_FOOD_INEDIBLE;
     }

@@ -205,7 +205,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return (you.species == SP_VAMPIRE
                 && item.sub_type != CORPSE_SKELETON
                 && !food_is_rotten(item)
-                && mons_has_blood(item.plus));
+                && mons_has_blood(item.mon_type));
     }
 
     if (equipped && item.cursed())
@@ -300,7 +300,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             && !food_is_rotten(item))
         {
             tip += "\n[Shift + L-Click] ";
-            if (can_bottle_blood_from_corpse(item.plus))
+            if (can_bottle_blood_from_corpse(item.mon_type))
                 tip += "Bottle blood";
             else
                 tip += "Chop up";
