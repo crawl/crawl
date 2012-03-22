@@ -507,10 +507,8 @@ const char* held_status(actor *act)
 {
     if (get_trapping_net(act->pos(), true) != NON_ITEM)
         return "held in a net";
-    else if (get_trap_type(act->pos()) == TRAP_WEB)
-        return "caught in a web";
     else
-        return "buggily held";
+        return "caught in a web";
 }
 
 // Like yesno, but requires a full typed answer.
