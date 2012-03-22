@@ -4296,7 +4296,7 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
                     && grd(foe->pos()) == DNGN_DEEP_WATER));
 
     case SPELL_BRAIN_FEED:
-        ret = !foe->is_player();
+        ret = (!foe || !foe->is_player());
         break;
 
     case SPELL_BOLT_OF_DRAINING:

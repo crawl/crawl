@@ -88,7 +88,7 @@ static void _holy_word_player(int pow, int caster, actor *attacker)
     int hploss;
 
     // Holy word won't kill its user.
-    if (attacker->is_player())
+    if (attacker && attacker->is_player())
         hploss = std::max(0, you.hp / 2 - 1);
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
@@ -382,13 +382,17 @@ void immolation(int pow, int caster, coord_def where, bool known,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker->is_player())
+    else if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
     }
     else
     {
+        // If there was no attacker, caster should have been IMMOLATION_GENERIC
+        // which we handled above.
+        ASSERT(attacker);
+
         beam.thrower     = KILL_MON;
         beam.beam_source = attacker->mindex();
     }
@@ -438,7 +442,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.damage_funcs.push_back(_conduct_electricity_damage);
     beam.affect_func   = _conduct_electricity_affects_actor;
 
-    if (attacker->is_player())
+    if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
@@ -486,13 +490,17 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker->is_player())
+    else if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
     }
     else
     {
+        // If there was no attacker, caster should have been
+        // CLEANSING_FLAME_{GENERIC,TSO} which we handled above.
+        ASSERT(attacker);
+
         beam.thrower     = KILL_MON;
         beam.beam_source = attacker->mindex();
     }
@@ -3270,6 +3278,8 @@ void recharge_rods(int aut, bool level_only)
 
 void slime_wall_damage(actor* act, int delay)
 {
+    ASSERT(act);
+
     const int depth = player_in_branch(BRANCH_SLIME_PITS)
                       ? player_branch_depth()
                       : 1;
@@ -3287,8 +3297,6 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        ASSERT(act->is_player());
-
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
             splash_with_acid(strength, false,

@@ -911,7 +911,7 @@ static bool _silver_statue_effects(monster* mons)
     int abjuration_duration = 5;
 
     // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && !foe->is_player()
+    if (mons->attitude == ATT_FRIENDLY && !(foe && foe->is_player())
         && crawl_state.game_is_zotdef())
     {
         if (!one_chance_in(3))

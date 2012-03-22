@@ -437,7 +437,7 @@ move_again:
         }
 
         // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
-        if (victim->is_player())
+        if (victim && victim->is_player())
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))

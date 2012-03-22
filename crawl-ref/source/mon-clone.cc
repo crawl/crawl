@@ -78,14 +78,9 @@ static bool _player_is_illusion_cloneable()
 bool actor_is_illusion_cloneable(actor *target)
 {
     if (target->is_player())
-    {
-        ASSERT(target->is_player());
         return _player_is_illusion_cloneable();
-    }
     else
-    {
         return _mons_is_illusion_cloneable(target->as_monster());
-    }
 }
 
 static void _mons_summon_monster_illusion(monster* caster,
@@ -195,7 +190,6 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 {
     if (foe->is_player())
     {
-        ASSERT(foe->is_player());
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
                           6, spell_cast, mons->pos(), mons->foe, 0)))

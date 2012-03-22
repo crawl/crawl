@@ -3844,7 +3844,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return (0);
 
-        if (agent->is_player() && you.duration[DUR_QUAD_DAMAGE])
+        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE])
         {
             amount *= 4;
             if (amount > hit_points + 50)
@@ -3917,7 +3917,7 @@ bool monster::fully_petrify(actor *atk, bool quiet)
     add_ench(ENCH_PETRIFIED);
     mons_check_pool(this, pos(),
                     atk ? atk->is_player() ? KILL_YOU_MISSILE
-                                      : KILL_MON_MISSILE
+                                           : KILL_MON_MISSILE
                         : KILL_NONE,
                     atk ? atk->mindex() : NON_MONSTER);
     return msg;
