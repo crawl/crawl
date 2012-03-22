@@ -372,7 +372,7 @@ bool melee_attack::handle_phase_attempted()
     attack_occurred = true;
 
     // Check for player practicing dodging
-    if (one_chance_in(3) && defender == &you)
+    if (one_chance_in(3) && defender->is_player())
         practise(EX_MONSTER_MAY_HIT);
 
     return (true);
@@ -3036,7 +3036,7 @@ bool melee_attack::apply_damage_brand()
             || attacker->stat_hp() == attacker->stat_maxhp()
             || !defender->is_player()
                && defender->as_monster()->is_summoned()
-            || attacker == &you && you.duration[DUR_DEATHS_DOOR]
+            || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || one_chance_in(5))
         {
             break;
@@ -3877,7 +3877,7 @@ bool melee_attack::attack_warded_off()
                  defender_name().c_str());
         }
 
-        if (defender == &you
+        if (defender->is_player()
             && player_equip(EQ_AMULET, AMU_WARDING, true)
             && !player_equip(EQ_STAFF, STAFF_SUMMONING, true))
         {
@@ -4769,7 +4769,7 @@ bool melee_attack::do_knockback(bool trample)
             attacker->move_to_pos(old_pos);
 
         // Interrupt stair travel and passwall.
-        if (defender == &you)
+        if (defender->is_player())
             stop_delay(true);
 
         return true;
@@ -5473,7 +5473,7 @@ bool melee_attack::handle_constriction()
         handle_noattack_constrictions(attacker);
 
     // if you got grabbed, interrupt stair climb and passwall
-    if (defender_grabbed && (defender == &you))
+    if (defender_grabbed && (defender->is_player()))
         stop_delay(true);
 
     attacker->has_constricted_this_turn = true;

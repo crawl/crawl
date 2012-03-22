@@ -2053,7 +2053,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
         enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
 
     // Deities take notice.
-    if (agent == &you)
+    if (agent->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (hurted > 0);
@@ -2087,7 +2087,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     }
 
     // Finally, take care of deity preferences.
-    if (who == &you)
+    if (who->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
@@ -2105,7 +2105,7 @@ bool miasma_monster(monster* mons, const actor* who)
 
     bool success = poison_monster(mons, who);
 
-    if (who == &you
+    if (who->is_player()
         && is_good_god(you.religion)
         && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
     {

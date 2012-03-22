@@ -694,7 +694,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
             mpr("A hydra appears.");
         player_angers_monster(hydra); // currently no-op
     }
-    else if (caster == &you)
+    else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -764,7 +764,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
         }
     }
 
-    if (!success && caster == &you)
+    if (!success && caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -2227,9 +2227,9 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
              _count_article(2, num_crawlies + num_lost == 0),
              num_masses == 1 ? "an agglomeration" : "agglomerations");
 
-    if (num_orcs > 0 && caster == &you)
+    if (num_orcs > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
-    if (num_holy > 0 && caster == &you)
+    if (num_holy > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
     return (true);

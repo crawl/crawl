@@ -27,7 +27,7 @@
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
     // We rely on the non-generalized move_player_to_cell.
-    ASSERT(this == &you);
+    ASSERT(is_player());
 
     if (dest == pos())
         return (false);

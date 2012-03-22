@@ -10,8 +10,7 @@
 
 bool actor::observable() const
 {
-    return (crawl_state.game_is_arena() && this != &you
-            || this == &you || you.can_see(this));
+    return (crawl_state.game_is_arena() || is_player() || you.can_see(this));
 }
 
 bool actor::see_cell(const coord_def &p) const
@@ -26,7 +25,7 @@ bool player::see_cell(const coord_def &p) const
 {
     if (!map_bounds(p))
         return (false);
-    if (crawl_state.game_is_arena() && this == &you)
+    if (crawl_state.game_is_arena() && is_player())
         return (true);
     if (xray_vision)
         return ((pos() - p).abs() <= dist_range(you.current_vision));
@@ -56,7 +55,7 @@ const los_base* actor::get_los()
 
 const los_base* player::get_los()
 {
-    if (crawl_state.game_is_arena() && this == &you)
+    if (crawl_state.game_is_arena() && is_player())
     {
         // env.show.init iterates over these bounds for arena
         los = los_glob(crawl_view.vgrdc, LOS_ARENA,

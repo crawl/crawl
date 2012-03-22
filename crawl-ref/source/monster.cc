@@ -3844,7 +3844,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return (0);
 
-        if (agent == &you && you.duration[DUR_QUAD_DAMAGE])
+        if (agent->is_player() && you.duration[DUR_QUAD_DAMAGE])
         {
             amount *= 4;
             if (amount > hit_points + 50)
@@ -3916,7 +3916,7 @@ bool monster::fully_petrify(actor *atk, bool quiet)
 
     add_ench(ENCH_PETRIFIED);
     mons_check_pool(this, pos(),
-                    atk ? atk == &you ? KILL_YOU_MISSILE
+                    atk ? atk->is_player() ? KILL_YOU_MISSILE
                                       : KILL_MON_MISSILE
                         : KILL_NONE,
                     atk ? atk->mindex() : NON_MONSTER);
@@ -4670,7 +4670,7 @@ bool monster::self_destructs()
 bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
 {
     const actor* a = actor_at(newpos);
-    if (a && (a != &you || !fedhas_passthrough(this)))
+    if (a && (!a->is_player() || !fedhas_passthrough(this)))
         return (false);
 
     const int index = mindex();

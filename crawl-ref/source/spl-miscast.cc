@@ -2519,7 +2519,7 @@ void MiscastEffect::_air(int severity)
     {
     case 0:         // just a harmless message
         num = 9;
-        if (target == &you)
+        if (target->is_player())
             num += 3 + _has_hair(target);
         switch (random2(num))
         {

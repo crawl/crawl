@@ -88,7 +88,7 @@ static void _holy_word_player(int pow, int caster, actor *attacker)
     int hploss;
 
     // Holy word won't kill its user.
-    if (attacker == &you)
+    if (attacker->is_player())
         hploss = std::max(0, you.hp / 2 - 1);
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
@@ -382,7 +382,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker == &you)
+    else if (attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
@@ -438,7 +438,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.damage_funcs.push_back(_conduct_electricity_damage);
     beam.affect_func   = _conduct_electricity_affects_actor;
 
-    if (attacker == &you)
+    if (attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
@@ -486,7 +486,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker == &you)
+    else if (attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
@@ -3287,7 +3287,7 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        ASSERT(act == &you);
+        ASSERT(act->is_player());
 
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {

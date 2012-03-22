@@ -1581,12 +1581,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         mutated = how_mutated(false, true);
 
     if (victim->is_chaotic()
-        || (victim == &you && player_is_shapechanged()))
+        || (victim->is_player() && player_is_shapechanged()))
     {
         dmg *= 7;
         dmg /= 4;
     }
-    else if (victim == &you && mutated > 0)
+    else if (victim->is_player() && mutated > 0)
     {
         int multiplier = 100 + (mutated * 5);
 
