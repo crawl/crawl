@@ -25,9 +25,11 @@ function ready()
   if you.turns() == 0 and bot_start then
     bot_start = false
     crawl.enable_more(false)
-    crawl.call_dlua("debug.disable('confirmations')")
-    --# don't let them stop us gearing up
-    crawl.call_dlua("debug.disable('mon_act')")
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('confirmations')" .. eol ..
+                   --# don't let them stop us gearing up
+                   "debug.disable('mon_act')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
     crawl.sendkeys("&A27" .. eol)
