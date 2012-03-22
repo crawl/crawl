@@ -3587,6 +3587,7 @@ enum disable_type
     DIS_HUNGER,
     DIS_DEATH,
     DIS_DELAY,
+    DIS_CONFIRMATIONS,
     NUM_DISABLEMENTS
 };
 
