@@ -1124,7 +1124,7 @@ ifeq ($(DESTDIR)$(prefix),)
 endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-	#$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/lua
