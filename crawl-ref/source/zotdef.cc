@@ -906,16 +906,13 @@ static monster_type _choose_unique_by_depth(int step)
 static monster_type _pick_unique(int level)
 {
     // Pick generic unique depending on depth.
-    int which_unique =
-        ((level <=  3) ? _choose_unique_by_depth(0) :
-         (level <=  7) ? _choose_unique_by_depth(1) :
-         (level <=  9) ? _choose_unique_by_depth(2) :
-         (level <= 13) ? _choose_unique_by_depth(3) :
-         (level <= 16) ? _choose_unique_by_depth(4) :
-         (level <= 19) ? _choose_unique_by_depth(5) :
-                         _choose_unique_by_depth(6));
-
-    return static_cast<monster_type>(which_unique);
+    return (level <=  3) ? _choose_unique_by_depth(0) :
+           (level <=  7) ? _choose_unique_by_depth(1) :
+           (level <=  9) ? _choose_unique_by_depth(2) :
+           (level <= 13) ? _choose_unique_by_depth(3) :
+           (level <= 16) ? _choose_unique_by_depth(4) :
+           (level <= 19) ? _choose_unique_by_depth(5) :
+                           _choose_unique_by_depth(6);
 }
 
 // Ask for a location and place a trap there. Returns true

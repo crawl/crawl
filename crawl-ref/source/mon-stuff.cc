@@ -372,7 +372,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     if (food_is_rotten(corpse))
         blood /= 3;
 
-    blood_spray(where, static_cast<monster_type>(corpse.plus), blood);
+    blood_spray(where, corpse.mon_type, blood);
 
     while (nchunks > 0 && ntries < 10000)
     {

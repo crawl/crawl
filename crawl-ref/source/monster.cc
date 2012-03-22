@@ -2335,8 +2335,7 @@ std::string monster::full_name(description_level_type desc,
 
 std::string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return (mons_pronoun(static_cast<monster_type>(type), pro,
-                         force_visible || you.can_see(this)));
+    return (mons_pronoun(type, pro, force_visible || you.can_see(this)));
 }
 
 std::string monster::conj_verb(const std::string &verb) const
