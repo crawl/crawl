@@ -533,13 +533,9 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
         break;
     }
 
-    switch (md.monnum)
-    {
-      case MONS_RAKSHASA_FAKE:
-      case MONS_MARA_FAKE:
+    if (md.monnum == MONS_RAKSHASA_FAKE || md.monnum == MONS_MARA_FAKE)
         name = "illusory " + name;
-        break;
-    }
+
     return name;
 }
 
@@ -718,8 +714,11 @@ void kill_monster_desc::save(writer& outf) const
 
 void kill_monster_desc::load(reader& inf)
 {
-    monnum = (int) unmarshallShort(inf);
+    monnum = static_cast<monster_type>(unmarshallShort(inf));
     modifier = (name_modifier) unmarshallShort(inf);
+#if TAG_MAJOR_VERSION == 32
+    ASSERT(monnum != -1);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -749,14 +748,8 @@ KILLEXP_ACCESS(exp, number, exp)
 KILLEXP_ACCESS(base_name, string, base_name.c_str())
 KILLEXP_ACCESS(desc, string, desc.c_str())
 KILLEXP_ACCESS(monnum, number, monnum)
-KILLEXP_ACCESS(isghost, boolean,
-               monnum == -1
-                   && ke->desc.find("The ghost of") != std::string::npos)
-KILLEXP_ACCESS(ispandemon, boolean,
-               monnum == -1
-                   && ke->desc.find("The ghost of") == std::string::npos)
-KILLEXP_ACCESS(isunique, boolean,
-               monnum != -1 && mons_is_unique(ke->monnum))
+KILLEXP_ACCESS(isghost, boolean, monnum == MONS_PLAYER_GHOST)
+KILLEXP_ACCESS(ispandemon, boolean, monnum == MONS_PANDEMONIUM_LORD)
 
 
 static int kill_lualc_modifier(lua_State *ls)
@@ -828,10 +821,21 @@ static int kill_lualc_place_name(lua_State *ls)
     return 1;
 }
 
-static bool is_ghost(const kill_exp *ke)
+static int kill_lualc_isunique(lua_State *ls)
 {
-    return ke->monnum == -1
-        && ke->desc.find("The ghost of") != std::string::npos;
+    if (!lua_islightuserdata(ls, 1))
+    {
+        luaL_argerror(ls, 1, "Unexpected argument type");
+        return 0;
+    }
+
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
+    if (ke)
+    {
+        lua_pushboolean(ls, mons_is_unique(ke->monnum));
+        return 1;
+    }
+    return 0;
 }
 
 static int kill_lualc_holiness(lua_State *ls)
@@ -846,23 +850,18 @@ static int kill_lualc_holiness(lua_State *ls)
     if (ke)
     {
         const char *verdict = "strange";
-        if (ke->monnum == -1)
-            verdict = is_ghost(ke)? "undead" : "demonic";
-        else
+        switch (mons_class_holiness(ke->monnum))
         {
-            switch (mons_class_holiness(ke->monnum))
-            {
-            case MH_HOLY:       verdict = "holy"; break;
-            case MH_NATURAL:    verdict = "natural"; break;
-            case MH_UNDEAD:     verdict = "undead"; break;
-            case MH_DEMONIC:    verdict = "demonic"; break;
-            case MH_NONLIVING:  verdict = "nonliving"; break;
-            case MH_PLANT:      verdict = "plant"; break;
-            }
-            if (ke->modifier != kill_monster_desc::M_NORMAL
-                    && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
-                verdict = "undead";
+        case MH_HOLY:       verdict = "holy"; break;
+        case MH_NATURAL:    verdict = "natural"; break;
+        case MH_UNDEAD:     verdict = "undead"; break;
+        case MH_DEMONIC:    verdict = "demonic"; break;
+        case MH_NONLIVING:  verdict = "nonliving"; break;
+        case MH_PLANT:      verdict = "plant"; break;
         }
+        if (ke->modifier != kill_monster_desc::M_NORMAL
+                && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
+            verdict = "undead";
         lua_pushstring(ls, verdict);
         return 1;
     }
@@ -880,9 +879,7 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
-        ucs_t ch = ke->monnum != -1?
-                   mons_char(ke->monnum) :
-              is_ghost(ke)? 'p' : '&';
+        ucs_t ch = mons_char(ke->monnum);
 
         if (ke->monnum == MONS_PROGRAM_BUG)
             ch = ' ';
