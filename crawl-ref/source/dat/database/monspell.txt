@@ -305,14 +305,6 @@ You hear an invocation said in the dwarven tongue.
 You see a slight glow in a spot of thin air.
 
 Someone prays in loud words.
-
-%%%%
-Mennas cast
-
-@The_monster@ casts a spell.
-
-@The_monster@ gestures silently.
-
 %%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
