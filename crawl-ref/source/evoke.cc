@@ -61,7 +61,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 {
     if (you.caught())
     {
-        canned_msg(MSG_HELD_IN_A_NET);
+        mprf("You cannot attack while %s.", held_status());
         return false;
     }
 

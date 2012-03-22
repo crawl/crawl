@@ -34,6 +34,7 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -485,6 +486,16 @@ void canned_msg(canned_message_type which_message)
         mpr("You're too hungry.");
         break;
     }
+}
+
+const char* held_status()
+{
+    if (get_trapping_net(you.pos(), true) != NON_ITEM)
+        return "held in a net";
+    else if (get_trap_type(you.pos()) == TRAP_WEB)
+        return "caught in a web";
+    else
+        return "buggily held";
 }
 
 // Like yesno, but requires a full typed answer.

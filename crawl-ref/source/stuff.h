@@ -29,6 +29,7 @@ bool print_error_screen(PRINTF(0, ));
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
+const char* held_status();
 
 bool yes_or_no(PRINTF(0, ));
 typedef std::map<int, int> explicit_keymap;
