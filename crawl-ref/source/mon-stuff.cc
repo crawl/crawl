@@ -1570,9 +1570,8 @@ int monster_die(monster* mons, killer_type killer,
     if (mons_near(mons) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
 
-          int  summon_type   = 0;
           int  duration      = 0;
-    const bool summoned      = mons->is_summoned(&duration, &summon_type);
+    const bool summoned      = mons->is_summoned(&duration);
     const int monster_killed = mons->mindex();
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
     bool unsummoned          = killer == KILL_UNSUMMONED;
