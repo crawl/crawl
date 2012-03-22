@@ -34,6 +34,7 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -496,13 +497,20 @@ void canned_msg(canned_message_type which_message)
     case MSG_ANIMATE_REMAINS:
         mpr("You attempt to give life to the dead...");
         break;
-    case MSG_HELD_IN_A_NET:
-        mpr("You're held in a net!");
-        break;
     case MSG_DECK_EXHAUSTED:
         mpr("The deck of cards disappears in a puff of smoke.");
         break;
     }
+}
+
+const char* held_status()
+{
+    if (get_trapping_net(you.pos(), true) != NON_ITEM)
+        return "held in a net";
+    else if (get_trap_type(you.pos()) == TRAP_WEB)
+        return "caught in a web";
+    else
+        return "buggily held";
 }
 
 // Like yesno, but requires a full typed answer.

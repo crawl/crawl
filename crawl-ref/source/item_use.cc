@@ -1290,14 +1290,14 @@ bool fire_warn_if_impossible(bool silent)
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
-                mpr("You cannot throw anything while held in a net!");
+                mprf("You cannot throw anything while %s.", held_status());
             return (true);
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             if (!silent)
-                mprf("You cannot shoot with your %s while held in a net!",
-                     weapon->name(DESC_BASENAME).c_str());
+                mprf("You cannot shoot with your %s while %s.",
+                     weapon->name(DESC_BASENAME).c_str(), held_status());
             return (true);
         }
         // Else shooting is possible.
