@@ -2011,15 +2011,15 @@ MONS:    wight / necrophage / shadow
 KMONS:   4 = Josephine / skeletal warrior / necromancer
 KMONS:   5 = skeletal warrior / necromancer
 : end
+SHUFFLE: Aa / Bb / Cc / Dd / Ee
+SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
 : if you.branch() == "Crypt" then
 SUBST:   x = c
 : end
-SHUFFLE: ABCDE
-SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., E = x
 MAP
     xxxxxxxxx
     x2233322x
-@  xx22x5x22xx  @
+xaaxx22x5x22xxccx
 xAAx.x2x=x2x.xCCx
 xAAxx.xx1xx.xxCCx
 xAAxxx.x.x.xxxCCx
@@ -2028,7 +2028,7 @@ x...............x
 xBBxxx.x.x.xxxDDx
 xBBxx.xx1xx.xxDDx
 xBBx.x2x=x2x.xDDx
-@  xx22x4x22xx  @
+xbbxx22x4x22xxddx
     x2233322x
     xxxxxxxxx
 ENDMAP
