@@ -2314,6 +2314,38 @@ xxxxaaaaaaaxxx..@
 xxxxxxxxxxxxxx.@@
 ENDMAP
 
+NAME:    hangedman_aerie_drop
+TAGS:    no_monster_gen no_pool_fixup
+DEPTH:   D:17-26, Vault:4-7
+WEIGHT:  3
+MONS:    patrolling spriggan air mage ; staff of air
+MONS:    patrolling spriggan rider ; spear ego:electrocution . buckler
+MONS:    lightning spire, sky beast, electric eel
+KMONS:   E = vapour w:10 / ball lightning w:6 / \
+             generate_awake air elemental w:7 / air elemental w:1
+KITEM:   dT = any weapon good_item ego:electrocution, disc of storms
+KFEAT:   E = deep_water
+KFEAT:   d = shallow_water
+KFEAT:   T = teleport trap
+KFEAT:   * = +
+MARKER:  * = lua:restrict_door()
+MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
+                 delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
+SHUFFLE: ab, {( / <<
+NSUBST:  E = 11:E / *:e, 5 = 2:5 / *:w
+SUBST:   e = E5w, a = v
+MAP
+ {bab bab bababtt
+.baEabaEaba...abt4
+@nEEwEwEEn1.4.2ntW
+.baw5v5wab.3v3.ba@
+ .bEnTnE*.4ndn4.+@
+.baw5v5wab.3v3.ba@
+@nEEwEwEEn1.4.2ntW
+.baEabaEaba...abt4
+ (bab bab bababtt
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters
