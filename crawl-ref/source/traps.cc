@@ -1386,6 +1386,7 @@ void free_self_from_net()
         }
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
+        you.redraw_evasion = true;
         return;
     }
 
@@ -1431,6 +1432,7 @@ void free_self_from_net()
 
             you.attribute[ATTR_HELD] = 0;
             you.redraw_quiver = true;
+            you.redraw_evasion = true;
             return;
         }
 
@@ -1477,6 +1479,7 @@ void free_self_from_net()
 
             you.attribute[ATTR_HELD] = 0;
             you.redraw_quiver = true;
+            you.redraw_evasion = true;
             remove_item_stationary(mitm[net]);
             return;
         }
@@ -1504,6 +1507,7 @@ void clear_trapping_net()
 
     you.attribute[ATTR_HELD] = 0;
     you.redraw_quiver = true;
+    you.redraw_evasion = true;
 }
 
 item_def trap_def::generate_trap_item()
