@@ -13,6 +13,12 @@ enum ev_ignore_type
 
 struct bolt;
 
+/* Axe this block soon */
+// (needed for asserts in is_player())
+class player;
+extern player you;
+/***********************/
+
 class actor
 {
 public:
@@ -25,7 +31,13 @@ public:
 
     bool is_player() const
     {
-        return atype() == ACT_PLAYER;
+        ASSERT(this);
+        if (atype() == ACT_PLAYER)
+        {
+            ASSERT(this == (actor*)&you); // there can be only one
+            return true;
+        }
+        return false;
     }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
