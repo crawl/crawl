@@ -1846,8 +1846,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << _name << " ";
         else if (!dbname && !starts_with(_name, "the "))
         {
-            buff << mons_type_name(static_cast<monster_type>(it_plus), DESC_PLAIN)
-                 << ' ';
+            const monster_type mc = static_cast<monster_type>(it_plus);
+            if (!(mons_is_unique(mc) && mons_species(mc) == mc))
+                buff << mons_type_name(mc, DESC_PLAIN) << ' ';
 
             if (!_name.empty() && shaped)
                 buff << _name << ' ';
