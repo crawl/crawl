@@ -3104,8 +3104,9 @@ monster* mons_place(mgen_data mg)
 
     if (mg.behaviour == BEH_COPY)
     {
-        mg.behaviour = mg.summoner->is_player() ? BEH_FRIENDLY
-                       : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+        mg.behaviour = (mg.summoner && mg.summoner->is_player())
+                        ? BEH_FRIENDLY
+                        : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
     }
 
     monster* creation = place_monster(mg);
