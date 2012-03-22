@@ -137,7 +137,8 @@ static bool _check_moveto_cloud(const coord_def& p,
         // Don't prompt if already in a cloud of the same type.
         if (is_damaging_cloud(ctype, true)
             && (env.cgrid(you.pos()) == EMPTY_CLOUD
-                || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
+                || ctype != env.cloud[ env.cgrid(you.pos()) ].type)
+            && !crawl_state.disables[DIS_CONFIRMATIONS])
         {
             std::string prompt = make_stringf(
                                     "Really %s into that cloud of %s?",
@@ -194,7 +195,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             return (false);
         }
     }
-    else if (trap->type == TRAP_ZOT)
+    else if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         std::string prompt = make_stringf(
             "Do you really want to %s into the Zot trap",
@@ -206,7 +207,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             return (false);
         }
     }
-    else if (!trap->is_safe())
+    else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         std::string prompt = make_stringf(
             "Really %s %s that %s?",
@@ -293,7 +294,8 @@ static bool _check_moveto_exclusion(const coord_def& p,
 {
     if (is_excluded(p)
         && !is_stair_exclusion(p)
-        && !is_excluded(you.pos()))
+        && !is_excluded(you.pos())
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         std::string prompt =
             make_stringf("Really %s into a travel-excluded area?",
