@@ -1495,7 +1495,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         case SPWPN_NORMAL:
         case SPWPN_PROTECTION:
         case SPWPN_SPEED:
-        case SPWPN_PENETRATION:
         case SPWPN_EVASION:
             return true;
         default:
