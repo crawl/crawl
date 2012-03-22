@@ -1761,10 +1761,11 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         if (x_chance_in_y(2, 5))
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
-                                                    2, ARM_RING_MAIL,
-                                                    1, ARM_SCALE_MAIL,
-                                                    1, ARM_CHAIN_MAIL,
+            item.sub_type  = random_choose_weighted(10, ARM_LEATHER_ARMOUR,
+                                                    3, ARM_RING_MAIL,
+                                                    1, ARM_TROLL_LEATHER_ARMOUR,
+                                                    1, ARM_STEAM_DRAGON_ARMOUR,
+                                                    1, ARM_MOTTLED_DRAGON_ARMOUR,
                                                     0);
         }
         else
