@@ -33,7 +33,7 @@ struct kill_monster_desc
         M_SHAPESHIFTER, // A shapeshifter pretending to be 'monnum'
     };
 
-    int monnum;                 // Number of the beast
+    monster_type monnum;        // Number of the beast
     name_modifier modifier;     // Nature of the beast
 
     struct less_than
@@ -103,8 +103,8 @@ struct kill_exp
     std::string base_name;
     std::string desc;
 
-    int monnum;       // Number of the beast
-    int modifier;     // Nature of the beast
+    monster_type monnum; // Number of the beast
+    int modifier;        // Nature of the beast
 
     std::vector<unsigned short> places;
 
@@ -118,7 +118,7 @@ struct kill_exp
 
     kill_exp(const kill_ghost &kg)
         : nkills(1), exp(kg.exp), base_name(), desc(kg.info()),
-          monnum(-1), modifier(0)
+          monnum(MONS_PROGRAM_BUG), modifier(0)
     {
         places.push_back(kg.place);
     }
