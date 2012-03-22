@@ -2412,7 +2412,7 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 // Player EV scaling for being flying tengu or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
-    if (you.duration[DUR_PETRIFYING])
+    if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
 
     switch (you.species)
