@@ -1662,7 +1662,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     const coord_def oldpos = victim->pos();
     victim->clear_clinging();
 
-    if (victim->atype() == ACT_PLAYER)
+    if (victim->is_player())
     {
         stop_delay(true);
 
@@ -1720,7 +1720,7 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
 
     if (you.can_see(victim))
     {
-        if (victim->atype() == ACT_PLAYER)
+        if (victim->is_player())
             dmg_msg = "You are electrocuted!";
         else if (victim->type == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_THE) + " is charged up!";
@@ -1974,7 +1974,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     returning = get_weapon_brand(item) == SPWPN_RETURNING
                 || ammo_brand == SPMSL_RETURNING;
 
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
         beam.beam_source   = NON_MONSTER;
@@ -2352,7 +2352,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
-    if (act->atype() == ACT_PLAYER || you.can_see(act))
+    if (act->is_player() || you.can_see(act))
         msg = NULL;
 
     noisy(level, act->pos(), msg, act->mindex());

@@ -236,7 +236,7 @@ int actor::body_weight(bool base) const
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return (act->atype() == ACT_PLAYER?
+    return (act->is_player()?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
 }

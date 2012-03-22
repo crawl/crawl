@@ -1890,7 +1890,7 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
 
     bool origin_worships_fedhas;
     mon_attitude_type origin_attitude;
-    if (originator->atype() == ACT_PLAYER)
+    if (originator->is_player())
     {
         origin_worships_fedhas = you.religion == GOD_FEDHAS;
         origin_attitude = ATT_FRIENDLY;

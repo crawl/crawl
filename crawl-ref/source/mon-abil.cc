@@ -2896,14 +2896,14 @@ void mon_nearby_ability(monster* mons)
 
             int confuse_power = 2 + random2(3);
 
-            if (foe->atype() == ACT_PLAYER && !can_see)
+            if (foe->is_player() && !can_see)
                 mpr("You feel you are being watched by something.");
 
             int res_margin = foe->check_res_magic((mons->hit_dice * 5)
                              * confuse_power);
             if (res_margin > 0)
             {
-                if (foe->atype() == ACT_PLAYER)
+                if (foe->is_player())
                     canned_msg(MSG_YOU_RESIST);
                 else if (foe->atype() == ACT_MONSTER)
                 {
@@ -2927,7 +2927,7 @@ void mon_nearby_ability(monster* mons)
                      mons->name(DESC_THE).c_str(),
                      foe->name(DESC_THE).c_str());
 
-            if (foe->atype() == ACT_PLAYER && !can_see)
+            if (foe->is_player() && !can_see)
                 mpr("You feel you are being watched by something.");
 
             // Subtly different from old paralysis behaviour, but
@@ -2938,7 +2938,7 @@ void mon_nearby_ability(monster* mons)
 
     case MONS_EYE_OF_DRAINING:
     case MONS_GHOST_MOTH:
-        if (_eyeball_will_use_ability(mons) && foe->atype() == ACT_PLAYER)
+        if (_eyeball_will_use_ability(mons) && foe->is_player())
         {
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");

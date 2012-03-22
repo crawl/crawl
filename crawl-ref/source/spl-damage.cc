@@ -100,7 +100,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.beam_source  = source->mindex();
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
-        source->atype() == ACT_PLAYER ? KILL_YOU_MISSILE : KILL_MON;
+        source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
     beam.obvious_effect = false;
     beam.is_beam      = false;
@@ -336,7 +336,7 @@ static bool _toxic_radianceable(const actor *act)
     if (act->invisible())
         return false;
     // currently monsters are still immune at rPois 1
-    return (act->res_poison() < (act->atype() == ACT_PLAYER ? 3 : 1));
+    return (act->res_poison() < (act->is_player() ? 3 : 1));
 }
 
 spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
@@ -913,7 +913,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
     {
         _player_hurt_monster(*mon, damage);
 
@@ -1958,7 +1958,7 @@ void forest_damage(const actor *mon)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
                 const int damage = 5 + random2(10);
-                if (foe->atype() == ACT_PLAYER)
+                if (foe->is_player())
                 {
                     mpr(random_choose(
                         "You are hit by a branch!",

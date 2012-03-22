@@ -1552,7 +1552,7 @@ void _end_game(scorefile_entry &se)
 
 int actor_to_death_source(const actor* agent)
 {
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
         return (NON_MONSTER);
     else if (agent->atype() == ACT_MONSTER)
         return (agent->as_monster()->mindex());

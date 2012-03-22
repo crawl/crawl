@@ -32,7 +32,7 @@ static void _fuzz_direction(monster& mon, int pow);
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
 {
-    const bool is_player = caster->atype() == ACT_PLAYER;
+    const bool is_player = caster->is_player();
     if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
         return SPRET_ABORT;
 
@@ -384,7 +384,7 @@ move_again:
             item_def *shield = victim->shield();
             if (!shield_reflects(*shield))
             {
-                if (victim->atype() == ACT_PLAYER)
+                if (victim->is_player())
                 {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 }
@@ -398,7 +398,7 @@ move_again:
                 return (true);
             }
 
-            if (victim->atype() == ACT_PLAYER)
+            if (victim->is_player())
             {
                 mprf("Your %s reflects %s!",
                     shield->name(DESC_PLAIN).c_str(),

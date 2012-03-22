@@ -685,7 +685,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     if (monster *hydra = create_monster(
             mgen_data(MONS_HYDRA, BEH_COPY, caster,
                       1, SPELL_SUMMON_HYDRA, caster->pos(),
-                      (caster->atype() == ACT_PLAYER) ?
+                      (caster->is_player()) ?
                           MHITYOU : caster->as_monster()->foe,
                       0, (god == GOD_NO_GOD) ? caster->deity() : god,
                       MONS_HYDRA, heads)))
@@ -752,7 +752,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
                 mgen_data(mon, BEH_COPY, caster,
                           6, SPELL_SUMMON_DRAGON,
                           caster->pos(),
-                          (caster->atype() == ACT_PLAYER) ? MHITYOU
+                          (caster->is_player()) ? MHITYOU
                             : caster->as_monster()->foe,
                           0, god)))
         {
@@ -1266,7 +1266,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
     coord_def point = find_gateway_location(caster);
     bool success = (point != coord_def(0, 0));
 
-    bool is_player = (caster->atype() == ACT_PLAYER);
+    bool is_player = (caster->is_player());
 
     if (success)
     {
@@ -1284,7 +1284,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 
-        if (one_chance_in(5) && caster->atype() == ACT_PLAYER)
+        if (one_chance_in(5) && caster->is_player())
         {
             // if someone deletes the db, no message is ok
             mpr(getMiscString("SHT_int_loss").c_str());

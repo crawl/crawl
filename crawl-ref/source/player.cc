@@ -6626,7 +6626,7 @@ void player::drain_stat(stat_type s, int amount, actor *attacker)
         lose_stat(s, amount, false, "");
     else if (attacker->atype() == ACT_MONSTER)
         lose_stat(s, amount, attacker->as_monster(), false);
-    else if (attacker->atype() == ACT_PLAYER)
+    else if (attacker->is_player())
         lose_stat(s, amount, false, "suicide");
     else
         lose_stat(s, amount, false, "");

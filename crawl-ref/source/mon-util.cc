@@ -2565,7 +2565,7 @@ bool mons_aligned(const actor *m1, const actor *m2)
     if (!m1 || !m2)
         return (true);
 
-    if (m1->atype() == ACT_PLAYER)
+    if (m1->is_player())
         fr1 = ATT_FRIENDLY;
     else
     {
@@ -2575,7 +2575,7 @@ bool mons_aligned(const actor *m1, const actor *m2)
         fr1 = mons_attitude(mon1);
     }
 
-    if (m2->atype() == ACT_PLAYER)
+    if (m2->is_player())
         fr2 = ATT_FRIENDLY;
     else
     {
@@ -3529,7 +3529,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     if (foe == NULL)
         ;
-    else if (foe->atype() == ACT_PLAYER)
+    else if (foe->is_player())
     {
         foe_species = species_name(you.species, true);
 

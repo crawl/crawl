@@ -220,7 +220,7 @@ void tornado_damage(actor *caster, int dur)
 
     int pow;
     // Not stored so unwielding that staff will reduce damage.
-    if (caster->atype() == ACT_PLAYER)
+    if (caster->is_player())
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
         pow = caster->as_monster()->hit_dice * 4;
@@ -345,7 +345,7 @@ void tornado_damage(actor *caster, int dur)
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
-                    if (victim->atype() == ACT_PLAYER)
+                    if (victim->is_player())
                         ouch(dmg, caster->mindex(), KILLED_BY_BEAM,
                              "tornado");
                     else

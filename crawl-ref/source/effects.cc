@@ -3285,7 +3285,7 @@ void slime_wall_damage(actor* act, int delay)
     // Up to 1d6 damage per wall per slot.
     const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
 
-    if (act->atype() == ACT_PLAYER)
+    if (act->is_player())
     {
         ASSERT(act == &you);
 

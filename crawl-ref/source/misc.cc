@@ -2431,7 +2431,7 @@ bool is_dragonkind(const actor *act)
         return (true);
     }
 
-    if (act->atype() == ACT_PLAYER)
+    if (act->is_player())
         return (you.form == TRAN_DRAGON);
 
     // Else the actor is a monster.
@@ -2604,10 +2604,10 @@ int apply_chunked_AC(int dam, int ac)
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_THE).c_str());
+        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->is_player()) ? "you" : act->name(DESC_THE).c_str());
 
     act->blink(false);
-    if (act->atype() == ACT_PLAYER)
+    if (act->is_player())
         ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
     else
         act->hurt(NULL, roll_dice(2, 4));

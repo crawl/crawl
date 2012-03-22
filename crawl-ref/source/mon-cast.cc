@@ -2179,7 +2179,7 @@ static bool _mons_vampiric_drain(monster *mons)
     else
         mpr("Unholy energy fills the air.");
 
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
         simple_monster_message(mons,
@@ -2298,7 +2298,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
-        if (ai->atype() == ACT_PLAYER)
+        if (ai->is_player())
         {
             if (mons->pacified()
                 || mons->friendly())
@@ -2412,7 +2412,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
         if (ai->res_negative_energy())
             continue;
 
-        if (ai->atype() == ACT_PLAYER)
+        if (ai->is_player())
         {
             if (mons->wont_attack())
                 continue;
@@ -3443,7 +3443,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
             // We can blink away the crowd, but only our allies.
             if (act
-                && (act->atype() == ACT_PLAYER
+                && (act->is_player()
                     || (act->atype() == ACT_MONSTER
                         && act->as_monster()->attitude != mons->attitude)))
             {
@@ -3879,10 +3879,10 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                 {
                     targ_prep = "next to";
 
-                    if (act->atype() == ACT_PLAYER || one_chance_in(++count))
+                    if (act->is_player() || one_chance_in(++count))
                         target = act->name(DESC_THE);
 
-                    if (act->atype() == ACT_PLAYER)
+                    if (act->is_player())
                         break;
                 }
             }
@@ -3950,13 +3950,13 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                     if (act && act != mons && you.can_see(act))
                     {
                         targ_prep = "past";
-                        if (act->atype() == ACT_PLAYER
+                        if (act->is_player()
                             || one_chance_in(++count))
                         {
                             target = act->name(DESC_THE);
                         }
 
-                        if (act->atype() == ACT_PLAYER)
+                        if (act->is_player())
                             break;
                     }
                 }
@@ -4235,7 +4235,7 @@ static bool _foe_should_res_negative_energy(const actor* foe)
 {
     const mon_holy_type holiness = foe->holiness();
 
-    if (foe->atype() == ACT_PLAYER)
+    if (foe->is_player())
     {
         // Non-bloodless vampires do not appear immune.
         if (holiness == MH_UNDEAD
