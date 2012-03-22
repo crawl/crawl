@@ -3444,7 +3444,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             // We can blink away the crowd, but only our allies.
             if (act
                 && (act->is_player()
-                    || (act->atype() == ACT_MONSTER
+                    || (act->is_monster()
                         && act->as_monster()->attitude != mons->attitude)))
             {
                 sumcount++;

@@ -39,6 +39,7 @@ public:
         }
         return false;
     }
+    bool is_monster() const { return !is_player(); }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
     virtual const monster* as_monster() const = 0;

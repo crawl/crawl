@@ -3494,7 +3494,7 @@ void bolt::affect_player_enchantment()
 
 void bolt::affect_actor(actor *act)
 {
-    if (act->atype() == ACT_MONSTER)
+    if (act->is_monster())
         affect_monster(act->as_monster());
     else
         affect_player();
@@ -5062,7 +5062,7 @@ bool bolt::knockback_actor(actor *act)
     const coord_def newpos(ray.pos());
     if (newpos == oldpos
         || actor_at(newpos)
-        || (act->atype() == ACT_MONSTER
+        || (act->is_monster()
             && mons_is_stationary(act->as_monster()))
         || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)

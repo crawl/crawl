@@ -3107,7 +3107,7 @@ static int _slouchable(coord_def where, int pow, int, actor* agent)
 
 static bool _act_slouchable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return false;  // too slow-witted
     return _slouchable(act->pos(), 0, 0, 0);
 }

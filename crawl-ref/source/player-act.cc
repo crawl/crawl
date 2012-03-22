@@ -554,7 +554,7 @@ void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (other && other->atype() == ACT_MONSTER)
+    if (other && other->is_monster())
     {
         const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())

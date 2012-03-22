@@ -837,7 +837,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
                  caster ? caster->pos() : you.pos(),
-                 (caster && caster->atype() == ACT_MONSTER)
+                 (caster && caster->is_monster())
                      ? ((monster*)caster)->foe : MHITYOU,
                  0, GOD_TROG);
 

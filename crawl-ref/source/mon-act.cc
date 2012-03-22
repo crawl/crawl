@@ -819,7 +819,7 @@ static bool _handle_reaching(monster* mons)
     {
         ret = true;
 
-        ASSERT(foe->is_player() || foe->atype() == ACT_MONSTER);
+        ASSERT(foe->is_player() || foe->is_monster());
 
         fight_melee(mons, foe);
 
@@ -2013,7 +2013,7 @@ void handle_noattack_constrictions(actor *attacker)
                  defender->name(DESC_PLAIN, true).c_str(),
                  basedam, durdam, acdam, timescale_dam, infdam);
 
-            if (defender->atype() == ACT_MONSTER
+            if (defender->is_monster()
                 && defender->as_monster()->hit_points < 1)
             {
                 monster_die(defender->as_monster(), attacker);

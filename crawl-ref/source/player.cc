@@ -6605,7 +6605,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
                  bool cleanup_dead)
 {
     // We ignore cleanup_dead here.
-    if (agent->atype() == ACT_MONSTER)
+    if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
@@ -6627,7 +6627,7 @@ void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
     if (attacker == NULL)
         lose_stat(s, amount, false, "");
-    else if (attacker->atype() == ACT_MONSTER)
+    else if (attacker->is_monster())
         lose_stat(s, amount, attacker->as_monster(), false);
     else if (attacker->is_player())
         lose_stat(s, amount, false, "suicide");

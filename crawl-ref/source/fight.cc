@@ -305,7 +305,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     if (!res)
         return (rawdamage);
 
-    const bool mons = (defender->atype() == ACT_MONSTER);
+    const bool mons = (defender->is_monster());
 
     const int resistible_fraction = get_resistible_fraction(flavour);
 

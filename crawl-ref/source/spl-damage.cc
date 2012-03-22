@@ -1033,7 +1033,7 @@ static int _shatter_walls(coord_def where, int pow, actor *)
 
 static bool _shatterable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return true; // no player ghostlies... at least user-controllable ones
     return _shatter_mon_dice(act->as_monster());
 }

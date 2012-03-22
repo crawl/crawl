@@ -2404,7 +2404,7 @@ bool is_orckind(const actor *act)
     if (mons_genus(act->mons_species()) == MONS_ORC)
         return (true);
 
-    if (act->atype() == ACT_MONSTER)
+    if (act->is_monster())
     {
         const monster* mon = act->as_monster();
         if (mons_is_zombified(mon)

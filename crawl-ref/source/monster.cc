@@ -4411,10 +4411,10 @@ bool monster::invisible() const
 
 bool monster::visible_to(const actor *looker) const
 {
-    bool sense_invis = looker->atype() == ACT_MONSTER
+    bool sense_invis = looker->is_monster()
                        && mons_sense_invis(looker->as_monster());
 
-    bool blind = looker->atype() == ACT_MONSTER
+    bool blind = looker->is_monster()
                  && looker->as_monster()->has_ench(ENCH_BLIND);
 
     bool vis = !blind && !invisible() || looker->can_see_invisible()
@@ -5184,7 +5184,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 !oppressor ? KILL_MISC
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,
-                (oppressor && oppressor->atype() == ACT_MONSTER)
+                (oppressor && oppressor->is_monster())
                   ? oppressor->mindex() : NON_MONSTER);
 
             if (fly_died && !is_habitable(pos()))
