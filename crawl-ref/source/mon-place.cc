@@ -1765,7 +1765,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
-        if (mg.summoner->atype() == ACT_PLAYER)
+        if (mg.summoner->is_player())
             mons_add_blame(mon, blame_prefix + "the player character");
         else
         {

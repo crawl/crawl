@@ -123,7 +123,7 @@ void MiscastEffect::init()
     ASSERT(target != NULL);
     ASSERT(target->alive());
 
-    ASSERT(lethality_margin == 0 || target->atype() == ACT_PLAYER);
+    ASSERT(lethality_margin == 0 || target->is_player());
 
     recursion_depth = 0;
 
@@ -257,7 +257,7 @@ std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
 
     if (source == NON_MONSTER)
     {
-        ASSERT(target->atype() == ACT_PLAYER);
+        ASSERT(target->is_player());
         std::string str = "miscasting ";
         str += spell_title(spell);
         return str;
@@ -341,7 +341,7 @@ void MiscastEffect::do_miscast()
 
         if (random2(40) > severity && random2(40) > severity)
         {
-            if (target->atype() == ACT_PLAYER)
+            if (target->is_player())
                 canned_msg(MSG_NOTHING_HAPPENS);
             return;
         }
@@ -393,7 +393,7 @@ void MiscastEffect::do_miscast()
     case SPTYP_DIVINATION:
         // Divination miscasts have nothing in common between the player
         // and monsters.
-        if (target->atype() == ACT_PLAYER)
+        if (target->is_player())
             _divination_you(severity);
         else
             _divination_mon(severity);
@@ -403,7 +403,7 @@ void MiscastEffect::do_miscast()
         die("Invalid miscast spell discipline.");
     }
 
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
         xom_is_stimulated(severity * 50);
 }
 
@@ -420,7 +420,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (!all_msg.empty())
         msg = all_msg;
-    else if (target->atype() == ACT_PLAYER)
+    else if (target->is_player())
         msg = you_msg;
     else if (!mon_msg.empty())
     {
@@ -488,7 +488,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     {
         // Those monsters of normal or greater intelligence will realize that they
         // were the source of the sound.
-        int src = target->atype() == ACT_PLAYER ? you.mindex()
+        int src = target->is_player() ? you.mindex()
                 : mons_intel(target_as_monster()) >= I_NORMAL ? target->mindex()
                 : -1;
         noisy(sound_loudness, target->pos(), src);
@@ -583,7 +583,7 @@ bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
 
 void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 {
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
     {
         potion_effect(pot_eff, pot_pow, false, false);
         return;
@@ -755,7 +755,7 @@ static bool _has_hair(actor* target)
 
 static std::string _hair_str(actor* target, bool &plural)
 {
-    ASSERT(target->atype() == ACT_PLAYER);
+    ASSERT(target->is_player());
 
     if (you.species == SP_MUMMY)
     {
@@ -978,7 +978,7 @@ void MiscastEffect::_enchantment(int severity)
                 sound_loudness = 2;
                 return;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 if (you.species == SP_OCTOPODE)
                     you_msg = "Your beak vibrates slightly."; // the only hard part
                 else
@@ -992,13 +992,13 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER && !liquefied(you.pos())
+            if (target->is_player() && !liquefied(you.pos())
                 && you.ground_level())
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
             {
                 // Reasoning: miscasts to get levitation to escape the effects of
                 // liquefaction = cheap.
@@ -1026,7 +1026,7 @@ void MiscastEffect::_enchantment(int severity)
         case 0:
         case 1:
         case 2:
-            if (target->atype() == ACT_PLAYER)
+            if (target->is_player())
             {
                 mpr("You sense a malignant aura.");
                 curse_an_item();
@@ -1046,7 +1046,7 @@ void MiscastEffect::_enchantment(int severity)
 
     case 3:         // potentially lethal
         // Only use first two cases for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 4 : 2))
+        switch (random2(target->is_player() ? 4 : 2))
         {
         case 0:
             target->paralyse(act_source, 2 + random2(6), cause);
@@ -1220,7 +1220,7 @@ void MiscastEffect::_translocation(int severity)
         while (reroll)
         {
             // Don't use the last case for monsters.
-            switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
+            switch (random2(target->is_player() ? 4 : 3))
             {
             case 0:
                 you_msg        = "You are caught in an extremely strong localised "
@@ -1277,7 +1277,7 @@ void MiscastEffect::_summoning(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "You feel momentarily dizzy.";
             break;
         case 2:
@@ -1317,7 +1317,7 @@ void MiscastEffect::_summoning(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "You feel watched.";
             break;
         }
@@ -1622,7 +1622,7 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->atype() == ACT_PLAYER && you.religion == GOD_KIKUBAAQUDGHA
+    if (target->is_player() && you.religion == GOD_KIKUBAAQUDGHA
         && !player_under_penance() && you.piety >= piety_breakpoint(1))
     {
         const bool death_curse =
@@ -1670,7 +1670,7 @@ void MiscastEffect::_necromancy(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 3;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "You feel homesick.";
             break;
         case 2:
@@ -1745,7 +1745,7 @@ void MiscastEffect::_necromancy(int severity)
                     all_msg = "You smell decay.";
                 }
 
-                if (target->atype() == ACT_PLAYER)
+                if (target->is_player())
                     you.rotting++;
                 else
                     target_as_monster()->add_ench(mon_enchant(ENCH_ROT, 1,
@@ -1826,7 +1826,7 @@ void MiscastEffect::_necromancy(int severity)
 
     case 3:         // even nastier
         // Don't use last case for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 6 : 5))
+        switch (random2(target->is_player() ? 6 : 5))
         {
         case 0:
             if (target->holiness() == MH_UNDEAD)
@@ -1971,7 +1971,7 @@ void MiscastEffect::_transmutation(int severity)
 
     case 2:         // much more annoying
         // Last case for players only.
-        switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
+        switch (random2(target->is_player() ? 4 : 3))
         {
         case 0:
             you_msg      = "Your body is twisted very painfully!";
@@ -2001,7 +2001,7 @@ void MiscastEffect::_transmutation(int severity)
             mon_msg = "@The_monster@'s body is flooded with distortional "
                       "energies!";
             if (_ouch(3 + random2avg(18, 2)) && target->alive()
-                && target->atype() == ACT_PLAYER)
+                && target->is_player())
             {
                 contaminate_player(random2avg(35, 3),
                                    spell != SPELL_NO_SPELL, false);
@@ -2018,7 +2018,7 @@ void MiscastEffect::_transmutation(int severity)
                 return;
             }
 
-            if (target->atype() == ACT_PLAYER)
+            if (target->is_player())
             {
                 you_msg = "You feel very strange.";
                 delete_mutation(RANDOM_MUTATION, cause, true, false, false, false);
@@ -2036,7 +2036,7 @@ void MiscastEffect::_transmutation(int severity)
                 return;
             }
 
-            if (target->atype() == ACT_PLAYER)
+            if (target->is_player())
             {
                 you_msg = "Your body is distorted in a weirdly horrible way!";
                 // We don't need messages when the mutation fails,
@@ -2105,7 +2105,7 @@ void MiscastEffect::_fire(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "You feel like you have heartburn.";
             break;
         }
@@ -2196,7 +2196,7 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen = "@The_monster@ is covered in liquid flames!";
             do_msg();
 
-            if (target->atype() == ACT_PLAYER)
+            if (target->is_player())
                 napalm_player(random2avg(7,3)  + 1);
             else
             {
@@ -2275,7 +2275,7 @@ void MiscastEffect::_ice(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "A snowflake lands on your nose.";
             break;
         case 10:
@@ -2401,7 +2401,7 @@ void MiscastEffect::_earth(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
-            else if (target->atype() == ACT_PLAYER)
+            else if (target->is_player())
                 you_msg = "You sympathise with the stones.";
             break;
         case 5:
@@ -2792,7 +2792,7 @@ void MiscastEffect::_poison(int severity)
 
     case 2:         // rather less harmless stuff
         // Don't use last case for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 3 : 2))
+        switch (random2(target->is_player() ? 3 : 2))
         {
         case 0:
             if (target->res_poison() <= 0)
@@ -2824,7 +2824,7 @@ void MiscastEffect::_poison(int severity)
 
     case 3:         // less harmless stuff
         // Don't use last case for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 3 : 2))
+        switch (random2(target->is_player() ? 3 : 2))
         {
         case 0:
             if (target->res_poison() <= 0)
@@ -2856,7 +2856,7 @@ void MiscastEffect::_poison(int severity)
 
 void MiscastEffect::_do_poison(int amount)
 {
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
         poison_player(amount, cause, "residual poison");
     else
         target->poison(act_source, amount);

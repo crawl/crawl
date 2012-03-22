@@ -1948,13 +1948,13 @@ void handle_noattack_constrictions(actor *attacker)
 
             int damage;
 
-            if (attacker->atype() == ACT_PLAYER)
+            if (attacker->is_player())
                 damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
             DIAG_ONLY(int basedam = damage);
             damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
-            if (attacker->atype() == ACT_PLAYER)
+            if (attacker->is_player())
                 damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
             DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
@@ -1966,7 +1966,7 @@ void handle_noattack_constrictions(actor *attacker)
             DIAG_ONLY(int infdam = damage);
 
             std::string exclams;
-            if (damage <= 0 && attacker->atype() == ACT_PLAYER
+            if (damage <= 0 && attacker->is_player()
                 && you.can_see(defender))
             {
                 exclams = ", but do no damage.";
@@ -1983,7 +1983,7 @@ void handle_noattack_constrictions(actor *attacker)
             if (you.can_see(attacker) || attacker == &you)
             {
                 mprf("%s %s %s%s%s",
-                     (attacker->atype() == ACT_PLAYER
+                     (attacker->is_player()
                          ? "You"
                          : attacker->name(DESC_THE).c_str()),
                      attacker->conj_verb("constrict").c_str(),

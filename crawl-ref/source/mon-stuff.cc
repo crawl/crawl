@@ -4517,7 +4517,7 @@ static bool _mons_reaped(actor *killer, monster* victim)
     beh_type beh;
     unsigned short hitting;
 
-    if (killer->atype() == ACT_PLAYER)
+    if (killer->is_player())
     {
         hitting = MHITYOU;
         beh     = BEH_FRIENDLY;

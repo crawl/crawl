@@ -67,7 +67,7 @@
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
 {
-    if (defender->atype() == ACT_PLAYER)
+    if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
@@ -83,7 +83,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         // change that.
         behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
     }
-    else if (attacker->atype() == ACT_PLAYER)
+    else if (attacker->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs or boulders this way.
@@ -205,7 +205,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         return (unchivalric);
 
     // Distracted (but not batty); this only applies to players.
-    if (attacker && attacker->atype() == ACT_PLAYER
+    if (attacker && attacker->is_player()
         && def && def->foe != MHITYOU && !mons_is_batty(def))
     {
         unchivalric = UCAT_DISTRACTED;

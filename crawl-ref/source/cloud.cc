@@ -581,7 +581,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;
     mid_t source        = 0;
-    if (agent && agent->atype() == ACT_PLAYER)
+    if (agent && agent->is_player())
         whose = KC_YOU, killer = KILL_YOU_MISSILE, source = MID_PLAYER;
     else if (agent && agent->atype() == ACT_MONSTER)
     {

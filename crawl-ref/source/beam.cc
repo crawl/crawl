@@ -490,7 +490,7 @@ bool bolt::can_affect_actor(const actor *act) const
 
 bool bolt::actor_wall_shielded(const actor *act) const
 {
-    return (act->atype() == ACT_PLAYER? false :
+    return (act->is_player()? false :
             mons_wall_shielded(act->as_monster()));
 }
 
@@ -5677,7 +5677,7 @@ void bolt::set_agent(actor *actor)
     if (!actor)
         return;
 
-    if (actor->atype() == ACT_PLAYER)
+    if (actor->is_player())
     {
         thrower = KILL_YOU_MISSILE;
     }

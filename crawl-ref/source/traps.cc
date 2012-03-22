@@ -179,7 +179,7 @@ bool trap_def::is_known(const actor* act) const
 {
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
-    if (act == NULL || act->atype() == ACT_PLAYER)
+    if (act == NULL || act->is_player())
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
@@ -242,7 +242,7 @@ bool trap_def::is_safe(actor* act) const
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
-    if (act->atype() != ACT_PLAYER)
+    if (!act->is_player())
         return false;
 
     // No prompt (teleport traps are ineffective if
@@ -527,7 +527,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_know = is_known();
     const bool trig_knows = !flat_footed && is_known(&triggerer);
 
-    const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
+    const bool you_trigger = (triggerer.is_player());
     const bool in_sight = you.see_cell(pos);
 
     // Zot def - player never sets off known traps
@@ -1547,7 +1547,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 {
     if (ammo_qty <= 0)
     {
-        if (was_known && act.atype() == ACT_PLAYER)
+        if (was_known && act.is_player())
             mpr("The trap is out of ammunition!");
         else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
@@ -1559,7 +1559,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     bool force_hit = (env.markers.property_at(pos, MAT_ANY,
                             "force_hit") == "true");
 
-    if (act.atype() == ACT_PLAYER)
+    if (act.is_player())
     {
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
@@ -1595,7 +1595,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     // Determine whether projectile hits.
     if (!force_hit && trap_hit < act.melee_evasion(NULL))
     {
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
         {
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
             practise(EX_DODGE_TRAP);
@@ -1609,7 +1609,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     else if (!force_hit && pro_block >= con_block)
     {
         std::string owner;
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
             owner = "your";
         else if (you.can_see(&act))
             owner = apostrophise(act.name(DESC_THE));
@@ -1632,7 +1632,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         int damage_taken =
             std::max(shot_damage(act) - random2(act.armour_class()+1),0);
 
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
         {
             mprf("%s shoots out and hits you!", shot.name(DESC_A).c_str());
 

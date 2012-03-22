@@ -182,7 +182,7 @@ bool melee_attack::handle_phase_attempted()
         return (false);
     }
 
-    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
+    if (attacker->is_player() && defender->atype() == ACT_MONSTER)
     {
         if ((damage_brand == SPWPN_ELECTROCUTION
                 && _conduction_affected(defender->pos()))
@@ -238,7 +238,7 @@ bool melee_attack::handle_phase_attempted()
         }
     }
     // Set delay now that we know the attack won't be cancelled.
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         you.time_taken = calc_attack_delay();
         if (weapon)
@@ -322,7 +322,7 @@ bool melee_attack::handle_phase_attempted()
     else if (attacker == defender && attacker->confused())
     {
         // And is still hilarious if it's the player.
-        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 200 : 100);
+        xom_is_stimulated(attacker->is_player() ? 200 : 100);
     }
 
     // Defending monster protects itself from attacks using the wall
@@ -333,7 +333,7 @@ bool melee_attack::handle_phase_attempted()
     {
         std::string feat_name = raw_feature_description(grd(defender->pos()));
 
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->is_player())
         {
             if (you.can_see(defender))
             {
@@ -410,7 +410,7 @@ bool melee_attack::handle_phase_dodged()
         {
             // TODO: Unify these, placed player_warn_miss here so I can remove
             // player_attack
-            if (attacker->atype() == ACT_PLAYER)
+            if (attacker->is_player())
                 player_warn_miss();
             else
             {
@@ -459,7 +459,7 @@ bool melee_attack::handle_phase_hit()
     perceived_attack = true;
     bool hit_woke_orc = false;
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
@@ -477,7 +477,7 @@ bool melee_attack::handle_phase_hit()
     }
 
     // Slimify does no damage and serves as an on-hit effect, handle it
-    if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
+    if (attacker->is_player() && you.duration[DUR_SLIMIFY]
         && mon_can_be_slimified(defender->as_monster()))
     {
         // Bail out after sliming so we don't get aux unarmed and
@@ -495,7 +495,7 @@ bool melee_attack::handle_phase_hit()
 
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.  We muse
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         stop_hit = player_monattk_hit_effects();
 
     // check_unrand_effects is safe to call with a dead defender, so always
@@ -509,7 +509,7 @@ bool melee_attack::handle_phase_hit()
             return (false);
 
         // TODO: Remove this, (placed here to remove player_attack)
-        if (attacker->atype() == ACT_PLAYER && hit_woke_orc)
+        if (attacker->is_player() && hit_woke_orc)
         {
             // Call function of orcs first noticing you, but with
             // beaten-up conversion messages (if applicable).
@@ -518,7 +518,7 @@ bool melee_attack::handle_phase_hit()
     }
     else if (needs_message)
     {
-        attack_verb = attacker->atype() == ACT_PLAYER
+        attack_verb = attacker->is_player()
                       ? attack_verb
                       : attacker->conj_verb(mons_attack_verb());
 
@@ -527,13 +527,13 @@ bool melee_attack::handle_phase_hit()
              attacker->name(DESC_THE).c_str(),
              attack_verb.c_str(),
              defender->name(DESC_THE).c_str(),
-             attacker->atype() == ACT_PLAYER ? "do" : "does");
+             attacker->is_player() ? "do" : "does");
     }
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
@@ -544,7 +544,7 @@ bool melee_attack::handle_phase_hit()
         if (!defender->alive())
             return (true);
     }
-    else if (defender->atype() == ACT_PLAYER)
+    else if (defender->is_player())
     {
         // These effects (mutations right now) are only triggered when
         // the player is hit, each of them will verify their own required
@@ -563,7 +563,7 @@ bool melee_attack::handle_phase_damaged()
     // TODO: Move this somewhere else, this is a terrible place for a
     // block-like (prevents all damage) effect.
     if (attacker != defender &&
-        defender->atype() == ACT_PLAYER &&
+        defender->is_player() &&
         you.duration[DUR_SHROUD_OF_GOLUBRIA] && !one_chance_in(3))
     {
         // Chance of the shroud falling apart increases based on the
@@ -606,7 +606,7 @@ bool melee_attack::handle_phase_damaged()
     damage_done = inflict_damage(damage_done);
 
     // TODO: Unify these, added here so we can get rid of player_attack
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         if (damage_done)
             player_exercise_combat_skills();
@@ -653,7 +653,7 @@ bool melee_attack::handle_phase_damaged()
                                   || (attk_flavour == AF_CHAOS
                                       && attacker != defender);
 
-        if (defender->atype() == ACT_PLAYER)
+        if (defender->is_player())
             practise(EX_MONSTER_WILL_HIT);
 
         if (decapitate_hydra(damage_done, attacker->damage_type(attack_number)))
@@ -746,7 +746,7 @@ bool melee_attack::handle_phase_killed()
 
 bool melee_attack::handle_phase_end()
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         // returns whether an aux attack successfully took place
         if (!defender->as_monster()->friendly()
@@ -759,11 +759,8 @@ bool melee_attack::handle_phase_end()
     }
 
     // Check for passive mutation effects.
-    if (defender->atype() == ACT_PLAYER && defender->alive()
-        && attacker != defender)
-    {
+    if (defender->is_player() && defender->alive() && attacker != defender)
         mons_do_eyeball_confusion();
-    }
 
     // This may invalidate both the attacker and defender.
     fire_final_effects();
@@ -789,7 +786,7 @@ bool melee_attack::attack()
     // monster constriction is completely different.
     // I hate to special case so soon after the rewrite, it just doesn't fit
 
-    if (attacker->atype() != ACT_PLAYER && attk_type == AT_CONSTRICT)
+    if (!attacker->is_player() && attk_type == AT_CONSTRICT)
         return (handle_constriction());
 
     if (!handle_phase_attempted())
@@ -804,14 +801,14 @@ bool melee_attack::attack()
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
     const int ev = defender->melee_evasion(attacker);
-    ev_margin = test_hit(to_hit, ev, (attacker->atype() != ACT_PLAYER));
+    ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(true);
 
     // Stuff for god conduct, this has to remain here for scope reasons.
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    if (attacker->atype() == ACT_PLAYER && attacker != defender)
+    if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, defender->as_monster());
 
@@ -874,13 +871,12 @@ bool melee_attack::attack()
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
         && attacker != defender && !attacker->confused()
         && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
-        && (attacker->atype() == ACT_PLAYER
-            || attacker->as_monster()->friendly()))
+        && (attacker->is_player() || attacker->as_monster()->friendly()))
     {
         remove_sanctuary(true);
     }
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
@@ -890,7 +886,7 @@ bool melee_attack::attack()
     else
     {
         // Invisible monster might have interrupted butchering.
-        if (you_are_delayed() && defender->atype() == ACT_PLAYER
+        if (you_are_delayed() && defender->is_player()
             && perceived_attack && !attacker_visible)
         {
             handle_interrupted_swap(false, true);
@@ -915,15 +911,14 @@ bool melee_attack::attack()
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && (defender->atype() == ACT_PLAYER
-            || defender->as_monster()->friendly())
-        && attacker->atype() != ACT_PLAYER
+        && (defender->is_player() || defender->as_monster()->friendly())
+        && !attacker->is_player()
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
     {
-        if (defender->atype() == ACT_PLAYER)
+        if (defender->is_player())
         {
             interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
 
@@ -959,7 +954,7 @@ bool melee_attack::attack()
 // however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
 {
-    if (attacker->atype() == ACT_PLAYER && weapon != NULL)
+    if (attacker->is_player() && weapon != NULL)
     {
         hands = hands_reqd(*weapon, attacker->body_size());
 
@@ -2126,7 +2121,7 @@ bool melee_attack::player_monattk_hit_effects()
 
 void melee_attack::_defender_die()
 {
-    if (defender->atype() == ACT_PLAYER)
+    if (defender->is_player())
         return;
 
     if (invalid_monster(defender->as_monster()))
@@ -2153,7 +2148,7 @@ void melee_attack::drain_defender()
 
     if (defender->drain_exp(attacker, true))
     {
-        if (defender->atype() == ACT_PLAYER)
+        if (defender->is_player())
             obvious_effect = true;
         else if (defender_visible)
         {
@@ -2250,7 +2245,7 @@ bool melee_attack::distortion_affects_defender()
 
     if (you.level_type != LEVEL_ABYSS && coinflip())
     {
-        if (defender->atype() == ACT_PLAYER && attacker_visible
+        if (defender->is_player() && attacker_visible
             && weapon != NULL && !is_unrandom_artefact(*weapon)
             && !is_special_unrandom_artefact(*weapon))
         {
@@ -2275,7 +2270,7 @@ bool melee_attack::distortion_affects_defender()
 
 void melee_attack::antimagic_affects_defender()
 {
-    if (defender->atype() == ACT_PLAYER)
+    if (defender->is_player())
     {
         int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
         if (!mp_loss)
@@ -2378,7 +2373,7 @@ void melee_attack::chaos_affects_defender()
         // Inform player that something is up.
         if (!skip_chaos_message && you.see_cell(defender->pos()))
         {
-            if (defender->atype() == ACT_PLAYER)
+            if (defender->is_player())
                 mpr("You give off a flash of multicoloured light!");
             else if (you.can_see(defender))
             {
@@ -2569,7 +2564,7 @@ void melee_attack::chaos_affects_defender()
             beam.name = atk_name(DESC_THE);
 
         beam.thrower =
-            (attacker->atype() == ACT_PLAYER)           ? KILL_YOU
+            (attacker->is_player())           ? KILL_YOU
             : attacker->as_monster()->confused_by_you() ? KILL_YOU_CONF
                                                         : KILL_MON;
 
@@ -2689,7 +2684,7 @@ void melee_attack::do_miscast()
     if (!miscast_target->alive())
         return;
 
-    if (miscast_target->atype() == ACT_PLAYER && you.banished)
+    if (miscast_target->is_player() && you.banished)
         return;
 
     const bool chaos_brand =
@@ -2705,7 +2700,7 @@ void melee_attack::do_miscast()
 
     const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         source = NON_MONSTER;
         if (chaos_brand)
@@ -2941,7 +2936,7 @@ bool melee_attack::apply_damage_brand()
         else if (one_chance_in(3))
         {
             special_damage_message =
-                defender->atype() == ACT_PLAYER?
+                defender->is_player()?
                    "You are electrocuted!"
                 :  "There is a sudden explosion of sparks!";
             special_damage = 10 + random2(15);
@@ -2999,7 +2994,7 @@ bool melee_attack::apply_damage_brand()
         {
             int old_poison;
 
-            if (defender->atype() == ACT_PLAYER)
+            if (defender->is_player())
                 old_poison = you.duration[DUR_POISONING];
             else
             {
@@ -3011,9 +3006,9 @@ bool melee_attack::apply_damage_brand()
             // but only one level to monsters.
             defender->poison(attacker, 2);
 
-            if (defender->atype() == ACT_PLAYER
+            if (defender->is_player()
                    && old_poison < you.duration[DUR_POISONING]
-                || defender->atype() != ACT_PLAYER
+                || !defender->is_player()
                    && old_poison <
                       (defender->as_monster()->get_ench(ENCH_POISON)).degree)
             {
@@ -3039,7 +3034,7 @@ bool melee_attack::apply_damage_brand()
 
         if (!weapon || defender->holiness() != MH_NATURAL || damage_done < 1
             || attacker->stat_hp() == attacker->stat_maxhp()
-            || defender->atype() != ACT_PLAYER
+            || !defender->is_player()
                && defender->as_monster()->is_summoned()
             || attacker == &you && you.duration[DUR_DEATHS_DOOR]
             || one_chance_in(5))
@@ -3052,11 +3047,11 @@ bool melee_attack::apply_damage_brand()
         // Handle weapon effects.
         // We only get here if we've done base damage, so no
         // worries on that score.
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->is_player())
             mpr("You feel better.");
         else if (attacker_visible)
         {
-            if (defender->atype() == ACT_PLAYER)
+            if (defender->is_player())
             {
                 mprf("%s draws strength from your injuries!",
                      attacker->name(DESC_THE).c_str());
@@ -3091,7 +3086,7 @@ bool melee_attack::apply_damage_brand()
         // This was originally for confusing touch and it doesn't really
         // work on the player, but a monster with a chaos weapon will
         // occassionally come up with this brand. -cao
-        if (defender->atype() == ACT_PLAYER)
+        if (defender->is_player())
             break;
 
         const int hdcheck =
@@ -3104,14 +3099,14 @@ bool melee_attack::apply_damage_brand()
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
             beam_temp.thrower =
-                attacker->atype() == ACT_PLAYER? KILL_YOU : KILL_MON;
+                attacker->is_player()? KILL_YOU : KILL_MON;
             beam_temp.flavour = BEAM_CONFUSION;
             beam_temp.beam_source = attacker->mindex();
             beam_temp.apply_enchantment_to_monster(defender->as_monster());
             obvious_effect = beam_temp.obvious_effect;
         }
 
-        if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CONFUSE)
+        if (attacker->is_player() && damage_brand == SPWPN_CONFUSE)
         {
             ASSERT(you.duration[DUR_CONFUSING_TOUCH]);
             you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5)
@@ -3141,7 +3136,7 @@ bool melee_attack::apply_damage_brand()
         miscast_target = coinflip() ? attacker : defender;
     }
 
-    if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CHAOS)
+    if (attacker->is_player() && damage_brand == SPWPN_CHAOS)
     {
         // If your god objects to using chaos, then it makes the
         // brand obvious.
@@ -3494,7 +3489,7 @@ int melee_attack::calc_to_hit(bool random)
     const bool fighter = attacker->atype() == ACT_MONSTER
                          && attacker->as_monster()->is_fighter();
     const int hd_mult = fighter ? 25 : 15;
-    int mhit = attacker->atype() == ACT_PLAYER ?
+    int mhit = attacker->is_player() ?
                 15 + (calc_stat_to_hit_base() / 2)
               : 18 + attacker->get_experience_level() * hd_mult / 10;
 
@@ -3506,7 +3501,7 @@ int melee_attack::calc_to_hit(bool random)
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         if (wearing_amulet(AMU_INACCURACY))
             mhit -= 5;
@@ -3663,14 +3658,14 @@ int melee_attack::calc_to_hit(bool random)
     }
 
     if (!defender->visible_to(attacker))
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->is_player())
             mhit -= 6;
         else
             mhit = mhit * 65 / 100;
     else
     {
         // This can only help if you're visible!
-        if (defender->atype() == ACT_PLAYER
+        if (defender->is_player()
             && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
             mhit -= 5;
 
@@ -3681,7 +3676,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit -= 2 + random2(4);
     }
     // Don't delay doing this roll until test_hit().
-    if (attacker->atype() != ACT_PLAYER)
+    if (!attacker->is_player())
         mhit = random2(mhit + 1);
 
     dprf("%s: Base to-hit: %d, Final to-hit: %d",
@@ -3704,7 +3699,7 @@ int melee_attack::calc_to_hit(bool random)
  */
 int melee_attack::calc_attack_delay(bool random, bool scaled)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         random_var attack_delay = weapon ? player_weapon_speed()
                                          : player_unarmed_speed();
@@ -3907,7 +3902,7 @@ bool melee_attack::attack_warded_off()
  */
 bool melee_attack::attack_shield_blocked(bool verbose)
 {
-    if (!defender_shield && defender->atype() != ACT_PLAYER)
+    if (!defender_shield && !defender->is_player())
         return (false);
 
     if (defender->incapacitated())
@@ -4113,7 +4108,7 @@ void melee_attack::mons_do_poison()
             {
                 mprf("%s partially resist%s.",
                     defender_name().c_str(),
-                    defender->atype() == ACT_PLAYER ? "" : "s");
+                    defender->is_player() ? "" : "s");
             }
         }
     }
@@ -4134,7 +4129,7 @@ void melee_attack::mons_do_napalm()
                  special_attack_punctuation().c_str());
         }
 
-        if (defender->atype() == ACT_PLAYER)
+        if (defender->is_player())
             napalm_player(random2avg(7, 3) + 1);
         else
         {
@@ -4148,7 +4143,7 @@ void melee_attack::mons_do_napalm()
 
 void melee_attack::splash_defender_with_acid(int strength)
 {
-    if (defender->atype() == ACT_PLAYER)
+    if (defender->is_player())
     {
         mpr("You are splashed with acid!");
         splash_with_acid(strength);
@@ -4425,7 +4420,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_STEAL:
         // Ignore monsters, for now.
-        if (defender->atype() != ACT_PLAYER)
+        if (!defender->is_player())
             break;
 
         attacker->as_monster()->steal_item_from_player();
@@ -4434,7 +4429,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_STEAL_FOOD:
     {
         // Monsters don't carry food.
-        if (defender->atype() != ACT_PLAYER)
+        if (!defender->is_player())
             break;
 
         const bool stolen = expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
@@ -4597,7 +4592,8 @@ void melee_attack::do_spines()
     {
         const int level = 1 + div_rand_round(defender->get_experience_level(), 4);
 
-        if (test_hit(random2(3 + 4 * level), attacker->melee_evasion(defender), !attacker->is_player()) < 0)
+        if (test_hit(random2(3 + 4 * level), attacker->melee_evasion(defender),
+            !attacker->is_player()) < 0)
         {
             if (you.can_see(defender))
             {
@@ -4971,7 +4967,7 @@ int melee_attack::calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
             || weapon->base_type == OBJ_STAVES)
@@ -5001,7 +4997,7 @@ int melee_attack::calc_base_unarmed_damage()
 {
     int damage = 0;
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         damage = you.duration[DUR_CONFUSING_TOUCH] ? 0 : 3;
 
@@ -5184,16 +5180,14 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
                       : 0;
     if (ac > 0)
     {
-        if (attacker->atype() == ACT_PLAYER)
-        {
+        if (attacker->is_player())
             damage -= random2(1 + defender->armour_class() - stab_bypass);
-        }
         else
         {
             int damage_reduction = random2(ac + 1);
             int guaranteed_damage_reduction = 0;
 
-            if (defender->atype() == ACT_PLAYER)
+            if (defender->is_player())
             {
                 const int gdr_perc = defender->as_player()->gdr_perc();
                 guaranteed_damage_reduction =
@@ -5428,7 +5422,7 @@ bool melee_attack::handle_constriction()
         int m_ev = defender->melee_evasion(attacker);
 
         int attackdice, defenddice;
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->is_player())
         {
             attackdice = roll_dice(3, you.strength() * (asize + 1));
             defenddice = roll_dice(1, 3 * m_ev * (dsize + 1));
@@ -5465,7 +5459,7 @@ bool melee_attack::handle_constriction()
         dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d gslot %d",
              attacker->name(DESC_PLAIN, true).c_str(),
              defender->name(DESC_PLAIN, true).c_str(),
-             (attacker->atype() == ACT_PLAYER
+             (attacker->is_player()
                  ? you.strength()
                  : attacker->as_monster()->hit_dice),
              asize,

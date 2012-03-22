@@ -77,7 +77,7 @@ static bool _player_is_illusion_cloneable()
 
 bool actor_is_illusion_cloneable(actor *target)
 {
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
     {
         ASSERT(target == &you);
         return _player_is_illusion_cloneable();
@@ -193,7 +193,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
 void mons_summon_illusion_from(monster* mons, actor *foe,
                                spell_type spell_cast)
 {
-    if (foe->atype() == ACT_PLAYER)
+    if (foe->is_player())
     {
         ASSERT(foe == &you);
         if (monster *clone = create_monster(
