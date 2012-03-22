@@ -32,11 +32,10 @@
 #include "species.h"
 
 #ifdef WIZARD
-static monster* _create_fsim_monster(int mtype, int hp)
+static monster* _create_fsim_monster(monster_type mtype, int hp)
 {
     monster *mon = create_monster(
-            mgen_data::hostile_at(
-                static_cast<monster_type>(mtype),
+            mgen_data::hostile_at(mtype,
                 "the fight simulator", false, 0, 0, you.pos()));
 
     if (!mon)
@@ -562,8 +561,8 @@ static int _fsim_kit_equip(const std::string &kit)
 // of current weapon skill.
 void debug_fight_statistics(bool use_defaults, bool defence)
 {
-    int punching_bag = get_monster_by_name(Options.fsim_mons);
-    if (punching_bag == -1 || punching_bag == MONS_NO_MONSTER)
+    monster_type punching_bag = get_monster_by_name(Options.fsim_mons);
+    if (punching_bag == MONS_NO_MONSTER)
         punching_bag = MONS_WORM;
 
     monster *mon = _create_fsim_monster(punching_bag, 500);

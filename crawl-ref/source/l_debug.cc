@@ -257,9 +257,8 @@ LUAFN(debug_reset_uniques)
 LUAFN(debug_randomize_uniques)
 {
     you.unique_creatures.init(false);
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
-        const monster_type mt = static_cast<monster_type>(i);
         if (!mons_is_unique(mt))
             continue;
         you.unique_creatures[mt] = coinflip();
@@ -279,9 +278,8 @@ static bool _check_uniques()
         if (mons_is_unique(mi->type))
             uniques_on_level[mi->type] = true;
 
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
-        const monster_type mt = static_cast<monster_type>(i);
         if (!mons_is_unique(mt))
             continue;
         bool was_set = saved_uniques[mt];

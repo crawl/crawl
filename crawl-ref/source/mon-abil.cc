@@ -2269,7 +2269,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
                                   ? draco_subspecies(mons)
-                                  : static_cast<monster_type>(mons->type);
+                                  : mons->type;
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())

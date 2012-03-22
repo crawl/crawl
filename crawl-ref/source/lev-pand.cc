@@ -114,15 +114,15 @@ void init_pandemonium(void)
 void pandemonium_mons(void)
 {
     // must leave allowance for monsters rare on pandemonium (wizards, etc.)
-    int pan_mons = env.mons_alloc[random2(10)];
+    monster_type pan_mons = env.mons_alloc[random2(10)];
 
     if (one_chance_in(40))
     {
         do
-            pan_mons = random2(NUM_MONSTERS);
+            pan_mons = static_cast<monster_type>(random2(NUM_MONSTERS));
         while (!mons_pan_rare(pan_mons));
     }
-    mgen_data mg(static_cast<monster_type>(pan_mons));
+    mgen_data mg(pan_mons);
     mg.level_type = LEVEL_PANDEMONIUM;
     mg.flags |= MG_PERMIT_BANDS;
 

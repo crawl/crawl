@@ -1554,8 +1554,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!actual)
         return (true);
 
-    const monster_type zombie_type =
-        static_cast<monster_type>(item.plus);
+    const monster_type zombie_type = item.mon_type;
 
     const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
                            item.props[MONSTER_HIT_DICE].get_short() : 0;
@@ -1990,7 +1989,7 @@ bool monster_simulacrum(monster *caster, bool actual)
             // You can see the spell being cast, not necessarily the caster.
             bool cast_visible = you.see_cell(caster->pos());
 
-            monster_type sim_type = static_cast<monster_type>(item.plus);
+            monster_type sim_type = item.mon_type;
             monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
                 MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 

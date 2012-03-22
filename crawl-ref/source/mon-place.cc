@@ -460,9 +460,9 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
         return (valid_monster_types);
 
     valid_monster_types.clear();
-    for (int i = 0; i < NUM_MONSTERS; ++i)
-        if (mons_rarity(static_cast<monster_type>(i), place) > 0)
-            valid_monster_types.push_back(static_cast<monster_type>(i));
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+        if (mons_rarity(i, place) > 0)
+            valid_monster_types.push_back(i);
 
     last_monster_type_place = place;
     return (valid_monster_types);
