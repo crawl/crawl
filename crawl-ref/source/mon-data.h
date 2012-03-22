@@ -2399,7 +2399,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MOTH_OF_SUPPRESSION, 'y', LIGHTGREEN, "moth of suppression",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_UNFINISHED,
     MR_NO_FLAGS,
     300, 10, MONS_MOTH, MONS_MOTH_OF_SUPPRESSION, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
