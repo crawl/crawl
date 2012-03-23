@@ -352,6 +352,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 // We're not transformed, or with a form compatible with tail
                 && (you.form == TRAN_NONE
                     || you.form == TRAN_APPENDAGE
+                       && you.attribute[ATTR_APPENDAGE] != MUT_TALONS
                     || you.form == TRAN_BLADE_HANDS))
             {
                 merfolk_start_swimming(stepped);
