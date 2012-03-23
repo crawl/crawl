@@ -23,10 +23,22 @@
 club WPN_CLUB
 mace1 WPN_MACE
 mace2
+%rim 0
+orcish_mace1 WPN_MACE_ORC
+orcish_mace2
+dwarven_mace1 WPN_MACE_DWARF
+dwarven_mace2
+%rim 1
 mace_large1 WPN_GREAT_MACE
 mace_large2
 flail1 WPN_FLAIL
 flail2
+%rim 0
+orcish_flail1 WPN_FLAIL_ORC
+orcish_flail2
+dwarven_flail1 WPN_FLAIL_DWARF
+dwarven_flail2
+%rim 1
 spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
 great_flail1 WPN_GREAT_FLAIL
@@ -37,6 +49,12 @@ eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 hammer1 WPN_HAMMER
 hammer2
+%rim 0
+orcish_hammer1 WPN_HAMMER_ORC
+orcish_hammer2
+dwarven_hammer1 WPN_HAMMER_DWARF
+dwarven_hammer2
+%rim 1
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
 bullwhip2
@@ -56,27 +74,46 @@ dagger2
 dagger3
 orcish_dagger WPN_DAGGER_ORC
 orcish_dagger2
-elven_dagger WPN_DAGGER_ELF
+%rim 0
+elven_dagger1 WPN_DAGGER_ELF
 elven_dagger2
+%rim 1
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 orcish_short_sword2
-elven_short_sword WPN_SHORT_SWORD_ELF
+%rim 0
+elven_short_sword1 WPN_SHORT_SWORD_ELF
+elven_short_sword2
+%rim 1
 
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
+orcish_long_sword1 WPN_LONG_SWORD_ORC
+orcish_long_sword2
+elven_long_sword1 WPN_LONG_SWORD_ELF
+elven_long_sword2
 %rim 1
-orcish_long_sword WPN_LONG_SWORD_ORC
 
 greatsword1 WPN_GREAT_SWORD
 greatsword2
-orcish_great_sword WPN_GREAT_SWORD_ORC
+%rim 0
+orcish_great_sword1 WPN_GREAT_SWORD_ORC
+orcish_great_sword2
+%rim 1
 
 falchion1 WPN_FALCHION
 falchion2
+%rim 0
+orcish_falchion1 WPN_FALCHION_ORC
+orcish_falchion2
+dwarven_falchion1 WPN_FALCHION_DWARF
+dwarven_falchion2
+elven_falchion1 WPN_FALCHION_ELF
+elven_falchion2
+%rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
 
@@ -95,8 +132,20 @@ blessed_blade WPN_BLESSED_BLADE
 ##Axe
 hand_axe1 WPN_HAND_AXE
 hand_axe2
+%rim 0
+dwarven_hand_axe1 WPN_HAND_AXE_DWARF
+dwarven_hand_axe2
+orcish_hand_axe1 WPN_HAND_AXE_ORC
+orcish_hand_axe2
+%rim 1
 war_axe1 WPN_WAR_AXE
 war_axe2
+%rim 0
+dwarven_war_axe1 WPN_WAR_AXE_DWARF
+dwarven_war_axe2
+orcish_war_axe1 WPN_WAR_AXE_ORC
+orcish_war_axe2
+%rim 1
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
@@ -107,8 +156,16 @@ executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
 
 ##Polearm
-spear1_elven WPN_SPEAR
+%rim 0
+spear1 WPN_SPEAR
+%rim 1
 spear2
+%rim 0
+orcish_spear1 WPN_SPEAR_ORC
+orcish_spear2
+elven_spear1 WPN_SPEAR_ELF
+elven_spear2
+%rim 1
 trident1 WPN_TRIDENT
 trident2
 demon_trident WPN_DEMON_TRIDENT
@@ -118,7 +175,10 @@ scythe1 WPN_SCYTHE
 scythe2
 glaive1 WPN_GLAIVE
 glaive2
-orcish_glaive WPN_GLAIVE_ORC
+%rim 0
+orcish_glaive1 WPN_GLAIVE_ORC
+orcish_glaive2
+%rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
 
