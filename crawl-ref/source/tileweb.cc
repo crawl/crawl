@@ -693,6 +693,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
             || next_pc.is_silenced != current_pc.is_silenced)
             write_message("silenced:%u,", next_pc.is_silenced);
 
+        if ((force_full && next_pc.is_suppressed)
+            || next_pc.is_suppressed != current_pc.is_suppressed)
+            write_message("suppressed:%u,", next_pc.is_suppressed);
+
         if ((force_full && next_pc.halo)
             || next_pc.halo != current_pc.halo)
             write_message("halo:%u,", next_pc.halo);
