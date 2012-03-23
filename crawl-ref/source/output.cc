@@ -1797,8 +1797,8 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
-    const int stasis = false;
-    const int notele = false;
+    int stasis = false;
+    int notele = false;
 
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
