@@ -352,10 +352,10 @@ std::string describe_mutations()
     case SP_MERFOLK:
         result += _annotate_form_based(
             "You revert to your normal form in water.",
-            form_changed_physiology());
+            !form_keeps_fishtail());
         result += _annotate_form_based(
             "You are very nimble and swift while swimming.",
-            form_changed_physiology());
+            !form_keeps_fishtail());
         have_any = true;
         break;
 

@@ -80,11 +80,8 @@ bool form_can_swim(transformation_type form)
     if (form == TRAN_ICE_BEAST)
         return (true);
 
-    if (you.species == SP_MERFOLK && !form_changed_physiology(form)
-        && you.attribute[ATTR_APPENDAGE] != MUT_TALONS)
-    {
+    if (you.species == SP_MERFOLK && form_keeps_fishtail())
         return (true);
-    }
 
     if (you.species == SP_OCTOPODE)
         return (true);
@@ -113,6 +110,15 @@ bool form_changed_physiology(transformation_type form)
 {
     return (form != TRAN_NONE && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS);
+}
+
+// And, more specifically, merfolk tails.
+bool form_keeps_fishtail(transformation_type form)
+{
+    if (form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == MUT_TALONS)
+        return (false);
+    else
+        return (!form_changed_physiology(form));
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
