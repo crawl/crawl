@@ -629,6 +629,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_DIVINE_STAMINA,
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
+        STATUS_TERRAIN,
     };
 
     status_info inf;
