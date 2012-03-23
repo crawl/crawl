@@ -80,8 +80,11 @@ bool form_can_swim(transformation_type form)
     if (form == TRAN_ICE_BEAST)
         return (true);
 
-    if (you.species == SP_MERFOLK && !form_changed_physiology(form))
+    if (you.species == SP_MERFOLK && !form_changed_physiology(form)
+        && you.attribute[ATTR_APPENDAGE] != MUT_TALONS)
+    {
         return (true);
+    }
 
     if (you.species == SP_OCTOPODE)
         return (true);
