@@ -805,8 +805,8 @@ KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
 f^g^h^&A&^i^j^k
-^.............^
-e..HG.....RT..l
+^.........RT..^
+e..HG.........l
 ^..IF.........^
 d..JE.....S...m
 ^...D..M..P...^
