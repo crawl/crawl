@@ -186,7 +186,7 @@ void level_range::write(writer& outf) const
     marshallShort(outf, branch);
     marshallShort(outf, shallowest);
     marshallShort(outf, deepest);
-    marshallByte(outf, deny);
+    marshallBoolean(outf, deny);
 }
 
 void level_range::read(reader& inf)
@@ -194,7 +194,7 @@ void level_range::read(reader& inf)
     branch     = static_cast<branch_type>(unmarshallShort(inf));
     shallowest = unmarshallShort(inf);
     deepest    = unmarshallShort(inf);
-    deny       = unmarshallByte(inf);
+    deny       = unmarshallBoolean(inf);
 }
 
 std::string level_range::str_depth_range() const
