@@ -647,7 +647,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (!intentional && !potion && (!you.suppressed
+    if (!intentional && !potion && (!you.suppressed()
                                     && player_mental_clarity(true)))
     {
         if (verbose)

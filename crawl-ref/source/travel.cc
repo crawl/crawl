@@ -2367,8 +2367,8 @@ bool travel_kill_monster(monster_type mons)
     {
         if ((!you.suppressed() && wearing_amulet(AMU_STASIS, false))
             || player_mental_clarity(false)
-            || you.is_undead != US_UNDEAD
-            || you.is_undead != US_HUNGRY_DEAD)
+            || you.is_undead == US_UNDEAD
+            || you.is_undead == US_HUNGRY_DEAD)
         {
             return (true);
         }

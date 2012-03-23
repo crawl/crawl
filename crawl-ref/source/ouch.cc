@@ -317,7 +317,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!(!you.suppressed && wearing_amulet(AMU_RESIST_MUTATION))
+                && (!(!you.suppressed() && wearing_amulet(AMU_RESIST_MUTATION))
                     || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give

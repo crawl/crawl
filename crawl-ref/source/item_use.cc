@@ -5492,7 +5492,7 @@ bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (!player.suppressed())
+    if (!you.suppressed())
     {
         if (wearing_amulet(AMU_STASIS, calc_unid))
         {
