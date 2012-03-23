@@ -370,6 +370,107 @@ MAP
                ........3.......
 ENDMAP
 
+NAME:   hangedman_spider_trapstep
+TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
+DEPTH:  Spider:1-3, Zot:1-4
+KMONS:  1 = tarantella
+: if you.branch() == "Zot" then
+KMONS:  2* = jumping spider / orb spider w:5
+KMONS:  3| = ghost moth / moth of wrath
+KITEM:  | = acquire any w:5 / any good_item
+KFEAT:  ` = known zot trap
+KFEAT:  ^ = web w:8 / any trap w:1 / . w:7
+KFEAT:  ~ = zot trap w:15 / shaft trap / web w:5 / . w:5
+NSUBST: 4 = 1:122 / 1:112
+SUBST:  X = c
+: else
+KMONS:  2 = tarantella
+KMONS:  3 = orb spider
+KITEM:  | = superb_item / any good_item w:5
+KFEAT:  ` = known shaft trap
+KFEAT:  ^ = web / . w:6
+KFEAT:  ~ = shaft trap w:15 / web / . w:5
+NSUBST: 4 = 1:2 / *:W
+SUBST:  X = x
+: end
+KITEM:  * = star_item / superb_item w:5
+KFEAT:  123*| = shallow_water
+KMASK:  . = !no_monster_gen
+SUBST:  ' = ..^
+MARKER: G = lua:props_marker { stop_explore = "statue" }
+MAP
+    ..'''''..
+   ..XX'''XX..
+  ..XX`'G'`XX..
+ ..XX~'''''~XX..
+..XX~''^^^''~XX..
+.XX~''^xxx^''~XX.
+.X~''^Wx1xW^''~X.
+.X~'^xxwxwxx^'~X.
+.X~'^x4xwx4x^'~X.
+.X~'^xWwxwWx^'~X.
+.X~''^xW2Wx^''~X.
+.XX^''^xxx^^'^XX.
+..XXW''^^^''WXX..
+ ..XX3'''''3XX..
+  ..XXW*|*WXX..
+   ..XXXXXXX..
+    .........
+ENDMAP
+
+NAME:    hangedman_creepy_crawlies
+TAGS:    no_monster_gen patrolling
+ORIENT:  float
+DEPTH:   Spider:1-4
+KMONS:   1 = giant centipede w:35 / scorpion w:20 / spider w:13 / \
+             worker ant w:4 / giant mite w:1 / giant cockroach w:1 / worm w:1
+KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
+KMONS:   3aAdD = brain worm / boulder beetle w:5
+KMONS:   4bB = demonic crawler
+KMONS:   5eE = place:Spider:5 zombie
+KMONS:   6cCfF = spiny worm / emperor scorpion w:8
+KMONS:   0% = crawling corpse hd:3 / nothing
+KMONS:   X = rock worm w:19 / rock worm zombie w:1
+KITEM:   fF = star_item w:8 / superb_item w:2
+KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
+KFEAT:   X = rock_wall
+KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
+KFEAT:   . = . w:39 / web w:1
+KMASK:   ' = !no_monster_gen
+KPROP:   ` = no_rtele_into
+SHUFFLE: ab, AB, cd, CD, ef, EF, gh, GH
+SUBST:   ' = .:28 W:1 %:1, % = 00%%.
+SUBST:   cC = c:13 4:1 3:1, 1 = 1:17 2:2 5:1
+SUBST:   ` = .
+:        dgn.delayed_decay(_G, '%', 'any corpse')
+MAP
+                  ' '     'xxx'     ' '
+    . .  . .     ''''''  ''xDx''   '''''
+   ..........   ''xxx''''''x2x''' ''xxx''
+  ..xxx..xxx..   'xExx''xxxx1xxx'''xxBx'
+  .xx1x..x1xx.  ''xx5xxxx.....%xxxxx1xx''
+ ''x1xx%%xx1x''  ''xx4x%.........xx1xx''
+ ''xx1%%%%1xx''   ''xx...xxx1xxx..%xx''
+  ''xxx00xxx''    ''x...xx`X2x`xx%..x''
+   ''xx..xx''   '''xx.%x4xxxCxxx1x..xx''
+''''xx..xx''  '''''x.1xxx5xxxxx1xxx..x''
+xxxxx..xx''   'xxx'x11x`xxFx'xAxX`x..x''
+x21x..xxxx'' ''x6xxx%3xxxxxx'xxxxxx..xx''
+xxx....12x'''''xX42%%%24Xxx''''x21....xxx
+''xx..xxxxxx'xxxxxx3%xxx6x'' ''xxxx..x12x
+ ''x..x`Xxax'xexx`x11x'xxx''  ''xx..xxxxx
+ ''x..xxx1xxxxx5xxx1.x'''''  ''xx..xx''''
+ ''xx..x1xxxcXxx4x%.xx''    ''xx..xx''
+  ''x..%xx`x2x`xx...x''    ''xxx00xxx''
+  ''xx%..xxx1xxx...xx''   ''xx1%%%%1xx''
+ ''xx1x..........%x4xx''  ''x1xx%%xx1x''
+''xx1xxxxx%......xxx5xx''  .xx1x..x1xx..
+ 'xbxx'''xxx1xxxxx'xxfx'   ..xxx..xxx..
+''xxx'' '''x2x''''''xxx''   ..........
+ '''''   ''xdx''  ''''''     . .  . .
+  ' '     'xxx'     ' '
+ENDMAP
+
 # Some wasp vaults. Wasps eat spiders (and players).
 NAME:   spiders_nest_wasp_nest
 DEPTH:  Spider
