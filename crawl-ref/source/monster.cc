@@ -1665,7 +1665,9 @@ bool monster::wants_armour(const item_def &item) const
     // Spellcasters won't pick up restricting armour, although they can
     // start with one.  Applies to arcane spells only, of course.
     if (!pos().origin() && is_actual_spellcaster()
-        && property(item, PARM_EVASION) < -1)
+        && (property(item, PARM_EVASION) < -1
+            || is_artefact(item)
+               && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING)))
     {
         return false;
     }
