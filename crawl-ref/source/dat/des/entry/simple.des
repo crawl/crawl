@@ -23,6 +23,23 @@ xx+xxx+xx
 ENDMAP
 
 ##############################################################
+NAME:   ncdulo_wetmaze
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xxxx=xxxx
+x{wwwww{x
+xWxW@Wxwx
+xWxxxWxWx
+xxWWWWWWx
+xWxxxxxxx
+xxWWWx..+
+xWxxWxx.x
+x.xx....x
+x+xxxxxxx
+ENDMAP
+
+##############################################################
 NAME:   minmay_entry_doors
 TAGS:   entry no_monster_gen
 ORIENT: float
