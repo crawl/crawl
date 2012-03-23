@@ -2672,11 +2672,19 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_SABRE;
 
     case WPN_FALCHION:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_FALCHION_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_FALCHION_DWARF;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_FALCHION_ELF;
         return TILE_WPN_FALCHION;
 
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_LONG_SWORD_ORC;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_LONG_SWORD_ELF;
         return TILE_WPN_LONG_SWORD;
 
     case WPN_GREAT_SWORD:
@@ -2697,9 +2705,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_TRIPLE_SWORD;
 
     case WPN_HAND_AXE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_HAND_AXE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_HAND_AXE_DWARF;
         return TILE_WPN_HAND_AXE;
 
     case WPN_WAR_AXE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_WAR_AXE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_WAR_AXE_DWARF;
         return TILE_WPN_WAR_AXE;
 
     case WPN_BROAD_AXE:
@@ -2724,6 +2740,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_CROSSBOW;
 
     case WPN_SPEAR:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_SPEAR_ORC;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_SPEAR_ELF;
         return TILE_WPN_SPEAR;
 
     case WPN_TRIDENT:
@@ -2750,12 +2770,24 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_CLUB;
 
     case WPN_HAMMER:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_HAMMER_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_HAMMER_DWARF;
         return TILE_WPN_HAMMER;
 
     case WPN_MACE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_MACE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_MACE_DWARF;
         return TILE_WPN_MACE;
 
     case WPN_FLAIL:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_FLAIL_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_FLAIL_DWARF;
         return TILE_WPN_FLAIL;
 
     case WPN_SPIKED_FLAIL:
