@@ -7,6 +7,22 @@
 ##############################################################################
 
 ##############################################################
+NAME:   ncdulo_lavacross
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xx+xxx+xx
+xl.lll.lx
+xll.l.llx
+xll...llx
+.%l.{.l%.
+xll...llx
+xll.l.llx
+xl.lll.lx
+xx+xxx+xx
+ENDMAP
+
+##############################################################
 NAME:   minmay_entry_doors
 TAGS:   entry no_monster_gen
 ORIENT: float
