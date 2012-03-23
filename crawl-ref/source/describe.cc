@@ -3247,7 +3247,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     std::vector<std::string> resist_descriptions;
     if (!extreme_resists.empty())
     {
-        const std::string tmp = "extremely resistant to "
+        const std::string tmp = "immune to "
             + comma_separated_line(extreme_resists.begin(),
                                    extreme_resists.end());
         resist_descriptions.push_back(tmp);
