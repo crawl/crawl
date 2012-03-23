@@ -2101,9 +2101,9 @@ static std::string _status_mut_abilities(int sw)
     {
       case SP_MERFOLK:
           mutations.push_back(_annotate_form_based("change form in water",
-                                                   form_changed_physiology()));
+                                                   !form_keeps_fishtail()));
           mutations.push_back(_annotate_form_based("swift swim",
-                                                   form_changed_physiology()));
+                                                   !form_keeps_fishtail()));
           break;
 
       case SP_MINOTAUR:
