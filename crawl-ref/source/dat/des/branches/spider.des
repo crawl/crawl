@@ -604,7 +604,7 @@ ORIENT: southwest
 TAGS:   uniq_spidermines
 NSUBST: F = 1:Q / *:z
 SUBST:  B = z..
-RTILE:  0 = wall_lair
+RTILE:  O = wall_lair
 FTILE:  OzQ = floor_hive
 RTILE:  X = wall_stone_brick
 COLOUR: O = brown
