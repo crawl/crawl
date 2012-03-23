@@ -1628,7 +1628,9 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
-        else if (wearing_amulet(AMU_RAGE) && one_chance_in(30))
+        else if (!you.suppressed()
+                 && wearing_amulet(AMU_RAGE) 
+                 && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;
 

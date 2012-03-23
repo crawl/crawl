@@ -317,7 +317,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!(!you.suppressed && wearing_amulet(AMU_RESIST_MUTATION))
+                    || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give
                 // aux as well
@@ -434,7 +435,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
+    if (!you.suppressed() && wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;

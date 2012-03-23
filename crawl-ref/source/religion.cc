@@ -2561,7 +2561,7 @@ int piety_scale(int piety)
     if (piety < 0)
         return (-piety_scale(-piety));
 
-    if (wearing_amulet(AMU_FAITH))
+    if (!you.suppressed() && wearing_amulet(AMU_FAITH))
         return (piety + div_rand_round(piety, 3));
 
     return (piety);

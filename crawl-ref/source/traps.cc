@@ -248,8 +248,9 @@ bool trap_def::is_safe(actor* act) const
     // No prompt (teleport traps are ineffective if
     // wearing an amulet of stasis)
     if (type == TRAP_TELEPORT
-        && (player_equip(EQ_AMULET, AMU_STASIS, false)
-            || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+        && (!you.suppressed()
+            && (player_equip(EQ_AMULET, AMU_STASIS, false)
+                || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))))
     {
         return true;
     }

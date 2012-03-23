@@ -735,7 +735,7 @@ static void _describe_airborne(status_info* inf)
     const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
     const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
 
-    if (wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (!you.suppressed() && wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
         inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
         inf->light_text   = "Fly";

@@ -454,7 +454,7 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
-        if (wearing_amulet(AMU_INACCURACY))
+        if (!you.suppressed() && wearing_amulet(AMU_INACCURACY))
             pbolt.hit = std::max(0, pbolt.hit - 5);
     }
 
