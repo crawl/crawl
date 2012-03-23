@@ -1635,6 +1635,14 @@ bool monster::wants_weapon(const item_def &weap) const
         return (false);
     }
 
+    // Arcane spellcasters don't want -CAST.
+    if (is_actual_spellcaster()
+        && is_artefact(weap)
+        && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
+    {
+        return (false);
+    }
+
     // deep dwarf artificers
     if (weap.base_type == OBJ_STAVES
         && type == MONS_DEEP_DWARF_ARTIFICER)
