@@ -794,6 +794,7 @@ dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
 dc-mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
+%rim 0
 %sdir dc-mon/unique
 ilsuiw MONS_ILSUIW
 ilsuiw_water MONS_ILSUIW_WATER
@@ -810,6 +811,7 @@ mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
+%rim 1
 
 ## Rotting monsters ('n')
 %sdir dc-mon/undead
