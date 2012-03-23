@@ -1855,17 +1855,20 @@ monster_type pick_random_zombie()
 {
     static std::vector<monster_type> zombifiable;
 
-    for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
+    if (zombifiable.empty())
     {
-        if (mons_species(mcls) != mcls || mcls == MONS_PROGRAM_BUG)
-            continue;
+        for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
+        {
+            if (mons_species(mcls) != mcls || mcls == MONS_PROGRAM_BUG)
+                continue;
 
-        if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
-            continue;
-        if (mons_class_holiness(mcls) != MH_NATURAL)
-            continue;
+            if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
+                continue;
+            if (mons_class_holiness(mcls) != MH_NATURAL)
+                continue;
 
-        zombifiable.push_back(mcls);
+            zombifiable.push_back(mcls);
+        }
     }
 
     return (zombifiable[random2(zombifiable.size())]);
