@@ -164,7 +164,7 @@ if __name__ == "__main__":
         purge_login_tokens_timeout()
         start_reading_milestones()
 
-    logging.info("Webtiles server started!")
+    logging.info("Webtiles server started! (PID: %s)" % os.getpid())
 
     try:
         ioloop.start()
