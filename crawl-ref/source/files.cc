@@ -311,10 +311,13 @@ time_t file_modtime(const std::string &file)
     return (filestat.st_mtime);
 }
 
-// Returns true if file a is newer than file b.
-bool is_newer(const std::string &a, const std::string &b)
+time_t file_modtime(FILE *f)
 {
-    return (file_modtime(a) > file_modtime(b));
+    struct stat filestat;
+    if (fstat(fileno(f), &filestat))
+        return (0);
+
+    return (filestat.st_mtime);
 }
 
 static bool _create_directory(const char *dir)

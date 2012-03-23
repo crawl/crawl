@@ -72,7 +72,7 @@ std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
 time_t file_modtime(const std::string &file);
-bool is_newer(const std::string &a, const std::string &b);
+time_t file_modtime(FILE *f);
 std::vector<std::string> get_title_files();
 
 
