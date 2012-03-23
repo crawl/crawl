@@ -165,7 +165,7 @@ static void _fuzz_direction(monster& mon, int pow)
     const float off = (coinflip() ? -1 : 1) * 0.25;
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
-    if (wearing_amulet(AMU_INACCURACY))
+    if (!you.suppressed() && wearing_amulet(AMU_INACCURACY))
         tan *= 2;
 
     // Cast either from left or right hand.

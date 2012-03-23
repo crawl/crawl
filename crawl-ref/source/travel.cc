@@ -2362,14 +2362,22 @@ bool travel_kill_monster(monster_type mons)
         return (false);
 
     // Don't auto-kill things with berserkitis or *rage.
-    if ((player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY)
-         || player_equip_unrand(UNRAND_TROG))
-        && !wearing_amulet(AMU_STASIS, false)
-        && !player_mental_clarity(false)
-        && you.is_undead != US_UNDEAD
-        && you.is_undead != US_HUNGRY_DEAD)
+    if (player_mutation_level(MUT_BERSERK) 
+        || (!you.suppressed()
+            && (scan_artefacts(ARTP_ANGRY)
+                || player_equip_unrand(UNRAND_TROG))))
     {
-        return (false);
+        if ((!you.suppressed() && wearing_amulet(AMU_STASIS, false))
+            || player_mental_clarity(false)
+            || you.is_undead != US_UNDEAD
+            || you.is_undead != US_HUNGRY_DEAD)
+        {
+            return (true);
+        }
+        else
+        {
+            return (false);
+        }
     }
 
     return (true);

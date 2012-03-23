@@ -1204,19 +1204,24 @@ int player_teleport(bool calc_unid)
 
     int tp = 0;
 
-    // rings (keep in sync with _equip_jewellery_effect)
-    tp += 8 * player_equip(EQ_RINGS, RING_TELEPORTATION, calc_unid);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // rings (keep in sync with _equip_jewellery_effect)
+        tp += 8 * player_equip(EQ_RINGS, RING_TELEPORTATION, calc_unid);
+
+        // randart weapons only
+        if (you.weapon()
+            && you.weapon()->base_type == OBJ_WEAPONS
+            && is_artefact(*you.weapon()))
+        {
+            tp += scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
+        }
+    }
 
     // mutations
     tp += player_mutation_level(MUT_TELEPORT) * 3;
-
-    // randart weapons only
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
-        && is_artefact(*you.weapon()))
-    {
-        tp += scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
-    }
 
     return tp;
 }
@@ -1235,15 +1240,20 @@ static int _player_bonus_regen()
         rr += 100;
     }
 
-    // Rings.
-    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
-
-    // Troll leather (except for trolls).
-    if ((player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-         || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-        && you.species != SP_TROLL)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        rr += 30;
+        // Rings.
+        rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
+
+        // Troll leather (except for trolls).
+        if ((player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+             || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
+            && you.species != SP_TROLL)
+        {
+            rr += 30;
+        }
     }
 
     // Fast heal mutation.
@@ -1376,35 +1386,40 @@ int player_hunger_rate(bool temp)
             hunger--;
     }
 
-    // rings
-    if (you.hp < you.hp_max
-        && player_mutation_level(MUT_SLOW_HEALING) < 3)
-    {
-        hunger += 3 * player_equip(EQ_RINGS, RING_REGENERATION);
-    }
-
-    hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
-
-    // troll leather armour
-    if (you.species != SP_TROLL && you.hp < you.hp_max)
-    {
-        if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-            || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-        {
-            hunger += coinflip() ? 2 : 1;
-        }
-    }
-
-    // randarts
-    hunger += scan_artefacts(ARTP_METABOLISM);
-
     // burden
     if (temp)
         hunger += you.burden_state;
 
-    // sustenance affects things at the end, because it is multiplicative
-    for (int s = player_equip(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
-        hunger = (3*hunger)/5;
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // rings
+        if (you.hp < you.hp_max
+            && player_mutation_level(MUT_SLOW_HEALING) < 3)
+        {
+            hunger += 3 * player_equip(EQ_RINGS, RING_REGENERATION);
+        }
+
+        hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
+
+        // troll leather armour
+        if (you.species != SP_TROLL && you.hp < you.hp_max)
+        {
+            if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+                || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
+            {
+                hunger += coinflip() ? 2 : 1;
+            }
+        }
+
+        // randarts
+        hunger += scan_artefacts(ARTP_METABOLISM);
+
+        // sustenance affects things at the end, because it is multiplicative
+        for (int s = player_equip(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
+            hunger = (3*hunger)/5;
+    }
 
     if (hunger < 1)
         hunger = 1;
@@ -1448,7 +1463,9 @@ int player_spell_levels(void)
 int player_likes_chunks(bool permanently)
 {
     if (player_mutation_level(MUT_GOURMAND) > 0
-        || (!permanently && wearing_amulet(AMU_THE_GOURMAND)))
+        || (!you.suppressed()
+            && !permanently 
+            && wearing_amulet(AMU_THE_GOURMAND)))
     {
         return 3;
     }
@@ -1460,37 +1477,42 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 {
     int rf = 0;
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        // rings of fire resistance/fire
-        rf += player_equip(EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid);
-        rf += player_equip(EQ_RINGS, RING_FIRE, calc_unid);
+        if (items)
+        {
+            // rings of fire resistance/fire
+            rf += player_equip(EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid);
+            rf += player_equip(EQ_RINGS, RING_FIRE, calc_unid);
 
-        // rings of ice
-        rf -= player_equip(EQ_RINGS, RING_ICE, calc_unid);
+            // rings of ice
+            rf -= player_equip(EQ_RINGS, RING_ICE, calc_unid);
 
-        // Staves
-        rf += player_equip(EQ_STAFF, STAFF_FIRE, calc_unid);
+            // Staves
+            rf += player_equip(EQ_STAFF, STAFF_FIRE, calc_unid);
 
-        // body armour:
-        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
-        rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
+            // body armour:
+            rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
+            rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+            rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
+            rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
+            rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+            rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
 
-        // ego armours
-        rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE);
-        rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
+            // ego armours
+            rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE);
+            rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
-        // randart weapons:
-        rf += scan_artefacts(ARTP_FIRE, calc_unid);
+            // randart weapons:
+            rf += scan_artefacts(ARTP_FIRE, calc_unid);
 
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            rf++;
+            // dragonskin cloak: 0.5 to draconic resistances
+            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                rf++;
         }
+    }
 
     // species:
     if (you.species == SP_MUMMY)
@@ -1544,17 +1566,22 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
 
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
-        res += 2;
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+            res += 2;
 
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
-        res += 2;
+        if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
+            res += 2;
 
-    // dragonskin cloak: 0.5 to draconic resistances
-    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-        res++;
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            res++;
 
-    res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
+        res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
+    }
 
     if (res > 3)
         res = 3;
@@ -1605,37 +1632,42 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         }
     }
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        // rings of cold resistance/ice
-        rc += player_equip(EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid);
-        rc += player_equip(EQ_RINGS, RING_ICE, calc_unid);
+        if (items)
+        {
+            // rings of cold resistance/ice
+            rc += player_equip(EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid);
+            rc += player_equip(EQ_RINGS, RING_ICE, calc_unid);
 
-        // rings of fire
-        rc -= player_equip(EQ_RINGS, RING_FIRE, calc_unid);
+            // rings of fire
+            rc -= player_equip(EQ_RINGS, RING_FIRE, calc_unid);
 
-        // Staves
-        rc += player_equip(EQ_STAFF, STAFF_COLD, calc_unid);
+            // Staves
+            rc += player_equip(EQ_STAFF, STAFF_COLD, calc_unid);
 
-        // body armour:
-        rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
-        rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
+            // body armour:
+            rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
+            rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+            rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
+            rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
+            rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+            rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
 
-        // ego armours
-        rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);
-        rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
+            // ego armours
+            rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);
+            rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
-        // randart weapons:
-        rc += scan_artefacts(ARTP_COLD, calc_unid);
+            // randart weapons:
+            rc += scan_artefacts(ARTP_COLD, calc_unid);
 
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            rc++;
+            // dragonskin cloak: 0.5 to draconic resistances
+            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                rc++;
         }
+    }
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
@@ -1652,10 +1684,15 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
 int player_res_corr(bool calc_unid, bool items)
 {
-    if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
-        return 1;
-    else
-        return 0;
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
+            return 1;
+    }
+
+    return 0;
 }
 
 int player_res_acid(bool calc_unid, bool items)
@@ -1667,13 +1704,18 @@ int player_res_acid(bool calc_unid, bool items)
         res += 2;
     }
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid, true))
-            res++;
+        if (items)
+        {
+            if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid, true))
+                res++;
 
-        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION))
-            res++;
+            if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION))
+                res++;
+        }
     }
 
     // mutations:
@@ -1711,21 +1753,26 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        // staff
-        re += player_equip(EQ_STAFF, STAFF_AIR, calc_unid);
+        if (items)
+        {
+            // staff
+            re += player_equip(EQ_STAFF, STAFF_AIR, calc_unid);
 
-        // body armour:
-        re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
-        re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
+            // body armour:
+            re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
+            re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
 
-        // randart weapons:
-        re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
+            // randart weapons:
+            re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
 
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            re++;
+            // dragonskin cloak: 0.5 to draconic resistances
+            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                re++;
+        }
     }
 
     // mutations:
@@ -1755,7 +1802,8 @@ bool player_control_teleport(bool calc_unid, bool temp, bool items)
 {
     return ((temp && you.duration[DUR_CONTROL_TELEPORT])
             || (items
-                && player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid))
+                && player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
+                && !you.suppressed())
             || player_mutation_level(MUT_TELEPORT_CONTROL));
 }
 
@@ -1781,30 +1829,35 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     int rp = 0;
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        // rings of poison resistance
-        rp += player_equip(EQ_RINGS, RING_POISON_RESISTANCE, calc_unid);
+        if (items)
+        {
+            // rings of poison resistance
+            rp += player_equip(EQ_RINGS, RING_POISON_RESISTANCE, calc_unid);
 
-        // Staves
-        rp += player_equip(EQ_STAFF, STAFF_POISON, calc_unid);
+            // Staves
+            rp += player_equip(EQ_STAFF, STAFF_POISON, calc_unid);
 
-        // ego armour:
-        rp += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
+            // ego armour:
+            rp += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
-        // body armour:
-        rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR);
-        rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE);
+            // body armour:
+            rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+            rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR);
+            rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+            rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE);
 
-        // randart weapons:
-        rp += scan_artefacts(ARTP_POISON, calc_unid);
+            // randart weapons:
+            rp += scan_artefacts(ARTP_POISON, calc_unid);
 
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            rp++;
+            // dragonskin cloak: 0.5 to draconic resistances
+            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                rp++;
 
+        }
     }
 
     // mutations:
@@ -1875,14 +1928,19 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MOTTLED_DRACONIAN)
         rsf++;
 
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        rsf++;
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
-        rsf++;
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+            rsf++;
+        if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
+            rsf++;
 
-    // dragonskin cloak: 0.5 to draconic resistances
-    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-        rsf++;
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            rsf++;
+    }
 
     if (rsf > 1)
         rsf = 1;
@@ -1894,8 +1952,13 @@ int player_spec_death()
 {
     int sd = 0;
 
-    // Staves
-    sd += player_equip(EQ_STAFF, STAFF_DEATH);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        sd += player_equip(EQ_STAFF, STAFF_DEATH);
+    }
 
     // species:
     if (you.species == SP_MUMMY)
@@ -1924,11 +1987,16 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    // staves:
-    sf += player_equip(EQ_STAFF, STAFF_FIRE);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // staves:
+        sf += player_equip(EQ_STAFF, STAFF_FIRE);
 
-    // rings of fire:
-    sf += player_equip(EQ_RINGS, RING_FIRE);
+        // rings of fire:
+        sf += player_equip(EQ_RINGS, RING_FIRE);
+    }
 
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
@@ -1940,11 +2008,16 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    // staves:
-    sc += player_equip(EQ_STAFF, STAFF_COLD);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // staves:
+        sc += player_equip(EQ_STAFF, STAFF_COLD);
 
-    // rings of ice:
-    sc += player_equip(EQ_RINGS, RING_ICE);
+        // rings of ice:
+        sc += player_equip(EQ_RINGS, RING_ICE);
+    }
 
     return sc;
 }
@@ -1953,8 +2026,13 @@ int player_spec_earth()
 {
     int se = 0;
 
-    // Staves
-    se += player_equip(EQ_STAFF, STAFF_EARTH);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        se += player_equip(EQ_STAFF, STAFF_EARTH);
+    }
 
     return se;
 }
@@ -1963,8 +2041,13 @@ int player_spec_air()
 {
     int sa = 0;
 
-    // Staves
-    sa += player_equip(EQ_STAFF, STAFF_AIR);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        sa += player_equip(EQ_STAFF, STAFF_AIR);
+    }
 
     return sa;
 }
@@ -1973,8 +2056,13 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    // Staves
-    sc += player_equip(EQ_STAFF, STAFF_CONJURATION);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        sc += player_equip(EQ_STAFF, STAFF_CONJURATION);
+    }
 
     return sc;
 }
@@ -1983,8 +2071,13 @@ int player_spec_ench()
 {
     int se = 0;
 
-    // Staves
-    se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
+    }
 
     return se;
 }
@@ -1993,8 +2086,13 @@ int player_spec_summ()
 {
     int ss = 0;
 
-    // Staves
-    ss += player_equip(EQ_STAFF, STAFF_SUMMONING);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        ss += player_equip(EQ_STAFF, STAFF_SUMMONING);
+    }
 
     return ss;
 }
@@ -2003,11 +2101,16 @@ int player_spec_poison()
 {
     int sp = 0;
 
-    // Staves
-    sp += player_equip(EQ_STAFF, STAFF_POISON);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        sp += player_equip(EQ_STAFF, STAFF_POISON);
 
-    if (player_equip_unrand(UNRAND_OLGREB))
-        sp++;
+        if (player_equip_unrand(UNRAND_OLGREB))
+            sp++;
+    }
 
     return sp;
 }
@@ -2016,8 +2119,13 @@ int player_energy()
 {
     int pe = 0;
 
-    // Staves
-    pe += player_equip(EQ_STAFF, STAFF_ENERGY);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Staves
+        pe += player_equip(EQ_STAFF, STAFF_ENERGY);
+    }
 
     return pe;
 }
@@ -2076,30 +2184,35 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
             pl += 3;
     }
 
-    if (items)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        if (wearing_amulet(AMU_WARDING, calc_unid))
-            pl++;
+        if (items)
+        {
+            if (wearing_amulet(AMU_WARDING, calc_unid))
+                pl++;
 
-        // rings
-        pl += player_equip(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
+            // rings
+            pl += player_equip(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
 
-        // armour (checks body armour only)
-        pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
+            // armour (checks body armour only)
+            pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
-        // pearl dragon counts
-        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
-        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
+            // pearl dragon counts
+            pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
+            pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
 
-        // randart wpns
-        pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+            // randart wpns
+            pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 
-        // dragonskin cloak: 0.5 to draconic resistances
-        // this one is dubious (no pearl draconians)
-        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            pl++;
+            // dragonskin cloak: 0.5 to draconic resistances
+            // this one is dubious (no pearl draconians)
+            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                pl++;
 
-        pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
+            pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
+        }
     }
 
     // undead/demonic power
@@ -2390,12 +2503,17 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     if (you.duration[DUR_AGILITY])
         evbonus += 5;
 
-    evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
 
-    if (player_equip_ego_type(EQ_WEAPON, SPWPN_EVASION))
-        evbonus += 5;
+        if (player_equip_ego_type(EQ_WEAPON, SPWPN_EVASION))
+            evbonus += 5;
 
-    evbonus += scan_artefacts(ARTP_EVASION);
+        evbonus += scan_artefacts(ARTP_EVASION);
+    }
 
     // mutations
     if (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1)
@@ -2555,6 +2673,9 @@ int player_armour_shield_spell_penalty()
 
 static int _player_magical_power(void)
 {
+    if (you.suppressed())
+        return (0);
+
     int ret = 0;
 
     ret += 13 * player_equip(EQ_STAFF, STAFF_POWER);
@@ -2571,11 +2692,16 @@ int player_mag_abil(bool is_weighted)
     // Brilliance Potion
     ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
 
-    // Rings
-    ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Rings
+        ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
 
-    // Staves
-    ma += 4 * player_equip(EQ_STAFF, STAFF_WIZARDRY);
+        // Staves
+        ma += 4 * player_equip(EQ_STAFF, STAFF_WIZARDRY);
+    }
 
     return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
@@ -2650,7 +2776,12 @@ int player_sust_abil(bool calc_unid)
 {
     int sa = 0;
 
-    sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
+    }
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
         sa += 1;
@@ -2665,11 +2796,16 @@ int player_warding(bool calc_unid)
 {
     int ward = 0;
 
-    // Note: when adding a new source of warding, please add it to
-    // melee_attack::attack_warded_off() as well.
-    ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // Note: when adding a new source of warding, please add it to
+        // melee_attack::attack_warded_off() as well.
+        ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
 
-    ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
+        ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
+    }
 
     return (ward);
 }
@@ -3676,27 +3812,32 @@ int check_stealth(void)
     const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
 
-    if (arm)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
-        const int ep = -property(*arm, PARM_EVASION);
-        const int penalty = 6 * ep * ep;
-#if 0
-        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
-#endif
-        stealth -= penalty;
-    }
+        if (arm)
+        {
+            // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+            const int ep = -property(*arm, PARM_EVASION);
+            const int penalty = 6 * ep * ep;
+    #if 0
+            dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+    #endif
+            stealth -= penalty;
+        }
 
-    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
-        stealth += 20;
+        if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
+            stealth += 20;
+
+        stealth += scan_artefacts(ARTP_STEALTH);
+    }
 
     if (you.duration[DUR_STEALTH])
         stealth += 80;
 
     if (you.duration[DUR_AGILITY])
         stealth += 50;
-
-    stealth += scan_artefacts(ARTP_STEALTH);
 
     if (you.airborne())
         stealth += 10;
@@ -3713,11 +3854,14 @@ int check_stealth(void)
     // No stealth bonus from boots if you're airborne or in water
     else if (boots)
     {
-        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += 50;
+        if (!you.suppressed())
+        {
+            if (get_armour_ego_type(*boots) == SPARM_STEALTH)
+                stealth += 50;
 
-        if (get_equip_race(*boots) == ISFLAG_ELVEN)
-            stealth += 20;
+            if (get_equip_race(*boots) == ISFLAG_ELVEN)
+                stealth += 20;
+        }
     }
 
     else if (player_mutation_level(MUT_HOOVES) > 0)
@@ -4119,15 +4263,24 @@ void display_char_status()
 
 bool player_item_conserve(bool calc_unid)
 {
-    return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-            || player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
+    return (!you.suppressed()
+            && (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
+                || player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION)));
 }
 
 int player_mental_clarity(bool calc_unid, bool items)
 {
-    int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
-              + player_mutation_level(MUT_CLARITY)
-              + scan_artefacts(ARTP_CLARITY);
+    int ret = 0;
+    
+    ret += player_mutation_level(MUT_CLARITY);
+    
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        ret += 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
+               + scan_artefacts(ARTP_CLARITY);
+    }
 
     if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
         && !player_under_penance())
@@ -4140,8 +4293,17 @@ int player_mental_clarity(bool calc_unid, bool items)
 
 int player_spirit_shield(bool calc_unid)
 {
-    return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
-           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
+               + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 // Returns whether the player has the effect of the amulet from a
@@ -4273,19 +4435,24 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
 {
     int ret = 0;
 
-    if (which_affected == PWPN_HIT)
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
     {
-        ret += player_equip(EQ_RINGS_PLUS, RING_SLAYING);
-        ret += scan_artefacts(ARTP_ACCURACY);
-        if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
-            ret += ranged ? 5 : -1;
-    }
-    else if (which_affected == PWPN_DAMAGE)
-    {
-        ret += player_equip(EQ_RINGS_PLUS2, RING_SLAYING);
-        ret += scan_artefacts(ARTP_DAMAGE);
-        if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
-            ret += ranged ? 3 : -1;
+        if (which_affected == PWPN_HIT)
+        {
+            ret += player_equip(EQ_RINGS_PLUS, RING_SLAYING);
+            ret += scan_artefacts(ARTP_ACCURACY);
+            if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
+                ret += ranged ? 5 : -1;
+        }
+        else if (which_affected == PWPN_DAMAGE)
+        {
+            ret += player_equip(EQ_RINGS_PLUS2, RING_SLAYING);
+            ret += scan_artefacts(ARTP_DAMAGE);
+            if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
+                ret += ranged ? 3 : -1;
+        }
     }
 
     ret += std::min(you.duration[DUR_SLAYING] / (13 * BASELINE_DELAY), 6);
@@ -4669,8 +4836,13 @@ int get_real_hp(bool trans, bool rotted)
     if (!rotted)
         hitp += you.hp_max_temp;
 
-    if (trans)
-        hitp += scan_artefacts(ARTP_HP);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        if (trans)
+            hitp += scan_artefacts(ARTP_HP);
+    }
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
@@ -4715,6 +4887,7 @@ int get_real_mp(bool include_items)
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
+    // Note that suppression doesn't affect the antimagic brand.
     if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
 
@@ -5290,8 +5463,10 @@ void float_player(bool fly)
              you.is_wall_clinging() ? "wall" : "floor");
     }
 
-    // Amulet of Controlled Flight can auto-ID.
-    if (wearing_amulet(AMU_CONTROLLED_FLIGHT)
+    // Amulet of Controlled Flight can auto-ID
+    // ...but not if you're suppressed!
+    if (!you.suppressed()
+        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
         && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
     {
         // it's important to do this only if the amulet is not identified yet,
@@ -6082,15 +6257,20 @@ int player::armour_class() const
             AC -= ac_value / 2;
     }
 
-    AC += player_equip(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        AC += player_equip(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
-    if (player_equip_ego_type(EQ_WEAPON, SPWPN_PROTECTION))
-        AC += 500;
+        if (player_equip_ego_type(EQ_WEAPON, SPWPN_PROTECTION))
+            AC += 500;
 
-    if (player_equip_ego_type(EQ_SHIELD, SPARM_PROTECTION))
-        AC += 300;
+        if (player_equip_ego_type(EQ_SHIELD, SPARM_PROTECTION))
+            AC += 300;
 
-    AC += scan_artefacts(ARTP_AC) * 100;
+        AC += scan_artefacts(ARTP_AC) * 100;
+    }
 
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
@@ -6483,19 +6663,24 @@ int player_res_magic(bool calc_unid, bool temp)
         break;
     }
 
-    // randarts
-    rm += scan_artefacts(ARTP_MAGIC, calc_unid);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        // randarts
+        rm += scan_artefacts(ARTP_MAGIC, calc_unid);
 
-    // armour
-    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
-                                     calc_unid);
+        // armour
+        rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                         calc_unid);
 
-    // rings of magic resistance
-    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
+        // rings of magic resistance
+        rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
-    // Enchantment skill through staff of enchantment (up to 90).
-    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-        rm += 9 + std::max(you.skill(SK_CHARMS, 3), you.skill(SK_HEXES, 3));
+        // Enchantment skill through staff of enchantment (up to 90).
+        if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
+            rm += 9 + std::max(you.skill(SK_CHARMS, 3), you.skill(SK_HEXES, 3));
+    }
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
@@ -6550,7 +6735,8 @@ flight_type player::flight_mode() const
     else if (is_levitating())
     {
         return (duration[DUR_CONTROLLED_FLIGHT]
-                || wearing_amulet(AMU_CONTROLLED_FLIGHT) ? FL_FLY
+                || (!you.suppressed()
+                    && wearing_amulet(AMU_CONTROLLED_FLIGHT)) ? FL_FLY
                                                          : FL_LEVITATE);
     }
     else
@@ -6984,10 +7170,21 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
 
     int si = 0;
 
-    si += player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid);
+    // All effects negated by magical suppression should go in here.
+    // Note that resistances granted by temporary effects don't count.
+    if (!you.suppressed())
+    {
+        si += player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid);
 
-    // armour: (checks head armour only)
-    si += player_equip_ego_type(EQ_HELMET, SPARM_SEE_INVISIBLE);
+        // armour: (checks head armour only)
+        si += player_equip_ego_type(EQ_HELMET, SPARM_SEE_INVISIBLE);
+
+        // randart wpns
+        int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
+
+        if (artefacts > 0)
+            si += artefacts;
+    }
 
     if (player_mutation_level(MUT_ACUTE_VISION) > 0)
         si += player_mutation_level(MUT_ACUTE_VISION);
@@ -7002,12 +7199,6 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
     //jmf: added see_invisible spell
     if (transient && duration[DUR_SEE_INVISIBLE] > 0)
         si++;
-
-    // randart wpns
-    int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
-
-    if (artefacts > 0)
-        si += artefacts;
 
     if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
         && !player_under_penance())

@@ -1727,7 +1727,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
+    const int rmuta = ((!you.suppressed()
+                        && wearing_amulet(AMU_RESIST_MUTATION, calc_unid))
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
     const int rrott = (you.res_rotting()
@@ -1758,7 +1759,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const char* pregourmand;
     const char* postgourmand;
 
-    if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
+    if (!you.suppressed() && wearing_amulet(AMU_THE_GOURMAND, calc_unid))
     {
         pregourmand = "Gourmand  : ";
         postgourmand = _itosym1(1);
@@ -1796,9 +1797,17 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
-    const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
-    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
-                       || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
+    const int stasis = false;
+    const int notele = false;
+
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        stasis = wearing_amulet(AMU_STASIS, calc_unid);
+        notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    }
+    
+    notele = notele || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
@@ -1821,7 +1830,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     int rctel = player_control_teleport(calc_unid);
     rctel = allow_control_teleport(true) ? rctel : -1;
     const int rlevi = you.airborne();
-    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    const int rcfli = !you.suppressed()
+                      && wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
