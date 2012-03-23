@@ -3237,11 +3237,11 @@ static std::string _monster_stat_description(const monster_info& mi)
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
         "tiny",
-        "little",
+        "very small",
         "small",
         NULL,     // don't display anything for 'medium'
         "large",
-        "big",
+        "very large",
         "giant",
         "huge",
     };
