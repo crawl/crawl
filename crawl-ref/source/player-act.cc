@@ -636,7 +636,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
     // trigger when the player attempts to activate berserk,
     // auto-iding at that point, but also killing the berserk and
     // wasting a turn.
-    if (wearing_amulet(AMU_STASIS, false))
+    if (!you.suppressed() && wearing_amulet(AMU_STASIS, false))
     {
         if (verbose)
         {
@@ -647,7 +647,8 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (!intentional && !potion && player_mental_clarity(true))
+    if (!intentional && !potion && (!you.suppressed
+                                    && player_mental_clarity(true)))
     {
         if (verbose)
         {
