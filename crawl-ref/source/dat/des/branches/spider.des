@@ -516,6 +516,130 @@ aa?...a.a...?aa
       aaa
 ENDMAP
 
+# A few mining accidents
+NAME:   nicolae_spider_mines_1
+DEPTH:  Spider:1-4
+ORIENT: southwest
+TAGS:   uniq_spidermines
+SUBST:  B = z..
+RTILE:  O = wall_lair
+FTILE:  Oz = floor_hive
+RTILE:  X = wall_stone_brick
+COLOUR: O = brown
+COLOUR: z = brown
+COLOUR: X = lightgrey
+SUBST:  O = x
+SUBST:  z = v:1 z:14
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
+            tarantella w:1 /  nothing w:100
+: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM: z = any armour race:orcish w:5 / any weapon race:orcish w:5 / \
+           gold w:1 / nothing w:50
+KFEAT: z = web / floor w:60
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxxx......xx
+xxxxxx.....x...xx
+xxxx.......xx...@
+xxxx....BBBxx...@
+xxxx.xxxxBBOxx..@
+xxxxxxOOOBBBOxxxx
+xxxxxOOOzzzzOOOxx
+xxxOOOOzzzzzzOOOx
+xxOOOzzzzzzzzzOOx
+xOOOzzzzzzzzzzOOx
+xOOzzzzzzzzzzOOxx
+xOOzzzzzzzzzOOxx
+xOOzzzzzzzzzOOx
+xxOOzzzzzzzzOOx
+xxxOOzzzzzzOOxx
+xxxOOzzzzzzOOxx
+xxXXXXXXXXXXXXx
+xxXXXXXXXXXXXXx
+ENDMAP
+
+NAME:   nicolae_spider_mines_2
+DEPTH:  Spider:1-4
+ORIENT: southeast
+TAGS:   uniq_spidermines
+SUBST:  B = z..
+RTILE:  O = wall_lair
+FTILE:  OzI_ = floor_hive
+RTILE:  X = wall_stone_brick
+COLOUR: O = brown
+COLOUR: z = brown
+COLOUR: X = lightgrey
+SUBST:  O = x
+SUBST:  z = v:1 z:14
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
+            tarantella w:1 / nothing w:100
+: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM: z = any armour race:orcish w:5 / any weapon race:orcish w:5 / \
+           gold w:1 / nothing w:50
+KFEAT: z = web / floor w:60
+KFEAT:  _ = altar_beogh
+
+MAP
+       xxxxxxxxxxxxx
+       @.....xxxxxxx
+       @........xxxx
+       @xxxxxx..xxxx
+       xxOBBBBBBxxxx
+     xxxOOBBBOOOxxxx
+   xxxOOOzzzzzzOOxxx
+  xxOOOOzzzzzzzOOxxx
+  xOOOOOzIzzzIzOOxxx
+  xOzzzzzzz_zzzOOxxx
+  xOzzzzzIzzzIzzOOxx
+  xOzzzzzzzzzzzzOOxx
+  xOOOOzzzzzzzzOOxxx
+   xxOOOzzzzzzOOOxxx
+   xXXXXXXXXXXXXXXxx
+   xXXXXXXXXXXXXXXxx
+ENDMAP
+
+NAME:   nicolae_spider_mines_3
+DEPTH:  Spider:1-4
+ORIENT: southwest
+TAGS:   uniq_spidermines
+NSUBST: F = 1:Q / *:z
+SUBST:  B = z..
+RTILE:  0 = wall_lair
+FTILE:  OzQ = floor_hive
+RTILE:  X = wall_stone_brick
+COLOUR: O = brown
+COLOUR: z = brown
+COLOUR: X = lightgrey
+SUBST:  O = x
+SUBST:  z = v:1 z:14
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
+            tarantella w:1 / nothing w:100
+: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM: z = any armour race:orcish w:5 / any weapon race:orcish w:5 / \
+           gold w:1 / nothing w:50
+KFEAT: z = web / floor w:60
+KFEAT: Q = abandoned_shop
+MAP
+         xxxxxxxxx
+xxxxxxxxxxOOOOOOOxx
+xxxxxxxxxxOzzzzzOOxxx
+xxxxxxxxxxOzzzFzzOxxxxx
+xxxxxxxOOOOOzzzzzOx...@
+xxOOOOOOOOOOzzzzOOx...@
+xxOzzzzOOOOzzzzzOxx...@
+xxOzzzzzOOzzzzzzOx....x
+xxOzzFzzzzzzzzzzOx...xx
+xxOzzzzzzzzzzzzBBBBB.x
+xxOzzzzzzzFzzzBBBBBBxx
+xxOOzzzzzzzzzOOxxxxxxx
+xxxOOzzzzzzzzOOxxxxxxx
+xxxOOzzzzzzzOOxxxxxxxxx
+xxxxOOzzzzzzOOxxxxxxxxx
+xxxxxOzzzzzzOOxxxxxxxxx
+xxxxXXXXXXXXXXXxxxxxxxx
+xxxxXXXXXXXXXXXxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
