@@ -4592,7 +4592,7 @@ void melee_attack::do_spines()
     {
         const int level = 1 + div_rand_round(defender->get_experience_level(), 4);
 
-        if (test_hit(random2(3 + 4 * level), attacker->melee_evasion(defender),
+        if (test_hit(random2(10 + 4 * level), attacker->melee_evasion(defender),
             !attacker->is_player()) < 0)
         {
             if (you.can_see(defender))
