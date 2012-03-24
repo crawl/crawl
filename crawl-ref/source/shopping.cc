@@ -2000,7 +2000,7 @@ unsigned int item_value(item_def item, bool ident)
 
     valued *= item.quantity;
 
-    return (valued);
+    return stepdown_value(valued, 1000, 1000, 10000, 10000);
 }
 
 bool is_worthless_consumable(const item_def &item)
