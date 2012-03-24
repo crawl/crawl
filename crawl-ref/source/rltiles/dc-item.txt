@@ -1042,6 +1042,7 @@ runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 runes/rune_snake MISC_RUNE_SNAKE
 runes/rune_swamp MISC_RUNE_SWAMP
 runes/rune_shoals MISC_RUNE_SHOALS
+runes/rune_spider MISC_RUNE_SPIDER
 runes/rune_slime MISC_RUNE_SLIME
 runes/rune_vaults MISC_RUNE_VAULTS
 runes/rune_tomb MISC_RUNE_TOMB

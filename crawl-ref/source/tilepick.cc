@@ -3719,6 +3719,7 @@ static tileidx_t _tileidx_rune(const item_def &item)
     case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
 
     case RUNE_SNAKE_PIT:   return TILE_MISC_RUNE_SNAKE;
+    case RUNE_SPIDER_NEST: return TILE_MISC_RUNE_SPIDER;
     case RUNE_SLIME_PITS:  return TILE_MISC_RUNE_SLIME;
     case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
     case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
@@ -3727,7 +3728,6 @@ static tileidx_t _tileidx_rune(const item_def &item)
 
     case RUNE_ELVEN_HALLS:
     case RUNE_FOREST:
-    case RUNE_SPIDER_NEST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
     }
 }
