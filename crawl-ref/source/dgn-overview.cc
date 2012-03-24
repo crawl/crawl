@@ -1048,6 +1048,11 @@ void annotate_level()
             li = li2;
     }
 
+    do_annotate(li);
+}
+
+void do_annotate(level_id& li)
+{
     if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation: " +

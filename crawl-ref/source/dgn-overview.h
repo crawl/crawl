@@ -41,6 +41,7 @@ bool level_annotation_has(std::string str,
                           level_id li = level_id::current());
 
 void annotate_level();
+void do_annotate(level_id& li);
 
 class writer;
 class reader;

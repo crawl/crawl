@@ -15,6 +15,7 @@
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dgn-overview.h"
 #include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -1208,6 +1209,18 @@ bool show_map(level_pos &lpos,
                     map_alive = false;
                     break;
                 }
+            }
+            case CMD_MAP_ANNOTATE_LEVEL:
+            {
+                if (lpos.id.level_type != LEVEL_DUNGEON)
+                {
+                    mpr("You can't annotate this level.");
+                }
+                else
+                {
+                    do_annotate(lpos.id);
+                }
+                break;
             }
 
 #ifdef WIZARD

@@ -122,6 +122,7 @@ level-map
 <w>_</w>      : Cycle through altars.
 
 <h>Other</h>
+<w>!</w>      : Annotate level
 <w>Ctrl-C</w> : Clear item and monster memory.
 <w>Ctrl-F</w> : Forget level map.{{
 if you.wizard() then
