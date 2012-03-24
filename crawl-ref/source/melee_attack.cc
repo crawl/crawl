@@ -4484,7 +4484,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENSNARE:
-        if (damage_done > 0 && coinflip())
+        if (coinflip())
             ensnare(defender);
     }
 }
