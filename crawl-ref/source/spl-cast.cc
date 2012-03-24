@@ -494,8 +494,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (!you.suppressed() 
-        && player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
+    if (player_effect_archmagi())
         enhanced++;
 
     enhanced += augmentation_amount();
@@ -537,7 +536,7 @@ static bool _can_cast()
     }
 
     // Randart weapons.
-    if (!you.suppressed() && scan_artefacts(ARTP_PREVENT_SPELLCASTING))
+    if (player_effect_nocast())
     {
         mpr("Something interferes with your magic!");
         return false;

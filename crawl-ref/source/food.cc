@@ -1522,8 +1522,7 @@ int prompt_eat_chunks(bool only_auto)
         && !you.is_undead && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
         && (Options.easy_eat_gourmand 
-            && (!you.suppressed()
-                && wearing_amulet(AMU_THE_GOURMAND))
+            && player_effect_gourmand() 
             || Options.easy_eat_contaminated);
 
     if (found_valid)
@@ -1691,7 +1690,7 @@ static int _chunk_nutrition(int likes_chunks)
     }
 
     const int gourmand =
-        (!you.suppressed() && wearing_amulet(AMU_THE_GOURMAND)) ? you.duration[DUR_GOURMAND] : 0;
+        player_effect_gourmand() ? you.duration[DUR_GOURMAND] : 0;
     const int effective_nutrition =
         _apply_gourmand_nutrition_effects(nutrition, gourmand);
 
@@ -1744,7 +1743,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     // contaminated meat as though it were "clean" meat - level 3
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
-    if (!you.suppressed() && wearing_amulet(AMU_THE_GOURMAND))
+    if (player_effect_gourmand())
     {
         int left = GOURMAND_MAX - you.duration[DUR_GOURMAND];
         // [dshaligram] Level 3 saprovores relish contaminated meat.

@@ -2363,11 +2363,9 @@ bool travel_kill_monster(monster_type mons)
 
     // Don't auto-kill things with berserkitis or *rage.
     if (player_mutation_level(MUT_BERSERK) 
-        || (!you.suppressed()
-            && (scan_artefacts(ARTP_ANGRY)
-                || player_equip_unrand(UNRAND_TROG))))
+        || player_effect_angry())
     {
-        if ((!you.suppressed() && wearing_amulet(AMU_STASIS, false))
+        if (player_effect_stasis(false)
             || player_mental_clarity(false)
             || you.is_undead == US_UNDEAD
             || you.is_undead == US_HUNGRY_DEAD)
