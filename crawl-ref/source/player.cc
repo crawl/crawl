@@ -348,10 +348,14 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         if (you.species == SP_MERFOLK)
         {
-            // We're entering water and either not transformed, or in a form
-            // compatible with tail.
-            if (feat_is_water(new_grid) && form_keeps_fishtail())
+            if (feat_is_water(new_grid) // We're entering water
+                // We're not transformed, or with a form compatible with tail
+                && (you.form == TRAN_NONE
+                    || you.form == TRAN_APPENDAGE
+                    || you.form == TRAN_BLADE_HANDS))
+            {
                 merfolk_start_swimming(stepped);
+            }
             else if (!feat_is_water(new_grid) && !is_feat_dangerous(new_grid))
                 merfolk_stop_swimming();
         }
