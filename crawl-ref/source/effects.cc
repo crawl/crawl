@@ -2225,21 +2225,19 @@ void handle_time()
         added_contamination++;
 
     bool mutagenic_randart = false;
-    if (!you.suppressed())
+    const int artefact_glow = player_effect_mutagenic();
+    if (artefact_glow)
     {
-        if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
-        {
-            // Reduced randart glow. Note that one randart will contribute
-            // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
-            // index of 2 does about 0.58 points of contamination per turn.
-            // A randart with a mutagen index of 5 does about 0.7 points of
-            // contamination per turn.
+        // Reduced randart glow. Note that one randart will contribute
+        // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
+        // index of 2 does about 0.58 points of contamination per turn.
+        // A randart with a mutagen index of 5 does about 0.7 points of
+        // contamination per turn.
 
-            const int mean_glow   = 500 + artefact_glow * 40;
-            const int actual_glow = mean_glow / 2 + random2(mean_glow);
-            added_contamination += div_rand_round(actual_glow, 1000);
-            mutagenic_randart = true;
-        }
+        const int mean_glow   = 500 + artefact_glow * 40;
+        const int actual_glow = mean_glow / 2 + random2(mean_glow);
+        added_contamination += div_rand_round(actual_glow, 1000);
+        mutagenic_randart = true;
     }
 
     // The Orb adds .25 points per turn (effectively halving dissipation),
@@ -2405,7 +2403,7 @@ void handle_time()
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (!(!you.suppressed() && wearing_amulet(AMU_RESIST_MUTATION))
+                && (!player_res_mutation()
                     || one_chance_in(10)))
             {
                 evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);

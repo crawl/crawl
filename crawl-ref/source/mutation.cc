@@ -1218,8 +1218,8 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         // resistance mutation.
         if (!god_gift)
         {
-            if (((!you.suppressed() && wearing_amulet(AMU_RESIST_MUTATION))
-                    && !one_chance_in(10) && !stat_gain_potion)
+            if ((player_res_mutation()
+                 && !one_chance_in(10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(3)))
