@@ -4286,7 +4286,8 @@ void bolt::affect_monster(monster* mon)
             {
                 simple_god_message(
                     make_stringf(" protects %s plant from harm.",
-                        attitude == ATT_FRIENDLY ? "your" : "a").c_str());
+                        attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
+                    GOD_FEDHAS);
             }
         }
         return;
