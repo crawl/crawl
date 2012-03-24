@@ -1205,7 +1205,6 @@ int player_teleport(bool calc_unid)
     int tp = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // rings (keep in sync with _equip_jewellery_effect)
@@ -1241,7 +1240,6 @@ static int _player_bonus_regen()
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Rings.
@@ -1391,7 +1389,6 @@ int player_hunger_rate(bool temp)
         hunger += you.burden_state;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // rings
@@ -1478,7 +1475,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     int rf = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -1567,7 +1563,6 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
         res += 2;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
@@ -1633,7 +1628,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -1685,7 +1679,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 int player_res_corr(bool calc_unid, bool items)
 {
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
@@ -1705,7 +1698,6 @@ int player_res_acid(bool calc_unid, bool items)
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -1754,7 +1746,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     int re = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -1830,7 +1821,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     int rp = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -1929,7 +1919,6 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
         rsf++;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
@@ -1953,7 +1942,6 @@ int player_spec_death()
     int sd = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -1988,7 +1976,6 @@ int player_spec_fire()
     int sf = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // staves:
@@ -2009,7 +1996,6 @@ int player_spec_cold()
     int sc = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // staves:
@@ -2027,7 +2013,6 @@ int player_spec_earth()
     int se = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2042,7 +2027,6 @@ int player_spec_air()
     int sa = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2057,7 +2041,6 @@ int player_spec_conj()
     int sc = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2072,7 +2055,6 @@ int player_spec_ench()
     int se = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2087,7 +2069,6 @@ int player_spec_summ()
     int ss = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2102,7 +2083,6 @@ int player_spec_poison()
     int sp = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2120,7 +2100,6 @@ int player_energy()
     int pe = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Staves
@@ -2185,7 +2164,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (items)
@@ -2504,7 +2482,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
         evbonus += 5;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
@@ -2693,7 +2670,6 @@ int player_mag_abil(bool is_weighted)
     ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Rings
@@ -2777,7 +2753,6 @@ int player_sust_abil(bool calc_unid)
     int sa = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
@@ -2797,7 +2772,6 @@ int player_warding(bool calc_unid)
     int ward = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // Note: when adding a new source of warding, please add it to
@@ -3801,7 +3775,6 @@ int check_stealth(void)
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (arm)
@@ -4264,7 +4237,6 @@ int player_mental_clarity(bool calc_unid, bool items)
     ret += player_mutation_level(MUT_CLARITY);
     
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         ret += 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
@@ -4283,11 +4255,174 @@ int player_mental_clarity(bool calc_unid, bool items)
 int player_spirit_shield(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
                + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_inaccuracy()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_INACCURACY);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// See if the player has an ongoing effect as per the *MUT or +MUT properties.
+int player_effect_mutagenic()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return scan_artefacts(ARTP_MUTAGENIC);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_res_mutation()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_RESIST_MUTATION);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_gourmand()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_THE_GOURMAND);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_stasis(bool calc_unid)
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_STASIS, calc_unid);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// This is a bit confusing. This is not the function that determines whether or
+// not a player is capable of teleporting, only whether they are specifically
+// under the influence of the "notele" effect. See item_blocks_teleport() in
+// item_use.cc for a superset of this function. In the future, I suppose we
+// could use this function for a dimensional anchor spell or something similar.
+int player_effect_notele(bool calc_unid)
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// permaswift effects like boots of running and lightning scales
+int player_effect_running()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_cfly(bool calc_unid)
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_faith()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return wearing_amulet(AMU_FAITH);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_archmagi()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_nocast()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return scan_artefacts(ARTP_PREVENT_SPELLCASTING);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int player_effect_angry()
+{
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        return (scan_artefacts(ARTP_ANGRY)
+                || player_equip_unrand(UNRAND_TROG));
     }
     else
     {
@@ -4425,7 +4560,6 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
     int ret = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (which_affected == PWPN_HIT)
@@ -4826,7 +4960,6 @@ int get_real_hp(bool trans, bool rotted)
         hitp += you.hp_max_temp;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         if (trans)
@@ -6241,7 +6374,6 @@ int player::armour_class() const
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         AC += player_equip(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
@@ -6647,7 +6779,6 @@ int player_res_magic(bool calc_unid, bool temp)
     }
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         // randarts
@@ -7154,7 +7285,6 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
     int si = 0;
 
     // All effects negated by magical suppression should go in here.
-    // Note that resistances granted by temporary effects don't count.
     if (!you.suppressed())
     {
         si += player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid);

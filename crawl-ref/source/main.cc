@@ -2293,10 +2293,9 @@ static void _decrement_durations()
 {
     int delay = you.time_taken;
 
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    if (player_effect_gourmand())
     {
-        if (!you.suppressed()
-            && (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip()))
+        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
     }
     else
@@ -4380,7 +4379,7 @@ static void _move_player(coord_def move)
     apply_berserk_penalty = !attacking;
 
     if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
-        && (!you.suppressed() && player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING)))
+        && player_effect_running())
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

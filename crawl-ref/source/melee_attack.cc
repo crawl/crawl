@@ -3503,7 +3503,7 @@ int melee_attack::calc_to_hit(bool random)
     // player_to_hit methods.
     if (attacker->is_player())
     {
-        if (!you.suppressed() && wearing_amulet(AMU_INACCURACY))
+        if (player_effect_inaccuracy())
             mhit -= 5;
 
         // If you can't see yourself, you're a little less accurate. Maybe
@@ -4892,7 +4892,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
-    if (!you.suppressed() && wearing_amulet(AMU_INACCURACY))
+    if (player_effect_inaccuracy())
         your_to_hit -= 5;
 
     if (player_mutation_level(MUT_EYEBALLS))

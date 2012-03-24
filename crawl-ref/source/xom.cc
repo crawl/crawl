@@ -339,7 +339,7 @@ void xom_tick()
         you.redraw_title = true;
     }
 
-    if ((!you.suppressed() && wearing_amulet(AMU_FAITH)) ? coinflip() : one_chance_in(3))
+    if (player_effect_faith() ? coinflip() : one_chance_in(3))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :

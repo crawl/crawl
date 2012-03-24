@@ -847,6 +847,18 @@ int player_res_torment(bool calc_unid = true, bool temp = true);
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
+int player_effect_inaccuracy();
+int player_effect_mutagenic();
+int player_res_mutation();
+int player_effect_gourmand();
+int player_effect_stasis(bool calc_unid = true);
+int player_effect_notele(bool calc_unid = true);
+int player_effect_running();
+int player_effect_cfly(bool calc_unid = true);
+int player_effect_faith();
+int player_effect_archmagi();
+int player_effect_nocast();
+int player_effect_angry();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);

@@ -5481,8 +5481,7 @@ bool wearing_slot(int inv_slot)
 
 bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return ((!you.suppressed()
-             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid))
+    return (player_effect_notele(calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
             || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
@@ -5492,38 +5491,35 @@ bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (!you.suppressed())
+    if (player_effect_stasis(calc_unid))
     {
-        if (wearing_amulet(AMU_STASIS, calc_unid))
+        item_def *amulet = you.slot_item(EQ_AMULET, false);
+
+        if (msg)
         {
-            item_def *amulet = you.slot_item(EQ_AMULET, false);
+            const std::string name(amulet? amulet->name(DESC_YOUR) :
+                                   "Something");
+            const std::string message =
+                make_stringf(msg, name.c_str());
 
-            if (msg)
+            if (noise)
             {
-                const std::string name(amulet? amulet->name(DESC_YOUR) :
-                                       "Something");
-                const std::string message =
-                    make_stringf(msg, name.c_str());
-
-                if (noise)
+                if (!noisy(noise, you.pos(), message.c_str())
+                    && silenced_msg)
                 {
-                    if (!noisy(noise, you.pos(), message.c_str())
-                        && silenced_msg)
-                    {
-                        mprf(silenced_msg, name.c_str());
-                    }
-                }
-                else
-                {
-                    mpr(message.c_str());
+                    mprf(silenced_msg, name.c_str());
                 }
             }
-
-            // In all cases, the amulet auto-ids if requested.
-            if (amulet && identify && !item_type_known(*amulet))
-                wear_id_type(*amulet);
-            return (true);
+            else
+            {
+                mpr(message.c_str());
+            }
         }
+
+        // In all cases, the amulet auto-ids if requested.
+        if (amulet && identify && !item_type_known(*amulet))
+            wear_id_type(*amulet);
+        return (true);
     }
     return (false);
 }
