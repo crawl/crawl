@@ -1128,6 +1128,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return (true);
     }
 
+    // Merfolk have no feet in the natural form, and we never allow mutations
+    // that show up only in a certain transformation.
+    if (you.species == SP_MERFOLK && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+        return (true);
+
     equipment_type eq_type = EQ_NONE;
 
     // Mutations of the same slot conflict
