@@ -408,6 +408,7 @@ public:
     void copy_from(const player &other);
 
     void init();
+    void init_skills();
 
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);

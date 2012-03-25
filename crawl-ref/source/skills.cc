@@ -554,7 +554,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
 
 /*
  * Init the training array by scaling down the skill_points array to 100.
- * Used at game setup, and when upgrading saves.
+ * Used at game setup, when upgrading saves and when loading dump files.
  */
 void init_training()
 {

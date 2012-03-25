@@ -5472,17 +5472,7 @@ void player::init()
     deaths = 0;
     xray_vision = false;
 
-    auto_training = !(Options.default_manual_training);
-    skills.init(0);
-    train.init(false);
-    train_alt.init(false);
-    training.init(0);
-    can_train.init(false);
-    skill_points.init(0);
-    ct_skill_points.init(0);
-    skill_order.init(MAX_SKILL_ORDER);
-    exercises.clear();
-    exercises_all.clear();
+    init_skills();
 
     skill_menu_do = SKM_NONE;
     skill_menu_view = SKM_NONE;
@@ -5675,6 +5665,21 @@ void player::init()
         non_branch_info[i].branch     = -1;
         non_branch_info[i].assert_validity();
     }
+}
+
+void player::init_skills()
+{
+    auto_training = !(Options.default_manual_training);
+    skills.init(0);
+    train.init(false);
+    train_alt.init(false);
+    training.init(0);
+    can_train.init(false);
+    skill_points.init(0);
+    ct_skill_points.init(0);
+    skill_order.init(MAX_SKILL_ORDER);
+    exercises.clear();
+    exercises_all.clear();
 }
 
 player_save_info& player_save_info::operator=(const player& rhs)
