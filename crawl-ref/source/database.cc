@@ -796,7 +796,10 @@ std::string getRandNameString(const std::string &itemtype,
 
 std::string getHelpString(const std::string &topic)
 {
-    return _query_database(HelpDB.get(), topic, false, true);
+    std::string help = _query_database(HelpDB.get(), topic, false, true);
+    if (help.empty())
+        help = "Error! The help for \"" + topic + "\" is missing!";
+    return help;
 }
 
 /////////////////////////////////////////////////////////////////////////////
