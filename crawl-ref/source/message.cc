@@ -1450,7 +1450,7 @@ void get_recent_messages(std::vector<std::string> &mess,
     flush_prev_message();
 
     const store_t& msgs = messages.get_store();
-    int mcount = std::min(mcount, NUM_STORED_MESSAGES);
+    int mcount = NUM_STORED_MESSAGES;
     for (int i = -1; mcount > 0; --i, --mcount)
     {
         const message_item msg = msgs[i];
