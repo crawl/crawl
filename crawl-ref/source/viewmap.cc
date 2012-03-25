@@ -18,6 +18,7 @@
 #include "dgn-overview.h"
 #include "env.h"
 #include "map_knowledge.h"
+#include "message.h"
 #include "fprop.h"
 #include "exclude.h"
 #include "feature.h"
@@ -1197,11 +1198,19 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_ANNOTATE_LEVEL:
+                le.go_to(original);
+                redraw_screen();
+                le.go_to(lpos.id);
+
                 if (lpos.id.level_type != LEVEL_DUNGEON)
+                {
                     mpr("You can't annotate this level.");
+                    more();
+                }
                 else
                     do_annotate(lpos.id);
 
+                redraw_map = true;
                 break;
 
 #ifdef WIZARD
