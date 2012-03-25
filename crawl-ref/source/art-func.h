@@ -681,7 +681,7 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
 {
     if (!mondied || !defender || !is_dragonkind(defender))
         return;
-    if (defender->atype() != ACT_MONSTER)
+    if (defender->is_player())
     {
         // can't currently happen even on a death blow
         mpr("<green>You see the lance glow as it kills you.</green>");

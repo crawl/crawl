@@ -1970,7 +1970,7 @@ static void _rot_inventory_food(int time_delta)
 
             // The item is of type carrion.
             if (item.sub_type == CORPSE_SKELETON
-                || !mons_skeleton(item.plus))
+                || !mons_skeleton(item.mon_type))
             {
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
@@ -3201,7 +3201,7 @@ void update_corpses(int elapsedTime)
             else
             {
                 if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton(it.plus))
+                    || !mons_skeleton(it.mon_type))
                 {
                     item_was_destroyed(it);
                     destroy_item(c);

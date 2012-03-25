@@ -115,11 +115,19 @@ def bind_server():
     if http_connection_timeout is not None:
         kwargs["connection_timeout"] = http_connection_timeout
 
+    servers = []
+
     if bind_nonsecure:
-        application.listen(bind_port, bind_address, **kwargs)
+        server = tornado.httpserver.HTTPServer(application, **kwargs)
+        server.listen(bind_port, bind_address)
+        servers.append(server)
     if ssl_options:
-        application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
-                           **kwargs)
+        server = tornado.httpserver.HTTPServer(application,
+                                               ssl_options = ssl_options, **kwargs)
+        server.listen(ssl_port, ssl_address)
+        servers.append(server)
+
+    return servers
 
 def init_logging(logging_config):
     filename = logging_config.get("filename")
@@ -161,7 +169,7 @@ if __name__ == "__main__":
 
     write_pidfile()
 
-    bind_server()
+    servers = bind_server()
 
     shed_privileges()
 
@@ -176,12 +184,13 @@ if __name__ == "__main__":
         purge_login_tokens_timeout()
         start_reading_milestones()
 
-    logging.info("Webtiles server started!")
+    logging.info("Webtiles server started! (PID: %s)" % os.getpid())
 
     try:
         ioloop.start()
     except KeyboardInterrupt:
         logging.info("Received keyboard interrupt, shutting down.")
+        for server in servers: server.stop()
         shutdown()
         if len(sockets) > 0:
             ioloop.start() # We'll wait until all crawl processes have ended.

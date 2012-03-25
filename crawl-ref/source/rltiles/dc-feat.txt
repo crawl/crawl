@@ -516,6 +516,7 @@ mold_glowing2
 mold_glowing3
 mold_glowing4
 effect/silenced SILENCED
+effect/suppressed SUPPRESSED
 %shrink 0
 %sdir dc-mon/tentacles/kraken_corners
 kraken_corner_NW KRAKEN_OVERLAY_NW

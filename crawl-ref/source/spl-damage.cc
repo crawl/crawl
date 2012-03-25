@@ -1033,7 +1033,7 @@ static int _shatter_walls(coord_def where, int pow, actor *)
 
 static bool _shatterable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return true; // no player ghostlies... at least user-controllable ones
     return _shatter_mon_dice(act->as_monster());
 }
@@ -1205,13 +1205,13 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
     }
     else if (item.base_type == OBJ_CORPSES &&
              item.sub_type == CORPSE_BODY &&
-             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
     {
-        strength = mons_weight(item.plus) / 25;
+        strength = mons_weight(item.mon_type) / 25;
     }
     else if (item.base_type == OBJ_FOOD &&
              item.sub_type == FOOD_CHUNK &&
-             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
     {
         strength += 30 * item.quantity;
     }
@@ -1230,7 +1230,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
 
         if (item.base_type == OBJ_CORPSES &&
             item.sub_type == CORPSE_BODY &&
-            mons_skeleton(item.plus))
+            mons_skeleton(item.mon_type))
         {
             turn_corpse_into_skeleton(item);
         }

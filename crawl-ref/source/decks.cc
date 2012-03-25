@@ -319,7 +319,9 @@ const char* card_name(card_type card)
     case CARD_TOMB:            return "the Tomb";
     case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
+#if TAG_MAJOR_VERSION == 32
     case CARD_MAP:             return "the Map";
+#endif
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_CRUSADE:         return "the Crusade";
@@ -343,7 +345,9 @@ const char* card_name(card_type card)
     case CARD_HAMMER:          return "the Hammer";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
+#if TAG_MAJOR_VERSION == 32
     case CARD_SPADE:           return "the Spade";
+#endif
     case CARD_BARGAIN:         return "the Bargain";
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";

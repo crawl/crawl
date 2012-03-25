@@ -2862,7 +2862,7 @@ void lose_piety(int pgn)
 // If fedhas worshipers kill a protected monster they lose piety,
 // if they attack a friendly one they get penance,
 // if a friendly one dies they lose piety.
-static bool _fedhas_protects_species(int mc)
+static bool _fedhas_protects_species(monster_type mc)
 {
     return (mons_class_is_plant(mc)
             && mc != MONS_GIANT_SPORE);
@@ -3206,7 +3206,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     return (god_hates_attacking_friend(god, fr->mons_species()));
 }
 
-bool god_hates_attacking_friend(god_type god, int species)
+bool god_hates_attacking_friend(god_type god, monster_type species)
 {
     if (mons_is_object(species))
         return (false);
@@ -3272,7 +3272,7 @@ bool god_likes_item(god_type god, const item_def& item)
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
-                   && mons_genus(item.plus) == MONS_ORC);
+                   && mons_genus(item.mon_type) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)

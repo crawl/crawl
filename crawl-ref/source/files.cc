@@ -311,10 +311,13 @@ time_t file_modtime(const std::string &file)
     return (filestat.st_mtime);
 }
 
-// Returns true if file a is newer than file b.
-bool is_newer(const std::string &a, const std::string &b)
+time_t file_modtime(FILE *f)
 {
-    return (file_modtime(a) > file_modtime(b));
+    struct stat filestat;
+    if (fstat(fileno(f), &filestat))
+        return (0);
+
+    return (filestat.st_mtime);
 }
 
 static bool _create_directory(const char *dir)
@@ -1725,13 +1728,8 @@ bool load_ghost(bool creating_level)
 }
 
 // returns false if a new game should start instead
-bool restore_game(const std::string& filename)
+static bool _restore_game(const std::string& filename)
 {
-    // [ds] Set up branch depths for the current game type before
-    // trying to load the game. This is important for Sprint because
-    // it reduces the dungeon to 1 level, making D:1's place name "D"
-    // in save chunks.
-    initialise_branches_for_game_type();
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
@@ -1821,6 +1819,35 @@ bool restore_game(const std::string& filename)
     }
 
     return true;
+}
+
+// returns false if a new game should start instead
+bool restore_game(const std::string& filename)
+{
+    // [ds] Set up branch depths for the current game type before
+    // trying to load the game. This is important for Sprint because
+    // it reduces the dungeon to 1 level, making D:1's place name "D"
+    // in save chunks.
+    initialise_branches_for_game_type();
+    try
+    {
+        return _restore_game(filename);
+    }
+    catch (corrupted_save &err)
+    {
+        if (yesno(make_stringf(
+                   "There exists a save by that name but it appears to be invalid.\n"
+                   "(Error: %s).  Do you want to delete it?", err.msg.c_str()).c_str(),
+                  true, 'n'))
+        {
+            if (you.save)
+                you.save->unlink();
+            you.save = 0;
+            return false;
+        }
+        // Shouldn't crash probably...
+        fail("Aborting; you may try to recover it somehow.");
+    }
 }
 
 static void _load_level(const level_id &level)

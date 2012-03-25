@@ -1054,7 +1054,7 @@ static void _orc_battle_cry(monster* chief)
                 }
                 else
                 {
-                    int type = seen_affected[0]->type;
+                    monster_type type = seen_affected[0]->type;
                     for (unsigned int i = 0; i < seen_affected.size(); i++)
                     {
                         if (seen_affected[i]->type != type)
@@ -2269,7 +2269,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
                                   ? draco_subspecies(mons)
-                                  : static_cast<monster_type>(mons->type);
+                                  : mons->type;
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
@@ -2905,7 +2905,7 @@ void mon_nearby_ability(monster* mons)
             {
                 if (foe->is_player())
                     canned_msg(MSG_YOU_RESIST);
-                else if (foe->atype() == ACT_MONSTER)
+                else if (foe->is_monster())
                 {
                     const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons,

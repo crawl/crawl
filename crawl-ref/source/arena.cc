@@ -113,7 +113,7 @@ namespace arena
 
     int  summon_throttle     = INT_MAX;
 
-    std::vector<int> uniques_list;
+    std::vector<monster_type> uniques_list;
     std::vector<int> a_spawners;
     std::vector<int> b_spawners;
     int8_t           to_respawn[MAX_MONSTERS];
@@ -128,7 +128,7 @@ namespace arena
     coord_def place_a, place_b;
 
     bool cycle_random     = false;
-    int  cycle_random_pos = -1;
+    monster_type cycle_random_pos = NUM_MONSTERS;
 
     FILE *file = NULL;
     int message_pos = 0;
@@ -970,16 +970,13 @@ namespace arena
 
         expand_mlist(5);
 
-        for (int i = 0; i < NUM_MONSTERS; i++)
+        for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
         {
             if (i == MONS_PLAYER_GHOST)
                 continue;
 
-            if (mons_is_unique(i)
-                && !arena_veto_random_monster(static_cast<monster_type>(i)))
-            {
+            if (mons_is_unique(i) && !arena_veto_random_monster(i))
                 uniques_list.push_back(i);
-            }
         }
     }
 
@@ -1058,12 +1055,12 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 {
     if (arena::random_uniques)
     {
-        const std::vector<int> &uniques = arena::uniques_list;
+        const std::vector<monster_type> &uniques = arena::uniques_list;
 
-        const int type = uniques[random2(uniques.size())];
+        const monster_type type = uniques[random2(uniques.size())];
         you.unique_creatures[type] = false;
 
-        return static_cast<monster_type>(type);
+        return type;
     }
 
     if (!arena::cycle_random)
@@ -1071,20 +1068,17 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
-        arena::cycle_random_pos++;
+        ++arena::cycle_random_pos;
         if (arena::cycle_random_pos >= NUM_MONSTERS)
-            arena::cycle_random_pos = 0;
+            arena::cycle_random_pos = MONS_0;
 
-        const monster_type type =
-            static_cast<monster_type>(arena::cycle_random_pos);
-
-        if (mons_rarity(type, place) == 0)
+        if (mons_rarity(arena::cycle_random_pos, place) == 0)
             continue;
 
-        if (arena_veto_random_monster(type))
+        if (arena_veto_random_monster(arena::cycle_random_pos))
             continue;
 
-        return (type);
+        return (arena::cycle_random_pos);
     }
 
     game_ended_with_error(

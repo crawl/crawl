@@ -540,7 +540,7 @@ bool player_genus(genus_type which_genus, species_type species)
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
-bool is_player_same_species(const int mon, bool transform)
+bool is_player_same_species(const monster_type mon, bool transform)
 {
     if (transform)
     {
@@ -6922,7 +6922,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
                  bool cleanup_dead)
 {
     // We ignore cleanup_dead here.
-    if (agent->atype() == ACT_MONSTER)
+    if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
@@ -6944,7 +6944,7 @@ void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
     if (attacker == NULL)
         lose_stat(s, amount, false, "");
-    else if (attacker->atype() == ACT_MONSTER)
+    else if (attacker->is_monster())
         lose_stat(s, amount, attacker->as_monster(), false);
     else if (attacker->is_player())
         lose_stat(s, amount, false, "suicide");

@@ -343,11 +343,11 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want chunks to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE)
-        && mons_genus(corpse.plus) == MONS_DRAGON)
+    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE)
+        && mons_genus(corpse.mon_type) == MONS_DRAGON)
     {
         // Uh... dragon hide is tough stuff and it keeps the monster in
-        // one piece?  More importantly, it prevents a flavor feature
+        // one piece?  More importantly, it prevents a flavour feature
         // from becoming a trap for the unwary.
 
         return (false);
@@ -355,7 +355,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    const int max_chunks = get_max_corpse_chunks(corpse.plus);
+    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
 
     int nchunks = 1 + random2(max_chunks);
     nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
@@ -372,7 +372,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     if (food_is_rotten(corpse))
         blood /= 3;
 
-    blood_spray(where, static_cast<monster_type>(corpse.plus), blood);
+    blood_spray(where, corpse.mon_type, blood);
 
     while (nchunks > 0 && ntries < 10000)
     {
@@ -1495,7 +1495,7 @@ int monster_die(monster* mons, actor *killer, bool silent,
     killer_type ktype = KILL_YOU;
     int kindex = NON_MONSTER;
 
-    if (killer->atype() == ACT_MONSTER)
+    if (killer->is_monster())
     {
         const monster *kmons = killer->as_monster();
         ktype = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
@@ -1570,9 +1570,8 @@ int monster_die(monster* mons, killer_type killer,
     if (mons_near(mons) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
 
-          int  summon_type   = 0;
           int  duration      = 0;
-    const bool summoned      = mons->is_summoned(&duration, &summon_type);
+    const bool summoned      = mons->is_summoned(&duration);
     const int monster_killed = mons->mindex();
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
     bool unsummoned          = killer == KILL_UNSUMMONED;
@@ -3315,7 +3314,10 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (mons->caught())
     {
         if (!quiet)
-            simple_monster_message(mons, " is held in a net!");
+        {
+            simple_monster_message(mons,
+                make_stringf(" is %s!", held_status(mons)).c_str());
+        }
         return (false);
     }
 
@@ -3994,7 +3996,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     }
 }
 
-bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
+bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor)
 {
     if (which_descriptor == MDSC_LEAVES_HIDE)
     {
@@ -4251,6 +4253,10 @@ bool is_item_jelly_edible(const item_def &item)
 {
     // Don't eat artefacts.
     if (is_artefact(item))
+        return (false);
+
+    // Don't eat mimics.
+    if (item.flags & ISFLAG_MIMIC)
         return (false);
 
     // Shouldn't eat stone things

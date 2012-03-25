@@ -601,7 +601,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
 static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 {
     const int z_type = mon.type;
-    const int subtype = mon.base_type;
+    const monster_type subtype = mon.base_type;
 
     // TODO: Add tiles and code for these as well.
     switch (z_type)
@@ -2518,7 +2518,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
     if (!mons.ground_level() && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
-    if (mons.is(MB_CAUGHT))
+    // FIXME: should probably have a different tile flag for being webbed
+    if (mons.is(MB_CAUGHT) || mons.is(MB_WEBBED))
         ch |= TILE_FLAG_NET;
     if (mons.is(MB_POISONED))
         ch |= TILE_FLAG_POISON;
@@ -2671,11 +2672,19 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_SABRE;
 
     case WPN_FALCHION:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_FALCHION_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_FALCHION_DWARF;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_FALCHION_ELF;
         return TILE_WPN_FALCHION;
 
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_LONG_SWORD_ORC;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_LONG_SWORD_ELF;
         return TILE_WPN_LONG_SWORD;
 
     case WPN_GREAT_SWORD:
@@ -2696,9 +2705,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_TRIPLE_SWORD;
 
     case WPN_HAND_AXE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_HAND_AXE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_HAND_AXE_DWARF;
         return TILE_WPN_HAND_AXE;
 
     case WPN_WAR_AXE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_WAR_AXE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_WAR_AXE_DWARF;
         return TILE_WPN_WAR_AXE;
 
     case WPN_BROAD_AXE:
@@ -2723,6 +2740,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_CROSSBOW;
 
     case WPN_SPEAR:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_SPEAR_ORC;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_SPEAR_ELF;
         return TILE_WPN_SPEAR;
 
     case WPN_TRIDENT:
@@ -2749,12 +2770,24 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_CLUB;
 
     case WPN_HAMMER:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_HAMMER_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_HAMMER_DWARF;
         return TILE_WPN_HAMMER;
 
     case WPN_MACE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_MACE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_MACE_DWARF;
         return TILE_WPN_MACE;
 
     case WPN_FLAIL:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_FLAIL_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_FLAIL_DWARF;
         return TILE_WPN_FLAIL;
 
     case WPN_SPIKED_FLAIL:
@@ -3686,6 +3719,7 @@ static tileidx_t _tileidx_rune(const item_def &item)
     case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
 
     case RUNE_SNAKE_PIT:   return TILE_MISC_RUNE_SNAKE;
+    case RUNE_SPIDER_NEST: return TILE_MISC_RUNE_SPIDER;
     case RUNE_SLIME_PITS:  return TILE_MISC_RUNE_SLIME;
     case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
     case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
@@ -3694,7 +3728,6 @@ static tileidx_t _tileidx_rune(const item_def &item)
 
     case RUNE_ELVEN_HALLS:
     case RUNE_FOREST:
-    case RUNE_SPIDER_NEST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
     }
 }
@@ -4640,7 +4673,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
 
     // Vampires are only interested in fresh blood.
     if (you.species == SP_VAMPIRE
-        && (rotten || !mons_has_blood(item.plus)))
+        && (rotten || !mons_has_blood(item.mon_type)))
     {
         return TILE_FOOD_INEDIBLE;
     }

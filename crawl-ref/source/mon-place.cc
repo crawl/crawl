@@ -85,7 +85,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           bool *chose_ood_monster);
 
 static monster_type _band_member(band_type band, int power);
-static band_type _choose_band(int mon_type, int power, int &band_size,
+static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool& natural_leader);
 
 static monster* _place_monster_aux(const mgen_data &mg, bool first_band_member,
@@ -141,7 +141,7 @@ bool monster_habitable_grid(const monster* mon,
                                    mon->cannot_move()));
 }
 
-bool mons_airborne(int mcls, int flies, bool paralysed)
+bool mons_airborne(monster_type mcls, int flies, bool paralysed)
 {
     if (flies == -1)
         flies = mons_class_flies(mcls);
@@ -460,9 +460,9 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
         return (valid_monster_types);
 
     valid_monster_types.clear();
-    for (int i = 0; i < NUM_MONSTERS; ++i)
-        if (mons_rarity(static_cast<monster_type>(i), place) > 0)
-            valid_monster_types.push_back(static_cast<monster_type>(i));
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+        if (mons_rarity(i, place) > 0)
+            valid_monster_types.push_back(i);
 
     last_monster_type_place = place;
     return (valid_monster_types);
@@ -620,7 +620,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     return (mon_type);
 }
 
-bool can_place_on_trap(int mon_type, trap_type trap)
+bool can_place_on_trap(monster_type mon_type, trap_type trap)
 {
     if (trap == TRAP_TELEPORT)
         return (false);
@@ -1734,7 +1734,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "summoned by ";
 
         if (mg.summoner != NULL && mg.summoner->alive()
-            && mg.summoner->atype() == ACT_MONSTER
+            && mg.summoner->is_monster()
             && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1857,12 +1857,10 @@ monster_type pick_random_zombie()
 
     if (zombifiable.empty())
     {
-        for (int i = 0; i < NUM_MONSTERS; ++i)
+        for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
         {
-            if (mons_species(i) != i || i == MONS_PROGRAM_BUG)
+            if (mons_species(mcls) != mcls || mcls == MONS_PROGRAM_BUG)
                 continue;
-
-            const monster_type mcls = static_cast<monster_type>(i);
 
             if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
@@ -2141,7 +2139,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     return (true);
 }
 
-static band_type _choose_band(int mon_type, int power, int &band_size,
+static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool &natural_leader)
 {
 #ifdef DEBUG_MON_CREATION
@@ -2582,7 +2580,25 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_SPIDER;
         band_size = 1 + random2(4);
         break;
-    } // end switch
+
+    case MONS_JUMPING_SPIDER:
+        if (!one_chance_in(3))
+        {
+            band = BAND_JUMPING_SPIDER;
+            band_size = 1 + random2(5);
+        }
+        break;
+
+    case MONS_TARANTELLA:
+        if (!one_chance_in(3))
+        {
+            band = BAND_TARANTELLA;
+            band_size = 1 + random2(5);
+        }
+        break;
+
+    default: ;
+    }
 
     if (band != BAND_NO_BAND && band_size == 0)
         band = BAND_NO_BAND;
@@ -2931,16 +2947,37 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_REDBACK:
-        // Total weight 30
-        mon_type = random_choose_weighted(20, MONS_REDBACK,
-                                           5, MONS_WOLF_SPIDER,
-                                           3, MONS_TARANTELLA,
-                                           2, MONS_JUMPING_SPIDER,
+        // Total weight 40
+        mon_type = random_choose_weighted(30, MONS_REDBACK,
+                                           5, MONS_TARANTELLA,
+                                           5, MONS_JUMPING_SPIDER,
                                            0);
         break;
 
     case BAND_SPIDER:
         mon_type = MONS_SPIDER;
+        break;
+
+    case BAND_JUMPING_SPIDER:
+        // Total weight 40
+        mon_type = random_choose_weighted(15, MONS_JUMPING_SPIDER,
+                                           8, MONS_WOLF_SPIDER,
+                                           7, MONS_ORB_SPIDER,
+                                           5, MONS_SPIDER,
+                                           4, MONS_REDBACK,
+                                           2, MONS_DEMONIC_CRAWLER,
+                                           0);
+        break;
+
+    case BAND_TARANTELLA:
+        // Total weight 40
+        mon_type = random_choose_weighted(15, MONS_TARANTELLA,
+                                           6, MONS_WOLF_SPIDER,
+                                           3, MONS_ORB_SPIDER,
+                                           7, MONS_REDBACK,
+                                           7, MONS_SPIDER,
+                                           2, MONS_DEMONIC_CRAWLER,
+                                           0);
         break;
 
     default:
@@ -3033,16 +3070,18 @@ static monster_type _pick_zot_exit_defender()
     }
 
     const int temp_rand = random2(276);
-    const int mon_type =
-        ((temp_rand > 184) ? MONS_WHITE_IMP + random2(15) :  // 33.33%
-         (temp_rand > 104) ? MONS_HELLION + random2(10) :    // 28.99%
+    const monster_type mon_type =
+        ((temp_rand > 184) ? (monster_type)random_range(MONS_WHITE_IMP,
+                                  MONS_CHAOS_SPAWN) :        // 33.33%
+         (temp_rand > 104) ? (monster_type)random_range(MONS_HELLION,
+                                  MONS_IRON_DEVIL) :         // 28.99%
          (temp_rand > 78)  ? MONS_HELL_HOUND :               //  9.06%
          (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
          (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
          (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
                            : MONS_PIT_FIEND);                //  5.07%
 
-    return static_cast<monster_type>(mon_type);
+    return mon_type;
 }
 
 monster* mons_place(mgen_data mg)
@@ -3146,14 +3185,14 @@ monster* mons_place(mgen_data mg)
     return creation;
 }
 
-static dungeon_feature_type _monster_primary_habitat_feature(int mc)
+static dungeon_feature_type _monster_primary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_primary_habitat(mc)));
 }
 
-static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
+static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return (DNGN_FLOOR);
@@ -3253,7 +3292,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return (in_bounds(p) ? p : coord_def(-1, -1));
 }
 
-coord_def find_newmons_square(int mons_class, const coord_def &p)
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
 {
     coord_def empty;
     coord_def pos(-1, -1);
@@ -3378,8 +3417,8 @@ bool player_angers_monster(monster* mon)
 
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
-    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                         : mg.cls);
+    const monster_type montype = mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                                 : mg.cls;
 
     monster *summd = 0;
 

@@ -1104,7 +1104,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 
 static std::string _origin_monster_name(const item_def &item)
 {
-    const int monnum = item.orig_monnum - 1;
+    const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
     if (monnum == MONS_PLAYER_GHOST)
         return ("a player ghost");
     else if (monnum == MONS_PANDEMONIUM_LORD)

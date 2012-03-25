@@ -1959,7 +1959,7 @@ std::string get_item_description(const item_def &item, bool verbose,
             else if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 description << "It looks rather unpleasant.";
 
-            switch (mons_corpse_effect(item.plus))
+            switch (mons_corpse_effect(item.mon_type))
             {
             case CE_POISONOUS:
                 description << "\n\nThis meat is poisonous.";
@@ -1996,11 +1996,11 @@ std::string get_item_description(const item_def &item, bool verbose,
             }
 
             if ((god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.plus))
+                   && is_player_same_species(item.mon_type))
                 || (you.religion == GOD_ZIN
-                   && mons_class_intel(item.plus) >= I_NORMAL)
+                   && mons_class_intel(item.mon_type) >= I_NORMAL)
                 || (is_good_god(you.religion)
-                   && mons_class_holiness(item.plus) == MH_HOLY))
+                   && mons_class_holiness(item.mon_type) == MH_HOLY))
             {
                 description << "\n\n" << uppercase_first(god_name(you.religion))
                             << " disapproves of eating such meat.";
@@ -3131,7 +3131,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     std::vector<std::string> resist_descriptions;
     if (!extreme_resists.empty())
     {
-        const std::string tmp = "extremely resistant to "
+        const std::string tmp = "immune to "
             + comma_separated_line(extreme_resists.begin(),
                                    extreme_resists.end());
         resist_descriptions.push_back(tmp);
@@ -3237,11 +3237,11 @@ static std::string _monster_stat_description(const monster_info& mi)
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
         "tiny",
-        "little",
+        "very small",
         "small",
         NULL,     // don't display anything for 'medium'
         "large",
-        "big",
+        "very large",
         "giant",
         "huge",
     };

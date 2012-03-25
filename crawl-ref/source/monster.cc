@@ -355,7 +355,7 @@ size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
 
 int monster::body_weight(bool /*base*/) const
 {
-    int mc = mons_base_type(this);
+    monster_type mc = mons_base_type(this);
 
     if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return (0);
@@ -414,14 +414,12 @@ int monster::body_weight(bool /*base*/) const
         case MONS_SHADOW_DEMON:
             weight /= 3;
             break;
+
+        default: ;
         }
 
-        switch (mons_base_char(mc))
-        {
-        case 'L':
+        if (mons_base_char(mc) == 'L')
             weight /= 2;
-            break;
-        }
     }
 
     if (mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE)
@@ -1637,6 +1635,14 @@ bool monster::wants_weapon(const item_def &weap) const
         return (false);
     }
 
+    // Arcane spellcasters don't want -CAST.
+    if (is_actual_spellcaster()
+        && is_artefact(weap)
+        && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
+    {
+        return (false);
+    }
+
     // deep dwarf artificers
     if (weap.base_type == OBJ_STAVES
         && type == MONS_DEEP_DWARF_ARTIFICER)
@@ -1662,6 +1668,16 @@ bool monster::wants_armour(const item_def &item) const
                       == HANDS_TWO))
     {
         return (false);
+    }
+
+    // Spellcasters won't pick up restricting armour, although they can
+    // start with one.  Applies to arcane spells only, of course.
+    if (!pos().origin() && is_actual_spellcaster()
+        && (property(item, PARM_EVASION) < -1
+            || is_artefact(item)
+               && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING)))
+    {
+        return false;
     }
 
     // Returns whether this armour is the monster's size.
@@ -1993,7 +2009,7 @@ bool monster::pickup_food(item_def &item, int near)
     if (item.base_type == OBJ_FOOD
         && item.sub_type == FOOD_CHUNK
         && has_spell(SPELL_SIMULACRUM)
-        && mons_class_can_be_zombified(item.plus))
+        && mons_class_can_be_zombified(item.mon_type))
     {
         // If a Beoghite monster ever gets Simulacrum, please
         // add monster type restrictions here.
@@ -2337,8 +2353,7 @@ std::string monster::full_name(description_level_type desc,
 
 std::string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return (mons_pronoun(static_cast<monster_type>(type), pro,
-                         force_visible || you.can_see(this)));
+    return (mons_pronoun(type, pro, force_visible || you.can_see(this)));
 }
 
 std::string monster::conj_verb(const std::string &verb) const
@@ -4414,10 +4429,10 @@ bool monster::invisible() const
 
 bool monster::visible_to(const actor *looker) const
 {
-    bool sense_invis = looker->atype() == ACT_MONSTER
+    bool sense_invis = looker->is_monster()
                        && mons_sense_invis(looker->as_monster());
 
-    bool blind = looker->atype() == ACT_MONSTER
+    bool blind = looker->is_monster()
                  && looker->as_monster()->has_ench(ENCH_BLIND);
 
     bool vis = !blind && !invisible() || looker->can_see_invisible()
@@ -5187,7 +5202,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 !oppressor ? KILL_MISC
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,
-                (oppressor && oppressor->atype() == ACT_MONSTER)
+                (oppressor && oppressor->is_monster())
                   ? oppressor->mindex() : NON_MONSTER);
 
             if (fly_died && !is_habitable(pos()))

@@ -231,6 +231,7 @@ static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
+static void _describe_terrain(status_info* inf);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -526,6 +527,10 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Constr";
             inf->short_text   = "constricted";
         }
+        break;
+
+    case STATUS_TERRAIN:
+        _describe_terrain(inf);
         break;
 
     default:
@@ -918,5 +923,26 @@ static void _describe_stat_zero(status_info* inf, stat_type st)
         inf->long_text    = make_stringf(you.stat(st) ?
                 "You are recovering from loss of %s." : "You have no %s!",
                 stat_desc(st, SD_NAME));
+    }
+}
+
+static void _describe_terrain(status_info* inf)
+{
+    switch (grd(you.pos()))
+    {
+    case DNGN_SHALLOW_WATER:
+        inf->light_colour = LIGHTBLUE;
+        inf->light_text = "Water";
+        break;
+    case DNGN_DEEP_WATER:
+        inf->light_colour = BLUE;
+        inf->light_text = "Water";
+        break;
+    case DNGN_LAVA:
+        inf->light_colour = RED;
+        inf->light_text = "Lava";
+        break;
+    default:
+        ;
     }
 }

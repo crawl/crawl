@@ -2017,7 +2017,7 @@ int fedhas_fungal_bloom()
                                        BEH_GOOD_NEUTRAL, true);
 
                 // Either turn this corpse into a skeleton or destroy it.
-                if (mons_skeleton(j->plus))
+                if (mons_skeleton(j->mon_type))
                     turn_corpse_into_skeleton(*j);
                 else
                 {
@@ -2757,7 +2757,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
             }
         }
 
-        if (mons_skeleton(positions[i]->plus))
+        if (mons_skeleton(positions[i]->mon_type))
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
@@ -3107,7 +3107,7 @@ static int _slouchable(coord_def where, int pow, int, actor* agent)
 
 static bool _act_slouchable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return false;  // too slow-witted
     return _slouchable(act->pos(), 0, 0, 0);
 }

@@ -1950,7 +1950,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             if (death_source_name.empty())
                 desc += "spore";
             else
-                desc += get_monster_data(death_source)->name;
+                desc += death_source_name;
         }
         else
         {

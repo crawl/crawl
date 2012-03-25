@@ -837,7 +837,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
                  caster ? caster->pos() : you.pos(),
-                 (caster && caster->atype() == ACT_MONSTER)
+                 (caster && caster->is_monster())
                      ? ((monster*)caster)->foe : MHITYOU,
                  0, GOD_TROG);
 
@@ -1363,7 +1363,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 static bool _animatable_remains(const item_def& item)
 {
     return (item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.plus));
+        && mons_class_can_be_zombified(item.mon_type));
 }
 
 // Try to equip the skeleton/zombie with the objects it died with.  This
@@ -1378,7 +1378,7 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-static void _equip_undead(const coord_def &a, int corps, monster *mon, int monnum)
+static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_type monnum)
 {
     if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
@@ -1554,8 +1554,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!actual)
         return (true);
 
-    const monster_type zombie_type =
-        static_cast<monster_type>(item.plus);
+    const monster_type zombie_type = item.mon_type;
 
     const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
                            item.props[MONSTER_HIT_DICE].get_short() : 0;
@@ -1584,21 +1583,21 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     if (item.sub_type == CORPSE_BODY)
     {
-        mon = (mons_zombie_size(item.plus) == Z_SMALL) ? MONS_ZOMBIE_SMALL
-                                                       : MONS_ZOMBIE_LARGE;
+        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_ZOMBIE_SMALL
+                                                           : MONS_ZOMBIE_LARGE;
     }
     else
     {
-        mon = (mons_zombie_size(item.plus) == Z_SMALL) ? MONS_SKELETON_SMALL
-                                                       : MONS_SKELETON_LARGE;
+        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_SKELETON_SMALL
+                                                           : MONS_SKELETON_LARGE;
     }
 
-    const int monnum = item.orig_monnum - 1;
+    const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH|MG_FORCE_PLACE,
-                 god, static_cast<monster_type>(monnum), number);
+                 god, monnum, number);
 
     // No experience for monsters animated by god wrath or the Sword of
     // Zonguldrok.
@@ -1796,8 +1795,8 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-            && mons_skeleton(si->plus)
-            && mons_class_can_be_zombified(si->plus))
+            && mons_skeleton(si->mon_type)
+            && mons_class_can_be_zombified(si->mon_type))
         {
             butcher_corpse(*si, B_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
@@ -1853,7 +1852,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     if (weapon
         && weapon->base_type == OBJ_FOOD && weapon->sub_type == FOOD_CHUNK)
     {
-        const monster_type sim_type = static_cast<monster_type>(weapon->plus);
+        const monster_type sim_type = weapon->mon_type;
 
         if (!mons_class_can_be_zombified(sim_type))
         {
@@ -1982,7 +1981,7 @@ bool monster_simulacrum(monster *caster, bool actual)
     {
         item_def& item(mitm[caster->inv[MSLOT_MISCELLANY]]);
         if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
-            && mons_class_can_be_zombified(item.plus))
+            && mons_class_can_be_zombified(item.mon_type))
         {
             if (!actual)
                 return true;
@@ -1990,7 +1989,7 @@ bool monster_simulacrum(monster *caster, bool actual)
             // You can see the spell being cast, not necessarily the caster.
             bool cast_visible = you.see_cell(caster->pos());
 
-            monster_type sim_type = static_cast<monster_type>(item.plus);
+            monster_type sim_type = item.mon_type;
             monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
                 MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
@@ -2078,7 +2077,7 @@ bool monster_simulacrum(monster *caster, bool actual)
         {
             if ((si->base_type == OBJ_FOOD && si->sub_type == FOOD_CHUNK
                  || si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-                && mons_class_can_be_zombified(si->plus))
+                && mons_class_can_be_zombified(si->mon_type))
             {
                 dprf("found %s", si->name(DESC_PLAIN).c_str());
                 if (actual)
@@ -2136,15 +2135,15 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                     continue;
                 }
 
-                if (mons_genus(si->plus) == MONS_ORC)
+                if (mons_genus(si->mon_type) == MONS_ORC)
                     num_orcs++;
-                if (mons_class_holiness(si->plus) == MH_HOLY)
+                if (mons_class_holiness(si->mon_type) == MH_HOLY)
                     num_holy++;
 
                 if (food_is_rotten(*si))
-                    total_mass += mons_weight(si->plus) / 4;
+                    total_mass += mons_weight(si->mon_type) / 4;
                 else
-                    total_mass += mons_weight(si->plus);
+                    total_mass += mons_weight(si->mon_type);
 
                 ++num_corpses;
                 item_was_destroyed(*si);

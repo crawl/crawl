@@ -3444,7 +3444,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             // We can blink away the crowd, but only our allies.
             if (act
                 && (act->is_player()
-                    || (act->atype() == ACT_MONSTER
+                    || (act->is_monster()
                         && act->as_monster()->attitude != mons->attitude)))
             {
                 sumcount++;
@@ -4006,7 +4006,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
     {
-        int type = mons->type;
+        monster_type type = mons->type;
         if (mons_genus(type) == MONS_DRACONIAN)
             type = draco_subspecies(mons);
 

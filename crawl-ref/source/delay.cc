@@ -305,8 +305,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
 
-        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
+        const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
         if (delay.parm1
@@ -316,12 +316,11 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         {
             mpr("All blood oozes out of the corpse!");
 
-            bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
-                             delay.duration, false);
+            bleed_onto_floor(you.pos(), item.mon_type, delay.duration, false);
 
             const item_def corpse = item;
 
-            if (mons_skeleton(item.plus) && one_chance_in(3))
+            if (mons_skeleton(item.mon_type) && one_chance_in(3))
                 turn_corpse_into_skeleton(item);
             else
             {
@@ -1045,8 +1044,8 @@ static void _finish_delay(const delay_queue_item &delay)
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
 
-        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
+        const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -1056,7 +1055,7 @@ static void _finish_delay(const delay_queue_item &delay)
         {
             const item_def corpse = item;
 
-            if (mons_skeleton(item.plus) && one_chance_in(3))
+            if (mons_skeleton(item.mon_type) && one_chance_in(3))
             {
                 turn_corpse_into_skeleton(item);
                 item_check(false);
@@ -1185,10 +1184,10 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mpr("You finish bottling this corpse's blood.");
 
-                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
-                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
+                const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
-                if (mons_skeleton(item.plus) && one_chance_in(3))
+                if (mons_skeleton(item.mon_type) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
                 else
                     turn_corpse_into_blood_potions(item);
@@ -1205,26 +1204,26 @@ static void _finish_delay(const delay_queue_item &delay)
                      mitm[delay.parm1].name(DESC_THE).c_str());
 
                 if (god_hates_cannibalism(you.religion)
-                    && is_player_same_species(item.plus))
+                    && is_player_same_species(item.mon_type))
                 {
                     simple_god_message(" expects more respect for your"
                                        " departed relatives.");
                 }
                 else if (is_good_god(you.religion)
-                    && mons_class_holiness(item.plus) == MH_HOLY)
+                    && mons_class_holiness(item.mon_type) == MH_HOLY)
                 {
                     simple_god_message(" expects more respect for holy"
                                        " creatures!");
                 }
                 else if (you.religion == GOD_ZIN
-                         && mons_class_intel(item.plus) >= I_NORMAL)
+                         && mons_class_intel(item.mon_type) >= I_NORMAL)
                 {
                     simple_god_message(" expects more respect for this"
                                        " departed soul.");
                 }
 
-                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
-                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
+                const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
                 butcher_corpse(item);
 

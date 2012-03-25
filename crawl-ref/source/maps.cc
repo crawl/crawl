@@ -1105,7 +1105,7 @@ std::string get_descache_path(const std::string &file,
     return _des_cache_dir(basename);
 }
 
-static bool verify_file_version(const std::string &file)
+static bool verify_file_version(const std::string &file, time_t mtime)
 {
     FILE *fp = fopen_u(file.c_str(), "rb");
     if (!fp)
@@ -1115,8 +1115,11 @@ static bool verify_file_version(const std::string &file)
         reader inf(fp);
         const uint8_t major = unmarshallUByte(inf);
         const uint8_t minor = unmarshallUByte(inf);
+        const int64_t t = unmarshallSigned(inf);
         fclose(fp);
-        return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
+        return (major == TAG_MAJOR_VERSION
+                && minor <= TAG_MINOR_VERSION
+                && t == mtime);
     }
     catch (short_read_exception &E)
     {
@@ -1125,17 +1128,18 @@ static bool verify_file_version(const std::string &file)
     }
 }
 
-static bool verify_map_index(const std::string &base)
+static bool verify_map_index(const std::string &base, time_t mtime)
 {
-    return verify_file_version(base + ".idx");
+    return verify_file_version(base + ".idx", mtime);
 }
 
-static bool verify_map_full(const std::string &base)
+static bool verify_map_full(const std::string &base, time_t mtime)
 {
-    return verify_file_version(base + ".dsc");
+    return verify_file_version(base + ".dsc", mtime);
 }
 
-static bool load_map_index(const std::string& cache, const std::string &base)
+static bool load_map_index(const std::string& cache, const std::string &base,
+                           time_t mtime)
 {
     // If there's a global prelude, load that first.
     {
@@ -1143,6 +1147,11 @@ static bool load_map_index(const std::string& cache, const std::string &base)
         if (fp)
         {
             reader inf(fp, TAG_MINOR_VERSION);
+            uint8_t major = unmarshallUByte(inf);
+            uint8_t minor = unmarshallUByte(inf);
+            int64_t t = unmarshallSigned(inf);
+            if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
+                return false;
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1158,7 +1167,8 @@ static bool load_map_index(const std::string& cache, const std::string &base)
     // Re-check version, might have been modified in the meantime.
     uint8_t major = unmarshallUByte(inf);
     uint8_t minor = unmarshallUByte(inf);
-    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
+    int64_t t = unmarshallSigned(inf);
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
         return false;
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
@@ -1185,19 +1195,21 @@ static bool load_map_cache(const std::string &filename, const std::string &cache
 
     file_lock deslock(descache_base + ".lk", "rb", false);
 
+    time_t mtime = file_modtime(filename);
     std::string file_idx = descache_base + ".idx";
     std::string file_dsc = descache_base + ".dsc";
 
-    if (is_newer(filename, file_idx) || is_newer(filename, file_dsc))
+    // What's the point in checking these twice (here and in load_ma_index)?
+    if (!verify_map_index(descache_base, mtime)
+        || !verify_map_full(descache_base, mtime))
+    {
         return (false);
+    }
 
-    if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
-        return (false);
-
-    return load_map_index(cachename, descache_base);
+    return load_map_index(cachename, descache_base, mtime);
 }
 
-static void write_map_prelude(const std::string &filebase)
+static void write_map_prelude(const std::string &filebase, time_t mtime)
 {
     const std::string luafile = filebase + ".lux";
     if (lc_global_prelude.empty())
@@ -1208,11 +1220,15 @@ static void write_map_prelude(const std::string &filebase)
 
     FILE *fp = fopen_u(luafile.c_str(), "wb");
     writer outf(luafile, fp);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallSigned(outf, mtime);
     lc_global_prelude.write(outf);
     fclose(fp);
 }
 
-static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
+static void write_map_full(const std::string &filebase, size_t vs, size_t ve,
+                           time_t mtime)
 {
     const std::string cfile = filebase + ".dsc";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
@@ -1222,12 +1238,14 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
     marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallSigned(outf, mtime);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
     fclose(fp);
 }
 
-static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
+static void write_map_index(const std::string &filebase, size_t vs, size_t ve,
+                            time_t mtime)
 {
     const std::string cfile = filebase + ".idx";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
@@ -1237,6 +1255,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
     marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallSigned(outf, mtime);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
     {
@@ -1248,7 +1267,8 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     fclose(fp);
 }
 
-static void write_map_cache(const std::string &filename, size_t vs, size_t ve)
+static void write_map_cache(const std::string &filename, size_t vs, size_t ve,
+                            time_t mtime)
 {
     check_des_index_dir();
 
@@ -1256,9 +1276,9 @@ static void write_map_cache(const std::string &filename, size_t vs, size_t ve)
 
     file_lock deslock(descache_base + ".lk", "wb");
 
-    write_map_prelude(descache_base);
-    write_map_full(descache_base, vs, ve);
-    write_map_index(descache_base, vs, ve);
+    write_map_prelude(descache_base, mtime);
+    write_map_full(descache_base, vs, ve, mtime);
+    write_map_index(descache_base, vs, ve, mtime);
 }
 
 static void parse_maps(const std::string &s)
@@ -1276,6 +1296,11 @@ static void parse_maps(const std::string &s)
     if (!dat)
         end(1, true, "Failed to open %s for reading", s.c_str());
 
+#ifdef DEBUG_DIAGNOSTICS
+    printf("Regenerating des: %s\n", s.c_str());
+#endif
+
+    time_t mtime = file_modtime(dat);
     reset_map_parser();
 
     extern int yyparse(void);
@@ -1288,7 +1313,7 @@ static void parse_maps(const std::string &s)
 
     global_preludes.push_back(lc_global_prelude);
 
-    write_map_cache(cache_name, file_start, vdefs.size());
+    write_map_cache(cache_name, file_start, vdefs.size(), mtime);
 }
 
 void read_map(const std::string &file)

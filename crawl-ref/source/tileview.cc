@@ -916,12 +916,9 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     }
 }
 
-static bool _suppress_blood(const coord_def pos)
+static bool _suppress_blood(const map_cell& mc)
 {
-    if (!you.see_cell(pos))
-        return (true);
-
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = mc.feat();
     if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
         return (true);
 
@@ -937,8 +934,7 @@ static bool _suppress_blood(const coord_def pos)
     if (feat == DNGN_MALIGN_GATEWAY)
         return (true);
 
-    const trap_def *trap = find_trap(pos);
-    if (trap && trap->type == TRAP_SHAFT && trap->is_known())
+    if (mc.trap() == TRAP_SHAFT)
         return (true);
 
     return (false);
@@ -1101,19 +1097,12 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
 }
 
 // If the top tile is a corpse, don't draw blood underneath.
-static bool _top_item_is_corpse(const coord_def &gc)
+static bool _top_item_is_corpse(const map_cell& mc)
 {
-    if (!in_bounds(gc))
-        return (false);
-
-    const int item_idx = igrd(gc);
-    // No item.
-    if (item_idx == NON_ITEM)
-        return (false);
-
-    item_def& item = mitm[item_idx];
-    return (item.base_type == OBJ_CORPSES
-            && item.sub_type == CORPSE_BODY);
+    const item_info* item = mc.item();
+    return (item
+            && item->base_type == OBJ_CORPSES
+            && item->sub_type == CORPSE_BODY);
 }
 
 void tile_apply_properties(const coord_def &gc, packed_cell &cell)
@@ -1131,31 +1120,30 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     _apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
+    const map_cell& mc = env.map_knowledge(gc);
+
     bool print_blood = true;
-    if (haloed(gc))
+    if (mc.flags & MAP_HALOED)
     {
-        monster* mon = monster_at(gc);
-        if (you.see_cell(gc))
+        monster_info* mon = mc.monsterinfo();
+        if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
-            if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
-            {
-                cell.halo = HALO_MONSTER;
-                print_blood = false;
-            }
-            else
-            {
-                cell.halo = HALO_RANGE;
-            }
+            cell.halo = HALO_MONSTER;
+            print_blood = false;
+        }
+        else
+        {
+            cell.halo = HALO_RANGE;
         }
     }
-    else if (umbraed(gc))
+    else if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
     else
         cell.halo = HALO_NONE;
 
-    if (liquefied(gc, true))
+    if (mc.flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
-    else if (print_blood && (_suppress_blood(gc)
+    else if (print_blood && (_suppress_blood(mc)
                              || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
@@ -1164,32 +1152,35 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
-        if (glowing_mold(gc))
+        if (mc.flags & MAP_GLOWING_MOLDY)
             cell.glowing_mold = true;
-        else if (is_moldy(gc))
+        else if (mc.flags & MAP_MOLDY)
             cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
-        else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
+        else if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
         }
     }
 
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    const dungeon_feature_type feat = mc.feat();
     if (feat_is_water(feat) || feat == DNGN_LAVA)
         cell.bg |= TILE_FLAG_WATER;
 
-    if (is_sanctuary(gc))
+    if ((mc.flags & MAP_SANCTUARY_1) || (mc.flags & MAP_SANCTUARY_2))
         cell.is_sanctuary = true;
 
-    if (silenced(gc))
+    if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
+
+    if (mc.flags & MAP_SUPPRESSED)
+        cell.is_suppressed = true;
 
     if (feat == DNGN_SWAMP_TREE)
         cell.swamp_tree_water = true;
 
-    if (orb_haloed(gc))
+    if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 }
 

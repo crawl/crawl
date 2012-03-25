@@ -66,6 +66,8 @@ enum band_type
     BAND_SHEDU,
     BAND_REDBACK,
     BAND_SPIDER,
+    BAND_JUMPING_SPIDER,
+    BAND_TARANTELLA,
     NUM_BANDS                   // always last
 };
 

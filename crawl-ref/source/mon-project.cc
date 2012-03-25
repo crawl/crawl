@@ -342,7 +342,7 @@ move_again:
                      feature_description(pos, false, DESC_A).c_str());
         }
 
-        monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
+        monster* mons = (victim && victim->is_monster()) ?
             (monster*) victim : 0;
 
         if (mons && mons_is_projectile(victim->type))

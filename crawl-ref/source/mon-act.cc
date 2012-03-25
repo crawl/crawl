@@ -819,7 +819,7 @@ static bool _handle_reaching(monster* mons)
     {
         ret = true;
 
-        ASSERT(foe->is_player() || foe->atype() == ACT_MONSTER);
+        ASSERT(foe->is_player() || foe->is_monster());
 
         fight_melee(mons, foe);
 
@@ -2013,7 +2013,7 @@ void handle_noattack_constrictions(actor *attacker)
                  defender->name(DESC_PLAIN, true).c_str(),
                  basedam, durdam, acdam, timescale_dam, infdam);
 
-            if (defender->atype() == ACT_MONSTER
+            if (defender->is_monster()
                 && defender->as_monster()->hit_points < 1)
             {
                 monster_die(defender->as_monster(), attacker);
@@ -2824,7 +2824,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
-    monster_type mt = static_cast<monster_type>(item.plus);
+    monster_type mt = item.mon_type;
     if (do_heal)
     {
         int base_max = mons_avg_hp(mons->type);

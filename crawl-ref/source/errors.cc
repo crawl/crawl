@@ -35,3 +35,13 @@ NORETURN void sysfail(const char *msg, ...)
 
     throw ext_fail_exception(buf);
 }
+
+NORETURN void corrupted(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    std::string buf = vmake_stringf(msg, args);
+    va_end(args);
+
+    throw corrupted_save(buf);
+}

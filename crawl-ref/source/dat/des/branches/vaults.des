@@ -218,6 +218,48 @@ vvvvvv.vvvvvv
 vvvvvv.vvvvvv
 ENDMAP
 
+############################################################
+# HangedMan's map
+#
+NAME:    hangedman_vaults_entry_quadrant_bands
+TAGS:    vault_entry no_monster_gen no_item_gen patrolling
+ORIENT:  float
+MONS:    centaur warrior, centaur / nothing w:5
+MONS:    ogre mage, two-headed ogre / ogre / nothing w:5
+MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
+KMONS:   7 = yaktaur
+KMONS:   8 = yaktaur / nothing w:5
+KMONS:   9 = deep elf knight
+KMONS:   0 = deep elf mage / deep elf summoner / deep elf soldier / nothing w:15
+KMONS:   A = kobold demonologist
+KMONS:   B = kobold demonologist w:1 / big kobold / kobold w:9
+KMONS:   C = skeletal warrior
+KMONS:   D = skeletal warrior / nothing
+KMONS:   E = boggart
+KMONS:   F = boggart w:15 / nothing w:5
+KMASK:   @` = !no_item_gen
+KFEAT:   O = enter_vaults
+SHUFFLE: 12 / 34 / 56 / 78 / 90 / AB / CD / EF, O%*|
+SUBST:   $ = $$., * = **%, | = **|., ` = .
+MAP
+vvvvvvv@@vvvvvvv
+vO2...v``v...4*v
+v2$v2vv``vv4v$4v
+v.v1v.v``v.v3v.v
+v.2vv.v``v.vv4.v
+v.v....``....v.v
+vvvvv.v``v.vvvvv
+@``````````````@
+@``````````````@
+vvvvv.v``v.vvvvv
+v.v....``....v.v
+v.6vv.v``v.vv8.v
+v.v5v.v``v.v7v.v
+v6$v6vv``vv8v$8v
+v%6...v``v...8|v
+vvvvvvv@@vvvvvvv
+ENDMAP
+
 ###############################################################################
 # Vaults specific vaults
 ###############################################################################

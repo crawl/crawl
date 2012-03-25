@@ -2862,9 +2862,9 @@ void describe_floor()
 
     msg_channel_type channel = MSGCH_EXAMINE;
 
-    // Water is not terribly important if you don't mind it.
-    if (feat_is_water(grid) && player_likes_water())
-        channel = MSGCH_EXAMINE_FILTER;
+    // Messages for water/lava are too spammy use a status light instead.
+    if (feat_is_water(grid) || feat_is_lava(grid))
+        return;
 
     mpr((prefix + feat + suffix).c_str(), channel);
     if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)

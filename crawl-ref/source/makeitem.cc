@@ -243,7 +243,7 @@ void item_colour(item_def &item)
         return; // unrandarts have already been coloured
 
     int switchnum = 0;
-    int temp_value;
+    colour_t temp_value;
 
     switch (item.base_type)
     {
@@ -435,7 +435,7 @@ void item_colour(item_def &item)
             break;
         case FOOD_CHUNK:
             // Set the appropriate colour of the meat:
-            temp_value  = mons_class_colour(item.plus);
+            temp_value  = mons_class_colour(item.mon_type);
             item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
             break;
         default:
@@ -697,7 +697,7 @@ void item_colour(item_def &item)
 
     case OBJ_CORPSES:
         // Set the appropriate colour of the body:
-        temp_value  = mons_class_colour(item.plus);
+        temp_value  = mons_class_colour(item.mon_type);
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
 
@@ -2462,7 +2462,8 @@ static monster_type _choose_random_monster_corpse()
 {
     for (int count = 0; count < 1000; ++count)
     {
-        monster_type spc = mons_species(random2(NUM_MONSTERS));
+        monster_type spc = mons_species(static_cast<monster_type>(
+                                        random2(NUM_MONSTERS)));
         if (mons_class_flag(spc, M_NO_POLY_TO))
             continue;
         if (mons_weight(spc) > 0)        // drops a corpse

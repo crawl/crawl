@@ -1943,6 +1943,7 @@ enum targ_mode_type
 enum monster_type                      // (int) menv[].type
 {
     MONS_PROGRAM_BUG,
+        MONS_0 = MONS_PROGRAM_BUG,
 
     MONS_GIANT_NEWT,
     MONS_GIANT_GECKO,

@@ -67,9 +67,9 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
 
             dec_inv_item_quantity(wielded, 1);
 
-            if (mons_genus(you.inv[wielded].plus) == MONS_ORC)
+            if (mons_genus(you.inv[wielded].mon_type) == MONS_ORC)
                 did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-            if (mons_class_holiness(you.inv[wielded].plus) == MH_HOLY)
+            if (mons_class_holiness(you.inv[wielded].mon_type) == MH_HOLY)
                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         }
         else if (is_blood_potion(you.inv[wielded]))
@@ -421,14 +421,14 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
 
     potion_type pot_type = POT_WATER;
 
-    switch (mons_corpse_effect(corpse->plus))
+    switch (mons_corpse_effect(corpse->mon_type))
     {
     case CE_CLEAN:
         pot_type = POT_WATER;
         break;
 
     case CE_CONTAMINATED:
-        pot_type = (mons_weight(corpse->plus) >= 900)
+        pot_type = (mons_weight(corpse->mon_type) >= 900)
             ? POT_DEGENERATION : POT_CONFUSION;
         break;
 
@@ -454,7 +454,7 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         break;
     }
 
-    switch (corpse->plus)
+    switch (corpse->mon_type)
     {
     case MONS_RED_WASP:              // paralysis attack
         pot_type = POT_PARALYSIS;
@@ -468,7 +468,7 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         break;
     }
 
-    struct monsterentry* smc = get_monster_data(corpse->plus);
+    struct monsterentry* smc = get_monster_data(corpse->mon_type);
 
     for (int nattk = 0; nattk < 4; ++nattk)
     {
@@ -483,8 +483,8 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         }
     }
 
-    const bool was_orc = (mons_genus(corpse->plus) == MONS_ORC);
-    const bool was_holy = (mons_class_holiness(corpse->plus) == MH_HOLY);
+    const bool was_orc = (mons_genus(corpse->mon_type) == MONS_ORC);
+    const bool was_holy = (mons_class_holiness(corpse->mon_type) == MH_HOLY);
 
     // We borrow the corpse's object to make our potion.
     corpse->base_type = OBJ_POTIONS;
