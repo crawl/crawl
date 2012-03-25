@@ -309,11 +309,13 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
+#ifndef DGAMELAUNCH
 static void* init_db(void *arg)
 {
     AllDBs[(intptr_t)arg].init();
     return 0;
 }
+#endif
 
 #define NUM_DB ARRAYSZ(AllDBs)
 
