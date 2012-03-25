@@ -27,11 +27,6 @@ void mark_milestone(const std::string &type, const std::string &milestone,
 std::string xlog_status_line();
 #endif
 
-std::string xlog_unescape(const std::string &);
-std::string xlog_escape(const std::string &);
-
-std::vector<std::string> xlog_split_fields(const std::string &s);
-
 class xlog_fields
 {
 public:

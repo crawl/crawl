@@ -37,7 +37,7 @@
  * @param mons    The monster to be checked.
  * @returns       True if the monster is Pikel, otherwise false.
 **/
-bool mons_is_pikel (monster* mons)
+bool mons_is_pikel(monster* mons)
 {
     return (mons->type == MONS_PIKEL
             || (mons->props.exists("original_name")
@@ -81,7 +81,7 @@ void pikel_band_neutralise()
  * @param mons    The monster to check.
  * @returns       True if Kirke, false otherwise.
 **/
-bool mons_is_kirke (monster* mons)
+bool mons_is_kirke(monster* mons)
 {
     return (mons->type == MONS_KIRKE
             || (mons->props.exists("original_name")
@@ -378,7 +378,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
  *
  * @param twin    The orignial monster pacified.
 **/
-void elven_twins_pacify (monster* twin)
+void elven_twins_pacify(monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
@@ -433,7 +433,7 @@ void elven_twins_pacify (monster* twin)
  *
  * @param twin    The monster attacked.
 **/
-void elven_twins_unpacify (monster* twin)
+void elven_twins_unpacify(monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
@@ -477,7 +477,7 @@ void elven_twins_unpacify (monster* twin)
  *
  * @param spirit    The monster that died.
 **/
-void spirit_fades (monster *spirit)
+void spirit_fades(monster *spirit)
 {
     // XXX: No check for silence; summoned?
     if (mons_near(spirit))
@@ -526,7 +526,7 @@ void spirit_fades (monster *spirit)
  * @param mons      The monster to check.
  * @returns         True if Phoenix, False otherwise.
 **/
-bool mons_is_phoenix (const monster* mons)
+bool mons_is_phoenix(const monster* mons)
 {
     return (mons->type == MONS_PHOENIX);
 }
@@ -536,7 +536,7 @@ bool mons_is_phoenix (const monster* mons)
  *
  * @param mons      The monster that just died.
 **/
-void phoenix_died (monster* mons)
+void phoenix_died(monster* mons)
 {
     int durt = (random2(10) + random2(5) + 10) * BASELINE_DELAY;
     env.markers.add(new map_phoenix_marker(mons->pos(),
@@ -554,7 +554,7 @@ void phoenix_died (monster* mons)
  *
  * @returns     Vector of map_phoenix_markers.
 **/
-std::vector<map_phoenix_marker*> get_phoenix_markers ()
+static std::vector<map_phoenix_marker*> get_phoenix_markers()
 {
     std::vector<map_phoenix_marker*> mm_markers;
 
@@ -578,7 +578,7 @@ std::vector<map_phoenix_marker*> get_phoenix_markers ()
  *
  * @param duration      Duration.
 **/
-void timeout_phoenix_markers (int duration)
+void timeout_phoenix_markers(int duration)
 {
     std::vector<map_phoenix_marker*> markers = get_phoenix_markers();
 
@@ -696,7 +696,7 @@ void timeout_phoenix_markers (int duration)
  *                 shedu.
  * @returns        Either a monster* or NULL if a monster was not found.
 **/
-monster* get_shedu_pair (const monster* mons)
+monster* get_shedu_pair(const monster* mons)
 {
     monster* pair = monster_by_mid(mons->number);
     if (pair)
@@ -713,7 +713,7 @@ monster* get_shedu_pair (const monster* mons)
  * @param mons    The monster whose pair we are searching for.
  * @returns        True if the pair is alive, False otherwise.
 **/
-bool shedu_pair_alive (const monster* mons)
+bool shedu_pair_alive(const monster* mons)
 {
     if (get_shedu_pair(mons) == NULL)
         return (false);
@@ -745,7 +745,7 @@ bool mons_is_shedu(const monster* mons)
  *
  * @param mons    The shedu who died.
 **/
-void shedu_do_resurrection (const monster* mons)
+void shedu_do_resurrection(const monster* mons)
 {
     if (!mons_is_shedu(mons))
         return;
@@ -778,7 +778,7 @@ void shedu_do_resurrection (const monster* mons)
  *
  * @param mons    The shedu who is to perform the resurrection.
 **/
-void shedu_do_actual_resurrection (monster* mons)
+void shedu_do_actual_resurrection(monster* mons)
 {
     // Here is where we actually recreate the dead
     // shedu.

@@ -68,7 +68,7 @@ game_options Options;
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
 
-template<class A, class B> void append_vector(A &dest, const B &src)
+template<class A, class B> static void append_vector(A &dest, const B &src)
 {
     dest.insert(dest.end(), src.begin(), src.end());
 }
@@ -598,7 +598,14 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-std::string user_home_dir()
+#if defined(DGAMELAUNCH)
+static std::string _resolve_dir(const char* path, const char* suffix)
+{
+    return catpath(path, "");
+}
+#else
+
+static std::string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     wchar_t home[MAX_PATH];
@@ -615,22 +622,19 @@ std::string user_home_dir()
 #endif
 }
 
-std::string user_home_subpath(const std::string subpath)
+static std::string _user_home_subpath(const std::string subpath)
 {
-    return catpath(user_home_dir(), subpath);
+    return catpath(_user_home_dir(), subpath);
 }
 
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
-#if defined(DGAMELAUNCH)
-    return catpath(path, "");
-#else
     if (path[0] != '~')
         return catpath(std::string(path), suffix);
     else
-        return user_home_subpath(catpath(path + 1, suffix));
-#endif
+        return _user_home_subpath(catpath(path + 1, suffix));
 }
+#endif
 
 void game_options::reset_options()
 {
@@ -652,7 +656,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = user_home_subpath(".crawl");
+        macro_dir = _user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -661,7 +665,7 @@ void game_options::reset_options()
 
 #if defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
-        user_home_subpath("Library/Application Support/" CRAWL);
+        _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())

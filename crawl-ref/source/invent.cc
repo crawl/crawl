@@ -632,13 +632,13 @@ bool InvMenu::is_selectable(int index) const
 }
 
 template <std::string (*proc)(const InvEntry *a)>
-int compare_item_str(const InvEntry *a, const InvEntry *b)
+static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
     return (proc(a).compare(proc(b)));
 }
 
 template <typename T, T (*proc)(const InvEntry *a)>
-int compare_item(const InvEntry *a, const InvEntry *b)
+static int compare_item(const InvEntry *a, const InvEntry *b)
 {
     return (int(proc(a)) - int(proc(b)));
 }

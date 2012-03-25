@@ -72,8 +72,11 @@ static void  _hs_close(FILE *handle, const char *mode,
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
 static void  _hs_write(FILE *scores, scorefile_entry &entry);
 static time_t _parse_time(const std::string &st);
+static std::string _xlog_escape(const std::string &s);
+static std::string _xlog_unescape(const std::string &s);
+static std::vector<std::string> _xlog_split_fields(const std::string &s);
 
-std::string score_file_name()
+static std::string _score_file_name()
 {
     std::string ret;
     if (!SysEnv.scorefile.empty())
@@ -86,7 +89,7 @@ std::string score_file_name()
     return (ret);
 }
 
-std::string log_file_name()
+static std::string _log_file_name()
 {
     return (Options.shared_dir + "logfile" + crawl_state.game_type_qualifier());
 }
@@ -103,7 +106,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     //
     // Opening as a+ instead of r+ to force an exclusive lock (see
     // hs_open) and to create the file if it's not there already.
-    scores = _hs_open("a+", score_file_name());
+    scores = _hs_open("a+", _score_file_name());
     if (scores == NULL)
         end(1, true, "failed to open score file for writing");
 
@@ -149,7 +152,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     if (!inserted)
     {
         newest_entry = -1; // This might not be the first game
-        _hs_close(scores, "a+", score_file_name());
+        _hs_close(scores, "a+", _score_file_name());
         return;
     }
 
@@ -172,7 +175,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     }
 
     // close scorefile.
-    _hs_close(scores, "a+", score_file_name());
+    _hs_close(scores, "a+", _score_file_name());
 }
 
 void logfile_new_entry(const scorefile_entry &ne)
@@ -183,7 +186,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     scorefile_entry le = ne;
 
     // open logfile (appending) -- NULL *is* fatal here.
-    logfile = _hs_open("a", log_file_name());
+    logfile = _hs_open("a", _log_file_name());
     if (logfile == NULL)
     {
         mpr("ERROR: failure writing to the logfile.", MSGCH_ERROR);
@@ -193,7 +196,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     _hs_write(logfile, le);
 
     // close logfile.
-    _hs_close(logfile, "a", log_file_name());
+    _hs_close(logfile, "a", _log_file_name());
 }
 
 template <class t_printf>
@@ -222,7 +225,7 @@ void hiscores_print_all(int display_count, int format)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
 
-    FILE *scores = _hs_open("r", score_file_name());
+    FILE *scores = _hs_open("r", _score_file_name());
     if (scores == NULL)
     {
         // will only happen from command line
@@ -242,7 +245,7 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close(scores, "r", score_file_name());
+    _hs_close(scores, "r", _score_file_name());
 }
 
 // Displays high scores using curses. For output to the console, use
@@ -258,7 +261,7 @@ void hiscores_print_list(int display_count, int format)
         return;
 
     // open highscore file (reading)
-    scores = _hs_open("r", score_file_name());
+    scores = _hs_open("r", _score_file_name());
     if (scores == NULL)
         return;
 
@@ -272,7 +275,7 @@ void hiscores_print_list(int display_count, int format)
     total_entries = i;
 
     // close off
-    _hs_close(scores, "r", score_file_name());
+    _hs_close(scores, "r", _score_file_name());
 
     textcolor(LIGHTGREY);
 
@@ -430,7 +433,7 @@ static const char *kill_method_names[] =
     "falling_through_gate", "disintegration", "headbutt",
 };
 
-const char *kill_method_name(kill_method_type kmt)
+static const char *_kill_method_name(kill_method_type kmt)
 {
     COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
@@ -440,7 +443,7 @@ const char *kill_method_name(kill_method_type kmt)
     return kill_method_names[kmt];
 }
 
-kill_method_type str_to_kill_method(const std::string &s)
+static kill_method_type _str_to_kill_method(const std::string &s)
 {
     COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
@@ -670,7 +673,7 @@ void scorefile_entry::init_with_fields()
     best_skill     = str_to_skill(fields->str_field("sk"));
     best_skill_lvl = fields->int_field("sklev");
 
-    death_type        = str_to_kill_method(fields->str_field("ktyp"));
+    death_type        = _str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
     auxkilldata       = fields->str_field("kaux");
     indirectkiller    = fields->str_field("ikiller");
@@ -824,7 +827,7 @@ void scorefile_entry::set_score_fields() const
     set_base_xlog_fields();
 
     fields->add_field("sc", "%d", points);
-    fields->add_field("ktyp", "%s", ::kill_method_name(kill_method_type(death_type)));
+    fields->add_field("ktyp", "%s", _kill_method_name(kill_method_type(death_type)));
 
     const std::string killer = death_source_desc();
     fields->add_field("killer", "%s", killer.c_str());
@@ -996,7 +999,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             for (CrawlVector::const_iterator it = blame.begin();
                  it != blame.end(); ++it)
             {
-                killerpath = killerpath + ":" + xlog_escape(it->get_string());
+                killerpath = killerpath + ":" + _xlog_escape(it->get_string());
             }
 
             killerpath.erase(killerpath.begin());
@@ -2159,7 +2162,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             if (!killerpath.empty())
             {
                 std::vector<std::string> summoners
-                    = xlog_split_fields(killerpath);
+                    = _xlog_split_fields(killerpath);
 
                 for (std::vector<std::string>::iterator it = summoners.begin();
                      it != summoners.end(); ++it)
@@ -2245,6 +2248,18 @@ xlog_fields::xlog_fields(const std::string &line) : fields(), fieldmap()
     init(line);
 }
 
+// xlogfile escape: s/:/::/g
+static std::string _xlog_escape(const std::string &s)
+{
+    return replace_all(s, ":", "::");
+}
+
+// xlogfile unescape: s/::/:/g
+static std::string _xlog_unescape(const std::string &s)
+{
+    return replace_all(s, "::", ":");
+}
+
 static std::string::size_type
 _xlog_next_separator(const std::string &s,
                             std::string::size_type start)
@@ -2256,7 +2271,7 @@ _xlog_next_separator(const std::string &s,
     return (p);
 }
 
-std::vector<std::string> xlog_split_fields(const std::string &s)
+static std::vector<std::string> _xlog_split_fields(const std::string &s)
 {
     std::string::size_type start = 0, end = 0;
     std::vector<std::string> fs;
@@ -2275,7 +2290,7 @@ std::vector<std::string> xlog_split_fields(const std::string &s)
 
 void xlog_fields::init(const std::string &line)
 {
-    std::vector<std::string> rawfields = xlog_split_fields(line);
+    std::vector<std::string> rawfields = _xlog_split_fields(line);
     for (int i = 0, size = rawfields.size(); i < size; ++i)
     {
         const std::string field = rawfields[i];
@@ -2286,22 +2301,10 @@ void xlog_fields::init(const std::string &line)
         fields.push_back(
             std::pair<std::string, std::string>(
                 field.substr(0, st),
-                xlog_unescape(field.substr(st + 1))));
+                _xlog_unescape(field.substr(st + 1))));
     }
 
     map_fields();
-}
-
-// xlogfile escape: s/:/::/g
-std::string xlog_escape(const std::string &s)
-{
-    return replace_all(s, ":", "::");
-}
-
-// xlogfile unescape: s/::/:/g
-std::string xlog_unescape(const std::string &s)
-{
-    return replace_all(s, "::", ":");
 }
 
 void xlog_fields::add_field(const std::string &key,
@@ -2364,7 +2367,7 @@ std::string xlog_fields::xlog_line() const
 
         line += f.first;
         line += "=";
-        line += xlog_escape(f.second);
+        line += _xlog_escape(f.second);
     }
 
     return (line);
