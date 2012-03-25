@@ -135,13 +135,14 @@ ENDMAP
 NAME:    spiders_nest_a
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 DEPTH:   Spider:1-4
+WEIGHT:  5
 ORIENT:  southeast
 MONS:    giant centipede
 MONS:    scorpion / emperor scorpion w:1
 MONS:    trapdoor spider generate_awake / nothing w:20
 MONS:    redback / wolf spider
 MONS:    jumping spider / tarantella w:20
-MONS:    emperor scorpion / demonic crawler
+MONS:    emperor scorpion / demonic crawler / nothing
 MAP
 @@@x
 @..xxx
@@ -185,7 +186,7 @@ KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = trapdoor spider generate_awake / nothing
 KMONS:  74 = redback / wolf spider / nothing w:15
 KMONS:  5 = jumping spider / tarantella w:20
-KMONS:  6 = emperor scorpion
+KMONS:  6 = emperor scorpion / scorpion
 KMONS:  M = fungus
 KFEAT:  14 = W
 SUBST:  W = WW. , * = %%**WM , X = xxW
@@ -312,6 +313,7 @@ NAME:    mumra_spider_spiderweb
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  float
 DEPTH:   Spider:1-4
+WEIGHT:  5
 NSUBST:  y = 1:y / *:.
 {{
 local ym = TriggerableFunction:new{func="callback.spiders_nest_cobweb_light"}
@@ -422,6 +424,7 @@ NAME:    hangedman_creepy_crawlies
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider:1-4
+WEIGHT:  5
 KMONS:   1 = giant centipede w:35 / scorpion w:20 / spider w:13 / \
              worker ant w:4 / giant mite w:1 / giant cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
@@ -647,7 +650,7 @@ ENDMAP
 NAME:   spider_rune_water
 PLACE:  Spider:5
 ORIENT: northwest
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = piece of ambrosia q:3, gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
