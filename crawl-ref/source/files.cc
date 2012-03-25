@@ -512,7 +512,7 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
 // Get the directory that contains save files for the current game
 // type. This will not be the same as get_base_savedir() for game
 // types such as Sprint.
-std::string _get_savefile_directory()
+static std::string _get_savefile_directory()
 {
     std::string dir = catpath(Options.save_dir,
                               crawl_state.game_savedir_path());

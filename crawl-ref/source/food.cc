@@ -2887,7 +2887,7 @@ const char* hunger_cost_string(const int hunger)
                                                 ARRAYSZ(breakpoints))]);
 }
 
-int _chunks_needed()
+static int _chunks_needed()
 {
     if (you.form == TRAN_LICH)
         return 1; // possibly low success rate, so don't drop everything

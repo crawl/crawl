@@ -526,7 +526,7 @@ bool is_corpse_violating_spellbook(const item_def & item)
     return (is_spellbook_type(item, false, is_corpse_violating_spell));
 }
 
-bool god_hates_spellbook(const item_def& item)
+static bool _god_hates_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, god_hates_spell));
 }
@@ -561,7 +561,7 @@ bool is_corpse_violating_rod(const item_def & item)
     return (is_spellbook_type(item, true, is_corpse_violating_spell));
 }
 
-bool god_hates_rod(const item_def& item)
+static bool _god_hates_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, god_hates_spell));
 }
@@ -648,7 +648,7 @@ conduct_type god_hates_item_handling(const item_def &item)
     }
 
     if (item_type_known(item)
-        && (god_hates_spellbook(item) || god_hates_rod(item)))
+        && (_god_hates_spellbook(item) || _god_hates_rod(item)))
     {
         return (NUM_CONDUCTS); // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.

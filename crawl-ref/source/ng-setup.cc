@@ -30,6 +30,9 @@
 
 #define MIN_START_STAT       3
 
+static void _newgame_give_item(object_class_type base, int sub_type,
+                               int qty = 1, int plus = 0, int plus2 = 0);
+
 static void _init_player(void)
 {
     you.init();
@@ -229,12 +232,12 @@ void unfocus_stats()
 // Some consumables to make the starts of Sprint and Zotdef a little easier.
 static void _give_bonus_items()
 {
-    newgame_give_item(OBJ_POTIONS, POT_CURING);
-    newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
-    newgame_give_item(OBJ_POTIONS, POT_SPEED);
-    newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);
-    newgame_give_item(OBJ_POTIONS, POT_BERSERK_RAGE);
-    newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
+    _newgame_give_item(OBJ_POTIONS, POT_CURING);
+    _newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
+    _newgame_give_item(OBJ_POTIONS, POT_SPEED);
+    _newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);
+    _newgame_give_item(OBJ_POTIONS, POT_BERSERK_RAGE);
+    _newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
 }
 
 void give_basic_mutations(species_type speci)
@@ -417,8 +420,8 @@ void newgame_make_item(int slot, equipment_type eqslot,
         you.equip[eqslot] = slot;
 }
 
-void newgame_give_item(object_class_type base, int sub_type,
-                       int qty, int plus, int plus2)
+static void _newgame_give_item(object_class_type base, int sub_type,
+                               int qty, int plus, int plus2)
 {
     newgame_make_item(-1, EQ_NONE, base, sub_type, -1, qty, plus, plus2);
 }
