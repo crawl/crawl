@@ -627,11 +627,9 @@ namespace arena
         if (!Options.arena_dump_msgs || file == NULL)
             return;
 
-        std::vector<int> channels;
-        std::vector<std::string> messages =
-            get_recent_messages(message_pos,
-                                !Options.arena_dump_msgs_all,
-                                &channels);
+        std::vector<std::string> messages;
+        std::vector<msg_channel_type> channels;
+        get_recent_messages(messages, channels);
 
         for (unsigned int i = 0; i < messages.size(); i++)
         {
@@ -641,6 +639,12 @@ namespace arena
             std::string prefix;
             switch (chan)
             {
+                case MSGCH_DIAGNOSTICS:
+                    prefix = "DIAG: ";
+                    if (Options.arena_dump_msgs_all)
+                        break;
+                    continue;
+
                 // Ignore messages generated while the user examines
                 // the arnea.
                 case MSGCH_PROMPT:
@@ -660,7 +664,6 @@ namespace arena
 
                 case MSGCH_ERROR: prefix = "ERROR: "; break;
                 case MSGCH_WARN: prefix = "WARN: "; break;
-                case MSGCH_DIAGNOSTICS: prefix = "DIAG: "; break;
                 case MSGCH_SOUND: prefix = "SOUND: "; break;
 
                 case MSGCH_TALK_VISUAL:

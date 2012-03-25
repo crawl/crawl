@@ -107,14 +107,8 @@ void replay_messages();
 void set_more_autoclear(bool on);
 
 std::string get_last_messages(int mcount);
-
-inline std::vector<std::string> get_recent_messages(int &message_pos,
-                                             bool dumpworthy_only = true,
-                                             std::vector<int> *channels = NULL)
-{
-    return std::vector<std::string>();
-}
-
+void get_recent_messages(std::vector<std::string> &messages,
+                         std::vector<msg_channel_type> &channels);
 
 int channel_to_colour(msg_channel_type channel, int param = 0);
 bool strip_channel_prefix(std::string &text, msg_channel_type &channel,
