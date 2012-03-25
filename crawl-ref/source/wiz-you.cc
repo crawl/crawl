@@ -1111,8 +1111,14 @@ void wizard_load_dump_file()
         return;
     }
 
+    you.init_skills();
+
     FileLineInput f(filename);
     while (!f.eof())
         _wizard_modify_character(f.get_line());
-    return;
+
+    init_skill_order();
+    init_can_train();
+    init_train();
+    init_training();
 }
