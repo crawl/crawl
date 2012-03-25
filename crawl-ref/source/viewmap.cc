@@ -935,7 +935,6 @@ bool show_map(level_pos &lpos,
 
                 // Cycle the radius of an exclude.
             case CMD_MAP_EXCLUDE_AREA:
-            {
                 if (you.level_type == LEVEL_LABYRINTH)
                     break;
 
@@ -944,7 +943,6 @@ bool show_map(level_pos &lpos,
                 _reset_travel_colours(features, on_level);
                 feats.init();
                 break;
-            }
 
             case CMD_MAP_CLEAR_EXCLUDES:
                 clear_excludes();
@@ -954,13 +952,11 @@ bool show_map(level_pos &lpos,
 
 #ifdef WIZARD
             case CMD_MAP_EXCLUDE_RADIUS:
-            {
                 set_exclude(lpos.pos, getchm() - '0');
 
                 _reset_travel_colours(features, on_level);
                 feats.init();
                 break;
-            }
 #endif
 
             case CMD_MAP_MOVE_DOWN_LEFT:
@@ -1184,7 +1180,6 @@ bool show_map(level_pos &lpos,
             }
 
             case CMD_MAP_GOTO_TARGET:
-            {
                 if (travel_mode && on_level && lpos.pos == you.pos())
                 {
                     if (you.travel_x > 0 && you.travel_y > 0)
@@ -1192,41 +1187,30 @@ bool show_map(level_pos &lpos,
                         move_x = you.travel_x - lpos.pos.x;
                         move_y = you.travel_y - lpos.pos.y;
                     }
-                    break;
                 }
                 else
                 {
                     chose = true;
                     map_alive = false;
-                    break;
                 }
-            }
-            case CMD_MAP_ANNOTATE_LEVEL:
-            {
-                if (lpos.id.level_type != LEVEL_DUNGEON)
-                {
-                    mpr("You can't annotate this level.");
-                }
-                else
-                {
-                    do_annotate(lpos.id);
-                }
+
                 break;
-            }
+
+            case CMD_MAP_ANNOTATE_LEVEL:
+                if (lpos.id.level_type != LEVEL_DUNGEON)
+                    mpr("You can't annotate this level.");
+                else
+                    do_annotate(lpos.id);
+
+                break;
 
 #ifdef WIZARD
             case CMD_MAP_WIZARD_TELEPORT:
-            {
-                if (!you.wizard)
-                    break;
-                if (!on_level)
-                    break;
-                if (!in_bounds(lpos.pos))
+                if (!you.wizard || !on_level || !in_bounds(lpos.pos))
                     break;
                 you.moveto(lpos.pos);
                 map_alive = false;
                 break;
-            }
 #endif
 
             case CMD_MAP_EXIT_MAP:
