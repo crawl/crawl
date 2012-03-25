@@ -1444,6 +1444,23 @@ std::string get_last_messages(int mcount)
     return text;
 }
 
+void get_recent_messages(std::vector<std::string> &mess,
+                         std::vector<msg_channel_type> &chan)
+{
+    flush_prev_message();
+
+    const store_t& msgs = messages.get_store();
+    int mcount = std::min(mcount, NUM_STORED_MESSAGES);
+    for (int i = -1; mcount > 0; --i, --mcount)
+    {
+        const message_item msg = msgs[i];
+        if (!msg)
+            break;
+        mess.push_back(msg.pure_text());
+        chan.push_back(msg.channel);
+    }
+}
+
 // We just write out the whole message store including empty/unused
 // messages. They'll be ignored when restoring.
 void save_messages(writer& outf)
