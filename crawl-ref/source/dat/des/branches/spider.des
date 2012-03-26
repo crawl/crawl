@@ -519,6 +519,21 @@ aa?...a.a...?aa
       aaa
 ENDMAP
 
+NAME:   guppyfry_wasp_nest
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  Spider
+ORIENT: float
+MONS:   yellow wasp / red wasp / nothing
+SUBST:  - = wW.%
+MAP
+WWxxxxxxxxxxxxxxWW
+xWW....WWWW....WWx
+xxWW--WW--WW--WWxx
+ xxWWWW1111WWWWxx
+  xxWW..11..WWxx
+   xxxxxxxxxxxx
+ENDMAP
+
 # A few mining accidents
 NAME:   nicolae_spider_mines_1
 DEPTH:  Spider:1-4
@@ -641,6 +656,59 @@ xxxxOOzzzzzzOOxxxxxxxxx
 xxxxxOzzzzzzOOxxxxxxxxx
 xxxxXXXXXXXXXXXxxxxxxxx
 xxxxXXXXXXXXXXXxxxxxxxx
+ENDMAP
+
+# Misc minivaults
+NAME:   Guppyfry_Spider_Mini_1
+DEPTH:  Spider
+MONS:   spider / jumping spider, trapdoor spider / redback
+MAP
+x@.xxxxxxxx.
+xx..xxxxx..@
+xxx..xxx..xx
+.xxx..x..xx.
+@..xx.1.xx.@
+xx...111...x
+xxx..111...@
+xx..x.1.x.xx
+x..xx..xx..x
+@.xxx..xxx.@
+xxxx..xxxxx.
+xxx.@xxxxxxx
+ENDMAP
+
+NAME:   Guppyfry_Spider_Mini_2
+DEPTH:  Spider
+MONS:   spider / jumping spider / trapdoor spider / redback
+MAP
+xx..xxxx..xx
+x....xx....x
+xx..xxxx..xx
+xxx11xx11xxx
+xWWxxWWxxWWx
+@WWWWWWWWWW@
+xWWxxWWxxWWx
+xxx11xx11xxx
+xx..xxxx..xx
+x....xx....x
+xx..xxxx..xx
+ENDMAP
+
+NAME:   Guppyfry_Spider_Mini_3
+DEPTH:  Spider
+MONS:   spider / jumping spider / trapdoor spider / redback
+MAP
+W....WW....W
+xW...WW...Wx
+.xWWWWWWWWx.
+.WxW.WW.WxW.
+.W.1WWWW1.W.
+WWWW1111WWWW
+.W.1WWWW1.W.
+.WxW.WW.WxW.
+.xWWWWWWWWx.
+xW...WW...Wx
+W....WW....W
 ENDMAP
 
 ##############################################################################
