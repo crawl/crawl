@@ -1209,7 +1209,7 @@ ENDMAP
 
 NAME:  bmh_abyss_fiendish_exit
 TAGS:  abyss_exit allow_dup no_monster_gen
-KMONS: F = patrolling pit fiend
+KMONS: F = patrolling hell sentinel
 KFEAT: F = floor
 KFEAT: 0 = exit_abyss
 KFEAT: % = floor

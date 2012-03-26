@@ -100,7 +100,7 @@ void init_pandemonium(void)
         env.mons_alloc[7 + random2(3)] = MONS_SHADOW_FIEND;
 
     if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_PIT_FIEND;
+        env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;
 
     // Set at least some specific monsters for the special levels - this
     // can also be used to set some colours.

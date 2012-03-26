@@ -4560,7 +4560,8 @@ bool monster::is_skeletal() const
 
 static bool _mons_is_spiny(int mc)
 {
-    return (mc == MONS_PORCUPINE);
+    return (mc == MONS_PORCUPINE
+            || mc == MONS_HELL_SENTINEL);
 }
 
 bool monster::is_spiny() const
