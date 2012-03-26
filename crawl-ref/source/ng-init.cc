@@ -60,6 +60,10 @@ void initialise_branches_for_game_type()
 
     for (int i = 0; i < NUM_BRANCHES; i++)
         brdepth[i] = branches[i].numlevels;
+
+    // In trunk builds, test variable-length branches.
+    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
+        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
 }
 
 // Determine starting depths of branches.
