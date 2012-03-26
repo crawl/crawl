@@ -4851,7 +4851,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GREEN_DEATH, '2', GREEN, "Green Death",
+    MONS_GREEN_DEATH, '2', GREEN, "green death",
     M_SPELLCASTER | M_SEE_INVIS,
     MR_RES_POISON,
     0, 13, MONS_GREEN_DEATH, MONS_GREEN_DEATH, MH_DEMONIC, -9,
