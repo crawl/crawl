@@ -338,7 +338,7 @@ xx??.........??xx
   xx??11111??xx
    xx??111??xx
     xx??1??xx
-     xx?2?xx
+     xxI2Ixx
       xv=vx
       x!!!x
       x!O!x
@@ -366,7 +366,7 @@ KFEAT:  O = enter_orcish_mines
 MAP
 xx?xxxxxxx?xx
 x111xxxxx111x
-?111aaaaa111?
+?1I1aaaaa1I1?
 x111xxxxx111x
 xxbx=xxx=xcxx
 xxbxx!!!xxcxx
@@ -374,7 +374,7 @@ xxbxx!O!xxcxx
 xxbxx!!!xxcxx
 xxbx=xxx=xcxx
 x111xxxxx111x
-?111ddddd111x
+?1I1ddddd1I1x
 x111xxxxx111?
 xx?xxxxxxx@xx
 ENDMAP
