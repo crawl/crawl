@@ -1059,12 +1059,9 @@ int mons_hallelf_level(int mcls)
     case MONS_DEEP_ELF_PRIEST:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_DEEP_ELF_KNIGHT:
-        mlev += 2;
-        break;
-
     case MONS_ORC_PRIEST:
     case MONS_ORC_HIGH_PRIEST:
-        mlev += 3;
+        mlev += 2;
         break;
 
     case MONS_DEEP_ELF_HIGH_PRIEST:
@@ -1072,12 +1069,12 @@ int mons_hallelf_level(int mcls)
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
-        mlev += 5;
+        mlev += 3;
         break;
 
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
-        mlev += 8;
+        mlev += 5;
         break;
 
     default:
