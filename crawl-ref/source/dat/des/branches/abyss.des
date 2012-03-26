@@ -1232,3 +1232,56 @@ MAP
    .c.
     .
 ENDMAP
+
+NAME:  guppyfry_abyss_exit_glass_guarded
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+.............
+.xmxmxmxmxmx.
+m.m.......m.m
+xm.mmm.mmm.mx
+xxxx.....xxxx
+x00...O...00x
+xxxxxxlxxxxxx
+lllllllllllll
+mxmxmxmxmxmxx
+.............
+ENDMAP
+
+NAME:  guppyfry_abyss_exit_spiral_guarded
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: - = llx
+MAP
+.0---------0
+.-........--
+..--------.-
+.--.....--.-
+.-.-----.-.-
+.-.--O--.-.-
+.-.-.---.-.-
+.-.--...--.-
+.-.-------.-
+.--.......--
+.0---------0
+ENDMAP
+
+NAME: guppyfry_abyss_exit_imp_island
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: - = Wwwww
+MONS: crimson imp / white imp
+MAP
+.---------.
+---..1..---
+--..1.1..--
+---..1..---
+.---------.
+.....O.....
+.---------.
+---..1..---
+--..1.1..--
+---..1..---
+.---------.
+ENDMAP
