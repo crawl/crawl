@@ -111,7 +111,7 @@ static int dgn_place(lua_State *ls)
         {
             try
             {
-                map->place = level_id::parse_level_id(luaL_checkstring(ls, 2));
+                map->place = depth_ranges::parse_depth_ranges(luaL_checkstring(ls, 2));
             }
             catch (const std::string &err)
             {

@@ -1091,7 +1091,7 @@ public:
     // Description for the map that can be shown to players.
     std::string     description;
     std::string     tags;
-    level_id        place;
+    depth_ranges    place;
 
     depth_ranges     depths;
     map_section_type orient;
