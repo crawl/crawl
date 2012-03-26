@@ -2456,9 +2456,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
 
         case MONS_BOULDER_BEETLE:
-            return mon->has_ench(ENCH_ROLLING)
-                ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
-                : TILEP_MONS_BOULDER_BEETLE;
+            return (mon.is(MB_ROLLING)
+                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
+                    : TILEP_MONS_BOULDER_BEETLE);
 
         case MONS_ITEM_MIMIC:
         {
@@ -4131,8 +4131,6 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 break;
 
             case CLOUD_DUST_TRAIL:
-                if (decay/20 > 2)
-                    dur = 3;
                 ch = TILE_CLOUD_DUST_TRAIL_0 + dur;
                 break;
 
