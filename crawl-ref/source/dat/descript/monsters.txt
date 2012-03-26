@@ -490,7 +490,7 @@ An umber beetle with large, powerful mandibles which enable it to bore through s
 %%%%
 boulder beetle
 
-A huge grey beetle with an almost impenetrable rocky carapace.
+A huge grey beetle with an almost impenetrable rocky carapace, capable of rolling at its foes at high speed.
 %%%%
 brain worm
 
