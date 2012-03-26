@@ -253,8 +253,9 @@ bool TextDB::_needs_update() const
         // No point in empty databases, although for simplicity keep ones
         // for disappeared translations for now.
         ASSERT(english);
-        delete english->translation;
-        english->translation = 0;
+        TextDB *en = english;
+        delete en->translation; // ie, ourself
+        en->translation = 0;
         return false;
     }
 
