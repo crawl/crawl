@@ -726,7 +726,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
-    const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
@@ -746,7 +745,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     dec_mp(spell_mana(spell));
 
-    if (!staff_energy && you.is_undead != US_UNDEAD)
+    if (you.is_undead != US_UNDEAD)
     {
         const int spellh = calc_hunger(spell_hunger(spell));
         if (spellh > 0)
