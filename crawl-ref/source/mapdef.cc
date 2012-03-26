@@ -241,15 +241,7 @@ void level_range::set(const std::string &br, int s, int d)
     shallowest = s;
     deepest    = d;
 
-    if (branch != NUM_BRANCHES)
-    {
-        if (shallowest == -1)
-            shallowest = branches[branch].numlevels;
-        if (deepest == -1)
-            deepest = branches[branch].numlevels;
-    }
-
-    if (deepest < shallowest)
+    if (deepest < shallowest || deepest <= 0)
         throw make_stringf("Level-range %s:%d-%d is malformed",
                            br.c_str(), s, d);
 }
@@ -289,7 +281,7 @@ void level_range::parse_partial(level_range &lr, const std::string &s)
         parse_depth_range(s, &lr.shallowest, &lr.deepest);
     }
     else
-        lr.set(s, 1, 100);
+        lr.set(s, 1, BRANCH_END);
 }
 
 void level_range::parse_depth_range(const std::string &s, int *l, int *h)
@@ -298,13 +290,14 @@ void level_range::parse_depth_range(const std::string &s, int *l, int *h)
     if (s == "*")
     {
         *l = 1;
-        *h = 100;
+        *h = BRANCH_END;
         return;
     }
 
     if (s == "$")
     {
-        *l = *h = -1;
+        *l = BRANCH_END;
+        *h = BRANCH_END;
         return;
     }
 
@@ -320,8 +313,8 @@ void level_range::parse_depth_range(const std::string &s, int *l, int *h)
         *l = strict_aton<int>(s.substr(0, hy).c_str());
 
         std::string tail = s.substr(hy + 1);
-        if (tail.empty())
-            *h = 100;
+        if (tail.empty() || tail == "$")
+            *h = BRANCH_END;
         else
             *h = strict_aton<int>(tail.c_str());
 
@@ -334,8 +327,12 @@ void level_range::set(int s, int d)
 {
     shallowest = s;
     deepest    = d;
-    if (deepest == -1 || deepest < shallowest)
+
+    if (deepest == -1)
         deepest = shallowest;
+
+    if (deepest < shallowest)
+        throw make_stringf("Bad depth range: %d-%d", shallowest, deepest);
 }
 
 void level_range::reset()
@@ -371,11 +368,6 @@ bool level_range::operator == (const level_range &lr) const
 bool level_range::valid() const
 {
     return (shallowest > 0 && deepest >= shallowest);
-}
-
-int level_range::span() const
-{
-    return (deepest - shallowest);
 }
 
 ////////////////////////////////////////////////////////////////////////

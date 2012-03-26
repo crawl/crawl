@@ -32,6 +32,8 @@ extern const char *traversable_glyphs;
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
+static const int BRANCH_END = 100;
+
 // Exception thrown when a map cannot be loaded from its .dsc file
 // because the .dsc file has changed under it.
 class map_load_exception : public std::exception
@@ -98,7 +100,6 @@ public:
     void read(reader&);
 
     bool valid() const;
-    int span() const;
 
     static level_range parse(std::string lr) throw (std::string);
 
