@@ -2013,55 +2013,6 @@ static int _xom_give_mutations(bool good, bool debug = false)
     return (XOM_DID_NOTHING);
 }
 
-// Summons a permanent ally.
-static int _xom_send_major_ally(int sever, bool debug = false)
-{
-    if (debug)
-        return (XOM_GOOD_MAJOR_ALLY);
-
-    const monster_type mon_type = _xom_random_demon(sever);
-    const bool is_demonic = (mons_class_holiness(mon_type) == MH_DEMONIC);
-
-    beh_type beha = BEH_FRIENDLY;
-
-    // There's a chance that a non-demon may be hostile.
-    if (!is_demonic && one_chance_in(4))
-        beha = BEH_HOSTILE;
-
-    mgen_data mg(_xom_random_demon(sever, one_chance_in(8)), beha,
-                 (beha == BEH_FRIENDLY) ? &you : 0,
-                 0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
-
-    mg.non_actor_summoner = "Xom";
-
-    if (monster *summons = create_monster(mg))
-    {
-        if (is_demonic)
-        {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("single major demon summon").c_str());
-        }
-        else
-        {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("single major holy summon").c_str());
-        }
-
-        player_angers_monster(summons);
-
-        // Take a note.
-        static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "sends permanent %s %s",
-                 beha == BEH_FRIENDLY ? "friendly" : "hostile",
-                 summons->name(DESC_PLAIN).c_str());
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
-
-        return (XOM_GOOD_MAJOR_ALLY);
-    }
-
-    return (XOM_DID_NOTHING);
-}
-
 static int _xom_throw_divine_lightning(bool debug = false)
 {
     if (!player_in_a_dangerous_place())
@@ -2502,9 +2453,6 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     {
         done = _xom_give_mutations(true, debug);
     }
-    // It's pointless to send in help if there's no danger.
-    else if (tension > random2(15) && x_chance_in_y(18, sever))
-        done = _xom_send_major_ally(sever, debug);
     else if (tension > 0 && x_chance_in_y(19, sever))
         done = _xom_throw_divine_lightning(debug);
 
@@ -4269,8 +4217,8 @@ static const std::string _xom_effect_to_name(int effect)
         "divination", "confuse monsters", "single ally",
         "animate monster weapon", "annoyance gift", "random item gift",
         "acquirement", "summon allies", "polymorph", "swap monsters",
-        "teleportation", "vitrification", "mutation", "permanent ally",
-        "lightning", "change scenery", "snakes to sticks",
+        "teleportation", "vitrification", "mutation", "lightning",
+        "change scenery", "snakes to sticks",
         // bad acts
         "nothing", "coloured smoke trail", "miscast (pseudo)",
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
