@@ -1436,9 +1436,7 @@ int staff_spell(int staff)
 
     int food = spell_hunger(spell, true);
 
-    // For now player_energy() is always 0, because you've got to
-    // be wielding the rod...
-    if (you.is_undead == US_UNDEAD || player_energy() > 0)
+    if (you.is_undead == US_UNDEAD)
         food = 0;
     else
         food = calc_hunger(food);
