@@ -202,7 +202,10 @@ std::string level_range::str_depth_range() const
     if (shallowest == -1)
         return (":??");
 
-    if (deepest >= branches[branch].numlevels)
+    if (shallowest == BRANCH_END)
+        return (":$");
+
+    if (deepest == BRANCH_END)
         return (shallowest == 1? "" : make_stringf("%d-", shallowest));
 
     if (shallowest == deepest)
