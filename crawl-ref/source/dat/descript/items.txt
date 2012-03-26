@@ -1234,7 +1234,7 @@ This staff increases the power of charm and hex spells cast by its wielder. In t
 %%%%
 staff of energy
 
-This staff allows its wielder to cast magical spells without hungering as a result.
+This staff greatly reduces the hunger cost of the wielder's magical spells.
 %%%%
 staff of fire
 
