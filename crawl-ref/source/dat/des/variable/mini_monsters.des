@@ -1355,6 +1355,23 @@ MAP
     @
 ENDMAP
 
+NAME:    Guppyfry_Hobgoblin_minivault
+DEPTH:   D:2-4
+TAGS:    no_monster_gen mini_float
+MONS:    hobgoblin, jackal, goblin
+ITEM:    meat ration / beef jerky / any food / gold / rat corpse
+SHUFFLE: 12dT
+SUBST:   ? = 123d.
+MAP
+.......
+.xxxxx.
+.x??dx.
+.+212+.
+.x?dTx.
+.xxxxx.
+.......
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
