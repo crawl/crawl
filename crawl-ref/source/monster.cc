@@ -5423,6 +5423,7 @@ void monster::steal_item_from_player()
 bool monster::is_web_immune() const
 {
     // Spiders, Demonic crawlers
+    // Moths
     // Ghosts and other incorporeals
     // Oozes
     // All 'I' (ice / sky beast)
@@ -5430,7 +5431,8 @@ bool monster::is_web_immune() const
             || type == MONS_ARACHNE
             || is_insubstantial()
             || mons_genus(type) == MONS_JELLY
-            || mons_genus(type) == MONS_DEMONIC_CRAWLER);
+            || mons_genus(type) == MONS_DEMONIC_CRAWLER
+            || mons_genus(type) == MONS_MOTH);
 }
 
 // Undead and demonic monsters have nightvision, as do all followers
