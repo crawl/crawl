@@ -615,8 +615,6 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     beam.ex_size = 1;
     beam.loudness = 5;
 
-//    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
-
     beam.fire();
 
     return (true);
@@ -814,9 +812,6 @@ move_again:
 
             // Need to get out of the victim's square.
 
-            // If you're next to the caster and both of you wear shields of
-            // reflection, this can lead to a brief game of ping-pong, but
-            // rapidly increasing shield penalties will make it short.
             mon.lose_energy(EUT_MOVE);
             goto move_again;
         }
@@ -825,10 +820,11 @@ move_again:
         if (victim == &you)
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
-        if (_boulder_hit(mon, pos)){
+        if (_boulder_hit(mon, pos))
+        {
             if ((victim && victim->alive()))
                 _boulder_stop(mon);
-        //    return (true);
+            return (true);
         }
     }
 
