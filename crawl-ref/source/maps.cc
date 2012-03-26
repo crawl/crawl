@@ -700,7 +700,7 @@ public:
 
 bool map_selector::depth_selectable(const map_def &mapdef) const
 {
-    return (!mapdef.place.is_valid()
+    return (mapdef.place.empty()
             && mapdef.is_usable_in(place)
             // Some tagged levels cannot be selected as random
             // maps in a specific depth:
@@ -726,7 +726,7 @@ bool map_selector::accept(const map_def &mapdef) const
             return (false);
         }
         return (mapdef.is_minivault() == mini
-                && mapdef.place == place
+                && mapdef.place.is_usable_in(place)
                 && map_matches_layout_type(mapdef)
                 && !mapdef.map_already_used());
 

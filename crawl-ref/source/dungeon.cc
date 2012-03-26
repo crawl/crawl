@@ -4657,7 +4657,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             monster_type mt = static_cast<monster_type>(monster_type_thing.type);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
-            if (place.map.place.is_valid()
+            if (!place.map.place.empty()
                 && !invalid_monster_type(mt)
                 && mons_is_unique(mt)
                 && you.unique_creatures[mt])

@@ -2372,7 +2372,7 @@ void map_def::write_index(writer& outf) const
     _weight.write(outf, marshallInt);
     marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
-    place.save(outf);
+    place.write(outf);
     write_depth_ranges(outf);
     prelude.write(outf);
 }
@@ -2396,7 +2396,7 @@ void map_def::read_index(reader& inf)
     _weight = range_weight_t::read(inf, unmarshallInt);
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
-    place.load(inf);
+    place.read(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
     index_only = true;
@@ -2650,7 +2650,7 @@ std::string map_def::validate_temple_map()
 
 std::string map_def::validate_map_placeable()
 {
-    if (has_depth() || place.is_valid())
+    if (has_depth() || !place.empty())
         return ("");
 
     // Ok, the map wants to be placed by tag. In this case it should have
@@ -2688,7 +2688,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     if (!has_depth() && !lc_default_depths.empty())
         depths.add_depths(lc_default_depths);
 
-    if (place.branch == BRANCH_ECUMENICAL_TEMPLE
+    if (place.is_usable_in(level_id(BRANCH_ECUMENICAL_TEMPLE))
         || has_tag_prefix("temple_overflow_"))
     {
         err = validate_temple_map();
