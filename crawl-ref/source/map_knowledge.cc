@@ -66,7 +66,7 @@ int count_detected_mons()
     return (count);
 }
 
-void clear_map(bool clear_detected_items, bool clear_detected_monsters)
+void clear_map(bool clear_items, bool clear_mons)
 {
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
@@ -77,11 +77,10 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 
         cell.clear_cloud();
 
-        if (clear_detected_items || !cell.detected_item())
+        if (clear_items)
             cell.clear_item();
 
-        if ((clear_detected_monsters || !cell.detected_monster())
-            && !mons_class_is_stationary(cell.monster()))
+        if (clear_mons && !mons_class_is_stationary(cell.monster()))
         {
             cell.clear_monster();
 #ifdef USE_TILE
