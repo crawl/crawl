@@ -1036,9 +1036,8 @@ void monster::unequip_armour(item_def &item, int near)
         ac -= property(item, PARM_AC);
 
         const int armour_plus = item.plus;
-        ASSERT(abs(armour_plus) < 20);
-        if (abs(armour_plus) < 20)
-            ac -= armour_plus;
+        ASSERT(abs(armour_plus) < 30);
+        ac -= armour_plus;
     }
 
     ev -= property(item, PARM_EVASION) / 2;
