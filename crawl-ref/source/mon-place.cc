@@ -2582,7 +2582,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
 
     case MONS_JUMPING_SPIDER:
-        if (!one_chance_in(3))
+        if (coinflip())
         {
             band = BAND_JUMPING_SPIDER;
             band_size = 1 + random2(5);
@@ -2590,10 +2590,10 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
 
     case MONS_TARANTELLA:
-        if (!one_chance_in(3))
+        if (coinflip())
         {
             band = BAND_TARANTELLA;
-            band_size = 1 + random2(5);
+            band_size = 1 + random2(4);
         }
         break;
 
@@ -2960,22 +2960,22 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_JUMPING_SPIDER:
         // Total weight 40
-        mon_type = random_choose_weighted(15, MONS_JUMPING_SPIDER,
+        mon_type = random_choose_weighted(12, MONS_JUMPING_SPIDER,
                                            8, MONS_WOLF_SPIDER,
                                            7, MONS_ORB_SPIDER,
-                                           5, MONS_SPIDER,
-                                           4, MONS_REDBACK,
+                                           6, MONS_SPIDER,
+                                           5, MONS_REDBACK,
                                            2, MONS_DEMONIC_CRAWLER,
                                            0);
         break;
 
     case BAND_TARANTELLA:
         // Total weight 40
-        mon_type = random_choose_weighted(15, MONS_TARANTELLA,
-                                           6, MONS_WOLF_SPIDER,
+        mon_type = random_choose_weighted(10, MONS_TARANTELLA,
+                                           7, MONS_WOLF_SPIDER,
                                            3, MONS_ORB_SPIDER,
-                                           7, MONS_REDBACK,
-                                           7, MONS_SPIDER,
+                                           8, MONS_REDBACK,
+                                          10, MONS_SPIDER,
                                            2, MONS_DEMONIC_CRAWLER,
                                            0);
         break;
