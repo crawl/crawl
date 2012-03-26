@@ -3071,15 +3071,13 @@ static monster_type _pick_zot_exit_defender()
 
     const int temp_rand = random2(276);
     const monster_type mon_type =
-        ((temp_rand > 184) ? (monster_type)random_range(MONS_WHITE_IMP,
-                                  MONS_CHAOS_SPAWN) :        // 33.33%
-         (temp_rand > 104) ? (monster_type)random_range(MONS_HELLION,
-                                  MONS_IRON_DEVIL) :         // 28.99%
-         (temp_rand > 78)  ? MONS_HELL_HOUND :               //  9.06%
-         (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
-         (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
-         (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
-                           : MONS_HELL_SENTINEL);            //  5.07%
+        ((temp_rand > 184) ? summon_any_demon(DEMON_COMMON) : // 33.33%
+         (temp_rand > 104) ? summon_any_demon(DEMON_RANDOM) : // 28.99%
+         (temp_rand > 78)  ? MONS_HELL_HOUND :                //  9.06%
+         (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :         //  8.70%
+         (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :         //  7.61%
+         (temp_rand > 13)  ? MONS_RED_DEVIL                   //  7.25%
+                           : MONS_HELL_SENTINEL);             //  5.07%
 
     return mon_type;
 }
