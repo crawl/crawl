@@ -595,7 +595,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 {
     bolt beam;
     beam.name = "rolling boulder";
-    beam.flavour = BEAM_DISINTEGRATION;
+    beam.flavour = BEAM_MISSILE;
     beam.attitude = mon.attitude;
 
     actor *caster = &mon;
@@ -610,7 +610,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 
     int pow = mon.hit_dice * 6;
     pow = stepdown_value(pow, 30, 30, 200, -1);
-    beam.damage = dice_def(3, pow / 4);
+    beam.damage = dice_def(4, pow / 4);
 
     beam.ex_size = 1;
     beam.loudness = 5;
