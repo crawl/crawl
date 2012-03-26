@@ -335,11 +335,11 @@ static void _sdump_visits(dump_params &par)
     }
 
     place_info = you.get_place_info(LEVEL_LABYRINTH);
-    if (place_info.num_visits > 0)
+    if (place_info.levels_seen > 0)
     {
         text += make_stringf("You %svisited %d Labyrinth",
-                             have.c_str(), place_info.num_visits);
-        if (place_info.num_visits > 1)
+                             have.c_str(), place_info.levels_seen);
+        if (place_info.levels_seen > 1)
             text += "s";
         text += ".\n";
     }
