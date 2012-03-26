@@ -427,12 +427,12 @@
       }
     },
 
-    {  MST_PIT_FIEND,
+    {  MST_HELL_SENTINEL,
       {
        SPELL_HELLFIRE,
        SPELL_HELLFIRE,
        SPELL_MELEE,
-       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_IRON_SHOT,
        SPELL_MELEE,
        SPELL_NO_SPELL
       }

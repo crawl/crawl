@@ -489,7 +489,7 @@ local rnd = crawl.random2(149)
                  shadow fiend w:1 / spectral thing place:Tar:7 / ghoul w:5")
 -- Dis
   elseif rnd < 79 then
-    e.kmons("1 = place:Dis:7 w:500 / pit fiend")
+    e.kmons("1 = place:Dis:7 w:500 / hell sentinel")
 -- Giant
   elseif rnd < 82 then
     e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\

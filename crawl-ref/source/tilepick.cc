@@ -1661,8 +1661,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ICE_FIEND;
     case MONS_SHADOW_FIEND:
         return TILEP_MONS_SHADOW_FIEND;
-    case MONS_PIT_FIEND:
-        return TILEP_MONS_PIT_FIEND;
+    case MONS_HELL_SENTINEL:
+        return TILEP_MONS_HELL_SENTINEL;
     case MONS_EXECUTIONER:
         return TILEP_MONS_EXECUTIONER;
     case MONS_GREEN_DEATH:

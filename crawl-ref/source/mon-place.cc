@@ -3079,7 +3079,7 @@ static monster_type _pick_zot_exit_defender()
          (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
          (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
          (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
-                           : MONS_PIT_FIEND);                //  5.07%
+                           : MONS_HELL_SENTINEL);            //  5.07%
 
     return mon_type;
 }
@@ -3593,7 +3593,7 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_BRIMSTONE_FIEND,
                 1, MONS_ICE_FIEND,
                 1, MONS_SHADOW_FIEND,
-                1, MONS_PIT_FIEND,
+                1, MONS_HELL_SENTINEL,
                 1, MONS_EXECUTIONER,
                 0);
         }

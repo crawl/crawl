@@ -519,7 +519,7 @@ NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Cerebov')
-MONS:      patrolling Cerebov, Balrug, Pit Fiend
+MONS:      patrolling Cerebov, Balrug, brimstone fiend
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -567,7 +567,7 @@ TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
 : pan_lord_setup(_G, 'Cerebov')
 TILE:      v = dngn_metal_wall_brown
-MONS:      patrolling Cerebov, balrug, pit fiend
+MONS:      patrolling Cerebov, balrug, brimstone fiend
 MONS:      red devil, sun demon, crimson imp
 epilogue{{
   pan_lord_epilogue('Cerebov')
@@ -621,7 +621,7 @@ SUBST:      L : lll.
 SUBST:      U : W., W : V., V : v.
 KPROP:      l = no_cloud_gen
 TILE:       v = dngn_metal_wall_brown
-MONS:       Cerebov, balrug, pit fiend, sun demon
+MONS:       Cerebov, balrug, brimstone fiend, sun demon
 NSUBST:     Q = 1:3 / 2:|
 NSUBST:     B = 3:2 / 3:4
 NSUBST:     C = 2:2 / 2:|

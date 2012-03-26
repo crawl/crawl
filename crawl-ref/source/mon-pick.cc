@@ -165,7 +165,7 @@ int mons_abyss_rare(int mcls)
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
     case MONS_RED_DEVIL:
     case MONS_SHINING_EYE:
     case MONS_SPINY_WORM:
@@ -2584,7 +2584,7 @@ int mons_gehenna_level(int mcls)
     case MONS_BRIMSTONE_FIEND:
     case MONS_LICH:
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
         mlev += 6;
@@ -2667,7 +2667,7 @@ int mons_gehenna_rare(int mcls)
     case MONS_STONE_GOLEM:
         return 8;
 
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
         return 7;
 
     case MONS_EFREET:
