@@ -426,6 +426,12 @@ Xom touches your surroundings.
 
 @Xom good monster polymorph@
 %%%%
+Xom inner flame
+
+"Let it end in hellfire!"
+
+Xom turns up the heat.
+%%%%
 Xom accidental homicide
 
 "Oops, I didn't mean to do *that*!"

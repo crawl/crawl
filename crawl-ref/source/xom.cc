@@ -2343,6 +2343,40 @@ static int _xom_change_scenery(bool debug = false)
     return (XOM_GOOD_SCENERY);
 }
 
+static int _xom_inner_flame(bool debug = false)
+{
+    bool rc = false;
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->wont_attack() || one_chance_in(4))
+            continue;
+
+        if (debug)
+            return (XOM_GOOD_INNER_FLAME);
+
+        if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0,
+              &menv[ANON_FRIENDLY_MONSTER])))
+        {
+            // Only give this message once.
+            if (!rc)
+                god_speaks(GOD_XOM, _get_xom_speech("inner flame").c_str());
+
+            simple_monster_message(*mi, (mi->body_size(PSIZE_BODY) > SIZE_BIG)
+                                   ? " is filled with an intense inner flame!"
+                                   : " is filled with an inner flame.");
+            rc = true;
+        }
+    }
+
+    if (rc)
+    {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "inner flame monster(s)"),
+                  true);
+        return (XOM_GOOD_INNER_FLAME);
+    }
+    return (XOM_DID_NOTHING);
+}
+
 // The nicer stuff.  Note: these things are not necessarily nice.
 static int _xom_is_good(int sever, int tension, bool debug = false)
 {
@@ -2387,11 +2421,13 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_animate_monster_weapon(sever, debug);
     else if (x_chance_in_y(12, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
-    else if (tension > 0 && x_chance_in_y(13, sever))
+    else if (x_chance_in_y(13, sever))
+        done = _xom_inner_flame(debug);
+    else if (tension > 0 && x_chance_in_y(14, sever))
         done = _xom_rearrange_pieces(sever, debug);
-    else if (random2(tension) < 15 && x_chance_in_y(14, sever))
+    else if (random2(tension) < 15 && x_chance_in_y(15, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(15, sever))
+    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(16, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2434,7 +2470,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = XOM_GOOD_TELEPORT;
     }
-    else if (random2(tension) < 5 && x_chance_in_y(16, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(17, sever))
     {
         if (debug)
             return (XOM_GOOD_VITRIFY);
@@ -2448,7 +2484,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             done = XOM_GOOD_VITRIFY;
         }
     }
-    else if (random2(tension) < 5 && x_chance_in_y(17, sever)
+    else if (random2(tension) < 5 && x_chance_in_y(18, sever)
              && x_chance_in_y(16, how_mutated()))
     {
         done = _xom_give_mutations(true, debug);
@@ -4218,7 +4254,7 @@ static const std::string _xom_effect_to_name(int effect)
         "animate monster weapon", "annoyance gift", "random item gift",
         "acquirement", "summon allies", "polymorph", "swap monsters",
         "teleportation", "vitrification", "mutation", "lightning",
-        "change scenery", "snakes to sticks",
+        "change scenery", "snakes to sticks", "inner flame monsters",
         // bad acts
         "nothing", "coloured smoke trail", "miscast (pseudo)",
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
