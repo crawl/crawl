@@ -1284,8 +1284,6 @@ public:
     };
 
 private:
-    void write_depth_ranges(writer&) const;
-    void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     std::string apply_subvault(string_spec &);

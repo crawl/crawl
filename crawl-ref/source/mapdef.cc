@@ -2373,7 +2373,7 @@ void map_def::write_index(writer& outf) const
     marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
     place.write(outf);
-    write_depth_ranges(outf);
+    depths.write(outf);
     prelude.write(outf);
 }
 
@@ -2397,19 +2397,9 @@ void map_def::read_index(reader& inf)
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.read(inf);
-    read_depth_ranges(inf);
+    depths.read(inf);
     prelude.read(inf);
     index_only = true;
-}
-
-void map_def::write_depth_ranges(writer& outf) const
-{
-    depths.write(outf);
-}
-
-void map_def::read_depth_ranges(reader& inf)
-{
-    depths.read(inf);
 }
 
 void map_def::set_file(const std::string &s)
