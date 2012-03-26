@@ -350,7 +350,9 @@ bool level_range::matches(const level_id &lid) const
         return (matches(absdungeon_depth(lid.branch, lid.depth)));
     else
         return (branch == lid.branch
-                && lid.depth >= shallowest && lid.depth <= deepest);
+                && (lid.depth >= shallowest
+                    || shallowest == BRANCH_END && lid.depth == brdepth[branch])
+                && lid.depth <= deepest);
 }
 
 bool level_range::matches(int x) const
