@@ -52,7 +52,7 @@ void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void handle_god_time(void);
 int god_colour(god_type god);
-uint8_t god_message_altar_colour(god_type god);
+colour_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int had_gods();
@@ -83,11 +83,9 @@ void mons_make_god_gift(monster* mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
 
 int yred_random_servants(unsigned int threshold, bool force_hostile = false);
-bool is_undead_slave(const monster* mon);
 bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
-bool is_neutral_plant(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
@@ -95,7 +93,7 @@ bool bless_follower(monster* follower = NULL,
                     bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
-bool god_hates_attacking_friend(god_type god, int species);
+bool god_hates_attacking_friend(god_type god, monster_type species);
 bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god);
 

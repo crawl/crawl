@@ -12,6 +12,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "spl-transloc.h"
+#include "stuff.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -76,12 +77,8 @@ static duration_def duration_data[] =
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_REPEL_MISSILES, true,
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
-    { DUR_RESIST_POISON, true,
-      LIGHTBLUE, "rPois", "", "You resist poison." },
-    { DUR_RESIST_COLD, true,
-      LIGHTBLUE, "rCold", "", "You resist cold." },
-    { DUR_RESIST_FIRE, true,
-      LIGHTBLUE, "rFire", "", "You resist fire." },
+    { DUR_RESISTANCE, true,
+      LIGHTBLUE, "Resist", "", "You resist elements." },
     { DUR_SAGE, true,
       BLUE, "Sage", "", "" },
     { DUR_SEE_INVISIBLE, true,
@@ -234,6 +231,7 @@ static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
+static void _describe_terrain(status_info* inf);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -318,13 +316,23 @@ void fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_SUPPRESSED:
+        if (you.suppressed())
+        {
+            inf->light_colour = LIGHTGREEN;
+            inf->light_text   = "Suppress";
+            inf->short_text   = "magically suppressed";
+            inf->long_text    = "You are enveloped in a field of magical suppression.";
+        }
+        break;
+
     case STATUS_NET:
         if (you.attribute[ATTR_HELD])
         {
             inf->light_colour = RED;
             inf->light_text   = "Held";
             inf->short_text   = "held";
-            inf->long_text    = "You are held in a net.";
+            inf->long_text    = make_stringf("You are %s.", held_status());
         }
         break;
 
@@ -519,6 +527,10 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Constr";
             inf->short_text   = "constricted";
         }
+        break;
+
+    case STATUS_TERRAIN:
+        _describe_terrain(inf);
         break;
 
     default:
@@ -911,5 +923,26 @@ static void _describe_stat_zero(status_info* inf, stat_type st)
         inf->long_text    = make_stringf(you.stat(st) ?
                 "You are recovering from loss of %s." : "You have no %s!",
                 stat_desc(st, SD_NAME));
+    }
+}
+
+static void _describe_terrain(status_info* inf)
+{
+    switch (grd(you.pos()))
+    {
+    case DNGN_SHALLOW_WATER:
+        inf->light_colour = LIGHTBLUE;
+        inf->light_text = "Water";
+        break;
+    case DNGN_DEEP_WATER:
+        inf->light_colour = BLUE;
+        inf->light_text = "Water";
+        break;
+    case DNGN_LAVA:
+        inf->light_colour = RED;
+        inf->light_text = "Lava";
+        break;
+    default:
+        ;
     }
 }

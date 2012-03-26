@@ -191,14 +191,24 @@ void TilesFramework::finish_message()
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
-            if (sendto(m_sock, fragment_start, fragment_size, 0,
-                       (sockaddr*) &m_dest_addrs[i], sizeof (sockaddr_un)) == -1)
+            int retries = 10;
+            while (sendto(m_sock, fragment_start, fragment_size, 0,
+                          (sockaddr*) &m_dest_addrs[i], sizeof (sockaddr_un)) == -1)
             {
+                if (--retries <= 0)
+                    die("Socket write error: %s", strerror(errno));
+
                 if (errno == ECONNREFUSED || errno == ENOENT)
                 {
                     // the other side is dead
                     m_dest_addrs.erase(m_dest_addrs.begin() + i);
                     i--;
+                    break;
+                }
+                else if (errno == ENOBUFS)
+                {
+                    // Wait for half a second, then try again
+                    usleep(500 * 1000);
                 }
                 else
                     die("Socket write error: %s", strerror(errno));
@@ -682,6 +692,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if ((force_full && next_pc.is_silenced)
             || next_pc.is_silenced != current_pc.is_silenced)
             write_message("silenced:%u,", next_pc.is_silenced);
+
+        if ((force_full && next_pc.is_suppressed)
+            || next_pc.is_suppressed != current_pc.is_suppressed)
+            write_message("suppressed:%u,", next_pc.is_suppressed);
 
         if ((force_full && next_pc.halo)
             || next_pc.halo != current_pc.halo)

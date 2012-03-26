@@ -217,11 +217,9 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ASHENZARI:
-        // Cursed god: no holy wrath (since that brand repels curses) or
-        // pearl dragon armour (since that armour type repels curses).
+        // Cursed god: no holy wrath (since that brand repels curses).
         if (brand == SPWPN_HOLY_WRATH)
             return (false);
-
         break;
 
     default:
@@ -349,6 +347,18 @@ bool is_randapp_artefact(const item_def &item)
     return (item.flags & ISFLAG_UNRANDART
             && !(item.flags & ISFLAG_KNOW_TYPE)
             && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP));
+}
+
+void autoid_unrand(item_def &item)
+{
+    if (!(item.flags & ISFLAG_UNRANDART) || item.flags & ISFLAG_KNOW_TYPE)
+        return;
+    const uint16_t uflags = _seekunrandart(item)->flags;
+    if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
+        return;
+
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    add_autoinscription(item);
 }
 
 unique_item_status_type get_unique_item_status(const item_def& item)
@@ -684,7 +694,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
     return (1 + random2(2));
 }
 
-void static _get_randart_properties(const item_def &item,
+static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &proprt)
 {
     const object_class_type aclass = item.base_type;
@@ -733,11 +743,8 @@ void static _get_randart_properties(const item_def &item,
                                      (tmp >=  8) ? SPWPN_VENOM
                                                  : SPWPN_VORPAL + random2(3);
 
-                if (atype == WPN_BLOWGUN
-                    && proprt[ARTP_BRAND] != SPWPN_SPEED)
-                {
-                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
-                }
+                if (atype == WPN_BLOWGUN)
+                    proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
 
                 // Removed slings from getting the venom attribute: they can
                 // be branded with it now using Poison Weapon, and perma-branded
@@ -1366,8 +1373,7 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         return;
 
     known_vec[prop] = static_cast<bool>(true);
-    if (Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(item));
+    add_autoinscription(item);
 }
 
 static std::string _get_artefact_type(const item_def &item,
@@ -2065,19 +2071,15 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
 
+    if (!(unrand->flags & UNRAND_FLAG_RANDAPP)
+        && !(unrand->flags & UNRAND_FLAG_UNIDED)
+        && !strcmp(unrand->name, unrand->unid_name))
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        add_autoinscription(item);
+    }
+
     return (true);
-}
-
-const char *unrandart_descrip(int which_descrip, const item_def &item)
-{
-    // Eventually it would be great to have randomly generated descriptions
-    // for randarts.
-    const unrandart_entry *unrand = _seekunrandart(item);
-
-    return ((which_descrip == 0) ? unrand->desc :
-            (which_descrip == 1) ? unrand->desc_id :
-            (which_descrip == 2) ? unrand->desc_end
-                                 : "Unknown.");
 }
 
 void unrand_reacts()

@@ -273,7 +273,7 @@ spret_type cast_corpse_rot(bool fail)
 
 void corpse_rot(actor* caster)
 {
-    for (radius_iterator ri(caster->pos(), 6, C_ROUND, caster->atype() == ACT_PLAYER ? you.get_los_no_trans()
+    for (radius_iterator ri(caster->pos(), 6, C_ROUND, caster->is_player() ? you.get_los_no_trans()
                                                                                     : caster->get_los());
          ri; ++ri)
     {
@@ -282,7 +282,7 @@ void corpse_rot(actor* caster)
                 if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
                     // Found a corpse.  Skeletonise it if possible.
-                    if (!mons_skeleton(si->plus))
+                    if (!mons_skeleton(si->mon_type))
                     {
                         item_was_destroyed(*si);
                         destroy_item(si->index());

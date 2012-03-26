@@ -261,13 +261,8 @@ LFLAGS:  no_tele_control
 -- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
 -- when it dies through means other than being banished.
 local function monster_die(monster, killer_type, killer_index, silent, wizard)
-    if killer_type == "reset" then
-       if monster.you_can_see then
-          crawl.mpr("You feel a great sense of loss.")
-       else
-          crawl.mpr("You feel a great sense of loss, and a brush of " ..
-                    "the abyss.")
-       end
+    if killer_type == "banished" then
+      crawl.mpr("You feel a great sense of loss, and a brush of the abyss.")
     else
       dgn.persist.fix_slime_vaults = true
     end
@@ -299,10 +294,6 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 
 {{
     dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
-    dgn.set_feature_desc_long("stone wall",
-"This strangely slime-free stone wall is carved all over with countless "..
-"mystical runes. One often repeated set of runes seems to refer to "..
-"'the royal jelly.'")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

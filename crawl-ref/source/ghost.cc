@@ -79,7 +79,6 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
-    SPELL_TUKIMAS_BALL,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
@@ -258,11 +257,7 @@ void ghost_demon::init_random_demon()
             spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-        {
             spells[2] = RANDOM_ELEMENT(search_order_third);
-            if (spells[2] == SPELL_TUKIMAS_BALL)
-                spells[2] = SPELL_NO_SPELL;
-        }
 
         if (coinflip())
         {
@@ -447,10 +442,10 @@ void ghost_demon::init_player_ghost()
     add_spells();
 }
 
-static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
-                                         uint8_t force_not_colour)
+static colour_t _ugly_thing_assign_colour(colour_t force_colour,
+                                          colour_t force_not_colour)
 {
-    uint8_t colour;
+    colour_t colour;
 
     if (force_colour != BLACK)
         colour = force_colour;
@@ -487,7 +482,7 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
     return (u_att_flav);
 }
 
-static attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
+static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 {
     attack_flavour u_att_flav = AF_PLAIN;
 
@@ -528,7 +523,7 @@ static attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
 }
 
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
-                                  uint8_t force_colour)
+                                  colour_t force_colour)
 {
     // Movement speed: 11, the same as in mon-data.h.
     speed = 11;
@@ -1013,7 +1008,7 @@ int ghost_level_to_rank(const int xl)
 ///////////////////////////////////////////////////////////////////////////////
 // Laboratory rats!
 
-std::string adjective_for_labrat_colour (uint8_t l_colour)
+std::string adjective_for_labrat_colour (colour_t l_colour)
 {
     switch (l_colour)
     {
@@ -1036,7 +1031,7 @@ std::string adjective_for_labrat_colour (uint8_t l_colour)
 }
 
 #ifdef USE_TILE
-int tile_offset_for_labrat_colour (uint8_t l_colour)
+int tile_offset_for_labrat_colour (colour_t l_colour)
 {
     switch (l_colour)
     {
@@ -1056,7 +1051,7 @@ int tile_offset_for_labrat_colour (uint8_t l_colour)
 }
 #endif
 
-uint8_t colour_for_labrat_adjective (std::string adjective)
+colour_t colour_for_labrat_adjective (std::string adjective)
 {
     if (adjective == "armoured")    return CYAN;
     if (adjective == "beastly")     return YELLOW;
@@ -1072,16 +1067,16 @@ uint8_t colour_for_labrat_adjective (std::string adjective)
     return BLACK;
 }
 
-static const uint8_t labrat_colour_values[] = {
+static const colour_t labrat_colour_values[] = {
     CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
 };
 
-static uint8_t _labrat_random_colour()
+static colour_t _labrat_random_colour()
 {
     return (RANDOM_ELEMENT(labrat_colour_values));
 }
 
-void ghost_demon::init_labrat (uint8_t force_colour)
+void ghost_demon::init_labrat (colour_t force_colour)
 {
     // Base init for "plain" laboratory rats. Kept in line with mon-data.h.
     xl = 5;

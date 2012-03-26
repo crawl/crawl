@@ -189,7 +189,7 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
     if (exsk == SK_FIGHTING)
         calc_hp();
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
         calc_mp();
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR)
@@ -554,7 +554,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
 
 /*
  * Init the training array by scaling down the skill_points array to 100.
- * Used at game setup, and when upgrading saves.
+ * Used at game setup, when upgrading saves and when loading dump files.
  */
 void init_training()
 {
@@ -1029,7 +1029,7 @@ void set_skill_level(skill_type skill, double amount)
     if (fractional)
     {
         target += (skill_exp_needed(level + 1, skill)
-                  - skill_exp_needed(level, skill)) * fractional;
+                  - skill_exp_needed(level, skill)) * fractional + 1;
     }
 
     if (target == you.skill_points[skill])

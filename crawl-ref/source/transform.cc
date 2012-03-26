@@ -37,6 +37,26 @@
 
 static void _extra_hp(int amount_extra);
 
+static const char* form_names[LAST_FORM + 1] =
+{
+    "none",
+    "spider",
+    "blade",
+    "statue",
+    "ice",
+    "dragon",
+    "lich",
+    "bat",
+    "pig",
+    "appendage",
+};
+
+const char* transform_name(transformation_type form)
+{
+    ASSERT(form >= 0 && form <= LAST_FORM);
+    return form_names[form];
+}
+
 bool form_can_wield(transformation_type form)
 {
     return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
@@ -475,7 +495,11 @@ static bool _slot_conflict(equipment_type eq)
     // until they get something that doesn't conflict with their randart
     // of überness.
     if (you.equip[eq] != -1)
-        return true;
+    {
+        // Horns + hat is fine.
+        if (eq != EQ_HELMET || is_hard_helmet(*(you.slot_item(eq))))
+            return true;
+    }
 
     for (int mut = 0; mut < NUM_MUTATIONS; mut++)
         if (you.mutation[mut] && eq == beastly_slot(mut))
@@ -602,7 +626,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         else
         {
-            if (!force && which_trans != TRAN_PIG)
+            if (!force && which_trans != TRAN_PIG && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
             return (false);
         }
@@ -755,6 +779,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     case TRAN_NONE:
+        tran_name = "null";
+        msg += "your old self.";
         break;
     default:
         msg += "something buggy!";
@@ -861,9 +887,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.duration[DUR_REGENERATION] = 0;
         }
 
-        // silently removed since undead automatically resist poison -- bwr
-        you.duration[DUR_RESIST_POISON] = 0;
-
         you.is_undead = US_UNDEAD;
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         set_redraw_status(REDRAW_HUNGER);
@@ -874,7 +897,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             int app = you.attribute[ATTR_APPENDAGE];
             ASSERT(app != NUM_MUTATIONS);
             ASSERT(beastly_slot(app) != EQ_NONE);
-            ASSERT(you.equip[beastly_slot(app)] == -1);
             you.mutation[app] = app == MUT_HORNS ? 2 : 3;
         }
         break;

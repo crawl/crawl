@@ -581,9 +581,9 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;
     mid_t source        = 0;
-    if (agent && agent->atype() == ACT_PLAYER)
+    if (agent && agent->is_player())
         whose = KC_YOU, killer = KILL_YOU_MISSILE, source = MID_PLAYER;
-    else if (agent && agent->atype() == ACT_MONSTER)
+    else if (agent && agent->is_monster())
     {
         if (agent->as_monster()->friendly())
             whose = KC_FRIENDLY;
@@ -991,11 +991,11 @@ bool _actor_apply_cloud_side_effects(actor *act,
             {
                 mpr("Strange energies course through your body.");
                 if (one_chance_in(3))
-                    return you.mutate();
+                    return you.mutate("mutagenic cloud");
                 else
-                    return give_bad_mutation();
+                    return give_bad_mutation("mutagenic cloud");
             }
-            else if (mons->mutate())
+            else if (mons->mutate("mutagenic cloud"))
             {
                 if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
                     did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));

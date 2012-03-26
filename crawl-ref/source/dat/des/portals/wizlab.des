@@ -82,11 +82,6 @@
 
 {{
 function wizlab_portal (e)
-    -- Flavour could use some improvement.
-    local desc_long = "This portal has been left open by a careless wizard. " ..
-                      "It might lead to their secret laboratory, but beware!" ..
-                      " Surely it will be guarded by magical traps and "      ..
-                      "terrible monsters. It seems to be slowly fading away."
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
     local messager =
@@ -105,7 +100,6 @@ function wizlab_portal (e)
       timed_marker {
         disappear = "The portal disappears completely.",
         desc = "magical portal",
-        desc_long = desc_long,
         entity = 'portal',
         dst = 'WizLab',
         overview = "magical portal",
@@ -247,7 +241,7 @@ end
 
 local function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false, false, false)
-    local mons =  dgn.create_monster(x, y, spec)
+    local mons = dgn.create_monster(x, y, spec)
     mons.set_prop("zonguldrok", 1)
     return mons
 end
@@ -276,7 +270,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         return
     end
 
-    local mons = dgn.mons_from_index(ev:arg1())
+    local mons = dgn.mons_from_mid(ev:arg1())
     if not mons.has_prop("zonguldrok") then
         return
     end
@@ -670,20 +664,10 @@ KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other
 KITEM:      9 = scroll of acquirement
 :           dgn.set_feature_desc_short("translucent rock wall",
 :                                      "crystal clear mirror")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                                     "A glistening mirror, reflecting everything around it.\n")
 :           dgn.set_feature_desc_short("granite statue", "strange machine")
-:           dgn.set_feature_desc_long("granite statue", "A mechanical contraption," ..
-:                                     " all hisses and pops. It is highly reflective.\n")
 :           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
-:           dgn.set_feature_desc_long("dry fountain", "A pristine fountain. " ..
-:                                     "The only thing it lacks is water.\n")
 :           dgn.set_feature_desc_short("stone wall", "black marble wall")
-:           dgn.set_feature_desc_long("stone wall", "The marble glistens and shines. It certainly " ..
-:                                     "is beautiful!\n")
 :           dgn.set_feature_desc_short("floor", "marble floor")
-:           dgn.set_feature_desc_long("floor", "Where the walls are black marble, the floor is " ..
-:                                     "a white and silver, with shades of pink here and there.\n")
 :           set_random_mon_list("dancing weapon")
 :           wizlab_setup(_G, "Tukima's Studio")
 epilogue{{
@@ -767,16 +751,9 @@ lua_marker("_", grow_marker)
 :           wizlab_setup(_G, "Eringya's Formal Garden")
 :           dgn.set_feature_desc_short("empty arch of ancient stone",
 :                                      "rose-covered archway")
-:           dgn.set_feature_desc_long("empty arch of ancient stone",
-:                                "The roses look beautiful!\n")
 :           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
-:           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
-:                                     "monster made entirely from vines.\n")
 :           dgn.set_feature_desc_short("stone wall", "crumbling stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It looks ancient.\n")
 :           dgn.set_feature_desc_short("floor", "the grass-covered ground")
-:           dgn.set_feature_desc_long("floor", "Strewn with leaves and twigs that" ..
-:                       " crunch loudly underfoot, the grass is crisp and fresh.\n")
 :           set_random_mon_list ("oklob plant / centaur / centaur warrior")
 epilogue{{
             wizlab_milestone(_G, "Eringya's Formal Garden")
@@ -944,7 +921,7 @@ KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
                 soul eater / sun demon
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
-KMONS:      | = blizzard demon / green death / pit fiend / brimstone fiend /\
+KMONS:      | = blizzard demon / green death / hell sentinel / brimstone fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2
@@ -993,13 +970,8 @@ box_marker:add_triggerer(DgnTriggerer:new { type="turn",
 lua_marker("A", box_marker)
 }}
 :           dgn.set_feature_desc_short("rock wall", "strange rock wall")
-:           dgn.set_feature_desc_long("rock wall", "It is decorated with "
-:                                  .. "images you might see in a tomb.\n")
 :           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It is covered with disturbing"
-:                                  .. ", horrifying images.\n")
 :           dgn.set_feature_desc_short("floor", "rough-hewn floor")
-:           dgn.set_feature_desc_long("floor", "It is rough and uneven in places.\n")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
 :           set_random_mon_list("mummy")
 epilogue{{
@@ -1123,18 +1095,9 @@ COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
 :           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
-:           dgn.set_feature_desc_long("Some shallow water", "This sticky "
-:            .. "fluid seems to be secreted by the nearby walls. It looks "
-:            .. "disgusting.\n")
 :           dgn.set_feature_desc_short("stone wall", "sinewy wall")
-:           dgn.set_feature_desc_long("stone wall", "These walls look"
-:            .. " strangely organic, but incredibly tough and durable.\n")
 :           dgn.set_feature_desc_short("translucent rock wall", "thin membrane")
-:           dgn.set_feature_desc_long("translucent rock wall", "This strange"
-:            .. " membrane is thin enough to see through.\n")
 :           dgn.set_feature_desc_short("floor", "pulsating floor")
-:           dgn.set_feature_desc_long("floor", "This slick floor seems to pulse"
-:            .. " to an unknown beat.\n")
 : lua_marker('+', props_marker {
 :           door_description_noun="fleshy orifice",
 :           door_berserk_verb_open="You part the %s%s",
@@ -1300,7 +1263,6 @@ ITEM:       long sword unrand:sword_of_zonguldrok
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("Z", portal_desc { wizard_grave = 1})
 lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
-        desc_long="A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.\n",
         veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
 
 local zombies_appear_marker = TriggerableFunction:new {
@@ -1346,11 +1308,7 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
 :           dgn.set_feature_desc_short("granite statue", "gravestone")
-:           dgn.set_feature_desc_long("granite statue", "A nameless grave. The question "
-:               .. "remains: is it the grave that is nameless, or the person who lies "
-:               .. "in that grave?\n")
 :           dgn.set_feature_desc_short("floor", "the ground")
-:           dgn.set_feature_desc_long("floor", "No life grows here. It is completely dead.\n")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1481,22 +1439,9 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           set_border_fill_type("tree")
 :           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
 :           dgn.set_feature_desc_short("tree", "autumnal tree")
-:           dgn.set_feature_desc_long("tree", "These trees, large as they are, appear to be "
-:               .. "permanently locked in an autumnal moment: leaves, coloured red and gold, "
-:               .. "fall from branches and float gracefully to the floor. Before they even "
-:               .. "reach the ground, however, a shadow passes, and when the shimmer is gone, "
-:               .. "the leaves are once more on the branch, ready to fall again.\n")
 :           dgn.set_feature_desc_short("stone wall", "crumbled stone wall")
-:           dgn.set_feature_desc_long("stone wall", "These walls, though they have fallen "
-:               .. "into disrepair, appear as locked in time as the trees, ready to collapse, "
-:               .. "but utterly unable to.\n")
 :           dgn.set_feature_desc_short("granite statue", "strange statue")
-:           dgn.set_feature_desc_long("granite statue", "The features of this statue are strange "
-:               .. "and alien. Is it because the statue is worn and tarnished that it has become "
-:               .. "so unrecognisable? Or is it that the subject was something demonic and evil?\n")
 :           dgn.set_feature_desc_short("floor", "timeless floor")
-:           dgn.set_feature_desc_long("floor", "Though a thousand feet may have trod these floors, "
-:               .. "they appear timeless and indestructible.\n")
 epilogue{{
             wizlab_milestone(_G, "Wucad Mu's Monastery")
 }}
@@ -1593,7 +1538,6 @@ COLOUR:     wW# = silver
 :           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 :           dgn.set_feature_desc_short("floor", "damp floor")
-:           dgn.set_feature_desc_long("floor", "Perhaps it is the humidity, or the constant flow of clouds, but the floor here remains forever damp.\n")
 :           dgn.set_feature_desc_short("wall of green crystal", "wall of white crystal")
 :           dgn.set_feature_desc_short("translucent unnaturally hard rock wall", "wall of transparent white crystal")
 
@@ -1746,14 +1690,11 @@ KITEM:      i = rod of demonology / ring of fire / ring of protection from fire 
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
 :           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
-:                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
+:                        .. [[ufetubus / midge / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
 :           dgn.set_feature_desc_short("floor", "hot floor")
-:           dgn.set_feature_desc_long("floor", "Deep below the floor burns a fire hotter than any other fire: the fire of hell. The floor is hot to the touch.\n")
 :           dgn.set_feature_desc_short("stone wall", "black wall")
-:           dgn.set_feature_desc_long("stone wall", "Perhaps stone, or solid charcoal, or a substance found only in the deepest hells.\n")
 :           dgn.set_feature_desc_short("rock wall", "carved rock wall")
-:           dgn.set_feature_desc_long("rock wall", "It is decorated with images of death and destruction.\n")
 epilogue{{
             wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
 }}

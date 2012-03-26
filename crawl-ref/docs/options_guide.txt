@@ -58,14 +58,15 @@ The contents of this text are:
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
-                easy_eat_gourmand, easy_eat_contaminated,
+                easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
-                status_caption_colour, clear_messages, show_more, small_more,
-                show_inventory_weights, show_newturn_mark, show_gold_turns,
-                show_game_turns, item_stack_summary_minimum, list_rotten,
+                status_caption_colour, enemy_hp_colour, clear_messages,
+                show_more, small_more, show_inventory_weights,
+                show_newturn_mark, show_gold_turns, show_game_turns,
+                item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, show_no_ctele, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting,
@@ -807,14 +808,17 @@ explore_greedy = true
         disabled if you're temporarily unable to pick up items
         (from uncontrolled levitation, for instance).
 
-explore_stop  = items,greedy_pickup_smart,stairs,shops,altars,gates,
-explore_stop += greedy_visited_item_stack
+explore_stop  = items,stairs,shops,altars,portals,branches
+explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
         "explore_stop += option"s, otherwise the last "explore_stop ="
         options line will override all previous explore_stop lines.
         "explore_stop -=" can be used to remove items from the list.
+
+        The "branches" condition stops for branch entrances but not for
+        other kinds of stairs or portals.
 
         NOTE: runrest_ignore_message has no effect on explore_stop.
 
@@ -1082,6 +1086,15 @@ auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
 
+auto_drop_chunks = (never | rotten | yes)
+        If you try to pick something up but cannot due to burden, this
+        option will try dropping useless chunks to make room. Normally,
+        dropping chunks is a waste of time (as the problem will soon rot
+        away) so this is done only at pick up time. If set to "rotten", only
+        spoiled chunks will be considered useless, and only if you are not
+        a saprovore. If fully enabled, chunks that would spoil before you
+        would need them will be dropped as well, ordered by quality and age.
+
 prompt_for_swap = true
         If true, then if an auto-switch butchery is interrupted by a
         hostile monster, the game will ask if you wish to switch back to
@@ -1287,6 +1300,12 @@ stat_colour = 1:lightred, 3:red
 status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
+
+enemy_hp_colour = green green brown brown magenta red lightgrey
+        Colours enemy health appropriately in the monster pane. The
+        colourings correspond to full health, lightly wounded, moderately
+        wounded, heavily wounded, severely wounded, almost dead, and
+        undead (or otherwise unable to be determined).
 
 clear_messages = false
         Setting this option to true will cause messages to cleared

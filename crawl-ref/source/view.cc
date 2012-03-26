@@ -731,7 +731,7 @@ void view_update_at(const coord_def &pos)
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
         : you.flash_colour;
-    int mons = env.map_knowledge(pos).monster();
+    monster_type mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
@@ -750,12 +750,12 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE_LOCAL
-void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
+void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))
     {
-        uint8_t old_flash_colour = you.flash_colour;
+        colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
 
         you.flash_colour = fmc_colour;
@@ -781,14 +781,14 @@ bool view_update()
     return (false);
 }
 
-void flash_view(uint8_t colour, targetter *where)
+void flash_view(colour_t colour, targetter *where)
 {
     you.flash_colour = colour;
     you.flash_where = where;
     viewwindow(false);
 }
 
-void flash_view_delay(uint8_t colour, int flash_delay, targetter *where)
+void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
 {
     flash_view(colour, where);
     // Scale delay to match change in arena_delay.
@@ -966,6 +966,8 @@ static void _draw_player(screen_cell_t *cell,
     }
     if (Options.use_fake_player_cursor)
         cell->colour |= COLFLAG_REVERSE;
+
+    cell->colour = real_colour(cell->colour);
 
 #ifdef USE_TILE
     cell->tile.fg = env.tile_fg(ep) = tileidx_player();

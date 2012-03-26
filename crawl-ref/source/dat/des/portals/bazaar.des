@@ -26,18 +26,6 @@ function place_bazaar_portal(e, perm)
 end
 
 function bazaar_portal(timed)
-  local desc_long =
-"Aside from the vendors who've set up their stores at various places in the " ..
-"dungeon, there are others trying to make a living by traveling from place " ..
-"to place. Bazaars feature a number of different shops and often have " ..
-"better stock than the sedentary ones, sometimes even at a bargain. " ..
-"Once you hear the clinking of coins, be sure to hurry up and find the " ..
-"impromptu marketplace before the caravan moves on! " ..
-"\n\n"..
-"Also be warned that their nomadic lifestyle has taught these sellers to " ..
-"appropriate any items an adventurer might leave behind, and then leave " ..
-"quickly, probably to sell them elsewhere."
-
   local messager =
     timed_msg {
       initmsg = { "You hear coins being counted.",
@@ -59,7 +47,7 @@ function bazaar_portal(timed)
                   floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
               }
   else
-    return one_way_stair { desc = 'gateway to a bazaar', desc_long = desc_long,
+    return one_way_stair { desc = 'gateway to a bazaar',
                            dst = 'Bazaar', floor = 'stone_arch' }
   end
 end
@@ -393,7 +381,7 @@ KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
 SUBST:   b=a, c=a, d=a, e=a, f=a, a=T
 SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
-KFEAT:   Z = stone_arch
+KFEAT:   Z = abandoned_shop
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
@@ -434,7 +422,7 @@ SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
 SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
 SUBST:   y=z, r=z, s=z, j=z, k=z, m=z
 KFEAT:   A = any shop
-KFEAT:   Z = stone_arch
+KFEAT:   Z = abandoned_shop
 SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
@@ -1703,7 +1691,7 @@ WEIGHT: 10
 KFEAT:  ! = general shop
 MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
              pow_min = 1, pow_max = 3, delay_min = 5, delay_max = 10, \
-             size = 16, walk_dist = 0, spread_rate= 0 }
+             size = 10, walk_dist = 0, spread_rate= 0 }
 ITEM:   nothing
 NSUBST: < = 1:< / *:.
 MAP
@@ -1718,7 +1706,7 @@ x.......x.xxx.x.......x
 xxxxxxxx.x.x.x.xxxxxxxx
       x.xx...xx.x
       xx.......xx
-       xx..*..xx
+       xx..d..xx
       xx.......xx
       x.xx...xx.x
 xxxxxxxx.x.x.x.xxxxxxxx

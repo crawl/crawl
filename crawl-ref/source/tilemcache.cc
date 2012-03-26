@@ -247,20 +247,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
-    case TILEP_MONS_MERFOLK:
-    case TILEP_MONS_MERFOLK_WATER:
-    case TILEP_MONS_MERFOLK_JAVELINEER:
-    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
-    case TILEP_MONS_MERFOLK_IMPALER:
-    case TILEP_MONS_MERFOLK_IMPALER_WATER:
-    case TILEP_MONS_MERFOLK_AQUAMANCER:
-    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
-    case TILEP_MONS_MERMAID:
-    case TILEP_MONS_MERMAID_WATER:
-    case TILEP_MONS_SIREN:
-    case TILEP_MONS_SIREN_WATER:
-    case TILEP_MONS_ILSUIW:
-    case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
@@ -281,6 +267,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
     case TILEP_MONS_BIG_KOBOLD:
+    case TILEP_MONS_MERFOLK:
+    case TILEP_MONS_MERFOLK_WATER:
+    case TILEP_MONS_MERFOLK_JAVELINEER:
+    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
@@ -295,6 +285,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT+7:
     case TILEP_MONS_TIAMAT+8:
     case TILEP_MONS_ANCIENT_CHAMPION:
+    case TILEP_MONS_MERFOLK_IMPALER:
+    case TILEP_MONS_MERFOLK_IMPALER_WATER:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -356,6 +348,12 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_SOLDIER:
     case TILEP_MONS_DEEP_DWARF_NECROMANCER:
     case TILEP_MONS_UNBORN_DEEP_DWARF:
+    case TILEP_MONS_MERMAID:
+    case TILEP_MONS_MERMAID_WATER:
+    case TILEP_MONS_SIREN:
+    case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_ILSUIW:
+    case TILEP_MONS_ILSUIW_WATER:
         *ofs_x = 0;
         *ofs_y = 2;
         break;
@@ -382,6 +380,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -5;
         break;
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
+    case TILEP_MONS_MERFOLK_AQUAMANCER:
+    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
         *ofs_x = -2;
         *ofs_y = -1;
         break;

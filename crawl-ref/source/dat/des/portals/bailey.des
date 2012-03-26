@@ -13,14 +13,6 @@
 
 {{
 function bailey_portal(e, ptype)
-  local desc_long
-  if ptype == 'axe' then
-    desc_long = [[This portal leads to a forbidden dungeon of the mad axeman. You know this because of the black pennant bearing axes in saltire. It seems as if you had better enter the portal before the standard is lowered to the ground.]]
-  else
-    desc_long = [[This portal leads to a forbidden dungeon of the mad chevalier. You know this because of the black pennant bearing polearms in saltire. It seems as if you had better enter the portal before the standard is lowered to the ground.]]
-  end
-  desc_long = string.gsub(desc_long, "\n%s+", "\n")
-
   local timeout_turns_long = crawl.random_range(2700, 3300)
   local timeout_turns_short = timeout_turns_long/10;
 
@@ -42,7 +34,6 @@ function bailey_portal(e, ptype)
       timed_marker {
         disappear = "The portal closes with a thud.",
         desc = "flagged portal",
-        desc_long = desc_long,
         entity = 'oriflamme',
         dst = "Bailey",
         bailey_type = ptype,

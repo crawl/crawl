@@ -169,9 +169,14 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
     });
 
     $(document).ready(function () {
-        $(window).resize(function () {
-            var params = $.extend({}, layout_parameters);
-            layout(params);
+        $(window)
+            .off("resize.game")
+            .on("resize.game", function () {
+            if (layout_parameters)
+            {
+                var params = $.extend({}, layout_parameters);
+                layout(params);
+            }
         });
     });
 

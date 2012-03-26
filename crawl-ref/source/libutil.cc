@@ -175,38 +175,6 @@ std::string make_stringf(const char *s, ...)
     return ret;
 }
 
-std::string &escape_path_spaces(std::string &s)
-{
-    std::string result;
-    result.clear();
-#ifdef UNIX
-    for (const char* ch = s.c_str(); *ch != '\0'; ++ch)
-    {
-        if (*ch == ' ')
-        {
-            result += '\\';
-        }
-        result += *ch;
-    }
-#elif defined(TARGET_OS_WINDOWS)
-    if (s.find(" ") != std::string::npos
-        && s.find("\"") == std::string::npos)
-    {
-        result = "\"" + s + "\"";
-    }
-    else
-    {
-        return s;
-    }
-#else
-    // Not implemented for this platform.  Assume that escaping isn't
-    // necessary.
-    return s;
-#endif
-    s = result;
-    return s;
-}
-
 bool key_is_escape(int key)
 {
     switch (key)
@@ -1003,6 +971,27 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     return s - src - 1;
 }
 
+std::string unwrap_desc(std::string desc)
+{
+    // Don't append a newline to an empty description.
+    if (desc == "")
+        return "";
+
+    trim_string_right(desc);
+
+    // An empty line separates paragraphs.
+    desc = replace_all(desc, "\n\n", "\\n\\n");
+    // Indented lines are pre-formatted.
+    desc = replace_all(desc, "\n ", "\\n ");
+
+    // Newlines are still whitespace.
+    desc = replace_all(desc, "\n", " ");
+    // Can force a newline with a literal "\n".
+    desc = replace_all(desc, "\\n", "\n");
+
+    return desc + "\n";
+}
+
 #ifdef TARGET_OS_WINDOWS
 // FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
 // function isn't included in msys, so I don't know how to do that. Instead, I just check
@@ -1087,7 +1076,9 @@ static BOOL WINAPI console_handler(DWORD sig)
 
 void init_signals()
 {
-    // If there's no console,
+    // If there's no console, this will return an error, which we ignore.
+    // For GUI programs there's no controlling terminal, but there's no hurt in
+    // blindly trying -- this way, we support Cygwin.
     SetConsoleCtrlHandler(console_handler, true);
 }
 

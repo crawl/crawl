@@ -373,6 +373,7 @@ static void _print_stats_ac(int x, int y)
     if (you.incapacitated() && player_wearing_slot(EQ_SHIELD))
         textcolor(RED);
     else if (you.duration[DUR_CONDENSATION_SHIELD]
+             || you.duration[DUR_MAGIC_SHIELD]
              || you.duration[DUR_DIVINE_SHIELD])
     {
         textcolor(LIGHTBLUE);
@@ -577,9 +578,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_REPEL_MISSILES,
         STATUS_REGENERATION,
         DUR_BERSERK,
-        DUR_RESIST_POISON,
-        DUR_RESIST_COLD,
-        DUR_RESIST_FIRE,
+        DUR_RESISTANCE,
         DUR_INSULATION,
         DUR_SEE_INVISIBLE,
         STATUS_AIRBORNE,
@@ -630,6 +629,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_CONSTRICTED,
         DUR_DIVINE_STAMINA,
         STATUS_AUGMENTED,
+        STATUS_SUPPRESSED,
+        STATUS_TERRAIN,
     };
 
     status_info inf;
@@ -1093,37 +1094,13 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 
         const int count = (end - start);
 
-        if (count == 1)
+        if (count == 1)  // Print an icon representing damage level.
         {
-            // Print an "icon" representing damage level.
-            monster_info mi = mons[start];
-
-            int dam_color;
-            switch (mi.dam)
-            {
-            // NOTE: In os x, light versions of foreground colors are OK,
-            //       but not background colors.  So stick wth standards.
-            case MDAM_DEAD:
-            case MDAM_ALMOST_DEAD:
-            case MDAM_SEVERELY_DAMAGED:   dam_color = RED;       break;
-            case MDAM_HEAVILY_DAMAGED:    dam_color = MAGENTA;   break;
-            case MDAM_MODERATELY_DAMAGED: dam_color = BROWN;     break;
-            case MDAM_LIGHTLY_DAMAGED:    dam_color = GREEN;     break;
-            case MDAM_OKAY:               dam_color = GREEN;     break;
-            default:                      dam_color = CYAN;      break;
-            }
-
-            if (!mons_class_can_display_wounds(mi.type))
-                dam_color = BLACK;
-
             cprintf(" ");
-            textbackground(dam_color);
-            textcolor(dam_color);
-            // FIXME: On Windows, printing a blank space here
-            // doesn't give us the correct colours. So use and
-            // underscore instead. Is this a bug with our interface
-            // or with Windows?
-            cprintf("_");
+
+            monster_info mi = mons[start];
+            textcolor(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP));
+            cprintf(" ");
             textbackground(BLACK);
             textcolor(LIGHTGREY);
             cprintf(" ");
@@ -2059,6 +2036,7 @@ static std::string _status_mut_abilities(int sw)
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
         STATUS_AUGMENTED,
+        STATUS_SUPPRESSED,
     };
 
     status_info inf;

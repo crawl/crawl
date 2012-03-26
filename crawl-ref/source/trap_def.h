@@ -13,10 +13,10 @@ struct trap_def
     bool is_safe(actor* act = 0) const;
     void trigger(actor& triggerer, bool flat_footed = false);
     void disarm();
-    void destroy(bool known = true);
+    void destroy(bool known = false);
     void hide();
     void reveal();
-    void prepare_ammo();
+    void prepare_ammo(int charges = 0);
     bool type_has_ammo() const;
     bool active() const;
     bool defined() const { return active(); }

@@ -93,7 +93,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where);
 
 void prompt_inscribe_item();
 int launcher_final_speed(const item_def &launcher,
-                         const item_def *shield);
+                         const item_def *shield, bool scaled = true);
 
 void warn_shield_penalties();
 void warn_armour_penalties();

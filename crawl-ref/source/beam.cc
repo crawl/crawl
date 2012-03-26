@@ -490,7 +490,7 @@ bool bolt::can_affect_actor(const actor *act) const
 
 bool bolt::actor_wall_shielded(const actor *act) const
 {
-    return (act->atype() == ACT_PLAYER? false :
+    return (act->is_player()? false :
             mons_wall_shielded(act->as_monster()));
 }
 
@@ -543,6 +543,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
+             2, BEAM_ENSNARE,
             0);
 
     return (flavour);
@@ -1840,6 +1841,10 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_ENSNARE:
+        ensnare(mons);
+        break;
+
     default:
         break;
     }
@@ -2048,7 +2053,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
         enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
 
     // Deities take notice.
-    if (agent == &you)
+    if (agent->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (hurted > 0);
@@ -2082,7 +2087,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     }
 
     // Finally, take care of deity preferences.
-    if (who == &you)
+    if (who && who->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
@@ -2100,7 +2105,7 @@ bool miasma_monster(monster* mons, const actor* who)
 
     bool success = poison_monster(mons, who);
 
-    if (who == &you
+    if (who && who->is_player()
         && is_good_god(you.religion)
         && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
     {
@@ -3244,7 +3249,8 @@ void bolt::affect_player_enchantment()
         if (MON_KILL(thrower))
         {
             mpr("Strange energies course through your body.");
-            you.mutate();
+            you.mutate(aux_source.empty() ? get_source_name() :
+                       (get_source_name() + "/" + aux_source));
             obvious_effect = true;
         }
         else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
@@ -3488,7 +3494,7 @@ void bolt::affect_player_enchantment()
 
 void bolt::affect_actor(actor *act)
 {
-    if (act->atype() == ACT_MONSTER)
+    if (act->is_monster())
         affect_monster(act->as_monster());
     else
         affect_player();
@@ -3639,6 +3645,9 @@ void bolt::affect_player()
     // Acid.
     if (flavour == BEAM_ACID)
         splash_with_acid(5, affects_items);
+
+    if (flavour == BEAM_ENSNARE)
+        was_affected = ensnare(&you) || was_affected;
 
     if (affects_items)
     {
@@ -4275,8 +4284,10 @@ void bolt::affect_monster(monster* mon)
             // nice.
             if (you.see_cell(mon->pos()))
             {
-                mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
-                     attitude == ATT_FRIENDLY ? "your" : "a");
+                simple_god_message(
+                    make_stringf(" protects %s plant from harm.",
+                        attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
+                    GOD_FEDHAS);
             }
         }
         return;
@@ -4726,7 +4737,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_POLYMORPH:
-        if (mon->mutate())
+        if (mon->mutate("polymorph other")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
@@ -4861,7 +4872,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
         {
             // No KILL_YOU_CONF, or we get "You heal ..."
-            if (cast_healing(5 + damage.roll(), false, mon->pos()) > 0)
+            if (cast_healing(5 + damage.roll(), 5 + damage.num * damage.size,
+                             false, mon->pos()) > 0)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"
         }
@@ -5051,7 +5063,7 @@ bool bolt::knockback_actor(actor *act)
     const coord_def newpos(ray.pos());
     if (newpos == oldpos
         || actor_at(newpos)
-        || (act->atype() == ACT_MONSTER
+        || (act->is_monster()
             && mons_is_stationary(act->as_monster()))
         || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)
@@ -5666,7 +5678,7 @@ void bolt::set_agent(actor *actor)
     if (!actor)
         return;
 
-    if (actor->atype() == ACT_PLAYER)
+    if (actor->is_player())
     {
         thrower = KILL_YOU_MISSILE;
     }
@@ -5824,6 +5836,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_INNER_FLAME:           return ("inner flame");
     case BEAM_PETRIFYING_CLOUD:      return ("calcifying dust");
     case BEAM_BOLT_OF_ZIN:           return ("silver light");
+    case BEAM_ENSNARE:               return ("magic web");
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

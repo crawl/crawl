@@ -121,7 +121,7 @@ enum ability_type
     ABIL_NEMELEX_DRAW_ONE = 160,
     ABIL_NEMELEX_PEEK_TWO,
     ABIL_NEMELEX_TRIPLE_DRAW,
-    ABIL_NEMELEX_MARK_FOUR,
+    ABIL_NEMELEX_DEAL_FOUR,
     ABIL_NEMELEX_STACK_FIVE,
     // Beogh
     ABIL_BEOGH_SMITING = 170,
@@ -356,7 +356,8 @@ enum beam_type                  // beam[].flavour
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_BOLT_OF_ZIN,
-    BEAM_LAST_REAL = BEAM_BOLT_OF_ZIN,
+    BEAM_ENSNARE,
+    BEAM_LAST_REAL = BEAM_ENSNARE,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -526,6 +527,10 @@ enum canned_message_type
     MSG_MANA_DECREASE,
     MSG_DISORIENTED,
     MSG_TOO_HUNGRY,
+    MSG_DETECT_NOTHING,
+    MSG_CALL_DEAD,
+    MSG_ANIMATE_REMAINS,
+    MSG_DECK_EXHAUSTED,
 };
 
 enum char_set_type
@@ -621,6 +626,7 @@ enum command_type
     CMD_GO_DOWNSTAIRS,
     CMD_TOGGLE_AUTOPICKUP,
     CMD_TOGGLE_FRIENDLY_PICKUP,
+    CMD_TOGGLE_VIEWPORT_MONSTER_HP,
     CMD_PICKUP,
     CMD_PICKUP_QUANTITY,
     CMD_DROP,
@@ -768,6 +774,7 @@ enum command_type
     CMD_MAP_FIND_STASH_REVERSE,
 
     CMD_MAP_GOTO_TARGET,
+    CMD_MAP_ANNOTATE_LEVEL,
 
     CMD_MAP_WIZARD_TELEPORT,
 
@@ -970,6 +977,13 @@ enum confirm_level_type
     CONFIRM_NONE_EASY,
     CONFIRM_SAFE_EASY,
     CONFIRM_ALL_EASY,
+};
+
+enum chunk_drop_type
+{
+    ADC_NEVER,
+    ADC_ROTTEN,
+    ADC_YES,
 };
 
 // When adding new delays, update their names in delay.cc, or bad things will
@@ -1396,9 +1410,11 @@ enum duration_type
     DUR_GOURMAND,
     DUR_BARGAIN,
     DUR_INSULATION,
-    DUR_RESIST_POISON,
-    DUR_RESIST_FIRE,
-    DUR_RESIST_COLD,
+    DUR_RESISTANCE,
+#if TAG_MAJOR_VERSION == 32
+    DUR_UNUSED_RESIST_FIRE,
+    DUR_UNUSED_RESIST_COLD,
+#endif
     DUR_SLAYING,
     DUR_STEALTH,
     DUR_MAGIC_SHIELD,
@@ -1429,6 +1445,7 @@ enum duration_type
     DUR_SHROUD_OF_GOLUBRIA,
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
+    DUR_AMBROSIA,
     NUM_DURATIONS
 };
 
@@ -1658,7 +1675,7 @@ enum holy_word_source_type
     HOLY_WORD_TSO         = -5,  // TSO effect
 };
 
-enum hunger_state                  // you.hunger_state
+enum hunger_state_t                    // you.hunger_state
 {
     HS_STARVING,
     HS_NEAR_STARVING,
@@ -1914,6 +1931,7 @@ enum targ_mode_type
 enum monster_type                      // (int) menv[].type
 {
     MONS_PROGRAM_BUG,
+        MONS_0 = MONS_PROGRAM_BUG,
 
     MONS_GIANT_NEWT,
     MONS_GIANT_GECKO,
@@ -2281,7 +2299,9 @@ enum monster_type                      // (int) menv[].type
     MONS_TORMENTOR,
     MONS_REAPER,
     MONS_SOUL_EATER,
+#if TAG_MAJOR_VERSION == 32
     MONS_HAIRY_DEVIL,
+#endif
     MONS_ICE_DEVIL,
     MONS_BLUE_DEVIL,
     MONS_HELL_BEAST,
@@ -2293,7 +2313,7 @@ enum monster_type                      // (int) menv[].type
     MONS_CACODEMON,
     MONS_SUN_DEMON,
     MONS_SHADOW_DEMON,
-    MONS_PIT_FIEND,
+    MONS_HELL_SENTINEL,
     MONS_BRIMSTONE_FIEND,
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
@@ -2464,7 +2484,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
     MONS_PILLAR_OF_SALT,
+#if TAG_MAJOR_VERSION == 32
     MONS_TERPSICHORE,
+#endif
     MONS_BAT,
     MONS_SPRIGGAN_AIR_MAGE,
     MONS_FIRE_BAT,
@@ -2486,6 +2508,10 @@ enum monster_type                      // (int) menv[].type
 #if TAG_MAJOR_VERSION == 32
     MONS_SUBTRACTOR_SNAKE,
 #endif
+    MONS_ORB_SPIDER,
+    MONS_ARACHNE,
+    MONS_MOTH,
+    MONS_MOTH_OF_SUPPRESSION,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -3119,7 +3145,9 @@ enum spell_type
     SPELL_ANIMATE_SKELETON,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_HAUNT,
+#if TAG_MAJOR_VERSION == 32
     SPELL_DETECT_ITEMS,
+#endif
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_FREEZE,
     SPELL_SUMMON_ELEMENTAL,
@@ -3157,7 +3185,9 @@ enum spell_type
     SPELL_SWIFTNESS,
     SPELL_FLY,
     SPELL_INSULATION,
+#if TAG_MAJOR_VERSION == 32
     SPELL_DETECT_CREATURES,
+#endif
     SPELL_CURE_POISON,
     SPELL_CONTROL_TELEPORT,
     SPELL_POISON_WEAPON,
@@ -3300,7 +3330,9 @@ enum spell_type
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_HOMUNCULUS,
     SPELL_SUMMON_HYDRA,
+#if TAG_MAJOR_VERSION == 32
     SPELL_TUKIMAS_BALL,
+#endif
     SPELL_DARKNESS,
     SPELL_MESMERISE,
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
@@ -3311,6 +3343,7 @@ enum spell_type
     SPELL_MASS_ABJURATION,
     SPELL_BEASTLY_APPENDAGE,
     SPELL_SILVER_BLAST,
+    SPELL_ENSNARE,
 
     NUM_SPELLS
 };
@@ -3367,6 +3400,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_GOLUBRIA,
     TRAP_PLATE,
     TRAP_WEB,
+    TRAP_GAS,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
@@ -3544,6 +3578,7 @@ enum disable_type
     DIS_HUNGER,
     DIS_DEATH,
     DIS_DELAY,
+    DIS_CONFIRMATIONS,
     NUM_DISABLEMENTS
 };
 

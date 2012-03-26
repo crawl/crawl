@@ -152,8 +152,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
 bool monster::level_up_change()
 {
-    if (const monster_level_up *lup =
-        _monster_level_up_target(static_cast<monster_type>(type), hit_dice))
+    if (const monster_level_up *lup = _monster_level_up_target(type, hit_dice))
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
         return (true);

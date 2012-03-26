@@ -180,6 +180,7 @@ e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 +         CMD_MAP_SCROLL_DOWN
 -         CMD_MAP_SCROLL_UP
 ., \r, ;  CMD_MAP_GOTO_TARGET
+!         CMD_MAP_ANNOTATE_LEVEL
 ESCAPE    CMD_MAP_EXIT_MAP
 
 Move cursor one step in a given direction

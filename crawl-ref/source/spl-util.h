@@ -26,10 +26,9 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_HOLY           = 1<<13,
-  SPTYP_LAST_EXPONENT  = 13,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
-  NUM_SPELL_TYPES      = 15,
-  SPTYP_RANDOM         = 1<<14,
+  SPTYP_LAST_EXPONENT  = 12,
+  SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
+  SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
 };
 
 struct bolt;

@@ -85,7 +85,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           bool *chose_ood_monster);
 
 static monster_type _band_member(band_type band, int power);
-static band_type _choose_band(int mon_type, int power, int &band_size,
+static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool& natural_leader);
 
 static monster* _place_monster_aux(const mgen_data &mg, bool first_band_member,
@@ -141,7 +141,7 @@ bool monster_habitable_grid(const monster* mon,
                                    mon->cannot_move()));
 }
 
-bool mons_airborne(int mcls, int flies, bool paralysed)
+bool mons_airborne(monster_type mcls, int flies, bool paralysed)
 {
     if (flies == -1)
         flies = mons_class_flies(mcls);
@@ -234,7 +234,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         case HT_LAVA:
             return (feat == DNGN_LAVA);
         case HT_LAND:
-            // Currently, trapdoor spider only.
+            // Currently, trapdoor spider and air elemental only.
             return (feat_is_floor(feat));
         default:
             return (false);
@@ -458,9 +458,9 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
         return (valid_monster_types);
 
     valid_monster_types.clear();
-    for (int i = 0; i < NUM_MONSTERS; ++i)
-        if (mons_rarity(static_cast<monster_type>(i), place) > 0)
-            valid_monster_types.push_back(static_cast<monster_type>(i));
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+        if (mons_rarity(i, place) > 0)
+            valid_monster_types.push_back(i);
 
     last_monster_type_place = place;
     return (valid_monster_types);
@@ -611,7 +611,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     return (mon_type);
 }
 
-bool can_place_on_trap(int mon_type, trap_type trap)
+bool can_place_on_trap(monster_type mon_type, trap_type trap)
 {
     if (trap == TRAP_TELEPORT)
         return (false);
@@ -1018,7 +1018,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static uint8_t ugly_colour = BLACK;
+    static colour_t ugly_colour = BLACK;
 
     if (create_band)
     {
@@ -1522,7 +1522,8 @@ static monster* _place_monster_aux(const mgen_data &mg,
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
         invalidate_agrid(true);
-    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
+    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR
+        || mg.cls == MONS_MOTH_OF_SUPPRESSION)
         invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply
@@ -1727,7 +1728,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "summoned by ";
 
         if (mg.summoner != NULL && mg.summoner->alive()
-            && mg.summoner->atype() == ACT_MONSTER
+            && mg.summoner->is_monster()
             && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1759,7 +1760,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
-        if (mg.summoner->atype() == ACT_PLAYER)
+        if (mg.summoner->is_player())
             mons_add_blame(mon, blame_prefix + "the player character");
         else
         {
@@ -1826,7 +1827,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
-    else if (!Generating_Level && you.can_see(mon))
+    else if (!Generating_Level && !dont_place && you.can_see(mon))
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
@@ -1838,7 +1839,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
 
     // Area effects can produce additional messages, and thus need to be
     // done after come in view ones.
-    if (mon->type == MONS_TWISTER)
+    if (mon->type == MONS_TWISTER && !dont_place)
         _place_twister_clouds(mon);
 
     return mon;
@@ -1850,12 +1851,10 @@ monster_type pick_random_zombie()
 
     if (zombifiable.empty())
     {
-        for (int i = 0; i < NUM_MONSTERS; ++i)
+        for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
         {
-            if (mons_species(i) != i || i == MONS_PROGRAM_BUG)
+            if (mons_species(mcls) != mcls || mcls == MONS_PROGRAM_BUG)
                 continue;
-
-            const monster_type mcls = static_cast<monster_type>(i);
 
             if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
@@ -2134,7 +2133,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     return (true);
 }
 
-static band_type _choose_band(int mon_type, int power, int &band_size,
+static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool &natural_leader)
 {
 #ifdef DEBUG_MON_CREATION
@@ -2530,12 +2529,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 3;
         break;
 
-    case MONS_TERPSICHORE:
-        natural_leader = true;
-        band = BAND_TERPSICHORE;
-        band_size = 1 + random_range(1, 3);
-        break;
-
     case MONS_GOLDEN_EYE:
         band = BAND_GOLDEN_EYE;
         band_size = 1 + random2(5);
@@ -2572,7 +2565,34 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 1;
         break;
 
-    } // end switch
+    case MONS_REDBACK:
+        band = BAND_REDBACK;
+        band_size = 1 + random2(5);
+        break;
+
+    case MONS_SPIDER:
+        band = BAND_SPIDER;
+        band_size = 1 + random2(4);
+        break;
+
+    case MONS_JUMPING_SPIDER:
+        if (coinflip())
+        {
+            band = BAND_JUMPING_SPIDER;
+            band_size = 1 + random2(5);
+        }
+        break;
+
+    case MONS_TARANTELLA:
+        if (coinflip())
+        {
+            band = BAND_TARANTELLA;
+            band_size = 1 + random2(4);
+        }
+        break;
+
+    default: ;
+    }
 
     if (band != BAND_NO_BAND && band_size == 0)
         band = BAND_NO_BAND;
@@ -2703,11 +2723,11 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_BALRUG:
-        mon_type = (coinflip() ? MONS_NEQOXEC : MONS_ORANGE_DEMON);
+        mon_type = (coinflip() ? MONS_SUN_DEMON : MONS_RED_DEVIL);
         break;
 
     case BAND_CACODEMON:
-        mon_type = MONS_LEMURE;
+        mon_type = (coinflip() ? MONS_SIXFIRHY : MONS_ORANGE_DEMON);
         break;
 
     case BAND_EXECUTIONER:
@@ -2719,14 +2739,14 @@ static monster_type _band_member(band_type band, int power)
         if (one_chance_in(7))
         {
             mon_type = random_choose_weighted(50, MONS_LICH,
-                                       10, MONS_ANCIENT_LICH,
+                                              10, MONS_ANCIENT_LICH,
                                                0);
         }
         else if (one_chance_in(6))
         {
             mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
-                                       40, MONS_ABOMINATION_LARGE,
-                                       10, MONS_TENTACLED_MONSTROSITY,
+                                              40, MONS_ABOMINATION_LARGE,
+                                              10, MONS_TENTACLED_MONSTROSITY,
                                                0);
         }
         else
@@ -2782,11 +2802,6 @@ static monster_type _band_member(band_type band, int power)
                  (temp_rand == 2) ? MONS_DEEP_ELF_ANNIHILATOR : // 1 in 16
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
-        break;
-    case BAND_TERPSICHORE:
-        mon_type = MONS_DANCING_WEAPON;
-        if (one_chance_in(4))
-            mon_type = MONS_PHANTOM;
         break;
     case BAND_HELL_KNIGHTS:
         mon_type = MONS_HELL_KNIGHT;
@@ -2876,9 +2891,9 @@ static monster_type _band_member(band_type band, int power)
     }
     case BAND_ILSUIW:
         mon_type = random_choose_weighted(30, MONS_MERMAID,
-                                   15, MONS_MERFOLK,
-                                   10, MONS_MERFOLK_JAVELINEER,
-                                   10, MONS_MERFOLK_IMPALER,
+                                          15, MONS_MERFOLK,
+                                          10, MONS_MERFOLK_JAVELINEER,
+                                          10, MONS_MERFOLK_IMPALER,
                                            0);
         break;
 
@@ -2907,9 +2922,9 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_MERFOLK_AQUAMANCER:
-        mon_type = random_choose_weighted(8, MONS_MERFOLK,
-                                   10, MONS_ICE_BEAST,
-                                          0);
+        mon_type = random_choose_weighted( 8, MONS_MERFOLK,
+                                          10, MONS_ICE_BEAST,
+                                           0);
         break;
 
     case BAND_MERFOLK_IMPALER:
@@ -2923,6 +2938,40 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_SHEDU:
         mon_type = MONS_SHEDU;
+        break;
+
+    case BAND_REDBACK:
+        // Total weight 40
+        mon_type = random_choose_weighted(30, MONS_REDBACK,
+                                           5, MONS_TARANTELLA,
+                                           5, MONS_JUMPING_SPIDER,
+                                           0);
+        break;
+
+    case BAND_SPIDER:
+        mon_type = MONS_SPIDER;
+        break;
+
+    case BAND_JUMPING_SPIDER:
+        // Total weight 40
+        mon_type = random_choose_weighted(12, MONS_JUMPING_SPIDER,
+                                           8, MONS_WOLF_SPIDER,
+                                           7, MONS_ORB_SPIDER,
+                                           6, MONS_SPIDER,
+                                           5, MONS_REDBACK,
+                                           2, MONS_DEMONIC_CRAWLER,
+                                           0);
+        break;
+
+    case BAND_TARANTELLA:
+        // Total weight 40
+        mon_type = random_choose_weighted(10, MONS_TARANTELLA,
+                                           7, MONS_WOLF_SPIDER,
+                                           3, MONS_ORB_SPIDER,
+                                           8, MONS_REDBACK,
+                                          10, MONS_SPIDER,
+                                           2, MONS_DEMONIC_CRAWLER,
+                                           0);
         break;
 
     default:
@@ -3013,16 +3062,16 @@ static monster_type _pick_zot_exit_defender()
     }
 
     const int temp_rand = random2(276);
-    const int mon_type =
-        ((temp_rand > 184) ? MONS_WHITE_IMP + random2(15) :  // 33.33%
-         (temp_rand > 104) ? MONS_HELLION + random2(10) :    // 28.99%
-         (temp_rand > 78)  ? MONS_HELL_HOUND :               //  9.06%
-         (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
-         (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
-         (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
-                           : MONS_PIT_FIEND);                //  5.07%
+    const monster_type mon_type =
+        ((temp_rand > 184) ? summon_any_demon(DEMON_COMMON) : // 33.33%
+         (temp_rand > 104) ? summon_any_demon(DEMON_RANDOM) : // 28.99%
+         (temp_rand > 78)  ? MONS_HELL_HOUND :                //  9.06%
+         (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :         //  8.70%
+         (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :         //  7.61%
+         (temp_rand > 13)  ? MONS_RED_DEVIL                   //  7.25%
+                           : MONS_HELL_SENTINEL);             //  5.07%
 
-    return static_cast<monster_type>(mon_type);
+    return mon_type;
 }
 
 monster* mons_place(mgen_data mg)
@@ -3073,8 +3122,9 @@ monster* mons_place(mgen_data mg)
 
     if (mg.behaviour == BEH_COPY)
     {
-        mg.behaviour = (mg.summoner == &you) ? BEH_FRIENDLY
-                            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+        mg.behaviour = (mg.summoner && mg.summoner->is_player())
+                        ? BEH_FRIENDLY
+                        : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
     }
 
     monster* creation = place_monster(mg);
@@ -3114,14 +3164,14 @@ monster* mons_place(mgen_data mg)
     return creation;
 }
 
-static dungeon_feature_type _monster_primary_habitat_feature(int mc)
+static dungeon_feature_type _monster_primary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_primary_habitat(mc)));
 }
 
-static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
+static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return (DNGN_FLOOR);
@@ -3221,7 +3271,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return (in_bounds(p) ? p : coord_def(-1, -1));
 }
 
-coord_def find_newmons_square(int mons_class, const coord_def &p)
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
 {
     coord_def empty;
     coord_def pos(-1, -1);
@@ -3346,8 +3396,8 @@ bool player_angers_monster(monster* mon)
 
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
-    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                         : mg.cls);
+    const monster_type montype = mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                                 : mg.cls;
 
     monster *summd = 0;
 
@@ -3479,7 +3529,6 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_ORANGE_DEMON,
                 1, MONS_RED_DEVIL,
                 1, MONS_ROTTING_DEVIL,
-                1, MONS_HAIRY_DEVIL,
                 1, MONS_SIXFIRHY,
                 1, MONS_HELLWING,
                 0);
@@ -3523,7 +3572,7 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_BRIMSTONE_FIEND,
                 1, MONS_ICE_FIEND,
                 1, MONS_SHADOW_FIEND,
-                1, MONS_PIT_FIEND,
+                1, MONS_HELL_SENTINEL,
                 1, MONS_EXECUTIONER,
                 0);
         }

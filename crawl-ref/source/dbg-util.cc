@@ -358,21 +358,18 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
 }
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_skill
-//
-//---------------------------------------------------------------
 skill_type debug_prompt_for_skill(const char *prompt)
 {
     char specs[80];
-
     msgwin_get_line_autohist(prompt, specs, sizeof(specs));
-
     if (specs[0] == '\0')
         return (SK_NONE);
-    std::string spec = lowercase_string(specs);
 
+    return skill_from_name(lowercase_string(specs).c_str());
+}
+
+skill_type skill_from_name(const char *name)
+{
     skill_type skill = SK_NONE;
 
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
@@ -381,7 +378,7 @@ skill_type debug_prompt_for_skill(const char *prompt)
 
         std::string sk_name = lowercase_string(skill_name(sk));
 
-        size_t pos = sk_name.find(spec);
+        size_t pos = sk_name.find(name);
         if (pos != std::string::npos)
         {
             skill = sk;

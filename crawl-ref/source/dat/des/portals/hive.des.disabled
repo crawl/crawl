@@ -19,10 +19,7 @@ function place_hive_portal(e, perm)
 end
 
 function hive_portal()
-  local d = "You hear a manifold buzzing. The waxy walls of this " ..
-  "place are dripping with honey, but the larvae are hungry, and the queen " ..
-  "bee will not tolerate intruders."
-  return one_way_stair { desc = 'gateway to a hive', desc_long = d,
+  return one_way_stair { desc = 'gateway to a hive',
                            dst = 'Hive', floor = 'stone_arch',
                            feat_tile = 'dngn_portal_hive_gone' }
 end

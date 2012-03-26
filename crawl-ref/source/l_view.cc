@@ -18,11 +18,6 @@
 #include "travel.h"
 
 
-coord_def player2show(const coord_def &s)
-{
-    return (s + coord_def(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET));
-}
-
 LUAFN(view_feature_at)
 {
     COORDSHOW(s, 1, 2)

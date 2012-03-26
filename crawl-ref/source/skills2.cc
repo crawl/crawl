@@ -344,12 +344,12 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SPELLCASTING:
-            if (you.species == SP_OGRE)
+            if (species == SP_OGRE)
                 result = "Ogre Mage";
             break;
 
         case SK_NECROMANCY:
-            if (you.species == SP_SPRIGGAN && skill_rank == 5)
+            if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "La Petite Mort";
             break;
 

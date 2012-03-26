@@ -567,6 +567,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_stair  (Options.explore_stop & ES_STAIR)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
+#define ES_branch (Options.explore_stop & ES_BRANCH)
 
 // Adds interesting stuff on the point p to explore_discoveries.
 inline static void _check_interesting_square(const coord_def pos,
@@ -4110,7 +4111,14 @@ void explore_discoveries::found_feature(const coord_def &pos,
         add_stair(stair);
         es_flags |= ES_STAIR;
     }
-    else if (feat_is_portal(feat) && ES_portal)
+    else if (feat_is_branchlike(feat) && ES_branch)
+    {
+        const named_thing<int> stair(cleaned_feature_description(pos), 1);
+        add_stair(stair);
+        es_flags |= ES_BRANCH;
+    }
+    else if ((feat_is_portal(feat) || feat == DNGN_ENTER_LABYRINTH)
+             && ES_portal)
     {
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);

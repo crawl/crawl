@@ -12,17 +12,6 @@
 #include "mon-util.h"
 #include "place.h"
 
-// NB - When adding new branches or levels above 50, you must
-// change pre-game deletion routine in new_game in newgame.cc
-
-//    New branch must be added in:
-//    - new_game stair location
-//    - down/up stairs (to and back) misc.cc
-//    - new_level (2 places) (misc.cc)
-//    - item_check items.cc
-//    - ouch ouch.cc (death message)
-//    - and here...
-
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_level(int mcls, const level_id &place)
 {
@@ -132,7 +121,6 @@ int mons_abyss_rare(int mcls)
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_SERPENT:
-    case MONS_HAIRY_DEVIL:
     case MONS_HELLION:
     case MONS_ICE_DEVIL:
     case MONS_CRIMSON_IMP:
@@ -178,7 +166,7 @@ int mons_abyss_rare(int mcls)
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
     case MONS_RED_DEVIL:
     case MONS_SHINING_EYE:
     case MONS_SPINY_WORM:
@@ -343,7 +331,6 @@ int mons_pan_rare(int mcls)
     case MONS_TORMENTOR:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
-    case MONS_HAIRY_DEVIL:
     case MONS_ICE_DEVIL:
     case MONS_BLUE_DEVIL:
     case MONS_IRON_DEVIL:
@@ -458,7 +445,6 @@ int mons_standard_level(int mcls)
     case MONS_HILL_GIANT:
     case MONS_KOMODO_DRAGON:
     case MONS_SOLDIER_ANT:
-    case MONS_WOLF_SPIDER:
     case MONS_WRAITH:
     case MONS_UNSEEN_HORROR:
     case MONS_TRAPDOOR_SPIDER:
@@ -512,6 +498,7 @@ int mons_standard_level(int mcls)
     case MONS_ROCK_TROLL:
     case MONS_TOENAIL_GOLEM:
     case MONS_YAKTAUR:
+    case MONS_WOLF_SPIDER:
         return 19;
 
     case MONS_AIR_ELEMENTAL:
@@ -720,7 +707,6 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_EYEBALL:
     case MONS_GIANT_SPORE:
     case MONS_GRIFFON:
-    case MONS_HAIRY_DEVIL:
     case MONS_JACKAL:
     case MONS_MOTTLED_DRAGON:
     case MONS_PHANTOM:
@@ -1202,7 +1188,6 @@ int mons_lair_level(int mcls)
     case MONS_ORANGE_RAT:
     case MONS_SHEEP:
     case MONS_STEAM_DRAGON:
-    case MONS_WOLF_SPIDER:
     case MONS_YAK:
     case MONS_GRIZZLY_BEAR:
         mlev += 4;
@@ -1228,6 +1213,7 @@ int mons_lair_level(int mcls)
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
     case MONS_ELEPHANT:
+    case MONS_WOLF_SPIDER:
         mlev += 6;
         break;
 
@@ -1687,34 +1673,38 @@ int mons_spidernest_level(int mcls)
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_MITE:
     case MONS_SCORPION:
-    case MONS_REDBACK:
-    case MONS_WOLF_SPIDER:
-    case MONS_TRAPDOOR_SPIDER:
-    case MONS_VAMPIRE_MOSQUITO:
     case MONS_SPIDER:
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_WORM:
         mlev++;
         break;
 
     case MONS_YELLOW_WASP:
-    case MONS_RED_WASP:
+    case MONS_REDBACK:
+    case MONS_TRAPDOOR_SPIDER:
     case MONS_GOLIATH_BEETLE:
+    case MONS_ROCK_WORM:
         mlev += 2;
         break;
 
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
-    case MONS_GIANT_CENTIPEDE:
+    case MONS_TARANTELLA:
+    case MONS_SPINY_WORM:
+    case MONS_ORB_SPIDER:
+    case MONS_JUMPING_SPIDER:
         mlev += 3;
         break;
 
     case MONS_EMPEROR_SCORPION:
-    case MONS_JUMPING_SPIDER:
+    case MONS_DEMONIC_CRAWLER:
+    case MONS_RED_WASP:
+    case MONS_WOLF_SPIDER:
         mlev += 4;
         break;
 
-    case MONS_TARANTELLA:
     case MONS_GHOST_MOTH:
-    case MONS_DEMONIC_CRAWLER:
+    case MONS_MOTH_OF_WRATH:
         mlev += 5;
         break;
 
@@ -1729,38 +1719,48 @@ int mons_spidernest_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_GIANT_COCKROACH:
-    case MONS_GIANT_MITE:
+    case MONS_WOLF_SPIDER:
+        return 85;
+
+    case MONS_TRAPDOOR_SPIDER:
+        return 75;
+
+    case MONS_DEMONIC_CRAWLER:
+    case MONS_JUMPING_SPIDER:
+        return 65;
+
+    case MONS_TARANTELLA:
         return 60;
 
-    case MONS_SCORPION:
     case MONS_REDBACK:
-    case MONS_WOLF_SPIDER:
-    case MONS_TRAPDOOR_SPIDER:
-        return 50;
+        return 55;
 
-    case MONS_VAMPIRE_MOSQUITO:
+    case MONS_ORB_SPIDER:
+        return 52;
+
+    case MONS_SPIDER:
         return 40;
 
-    case MONS_YELLOW_WASP:
+    case MONS_SCORPION:
     case MONS_RED_WASP:
+        return 35;
+
+    case MONS_WORM:
+    case MONS_ROCK_WORM:
+    case MONS_GOLIATH_BEETLE:
+    case MONS_BOULDER_BEETLE:
+    case MONS_EMPEROR_SCORPION:
+    case MONS_GHOST_MOTH:
         return 20;
 
-    case MONS_GOLIATH_BEETLE:
     case MONS_BORING_BEETLE:
-    case MONS_BOULDER_BEETLE:
+    case MONS_YELLOW_WASP:
+    case MONS_SPINY_WORM:
+    case MONS_GIANT_COCKROACH:
     case MONS_GIANT_CENTIPEDE:
-    case MONS_EMPEROR_SCORPION:
-    case MONS_SPIDER:
+    case MONS_GIANT_MITE:
+    case MONS_MOTH_OF_WRATH:
         return 15;
-
-    case MONS_JUMPING_SPIDER:
-    case MONS_TARANTELLA:
-        return 10;
-
-    case MONS_GHOST_MOTH:
-    case MONS_DEMONIC_CRAWLER:
-        return 5;
 
     default:
         return 0;
@@ -2253,9 +2253,6 @@ int mons_hallzot_level(int mcls)
         mlev += 3;
         break;
     case MONS_MOTH_OF_WRATH:
-#if TAG_MAJOR_VERSION == 32
-    case MONS_SUBTRACTOR_SNAKE:
-#endif
         mlev += 2;
         break;
     case MONS_ORB_OF_FIRE:
@@ -2292,9 +2289,6 @@ int mons_hallzot_rare(int mcls)
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:
     case MONS_CURSE_TOE:
-#if TAG_MAJOR_VERSION == 32
-    case MONS_SUBTRACTOR_SNAKE:
-#endif
         return 20;
 
     case MONS_MOTTLED_DRACONIAN:
@@ -2357,7 +2351,6 @@ int mons_vestibule_rare(int mcls)
     case MONS_HELL_HOUND:
     case MONS_ORANGE_RAT:
     case MONS_RED_DEVIL:
-    case MONS_HAIRY_DEVIL:
     case MONS_BLUE_DEVIL:
     case MONS_IRON_DEVIL:
     case MONS_LOROCYPROCA:
@@ -2422,7 +2415,6 @@ int mons_dis_level(int mcls)
     case MONS_FLAYED_GHOST:
     case MONS_FREEZING_WRAITH:
     case MONS_DEATH_DRAKE:
-    case MONS_HAIRY_DEVIL:
     case MONS_IRON_DEVIL:
     case MONS_IRON_IMP:
     case MONS_VAMPIRE:
@@ -2518,9 +2510,6 @@ int mons_dis_rare(int mcls)
     case MONS_PHANTOM:
         return 17;
 
-    case MONS_HAIRY_DEVIL:
-        return 15;
-
     case MONS_CLAY_GOLEM:
     case MONS_DANCING_WEAPON:
     case MONS_EFREET:
@@ -2579,7 +2568,6 @@ int mons_gehenna_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_HELL_KNIGHT:
     case MONS_VAMPIRE:
     case MONS_WRAITH:
@@ -2601,7 +2589,7 @@ int mons_gehenna_level(int mcls)
     case MONS_BRIMSTONE_FIEND:
     case MONS_LICH:
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
         mlev += 6;
@@ -2674,7 +2662,6 @@ int mons_gehenna_rare(int mcls)
     case MONS_HELL_KNIGHT:
         return 21;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_PHANTASMAL_WARRIOR:
         return 20;
 
@@ -2685,7 +2672,7 @@ int mons_gehenna_rare(int mcls)
     case MONS_STONE_GOLEM:
         return 8;
 
-    case MONS_PIT_FIEND:
+    case MONS_HELL_SENTINEL:
         return 7;
 
     case MONS_EFREET:
@@ -2736,7 +2723,6 @@ int mons_cocytus_level(int mcls)
         break;
 
     case MONS_FREEZING_WRAITH:
-    case MONS_HAIRY_DEVIL:
     case MONS_HUNGRY_GHOST:
     case MONS_MUMMY:
     case MONS_PHANTASMAL_WARRIOR:
@@ -2818,7 +2804,6 @@ int mons_cocytus_rare(int mcls)
     case MONS_BLIZZARD_DEMON:
         return 30;
 
-    case MONS_HAIRY_DEVIL:
     case MONS_HUNGRY_GHOST:
         return 26;
 
@@ -2904,7 +2889,6 @@ int mons_tartarus_level(int mcls)
         break;
 
     case MONS_ANCIENT_LICH:
-    case MONS_HAIRY_DEVIL:
     case MONS_LICH:
     case MONS_SOUL_EATER:
         mlev += 6;
@@ -2984,7 +2968,6 @@ int mons_tartarus_rare(int mcls)
         return 32;
 
     case MONS_FLAYED_GHOST:
-    case MONS_HAIRY_DEVIL:
         return 30;
 
     case MONS_LICH:

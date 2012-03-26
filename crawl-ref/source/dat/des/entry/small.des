@@ -1949,10 +1949,33 @@ NAME:    dpeg_entry_round_a
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-SUBST:   ? = x= , ' = x. , v : cvxxxx
+# Equal chance of passable, blocked at ?, blocked at A, and blocked at a.
+# Blocking the path at two points would create a disconnected bubble.
+: local r = crawl.random2(4)
+: if r == 0 then
+:   subst("? = x")
+:   subst("A = .")
+:   subst("a = =")
+: elseif r == 1 then
+:   subst("? = =")
+:   subst("A = .")
+:   subst("a = x")
+: else
+:   subst("? = =")
+:   subst("A = '")
+:   subst("a = =")
+: end
+: if crawl.random2(3) == 0 then
+:   subst("B = .")
+:   subst("b = x")
+: else
+:   subst("B = '")
+:   subst("b = =")
+: end
+SUBST:   ' = x. , v : cvxxxx
 MAP
 xxxxxxxxxxxxxxxx.@
-@...xxxxxx.'xx.?..
+@...xxxxxx.Axx.a..
 xxx'.xxxx.xx..xx..
 xxxx.'xxx?xxxxxx..
 xxxxx.xxx.xxxxxx..
@@ -1960,8 +1983,8 @@ xx[x.......xxxxx..
 xx...vvvv..'xxxx..
 x'.vvvvvvv....xx..
 x..vvvvvv..xx'.x..
-xx..vv....xxxx'x..
-x(x'...xx{xxxx.?..
+xx..vv....xxxxBx..
+x(x'...xx{xxxx.b..
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -2903,7 +2926,6 @@ COLOUR:  t = darkgrey
 COLOUR:  G = white
 SUBST:   t = t.
 : dgn.set_feature_desc_short("granite statue", "adventurer's gravestone")
-: dgn.set_feature_desc_long("granite statue", "The grave of an adventurer who came close to victory.\n")
 MAP
     ....'....
   ...'....'..

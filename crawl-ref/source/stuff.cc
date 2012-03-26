@@ -34,6 +34,7 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -113,6 +114,53 @@ void clear_globals_on_exit()
     dgn_clear_vault_placements(env.level_vaults);
 }
 
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
+     || defined(DGL_PAUSE_AFTER_ERROR)
+// Print error message on the screen.
+// Ugly, but better than not showing anything at all. (jpeg)
+static bool _print_error_screen(const char *message, ...)
+{
+    if (!crawl_state.io_inited || crawl_state.seen_hups)
+        return false;
+
+    // Get complete error message.
+    std::string error_msg;
+    {
+        va_list arg;
+        va_start(arg, message);
+        char buffer[1024];
+        vsnprintf(buffer, sizeof buffer, message, arg);
+        va_end(arg);
+
+        error_msg = std::string(buffer);
+    }
+    if (error_msg.empty())
+        return false;
+
+    // Escape '<'.
+    // NOTE: This assumes that the error message doesn't contain
+    //       any formatting!
+    error_msg = replace_all(error_msg, "<", "<<");
+
+    error_msg += "\n\n\nHit any key to exit...\n";
+
+    // Break message into correctly sized lines.
+    int width = 80;
+#ifdef USE_TILE_LOCAL
+    width = crawl_view.msgsz.x;
+#else
+    width = std::min(80, get_number_of_cols());
+#endif
+    linebreak_string(error_msg, width);
+
+    // And finally output the message.
+    clrscr();
+    formatted_string::parse_string(error_msg, false).display();
+    getchm();
+    return true;
+}
+#endif
+
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.
 // Not a part of crawl_state, since that's a global C++ instance which is
 // free'd by exit() hooks when exit() is called, and we don't want to reference
@@ -147,9 +195,13 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     bool need_pause = true;
     if (exit_code && !error.empty())
     {
-        if (print_error_screen("%s", error.c_str()))
+        if (_print_error_screen("%s", error.c_str()))
             need_pause = false;
     }
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
 #endif
 
     cio_cleanup();
@@ -223,50 +275,6 @@ NORETURN void game_ended_with_error(const std::string &message)
     {
         end(1, false, "%s", message.c_str());
     }
-}
-
-// Print error message on the screen.
-// Ugly, but better than not showing anything at all. (jpeg)
-bool print_error_screen(const char *message, ...)
-{
-    if (!crawl_state.io_inited || crawl_state.seen_hups)
-        return false;
-
-    // Get complete error message.
-    std::string error_msg;
-    {
-        va_list arg;
-        va_start(arg, message);
-        char buffer[1024];
-        vsnprintf(buffer, sizeof buffer, message, arg);
-        va_end(arg);
-
-        error_msg = std::string(buffer);
-    }
-    if (error_msg.empty())
-        return false;
-
-    // Escape '<'.
-    // NOTE: This assumes that the error message doesn't contain
-    //       any formatting!
-    error_msg = replace_all(error_msg, "<", "<<");
-
-    error_msg += "\n\n\nHit any key to exit...\n";
-
-    // Break message into correctly sized lines.
-    int width = 80;
-#ifdef USE_TILE_LOCAL
-    width = crawl_view.msgsz.x;
-#else
-    width = std::min(80, get_number_of_cols());
-#endif
-    linebreak_string(error_msg, width);
-
-    // And finally output the message.
-    clrscr();
-    formatted_string::parse_string(error_msg, false).display();
-    getchm();
-    return true;
 }
 
 void redraw_screen(void)
@@ -480,7 +488,27 @@ void canned_msg(canned_message_type which_message)
     case MSG_TOO_HUNGRY:
         mpr("You're too hungry.");
         break;
+    case MSG_DETECT_NOTHING:
+        mpr("You detect nothing.");
+        break;
+    case MSG_CALL_DEAD:
+        mpr("You call on the dead to rise...");
+        break;
+    case MSG_ANIMATE_REMAINS:
+        mpr("You attempt to give life to the dead...");
+        break;
+    case MSG_DECK_EXHAUSTED:
+        mpr("The deck of cards disappears in a puff of smoke.");
+        break;
     }
+}
+
+const char* held_status(actor *act)
+{
+    if (get_trapping_net(act->pos(), true) != NON_ITEM)
+        return "held in a net";
+    else
+        return "caught in a web";
 }
 
 // Like yesno, but requires a full typed answer.

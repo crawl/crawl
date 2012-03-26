@@ -416,7 +416,7 @@ static const bool _is_appropriate_spell(spell_type spell,
 
     const bool helpful = flags & SPFLAG_HELPFUL;
 
-    if (target->atype() == ACT_PLAYER)
+    if (target->is_player())
     {
         if (flags & SPFLAG_NOT_SELF)
             return (false);
@@ -459,7 +459,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
         return (true);
 
     spell_type spell = zap_type_to_spell(item.zap());
-    if (spell == SPELL_TELEPORT_OTHER && target->atype() == ACT_PLAYER)
+    if (spell == SPELL_TELEPORT_OTHER && target->is_player())
         spell = SPELL_TELEPORT_SELF;
 
     return (_is_appropriate_spell(spell, target));

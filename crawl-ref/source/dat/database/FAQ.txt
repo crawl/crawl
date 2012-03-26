@@ -199,7 +199,7 @@ A: There isn't any such option, and we're not planning to add one, either.
 
 For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, spellcasters who've learned Dispel Undead, or followers of The Shining One.
+Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, spellcasters who've learned Dispel Undead, or followers of the Shining One.
 %%%%
 Q:instadeath
 

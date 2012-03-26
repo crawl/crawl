@@ -788,6 +788,9 @@ void SkillMenu::clear_selections()
 // Before we exit, make sure there's at least one skill enabled.
 bool SkillMenu::exit()
 {
+    if (crawl_state.seen_hups)
+        return true;
+
     bool maxed_out = true;
     bool enabled_skill = false;
 

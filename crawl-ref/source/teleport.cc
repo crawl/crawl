@@ -27,7 +27,7 @@
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
     // We rely on the non-generalized move_player_to_cell.
-    ASSERT(this == &you);
+    ASSERT(is_player());
 
     if (dest == pos())
         return (false);
@@ -134,19 +134,17 @@ void blink_other_close(actor* victim, const coord_def &target)
 }
 
 // Blink the monster away from its foe.
-void blink_away(monster* mon)
+bool blink_away(monster* mon)
 {
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))
-        return;
+        return false;
     coord_def dest = random_space_weighted(mon, foe, false, false);
     if (dest.origin())
-        return;
+        return false;
     bool success = mon->blink_to(dest);
     ASSERT(success);
-#ifndef DEBUG
-    UNUSED(success);
-#endif
+    return success;
 }
 
 // Blink the monster within range but at distance to its foe.

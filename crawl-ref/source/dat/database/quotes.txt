@@ -10,6 +10,15 @@ Tomb
 ####################################################
 # Features
 ####################################################
+A gas trap
+
+"Good your grace, an' I had room for such a thundergust within mine ancient
+bowels, 'tis not in reason I coulde discharge ye same and live to thank God
+for yt. He did choose handmaid so humble whereby to shew his power. Nay, 'tis
+not I yt have broughte forth this rich o'ermastering fog, this fragrant
+gloom, so pray you seeke ye further."
+    -Mark Twain, "1601", 1880.
+%%%%
 A gateway to a ziggurat
 
 "Captain: Take off every 'zig'!!

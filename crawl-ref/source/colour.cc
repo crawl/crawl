@@ -7,6 +7,10 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
+#include "mon-stuff.h"
+#include "mon-info.h"
+#include "mon-info.h"
+#include "mon-util.h"
 #include "options.h"
 #include "player.h"
 #include "random.h"
@@ -61,14 +65,14 @@ int random_element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*real_calc)(rand(non_random), loc, rand_vals);
 }
 
-uint8_t random_colour(void)
+colour_t random_colour(void)
 {
     return (1 + random2(15));
 }
 
-uint8_t random_uncommon_colour()
+colour_t random_uncommon_colour()
 {
-    uint8_t result;
+    colour_t result;
 
     do
         result = random_colour();
@@ -77,17 +81,17 @@ uint8_t random_uncommon_colour()
     return (result);
 }
 
-bool is_low_colour(uint8_t colour)
+bool is_low_colour(colour_t colour)
 {
     return (colour <= 7);
 }
 
-bool is_high_colour(uint8_t colour)
+bool is_high_colour(colour_t colour)
 {
     return (colour >= 8 && colour <= 15);
 }
 
-uint8_t make_low_colour(uint8_t colour)
+colour_t make_low_colour(colour_t colour)
 {
     if (is_high_colour(colour))
         return (colour - 8);
@@ -95,7 +99,7 @@ uint8_t make_low_colour(uint8_t colour)
     return (colour);
 }
 
-uint8_t make_high_colour(uint8_t colour)
+colour_t make_high_colour(colour_t colour)
 {
     if (is_low_colour(colour))
         return (colour + 8);
@@ -251,6 +255,24 @@ bool get_orb_phase(const coord_def& loc)
 static int _etc_orb_glow(int, const coord_def& loc)
 {
     return get_orb_phase(loc) ? LIGHTMAGENTA : MAGENTA;
+}
+
+int dam_colour(const monster_info& mi)
+{
+    if (!mons_class_can_display_wounds(mi.type))
+        return Options.enemy_hp_colour[6]; // undead and whatnot
+
+   switch (mi.dam)
+   {
+        case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
+        case MDAM_LIGHTLY_DAMAGED:      return Options.enemy_hp_colour[1];
+        case MDAM_MODERATELY_DAMAGED:   return Options.enemy_hp_colour[2];
+        case MDAM_HEAVILY_DAMAGED:      return Options.enemy_hp_colour[3];
+        case MDAM_SEVERELY_DAMAGED:     return Options.enemy_hp_colour[4];
+        case MDAM_ALMOST_DEAD:          return Options.enemy_hp_colour[5];
+        case MDAM_DEAD:                 return BLACK; // this should never happen
+        default:                        return CYAN; // this should really never happen
+    }
 }
 
 static int _etc_random(int, const coord_def&)
@@ -639,14 +661,14 @@ unsigned int str_to_tile_colour(std::string colour)
 }
 #endif
 
-const std::string cols[16] =
+static const std::string cols[16] =
 {
     "black", "blue", "green", "cyan", "red", "magenta", "brown",
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
 
-const std::string colour_to_str(uint8_t colour)
+const std::string colour_to_str(colour_t colour)
 {
     if (colour >= 16)
         return "lightgrey";
@@ -762,7 +784,7 @@ static unsigned short _dos_hilite_brand(unsigned short colour,
 }
 
 unsigned short dos_brand(unsigned short colour,
-                          unsigned brand)
+                         unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);

@@ -31,7 +31,7 @@ enum spflag_type
     SPFLAG_AREA                 = 0x008000,      // area affect
     SPFLAG_BATTLE               = 0x010000,      // a non-Conjuration spell that
                                                  // is still a battle spell
-    SPFLAG_CARD                 = 0x020000,      // a card effect spell
+                                //0x020000,
     SPFLAG_MONSTER              = 0x040000,      // monster-only spell
     SPFLAG_INNATE               = 0x080000,      // an innate spell, even if
                                                  // use by a priest/wizard
@@ -63,7 +63,6 @@ int calc_spell_power(spell_type spell, bool apply_intel,
                      bool rod = false);
 int calc_spell_range(spell_type spell, int power = 0,
                      bool real_cast = false, bool rod = false);
-int spell_enhancement(unsigned int typeflags);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 

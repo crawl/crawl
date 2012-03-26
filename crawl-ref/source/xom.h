@@ -26,7 +26,7 @@ enum xom_event_type
     XOM_GOOD_POTION,
     XOM_GOOD_SPELL_TENSION,
     XOM_GOOD_SPELL_CALM,
-    XOM_GOOD_MAPPING,           //   5
+    XOM_GOOD_DIVINATION,        //   5
     XOM_GOOD_CONFUSION,
     XOM_GOOD_SINGLE_ALLY,
     XOM_GOOD_ANIMATE_MON_WPN,
@@ -39,11 +39,11 @@ enum xom_event_type
     XOM_GOOD_TELEPORT,          //  15
     XOM_GOOD_VITRIFY,
     XOM_GOOD_MUTATION,
-    XOM_GOOD_MAJOR_ALLY,
     XOM_GOOD_LIGHTNING,
     XOM_GOOD_SCENERY,           //  20
     XOM_GOOD_SNAKES,
-    XOM_LAST_GOOD_ACT = XOM_GOOD_SNAKES,   // 21
+    XOM_GOOD_INNER_FLAME,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_INNER_FLAME,   // 22
 
     // bad acts
     XOM_BAD_NOTHING,  // bad act suppressed

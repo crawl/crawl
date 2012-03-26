@@ -2862,9 +2862,9 @@ void describe_floor()
 
     msg_channel_type channel = MSGCH_EXAMINE;
 
-    // Water is not terribly important if you don't mind it.
-    if (feat_is_water(grid) && player_likes_water())
-        channel = MSGCH_EXAMINE_FILTER;
+    // Messages for water/lava are too spammy use a status light instead.
+    if (feat_is_water(grid) || feat_is_lava(grid))
+        return;
 
     mpr((prefix + feat + suffix).c_str(), channel);
     if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)
@@ -2953,6 +2953,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("blade trap");
         case TRAP_NET:
             return ("net trap");
+        case TRAP_GAS:
+            return ("gas trap");
         case TRAP_ALARM:
             return ("alarm trap");
         case TRAP_SHAFT:
@@ -3507,6 +3509,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_UMBRAED))
         descs.push_back("umbra");
 
+    if (mi.is(MB_SUPPRESSED))
+        descs.push_back("suppressed");
+
     if (mi.is(MB_POSSESSABLE))
         descs.push_back("possessable"); // FIXME: better adjective
     else if (mi.is(MB_ENSLAVED))
@@ -3573,6 +3578,9 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.is(MB_UMBRAED))
         text += pronoun + " is wreathed by an unholy umbra.\n";
+
+    if (mi.is(MB_SUPPRESSED))
+        text += pronoun + " exudes an aura of magical suppression.\n";
 
     if (mi.intel() <= I_PLANT)
         text += pronoun + " is mindless.\n";
@@ -3817,6 +3825,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("is lit by a halo");
     if (umbraed(where) && !haloed(where))
         areas.push_back("is wreathed by an umbra");
+    if (suppressed(where))
+        areas.push_back("thrums with a field of magical suppression");
     if (liquefied(where))
         areas.push_back("is liquefied");
     if (orb_haloed(where))

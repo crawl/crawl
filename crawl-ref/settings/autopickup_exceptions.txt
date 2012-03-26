@@ -2,8 +2,9 @@ ae := autopickup_exceptions
 
 #### inclusions ###
 
-# curare is always dangerous on the floor
-ae = <curare-tipped
+# curare is always dangerous on the floor, so you may wish to always pick
+# it up.  Disabled by default.
+# ae = <curare-tipped
 
 ### exclusions ###
 

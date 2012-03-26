@@ -160,13 +160,18 @@ PLACE:   Tomb:1
 ORIENT:  encompass
 TAGS:    no_dump
 #
-SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
+SHUFFLE: ([{, AB), ]}, _-
 SUBST:   A=|*, B=|*
-SUBST:   f = F, i = G, j = G, k = G, l = F
-SUBST:   I = G:900 6
-SUBST:   J = G:750 6
-SUBST:   K = G:550 6
-SUBST:   L = G:300 6
+: if crawl.coinflip() then
+SUBST:   I = I:900 6, N = N:900 6
+SUBST:   J = J:750 6, O = O:750 6
+SUBST:   K = K:550 6, P = P:550 6
+SUBST:   L = L:300 6, Q = Q:300 6
+: end
+TILE:    FIJKL = dngn_sarcophagus_pedestal_left
+TILE:    MNOPQ = dngn_sarcophagus_pedestal_right
+COLOUR:  FIJKLMNOPQ = yellow
+SUBST:   FIJKLMNOPQ = G
 SUBST:   - = T
 SUBST:   _ = F 6 ~:30 .:30
 SUBST:   T = ~ .
@@ -180,6 +185,7 @@ SUBST:   3 = 3., 4 = 4., 5 = 5.
 MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
 MONS:    silver statue / orange crystal statue / ice statue
 #
+: dgn.set_feature_desc_short("granite statue", "sarcophagus")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -220,19 +226,19 @@ xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''ccccccccccccccTTTTTTTcccccccccccccc''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c'''''''''''ccc+++++ccc'''''''''''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c'''''''''''cc.2...2.cc'''''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''ccccccc''cc.L...L.cc''ccccccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''ccccccc''cc.L...Q.cc''ccccccc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''cc.322c''cc.......cc''c22.'cc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''c]'c22c''cc.2...2.cc''c22c.}c''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''cccc''c''cc.K...K.cc''c3'cccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cccc''c''cc.K...P.cc''c3'cccc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''''''''c''cc.......cc''c''''''''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''''''''c''cc.2...2.cc''c''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''cccccccccc''cc.J...J.cc''cccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccc''cc.J...O.cc''cccccccccc''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
-xxxxxxxxx..........cccccccccccccccccc.I...I.cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.I...N.cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx.............................4...4............................xxxxxxxxx
-xxxxxxxxx.............................F...F............................xxxxxxxxx
+xxxxxxxxx.............................F...M............................xxxxxxxxx
 xxxxxxxxx...........................4.4...4.4..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx

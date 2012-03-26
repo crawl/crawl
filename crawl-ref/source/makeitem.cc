@@ -34,6 +34,8 @@
 #include "state.h"
 #include "travel.h"
 
+static armour_type _get_random_armour_type(int item_level);
+
 int create_item_named(std::string name, coord_def p,
                       std::string *error)
 {
@@ -241,7 +243,7 @@ void item_colour(item_def &item)
         return; // unrandarts have already been coloured
 
     int switchnum = 0;
-    int temp_value;
+    colour_t temp_value;
 
     switch (item.base_type)
     {
@@ -433,7 +435,7 @@ void item_colour(item_def &item)
             break;
         case FOOD_CHUNK:
             // Set the appropriate colour of the meat:
-            temp_value  = mons_class_colour(item.plus);
+            temp_value  = mons_class_colour(item.mon_type);
             item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
             break;
         default:
@@ -695,7 +697,7 @@ void item_colour(item_def &item)
 
     case OBJ_CORPSES:
         // Set the appropriate colour of the body:
-        temp_value  = mons_class_colour(item.plus);
+        temp_value  = mons_class_colour(item.mon_type);
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
 
@@ -1269,6 +1271,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
+            if (one_chance_in(10))
+                rc = SPWPN_VAMPIRICISM;
+
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
 
@@ -1348,6 +1353,11 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             break;
         }
+
+        case WPN_BLOWGUN:
+            if (one_chance_in(30))
+                rc = SPWPN_EVASION;
+            break;
 
         // Staves
         case WPN_STAFF:
@@ -1478,6 +1488,20 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return (false);
     }
 
+    if (type == WPN_BLOWGUN)
+    {
+        switch ((brand_type)brand)
+        {
+        case SPWPN_NORMAL:
+        case SPWPN_PROTECTION:
+        case SPWPN_SPEED:
+        case SPWPN_EVASION:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     switch ((brand_type)brand)
     {
     // Universal brands.
@@ -1548,14 +1572,14 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             item.sub_type = _determine_weapon_subtype(item_level);
             if (is_weapon_brand_ok(item.sub_type, item.special, true))
-                goto brand_ok;
+                break;
         }
-        item.sub_type = SPWPN_NORMAL; // fall back to no brand
+        if (i == 1000)
+            item.sub_type = SPWPN_NORMAL; // fall back to no brand
     }
-brand_ok:
 
     // Forced randart.
-    if (item_level == -6)
+    if (item_level == ISPEC_RANDART)
     {
         int i;
         int ego = item.special;
@@ -1629,7 +1653,7 @@ brand_ok:
         item.plus  -= 1 + random2(3);
         item.plus2 -= 1 + random2(3);
 
-        if (item_level == -5)
+        if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
     else if ((force_good || is_demonic(item) || forced_ego
@@ -2312,19 +2336,19 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     else
     {
         int i;
-        for (i=0; i<1000; i++)
+        for (i = 0; i < 1000; ++i)
         {
-            item.sub_type = get_random_armour_type(item_level);
+            item.sub_type = _get_random_armour_type(item_level);
             if (is_armour_brand_ok(item.sub_type, item.special, true))
                 break;
         }
     }
 
     // Forced randart.
-    if (item_level == -6)
+    if (item_level == ISPEC_RANDART)
     {
         int i;
-        for (i=0; i<100; i++)
+        for (i = 0; i < 100; ++i)
             if (_try_make_armour_artefact(item, force_type, 0, true) && is_artefact(item))
                 return;
         // fall back to an ordinary item
@@ -2375,7 +2399,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
 
-        if (item_level == -5)
+        if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
     else if ((forced_ego || item.sub_type == ARM_WIZARD_HAT
@@ -2439,7 +2463,8 @@ static monster_type _choose_random_monster_corpse()
 {
     for (int count = 0; count < 1000; ++count)
     {
-        monster_type spc = mons_species(random2(NUM_MONSTERS));
+        monster_type spc = mons_species(static_cast<monster_type>(
+                                        random2(NUM_MONSTERS)));
         if (mons_class_flag(spc, M_NO_POLY_TO))
             continue;
         if (mons_weight(spc) > 0)        // drops a corpse
@@ -2565,6 +2590,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     {
         // Set chunk flavour (default to common dungeon rat steaks):
         item.plus = _choose_random_monster_corpse();
+        item.orig_monnum = item.plus + 1;
         // Set duration.
         item.special = (10 + random2(11)) * 10;
     }
@@ -3012,17 +3038,14 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         if (force_ego >= DECK_RARITY_COMMON && force_ego <= DECK_RARITY_LEGENDARY)
             item.special = force_ego;
         else
-            item.special = random_deck_rarity();
+        {
+            item.special = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                                 20, DECK_RARITY_RARE,
+                                                 72, DECK_RARITY_COMMON,
+                                                  0);
+        }
         init_deck(item);
     }
-}
-
-deck_rarity_type random_deck_rarity()
-{
-    return random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                 20, DECK_RARITY_RARE,
-                                 72, DECK_RARITY_COMMON,
-                                  0);
 }
 
 
@@ -3199,9 +3222,9 @@ int items(bool allow_uniques,
     }
 
     if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, item.special, false)
+          && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
         || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, item.special, false)
+          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
         || item.base_type == OBJ_MISSILES
           && !is_missile_brand_ok(item.sub_type, item.special, false))
     {
@@ -3402,7 +3425,7 @@ armour_type get_random_body_armour_type(int item_level)
 {
     for (int tries = 100; tries > 0; --tries)
     {
-        const armour_type tr = get_random_armour_type(item_level);
+        const armour_type tr = _get_random_armour_type(item_level);
         if (get_armour_slot(tr) == EQ_BODY_ARMOUR)
             return (tr);
     }
@@ -3410,7 +3433,7 @@ armour_type get_random_body_armour_type(int item_level)
 }
 
 // FIXME: Need to clean up this mess.
-armour_type get_random_armour_type(int item_level)
+static armour_type _get_random_armour_type(int item_level)
 {
     // Default (lowest-level) armours.
     const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
@@ -3586,11 +3609,11 @@ static int _test_item_level()
     case 0:
         return MAKE_GOOD_ITEM;
     case 1:
-        return -4; // damaged
+        return ISPEC_DAMAGED;
     case 2:
-        return -5; // cursed
+        return ISPEC_BAD;
     case 3:
-        return -6; // force randart
+        return ISPEC_RANDART;
     default:
         return random2(50);
     }
@@ -3602,7 +3625,7 @@ void makeitem_tests()
     item_def item;
 
     mpr("Running generate_weapon_item tests.");
-    for (i=0;i<10000;i++)
+    for (i = 0; i < 10000; ++i)
     {
         item.clear();
         level = _test_item_level();
@@ -3619,7 +3642,7 @@ void makeitem_tests()
     }
 
     mpr("Running generate_armour_item tests.");
-    for (i=0;i<10000;i++)
+    for (i = 0; i < 10000; ++i)
     {
         item.clear();
         level = _test_item_level();

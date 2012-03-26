@@ -30,6 +30,7 @@ enum monster_info_flags
     MB_PARALYSED,
     MB_SICK,
     MB_CAUGHT,
+    MB_WEBBED,
     MB_FRENZIED,
     MB_PETRIFYING,
     MB_PETRIFIED,
@@ -81,6 +82,7 @@ enum monster_info_flags
     MB_FIREWOOD,
     MB_TWO_WEAPONS,
     MB_NO_REGEN,
+    MB_SUPPRESSED,
     NUM_MB_FLAGS
 };
 
@@ -201,7 +203,7 @@ struct monster_info : public monster_info_base
 
     const char *pronoun(pronoun_type variant) const
     {
-        return (mons_pronoun(static_cast<monster_type>(type), variant, true));
+        return (mons_pronoun(type, variant, true));
     }
 
     std::string wounds_description_sentence() const;

@@ -113,8 +113,8 @@ max_passwd_length = 20
 
 login_token_lifetime = 7 # Days
 
-uid = None  # If this is not None, the server will setuid to that id after
-gid = None  # binding its sockets.
+uid = None  # If this is not None, the server will setuid to that (numeric) id
+gid = None  # after binding its sockets.
 
 umask = None # e.g. 0077
 

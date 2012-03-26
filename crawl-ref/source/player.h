@@ -31,7 +31,9 @@ typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
+  // ---------------
   // Permanent data:
+  // ---------------
   std::string your_name;
   species_type species;
   std::string species_name;
@@ -44,7 +46,9 @@ public:
   time_t        birth_time;           // start time of game
 
 
+  // ----------------
   // Long-term state:
+  // ----------------
   int elapsed_time;        // total amount of elapsed time in the game
   int elapsed_time_at_last_input; // used for elapsed_time delta display
 
@@ -65,7 +69,7 @@ public:
 
   int hunger;
   int disease;
-  uint8_t hunger_state;
+  hunger_state_t hunger_state;
   uint8_t max_level;
   uint8_t hit_points_regeneration;
   uint8_t magic_points_regeneration;
@@ -274,7 +278,10 @@ public:
   // For now, only control the speed of abyss morphing.
   int abyss_speed;
 
+
+  // -------------------
   // Non-saved UI state:
+  // -------------------
   unsigned short prev_targ;
   coord_def      prev_grd_targ;
   coord_def      prev_move;
@@ -295,7 +302,13 @@ public:
   int8_t bondage[NUM_ET];
   std::map<skill_type, int8_t> skill_boost; // Skill bonuses.
 
+  // The last spell cast by the player.
+  spell_type last_cast_spell;
+
+
+  // ---------------------------
   // Volatile (same-turn) state:
+  // ---------------------------
   bool turn_is_over; // flag signaling that player has performed a timed action
 
   // If true, player is headed to the Abyss.
@@ -314,7 +327,7 @@ public:
   bool redraw_armour_class;
   bool redraw_evasion;
 
-  uint8_t flash_colour;
+  colour_t flash_colour;
   targetter *flash_where;
 
   int time_taken;
@@ -351,11 +364,11 @@ public:
   // Number of viewport refreshes.
   unsigned int frame_no;
 
-  // The save file itself.
-  package *save;
 
-  // The last spell cast by the player.
-  spell_type last_cast_spell;
+  // ---------------------
+  // The save file itself.
+  // ---------------------
+  package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -368,6 +381,7 @@ public:
     void copy_from(const player &other);
 
     void init();
+    void init_skills();
 
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
@@ -531,7 +545,7 @@ public:
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool mutate();
+    bool mutate(const std::string &reason);
     void backlight();
     void banish(const std::string &who = "");
     void blink(bool allow_partial_control = true);
@@ -543,7 +557,6 @@ public:
     void expose_to_element(beam_type element, int strength = 0);
     void god_conduct(conduct_type thing_done, int level);
 
-    int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true);
@@ -609,6 +622,7 @@ public:
     int silence_radius2() const;
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
+    int suppression_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -783,19 +797,17 @@ int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
 int player_movement_speed(bool ignore_burden = false);
 
-int player_hunger_rate(void);
+int player_hunger_rate(bool temp = true);
 
 int calc_hunger(int food_cost);
 
 int player_icemail_armour_class();
 
 int player_mag_abil(bool is_weighted);
-int player_magical_power(void);
 
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
-int player_bonus_regen(void);
 int player_regen(void);
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
@@ -847,7 +859,6 @@ int player_spec_poison(void);
 int player_spec_summ(void);
 
 int player_speed(void);
-int player_armour_slots();
 int player_evokable_levitation();
 int player_evokable_invis();
 
@@ -889,7 +900,7 @@ void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);
-bool is_player_same_species(const int mon, bool = false);
+bool is_player_same_species(const monster_type mon, bool = false);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
 void update_vision_range();

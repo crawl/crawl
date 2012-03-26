@@ -14,7 +14,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "crash.h"
-#include "dbg-crsh.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
 #include "directn.h"
@@ -214,7 +213,7 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|     %c     |   %d   |    %2d    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %d   |   %3d    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],

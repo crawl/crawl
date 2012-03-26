@@ -28,6 +28,8 @@ enum status_type
     STATUS_CONSTRICTED,
     STATUS_MANUAL,
     STATUS_AUGMENTED,
+    STATUS_SUPPRESSED,
+    STATUS_TERRAIN,
 };
 
 struct status_info

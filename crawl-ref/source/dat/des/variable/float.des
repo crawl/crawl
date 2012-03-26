@@ -162,16 +162,6 @@ xxxx.........xxxxxx.........xxxxxx.........xxxx
 @.............................................@
 ...............................................
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-...............................................
-@.............................................@
-xxxx.........xxxxxx.........xxxxxx.........xxxx
-   xxx.....xxx    xxx.....xxx    xxx.....xxx
-     xx...xx        xx...xx        xx...xx
-      x...x          x...x          x...x
-      xx.xx          xx.xx          xx.xx
-       x*x            x|x            x*x
-       x1x            x1x            x1x
-       xxx            xxx            xxx
 ENDMAP
 
 ##############################################################################
@@ -647,7 +637,7 @@ DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
-MONS:   killer bee / scorpion / redback w:5
+MONS:   killer bee / scorpion / soldier ant w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1060,7 +1050,7 @@ ENDMAP
 ##############################################################################
 # The Shining One Protects a Powerful Item, vault series by abrahamwl
 #
-# The basic theme of these vaults is that tthe Shining One has placed a
+# The basic theme of these vaults is that the Shining One has placed a
 # powerful item under the guard of an angel or daeva.
 
 NAME:    abrahamwl_protected_by_tso_1
@@ -1312,8 +1302,6 @@ KMONS:  Z = col:flash wizard hd:15 name_descriptor tile:mons_master_elementalist
         dagger ego:electrocution
 : end
 
-MARKER:     Z = lua:MonPropsMarker:new {description="The primal forces of " \
-            .. "the universe dance at this demented wizard's fingertips.\n"}
 KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
             randbook disc:earth
 KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
@@ -1991,15 +1979,15 @@ MONS:    wight / necrophage / shadow
 KMONS:   4 = Josephine / skeletal warrior / necromancer
 KMONS:   5 = skeletal warrior / necromancer
 : end
+SHUFFLE: Aa / Bb / Cc / Dd / Ee
+SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
 : if you.branch() == "Crypt" then
 SUBST:   x = c
 : end
-SHUFFLE: ABCDE
-SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., E = x
 MAP
     xxxxxxxxx
     x2233322x
-@  xx22x5x22xx  @
+xaaxx22x5x22xxccx
 xAAx.x2x=x2x.xCCx
 xAAxx.xx1xx.xxCCx
 xAAxxx.x.x.xxxCCx
@@ -2008,7 +1996,7 @@ x...............x
 xBBxxx.x.x.xxxDDx
 xBBxx.xx1xx.xxDDx
 xBBx.x2x=x2x.xDDx
-@  xx22x4x22xx  @
+xbbxx22x4x22xxddx
     x2233322x
     xxxxxxxxx
 ENDMAP

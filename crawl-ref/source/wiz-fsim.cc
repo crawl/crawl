@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #include "beam.h"
+#include "coordit.h"
 #include "dbg-util.h"
 #include "env.h"
 #include "fight.h"
@@ -31,15 +32,29 @@
 #include "species.h"
 
 #ifdef WIZARD
-static monster* _create_fsim_monster(int mtype, int hp)
+static monster* _create_fsim_monster(monster_type mtype, int hp)
 {
     monster *mon = create_monster(
-            mgen_data::hostile_at(
-                static_cast<monster_type>(mtype),
+            mgen_data::hostile_at(mtype,
                 "the fight simulator", false, 0, 0, you.pos()));
 
     if (!mon)
         return 0;
+
+    // To prevent distracted stabing.
+    mon->foe = MHITYOU;
+
+    // Move the monster next to the player
+    if (!adjacent(mon->pos(), you.pos()))
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (mon->move_to_pos(*ai))
+                break;
+
+    if (!adjacent(mon->pos(), you.pos()))
+    {
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        return 0;
+    }
 
     // the monster is never saved, and thus we might allow any 31 bit value
     mon->hit_points = mon->max_hit_points = hp;
@@ -155,7 +170,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, monster &mon,
         if (damage > maxdam)
             maxdam = damage;
     }
-    _fsim_item(out, false, item, _fsim_melee_skill(item),
+    _fsim_item(out, false, item, range_skill(*item),
                cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
     return (true);
@@ -212,7 +227,9 @@ static bool _fsim_melee_combat(FILE *out, int wskill, monster &mon,
         mon            = orig;
         mon.hit_points = mon.max_hit_points;
         you.time_taken = player_speed();
-        if (fight_melee(&you, &mon))
+        bool did_hit = false;
+        fight_melee(&you, &mon, &did_hit);
+        if (did_hit)
             hits++;
 
         you.hunger = hunger;
@@ -482,7 +499,7 @@ static bool debug_fight_sim(monster &mon, int missile_slot,
     return (success);
 }
 
-int fsim_kit_equip(const std::string &kit)
+static int _fsim_kit_equip(const std::string &kit)
 {
     int missile_slot = -1;
 
@@ -544,8 +561,8 @@ int fsim_kit_equip(const std::string &kit)
 // of current weapon skill.
 void debug_fight_statistics(bool use_defaults, bool defence)
 {
-    int punching_bag = get_monster_by_name(Options.fsim_mons);
-    if (punching_bag == -1 || punching_bag == MONS_NO_MONSTER)
+    monster_type punching_bag = get_monster_by_name(Options.fsim_mons);
+    if (punching_bag == MONS_NO_MONSTER)
         punching_bag = MONS_WORM;
 
     monster *mon = _create_fsim_monster(punching_bag, 500);
@@ -570,7 +587,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     {
         for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
         {
-            int missile = fsim_kit_equip(Options.fsim_kit[i]);
+            int missile = _fsim_kit_equip(Options.fsim_kit[i]);
             if (missile == -100)
             {
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());

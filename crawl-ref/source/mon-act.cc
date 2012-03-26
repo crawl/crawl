@@ -53,6 +53,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
 #include "hints.h"
@@ -296,7 +297,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
         if (ally == NULL)
             continue;
 
-        if (mons_is_stationary(ally))
+        if (mons_is_stationary(ally) || ally->reach_range())
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
@@ -790,6 +791,11 @@ static bool _handle_reaching(monster* mons)
     if (mons_aligned(mons, foe))
         return (false);
 
+    // Greatly lowered chances if the monster is fleeing or pacified and
+    // leaving the level.
+    if ((mons_is_fleeing(mons) || mons->pacified()) && !one_chance_in(8))
+        return (false);
+
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
     const int grid_distance(delta.rdist());
@@ -809,7 +815,7 @@ static bool _handle_reaching(monster* mons)
     {
         ret = true;
 
-        ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
+        ASSERT(foe->is_player() || foe->is_monster());
 
         fight_melee(mons, foe);
 
@@ -870,28 +876,29 @@ static bool _handle_scroll(monster* mons)
     case SCR_TELEPORTATION:
         if (!mons->has_ench(ENCH_TP))
         {
-            if (mons->caught() || mons_is_fleeing(mons)
-                || mons->pacified())
+            if (mons->caught() || mons_is_fleeing(mons) || mons->pacified())
             {
                 simple_monster_message(mons, " reads a scroll.");
-                monster_teleport(mons, false);
-                read  = true;
+                read = true;
                 ident = ID_KNOWN_TYPE;
+                monster_teleport(mons, false);
             }
         }
         break;
 
     case SCR_BLINKING:
-        if (mons->caught() || mons_is_fleeing(mons)
-            || mons->pacified())
+        if ((mons->caught() || mons_is_fleeing(mons) || mons->pacified())
+            && mons_near(mons))
         {
-            if (mons_near(mons))
+            simple_monster_message(mons, " reads a scroll.");
+            read = true;
+            if (mons->caught())
             {
-                simple_monster_message(mons, " reads a scroll.");
-                monster_blink(mons);
-                read  = true;
                 ident = ID_KNOWN_TYPE;
+                monster_blink(mons);
             }
+            else if (blink_away(mons))
+                ident = ID_KNOWN_TYPE;
         }
         break;
 
@@ -907,8 +914,8 @@ static bool _handle_scroll(monster* mons)
             {
                 if (you.can_see(mon))
                 {
-                    mprf("%s appears!", mon->name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
+                    mprf("%s appears!", mon->name(DESC_A).c_str());
                 }
                 player_angers_monster(mon);
             }
@@ -1937,13 +1944,13 @@ void handle_noattack_constrictions(actor *attacker)
 
             int damage;
 
-            if (attacker->atype() == ACT_PLAYER)
+            if (attacker->is_player())
                 damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
             DIAG_ONLY(int basedam = damage);
             damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
-            if (attacker->atype() == ACT_PLAYER)
+            if (attacker->is_player())
                 damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
             DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
@@ -1955,7 +1962,7 @@ void handle_noattack_constrictions(actor *attacker)
             DIAG_ONLY(int infdam = damage);
 
             std::string exclams;
-            if (damage <= 0 && attacker->atype() == ACT_PLAYER
+            if (damage <= 0 && attacker->is_player()
                 && you.can_see(defender))
             {
                 exclams = ", but do no damage.";
@@ -1969,10 +1976,10 @@ void handle_noattack_constrictions(actor *attacker)
             else
                 exclams = "!!!";
 
-            if (you.can_see(attacker) || attacker == &you)
+            if (you.can_see(attacker) || attacker->is_player())
             {
                 mprf("%s %s %s%s%s",
-                     (attacker->atype() == ACT_PLAYER
+                     (attacker->is_player()
                          ? "You"
                          : attacker->name(DESC_THE).c_str()),
                      attacker->conj_verb("constrict").c_str(),
@@ -1984,7 +1991,7 @@ void handle_noattack_constrictions(actor *attacker)
 #endif
                      exclams.c_str());
             }
-            else if (you.can_see(defender) || defender == &you)
+            else if (you.can_see(defender) || defender->is_player())
             {
                 mprf("%s %s constricted%s%s",
                      defender->name(DESC_THE).c_str(),
@@ -2002,7 +2009,7 @@ void handle_noattack_constrictions(actor *attacker)
                  defender->name(DESC_PLAIN, true).c_str(),
                  basedam, durdam, acdam, timescale_dam, infdam);
 
-            if (defender->atype() == ACT_MONSTER
+            if (defender->is_monster()
                 && defender->as_monster()->hit_points < 1)
             {
                 monster_die(defender->as_monster(), attacker);
@@ -2390,7 +2397,7 @@ void handle_monster_move(monster* mons)
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
             const bool friendly_or_near =
-                mons->friendly() || mons->near_foe();
+                mons->friendly() && mons->foe == MHITYOU || mons->near_foe();
             if (friendly_or_near
                 || mons->type == MONS_TEST_SPAWNER
                 // Slime creatures can split when offscreen.
@@ -2813,7 +2820,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
-    monster_type mt = static_cast<monster_type>(item.plus);
+    monster_type mt = item.mon_type;
     if (do_heal)
     {
         int base_max = mons_avg_hp(mons->type);
@@ -2855,6 +2862,52 @@ static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
     return (eaten > 0);
 }
 
+// XXX: This function assumes that only killer bee larvae eat honey.
+static bool _monster_eat_honey(monster* mons, bool nearby)
+{
+    if (!mons_eats_honey(mons))
+        return (false);
+
+    if (mons_is_fleeing(mons))
+        return (false);
+
+    for (stack_iterator si(mons->pos()); si; ++si)
+    {
+        const bool is_honey = (si->base_type == OBJ_FOOD
+                                  && (si->sub_type == FOOD_HONEYCOMB
+                                      || si->sub_type == FOOD_ROYAL_JELLY));
+
+        if (!is_honey)
+            continue;
+
+        if (!nearby)
+            mpr("You hear a distant popping sound.", MSGCH_SOUND);
+        else
+        {
+            mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
+                 quant_name(*si, 1, DESC_THE).c_str());
+        }
+
+        dec_mitm_item_quantity(si.link(), 1);
+
+        std::string old_name_the = mons->name(DESC_THE);
+
+        mons->upgrade_type(MONS_KILLER_BEE, true, true);
+
+        if (!nearby)
+            mpr("You hear a distant bursting sound.", MSGCH_SOUND);
+        else
+        {
+            mprf("%s metamorphoses into %s!",
+                 old_name_the.c_str(), mons->name(DESC_A).c_str());
+        }
+
+        return (true);
+    }
+
+    return (false);
+}
+
 static bool _monster_eat_food(monster* mons, bool nearby)
 {
     if (!mons_eats_food(mons))
@@ -2870,44 +2923,11 @@ static bool _monster_eat_food(monster* mons, bool nearby)
         const bool is_food = (si->base_type == OBJ_FOOD);
         const bool is_corpse = (si->base_type == OBJ_CORPSES
                                    && si->sub_type == CORPSE_BODY);
-        const bool free_to_eat = mons->wont_attack()
-                || grid_distance(mons->pos(), you.pos()) > 1;
+        const bool free_to_eat = (mons->wont_attack()
+                                  || grid_distance(mons->pos(), you.pos()) > 1);
 
         if (!is_food && !is_corpse)
             continue;
-
-        if (mons->type == MONS_KILLER_BEE_LARVA)
-        {
-            if (si->sub_type != FOOD_HONEYCOMB
-                && si->sub_type != FOOD_ROYAL_JELLY)
-            {
-                return (false);
-            }
-
-            if (!nearby)
-                mpr("You hear a distant popping sound.", MSGCH_SOUND);
-            else
-            {
-                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
-                     quant_name(*si, 1, DESC_THE).c_str());
-            }
-
-            dec_mitm_item_quantity(si.link(), 1);
-
-            std::string old_name_the = mons->name(DESC_THE);
-
-            mons->upgrade_type(MONS_KILLER_BEE, true, true);
-
-            if (!nearby)
-                mpr("You hear a distant bursting sound.", MSGCH_SOUND);
-            else
-            {
-                mprf("%s metamorphoses into %s!",
-                     old_name_the.c_str(), mons->name(DESC_A).c_str());
-            }
-
-            return (true);
-        }
 
         if (free_to_eat && coinflip())
         {
@@ -2980,6 +3000,11 @@ static bool _handle_pickup(monster* mons)
                 return (false);
             }
         }
+        else if (mons_eats_honey(mons))
+        {
+            if (_monster_eat_honey(mons, nearby))
+                return (false);
+        }
         else if (mons_eats_food(mons))
         {
             if (_monster_eat_food(mons, nearby))
@@ -3021,6 +3046,7 @@ static int _estimated_trap_damage(trap_type trap)
         case TRAP_SPEAR: return (random2(10));
         case TRAP_BOLT:  return (random2(13));
         case TRAP_AXE:   return (random2(15));
+        case TRAP_GAS:   return (random2(50));
         default:         return (0);
     }
 }
@@ -3246,6 +3272,7 @@ static bool _mons_can_displace(const monster* mpusher,
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
         || mpusher->cannot_move() || mons_is_stationary(mpusher)
+        || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_kraken_parts(mpusher, mpushee)
            && (mpushee->cannot_move()
                || mons_is_stationary(mpushee)))

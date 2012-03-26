@@ -44,8 +44,6 @@ would be all hexes. Beguiling and illusions also belong here.
 
 This includes: slowing monsters, paralysing monsters, confusing monsters, etc.
 
-This specifically includes: weapon branding spells.
-
 Charms
 ======
 
@@ -56,8 +54,7 @@ for direct contact with the warded person (RoF, RMsl, ...).
 These are wards or enhancements: give you a resistance, let you move or heal
 faster, let you have more control on magic affecting you, make you stronger.
 
-This includes: hasting yourself, becoming invisible, extending current status
-effects, berserk rage, etc.
+This includes: hasting yourself, spells to repel attacks, etc.
 
 Fire
 ====
@@ -177,8 +174,7 @@ location), and Portal Projectile (the creation of a portal to a specific, nearby
 location).
 
 This also specifically includes spells which cause things to be continuously
-moved from one location to another, such as Apportation, though in this instance
-the spell is not specifically flavoured as such.
+moved from one location to another, such as Apportation.
 
 Poison
 ======

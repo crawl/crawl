@@ -883,7 +883,6 @@ MARKER: v = lua:props_marker { veto_fragmentation="veto", veto_disintegrate="vet
 # Final subst
 SUBST:  MV = .
 :       dgn.set_feature_desc_short("granite statue", "iron statue")
-:       dgn.set_feature_desc_long("granite statue", "The statue has no mouth. Creepy!\n")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then
@@ -1353,7 +1352,7 @@ MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             size = 1, walk_dist = 1, spread_rate= 33 }
 MARKER: V = lua:props_marker { feature_description = "foul fountain" }
 SUBST:  % = %*|$
-SUBST:  A = 11.
+SUBST:  A = 1.
 MAP
 xxxx......@@@......xxxxxxxxxxxxxxxxxxxxxxxxx
 xccc......1.1......ccccccccccccccccccccccccc
@@ -1363,11 +1362,11 @@ xccc..b.2c...c2.b..c%%c.......cc....ccc1>1cc
 xccc.....c...c.....cccc.......cc.bb.ccc.c.cc
 xccc=ccccc...ccccccccccccc+ccccc.BB.ccc.c.cc
 xcb$$bc.........cb$$bc....5....c....ccc.c.cc
-xc1..1c.Bb...bB.c1..1c.b.ccc.b.c5BB5cc....cc
+xc1..Ac.Bb...bB.cA..1c.b.ccc.b.c5BB5cc....cc
 xcb..bc.bb...bb.cb..bc.b.ccc.b.c.bb.cc.c.ccc
-xc1...+.........+...1=..2...2..=.6..cc.c.ccc
+xcA...+.........+...A=..2...2..=.6..cc.c.ccc
 xcb..bc.bb...bb.cb..bccccc.ccccc.cc..+.c.ccc
-xc1..1c.Bb...bB.c1..1=AAAc.cAAAccccccccc+ccc
+xc1..Ac.Bb...bB.cA..1=AAAc.cAAAccccccccc+ccc
 xcb$$bc...3_4...cb$$bcA$Ac.cA$Accccccc.....c
 xccc=ccccc...cccccccccA2Ac+cA2Accccccc%6.6%c
 xcc%%2ccccc+ccccccccccc+cc.cc+ccAAAccc%%7%%c

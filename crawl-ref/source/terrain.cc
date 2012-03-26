@@ -448,6 +448,13 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
 }
 
+bool feat_is_branchlike(dungeon_feature_type feat)
+{
+    return (feat_is_branch_stairs(feat)
+            || feat == DNGN_ENTER_HELL || feat == DNGN_ENTER_ABYSS
+            || feat == DNGN_ENTER_PANDEMONIUM);
+}
+
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE);
@@ -1052,15 +1059,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-    {
-        // If the monster can't stay submerged in the new terrain and
-        // there aren't any adjacent squares where it can stay
-        // submerged then move it.
-        monster* mon = monster_at(pos);
-        if (mon && !mon->submerged())
-            monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true);
-    }
     else
         you_teleport_now(true, false);
 }
@@ -1430,19 +1429,13 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk())
+        if (beogh_water_walk() || form_likes_water())
             return (false);
 
-        if (species_likes_water(you.species))
+        if (species_likes_water(you.species) && !you.transform_uncancellable)
         {
-            // These can happen when we enter deep water directly. - bwr
-            if (form_likes_water())
-                return (false);
-            else if (!you.transform_uncancellable)
-            {
-                emergency_untransform();
-                return (false);
-            }
+            emergency_untransform();
+            return (false);
         }
     }
 

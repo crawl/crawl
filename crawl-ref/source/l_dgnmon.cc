@@ -132,7 +132,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
             }
             if (mon.type == -1)
                 mon.type = MONS_PROGRAM_BUG;
-            name = mons_type_name(mon.type, DESC_PLAIN);
+            name = mons_type_name(static_cast<monster_type>(mon.type), DESC_PLAIN);
         }
 
         mons.push_back(mon);
@@ -173,11 +173,11 @@ static int dgn_set_random_mon_list(lua_State *ls)
     return (0);
 }
 
-static int dgn_mons_from_index(lua_State *ls)
+static int dgn_mons_from_mid(lua_State *ls)
 {
-    const int index = luaL_checkint(ls, 1);
+    const int mid = luaL_checkint(ls, 1);
 
-    monster* mons = &menv[index];
+    monster* mons = monster_by_mid(mid);
 
     if (mons->type != -1)
         push_monster(ls, mons);
@@ -237,7 +237,7 @@ LUAFN(dgn_dismiss_monsters)
 const struct luaL_reg dgn_mons_dlib[] =
 {
 { "set_random_mon_list", dgn_set_random_mon_list },
-{ "mons_from_index", dgn_mons_from_index },
+{ "mons_from_mid", dgn_mons_from_mid },
 { "mons_at", dgn_mons_at },
 { "create_monster", dgn_create_monster },
 { "monster_spec", _dgn_monster_spec },

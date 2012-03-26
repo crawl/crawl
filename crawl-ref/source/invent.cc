@@ -632,13 +632,13 @@ bool InvMenu::is_selectable(int index) const
 }
 
 template <std::string (*proc)(const InvEntry *a)>
-int compare_item_str(const InvEntry *a, const InvEntry *b)
+static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
     return (proc(a).compare(proc(b)));
 }
 
 template <typename T, T (*proc)(const InvEntry *a)>
-int compare_item(const InvEntry *a, const InvEntry *b)
+static int compare_item(const InvEntry *a, const InvEntry *b)
 {
     return (int(proc(a)) - int(proc(b)));
 }
@@ -1141,7 +1141,7 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-                && !food_is_rotten(i) && mons_has_blood(i.plus));
+                && !food_is_rotten(i) && mons_has_blood(i.mon_type));
 
     case OSEL_DRAW_DECK:
         return (is_deck(i));
@@ -1971,6 +1971,13 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     switch (item.base_type)
     {
     case OBJ_WANDS:
+        if (you.species == SP_FELID)
+        {
+            if (msg)
+                mpr("You cannot grasp it well enough.");
+            return (false);
+        }
+
         if (all_wands)
             return (true);
 

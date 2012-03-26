@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <cmath>
 
 #include "externs.h"
 
@@ -213,7 +214,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
-      ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
+      ABIL_NEMELEX_DEAL_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_NON_ABILITY,
@@ -398,7 +399,7 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_DRAW_ONE, "Draw One", 2, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_PEEK_TWO, "Peek at Two", 3, 0, 0, 1, 0, ABFLAG_INSTANT},
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, 0, ABFLAG_NONE},
-    { ABIL_NEMELEX_MARK_FOUR, "Mark Four", 4, 0, 125, 5, 0, ABFLAG_NONE},
+    { ABIL_NEMELEX_DEAL_FOUR, "Deal Four", 8, 0, 200, 10, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_STACK_FIVE, "Stack Five", 5, 0, 250, 10, 0, ABFLAG_NONE},
 
     // Beogh
@@ -1239,7 +1240,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 80 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 4);
         break;
 
-    case ABIL_NEMELEX_MARK_FOUR:
+    case ABIL_NEMELEX_DEAL_FOUR:
         invoc = true;
         failure = 70 - (you.piety * 2 / 45) - you.skill(SK_EVOCATIONS, 9) / 2;
         break;
@@ -2440,9 +2441,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     {
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
-
-        if (cast_healing(3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)), true,
-                         self ? you.pos() : coord_def(0, 0), !self,
+        if (cast_healing(3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)),
+                         3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0),
+                         true, self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
         {
             return (false);
@@ -2460,8 +2461,9 @@ static bool _do_ability(const ability_def& abil)
     {
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
 
-        if (cast_healing(10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)), true,
-                         self ? you.pos() : coord_def(0, 0), !self,
+        if (cast_healing(10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)),
+                         10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0),
+                         true, self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
         {
             return (false);
@@ -2548,8 +2550,8 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         break;
 
-    case ABIL_NEMELEX_MARK_FOUR:
-        if (!deck_mark())
+    case ABIL_NEMELEX_DEAL_FOUR:
+        if (!deck_deal())
             return (false);
         break;
 

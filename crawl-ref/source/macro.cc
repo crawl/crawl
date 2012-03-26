@@ -103,6 +103,8 @@ typedef std::map<int, int> cmd_to_key_map;
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
 
+static KeymapContext _context_for_command(command_type cmd);
+
 static inline int userfunc_index(int key)
 {
     int index = (key <= USERFUNCBASE? USERFUNCBASE - key : -1);
@@ -1182,7 +1184,7 @@ void init_keybindings()
         default_binding &data = _default_binding_list[i];
         ASSERT(VALID_BIND_COMMAND(data.cmd));
 
-        KeymapContext context = context_for_command(data.cmd);
+        KeymapContext context = _context_for_command(data.cmd);
 
         ASSERT(context < KMC_CONTEXT_COUNT);
 
@@ -1225,7 +1227,7 @@ command_type key_to_command(int key, KeymapContext context)
     if (-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
     {
         command_type  cmd         = (command_type) -key;
-        KeymapContext cmd_context = context_for_command(cmd);
+        KeymapContext cmd_context = _context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
             return (CMD_NO_CMD);
@@ -1259,14 +1261,14 @@ command_type key_to_command(int key, KeymapContext context)
         return CMD_NO_CMD;
 
     const command_type cmd = static_cast<command_type>(it->second);
-    ASSERT(context_for_command(cmd) == context);
+    ASSERT(_context_for_command(cmd) == context);
 
     return cmd;
 }
 
 int command_to_key(command_type cmd)
 {
-    KeymapContext context = context_for_command(cmd);
+    KeymapContext context = _context_for_command(cmd);
 
     if (context == KMC_NONE)
         return ('\0');
@@ -1280,7 +1282,7 @@ int command_to_key(command_type cmd)
     return (it->second);
 }
 
-KeymapContext context_for_command(command_type cmd)
+static KeymapContext _context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
         return KMC_DEFAULT;
@@ -1301,7 +1303,7 @@ KeymapContext context_for_command(command_type cmd)
 
 void bind_command_to_key(command_type cmd, int key)
 {
-    KeymapContext context      = context_for_command(cmd);
+    KeymapContext context      = _context_for_command(cmd);
     std::string   command_name = command_to_name(cmd);
 
     if (context == KMC_NONE || command_name == "CMD_NO_CMD"
@@ -1466,7 +1468,7 @@ static void _list_all_commands(std::string &commands)
         if (command_name == "CMD_NO_CMD")
             continue;
 
-        if (context_for_command(cmd) != KMC_DEFAULT)
+        if (_context_for_command(cmd) != KMC_DEFAULT)
             continue;
 
         snprintf(info, INFO_SIZE, "%s: %s\n",

@@ -112,10 +112,16 @@ static void _set_firing_pos(monster* mon, coord_def target)
     int best_distance = INT_MAX;
     int best_distance_to_ideal_range = INT_MAX;
     coord_def best_pos(0, 0);
-    for (radius_iterator ri(mon->get_los(), true); ri; ++ri)
+
+    const los_base *los = mon->get_los();
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS);
+         di; ++di)
     {
-        const coord_def p(*ri);
+        const coord_def p(*di);
         const int range = p.distance_from(target);
+
+        if (!los->see_cell(*di))
+            continue;
 
         if (!in_bounds(p) || range > max_range
             || !cell_see_cell(p, target, LOS_NO_TRANS)
@@ -575,11 +581,17 @@ void handle_behaviour(monster* mon)
             {
                 // The foe is the player.
 
-                // If monster is currently getting into firing position and
-                // see the player and can attack him, clear firing_pos.
-                if (!mon->firing_pos.zero()
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                    && !mon->berserk())
+                {
+                    // Get to firing range even if we are close.
+                    _set_firing_pos(mon, you.pos());
+                }
+                else if (!mon->firing_pos.zero()
                     && mon->see_cell_no_trans(mon->target))
                 {
+                    // If monster is currently getting into firing position and
+                    // sees the player and can attack him, clear firing_pos.
                     mon->firing_pos.reset();
                 }
 
@@ -612,6 +624,13 @@ void handle_behaviour(monster* mon)
             {
                 // We have a foe but it's not the player.
                 mon->target = menv[mon->foe].pos();
+
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                    && !mon->berserk())
+                {
+                    _set_firing_pos(mon, mon->target);
+                }
+
             }
 
             break;

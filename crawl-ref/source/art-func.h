@@ -63,7 +63,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
 static void _ASMODEUS_melee_effect(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
 }
 
@@ -75,9 +75,8 @@ static bool _evoke_sceptre_of_asmodeus()
     const monster_type mon = random_choose_weighted(
                                    3, MONS_EFREET,
                                    3, MONS_SUN_DEMON,
-                                   2, MONS_BALRUG,
+                                   3, MONS_BALRUG,
                                    2, MONS_HELLION,
-                                   1, MONS_PIT_FIEND,
                                    1, MONS_BRIMSTONE_FIEND,
                                    0);
 
@@ -126,7 +125,7 @@ static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
 static void _CEREBOV_melee_effect(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
 }
 
@@ -152,7 +151,7 @@ static void _CURSES_world_reacts(item_def *item)
 static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
     if (defender->has_lifeforce() && !mondied)
         _curses_miscast(defender, random2(9), random2(70));
@@ -163,7 +162,7 @@ static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
 static void _DISPATER_melee_effect(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
 }
 
@@ -273,7 +272,7 @@ static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
     {
         defender->poison(attacker, 2, defender->has_lifeforce()
                                       && x_chance_in_y(skill, 800));
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->is_player())
             did_god_conduct(DID_POISON, 3);
     }
 }
@@ -313,6 +312,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     {
         mprf(MSGCH_TALK, "%s says, \"Hi!  I'm the Singing Sword!\"",
              item->name(DESC_THE).c_str());
+        autoid_unrand(*item); // pluses too
     }
     else
         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
@@ -405,7 +405,7 @@ static void _TORMENT_melee_effect(item_def* weapon, actor* attacker,
     if (!coinflip())
         return;
     torment(attacker, TORMENT_SPWLD, attacker->pos());
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 5);
 }
 
@@ -544,7 +544,7 @@ static void _ZONGULDROK_world_reacts(item_def *item)
 static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
                                      actor* defender, bool mondied, int dam)
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         did_god_conduct(DID_NECROMANCY, 3);
         did_god_conduct(DID_CORPSE_VIOLATION, 3);
@@ -610,7 +610,7 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
     if (one_chance_in(10))
         cast_summon_demon(50+random2(100), attacker->deity());
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
 }
 
@@ -680,7 +680,7 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
 {
     if (!mondied || !defender || !is_dragonkind(defender))
         return;
-    if (defender->atype() != ACT_MONSTER)
+    if (defender->is_player())
     {
         // can't currently happen even on a death blow
         mpr("<green>You see the lance glow as it kills you.</green>");
@@ -715,7 +715,7 @@ static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
     {
         mprf("%s %s blasted by disruptive energy!",
               defender->name(DESC_THE).c_str(),
-              defender->atype() == ACT_PLAYER ? "are" : "is");
+              defender->is_player() ? "are" : "is");
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }
 }

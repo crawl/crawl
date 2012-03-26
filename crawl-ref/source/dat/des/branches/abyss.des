@@ -189,6 +189,39 @@ xxxxx1$1xxxxx
      . .
 ENDMAP
 
+NAME:    hangedman_abyss_shoalhut
+TAGS:    abyss no_pool_fixup patrolling
+MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
+         unseen horror / ynoxinul / snapping turtle skeleton w:15
+NSUBST:  = = 1:x= / *:x
+SUBST:   1 = 1., x = xxxxcccvb, l = wWll
+KMASK:   wWl = no_monster_gen
+MAP
+   l l
+ lxx=xxl
+ xx.1.xx
+lx.1.1.xl
+ =1.|.1=
+lx.1.1.xl
+ xx.1.xx
+ lxx+xxl
+   l l
+ENDMAP
+
+NAME:    abyss_fake_exit
+TAGS:    abyss
+KFEAT:   O = exit_abyss mimic
+MAP
+O
+ENDMAP
+
+NAME:    abyss_fake_rune
+TAGS:    abyss
+ITEM:    abyssal rune of Zot mimic
+MAP
+d
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################
@@ -470,7 +503,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_rune_flesh_and_stone
-TAGS:   abyss_rune no_monster_gen no_item_gen no_pool_fixup
+TAGS:   abyss_rune no_monster_gen no_item_gen no_pool_fixup allow_dup
 MONS:   catoblepas, stone golem, earth elemental, stone giant
 KMONS:  O = rock worm
 KITEM:  O = abyssal rune of Zot
@@ -497,39 +530,37 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_rune_macabre_mess
-TAGS:   abyss_rune
-KMONS:  1 = giant orange brain spells:brain_feed;cause_fear;shadow_creatures;confuse;.;.
+TAGS:   abyss_rune allow_dup
+KMONS:  1 = giant orange brain spells:brain_feed;cause_fear;\
+            shadow_creatures;confuse;cantrip;teleport_self
 KMONS:  2 = golden eye
 KMONS:  3 = flying skull
-KMONS:  4 = insubstantial wisp
-KMONS:  5 = macabre mass hd:2 / macabre mass hd:3 / small abomination w:4
-KMONS:  6 = neqoxec
-KMONS:  7 = cacodemon
-KMONS:  8 = pulsating lump
-KMONS:  9 = flying skull
-KITEM:  9 = abyssal rune of Zot
-KFEAT:  12 = W
+KMONS:  4 = macabre mass hd:2 / macabre mass hd:3 / small abomination w:4
+KMONS:  5 = neqoxec
+KMONS:  6 = cacodemon
+KMONS:  O = flying skull
+KITEM:  O = abyssal rune of Zot
+KFEAT:  n = iron_grate
+KFEAT:  123456. = shallow_water w:1 / . w:9
 KFEAT:  * = +
 MARKER: * = lua:restrict_door()
-SUBST:  c = ccv, . = .....W
-KFEAT:  n = iron_grate
+SUBST:  c = ccccvb
 MAP
- .cccccc5 5cccccc.
- cc .. cc8cc .. cc
-.c .55..c2c..55. c.
-cc.5nnn.c+c.nnn5.cc
-c 5nn2n.....n2nn5 c
-c64*13n.....n31*46c
-c 5nn2n.....n2nn5 c
-cc.5nnn.....nnn5.cc
-.c .55.......55. c.
- ccc ......... ccc
-  .cc55nnnnn55cc.
-   .c55n292n55c.
-    c 5nn1nn5 c
-    cc55n*n55cc
-    .c 55455 c.
-     ccc 7 ccc
+ .cccccc4@4cccccc.
+ cc .. ccWcc .. cc
+.c 444. c5c .444 c.
+cc44nnn.c+c.nnn44cc
+c 4nn2n.....n2nn4 c
+c54*13n.....n31*45c
+c 4nn2n.....n2nn4 c
+cc.4nnn.....nnn4.cc
+.c ............. c.
+ ccc .4nnnnn4. ccc
+  .cc44n2O2n44cc.
+   .c 4nn1nn4 c.
+    cc44n*n44cc
+    .c 44444 c.
+     ccc 6 ccc
       .ccccc.
 ENDMAP
 
@@ -1182,7 +1213,7 @@ ENDMAP
 
 NAME:  bmh_abyss_fiendish_exit
 TAGS:  abyss_exit allow_dup no_monster_gen
-KMONS: F = patrolling pit fiend
+KMONS: F = patrolling hell sentinel
 KFEAT: F = floor
 KFEAT: 0 = exit_abyss
 KFEAT: % = floor
@@ -1204,4 +1235,57 @@ MAP
   .bSb.
    .c.
     .
+ENDMAP
+
+NAME:  guppyfry_abyss_exit_glass_guarded
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+.............
+.xmxmxmxmxmx.
+m.m.......m.m
+xm.mmm.mmm.mx
+xxxx.....xxxx
+x00...O...00x
+xxxxxxlxxxxxx
+lllllllllllll
+mxmxmxmxmxmxx
+.............
+ENDMAP
+
+NAME:  guppyfry_abyss_exit_spiral_guarded
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: - = llx
+MAP
+.0---------0
+.-........--
+..--------.-
+.--.....--.-
+.-.-----.-.-
+.-.--O--.-.-
+.-.-.---.-.-
+.-.--...--.-
+.-.-------.-
+.--.......--
+.0---------0
+ENDMAP
+
+NAME: guppyfry_abyss_exit_imp_island
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: - = Wwwww
+MONS: crimson imp / white imp
+MAP
+.---------.
+---..1..---
+--..1.1..--
+---..1..---
+.---------.
+.....O.....
+.---------.
+---..1..---
+--..1.1..--
+---..1..---
+.---------.
 ENDMAP
