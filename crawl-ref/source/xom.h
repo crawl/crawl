@@ -39,7 +39,6 @@ enum xom_event_type
     XOM_GOOD_TELEPORT,          //  15
     XOM_GOOD_VITRIFY,
     XOM_GOOD_MUTATION,
-    XOM_GOOD_MAJOR_ALLY,
     XOM_GOOD_LIGHTNING,
     XOM_GOOD_SCENERY,           //  20
     XOM_GOOD_SNAKES,
