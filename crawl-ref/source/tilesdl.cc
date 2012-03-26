@@ -453,6 +453,11 @@ void TilesFramework::resize()
 
     wm->resize(m_windowsz);
 
+    if (m_active_layer == LAYER_NORMAL)
+    {
+        viewwindow(false);
+    }
+
     redraw();
 }
 
