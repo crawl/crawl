@@ -592,9 +592,9 @@ void timeout_phoenix_markers(int duration)
         if (mmark->duration < 0)
         {
             // Now, look for the corpse
-            bool found_body;
+            bool found_body = false;
             coord_def place_at;
-            bool from_inventory;
+            bool from_inventory = false;
 
             for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
             {
