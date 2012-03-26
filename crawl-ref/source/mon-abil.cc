@@ -2593,18 +2593,22 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_BOULDER_BEETLE:
-        if (!mons->has_ench(ENCH_ROLLING)){
+        if (!mons->has_ench(ENCH_ROLLING))
+        {
             // Fleeing check
-            if (mons_is_fleeing(mons)) {
-                if (one_chance_in(2)) {
+            if (mons_is_fleeing(mons))
+            {
+                if (coinflip())
+                {
                  //   behaviour_event(mons, ME_CORNERED);
-                    boulder_flee(mons,&beem);
+                    boulder_flee(mons, &beem);
                 }
             }
-            // Normal check
-            else if(one_chance_in(3))
+            // Normal check - don't roll at adjacent targets
+            else if (one_chance_in(3) &&
+                     !adjacent(mons->pos(), beem.target))
             {
-                boulder_start(mons,&beem);
+                boulder_start(mons, &beem);
             }
         }
         break;
