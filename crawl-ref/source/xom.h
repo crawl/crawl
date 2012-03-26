@@ -42,6 +42,7 @@ enum xom_event_type
     XOM_GOOD_LIGHTNING,
     XOM_GOOD_SCENERY,           //  20
     XOM_GOOD_SNAKES,
+    XOM_GOOD_INNER_FLAME,
     XOM_LAST_GOOD_ACT = XOM_GOOD_SNAKES,   // 21
 
     // bad acts
