@@ -189,7 +189,7 @@ enum explore_stop_type
     ES_GREEDY_VISITED_ITEM_STACK = 0x0040,
 
     // Explored into view of a stair, shop, altar, portal, glowing
-    // item, or artefact.
+    // item, artefact, or branch entrance.
     ES_STAIR                     = 0x0080,
     ES_SHOP                      = 0x0100,
     ES_ALTAR                     = 0x0200,
@@ -197,6 +197,7 @@ enum explore_stop_type
     ES_GLOWING_ITEM              = 0x0800,
     ES_ARTEFACT                  = 0x1000,
     ES_RUNE                      = 0x2000,
+    ES_BRANCH                    = 0x4000,
 };
 
 ////////////////////////////////////////////////////////////////////////////

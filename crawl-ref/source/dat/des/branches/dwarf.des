@@ -50,9 +50,6 @@ dhfh.hall_setup = function(e, glyph)
         mod:add_triggerer( local_util.new_trigger("item_pickup") )
     end
     e.lua_marker("G", portal_desc { desc="granite statue of a fallen hero",
-             desc_long=("A life-size granite statue of a dwarf standing " ..
-             "guard in this hall. You can't help but feel like it's" ..
-             " watching you.\n"),
             slaved_to="statue" .. local_util.statues_idx})
     e.lua_marker(glyph, mod)
 end

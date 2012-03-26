@@ -220,7 +220,7 @@ void tornado_damage(actor *caster, int dur)
 
     int pow;
     // Not stored so unwielding that staff will reduce damage.
-    if (caster->atype() == ACT_PLAYER)
+    if (caster->is_player())
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
         pow = caster->as_monster()->hit_dice * 4;
@@ -281,7 +281,7 @@ void tornado_damage(actor *caster, int dur)
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
-                if (caster == &you)
+                if (caster->is_player())
                     did_god_conduct(DID_KILL_PLANT, 1);
             }
 
@@ -296,7 +296,7 @@ void tornado_damage(actor *caster, int dur)
                     leda = true; // and with fish, too
                     continue;
                 }
-                if (victim == &you && monster_at(*dam_i))
+                if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
                     // or standing on a submerged air elemental, there are
@@ -308,11 +308,11 @@ void tornado_damage(actor *caster, int dur)
                 }
 
                 leda = liquefied(victim->pos()) && victim->ground_level()
-                    || victim->atype() == ACT_MONSTER
+                    || victim->is_monster()
                        && _mons_is_unmovable(victim->as_monster());
                 if (!victim->res_wind())
                 {
-                    if (victim->atype() == ACT_MONSTER)
+                    if (victim->is_monster())
                     {
                         monster *mon = victim->as_monster();
                         if (!leda)
@@ -345,7 +345,7 @@ void tornado_damage(actor *caster, int dur)
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
-                    if (victim->atype() == ACT_PLAYER)
+                    if (victim->is_player())
                         ouch(dmg, caster->mindex(), KILLED_BY_BEAM,
                              "tornado");
                     else
@@ -423,7 +423,7 @@ void tornado_damage(actor *caster, int dur)
             ASSERT(move_act[i]->pos() == newpos);
         }
 
-    if (caster == &you)
+    if (caster->is_player())
         fire_final_effects();
 }
 

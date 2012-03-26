@@ -36,16 +36,16 @@ function pan_lord_setup(_G, name)
     -- Set level monsters.
     -- needs exactly 10 monsters, weights are not supported yet
     local monsters = {
-        Mnoleg = "small abomination / small abomination / small abomination / " ..
-                 "large abomination / neqoxec / midge / neqoxec / " ..
-                 "blizzard demon / balrug / lemure",
-        ['Lom Lobon'] = "hellwing / smoke demon / smoke demon / ynoxinul / " ..
+        Mnoleg = "small abomination / small abomination / large abomination / " ..
+                 "large abomination / neqoxec / neqoxec / cacodemon / " ..
+                 "cacodemon / chaos spawn / chaos spawn",
+        ['Lom Lobon'] = "hellwing / smoke demon / smoke demon / sixfirhy / " ..
                  "Green Death / blizzard demon / smoke demon / hellwing / " ..
-                 "white imp / hellwing",
-        Cerebov = "efreet / small abomination / orange demon / orange demon / " ..
-                 "neqoxec / lemure / orange demon / ynoxinul / balrug / balrug",
+                 "Green Death / hellwing",
+        Cerebov = "efreet / efreet / orange demon / orange demon / " ..
+                 "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
         ['Gloorx Vloq'] = "small skeleton / small skeleton / large skeleton / " ..
-                 "white imp / cacodemon / hellwing / smoke demon / " ..
+                 "large skeleton / soul eater / soul eater / lorocyproca / " ..
                  "executioner / executioner / executioner"
     }
 
@@ -521,10 +521,9 @@ ENDMAP
 #
 NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
-DESC:      Cerebov's castle
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Cerebov')
-MONS:      patrolling Cerebov, Balrug, Pit Fiend
+MONS:      patrolling Cerebov, Balrug, brimstone fiend
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -533,10 +532,6 @@ TILE:       n = dngn_metal_wall_cracked
 TILE:       v = dngn_metal_wall_brown
 :           dgn.set_feature_desc_short("translucent stone wall",
 :                                      "cracked metal wall")
-:           dgn.set_feature_desc_long("translucent stone wall",
-:                                     "This metal wall has suffered some " ..
-:                                     "damage. Alas, the hole is not big " ..
-:                                     "enough to crawl through.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -576,7 +571,7 @@ TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
 : pan_lord_setup(_G, 'Cerebov')
 TILE:      v = dngn_metal_wall_brown
-MONS:      patrolling Cerebov, balrug, pit fiend
+MONS:      patrolling Cerebov, balrug, brimstone fiend
 MONS:      red devil, sun demon, crimson imp
 epilogue{{
   pan_lord_epilogue('Cerebov')
@@ -630,7 +625,7 @@ SUBST:      L : lll.
 SUBST:      U : W., W : V., V : v.
 KPROP:      l = no_cloud_gen
 TILE:       v = dngn_metal_wall_brown
-MONS:       Cerebov, balrug, pit fiend, sun demon
+MONS:       Cerebov, balrug, brimstone fiend, sun demon
 NSUBST:     Q = 1:3 / 2:|
 NSUBST:     B = 3:2 / 3:4
 NSUBST:     C = 2:2 / 2:|
@@ -1608,7 +1603,7 @@ ENDMAP
 
 NAME:   pan_captured_pigsty
 TAGS:   pan extra
-MONS:   hairy devil, holy swine
+MONS:   red devil, holy swine
 KFEAT:  o = iron_grate
 {{
 local function swineherd_die(monster, killer_type, killer_index, silent, wizard)
@@ -1648,8 +1643,7 @@ COLOUR: D = random
 COLOUR: .x = disco
 COLOUR: 0123456789 = disco
 KFEAT:  D = granite_statue
-MARKER: D = lua:portal_desc { desc="weirdly glowing ball", \
-            desc_long=("This floating ball radiates with shimmering light.") }
+MARKER: D = lua:portal_desc { desc="weirdly glowing ball" }
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
@@ -1744,17 +1738,13 @@ FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
 : dgn.set_feature_desc_short("granite statue",
 :                            "golden statue")
-: dgn.set_feature_desc_long("granite statue",
-:                           "A solid gold statue of a saint.")
 : dgn.set_feature_desc_short("metal wall",
 :                            "silver wall")
-: dgn.set_feature_desc_long("metal wall",
-:                           "This wall is made of pure silver.")
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
 :                        "apis / paladin / apis / ophan / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
 veto {{
-    if you.god() == "The Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then
+    if you.god() == "the Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then
         return true
     else
         return false

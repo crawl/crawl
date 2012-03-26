@@ -25,8 +25,6 @@ std::string apply_description(description_level_type desc,
 
 description_level_type description_type_by_name(const char *desc);
 
-std::string &escape_path_spaces(std::string &s);
-
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
@@ -177,6 +175,8 @@ std::string comma_separated_line(Z start, Z end,
     }
     return (text);
 }
+
+std::string unwrap_desc(std::string desc);
 
 inline int sqr(int x)
 {

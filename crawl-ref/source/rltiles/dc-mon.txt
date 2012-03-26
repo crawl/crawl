@@ -110,6 +110,7 @@ jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
+orb_spider MONS_ORB_SPIDER
 %sdir dc-mon/demons
 demonic_crawler MONS_DEMONIC_CRAWLER
 
@@ -143,6 +144,7 @@ yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
+moth_of_suppression MONS_MOTH_OF_SUPPRESSION
 
 ## Aquatics (';')
 %rim 0
@@ -182,11 +184,6 @@ water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
-snake_blue MONS_SUBTRACTOR_SNAKE
-snake_yellow
-snake_cyan
-snake_green
-snake_violet
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR
@@ -262,7 +259,7 @@ executioner MONS_EXECUTIONER
 brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
-pit_fiend MONS_PIT_FIEND
+hell_sentinel MONS_HELL_SENTINEL
 shadow_fiend MONS_SHADOW_FIEND
 %sdir dc-mon/unique
 ignacio MONS_IGNACIO
@@ -288,7 +285,6 @@ tormentor MONS_TORMENTOR
 ynoxinul MONS_YNOXINUL
 
 # type '4' demons
-hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
@@ -797,6 +793,7 @@ dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
 dc-mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
+%rim 0
 %sdir dc-mon/unique
 ilsuiw MONS_ILSUIW
 ilsuiw_water MONS_ILSUIW_WATER
@@ -813,6 +810,7 @@ mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
+%rim 1
 
 ## Rotting monsters ('n')
 %sdir dc-mon/undead
@@ -848,7 +846,6 @@ silent_spectre MONS_SILENT_SPECTRE
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
 %sdir dc-mon/unique
-terpsichore MONS_TERPSICHORE
 %sdir dc-mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy

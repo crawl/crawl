@@ -94,6 +94,7 @@ jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
+orb_spider CORPSE_ORB_SPIDER
 %sdir dc-mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
@@ -124,6 +125,7 @@ yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
+moth_of_suppression CORPSE_MOTH_OF_SUPPRESSION
 
 ## Aquatics (';')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
@@ -157,7 +159,6 @@ black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
 sea_snake CORPSE_SEA_SNAKE
-snake_yellow CORPSE_SUBTRACTOR_SNAKE
 
 ## Bears ('U')
 black_bear CORPSE_BLACK_BEAR

@@ -8,6 +8,7 @@
 #define STUFF_H
 
 #include <map>
+#include "player.h"
 
 std::string make_time_string(time_t abs_time, bool terse = false);
 std::string make_file_time(time_t when);
@@ -25,10 +26,10 @@ NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = NULL));
 NORETURN void game_ended();
 NORETURN void game_ended_with_error(const std::string &message);
 
-bool print_error_screen(PRINTF(0, ));
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
+const char* held_status(actor *act = &you);
 
 bool yes_or_no(PRINTF(0, ));
 typedef std::map<int, int> explicit_keymap;

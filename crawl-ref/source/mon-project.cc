@@ -32,7 +32,7 @@ static void _fuzz_direction(monster& mon, int pow);
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
 {
-    const bool is_player = caster->atype() == ACT_PLAYER;
+    const bool is_player = caster->is_player();
     if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
         return SPRET_ABORT;
 
@@ -342,7 +342,7 @@ move_again:
                      feature_description(pos, false, DESC_A).c_str());
         }
 
-        monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
+        monster* mons = (victim && victim->is_monster()) ?
             (monster*) victim : 0;
 
         if (mons && mons_is_projectile(victim->type))
@@ -384,7 +384,7 @@ move_again:
             item_def *shield = victim->shield();
             if (!shield_reflects(*shield))
             {
-                if (victim->atype() == ACT_PLAYER)
+                if (victim->is_player())
                 {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 }
@@ -398,7 +398,7 @@ move_again:
                 return (true);
             }
 
-            if (victim->atype() == ACT_PLAYER)
+            if (victim->is_player())
             {
                 mprf("Your %s reflects %s!",
                     shield->name(DESC_PLAIN).c_str(),
@@ -437,7 +437,7 @@ move_again:
         }
 
         // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
-        if (victim == &you)
+        if (victim && victim->is_player())
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))

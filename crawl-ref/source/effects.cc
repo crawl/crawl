@@ -80,7 +80,7 @@
 #include "viewchar.h"
 #include "xom.h"
 
-void holy_word_player(int pow, int caster, actor *attacker)
+static void _holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!you.undead_or_demonic())
         return;
@@ -88,7 +88,7 @@ void holy_word_player(int pow, int caster, actor *attacker)
     int hploss;
 
     // Holy word won't kill its user.
-    if (attacker == &you)
+    if (attacker && attacker->is_player())
         hploss = std::max(0, you.hp / 2 - 1);
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
@@ -135,7 +135,7 @@ void holy_word_monsters(coord_def where, int pow, int caster,
 
     // Is the player in this cell?
     if (where == you.pos())
-        holy_word_player(pow, caster, attacker);
+        _holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
@@ -382,13 +382,17 @@ void immolation(int pow, int caster, coord_def where, bool known,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker == &you)
+    else if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
     }
     else
     {
+        // If there was no attacker, caster should have been IMMOLATION_GENERIC
+        // which we handled above.
+        ASSERT(attacker);
+
         beam.thrower     = KILL_MON;
         beam.beam_source = attacker->mindex();
     }
@@ -438,7 +442,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.damage_funcs.push_back(_conduct_electricity_damage);
     beam.affect_func   = _conduct_electricity_affects_actor;
 
-    if (attacker == &you)
+    if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
@@ -486,13 +490,17 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
     }
-    else if (attacker == &you)
+    else if (attacker && attacker->is_player())
     {
         beam.thrower     = KILL_YOU;
         beam.beam_source = NON_MONSTER;
     }
     else
     {
+        // If there was no attacker, caster should have been
+        // CLEANSING_FLAME_{GENERIC,TSO} which we handled above.
+        ASSERT(attacker);
+
         beam.thrower     = KILL_MON;
         beam.beam_source = attacker->mindex();
     }
@@ -1831,7 +1839,7 @@ static void _rot_inventory_food(int time_delta)
 
             // The item is of type carrion.
             if (item.sub_type == CORPSE_SKELETON
-                || !mons_skeleton(item.plus))
+                || !mons_skeleton(item.mon_type))
             {
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
@@ -2154,9 +2162,9 @@ void handle_time()
 
             // We want to warp the player, not do good stuff!
             if (one_chance_in(5))
-                mutate(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION, "mutagenic glow");
             else
-                give_bad_mutation(true, coinflip());
+                give_bad_mutation("mutagenic glow", true, coinflip());
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
@@ -2255,12 +2263,13 @@ void handle_time()
             you.attribute[ATTR_EVOL_XP] = 0;
             mpr("You feel a genetic drift.");
             bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                               "evolution",
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
                 && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
             {
-                evol |= delete_mutation(MUT_EVOLUTION, false);
+                evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
             }
             // interrupt the player only if something actually happened
             if (evol)
@@ -3059,7 +3068,7 @@ void update_corpses(int elapsedTime)
             else
             {
                 if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton(it.plus))
+                    || !mons_skeleton(it.mon_type))
                 {
                     item_was_destroyed(it);
                     destroy_item(c);
@@ -3138,6 +3147,8 @@ void recharge_rods(int aut, bool level_only)
 
 void slime_wall_damage(actor* act, int delay)
 {
+    ASSERT(act);
+
     const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
 
     int walls = 0;
@@ -3151,10 +3162,8 @@ void slime_wall_damage(actor* act, int delay)
     // Up to 1d6 damage per wall per slot.
     const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
 
-    if (act->atype() == ACT_PLAYER)
+    if (act->is_player())
     {
-        ASSERT(act == &you);
-
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
             splash_with_acid(strength, false,

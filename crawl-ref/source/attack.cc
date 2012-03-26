@@ -130,16 +130,15 @@ void attack::init_attack()
     ;
 }
 
-/* If debug, return formatted damage done
+/* In wizard mode, return formatted damage done
  *
  */
 std::string attack::debug_damage_number()
 {
-#ifdef DEBUG_DIAGNOSTICS
+if (you.wizard)
     return make_stringf(" for %d", damage_done);
-#else
+else
     return ("");
-#endif
 }
 
 /* Returns special punctuation
@@ -161,7 +160,7 @@ std::string attack::special_attack_punctuation()
  */
 std::string attack::attack_strength_punctuation()
 {
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
     {
         return get_exclams(damage_done);
     }
@@ -220,7 +219,7 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 {
     ASSERT(weapon != NULL);
 
-    if (attacker->atype() == ACT_PLAYER)
+    if (attacker->is_player())
         return weapon->name(desc, false, false, false, false, ignre_flags);
 
     std::string name;

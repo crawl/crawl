@@ -46,6 +46,7 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -75,7 +76,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
     if (crawl_state.game_is_zotdef() && you.is_undead != US_SEMI_UNDEAD)
     {
-        you.hunger = 6000;
+        you.hunger = HUNGER_DEFAULT;
         you.hunger_state = HS_SATIATED;
         return;
     }
@@ -247,7 +248,7 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         return (false);
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
-             && (can_bottle_blood_from_corpse(mitm[corpse_id].plus)
+             && (can_bottle_blood_from_corpse(mitm[corpse_id].mon_type)
                  || !is_bad_food(mitm[corpse_id]))
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM)
@@ -281,7 +282,7 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
     delay_type dtype = DELAY_BUTCHER;
     // Sanity checks.
     if (bottle_blood && !rotten
-        && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
+        && can_bottle_blood_from_corpse(mitm[corpse_id].mon_type))
     {
         dtype = DELAY_BOTTLE_BLOOD;
     }
@@ -329,7 +330,7 @@ int count_corpses_in_pack(bool blood_only)
             continue;
         }
 
-        if (!blood_only || mons_has_blood(obj.plus))
+        if (!blood_only || mons_has_blood(obj.mon_type))
             num++;
     }
 
@@ -427,7 +428,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
             if (bottle_blood && (food_is_rotten(*si)
-                                 || !can_bottle_blood_from_corpse(si->plus)))
+                                 || !can_bottle_blood_from_corpse(si->mon_type)))
             {
                 continue;
             }
@@ -516,7 +517,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             continue;
 
         if (bottle_blood && (food_is_rotten(*si)
-                             || !can_bottle_blood_from_corpse(si->plus)))
+                             || !can_bottle_blood_from_corpse(si->mon_type)))
         {
             continue;
         }
@@ -855,9 +856,13 @@ static std::string _how_hungry()
     return ("hungry");
 }
 
+static const int hunger_threshold[HS_ENGORGED + 1] =
+    { 1000, 1533, 2055, 2600, 7000, 9000, 11000, 40000 };
+
 bool food_change(bool suppress_message)
 {
-    uint8_t newstate = HS_ENGORGED;
+    COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
+
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -865,20 +870,9 @@ bool food_change(bool suppress_message)
     you.hunger = std::min(you_max_hunger(), you.hunger);
 
     // Get new hunger state.
-    if (you.hunger <= 1000)
-        newstate = HS_STARVING;
-    else if (you.hunger <= 1533)
-        newstate = HS_NEAR_STARVING;
-    else if (you.hunger <= 2066)
-        newstate = HS_VERY_HUNGRY;
-    else if (you.hunger <= 2600)
-        newstate = HS_HUNGRY;
-    else if (you.hunger < 7000)
-        newstate = HS_SATIATED;
-    else if (you.hunger < 9000)
-        newstate = HS_FULL;
-    else if (you.hunger < 11000)
-        newstate = HS_VERY_FULL;
+    hunger_state_t newstate = HS_STARVING;
+    while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
+        newstate = (hunger_state_t)(newstate + 1);
 
     if (newstate != you.hunger_state)
     {
@@ -1039,7 +1033,7 @@ void eat_inventory_item(int which_inventory_slot)
 
     if (food.sub_type == FOOD_CHUNK)
     {
-        const int mons_type  = food.plus;
+        const monster_type mons_type = food.mon_type;
         const bool cannibal  = is_player_same_species(mons_type);
         const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
@@ -1075,12 +1069,12 @@ void eat_floor_item(int item_link)
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
-        const bool cannibal  = is_player_same_species(food.plus);
-        const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
+        const bool cannibal  = is_player_same_species(food.mon_type);
+        const int intel      = mons_class_intel(food.mon_type) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
-        const bool orc       = (mons_genus(food.plus) == MONS_ORC);
-        const bool holy      = (mons_class_holiness(food.plus) == MH_HOLY);
-        const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
+        const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
+        const bool holy      = (mons_class_holiness(food.mon_type) == MH_HOLY);
+        const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
             return;
@@ -1172,7 +1166,7 @@ int eat_from_floor(bool skip_chunks)
             if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
 
-            if (!mons_has_blood(si->plus))
+            if (!mons_has_blood(si->mon_type))
             {
                 unusable_corpse++;
                 continue;
@@ -1335,7 +1329,7 @@ bool eat_from_inventory()
             if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
                 continue;
 
-            if (!mons_has_blood(item->plus))
+            if (!mons_has_blood(item->mon_type))
             {
                 unusable_corpse++;
                 continue;
@@ -1477,7 +1471,7 @@ int prompt_eat_chunks(bool only_auto)
                 if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                     continue;
 
-                if (!mons_has_blood(si->plus))
+                if (!mons_has_blood(si->mon_type))
                     continue;
             }
             else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
@@ -1507,7 +1501,7 @@ int prompt_eat_chunks(bool only_auto)
             if (item->base_type != OBJ_CORPSES || item->sub_type != CORPSE_BODY)
                 continue;
 
-            if (!mons_has_blood(item->plus))
+            if (!mons_has_blood(item->mon_type))
                 continue;
         }
         else if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
@@ -1784,14 +1778,14 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     {
     case CE_MUTAGEN_RANDOM:
         mpr("This meat tastes really weird.");
-        mutate(RANDOM_MUTATION);
+        mutate(RANDOM_MUTATION, "mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
         break;
 
     case CE_MUTAGEN_BAD:
         mpr("This meat tastes *really* weird.");
-        give_bad_mutation();
+        give_bad_mutation("spoiled mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(random2(200));
         break;
@@ -2001,8 +1995,16 @@ static void _eating(object_class_type item_class, int item_type)
         if (food_value > 0)
         {
             int duration = 1;
+
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
+            {
                 duration = 3;
+            }
+            else if (item_type == FOOD_AMBROSIA || item_type == FOOD_GRAPE
+                     || item_type == FOOD_SULTANA)
+            {
+                duration = 0;
+            }
 
             if (you.duration[DUR_NAUSEA])
             {
@@ -2011,7 +2013,9 @@ static void _eating(object_class_type item_class, int item_type)
                 food_value /= 2;
             }
 
-            start_delay(DELAY_EAT, duration, 0, item_type);
+            // use delay.parm3 to figure out whether to output "finish eating"
+            start_delay(DELAY_EAT, duration, 0, item_type, duration);
+
             lessen_hunger(food_value, true);
 
             if (player_mutation_level(MUT_FOOD_JELLY)
@@ -2160,7 +2164,8 @@ void finished_eating_message(int food_type)
     case FOOD_AMBROSIA:                       // XXX: could put some more
         mpr("That ambrosia tasted strange."); // inspired messages here --evk
         potion_effect(POT_CONFUSION, 0, false, false);
-        potion_effect(POT_MAGIC, 0, false, false);
+        you.duration[DUR_AMBROSIA] += 30 + random2(41);
+        // It will be converted to mp by normal food use (but not costs).
         break;
     case FOOD_PIZZA:
         if (!Options.pizza.empty() && !one_chance_in(3))
@@ -2229,7 +2234,7 @@ void finished_eating_message(int food_type)
 
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 {
-    const int mons_type  = corpse.plus;
+    const monster_type mons_type = corpse.mon_type;
     const int chunk_type = _determine_chunk_effect(
                                 mons_corpse_effect(mons_type), false);
 
@@ -2290,7 +2295,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             food_value /= 2;
             if (start_feeding)
                 mpr("This blood tastes really weird!");
-            mutate(RANDOM_MUTATION);
+            mutate(RANDOM_MUTATION, "mutagenic blood");
             did_god_conduct(DID_DELIBERATE_MUTATING, 10);
             xom_is_stimulated(100);
             // Sometimes heal by one hp.
@@ -2302,7 +2307,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             food_value /= 2;
             if (start_feeding)
                 mpr("This blood tastes *really* weird!");
-            give_bad_mutation();
+            give_bad_mutation("spoiled mutagenic blood");
             did_god_conduct(DID_DELIBERATE_MUTATING, 10);
             xom_is_stimulated(random2(200));
             // No healing from bad mutagenic blood.
@@ -2336,7 +2341,7 @@ bool is_poisonous(const item_def &food)
     if (player_res_poison(false) > 0)
         return (false);
 
-    return (chunk_is_poisonous(mons_corpse_effect(food.plus)));
+    return (chunk_is_poisonous(mons_corpse_effect(food.mon_type)));
 }
 
 // Returns true if a food item (also corpses) is mutagenic.
@@ -2349,7 +2354,7 @@ bool is_mutagenic(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_MUTAGEN_RANDOM);
+    return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN_RANDOM);
 }
 
 // Returns true if a food item (also corpses) may cause sickness.
@@ -2359,7 +2364,7 @@ bool is_contaminated(const item_def &food)
             && food.base_type != OBJ_CORPSES)
         return (false);
 
-    const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
+    const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
     return (chunk_type == CE_CONTAMINATED
             || (player_res_poison(false) > 0 && chunk_type == CE_POISON_CONTAM)
             || food_is_rotten(food)
@@ -2376,7 +2381,7 @@ bool causes_rot(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_ROT);
+    return (mons_corpse_effect(food.mon_type) == CE_ROT);
 }
 
 // Returns 1 for herbivores, -1 for carnivores and 0 for either.
@@ -2444,7 +2449,7 @@ bool is_inedible(const item_def &item)
 
     if (item.base_type == OBJ_CORPSES
         && (item.sub_type == CORPSE_SKELETON
-            || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)))
+            || you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type)))
     {
         return (true);
     }
@@ -2507,20 +2512,20 @@ bool is_forbidden_food(const item_def &food)
 
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
-        && is_player_same_species(food.plus))
+        && is_player_same_species(food.mon_type))
     {
         return (true);
     }
 
     // Holy gods do not like it if you are eating holy creatures
     if (is_good_god(you.religion)
-        && mons_class_holiness(food.plus) == MH_HOLY)
+        && mons_class_holiness(food.mon_type) == MH_HOLY)
     {
         return (true);
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you.religion == GOD_ZIN && mons_class_intel(food.plus) >= I_NORMAL)
+    if (you.religion == GOD_ZIN && mons_class_intel(food.mon_type) >= I_NORMAL)
         return (true);
 
     // Everything else is allowed.
@@ -2768,7 +2773,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
 
-    if (!mons_has_blood(corpse.plus))
+    if (!mons_has_blood(corpse.mon_type))
     {
         mpr("There is no blood in this body!");
         return (false);
@@ -2783,7 +2788,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     // The delay for eating a chunk (mass 1000) is 2
     // Here the base nutrition value equals that of chunks,
     // but the delay should be smaller.
-    const int max_chunks = get_max_corpse_chunks(corpse.plus);
+    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
     int duration = 1 + max_chunks / 3;
     duration = stepdown_value(duration, 6, 6, 12, 12);
 
@@ -2820,20 +2825,20 @@ int you_max_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return (6000);
+        return HUNGER_DEFAULT;
 
     // Ghouls can never be full or above.
     if (you.species == SP_GHOUL)
-        return (6999);
+        return hunger_threshold[HS_SATIATED];
 
-    return (40000);
+    return hunger_threshold[HS_ENGORGED];
 }
 
 int you_min_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return (6000);
+        return HUNGER_DEFAULT;
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
     if (you.is_undead)
@@ -2880,4 +2885,157 @@ const char* hunger_cost_string(const int hunger)
 
     return (hunger_descriptions[breakpoint_rank(hunger, breakpoints,
                                                 ARRAYSZ(breakpoints))]);
+}
+
+static int _chunks_needed()
+{
+    if (you.form == TRAN_LICH)
+        return 1; // possibly low success rate, so don't drop everything
+
+    int gut = hunger_threshold[HS_HUNGRY + player_likes_chunks()];
+    int hunger = gut - you.hunger;
+
+    int appetite = player_hunger_rate(false);
+    hunger += appetite * FRESHEST_CORPSE * 2;
+
+    bool channeling = you.religion == GOD_SIF_MUNA;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].base_type == OBJ_STAVES
+            && you.inv[i].sub_type == STAFF_CHANNELING)
+        {
+            channeling = true;
+        }
+    }
+
+    if (channeling)
+        hunger += 2000; // a massive food sink!
+
+    int biggest_spell = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+        if (spell_hunger(you.spells[i]) > biggest_spell)
+            biggest_spell = spell_hunger(you.spells[i]);
+    hunger += biggest_spell;
+
+    int needed = 1 + std::max(0, hunger / 666);
+    dprf("want to keep %d chunks", needed);
+
+    return needed;
+}
+
+static bool _compare_second(const std::pair<int, int> &a,
+                            const std::pair<int, int> &b)
+{
+    return a.second < b.second;
+}
+
+static int _chunk_mass()
+{
+    item_def chunk;
+    chunk.base_type = OBJ_FOOD;
+    chunk.sub_type = FOOD_CHUNK;
+    return item_mass(chunk);
+}
+
+/**
+ * Try to make space in the inventory.  Caller must call pickup_burden() later.
+ * @param num_needed Try to free at least that much carrying capacity.
+**/
+maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
+{
+    if (Options.auto_drop_chunks == ADC_NEVER)
+        return B_FALSE;
+
+    int num_needed = 1 + (weight_needed - 1) / _chunk_mass();
+
+    bool wants_any = you.has_spell(SPELL_SIMULACRUM)
+                  || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+
+    int nchunks = 0;
+    maybe_bool result = B_FALSE;
+
+    std::vector<std::pair<int, int> > chunk_slots;
+    for (int slot = 0; slot < ENDOFPACK; slot++)
+    {
+        item_def &item(you.inv[slot]);
+
+        if (!item.defined()
+            || item.base_type != OBJ_FOOD
+            || item.sub_type != FOOD_CHUNK)
+        {
+            continue;
+        }
+
+        bool rotten = food_is_rotten(item);
+        if (rotten && !you.mutation[MUT_SAPROVOROUS] && !wants_any)
+        {
+            num_needed -= item.quantity;
+            if (!drop_item(slot, item.quantity))
+                return result; // level full, error out
+            if (num_needed <= 0)
+                return B_TRUE;
+            result = B_MAYBE; // at least a bit lighter
+            continue;
+        }
+
+        corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
+                                                            item.mon_type),
+                                                        rotten);
+        if (ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_BAD || ce == CE_ROT)
+            continue; // no nutrition from those
+        // We assume that carrying poisonous chunks means you can swap rPois in.
+
+        int contam = _contamination_ratio(ce);
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
+            contam = -contam;
+
+        // Arbitrarily lower the value of poisonous chunks: swapping resistances
+        // is tedious.
+        if (ce == CE_POISONOUS)
+            contam = contam * 3 / 2;
+
+        // Have uses that care about age but not quality?
+        if (wants_any)
+            contam /= 2;
+
+        dprf("%s: to rot %d, contam %d -> badness %d",
+             item.name(DESC_PLAIN).c_str(),
+             item.special - ROTTING_CORPSE, contam,
+             contam - 3 * item.special);
+
+        // Being almost rotten has 480 badness, contamination usually 333.
+        contam -= 3 * item.special;
+
+        nchunks += item.quantity;
+        chunk_slots.push_back(std::pair<int,int>(slot, contam));
+    }
+
+    // No rotten ones to drop, and we're not allowed to drop others.
+    if (Options.auto_drop_chunks == ADC_ROTTEN)
+        return result;
+
+    nchunks -= _chunks_needed();
+
+    std::sort(chunk_slots.begin(), chunk_slots.end(), _compare_second);
+
+    while (nchunks > 0 && !chunk_slots.empty())
+    {
+        int slot = chunk_slots.back().first;
+        chunk_slots.pop_back();
+
+        int quant = std::min<int>(nchunks, you.inv[slot].quantity);
+        if (whole_slot && quant < you.inv[slot].quantity)
+            return result;
+
+        if (!drop_item(slot, quant))
+            return result; // level full, error out
+
+        if (num_needed -= quant <= 0)
+            return B_TRUE;
+
+        result = B_MAYBE; // at least a bit lighter
+    }
+
+    return result;
 }

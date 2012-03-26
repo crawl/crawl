@@ -101,7 +101,7 @@ void map_register_flag(const std::string &flag)
     Map_Flag_Names.insert(flag);
 }
 
-bool map_tag_is_selectable(const std::string &tag)
+static bool _map_tag_is_selectable(const std::string &tag)
 {
     return (Map_Flag_Names.find(tag) == Map_Flag_Names.end()
             && tag.find("luniq_") != 0
@@ -700,7 +700,7 @@ std::string map_lines::parse_glyph_replacements(std::string s,
 }
 
 template<class T>
-std::string parse_weighted_str(const std::string &spec, T &list)
+static std::string _parse_weighted_str(const std::string &spec, T &list)
 {
     std::vector<std::string> speclist = split_string("/", spec);
     for (int i = 0, vsize = speclist.size(); i < vsize; ++i)
@@ -758,7 +758,7 @@ std::string map_lines::add_colour(const std::string &sub)
         return (err);
 
     map_colour_list colours;
-    err = parse_weighted_str<map_colour_list>(substitute, colours);
+    err = _parse_weighted_str<map_colour_list>(substitute, colours);
     if (!err.empty())
         return (err);
 
@@ -810,7 +810,7 @@ std::string map_lines::add_fproperty(const std::string &sub)
         return (err);
 
     map_fprop_list fprops;
-    err = parse_weighted_str<map_fprop_list>(substitute, fprops);
+    err = _parse_weighted_str<map_fprop_list>(substitute, fprops);
     if (!err.empty())
         return (err);
 
@@ -835,7 +835,7 @@ std::string map_lines::add_fheight(const std::string &sub)
         return (err);
 
     map_featheight_list fheights;
-    err = parse_weighted_str(substitute, fheights);
+    err = _parse_weighted_str(substitute, fheights);
     if (!err.empty())
         return (err);
 
@@ -1882,7 +1882,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
         return (err);
 
     map_tile_list list;
-    err = parse_weighted_str<map_tile_list>(substitute, list);
+    err = _parse_weighted_str<map_tile_list>(substitute, list);
     if (!err.empty())
         return (err);
 
@@ -2649,7 +2649,7 @@ std::string map_def::validate_map_placeable()
     bool has_selectable_tag = false;
     for (int i = 0, tsize = tag_pieces.size(); i < tsize; ++i)
     {
-        if (map_tag_is_selectable(tag_pieces[i]))
+        if (_map_tag_is_selectable(tag_pieces[i]))
         {
             has_selectable_tag = true;
             break;
@@ -3106,7 +3106,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
         return ("SUBVAULT does not support '='.  Use ':' instead.");
 
     map_string_list vlist;
-    err = parse_weighted_str<map_string_list>(substitute, vlist);
+    err = _parse_weighted_str<map_string_list>(substitute, vlist);
     if (!err.empty())
         return (err);
 
@@ -3779,7 +3779,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 // Is this a modified monster?
                 if (nspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_zombified(nspec.type))
+                    && mons_class_is_zombified(static_cast<monster_type>(nspec.type)))
                 {
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
@@ -4058,7 +4058,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
 
     // We should have a non-base draconian here.
     if (spec.type == MONS_PROGRAM_BUG
-        || mons_genus(spec.type) != MONS_DRACONIAN
+        || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DRACONIAN
         || spec.type == MONS_DRACONIAN
         || (spec.type >= MONS_BLACK_DRACONIAN
             && spec.type <= MONS_PALE_DRACONIAN))
@@ -4716,7 +4716,7 @@ item_spec item_list::parse_single_spec(std::string s)
     if (special != TAG_UNFOUND)
         result.item_special = special;
 
-    // When placing corpses, use place:Elf:7 to choose monsters
+    // When placing corpses, use place:Elf:5 to choose monsters
     // appropriate for that level, as an example.
     const std::string place = strip_tag_prefix(s, "place:");
     if (!place.empty())
@@ -4846,6 +4846,13 @@ item_spec item_list::parse_single_spec(std::string s)
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
         result.props["charges"].get_int() = charges;
+
+    const int plus = strip_number_tag(s, "plus:");
+    if (plus != TAG_UNFOUND)
+        result.props["plus"].get_int() = plus;
+    const int plus2 = strip_number_tag(s, "plus2:");
+    if (plus2 != TAG_UNFOUND)
+        result.props["plus2"].get_int() = plus2;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;

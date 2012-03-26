@@ -427,12 +427,12 @@
       }
     },
 
-    {  MST_PIT_FIEND,
+    {  MST_HELL_SENTINEL,
       {
        SPELL_HELLFIRE,
        SPELL_HELLFIRE,
        SPELL_MELEE,
-       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_IRON_SHOT,
        SPELL_MELEE,
        SPELL_NO_SPELL
       }
@@ -1207,17 +1207,6 @@
       }
     },
 
-    {  MST_TERPSICHORE,
-      {
-       SPELL_TUKIMAS_BALL,
-       SPELL_SWIFTNESS,
-       SPELL_CORONA,
-       SPELL_BLINK,
-       SPELL_CANTRIP,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,
@@ -1596,12 +1585,23 @@
 
     {  MST_JUMPING_SPIDER,
       {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_ORB_SPIDER,
+      {
+       SPELL_IOOD,
+       SPELL_NO_SPELL,
+       SPELL_CANTRIP,
+       SPELL_IOOD,
+       SPELL_NO_SPELL,
+       SPELL_IOOD
       }
     },
 
@@ -1745,6 +1745,17 @@
        SPELL_HASTE_OTHER,
        SPELL_HEAL_OTHER,
        SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_ARACHNE,
+      {
+       SPELL_ENSNARE,
+       SPELL_POISON_ARROW,
+       SPELL_BLINK,
+       SPELL_ENSNARE,
+       SPELL_VENOM_BOLT,
+       SPELL_ENSNARE
       }
     },
 

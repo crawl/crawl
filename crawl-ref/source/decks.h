@@ -47,6 +47,7 @@ enum card_flags_type
     CFLAG_ODDITY = (1 << 0),
     CFLAG_SEEN   = (1 << 1),
     CFLAG_MARKED = (1 << 2),
+    CFLAG_DEALT  = (1 << 4),
 };
 
 enum card_type
@@ -102,9 +103,13 @@ enum card_type
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
+#if TAG_MAJOR_VERSION == 32
     CARD_MAP,                   // magic mapping
-    CARD_DOWSING,               // detect SD/traps/items/monsters
+#endif
+    CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
+#if TAG_MAJOR_VERSION == 32
     CARD_SPADE,                 // dig
+#endif
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
     CARD_STAIRS,                // moves stairs around
@@ -131,7 +136,7 @@ const char* card_name(card_type card);
 void evoke_deck(item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
-bool deck_mark();
+bool deck_deal();
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
@@ -139,7 +144,7 @@ void shuffle_all_decks_on_level();
 
 void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
-void draw_from_deck_of_punishment();
+void draw_from_deck_of_punishment(bool deal = false);
 
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
@@ -147,7 +152,7 @@ card_type top_card(const item_def &item);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
 deck_rarity_type deck_rarity(const item_def &item);
-uint8_t deck_rarity_to_color(deck_rarity_type rarity);
+colour_t deck_rarity_to_color(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
 int cards_in_deck(const item_def &deck);

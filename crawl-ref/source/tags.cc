@@ -604,7 +604,7 @@ void unmarshallMap(reader& th, map& data,
 }
 
 template<typename T>
-T unmarshall_long_as(reader& th)
+static T unmarshall_long_as(reader& th)
 {
     return static_cast<T>(unmarshallInt(th));
 }
@@ -3741,8 +3741,8 @@ void unmarshallMonster(reader &th, monster& m)
 #endif
     m.foe_memory = unmarshallInt(th);
 
-    unmarshallShort(th);
-    unmarshallShort(th);
+    m.damage_friendly = unmarshallShort(th);
+    m.damage_total = unmarshallShort(th);
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
@@ -3869,19 +3869,6 @@ static void _debug_count_tiles()
 
 void tag_read_level_tiles(reader &th)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (!unmarshallBoolean(th))
-    {
-        dprf("Tile data missing -- recreating from scratch.");
-        tag_missing_level_tiles();
-        tag_init_tile_bk();
-        _debug_count_tiles();
-        return;
-    }
-
-    unsigned int rle_count = 0;
-#endif
-
     // Map grids.
     // how many X?
     const int gx = unmarshallShort(th);
@@ -3889,6 +3876,8 @@ void tag_read_level_tiles(reader &th)
     const int gy = unmarshallShort(th);
 
 #if TAG_MAJOR_VERSION == 32
+    unsigned int rle_count = 0;
+
     if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         // Throw away tile_bk data

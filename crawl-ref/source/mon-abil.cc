@@ -168,7 +168,7 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     std::string src = "";
 
-    uint8_t mon_colour = BLACK;
+    colour_t mon_colour = BLACK;
 
     if (!proximity)
         success = true;
@@ -210,9 +210,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
                             if (coinflip())
                             {
-                                const uint8_t ugly_colour =
+                                const colour_t ugly_colour =
                                     make_low_colour(ugly->colour);
-                                const uint8_t ugly_near_colour =
+                                const colour_t ugly_near_colour =
                                     make_low_colour(mon_near->colour);
 
                                 if (ugly_colour != ugly_near_colour)
@@ -523,7 +523,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
     // Now kill the other monster
-    monster_die(crawlie, KILL_MISC, NON_MONSTER, true);
+    monster_die(crawlie, KILL_DISMISSED, NON_MONSTER, true);
 
     return (true);
 }
@@ -580,7 +580,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
         mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_slime, KILL_MISC, NON_MONSTER, true);
+    monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
 
     return (true);
 }
@@ -911,7 +911,7 @@ static bool _silver_statue_effects(monster* mons)
     int abjuration_duration = 5;
 
     // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && foe != &you
+    if (mons->attitude == ATT_FRIENDLY && !(foe && foe->is_player())
         && crawl_state.game_is_zotdef())
     {
         if (!one_chance_in(3))
@@ -946,7 +946,7 @@ static bool _orange_statue_effects(monster* mons)
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         // Tone down friendly OCSs for Zotdef.
-        if (mons->attitude == ATT_FRIENDLY && foe != &you
+        if (mons->attitude == ATT_FRIENDLY && !foe->is_player()
             && crawl_state.game_is_zotdef())
         {
             if (foe->check_res_magic(120) > 0)
@@ -957,7 +957,7 @@ static bool _orange_statue_effects(monster* mons)
 
         if (you.can_see(foe))
         {
-            if (foe == &you)
+            if (foe->is_player())
                 mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
             else if (you.can_see(mons))
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
@@ -981,7 +981,7 @@ static void _orc_battle_cry(monster* chief)
     int affected = 0;
 
     if (foe
-        && (foe != &you || !chief->friendly())
+        && (!foe->is_player() || !chief->friendly())
         && !silenced(chief->pos())
         && !chief->has_ench(ENCH_MUTE)
         && chief->can_see(foe)
@@ -1054,7 +1054,7 @@ static void _orc_battle_cry(monster* chief)
                 }
                 else
                 {
-                    int type = seen_affected[0]->type;
+                    monster_type type = seen_affected[0]->type;
                     for (unsigned int i = 0; i < seen_affected.size(); i++)
                     {
                         if (seen_affected[i]->type != type)
@@ -1081,7 +1081,7 @@ static void _cherub_hymn(monster* chief)
     int affected = 0;
 
     if (foe
-        && (foe != &you || !chief->friendly())
+        && (!foe->is_player() || !chief->friendly())
         && !silenced(chief->pos())
         && chief->can_see(foe)
         && coinflip())
@@ -2269,7 +2269,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
                                   ? draco_subspecies(mons)
-                                  : static_cast<monster_type>(mons->type);
+                                  : mons->type;
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
@@ -2896,16 +2896,16 @@ void mon_nearby_ability(monster* mons)
 
             int confuse_power = 2 + random2(3);
 
-            if (foe->atype() == ACT_PLAYER && !can_see)
+            if (foe->is_player() && !can_see)
                 mpr("You feel you are being watched by something.");
 
             int res_margin = foe->check_res_magic((mons->hit_dice * 5)
                              * confuse_power);
             if (res_margin > 0)
             {
-                if (foe->atype() == ACT_PLAYER)
+                if (foe->is_player())
                     canned_msg(MSG_YOU_RESIST);
-                else if (foe->atype() == ACT_MONSTER)
+                else if (foe->is_monster())
                 {
                     const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons,
@@ -2927,7 +2927,7 @@ void mon_nearby_ability(monster* mons)
                      mons->name(DESC_THE).c_str(),
                      foe->name(DESC_THE).c_str());
 
-            if (foe->atype() == ACT_PLAYER && !can_see)
+            if (foe->is_player() && !can_see)
                 mpr("You feel you are being watched by something.");
 
             // Subtly different from old paralysis behaviour, but
@@ -2938,7 +2938,7 @@ void mon_nearby_ability(monster* mons)
 
     case MONS_EYE_OF_DRAINING:
     case MONS_GHOST_MOTH:
-        if (_eyeball_will_use_ability(mons) && foe->atype() == ACT_PLAYER)
+        if (_eyeball_will_use_ability(mons) && foe->is_player())
         {
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");

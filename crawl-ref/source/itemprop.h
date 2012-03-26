@@ -15,7 +15,6 @@ void init_properties(void);
 
 // cursed:
 bool item_known_cursed(const item_def &item);
-bool item_known_uncursed(const item_def &item);
 void do_curse_item(item_def &item, bool quiet = true);
 void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
                      bool check_bondage = true);
@@ -69,7 +68,6 @@ bool jewellery_is_amulet(int sub_type);
 
 bool  hide2armour(item_def &item);
 
-bool  base_armour_is_light(const item_def &item);
 int   fit_armour_size(const item_def &item, size_type size);
 bool  check_armour_size(const item_def &item, size_type size);
 
@@ -92,10 +90,7 @@ void ident_reflector(item_def *item);
 int weapon_rarity(int w_type);
 
 int   cmp_weapon_size(const item_def &item, size_type size);
-int   fit_weapon_wieldable_size(const item_def &item, size_type size);
 bool  check_weapon_wieldable_size(const item_def &item, size_type size);
-
-int   fit_item_throwable_size(const item_def &item, size_type size);
 
 int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden = false);
@@ -115,7 +110,6 @@ bool convert2bad(item_def &item);
 
 int get_vorpal_type(const item_def &item);
 int get_damage_type(const item_def &item);
-bool does_damage_type(const item_def &item, int dam_type);
 int single_damage_type(const item_def &item);
 
 int weapon_str_weight(const item_def &wpn);
@@ -132,7 +126,6 @@ void maybe_change_train(const item_def &item, bool start);
 
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item);
-bool is_range_weapon_type(weapon_type wtype);
 missile_type fires_ammo_type(const item_def &item);
 missile_type fires_ammo_type(weapon_type wtype);
 const char *ammo_name(missile_type ammo);
@@ -172,7 +165,6 @@ int food_value(const item_def &item);
 int food_turns(const item_def &item);
 bool can_cut_meat(const item_def &item);
 bool food_is_rotten(const item_def &item);
-int corpse_freshness(const item_def &item);
 bool is_fruit(const item_def & item);
 uint32_t item_fruit_mask(const item_def &item);
 

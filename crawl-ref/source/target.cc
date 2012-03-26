@@ -279,7 +279,7 @@ bool targetter_splash::anyone_there(coord_def loc)
 {
     if (!map_bounds(loc))
         return false;
-    if (agent && agent->atype() == ACT_PLAYER)
+    if (agent && agent->is_player())
         return env.map_knowledge(loc).monsterinfo();
     return actor_at(loc);
 }

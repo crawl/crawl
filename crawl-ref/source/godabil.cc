@@ -1258,7 +1258,7 @@ bool zin_remove_all_mutations()
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations();
+    delete_all_mutations("Zin's power");
 
     return (true);
 }
@@ -1431,6 +1431,7 @@ bool trog_burn_spellbooks()
 
     int totalpiety = 0;
     int totalblocked = 0;
+    std::vector<coord_def> mimics;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
     {
@@ -1448,6 +1449,13 @@ bool trog_burn_spellbooks()
                 || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
             {
                 totalblocked++;
+                continue;
+            }
+
+            if (si->flags & ISFLAG_MIMIC)
+            {
+                totalblocked++;
+                mimics.push_back(*ri);
                 continue;
             }
 
@@ -1505,6 +1513,11 @@ bool trog_burn_spellbooks()
         mprf("The spellbook%s fail%s to ignite!",
              totalblocked == 1 ? ""  : "s",
              totalblocked == 1 ? "s" : "");
+        for (std::vector<coord_def>::iterator it = mimics.begin();
+             it != mimics.end(); ++it)
+        {
+            discover_mimic(*it, false);
+        }
         return (false);
     }
     else
@@ -1563,7 +1576,7 @@ bool jiyva_remove_bad_mutation()
     }
 
     // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
+    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -1590,14 +1603,14 @@ void yred_animate_remains_or_dead()
 {
     if (yred_can_animate_dead())
     {
-        mpr("You call on the dead to rise...");
+        canned_msg(MSG_CALL_DEAD);
 
         animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1, BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
     }
     else
     {
-        mpr("You attempt to give life to the dead...");
+        canned_msg(MSG_ANIMATE_REMAINS);
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
                             MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
@@ -1877,7 +1890,7 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
 
     bool origin_worships_fedhas;
     mon_attitude_type origin_attitude;
-    if (originator->atype() == ACT_PLAYER)
+    if (originator->is_player())
     {
         origin_worships_fedhas = you.religion == GOD_FEDHAS;
         origin_attitude = ATT_FRIENDLY;
@@ -2004,7 +2017,7 @@ int fedhas_fungal_bloom()
                                        BEH_GOOD_NEUTRAL, true);
 
                 // Either turn this corpse into a skeleton or destroy it.
-                if (mons_skeleton(j->plus))
+                if (mons_skeleton(j->mon_type))
                     turn_corpse_into_skeleton(*j);
                 else
                 {
@@ -2744,7 +2757,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
             }
         }
 
-        if (mons_skeleton(positions[i]->plus))
+        if (mons_skeleton(positions[i]->mon_type))
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
@@ -3094,7 +3107,7 @@ static int _slouchable(coord_def where, int pow, int, actor* agent)
 
 static bool _act_slouchable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return false;  // too slow-witted
     return _slouchable(act->pos(), 0, 0, 0);
 }

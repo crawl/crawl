@@ -40,7 +40,7 @@ typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
 typedef std::map<level_pos, std::string> portal_vault_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
-typedef std::map<level_pos, uint8_t> portal_vault_colour_map_type;
+typedef std::map<level_pos, colour_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
 typedef std::pair<std::string, level_id> monster_annotation;
 
@@ -279,7 +279,7 @@ static std::string _portal_vaults_description_string()
             {
                 if (last_id.depth == 10000)
                 {
-                    uint8_t col = portal_vault_colours[ci_portals->first];
+                    colour_t col = portal_vault_colours[ci_portals->first];
                     disp += '<';
                     disp += colour_to_str(col) + '>';
                     disp += vault_names_vec[i];
@@ -825,7 +825,7 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         portal_name = replace_all(portal_name, "_", " ");
         portal_vaults_present[where] = uppercase_first(portal_name);
 
-        uint8_t col;
+        colour_t col;
         if (env.grid_colours(pos) != BLACK)
             col = env.grid_colours(pos);
         else
@@ -880,7 +880,10 @@ static void _update_unique_annotation(level_id level)
             note += i->first;
         }
     }
-    set_level_unique_annotation(note, level);
+    if (note.empty())
+        level_uniques.erase(level);
+    else
+        level_uniques[level] = note;
 }
 
 static std::string unique_name(monster* mons)
@@ -942,14 +945,6 @@ void remove_unique_annotation(monster* mons)
         _update_unique_annotation(*i);
 }
 
-void set_level_annotation(std::string str, level_id li)
-{
-    if (str.empty())
-        level_annotations.erase(li);
-    else
-        level_annotations[li] = str;
-}
-
 void set_level_exclusion_annotation(std::string str, level_id li)
 {
     if (str.empty())
@@ -959,14 +954,6 @@ void set_level_exclusion_annotation(std::string str, level_id li)
     }
 
     level_exclusions[li] = str;
-}
-
-void set_level_unique_annotation(std::string str, level_id li)
-{
-    if (str.empty())
-        level_uniques.erase(li);
-    else
-        level_uniques[li] = str;
 }
 
 void clear_level_exclusion_annotation(level_id li)
@@ -1052,6 +1039,11 @@ void annotate_level()
             li = li2;
     }
 
+    do_annotate(li);
+}
+
+void do_annotate(level_id& li)
+{
     if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation: " +

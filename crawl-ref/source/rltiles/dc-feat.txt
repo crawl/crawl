@@ -119,14 +119,16 @@ golden_statue_2
 ## sarcophagus for ragdoll_tomb_raider
 sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 
+## sideways sarcophagi for tomb:1
+sarcophagus_pedestal_left DNGN_SARCOPHAGUS_PEDESTAL_LEFT
+sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
 dc-misc/error PLACEHOLDER1
 dc-misc/error PLACEHOLDER2
 dc-misc/error PLACEHOLDER3
-dc-misc/error PLACEHOLDER4
-dc-misc/error PLACEHOLDER5
 
 %sdir dc-dngn/traps
 ## traps
@@ -328,7 +330,7 @@ dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 dngn_return_zot DNGN_RETURN_ZOT
-spider_portal DNGN_ENTER_SPIDER_NEST
+dngn_enter_spider DNGN_ENTER_SPIDER_NEST
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
 dngn_enter_cocytus DNGN_ENTER_COCYTUS
@@ -514,6 +516,7 @@ mold_glowing2
 mold_glowing3
 mold_glowing4
 effect/silenced SILENCED
+effect/suppressed SUPPRESSED
 %shrink 0
 %sdir dc-mon/tentacles/kraken_corners
 kraken_corner_NW KRAKEN_OVERLAY_NW

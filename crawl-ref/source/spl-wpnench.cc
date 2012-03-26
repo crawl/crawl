@@ -182,8 +182,8 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
-        // [dshaligram] Clamping power to 2.
-        power = 2;
+        // Low duration, but power still helps.
+        power /= 2;
         break;
 
     case SPWPN_PAIN:

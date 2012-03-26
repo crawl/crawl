@@ -30,7 +30,7 @@ bool actor::will_trigger_shaft() const
 {
     return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
             // let's pretend that they always make their saving roll
-            && !(atype() == ACT_MONSTER
+            && !(is_monster()
                  && mons_is_elven_twin(static_cast<const monster* >(this))));
 }
 
@@ -134,7 +134,7 @@ int actor::check_res_magic(int power)
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
-    if (atype() == ACT_MONSTER && mrs < 6 && coinflip())
+    if (is_monster() && mrs < 6 && coinflip())
         return (-1);
 
     power = stepdown_value(power, 30, 40, 100, 120);
@@ -174,7 +174,7 @@ bool actor::can_hibernate(bool holi_only) const
             return (false);
 
         // The monster has slept recently.
-        if (atype() == ACT_MONSTER
+        if (is_monster()
             && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
             return (false);
@@ -230,16 +230,13 @@ int actor::body_weight(bool base) const
     case SIZE_HUGE:
         return (2200);
     default:
-        mpr("ERROR: invalid body weight");
-        perror("actor::body_weight(): invalid body weight");
-        end(0);
-        return (0);
+        die("invalid body weight");
     }
 }
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return (act->atype() == ACT_PLAYER?
+    return (act->is_player()?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
 }

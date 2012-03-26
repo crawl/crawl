@@ -64,6 +64,7 @@ static void         _hints_describe_disturbance(int x, int y);
 static void         _hints_describe_cloud(int x, int y);
 static void         _hints_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
+static void         _hints_healing_reminder();
 
 static int _get_hints_cols()
 {
@@ -145,6 +146,32 @@ void init_hints()
     Hints.hints_seen_invisible = 0;
 }
 
+static void _print_hints_menu(hints_types type)
+{
+    char letter = 'a' + type;
+    char desc[100];
+
+    switch (type)
+    {
+      case HINT_BERSERK_CHAR:
+          strcpy(desc, "(Melee oriented character with divine support)");
+          break;
+      case HINT_MAGIC_CHAR:
+          strcpy(desc, "(Magic oriented character)");
+          break;
+      case HINT_RANGER_CHAR:
+          strcpy(desc, "(Ranged fighter)");
+          break;
+      default: // no further choices
+          strcpy(desc, "(erroneous character)");
+          break;
+    }
+
+    cprintf("%c - %s %s %s\n",
+            letter, species_name(_get_hints_species(type)).c_str(),
+                    get_job_name(_get_hints_job(type)), desc);
+}
+
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def* choice)
 {
@@ -160,7 +187,7 @@ void pick_hints(newgame_def* choice)
     textcolor(LIGHTGREY);
 
     for (int i = 0; i < HINT_TYPES_NUM; i++)
-        print_hints_menu(i);
+        _print_hints_menu((hints_types)i);
 
     formatted_string::parse_string(
         "<brown>\nEsc - Quit"
@@ -181,7 +208,8 @@ void pick_hints(newgame_def* choice)
             Hints.hints_type = keyn - 'a';
             choice->species  = _get_hints_species(Hints.hints_type);
             choice->job = _get_hints_job(Hints.hints_type);
-            choice->weapon = WPN_HAND_AXE; // easiest choice for fighters
+            choice->weapon = choice->job == JOB_HUNTER ? WPN_BOW
+                                                       : WPN_HAND_AXE; // easiest choice for fighters
 
             return;
         }
@@ -209,32 +237,6 @@ void hints_load_game()
     Hints.hints_explored = Hints.hints_events[HINT_AUTO_EXPLORE];
     Hints.hints_stashes  = true;
     Hints.hints_travel   = true;
-}
-
-void print_hints_menu(unsigned int type)
-{
-    char letter = 'a' + type;
-    char desc[100];
-
-    switch (type)
-    {
-      case HINT_BERSERK_CHAR:
-          strcpy(desc, "(Melee oriented character with divine support)");
-          break;
-      case HINT_MAGIC_CHAR:
-          strcpy(desc, "(Magic oriented character)");
-          break;
-      case HINT_RANGER_CHAR:
-          strcpy(desc, "(Ranged fighter)");
-          break;
-      default: // no further choices
-          strcpy(desc, "(erroneous character)");
-          break;
-    }
-
-    cprintf("%c - %s %s %s\n",
-            letter, species_name(_get_hints_species(type)).c_str(),
-                    get_job_name(_get_hints_job(type)), desc);
 }
 
 static species_type _get_hints_species(unsigned int type)
@@ -356,7 +358,7 @@ void hints_new_turn()
             if (2 * you.hp < you.hp_max
                 || 2 * you.magic_points < you.max_magic_points)
             {
-                hints_healing_reminder();
+                _hints_healing_reminder();
             }
             else if (!you.running
                      && Hints.hints_events[HINT_SHIFT_RUN]
@@ -712,8 +714,7 @@ void hints_healing_check()
 }
 
 // Occasionally remind injured characters of resting.
-// FIXME: This is currently UNUSED!
-void hints_healing_reminder()
+static void _hints_healing_reminder()
 {
     if (!crawl_state.game_is_hints())
         return;
@@ -3365,8 +3366,9 @@ std::string hints_skills_info()
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     std::string broken = "This screen shows the skill set of your character. "
         "The number next to the skill is your current level, the higher the "
-        "better. The <cyan>cyan percent value</cyan> shows your progress "
-        "towards the next skill level. You can toggle which skills to train by "
+        "better. The <brown>brown percent value</brows> shows how much "
+        "experience is allocated to go towards that skill. "
+        "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will not be trained and ease the training of others. "
         "Press <w>!</w> to learn about skill training and <w>?</w> to read "
@@ -4358,8 +4360,8 @@ static void _hints_describe_feature(int x, int y)
        case DNGN_TRAP_NATURAL: // only shafts for now
             ostr << "The dungeon contains a number of natural obstacles such "
                     "as shafts, which lead one to three levels down. They "
-                    "can't be disarmed, but you can safely pass over them "
-                    "if you're levitating or flying.\n"
+                    "can't be disarmed, but once you know the shaft is there, "
+                    "you can safely step over it.\n"
                     "If you want to jump down there, use <w>></w> to do so. "
                     "Be warned that getting back here might be difficult.";
             Hints.hints_events[HINT_SEEN_TRAP] = false;

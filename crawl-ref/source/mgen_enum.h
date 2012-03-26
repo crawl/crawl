@@ -64,7 +64,10 @@ enum band_type
     BAND_ELEPHANT,
     BAND_DEEP_DWARF,
     BAND_SHEDU,
-    BAND_TERPSICHORE,
+    BAND_REDBACK,
+    BAND_SPIDER,
+    BAND_JUMPING_SPIDER,
+    BAND_TARANTELLA,
     NUM_BANDS                   // always last
 };
 

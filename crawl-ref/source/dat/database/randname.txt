@@ -787,6 +787,9 @@ faintly glowing
 steaming
 
 dazzling
+
+w:2
+blackened
 %%%%
 weapon appearance
 
@@ -799,6 +802,18 @@ crystal
 jewelled
 
 ichor-stained
+
+w:3
+ivory
+
+w:3
+bone
+
+w:1
+sapphire
+
+w:3
+ebony
 
 # currently 16 entries, so their overall weight amounts 160
 w:160
@@ -863,9 +878,20 @@ heavily jewelled
 ichor-stained
 
 distressingly furry
+
+tattered
+
+silk
 %%%%
 body armour appearance
 
+w:3
+smelly
+
+w:3
+bronze
+
+w:200
 @armour appearance@
 %%%%
 armour appearance

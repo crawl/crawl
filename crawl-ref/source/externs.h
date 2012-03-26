@@ -278,6 +278,12 @@ typedef uint32_t mid_t;
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND ((mid_t)0xffff0000)
 
+static inline monster_type operator++(monster_type &x)
+{
+    x = static_cast<monster_type>(x + 1);
+    return x;
+}
+
 struct cloud_struct
 {
     coord_def     pos;
@@ -510,10 +516,10 @@ struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
     uint8_t        sub_type;       // type within that class (ie WPN_DAGGER)
-    short          plus;           // +to hit, charges, corpse mon id
+    union { short plus; monster_type mon_type:16; }; // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
     int            special;        // special stuff
-    uint8_t        colour;         // item colour
+    colour_t       colour;         // item colour
     uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
     iflags_t       flags;          // item status flags

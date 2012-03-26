@@ -75,8 +75,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        if (Options.autoinscribe_artefacts && is_artefact(item))
-            add_autoinscription(item, artefact_auto_inscription(item));
+        add_autoinscription(item);
 
         if (is_deck(item) && !top_card_is_known(item))
             deck_identify_first(item_slot);
@@ -168,7 +167,10 @@ int is_pacifiable(const monster* mon)
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
 // Returns -2, if monster can currently not be pacified (asleep).
-static int _can_pacify_monster(const monster* mon, const int healed)
+// Returns -3, if monster can be pacified but the attempt narrowly failed.
+// Returns -4, if monster can currently not be pacified (too much hp).
+static int _can_pacify_monster(const monster* mon, const int healed,
+                               const int max_healed)
 {
 
    int pacifiable = is_pacifiable(mon);
@@ -192,6 +194,12 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
+    if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
+                                         + max_healed) / divisor))
+    {
+        return (-4);
+    }
+
     int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
                                 / divisor);
 
@@ -201,6 +209,8 @@ static int _can_pacify_monster(const monster* mon, const int healed)
 
     if (mon->max_hit_points < factor * random_factor)
         return (1);
+    if (mon->max_hit_points < factor * random_factor * 1.15)
+        return (-3);
 
     return (0);
 }
@@ -214,7 +224,7 @@ static std::vector<std::string> _desc_mindless(const monster_info& mi)
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
-static int _healing_spell(int healed, bool divine_ability,
+static int _healing_spell(int healed, int max_healed, bool divine_ability,
                           const coord_def& where, bool not_self,
                           targ_mode_type mode)
 {
@@ -263,7 +273,7 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const int can_pacify  = _can_pacify_monster(mons, healed);
+    const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
     const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
@@ -273,7 +283,20 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         if (can_pacify == 0)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            mprf("The light of Elyvilon fails to reach %s.",
+                 mons->name(DESC_THE).c_str());
+            return (0);
+        }
+        else if (can_pacify == -3)
+        {
+            mprf("The light of Elyvilon almost touches upon %s.",
+                 mons->name(DESC_THE).c_str());
+            return (0);
+        }
+        else if (can_pacify == -4)
+        {
+            mprf("%s is completely unfazed by your meager offer of peace.",
+                 mons->name(DESC_THE).c_str());
             return (0);
         }
         else
@@ -347,12 +370,13 @@ static int _healing_spell(int healed, bool divine_ability,
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, bool divine_ability, const coord_def& where,
-                 bool not_self, targ_mode_type mode)
+int cast_healing(int pow, int max_pow, bool divine_ability,
+                 const coord_def& where, bool not_self, targ_mode_type mode)
 {
     pow = std::min(50, pow);
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where,
-                           not_self, mode));
+    max_pow = std::min(50, max_pow);
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
+                           divine_ability, where, not_self, mode));
 }
 
 // Antimagic is sort of an anti-extension... it sets a lot of magical
@@ -369,8 +393,8 @@ void antimagic()
         DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
-        DUR_RESIST_FIRE, DUR_RESIST_COLD, DUR_SLAYING, DUR_STEALTH,
+        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESISTANCE,
+        DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
         DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
@@ -401,33 +425,13 @@ void antimagic()
     contaminate_player(-1 * (1 + random2(5)));
 }
 
-// The description idea was okay, but this spell just isn't that exciting.
-// So I'm converting it to the more practical expose secret doors. -- bwr
-void cast_detect_secret_doors(int pow)
-{
-    int found = 0;
-
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-        if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
-        {
-            reveal_secret_door(*ri);
-            found++;
-        }
-
-    if (found)
-        redraw_screen();
-
-    mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
-}
-
 int detect_traps(int pow)
 {
     pow = std::min(50, pow);
 
-    // Trap detection moved to traps.cc.  -am
-
+    // Trap detection moved to traps.cc. -am
     const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
+    return (reveal_traps(range));
 }
 
 // pow -1 for passive
@@ -552,14 +556,6 @@ int detect_creatures(int pow, bool telepathic)
             {
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
-            }
-
-            // Assuming that highly intelligent spellcasters can
-            // detect scrying. -- bwr
-            if (mons_intel(mon) == I_HIGH
-                && mons_class_flag(mon->type, M_SPELLCASTER))
-            {
-                behaviour_event(mon, ME_DISTURB, MHITYOU, you.pos());
             }
         }
     }
@@ -864,7 +860,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!zin && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 3))
             continue;
 
         // The tile is occupied.
@@ -901,11 +897,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
                 marker->set_property("feature_description", "A gleaming silver wall");
-                marker->set_property("prison", "Zin");
+                marker->set_property("tomb", "Zin");
                 env.markers.add(marker);
             }
+            // Tomb card
             else
+            {
                 grd(*ai) = DNGN_ROCK_WALL;
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("tomb", "card");
+                env.markers.add(marker);
+            }
 
             set_terrain_changed(*ai);
             number_built++;
@@ -940,8 +942,18 @@ bool entomb(int pow)
         mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
         return (false);
     }
+    if (_do_imprison(pow, you.pos(), false))
+    {
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(you.pos(),
+                                            tomb_duration,
+                                            you.mindex(),
+                                            you.mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
+        return (true);
+    }
 
-    return (_do_imprison(pow, you.pos(), false));
+    return (false);
 }
 
 bool cast_imprison(int pow, monster* mons, int source)

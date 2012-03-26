@@ -1,0 +1,412 @@
+%%%%
+Singing Sword
+
+This blessed weapon loves nothing more than to sing to its owner, whether they want it to or not.
+%%%%
+Wrath of Trog
+
+This was the favourite weapon of the old god Trog, before it was
+lost one day. It induces a bloodthirsty berserker rage in anyone
+who uses it to strike another.
+%%%%
+Mace of Variability
+
+It is rather unreliable.
+%%%%
+Glaive of Prune
+
+It is the creation of a mad god, and carries a curse which
+transforms anyone possessing it into a prune. Fortunately, the
+curse works very slowly, and one can use it briefly with no
+consequences worse than slightly purple skin and a few wrinkles.
+%%%%
+Sword of Power
+
+It rewards the powerful with power and the meek with weakness.
+%%%%
+Staff of Olgreb
+
+It was the magical weapon wielded by the mighty wizard Olgreb
+before he met his fate somewhere within these dungeons. It
+increases the ability of its wielder to use venomous magic, and
+carries magical powers which can be evoked.
+The tales say that Olgreb researched rare venoms that may have
+some limited effect even on creatures immune to all commonly known
+poisons.
+%%%%
+Staff of Wucad Mu
+
+Its power varies in proportion to its wielder's intelligence.
+It can be evoked to restore large amounts of magical energy, but
+at the risk of damaging the user's mind.
+%%%%
+Vampire's Tooth
+
+This ivory-like dagger looks like it could actually have been created from
+a tooth of some enormous predatory creature, although obviously not an
+average human-sized bloodsucker.
+
+It is lethally vampiric.
+%%%%
+Scythe of Curses
+
+This weapon carries a terrible and highly irritating curse.
+%%%%
+Sceptre of Torment
+
+This truly accursed weapon is an instrument of Hell.
+%%%%
+Sword of Zonguldrok
+
+This dreadful weapon is used at the user's peril.
+%%%%
+Sword of Cerebov
+
+Eerie flames cover its twisted blade.
+%%%%
+Staff of Dispater
+
+This legendary item can unleash the fury of Hell.
+%%%%
+Sceptre of Asmodeus
+
+It carries some of the powers of the arch-fiend Asmodeus.
+%%%%
+faerie dragon armour
+
+Faerie dragons used to be a race of the same species as mottled ones.
+Too bad, their vivid colours became their bane, as they alerted
+potential prey. They are now extinct, and this prized relic is one of
+the last proofs they ever existed.
+%%%%
+#demon blade "Bloodbane"
+%%%%
+#scimitar of Flaming Death
+%%%%
+mace of Brilliance
+
+This mace will let you shine some light into the dungeon, and also will
+make sure enemies are well-warned of your presence. Its light is hated by
+the undead, and can reveal any machinations of those who try to stay
+invisible.
+%%%%
+#demon blade "Leech"
+%%%%
+dagger of Chilly Death
+
+A dagger made of one huge piece of sapphire.
+%%%%
+dagger "Morg"
+
+An ugly rusty dagger.
+
+Many years ago it was the property of a powerful mage called Boris.
+He got lost in the Dungeon while seeking the Orb.
+%%%%
+scythe "Finisher"
+
+A long and sharp scythe, specially modified for combat purposes.
+%%%%
+sling "Punk"
+
+A sling made of weird blue leather.
+%%%%
+bow of Krishna "Sharnga"
+
+A wonderful golden bow.
+
+It once belonged to a foreign god. It works best with special
+arrows which are not generally available.
+%%%%
+giant club "Skullcrusher"
+
+This lovely cudgel can make any ogre overjoyous - be it a bar brawl,
+genocide, or a mixture of both.
+%%%%
+glaive of the Guard
+
+This weapon once belonged to Gar Dogh, the guard of a king's
+treasures. According to legend he was lost somewhere in the Dungeon.
+%%%%
+sword of Jihad
+
+A long sword made of one huge piece of crystal.
+Legend says it was the Shining One's gift to a worshipper.
+%%%%
+crossbow "Hellfire"
+
+A flaming crossbow, forged in the fires of the Hells.
+%%%%
+sword of the Doom Knight
+
+An adamantine great sword.
+%%%%
+#morningstar "Eos"
+%%%%
+spear of the Botono
+
+A really dark and malign artefact, which no wise man would even touch.
+%%%%
+trident of the Octopus King
+
+This trident was stolen many years ago from the Octopus King's
+garden by a really unimportant and already dead man. But beware
+of the Octopus King's wrath!
+%%%%
+mithril axe "Arga"
+
+A beautiful mithril axe, probably lost by some dwarven hero.
+%%%%
+Elemental Staff
+
+This powerful staff used to belong to the leader of the Guild of Five Elements.
+%%%%
+crossbow "Sniper"
+
+A crossbow made of some black material.
+%%%%
+longbow "Piercer"
+
+An exceptionally large metal longbow.
+%%%%
+blowgun of the Assassin
+
+It is designed for easy concealment, but still packs a nasty punch.
+%%%%
+#lance "Wyrmbane"
+%%%%
+Spriggan's Knife
+
+A dainty little knife.
+
+This knife was made by Spriggans, or for Spriggans, or possibly
+from Spriggans. Anyway, it's in some way associated with those
+fey folk.
+%%%%
+plutonium sword
+
+A triple sword made of weird glowing metal. You wonder whether it grew its
+two side blades due to its radiation, and whether you'll grow two extra
+heads as well.
+%%%%
+great mace "Undeadhunter"
+
+This weapon is imbued with magic that can counter and disrupt the
+magic holding undead together, inflicting great damage.
+%%%%
+whip "Snakebite"
+
+A double-ended whip made from the cured hides of the Lair of Beasts'
+deadly black mambas.
+%%%%
+knife of Accuracy
+
+It is almost unerringly accurate.
+%%%%
+Lehudib's crystal spear
+
+Presumably this relic led to the invention of the famous spell, or maybe the other way around.
+%%%%
+captain's cutlass
+
+This infamous weapon was used by a vile pirate captain to
+slaughter countless innocents. Finally, he met his destiny
+when a kraken swallowed his ship with all the crew aboard.
+The cutlass was thought to be forever lost, but now you have
+proof to the contrary in your very hands.
+%%%%
+storm bow
+
+This bow has the colour of dark rain clouds, and the smell of wet ozone.
+%%%%
+shield of Ignorance
+
+"An open mind is like a fortress with its gates unbarred and unguarded."
+%%%%
+robe of Augmentation
+
+A robe made of the finest silk.
+%%%%
+cloak of the Thief
+
+It allows its wearer to excel in the arts of thievery.
+%%%%
+#shield "Bullseye"
+%%%%
+crown of Dyrovepreva
+
+A large crown of dull bronze, set with a dazzling array of gemstones.
+%%%%
+hat of the Bear Spirit
+
+Once owned by Ukta, a powerful ogre shaman, this fur hat houses
+the spirit of an especially mighty bear.
+%%%%
+robe of Misfortune
+
+A splendid flowing robe of fur and silk.
+%%%%
+cloak of Flash
+
+A vibrating cloak.
+%%%%
+boots of the Assassin
+
+Some soft boots, specially designed by the Assassin's Guild.
+%%%%
+Lear's chain mail
+
+A chain mail made of pure gold.
+%%%%
+skin of Zhor
+
+A smelly skin of some strange animal.
+%%%%
+salamander hide armour
+
+A leather armour made of a salamander's skin.
+%%%%
+#gauntlets of War
+%%%%
+shield of Resistance
+
+A bronze shield.
+%%%%
+robe of Folly
+
+A dull grey robe.
+%%%%
+Maxwell's patent armour
+
+A weird-looking armour.
+%%%%
+mask of the Dragon
+
+A blue mask.
+%%%%
+robe of Night
+
+A long black robe made of strange glossy material.
+
+According to legend, it was the gift of Ratri the Goddess of the Night to one of her followers.
+%%%%
+armour of the Dragon King
+
+A long time ago, a mighty golden dragon seized the rulership of all dragons
+in her part of the world. Yet her reign didn't last long, stopped by a
+single puny human who then made this armour from the dragon's hide.
+%%%%
+hat of the Alchemist
+
+A dirty hat. It bears signs of surviving many weird explosions, which
+suggests it may have means of protecting the head inside from the risks
+involved with alchemy experiments. And with the kind of protections granted
+by this hat, it's certain some prior head damage was a prerequisite for even
+thinking about such experiments.
+%%%%
+fencer's gloves
+
+A pair of gloves made of white silk.
+%%%%
+cloak of Starlight
+
+A phosphorescent cloak, woven of pure light beams.
+%%%%
+ratskin cloak
+
+An enchantress with a magic loom and way too much time on
+her hands stitched this cloak from the hides of hundreds
+of rats, most of them orange. It's a bit awkward to wear
+and looks rather foolish, but it provides excellent protection
+from rats of all kinds.
+%%%%
+shield of the gong
+
+This is a large bronze gong that can be worn as a shield. According to
+certain mystics, beating on such a gong can grant you spiritual protection.
+
+And this shield surely will be heard!
+%%%%
+#amulet of the Air
+%%%%
+#ring of Shadows
+%%%%
+#amulet of Cekugob
+%%%%
+#amulet of the Four Winds
+%%%%
+#necklace of Bloodlust
+%%%%
+#ring of Shaolin
+%%%%
+#ring of Robustness
+%%%%
+#ring of the Mage
+%%%%
+brooch of Shielding
+
+Back in the good old days, every adventurer had one of these
+handy devices. That, and a pony.
+%%%%
+robe of Clouds
+
+A robe of a material so flimsy it could almost be clouds.
+%%%%
+hat of Pondering
+
+A slimy wizard hat.
+
+The favorite hat of the slug wizard Gastronok, stained with reddish
+slime and enchanted to aid in his arcane pondering. It has been
+specially enchanted to protect against the effects of salt, though
+you probably don't care.
+%%%%
+obsidian axe
+
+This axe has had a curse placed on it by one of the lords of
+Pandemonium so that unsuspecting adventurers like you would
+unleash demons into this world. Beware, for this axe has
+ways of taking its wielder under its command...
+%%%%
+lightning scales
+
+These scales have been fashioned into armour for a naga's lower
+body. Faintly crackling with electricity, they have been enchanted
+to allow their wearer to slither at almost a human's pace.
+%%%%
+Black Knight's horse barding
+
+This gear used to be worn by the personal horse of the Black Knight
+during his reign of terror. Pitch-black, it appears to be made not
+only of some strange black steel, but also of entire plates of
+black diamond! Naturally, such a weight of metal and stone cannot
+be good for the mount's speed. However, it offers not only mundane
+protection against blows; the adamant bears an enchantment that
+makes its wearer partially undead.
+%%%%
+ring of Vitality
+
+This famed ring greatly improves its wearer's health.
+%%%%
+autumn katana
+
+This exotic sword is a weapon for truly enlightened users.
+%%%%
+shillelagh "Devastator"
+
+You guess this stick is loaded with something else than just lead.
+%%%%
+dragonskin cloak
+
+This opalescent cloak gleams with all dragon colours. It protects
+its wearer from elemental attacks of all kinds, although somewhat
+unreliably.
+%%%%
+ring of the Octopus King
+
+"A mermaid who fancied to sing,
+ Roused lust in the Octopus King.
+ Her squiggly suitor,
+ Tried hard to woo her,
+ But she couldn't wear all his rings."
+%%%%

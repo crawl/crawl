@@ -32,7 +32,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_NEMELEX_DRAW_ONE:
     case ABIL_NEMELEX_PEEK_TWO:
     case ABIL_NEMELEX_TRIPLE_DRAW:
-    case ABIL_NEMELEX_MARK_FOUR:
+    case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
         return (SK_EVOCATIONS);
 
@@ -108,7 +108,7 @@ static int _abil_degree(ability_type abil)
         return (2 + random2(2));
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return (3 + random2(3));
-    case ABIL_NEMELEX_MARK_FOUR:
+    case ABIL_NEMELEX_DEAL_FOUR:
         return (4 + random2(4));
     case ABIL_NEMELEX_STACK_FIVE:
         return (5 + random2(5));
@@ -193,9 +193,6 @@ static void _exercise_spell(spell_type spell, bool success)
     int workout = 0;
 
     unsigned int disciplines = get_spell_disciplines(spell);
-
-    //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);
 
     int skillcount = count_bits(disciplines);
 

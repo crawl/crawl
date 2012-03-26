@@ -111,6 +111,7 @@ public:
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
     bool        list_rotten;     // list slots for rotting corpses/chunks
+    chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        easy_eat_gourmand; // with easy_eat_chunks, and wearing a
@@ -177,6 +178,8 @@ public:
     std::vector<std::pair<int, int> > hp_colour;
     std::vector<std::pair<int, int> > mp_colour;
     std::vector<std::pair<int, int> > stat_colour;
+    std::vector<int> enemy_hp_colour;
+    bool visual_monster_hp;
 
     std::string map_file_name;   // name of mapping file to use
     std::vector<std::pair<text_pattern, bool> > force_autopickup;
@@ -311,6 +314,8 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
+    const char* lang;           // Translation to use.
+
 #ifdef WIZARD
     // Parameters for fight simulations.
     int         fsim_rounds;
@@ -436,6 +441,7 @@ private:
     void set_fire_order(const std::string &full, bool add);
     void add_fire_order_slot(const std::string &s);
     void set_menu_sort(std::string field);
+    void str_to_enemy_hp_colour(const std::string &);
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;

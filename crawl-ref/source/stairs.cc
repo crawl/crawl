@@ -856,7 +856,7 @@ void down_stairs(dungeon_feature_type force_stair)
         stair_taken = DNGN_ENTER_ABYSS;
 
     if (shaft)
-        stair_taken = DNGN_ESCAPE_HATCH_DOWN;
+        stair_taken = DNGN_TRAP_NATURAL;
 
     switch (you.where_are_you)
     {

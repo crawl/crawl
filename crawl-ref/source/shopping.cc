@@ -371,6 +371,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
           bool viewing          = false;
           bool first_iter       = true;
 
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items picked up.
+    std::map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     while (true)
     {
         ASSERT(total_cost >= 0);
@@ -755,6 +760,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
         }
     }
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     return (bought_something);
 }
@@ -1999,7 +2007,7 @@ unsigned int item_value(item_def item, bool ident)
 
     valued *= item.quantity;
 
-    return (valued);
+    return stepdown_value(valued, 1000, 1000, 10000, 10000);
 }
 
 bool is_worthless_consumable(const item_def &item)
@@ -2447,7 +2455,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     bool add_item = false;
 
-    std::vector<level_pos> to_del;
+    typedef std::pair<item_def, level_pos> list_pair;
+    std::vector<list_pair> to_del;
 
     // NOTE: Don't modify the shopping list while iterating over it.
     for (unsigned int i = 0; i < list->size(); i++)
@@ -2468,7 +2477,34 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         if (!item_type_known(list_item) || is_artefact(list_item))
             continue;
 
-        const level_pos list_pos = thing_pos(thing);
+        // Don't prompt to remove rings with strictly better pluses
+        // than the new one.  Also, don't prompt to remove rings with
+        // known pluses when the new ring's pluses are unknown.
+        if (item.base_type == OBJ_JEWELLERY)
+        {
+            const int nplus = ring_has_pluses(item);
+            const int delta_p = item.plus - list_item.plus;
+            const int delta_p2 = nplus >= 2 ? item.plus2 - list_item.plus2 : 0;
+            if (nplus
+                && item_ident(list_item, ISFLAG_KNOW_PLUSES)
+                && (!item_ident(item, ISFLAG_KNOW_PLUSES)
+                     || delta_p <= 0 && delta_p2 <= 0
+                        && (delta_p < 0 || delta_p2 < 0)))
+            {
+                continue;
+            }
+        }
+
+        // Don't prompt to remove known manuals when the new one is unknown
+        // or for a different skill.
+        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
+            && item_type_known(list_item)
+            && (!item_type_known(item) || item.plus != list_item.plus))
+        {
+            continue;
+        }
+
+        list_pair listed(list_item, thing_pos(thing));
 
         // cost = -1, we just found a shop item which is cheaper than
         // one on the shopping list.
@@ -2492,7 +2528,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             if (_shop_yesno(prompt.c_str(), 'y'))
             {
                 add_item = true;
-                to_del.push_back(list_pos);
+                to_del.push_back(listed);
             }
             continue;
         }
@@ -2510,7 +2546,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                              describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
-                to_del.push_back(list_pos);
+                to_del.push_back(listed);
         }
         else
         {
@@ -2519,12 +2555,12 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                              describe_thing(thing, DESC_A).c_str());
 
             _shop_mpr(str.c_str());
-            to_del.push_back(list_pos);
+            to_del.push_back(listed);
         }
     }
 
     for (unsigned int i = 0; i < to_del.size(); i++)
-        del_thing(item, &to_del[i]);
+        del_thing(to_del[i].first, &to_del[i].second);
 
     if (add_item && !on_list)
         add_thing(item, cost);

@@ -30,6 +30,7 @@
 #include "state.h"
 #include "tagstring.h"
 #include "terrain.h"
+#include "traps.h"
 
 #include <algorithm>
 #include <sstream>
@@ -90,7 +91,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_STICKY_FLAME:
         return MB_BURNING;
     case ENCH_HELD:
-        return MB_CAUGHT;
+        return (get_trapping_net(mons.pos(), true) == NON_ITEM
+                ? MB_WEBBED : MB_CAUGHT);
     case ENCH_PETRIFIED:
         return MB_PETRIFIED;
     case ENCH_PETRIFYING:
@@ -542,6 +544,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
         mb.set(MB_UMBRAED);
+    if (m->suppressed())
+        mb.set(MB_SUPPRESSED);
     if (mons_looks_stabbable(m))
         mb.set(MB_STABBABLE);
     if (mons_looks_distracted(m))
@@ -878,7 +882,10 @@ std::string monster_info::common_name(description_level_type desc) const
     }
 
     std::string core = _core_name();
-    ss << core;
+    bool nocore = (mons_class_is_zombified(type) && mons_is_unique(base_type)
+                   && base_type == mons_species(base_type));
+    if (!nocore)
+        ss << core;
 
     // Add suffixes.
     switch (type)
@@ -886,20 +893,20 @@ std::string monster_info::common_name(description_level_type desc) const
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " zombie";
+            ss << (nocore ? "" : " ") << "zombie";
         break;
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " skeleton";
+            ss << (nocore ? "" : " ") << "skeleton";
         break;
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         if (!is(MB_NAME_ZOMBIE))
-            ss << " simulacrum";
+            ss << (nocore ? "" : " ") << "simulacrum";
         break;
     case MONS_PILLAR_OF_SALT:
-        ss << " shaped pillar of salt";
+        ss << (nocore ? "" : " ") << "shaped pillar of salt";
         break;
     default:
         break;
@@ -1106,6 +1113,8 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("paralysed");
     if (mi.is(MB_CAUGHT))
         return ("caught");
+    if (mi.is(MB_WEBBED))
+        return ("webbed");
     if (mi.is(MB_PETRIFIED))
         return ("petrified");
     if (mi.is(MB_PETRIFYING))
@@ -1276,6 +1285,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("covered in liquid flames");
     if (is(MB_CAUGHT))
         v.push_back("entangled in a net");
+    if (is(MB_WEBBED))
+        v.push_back("entangled in a web");
     if (is(MB_PETRIFIED))
         v.push_back("petrified");
     if (is(MB_PETRIFYING))
@@ -1324,9 +1335,9 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_MAD))
         v.push_back("lost in madness");
     if (is(MB_DEATHS_DOOR))
-       v.push_back("standing in death's doorway");
+        v.push_back("standing in death's doorway");
     if (is(MB_REGENERATION))
-       v.push_back("regenerating");
+        v.push_back("regenerating");
     return v;
 }
 

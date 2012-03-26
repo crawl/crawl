@@ -25,7 +25,7 @@ This amulet makes its wearer less accurate in hand combat and when targetting mo
 %%%%
 amulet of rage
 
-This amulet enables its wearer to attempt to enter a state of berserk rage, and increases their chance of successfully doing so. It also partially protects the user from passing out when coming out of that rage.
+This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of resist corrosion
 
@@ -55,7 +55,7 @@ While the amulet is effective against most translocular magic, plane shifts such
 %%%%
 ankus
 
-What mahouts steer their elephants with. It basically resembles a fireplace poker with a short, stout handle, and a bluntish spike and hook for communicating one's desires through the pachyderm's thick skin. Curiously enough, Ogres are famous for driving larger elephants.
+What mahouts steer their elephants with. It basically resembles a fireplace poker with a short, stout handle, and a bluntish spike and hook for communicating one's desires through the pachyderm's thick skin.
 %%%%
 animal skin
 
@@ -214,10 +214,6 @@ book of frost
 A book of magic spells, cold to the touch.
 %%%%
 book of geomancy
-
-A book of magic spells.
-%%%%
-book of healing
 
 A book of magic spells.
 %%%%
@@ -401,7 +397,7 @@ It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the
 %%%%
 deck of dungeons
 
-A deck of magical cards which deal with shaping the dungeon. Unlike most other decks, the cards from this deck tend to be ignored by Nemelex, who prefers more amusing pursuits.
+A deck of magical cards which deal with shaping the dungeon.
 
 It may contain the following cards: Water, Vitrification, the Map, Dowsing, the Spade, Trowel, the Minefield.
 %%%%
@@ -654,21 +650,23 @@ meat ration
 
 A filling ration of dried and preserved meats.
 %%%%
-monster manual
-
-A book of magic spells.
-%%%%
 morningstar
 
 A mace covered in spikes.
 %%%%
 mottled dragon armour
 
-A magical armour made from the scales of a mottled dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is as light and relatively uncumbersome as leather armour.
+A magical armour made from the scales of a mottled dragon. Although it does
+not provide its wearer with much in the way of special magical protection,
+unlike the armour made from the scales of some larger dragons, it is as
+light and relatively uncumbersome as leather armour. It is also remarkably
+smooth, letting sticky flames flow down like water.
 %%%%
 mottled dragon hide
 
-The weirdly-patterned scaly skin of a mottled dragon. It may be turned into proper armour by magical means.
+The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
+proper armour by magical means. Its smooth surface does not let sticky
+flames attach.
 %%%%
 naga barding
 
@@ -1095,7 +1093,7 @@ Small writing on the back of the scroll reads: "Warning: contents under pressure
 %%%%
 scroll of magic mapping
 
-This scroll reveals the nearby surroundings of one who reads it.
+This scroll reveals the surroundings of one who reads it.
 
 It is not strong enough to see the interior of rooms sealed with secret doors; one needs Traps and Doors skill for that.
 %%%%
@@ -1103,17 +1101,16 @@ scroll of noise
 
 This prank scroll, often slipped into a wizard's backpack by a devious apprentice, causes a loud noise. It is not otherwise noted for its usefulness.
 %%%%
-scroll of paper
-
-Apart from a label, this scroll is blank.
-%%%%
 scroll of random uselessness
 
 It is easy to be blinded to the essential uselessness of this scroll by the sense of achievement you get from getting it to work at all.
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by its reader.
+This scroll restores the charges of any magical wand or rod chosen by its
+reader. When used on a rod, it also increases the size of the rod's power
+storage, increases the rate at which it regenerates power, and even improves
+its melee combat qualities.
 %%%%
 scroll of remove curse
 
@@ -1129,13 +1126,15 @@ Reading the words on this scroll translocates you to a random position.
 %%%%
 scroll of torment
 
-This scroll calls on the powers of darkness to inflict great pain on any nearby creature - including you!
+This scroll calls on the powers of darkness to inflict great pain on any
+nearby creature - including you! This halves the resilience of all living
+creatures, although is never directly fatal.
 %%%%
 scroll of vorpalise weapon
 
 This scroll enchants the wielded weapon so as to make it far more effective at inflicting harm on its wielder's enemies. Using it on a weapon already affected by some kind of permanent branding is not advised. On the other hand, the scroll can make permanent the temporary branding of weapons obtained from some spells.
 
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha, The Shining One) cannot be affixed this way. Xom, on the other hand is, let's say... less than predictable.
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha, the Shining One) cannot be affixed this way. Xom, on the other hand is, let's say... less than predictable.
 %%%%
 scroll of vulnerability
 
@@ -1143,7 +1142,18 @@ This scroll cancels all magical enchantments from the reader and from beings in 
 %%%%
 scroll of silence
 
-This scroll eliminates all sound near the reader. This makes reading scrolls, casting spells, praying or yelling in the reader's vicinity impossible. (Applies to reader too, of course.) This silence will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong. Silence starts out with a radius covering half the normal vision range, which will then shrink, eventually covering only the reader, before the effect times out.
+This scroll eliminates all sound near the reader. This makes reading
+scrolls, casting spells, praying or yelling in the reader's vicinity
+impossible. (It applies to the reader, too, of course.)
+
+This silence will not hide your presence, since its oppressive, unnatural
+effect will almost certainly alert any living creature that something is
+very wrong. Silence starts out with a radius covering half the normal
+vision range, which will then shrink, eventually covering only the reader,
+before the effect times out.
+
+Note that demons do not need sound to cast spells; certain necromantic
+fixtures have this property as well.
 %%%%
 scythe
 
@@ -1199,7 +1209,8 @@ This staff increases the power of air spells cast by its wielder, and insulates 
 %%%%
 staff of channeling
 
-This staff allows its caster to channel ambient magical energy for his or her own purposes.
+This staff allows its wielder to channel ambient magical energy for his or
+her own purposes.
 %%%%
 staff of cold
 
@@ -1247,7 +1258,7 @@ This staff significantly increases the ability of its wielder to use magical spe
 %%%%
 steam dragon armour
 
-A magical armour, made from the scales of a steam-breathing dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is extremely light and as supple as cloth.
+A magical armour, made from the scales of a steam-breathing dragon. Although it does not provide its wearer with much in the way of special magical protection, unlike the armour made from the scales of some larger dragons, it is extremely light and as supple as cloth.
 %%%%
 steam dragon hide
 
@@ -1323,11 +1334,15 @@ A blessed trident moulded by cleansing flame, with three points symbolising the 
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll. I suppose you could wear it if you really wanted to.
+The stiff and knobbly hide of a troll, with magical regenerative properties.
+I suppose you could wear it if you really wanted to, although you probably
+want to enchant it into proper armour first.
 %%%%
 troll leather armour
 
-A magical armour, made from the stiff and knobbly skin of a common troll. It magically regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
+A magical armour, made from the stiff and knobbly skin of a common troll.
+It magically regenerates its wearer's flesh at a fairly slow rate (unless
+already a troll).
 %%%%
 wand of cold
 
@@ -1348,7 +1363,9 @@ A magical device which disrupts the physical structure of anything but the harde
 %%%%
 wand of draining
 
-A magical device which throws a bolt of negative energy which drains the life essences of living creatures, but is useless against the undead.
+A magical device which throws a bolt of negative energy which drains the
+life essences of living creatures, but is useless against the undead,
+demons, artificial creatures and even living plants.
 %%%%
 wand of enslavement
 

@@ -71,6 +71,7 @@ enum tag_minor_version
     TAG_MINOR_ABILITY_COUNTS,      // Count ability usage better.
     TAG_MINOR_REMOVE_SKILL_SET,    // Remove the useless you.skill_set array.
     TAG_MINOR_TOTAL_EXPERIENCE,    // Keep track of the total number of XP gained.
+    TAG_MINOR_DES_CACHE_TIMESTAMP, // Embed the timestamp into des cache files.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

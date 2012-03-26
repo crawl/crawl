@@ -68,7 +68,7 @@ game_options Options;
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
 
-template<class A, class B> void append_vector(A &dest, const B &src)
+template<class A, class B> static void append_vector(A &dest, const B &src)
 {
     dest.insert(dest.end(), src.begin(), src.end());
 }
@@ -429,6 +429,15 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
+void game_options::str_to_enemy_hp_colour(const std::string &colours)
+{
+    std::vector<std::string> colour_list = split_string(" ", colours, true, true);
+    for (int i = 0, csize = colour_list.size(); i < csize; i++)
+    {
+        enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
+    }
+}
+
 #ifdef USE_TILE
 static FixedVector<const char*, TAGPREF_MAX>
     tag_prefs("none", "tutorial", "named", "enemy");
@@ -589,7 +598,14 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-std::string user_home_dir()
+#if defined(DGAMELAUNCH)
+static std::string _resolve_dir(const char* path, const char* suffix)
+{
+    return catpath(path, "");
+}
+#else
+
+static std::string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     wchar_t home[MAX_PATH];
@@ -606,22 +622,19 @@ std::string user_home_dir()
 #endif
 }
 
-std::string user_home_subpath(const std::string subpath)
+static std::string _user_home_subpath(const std::string subpath)
 {
-    return catpath(user_home_dir(), subpath);
+    return catpath(_user_home_dir(), subpath);
 }
 
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
-#if defined(DGAMELAUNCH)
-    return catpath(path, "");
-#else
     if (path[0] != '~')
         return catpath(std::string(path), suffix);
     else
-        return user_home_subpath(catpath(path + 1, suffix));
-#endif
+        return _user_home_subpath(catpath(path + 1, suffix));
 }
+#endif
 
 void game_options::reset_options()
 {
@@ -643,7 +656,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = user_home_subpath(".crawl");
+        macro_dir = _user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -652,7 +665,7 @@ void game_options::reset_options()
 
 #if defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
-        user_home_subpath("Library/Application Support/" CRAWL);
+        _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())
@@ -740,6 +753,7 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
+    auto_drop_chunks       = ADC_NEVER;
     prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
     easy_eat_gourmand      = false;
@@ -818,8 +832,8 @@ void game_options::reset_options()
 
     stash_tracking         = STM_ALL;
 
-    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP
-                              | ES_ALTAR | ES_GREEDY_PICKUP_SMART
+    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
+                              | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
     // The prompt conditions will be combined into explore_stop after
@@ -1009,6 +1023,15 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(25, RED));
     stat_colour.clear();
     stat_colour.push_back(std::pair<int, int>(3, RED));
+    enemy_hp_colour.clear();
+    enemy_hp_colour.push_back(GREEN); // I think these defaults are pretty ugly but apparently OS X has problems with lighter colours
+    enemy_hp_colour.push_back(GREEN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(MAGENTA);
+    enemy_hp_colour.push_back(RED);
+    enemy_hp_colour.push_back(LIGHTGREY);
+    visual_monster_hp = false;
 
     force_autopickup.clear();
     note_monsters.clear();
@@ -1135,7 +1158,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         letter = mons[0] == '_' ? ' ' : mons[0];
 
     bool found = false;
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
@@ -1144,7 +1167,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (me->basechar == letter || me->name == mons)
         {
             found = true;
-            mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
+            mon_glyph_overrides[i] = mdisp;
         }
     }
     if (!found)
@@ -1452,6 +1475,7 @@ void read_options(const std::string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
+    lang = 0; // FIXME: obtain from gettext
     reset_options();
 }
 
@@ -1687,6 +1711,10 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_SHOP;
         else if (c == "stair" || c == "stairs")
             conditions |= ES_STAIR;
+        else if (c == "branch" || c == "branches")
+            conditions |= ES_BRANCH;
+        else if (c == "portal" || c == "portals")
+            conditions |= ES_PORTAL;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
         else if (c == "greedy_item" || c == "greedy_items")
@@ -2160,6 +2188,21 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             fprintf(stderr, "Bad character set: %s\n", field.c_str());
     }
+    else if (key == "language")
+    {
+        // FIXME: should talk to gettext/etc instead
+        if (field == "pl" || field == "polish" || field == "polski")
+            lang = "pl";
+        else if (field == "de" || field == "german" || field == "deutch")
+            lang = "de";
+        else if (field == "fr" || field == "french" || field == "français")
+            lang = "fr";
+        else
+        {
+            report_error(make_stringf("No translations for language: %s\n",
+                                      field.c_str()));
+        }
+    }
     else if (key == "default_autopickup")
     {
         if (_read_bool(field, true))
@@ -2235,6 +2278,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(easy_eat_gourmand);
     else BOOL_OPTION(easy_eat_contaminated);
     else BOOL_OPTION(auto_eat_chunks);
+    else if (key == "auto_drop_chunks")
+    {
+        if (field == "never")
+            auto_drop_chunks = ADC_NEVER;
+        else if (field == "rotten")
+            auto_drop_chunks = ADC_ROTTEN;
+        else if (field == "yes" || field == "true")
+            auto_drop_chunks = ADC_YES;
+        else
+            report_error("Invalid auto_drop_chunks: \"" + field + "\"");
+    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -2706,6 +2760,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             stat_colour.push_back(std::pair<int, int>(stat_limit, scolour));
         }
     }
+
+    else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
+    {
+        enemy_hp_colour.clear();
+        str_to_enemy_hp_colour(field);
+    }
+
     else if (key == "note_skill_levels")
     {
         std::vector<std::string> thesplit = split_string(",", field);

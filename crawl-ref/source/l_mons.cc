@@ -208,7 +208,12 @@ MDEF(muse)
 
 static const char *_moneat_names[] =
 {
-    "nothing", "items", "corpses", "food"
+    "nothing", "items", "corpses",
+#if TAG_MAJOR_VERSION == 32
+    "food", "honey"
+#else
+    "honey", "food"
+#endif
 };
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)

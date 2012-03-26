@@ -26,6 +26,12 @@ function ready()
     bot_start = false
     crawl.enable_more(false)
     crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('confirmations')" .. eol ..
+                   "debug.disable('death')" .. eol ..
+                   --# don't let them stop us gearing up
+                   "debug.disable('mon_act')" .. eol .. esc)
+    crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
     crawl.sendkeys("&A27" .. eol)
     crawl.sendkeys("&@27 12 12" .. eol)
@@ -47,6 +53,9 @@ function ready()
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
     crawl.sendkeys("ag") -- levitation
+    --# re-enable monsters
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('mon_act', false)" .. eol .. esc)
   end
   if you.turns() ~= last_turn then
     command = 1

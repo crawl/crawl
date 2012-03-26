@@ -35,6 +35,8 @@ Snail
 
 Gastropod
 
+Trilobite
+
 # arachnids and clams
 Tarantula
 
@@ -77,6 +79,15 @@ Monkey
 
 # not strictly an animal... :)
 Monkey's Uncle
+
+# modern mythical animals
+Dropbear
+
+Jackalope
+
+Wild Haggis
+
+Chupacabra
 %%%%
 flower_name
 
@@ -290,6 +301,8 @@ Decompression
 the Loofah
 
 Love and Death
+
+Indecent Exposure
 %%%%
 # Lemuel's suggestions
 celestial_bodies
@@ -307,6 +320,9 @@ Pleiades
 Morning Star
 
 Evening Star
+
+# astrological
+Black Moon
 %%%%
 instrument_name
 

@@ -6,7 +6,6 @@
 # introduced to new features one by one.
 ##############################################################################
 
-##############################################################
 NAME:   minmay_entry_doors
 TAGS:   entry no_monster_gen
 ORIENT: float
@@ -1291,6 +1290,84 @@ MAP
 .....x....xxl..xxl.....xl.
  .xl.....x....xl....x..lx.
  ....   ...  ....  .......
+ENDMAP
+
+##############################################################################
+NAME:   ncdulo_lavacross
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xx+xxx+xx
+xl.lll.lx
+xll.l.llx
+xll...llx
+@.l.{.l.@
+xll...llx
+xll.l.llx
+xl.lll.lx
+xx+xxx+xx
+ENDMAP
+
+NAME:   ncdulo_wetmaze
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xxxx=xxxx
+x[wwwww(x
+xWxW{Wxwx
+xWxxxWxWx
+xxWWWWWWx
+xWxxxxxxx
+xxWWWx..+
+xWxxWxx.x
+x.xx....x
+x+xxxxxxx
+ENDMAP
+
+NAME:   ncdulo_watergridlock
+TAGS:   entry no_monster_gen no_pool_fixup
+ORIENT: float
+MAP
+x.x.x.x.x.x.x
+.x.x.x.x.x.x.
+x.x.wwwww.x.x
+.x.xw.{.wx.x.
+x.x.w[.(w.x.x
+.x.xw...wx.x.
+x.x.WWWWW.x.x
+.x.x.x.x.x.x.
+x.x.x.x.x.x.x
+ENDMAP
+
+NAME:   ncdulo_smallfort
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxx
+x[.....(x
+x.xx=xx.x
+x.x...x.x
+x.x.{.x.x
+x.xx+xx.x
+x.....=.+
+xxxxxxx=x
+ENDMAP
+
+NAME:   ncdulo_halloftheorcs
+TAGS:   entry
+ORIENT: float
+MAP
+     ccc+ccc
+    cc.....cc
+   cc.T...T.cc
+  cc....I....cc
+ccc...T...T...ccc
+c...............c
+c.G.G.vvvvv.G.G.c
+c..I..v({[v..I..c
+c.G.G.vv+vv.G.G.c
+c...............c
+ccccccccccccccccc
 ENDMAP
 
 ##############################################################################

@@ -319,7 +319,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
                 && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
             {
-                delete_mutation(RANDOM_GOOD_MUTATION);
+                // silver stars only, if this ever changes we may want to give
+                // aux as well
+                delete_mutation(RANDOM_GOOD_MUTATION, source);
             }
         }
         break;
@@ -620,7 +622,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
-                if (x_chance_in_y(strength, 100))
+                if (bernoulli(strength, 0.01))
                 {
                     num_dest++;
 
@@ -1363,23 +1365,18 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Prevent bogus notes.
     activate_notes(false);
 
-#ifdef SCORE_WIZARD_CHARACTERS
-    // Add this highscore to the score file.
-    hiscores_new_entry(se);
-    logfile_new_entry(se);
-#else
-
-    // Only add non-wizards to the score file.
-    // Never generate bones files of wizard or tutorial characters -- bwr
+#ifndef SCORE_WIZARD_CHARACTERS
     if (!you.wizard)
+#endif
     {
+        // Add this highscore to the score file.
         hiscores_new_entry(se);
         logfile_new_entry(se);
-
-        if (!non_death && !crawl_state.game_is_tutorial())
-            save_ghost();
     }
-#endif
+
+    // Never generate bones files of wizard or tutorial characters -- bwr
+    if (!non_death && !crawl_state.game_is_tutorial() && !you.wizard)
+        save_ghost();
 
     _end_game(se);
 }
@@ -1433,12 +1430,7 @@ void _end_game(scorefile_entry &se)
             continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-        if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
-        {
-            std::string inscr = artefact_auto_inscription(you.inv[i]);
-            if (inscr != "")
-                add_autoinscription(you.inv[i], inscr);
-        }
+        add_autoinscription(you.inv[i]);
     }
 
     _delete_files();
@@ -1560,9 +1552,9 @@ void _end_game(scorefile_entry &se)
 
 int actor_to_death_source(const actor* agent)
 {
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
         return (NON_MONSTER);
-    else if (agent->atype() == ACT_MONSTER)
+    else if (agent->is_monster())
         return (agent->as_monster()->mindex());
     else
         return (NON_MONSTER);

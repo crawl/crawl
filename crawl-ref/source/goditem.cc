@@ -43,12 +43,6 @@ bool is_holy_item(const item_def& item)
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_HOLY_WORD);
         break;
-    case OBJ_BOOKS:
-        retval = is_holy_spellbook(item);
-        break;
-    case OBJ_STAVES:
-        retval = is_holy_rod(item);
-        break;
     default:
         break;
     }
@@ -401,23 +395,9 @@ bool is_poisoned_item(const item_def& item)
     return (false);
 }
 
-bool is_holy_discipline(int discipline)
-{
-    return (discipline & SPTYP_HOLY);
-}
-
 bool is_evil_discipline(int discipline)
 {
     return (discipline & SPTYP_NECROMANCY);
-}
-
-bool is_holy_spell(spell_type spell, god_type god)
-{
-    UNUSED(god);
-
-    unsigned int disciplines = get_spell_disciplines(spell);
-
-    return (is_holy_discipline(disciplines));
 }
 
 bool is_unholy_spell(spell_type spell, god_type god)
@@ -516,11 +496,6 @@ bool is_spellbook_type(const item_def& item, bool book_or_rod,
     return (total_liked >= (total / 2) + 1);
 }
 
-bool is_holy_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_holy_spell));
-}
-
 bool is_unholy_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, is_unholy_spell));
@@ -551,14 +526,9 @@ bool is_corpse_violating_spellbook(const item_def & item)
     return (is_spellbook_type(item, false, is_corpse_violating_spell));
 }
 
-bool god_hates_spellbook(const item_def& item)
+static bool _god_hates_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, god_hates_spell));
-}
-
-bool is_holy_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_holy_spell));
 }
 
 bool is_unholy_rod(const item_def& item)
@@ -591,7 +561,7 @@ bool is_corpse_violating_rod(const item_def & item)
     return (is_spellbook_type(item, true, is_corpse_violating_spell));
 }
 
-bool god_hates_rod(const item_def& item)
+static bool _god_hates_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, god_hates_spell));
 }
@@ -678,7 +648,7 @@ conduct_type god_hates_item_handling(const item_def &item)
     }
 
     if (item_type_known(item)
-        && (god_hates_spellbook(item) || god_hates_rod(item)))
+        && (_god_hates_spellbook(item) || _god_hates_rod(item)))
     {
         return (NUM_CONDUCTS); // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.
@@ -719,11 +689,6 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
             return (true);
         }
 
-        // Holy spells are probably too useful for Xom to find them
-        // interesting.
-        if (is_holy_spell(spell))
-            return (true);
-
         // Things are more fun for Xom the less the player knows in
         // advance.
         if (disciplines & SPTYP_DIVINATION)
@@ -758,13 +723,6 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
     {
     case GOD_SHINING_ONE:
         return (discipline & SPTYP_POISON);
-
-    case GOD_YREDELEMNUL:
-        return (is_holy_discipline(discipline));
-
-    case GOD_XOM:
-        return (is_holy_discipline(discipline)
-                || (discipline & SPTYP_DIVINATION));
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));

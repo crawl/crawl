@@ -40,6 +40,7 @@ enum areaprop_flag
     APROP_ACTUAL_LIQUID = (1 << 5),
     APROP_ORB           = (1 << 6),
     APROP_UMBRA         = (1 << 7),
+    APROP_SUPPRESSION   = (1 << 8),
 };
 
 struct area_centre
@@ -82,7 +83,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1))
+         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
+         || act->suppression_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -112,6 +114,16 @@ static void _update_agrid()
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
+            no_areas = false;
+        }
+
+        // Just like silence, suppression goes through walls
+        if ((r = ai->suppression_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
+                _set_agrid_flag(*ri, APROP_SUPPRESSION);
             no_areas = false;
         }
 
@@ -179,7 +191,7 @@ static void _update_agrid()
 static area_centre_type _get_first_area (const coord_def& f)
 {
     uint32_t a = _agrid(f);
-    if (a & APROP_SANCTUARY_2)
+    if (a & APROP_SANCTUARY_1)
         return AREA_SANCTUARY;
     if (a & APROP_SANCTUARY_2)
         return AREA_SANCTUARY;
@@ -189,6 +201,8 @@ static area_centre_type _get_first_area (const coord_def& f)
         return AREA_HALO;
     if (a & APROP_UMBRA)
         return AREA_UMBRA;
+    if (a & APROP_SUPPRESSION)
+        return AREA_SUPPRESSION;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -427,24 +441,24 @@ void create_sanctuary(const coord_def& center, int time)
     // Messaging.
     if (trap_count > 0)
     {
-        mpr("By Zin's power hidden traps are revealed to you.",
+        mpr("By Zin's power, hidden traps are revealed to you.",
             MSGCH_GOD);
     }
 
     if (cloud_count == 1)
     {
-        mpr("By Zin's power the foul cloud within the sanctuary is "
+        mpr("By Zin's power, the foul cloud within the sanctuary is "
             "swept away.", MSGCH_GOD);
     }
     else if (cloud_count > 1)
     {
-        mpr("By Zin's power all foul fumes within the sanctuary are "
+        mpr("By Zin's power, all foul fumes within the sanctuary are "
             "swept away.", MSGCH_GOD);
     }
 
     if (blood_count > 0)
     {
-        mpr("By Zin's power all blood is cleared from the sanctuary.",
+        mpr("By Zin's power, all blood is cleared from the sanctuary.",
             MSGCH_GOD);
     }
 
@@ -676,4 +690,35 @@ int monster::umbra_radius2() const
     default:
         return (-1);
     }
+}
+
+/////////////
+// Suppression
+
+bool suppressed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return (_check_agrid_flag(p, APROP_SUPPRESSION));
+}
+
+int monster::suppression_radius2() const
+{
+    if (type == MONS_MOTH_OF_SUPPRESSION)
+        return (150);
+    else
+        return (-1);
+}
+
+bool actor::suppressed() const
+{
+    return (::suppressed(pos()));
+}
+
+int player::suppression_radius2() const
+{
+    return (-1);
 }

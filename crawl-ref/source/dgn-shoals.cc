@@ -787,7 +787,7 @@ static void _clear_net_trapping_status(coord_def c)
     if (!victim)
         return;
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
     {
         monster* mvictim = victim->as_monster();
         if (you.can_see(mvictim))
@@ -841,7 +841,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     if (!victim || !victim->ground_level() || victim->swimming())
         return true;
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
     {
         const monster* mvictim = victim->as_monster();
         // Plants and statues cannot be moved away; the tide cannot

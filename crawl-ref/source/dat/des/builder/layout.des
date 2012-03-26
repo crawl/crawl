@@ -670,7 +670,7 @@ ENDMAP
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
 DEPTH: D:5-27
-WEIGHT: 5
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -683,7 +683,7 @@ TAGS: overwritable layout allow_dup unrand
     _G.lrocktile('wall_pebble_lightgray')
     _G.lfloortile('floor_pebble_brown')
 
-    if (crawl.one_chance_in(3)) then
+    if (crawl.one_chance_in(5)) then
       _G.subst('x = b')
       _G.tile('b = wall_emerald')
       _G.lfloortile('floor_pebble_green')

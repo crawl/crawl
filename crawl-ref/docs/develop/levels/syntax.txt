@@ -522,6 +522,8 @@ ITEM:     (list of items, separated by comma)
              if the item is not stackable.
           * "charges:N" sets the number of charges for wands. Does no checks
             against the maximum number of charges.
+          * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
+            jewellery (such as rings of intelligence or slaying), and missiles.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,

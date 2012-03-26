@@ -461,7 +461,7 @@ static void _pan_wave(int power)
                 MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD,
                 MONS_IGNACIO, END};
     monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_BRIMSTONE_FIEND,
-                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
+                MONS_HELL_SENTINEL, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
     for (int i = 0; i <= NSLOTS; i++)
     {
@@ -906,16 +906,13 @@ static monster_type _choose_unique_by_depth(int step)
 static monster_type _pick_unique(int level)
 {
     // Pick generic unique depending on depth.
-    int which_unique =
-        ((level <=  3) ? _choose_unique_by_depth(0) :
-         (level <=  7) ? _choose_unique_by_depth(1) :
-         (level <=  9) ? _choose_unique_by_depth(2) :
-         (level <= 13) ? _choose_unique_by_depth(3) :
-         (level <= 16) ? _choose_unique_by_depth(4) :
-         (level <= 19) ? _choose_unique_by_depth(5) :
-                         _choose_unique_by_depth(6));
-
-    return static_cast<monster_type>(which_unique);
+    return (level <=  3) ? _choose_unique_by_depth(0) :
+           (level <=  7) ? _choose_unique_by_depth(1) :
+           (level <=  9) ? _choose_unique_by_depth(2) :
+           (level <= 13) ? _choose_unique_by_depth(3) :
+           (level <= 16) ? _choose_unique_by_depth(4) :
+           (level <= 19) ? _choose_unique_by_depth(5) :
+                           _choose_unique_by_depth(6);
 }
 
 // Ask for a location and place a trap there. Returns true

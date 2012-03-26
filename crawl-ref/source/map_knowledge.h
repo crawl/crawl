@@ -9,13 +9,13 @@ struct cloud_info
     cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0)
     { }
 
-    cloud_info(cloud_type t, uint8_t c,
+    cloud_info(cloud_type t, colour_t c,
                uint8_t dur, unsigned short til, coord_def gc)
         : type(t), colour(c), duration(dur), tile(til), pos(gc)
     { }
 
     cloud_type type:8;
-    uint8_t colour;
+    colour_t colour;
     uint8_t duration; // decay/20, clamped to 0-3
     unsigned short tile;
     coord_def pos;
@@ -47,6 +47,7 @@ struct cloud_info
 #define MAP_LIQUEFIED       0x400000
 #define MAP_ORB_HALOED      0x800000
 #define MAP_UMBRAED        0x1000000
+#define MAP_SUPPRESSED     0X2000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -241,6 +242,15 @@ struct map_cell
         _cloud = new cloud_info(ci);
     }
 
+    void clear_cloud()
+    {
+        if (_cloud)
+        {
+            delete _cloud;
+            _cloud = 0;
+        }
+    }
+
     bool known() const
     {
         return !!(flags & MAP_GRID_KNOWN);
@@ -280,7 +290,7 @@ private:
 #else
     dungeon_feature_type _feat:8;
 #endif
-    uint8_t _feat_colour;
+    colour_t _feat_colour;
     cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;
@@ -309,7 +319,6 @@ void set_terrain_visible(const coord_def &c);
 void clear_terrain_visibility();
 
 int count_detected_mons(void);
-void map_knowledge_forget_mons(const coord_def &c);
 
 void clear_map(bool clear_items = false, bool clear_mons = true);
 

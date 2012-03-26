@@ -12,10 +12,12 @@
 #include "areas.h"
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "feature.h"
 #include "food.h"
 #include "fprop.h"
 #include "godconduct.h"
@@ -98,7 +100,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.beam_source  = source->mindex();
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
-        source->atype() == ACT_PLAYER ? KILL_YOU_MISSILE : KILL_MON;
+        source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
     beam.obvious_effect = false;
     beam.is_beam      = false;
@@ -187,7 +189,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
     beam.name           = "lightning arc";
     beam.aux_source     = "chain lightning";
     beam.beam_source    = caster->mindex();
-    beam.thrower        = (caster == &you) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -334,7 +336,7 @@ static bool _toxic_radianceable(const actor *act)
     if (act->invisible())
         return false;
     // currently monsters are still immune at rPois 1
-    return (act->res_poison() < (act->atype() == ACT_PLAYER ? 3 : 1));
+    return (act->res_poison() < (act->is_player() ? 3 : 1));
 }
 
 spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
@@ -911,7 +913,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
     {
         _player_hurt_monster(*mon, damage);
 
@@ -1031,7 +1033,7 @@ static int _shatter_walls(coord_def where, int pow, actor *)
 
 static bool _shatterable(const actor *act)
 {
-    if (act->atype() != ACT_MONSTER)
+    if (act->is_player())
         return true; // no player ghostlies... at least user-controllable ones
     return _shatter_mon_dice(act->as_monster());
 }
@@ -1078,7 +1080,7 @@ spret_type cast_shatter(int pow, bool fail)
 
 static int _shatter_player(int pow, actor *wielder)
 {
-    if (wielder == &you)
+    if (wielder->is_player())
         return 0;
 
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
@@ -1203,13 +1205,13 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
     }
     else if (item.base_type == OBJ_CORPSES &&
              item.sub_type == CORPSE_BODY &&
-             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
     {
-        strength = mons_weight(item.plus) / 25;
+        strength = mons_weight(item.mon_type) / 25;
     }
     else if (item.base_type == OBJ_FOOD &&
              item.sub_type == FOOD_CHUNK &&
-             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+             chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
     {
         strength += 30 * item.quantity;
     }
@@ -1228,7 +1230,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
 
         if (item.base_type == OBJ_CORPSES &&
             item.sub_type == CORPSE_BODY &&
-            mons_skeleton(item.plus))
+            mons_skeleton(item.mon_type))
         {
             turn_corpse_into_skeleton(item);
         }
@@ -1734,22 +1736,15 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // Stone and rock terrain
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
-        beam.colour = env.rock_colour;
-        // fall-through
+    case DNGN_SLIMY_WALL:
     case DNGN_STONE_WALL:
-        if (beam.colour == 0)
-            beam.colour = LIGHTGRAY;
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        if (beam.colour == 0)
-            beam.colour = LIGHTCYAN;
         what = "wall";
         // fall-through
     case DNGN_ORCISH_IDOL:
         if (what == NULL)
             what = "stone idol";
-        if (beam.colour == 0)
-            beam.colour = DARKGREY;
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
         if (what == NULL)
@@ -1757,8 +1752,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
-        if (beam.colour == 0)
-            beam.colour = LIGHTGREY;
 
         if ((grid == DNGN_ORCISH_IDOL
              || grid == DNGN_GRANITE_STATUE
@@ -1782,7 +1775,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     case DNGN_GRATE:
         if (what == NULL)
             what        = "iron grate";
-        beam.colour     = CYAN;
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
@@ -1796,7 +1788,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // Crystal
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
         what            = "crystal wall";
-        beam.colour     = GREEN;
         beam.ex_size    = 2;
         beam.name       = "blast of crystal shards";
         beam.damage.num = 4;
@@ -1823,7 +1814,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             what        = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
-        beam.colour     = LIGHTGREY;
         beam.damage.num = 2;
         break;
 
@@ -1836,6 +1826,11 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // If it was recoloured, use that colour instead.
     if (env.grid_colours(spd.target))
         beam.colour = env.grid_colours(spd.target);
+    else
+    {
+        beam.colour = element_colour(get_feature_def(grid).colour,
+                                     false, spd.target);
+    }
 
   all_done:
 
@@ -1963,7 +1958,7 @@ void forest_damage(const actor *mon)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
                 const int damage = 5 + random2(10);
-                if (foe->atype() == ACT_PLAYER)
+                if (foe->is_player())
                 {
                     mpr(random_choose(
                         "You are hit by a branch!",

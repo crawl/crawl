@@ -1290,14 +1290,14 @@ bool fire_warn_if_impossible(bool silent)
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
-                mpr("You cannot throw anything while held in a net!");
+                mprf("You cannot throw anything while %s.", held_status());
             return (true);
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             if (!silent)
-                mprf("You cannot shoot with your %s while held in a net!",
-                     weapon->name(DESC_BASENAME).c_str());
+                mprf("You cannot shoot with your %s while %s.",
+                     weapon->name(DESC_BASENAME).c_str(), held_status());
             return (true);
         }
         // Else shooting is possible.
@@ -1455,7 +1455,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
 // Returns the attack cost of using the launcher, taking skill and shields
 // into consideration. NOTE: You must pass in the shield; if you send in
 // NULL, this function assumes no shield is in use.
-int launcher_final_speed(const item_def &launcher, const item_def *shield)
+int launcher_final_speed(const item_def &launcher, const item_def *shield, bool scaled)
 {
     const int  str_weight   = weapon_str_weight(launcher);
     const int  dex_weight   = 10 - str_weight;
@@ -1503,7 +1503,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed = 2 * speed / 3;
     }
 
-    if (you.duration[DUR_FINESSE])
+    if (scaled && you.duration[DUR_FINESSE])
     {
         ASSERT(!you.duration[DUR_BERSERK]);
         // Need to undo haste by hand.
@@ -1581,12 +1581,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         mutated = how_mutated(false, true);
 
     if (victim->is_chaotic()
-        || (victim == &you && player_is_shapechanged()))
+        || (victim->is_player() && player_is_shapechanged()))
     {
         dmg *= 7;
         dmg /= 4;
     }
-    else if (victim == &you && mutated > 0)
+    else if (victim->is_player() && mutated > 0)
     {
         int multiplier = 100 + (mutated * 5);
 
@@ -1662,7 +1662,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     const coord_def oldpos = victim->pos();
     victim->clear_clinging();
 
-    if (victim->atype() == ACT_PLAYER)
+    if (victim->is_player())
     {
         stop_delay(true);
 
@@ -1720,7 +1720,7 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
 
     if (you.can_see(victim))
     {
-        if (victim->atype() == ACT_PLAYER)
+        if (victim->is_player())
             dmg_msg = "You are electrocuted!";
         else if (victim->type == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_THE) + " is charged up!";
@@ -1766,7 +1766,7 @@ static int _blowgun_power_roll(bolt &beam)
 
     int base_power;
     item_def* blowgun;
-    if (agent->atype() == ACT_MONSTER)
+    if (agent->is_monster())
     {
         base_power = agent->get_experience_level();
         blowgun = agent->as_monster()->launcher();
@@ -1786,7 +1786,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     if (victim->holiness() == MH_UNDEAD || victim->holiness() == MH_NONLIVING)
     {
-        if (victim->atype() == ACT_MONSTER)
+        if (victim->is_monster())
             simple_monster_message(victim->as_monster(), " is unaffected.");
         else
             canned_msg(MSG_YOU_UNAFFECTED);
@@ -1795,7 +1795,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     actor* agent = beam.agent();
 
-    if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
+    if (!agent || agent->is_monster() || beam.reflections > 0)
         return (true);
 
     const int skill = you.skill_rdiv(SK_THROWING);
@@ -1815,7 +1815,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     if (resist_roll < victim->get_experience_level())
     {
-        if (victim->atype() == ACT_MONSTER)
+        if (victim->is_monster())
             simple_monster_message(victim->as_monster(), " resists.");
         else
             canned_msg(MSG_YOU_RESIST);
@@ -1898,7 +1898,7 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     if (!_blowgun_check(beam, victim))
         return (false);
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
         victim->as_monster()->go_frenzy();
     else
         victim->go_berserk(false);
@@ -1949,7 +1949,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_brand = SPMSL_NORMAL;
         }
         // Nessos gets to cheat.
-        else if (agent->atype() == ACT_MONSTER)
+        else if (agent->is_monster())
         {
             const monster* mon = static_cast<const monster* >(agent);
             if (mon->type != MONS_NESSOS)
@@ -1974,7 +1974,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     returning = get_weapon_brand(item) == SPWPN_RETURNING
                 || ammo_brand == SPMSL_RETURNING;
 
-    if (agent->atype() == ACT_PLAYER)
+    if (agent->is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
         beam.beam_source   = NON_MONSTER;
@@ -2352,7 +2352,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
-    if (act->atype() == ACT_PLAYER || you.can_see(act))
+    if (act->is_player() || you.can_see(act))
         msg = NULL;
 
     noisy(level, act->pos(), msg, act->mindex());
@@ -2649,7 +2649,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         const int speed = launcher_final_speed(launcher, you.shield());
         dprf("Final launcher speed: %d", speed);
-        you.time_taken = speed * you.time_taken / 100;
+        you.time_taken = div_rand_round(speed * you.time_taken, 100);
 
         // [dshaligram] Improving missile weapons:
         //  - Remove the strength/enchantment cap where you need to be strong
@@ -4132,6 +4132,9 @@ void zap_wand(int slot)
 
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
+    // Mark as empty if necessary.
+    if (wand.plus == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
+        wand.plus2 = ZAPCOUNT_EMPTY;
 
     practise(EX_DID_ZAP_WAND);
     count_action(CACT_EVOKE, EVOC_WAND);
@@ -4542,7 +4545,7 @@ static bool _vorpalise_weapon(bool already_known)
             if (you.can_safely_mutate())
             {
                 // not funny on the undead
-                mutate(RANDOM_MUTATION);
+                mutate(RANDOM_MUTATION, "chaos affixation");
                 break;
             }
         case 1:
@@ -4661,7 +4664,11 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (success)
+    {
         you.wield_change = true;
+        if (wpn.base_type == OBJ_MISSILES)
+            _merge_ammo_in_inventory(wpn.link);
+    }
 
     return success;
 }
@@ -4879,8 +4886,6 @@ static bool _scroll_modify_item(item_def scroll)
         }
     }
     while (item_slot < 0);
-
-    ASSERT_SAVE(item_slot >= 0);
 
     item_def &item = you.inv[item_slot];
 
@@ -5306,13 +5311,11 @@ void read_scroll(int slot)
                 cancel_scroll = true;
                 break;
             }
-            else if (item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+            else
             {
                 mpr("You feel like taking on a jabberwock.");
                 id_the_scroll = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
         }
         break;
 

@@ -65,9 +65,6 @@
 #include "xom.h"
 #include "mon-info.h"
 
-#define LONG_DESC_KEY "long_desc_key"
-#define QUOTE_KEY "quote_key"
-
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -120,13 +117,6 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
-void print_quote(const std::string &body)
-{
-    describe_info inf;
-    inf.quote = body;
-    print_quote(inf);
-}
-
 class default_desc_proc
 {
 public:
@@ -154,7 +144,7 @@ void print_description(const describe_info &inf)
     process_description<default_desc_proc>(proc, inf);
 }
 
-void print_quote(const describe_info &inf)
+static void _print_quote(const describe_info &inf)
 {
     clrscr();
     textcolor(LIGHTGREY);
@@ -173,7 +163,7 @@ static const char* _jewellery_base_ability_string(int subtype)
     case RING_WIZARDRY:          return "Wiz";
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
-    case RING_TELEPORTATION:     return "*TELE +Tele";
+    case RING_TELEPORTATION:     return "+/*TELE";
     case RING_TELEPORT_CONTROL:  return "cTele";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
@@ -214,11 +204,11 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
 
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { "-CAST",  ARTP_PREVENT_SPELLCASTING,  2 },
-        { "-TELE",  ARTP_PREVENT_TELEPORTATION, 2 },
-        { "MUT",    ARTP_MUTAGENIC,             2 }, // handled specially
+        { "-Cast",  ARTP_PREVENT_SPELLCASTING,  2 },
+        { "-Tele",  ARTP_PREVENT_TELEPORTATION, 2 },
+        { "Contam", ARTP_MUTAGENIC,             2 }, // handled specially
         { "*Rage",  ARTP_ANGRY,                 2 },
-        { "*TELE",  ARTP_CAUSE_TELEPORTATION,   2 },
+        { "*Tele",  ARTP_CAUSE_TELEPORTATION,   2 },
         { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
         { "Noisy",  ARTP_NOISES,                2 },
 
@@ -391,16 +381,11 @@ std::string artefact_auto_inscription(const item_def& item)
     return insc;
 }
 
-void add_autoinscription(item_def &item, std::string ainscrip)
-{
-    // Remove previous randart inscription.
-    trim_randart_inscrip(item);
-
-    add_inscription(item, ainscrip);
-}
-
 void add_autoinscription(item_def &item)
 {
+    if (!is_artefact(item) || !Options.autoinscribe_artefacts)
+        return;
+
     // Remove previous randart inscription.
     trim_randart_inscrip(item);
 
@@ -547,7 +532,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
     "bolt", "net", "Zot", "needle",
-    "shaft", "passage", "pressure plate", "web",
+    "shaft", "passage", "pressure plate", "web", "gas",
 };
 
 std::string trap_name(trap_type trap)
@@ -1807,19 +1792,10 @@ std::string get_item_description(const item_def &item, bool verbose,
                         << "]";
             need_base_desc = false;
         }
-        else if (is_unrandom_artefact(item)
-                 && (unrandart_descrip(0, item)[0] != '\0'
-                     || unrandart_descrip(1, item)[1] != '\0'))
+        else if (is_unrandom_artefact(item) && item_type_known(item))
         {
-            const char *desc    = unrandart_descrip(0, item);
-            const char *desc_id = unrandart_descrip(1, item);
-
-            if (item_type_known(item) && desc_id[0] != '\0')
-            {
-                description << desc_id;
-                need_base_desc = false;
-            }
-            else if (desc[0] != '\0')
+            const std::string desc = getLongDescription(get_artefact_name(item));
+            if (!desc.empty())
             {
                 description << desc;
                 need_base_desc = false;
@@ -1983,7 +1959,7 @@ std::string get_item_description(const item_def &item, bool verbose,
             else if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 description << "It looks rather unpleasant.";
 
-            switch (mons_corpse_effect(item.plus))
+            switch (mons_corpse_effect(item.mon_type))
             {
             case CE_POISONOUS:
                 description << "\n\nThis meat is poisonous.";
@@ -2003,7 +1979,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
                     description << "\n\nMeat like this may occasionally cause "
-                                   "sickness.";
+                                   "nausea.";
                 }
                 break;
             case CE_POISON_CONTAM:
@@ -2020,14 +1996,14 @@ std::string get_item_description(const item_def &item, bool verbose,
             }
 
             if ((god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.plus))
+                   && is_player_same_species(item.mon_type))
                 || (you.religion == GOD_ZIN
-                   && mons_class_intel(item.plus) >= I_NORMAL)
+                   && mons_class_intel(item.mon_type) >= I_NORMAL)
                 || (is_good_god(you.religion)
-                   && mons_class_holiness(item.plus) == MH_HOLY))
+                   && mons_class_holiness(item.mon_type) == MH_HOLY))
             {
-                description << "\n\n" << god_name(you.religion) << " disapproves "
-                               "of eating such meat.";
+                description << "\n\n" << uppercase_first(god_name(you.religion))
+                            << " disapproves of eating such meat.";
             }
         }
         break;
@@ -2139,13 +2115,6 @@ std::string get_item_description(const item_def &item, bool verbose,
         die("Bad item class");
     }
 
-    if (is_unrandom_artefact(item)
-        && unrandart_descrip(2, item)[0] != '\0')
-    {
-        description << "\n\n";
-        description << unrandart_descrip(2, item);
-    }
-
     if (!verbose && item_known_cursed(item))
         description << "\nIt has a curse placed upon it.";
     else
@@ -2179,8 +2148,8 @@ std::string get_item_description(const item_def &item, bool verbose,
 
     if (conduct_type ct = good_god_hates_item_handling(item))
     {
-        description << "\n\n" << god_name(you.religion) << " opposes the use of "
-                    << "such an ";
+        description << "\n\n" << uppercase_first(god_name(you.religion))
+                    << " opposes the use of such an ";
 
         if (ct == DID_NECROMANCY)
             description << "evil";
@@ -2191,8 +2160,8 @@ std::string get_item_description(const item_def &item, bool verbose,
     }
     else if (god_hates_item_handling(item))
     {
-        description << "\n\n" << god_name(you.religion) << " disapproves of the "
-                    << "use of such an item.";
+        description << "\n\n" << uppercase_first(god_name(you.religion))
+                    << " disapproves of the use of such an item.";
     }
 
     if (verbose && origin_describable(item))
@@ -2203,11 +2172,6 @@ std::string get_item_description(const item_def &item, bool verbose,
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
 
     return description.str();
-}
-
-static std::string _get_feature_description_wide(int feat)
-{
-    return std::string();
 }
 
 void get_feature_desc(const coord_def &pos, describe_info &inf)
@@ -2233,60 +2197,15 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         long_desc = getLongDescription(db_name);
     }
 
-    bool custom_desc = false;
-
     const std::string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
 
     if (!marker_desc.empty())
-    {
-        long_desc   = marker_desc;
-        custom_desc = true;
-    }
-
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
-    {
-        long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
-        custom_desc = true;
-    }
-
-    const CrawlHashTable &props = env.properties;
-    if (!custom_desc && props.exists(LONG_DESC_KEY))
-    {
-        const CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
-
-        // First try the modified name, then the base name.
-        std::string key = raw_feature_description(feat);
-        if (!desc_table.exists(key))
-            key = raw_feature_description(feat, NUM_TRAPS, true);
-
-        if (desc_table.exists(key))
-        {
-            long_desc   = desc_table[key].get_string();
-            custom_desc = true;
-        }
-
-        std::string quote = getQuoteString(key);
-        if (!quote.empty())
-            db_name = key;
-    }
+        long_desc += marker_desc;
 
     inf.body << long_desc;
 
-    // For things which require logic
-    if (!custom_desc)
-        inf.body << _get_feature_description_wide(grd(pos));
-
     inf.quote = getQuoteString(db_name);
-
-    // Quotes don't care about custom descriptions.
-    if (props.exists(QUOTE_KEY))
-    {
-        const CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
-
-        if (quote_table.exists(db_name))
-            inf.quote = quote_table[db_name].get_string();
-    }
 }
 
 // Returns the pressed key in key
@@ -2329,7 +2248,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
 #endif
 
     if (show_quote)
-        print_quote(inf);
+        _print_quote(inf);
     else
         print_description(inf);
 
@@ -2339,42 +2258,6 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     int key;
     if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
-}
-
-void set_feature_desc_long(const std::string &raw_name,
-                           const std::string &desc)
-{
-    ASSERT(!raw_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(LONG_DESC_KEY))
-        props[LONG_DESC_KEY].new_table();
-
-    CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
-
-    if (desc.empty())
-        desc_table.erase(raw_name);
-    else
-        desc_table[raw_name] = desc;
-}
-
-void set_feature_quote(const std::string &raw_name,
-                       const std::string &quote)
-{
-    ASSERT(!raw_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(QUOTE_KEY))
-        props[QUOTE_KEY].new_table();
-
-    CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
-
-    if (quote.empty())
-        quote_table.erase(raw_name);
-    else
-        quote_table[raw_name] = quote;
 }
 
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
@@ -2749,9 +2632,10 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     if (allow_inscribe && crawl_state.game_is_tutorial())
         allow_inscribe = false;
 
-    // Don't ask if there aren't enough rows left
+    // Don't ask if there aren't enough rows left (or if we're dead).
     if (wherey() <= get_number_of_lines() - 2 && in_inventory(item)
-        && crawl_state.prev_cmd != CMD_RESISTS_SCREEN)
+        && crawl_state.prev_cmd != CMD_RESISTS_SCREEN
+        && !(you.dead || crawl_state.updating_scores))
     {
         cgotoxy(1, wherey() + 2);
         return _actions_prompt(item, allow_inscribe);
@@ -2967,14 +2851,14 @@ static int _get_spell_description(const spell_type spell,
 
     if (god_hates_spell(spell, you.religion))
     {
-        description += god_name(you.religion)
+        description += uppercase_first(god_name(you.religion))
                        + " frowns upon the use of this spell.\n";
         if (god_loathes_spell(spell, you.religion))
             description += "You'd be excommunicated if you dared to cast it!\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {
-        description += god_name(you.religion)
+        description += uppercase_first(god_name(you.religion))
                        + " supports the use of this spell.\n";
     }
     if (item && !player_can_memorise_from_spellbook(*item))
@@ -3247,7 +3131,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     std::vector<std::string> resist_descriptions;
     if (!extreme_resists.empty())
     {
-        const std::string tmp = "extremely resistant to "
+        const std::string tmp = "immune to "
             + comma_separated_line(extreme_resists.begin(),
                                    extreme_resists.end());
         resist_descriptions.push_back(tmp);
@@ -3353,11 +3237,11 @@ static std::string _monster_stat_description(const monster_info& mi)
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
         "tiny",
-        "little",
+        "very small",
         "small",
         NULL,     // don't display anything for 'medium'
         "large",
-        "big",
+        "very large",
         "giant",
         "huge",
     };
@@ -3680,9 +3564,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     do
     {
         if (show_quote)
-        {
-            print_quote(inf);
-        }
+            _print_quote(inf);
         else
         {
             print_description(inf);
@@ -3907,9 +3789,9 @@ static std::string _describe_favour(god_type which_god)
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
            (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
            (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
-           (you.piety >  40) ? godname + " is most pleased with you." :
-           (you.piety >  20) ? godname + " has noted your presence." :
-           (you.piety >   5) ? godname + " is noncommittal."
+           (you.piety >  40) ? uppercase_first(godname) + " is most pleased with you." :
+           (you.piety >  20) ? uppercase_first(godname) + " has noted your presence." :
+           (you.piety >   5) ? uppercase_first(godname) + " is noncommittal."
                              : "You are beneath notice.";
 }
 
@@ -4003,16 +3885,16 @@ static std::string _religion_help(god_type god)
     case GOD_VEHUMET:
         if (you.piety >= piety_breakpoint(1))
         {
-            result += god_name(god) + " assists you in casting "
-                      "Conjurations and Summonings.";
+            result += uppercase_first(god_name(god)) + " assists you in "
+                      "casting Conjurations and Summonings.";
         }
         break;
 
     case GOD_FEDHAS:
         if (you.piety >= piety_breakpoint(0))
         {
-            result += "Evolving plants requires fruit, "
-                      "evolving fungi requires piety.";
+            result += "Evolving plants requires fruit, and evolving "
+                      "fungi requires piety.";
         }
 
     default:
@@ -4219,7 +4101,7 @@ static void _detailed_god_description(god_type which_god)
 
     const int width = std::min(80, get_number_of_cols());
 
-    std::string godname = god_name(which_god, true);
+    std::string godname = uppercase_first(god_name(which_god, true));
     int len = get_number_of_cols() - strwidth(godname);
     textcolor(god_colour(which_god));
     cprintf("%s%s\n", std::string(len / 2, ' ').c_str(), godname.c_str());
@@ -4392,7 +4274,7 @@ void describe_god(god_type which_god, bool give_title)
 
     // Print long god's name.
     textcolor(colour);
-    cprintf("%s", god_name(which_god, true).c_str());
+    cprintf("%s", uppercase_first(god_name(which_god, true)).c_str());
     cprintf("\n\n");
 
     // Print god's description.
@@ -4447,7 +4329,7 @@ void describe_god(god_type which_god, bool give_title)
                  (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
                  (you.worshipped[which_god]) ? "%s is ambivalent towards you."
                                              : "%s is neutral towards you.",
-                 god_name(which_god).c_str());
+                 uppercase_first(god_name(which_god)).c_str());
     }
     else
     {
@@ -4493,7 +4375,7 @@ void describe_god(god_type which_god, bool give_title)
                               (prot_chance >= 25) ? "sometimes"
                                                   : "occasionally";
 
-            std::string buf = god_name(which_god);
+            std::string buf = uppercase_first(god_name(which_god));
             buf += " ";
             buf += how;
             buf += " watches over you";
@@ -4512,7 +4394,7 @@ void describe_god(god_type which_god, bool give_title)
                                                    "occasionally";
 
             cprintf("%s %s shields you from chaos.\n",
-                    god_name(which_god).c_str(), how);
+                    uppercase_first(god_name(which_god)).c_str(), how);
         }
         else if (which_god == GOD_SHINING_ONE)
         {
@@ -4523,7 +4405,7 @@ void describe_god(god_type which_god, bool give_title)
                                                    "occasionally";
 
             cprintf("%s %s shields you from negative energy.\n",
-                    god_name(which_god).c_str(), how);
+                    uppercase_first(god_name(which_god)).c_str(), how);
         }
         else if (which_god == GOD_TROG)
         {
@@ -4548,7 +4430,7 @@ void describe_god(god_type which_god, bool give_title)
             {
                 have_any = true;
                 cprintf("%s shields you from corrosive effects.\n",
-                        god_name(which_god).c_str());
+                        uppercase_first(god_name(which_god)).c_str());
             }
             if (you.piety >= piety_breakpoint(1))
             {
@@ -4593,7 +4475,7 @@ void describe_god(god_type which_god, bool give_title)
             {
                 have_any = true;
                 _print_final_god_abil_desc(which_god,
-                                           god_name(which_god)
+                                           uppercase_first(god_name(which_god))
                                            + " slows and strengthens your metabolism.",
                                            ABIL_NON_ABILITY);
             }

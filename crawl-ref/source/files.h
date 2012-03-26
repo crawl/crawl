@@ -43,8 +43,6 @@ std::string datafile_path(
     bool test_base_path = false,
     bool (*thing_exists)(const std::string&) = file_exists);
 
-
-bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
 std::string get_base_filename(const std::string &filename);
 std::string get_cache_name(const std::string &filename);
@@ -59,22 +57,15 @@ bool check_mkdir(const std::string &what, std::string *dir,
 // Find saved games for all game types.
 std::vector<player_save_info> find_all_saved_characters();
 
-// Find saved games for the current game type.
-std::vector<player_save_info> find_saved_characters();
-
-std::string get_savefile_directory(bool ignore_game_type = false);
-std::string get_bonefile_directory(bool ignore_game_type = false);
 std::string get_save_filename(const std::string &name);
 std::string get_savedir_filename(const std::string &name);
-std::string get_base_savedir_path(const std::string &subpath = "");
-std::string get_savedir_path(const std::string &shortpath);
 std::string savedir_versioned_path(const std::string &subdirs = "");
 std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
 time_t file_modtime(const std::string &file);
-bool is_newer(const std::string &a, const std::string &b);
+time_t file_modtime(FILE *f);
 std::vector<std::string> get_title_files();
 
 

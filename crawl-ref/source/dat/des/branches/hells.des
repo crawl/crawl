@@ -11,8 +11,6 @@ function dis_setup(e)
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
    dgn.set_feature_desc_short("granite statue", "iron statue")
-   dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. " ..
-                             "You can't help but feel like it's watching you.\n")
 end
 
 function dis_rune(e)
@@ -34,10 +32,7 @@ function geh_setup(e)
    e.lfloortile("floor_pebble_darkgray")
    e.colour("v = red")
    dgn.set_feature_desc_short("floor", "Ashen ground")
-   dgn.set_feature_desc_long("floor", "With every step, you walk on ash. " ..
-                             "It is warm and almost comfortable.\n")
    dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-   dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.\n")
 end
 
 function coc_setup(e)
@@ -53,12 +48,8 @@ function coc_setup(e)
    e.lfloortile("floor_ice")
    e.colour("c = lightblue")
    dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-   dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-   dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("floor", "Frost-covered floor")
-   dgn.set_feature_desc_long("floor", "Frost-covered floor. It crunches " ..
-                             "satisfyingly underfoot.\n")
 end
 
 function tar_setup(e)
@@ -115,7 +106,7 @@ default-depth: D:12-26
 NAME:   hellmouth_1
 TAGS:   no_rotate
 MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
-        hairy devil / hell hound
+        red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
@@ -152,7 +143,7 @@ NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
-MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
+MONS:   hellion / rotting devil / iron devil / red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
@@ -440,6 +431,7 @@ ENDMAP
 NAME:     vestibule_of_hell_mu
 PLACE:    Hell
 ORIENT:   encompass
+WEIGHT:   20
 TAGS:     no_rotate no_dump
 SUBVAULT: A : vestibule_dis
 SUBVAULT: B : vestibule_tar
@@ -720,7 +712,7 @@ ORIENT:  north
 TAGS:    dis_castle no_rotate no_vmirror
 MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, \
          metal gargoyle, iron dragon
-KMONS:   7 = pit fiend
+KMONS:   7 = hell sentinel
 KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
@@ -768,7 +760,7 @@ MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, \
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
-KMONS:   9 = pit fiend
+KMONS:   9 = hell sentinel
 KMONS:   0 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
@@ -821,7 +813,7 @@ ENDMAP
 NAME:    dis_wall_1
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-MONS:    pit fiend, iron dragon
+MONS:    hell sentinel, iron dragon
 MAP
 ....................................................................
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -838,7 +830,7 @@ ENDMAP
 NAME:    dis_wall_2
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-MONS:    pit fiend, iron dragon
+MONS:    hell sentinel, iron dragon
 MAP
 ....................................................................
 vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvnnvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv
@@ -855,7 +847,7 @@ ENDMAP
 NAME:    dis_wall_3
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-MONS:    pit fiend, iron dragon
+MONS:    hell sentinel, iron dragon
 MAP
 ....................................................................
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -872,7 +864,7 @@ ENDMAP
 NAME:    dis_wall_4
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = pit fiend
+KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   12 = deep_water
 KMASK:   w = no_monster_gen
@@ -892,7 +884,7 @@ ENDMAP
 NAME:    dis_wall_5
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = pit fiend
+KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   2 = deep_water
 KMASK:   w = no_monster_gen
@@ -912,7 +904,7 @@ ENDMAP
 NAME:    dis_wall_6
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = pit fiend
+KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 MAP
 ....................................................................
@@ -930,7 +922,7 @@ ENDMAP
 NAME:    dis_wall_7
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = pit fiend
+KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 MAP
 vvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvv
@@ -948,7 +940,7 @@ ENDMAP
 NAME:    dis_wall_8
 ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = pit fiend
+KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -968,13 +960,13 @@ ENDMAP
 ##############################################################################
 NAME:    dis_st
 ORIENT:  encompass
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, pit fiend
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
 MONS:    iron troll, iron dragon, cacodemon
 SUBST:   5=5.,6=6.,7=7.,8=4467...,0=09988...
 SHUFFLE: 67
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
-# four pit fiends in Dispater's building
+# four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
 # Maybe make an iron statue tile for this?
 COLOUR:  G = cyan

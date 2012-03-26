@@ -320,6 +320,11 @@ class message_window
         for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
         if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
             cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
+        else if (i < 0)
+        {
+            // If there were no lines, put the cursor at the upper left.
+            cgotoxy(1, 1, GOTO_MSG);
+        }
     }
 
     // Whether to show msgwin-full more prompts.
@@ -1085,7 +1090,11 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
     msg_colour_type colour = prepare_message(text, channel, param);
 
     if (colour == MSGCOL_MUTED)
+    {
+        if (channel == MSGCH_PROMPT)
+            msgwin.show();
         return;
+    }
 
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
@@ -1433,6 +1442,23 @@ std::string get_last_messages(int mcount)
     if (!text.empty())
         text += "\n";
     return text;
+}
+
+void get_recent_messages(std::vector<std::string> &mess,
+                         std::vector<msg_channel_type> &chan)
+{
+    flush_prev_message();
+
+    const store_t& msgs = messages.get_store();
+    int mcount = NUM_STORED_MESSAGES;
+    for (int i = -1; mcount > 0; --i, --mcount)
+    {
+        const message_item msg = msgs[i];
+        if (!msg)
+            break;
+        mess.push_back(msg.pure_text());
+        chan.push_back(msg.channel);
+    }
 }
 
 // We just write out the whole message store including empty/unused

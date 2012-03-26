@@ -135,13 +135,13 @@ void package::load()
     if (!res || !(head.magic || head.version || head.padding[0]
                   || head.padding[1] || head.padding[2] || head.start))
     {
-        fail("The save file (%s) is empty!", filename.c_str());
+        corrupted("The save file (%s) is empty!", filename.c_str());
     }
     if (res != sizeof(file_header))
-        fail("save file (%s) corrupted -- header truncated", filename.c_str());
+        corrupted("save file (%s) corrupted -- header truncated", filename.c_str());
 
     if (htole(head.magic) != PACKAGE_MAGIC)
-        fail("save file (%s) corrupted -- not a DCSS save file",
+        corrupted("save file (%s) corrupted -- not a DCSS save file",
              filename.c_str());
     off_t len = lseek(fd, 0, SEEK_END);
     if (len == -1)
@@ -240,7 +240,7 @@ void package::seek(len_t to)
     ASSERT(!aborted);
 
     if (to > file_len)
-        fail("save file corrupted -- invalid offset");
+        corrupted("save file corrupted -- invalid offset");
     if (lseek(fd, to, SEEK_SET) != (off_t)to)
         sysfail("failed to seek inside the save file");
 }
@@ -487,7 +487,7 @@ void package::read_directory(len_t start, uint8_t version)
         while (len_t res = rd.read(&ch0, sizeof(dir_entry0)))
         {
             if (res != sizeof(dir_entry0))
-                fail("save file corrupted -- truncated directory");
+                corrupted("save file corrupted -- truncated directory");
             std::string chname(ch0.name, 4);
             chname.resize(strlen(chname.c_str()));
             directory[chname] = htole(ch0.start);
@@ -500,19 +500,19 @@ void package::read_directory(len_t start, uint8_t version)
         while (len_t res = rd.read(&name_len, sizeof(name_len)))
         {
             if (res != sizeof(name_len))
-                fail("save file corrupted -- truncated directory");
+                corrupted("save file corrupted -- truncated directory");
             std::string chname;
             chname.resize(name_len);
             if (rd.read(&chname[0], name_len) != name_len)
-                fail("save file corrupted -- truncated directory");
+                corrupted("save file corrupted -- truncated directory");
             if (rd.read(&bstart, sizeof(bstart)) != sizeof(bstart))
-                fail("save file corrupted -- truncated directory");
+                corrupted("save file corrupted -- truncated directory");
             directory[chname] = htole(bstart);
             dprintf("* %s\n", chname.c_str());
         }
         break;
     default:
-        fail("save file (%s) uses an unknown format %u", filename.c_str(),
+        corrupted("save file (%s) uses an unknown format %u", filename.c_str(),
              version);
     }
 }
@@ -545,7 +545,7 @@ void package::trace_chunk(len_t start)
         if (res < 0)
             sysfail("error reading the save file");
         if (res != sizeof(block_header))
-            fail("save file corrupted -- block past eof");
+            corrupted("save file corrupted -- block past eof");
 
         len_t len  = htole(bl.len);
         len_t next = htole(bl.next);
@@ -554,12 +554,12 @@ void package::trace_chunk(len_t start)
 
         fb_t::iterator sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
-            fail("save file corrupted -- overlapping blocks");
+            corrupted("save file corrupted -- overlapping blocks");
         --sp;
         len_t sp_start = sp->first;
         len_t sp_size  = sp->second;
         if (sp_start > start || sp_start + sp_size < end)
-            fail("save file corrupted -- overlapping blocks");
+            corrupted("save file corrupted -- overlapping blocks");
         free_blocks.erase(sp);
         if (sp_start < start)
             free_blocks[sp_start] = start - sp_start;
@@ -789,7 +789,7 @@ chunk_reader::chunk_reader(package *parent, const std::string _name)
 {
     ASSERT(parent);
     if (!parent->has_chunk(_name))
-        fail("save file corrupted -- chunk \"%s\" missing", _name.c_str());
+        corrupted("save file corrupted -- chunk \"%s\" missing", _name.c_str());
     dprintf("chunk_reader(%s): starting\n", _name.c_str());
     pkg = parent;
     init(parent->directory[_name]);
@@ -823,7 +823,7 @@ len_t chunk_reader::raw_read(void *data, len_t len)
             if (res < 0)
                 sysfail("error reading the save file");
             if (res != sizeof(block_header))
-                fail("save file corrupted -- block past eof");
+                corrupted("save file corrupted -- block past eof");
 
             off = next_block + sizeof(block_header);
             block_left = htole(bl.len);
@@ -839,7 +839,7 @@ len_t chunk_reader::raw_read(void *data, len_t len)
         if (res < 0)
             sysfail("error reading the save file");
         if ((len_t)res != s)
-            fail("save file corrupted -- block past eof");
+            corrupted("save file corrupted -- block past eof");
 
         buf = (char*)buf + s;
         off += s;
@@ -870,7 +870,7 @@ len_t chunk_reader::read(void *data, len_t len)
             zs.next_in  = z_buffer;
             zs.avail_in = raw_read(z_buffer, sizeof(z_buffer));
             if (!zs.avail_in)
-                fail("save file corrupted -- block truncated");
+                corrupted("save file corrupted -- block truncated");
         }
         int res = inflate(&zs, Z_NO_FLUSH);
         if (res == Z_STREAM_END)
@@ -879,7 +879,7 @@ len_t chunk_reader::read(void *data, len_t len)
             return zs.next_out - (Bytef*)data;
         }
         if (res != Z_OK)
-            fail("save file decompression failed: %s", zs.msg);
+            corrupted("save file decompression failed: %s", zs.msg);
     }
     return zs.next_out - (Bytef*)data;
 #else

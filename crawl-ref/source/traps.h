@@ -46,4 +46,5 @@ trap_type random_trap_for_place(const level_id &place = level_id::current());
 int count_traps(trap_type ttyp);
 void place_webs(int num, bool is_second_phase = false);
 bool maybe_destroy_web(actor *oaf);
+bool ensnare(actor *fly);
 #endif

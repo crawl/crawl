@@ -1091,7 +1091,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 
 static std::string _origin_monster_name(const item_def &item)
 {
-    const int monnum = item.orig_monnum - 1;
+    const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
     if (monnum == MONS_PLAYER_GHOST)
         return ("a player ghost");
     else if (monnum == MONS_PANDEMONIUM_LORD)
@@ -1700,7 +1700,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
 
-    const int imass = unit_mass * quant_got;
+    int imass = unit_mass * quant_got;
+    if (!ignore_burden && (you.burden + imass > carrying_capacity()))
+    {
+        if (drop_spoiled_chunks(you.burden + imass - carrying_capacity()))
+            imass = unit_mass * quant_got;
+    }
 
     bool partial_pickup = false;
 
@@ -1793,6 +1798,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     // Can't combine, check for slot space.
     if (inv_count() >= ENDOFPACK)
+        drop_spoiled_chunks(1, true);
+    if (inv_count() >= ENDOFPACK)
         return (-1);
 
     if (!quiet && partial_pickup)
@@ -1816,11 +1823,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         orb_pickup_noise(you.pos(), 30);
 
         mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
+
         if (you.religion == GOD_CHEIBRIADOS)
-        {
-            mprf(MSGCH_GOD, "%s tells them not to hurry.",
-                            god_name(you.religion).c_str());
-        }
+            simple_god_message(" tells them not to hurry.");
+
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
 
         you.char_direction = GDT_ASCENDING;
@@ -2214,9 +2220,7 @@ bool drop_item(int item_dropped, int quant_drop)
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
             if (!Options.easy_unequip)
-            {
                 mpr("You will have to take that off first.");
-            }
             else if (check_warning_inscriptions(you.inv[item_dropped],
                                                 OPER_TAKEOFF))
             {
@@ -2868,11 +2872,20 @@ static void _do_autopickup()
         if (item_needs_autopickup(mitm[o]))
         {
             int num_to_take = mitm[o].quantity;
-            if (Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
+            int unit_mass = item_mass(mitm[o]);
+            if (Options.autopickup_no_burden && unit_mass != 0)
             {
-                int num_can_take =
-                    (carrying_capacity(you.burden_state) - you.burden) /
-                        item_mass(mitm[o]);
+                int capacity = carrying_capacity(you.burden_state);
+                int num_can_take = (capacity - you.burden) / unit_mass;
+
+                if (num_can_take < num_to_take
+                    && drop_spoiled_chunks(you.burden
+                           + num_to_take * unit_mass - capacity))
+                {
+                    // Yay, some new space, retry.
+                    // Compare to the old burden capacity, not the new one.
+                    num_can_take = (capacity - you.burden) / unit_mass;
+                }
 
                 if (num_can_take < num_to_take)
                 {

@@ -1382,7 +1382,6 @@ ENDMAP
 
 # Autumnal temple, 12 altars (oiseaux)
 NAME:   oiseaux_autumnal_temple_12
-DESC:   Autumnal temple
 PLACE:  Temple
 ORIENT: encompass
 TAGS:   no_rotate no_pool_fixup

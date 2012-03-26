@@ -56,12 +56,6 @@ void describe_god(god_type which_god, bool give_title);
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
-void set_feature_desc_long(const std::string &raw_name,
-                           const std::string &desc);
-
-void set_feature_quote(const std::string &raw_name,
-                       const std::string &quote);
-
 bool describe_item(item_def &item, bool allow_inscribe = false,
                    bool shopping = false);
 void get_item_desc(const item_def &item, describe_info &inf,
@@ -96,12 +90,8 @@ std::string get_command_description(const command_type cmd,
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);
 
-void print_quote(const describe_info &inf);
-void print_quote(const std::string &desc);
-
 void trim_randart_inscrip(item_def& item);
 std::string artefact_auto_inscription(const item_def& item);
-void add_autoinscription(item_def &item, std::string ainscrip);
 void add_autoinscription(item_def &item);
 void add_inscription(item_def &item, std::string inscrip);
 

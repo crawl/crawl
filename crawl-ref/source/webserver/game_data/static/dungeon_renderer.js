@@ -42,6 +42,11 @@ function ($, cr, map_knowledge) {
             this.element.width = c * this.cell_width;
             this.element.height = r * this.cell_height;
             this.init(this.element);
+            // The canvas is completely transparent after resizing;
+            // make it opaque to prevent display errors when shifting
+            // around parts of it later.
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
         },
 
         set_view_center: function(x, y)

@@ -16,7 +16,7 @@
 
 #define RAY_METATABLE "dgn.ray"
 
-void lua_push_ray(lua_State *ls, ray_def *ray)
+static void _lua_push_ray(lua_State *ls, ray_def *ray)
 {
     ray_def **rayref = clua_new_userdata<ray_def *>(ls, RAY_METATABLE);
     *rayref = ray;
@@ -31,7 +31,7 @@ LUAFN(los_find_ray)
     //      in findray test case.
     if (find_ray(a, b, *ray, opc_no_trans))
     {
-        lua_push_ray(ls, ray);
+        _lua_push_ray(ls, ray);
         return (1);
     }
     delete ray;
@@ -48,7 +48,7 @@ LUAFN(los_make_ray)
     VECT(s, 1, 2);
     VECT(d, 3, 4);
     ray_def *ray = new ray_def(geom::ray(s.x, s.y, d.x, d.y));
-    lua_push_ray(ls, ray);
+    _lua_push_ray(ls, ray);
     return (1);
 }
 

@@ -33,7 +33,7 @@
 default-depth: D
 
 # These must feature one of the temple_overflow_* TAGs (see header).
-# Altars are sorted alphabetically by god, with The Shining One coming
+# Altars are sorted alphabetically by god, with the Shining One coming
 # after Zin. At the end, there are altar vaults which can be used for
 # more than just one god.
 
@@ -522,8 +522,8 @@ DEPTH:   3-11
 TAGS:    no_monster_gen patrolling temple_overflow_makhleb
 TAGS:    layout_rooms layout_city layout_open layout_cross mini_float
 KFEAT:   _ = altar_makhleb
-# Either one slow type 3 or s or 4 demon (iron devil or demonic crawler or
-#     smoke demon) or three slow type 5 demons (iron imp).
+# Either one slow type 3 or 4 demon (iron devil or smoke demon) or
+# three slow type 5 demons (iron imp).
 # The smoke demon can only come up in D:9-11.
 SHUFFLE: 1234
 NSUBST:  1 = 1:1 / *:.
@@ -532,7 +532,7 @@ NSUBST:  3 = 2:3 / *:.
 : if you.absdepth() < 9 then
 SUBST:   3 = 12
 : end
-MONS:    iron devil, demonic crawler, smoke demon, iron imp
+MONS:    iron devil, smoke demon, iron imp
 MAP
 xxxxxxxxxxxxxxx
 x.............x
@@ -1140,6 +1140,7 @@ MONS:   angel god:zin name:glowing n_adj / \
         angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
         angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
         angel god:zin name:glowing n_adj ; mace ego:holy_wrath
+MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"}
 DEPTH:  2-27
 MAP
 xxxxxxxxx

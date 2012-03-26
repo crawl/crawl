@@ -2,13 +2,12 @@
 #define SPL_GODITEM_H
 
 int identify(int power, int item_slot = -1, std::string *pre_msg = NULL);
-int cast_healing(int pow, bool divine_ability = false,
+int cast_healing(int pow, int max_pow, bool divine_ability = false,
                  const coord_def& where = coord_def(0, 0),
                  bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
 
 void antimagic();
 
-void cast_detect_secret_doors(int pow);
 int detect_traps(int pow);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);

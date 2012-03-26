@@ -24,7 +24,7 @@ function callback.dk_yredelemnul_ordeal(data, triggerable, triggerer, marker, ev
         return
       end
   end
-  crawl.mpr("The hear a strange fizzling.")
+  crawl.mpr("You hear a strange fizzling.")
 end
 }}
 
@@ -37,7 +37,7 @@ MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
 # good gods will get mad if you choose to obey Yred.
 KMONS:  h = generate_awake human hd:2 att:neutral
 MARKER: h = lua:portal_desc {slave_name="victim"}
-MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
+MARKER: h = lua:MonPropsMarker:new{yslave="yslave"}
 MARKER: + = lua:restrict_door()
 KFEAT:  h = .
 KFEAT:  _ = altar_yredelemnul
@@ -54,7 +54,7 @@ tlos:add_triggerer(DgnTriggerer:new{type="player_los"})
 
 local tm = TriggerableFunction:new{
   func="callback.dk_yredelemnul_ordeal", repeated=false}
-tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="yslave"})
 
 lua_marker('h', tlos)
 lua_marker('_', tm)

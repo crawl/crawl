@@ -106,8 +106,13 @@ void trap_def::hide()
     grd(pos) = DNGN_UNDISCOVERED_TRAP;
 }
 
-void trap_def::prepare_ammo()
+void trap_def::prepare_ammo(int charges)
 {
+    if (charges)
+    {
+        ammo_qty = charges;
+        return;
+    }
     switch (type)
     {
     case TRAP_DART:
@@ -174,9 +179,9 @@ bool trap_def::is_known(const actor* act) const
 {
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
-    if (act == NULL || act->atype() == ACT_PLAYER)
+    if (act == NULL || act->is_player())
         return (player_knows);
-    else if (act->atype() == ACT_MONSTER)
+    else if (act->is_monster())
     {
         const monster* mons = act->as_monster();
         const int intel = mons_intel(mons);
@@ -237,7 +242,7 @@ bool trap_def::is_safe(actor* act) const
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
-    if (act->atype() != ACT_PLAYER)
+    if (!act->is_player())
         return false;
 
     // No prompt (teleport traps are ineffective if
@@ -456,7 +461,7 @@ void check_net_will_hold_monster(monster* mons)
         mons->add_ench(ENCH_HELD);
 }
 
-bool player_caught_in_web()
+static bool _player_caught_in_web()
 {
     if (you.attribute[ATTR_HELD])
         return false;
@@ -522,7 +527,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_know = is_known();
     const bool trig_knows = !flat_footed && is_known(&triggerer);
 
-    const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
+    const bool you_trigger = (triggerer.is_player());
     const bool in_sight = you.see_cell(pos);
 
     // Zot def - player never sets off known traps
@@ -618,7 +623,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // can't use trap_destroyed, as we might recurse into a shaft
             // or be banished by a Zot trap
             if (in_sight)
+            {
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+                mpr("The teleport trap disappears.");
+            }
             disarm();
         }
         triggerer.teleport(true);
@@ -872,7 +880,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             {
                 mpr("You are caught in the web!");
 
-                if (player_caught_in_web())
+                if (_player_caught_in_web())
                 {
                     check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
                     if (player_in_a_dangerous_place())
@@ -1003,6 +1011,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+    case TRAP_GAS:
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
@@ -1033,7 +1042,7 @@ int trap_def::max_damage(const actor& act)
     // they are fairly stupid and tend to have fewer hp than
     // players -- this choice prevents traps from easily killing
     // large monsters fairly deep within the dungeon.
-    if (act.atype() == ACT_MONSTER)
+    if (act.is_monster())
         level = 0;
 
     switch (type)
@@ -1377,6 +1386,7 @@ void free_self_from_net()
         }
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
+        you.redraw_evasion = true;
         return;
     }
 
@@ -1422,6 +1432,7 @@ void free_self_from_net()
 
             you.attribute[ATTR_HELD] = 0;
             you.redraw_quiver = true;
+            you.redraw_evasion = true;
             return;
         }
 
@@ -1468,6 +1479,7 @@ void free_self_from_net()
 
             you.attribute[ATTR_HELD] = 0;
             you.redraw_quiver = true;
+            you.redraw_evasion = true;
             remove_item_stationary(mitm[net]);
             return;
         }
@@ -1495,6 +1507,7 @@ void clear_trapping_net()
 
     you.attribute[ATTR_HELD] = 0;
     you.redraw_quiver = true;
+    you.redraw_evasion = true;
 }
 
 item_def trap_def::generate_trap_item()
@@ -1538,7 +1551,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 {
     if (ammo_qty <= 0)
     {
-        if (was_known && act.atype() == ACT_PLAYER)
+        if (was_known && act.is_player())
             mpr("The trap is out of ammunition!");
         else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
@@ -1550,7 +1563,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     bool force_hit = (env.markers.property_at(pos, MAT_ANY,
                             "force_hit") == "true");
 
-    if (act.atype() == ACT_PLAYER)
+    if (act.is_player())
     {
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
@@ -1586,7 +1599,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     // Determine whether projectile hits.
     if (!force_hit && trap_hit < act.melee_evasion(NULL))
     {
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
         {
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
             practise(EX_DODGE_TRAP);
@@ -1600,7 +1613,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     else if (!force_hit && pro_block >= con_block)
     {
         std::string owner;
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
             owner = "your";
         else if (you.can_see(&act))
             owner = apostrophise(act.name(DESC_THE));
@@ -1623,7 +1636,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         int damage_taken =
             std::max(shot_damage(act) - random2(act.armour_class()+1),0);
 
-        if (act.atype() == ACT_PLAYER)
+        if (act.is_player())
         {
             mprf("%s shoots out and hits you!", shot.name(DESC_A).c_str());
 
@@ -1688,9 +1701,12 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+    case TRAP_GAS:
     case TRAP_PLATE:
-    default:                    // what *would* be the default? {dlb}
         return (DNGN_TRAP_MECHANICAL);
+
+    default:
+        die("placeholder trap type %d used", type);
     }
 }
 
@@ -1971,7 +1987,7 @@ void place_webs(int num, bool is_second_phase)
         {
             if (slot >= MAX_TRAPS)
                 return;
-            if (env.trap[++slot].type == TRAP_UNASSIGNED)
+            if (env.trap[slot].type == TRAP_UNASSIGNED)
                 break;
         };
         trap_def& ts(env.trap[slot]);
@@ -2039,17 +2055,74 @@ bool maybe_destroy_web(actor *oaf)
 
     if (coinflip())
     {
-        if (oaf->atype() == ACT_MONSTER)
+        if (oaf->is_monster())
             simple_monster_message(oaf->as_monster(), " pulls away from the web.");
         else
             mpr("You disentangle yourself.");
         return false;
     }
 
-    if (oaf->atype() == ACT_MONSTER)
+    if (oaf->is_monster())
         simple_monster_message(oaf->as_monster(), " tears the web.");
     else
         mpr("The web tears apart.");
     destroy_trap(oaf->pos());
+    return true;
+}
+
+bool ensnare(actor *fly)
+{
+    if (fly->is_web_immune())
+        return false;
+
+    if (fly->caught())
+    {
+        // currently webs are stateless so except for flavour it's a no-op
+        if (fly->is_player())
+            mpr("You are even more entangled.");
+        return false;
+    }
+
+    if (fly->body_size() >= SIZE_GIANT)
+    {
+        if (you.can_see(fly))
+        {
+            if (fly->is_player())
+                mpr("A web splats on you, sticky and dirtying but otherwise harmless.");
+            else
+                mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    // If we're over water, an open door, shop, portal, etc, the web will
+    // fail to attach and you'll be released after a single turn.
+    // Same if we're at max traps already.
+    if (grd(fly->pos()) == DNGN_FLOOR
+        && place_specific_trap(fly->pos(), TRAP_WEB)
+        // succeeded, mark the web known discovered
+        && grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
+        && you.see_cell(fly->pos()))
+    {
+        grd(fly->pos()) = DNGN_TRAP_WEB;
+    }
+
+    if (fly->is_player())
+    {
+        if (_player_caught_in_web()) // no fail, returns false if already held
+            mpr("You are caught in a web!");
+    }
+    else
+    {
+        simple_monster_message(fly->as_monster(), " is caught in a web!");
+        fly->as_monster()->add_ench(ENCH_HELD);
+    }
+
+    // Drowned?
+    if (!fly->alive())
+        return true;
+
+    check_monsters_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
+    check_player_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
     return true;
 }

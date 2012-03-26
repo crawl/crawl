@@ -17,6 +17,15 @@
 
 #include <algorithm>
 
+// These tend to be called from tight loops, and C++ method calls don't
+// get optimized away except for LTO -fwhole-program builds, so merely
+// disabling the function's body is not enough; let's not call them at all.
+#ifdef DEBUG
+# define ASSERT_VALIDITY(x) x assert_validity()
+#else
+# define ASSERT_VALIDITY(x)
+#endif
+
 CrawlStoreValue::CrawlStoreValue()
     : type(SV_NONE), flags(SFLAG_UNSET)
 {
@@ -1273,7 +1282,7 @@ CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
 // Read/write from/to savefile
 void CrawlHashTable::write(writer &th) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (empty())
     {
         marshallByte(th, 0);
@@ -1290,12 +1299,12 @@ void CrawlHashTable::write(writer &th) const
         i->second.write(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlHashTable::read(reader &th)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(empty());
 
@@ -1314,7 +1323,7 @@ void CrawlHashTable::read(reader &th)
         val.read(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 
@@ -1334,7 +1343,7 @@ bool CrawlHashTable::exists(const std::string &key) const
         return (false);
 
     ACCESS(key);
-    assert_validity();
+    ASSERT_VALIDITY();
     hash_map_type::const_iterator i = hash_map->find(key);
 
     return (i != hash_map->end());
@@ -1410,7 +1419,7 @@ void CrawlHashTable::assert_validity() const
 
 CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     ACCESS(key);
@@ -1433,7 +1442,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
     if (!hash_map)
         die("trying to read non-existant property \"%s\"", key.c_str());
 #endif
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ACCESS(key);
     hash_map_type::const_iterator i = hash_map->find(key);
@@ -1468,7 +1477,7 @@ bool CrawlHashTable::empty() const
 
 void CrawlHashTable::erase(const std::string key)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     ACCESS(key);
@@ -1487,7 +1496,7 @@ void CrawlHashTable::erase(const std::string key)
 
 void CrawlHashTable::clear()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (hash_map == NULL)
         return;
 
@@ -1497,7 +1506,7 @@ void CrawlHashTable::clear()
 
 CrawlHashTable::iterator CrawlHashTable::begin()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     return hash_map->begin();
@@ -1505,7 +1514,7 @@ CrawlHashTable::iterator CrawlHashTable::begin()
 
 CrawlHashTable::iterator CrawlHashTable::end()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     return hash_map->end();
@@ -1514,7 +1523,7 @@ CrawlHashTable::iterator CrawlHashTable::end()
 CrawlHashTable::const_iterator CrawlHashTable::begin() const
 {
     ASSERT(hash_map != NULL);
-    assert_validity();
+    ASSERT_VALIDITY();
 
     return hash_map->begin();
 }
@@ -1522,7 +1531,7 @@ CrawlHashTable::const_iterator CrawlHashTable::begin() const
 CrawlHashTable::const_iterator CrawlHashTable::end() const
 {
     ASSERT(hash_map != NULL);
-    assert_validity();
+    ASSERT_VALIDITY();
 
     return hash_map->end();
 }
@@ -1561,14 +1570,14 @@ CrawlVector::CrawlVector(store_val_type _type, store_flags flags,
 
 CrawlVector::~CrawlVector()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 //////////////////////////////
 // Read/write from/to savefile
 void CrawlVector::write(writer &th) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (empty())
     {
         marshallByte(th, 0);
@@ -1586,12 +1595,12 @@ void CrawlVector::write(writer &th) const
        val.write(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlVector::read(reader &th)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(empty());
     ASSERT(type == SV_NONE);
@@ -1614,7 +1623,7 @@ void CrawlVector::read(reader &th)
     for (vec_size i = 0; i < _size; i++)
         vec[i].read(th);
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 
@@ -1623,13 +1632,13 @@ void CrawlVector::read(reader &th)
 
 store_flags CrawlVector::get_default_flags() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return default_flags;
 }
 
 store_flags CrawlVector::set_default_flags(store_flags flags)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(flags & SFLAG_UNSET));
     default_flags |= flags;
 
@@ -1638,7 +1647,7 @@ store_flags CrawlVector::set_default_flags(store_flags flags)
 
 store_flags CrawlVector::unset_default_flags(store_flags flags)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(flags & SFLAG_UNSET));
     default_flags &= ~flags;
 
@@ -1647,13 +1656,13 @@ store_flags CrawlVector::unset_default_flags(store_flags flags)
 
 store_val_type CrawlVector::get_type() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return type;
 }
 
 void CrawlVector::assert_validity() const
 {
-#ifdef ASSERTS
+#ifdef DEBUG
     ASSERT(!(default_flags & SFLAG_UNSET));
     ASSERT(max_size > 0);
     ASSERT(max_size >= size());
@@ -1729,7 +1738,7 @@ vec_size CrawlVector::get_max_size() const
 
 CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
@@ -1739,7 +1748,7 @@ CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
 
 const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
@@ -1761,7 +1770,7 @@ bool CrawlVector::empty() const
 
 CrawlStoreValue& CrawlVector::pop_back()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!vec.empty());
 
     CrawlStoreValue& val = vec[vec.size() - 1];
@@ -1771,7 +1780,7 @@ CrawlStoreValue& CrawlVector::pop_back()
 
 void CrawlVector::push_back(CrawlStoreValue val)
 {
-#ifdef ASSERTS
+#ifdef DEBUG
     if (type != SV_NONE)
         ASSERT(type == val.type);
 
@@ -1812,7 +1821,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
     }
 #endif
 
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
@@ -1824,12 +1833,12 @@ void CrawlVector::push_back(CrawlStoreValue val)
         val.flags |= SFLAG_CONST_TYPE;
     }
     vec.push_back(val);
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
@@ -1845,7 +1854,7 @@ void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 
 void CrawlVector::resize(const vec_size _size)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(max_size == VEC_MAX_SIZE);
     ASSERT(_size < max_size);
 
@@ -1861,7 +1870,7 @@ void CrawlVector::resize(const vec_size _size)
 
 void CrawlVector::erase(const vec_size index)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
 
@@ -1870,7 +1879,7 @@ void CrawlVector::erase(const vec_size index)
 
 void CrawlVector::clear()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(default_flags & SFLAG_NO_ERASE));
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
@@ -1883,25 +1892,25 @@ void CrawlVector::clear()
 
 CrawlVector::iterator CrawlVector::begin()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.begin();
 }
 
 CrawlVector::iterator CrawlVector::end()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.end();
 }
 
 CrawlVector::const_iterator CrawlVector::begin() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.begin();
 }
 
 CrawlVector::const_iterator CrawlVector::end() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.end();
 }
 

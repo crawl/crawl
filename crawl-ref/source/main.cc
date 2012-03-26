@@ -613,6 +613,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
+    case CONTROL('M'): wizard_memorise_spec_spell(); break;
+    case CONTROL('P'): wizard_transform(); break;
     case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('S'): wizard_abyss_speed(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
@@ -673,6 +675,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'J': jiyva_eat_offlevel_items();            break;
     case 'W': wizard_god_wrath();                    break;
     case 'w': wizard_god_mollify();                  break;
+    case '#': wizard_load_dump_file();               break;
 
     case 'x':
         you.experience = 1 + exp_needed(1 + you.experience_level);
@@ -879,7 +882,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_INSPECT_FLOOR:
     case CMD_SHOW_TERRAIN:
     case CMD_EXAMINE_OBJECT:
-    case CMD_LIST_WEAPONS:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
     case CMD_LIST_EQUIPMENT:
@@ -1017,7 +1019,7 @@ bool apply_berserk_penalty = false;
 static void _center_cursor()
 {
 #ifndef USE_TILE_LOCAL
-    const coord_def cwhere = crawl_view.grid2screen(you.pos());
+    const coord_def cwhere = crawl_view.grid2view(you.pos());
     cgotoxy(cwhere.x, cwhere.y, GOTO_DNGN);
 #endif
 }
@@ -1229,6 +1231,9 @@ static void _input()
                 clua.callfn("ready", 0);
         }
 
+        // We're not in an infinite loop, reset the timer.
+        watchdog();
+
         // Flush messages and display message window.
         msgwin_new_cmd();
 
@@ -1367,15 +1372,10 @@ static void _go_upstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You're held in a net!");
+        mprf("You can't use stairs while %s.", held_status());
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        mpr("You can't go up stairs while constricted.");
-        return;
-    }
     if (ygrd == DNGN_ENTER_SHOP)
     {
         if (you.berserk())
@@ -1399,6 +1399,9 @@ static void _go_upstairs()
             mpr("You can't go up here!");
         return;
     }
+
+    if (!you.attempt_escape()) // false means constricted and don't escape
+        return;
 
     if (!_prompt_dangerous_portal(ygrd))
         return;
@@ -1514,15 +1517,12 @@ static void _go_downstairs()
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You're held in a net!");
+        mprf("You can't use stairs while %s.", held_status());
         return;
     }
 
     if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        mpr("You can't go down stairs while constricted.");
         return;
-    }
 
     if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
         return;
@@ -1874,7 +1874,9 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_FRIENDLY_PICKUP: _toggle_friendly_pickup(); break;
+    case CMD_TOGGLE_FRIENDLY_PICKUP:     _toggle_friendly_pickup(); break;
+    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
+
 
         // Map commands.
     case CMD_CLEAR_MAP:       _do_clear_map();   break;
@@ -1982,7 +1984,6 @@ void process_command(command_type cmd)
     case CMD_LIST_EQUIPMENT:           get_invent(OSEL_EQUIP);         break;
     case CMD_LIST_GOLD:                _do_list_gold();                break;
     case CMD_LIST_JEWELLERY:           list_jewellery();               break;
-    case CMD_LIST_WEAPONS:             list_weapons();                 break;
     case CMD_MAKE_NOTE:                make_user_note();               break;
     case CMD_REPLAY_MESSAGES: replay_messages(); redraw_screen();      break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
@@ -2088,8 +2089,11 @@ void process_command(command_type cmd)
         break;
 
     case CMD_QUIT:
-        if (yes_or_no("Are you sure you want to quit without saving"))
+        if (crawl_state.disables[DIS_CONFIRMATIONS]
+            || yes_or_no("Are you sure you want to quit without saving"))
+        {
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
+        }
         else
             canned_msg(MSG_OK);
         break;
@@ -2302,7 +2306,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
-    dec_napalm_player(delay);
+    if (you.duration[DUR_LIQUID_FLAMES])
+        dec_napalm_player(delay);
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
@@ -2462,16 +2467,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_INSULATION, delay,
                           "You feel conductive.", coinflip(),
                           "You start to feel a little less insulated.");
-
-    _decrement_a_duration(DUR_RESIST_FIRE, delay,
-                          "Your fire resistance expires.", coinflip(),
-                          "You start to feel less resistant to fire.");
-    _decrement_a_duration(DUR_RESIST_COLD, delay,
-                          "Your cold resistance expires.", coinflip(),
-                          "You start to feel less resistant to cold.");
-    _decrement_a_duration(DUR_RESIST_POISON, delay,
-                          "Your poison resistance expires.", coinflip(),
-                          "You start to feel less resistant to poison.");
+    _decrement_a_duration(DUR_RESISTANCE, delay,
+                          "Your resistance to elements expires.", coinflip(),
+                          "You start to feel less resistant.");
 
     if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
                     "You are firmly grounded in the material plane once more.",
@@ -3048,8 +3046,17 @@ static void _player_reacts()
     int food_use = player_hunger_rate();
     food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
-    if (food_use > 0 && you.hunger >= 40)
+    if (food_use > 0 && you.hunger > 0)
+    {
         make_hungry(food_use, true);
+        if (you.duration[DUR_AMBROSIA])
+        {
+            if (food_use > you.duration[DUR_AMBROSIA])
+                food_use = you.duration[DUR_AMBROSIA];
+            you.duration[DUR_AMBROSIA] -= food_use;
+            inc_mp(food_use);
+        }
+    }
 
     _regenerate_hp_and_mp(capped_time);
 
@@ -3125,8 +3132,12 @@ static void _update_golubria_traps()
         {
             if (--trap->ammo_qty <= 0)
             {
-                mpr("Your passage of Golubria closes.");
+                if (you.see_cell(*it))
+                    mpr("Your passage of Golubria closes with a snap!");
+                else
+                    mpr("You hear a snapping sound.", MSGCH_SOUND);
                 trap->destroy();
+                noisy(8, *it);
             }
         }
     }
@@ -3138,6 +3149,12 @@ void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
+
+    if(crawl_state.viewport_monster_hp)
+    {
+        crawl_state.viewport_monster_hp = false;
+        viewwindow();
+    }
 
     update_monsters_in_view();
 
@@ -3779,7 +3796,7 @@ static void _close_door(coord_def move)
 
     if (you.attribute[ATTR_HELD])
     {
-        mpr("You can't close doors while held in a net.");
+        mprf("You can't close doors while %s.", held_status());
         return;
     }
 
@@ -4233,14 +4250,7 @@ static void _move_player(coord_def move)
         }
 
         if (!you.attempt_escape()) // false means constricted and did not escape
-        {
-            std::string emsg = "While you don't manage to break free from ";
-            emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-            emsg += ", you feel that another attempt might be more successful.";
-            mpr(emsg);
-            you.turn_is_over = true;
             return;
-        }
 
         std::string verb;
         if (you.flight_mode() == FL_FLY)
@@ -4625,6 +4635,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(TAG_CHR_FORMAT < 256);
     COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
     COMPILE_CHECK(NUM_TAG_MINORS < 256);
+    COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
+                                         // with untested signedness
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

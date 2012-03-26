@@ -169,8 +169,8 @@ static void _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true,
-                               true))
+            && delete_mutation(RANDOM_GOOD_MUTATION, "Zin's wrath",
+                               failMsg, false, true, true))
         {
             success = true;
         }
@@ -955,7 +955,7 @@ static bool _jiyva_retribution()
         god_speaks(god, "You feel Jiyva alter your body.");
 
         for (int i = 0; i < mutat; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, false, true);
+            mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
     }
     else if (there_are_monsters_nearby() && coinflip())
     {
@@ -982,9 +982,9 @@ static bool _jiyva_retribution()
 
         if (found_one)
         {
-            mprf(MSGCH_GOD, "Jiyva's putrescence saturates %s!",
-                 mon->name(DESC_THE).c_str());
-
+            simple_god_message(
+                make_stringf("'s putrescence saturates %s!",
+                             mon->name(DESC_THE).c_str()).c_str(), god);
             slimify_monster(mon, true);
         }
     }
@@ -1374,7 +1374,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
 // Currently only used when holy beings have been killed.
 static std::string _get_tso_speech(const std::string key)
 {
-    std::string result = getSpeakString("TSO " + key);
+    std::string result = getSpeakString("the Shining One " + key);
 
     if (result.empty())
         return ("The Shining One is angry!");
@@ -1411,7 +1411,7 @@ static bool _tso_holy_revenge()
 static bool _ely_holy_revenge(const monster *victim)
 {
     // It's a mild effect, a relatively big chance is ok.  Keeping it small
-    // though -- we don't want gods to be omniescent.
+    // though -- we don't want gods to be omniscient.
     if (!one_chance_in(3))
         return false;
 

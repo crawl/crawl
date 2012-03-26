@@ -59,6 +59,7 @@ enum attack_type
     AT_TRUNK_SLAP,
     AT_SNAP,
     AT_SPLASH,
+    AT_POUNCE,
     AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
@@ -110,6 +111,7 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 32
     AF_SUBTRACTOR,
 #endif
+    AF_ENSNARE,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -167,7 +169,13 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
+#if TAG_MAJOR_VERSION == 32
     MONEAT_FOOD,
+    MONEAT_HONEY,
+#else
+    MONEAT_HONEY,
+    MONEAT_FOOD,
+#endif
 
     NUM_MONEAT
 };

@@ -48,7 +48,6 @@ void init_pandemonium(void)
                                     MONS_TORMENTOR,
                                     MONS_REAPER,
                                     MONS_SOUL_EATER,
-                                    MONS_HAIRY_DEVIL,
                                     MONS_ICE_DEVIL,
                                     MONS_BLUE_DEVIL,
                                     MONS_HELL_BEAST,
@@ -101,7 +100,7 @@ void init_pandemonium(void)
         env.mons_alloc[7 + random2(3)] = MONS_SHADOW_FIEND;
 
     if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_PIT_FIEND;
+        env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;
 
     // Set at least some specific monsters for the special levels - this
     // can also be used to set some colours.
@@ -114,15 +113,15 @@ void init_pandemonium(void)
 void pandemonium_mons(void)
 {
     // must leave allowance for monsters rare on pandemonium (wizards, etc.)
-    int pan_mons = env.mons_alloc[random2(10)];
+    monster_type pan_mons = env.mons_alloc[random2(10)];
 
     if (one_chance_in(40))
     {
         do
-            pan_mons = random2(NUM_MONSTERS);
+            pan_mons = static_cast<monster_type>(random2(NUM_MONSTERS));
         while (!mons_pan_rare(pan_mons));
     }
-    mgen_data mg(static_cast<monster_type>(pan_mons));
+    mgen_data mg(pan_mons);
     mg.place = level_id(BRANCH_PANDEMONIUM);
     mg.flags |= MG_PERMIT_BANDS;
 
