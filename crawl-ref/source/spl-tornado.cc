@@ -391,10 +391,7 @@ void tornado_damage(actor *caster, int dur)
     // have spawned something new (like Royal Jelly spawns).
     for (int i = move_avail.size() - 1; i >= 0; i--)
         if (actor_at(move_avail[i]))
-        {
-            move_avail[i] = move_avail[move_avail.size() - 1];
-            move_avail.pop_back();
-        }
+            erase_any(move_avail, i);
 
     // Calculate destinations.
     for (unsigned int i = 0; i < move_act.size(); i++)
@@ -406,8 +403,7 @@ void tornado_damage(actor *caster, int dur)
             if (move_avail[j] == dest)
             {
                 // Only one monster per destination.
-                move_avail[j] = move_avail[move_avail.size() - 1];
-                move_avail.pop_back();
+                erase_any(move_avail, j);
                 break;
             }
         move_dest[move_act[i]->mid] = dest;
