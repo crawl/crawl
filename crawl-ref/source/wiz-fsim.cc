@@ -70,8 +70,10 @@ static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
     set_skill_level(_fsim_melee_skill(item), skill);
     set_skill_level(SK_FIGHTING, skill * 15 / 27);
-    set_skill_level(SK_ARMOUR, skill * 15 / 27);
-    set_skill_level(SK_SHIELDS, skill);
+    if (!skill || !is_useless_skill(SK_ARMOUR))
+        set_skill_level(SK_ARMOUR, skill * 15 / 27);
+    if (!skill || !is_useless_skill(SK_SHIELDS))
+        set_skill_level(SK_SHIELDS, skill);
     for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_SKILL; ++i)
         set_skill_level(skill_type(i), skill);
 }
