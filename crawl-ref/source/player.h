@@ -146,8 +146,9 @@ public:
   unsigned int  transfer_skill_points;
   unsigned int  transfer_total_skill_points;
 
-  skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
-  int sage_bonus_degree;        // How much bonus XP to give in that skill.
+  std::vector<skill_type> sage_skills; // skills with active Sage
+  std::vector<int> sage_xp;            // how much more XP to redirect
+  std::vector<int> sage_bonus;         // how much bonus XP to give in these skills
 
   skill_type manual_skill;
   int manual_index;

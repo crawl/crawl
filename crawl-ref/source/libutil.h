@@ -178,6 +178,14 @@ std::string comma_separated_line(Z start, Z end,
 
 std::string unwrap_desc(std::string desc);
 
+template <typename Z>
+void erase_any(std::vector<Z> &vec, unsigned long which)
+{
+    if (which != vec.size() - 1)
+        vec[which] = vec[vec.size() - 1];
+    vec.pop_back();
+}
+
 inline int sqr(int x)
 {
     return x * x;

@@ -2881,15 +2881,27 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     you.attribute[ATTR_EVOL_XP] += exp_gained;
 
-    if (you.duration[DUR_SAGE])
+    if (!you.sage_skills.empty())
     {
+        int which_sage = random2(you.sage_skills.size());
+        skill_type skill = you.sage_skills[which_sage];
+
         const int old_avail = you.exp_available;
         // Bonus skill training from Sage.
         you.exp_available =
-            (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        train_skill(you.sage_bonus_skill, you.exp_available);
+            (exp_gained * you.sage_bonus[which_sage]) / 100 + exp_gained / 2;
+        you.sage_xp[which_sage] -= you.exp_available;
+        train_skill(skill, you.exp_available);
         you.exp_available = old_avail;
         exp_gained /= 2;
+
+        if (you.sage_xp[which_sage] <= 0 || you.skills[skill] == 27)
+        {
+            mprf("You are less studious about %s.", skill_name(skill));
+            erase_any(you.sage_skills, which_sage);
+            erase_any(you.sage_xp, which_sage);
+            erase_any(you.sage_bonus, which_sage);
+        }
     }
 
     if (crawl_state.game_is_sprint())
@@ -3797,7 +3809,6 @@ int get_expiration_threshold(duration_type dur)
         return (10 * BASELINE_DELAY);
 
     // These get no messages when they "flicker".
-    case DUR_SAGE:
     case DUR_BARGAIN:
         return (15 * BASELINE_DELAY);
 
@@ -4026,7 +4037,7 @@ void display_char_status()
         DUR_TRANSFORMATION,
         STATUS_BURDEN,
         STATUS_MANUAL,
-        DUR_SAGE,
+        STATUS_SAGE,
         DUR_BARGAIN,
         DUR_BREATH_WEAPON,
         DUR_LIQUID_FLAMES,
@@ -5482,8 +5493,9 @@ void player::init()
     transfer_skill_points = 0;
     transfer_total_skill_points = 0;
 
-    sage_bonus_skill = NUM_SKILLS;
-    sage_bonus_degree = 0;
+    sage_skills.clear();
+    sage_xp.clear();
+    sage_bonus.clear();
 
     manual_skill = SK_NONE;
     manual_index = -1;

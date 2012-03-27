@@ -185,6 +185,11 @@ void wizard_change_species(void)
     // Sanitize skills.
     fixup_skills();
 
+    // Could delete only inappropriate ones, but meh.
+    you.sage_skills.clear();
+    you.sage_xp.clear();
+    you.sage_bonus.clear();
+
     calc_hp();
     calc_mp();
 
@@ -751,7 +756,9 @@ static const char* dur_names[] =
     "stealth",
     "magic shield",
     "sleep",
+#if TAG_MAJOR_VERSION == 32
     "sage",
+#endif
     "telepathy",
     "petrified",
     "lowered mr",
