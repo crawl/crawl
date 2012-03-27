@@ -866,13 +866,13 @@ ORIENT:  north
 TAGS:    dis_divider no_vmirror no_rotate
 KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
-KFEAT:   12 = deep_water
+KFEAT:   2 = deep_water
 KMASK:   w = no_monster_gen
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvvvvv................vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv1..............1vvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwvvvv
-vvvvwwwwwwwwwwwwww2wwwwwww..wwwww11wwwww..wwwwwww2wwwwwwwwwwwwwwvvvv
+vvvvwwwwwwwwwwwwww2wwwwwww..wwwwwwwwwwww..wwwwwww2wwwwwwwwwwwwwwvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvv....................................................vvvvvvvv
