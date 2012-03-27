@@ -23,6 +23,7 @@
 #include "fprop.h"
 #include "godconduct.h"
 #include "los.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "monster.h"
 #include "mapmark.h"
@@ -1106,7 +1107,10 @@ int actor_apply_cloud(actor *act)
         cloud.announce_actor_engulfed(act);
     }
     if (player && cloud_max_base_damage > 0 && resist > 0)
+    {
         canned_msg(MSG_YOU_RESIST);
+        maybe_id_resist(cloud_flavour);
+    }
 
     if (player && cloud_flavour != BEAM_NONE)
         expose_player_to_element(cloud_flavour, 7);
