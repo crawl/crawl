@@ -2205,7 +2205,7 @@ void sage_card(int power, deck_rarity_type rarity)
         you.sage_xp.push_back(xp);
         you.sage_bonus.push_back(power / 25);
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
-        dprf("Will redirect %d xp, bonus = %d\n", xp, power / 25);
+        dprf("Will redirect %d xp, bonus = %d%%\n", xp, (power / 25) * 2);
     }
 }
 
