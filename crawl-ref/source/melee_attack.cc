@@ -1180,7 +1180,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         else if (you.has_usable_claws())
         {
             aux_verb = "claw";
-            aux_damage += roll_dice(you.has_usable_claws(), 3);
+            aux_damage += roll_dice(you.has_claws(), 3);
         }
         else if (you.has_usable_tentacles())
         {
@@ -5034,7 +5034,7 @@ int melee_attack::calc_base_unarmed_damage()
         if (you.has_usable_claws())
         {
             // Claw damage only applies for bare hands.
-            damage += you.has_usable_claws(false) * 2;
+            damage += you.has_claws(false) * 2;
             apply_bleeding = true;
         }
 
