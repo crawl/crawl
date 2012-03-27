@@ -1604,6 +1604,10 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
             if (you.innate_mutations[mutat] >= you.mutation[mutat])
                 continue;
 
+            // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
+            if (mutat && mutat == you.attribute[ATTR_APPENDAGE])
+                continue;
+
             const mutation_def& mdef = get_mutation_def(mutat);
 
             if (random2(10) >= mdef.rarity && !_is_slime_mutation(mutat))
