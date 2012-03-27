@@ -2195,10 +2195,17 @@ void sage_card(int power, deck_rarity_type rarity)
         mpr("You feel omnipotent.");  // All skills maxed.
     else
     {
-        you.set_duration(DUR_SAGE, random2(1800) + 200);
-        you.sage_bonus_skill   = result;
-        you.sage_bonus_degree  = power / 25;
+        int xp = exp_needed(std::min<int>(you.max_level, 27) + 1)
+               - exp_needed(std::min<int>(you.max_level, 27));
+        xp = xp / 10 + random2(xp / 4);
+
+        // There may be concurrent sages for the same skill, with different
+        // bonus multipliers.
+        you.sage_skills.push_back(result);
+        you.sage_xp.push_back(xp);
+        you.sage_bonus.push_back(power / 25);
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
+        dprf("Will redirect %d xp, bonus = %d\n", xp, power / 25);
     }
 }
 

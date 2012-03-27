@@ -2550,7 +2550,6 @@ static void _decrement_durations()
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     }
 
-    _decrement_a_duration(DUR_SAGE, delay, "You feel less studious.");
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 

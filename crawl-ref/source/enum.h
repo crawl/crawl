@@ -1405,7 +1405,9 @@ enum duration_type
     DUR_STEALTH,
     DUR_MAGIC_SHIELD,
     DUR_SLEEP,
+#if TAG_MAJOR_VERSION == 32
     DUR_SAGE,
+#endif
     DUR_TELEPATHY,
     DUR_PETRIFIED,
     DUR_LOWERED_MR,

@@ -1063,8 +1063,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
-    marshallShort(th, you.sage_bonus_skill);
-    marshallInt(th, you.sage_bonus_degree);
     marshallShort(th, you.manual_skill);
     marshallInt(th, you.manual_index);
     marshallByte(th, you.level_type);
@@ -1084,6 +1082,15 @@ static void tag_construct_you(writer &th)
     marshallBoolean(th, you.fishtail);
     marshallInt(th, you.earth_attunement);
     marshallInt(th, you.form);
+
+    j = std::min<int>(you.sage_skills.size(), 32767);
+    marshallShort(th, you.sage_skills.size());
+    for (i = 0; i < (int)you.sage_skills.size(); ++i)
+    {
+        marshallByte(th, you.sage_skills[i]);
+        marshallInt(th, you.sage_xp[i]);
+        marshallInt(th, you.sage_bonus[i]);
+    }
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1797,10 +1804,12 @@ static void tag_read_you(reader &th)
     ASSERT(you.is_undead <= US_SEMI_UNDEAD);
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
-    you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
-    ASSERT(you.sage_bonus_skill <= NUM_SKILLS);
-    you.sage_bonus_degree = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_MULTI_SAGE)
+    {
+        unmarshallShort(th);
+        unmarshallInt(th);
+    }
     if (th.getMinorVersion() >= TAG_MINOR_MANUAL)
     {
 #endif
@@ -1831,6 +1840,27 @@ static void tag_read_you(reader &th)
     you.earth_attunement= unmarshallInt(th);
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT(you.form >= TRAN_NONE && you.form <= LAST_FORM);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MULTI_SAGE)
+    {
+#endif
+    count = unmarshallShort(th);
+    ASSERT(count >= 0 && count <= 32767);
+    you.sage_skills.resize(count, SK_NONE);
+    you.sage_xp.resize(count, 0);
+    you.sage_bonus.resize(count, 0);
+    for (i = 0; i < count; ++i)
+    {
+        you.sage_skills[i] = static_cast<skill_type>(unmarshallByte(th));
+        ASSERT(!is_invalid_skill(you.sage_skills[i]));
+        ASSERT(!is_useless_skill(you.sage_skills[i]));
+        you.sage_xp[i] = unmarshallInt(th);
+        you.sage_bonus[i] = unmarshallInt(th);
+    }
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
 
     // How many you.equip?
     count = unmarshallByte(th);
