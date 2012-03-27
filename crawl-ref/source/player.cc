@@ -2889,11 +2889,11 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         const int old_avail = you.exp_available;
         // Bonus skill training from Sage.
         you.exp_available =
-            (exp_gained * you.sage_bonus[which_sage]) / 100 + exp_gained / 2;
+            div_rand_round(exp_gained * (you.sage_bonus[which_sage] + 50), 100);
         you.sage_xp[which_sage] -= you.exp_available;
         train_skill(skill, you.exp_available);
         you.exp_available = old_avail;
-        exp_gained /= 2;
+        exp_gained = div_rand_round(exp_gained, 2);
 
         if (you.sage_xp[which_sage] <= 0 || you.skills[skill] == 27)
         {
