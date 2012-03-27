@@ -194,6 +194,15 @@ static void _sdump_header(dump_params &par)
         type += " DCSS";
 
     par.text += " " + type + " version " + Version::Long();
+#ifdef USE_TILE_LOCAL
+    par.text += " (tiles)";
+#elif defined(USE_TILE_WEB)
+    if (::tiles.is_controlled_from_web())
+        par.text += " (webtiles)";
+    else
+#else
+    par.text += " (console)";
+#endif
     par.text += " character file.\n\n";
 }
 
