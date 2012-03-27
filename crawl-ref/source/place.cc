@@ -98,9 +98,6 @@ std::string prep_branch_level_name()
 
 int absdungeon_depth(branch_type branch, int subdepth)
 {
-    if (branch >= BRANCH_VESTIBULE_OF_HELL && branch <= BRANCH_LAST_HELL)
-        return subdepth + 27 - (branch == BRANCH_VESTIBULE_OF_HELL);
-
     --subdepth;
     while (branch != NUM_BRANCHES)
     {
