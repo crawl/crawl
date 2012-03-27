@@ -182,10 +182,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         {
             resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
-        hurted = resist_adjust_damage(&you, flavour, resist,
-                                      hurted, true);
+            hurted = resist_adjust_damage(&you, flavour, resist,
+                                          hurted, true);
             if (resist > 0)
-            canned_msg(MSG_YOU_RESIST);
+                canned_msg(MSG_YOU_RESIST);
         }
         else
         {
