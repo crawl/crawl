@@ -2538,21 +2538,24 @@ void wear_id_type(item_def &item)
          item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-// AutoID an equipped ring of teleport.
-// Code copied from fire/ice in spl-cast.cc
-void maybe_id_ring_TC()
+static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
+                            jewellery_type amulet_type = NUM_JEWELLERY,
+                            artefact_prop_type artp = ARTP_NUM_PROPERTIES)
 {
-    if (you.duration[DUR_CONTROL_TELEPORT]
-        || player_mutation_level(MUT_TELEPORT_CONTROL))
-    {
-        return;
-    }
-
     int num_unknown = 0;
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
-        if (i == EQ_AMULET)
+        if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY
+            && artp == ARTP_NUM_PROPERTIES)
+        {
             continue;
+        }
+
+        if (i != EQ_AMULET && ring_type == NUM_JEWELLERY
+            && artp == ARTP_NUM_PROPERTIES)
+        {
+            continue;
+        }
 
         if (player_wearing_slot(i)
             && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
@@ -2561,20 +2564,86 @@ void maybe_id_ring_TC()
         }
     }
 
-    if (num_unknown == 0)
+    if (num_unknown != 1)
         return;
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
-        if (i == EQ_AMULET)
-            continue;
-
         if (player_wearing_slot(i))
         {
-            item_def& ring = you.inv[you.equip[i]];
-            if (ring.sub_type == RING_TELEPORT_CONTROL)
-                wear_id_type(ring);
+            item_def& item = you.inv[you.equip[i]];
+            if (item.sub_type == ring_type || item.sub_type == amulet_type)
+                wear_id_type(item);
+            bool known;
+            if (artp != ARTP_NUM_PROPERTIES && is_artefact(item)
+                && artefact_wpn_property(item, artp, known)
+                && !known)
+            {
+                artefact_wpn_learn_prop(item, artp);
+                mprf("You are wearing: %s",
+                     item.name(DESC_INVENTORY_EQUIP).c_str());
+            }
         }
+    }
+}
+
+// AutoID an equipped ring of teleport.
+void maybe_id_ring_TC()
+{
+    if (you.duration[DUR_CONTROL_TELEPORT]
+        || player_mutation_level(MUT_TELEPORT_CONTROL))
+    {
+        return;
+    }
+
+    _maybe_id_jewel(RING_TELEPORT_CONTROL);
+}
+
+void maybe_id_resist(beam_type flavour)
+{
+    switch (flavour)
+    {
+    case BEAM_FIRE:
+    case BEAM_LAVA:
+        if (player_res_fire(false))
+            return;
+        _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
+        break;
+
+    case BEAM_COLD:
+    case BEAM_ICE:
+        if (player_res_cold(false))
+            return;
+        _maybe_id_jewel(RING_PROTECTION_FROM_COLD, NUM_JEWELLERY, ARTP_COLD);
+        break;
+
+    case BEAM_ELECTRICITY:
+        if (player_res_electricity(false))
+            return;
+        _maybe_id_jewel(NUM_JEWELLERY, NUM_JEWELLERY, ARTP_ELECTRICITY);
+        break;
+
+    case BEAM_POISON:
+    case BEAM_POISON_ARROW:
+        if (player_res_poison(false))
+            return;
+        _maybe_id_jewel(RING_POISON_RESISTANCE, NUM_JEWELLERY, ARTP_POISON);
+        break;
+
+    case BEAM_NEG:
+        if (player_prot_life(false))
+            return;
+        _maybe_id_jewel(RING_LIFE_PROTECTION, AMU_WARDING, ARTP_NEGATIVE_ENERGY);
+        break;
+
+    case BEAM_STEAM:
+        if (player_res_steam(false))
+            return;
+        // rF+ grants rSteam, all possibly unidentified sources of rSteam are rF
+        _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
+        break;
+
+    default: ;
     }
 }
 
