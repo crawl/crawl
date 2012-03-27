@@ -104,7 +104,7 @@ int absdungeon_depth(branch_type branch, int subdepth)
     --subdepth;
     while (branch != NUM_BRANCHES)
     {
-        subdepth += startdepth[branch];
+        subdepth += (branches[branch].mindepth + branches[branch].maxdepth) / 2;
         branch = branches[branch].parent_branch;
     }
     return subdepth;
