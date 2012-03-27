@@ -1626,7 +1626,8 @@ bool delete_mutation(mutation_type which_mutation, const std::string &reason,
             if (you.innate_mutations[mutat] >= you.mutation[mutat])
                 continue;
 
-            if (mutat == you.attribute[ATTR_APPENDAGE])
+            // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
+            if (mutat && mutat == you.attribute[ATTR_APPENDAGE])
                 continue;
 
             const mutation_def& mdef = get_mutation_def(mutat);
