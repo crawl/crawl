@@ -130,7 +130,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_tomb_rare, mons_tomb_level,
       'W', false, true, -10 },
 
-    { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 21, 27, 1,
+    { BRANCH_VESTIBULE_OF_HELL, NUM_BRANCHES, 27, 27, 1,
           BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
       "Hell", "the Vestibule of Hell", "Hell",
