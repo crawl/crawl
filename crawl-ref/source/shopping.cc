@@ -964,7 +964,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 35;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case WPN_ANKUS:
+#endif
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
         case WPN_SABRE:

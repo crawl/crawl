@@ -2809,8 +2809,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_GIANT_SPIKED_CLUB:
         return TILE_WPN_GIANT_SPIKED_CLUB;
 
+#if TAG_MAJOR_VERSION == 32
     case WPN_ANKUS:
         return TILE_WPN_ANKUS;
+#endif
 
     case WPN_WHIP:
         return TILE_WPN_WHIP;

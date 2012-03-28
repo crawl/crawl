@@ -193,9 +193,11 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
+#if TAG_MAJOR_VERSION == 32
     { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON,  1 },
+#endif
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
