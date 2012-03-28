@@ -483,7 +483,8 @@ int mons_standard_level(int mcls)
     case MONS_GARGOYLE:
     case MONS_GIANT_AMOEBA:
     case MONS_KOBOLD_DEMONOLOGIST:
-    case MONS_SKELETON_LARGE: // Higher than actual threat level so that they will still show up in The Vaults
+    // Higher than actual threat level so that they will still show up in The Vaults
+    case MONS_SKELETON_LARGE:
         return 18;
 
     case MONS_GIANT_SLUG:

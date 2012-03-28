@@ -2672,7 +2672,10 @@ int apply_chunked_AC(int dam, int ac)
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->is_player()) ? "you" : act->name(DESC_THE).c_str());
+    {
+        mprf("The portal repels %s, its terrible forces doing untold damage!",
+             act->is_player() ? "you" : act->name(DESC_THE).c_str());
+    }
 
     act->blink(false);
     if (act->is_player())

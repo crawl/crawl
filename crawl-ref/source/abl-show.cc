@@ -1771,8 +1771,11 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_SILVER_STATUE:
     case ABIL_MAKE_CURSE_SKULL:
     case ABIL_MAKE_LIGHTNING_SPIRE:
-        if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
+        if (!create_zotdef_ally(_monster_for_ability(abil),
+            _zd_mons_description_for_ability(abil).c_str()))
+        {
             return (false);
+        }
         break;
     // End ZotDef Allies
 

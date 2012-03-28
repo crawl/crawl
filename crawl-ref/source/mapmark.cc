@@ -651,13 +651,15 @@ map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
 
 map_marker *map_malign_gateway_marker::clone() const
 {
-    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, summoner_string, behaviour, god, power);
+    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos,
+        duration, is_player, summoner_string, behaviour, god, power);
     return (mark);
 }
 
 std::string map_malign_gateway_marker::debug_describe() const
 {
-    return make_stringf("Malign gateway (%d, %s)", duration, is_player ? "player" : "monster");
+    return make_stringf("Malign gateway (%d, %s)", duration,
+                        is_player ? "player" : "monster");
 }
 
 //////////////////////////////////////////////////////////////////////////

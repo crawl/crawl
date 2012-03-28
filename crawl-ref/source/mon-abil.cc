@@ -308,7 +308,8 @@ static void _merge_ench_durations(monster* initial, monster* merge_to, bool useh
     {
         // Does the other creature have this enchantment as well?
         mon_enchant temp = merge_to->get_ench(i->first);
-        bool no_initial = temp.ench == ENCH_NONE;        // If not, use duration 0 for their part of the average.
+        // If not, use duration 0 for their part of the average.
+        bool no_initial = temp.ench == ENCH_NONE;
         int duration = no_initial ? 0 : temp.duration;
 
         i->second.duration = (i->second.duration * initial_count
@@ -2068,8 +2069,10 @@ void move_demon_tentacle(monster* tentacle)
     {
         // This should really never fail for demonic tentacles (they don't
         // have the whole shifting base problem). -cao
-        mprf("tentacle connect failed! What the heck!  severed status %d", tentacle->has_ench(ENCH_SEVERED));
-        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y, old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
+        mprf("tentacle connect failed! What the heck!  severed status %d",
+             tentacle->has_ench(ENCH_SEVERED));
+        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y,
+             old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
 
 //        mgrd(tentacle->pos()) = tentacle->mindex();
 

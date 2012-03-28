@@ -521,7 +521,8 @@ void spirit_fades(monster *spirit)
 /**
  * Determine if a monster is a phoenix.
  *
- * Monsters that were previously phoenixes are not considered phoenixes for phoenix resurrection purposes, I suppose.
+ * Monsters that were previously phoenixes are not considered phoenixes for
+ * phoenix resurrection purposes, I suppose.
  *
  * @param mons      The monster to check.
  * @returns         True if Phoenix, False otherwise.

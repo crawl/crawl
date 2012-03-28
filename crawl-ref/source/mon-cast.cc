@@ -2183,7 +2183,7 @@ static bool _mons_vampiric_drain(monster *mons)
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
         simple_monster_message(mons,
-                               " draws life force from you and is healed!");
+            " draws life force from you and is healed!");
     }
     else
     {
@@ -2191,7 +2191,8 @@ static bool _mons_vampiric_drain(monster *mons)
         const std::string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
         simple_monster_message(mons,
-                               make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
+            make_stringf(" draws life force from %s and is healed!",
+            targname.c_str()).c_str());
         if (mtarget->alive())
             print_wounds(mtarget);
         mons->heal(hp_cost / 2);
@@ -2668,7 +2669,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TROGS_HAND:
     {
         simple_monster_message(mons,
-                               make_stringf(" invokes %s's protection!", god_name(mons->god).c_str()).c_str(),
+                               make_stringf(" invokes %s's protection!",
+                                   god_name(mons->god).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
         const int dur = BASELINE_DELAY
             * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
@@ -3101,7 +3103,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MALIGN_GATEWAY:
         if (!can_cast_malign_gateway())
-            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_THE).c_str(), count_malign_gateways());
+        {
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! "
+                 "Counted %d gateways.", mons->name(DESC_THE).c_str(),
+                 count_malign_gateways());
+        }
         cast_malign_gateway(mons, 200);
         return;
 
