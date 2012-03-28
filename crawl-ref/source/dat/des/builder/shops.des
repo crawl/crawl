@@ -150,7 +150,6 @@ ENDMAP
 # Custom blood shop Vault
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen
-ORIENT:  float
 DEPTH:   D:12-
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
@@ -174,7 +173,6 @@ ENDMAP
 # Custom fishing shop Vault
 NAME:    guppyfry_shop_fishing
 TAGS:    no_monster_gen mini_float
-ORIENT:  float
 DEPTH:   D:4-
 KMONS:   1 = giant goldfish / big fish
 KMONS:   2 = place:Shoals:1
