@@ -3933,7 +3933,10 @@ item_info get_item_info(const item_def& item)
                     found_unmarked = true;
                 }
             }
-            // TODO: this leaks both whether the seen cards are still there and their order: the representation needs to be fixed
+            // TODO: this leaks both whether the seen cards are still there
+            // and their order: the representation needs to be fixed
+
+            // The above comment seems obsolete now that Mark Four is gone.
             for (int i = 0; i < num_cards; ++i)
             {
                 uint8_t flags;
