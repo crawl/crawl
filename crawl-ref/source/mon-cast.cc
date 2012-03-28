@@ -2147,6 +2147,8 @@ void mons_cast_spectral_orcs(monster* mons)
 static bool _mons_vampiric_drain(monster *mons)
 {
     actor *target = mons->get_foe();
+    if (!target)
+        return (false);
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return (false);
     if (target->undead_or_demonic())
