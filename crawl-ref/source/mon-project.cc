@@ -568,7 +568,8 @@ bool boulder_flee(monster *mon, bolt *beam)
 
 static void _boulder_stop(monster& mon, bool msg = true)
 {
-    if (mon.type==MONS_BOULDER_BEETLE) {
+    if (mon.type==MONS_BOULDER_BEETLE)
+    {
         /*
         if (msg)
             simple_monster_message(&mon, " comes to a halt.");
@@ -718,8 +719,10 @@ move_again:
         if (cell_is_solid(pos))
         {
             if (you.see_cell(pos))
+            {
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description(pos, false, DESC_A).c_str());
+            }
             _boulder_stop(mon,you.see_cell(pos));
         }
 
@@ -784,8 +787,8 @@ move_again:
             if (victim->atype() == ACT_PLAYER)
             {
                 mprf("Your %s reflects %s!",
-                    shield->name(DESC_PLAIN).c_str(),
-                    mon.name(DESC_THE, true).c_str());
+                     shield->name(DESC_PLAIN).c_str(),
+                     mon.name(DESC_THE, true).c_str());
                 ident_reflector(shield);
             }
             else if (you.see_cell(pos))
@@ -793,10 +796,10 @@ move_again:
                 if (victim->observable())
                 {
                     mprf("%s reflects %s with %s %s!",
-                        victim->name(DESC_THE, true).c_str(),
-                        mon.name(DESC_THE, true).c_str(),
-                        mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
-                        shield->name(DESC_PLAIN).c_str());
+                         victim->name(DESC_THE, true).c_str(),
+                         mon.name(DESC_THE, true).c_str(),
+                         mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                         shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);
                 }
                 else
@@ -822,7 +825,7 @@ move_again:
 
         if (_boulder_hit(mon, pos))
         {
-            if ((victim && victim->alive()))
+            if (victim && victim->alive())
                 _boulder_stop(mon);
             return (true);
         }
