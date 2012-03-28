@@ -262,6 +262,8 @@ bool melee_attack::handle_phase_attempted()
             int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
             int delay = calc_attack_delay();
             dprf("Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
+            ASSERT(energy > 0);
+            ASSERT(delay > 0);
 
             attacker->as_monster()->speed_increment
                 -= div_rand_round(energy * delay, 10);
