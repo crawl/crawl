@@ -196,11 +196,11 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 #if TAG_MAJOR_VERSION == 32
     { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON,  1 },
+        DAMV_CRUSHING | DAM_PIERCE,  1 },
 #endif
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
@@ -209,13 +209,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
         SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 2 },
+        DAMV_CRUSHING | DAM_PIERCE, 2 },
     { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
@@ -224,7 +224,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
 #if TAG_MAJOR_VERSION == 32
