@@ -43,7 +43,7 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
-#    ASSERTS       -- set to enable assertion checks (implied in debug mode)
+#    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
 #
@@ -60,8 +60,6 @@
 #    them somewhere in the near future.
 
 GAME = crawl
-
-ASSERTS = yes
 
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
@@ -702,7 +700,7 @@ export CCACHE_CPP2 = yes
 endif
 endif
 
-ifdef ASSERTS
+ifndef NOASSERTS
 DEFINES += -DASSERTS
 endif
 
