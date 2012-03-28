@@ -1804,12 +1804,12 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 
 static int _xom_random_stickable(const int HD)
 {
-    int c;
+    unsigned int c;
     // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
     // It has everything but tridents, demon tridents and bardiches, and
     // puts the giant club types at the end as special cases.
-    static const int arr[13] = {
-        WPN_CLUB,    WPN_ANKUS,      WPN_SPEAR,        WPN_HALBERD,
+    static const int arr[] = {
+        WPN_CLUB,    WPN_SPEAR,      WPN_HALBERD,
         WPN_SCYTHE,  WPN_GLAIVE,     WPN_STAFF,        WPN_QUARTERSTAFF,
         WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
         WPN_GIANT_SPIKED_CLUB
@@ -1819,7 +1819,7 @@ static int _xom_random_stickable(const int HD)
     // weapon_rarity also gives us 1-10.
     do
         c = random2(HD);
-    while (c > 11
+    while (c >= ARRAYSZ(arr)
            || random2(HD) > weapon_rarity(arr[c]) && x_chance_in_y(c, HD));
 
     return arr[c];
