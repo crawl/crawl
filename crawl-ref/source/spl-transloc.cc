@@ -819,14 +819,17 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         // There's also a 1-in-6 flat chance of apport failing.
         if (one_chance_in(6))
         {
-            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
-                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks and becomes a dead weight against your magic!",
+                "The orb lets out a furious burst of light and becomes "
+                    "a dead weight against your magic!");
             return SPRET_SUCCESS;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
-            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
-                             "The orb lets out a furious burst of light as your magic touches it!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks as your magic touches it!",
+                "The orb lets out a furious burst of light as your magic touches it!");
         }
     }
 

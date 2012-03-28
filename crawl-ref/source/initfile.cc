@@ -1024,7 +1024,9 @@ void game_options::reset_options()
     stat_colour.clear();
     stat_colour.push_back(std::pair<int, int>(3, RED));
     enemy_hp_colour.clear();
-    enemy_hp_colour.push_back(GREEN); // I think these defaults are pretty ugly but apparently OS X has problems with lighter colours
+    // I think these defaults are pretty ugly but apparently OS X has problems
+    // with lighter colours
+    enemy_hp_colour.push_back(GREEN);
     enemy_hp_colour.push_back(GREEN);
     enemy_hp_colour.push_back(BROWN);
     enemy_hp_colour.push_back(BROWN);

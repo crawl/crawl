@@ -1690,11 +1690,13 @@ static double _get_true_fail_rate(int raw_fail)
         //PIE: the negative term takes the maximum of 100 (or 99) into
         //consideration.  Note that only one term can exceed it in this case,
         //which is why this works.
-        return (double) (_tetrahedral_number(target) - 2*_tetrahedral_number(target-101) - _tetrahedral_number(target-100))/1020100;
+        return (double) (_tetrahedral_number(target)
+                         - 2*_tetrahedral_number(target - 101)
+                         - _tetrahedral_number(target - 100)) / 1020100;
     }
     //The random2avg distribution is symmetric, so the last interval is
     //essentially the same as the first interval.
-    return (double) (1020100 - _tetrahedral_number(300 - target))/1020100;
+    return (double) (1020100 - _tetrahedral_number(300 - target)) / 1020100;
 
 }
 

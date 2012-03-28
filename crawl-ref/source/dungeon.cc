@@ -3420,7 +3420,8 @@ static int _place_uniques(int level_number, level_area_type level_type)
 
 #ifdef DEBUG_UNIQUE_PLACEMENT
     FILE *ostat = fopen("unique_placement.log", "a");
-    fprintf(ostat, "--- Looking to place uniques on: Level %d of %s ---\n", level_number, your_branch().shortname);
+    fprintf(ostat, "--- Looking to place uniques on: Level %d of %s ---\n",
+            level_number, your_branch().shortname);
 #endif
 
     int num_placed = 0;

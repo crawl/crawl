@@ -82,7 +82,8 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
         // Print some explanatory comments. May contain no spaces!
         fprintf(fp, "#Legend:\n");
         fprintf(fp, "#***:equipment/123:index/000:none\n");
-        fprintf(fp, "#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing\n");
+        fprintf(fp, "#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/"
+                    "Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing\n");
         fprintf(fp, "#Sh:Bse:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm:Hal:Enc:Drc:Wng\n");
         char fbuf[80];
         for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
@@ -437,7 +438,8 @@ void save_doll_file(writer &dollf)
 }
 
 #ifdef USE_TILE_LOCAL
-void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
+void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
+                   int x, int y, bool submerged, bool ghost)
 {
     // Ordered from back to front.
     int p_order[TILEP_PART_MAX] =

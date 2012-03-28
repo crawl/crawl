@@ -1274,15 +1274,19 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
-                                is_player ? "" : caster->as_monster()->full_name(DESC_A, true),
-                                is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                is_player ? ""
+                                    : caster->as_monster()->full_name(DESC_A, true),
+                                is_player ? BEH_FRIENDLY
+                                    : attitude_creation_behavior(
+                                      caster->as_monster()->attitude),
                                 god,
                                 pow));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
 
         noisy(10, point);
-        mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
+        mpr("The dungeon shakes, a horrible noise fills the air, and a portal "
+            "to some otherworldly place is opened!", MSGCH_WARN);
 
         if (one_chance_in(5) && caster->is_player())
         {

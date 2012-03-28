@@ -1140,7 +1140,10 @@ static bool _sort_by_first(std::pair<int, FixedVector<int, 28> > a,
 static void _sdump_spell_usage(dump_params &par)
 {
     std::vector<std::pair<int, FixedVector<int, 28> > > usage_vec;
-    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator sp = you.action_count.begin(); sp != you.action_count.end(); ++sp)
+    for (std::map<std::pair<caction_type, int>,
+           FixedVector<int, 27> >::const_iterator sp = you.action_count.begin();
+         sp != you.action_count.end();
+         ++sp)
     {
         if (sp->first.first != CACT_CAST)
             continue;
@@ -1277,7 +1280,9 @@ static void _sdump_action_counts(dump_params &par)
     for (int cact = 0; cact < NUM_CACTIONS; cact++)
     {
         std::vector<std::pair<int, FixedVector<int, 28> > > action_vec;
-        for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac = you.action_count.begin(); ac != you.action_count.end(); ++ac)
+        for (std::map<std::pair<caction_type, int>,
+                                FixedVector<int, 27> >::const_iterator ac =
+                 you.action_count.begin(); ac != you.action_count.end(); ++ac)
         {
             if (ac->first.first != cact)
                 continue;
@@ -1292,7 +1297,9 @@ static void _sdump_action_counts(dump_params &par)
         }
         std::sort(action_vec.begin(), action_vec.end(), _sort_by_first);
 
-        for (std::vector<std::pair<int, FixedVector<int, 28> > >::const_iterator ac = action_vec.begin(); ac != action_vec.end(); ++ac)
+        for (std::vector<std::pair<int, FixedVector<int, 28> > >
+                 ::const_iterator ac = action_vec.begin();
+             ac != action_vec.end(); ++ac)
         {
             if (ac == action_vec.begin())
             {

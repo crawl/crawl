@@ -835,7 +835,8 @@ std::string monster_info::_core_name() const
     return s;
 }
 
-std::string monster_info::_apply_adjusted_description(description_level_type desc, const std::string& s) const
+std::string monster_info::_apply_adjusted_description(description_level_type desc,
+                                                      const std::string& s) const
 {
     if (desc == DESC_ITS)
         desc = DESC_THE;
