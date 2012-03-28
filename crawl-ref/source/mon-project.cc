@@ -584,7 +584,7 @@ static bool _boulder_shielded(monster& mon, actor &victim)
     if (!victim.shield() || victim.incapacitated())
         return (false);
 
-    const int to_hit = 15 + mon.props["iood_pow"].get_short()/12;
+    const int to_hit = 15 + mon.hit_dice/2;
     const int con_block = random2(to_hit + victim.shield_block_penalty());
     const int pro_block = victim.shield_bonus();
     dprf("boulder shield: pro %d, con %d", pro_block, con_block);
