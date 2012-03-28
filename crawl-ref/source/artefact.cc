@@ -989,15 +989,11 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // prot_life - no necromantic brands on weapons allowed
+    // prot_life
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
-        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR)
-        && proprt[ARTP_BRAND] != SPWPN_DRAINING
-        && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
-        && proprt[ARTP_BRAND] != SPWPN_PAIN
-        && proprt[ARTP_BRAND] != SPWPN_REAPING)
+        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR))
     {
         proprt[ARTP_NEGATIVE_ENERGY] = 1;
         power_level++;
