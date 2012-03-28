@@ -6806,6 +6806,14 @@ int player::has_claws(bool allow_tran) const
         if (form == TRAN_BLADE_HANDS)
             return (0);
 
+        // Tentacles from Beastly Appendage override claws, just as the
+        // tentacles mutation overrides the claws mutation.
+        if (form == TRAN_APPENDAGE
+            && you.attribute[ATTR_APPENDAGE] == MUT_TENTACLES)
+        {
+            return (0);
+        }
+
         // Most forms suppress natural claws.
         if (!form_keeps_mutations())
             return (0);
