@@ -284,7 +284,8 @@ static int utf8_write_char(uchar_t unicode, char *out)
 {
     unsigned char *o = (unsigned char*) out;
 
-    ASSERT(unicode <= 0x10FFFF && !(unicode >= 0xD800 && unicode <= 0xDFFF));
+    ASSERT(unicode <= 0x10FFFF);
+    ASSERT(!(unicode >= 0xD800 && unicode <= 0xDFFF)); // UTF-16 surrogates
 
     if (unicode <= 0x7F)
     {
@@ -1052,7 +1053,7 @@ static void emit_value(SB *out, const JsonNode *node)
             emit_object(out, node);
             break;
         default:
-            ASSERT(false);
+            die("invalid JSON tag type");
     }
 }
 
@@ -1080,7 +1081,7 @@ void emit_value_indented(SB *out, const JsonNode *node, const char *space, int i
             emit_object_indented(out, node, space, indent_level);
             break;
         default:
-            ASSERT(false);
+            die("invalid JSON tag type");
     }
 }
 
@@ -1236,7 +1237,7 @@ void emit_string(SB *out, const char *str)
                  * This should never happen when assertions are enabled
                  * due to the assertion at the beginning of this function.
                  */
-                ASSERT(false);
+                die("mangled character");
                 if (escape_unicode)
                 {
                     strcpy(b, "\\uFFFD");
