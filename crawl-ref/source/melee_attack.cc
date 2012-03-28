@@ -256,43 +256,21 @@ bool melee_attack::handle_phase_attempted()
     }
     else
     {
-        // Initial attack causes energy to be used for all attacks.  No
-        // additional energy is used for unarmed attacks.
-        if (effective_attack_number == 0)
-            attacker->lose_energy(EUT_ATTACK);
+        // Only the first attack costs any energy.
+        if (!effective_attack_number)
+        {
+            int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
+            int delay = calc_attack_delay();
+            dprf("Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
+
+            attacker->as_monster()->speed_increment
+                -= div_rand_round(energy * delay, 10);
+        }
 
         // Statues and other special monsters which have AT_NONE need to lose
         // energy, but otherwise should exit the melee attack now.
         if (attk_type == AT_NONE)
             return (false);
-
-        // Monsters lose additional energy only for the first two weapon
-        // attacks; subsequent hits are free.
-        if (effective_attack_number < 1)
-        {
-            final_attack_delay = calc_attack_delay();
-            if (damage_brand == SPWPN_SPEED)
-                final_attack_delay = final_attack_delay / 2 + 1;
-
-            // speed adjustment for weapon-using monsters
-            if (final_attack_delay > 0)
-            {
-                const int atk_speed =
-                    attacker->as_monster()->action_energy(EUT_ATTACK);
-
-                // only get one third penalty/bonus for second weapons.
-                if (effective_attack_number > 0)
-                {
-                    final_attack_delay =
-                        div_rand_round((2 * atk_speed + final_attack_delay), 3);
-                }
-
-                int delta =
-                    div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
-                if (delta > 0)
-                    attacker->as_monster()->speed_increment -= delta;
-            }
-        }
     }
 
     if (attacker != defender)
@@ -3740,7 +3718,13 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
     }
     else
     {
-        return (weapon ? property(*weapon, PWPN_SPEED) : 0);
+        if (!weapon)
+            return 10;
+
+        int delay = property(*weapon, PWPN_SPEED);
+        if (damage_brand == SPWPN_SPEED)
+            delay = (delay + 1) / 2;
+        return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
     }
 
     return (0);
