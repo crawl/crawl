@@ -522,11 +522,10 @@ ENDMAP
 NAME:   guppyfry_wasp_nest
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  Spider
-ORIENT: float
 MONS:   yellow wasp / red wasp / nothing
 SUBST:  - = wW.%
 MAP
-WWxxxxxxxxxxxxxxWW
+@WxxxxxxxxxxxxxxW@
 xWW....WWWW....WWx
 xxWW--WW--WW--WWxx
  xxWWWW1111WWWWxx
