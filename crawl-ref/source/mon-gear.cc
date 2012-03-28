@@ -1853,6 +1853,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         // deliberate fall through {dlb}
 
     case MONS_PALADIN:
+    case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_DONALD:
@@ -1863,12 +1864,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);
-        break;
-
-    case MONS_FREDERICK:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = random_choose(ARM_SCALE_MAIL,   ARM_CHAIN_MAIL,
-                                       ARM_SPLINT_MAIL, -1);
         break;
 
     case MONS_MARGERY:
