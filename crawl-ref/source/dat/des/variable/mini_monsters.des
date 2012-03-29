@@ -1553,7 +1553,6 @@ ENDMAP
 
 # Carrion pond
 # Bad water, a lot of carrion and feeders around, yuck!
-# Has either necrophage or jackal, but the former is more memorable.
 #
 # Perhaps use Sewers style water?
 # Would also be nice if we could make the corpses fit the branch.
@@ -1565,11 +1564,7 @@ DEPTH: Lair: 2-7 , Swamp
 SUBST: ? = %%.
 KITEM: % = any corpse
 : dgn.delayed_decay(_G, '%', 'any corpse')
-: if you.xl() > 8 then
 MONS:  necrophage
-: else
-MONS:  jackal
-: end
 SUBST: ' = 111.
 MAP
  ..'..?..
