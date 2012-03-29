@@ -53,7 +53,7 @@ function callback.boulder_grate_trap_stepped(data, triggerable, triggerer, marke
   -- Use trap position as default target
   local tx, ty = marker:pos()
   -- Check for an explicit target marker
-  local target = dgn.find_marker_positions_by_prop(data.targetname,1)[1]
+  local target = dgn.find_marker_positions_by_prop(data.targetname, 1)[1]
   if target ~= nil then
     tx = target.x
     ty = target.y
@@ -84,12 +84,12 @@ KITEM: ^ = *
 {{
 local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
                                    repeated=true,
-                                   data = {targetname="target", gratename="grate", bouldername="boulder"} }
-tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+                                   data = {targetname="target_run", gratename="grate_run", bouldername="boulder_run"} }
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate",})
 lua_marker('^', tm)
-lua_marker(',', props_marker { grate=1 })
-lua_marker('A', props_marker { boulder=1 })
-lua_marker('B', props_marker { target=1 })
+lua_marker(',', props_marker { grate_run=1 })
+lua_marker('A', props_marker { boulder_run=1 })
+lua_marker('B', props_marker { target_run=1 })
 }}
 KFEAT: AB=floor
 MAP
