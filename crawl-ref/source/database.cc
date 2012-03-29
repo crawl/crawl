@@ -766,6 +766,8 @@ std::string getLongDescription(const std::string &key)
 // god names only
 std::string getWeightedRandomisedDescription(const std::string &key)
 {
+    if (!DescriptionDB.get()) // when called by Gretell's "monster"
+        return "";
     return _query_weighted_randomised(DescriptionDB, key);
 }
 
@@ -841,6 +843,8 @@ std::string getRandNameString(const std::string &itemtype,
 {
     int num_replacements = 0;
 
+    if (!RandartDB.get()) // when called by Gretell's "monster"
+        return "";
     return _getRandomisedStr(RandartDB, itemtype, suffix, num_replacements);
 }
 
