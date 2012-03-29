@@ -107,10 +107,7 @@ static std::string _get_version_information(void)
 {
     std::string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
 
-    result += "\n\n";
-
-    result += "Language selected: " + crawl_state.language_loaded + "\n";
-    result += "Translated databases loaded:" + crawl_state.db_loaded + "\n";
+    result += "\n";
 
     return (result);
 }
