@@ -1156,8 +1156,8 @@ endif
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
-	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
-	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/
+	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
