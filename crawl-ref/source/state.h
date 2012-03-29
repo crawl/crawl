@@ -112,8 +112,6 @@ struct game_state
     // Version of the last character save.
     int minorVersion;
 
-    std::string language_loaded, db_loaded;
-
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();
