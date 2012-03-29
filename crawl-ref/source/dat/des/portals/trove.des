@@ -298,14 +298,10 @@ CHANCE: 5%
 : trove.portal(_G)
 COLOUR: . = blue
 COLOUR: c = blue
-: if you.absdepth() <= 7 then
-# A pack of gnolls want the treasure more than you do!
-KMONS:  e = gnoll
-KMONS:  l = gnoll / nothing w:5
-: elseif you.absdepth() <= 15 then
+: if you.absdepth() <= 15 then
 # Got drafted in from Vaults:8, while the mages try and close the portal down.
 KMONS:  e = vault guard
-: elseif you.absdepth() <= 20 then
+: else
 # And this time he brought some friends...
 KMONS:  e = vault guard
 KMONS:  l = vault guard
