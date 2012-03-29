@@ -21,6 +21,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "random.h"
+#include "state.h"
 #include "stuff.h"
 #include "syscalls.h"
 #include "threads.h"
@@ -259,6 +260,9 @@ bool TextDB::_needs_update() const
         return false;
     }
 
+    if (_lang)
+        crawl_state.db_loaded += std::string(" ") + _db_name;
+
     return (ts != timestamp);
 }
 
@@ -326,6 +330,8 @@ void databaseSystemInit()
     // before 2011-12-28 and this assertion fails, please make sure you have
     // the current version ("git submodule sync;git submodule update --init").
     ASSERT(sqlite3_threadsafe());
+
+    crawl_state.language_loaded = Options.lang;
 
     thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
