@@ -891,6 +891,13 @@ smelly
 w:3
 bronze
 
+w:2
+@_gemstone_@-studded
+
+@_gemstone_@-encrusted
+
+@_precious_metal_@-plated
+
 w:200
 @armour appearance@
 %%%%
@@ -910,6 +917,72 @@ distressingly furry
 
 w:160
 @general appearance@
+%%%%
+_gemstone_
+
+diamond
+
+ruby
+
+jacinth
+
+sapphire
+
+black opal
+
+emerald
+
+turquoise
+
+citrine
+
+aquamarine
+
+amber
+
+topaz
+
+jet
+
+opal
+
+chrysoberyl
+
+garnet
+
+amethyst
+
+jasper
+
+fluorite
+
+obsidian
+
+agate
+
+jade
+
+w:2
+dilithium
+
+adamant
+%%%%
+_precious_metal_
+
+gold
+
+silver
+
+platinum
+
+copper
+
+w:1
+adamantium
+
+orichalcum
+
+starmetal
 %%%%
 ######################################################
 # Jewellery appearance
