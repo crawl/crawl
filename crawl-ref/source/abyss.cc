@@ -302,6 +302,8 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
         {
             mitm[thing_created].plus = RUNE_ABYSSAL;
             item_colour(mitm[thing_created]);
+            if (one_chance_in(ITEM_MIMIC_CHANCE))
+                mitm[thing_created].flags |= ISFLAG_MIMIC;
         }
         move_item_to_grid(&thing_created, chosen_spot);
         return (thing_created != NON_ITEM);
@@ -385,7 +387,11 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
                                       true, items_level, 250);
             move_item_to_grid(&thing_created, place);
             if (thing_created != NON_ITEM)
+            {
                 items_placed++;
+                if (one_chance_in(ITEM_MIMIC_CHANCE))
+                    mitm[thing_created].flags |= ISFLAG_MIMIC;
+            }
         }
     }
 

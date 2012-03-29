@@ -2065,20 +2065,6 @@ static void _ruin_level(Iterator ri,
     }
 }
 
-//#define DEBUG_MIMIC
-#ifdef DEBUG_MIMIC
-// Missing stairs are replaced in fixup_branch_stairs, but replacing
-// too many breaks interlevel connectivity, so we don't use a chance of 1.
-  #define FEATURE_MIMIC_CHANCE 2
-  #define ITEM_MIMIC_CHANCE    1
-  #define FEATURE_MIMIC_DEPTH  1
-  #define ITEM_MIMIC_DEPTH     1
-#else
-  #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    500
-  #define FEATURE_MIMIC_DEPTH   10
-  #define ITEM_MIMIC_DEPTH       7
-#endif
 static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
 {
