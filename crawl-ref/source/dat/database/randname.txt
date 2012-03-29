@@ -896,8 +896,6 @@ w:2
 
 @_gemstone_@-encrusted
 
-@_precious_metal_@-plated
-
 w:200
 @armour appearance@
 %%%%
@@ -961,28 +959,6 @@ obsidian
 agate
 
 jade
-
-w:2
-dilithium
-
-adamant
-%%%%
-_precious_metal_
-
-gold
-
-silver
-
-platinum
-
-copper
-
-w:1
-adamantium
-
-orichalcum
-
-starmetal
 %%%%
 ######################################################
 # Jewellery appearance
