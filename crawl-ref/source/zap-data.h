@@ -505,8 +505,8 @@
 {
     ZAP_STRIKING,
     "force bolt",
-    25,
-    new dicedef_calculator<1, 8, 0, 1>,
+    50,
+    new dicedef_calculator<1, 8, 1, 5>,
     new tohit_calculator<8, 1, 10>,
     BLACK,
     false,
