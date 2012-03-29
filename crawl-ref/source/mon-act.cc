@@ -1937,7 +1937,13 @@ void handle_noattack_constrictions(actor *attacker)
         {
             // Constriction should have stopped the moment the actors
             // became non-adjacent.
-            ASSERT(adjacent(attacker->pos(), defender->pos()));
+            if (!adjacent(attacker->pos(), defender->pos()))
+            {
+                // Yet disabling constriction by hand in every single place
+                // is too error-prone.
+                attacker->stop_constricting(defender->mindex(), false);
+                continue;
+            }
 
             int damage;
 
