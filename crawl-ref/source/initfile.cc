@@ -2199,6 +2199,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = "de";
         else if (field == "fr" || field == "french" || field == "français")
             lang = "fr";
+        else if (field == "en" || field == "english")
+            lang = 0;
         else
         {
             report_error(make_stringf("No translations for language: %s\n",
