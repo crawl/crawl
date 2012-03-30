@@ -328,6 +328,9 @@ static const char* german[][4] =
 
 void translate(std::string &str)
 {
+    if (!Options.lang)
+        return;
+
     const char* (*repl)[4];
 
     if (!strcmp(Options.lang, "dwarven"))
