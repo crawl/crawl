@@ -2199,6 +2199,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = "de";
         else if (field == "fr" || field == "french" || field == "français")
             lang = "fr";
+        else if (field == "dwarven" || field == "dwarf")
+            lang = "dwarven";
+        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
+            lang = "jägerkin";
+        else if (field == "lisp" || field == "lithp")
+            lang = "lisp";
         else if (field == "en" || field == "english")
             lang = 0;
         else

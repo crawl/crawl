@@ -216,6 +216,7 @@ target.o \
 teleport.o \
 terrain.o \
 transform.o \
+translate.o \
 traps.o \
 travel.o \
 tutorial.o \
