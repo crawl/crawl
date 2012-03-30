@@ -7,6 +7,7 @@
 #define DESCRIBE_TEMPLATES_H
 
 #include "describe.h"
+#include "translate.h"
 
 template<class T> void process_description(T &proc, const describe_info &inf);
 template<class T> void process_quote(T &proc, const describe_info &inf);
@@ -22,27 +23,28 @@ inline void process_description(T &proc, const describe_info &inf)
     const          int height     = proc.height();
 
     std::string desc;
+    // most stuff goes through translate() twice unnecessarily, yadda yadda yadda
 
     // How many lines is the title; we also seem to be adding 1 to
     // start with.
-    int num_lines = count_desc_lines(inf.title, line_width) + 1;
+    int num_lines = count_desc_lines(translated(inf.title), line_width) + 1;
 
-    int body_lines   = count_desc_lines(inf.body.str(), line_width);
-    const int suffix_lines = count_desc_lines(inf.suffix, line_width);
-    const int prefix_lines = count_desc_lines(inf.prefix, line_width);
-    const int footer_lines = count_desc_lines(inf.footer, line_width)
+    int body_lines   = count_desc_lines(translated(inf.body.str()), line_width);
+    const int suffix_lines = count_desc_lines(translated(inf.suffix), line_width);
+    const int prefix_lines = count_desc_lines(translated(inf.prefix), line_width);
+    const int footer_lines = count_desc_lines(translated(inf.footer), line_width)
                              + (inf.footer.empty() ? 0 : 1);
 
     if (inf.title.empty())
     {
-        desc = inf.body.str();
+        desc = translated(inf.body.str());
         // There is a default 1 line addition for some reason.
         num_lines = body_lines + 1;
     }
     else
     {
-        desc = inf.title + "\n\n";
-        desc += inf.body.str();
+        desc = translated(inf.title) + "\n\n";
+        desc += translated(inf.body.str());
         // Got 2 lines from the two \ns that weren't counted yet.
         num_lines += body_lines + 2;
     }
@@ -50,14 +52,14 @@ inline void process_description(T &proc, const describe_info &inf)
     // Prefer the footer over the suffix.
     if (num_lines + suffix_lines + footer_lines <= height)
     {
-        desc = desc + inf.suffix;
+        desc = desc + translated(inf.suffix);
         num_lines += suffix_lines;
     }
 
     // Prefer the footer over the prefix.
     if (num_lines + prefix_lines + footer_lines <= height)
     {
-        desc = inf.prefix + desc;
+        desc = translated(inf.prefix) + desc;
         num_lines += prefix_lines;
     }
 
@@ -70,7 +72,7 @@ inline void process_description(T &proc, const describe_info &inf)
         if (newlines >= 0)
         {
             desc.append(newlines, '\n');
-            desc = desc + inf.footer;
+            desc = desc + translated(inf.footer);
         }
     }
 

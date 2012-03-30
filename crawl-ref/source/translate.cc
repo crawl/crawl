@@ -344,3 +344,9 @@ void translate(std::string &str)
     for (; **repl; repl++)
         _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
 }
+
+std::string translated(std::string str)
+{
+    translate(str);
+    return str;
+}
