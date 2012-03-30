@@ -11,14 +11,12 @@ function boulder_generate(x, y, targetx, targety)
   local boulder = dgn.create_monster(x, y, 'generate_awake boulder beetle')
 
   -- Set x, y, velocity
-  x = x - 0.5
-  y = y - 0.5
-  targetx = targetx - 0.5
-  targety = targety - 0.5
+  local tx = targetx - x
+  local ty = targety - y
   boulder.set_prop("boulder_x",x)
   boulder.set_prop("boulder_y",y)
-  boulder.set_prop("boulder_vx",targetx - x)
-  boulder.set_prop("boulder_vy",targety - y)
+  boulder.set_prop("boulder_vx",tx)
+  boulder.set_prop("boulder_vy",ty)
   -- Let it roll!
   boulder.add_ench("rolling",1,50)
 
