@@ -789,143 +789,8 @@ static void _xom_acquirement(object_class_type force_class)
     stop_running();
 }
 
-static object_class_type _get_unrelated_wield_class(object_class_type ref)
-{
-    object_class_type objtype = OBJ_WEAPONS;
-    if (ref == OBJ_WEAPONS)
-    {
-        if (one_chance_in(10))
-            objtype = OBJ_MISCELLANY;
-        else
-            objtype = OBJ_STAVES;
-    }
-    else if (ref == OBJ_STAVES)
-    {
-        if (one_chance_in(10))
-            objtype = OBJ_MISCELLANY;
-        else
-            objtype = OBJ_WEAPONS;
-    }
-    else
-    {
-        const int temp_rand = random2(3);
-        objtype = (temp_rand == 0) ? OBJ_WEAPONS :
-                  (temp_rand == 1) ? OBJ_STAVES
-                                   : OBJ_MISCELLANY;
-    }
-
-    return (objtype);
-}
-
-// Gift an item the player can't currently use.  It can still be really
-// good or even acquirement level.
-static bool _xom_annoyance_gift(int power, bool debug = false)
-{
-    god_acting gdact(GOD_XOM);
-
-    if (coinflip() && player_in_a_dangerous_place())
-    {
-        const item_def *weapon = you.weapon();
-
-        // Xom has a sense of humour.
-        if (coinflip() && weapon && weapon->cursed())
-        {
-            if (debug)
-                return (true);
-
-            // If you are wielding a cursed item then Xom will give you
-            // an item of that same type.  Ha ha!
-            god_speaks(GOD_XOM, _get_xom_speech("cursed gift").c_str());
-            if (coinflip())
-                // For added humour, give the same sub-type.
-                _xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
-            else
-                _xom_acquirement(weapon->base_type);
-            return (true);
-        }
-
-        const item_def *gloves = you.slot_item(EQ_GLOVES, true);
-        if (coinflip() && gloves && gloves->cursed())
-        {
-            if (debug)
-                return (true);
-
-            // If you are wearing cursed gloves, then Xom will give you
-            // a ring.  Ha ha!
-            god_speaks(GOD_XOM, _get_xom_speech("cursed gift").c_str());
-            _xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
-            return (true);
-        };
-
-        const item_def *amulet = you.slot_item(EQ_AMULET, true);
-        if (coinflip() && amulet && amulet->cursed())
-        {
-            if (debug)
-                return (true);
-
-            // If you are wearing a cursed amulet, then Xom will give
-            // you an amulet.  Ha ha!
-            god_speaks(GOD_XOM, _get_xom_speech("cursed gift").c_str());
-            _xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
-            return (true);
-        };
-
-        const item_def *left_ring = you.slot_item(EQ_LEFT_RING, true);
-        const item_def *right_ring = you.slot_item(EQ_RIGHT_RING, true);
-        if (you.species != SP_OCTOPODE && coinflip() && ((left_ring && left_ring->cursed())
-                           || (right_ring && right_ring->cursed())))
-        {
-            if (debug)
-                return (true);
-
-            // If you are wearing a cursed ring, then Xom will give you
-            // a ring.  Ha ha!
-            god_speaks(GOD_XOM, _get_xom_speech("ring gift").c_str());
-            _xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
-            return (true);
-        }
-
-        if (one_chance_in(5) && weapon)
-        {
-            if (debug)
-                return (true);
-
-            // Xom will give you a wielded item of a type different from
-            // what you are currently wielding.
-            god_speaks(GOD_XOM, _get_xom_speech("weapon gift").c_str());
-
-            const object_class_type objtype =
-                _get_unrelated_wield_class(weapon->base_type);
-
-            if (x_chance_in_y(power, 256))
-                _xom_acquirement(objtype);
-            else
-                _xom_make_item(objtype, OBJ_RANDOM, power * 3);
-            return (true);
-        }
-    }
-
-    const item_def *cloak = you.slot_item(EQ_CLOAK, true);
-    if (coinflip() && cloak && cloak->cursed())
-    {
-        // If you are wearing a cursed cloak, then Xom will give you a
-        // cloak or body armour.  Ha ha!
-        god_speaks(GOD_XOM, _get_xom_speech("armour gift").c_str());
-        _xom_make_item(OBJ_ARMOUR,
-                       one_chance_in(10) ? ARM_CLOAK :
-                                get_random_body_armour_type(power * 2),
-                       power * 3);
-        return (true);
-    }
-
-    return (false);
-}
-
 static int _xom_give_item(int power, bool debug = false)
 {
-    if (_xom_annoyance_gift(power, debug))
-        return (XOM_GOOD_ANNOYANCE_GIFT);
-
     if (!debug)
         god_speaks(GOD_XOM, _get_xom_speech("general gift").c_str());
 
@@ -941,7 +806,8 @@ static int _xom_give_item(int power, bool debug = false)
 
         const object_class_type types[] = {
             OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
-            OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD
+            OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD,
+            OBJ_MISSILES
         };
         god_acting gdact(GOD_XOM);
         _xom_acquirement(RANDOM_ELEMENT(types));
@@ -2419,22 +2285,20 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_change_scenery(debug);
     else if (x_chance_in_y(8, sever))
         done = _xom_snakes_to_sticks(sever, debug);
-    else if (x_chance_in_y(9, sever))
-        done = _xom_give_item(sever, debug);
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(10) && x_chance_in_y(10, sever))
+    else if (tension > random2(10) && x_chance_in_y(9, sever))
         done = _xom_send_allies(sever, debug);
-    else if (tension > random2(8) && x_chance_in_y(11, sever))
+    else if (tension > random2(8) && x_chance_in_y(10, sever))
         done = _xom_animate_monster_weapon(sever, debug);
-    else if (x_chance_in_y(12, sever))
+    else if (x_chance_in_y(11, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
-    else if (x_chance_in_y(13, sever))
+    else if (x_chance_in_y(12, sever))
         done = _xom_inner_flame(debug);
-    else if (tension > 0 && x_chance_in_y(14, sever))
+    else if (tension > 0 && x_chance_in_y(13, sever))
         done = _xom_rearrange_pieces(sever, debug);
-    else if (random2(tension) < 15 && x_chance_in_y(15, sever))
+    else if (random2(tension) < 15 && x_chance_in_y(14, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(16, sever))
+    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(15, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2477,7 +2341,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = XOM_GOOD_TELEPORT;
     }
-    else if (random2(tension) < 5 && x_chance_in_y(17, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(16, sever))
     {
         if (debug)
             return (XOM_GOOD_VITRIFY);
@@ -2491,12 +2355,12 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             done = XOM_GOOD_VITRIFY;
         }
     }
-    else if (random2(tension) < 5 && x_chance_in_y(18, sever)
+    else if (random2(tension) < 5 && x_chance_in_y(17, sever)
              && x_chance_in_y(16, how_mutated()))
     {
         done = _xom_give_mutations(true, debug);
     }
-    else if (tension > 0 && x_chance_in_y(19, sever))
+    else if (tension > 0 && x_chance_in_y(18, sever))
         done = _xom_throw_divine_lightning(debug);
 
     return (done);
@@ -4258,7 +4122,7 @@ static const std::string _xom_effect_to_name(int effect)
         // good acts
         "nothing", "potion", "spell (tension)", "spell (no tension)",
         "divination", "confuse monsters", "single ally",
-        "animate monster weapon", "annoyance gift", "random item gift",
+        "animate monster weapon", "random item gift",
         "acquirement", "summon allies", "polymorph", "swap monsters",
         "teleportation", "vitrification", "mutation", "lightning",
         "change scenery", "snakes to sticks", "inner flame monsters",
