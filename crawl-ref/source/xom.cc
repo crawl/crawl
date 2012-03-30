@@ -2826,7 +2826,7 @@ static int _xom_lose_stats(bool debug = false)
         return (XOM_BAD_STATLOSS);
 
     stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int       max  = 1; //was 3
+    int       max  = 2; // was 3
 
     // Don't kill the player unless Xom is being nasty.
     if (!_xom_feels_nasty())
@@ -2845,9 +2845,9 @@ static int _xom_lose_stats(bool debug = false)
         {
             int idx = random2(3);
             stat = types[idx];
-            max  = std::min(3, vals[idx] - 1);
+            max  = std::min(max, vals[idx] - 1);
         }
-        while (max < 2 && (++tries < 30));
+        while (max < 1 && (++tries < 30));
 
         if (tries >= 30)
             return (XOM_DID_NOTHING);
