@@ -710,6 +710,194 @@ xW...WW...Wx
 W....WW....W
 ENDMAP
 
+NAME:   nicolae_trapdoor_corridor
+DEPTH:  Spider:1-3
+MONS:   trapdoor spider
+SUBST:  z = ....***
+NSUBST: ! = 1:^ / *:.
+NSUBST: ' = 1:^ / *:.
+KFEAT:  * = shaft trap w:40 / web / floor
+KFEAT:  ^ = known shaft trap
+MAP
+xxxxxxxxxxxxx
+@!.1.xxzzzzxxx
+@!.1.zzz1zzz.xxx
+xxx.zzzxxzz.1.'@
+  xxzzzzzzxx1.'@
+   xxzz1zzxxxxxx
+    xxzzzxx
+     xxxxx
+ENDMAP
+
+NAME:   nicolae_orb_island
+DEPTH:  Spider:2-5
+TAGS:   no_pool_fixup mini_float
+MONS:   generate_awake orb spider
+KPROP:  1'z = no_rtele_into
+KMASK:  w = no_monster_gen
+SUBST:  z = x
+MAP
+        ..
+      ......
+    ....x.....
+   ..........w...
+  ....x.www........
+  ...x..wwwwwww.....
+ ...w...w1''1www....
+ .......w'z''www.x...
+...w...ww'''zzww.....
+....wwww1'''1wwww.....
+ .....ww'zz''ww'ww...
+ ...x.ww''''www'x..w.
+  ..w.wwww'1wwwwx....
+  ....xwwwwwww.......
+   ........ww.w.....
+    w..............
+     ...xx.......
+      ........w
+       .....
+ENDMAP
+
+NAME: nicolae_orb_outpost
+DEPTH: Spider:2-5
+WEIGHT: 3
+TAGS: no_pool_fixup no_monster_gen mini_float
+MONS: generate_awake orb spider
+KPROP: 1' = no_rtele_into
+MAP
+    .....
+  .........
+ ...........
+ ...........
+....wwwww....
+....w1'1w....
+....w'''w....
+....w1'1w....
+....wwwww....
+ ...........
+ ...........
+  .........
+    .....
+ENDMAP
+
+NAME:   nicolae_orb_stairs
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  Spider:2-5
+MONS:   orb spider / nothing w:8
+SUBST:  s = x.
+SUBST:  w = www^
+SUBST:  . = ...^
+KFEAT:  ^ = web / floor
+SHUFFLE: [{(
+MAP
+ ssss@@@ssss
+sssxs^^^sxsss
+ssx...1...xss
+sx.1.www.1.xs
+ss..^...^..ss
+@^.w.....w.^@
+@^1w..[..w1^@
+@^.w.....w.^@
+ss..^...^..ss
+sx.1.www.1.xs
+ssx...1...xss
+sssxs^^^sxsss
+ ssss@@@ssss
+ENDMAP
+
+NAME:   nicolae_spider_nook
+DEPTH:  Spider
+TAGS:   no_monster_gen
+MONS:   wolf spider / redback / trapdoor spider / jumping spider / spider
+KITEM:  d = | w:5 / * w:20 / $
+KMONS:  d = orb spider
+MAP
+   xx+xx
+  xx.x.xx
+ xx1x1x1xx
+xx.x.x.x.xx
+x1x1x1x1x1x
+xx.x.x.x.xx
+ xx1x1x1xx
+  xxdxdxx
+   xx*xx
+    xxx
+ENDMAP
+
+# Demonic crawler nest, maybe with a demonic farmer
+NAME:   nicolae_crawler_farm
+DEPTH:  Spider
+TAGS:   no_monster_gen patrolling no_trap_gen mini_float
+MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
+        iron imp w:10 / nothing w:50
+MONS:   demonic crawler
+KPROP:  d' = no_rtele_into
+SUBST:  d = c
+NSUBST: c = 6:2 / *:.
+MAP
+    xxxxx
+  xxxxxxxxx
+  xxdl..ldxx
+  xlll.cl'dx
+ xxlc...ldxx
+ xx..l1.lxxx
+ xxc.ll.xxxx
+ xxl...cxxx..
+  xxcl..lxx...
+  xxxc....l...
+   xxxxl......
+     xxxxlllx
+       xxxxx
+ENDMAP
+
+NAME:   nicolae_spider_shape
+DEPTH:  Spider
+TAGS:   mini_float
+MAP
+ ...........
+ .xxx...xxx.
+.....x0x.....
+.xxx0xxx0xxx.
+...0xxxxx....
+....xxxxx0...
+.xxx0xxx0xxx.
+.....x0x.....
+ .xxx...xxx.
+ ...........
+ENDMAP
+
+NAME:   nicolae_arachne_temple
+DEPTH:  Spider:2-5
+TAGS:   no_item_gen no_monster_gen no_trap_gen mini_float
+MONS:   spider, tarantella, wolf spider, redback, jumping spider
+FTILE:  -2 = FLOOR_SANDSTONE
+FTILE:  'A435 = FLOOR_LIMESTONE
+COLOUR: -2 = brown
+COLOUR: 'A435 = yellow
+KFEAT:  -' = web / floor w:40
+KMONS:  A = Arachne, orb spider
+MAP
+         .1.
+        cc'cc
+    1.cc5'''5cc..
+   .'c''--'--''c'1
+   .c'--2-3-2--'c.
+   c'-'-'''''-'-'c
+   c'--'--'--'--'c
+  c5-2'-'-'-'-'2-5c
+ .c'--'--4'4--'--'c.
+ 1'''3''''A''''3'''1
+ .c'--'--4'4--'--'c.
+  c5-2'-'-'-'-'2-5c
+   c'--'--'--'--'c
+   c'-'-'''''-'-'c
+   .c'--2-3-2--'c.
+   1'c''--'--''c'.
+    ..cc5'''5cc.1
+        cc'cc
+         .1.
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
