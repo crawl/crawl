@@ -198,9 +198,10 @@ bool xom_is_nice(int tension)
         // At high tension Xom is more likely to be nice, at zero
         // tension the opposite.
         const int tension_bonus
-            = (tension == -1 ? 0 :
-               tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety) / 2,
-                                         you.piety / 10)
+            = (tension == -1 ? 0 // :
+// Xom needs to be less negative
+//              : tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety) / 2,
+//                                         you.piety / 10)
                              : std::min((MAX_PIETY - you.piety) / 2,
                                         random2(tension)));
 
@@ -285,59 +286,63 @@ void xom_is_stimulated(int maxinterestingness, const std::string& message,
 
 void xom_tick()
 {
-    // Xom semi-randomly drifts your piety.
-    const std::string old_xom_favour = describe_xom_favour();
-    const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
-                                                  : you.piety > HALF_MAX_PIETY);
-    int size = abs(you.piety - HALF_MAX_PIETY);
+     // Xom now ticks every action, not every 20 turns.
+     if (x_chance_in_y(1, 20))
+     {
+        // Xom semi-randomly drifts your piety.
+        const std::string old_xom_favour = describe_xom_favour();
+        const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
+                                                      : you.piety > HALF_MAX_PIETY);
+        int size = abs(you.piety - HALF_MAX_PIETY);
 
-    // Piety slowly drifts towards the extremes.
-    const int delta = piety_scale(x_chance_in_y(511, 1000) ? 1 : -1);
-    size += delta;
-    if (size > HALF_MAX_PIETY)
-        size = HALF_MAX_PIETY;
-
-    you.piety = HALF_MAX_PIETY + (good ? size : -size);
-    std::string new_xom_favour = describe_xom_favour();
-    if (old_xom_favour != new_xom_favour)
-    {
-        // If we entered another favour state, take a big step into
-        // the new territory, to avoid oscillating favour announcements
-        // every few turns.
-        size += delta * 8;
+        // Piety slowly drifts towards the extremes.
+        const int delta = piety_scale(x_chance_in_y(511, 1000) ? 1 : -1);
+        size += delta;
         if (size > HALF_MAX_PIETY)
             size = HALF_MAX_PIETY;
 
-        // If size was 0 to begin with, it may become negative, but that
-        // doesn't really matter.
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
-    }
+        std::string new_xom_favour = describe_xom_favour();
+        if (old_xom_favour != new_xom_favour)
+        {
+            // If we entered another favour state, take a big step into
+            // the new territory, to avoid oscillating favour announcements
+            // every few turns.
+            size += delta * 8;
+            if (size > HALF_MAX_PIETY)
+                size = HALF_MAX_PIETY;
 
+            // If size was 0 to begin with, it may become negative, but that
+            // doesn't really matter.
+            you.piety = HALF_MAX_PIETY + (good ? size : -size);
+        }
 #ifdef DEBUG_DIAGNOSTICS
-    snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
-             delta, you.piety);
-    take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+        snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
+                 delta, you.piety);
+        take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
 #endif
 
-    // ...but he gets bored...
-    if (you.gift_timeout > 0 && coinflip())
-        you.gift_timeout--;
+        // ...but he gets bored...
+        if (you.gift_timeout > 0 && coinflip())
+           you.gift_timeout--;
 
-    new_xom_favour = describe_xom_favour();
-    if (old_xom_favour != new_xom_favour)
-    {
-        const std::string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-        //updating piety status line
-        you.redraw_title = true;
-    }
+        new_xom_favour = describe_xom_favour();
+        if (old_xom_favour != new_xom_favour)
+        {
+            const std::string msg = "You are now " + new_xom_favour;
+            god_speaks(you.religion, msg.c_str());
+            //updating piety status line
+            you.redraw_title = true;
+        }
 
-    if (you.gift_timeout == 1)
-    {
+        if (you.gift_timeout == 1)
+        {
         simple_god_message(" is getting BORED.");
         //updating piety status line
         you.redraw_title = true;
+        }
     }
+
 
     if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
     {
@@ -348,14 +353,14 @@ void xom_tick()
                             tension <= 20 ? 4
                                           : 5);
 
-        // If Xom is bored, the chances for Xom acting are reversed.
-        if (!you.gift_timeout && x_chance_in_y(5 - chance, 5))
+        // If Xom is bored, the chances for Xom acting are sort of reversed.
+        if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
             xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
-                 && x_chance_in_y(chance - 1, 4))
+                 && x_chance_in_y(chance - 1, 80))
         {
             // During tension, Xom may briefly forget about being bored.
             const int interest = random2(chance * 15);
@@ -377,10 +382,12 @@ void xom_tick()
             }
         }
 
-        if (x_chance_in_y(chance, 5))
+        if (x_chance_in_y(chance*chance, 100))
             xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
     }
 }
+
+
 
 // Picks 100 random grids from the level and checks whether they've been
 // marked as seen (explored) or known (mapped).  If seen_only is true,
@@ -1157,7 +1164,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 
 static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 {
-    const int roll = random2(1000 - (MAX_PIETY - sever) * 3);
+    const int roll = random2(1000 - (MAX_PIETY - sever) * 5);
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
@@ -1319,7 +1326,7 @@ static int _xom_send_allies(int sever, bool debug = false)
     numdemons = std::min(numdemons + 2, 16);
 
     // Limit number of demons by experience level.
-    const int maxdemons = (you.experience_level * 3);
+    const int maxdemons = (you.experience_level);
     if (numdemons > maxdemons)
         numdemons = maxdemons;
 
@@ -2955,7 +2962,7 @@ static int _xom_lose_stats(bool debug = false)
         return (XOM_BAD_STATLOSS);
 
     stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int       max  = 3;
+    int       max  = 1; //was 3
 
     // Don't kill the player unless Xom is being nasty.
     if (!_xom_feels_nasty())
@@ -3452,7 +3459,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
         {
-            const int maxdemons = (you.experience_level * 2);
+            const int maxdemons = (you.experience_level / 2);
             if (numdemons > maxdemons)
                 numdemons = maxdemons;
         }
@@ -3923,7 +3930,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const bool was_bored = _xom_is_bored();
-    const bool good_act = niceness && !one_chance_in(20);
+    const bool good_act = niceness;// && !one_chance_in(20);
     int result = XOM_DID_NOTHING;
     if (good_act)
     {
