@@ -6,6 +6,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "showsymb.h"
+#include "translate.h"
 #include "unicode.h"
 #include "viewchar.h"
 
@@ -506,6 +507,13 @@ void formatted_string::capitalize()
             ops[i].text = uppercase_first(ops[i].text);
             break;
         }
+}
+
+void formatted_string::translate()
+{
+    for (unsigned int i = 0; i < ops.size(); i++)
+        if (ops[i].type == FSOP_TEXT)
+            ::translate(ops[i].text);
 }
 
 int count_linebreaks(const formatted_string& fs)

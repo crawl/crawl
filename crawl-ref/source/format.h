@@ -33,6 +33,7 @@ public:
     void del_char();
     void all_caps();
     void capitalize();
+    void translate();
 
     void clear();
     bool empty();
