@@ -3862,7 +3862,8 @@ void handle_god_time()
         switch (you.religion)
         {
         case GOD_XOM:
-            xom_tick();
+// Moved to _player_reacts()
+//            xom_tick();
             return;
 
         case GOD_ELYVILON:

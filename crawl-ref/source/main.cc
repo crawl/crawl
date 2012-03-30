@@ -3082,6 +3082,11 @@ static void _player_reacts()
     seen_monsters_react();
 
     update_stat_zero();
+
+    // XOM now ticks from here, to increase his reaction time to tension.
+    if (you.religion = GOD_XOM)
+       xom_tick();
+
 }
 
 // Ran after monsters and clouds get to act.
