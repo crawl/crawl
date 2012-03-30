@@ -45,6 +45,7 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "transform.h"
+#include "translate.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -806,7 +807,7 @@ void print_stats(void)
     if (you.redraw_title)
     {
         you.redraw_title = false;
-        _redraw_title(you.your_name, player_title());
+        _redraw_title(you.your_name, translated(player_title()));
     }
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
