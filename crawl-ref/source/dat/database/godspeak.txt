@@ -36,57 +36,8 @@ Xom grants you an implement of some kind.
 "Take this token of my esteem."
 
 Xom smiles on you.
-%%%%
-# Xom will give you a ring or amulet you can't currently use, due to
-# cursed equipment.
-Xom cursed gift
-
-"Perhaps you should try this instead."
-
-"Maybe this would work better."
 
 "Catch!"
-
-w:1
-"Vanity is a pleasure."
-%%%%
-# If you're wearing a cursed ring, Xom will give you another ring.
-Xom ring gift
-
-"Try this."
-
-"Take this!"
-
-"Catch!"
-
-w:1
-"There is a nice ring to it."
-%%%%
-# Xom will choose a weapon of a different subtype from the one you're
-# currently wielding.
-Xom weapon gift
-
-"Perhaps you should try this instead."
-
-"Have you considered using one of these?"
-
-"How about this?"
-
-w:1
-"Variety is the spice of life."
-%%%%
-# If you're wearing a cursed cloak, Xom will give you either a cloak
-# or body armour.
-Xom armour gift
-
-"Perhaps you should try this instead."
-
-"Have you considered wearing one of these?"
-
-"Here you go."
-
-w:1
-"It's marvellous!"
 %%%%
 ####################
 # friendly summons
