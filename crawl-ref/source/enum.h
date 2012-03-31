@@ -569,6 +569,7 @@ enum cloud_type
 #if TAG_MAJOR_VERSION == 32
     CLOUD_PETRIFY,
 #endif
+    CLOUD_DUST_TRAIL,
     NUM_CLOUD_TYPES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
@@ -1520,6 +1521,7 @@ enum enchant_type
     ENCH_ROUSED,        // Monster has been roused to greatness
     ENCH_BREATH_WEAPON, // just a simple timer for dragon breathweapon spam
     ENCH_DEATHS_DOOR,
+    ENCH_ROLLING,       // Boulder Beetle in ball form
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

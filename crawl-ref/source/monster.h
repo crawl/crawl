@@ -373,6 +373,7 @@ public:
     bool withdrawn() const {return has_ench(ENCH_WITHDRAWN);};
     int warding() const;
 
+    bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
     bool has_unholy_spell() const;

@@ -144,6 +144,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BREATH_WEAPON;
     case ENCH_DEATHS_DOOR:
         return MB_DEATHS_DOOR;
+    case ENCH_ROLLING:
+        return MB_ROLLING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1339,6 +1341,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("standing in death's doorway");
     if (is(MB_REGENERATION))
         v.push_back("regenerating");
+    if (is(MB_ROLLING))
+        v.push_back("rolling");
     return v;
 }
 
