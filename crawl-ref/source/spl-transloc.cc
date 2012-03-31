@@ -219,7 +219,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+            if (!wizard_blink)
+                place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -562,7 +564,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+                if (!wizard_tele)
+                    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 move_player_to_grid(pos, false, true);
 
