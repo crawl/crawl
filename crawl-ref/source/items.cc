@@ -2230,7 +2230,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (you.inv[item_dropped].base_type == OBJ_ORBS)
     {
-        mpr("The orb refuses to be left behind!", MSGCH_ORB);
+        mpr("You don't feel like leaving the orb behind!");
         return (false);
     }
 
