@@ -74,7 +74,7 @@ end
 # (or destroy it)
 #
 NAME:   boulder_corridor_run
-DEPTH:  Lair:1-6
+DEPTH:  D:8-13
 TAGS:   luniq_boulder_trap no_monster_gen
 ORIENT: float
 KFEAT: ^ = pressure plate trap
@@ -104,7 +104,7 @@ ENDMAP
 #
 NAME:   boulder_dual_corridor_run
 DEPTH:  Lair:3-8
-TAGS:   luniq_boulder_trap no_monster_gen
+TAGS:   luniq_boulder_trap no_monster_gen ruin_lair
 ORIENT: float
 KFEAT: ^ = pressure plate trap
 KITEM: ^ = *
