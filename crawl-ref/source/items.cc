@@ -2228,6 +2228,12 @@ bool drop_item(int item_dropped, int quant_drop)
         return (false);
     }
 
+    if (you.inv[item_dropped].base_type == OBJ_ORBS)
+    {
+        mpr("The orb refuses to be left behind!", MSGCH_ORB);
+        return (false);
+    }
+
     if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
         && you.inv[item_dropped].cursed())
