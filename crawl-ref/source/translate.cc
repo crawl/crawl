@@ -257,6 +257,7 @@ static void _german(std::string &txt)
                 break;
             case 'e': case 'i': case 'y':
                 txt[i] = isalower(txt[i]) ? 's' : 'S';
+                break;
             default:
                 txt[i] = isalower(txt[i]) ? 'k' : 'K';
             }
