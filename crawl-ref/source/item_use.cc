@@ -1263,6 +1263,11 @@ static bool _fire_validate_item(int slot, std::string &err)
         err = "You are wearing that object!";
         return (false);
     }
+    else if (you.inv[slot].base_type == OBJ_ORBS)
+    {
+       err = "You don't feel like leaving the orb behind!";
+       return (false);
+    }
     return (true);
 }
 
