@@ -1446,7 +1446,11 @@ A creature from the heavenly realms. It consists of a wheel within a wheel, and 
 %%%%
 orange crystal statue
 
-An intricately carved, brittle-looking idol of some nameless godling, hewn of translucent orange crystal. Its lifeless eyes seem to glitter uncannily with a wicked intelligence.
+An intricately carved idol of some nameless godling, hewn of translucent
+orange crystal. Its lifeless eyes seem to glitter uncannily with a wicked
+intelligence.
+
+This statue is very brittle; it will disintegrate at once.
 %%%%
 orange demon
 
@@ -1729,8 +1733,10 @@ An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
-A beautiful, brittle-looking statue of an unknown malignant creature,
-glistening with a silvery hue. Its eyes glow with an otherworldly radiance.
+A beautiful statue of an unknown malignant creature, glistening with a
+silvery hue. Its eyes glow with an otherworldly radiance.
+
+This statue is very brittle; it will disintegrate at once.
 %%%%
 siren
 
