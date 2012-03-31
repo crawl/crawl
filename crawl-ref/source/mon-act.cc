@@ -2203,6 +2203,14 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
+        if (mons_is_boulder(mons))
+        {
+            if (boulder_act(*mons))
+                return;
+            mons->lose_energy(EUT_MOVE);
+            continue;
+        }
+
         mons->shield_blocks = 0;
 
         const int  cloud_num   = env.cgrid(mons->pos());
