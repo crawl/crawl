@@ -1455,15 +1455,8 @@ static void _go_upstairs()
                                           " This will make you lose the game!");
         if (player_has_orb())
             stay = !yesno("Are you sure you want to win?");
-        else if (yesno(prompt.c_str(), false, 'n'))
-        {
-            // You did pick up the Orb but are not carrying it, this deserves
-            // another warning due to automatism.
-            if (you.char_direction == GDT_ASCENDING)
-                stay = !yes_or_no("You're not carrying the Orb! Leave anyway");
-            else
-                stay = false;
-        }
+        else
+            stay = !yesno(prompt.c_str(), false, 'n');
 
         if (stay)
         {

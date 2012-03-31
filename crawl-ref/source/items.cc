@@ -603,24 +603,11 @@ void item_was_lost(const item_def &item)
     xom_check_lost_item(item);
 }
 
-static void _note_item_destruction(const item_def &item)
-{
-    if (item_is_orb(item))
-    {
-        mprf(MSGCH_WARN, "A great rumbling fills the air... "
-             "the Orb of Zot has been destroyed!");
-        mark_milestone("orb.destroy", "destroyed the Orb of Zot");
-        env.orb_pos.reset();
-        invalidate_agrid(false);
-    }
-}
-
 void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
-    _note_item_destruction(item);
     xom_check_destroyed_item(item, cause);
 }
 
@@ -2010,12 +1997,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     igrd(p) = ob;
 
     if (item_is_orb(item))
-    {
-        if (you.level_type == LEVEL_DUNGEON)
-            set_branch_flags(BFLAG_HAS_ORB);
         env.orb_pos = p;
-        invalidate_agrid(true);
-    }
 
     return (true);
 }

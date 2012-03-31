@@ -170,8 +170,10 @@ static void _update_agrid()
 
     }
 
-    if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
+    if (you.char_direction == GDT_ASCENDING)
     {
+        ASSERT(!env.orb_pos.origin());
+
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
         los_glob los(env.orb_pos, LOS_DEFAULT);
