@@ -1057,6 +1057,11 @@ void untransform(bool skip_wielding, bool skip_move)
         move_player_to_grid(you.pos(), false, true);
     }
 
+#ifdef USE_TILE
+    if (you.species == SP_MERFOLK)
+        init_player_doll();
+#endif
+
     if (form_can_butcher_barehanded(old_form))
         stop_butcher_delay();
 
