@@ -36,7 +36,7 @@ static monster* _create_fsim_monster(monster_type mtype, int hp)
 {
     monster *mon = create_monster(
             mgen_data::hostile_at(mtype,
-                "the fight simulator", false, 0, 0, you.pos()));
+                "the fight simulator", false, 0, 0, you.pos(), MG_DONT_COME));
 
     if (!mon)
         return 0;
