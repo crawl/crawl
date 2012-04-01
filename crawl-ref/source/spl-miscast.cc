@@ -1154,108 +1154,89 @@ void MiscastEffect::_translocation(int severity)
         break;
 
     case 2:         // less harmless
-    {
-        bool reroll = true;
-
-        while (reroll)
+    reroll_2:
+        switch (random2(7))
         {
-            switch (random2(7))
+        case 0:
+        case 1:
+        case 2:
+            you_msg        = "You are caught in a strong localised spatial "
+                             "distortion.";
+            mon_msg_seen   = "@The_monster@ is caught in a strong localised "
+                             "spatial distortion.";
+            mon_msg_unseen = "A piece of empty space twists and writhes.";
+            _ouch(9 + random2avg(23, 2));
+            break;
+        case 3:
+        case 4:
+            you_msg        = "Space warps around you!";
+            mon_msg_seen   = "Space warps around @the_monster@!";
+            mon_msg_unseen = "A piece of empty space twists and writhes.";
+            _ouch(5 + random2avg(9, 2));
+            if (target->alive())
             {
-            case 0:
-            case 1:
-            case 2:
-                you_msg        = "You are caught in a strong localised spatial "
-                                 "distortion.";
-                mon_msg_seen   = "@The_monster@ is caught in a strong localised "
-                                 "spatial distortion.";
-                mon_msg_unseen = "A piece of empty space twists and writhes.";
-                _ouch(9 + random2avg(23, 2));
-                reroll = false;
-                break;
-            case 3:
-            case 4:
-                you_msg        = "Space warps around you!";
-                mon_msg_seen   = "Space warps around @the_monster@!";
-                mon_msg_unseen = "A piece of empty space twists and writhes.";
-                _ouch(5 + random2avg(9, 2));
-                reroll = false;
+                if (one_chance_in(3))
+                    target->teleport(true);
+                else
+                    target->blink(false);
                 if (target->alive())
-                {
-                    if (one_chance_in(3))
-                        target->teleport(true);
-                    else
-                        target->blink(false);
-                    if (target->alive())
-                        _potion_effect(POT_CONFUSION, 40);
-                    reroll = false;
-                }
-                break;
-            case 5:
+                    _potion_effect(POT_CONFUSION, 40);
+            }
+            break;
+        case 5:
+        {
+            bool success = false;
+
+            for (int i = 1 + random2(3); i >= 0; --i)
             {
-                bool success = false;
-
-                for (int i = 1 + random2(3); i >= 0; --i)
-                {
-                    if (_create_monster(MONS_SPATIAL_VORTEX, 3))
-                        success = true;
-                }
-
-                if (success)
-                    all_msg = "Space twists in upon itself!";
-                reroll = false;
-                break;
+                if (_create_monster(MONS_SPATIAL_VORTEX, 3))
+                    success = true;
             }
-            case 6:
-                reroll = !_send_to_abyss();
-                break;
-            }
+
+            if (success)
+                all_msg = "Space twists in upon itself!";
+            break;
         }
-
+        case 6:
+            if (!_send_to_abyss())
+                goto reroll_2;
+            break;
+        }
         break;
-    }
 
     case 3:         // much less harmless
-    {
-        bool reroll = true;
-
-        while (reroll)
+    reroll_3:
+        // Don't use the last case for monsters.
+        switch (random2(target->is_player() ? 4 : 3))
         {
-            // Don't use the last case for monsters.
-            switch (random2(target->is_player() ? 4 : 3))
+        case 0:
+            you_msg        = "You are caught in an extremely strong localised "
+                             "spatial distortion!";
+            mon_msg_seen   = "@The_monster@ is caught in an extremely strong "
+                             "localised spatial distortion!";
+            mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
+            _ouch(15 + random2avg(29, 2));
+            break;
+        case 1:
+            you_msg        = "Space warps crazily around you!";
+            mon_msg_seen   = "Space warps crazily around @the_monster@!";
+            mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
+            if (_ouch(9 + random2avg(17, 2)) && target->alive())
             {
-            case 0:
-                you_msg        = "You are caught in an extremely strong localised "
-                                 "spatial distortion!";
-                mon_msg_seen   = "@The_monster@ is caught in an extremely strong "
-                                 "localised spatial distortion!";
-                mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
-                _ouch(15 + random2avg(29, 2));
-                reroll = false;
-                break;
-            case 1:
-                you_msg        = "Space warps crazily around you!";
-                mon_msg_seen   = "Space warps crazily around @the_monster@!";
-                mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
-                if (_ouch(9 + random2avg(17, 2)) && target->alive())
-                {
-                    target->teleport(true);
-                    if (target->alive())
-                        _potion_effect(POT_CONFUSION, 60);
-                }
-                reroll = false;
-                break;
-            case 2:
-                reroll = !_send_to_abyss();
-                break;
-            case 3:
-                contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
-                reroll = false;
-                break;
+                target->teleport(true);
+                if (target->alive())
+                    _potion_effect(POT_CONFUSION, 60);
             }
+            break;
+        case 2:
+            if (!_send_to_abyss())
+                goto reroll_3;
+            break;
+        case 3:
+            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+            break;
         }
-
         break;
-    }
     }
 }
 
