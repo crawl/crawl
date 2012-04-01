@@ -2321,7 +2321,10 @@ int monster_die(monster* mons, killer_type killer,
         // Make sure that the monster looks dead.
         if (mons->alive() && !in_transit && (!summoned || duration > 0))
             mons->hit_points = -1;
-        mons_speaks(mons);
+        // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
+        // [malign] kraken has no valid head reference.
+        if (!mons_is_tentacle(mons->type))
+            mons_speaks(mons);
     }
 
     if (mons->type == MONS_BORIS && !in_transit)

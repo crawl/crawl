@@ -734,8 +734,10 @@ bool melee_attack::handle_phase_killed()
     // to possibly be called twice. Adding another entry for a single
     // artefact would be overkill, so here we call it by hand:
     if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+    {
         unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
                                                true, special_damage);
+    }
 
     _defender_die();
     return (true);
