@@ -2287,10 +2287,11 @@ void handle_monster_move(monster* mons)
             && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
                 || mons_itemeat(mons) != MONEAT_NOTHING))
         {
-            // Keep neutral and charmed monsters from picking up stuff.
+            // Keep neutral, charmed, summoned monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
-            if (!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-                || (you.religion == GOD_JIYVA && mons_is_slime(mons))
+            if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
+                 || (you.religion == GOD_JIYVA && mons_is_slime(mons)))
+                && !mons->is_summoned()
                 && (!mons->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {
