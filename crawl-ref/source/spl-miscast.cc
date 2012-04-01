@@ -1185,7 +1185,8 @@ void MiscastEffect::_translocation(int severity)
                         target->teleport(true);
                     else
                         target->blink(false);
-                    _potion_effect(POT_CONFUSION, 40);
+                    if (target->alive())
+                        _potion_effect(POT_CONFUSION, 40);
                     reroll = false;
                 }
                 break;
@@ -1238,7 +1239,8 @@ void MiscastEffect::_translocation(int severity)
                 if (_ouch(9 + random2avg(17, 2)) && target->alive())
                 {
                     target->teleport(true);
-                    _potion_effect(POT_CONFUSION, 60);
+                    if (target->alive())
+                        _potion_effect(POT_CONFUSION, 60);
                 }
                 reroll = false;
                 break;
