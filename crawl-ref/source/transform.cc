@@ -604,6 +604,13 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (false);
     }
 
+    // Don't allow changing form. Must manually untransform first.
+    if (!force && you.form != TRAN_NONE && you.form != which_trans)
+    {
+        mpr("You must return to your normal form first.");
+        return false;
+    }
+
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()), force))
         return (false);
 
