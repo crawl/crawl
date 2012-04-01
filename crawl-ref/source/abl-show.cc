@@ -2176,8 +2176,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_END_TRANSFORMATION:
-        mpr("You feel almost normal.");
-        you.set_duration(DUR_TRANSFORMATION, 2);
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
+        untransform();
         break;
 
     // INVOCATIONS:
