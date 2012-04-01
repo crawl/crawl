@@ -4001,19 +4001,7 @@ int runes_in_pack()
 
 bool player_has_orb()
 {
-    if (you.char_direction != GDT_ASCENDING)
-        return false;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_ORBS
-            && you.inv[i].sub_type == ORB_ZOT)
-        {
-            return (true);
-        }
-    }
-    return false;
+    return you.char_direction == GDT_ASCENDING;
 }
 
 static const object_class_type _mimic_item_classes[] =

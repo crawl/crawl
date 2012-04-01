@@ -1307,9 +1307,10 @@ static void _update_level_state()
 
     env.orb_pos = orb_position();
     if (player_has_orb())
+    {
         env.orb_pos = you.pos();
-    if (you.char_direction == GDT_ASCENDING)
         invalidate_agrid(true);
+    }
 }
 
 void new_level(bool restore)
