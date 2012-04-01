@@ -1204,17 +1204,13 @@ enum dungeon_feature_type
 
     DNGN_SHALLOW_WATER = 65,
     DNGN_MOVEMENT_MIN = DNGN_SHALLOW_WATER,
-    DNGN_WATER_RESERVED,
 
     // Lowest grid value that an item can be placed on.
     DNGN_MINITEM = DNGN_SHALLOW_WATER,
 
-    DNGN_FLOOR_MIN = 67,
-    DNGN_FLOOR = DNGN_FLOOR_MIN,
-    DNGN_FLOOR_RESERVED = 69,
-    DNGN_FLOOR_MAX = DNGN_FLOOR_RESERVED,
+    DNGN_FLOOR           = 67,
 
-    DNGN_EXIT_HELL,                    //   70
+    DNGN_EXIT_HELL       = 70,         //   70
     DNGN_ENTER_HELL,                   //   71
     DNGN_OPEN_DOOR,                    //   72
 

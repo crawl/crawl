@@ -284,8 +284,8 @@ bool feat_is_traversable(dungeon_feature_type feat)
     if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
 #endif
         return false;
-    else if (feat >= DNGN_FLOOR_MIN || feat == DNGN_DETECTED_SECRET_DOOR
-             || feat == DNGN_CLOSED_DOOR || feat == DNGN_SHALLOW_WATER)
+    else if (feat >= DNGN_MOVEMENT_MIN || feat == DNGN_DETECTED_SECRET_DOOR
+             || feat == DNGN_CLOSED_DOOR)
     {
         return true;
     }
@@ -3971,9 +3971,6 @@ const runrest &runrest::operator = (int newrunmode)
 
 static dungeon_feature_type _base_feat_type(dungeon_feature_type grid)
 {
-    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        return (DNGN_FLOOR);
-
     // Merge walls.
     if (feat_is_wall(grid))
         return (DNGN_ROCK_WALL);

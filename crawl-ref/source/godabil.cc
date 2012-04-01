@@ -2250,8 +2250,7 @@ bool fedhas_sunlight()
             processed_count++;
         }
         else if (one_chance_in(100)
-                 && ftype >= DNGN_FLOOR_MIN
-                 && ftype <= DNGN_FLOOR_MAX
+                 && ftype == DNGN_FLOOR
                  && orig_type == DNGN_SHALLOW_WATER)
         {
             // Create a plant.
@@ -2654,8 +2653,7 @@ int fedhas_rain(const coord_def &target)
             // x/192.
             if (x_chance_in_y(5, 192)
                 && !actor_at(*rad)
-                && ftype >= DNGN_FLOOR_MIN
-                && ftype <= DNGN_FLOOR_MAX)
+                && ftype == DNGN_FLOOR)
             {
                 if (create_monster(mgen_data(
                                       coinflip() ? MONS_PLANT : MONS_FUNGUS,
@@ -2678,7 +2676,7 @@ int fedhas_rain(const coord_def &target)
         }
 
         // Turn regular floor squares only into shallow water.
-        if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
+        if (ftype == DNGN_FLOOR)
         {
             dungeon_terrain_changed(*rad, DNGN_SHALLOW_WATER);
 
