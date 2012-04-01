@@ -1659,7 +1659,6 @@ ENDMAP
 ##############################################################################
 
 NAME:     tar_mu
-WEIGHT:   9999
 ORIENT:   encompass
 SUBVAULT: Z : eresh_room
 # Ereshkigal is placed in the subvault.
