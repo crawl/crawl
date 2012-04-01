@@ -367,7 +367,8 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
         if (you.wizard)
             env.pgrid(start) |= FPROP_HIGHLIGHT;
 #endif
-        bleed_onto_floor(start, MONS_HUMAN, 150, true, false);
+        bleed_onto_floor(start, MONS_HUMAN, 150, true, false, INVALID_COORD,
+                         true);
 
         for (unsigned int step = 0; step < path.size(); step++)
         {
