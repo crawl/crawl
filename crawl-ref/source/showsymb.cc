@@ -95,7 +95,7 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
         colour = ETC_LIQUEFIED;
     }
 
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
+    if (feat == DNGN_FLOOR)
     {
         if (cell.flags & MAP_HALOED)
         {

@@ -364,11 +364,6 @@ bool cell_is_solid(const coord_def &c)
     return (feat_is_solid(grd(c)));
 }
 
-bool feat_is_floor(dungeon_feature_type feat)
-{
-    return (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX);
-}
-
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
     return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
@@ -422,8 +417,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
-            || feat == DNGN_SWAMP_TREE
-            || feat == DNGN_WATER_RESERVED);
+            || feat == DNGN_SWAMP_TREE);
 }
 
 bool feat_is_watery(dungeon_feature_type feat)

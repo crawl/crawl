@@ -2499,11 +2499,8 @@ void bolt::affect_ground()
     if (is_explosion && flavour == BEAM_SPORE
         && this->agent() && !this->agent()->is_summoned())
     {
-        if (env.grid(pos()) >= DNGN_FLOOR_MIN
-            && env.grid(pos())<= DNGN_FLOOR_MAX)
-        {
+        if (env.grid(pos()) == DNGN_FLOOR)
             env.pgrid(pos()) |= FPROP_MOLD;
-        }
 
         if (x_chance_in_y(2, 21)
            && !crawl_state.game_is_zotdef() // Turn off in Zotdef

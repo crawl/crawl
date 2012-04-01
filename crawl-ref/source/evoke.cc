@@ -97,7 +97,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int y_distance  = abs(delta.y);
     monster* mons = monster_at(beam.target);
     // don't allow targetting of submerged trapdoor spiders
-    if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
+    if (mons && mons->submerged() && grd(beam.target) == DNGN_FLOOR)
         mons = NULL;
 
     const int x_first_middle = you.pos().x + (delta.x)/2;

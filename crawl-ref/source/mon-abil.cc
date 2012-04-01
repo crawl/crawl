@@ -3010,7 +3010,7 @@ void ballisto_on_move(monster* mons, const coord_def & position)
     {
         dungeon_feature_type ftype = env.grid(mons->pos());
 
-        if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
+        if (ftype == DNGN_FLOOR)
             env.pgrid(mons->pos()) |= FPROP_MOLD;
 
         // The number field is used as a cooldown timer for this behavior.
