@@ -84,10 +84,6 @@ static void _initialize()
     // be set to use with item_names_by_glyph_cache.
     init_item_name_cache();
 
-    // Pick a translation.
-    static const char* translations[] = {"dwarven","jägerkin"};
-    Options.lang = translations[random2(ARRAYSZ(translations))];
-
     msg::initialise_mpr_streams();
 
     // Init item array.
