@@ -604,13 +604,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (false);
     }
 
-    // Don't allow changing form. Must manually untransform first.
-    if (!force && you.form != TRAN_NONE && you.form != which_trans)
-    {
-        mpr("You must return to your normal form first.");
-        return false;
-    }
-
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()), force))
         return (false);
 
@@ -796,6 +789,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // If we're just pretending return now.
     if (just_check)
         return (true);
+
+    // Switching between forms takes a bit longer.
+    if (!force && previous_trans != TRAN_NONE && previous_trans != which_trans)
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;
