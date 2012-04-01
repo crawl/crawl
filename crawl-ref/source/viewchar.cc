@@ -46,8 +46,8 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     //       ▄       ∩       ⌠       ≈
         '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-    //  ∞       \                              Ω
-        0x221e, '\\', '}', '%', '$', '"', '#', 0x3a9,  // book .. tree
+    //  ∞       \                              ♣
+        0x221e, '\\', '}', '%', '$', '"', '#', 0x2663,  // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
