@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "colour.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -2925,7 +2926,10 @@ void mon_nearby_ability(monster* mons)
             int confuse_power = 2 + random2(3);
 
             if (foe->is_player() && !can_see)
+            {
                 mpr("You feel you are being watched by something.");
+                interrupt_activity(AI_MONSTER_ATTACKS, mons);
+            }
 
             int res_margin = foe->check_res_magic((mons->hit_dice * 5)
                              * confuse_power);
@@ -2972,6 +2976,8 @@ void mon_nearby_ability(monster* mons)
                 simple_monster_message(mons, " stares at you.");
             else
                 mpr("You feel you are being watched by something.");
+
+            interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
             int mp = std::min(5 + random2avg(13, 3), you.magic_points);
             dec_mp(mp);
