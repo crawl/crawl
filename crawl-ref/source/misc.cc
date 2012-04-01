@@ -1061,8 +1061,12 @@ bool maybe_bloodify_square(const coord_def& where)
  *
  * @param where Coordinates of the wall where there is a blood splat.
  * @param from Coordinates of the source of the blood.
+ * @param old_blood blood splats created at level generation are old and can
+ * have some blood inscriptions. Only for south facing splats, so you don't
+ * have to turn your head to read the inscriptions.
  */
-static void _orient_wall_blood(const coord_def& where, coord_def from)
+static void _orient_wall_blood(const coord_def& where, coord_def from,
+                               bool old_blood)
 {
     if (!feat_is_wall(env.grid(where)))
         return;
@@ -1101,12 +1105,15 @@ static void _orient_wall_blood(const coord_def& where, coord_def from)
         env.pgrid(where) |= FPROP_BLOOD_NORTH;
     else if (diff == coord_def(-1, 0))
         env.pgrid(where) |= FPROP_BLOOD_EAST;
+    else if (old_blood && one_chance_in(10))
+        env.pgrid(where) |= FPROP_OLD_BLOOD;
 }
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
                                    bool smell_alert = true,
-                                   const coord_def& from = INVALID_COORD)
+                                   const coord_def& from = INVALID_COORD,
+                                   const bool old_blood = false)
 {
     if (amount < 1)
         return;
@@ -1128,7 +1135,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
-            _orient_wall_blood(where, from);
+            _orient_wall_blood(where, from, old_blood);
 
             if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
@@ -1145,7 +1152,10 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-                _maybe_bloodify_square(*ai, amount/15, false, true, from);
+            {
+                _maybe_bloodify_square(*ai, amount/15, false, true, from,
+                                       old_blood);
+            }
         }
     }
 }
@@ -1155,7 +1165,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, bool smell_alert,
-                      const coord_def& from)
+                      const coord_def& from, const bool old_blood)
 {
     ASSERT(in_bounds(where));
 
@@ -1170,7 +1180,8 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
             return;
     }
 
-    _maybe_bloodify_square(where, damage, spatter, smell_alert, from);
+    _maybe_bloodify_square(where, damage, spatter, smell_alert, from,
+                           old_blood);
 }
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
@@ -1214,7 +1225,7 @@ static void _spatter_neighbours(const coord_def& where, int chance,
         if (one_chance_in(chance))
         {
             env.pgrid(*ai) |= FPROP_BLOODY;
-            _orient_wall_blood(where, from);
+            _orient_wall_blood(where, from, true);
             _spatter_neighbours(*ai, chance+1, from);
         }
     }

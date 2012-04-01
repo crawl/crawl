@@ -1161,6 +1161,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
+            cell.old_blood = env.pgrid(gc) & FPROP_OLD_BLOOD;
         }
     }
 
