@@ -25,7 +25,7 @@ Xom general gift
 
 Xom udziela ci daru!
 
-„Łap.”
+„Łap!”
 
 „Trzymaj.”
 
@@ -40,57 +40,6 @@ Xom daje ci coś.
 Xom uśmiecha się do ciebie.
 
 „Proszę.”
-%%%%
-# Xom will give you a ring or amulet you can't currently use, due to
-# cursed equipment.
-Xom cursed gift
-
-„Może zamiast tego spróbuj tego?”
-
-„Może to lepiej zadziała.”
-
-„Łap!”
-
-w:1
-„Próżność jest uciechą.”
-%%%%
-# If you're wearing a cursed ring, Xom will give you another ring.
-Xom ring gift
-
-„Spróbuj tego.”
-
-„Weż to!”
-
-„Łap!”
-
-w:1
-„Tu masz śliczny pierścionek.”
-%%%%
-# Xom will choose a weapon of a different subtype from the one you're
-# currently wielding.
-Xom weapon gift
-
-„Może zamiast tego spróbuj tego?”
-
-„Może tym będzie się lepiej walczyć?”
-
-„A może to?”
-
-w:1
-„Różnorodność czyni życie ciekawym.”
-%%%%
-# If you're wearing a cursed cloak, Xom will give you either a cloak
-# or body armour.
-Xom armour gift
-
-„Może zamiast tego spróbuj tego?”
-
-„A może spróbuj to założyć.”
-
-„Proszę.”
-
-w:1
-„To jest wspaniałe!”
 %%%%
 ####################
 # friendly summons
