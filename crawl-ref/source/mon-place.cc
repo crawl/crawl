@@ -1734,8 +1734,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "summoned by ";
 
         if (mg.summoner != NULL && mg.summoner->alive()
-            && mg.summoner->is_monster()
-            && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
+            && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
         }
@@ -1744,16 +1743,13 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "animated by ";
     else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
         blame_prefix = "transmuted by ";
-    else
+    else if (mg.cls == MONS_ELDRITCH_TENTACLE
+             || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
-        blame_prefix = "created by ";
-
-        if (mg.cls == MONS_ELDRITCH_TENTACLE
-            || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
-        {
-            blame_prefix = "called by ";
-        }
+        blame_prefix = "called by ";
     }
+    else
+        blame_prefix = "created by ";
 
     if (!mg.non_actor_summoner.empty())
         mons_add_blame(mon, blame_prefix + mg.non_actor_summoner);
