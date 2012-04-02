@@ -497,7 +497,7 @@ static bool _slot_conflict(equipment_type eq)
     if (you.equip[eq] != -1)
     {
         // Horns + hat is fine.
-        if (eq != EQ_HELMET || is_hard_helmet(*(you.slot_item(eq))))
+        if (eq != EQ_HELMET || you.melded[eq] || is_hard_helmet(*(you.slot_item(eq))))
             return true;
     }
 
