@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "libutil.h"
 #include "options.h"
+#include "unicode.h"
 
 #define UPPER "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define LOWER "abcdefghijklmnopqrstuvwxyz"
@@ -327,6 +328,28 @@ static const char* german[][4] =
   {0}
 };
 
+static void _wide(std::string &txt)
+{
+    std::string out;
+
+    for (size_t i = 0; i < txt.length(); i++)
+    {
+        if (txt[i] == ' ')
+            out += "　"; // U+3000 rather than U+FF00
+        else if (txt[i] > 32 && txt[i] < 127)
+        {
+            char buf[4];
+            int r = wctoutf8(buf, txt[i] + 0xFF00 - 32);
+            for (int j = 0; j < r; j++)
+                out.push_back(buf[j]);
+        }
+        else
+            out.push_back(txt[i]);
+    }
+
+    txt = out;
+}
+
 void filter_lang(std::string &str)
 {
     if (!Options.lang)
@@ -342,6 +365,8 @@ void filter_lang(std::string &str)
         repl = lisp;
     else if (!strcmp(Options.lang, "de"))
         _german(str), repl = german;
+    else if (!strcmp(Options.lang, "wide"))
+        return _wide(str);
     else
         return;
 

@@ -2205,6 +2205,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = "jägerkin";
         else if (field == "lisp" || field == "lithp")
             lang = "lisp";
+        else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
+            lang = "wide";
         else if (field == "en" || field == "english")
             lang = 0;
         else
