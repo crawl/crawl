@@ -13,7 +13,7 @@ Xom chichocze.
 
 „A może spróbujemy tego?”
 
-"Albo może eksperyment, hmmm?”
+„Albo może eksperyment, hmmm?”
 
 w:1
 „Ciekawe... Co ten przycisk robi?”
@@ -47,7 +47,6 @@ Xom uśmiecha się do ciebie.
 Xom single summon
 
 „Służ śmiertelnemu, moje dziecko!”
-"Serve the mortal, my child!"
 
 „Służ mej zabawce!”
 
@@ -534,7 +533,7 @@ Elyvilon holy
 
 Elyvilon syczy: „Ty podła bestio! Jak możesz?!”
 
-Elyvilon mówi ze smutkiem: "Jak to możliwe że takie okrucieństwo istnieje."
+Elyvilon mówi ze smutkiem: „Jak to możliwe że takie okrucieństwo w ogóle istnieje.”
 
 Elyvilon szepcze: „Nikt nie powinien krzywdzić innych. Nigdy!”
 %%%%
@@ -632,7 +631,7 @@ Fedhas protestuje przeciw twemu psuciu środowiska.
 %%%%
 Fedhas welcome
 
-Fedhas rzecze: Szerz życie i śmierć.
+Fedhas rzecze: Nieś życie i śmierć.
 %%%%
 Jiyva penance
 
@@ -758,7 +757,7 @@ Zin stanowczo wyjaśnia powagę @_important_subject_@
 %%%%
 Zin welcome
 
-Zin rzecze: Szerz światło, me dziecię.
+Zin rzecze: Nieś światło, me dziecię.
 %%%%
 Zin newgame
 
