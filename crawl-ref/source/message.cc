@@ -1109,7 +1109,7 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
         fs.all_caps(); // No sound, so we simulate the reverb with all caps.
     else if (cap)
         fs.capitalize();
-    fs.translate();
+    fs.filter_lang();
     text = fs.to_colour_string();
 
     message_item msg = message_item(text, channel, param, join);
