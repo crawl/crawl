@@ -5137,7 +5137,7 @@ void read_scroll(int slot)
         // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
         // mpr("Your reading takes too long for the scroll to take effect.");
         // mpr("Your low mental capacity makes reading really difficult. You give up!");
-        mpr("You try to decipher the scroll, but fail in the attempt.");
+        mpr("You almost manage to decipher the scroll, but fail in this attempt.");
         return;
     }
 
