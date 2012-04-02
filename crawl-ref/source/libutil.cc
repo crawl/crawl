@@ -731,8 +731,26 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
+static const std::string _get_indent(const std::string &s)
+{
+    if (starts_with(s, "\"")    // ASCII quotes
+        || starts_with(s, "“")  // English quotes
+        || starts_with(s, "„")  // Polish/German/... quotes
+        || starts_with(s, "«")) // French quotes
+    {
+        return " ";
+    }
+    if (starts_with(s, "「"))  // Chinese/Japanese quotes
+        return "  ";
+
+    size_t nspaces = s.find_first_not_of(' ');
+    if (nspaces == std::string::npos)
+        return "";
+    return s.substr(0, nspaces);
+}
+
 // The provided string is consumed!
-std::string wordwrap_line(std::string &s, int width, bool tags)
+std::string wordwrap_line(std::string &s, int width, bool tags, bool indent)
 {
     const char *cp0 = s.c_str();
     const char *cp = cp0, *space = 0;
@@ -795,12 +813,18 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
         cp = space;
     const std::string ret = s.substr(0, cp - cp0);
 
+    const std::string indentation = (indent && c != '\n') ? _get_indent(s) : "";
+
     // eat all trailing spaces and up to one newline
     while (*cp == ' ')
         cp++;
     if (*cp == '\n')
         cp++;
     s.erase(0, cp - cp0);
+
+    // if we had to break a line, reinsert the indendation
+    if (indent && c != '\n')
+        s = indentation + s;
 
     return ret;
 }

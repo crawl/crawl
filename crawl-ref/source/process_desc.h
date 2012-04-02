@@ -80,7 +80,7 @@ inline void process_description(T &proc, const describe_info &inf)
     int lineno = 0;
     while (!desc.empty())
     {
-        const std::string line = wordwrap_line(desc, line_width);
+        const std::string line = wordwrap_line(desc, line_width, false, true);
 
         // If this is the bottom line of the display but not
         // the last line of text, print an ellipsis instead.
@@ -143,7 +143,7 @@ inline void process_quote(T &proc, const describe_info &inf)
 
     while (!desc.empty())
     {
-        proc.print(wordwrap_line(desc, line_width));
+        proc.print(wordwrap_line(desc, line_width, false, true));
         if (!desc.empty())
             proc.nextline();
     }
