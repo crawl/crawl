@@ -6,7 +6,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "showsymb.h"
-#include "translate.h"
+#include "lang-fake.h"
 #include "unicode.h"
 #include "viewchar.h"
 
@@ -509,11 +509,11 @@ void formatted_string::capitalize()
         }
 }
 
-void formatted_string::translate()
+void formatted_string::filter_lang()
 {
     for (unsigned int i = 0; i < ops.size(); i++)
         if (ops[i].type == FSOP_TEXT)
-            ::translate(ops[i].text);
+            ::filter_lang(ops[i].text);
 }
 
 int count_linebreaks(const formatted_string& fs)

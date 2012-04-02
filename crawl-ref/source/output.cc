@@ -28,6 +28,7 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "item_use.h"
+#include "lang-fake.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -45,7 +46,6 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "transform.h"
-#include "translate.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -807,7 +807,7 @@ void print_stats(void)
     if (you.redraw_title)
     {
         you.redraw_title = false;
-        _redraw_title(you.your_name, translated(player_title()));
+        _redraw_title(you.your_name, filtered_lang(player_title()));
     }
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }

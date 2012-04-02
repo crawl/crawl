@@ -108,6 +108,7 @@ l_subvault.o \
 l_travel.o \
 l_view.o \
 l_you.o \
+lang-fake.o \
 lev-pand.o \
 libutil.o \
 los.o \
@@ -216,7 +217,6 @@ target.o \
 teleport.o \
 terrain.o \
 transform.o \
-translate.o \
 traps.o \
 travel.o \
 tutorial.o \

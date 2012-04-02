@@ -4,7 +4,7 @@
  **/
 
 #include "AppHdr.h"
-#include "translate.h"
+#include "lang-fake.h"
 
 #include "debug.h"
 #include "libutil.h"
@@ -327,7 +327,7 @@ static const char* german[][4] =
   {0}
 };
 
-void translate(std::string &str)
+void filter_lang(std::string &str)
 {
     if (!Options.lang)
         return;
@@ -349,8 +349,8 @@ void translate(std::string &str)
         _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
 }
 
-std::string translated(std::string str)
+std::string filtered_lang(std::string str)
 {
-    translate(str);
+    filter_lang(str);
     return str;
 }
