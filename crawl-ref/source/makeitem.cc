@@ -2280,6 +2280,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return (true);
 
     case SPARM_PRESERVATION:
+        if (type == ARM_PLATE_ARMOUR && !strict)
+            return (true);
     case SPARM_DARKNESS:
         return (slot == EQ_CLOAK);
 
