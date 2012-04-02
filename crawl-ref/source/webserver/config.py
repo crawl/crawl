@@ -1,7 +1,7 @@
 import logging
 from collections import OrderedDict
 
-dgl_mode = True
+dgl_mode = False
 
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
