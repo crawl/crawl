@@ -46,6 +46,11 @@
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
 #
+#    PROPORTIONAL_FONT -- set to a .ttf file you want to use for a proportional
+#                         font; if not set, a copy of Bitstream Vera Sans
+#                         shipped with Crawl will be used
+#    MONOSPACED_FONT   -- monospaced font; Bitstream Vera Mono Sans
+#
 #    WEBTILES      -- set to anything to compile for Webtiles
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
