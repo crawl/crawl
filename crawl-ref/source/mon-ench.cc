@@ -1986,6 +1986,14 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
+        // The duration is:
+        // deg = 1     90 aut
+        // deg = 2    180 aut
+        // deg = 3    270 aut
+        // deg = 4    360 aut
+        // deg = 5    810 aut
+        // deg = 6   1710 aut
+        // with a large fuzz
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
         if (deg >= 5)
@@ -2017,6 +2025,8 @@ int mon_enchant::calc_duration(const monster* mons,
     cturn = std::max(2, cturn);
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
+    // Note: this fuzzing is _not_ symmetric, resulting in 90% of input
+    // on the average.
     raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
 
     dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);
