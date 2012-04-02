@@ -3084,7 +3084,7 @@ static void _player_reacts()
     update_stat_zero();
 
     // XOM now ticks from here, to increase his reaction time to tension.
-    if (you.religion = GOD_XOM)
+    if (you.religion == GOD_XOM)
        xom_tick();
 
 }
