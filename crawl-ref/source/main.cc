@@ -1361,8 +1361,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     }
 
     item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
-    if (rune && (rune->plus == RUNE_CEREBOV || rune->plus == RUNE_LOM_LOBON
-                || rune->plus == RUNE_MNOLEG || rune->plus == RUNE_GLOORX_VLOQ))
+    if (rune && item_is_unique_rune(*rune))
     {
         return yesno("An item of great power still resides in this realm, "
                 "and once you leave you can never return. "

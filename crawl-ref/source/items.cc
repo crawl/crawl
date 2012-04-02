@@ -2986,7 +2986,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
             for (stack_iterator si(coord_def(x,y)); si; ++si)
                 if (si->defined()
                     && si->base_type == cls && si->sub_type == sub_type
-                    && !si->flags & ISFLAG_MIMIC)
+                    && !(si->flags & ISFLAG_MIMIC))
                 {
                     return (& (*si));
                 }
