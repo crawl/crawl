@@ -101,9 +101,8 @@ static const spell_type _xom_tension_spells[] =
     SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES,
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
     SPELL_POISON_WEAPON, SPELL_LETHAL_INFUSION, SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE,
-    SPELL_SUMMON_BUTTERFLIES, SPELL_SUMMON_SMALL_MAMMALS,
-    SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
+    SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_SMALL_MAMMALS, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
     SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
     SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_HORRIBLE_THINGS, SPELL_CALL_CANINE_FAMILIAR,
@@ -337,12 +336,11 @@ void xom_tick()
 
         if (you.gift_timeout == 1)
         {
-        simple_god_message(" is getting BORED.");
-        //updating piety status line
-        you.redraw_title = true;
+            simple_god_message(" is getting BORED.");
+            //updating piety status line
+            you.redraw_title = true;
         }
     }
-
 
     if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
     {
@@ -386,8 +384,6 @@ void xom_tick()
             xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
     }
 }
-
-
 
 // Picks 100 random grids from the level and checks whether they've been
 // marked as seen (explored) or known (mapped).  If seen_only is true,
