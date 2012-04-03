@@ -330,7 +330,11 @@ dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 dngn_return_zot DNGN_RETURN_ZOT
+dngn_enter_snake DNGN_ENTER_SNAKE_PIT
+dngn_enter_swamp DNGN_ENTER_SWAMP
 dngn_enter_spider DNGN_ENTER_SPIDER_NEST
+dngn_enter_shoals DNGN_ENTER_SHOALS
+dngn_enter_slime DNGN_ENTER_SLIME_PITS
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
 dngn_enter_cocytus DNGN_ENTER_COCYTUS
