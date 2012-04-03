@@ -534,6 +534,10 @@ void do_curse_item(item_def &item, bool quiet)
     // This might prevent a carried item from allowing training.
     maybe_change_train(item, false);
 
+    // If the item isn't equipped, you might not be able to use it for training.
+    if (!item_is_equipped(item))
+        item_skills(item, you.stop_train);
+
     item.flags |= ISFLAG_CURSED;
 
     // Xom is amused by the player's items being cursed, especially if
