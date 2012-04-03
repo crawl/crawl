@@ -4416,6 +4416,10 @@ void bolt::affect_monster(monster* mon)
             beam_hit -= 2 + random2(4);
     }
 
+    // The monster may block the beam.
+    if (!engulfs && is_blockable() && attempt_block(mon))
+        return;
+
     defer_rand r;
     int rand_ev = random2(mon->ev);
     int defl = mon->missile_deflection();
@@ -4450,10 +4454,6 @@ void bolt::affect_monster(monster* mon)
         }
         return;
     }
-
-    // The monster may block the beam.
-    if (!engulfs && is_blockable() && attempt_block(mon))
-        return;
 
     if (name == "orb of energy" && !in_explosion_phase
         && x_chance_in_y(3,2*grid_distance(source,pos())+2))
