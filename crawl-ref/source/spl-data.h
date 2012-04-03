@@ -647,7 +647,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
-     5, 5,
+     7, 7,
      0,
      NULL,
      true,
