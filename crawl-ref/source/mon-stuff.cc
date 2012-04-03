@@ -3588,6 +3588,13 @@ monster* choose_random_monster_on_level(int weight,
 
     for (; ri; ++ri)
     {
+        if (in_sight)
+        {
+            // Seeing through glass/trees is not enough.
+            if (!you.see_cell_no_trans(*ri))
+                continue;
+        }
+
         if (monster* mon = monster_at(*ri))
         {
             if (suitable(mon))
