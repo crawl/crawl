@@ -3115,10 +3115,15 @@ bool bolt::misses_player()
     }
 
     bool train_shields_more = false;
+    // IMB explodes sometimes... check now so that we know whether it is
+    // blockable.
+    const bool explosive = (name == "orb of energy" && !in_explosion_phase
+			    && x_chance_in_y(3,2*grid_distance(source,pos())+2));
 
     if (is_blockable()
         && (you.shield() || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0)
         && !aimed_at_feet
+        && !explosive
         && player_shield_class() > 0)
     {
         // We use the original to-hit here.
@@ -3174,10 +3179,8 @@ bool bolt::misses_player()
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
     }
-    else if (name == "orb of energy" && !in_explosion_phase
-             && x_chance_in_y(3,2*grid_distance(source,pos())+2))
+    else if (explosive) // IMB
     {
-        // IMB explodes sometimes.
         is_explosion = true;
         miss = false;
     }
@@ -4418,8 +4421,13 @@ void bolt::affect_monster(monster* mon)
             beam_hit -= 2 + random2(4);
     }
 
+    // IMB explodes sometimes; check whether it is explosive now so that
+    // we know whether it can be blocked.
+    const bool explosive = (name == "orb of energy" && !in_explosion_phase
+                            && x_chance_in_y(3,2*grid_distance(source,pos())+2));
+
     // The monster may block the beam.
-    if (!engulfs && is_blockable() && attempt_block(mon))
+    if (!engulfs && !explosive && is_blockable() && attempt_block(mon))
         return;
 
     defer_rand r;
@@ -4457,10 +4465,8 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    if (name == "orb of energy" && !in_explosion_phase
-        && x_chance_in_y(3,2*grid_distance(source,pos())+2))
+    if (explosive) // IMB
     {
-        // IMB explodes sometimes.
         is_explosion = true;
         finish_beam();
         return;
