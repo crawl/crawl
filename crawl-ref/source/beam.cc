@@ -466,8 +466,10 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
 
     // One special case
     if (z_type == ZAP_ICE_STORM)
+    {
         pbolt.ench_power = power; // used for radius
-
+        pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
+    }
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }
