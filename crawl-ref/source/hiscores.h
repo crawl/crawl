@@ -154,6 +154,7 @@ public:
     std::string death_place(death_desc_verbosity) const;
     std::string game_time(death_desc_verbosity) const;
 
+    std::string get_name() const  { return name; }
     int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
     time_t get_death_time() const { return death_time; }
