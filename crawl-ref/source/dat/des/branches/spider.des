@@ -374,7 +374,7 @@ ENDMAP
 
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
-DEPTH:  Spider:3-5, Zot:1-4
+DEPTH:  Spider:1-3, Zot:1-4
 KMONS:  1 = tarantella
 : if you.branch() == "Zot" then
 KMONS:  2* = jumping spider / orb spider w:5
