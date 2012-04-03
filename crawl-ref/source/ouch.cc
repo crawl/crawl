@@ -1387,9 +1387,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     _end_game(se);
 }
 
-static std::string _morgue_name(time_t when_crawl_got_even)
+std::string morgue_name(std::string char_name, time_t when_crawl_got_even)
 {
-    std::string name = "morgue-" + you.your_name;
+    std::string name = "morgue-" + char_name;
 
     std::string time = make_file_time(when_crawl_got_even);
     if (!time.empty())
@@ -1500,7 +1500,7 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(_morgue_name(se.get_death_time()), true, &se))
+    if (!dump_char(morgue_name(you.your_name, se.get_death_time()), true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
