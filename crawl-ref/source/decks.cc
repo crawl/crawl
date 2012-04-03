@@ -1156,6 +1156,7 @@ bool deck_stack()
     }
 
     _check_buggy_deck(deck);
+    you.wield_change = true;
 
     return (true);
 }
