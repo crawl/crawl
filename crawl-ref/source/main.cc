@@ -2362,9 +2362,9 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws his offer.",
-			      coinflip(), "Vehumet won't present you his gift forever..."))
+                              coinflip(), "Vehumet won't present you his gift forever..."))
     {
-	vehumet_gift_callback(false);
+        vehumet_gift_callback(false);
     }
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");

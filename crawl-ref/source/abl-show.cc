@@ -2706,7 +2706,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_VEHUMET_MEMORIZE_SPELL:
         vehumet_gift_callback(true);
-	break;
+    break;
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3128,8 +3128,8 @@ std::vector<talent> your_talents(bool check_confused)
     for (unsigned int i = 0; i < abilities.size(); ++i)
         _add_talent(talents, abilities[i], check_confused);
 
-    if(vehumet_is_currently_gifting())
-	_add_talent(talents, ABIL_VEHUMET_MEMORIZE_SPELL, check_confused);
+    if (vehumet_is_currently_gifting())
+        _add_talent(talents, ABIL_VEHUMET_MEMORIZE_SPELL, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced(you.pos()))

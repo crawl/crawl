@@ -4491,17 +4491,18 @@ void describe_god(god_type which_god, bool give_title)
                                            ABIL_ELYVILON_LESSER_HEALING_OTHERS);
             }
         }
-	else if (which_god == GOD_VEHUMET)
-	{
-	    if(vehumet_is_currently_gifting())
+        else if (which_god == GOD_VEHUMET)
+        {
+            if (vehumet_is_currently_gifting())
             {
-		have_any = true;
-		_print_final_god_abil_desc(which_god,
-					   "You can memorize " + std::string(spell_title(you.vehumet_gift_spell))+".",
-					   ABIL_VEHUMET_MEMORIZE_SPELL);
-	    }
-	}
-
+                have_any = true;
+                _print_final_god_abil_desc(which_god,
+                                           "You can memorize "
+                                           + std::string(spell_title(you.vehumet_gift_spell))
+                                           + ".",
+                                           ABIL_VEHUMET_MEMORIZE_SPELL);
+            }
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())

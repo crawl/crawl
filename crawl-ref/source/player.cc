@@ -3805,7 +3805,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_LEVITATION:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
-	case DUR_VEHUMET_GIFT:
+    case DUR_VEHUMET_GIFT:
     case DUR_SLIMIFY:
         return (10 * BASELINE_DELAY);
 
