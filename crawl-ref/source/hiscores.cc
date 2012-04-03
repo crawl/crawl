@@ -30,10 +30,11 @@
 #include <unistd.h>
 #endif
 
+#include "hiscores.h"
+
 #include "branch.h"
 #include "files.h"
 #include "dungeon.h"
-#include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -41,6 +42,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "menu.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
@@ -75,6 +77,7 @@ static time_t _parse_time(const std::string &st);
 static std::string _xlog_escape(const std::string &s);
 static std::string _xlog_unescape(const std::string &s);
 static std::vector<std::string> _xlog_split_fields(const std::string &s);
+static const int X_MARGIN = 4;
 
 static std::string _score_file_name()
 {
@@ -301,6 +304,116 @@ void hiscores_print_list(int display_count, int format)
             textcolor(LIGHTGREY);
     }
 }
+
+static void _add_hiscore_row(MenuScroller* scroller, std::string text,
+        std::string description)
+{
+    static int id = 0;
+
+    TextItem* tmp = new TextItem();
+
+    coord_def min_coord(1,1);
+    coord_def max_coord(1,2);
+
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+
+    tmp->set_text(text);
+    tmp->set_bounds(coord_def(1,1), coord_def(1,2));
+    tmp->set_description_text(description);
+    tmp->set_id(id++);
+    scroller->attach_item(tmp);
+    tmp->set_visible(true);
+}
+
+static void _construct_hiscore_table(MenuScroller* scroller)
+{
+    FILE *scores = _hs_open("r", _score_file_name());
+    int i, total_entries;
+
+    if (scores == NULL)
+        return;
+
+    // read highscore file
+    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
+    {
+        hs_list[i].reset(new scorefile_entry);
+        if (_hs_read(scores, *hs_list[i]) == false)
+            break;
+    }
+    total_entries = i;
+
+    // close off
+    _hs_close(scores, "r", _score_file_name());
+
+    for (int j=0; j<i; j++)
+    {
+        _add_hiscore_row(scroller, hiscores_format_single(*hs_list[j]),
+                hiscores_format_single_long(*hs_list[j], true));
+    }
+}
+
+void show_hiscore_table()
+{
+    clrscr();
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+
+    //MenuFreeform* freeform = new MenuFreeform();
+    //freeform->init(coord_def(0, 0), coord_def(get_number_of_cols(),
+    //            get_number_of_lines()), "freeform");
+    //freeform->allow_focus(false);
+    //menu.attach_object(freeform);
+
+
+
+    MenuScroller* score_entries = new MenuScroller();
+
+    score_entries->init(coord_def(18,7), coord_def(60,20), "scores");
+
+    _construct_hiscore_table(score_entries);
+
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(X_MARGIN, 1),
+            coord_def(get_number_of_cols(), get_number_of_lines()),
+            "descriptor");
+
+    menu.attach_object(descriptor);
+    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+    highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
+    menu.attach_object(highlighter);
+
+    //freeform->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
+    score_entries->set_visible(true);
+
+    menu.attach_object(score_entries);
+
+    menu.set_active_object(score_entries);
+
+    while (true)
+    {
+        menu.draw_menu();
+        textcolor(WHITE);
+        cgotoxy(18, 21);
+        clear_to_end_of_line();
+        cgotoxy(18, 21);
+
+        const int keyn = getch_ck();
+
+        if (key_is_escape(keyn))
+        {
+            // Go back to the menu
+            return;
+        }
+        if (!menu.process_key(keyn))
+        {
+            // Do something
+        }
+    }
+}
+
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
 static const char *_range_type_verb(const char *const aux)

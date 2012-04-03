@@ -7,6 +7,8 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
+#include "menu.h"
+
 class scorefile_entry;
 
 void hiscores_new_entry(const scorefile_entry &se);
@@ -15,6 +17,7 @@ void logfile_new_entry(const scorefile_entry &se);
 
 void hiscores_print_list(int display_count = -1, int format = SCORE_TERSE);
 void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
+void show_hiscore_table();
 
 std::string hiscores_format_single(const scorefile_entry &se);
 std::string hiscores_format_single_long(const scorefile_entry &se,
