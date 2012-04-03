@@ -1406,6 +1406,13 @@ static void _handle_run_delays(const delay_queue_item &delay)
         stop_running();
     else
     {
+        if (Options.auto_eat_chunks)
+        {
+            const interrupt_block block_interrupts;
+            if (prompt_eat_chunks(true) == 1)
+                return;
+        }
+
         switch (delay.type)
         {
         case DELAY_REST:
