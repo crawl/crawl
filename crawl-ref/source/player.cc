@@ -3701,7 +3701,7 @@ int check_stealth(void)
     else if (player_mutation_level(MUT_HOOVES) > 0)
         stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
 
-    else if (you.species == SP_FELID && !you.form)
+    else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
         stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
