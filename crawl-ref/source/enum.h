@@ -2586,6 +2586,8 @@ enum monster_type                      // menv[].type
     MONS_SKELETON,
     MONS_SIMULACRUM,
 
+    MONS_DJINNI,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3119,6 +3121,7 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+    SP_DJINNI,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
