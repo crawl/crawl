@@ -33,6 +33,7 @@
 #include "hiscores.h"
 
 #include "branch.h"
+#include "chardump.h"
 #include "files.h"
 #include "dungeon.h"
 #include "initfile.h"
@@ -305,11 +306,8 @@ void hiscores_print_list(int display_count, int format)
     }
 }
 
-static void _add_hiscore_row(MenuScroller* scroller, std::string text,
-        std::string description)
+static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
 {
-    static int id = 0;
-
     TextItem* tmp = new TextItem();
 
     coord_def min_coord(1,1);
@@ -318,10 +316,11 @@ static void _add_hiscore_row(MenuScroller* scroller, std::string text,
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
 
-    tmp->set_text(text);
+    tmp->set_text(hiscores_format_single(se));
+    tmp->set_description_text(hiscores_format_single_long(se, true));
+    tmp->set_id(id);
     tmp->set_bounds(coord_def(1,1), coord_def(1,2));
-    tmp->set_description_text(description);
-    tmp->set_id(id++);
+
     scroller->attach_item(tmp);
     tmp->set_visible(true);
 }
@@ -343,19 +342,25 @@ static void _construct_hiscore_table(MenuScroller* scroller)
     }
     total_entries = i;
 
-    // close off
     _hs_close(scores, "r", _score_file_name());
 
     for (int j=0; j<i; j++)
     {
-        _add_hiscore_row(scroller, hiscores_format_single(*hs_list[j]),
-                hiscores_format_single_long(*hs_list[j], true));
+        _add_hiscore_row(scroller, *hs_list[j], j);
     }
+}
+
+void show_morgue(scorefile_entry& se)
+{
+    enable_smart_cursor(true);
 }
 
 void show_hiscore_table()
 {
+    bool smart_cursor_enabled = is_smart_cursor_enabled();
+
     clrscr();
+
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
 
@@ -364,7 +369,6 @@ void show_hiscore_table()
     //            get_number_of_lines()), "freeform");
     //freeform->allow_focus(false);
     //menu.attach_object(freeform);
-
 
 
     MenuScroller* score_entries = new MenuScroller();
@@ -392,24 +396,27 @@ void show_hiscore_table()
 
     menu.set_active_object(score_entries);
 
+    enable_smart_cursor(false);
     while (true)
     {
         menu.draw_menu();
         textcolor(WHITE);
-        cgotoxy(18, 21);
-        clear_to_end_of_line();
-        cgotoxy(18, 21);
 
         const int keyn = getch_ck();
 
         if (key_is_escape(keyn))
         {
             // Go back to the menu
+            enable_smart_cursor(smart_cursor_enabled);
             return;
         }
         if (!menu.process_key(keyn))
         {
             // Do something
+            if (keyn == CK_ENTER)
+            {
+                show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+            }
         }
     }
 }
