@@ -259,7 +259,7 @@ ENDMAP
 
 NAME:   spiders_nest_the_unseen
 TAGS:   no_item_gen no_monster_gen mini_float
-DEPTH:  Spider
+DEPTH:  Spider:3-5
 MONS:   trapdoor spider, patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
 ITEM:   piece of ambrosia
@@ -284,7 +284,7 @@ ENDMAP
 
 NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen mini_float
-DEPTH:  Spider
+DEPTH:  Spider:3-5
 MONS:   ghost moth, tarantella
 ITEM:   piece of ambrosia
 MAP
@@ -374,7 +374,7 @@ ENDMAP
 
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
-DEPTH:  Spider:1-3, Zot:1-4
+DEPTH:  Spider:3-5, Zot:1-4
 KMONS:  1 = tarantella
 : if you.branch() == "Zot" then
 KMONS:  2* = jumping spider / orb spider w:5
