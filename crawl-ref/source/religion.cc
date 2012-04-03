@@ -642,7 +642,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_VEHUMET: case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill living beings");
         break;
 
@@ -660,6 +660,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill living beings");
         break;
 
@@ -683,8 +684,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_VEHUMET: case GOD_MAKHLEB:
-    case GOD_LUGONU:
+    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill the undead");
         break;
 
@@ -693,6 +693,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill the undead");
         break;
 
@@ -719,6 +720,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill demons");
         break;
 
@@ -759,6 +761,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill holy beings");
         break;
 
