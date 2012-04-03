@@ -276,6 +276,9 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
         return (true);
 
     _zappy(ztype, power, pbolt);
+    // Assume IMB will explode.
+    if (pbolt.name == "orb of energy")
+        pbolt.is_explosion = true;
     pbolt.name = "unimportant";
 
     pbolt.is_tracer      = true;
@@ -3169,6 +3172,13 @@ bool bolt::misses_player()
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
     }
+    else if (name == "orb of energy" && !in_explosion_phase
+             && x_chance_in_y(3,2*grid_distance(source,pos())+2))
+    {
+        // IMB explodes sometimes.
+        is_explosion = true;
+        miss = false;
+    }
     else
     {
         const bool engulfs = is_explosion || is_big_cloud;
@@ -3535,6 +3545,12 @@ void bolt::affect_player()
 
     if (misses_player())
         return;
+    if (name == "orb of energy" && is_explosion && !in_explosion_phase)
+    {
+        // Trigger the explosion now.
+        finish_beam();
+        return;
+    }
 
     const bool engulfs = is_explosion || is_big_cloud;
 
@@ -4439,6 +4455,15 @@ void bolt::affect_monster(monster* mon)
     if (!engulfs && is_blockable() && attempt_block(mon))
         return;
 
+    if (name == "orb of energy" && !in_explosion_phase
+        && x_chance_in_y(3,2*grid_distance(source,pos())+2))
+    {
+        // IMB explodes sometimes.
+        is_explosion = true;
+        finish_beam();
+        return;
+    }
+
     update_hurt_or_helped(mon);
     enable_attack_conducts(conducts);
 
@@ -5143,8 +5168,13 @@ void bolt::refine_for_explosion()
 
     if (name == "orb of energy")
     {
-        seeMsg  = "The orb of energy explodes!";
+        seeMsg  = "The crackling orb of energy explodes!";
         hearMsg = "You hear an explosion!";
+
+        name    = "mystic blast";
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_MMISSILE;
+        ex_size = 1;
     }
 
     if (name == "metal orb")

@@ -346,7 +346,7 @@
     ZAP_MYSTIC_BLAST,
     "orb of energy",
     100,
-    new calcdice_calculator<2, 15, 2, 5>,
+    new calcdice_calculator<2, 12, 1, 3>,
     new tohit_calculator<10, 1, 7>,
     LIGHTMAGENTA,
     false,
