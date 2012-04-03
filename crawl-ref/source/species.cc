@@ -32,6 +32,7 @@ static species_type species_order[] = {
     SP_BASE_DRACONIAN,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
+    SP_DJINNI,
     // undead species
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
@@ -59,7 +60,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op",
+      "Fe", "Op", "Dj",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD", };
 
@@ -193,6 +194,7 @@ string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
+        case SP_DJINNI:     res = (adj ? "Djinn"      : "Djinni");     break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
@@ -342,6 +344,8 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_FELID;
     case SP_OCTOPODE:
         return MONS_OCTOPODE;
+    case SP_DJINNI:
+        return MONS_DJINNI;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
@@ -401,6 +405,7 @@ int species_exp_modifier(species_type species)
     case SP_VAMPIRE:
     case SP_TROLL:
     case SP_DEMONSPAWN:
+    case SP_DJINNI:
         return -1;
     case SP_DEMIGOD:
         return -2;

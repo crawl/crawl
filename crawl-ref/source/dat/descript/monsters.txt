@@ -1411,6 +1411,11 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
+djinni
+
+A blue-skinned fellow without legs who hovers here, with not the slightest
+hint of having an urge to fulfill your wishes.
+%%%%
 draconian
 
 A bipedal reptilian creature slightly larger than a human. Draconians have

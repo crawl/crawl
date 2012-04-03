@@ -5556,6 +5556,19 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
+// djinn ('&')
+{
+    MONS_DJINNI, '&', LIGHTBLUE, "djinni",
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    MR_RES_HELLFIRE | MR_VUL_COLD,
+    0, 10, MONS_DJINNI, MONS_DJINNI, MH_NATURAL /* FIXME */, -3,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // explodey things / orb of fire ('*')
 {
     MONS_BALL_LIGHTNING, '*', LIGHTCYAN, "ball lightning",

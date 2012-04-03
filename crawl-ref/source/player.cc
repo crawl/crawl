@@ -3480,6 +3480,11 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_DJINNI:
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                break;
+
             default:
                 break;
             }
