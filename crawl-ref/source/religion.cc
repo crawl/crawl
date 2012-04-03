@@ -2109,7 +2109,7 @@ void vehumet_gift_callback(bool accepted)
     if (accepted
         && (player_spell_levels() - spell_levels_required(you.vehumet_gift_spell) >= 0))
     {
-        std::string prompt = make_stringf("Do you really want to memorize %s (Level %d)?",
+        std::string prompt = make_stringf("Do you really want to memorise %s (Level %d)?",
                                           spell_title(you.vehumet_gift_spell),
                                           spell_difficulty(you.vehumet_gift_spell));
         if (yesno(prompt.c_str(), true, 'n'))
@@ -2413,7 +2413,7 @@ bool do_god_gift(bool forced)
                 {
                     you.vehumet_gift_spell = spell;
                     _add_to_recent_spells(you.vehumet_gift_spell);
-                    simple_god_message(" grants you a gift! Check the god screen for details.");
+                    simple_god_message(" offers you a gift! Check the god screen for details.");
                     you.duration[DUR_VEHUMET_GIFT] = 500;
                     success = true;
                 }

@@ -2361,8 +2361,8 @@ static void _decrement_durations()
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
     }
 
-    if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws his offer.",
-                              coinflip(), "Vehumet won't present you his gift forever..."))
+    if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws the offer.",
+                              coinflip(), "Vehumet won't offer you this gift forever..."))
     {
         vehumet_gift_callback(false);
     }

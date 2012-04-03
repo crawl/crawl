@@ -438,7 +438,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // Vehumet
-    { ABIL_VEHUMET_MEMORIZE_SPELL, "Memorize spell", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
+    { ABIL_VEHUMET_MEMORISE_SPELL, "Memorise spell", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
 
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, ABFLAG_ZOTDEF},
@@ -2704,7 +2704,7 @@ static bool _do_ability(const ability_def& abil)
         ashenzari_end_transfer();
         break;
 
-    case ABIL_VEHUMET_MEMORIZE_SPELL:
+    case ABIL_VEHUMET_MEMORISE_SPELL:
         vehumet_gift_callback(true);
     break;
 
@@ -3129,7 +3129,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, abilities[i], check_confused);
 
     if (vehumet_is_currently_gifting())
-        _add_talent(talents, ABIL_VEHUMET_MEMORIZE_SPELL, check_confused);
+        _add_talent(talents, ABIL_VEHUMET_MEMORISE_SPELL, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced(you.pos()))

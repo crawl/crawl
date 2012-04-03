@@ -3886,7 +3886,7 @@ static std::string _religion_help(god_type god)
         if (you.piety >= piety_breakpoint(1))
         {
             result += uppercase_first(god_name(god)) + " assists you in casting "
-                      "Conjurations.";
+                      "destructive magics.";
         }
         break;
 
@@ -4497,10 +4497,10 @@ void describe_god(god_type which_god, bool give_title)
             {
                 have_any = true;
                 _print_final_god_abil_desc(which_god,
-                                           "You can memorize "
+                                           "You can memorise "
                                            + std::string(spell_title(you.vehumet_gift_spell))
                                            + ".",
-                                           ABIL_VEHUMET_MEMORIZE_SPELL);
+                                           ABIL_VEHUMET_MEMORISE_SPELL);
             }
         }
 
