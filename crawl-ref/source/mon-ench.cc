@@ -1260,7 +1260,10 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (mons_landlubbers_in_reach(this))
+        {
             del_ench(ENCH_SUBMERGED);
+            make_mons_stop_fleeing(this);
+        }
         break;
     }
     case ENCH_POISON:
