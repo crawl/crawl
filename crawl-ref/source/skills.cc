@@ -1058,6 +1058,7 @@ void set_skill_level(skill_type skill, double amount)
         // Maximum number of skill points to transfer in one go.
         // It's max_xp*10/cost rounded up.
         int max_skp = (max_xp * 10 + cost - 1) / cost;
+        max_skp = std::max(max_skp, 1);
         int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
                                       max_skp);
         int delta_xp = (delta_skp * cost + 9) / 10;
