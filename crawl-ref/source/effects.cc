@@ -3226,6 +3226,11 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
+    // Skill calculations with a massive scale would overflow, cap it.
+    // The worst case, a -3 rod, takes 17000 aut to fully charge.
+    // -4 rods don't recharge at all.
+    aut = std::min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
+
     int rate = 4 + short(rod.props["rod_enchantment"]);
 
     rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
