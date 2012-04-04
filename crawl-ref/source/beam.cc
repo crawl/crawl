@@ -3118,7 +3118,7 @@ bool bolt::misses_player()
     // IMB explodes sometimes... check now so that we know whether it is
     // blockable.
     const bool explosive = (name == "orb of energy" && !in_explosion_phase
-			    && x_chance_in_y(3,2*grid_distance(source,pos())+2));
+        && x_chance_in_y(3, 2 * grid_distance(source, pos()) + 2));
 
     if (is_blockable()
         && (you.shield() || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0)
