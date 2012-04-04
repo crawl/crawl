@@ -114,18 +114,19 @@ local function get_monster_info(dx,dy)
   info = {}
   info.distance = (abs(dx) > abs(dy)) and -abs(dx) or -abs(dy)
   if have_ranged() then
-    info.can_hit = you.see_cell_no_trans(dx, dy) and 3 or 0
+    info.attack_type = you.see_cell_no_trans(dx, dy) and 3 or 0
   elseif not have_reaching() then
-    info.can_hit = (-info.distance < 2) and 2 or 0
+    info.attack_type = (-info.distance < 2) and 2 or 0
   else
     if -info.distance > 2 then
-      info.can_hit = 0
+      info.attack_type = 0
     elseif -info.distance < 2 then
-      info.can_hit = 2
+      info.attack_type = 2
     else
-      info.can_hit = 1
+      info.attack_type = 1
     end
   end
+  info.can_attack = (info.attack_type > 0) and 1 or 0
   info.safe = m:is_safe() and -1 or 0
   -- Only prioritize good stabs: sleep and paralysis.
   info.very_stabbable = m:is_very_stabbable() and 1 or 0
@@ -135,7 +136,7 @@ local function get_monster_info(dx,dy)
 end
 
 local function compare_monster_info(m1, m2)
-  flag_order = {"safe", "distance", "very_stabbable", "injury", "threat"}
+  flag_order = {"can_attack", "safe", "distance", "very_stabbable", "injury", "threat"}
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then
       return true
@@ -220,11 +221,11 @@ function attack(allow_movement)
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
     crawl.mpr("No target in view!")
-  elseif info.can_hit == 3 then
+  elseif info.attack_type == 3 then
     attack_fire(x,y)
-  elseif info.can_hit == 2 then
+  elseif info.attack_type == 2 then
     attack_melee(x,y)
-  elseif info.can_hit == 1 then
+  elseif info.attack_type == 1 then
     attack_reach(x,y)
   elseif allow_movement then
     move_towards(x,y)
