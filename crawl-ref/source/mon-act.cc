@@ -1958,18 +1958,18 @@ void handle_noattack_constrictions(actor *attacker)
                 damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
-            DIAG_ONLY(int basedam = damage);
+            DIAG_ONLY(const int basedam = damage);
             damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
             if (attacker->is_player())
                 damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-            DIAG_ONLY(int durdam = damage);
+            DIAG_ONLY(const int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
-            DIAG_ONLY(int acdam = damage);
+            DIAG_ONLY(const int acdam = damage);
             damage = timescale_damage(attacker, damage);
-            DIAG_ONLY(int timescale_dam = damage);
+            DIAG_ONLY(const int timescale_dam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-            DIAG_ONLY(int infdam = damage);
+            DIAG_ONLY(const int infdam = damage);
 
             std::string exclams;
             if (damage <= 0 && attacker->is_player()
