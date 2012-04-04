@@ -1168,7 +1168,7 @@ int player_evokable_levitation()
 int player_evokable_invis()
 {
     return (player_equip(EQ_RINGS, RING_INVISIBILITY)
-            + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_DARKNESS)
+            + player_equip_ego_type(EQ_CLOAK, SPARM_DARKNESS)
             + scan_artefacts(ARTP_INVISIBLE));
 }
 
