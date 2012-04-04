@@ -168,6 +168,8 @@ LUARET1(you_see_cell_no_trans_rel, boolean,
 LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 LUARET1(you_max_burden, number, carrying_capacity(BS_UNENCUMBERED))
 LUARET1(you_burden, number, you.burden)
+LUARET1(you_constricted, boolean, you.is_constricted())
+LUARET1(you_constricting, boolean, you.is_constricting())
 
 static int l_you_genus(lua_State *ls)
 {
@@ -350,6 +352,8 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "max_burden",   you_max_burden },
     { "burden",       you_burden },
+    { "constricted",  you_constricted },
+    { "constricting", you_constricting },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
