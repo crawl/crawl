@@ -2269,6 +2269,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_LEVITATION:
         if (slot == EQ_BODY_ARMOUR)
             return (true);
+        // deliberate fall-through
     case SPARM_RUNNING:
     case SPARM_STEALTH:
         return (slot == EQ_BOOTS);
@@ -2282,6 +2283,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_PRESERVATION:
         if (type == ARM_PLATE_ARMOUR && !strict)
             return (true);
+        // deliberate fall-through
     case SPARM_DARKNESS:
         return (slot == EQ_CLOAK || !strict);
 
@@ -2293,6 +2295,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_DEXTERITY:
         if (!strict)
             return true;
+        // deliberate fall-through
     case SPARM_ARCHERY:
         return (slot == EQ_GLOVES);
 
@@ -2314,6 +2317,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_MAGIC_RESISTANCE:
         if (type == ARM_WIZARD_HAT)
             return (true);
+        // deliberate fall-through
     case SPARM_POISON_RESISTANCE:
     case SPARM_POSITIVE_ENERGY:
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
