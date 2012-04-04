@@ -152,7 +152,8 @@ local function is_candidate_for_attack(x,y)
   if not m or m:attitude() ~= ATT_HOSTILE then
     return false
   end
-  if string.find(m:desc(), "butterfly") then
+  if string.find(m:desc(), "butterfly")
+      or string.find(m:desc(), "orb of destruction") then
     return false
   end
   if m:is_firewood() then
