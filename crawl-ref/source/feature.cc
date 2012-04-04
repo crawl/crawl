@@ -223,6 +223,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_TELEPORTER:
+            f.dchar       = DCHAR_TELEPORTER;
+            f.colour      = YELLOW;
+            f.map_colour  = YELLOW;
+            f.minimap     = MF_FEATURE;
+            break;
+
         case DNGN_TRAP_MECHANICAL:
             f.colour     = LIGHTCYAN;
             f.dchar      = DCHAR_TRAP;

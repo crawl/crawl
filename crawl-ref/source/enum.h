@@ -1116,6 +1116,7 @@ enum dungeon_char_type
     DCHAR_ITEM_AMULET,
     DCHAR_CLOUD,
     DCHAR_TREE,
+    DCHAR_TELEPORTER,
 
     DCHAR_SPACE,
     DCHAR_FIRED_FLASK,
@@ -1213,6 +1214,7 @@ enum dungeon_feature_type
     DNGN_EXIT_HELL       = 70,         //   70
     DNGN_ENTER_HELL,                   //   71
     DNGN_OPEN_DOOR,                    //   72
+    DNGN_TELEPORTER,
 
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
