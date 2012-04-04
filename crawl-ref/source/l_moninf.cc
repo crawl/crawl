@@ -62,6 +62,40 @@ LUAFN(moninf_get_is)
     return (1);
 }
 
+static bool cant_see_you(const monster_info *mi)
+{
+    if (mons_class_flag(mi->type, M_SEE_INVIS))
+        return false;
+    if (mons_class_flag(mi->type, M_SENSE_INVIS)
+        && (you.pos() - mi->pos).abs() <= 17)
+    {
+        return false;
+    }
+    if (you.in_water())
+        return false;
+    return you.invisible() || mi->is(MB_BLIND);
+}
+
+LUAFN(moninf_get_stabbability)
+{
+    MONINF(ls, 1, mi);
+    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PARALYSED))
+        lua_pushnumber(ls, 1.0);
+    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
+             || mi->is(MB_PETRIFIED))
+    {
+        lua_pushnumber(ls, 0.5);
+    }
+    else if (mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi))
+        lua_pushnumber(ls, 0.25);
+    else if (mi->is(MB_DISTRACTED))
+        lua_pushnumber(ls, 0.16666666);
+    else
+        lua_pushnumber(ls, 0);
+
+    return (1);
+}
+
 LUAFN(moninf_get_is_very_stabbable)
 {
     MONINF(ls, 1, mi);
@@ -132,6 +166,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_safe),
     MIREG(is_firewood),
     MIREG(is_very_stabbable),
+    MIREG(stabbability),
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
