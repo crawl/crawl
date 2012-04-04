@@ -643,6 +643,8 @@ LUARET1(crawl_roll_dice, number,
         : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
                                                     luaL_checkint(ls, 2)))
+LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
+                                                     luaL_checkint(ls, 2)))
 
 static int crawl_is_tiles(lua_State *ls)
 {
@@ -848,6 +850,7 @@ static const struct luaL_reg crawl_clib[] =
     { "x_chance_in_y",  crawl_x_chance_in_y },
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
+    { "div_rand_round", crawl_div_rand_round },
     { "redraw_screen",  crawl_redraw_screen },
     { "c_input_line",   crawl_c_input_line},
     { "getch",          crawl_getch },
