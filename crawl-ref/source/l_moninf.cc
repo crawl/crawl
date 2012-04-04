@@ -96,14 +96,6 @@ LUAFN(moninf_get_stabbability)
     return (1);
 }
 
-LUAFN(moninf_get_is_very_stabbable)
-{
-    MONINF(ls, 1, mi);
-    lua_pushboolean(ls, mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) ||
-                        mi->is(MB_PARALYSED));
-    return (1);
-}
-
 LUAFN(moninf_get_is_constricted)
 {
     MONINF(ls, 1, mi);
@@ -165,7 +157,6 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is),
     MIREG(is_safe),
     MIREG(is_firewood),
-    MIREG(is_very_stabbable),
     MIREG(stabbability),
     MIREG(holiness),
     MIREG(attitude),
