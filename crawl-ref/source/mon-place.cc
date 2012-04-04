@@ -165,6 +165,10 @@ bool monster_habitable_grid(monster_type mt,
     if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
         return (false);
 
+    // Monsters can't use teleporters, and standing there would look just wrong.
+    if (actual_grid == DNGN_TELEPORTER)
+        return (false);
+
     const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(mt));
     const dungeon_feature_type feat_nonpreferred =

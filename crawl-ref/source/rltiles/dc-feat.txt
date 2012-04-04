@@ -108,9 +108,8 @@ gravestone_ornate DNGN_GRAVESTONE_ORNATE
 ## strange machine for Tukima's Wizlab
 machine_tukima DNGN_MACHINE_TUKIMA
 
-## tiles for the_teleporter vaults
-the_teleporter_vaults DNGN_THE_TELEPORTER_VAULTS
-the_teleporter_ice_cave DNGN_THE_TELEPORTER_ICE_CAVE
+## an icy teleporter
+teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 
 ## golden statues for the holy Pan level
 golden_statue_1 DNGN_GOLDEN_STATUE
@@ -458,6 +457,8 @@ dngn_dry_fountain DNGN_DRY_FOUNTAIN
 %lum 0 45
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
+
+dngn_teleporter DNGN_TELEPORTER
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.
