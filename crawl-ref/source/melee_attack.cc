@@ -236,6 +236,20 @@ bool melee_attack::handle_phase_attempted()
             cancel_attack = true;
             return (false);
         }
+        else if (cell_is_solid(defender->pos())
+                 && mons_wall_shielded(defender->as_monster())
+                 && you.can_see(defender)
+                 && !you.confused()
+                 && !crawl_state.game_is_zotdef())
+        {
+            // Don't waste a turn hitting a rock worm when you know it
+            // will do nothing.
+            mprf("The %s protects %s from harm.",
+                 raw_feature_description(grd(defender->pos())).c_str(),
+                 defender->name(DESC_THE).c_str());
+            cancel_attack = true;
+            return (false);
+        }
     }
     // Set delay now that we know the attack won't be cancelled.
     if (attacker->is_player())
