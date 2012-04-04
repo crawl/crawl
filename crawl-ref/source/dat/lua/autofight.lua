@@ -129,7 +129,7 @@ local function get_monster_info(dx,dy)
   info.can_attack = (info.attack_type > 0) and 1 or 0
   info.safe = m:is_safe() and -1 or 0
   -- Only prioritize good stabs: sleep and paralysis.
-  info.very_stabbable = m:is_very_stabbable() and 1 or 0
+  info.very_stabbable = (m:stabbability() >= 1) and 1 or 0
   info.injury = m:damage_level()
   info.threat = m:threat()
   return info
