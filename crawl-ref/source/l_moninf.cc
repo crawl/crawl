@@ -117,6 +117,24 @@ LUAFN(moninf_get_is_constricting)
     return (1);
 }
 
+LUAFN(moninf_get_is_constricting_you)
+{
+    MONINF(ls, 1, mi);
+    if (!you.is_constricted())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mi->constricting_name[i] == "you") // yay the interface
+        {
+            lua_pushboolean(ls, true);
+            return (1);
+        }
+    lua_pushboolean(ls, false);
+    return (1);
+}
+
 LUAFN(moninf_get_is_unique)
 {
     MONINF(ls, 1, mi);
@@ -163,6 +181,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(threat),
     MIREG(is_constricted),
     MIREG(is_constricting),
+    MIREG(is_constricting_you),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
