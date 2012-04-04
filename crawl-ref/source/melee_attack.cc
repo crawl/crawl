@@ -5372,14 +5372,6 @@ int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
     return defender->hurt(attacker, dam, flavour, clean);
 }
 
-// Avoid warnings for unread variables.  Used with variable declarations,
-// so unparenthesised: use only as a statement!
-#ifdef DEBUG_DIAGNOSTICS
-# define DIAG_ONLY(x) x
-#else
-# define DIAG_ONLY(x) (void)0
-#endif
-
 bool melee_attack::handle_constriction()
 {
     // see what is grabbed already
@@ -5467,4 +5459,3 @@ bool melee_attack::handle_constriction()
     attacker->has_constricted_this_turn = true;
     return true;
 }
-#undef DIAG_ONLY
