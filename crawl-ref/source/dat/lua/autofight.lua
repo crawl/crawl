@@ -128,6 +128,7 @@ local function get_monster_info(dx,dy)
   end
   info.can_attack = (info.attack_type > 0) and 1 or 0
   info.safe = m:is_safe() and -1 or 0
+  info.constricting_you = m:is_constricting_you() and 1 or 0
   -- Only prioritize good stabs: sleep and paralysis.
   info.very_stabbable = (m:stabbability() >= 1) and 1 or 0
   info.injury = m:damage_level()
@@ -136,7 +137,7 @@ local function get_monster_info(dx,dy)
 end
 
 local function compare_monster_info(m1, m2)
-  flag_order = {"can_attack", "safe", "distance", "very_stabbable", "injury", "threat"}
+  flag_order = {"can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat"}
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then
       return true
