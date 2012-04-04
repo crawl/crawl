@@ -59,6 +59,13 @@
 #include "env.h"
 #include "tags.h"
 
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilereg-crt.h"
+#endif
+
 #include "skills2.h"
 #define SCORE_VERSION "0.1"
 
@@ -308,7 +315,18 @@ void hiscores_print_list(int display_count, int format)
 
 static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
 {
-    TextItem* tmp = new TextItem();
+#ifdef USE_TILE_LOCAL
+    TextTileItem* tmp = NULL;
+#else
+    TextItem* tmp = NULL;
+#endif
+
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+#else
+    tmp = new TextItem();
+#endif
 
     coord_def min_coord(1,1);
     coord_def max_coord(1,2);
@@ -405,6 +423,19 @@ void show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
+
+#ifdef USE_TILE_LOCAL
+    const int max_col    = tiles.get_crt()->mx;
+#else
+    const int max_col    = get_number_of_cols() - 1;
+#endif
+    const int max_line   = get_number_of_lines() - 1;
+
+    const int scores_col_start = 20;
+    const int scores_row_start = 10;
+    const int scores_col_end = scores_col_start + 50;
+    const int scores_row_end = max_line;
+
     bool smart_cursor_enabled = is_smart_cursor_enabled();
 
     clrscr();
@@ -422,7 +453,11 @@ void show_hiscore_table()
 
     MenuScroller* score_entries = new MenuScroller();
 
-    score_entries->init(coord_def(18,7), coord_def(60,20), "scores");
+    //score_entries->init(coord_def(scores_col_start, scores_row_start),
+    //        coord_def(scores_col_end, scores_row_end), "scores");
+    //score_entries->init(coord_def(20,7), coord_def(60,20), "scores");
+    score_entries->init(coord_def(scores_col_start, scores_row_start),
+            coord_def(scores_col_end, scores_row_end), "scores");
 
     _construct_hiscore_table(score_entries);
 
@@ -431,11 +466,20 @@ void show_hiscore_table()
             coord_def(get_number_of_cols(), get_number_of_lines()),
             "descriptor");
 
+
     menu.attach_object(descriptor);
+#ifdef USE_TILE_LOCAL
+    // Black and White highlighter looks kinda bad on tiles
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+#else
     BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+#endif
     highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
     menu.attach_object(highlighter);
 
+#ifdef USE_TILE_LOCAL
+    tiles.get_crt()->attach_menu(&menu);
+#endif
     //freeform->set_visible(true);
     descriptor->set_visible(true);
     highlighter->set_visible(true);
@@ -463,6 +507,9 @@ void show_hiscore_table()
         {
             show_morgue(*hs_list[menu.get_active_item()->get_id()]);
             clrscr();
+#ifdef USE_TILE_LOCAL
+            tiles.get_crt()->attach_menu(&menu);
+#endif
         }
         // Do something
         if (!menu.process_key(keyn))
