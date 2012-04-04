@@ -70,6 +70,27 @@ LUAFN(moninf_get_is_very_stabbable)
     return (1);
 }
 
+LUAFN(moninf_get_is_constricted)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, !mi->constrictor_name.empty());
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricting)
+{
+    MONINF(ls, 1, mi);
+    bool any = false;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (!mi->constricting_name[i].empty())
+        {
+            any = true;
+            break;
+        }
+    lua_pushboolean(ls, any);
+    return (1);
+}
+
 LUAFN(moninf_get_is_unique)
 {
     MONINF(ls, 1, mi);
@@ -114,6 +135,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
+    MIREG(is_constricted),
+    MIREG(is_constricting),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
