@@ -352,7 +352,55 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 
 void show_morgue(scorefile_entry& se)
 {
-    enable_smart_cursor(true);
+
+    formatted_scroller morgue_file;
+    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+
+    morgue_file.set_flags(flags, false);
+    morgue_file.set_tag("morgue");
+
+    morgue_file.set_more(formatted_string::parse_string(
+#ifdef USE_TILE_LOCAL
+                            "<cyan>[ +/L-click : Page down.   - : Page up."
+                            "           Esc/R-click exits.]"));
+#else
+                            "<cyan>[ + : Page down.   - : Page up."
+                            "                           Esc exits.]"));
+#endif
+    //enable_smart_cursor(true);
+
+    std::string morgue_path = morgue_directory() + morgue_name(se.get_name(), se.get_death_time()) + ".txt";
+    FILE* morgue = lk_open("r", morgue_path);
+
+    if (!morgue)
+        return;
+
+    char buf[200];
+    std::string morgue_text = "";
+
+    while (fgets(buf, sizeof buf, morgue) != NULL)
+    {
+        morgue_text += std::string(buf);
+    }
+
+    lk_close(morgue, "r", morgue_path);
+
+    clrscr();
+
+
+    column_composer cols(2, 40);
+    cols.add_formatted(
+            0,
+            morgue_text,
+            true, true);
+
+    std::vector<formatted_string> blines = cols.formatted_lines();
+
+    unsigned i;
+    for (i = 0; i < blines.size(); ++i)
+        morgue_file.add_item_formatted_string(blines[i]);
+
+    morgue_file.show();
 }
 
 void show_hiscore_table()
@@ -369,6 +417,7 @@ void show_hiscore_table()
     //            get_number_of_lines()), "freeform");
     //freeform->allow_focus(false);
     //menu.attach_object(freeform);
+    //
 
 
     MenuScroller* score_entries = new MenuScroller();
@@ -410,13 +459,14 @@ void show_hiscore_table()
             enable_smart_cursor(smart_cursor_enabled);
             return;
         }
+        if (keyn == CK_ENTER)
+        {
+            show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+            clrscr();
+        }
+        // Do something
         if (!menu.process_key(keyn))
         {
-            // Do something
-            if (keyn == CK_ENTER)
-            {
-                show_morgue(*hs_list[menu.get_active_item()->get_id()]);
-            }
         }
     }
 }
