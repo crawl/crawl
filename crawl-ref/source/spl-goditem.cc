@@ -839,7 +839,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
-            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            if (!proceed && feat_is_reachable_past(grd(*ai)))
             {
                 success = false;
                 none_vis = false;

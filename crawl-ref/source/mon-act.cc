@@ -812,7 +812,7 @@ static bool _handle_reaching(monster* mons)
         && delta.abs() <= reach_range(range)
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
-        && (grd(middle) > DNGN_MAX_NONREACH
+        && (feat_is_reachable_past(grd(middle))
             || mons->see_cell_no_trans(foepos))
         // The foe should be on the map (not stepped from time).
         && in_bounds(foepos))

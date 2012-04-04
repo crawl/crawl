@@ -3464,7 +3464,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
                     proceed = true;
 
-            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            if (!proceed && feat_is_reachable_past(grd(*ai)))
                 sumcount++;
         }
 
