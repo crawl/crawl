@@ -1183,7 +1183,7 @@ enum dungeon_feature_type
 
     // Lowest grid value which can be seen through.
     DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
-
+#if TAG_MAJOR_VERSION == 32
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_GRATE,
 
@@ -1194,6 +1194,17 @@ enum dungeon_feature_type
     DNGN_ORCISH_IDOL,
     DNGN_SWAMP_TREE,
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
+#else
+    DNGN_TREE,
+    DNGN_SWAMP_TREE,
+
+    // Highest grid value which can't be reached through.
+    DNGN_MAX_NONREACH = DNGN_SWAMP_TREE,
+
+    DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
+    DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
+    DNGN_ORCISH_IDOL,
+#endif
     DNGN_GRANITE_STATUE = 21,
     // Highest solid grid value.
     DNGN_MAXSOLID = DNGN_GRANITE_STATUE,
