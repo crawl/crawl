@@ -609,9 +609,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     beam.hit = AUTOMATIC_HIT;
     beam.source_name = mon.name(DESC_PLAIN, true);
 
-    int pow = mon.hit_dice * 6;
-    pow = stepdown_value(pow, 30, 30, 200, -1);
-    beam.damage = dice_def(4, pow / 4);
+    beam.damage = dice_def(3, 20);
 
     beam.ex_size = 1;
     beam.loudness = 5;
