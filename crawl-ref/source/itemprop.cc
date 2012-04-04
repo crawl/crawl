@@ -326,7 +326,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
