@@ -498,7 +498,11 @@ bool feat_is_fountain(dungeon_feature_type feat)
 
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
+#if TAG_MAJOR_VERSION == 32
     return feat > DNGN_MAX_NONREACH && !feat_is_tree(feat);
+#else
+    return feat > DNGN_MAX_NONREACH;
+#endif
 }
 
 // Find all connected cells containing ft, starting at d.
