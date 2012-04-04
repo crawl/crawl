@@ -141,9 +141,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                      (grd(second_middle) <= DNGN_MAX_NONREACH ? first_middle :
                      (coinflip() ? first_middle : second_middle)));
 
-    // BCR - Added a check for monsters in the way.  Only checks cardinal
-    //       directions.  Knight moves are ignored.  Assume the weapon
-    //       slips between the squares.
+    // Check for a monster in the way. If there is one, it blocks the reaching
+    // attack 50% of the time, and the attack tries to hit it if it is hostile.
 
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
