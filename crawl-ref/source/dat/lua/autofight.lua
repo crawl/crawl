@@ -123,7 +123,7 @@ local function get_monster_info(dx,dy)
     elseif -info.distance < 2 then
       info.attack_type = 2
     else
-      info.attack_type = 1
+      info.attack_type = view.can_reach(dx, dy) and 1 or 0
     end
   end
   info.can_attack = (info.attack_type > 0) and 1 or 0
