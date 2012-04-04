@@ -4424,7 +4424,7 @@ void bolt::affect_monster(monster* mon)
     // IMB explodes sometimes; check whether it is explosive now so that
     // we know whether it can be blocked.
     const bool explosive = (name == "orb of energy" && !in_explosion_phase
-                            && x_chance_in_y(3,2*grid_distance(source,pos())+2));
+        && x_chance_in_y(3, 2 * grid_distance(source, pos()) + 2));
 
     // The monster may block the beam.
     if (!engulfs && !explosive && is_blockable() && attempt_block(mon))
