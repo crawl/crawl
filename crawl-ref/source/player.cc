@@ -3201,8 +3201,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (you.experience_level == 13)
                 {
-                    mpr("You can now constrict enemies with your "
-                        "snake-like lower body.", MSGCH_INTRINSIC_GAIN);
+                    mpr("Your tail grows strong enough to constrict"
+                        " your enemies.", MSGCH_INTRINSIC_GAIN);
                 }
                 break;
 
