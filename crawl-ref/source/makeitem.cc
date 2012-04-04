@@ -2286,7 +2286,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return (true);
         // deliberate fall-through
     case SPARM_DARKNESS:
-        return (slot == EQ_CLOAK || !strict);
+        return (slot == EQ_CLOAK);
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
