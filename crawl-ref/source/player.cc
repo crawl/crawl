@@ -7427,25 +7427,17 @@ void player::accum_has_constricted()
 
 bool player::attempt_escape()
 {
-    size_type thesize;
-    int attfactor;
-    int randfact;
     monster *themonst;
 
     if (!is_constricted())
         return true;
 
-    escape_attempts++;
-    // player breaks free if size*attempts > 5 + d(12) + d(HD)
-    // this is inefficient on purpose, simplify after debug
-    thesize = body_size(PSIZE_BODY);
-    attfactor = thesize * escape_attempts;
-
-    randfact = roll_dice(1,5) + 5;
     themonst = &env.mons[constricted_by];
-    randfact += roll_dice(1,themonst->hit_dice);
+    escape_attempts++;
 
-    if (attfactor > randfact)
+    // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
+    if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))
+        >= roll_dice(5, 8 + div_rand_round(themonst->hit_dice, 4)))
     {
         // message that you escaped
 
