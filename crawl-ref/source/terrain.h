@@ -79,6 +79,7 @@ bool feat_is_branch_stairs(dungeon_feature_type feat);
 bool feat_is_branchlike(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_reachable_past(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);

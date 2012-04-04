@@ -112,8 +112,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("Your weapon cannot reach that far!");
         return (false); // Shouldn't happen with confused swings
     }
-    else if (grd(first_middle) <= DNGN_MAX_NONREACH
-             && grd(second_middle) <= DNGN_MAX_NONREACH)
+    else if (!feat_is_reachable_past(grd(first_middle))
+             && !feat_is_reachable_past(grd(second_middle)))
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
@@ -137,9 +137,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
-                     (grd(first_middle) <= DNGN_MAX_NONREACH ? second_middle :
-                     (grd(second_middle) <= DNGN_MAX_NONREACH ? first_middle :
-                     (coinflip() ? first_middle : second_middle)));
+        (!feat_is_reachable_past(grd(first_middle)) ? second_middle :
+         (!feat_is_reachable_past(grd(second_middle)) ? first_middle :
+          (coinflip() ? first_middle : second_middle)));
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.

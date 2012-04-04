@@ -496,6 +496,11 @@ bool feat_is_fountain(dungeon_feature_type feat)
     return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
 }
 
+bool feat_is_reachable_past(dungeon_feature_type feat)
+{
+    return feat > DNGN_MAX_NONREACH && !feat_is_tree(feat);
+}
+
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
