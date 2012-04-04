@@ -2274,7 +2274,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return (slot == EQ_BOOTS);
 
     case SPARM_ARCHMAGI:
-        return (type == ARM_ROBE);
+        return (type == ARM_ROBE || !strict);
 
     case SPARM_PONDEROUSNESS:
         return (true);
@@ -2283,15 +2283,17 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PLATE_ARMOUR && !strict)
             return (true);
     case SPARM_DARKNESS:
-        return (slot == EQ_CLOAK);
+        return (slot == EQ_CLOAK || !strict);
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
         return (slot == EQ_SHIELD);
 
-    case SPARM_ARCHERY:
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
+        if (!strict)
+            return true;
+    case SPARM_ARCHERY:
         return (slot == EQ_GLOVES);
 
     case SPARM_SEE_INVISIBLE:
@@ -2317,10 +2319,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return (false); // contradictory or redundant
 
-        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK);
+        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK
+                || !strict);
 
     case SPARM_SPIRIT_SHIELD:
-        return (type == ARM_CAP || slot == EQ_SHIELD);
+        return (type == ARM_CAP || slot == EQ_SHIELD || !strict);
 
     case NUM_SPECIAL_ARMOURS:
         die("invalid armour brand");
