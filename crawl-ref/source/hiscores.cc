@@ -385,8 +385,6 @@ void show_morgue(scorefile_entry& se)
                             "<cyan>[ + : Page down.   - : Page up."
                             "                           Esc exits.]"));
 #endif
-    //enable_smart_cursor(true);
-
     std::string morgue_path = morgue_directory() + morgue_name(se.get_name(), se.get_death_time()) + ".txt";
     FILE* morgue = lk_open("r", morgue_path);
 
@@ -443,19 +441,8 @@ void show_hiscore_table()
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
 
-    //MenuFreeform* freeform = new MenuFreeform();
-    //freeform->init(coord_def(0, 0), coord_def(get_number_of_cols(),
-    //            get_number_of_lines()), "freeform");
-    //freeform->allow_focus(false);
-    //menu.attach_object(freeform);
-    //
-
-
     MenuScroller* score_entries = new MenuScroller();
 
-    //score_entries->init(coord_def(scores_col_start, scores_row_start),
-    //        coord_def(scores_col_end, scores_row_end), "scores");
-    //score_entries->init(coord_def(20,7), coord_def(60,20), "scores");
     score_entries->init(coord_def(scores_col_start, scores_row_start),
             coord_def(scores_col_end, scores_row_end), "scores");
 
@@ -469,7 +456,6 @@ void show_hiscore_table()
 
     menu.attach_object(descriptor);
 #ifdef USE_TILE_LOCAL
-    // Black and White highlighter looks kinda bad on tiles
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
 #else
     BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
@@ -480,7 +466,6 @@ void show_hiscore_table()
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
-    //freeform->set_visible(true);
     descriptor->set_visible(true);
     highlighter->set_visible(true);
     score_entries->set_visible(true);
@@ -499,7 +484,7 @@ void show_hiscore_table()
 
         if (key_is_escape(keyn))
         {
-            // Go back to the menu
+            // Go back to the menu and return the smart cursor to its previous state
             enable_smart_cursor(smart_cursor_enabled);
             return;
         }
