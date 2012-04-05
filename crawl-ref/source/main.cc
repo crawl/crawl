@@ -1234,7 +1234,7 @@ static void _input()
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else
-                clua.callfn("ready", 0);
+                clua.callfn("ready", 0, 0);
         }
 
         // We're not in an infinite loop, reset the timer.
