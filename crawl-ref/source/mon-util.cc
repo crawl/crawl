@@ -86,7 +86,7 @@ static int _mons_exp_mod(monster_type mclass);
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
-habitat_type grid2habitat(dungeon_feature_type grid)
+static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
     if (feat_is_watery(grid))
         return (HT_WATER);
@@ -149,7 +149,7 @@ monster_type random_monster_at_grid(dungeon_feature_type grid)
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = grid2habitat(grid);
+    const habitat_type ht = _grid2habitat(grid);
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
 
     ASSERT(!valid_mons.empty());

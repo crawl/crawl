@@ -950,36 +950,6 @@ bool in_inventory(const item_def &i)
     return i.pos.x == -1 && i.pos.y == -1;
 }
 
-unsigned char get_invent(int invent_type)
-{
-    unsigned char select;
-    int flags = MF_SINGLESELECT;
-    if (you.dead || crawl_state.updating_scores)
-        flags |= MF_EASY_EXIT;
-
-    while (true)
-    {
-        select = invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
-
-        if (isaalpha(select))
-        {
-            const int invidx = letter_to_index(select);
-            if (you.inv[invidx].defined())
-            {
-                if (!describe_item(you.inv[invidx], true))
-                    break;
-            }
-        }
-        else
-            break;
-    }
-
-    if (!crawl_state.doing_prev_cmd_again)
-        redraw_screen();
-
-    return select;
-}
-
 std::string item_class_name(int type, bool terse)
 {
     if (terse)
@@ -1225,16 +1195,18 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
     return (false);
 }
 
-unsigned char invent_select(const char *title,
-                             menu_type type,
-                             int item_selector,
-                             int excluded_slot,
-                             int flags,
-                             invtitle_annotator titlefn,
-                             std::vector<SelItem> *items,
-                             std::vector<text_pattern> *filter,
-                             Menu::selitem_tfn selitemfn,
-                             const std::vector<SelItem> *pre_select)
+// Use title = NULL for stock Inventory title
+// type = MT_DROP allows the multidrop toggle
+static unsigned char _invent_select(const char *title = NULL,
+                                    menu_type type = MT_INVLIST,
+                                    int item_selector = OSEL_ANY,
+                                    int excluded_slot = -1,
+                                    int flags = MF_NOSELECT,
+                                    invtitle_annotator titlefn = NULL,
+                                    std::vector<SelItem> *items = NULL,
+                                    std::vector<text_pattern> *filter = NULL,
+                                    Menu::selitem_tfn selitemfn = NULL,
+                                    const std::vector<SelItem> *pre_select = NULL)
 {
     InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
@@ -1256,6 +1228,36 @@ unsigned char invent_select(const char *title,
         *items = menu.get_selitems();
 
     return (menu.getkey());
+}
+
+unsigned char get_invent(int invent_type)
+{
+    unsigned char select;
+    int flags = MF_SINGLESELECT;
+    if (you.dead || crawl_state.updating_scores)
+        flags |= MF_EASY_EXIT;
+
+    while (true)
+    {
+        select = _invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
+
+        if (isaalpha(select))
+        {
+            const int invidx = letter_to_index(select);
+            if (you.inv[invidx].defined())
+            {
+                if (!describe_item(you.inv[invidx], true))
+                    break;
+            }
+        }
+        else
+            break;
+    }
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    return select;
 }
 
 void browse_inventory()
@@ -1363,7 +1365,7 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 
             // The "view inventory listing" mode.
-            const int ch = invent_select(prompt,
+            const int ch = _invent_select(prompt,
                                           mtype,
                                           keyin == '*' ? OSEL_ANY : type_expect,
                                           -1,
@@ -1808,7 +1810,7 @@ int prompt_invent_item(const char *prompt,
         {
             // The "view inventory listing" mode.
             std::vector< SelItem > items;
-            keyin = invent_select(
+            keyin = _invent_select(
                         prompt,
                         mtype,
                         keyin == '*' ? OSEL_ANY : type_expect,

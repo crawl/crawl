@@ -1216,7 +1216,7 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
+coord_def find_gateway_location (actor* caster)
 {
     coord_def point = coord_def(0, 0);
 
@@ -1226,7 +1226,6 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
-    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1239,7 +1238,7 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
+            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
