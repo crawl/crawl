@@ -56,6 +56,7 @@ Trent W. Buck
 Joe Buzzelli
 Henry Cipolla
 Aaron Curtis
+Simon Curtis
 Denzi
 Lothar Dierkes
 Mike Drinen
