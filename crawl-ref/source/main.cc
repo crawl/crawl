@@ -1229,6 +1229,10 @@ static void _input()
     {
         clear_macro_process_key_delay();
 
+        // At this point we are guaranteed to not be in any recursion, so the
+        // Lua stack must be empty.  Unless there's a leak.
+        ASSERT(lua_gettop(clua.state()) == 0);
+
         if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
