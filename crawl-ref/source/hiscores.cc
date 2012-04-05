@@ -85,7 +85,6 @@ static time_t _parse_time(const std::string &st);
 static std::string _xlog_escape(const std::string &s);
 static std::string _xlog_unescape(const std::string &s);
 static std::vector<std::string> _xlog_split_fields(const std::string &s);
-static const int X_MARGIN = 4;
 
 static std::string _score_file_name()
 {
@@ -323,7 +322,7 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
 
 #ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
-    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+    //tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
 #else
     tmp = new TextItem();
 #endif
@@ -369,11 +368,13 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 
 }
 
-void show_morgue(scorefile_entry& se)
+static void _show_morgue(scorefile_entry& se)
 {
 
     formatted_scroller morgue_file;
     int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+    if (Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
 
     morgue_file.set_flags(flags, false);
     morgue_file.set_tag("morgue");
@@ -397,7 +398,9 @@ void show_morgue(scorefile_entry& se)
 
     while (fgets(buf, sizeof buf, morgue) != NULL)
     {
-        morgue_text += std::string(buf);
+        std::string line = std::string(buf);
+        line.erase(line.find_last_of('\n'));
+        morgue_text += "<w>" + line + "</w>" + '\n';
     }
 
     lk_close(morgue, "r", morgue_path);
@@ -417,6 +420,7 @@ void show_morgue(scorefile_entry& se)
     for (i = 0; i < blines.size(); ++i)
         morgue_file.add_item_formatted_string(blines[i]);
 
+    textcolor(WHITE);
     morgue_file.show();
 }
 
@@ -425,7 +429,13 @@ void show_hiscore_table()
 
     const int max_line   = get_number_of_lines() - 1;
 
+#ifdef USE_TILE_LOCAL
     const int scores_col_start = 20;
+    const int descriptor_col_start = 15;
+#else
+    const int scores_col_start = 10;
+    const int descriptor_col_start = 4;
+#endif
     const int scores_row_start = 10;
     const int scores_col_end = scores_col_start + 55;
     const int scores_row_end = max_line;
@@ -445,8 +455,8 @@ void show_hiscore_table()
     _construct_hiscore_table(score_entries);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(X_MARGIN, 1),
-            coord_def(get_number_of_cols(), get_number_of_lines()),
+    descriptor->init(coord_def(descriptor_col_start, 1),
+            coord_def(get_number_of_cols(), scores_row_start - 1),
             "descriptor");
 
     menu.attach_object(descriptor);
@@ -487,13 +497,12 @@ void show_hiscore_table()
         }
         if (keyn == CK_ENTER)
         {
-            show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+            _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
             clrscr();
 #ifdef USE_TILE_LOCAL
             tiles.get_crt()->attach_menu(&menu);
 #endif
         }
-        // Do something
         if (!menu.process_key(keyn))
         {
         }
