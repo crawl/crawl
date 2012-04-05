@@ -4653,8 +4653,12 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
-    if (defender->cannot_act() || !attacker->alive())
+    if (defender->cannot_act()
+        || defender->confused()
+        || !attacker->alive())
+    {
         return;
+    }
 
     if (!defender->is_player())
     {
