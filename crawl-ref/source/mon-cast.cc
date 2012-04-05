@@ -2192,8 +2192,8 @@ static bool _mons_vampiric_drain(monster *mons)
                                make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
         if (mtarget->alive())
             print_wounds(mtarget);
-        mons->heal(hp_cost / 2);
     }
+    mons->heal(hp_cost / 2);
 
     return (true);
 }
