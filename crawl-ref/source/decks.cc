@@ -76,10 +76,7 @@
 // card), deck.props["drawn_cards"] holds the list of drawn cards
 // (with index 0 being the first drawn), deck.props["card_flags"]
 // holds the flags for each card, deck.props["num_marked"] is the
-// number of marked cards left in the deck, and
-// deck.props["non_brownie_draws"] is the number of non-marked draws
-// you have to make from that deck before earning brownie points from
-// it again.
+// number of marked cards left in the deck.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
@@ -857,10 +854,6 @@ bool deck_peek()
         already_seen++;
     if (flags2 & CFLAG_SEEN)
         already_seen++;
-
-    // Always increase if seen 2, 50% increase if seen 1.
-    if (already_seen && x_chance_in_y(already_seen, 2))
-        deck.props["non_brownie_draws"]++;
 
     mprf("You draw two cards from the deck. They are: %s and %s.",
          card_name(card1), card_name(card2));
@@ -3098,7 +3091,6 @@ void init_deck(item_def &item)
     ASSERT(cards_in_deck(item) == item.plus);
 
     props["num_marked"]        = (char) 0;
-    props["non_brownie_draws"] = (char) 0;
 
     props.assert_validity();
 
@@ -3123,7 +3115,6 @@ static void _unmark_deck(item_def& deck)
             static_cast<char>((static_cast<char>(flags[i]) & ~CFLAG_MARKED));
     }
 
-    // We'll be mean and leave non_brownie_draws as-is.
     props["num_marked"] = static_cast<char>(0);
 }
 
