@@ -5408,7 +5408,9 @@ bool melee_attack::handle_constriction()
     // if a new constriction is possible, try it
     if (!defender_grabbed
         && (!any_grabbed || attacker->has_usable_tentacle())
-        && defender->constricted_by == NON_ENTITY)
+        && defender->constricted_by == NON_ENTITY
+        && attacker->can_see(defender)
+        && !attacker->confused())
     {
         // calculate to_hit
         size_type asize = attacker->body_size(PSIZE_BODY);
