@@ -624,8 +624,10 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
-    int value = (item.base_type == OBJ_CORPSES ? 50 :
-                (is_worthless_consumable(item) ? 1 : shop_value));
+    const int value = (item.base_type == OBJ_CORPSES ?
+                          50 * stepdown_value(std::max(1,
+                          get_max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
+                      (is_worthless_consumable(item) ? 1 : shop_value));
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -691,12 +693,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
     case GOD_NEMELEX_XOBEH:
     {
-        if (item.base_type == OBJ_CORPSES)
-        {
-            value = 50 * stepdown_value(std::max(1,
-                    get_max_corpse_chunks(item.mon_type)), 4, 4, 12, 12);
-        }
-
         if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
         {
             you.attribute[ATTR_CARD_COUNTDOWN]--;
