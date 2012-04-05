@@ -2275,7 +2275,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return (slot == EQ_BOOTS);
 
     case SPARM_ARCHMAGI:
-        return (type == ARM_ROBE || !strict);
+        return (strict ? (type == ARM_ROBE)
+                       : (slot == EQ_BODY_ARMOUR));
 
     case SPARM_PONDEROUSNESS:
         return (true);
