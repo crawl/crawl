@@ -1563,7 +1563,7 @@ static bool make_item_for_monster(
     return (true);
 }
 
-void give_shield(monster* mon, int level)
+static void _give_shield(monster* mon, int level)
 {
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
@@ -1703,7 +1703,7 @@ void give_shield(monster* mon, int level)
     }
 }
 
-void give_armour(monster* mon, int level, bool spectral_orcs)
+static void _give_armour(monster* mon, int level, bool spectral_orcs)
 {
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -2170,6 +2170,6 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
 
     _give_ammo(mons, level_number, item_race, mons_summoned);
 
-    give_armour(mons, 1 + level_number / 2, spectral_orcs);
-    give_shield(mons, 1 + level_number / 2);
+    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
+    _give_shield(mons, 1 + level_number / 2);
 }

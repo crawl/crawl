@@ -1836,12 +1836,12 @@ bool valid_kraken_connection(const monster* mons)
 }
 
 
-bool valid_kraken_segment(monster * mons)
+static bool _valid_kraken_segment(monster * mons)
 {
     return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
-bool valid_demonic_connection(monster* mons)
+static bool _valid_demonic_connection(monster* mons)
 {
     return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
@@ -1940,13 +1940,13 @@ void move_demon_tentacle(monster* tentacle)
     std::map<coord_def, std::set<int> > connection_data;
 
     int visited_count = _collect_connection_data(tentacle,
-                                                 valid_demonic_connection,
+                                                 _valid_demonic_connection,
                                                  connection_data,
                                                  retract_pos);
 
     //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
 
-    _purge_connectors(tentacle->mindex(), valid_demonic_connection);
+    _purge_connectors(tentacle->mindex(), _valid_demonic_connection);
 
     if (severed)
     {
@@ -2167,7 +2167,7 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        _purge_connectors(tentacle_idx, valid_kraken_segment);
+        _purge_connectors(tentacle_idx, _valid_kraken_segment);
 
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)

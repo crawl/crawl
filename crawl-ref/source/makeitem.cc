@@ -3430,17 +3430,6 @@ jewellery_type get_random_ring_type()
     return (j);
 }
 
-armour_type get_random_body_armour_type(int item_level)
-{
-    for (int tries = 100; tries > 0; --tries)
-    {
-        const armour_type tr = _get_random_armour_type(item_level);
-        if (get_armour_slot(tr) == EQ_BODY_ARMOUR)
-            return (tr);
-    }
-    return (ARM_ROBE);
-}
-
 // FIXME: Need to clean up this mess.
 static armour_type _get_random_armour_type(int item_level)
 {

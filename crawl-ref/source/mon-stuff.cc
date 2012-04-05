@@ -4313,8 +4313,8 @@ bool monster_space_valid(const monster* mons, coord_def target,
     return monster_habitable_grid(mons, grd(target));
 }
 
-bool monster_random_space(const monster* mons, coord_def& target,
-                          bool forbid_sanctuary)
+static bool _monster_random_space(const monster* mons, coord_def& target,
+                                  bool forbid_sanctuary)
 {
     int tries = 0;
     while (tries++ < 1000)
@@ -4325,15 +4325,6 @@ bool monster_random_space(const monster* mons, coord_def& target,
     }
 
     return (false);
-}
-
-bool monster_random_space(monster_type mon, coord_def& target,
-                          bool forbid_sanctuary)
-{
-    monster dummy;
-    dummy.type = mon;
-
-    return (monster_random_space(&dummy, target, forbid_sanctuary));
 }
 
 void monster_teleport(monster* mons, bool instan, bool silent)
@@ -4387,7 +4378,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     }
 
     if (newpos.origin())
-        monster_random_space(mons, newpos, !mons->wont_attack());
+        _monster_random_space(mons, newpos, !mons->wont_attack());
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)

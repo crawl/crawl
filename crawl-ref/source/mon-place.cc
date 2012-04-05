@@ -869,23 +869,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
     return (chosen);
 }
 
-// Given a monster_type that includes meta-monster types such as
-// RANDOM_MONSTER, converts them into a level-appropriate monster.
-monster_type resolve_monster_type(monster_type mon_type,
-                                  dungeon_feature_type feat)
-{
-    monster_type base = MONS_NO_MONSTER;
-    coord_def dummy(GXM - 1, GYM - 1);
-    unwind_var<dungeon_feature_type> dummgrid(grd(dummy), feat);
-    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int level = you.absdepth0;
-    bool chose_ood = false;
-
-    return _resolve_monster_type(mon_type, PROX_ANYWHERE, base,
-                                 dummy, 0, &stair_type, &level,
-                                 &chose_ood);
-}
-
 // A short function to check the results of near_stairs().
 // Returns 0 if the point is not near stairs.
 // Returns 1 if the point is near unoccupied stairs.

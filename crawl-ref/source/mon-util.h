@@ -159,7 +159,6 @@ enum mon_threat_level_type
     MTHRT_UNDEF,
 };
 
-habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(monster_type mc);
