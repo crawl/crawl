@@ -431,7 +431,7 @@ void show_hiscore_table()
 
     const int scores_col_start = 20;
     const int scores_row_start = 10;
-    const int scores_col_end = scores_col_start + 50;
+    const int scores_col_end = scores_col_start + 55;
     const int scores_row_end = max_line;
 
     bool smart_cursor_enabled = is_smart_cursor_enabled();
@@ -443,6 +443,7 @@ void show_hiscore_table()
 
     MenuScroller* score_entries = new MenuScroller();
 
+    //18,7 60,20
     score_entries->init(coord_def(scores_col_start, scores_row_start),
             coord_def(scores_col_end, scores_row_end), "scores");
 
