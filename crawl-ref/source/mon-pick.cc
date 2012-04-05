@@ -366,7 +366,6 @@ int mons_standard_level(int mcls)
     case MONS_GNOLL:
     case MONS_HOBGOBLIN:
     case MONS_JACKAL:
-    case MONS_KILLER_BEE_LARVA:
         return 5;
 
     case MONS_WORM:
