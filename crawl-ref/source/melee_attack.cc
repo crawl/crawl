@@ -3502,11 +3502,6 @@ int melee_attack::calc_to_hit(bool random)
         if (player_effect_inaccuracy())
             mhit -= 5;
 
-        // If you can't see yourself, you're a little less accurate. Maybe
-        // monsters should get this penalty too? (would nerf orc wizards a bit)
-        if (!you.visible_to(&you))
-            mhit -= 5;
-
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -3629,13 +3624,8 @@ int melee_attack::calc_to_hit(bool random)
                 break;
             }
         }
-
-        // If no defender, we're calculating to-hit for debug-display
-        // purposes, so don't drop down to defender code below
-        if (defender == NULL)
-            return (mhit);
     }
-    else
+    else    // Monster to-hit.
     {
         if (weapon
             && (weapon->base_type == OBJ_WEAPONS
@@ -3647,11 +3637,21 @@ int melee_attack::calc_to_hit(bool random)
 
         if (weapon && item_is_rod(*weapon))
             mhit += (short)weapon->props["rod_enchantment"];
-
-        // Probably players should get this penalty too.
-        if (attacker->confused())
-            mhit -= 5;
     }
+
+    // Penalties for both players and monsters:
+
+    // If you can't see yourself, you're a little less accurate.
+    if (!attacker->visible_to(attacker))
+        mhit -= 5;
+
+    if (attacker->confused())
+        mhit -= 5;
+
+    // If no defender, we're calculating to-hit for debug-display
+    // purposes, so don't drop down to defender code below
+    if (defender == NULL)
+        return (mhit);
 
     if (!defender->visible_to(attacker))
         if (attacker->is_player())
