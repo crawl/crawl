@@ -3033,6 +3033,8 @@ bool melee_attack::apply_damage_brand()
             || !defender->is_player()
                && defender->as_monster()->is_summoned()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
+            || !attacker->is_player()
+               && attacker->as_monster()->has_ench(ENCH_DEATHS_DOOR)
             || one_chance_in(5))
         {
             break;
