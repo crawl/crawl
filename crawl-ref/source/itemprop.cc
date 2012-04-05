@@ -2361,24 +2361,21 @@ bool is_fizzing_potion (const item_def &item)
     return (item.sub_type == POT_FIZZING);
 }
 
-// Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
-
-    // XXX: This needs to be better merged with the mutation system.
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
     int ret = food.value;
 
-    ret += (carn * food.carn_mod);
-    ret += (herb * food.herb_mod);
+    ret += carn * food.carn_mod;
+    ret += herb * food.herb_mod;
 
-    return ((ret > 0) ? div_rand_round(ret, food.turns) : 0);
+    return ret;
 }
 
 int food_turns(const item_def &item)
