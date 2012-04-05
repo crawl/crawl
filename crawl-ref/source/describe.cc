@@ -3483,7 +3483,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << "; " << comma_separated_line(attitude.begin(),
                                                  attitude.end(),
                                                  "; ", "; ");
-    inf.body << "\n";
 
     if (mons.can_use_spells())
     {
@@ -3503,7 +3502,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                 inf.body << "    " << i << ": "
                          << spell_title(hspell_pass[i])
                          << " (" << static_cast<int>(hspell_pass[i])
-                         << ")\n";
+                         << ")";
             }
         }
     }
@@ -3515,10 +3514,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         {
             if (!has_item)
             {
-                inf.body << "\nMonster Inventory:\n";
+                inf.body << "\n\nMonster Inventory:\n";
                 has_item = true;
             }
-            inf.body << "    " << i << ") "
+            inf.body << "    " << i << ": "
                      << mitm[mons.inv[i]].name(DESC_A, false, true);
         }
     }
