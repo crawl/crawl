@@ -17,9 +17,7 @@
 // highest index card being the top card, and index 0 being the bottom
 // card), deck.props.["card_flags"] holds the flags for each card,
 // deck.props["num_marked"] is the number of marked cards left in the
-// deck, and deck.props["non_brownie_draws"] is the number of
-// non-marked draws you have to make from that deck before earning
-// brownie points from it again.
+// deck.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
