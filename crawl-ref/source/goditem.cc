@@ -25,6 +25,9 @@
 static bool _is_bookrod_type(const item_def& item,
                              bool (*suitable)(spell_type spell))
 {
+    if (!item_is_spellbook(item) && !item_is_rod(item))
+        return false;
+
     int total       = 0;
     int total_liked = 0;
 
