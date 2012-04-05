@@ -55,8 +55,7 @@
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
-static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel = 0, bool orc = false, bool holy = false);
+static void _eat_chunk(item_def& food);
 static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
@@ -1033,19 +1032,10 @@ void eat_inventory_item(int which_inventory_slot)
 
     if (food.sub_type == FOOD_CHUNK)
     {
-        const monster_type mons_type = food.mon_type;
-        const bool cannibal  = is_player_same_species(mons_type);
-        const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
-        const bool rotten    = food_is_rotten(food);
-        const bool orc       = (mons_genus(mons_type) == MONS_ORC);
-        const bool holy      = (mons_class_holiness(mons_type) == MH_HOLY);
-        const corpse_effect_type chunk_type = mons_corpse_effect(mons_type);
-
-        if (rotten && !_player_can_eat_rotten_meat(true))
+        if (food_is_rotten(food) && !_player_can_eat_rotten_meat(true))
             return;
 
-        _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel, orc, holy);
+        _eat_chunk(food);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1069,18 +1059,10 @@ void eat_floor_item(int item_link)
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
-        const bool cannibal  = is_player_same_species(food.mon_type);
-        const int intel      = mons_class_intel(food.mon_type) - I_ANIMAL;
-        const bool rotten    = food_is_rotten(food);
-        const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
-        const bool holy      = (mons_class_holiness(food.mon_type) == MH_HOLY);
-        const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
-
-        if (rotten && !_player_can_eat_rotten_meat(true))
+        if (food_is_rotten(food) && !_player_can_eat_rotten_meat(true))
             return;
 
-        _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel, orc, holy);
+        _eat_chunk(food);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1761,9 +1743,16 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
 
 // Never called directly - chunk_effect values must pass
 // through food::_determine_chunk_effect() first. {dlb}:
-static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel, bool orc, bool holy)
+static void _eat_chunk(item_def& food)
 {
+    const bool cannibal  = is_player_same_species(food.mon_type);
+    const int intel      = mons_class_intel(food.mon_type) - I_ANIMAL;
+    const bool rotten    = food_is_rotten(food);
+    const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
+    const bool holy      = (mons_class_holiness(food.mon_type) == MH_HOLY);
+    corpse_effect_type chunk_effect = mons_corpse_effect(food.mon_type);
+    chunk_effect = _determine_chunk_effect(chunk_effect, rotten);
+
     int likes_chunks  = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
     bool suppress_msg = false; // do we display the chunk nutrition message?
@@ -1858,8 +1847,8 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
 
     if (cannibal)
         did_god_conduct(DID_CANNIBALISM, 10);
-    else if (mon_intel > 0)
-        did_god_conduct(DID_EAT_SOULED_BEING, mon_intel);
+    else if (intel > 0)
+        did_god_conduct(DID_EAT_SOULED_BEING, intel);
 
     if (orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
