@@ -1107,6 +1107,8 @@ static void _place_player_corpse(bool explode)
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
+    if (you.hp_max <= 0)
+        unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
