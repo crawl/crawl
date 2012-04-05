@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dactions.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
@@ -805,6 +806,15 @@ void wizard_recreate_level()
         (*vp)->seen = false;
     }
     dgn_erase_unused_vault_placements();
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mons_is_unique(mi->type))
+        {
+            remove_unique_annotation(*mi);
+            you.unique_creatures[mi->type] = false;
+        }
+    }
 
     level_id lev = level_id::current();
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
