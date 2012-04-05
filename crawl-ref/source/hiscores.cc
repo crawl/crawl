@@ -366,6 +366,7 @@ static void _construct_hiscore_table(MenuScroller* scroller)
     {
         _add_hiscore_row(scroller, *hs_list[j], j);
     }
+
 }
 
 void show_morgue(scorefile_entry& se)
@@ -422,11 +423,6 @@ void show_morgue(scorefile_entry& se)
 void show_hiscore_table()
 {
 
-#ifdef USE_TILE_LOCAL
-    const int max_col    = tiles.get_crt()->mx;
-#else
-    const int max_col    = get_number_of_cols() - 1;
-#endif
     const int max_line   = get_number_of_lines() - 1;
 
     const int scores_col_start = 20;
@@ -443,9 +439,8 @@ void show_hiscore_table()
 
     MenuScroller* score_entries = new MenuScroller();
 
-    //18,7 60,20
     score_entries->init(coord_def(scores_col_start, scores_row_start),
-            coord_def(scores_col_end, scores_row_end), "scores");
+            coord_def(scores_col_end, scores_row_end), "score entries");
 
     _construct_hiscore_table(score_entries);
 
@@ -453,7 +448,6 @@ void show_hiscore_table()
     descriptor->init(coord_def(X_MARGIN, 1),
             coord_def(get_number_of_cols(), get_number_of_lines()),
             "descriptor");
-
 
     menu.attach_object(descriptor);
 #ifdef USE_TILE_LOCAL
@@ -467,13 +461,15 @@ void show_hiscore_table()
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
+
+    score_entries->set_visible(true);
     descriptor->set_visible(true);
     highlighter->set_visible(true);
-    score_entries->set_visible(true);
 
     menu.attach_object(score_entries);
 
     menu.set_active_object(score_entries);
+    score_entries->activate_first_item();
 
     enable_smart_cursor(false);
     while (true)
