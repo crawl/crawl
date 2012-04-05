@@ -2184,20 +2184,25 @@ static bool _mons_vampiric_drain(monster *mons)
     if (target->is_player())
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
-        simple_monster_message(mons,
-            " draws life force from you and is healed!");
+        if (mons->heal(hp_cost / 2))
+        {
+            simple_monster_message(mons,
+                " draws life force from you and is healed!");
+        }
     }
     else
     {
         monster* mtarget = target->as_monster();
         const std::string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
-        simple_monster_message(mons,
-            make_stringf(" draws life force from %s and is healed!",
-            targname.c_str()).c_str());
+        if (mons->heal(hp_cost / 2))
+        {
+            simple_monster_message(mons,
+                make_stringf(" draws life force from %s and is healed!",
+                targname.c_str()).c_str());
+        }
         if (mtarget->alive())
             print_wounds(mtarget);
-        mons->heal(hp_cost / 2);
     }
 
     return (true);
