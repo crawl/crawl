@@ -1521,8 +1521,8 @@ int prompt_eat_chunks(bool only_auto)
     const bool easy_eat = (Options.easy_eat_chunks || only_auto)
         && !you.is_undead && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
-        && (Options.easy_eat_gourmand 
-            && player_effect_gourmand() 
+        && (Options.easy_eat_gourmand
+            && player_effect_gourmand()
             || Options.easy_eat_contaminated);
 
     if (found_valid)

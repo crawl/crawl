@@ -1461,7 +1461,7 @@ int player_likes_chunks(bool permanently)
 {
     if (player_mutation_level(MUT_GOURMAND) > 0
         || (!you.suppressed()
-            && !permanently 
+            && !permanently
             && wearing_amulet(AMU_THE_GOURMAND)))
     {
         return 3;
@@ -4244,9 +4244,9 @@ bool player_item_conserve(bool calc_unid)
 int player_mental_clarity(bool calc_unid, bool items)
 {
     int ret = 0;
-    
+
     ret += player_mutation_level(MUT_CLARITY);
-    
+
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {

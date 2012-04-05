@@ -2362,7 +2362,7 @@ bool travel_kill_monster(monster_type mons)
         return (false);
 
     // Don't auto-kill things with berserkitis or *rage.
-    if (player_mutation_level(MUT_BERSERK) 
+    if (player_mutation_level(MUT_BERSERK)
         || player_effect_angry())
     {
         if (player_effect_stasis(false)
