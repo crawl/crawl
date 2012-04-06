@@ -2165,7 +2165,12 @@ static bool _mons_vampiric_drain(monster *mons)
         hp_cost -= hp_cost * target->res_negative_energy() / 3;
 
     if (!hp_cost)
+    {
+        simple_monster_message(mons,
+                               " is infused with unholy energy, but nothing happens.",
+                               MSGCH_MONSTER_SPELL);
         return (false);
+    }
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
@@ -4316,10 +4321,18 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         ret = (foe != &you);
         break;
 
+    case SPELL_VAMPIRIC_DRAINING:
+        if (mon->hit_points + 1 >= mon->max_hit_points
+            || grid_distance(mon->pos(), foe->pos()) > 1)
+        {
+            ret = true;
+        }
+    // fall through
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
-        ret = (!foe || _foe_should_res_negative_energy(foe));
+        if (!foe || _foe_should_res_negative_energy(foe))
+            ret = true;
         break;
     case SPELL_MIASMA:
         ret = (!foe || foe->res_rotting());
