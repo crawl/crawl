@@ -926,14 +926,21 @@ static void _close_level_gates()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (you.char_direction == GDT_ASCENDING
-            && !player_in_branch(BRANCH_PANDEMONIUM))
+        switch (grd(*ri))
         {
-            if (feat_sealable_portal(grd(*ri)))
-            {
-                remove_markers_and_listeners_at(*ri);
-                grd(*ri) = DNGN_STONE_ARCH;
-            }
+        case DNGN_ENTER_ABYSS:
+            if (player_in_branch(BRANCH_PANDEMONIUM))
+                continue;
+        case DNGN_ENTER_COCYTUS:
+        case DNGN_ENTER_DIS:
+        case DNGN_ENTER_GEHENNA:
+        case DNGN_ENTER_TARTARUS:
+        case DNGN_ENTER_PANDEMONIUM:
+        case DNGN_ENTER_LABYRINTH:
+        case DNGN_ENTER_PORTAL_VAULT:
+            remove_markers_and_listeners_at(*ri);
+            grd(*ri) = DNGN_STONE_ARCH;
+        default: ;
         }
     }
 }
@@ -1242,11 +1249,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Closes all the gates if you're on the way out.
     // Before marker activation since it removes some.
-    if (make_changes && you.char_direction == GDT_ASCENDING
-        && !player_in_branch(BRANCH_PANDEMONIUM))
-    {
+    if (make_changes && you.char_direction == GDT_ASCENDING)
         _close_level_gates();
-    }
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or

@@ -117,24 +117,6 @@ bool feat_is_staircase(dungeon_feature_type feat)
                && feat <= DNGN_RETURN_FROM_LAST_BRANCH);
 }
 
-bool feat_sealable_portal(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_TARTARUS:
-    case DNGN_ENTER_ABYSS:
-    case DNGN_ENTER_PANDEMONIUM:
-    case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_PORTAL_VAULT:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
 bool feat_is_portal(dungeon_feature_type feat)
 {
     return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT
