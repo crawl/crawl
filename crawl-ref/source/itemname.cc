@@ -2704,8 +2704,10 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_CURSE_ARMOUR:
-        case SCR_CURSE_JEWELLERY:
         case SCR_CURSE_WEAPON:
+            if (you.species == SP_FELID)
+                return false;
+        case SCR_CURSE_JEWELLERY:
             return (you.religion != GOD_ASHENZARI);
         case SCR_SUMMONING:
             // Summoning will always produce hostile monsters if you
