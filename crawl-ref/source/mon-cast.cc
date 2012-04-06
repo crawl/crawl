@@ -4168,6 +4168,9 @@ bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell)
 
 bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
 {
+    if (ms_waste_of_time(mon, monspell))
+        return (false);
+
     bool targ_adj      = false;
     bool targ_sanct    = false;
     bool targ_friendly = false;
@@ -4200,9 +4203,6 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     {
     case SPELL_TELEPORT_OTHER:
         return !targ_sanct && !targ_friendly;
-    case SPELL_TELEPORT_SELF:
-        // Don't cast again if already about to teleport.
-        return !mon->has_ench(ENCH_TP);
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
@@ -4222,10 +4222,6 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_INK_CLOUD:
         if (mon->type == MONS_KRAKEN)
             return true;
-    case SPELL_DEATHS_DOOR:
-        return !mon->has_ench(ENCH_DEATHS_DOOR);
-    case SPELL_INVISIBILITY:
-        return !mon->has_ench(ENCH_INVIS);
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
