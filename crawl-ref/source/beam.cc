@@ -2261,7 +2261,7 @@ static void _imb_explosion(actor *agent,
                            dice_def dam)
 {
     const int dist = grid_distance(center, origin);
-    if (dist == 0 || !x_chance_in_y(3,2+2*dist))
+    if (dist == 0 || !x_chance_in_y(3, 2 + 2 * dist))
         return;
     bolt beam;
     beam.name           = "mystic blast";
@@ -2292,20 +2292,20 @@ static void _imb_explosion(actor *agent,
             if (x == 0 && y == 0)
                 continue;
             // Don't hit the caster (the explosion doesn't reach back that far).
-            if (origin == center + coord_def(x,y) || origin == center + coord_def(2*x,2*y))
+            if (origin == center + coord_def(x, y) || origin == center + coord_def(2 * x, 2 * y))
                 continue;
             // Don't go far away from the caster (not enough momentum).
-            if (distance(origin, center + coord_def(2*x,2*y)) > LOS_RADIUS_SQ)
+            if (distance(origin, center + coord_def(2 * x, 2 * y)) > LOS_RADIUS_SQ)
                 continue;
-            if (x_chance_in_y(3,4))
+            if (x_chance_in_y(3, 4))
             {
                 if (first)
                 {
                     mpr("The orb of energy explodes!");
-                    noisy(10);
+                    noisy(10, center);
                     first = false;
                 }
-                beam.target = center + coord_def(2*x,2*y);
+                beam.target = center + coord_def(2 * x, 2 * y);
                 beam.fire();
             }
         }
