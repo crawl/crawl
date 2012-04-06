@@ -373,7 +373,7 @@ int spell_fail(spell_type spell)
         }
     }
 
-    chance2 += 10 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
 
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);

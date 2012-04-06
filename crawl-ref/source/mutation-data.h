@@ -985,7 +985,7 @@
   "low mp"
 },
 
-{ MUT_WILD_MAGIC,                 6,   3,  true, false, false,
+{ MUT_WILD_MAGIC,                 6,   3,  false, false, false,
     "wild magic",
 
     {"Your spells are a little harder to cast, but a little more powerful.",
