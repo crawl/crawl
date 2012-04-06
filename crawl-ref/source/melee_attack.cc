@@ -1165,7 +1165,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_PUNCH:
         aux_attack = aux_verb = "punch";
-        aux_damage = 5 + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 3);
+        aux_damage = 5 + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
 
         if (you.form == TRAN_BLADE_HANDS)
         {
@@ -1233,48 +1233,20 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
 /* Selects the unarmed attack type given by Unarmed Combat skill
  *
- * Selects at random, but then takes into accout various combinations of player
- * species, transformations, and other stuff to determine whether the randomly
- * selected unarmed attack type is appropriate (eg, no kicking for octopodes...
- * who technically lack legs).
+ * Currently the only possibility is an offhand punch. Other auxes are linked
+ * directly to mutations and just depend on stats.
  */
 unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
 {
-    unarmed_attack_type uc_attack =
-        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
-                       -1);
-
+    unarmed_attack_type uc_attack = coinflip() ? UNAT_PUNCH : UNAT_NO_ATTACK;
+    // Octopodes get more tentacle-slaps.
+    if (you.species == SP_OCTOPODE && coinflip())
+        uc_attack = UNAT_PUNCH;
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
             && !you.has_usable_offhand())
         uc_attack = UNAT_NO_ATTACK;
-
-    // With fangs, replace head attacks with bites.
-    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
-        && uc_attack == UNAT_HEADBUTT)
-    {
-        uc_attack = UNAT_BITE;
-    }
-
-    // Felids turn kicks into bites.
-    if (you.species == SP_FELID && uc_attack == UNAT_KICK)
-        uc_attack = UNAT_BITE;
-
-    // Nagas turn kicks into headbutts.
-    if (you.species == SP_NAGA && uc_attack == UNAT_KICK)
-        uc_attack = UNAT_HEADBUTT;
-
-    // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && uc_attack == UNAT_KICK
-        && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
-    {
-        uc_attack = UNAT_PUNCH;
-    }
-
-    // Octopodes turn headbutts into punches too.
-    if (you.species == SP_OCTOPODE && uc_attack == UNAT_HEADBUTT)
-        uc_attack = UNAT_PUNCH;
 
     if (_tran_forbid_aux_attack(uc_attack))
         uc_attack = UNAT_NO_ATTACK;
