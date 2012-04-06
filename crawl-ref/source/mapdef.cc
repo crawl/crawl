@@ -4407,7 +4407,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "archmagi",
         "preservation",
         "reflection",
-        "spirit shield",
+        "spirit_shield",
         "archery",
         NULL
     };
