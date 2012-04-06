@@ -757,7 +757,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
 
-    if (you.trans_wall_blocking(where))
+    if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;
