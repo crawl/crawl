@@ -5070,7 +5070,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
             if (monster *mons = mons_place(
                                   mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, 0, god)))
+                                            jpos, foe, MG_DONT_COME, god)))
             {
                 // Don't allow milking the royal jelly.
                 mons->flags |= MF_NO_REWARD;
