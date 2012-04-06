@@ -2151,8 +2151,6 @@ static bool _mons_vampiric_drain(monster *mons)
         return (false);
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return (false);
-    if (target->undead_or_demonic())
-        return (false);
 
     int fnum = 5;
     int fden = 5;
@@ -2163,6 +2161,9 @@ static bool _mons_vampiric_drain(monster *mons)
 
     hp_cost = std::min(hp_cost, target->stat_hp());
     hp_cost = std::min(hp_cost, mons->max_hit_points - mons->hit_points);
+    if (target->res_negative_energy() > 0)
+        hp_cost -= hp_cost * target->res_negative_energy() / 3;
+
     if (!hp_cost)
         return (false);
 
