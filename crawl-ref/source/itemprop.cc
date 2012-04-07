@@ -1412,7 +1412,6 @@ int weapon_rarity(int w_type)
     case WPN_GREAT_MACE:
         return (3);
 
-    case WPN_ANKUS:
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:
@@ -1427,6 +1426,7 @@ int weapon_rarity(int w_type)
 #if TAG_MAJOR_VERSION == 32
     case WPN_KATANA:
     case WPN_BLESSED_KATANA:
+    case WPN_ANKUS:
 #endif
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
