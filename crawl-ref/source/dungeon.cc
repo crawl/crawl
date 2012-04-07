@@ -933,15 +933,6 @@ static void _fixup_pandemonium_stairs()
         if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
             && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
-            if (one_chance_in(30))
-                _set_grd(*ri, DNGN_EXIT_PANDEMONIUM);
-            else
-                _set_grd(*ri, DNGN_FLOOR);
-        }
-
-        if (grd(*ri) >= DNGN_ENTER_LABYRINTH
-            && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
-        {
             _set_grd(*ri, DNGN_TRANSIT_PANDEMONIUM);
         }
     }
@@ -1766,9 +1757,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     {
         dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
-        {
             throw dgn_veto_exception("Failed to fix stone stairs.");
-        }
     }
 
     if (!_branch_entrances_are_connected())
