@@ -2198,6 +2198,15 @@ bool melee_attack::distortion_affects_defender()
         return (false);
     }
 
+    #ifdef WIZARD // kinda hacky, but this makes the fight simulator
+                  // play well with distortion-branded weapons
+    if (defender->is_player() && attacker->is_monster()
+        && attacker->as_monster()->max_hit_points == MAX_MONSTER_HP ||
+        defender->is_monster()
+        && defender->as_monster()->max_hit_points == MAX_MONSTER_HP)
+        return (false);
+    #endif
+
     if (one_chance_in(3))
     {
         if (defender_visible)
