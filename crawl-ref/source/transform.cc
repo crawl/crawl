@@ -65,8 +65,7 @@ bool form_can_wield(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
-    if ((form == TRAN_NONE || form == TRAN_LICH || form == TRAN_APPENDAGE)
-        && you.species == SP_TENGU
+    if (you.species == SP_TENGU
         && (you.experience_level >= 15 || you.airborne()))
     {
         return (true);

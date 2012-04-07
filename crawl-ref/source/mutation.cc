@@ -403,9 +403,9 @@ std::string describe_mutations()
             std::string msg = "You can fly";
             if (you.experience_level > 14)
                 msg += " continuously";
-            msg += ".";
+            msg += ".\n";
 
-            result += _annotate_form_based(msg, player_is_shapechanged());
+            result += msg;
             have_any = true;
         }
         break;
