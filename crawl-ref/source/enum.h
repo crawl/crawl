@@ -1269,6 +1269,7 @@ enum dungeon_feature_type
     DNGN_EXIT_PANDEMONIUM,             //  100
     DNGN_TRANSIT_PANDEMONIUM,          //  101
     DNGN_EXIT_DUNGEON,
+    DNGN_EXIT_THROUGH_ABYSS,
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110

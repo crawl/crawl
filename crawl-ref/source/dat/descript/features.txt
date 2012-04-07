@@ -382,6 +382,12 @@ An escape hatch in the floor
 
 A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adventurer beset by adversaries to exchange the perils of this level for the perils of the next.
 %%%%
+An exit through the horrors of the Abyss
+
+If you ever wanted to escape out of the pan into the fire, this is your
+chance. This gateway allows you to return from this place by a nice scenic
+path through infinite madness.
+%%%%
 An iron altar of Okawaru
 
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are surprisingly sharp.

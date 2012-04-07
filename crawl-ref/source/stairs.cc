@@ -516,6 +516,9 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
     case DNGN_TRANSIT_PANDEMONIUM:
         return level_id(BRANCH_PANDEMONIUM);
 
+    case DNGN_EXIT_THROUGH_ABYSS:
+        return level_id(BRANCH_ABYSS);
+
     case DNGN_ENTER_PORTAL_VAULT:
         if (dst.empty())
             die("portal without a destination");
@@ -747,6 +750,8 @@ void down_stairs(dungeon_feature_type force_stair)
     // reaching the Abyss.
     if (!force_stair && old_feat == DNGN_ENTER_ABYSS)
         mark_milestone("abyss.enter", "entered the Abyss!");
+    else if (old_feat == DNGN_EXIT_THROUGH_ABYSS)
+        mark_milestone("abyss.enter", "escaped (hah) into the Abyss!");
     else if (stair_find == DNGN_EXIT_ABYSS
              && you.char_direction != GDT_GAME_START)
     {

@@ -208,6 +208,7 @@ bool feat_is_gate(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
@@ -271,6 +272,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
@@ -434,6 +436,7 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 {
     return (feat_is_branch_stairs(feat)
             || feat == DNGN_ENTER_HELL || feat == DNGN_ENTER_ABYSS
+            || feat == DNGN_EXIT_THROUGH_ABYSS
             || feat == DNGN_ENTER_PANDEMONIUM);
 }
 
@@ -1655,7 +1658,7 @@ static const char *dngn_feature_names[] =
 "", "enter_dis", "enter_gehenna", "enter_cocytus",
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"exit_dungeon", "", "", "", "", "",
+"exit_dungeon", "exit_through_abyss", "", "", "", "",
 "", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",

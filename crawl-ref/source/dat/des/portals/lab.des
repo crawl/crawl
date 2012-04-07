@@ -368,7 +368,7 @@ ENDMAP
 # Teaser: fake exit
 NAME:  labyrinth_fake_exit
 TAGS:  lab allow_dup
-KFEAT: X = enter_abyss
+KFEAT: X = exit_through_abyss
 MAP
 ........
 .vvvvvv.
