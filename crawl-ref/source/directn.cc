@@ -3076,6 +3076,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("one-way gate to the infinite horrors of the Abyss");
     case DNGN_EXIT_ABYSS:
         return ("gateway leading out of the Abyss");
+    case DNGN_EXIT_THROUGH_ABYSS:
+        return ("exit through the horrors of the Abyss");
     case DNGN_STONE_ARCH:
         return ("empty arch of ancient stone");
     case DNGN_ENTER_PANDEMONIUM:

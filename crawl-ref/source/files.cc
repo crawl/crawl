@@ -929,8 +929,6 @@ static void _close_level_gates()
         switch (grd(*ri))
         {
         case DNGN_ENTER_ABYSS:
-            if (player_in_branch(BRANCH_PANDEMONIUM))
-                continue;
         case DNGN_ENTER_COCYTUS:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:

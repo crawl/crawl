@@ -384,6 +384,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_THROUGH_ABYSS:
             f.colour      = ETC_RANDOM;
             f.dchar       = DCHAR_ARCH;
             f.flags      |= FFT_NOTABLE;
