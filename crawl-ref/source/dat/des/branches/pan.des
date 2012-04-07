@@ -171,6 +171,19 @@ ENDMAP
 
 
 ##############################################################################
+# Random unguarded exits
+##############################################################################
+NAME:   pan_exit
+TAGS:   extra allow_dup
+DEPTH:  Pan
+CHANCE: 12%
+KFEAT:  O = exit_pandemonium
+MAP
+O
+ENDMAP
+
+
+##############################################################################
 # Pan Demon Lairs
 #
 # NOTE: The pandemonium lord levels are requested by tag; if you change the
