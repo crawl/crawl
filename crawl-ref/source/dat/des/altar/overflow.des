@@ -587,7 +587,7 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-DEPTH:  !Lair, !Orc
+DEPTH:  *, !Lair, !Orc
 TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
@@ -919,7 +919,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  !D:1
+DEPTH:  *, !D:1
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
@@ -959,7 +959,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
-DEPTH:   !D:1
+DEPTH:   *, !D:1
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG

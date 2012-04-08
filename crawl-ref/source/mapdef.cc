@@ -254,6 +254,12 @@ level_range level_range::parse(std::string s) throw (std::string)
     level_range lr;
     trim_string(s);
 
+    if (s == "*")
+    {
+        lr.set("any", 0, BRANCH_END);
+        return lr;
+    }
+
     if (s[0] == '!')
     {
         lr.deny = true;
