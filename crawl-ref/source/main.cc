@@ -606,7 +606,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
-    case CONTROL('F'): skill_vs_fighting(); break;
+    case CONTROL('F'): wizard_fight_sim(true); break;
 #ifdef DEBUG_BONES
     case CONTROL('G'): debug_ghosts(); break;
 #endif
@@ -642,8 +642,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 't': wizard_tweak_object();                 break;
     case 'T': debug_make_trap();                     break;
     case '\\': debug_make_shop();                    break;
-    case 'f': wiz_run_fight_sim();                   break;
-    case 'F': wiz_fight_sim_file();                  break;
+    case 'f': wizard_quick_fsim();                   break;
+    case 'F': wizard_fight_sim(false);               break;
     case 'm': wizard_create_spec_monster();          break;
     case 'M': wizard_create_spec_monster_name();     break;
     case 'R': wizard_spawn_control();                break;

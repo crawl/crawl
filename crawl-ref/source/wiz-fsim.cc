@@ -317,7 +317,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
 }
 
 // this is the skeletal simulator call, and the one that's easily accessed
-void wiz_run_fight_sim(monster_type mtype, int iter_limit)
+void wizard_quick_fsim()
 {
     // we could declare this in the fight calls, but i'm worried that
     // the actual monsters that are made will be slightly different,
@@ -326,6 +326,7 @@ void wiz_run_fight_sim(monster_type mtype, int iter_limit)
     if(!mon)
         return;
 
+    const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
     mprf("           %s\n"
          "Attacking: %s",
@@ -340,12 +341,90 @@ void wiz_run_fight_sim(monster_type mtype, int iter_limit)
     return;
 }
 
-void wiz_fight_sim_file(bool defend, monster_type mtype, int iter_limit,
-                        const char * fightstat)
+static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
+{
+    skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
+    fprintf(o, "%10.10s | %s\n",
+            skill_name(sk),
+            _dummy_string.c_str());
+
+    const int iter_limit = Options.fsim_rounds;
+    for(int i = 0; i <= 27; i++)
+    {
+        mesclr();
+        mprf("Calculating average damage at %s %d...",
+             skill_name(sk), i);
+
+        set_skill_level(sk, i);
+        fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
+        fprintf(o, "        %2d | %s\n", i, _fight_string(fdata).c_str());
+        fflush(o);
+
+        // kill the loop if the user hits escape
+        if (kbhit() && getchk() == 27)
+        {
+            mprf("Cancelling simulation.\n");
+            fprintf(o, "Simulation cancelled!\n\n");
+            break;
+        }
+    }
+}
+
+static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
+{
+    skill_type skx, sky;
+    if (defense)
+    {
+        skx = SK_ARMOUR;
+        sky = SK_DODGING;
+    }
+    else
+    {
+        skx = SK_FIGHTING;
+        sky = _equipped_skill();
+    }
+
+    fprintf(o, "%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
+    fprintf(o, "  ");
+    for(int y=0; y<27; y+=2)
+        fprintf(o,"   %2d", y);
+
+    fprintf(o,"\n");
+
+    const int iter_limit = Options.fsim_rounds;
+    for(int y=0; y<27; y+=2)
+    {
+        fprintf(o, "%2d", y);
+        for(int x=0; x<27; x+=2)
+        {
+            mesclr();
+            mprf("%s %d, %s %d...", skill_name(skx), x, skill_name(sky), y);
+            set_skill_level(skx, x);
+            set_skill_level(sky, y);
+            fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
+            fprintf(o,"%5.1f", fdata.av_eff_dam);
+            fflush(o);
+
+            // kill the loop if the user hits escape
+            if (kbhit() && getchk() == 27)
+            {
+                mprf("Cancelling simulation.\n");
+                fprintf(o, "\nSimulation cancelled!\n\n");
+                return;
+            }
+        }
+        fprintf(o,"\n");
+    }
+}
+
+void wizard_fight_sim(bool double_scale)
 {
     monster * mon = _init_fsim();
     if(!mon)
         return;
+
+    bool defense = false;
+    const char * fightstat = "fight.stat";
 
     FILE * o = fopen(fightstat, "a");
     if (!o)
@@ -355,7 +434,7 @@ void wiz_fight_sim_file(bool defend, monster_type mtype, int iter_limit,
     }
 
     _write_version(o);
-    _write_matchup(o, *mon, defend, iter_limit);
+    _write_matchup(o, *mon, defense, Options.fsim_rounds);
     _write_you(o);
     _write_weapon(o);
     _write_mon(o, *mon);
@@ -378,103 +457,15 @@ void wiz_fight_sim_file(bool defend, monster_type mtype, int iter_limit,
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
-    // this part is designed to be varied. in particular,
-    // i'm going to write a variant function soon that runs
-    // over morgue files and outputs data to a fight.stat in
-    // their directory. this is really just a prototype, so
-    // let's make it vary over, say, increasing equipped weapon skill
-    // if you're attacking and increasing Armour skill if you're defending.
-    const skill_type vary_skill = defend ? SK_ARMOUR : _equipped_skill();
-
-    fprintf(o, "%10.10s | %s\n",
-            skill_name(vary_skill),
-            _dummy_string.c_str());
-
-    for(int i = 0; i <= 27; i++)
-    {
-        mesclr();
-        mprf("Calculating average damage at %s %d...",
-             skill_name(vary_skill), i);
-
-        set_skill_level(vary_skill, i);
-        fight_data fdata = _get_fight_data(*mon, iter_limit, defend);
-        fprintf(o, "        %2d | %s\n", i, _fight_string(fdata).c_str());
-        fflush(o);
-
-        // kill the loop if the user hits escape
-        if (kbhit() && getchk() == 27)
-        {
-            mprf("Cancelling simulation.\n");
-            fprintf(o, "Simulation cancelled!\n\n");
-            break;
-        }
-    }
+    if (double_scale)
+        _fsim_double_scale(o, mon, defense);
+    else
+        _fsim_simple_scale(o, mon, defense);
 
     fprintf(o, "-----------------------------------\n\n");
     fclose(o);
     _uninit_fsim(mon);
     mprf("Done.");
-    return;
-}
-
-// now i'm showing off, but this is an example of what you can do
-void skill_vs_fighting(int iter_limit)
-{
-    monster *mon = _init_fsim();
-    if(!mon)
-        return;
-
-    FILE * o = fopen("fight.stat", "a");
-    if (!o)
-    {
-        mprf(MSGCH_ERROR, "Can't write %s: %s", "fight.stat", strerror(errno));
-        return;
-    }
-
-    _write_version(o);
-    _write_matchup(o, *mon, false, iter_limit);
-    _write_you(o);
-    _write_weapon(o);
-    _write_mon(o, *mon);
-    fprintf(o,"\n");
-
-    unwind_var<FixedVector<uint8_t, NUM_SKILLS> > skills(you.skills);
-    unwind_var<FixedVector<unsigned int, NUM_SKILLS> > skill_points(you.skill_points);
-    unwind_var<std::list<skill_type> > exercises(you.exercises);
-    unwind_var<std::list<skill_type> > exercises_all(you.exercises_all);
-    unwind_var<FixedVector<int8_t, NUM_STATS> > stats(you.base_stats);
-    unwind_var<int> xp(you.experience_level);
-    unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
-    crawl_state.disables.set(DIS_DEATH);
-    crawl_state.disables.set(DIS_DELAY);
-
-    fprintf(o, "Fighting(x) vs Weapon Skill(y)\n");
-    fprintf(o, "  ");
-    for(int y=0; y<27; y+=2)
-        fprintf(o,"   %2d", y);
-
-    fprintf(o,"\n");
-
-    for(int y=0; y<27; y+=2)
-    {
-        fprintf(o, "%2d", y);
-        for(int x=0; x<27; x+=2)
-        {
-            mesclr();
-            mprf("Fighting %d, Weapon Skill %d...", x, y);
-            set_skill_level(SK_FIGHTING, x);
-            set_skill_level(_equipped_skill(), y);
-            fight_data fdata = _get_fight_data(*mon, iter_limit, false);
-            fprintf(o,"%5.1f", fdata.av_eff_dam);
-        }
-        fprintf(o,"\n");
-    }
-
-    fprintf(o, "-----------------------------------\n\n");
-    fclose(o);
-    _uninit_fsim(mon);
-    mprf("Done.");
-    return;
 }
 
 #endif
