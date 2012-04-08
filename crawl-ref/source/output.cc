@@ -2133,8 +2133,7 @@ static std::string _status_mut_abilities(int sw)
               std::string help = "able to fly";
               if (you.experience_level > 14)
                   help += " continuously";
-              mutations.push_back(_annotate_form_based(help,
-                                                       player_is_shapechanged()));
+              mutations.push_back(help);
           }
           break;
 
