@@ -176,8 +176,17 @@ ENDMAP
 NAME:   pan_exit
 TAGS:   extra allow_dup
 DEPTH:  Pan
-CHANCE: 12%
+CHANCE: 5%
 KFEAT:  O = exit_pandemonium
+MAP
+O
+ENDMAP
+
+NAME:   pan_to_abyss
+TAGS:   extra allow_dup
+DEPTH:  Pan
+CHANCE: 25%
+KFEAT:  O = exit_through_abyss
 MAP
 O
 ENDMAP
