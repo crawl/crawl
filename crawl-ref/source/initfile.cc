@@ -881,8 +881,6 @@ void game_options::reset_options()
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_mons   = "";
-    fsim_str = fsim_int = fsim_dex = -1;
-    fsim_xl  = -1;
     fsim_kit.clear();
 #endif
 
@@ -2824,14 +2822,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fsim_mons")
         fsim_mons = field;
-    else if (key == "fsim_str")
-        fsim_str = atoi(field.c_str());
-    else if (key == "fsim_int")
-        fsim_int = atoi(field.c_str());
-    else if (key == "fsim_dex")
-        fsim_dex = atoi(field.c_str());
-    else if (key == "fsim_xl")
-        fsim_xl = atoi(field.c_str());
 #endif // WIZARD
     else if (key == "sort_menus")
     {
