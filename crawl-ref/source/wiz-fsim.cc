@@ -148,6 +148,59 @@ static void _write_mon(FILE * o, monster &mon)
             mon.ev);
 }
 
+static bool _fsim_kit_equip(const std::string &kit)
+{
+    std::string::size_type ammo_div = kit.find("/");
+    std::string weapon = kit;
+    std::string missile;
+    if (ammo_div != std::string::npos)
+    {
+        weapon = kit.substr(0, ammo_div);
+        missile = kit.substr(ammo_div + 1);
+        trim_string(weapon);
+        trim_string(missile);
+    }
+
+    if (!weapon.empty())
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (!you.inv[i].defined())
+                continue;
+
+            if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
+            {
+                if (i != you.equip[EQ_WEAPON])
+                {
+                    wield_weapon(true, i, false);
+                    if (i != you.equip[EQ_WEAPON])
+                        return false;
+                }
+                break;
+            }
+        }
+    }
+    else if (you.weapon())
+        unwield_item(false);
+
+    if (!missile.empty())
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (!you.inv[i].defined())
+                continue;
+
+            if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)
+            {
+                quiver_item(i);
+                break;
+            }
+        }
+    }
+
+    return true;
+}
+
 // fight simulator internals
 static monster* _init_fsim()
 {
@@ -455,10 +508,26 @@ void wizard_fight_sim(bool double_scale)
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
-    if (double_scale)
-        _fsim_double_scale(o, mon, defense);
+    void (*fsim_proc)(FILE * o, monster* mon, bool defense) = NULL;
+    fsim_proc = double_scale ? _fsim_double_scale : _fsim_simple_scale;
+
+    if (Options.fsim_kit.empty())
+        fsim_proc(o, mon, defense);
     else
-        _fsim_simple_scale(o, mon, defense);
+        for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+        {
+            if (_fsim_kit_equip(Options.fsim_kit[i]))
+            {
+                _write_weapon(o);
+                fsim_proc(o, mon, defense);
+                fprintf(o, "\n");
+            }
+            else
+            {
+                mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+                break;
+            }
+        }
 
     fprintf(o, "-----------------------------------\n\n");
     fclose(o);
