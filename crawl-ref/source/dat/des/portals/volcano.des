@@ -108,7 +108,7 @@ function volcano_feat_descs()
                                "rock-blocked tunnel")
 end
 
-dgn.set_lt_callback("volcano", "volcano_feat_descs")
+dgn.set_lt_callback("Volcano", "volcano_feat_descs")
 
 -- Destinations:
 function volcano_setup (e)

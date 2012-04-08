@@ -84,7 +84,7 @@ function fixup_bazaar()
   dgn.floor_halo("enter_shop", "yellow", tile.halo)
 end
 
-dgn.set_lt_callback("bazaar", "fixup_bazaar")
+dgn.set_lt_callback("Bazaar", "fixup_bazaar")
 
 }}
 

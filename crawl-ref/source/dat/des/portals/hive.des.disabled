@@ -24,12 +24,6 @@ function hive_portal()
                            feat_tile = 'dngn_portal_hive_gone' }
 end
 
-function fixup_hive()
-  dgn.fixup_stairs("stone_arch", "exit_portal_vault")
-end
-
-dgn.set_lt_callback("hive", "fixup_hive")
-
 }}
 
 default-depth: D:11-16
@@ -303,6 +297,8 @@ default-depth: Hive
 # Hive portal map
 NAME:     hive_mumra_combs
 ORIENT:   encompass
+KFEAT:    < = stone_arch
+KFEAT:    > = exit_portal_vault
 # Guarantee a certain amount of combs and larva to demonstrate
 # NSUBST:   % : %:5 / . # FIXME: syntax error
 # NSUBST:   ! : !:4 / .
