@@ -41,7 +41,6 @@ struct Branch
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
     int travel_shortcut;         // Which key to press for travel.
-    bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
     int ambient_noise;           // affects noise loudness and player stealth
 };
