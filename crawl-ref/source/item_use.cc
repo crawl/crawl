@@ -4625,7 +4625,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         || (wpn.base_type == OBJ_WEAPONS
             && wpn.sub_type == WPN_BLOWGUN))
     {
-        acc = std::max(acc, dam);
+        acc = acc + dam;
         dam = 0;
     }
 
