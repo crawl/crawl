@@ -298,12 +298,7 @@ static void _check_inventory_skills()
 
 static void _check_equipment_skills()
 {
-    skill_set_iter it = you.stop_train.find(SK_ARMOUR);
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, true);
-    if (it != you.stop_train.end() && armour && property(*armour, PARM_EVASION))
-        you.stop_train.erase(it);
-
-    it = you.stop_train.find(SK_SHIELDS);
+    skill_set_iter it = you.stop_train.find(SK_SHIELDS);
     if (it != you.stop_train.end() && you.slot_item(EQ_SHIELD, true))
         you.stop_train.erase(it);
 }
@@ -441,6 +436,7 @@ bool training_restricted(skill_type sk)
     case SK_FIGHTING:
     // Requiring missiles would mean disabling the skill when you run out.
     case SK_THROWING:
+    case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
     case SK_STABBING:
