@@ -386,16 +386,16 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
 
     fprintf(o, "%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
     fprintf(o, "  ");
-    for(int y=0; y<27; y+=2)
+    for(int y = 1; y <= 27; y += 2)
         fprintf(o,"   %2d", y);
 
     fprintf(o,"\n");
 
     const int iter_limit = Options.fsim_rounds;
-    for(int y=0; y<27; y+=2)
+    for(int y = 1; y <= 27; y += 2)
     {
         fprintf(o, "%2d", y);
-        for(int x=0; x<27; x+=2)
+        for(int x = 1; x <= 27; x += 2)
         {
             mesclr();
             mprf("%s %d, %s %d...", skill_name(skx), x, skill_name(sky), y);
