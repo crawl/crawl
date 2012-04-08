@@ -49,6 +49,8 @@ public:
     int    miscast_type;
     actor* miscast_target;
 
+    bool simu;
+
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1);

@@ -65,7 +65,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
     if (defender->is_player())
     {
@@ -98,6 +98,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         }
 
         melee_attack attk(&you, defender);
+
+        if (simu)
+            attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
