@@ -1896,6 +1896,17 @@ int mons_hive_rare(int mcls)
     }
 }
 
+// The Vaults
+int mons_vaults_level(int mcls)
+{
+    return mons_standard_level(mcls);
+}
+
+int mons_vaults_rare(int mcls)
+{
+    return mons_standard_rare(mcls);
+}
+
 // The Hall of Blades
 int mons_hallblade_level(int mcls)
 {
