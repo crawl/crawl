@@ -79,13 +79,13 @@ static std::string _equipped_weapon_name()
         // If it's a ranged weapon, add the description of the missile
         if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
                 item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
-        return item_buf;
+        return "Wielding: " + item_buf;
     }
 
     if (missile != -1)
-        return you.inv[missile].name(DESC_PLAIN);
+        return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
 
-    return "unarmed";
+    return "Unarmed";
 }
 
 static std::string _time_string()
@@ -134,7 +134,7 @@ static void _write_you(FILE * o)
 
 static void _write_weapon(FILE * o)
 {
-    fprintf(o, "Wielding: %s, Skill: %s\n",
+    fprintf(o, "%s, Skill: %s\n",
             _equipped_weapon_name().c_str(),
             skill_name(_equipped_skill()));
 }
