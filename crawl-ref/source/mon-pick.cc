@@ -1122,7 +1122,7 @@ int mons_hallelf_rare(int mcls)
 
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
-        return 1;
+        return 3;
 
     default:
         return 0;
