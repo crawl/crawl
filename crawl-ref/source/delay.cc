@@ -1336,8 +1336,6 @@ static void _armour_wear_effects(const int item_slot)
         {
             remove_ice_armour();
         }
-        if (property(arm, PARM_EVASION))
-            you.start_train.insert(SK_ARMOUR);
     }
     else if (eq_slot == EQ_SHIELD)
     {
