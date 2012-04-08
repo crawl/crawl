@@ -421,6 +421,7 @@ bool player_or_mon_in_sanct(const monster* mons);
 bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
+bool monster_nearby();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
 
