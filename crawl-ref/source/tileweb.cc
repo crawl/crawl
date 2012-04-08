@@ -1112,9 +1112,11 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         }
         break;
     case GOTO_MSG:
+        set_ui_state(UI_NORMAL);
         m_print_area = &m_text_message;
         break;
     case GOTO_STAT:
+        set_ui_state(UI_NORMAL);
         m_print_area = &m_text_stat;
         break;
     default:
