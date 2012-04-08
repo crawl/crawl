@@ -3875,7 +3875,7 @@ tileidx_t tileidx_item(const item_def &item)
         {
             if (item.flags & ISFLAG_KNOW_TYPE)
             {
-                return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
+                return TILE_ROD_ID_FIRST + type - STAFF_FIRST_ROD;
             }
 
             int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
@@ -4014,21 +4014,33 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     {
         int type = label - TILE_POT_ID_FIRST;
         int desc = you.item_description[IDESC_POTIONS][type] % NDSC_POT_PRI;
-        return (TILE_POTION_OFFSET + desc);
+
+        if (get_ident_type(OBJ_POTIONS, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_POTION;
+        else
+            return (TILE_POTION_OFFSET + desc);
     }
 
     if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
     {
         int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
-        return (TILE_RING_NORMAL_OFFSET + desc);
+
+        if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_RING;
+        else
+            return (TILE_RING_NORMAL_OFFSET + desc);
     }
 
     if (label >= TILE_AMU_ID_FIRST && label <= TILE_AMU_ID_LAST)
     {
         int type = label - TILE_AMU_ID_FIRST + AMU_FIRST_AMULET;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
-        return (TILE_AMU_NORMAL_OFFSET + desc);
+
+        if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_AMULET;
+        else
+            return (TILE_AMU_NORMAL_OFFSET + desc);
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
@@ -4038,7 +4050,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     {
         int type = label - TILE_WAND_ID_FIRST;
         int desc = you.item_description[IDESC_WANDS][type] % NDSC_WAND_PRI;
-        return (TILE_WAND_OFFSET + desc);
+
+        if (get_ident_type(OBJ_WANDS, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_WAND;
+        else
+            return (TILE_WAND_OFFSET + desc);
     }
 
     if (label >= TILE_STAFF_ID_FIRST && label <= TILE_STAFF_ID_LAST)
@@ -4046,7 +4062,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_STAFF_ID_FIRST;
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return (TILE_STAFF_OFFSET + desc);
+
+        if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_STAFF;
+        else
+            return (TILE_STAFF_OFFSET + desc);
     }
 
     if (label >= TILE_ROD_ID_FIRST && label <= TILE_ROD_ID_LAST)
@@ -4054,7 +4074,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_ROD_ID_FIRST + STAFF_FIRST_ROD;
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return (TILE_ROD_OFFSET + desc);
+
+        if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_STAFF;
+        else
+            return (TILE_ROD_OFFSET + desc);
     }
 
     return (0);
