@@ -112,11 +112,6 @@ function wizlab_portal (e)
     e.tile("O = no_random dngn_portal_wizard_lab")
 end
 
-function wizlab_feat_descs()
-end
-
-dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
-
 -- Destinations:
 function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")

@@ -57,7 +57,7 @@ function ice_cave_portal(e)
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
 
-  dgn.set_lt_callback(difficulty, "ice_cave_feat_descs")
+  dgn.set_lt_callback("IceCv", "ice_cave_feat_descs")
 
 end
 
