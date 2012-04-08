@@ -13,7 +13,7 @@ const Branch branches[NUM_BRANCHES] = {
     //  entry message
     //  has_uniques, floor colour, rock colour
     //  mons rarity function, mons level function
-    //  travel shortcut, upstairs exit branch, dangerous branch end, ambient noise level
+    //  travel shortcut, dangerous branch end, ambient noise level
 
     { BRANCH_MAIN_DUNGEON, NUM_BRANCHES, 0, 0,
           BRANCH_DUNGEON_DEPTH, 0, 0,
@@ -22,7 +22,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      'D', false, false, 0 },
+      'D', false, 0 },
 
     { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 4, 7, 1,
           BFLAG_NO_ITEMS, 0,
@@ -31,7 +31,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, BROWN,
       mons_null_rare, mons_null_level,
-      'T', false, false, 0 },
+      'T', false, 0 },
 
     { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 6, 11, 4, 0, 0,
       DNGN_ENTER_ORCISH_MINES, DNGN_RETURN_FROM_ORCISH_MINES,
@@ -39,7 +39,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, BROWN,
       mons_mineorc_rare, mons_mineorc_level,
-      'O', false, false, 4 },
+      'O', false, 4 },
 
     { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 3, 0, 0,
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
@@ -47,7 +47,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, WHITE, ETC_ELVEN_BRICK,
       mons_hallelf_rare, mons_hallelf_level,
-      'E', false, true, 0 },
+      'E', true, 0 },
 
     { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 13, 8, 0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
@@ -55,7 +55,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, GREEN, BROWN,
       mons_lair_rare, mons_lair_level,
-      'L', false, false, 4 },
+      'L', false, 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 5, 5, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
@@ -63,7 +63,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, BROWN,
       mons_swamp_rare, mons_swamp_level,
-      'S', false, true, 0 },
+      'S', true, 0 },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
@@ -71,7 +71,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, BROWN,
       mons_shoals_rare, mons_shoals_level,
-      'A', false, true, 3 },
+      'A', true, 3 },
 
     { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 8, 6, BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
@@ -79,7 +79,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, GREEN, BROWN,
       mons_pitslime_rare, mons_pitslime_level,
-      'M', false, true, -5 },
+      'M', true, -5 },
 
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 0, 0,
       DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
@@ -87,7 +87,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREEN, YELLOW,
       mons_pitsnake_rare, mons_pitsnake_level,
-      'P', false, true, 0 },
+      'P', true, 0 },
 
     { BRANCH_HIVE, NUM_BRANCHES, 11, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -95,7 +95,7 @@ const Branch branches[NUM_BRANCHES] = {
       "You hear a buzzing sound coming from all directions.",
       false, YELLOW, BROWN,
       mons_hive_rare, mons_hive_level,
-      'H', false, true, 5 },
+      'H', true, 5 },
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
@@ -103,7 +103,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      'V', false, true, 0 },
+      'V', true, 0 },
 
     { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 4, 6, 1, BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
@@ -111,7 +111,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_hallblade_rare, mons_hallblade_level,
-      'B', false, false, -7 },
+      'B', false, -7 },
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 4, 5, 0, 0,
       DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
@@ -119,7 +119,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_crypt_rare, mons_crypt_level,
-      'C', false, false, -20 },
+      'C', false, -20 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 2, 3, 3,
       BFLAG_ISLANDED, LFLAG_NO_TELE_CONTROL,
@@ -128,7 +128,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, BROWN,
       mons_tomb_rare, mons_tomb_level,
-      'W', false, true, -10 },
+      'W', true, -10 },
 
     { BRANCH_VESTIBULE_OF_HELL, NUM_BRANCHES, 27, 27, 1,
           BFLAG_NO_ITEMS, 0,
@@ -137,7 +137,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, LIGHTGREY, LIGHTRED,
       mons_vestibule_rare, mons_vestibule_level,
-      'U', false, false, 0 },
+      'U', false, 0 },
 
     { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7,
           BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
@@ -146,7 +146,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, CYAN, BROWN,
       mons_dis_rare, mons_dis_level,
-      'I', true, true, 0 },
+      'I', true, 0 },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7,
           BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
@@ -155,7 +155,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BROWN, RED,
       mons_gehenna_rare, mons_gehenna_level,
-      'G', true, true, 0 },
+      'G', true, 0 },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7,
           BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
@@ -164,7 +164,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTBLUE, LIGHTCYAN,
       mons_cocytus_rare, mons_cocytus_level,
-      'X', true, true, 0 },
+      'X', true, 0 },
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7,
           BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
@@ -173,7 +173,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, MAGENTA, MAGENTA,
       mons_tartarus_rare, mons_tartarus_level,
-      'Y', true, true, 0 },
+      'Y', true, 0 },
 
     { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 27, 27, 5, 0, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
@@ -181,7 +181,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BLACK, BLACK, // set per-map
       mons_hallzot_rare, mons_hallzot_level,
-      'Z', false, true, 0 },
+      'Z', true, 0 },
 
     { BRANCH_FOREST, BRANCH_MAIN_DUNGEON, 3, 6, 5, 0, 0,
       DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
@@ -189,7 +189,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, BROWN,
       mons_forest_rare, mons_forest_level,
-      'F', false, true, 0 },
+      'F', true, 0 },
 
     { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 0, 0,
       DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
@@ -197,7 +197,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BROWN, YELLOW,
       mons_spidernest_rare, mons_spidernest_level,
-      'N', false, true, 0 },
+      'N', true, 0 },
 
     { BRANCH_DWARVEN_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 1, 0, 0,
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
@@ -205,7 +205,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, YELLOW, BROWN,
       mons_dwarf_rare, mons_dwarf_level,
-      'K', false, false, 0 },
+      'K', false, 0 },
 
     { BRANCH_ABYSS, NUM_BRANCHES, DEPTH_ABYSS, DEPTH_ABYSS, 1,
           BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
@@ -214,7 +214,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLACK, BLACK, // set specially
       mons_abyss_rare, mons_abyss_level,
-      'J', false, false, 0 },
+      'J', false, 0 },
 
     { BRANCH_PANDEMONIUM, NUM_BRANCHES, DEPTH_PAN, DEPTH_PAN, 1,
           BFLAG_NO_XLEV_TRAVEL, 0,
@@ -223,7 +223,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BLACK, BLACK, // set specially from monster set
       mons_pan_rare, mons_pan_level,
-      'R', false, false, 0 },
+      'R', false, 0 },
 
     { BRANCH_ZIGGURAT, NUM_BRANCHES, 27, 27, 27,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -232,7 +232,7 @@ const Branch branches[NUM_BRANCHES] = {
       "You land on top of a ziggurat so tall you cannot make out the ground.",
       false, BLACK, BLACK,
       mons_null_rare, mons_null_level, // overridden later
-      'Q', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
+      'Q', false /* maybe, but Zig:26 is almost as bad */, 0 },
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, 10, 20, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
@@ -241,7 +241,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLACK, BLACK,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '0', false, 0 },
 
     { BRANCH_BAZAAR, NUM_BRANCHES, 10, 27, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -250,7 +250,7 @@ const Branch branches[NUM_BRANCHES] = {
       "You enter an inter-dimensional bazaar!",
       false, BLUE, YELLOW,
       mons_null_rare, mons_null_level,
-      '1', false, false, 0 },
+      '1', false, 0 },
 
     { BRANCH_TROVE, NUM_BRANCHES, 10, 27, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -259,7 +259,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, DARKGREY, BLUE,
       mons_null_rare, mons_null_level,
-      '2', false, false, 0 },
+      '2', false, 0 },
 
     { BRANCH_SEWER, NUM_BRANCHES, 3, 6, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -268,7 +268,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, DARKGREY,
       mons_sewer_rare, mons_sewer_level,
-      '3', false, false, 0 },
+      '3', false, 0 },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, 4, 8, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -277,7 +277,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, WHITE, YELLOW,
       mons_null_rare, mons_null_level,
-      '4', false, false, 0 },
+      '4', false, 0 },
 
     { BRANCH_BAILEY, NUM_BRANCHES, 7, 16, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -286,7 +286,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, WHITE, LIGHTGREY,
       mons_null_rare, mons_null_level,
-      '5', false, false, 0 },
+      '5', false, 0 },
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, 11, 19, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -295,7 +295,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLUE, WHITE,
       mons_null_rare, mons_null_level,
-      '6', false, false, 0 },
+      '6', false, 0 },
 
     { BRANCH_VOLCANO, NUM_BRANCHES, 8, 21, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -304,7 +304,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, RED, RED,
       mons_volcano_rare, mons_volcano_level,
-      '7', false, false, 0 },
+      '7', false, 0 },
 
     { BRANCH_WIZLAB, NUM_BRANCHES, 22, 27, 1,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
@@ -313,7 +313,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, BROWN, // set per-map
       mons_null_rare, mons_null_level,
-      '8', false, false, 0 },
+      '8', false, 0 },
 };
 
 #endif

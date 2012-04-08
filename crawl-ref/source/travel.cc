@@ -2164,16 +2164,11 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     }
 }
 
-static bool _is_easy_exiting_branch(int branch)
-{
-    return branches[branch].any_upstair_exits;
-}
-
 level_id find_up_level(level_id curr, bool up_branch)
 {
     --curr.depth;
 
-    if (up_branch || _is_easy_exiting_branch(curr.branch))
+    if (up_branch)
         curr.depth = 0;
 
     if (curr.depth < 1)
