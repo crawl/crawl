@@ -273,7 +273,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             else // otherwise, melee combat
             {
                 bool did_hit = false;
-                fight_melee(&you, &mon, &did_hit);
+                fight_melee(&you, &mon, &did_hit, true);
                 if (did_hit)
                     hits++;
             }
@@ -291,7 +291,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
         for (int i = 0; i < iter_limit; i++)
         {
             you.hp = you.hp_max = 999; // again, arbitrary
-            fight_melee(&mon, &you);
+            fight_melee(&mon, &you, NULL, true);
 
             time_taken += (100 / mon.speed);
 

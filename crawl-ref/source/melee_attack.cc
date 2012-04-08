@@ -99,7 +99,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
     stab_attempt(false), stab_bonus(0),
-    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
+    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
+    simu(false)
 {
     attack_occurred = false;
     weapon          = attacker->weapon(attack_number);
@@ -2198,14 +2199,8 @@ bool melee_attack::distortion_affects_defender()
         return (false);
     }
 
-    #ifdef WIZARD // kinda hacky, but this makes the fight simulator
-                  // play well with distortion-branded weapons
-    if (defender->is_player() && attacker->is_monster()
-        && attacker->as_monster()->max_hit_points == MAX_MONSTER_HP ||
-        defender->is_monster()
-        && defender->as_monster()->max_hit_points == MAX_MONSTER_HP)
+    if (simu)
         return (false);
-    #endif
 
     if (one_chance_in(3))
     {
