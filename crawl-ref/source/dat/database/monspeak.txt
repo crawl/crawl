@@ -5625,8 +5625,6 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ says @to_foe@, "Don't bother to defend, it's @_pointless_@."
 
-@The_monster@ says @to_foe@, "I'll show you a few @_ploy_@s."
-
 @The_monster@ shouts @at_foe@, "Now you die!"
 
 @The_monster@ shouts @at_foe@, "@_ATTACK_@!!!"
