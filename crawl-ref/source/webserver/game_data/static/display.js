@@ -59,7 +59,7 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
             window.render_times = [];
         if (window.render_times.length > 20)
             window.render_times.shift();
-        window.render_times.unshift(render_time);
+        window.render_times.push(render_time);
     }
 
     function clear_map()
