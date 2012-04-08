@@ -964,6 +964,8 @@ std::string monster_info::mimic_name() const
         {
             s = "rune";
         }
+        else if (item->base_type == OBJ_ORBS)
+            s = "orb";
         else
             s = item->name(DESC_BASENAME);
     }

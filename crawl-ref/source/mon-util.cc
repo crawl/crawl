@@ -41,6 +41,7 @@
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "random.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -881,6 +882,14 @@ void discover_mimic(const coord_def& pos, bool wake)
     {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
         mimic->seen_context = SC_JUST_SEEN;
+    }
+
+    // Orb mimics shriek.
+    if (item && item->base_type == OBJ_ORBS)
+    {
+        orb_pickup_noise(pos, 30,
+            "The orb mimic lets out a hideous shriek!",
+            "The orb mimic lets out a furious burst of light!");
     }
 
     // Just in case there's another one.
