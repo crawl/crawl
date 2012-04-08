@@ -137,7 +137,7 @@ trick
 
 gambit
 
-strategy
+trap
 %%%%
 _smoke_or_steam_
 
