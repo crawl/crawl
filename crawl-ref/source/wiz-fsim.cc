@@ -484,6 +484,33 @@ void wizard_fight_sim(bool double_scale)
         return;
     }
 
+    if (Options.fsim_mode.find("defen") != std::string::npos)
+        defense = true;
+    else if (Options.fsim_mode.find("attack") != std::string::npos
+             || Options.fsim_mode.find("offen") != std::string::npos)
+    {
+        defense = false;
+    }
+    else
+    {
+        mpr("(A)ttack or (D)efense?", MSGCH_PROMPT);
+
+        switch (tolower(getchk()))
+        {
+        case 'a':
+        case 'A':
+            defense = false;
+            break;
+        case 'd':
+        case 'D':
+            defense = true;
+            break;
+        default:
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
     _write_version(o);
     _write_matchup(o, *mon, defense, Options.fsim_rounds);
     _write_you(o);

@@ -2810,6 +2810,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
+    else if (key == "fsim_mode")
+        fsim_mode = field;
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));
     else if (key == "fsim_rounds")
