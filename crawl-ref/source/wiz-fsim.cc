@@ -182,7 +182,8 @@ static monster* _init_fsim()
         }
 
         mon = create_monster(
-            mgen_data::hostile_at(mtype, "fightsim", false, 0, 0, you.pos()));
+            mgen_data::hostile_at(mtype, "fightsim", false, 0, 0, you.pos(),
+                                  MG_DONT_COME));
         if (!mon)
         {
             mprf("Failed to create monster.");
