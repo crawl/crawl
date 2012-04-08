@@ -17,7 +17,16 @@
 
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
-TAGS:   trowel_portal
+TAGS:   trowel_portal unrand
+DEPTH:  *, !Zig, !Abyss
+veto {{
+  for d = 1,27 do
+    if you.is_level_on_stack("Zig:" .. d) then
+      return true
+    end
+  end
+  return false
+}}
 : ziggurat_portal(_G)
 MAP
 O

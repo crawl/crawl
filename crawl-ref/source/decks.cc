@@ -2359,26 +2359,35 @@ static void _trowel_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     bool done_stuff = false;
 
-    // [ds] FIXME: Remove the LEVEL_DUNGEON restriction once Crawl
-    // handles stacked level_area_types correctly. We should also
-    // review whether Trowel being able to create infinite portal
-    // vaults is a Good Thing, because it looks pretty broken to me.
-    if (power_level >= 2 && player_in_connected_branch()
-        && crawl_state.game_standard_levelgen())
+    if (power_level >= 2 && crawl_state.game_standard_levelgen())
     {
-        // Generate a portal to something.
-        const map_def *map = random_map_for_tag("trowel_portal");
-        if (!map)
-            mpr("A buggy portal flickers into view, then vanishes.");
-        else
+        // Vetoes are done too late, should not pass random_map_for_tag()
+        // at all.  Thus, allow retries.
+        int tries;
+        for (tries = 100; tries > 0; tries--)
         {
+            // Generate a portal to something.
+            const map_def *map = random_map_for_tag("trowel_portal", true, true);
+
+            // Bazaar is the only trowel with allow_dup, pulling more there will
+            // fail if other portals are exhausted.
+            if (!map)
+                break;
+
             {
                 no_messages n;
-                dgn_safe_place_map(map, true, true, you.pos());
+                if (dgn_safe_place_map(map, true, true, you.pos()))
+                {
+                    tries = -1; // hrm no_messages
+                    break;
+                }
             }
-            mpr("A mystic portal forms.");
         }
-        done_stuff = true;
+        if (tries > -1)
+            mpr("A portal flickers into view, then vanishes.");
+        else
+            mpr("A mystic portal forms.");
+        return;
     }
     else if (power_level == 1)
     {

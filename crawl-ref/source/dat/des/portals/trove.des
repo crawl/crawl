@@ -234,7 +234,7 @@ default-depth: D:10-, Elf:1-, Vault:1-
 ##############################################################################
 
 NAME:   enter_trove_0
-TAGS:   uniq_trove no_monster_gen trowel_portal chance_trove
+TAGS:   uniq_trove no_monster_gen chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -335,6 +335,15 @@ c$XXX$c
 c$$$$$c
 ccc+ccc
    @
+ENDMAP
+
+NAME:   trove_entry_trowel
+TAGS:   transparent trowel_portal unrand uniq_trove
+DEPTH:  *, !Trove, !Abyss
+veto {{ return you.is_level_on_stack("Trove") }}
+: trove.portal(_G)
+MAP
+O
 ENDMAP
 
 ##############################################################################

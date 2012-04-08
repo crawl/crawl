@@ -149,8 +149,22 @@ end
 default-depth: D:7-16, Orc
 
 NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent trowel_portal chance_bailey
+TAGS:   bailey_entry transparent chance_bailey
 CHANCE: 5%
+: local rnd = crawl.random2(2)
+: if rnd == 0 then
+:   bailey_portal_axe(_G)
+: elseif rnd == 1 then
+:   bailey_portal_polearm(_G)
+: end
+MAP
+O
+ENDMAP
+
+NAME:   bailey_entry_trowel
+TAGS:   transparent trowel_portal unrand
+DEPTH:  *, !Bailey, !Abyss
+veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 :   bailey_portal_axe(_G)
