@@ -40,7 +40,10 @@ level_id branch_entry_level(branch_type branch)
 
 level_id current_level_parent()
 {
-    // TODO:LEVEL_STACK: go up the level stack
+    // Never called from X[], we don't have to support levels you're not on.
+    if (!you.level_stack.empty())
+        return you.level_stack.back().id;
+
     return find_up_level(level_id::current());
 }
 
