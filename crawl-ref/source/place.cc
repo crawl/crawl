@@ -129,3 +129,12 @@ std::vector<level_id> all_dungeon_ids()
     }
     return (out);
 }
+
+bool is_level_on_stack(level_id lev)
+{
+    for (int i = you.level_stack.size() - 1; i >= 0; i--)
+        if (you.level_stack[i].id == lev)
+            return true;
+
+    return false;
+}
