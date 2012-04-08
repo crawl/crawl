@@ -101,7 +101,7 @@ Branch branches[] = {
       "Vaults", "the Vaults", "Vault",
       NULL,
       true, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level,
+      mons_vaults_rare, mons_vaults_level,
       'V', false, true, 0 },
 
     { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 4, 6, 1, 4, 0, 0,

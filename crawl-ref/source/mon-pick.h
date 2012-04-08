@@ -56,6 +56,8 @@ int mons_tartarus_level(int mcls);
 int mons_tartarus_rare(int mcls);
 int mons_tomb_level(int mcls);
 int mons_tomb_rare(int mcls);
+int mons_vaults_level(int mcls);
+int mons_vaults_rare(int mcls);
 int mons_vestibule_level(int mcls);
 int mons_vestibule_rare(int mcls);
 
