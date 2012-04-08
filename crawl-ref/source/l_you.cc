@@ -24,6 +24,7 @@
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "place.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -283,6 +284,22 @@ LUAFN(you_mutation)
     return (luaL_argerror(ls, 1, err.c_str()));
 }
 
+LUAFN(you_is_level_on_stack)
+{
+    std::string levname = luaL_checkstring(ls, 1);
+    level_id lev;
+    try
+    {
+        lev = level_id::parse_level_id(levname);
+    }
+    catch (const std::string &err)
+    {
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+
+    PLUARET(boolean, is_level_on_stack(lev));
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -363,6 +380,7 @@ static const struct luaL_reg you_clib[] =
     { "branch",       you_branch },
     { "depth",        you_depth },
     { "absdepth",     you_absdepth },
+    { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
