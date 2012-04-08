@@ -1122,7 +1122,24 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
-    ASSERT(!is_level_on_stack(level_id::current()));
+    coord_def return_pos;
+    if (!you.level_stack.empty()
+        && you.level_stack.back().id == level_id::current())
+    {
+        return_pos = you.level_stack.back().pos;
+        you.level_stack.pop_back();
+    }
+
+    if (is_level_on_stack(level_id::current()))
+    {
+        std::vector<std::string> stack;
+        for (unsigned int i = 0; i < you.level_stack.size(); i++)
+            stack.push_back(you.level_stack[i].id.describe());
+        die("Attempt to enter a portal (%s) twice; stack: %s",
+            level_id::current().describe().c_str(),
+            comma_separated_line(stack.begin(), stack.end(),
+                                 ", ", ", ").c_str());
+    }
 
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
@@ -1272,12 +1289,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _clear_clouds();
 
-        if (!you.level_stack.empty()
-            && you.level_stack.back().id == level_id::current())
-        {
-            you.moveto(you.level_stack.back().pos);
-            you.level_stack.pop_back();
-        }
+        if (!return_pos.origin())
+            you.moveto(return_pos);
         else if (just_created_level && player_in_branch(BRANCH_ABYSS))
             you.moveto(ABYSS_CENTRE);
         else
