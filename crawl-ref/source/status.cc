@@ -738,7 +738,7 @@ static void _describe_sage(status_info* inf)
     inf->light_text   = "Sage";
     inf->short_text   = "sage [" + comma_separated_line(sages.begin(),
                         sages.end(), ", ") + "]";
-    inf->long_text    = "You are studious about " + comma_separated_line(
+    inf->long_text    = "You feel studious about " + comma_separated_line(
                         sages.begin(), sages.end()) + ".";
 }
 
