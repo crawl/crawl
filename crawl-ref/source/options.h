@@ -318,6 +318,7 @@ public:
 
 #ifdef WIZARD
     // Parameters for fight simulations.
+    std::string fsim_mode;
     int         fsim_rounds;
     std::string fsim_mons;
     std::vector<std::string> fsim_kit;
