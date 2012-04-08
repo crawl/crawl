@@ -37,11 +37,10 @@
 
 fight_data null_fight = {0.0,0,0,0.0,0.0,0.0};
 
-// strings and things
-static const std::string _dummy_string =
+static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvEffDam"; // 55 columns
 
-static std::string _fight_string(fight_data fdata)
+static const std::string _fight_string(fight_data fdata)
 {
     return make_stringf("   %5.1f |    %3d |     %3d%% |"
                         " %5.1f |  %5.1f |    %5.1f",
@@ -328,14 +327,11 @@ void wizard_quick_fsim()
 
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
-    mprf("           %s\n"
-         "Attacking: %s",
-        _dummy_string.c_str(),
-        _fight_string(fdata).c_str());
+    mprf("           %s\nAttacking: %s", _title_line,
+         _fight_string(fdata).c_str());
 
     fdata = _get_fight_data(*mon, iter_limit, true);
-    mprf("Defending: %s",
-        _fight_string(fdata).c_str());
+    mprf("Defending: %s", _fight_string(fdata).c_str());
 
     _uninit_fsim(mon);
     return;
@@ -344,20 +340,21 @@ void wizard_quick_fsim()
 static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
 {
     skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
-    fprintf(o, "%10.10s | %s\n",
-            skill_name(sk),
-            _dummy_string.c_str());
+    const char* title = make_stringf("%10.10s | %s", skill_name(sk),
+                                     _title_line).c_str();
+    fprintf(o, "%s\n", title);
+    mpr(title);
 
     const int iter_limit = Options.fsim_rounds;
     for(int i = 0; i <= 27; i++)
     {
         mesclr();
-        mprf("Calculating average damage at %s %d...",
-             skill_name(sk), i);
-
         set_skill_level(sk, i);
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
-        fprintf(o, "        %2d | %s\n", i, _fight_string(fdata).c_str());
+        const std::string line = make_stringf("        %2d | %s", i,
+                                              _fight_string(fdata).c_str());
+        mpr(line);
+        fprintf(o, "%s\n", line.c_str());
         fflush(o);
 
         // kill the loop if the user hits escape
@@ -398,10 +395,11 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
         for(int x = 1; x <= 27; x += 2)
         {
             mesclr();
-            mprf("%s %d, %s %d...", skill_name(skx), x, skill_name(sky), y);
             set_skill_level(skx, x);
             set_skill_level(sky, y);
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
+            mprf("%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,
+                 int(fdata.av_eff_dam));
             fprintf(o,"%5.1f", fdata.av_eff_dam);
             fflush(o);
 
