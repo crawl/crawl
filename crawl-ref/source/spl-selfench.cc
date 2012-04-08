@@ -21,6 +21,7 @@
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-other.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "transform.h"
@@ -240,8 +241,12 @@ spret_type cast_insulation(int power, bool fail)
 spret_type cast_teleport_control(int power, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
-                          "You feel in control.");
+    if (allow_control_teleport(true))
+        mpr("You feel in control.");
+    else
+        mpr("You feel your control is inadequate.");
+
+    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50);
     return SPRET_SUCCESS;
 }
 
