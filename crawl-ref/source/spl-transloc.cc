@@ -809,7 +809,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         else
             mpr("The mass is resisting your pull.");
 
-            return SPRET_SUCCESS;
+        return SPRET_SUCCESS;
     }
 
     // We need to modify the item *before* we move it, because
