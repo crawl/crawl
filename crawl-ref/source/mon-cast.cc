@@ -891,6 +891,10 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     case SPELL_IOOD: // tracer only
         beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
+        // Doesn't take distance into account, but this is just a tracer so
+        // we'll ignore that.  We need some damage on the tracer so the monster
+        // doesn't think the spell is useless against other monsters.
+        beam.damage   = dice_def(9, stepdown_value(power, 30, 30, 200, -1) / 4);
         break;
 
     case SPELL_SUNRAY:
