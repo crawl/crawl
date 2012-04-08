@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Vaults", "the Vaults", "Vault",
       NULL,
       true, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level,
+      mons_vaults_rare, mons_vaults_level,
       'V', true, 0 },
 
     { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 4, 6, 1, BFLAG_NO_ITEMS, 0,
