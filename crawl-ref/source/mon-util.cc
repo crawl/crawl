@@ -4199,6 +4199,14 @@ int get_dist_to_nearest_monster()
     return (minRange);
 }
 
+bool monster_nearby()
+{
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+        if (monster_at(*ri))
+            return true;
+    return false;
+}
+
 actor *actor_by_mid(mid_t m)
 {
     if (m == MID_PLAYER)

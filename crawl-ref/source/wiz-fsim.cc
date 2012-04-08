@@ -31,6 +31,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "stuff.h"
 
 #ifdef WIZARD
 
@@ -149,18 +150,37 @@ static void _write_mon(FILE * o, monster &mon)
 }
 
 // fight simulator internals
-static monster* _init_fsim(monster_type mtype)
+static monster* _init_fsim()
 {
-    monster * mon;
+    monster * mon = NULL;
+    monster_type mtype = get_monster_by_name(Options.fsim_mons);
 
-    // get a monster via targetting. hooray!
-    dist moves;
-    direction_chooser_args args;
-    args.needs_path = false;
-    args.top_prompt = "Select a monster, or hit Escape to use default.";
-    direction(moves, args);
-    if(!monster_at(moves.target)) // or don't, which is boring
+    if(mtype == MONS_PROGRAM_BUG && monster_nearby())
     {
+        // get a monster via targetting.
+        dist moves;
+        direction_chooser_args args;
+        args.needs_path = false;
+        args.top_prompt = "Select a monster, or hit Escape to use default.";
+        direction(moves, args);
+        if (monster_at(moves.target))
+            mon = clone_mons(monster_at(moves.target), true);
+    }
+
+    if (!mon)
+    {
+        if (mtype == MONS_PROGRAM_BUG)
+        {
+            char specs[100];
+            mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
+            if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+            {
+                canned_msg(MSG_OK);
+                return NULL;
+            }
+            mtype = get_monster_by_name(specs);
+        }
+
         mon = create_monster(
             mgen_data::hostile_at(mtype, "fightsim", false, 0, 0, you.pos()));
         if (!mon)
@@ -169,8 +189,6 @@ static monster* _init_fsim(monster_type mtype)
             return NULL;
         }
     }
-    else
-        mon = clone_mons(monster_at(moves.target), true);
 
     // move the monster next to the player
     // this probably works best in the arena, or at least somewhere
@@ -303,7 +321,7 @@ void wiz_run_fight_sim(monster_type mtype, int iter_limit)
     // we could declare this in the fight calls, but i'm worried that
     // the actual monsters that are made will be slightly different,
     // so it's safer to do it here.
-    monster *mon = _init_fsim(mtype);
+    monster *mon = _init_fsim();
     if(!mon)
         return;
 
@@ -324,7 +342,7 @@ void wiz_run_fight_sim(monster_type mtype, int iter_limit)
 void wiz_fight_sim_file(bool defend, monster_type mtype, int iter_limit,
                         const char * fightstat)
 {
-    monster * mon = _init_fsim(mtype);
+    monster * mon = _init_fsim();
     if(!mon)
         return;
 
@@ -401,7 +419,7 @@ void wiz_fight_sim_file(bool defend, monster_type mtype, int iter_limit,
 // now i'm showing off, but this is an example of what you can do
 void skill_vs_fighting(int iter_limit)
 {
-    monster *mon = _init_fsim(MONS_ANCIENT_LICH);
+    monster *mon = _init_fsim();
     if(!mon)
         return;
 
