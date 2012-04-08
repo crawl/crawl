@@ -1122,6 +1122,8 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
+    ASSERT(!is_level_on_stack(level_id::current()));
+
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
 

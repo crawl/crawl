@@ -40,4 +40,6 @@ bool branch_is_stash_trackable(branch_type branch);
 
 std::vector<level_id> all_dungeon_ids();
 
+bool is_level_on_stack(level_id id);
+
 #endif
