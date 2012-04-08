@@ -65,7 +65,7 @@ Features
  ^ - random trap.
  ~ - random trap suitable for the branch and depth the map is being used.
 
- A - Vestibule gateway (opened by Horn).
+ A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
  C - Random Altar.
