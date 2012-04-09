@@ -732,6 +732,106 @@ MAP
      xxxx
 ENDMAP
 
+NAME:  guppyfry_elf_castle
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf soldier / deep elf mage / deep elf knight
+MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
+MONS:  plant
+SUBST: - = .%*3$
+SUBST: ? = .12$
+MAP
+..............
+.xxmxx..xxmxx.
+.x1-1x..x1*1x.
+.x.?.x..x.2.x.
+.xx.xx..xx.xx.
+.x...x..x...x.
+.x...x..x...x.
+.xxx+x++x+xxx.
+.x.2......?.x.
+.x.*1....1-.x.
+.xxmxx++xxmxx.
+..............
+ENDMAP
+
+NAME:  guppyfry_elf_garden
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf soldier / deep elf mage / deep elf priest
+MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
+MONS:  plant
+SUBST: - = wwWW333ttt..%
+MAP
+................
+................
+..mmmmT..Tmmmm..
+..m----..----m..
+..m----..----m..
+..m----..----m..
+..3---t..t---3..
+.......21.......
+.......11.......
+..3---t..t---3..
+..m----..----m..
+..m----..----m..
+..m----..----m..
+..mmmmT..Tmmmm..
+................
+................
+ENDMAP
+
+NAME:  guppyfry_elf_altar
+DEPTH: Elf:2-4
+MONS:  deep elf knight / deep elf priest
+MONS:  deep elf high priest
+SUBST: F = G:6 F:1
+KMONS: F = orange crystal statue / silver statue / ice statue
+SUBST: ? = .1$%*
+MAP
+xxxxxxxxxxx
+xC?1.m....+
+x??1Fm....+
+x112.m....x
+x.F..F..xxx
+x.........x
+x..F..F...x
+x.........x
+x...F..F..x
+x.........x
+x...T..T..x
+xxxxx++xxxx
+ENDMAP
+
+NAME:  guppyfry_elf_lava
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf conjurer / deep elf mage / deep elf summoner
+MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
+KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
+       w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
+       w:4 any weapon ego:flaming | w:4 bow ego:flame | w:12 arrow ego:flame | \
+       w:7 wand of flame | w:5 wand of fire | w:3 wand of fireball | \
+       w:4 bottled efreet | w:4 staff of fire | w:17 randbook disc:fire | \
+       w:6 robe ego:fire_resistance | w:9 any armour ego:fire_resistance
+SUBST: ? = .l1
+SUBST: - = .l
+MAP
+.............
+.xxxx-..-xxxx.
+.xllll-.llllx.
+.xllll.-llllx.
+.xllll-.llllx.
+.-lll?..vlll-.
+...-..12...-..
+..-.-.11..-.-.
+.-lll?..?lll-.
+.xllll.-llllx.
+.xllll-.llllx.
+.xllll.-llllx.
+.xxxx...-xxxx.
+..............
+ENDMAP
 
 ##############################################################################
 ##############################################################################
