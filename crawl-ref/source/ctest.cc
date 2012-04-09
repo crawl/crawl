@@ -18,6 +18,7 @@
 #include "clua.h"
 #include "cluautil.h"
 #include "dlua.h"
+#include "errors.h"
 #include "files.h"
 #include "libutil.h"
 #include "maps.h"
@@ -135,6 +136,21 @@ namespace crawl_tests
         return crawl_state.tests_selected[0].find(test) != std::string::npos;
     }
 
+    static void _run_test(const std::string &name, void (*func)(void))
+    {
+        if (!_has_test(name))
+            return;
+
+        try
+        {
+            (*func)();
+        }
+        catch (const ext_fail_exception &E)
+        {
+            failures.push_back(file_error(name, E.msg));
+        }
+    }
+
     // Assumes curses has already been initialized.
     bool run_tests(bool exit_on_complete)
     {
@@ -149,10 +165,8 @@ namespace crawl_tests
 
         init_test_bindings();
 
-        if (_has_test("makeitem"))
-            makeitem_tests();
-        if (_has_test("zotdef_wave"))
-            debug_waves();
+        _run_test("makeitem", makeitem_tests);
+        _run_test("zotdef_wave", debug_waves);
 
         // Get a list of Lua files in test. Order of execution of
         // tests should be irrelevant.
