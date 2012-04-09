@@ -911,11 +911,12 @@ MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
 MONS:   ghost moth
 MONS:   orb spider
+KMONS:  8 = moth of wrath / ghost moth
 NSUBST: 6 = 1:6 / 1:46 / *:4
 COLOUR: c = white
-COLOUR: 1O+' = lightgrey
-FTILE:  1cO+' = floor_pebble_lightgray
-NSUBST: ' = 3:3 / 4:2 / *:'
+COLOUR: 18O+' = lightgrey
+FTILE:  18cO+' = floor_pebble_lightgray
+NSUBST: ' = 3:3 / 4:2 / 4=32'' / *:'
 TILE:   c = wall_vines
 SUBST:  x = c
 SUBST:  X = x
@@ -925,6 +926,8 @@ SUBST:  W = WW.
 SUBST:  W = W..
 : end
 KFEAT:  Ww = shallow_water
+SUBST:  = : .+
+SUBST:  9 : 7.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
@@ -935,7 +938,7 @@ xxxxxxxxxx44wwwW..WxxW.xx.57.WWxxxxxxxxxxxxxxxX
 xxxxxxxxxxx4xxW..Wxxx.WxxWWxW..WxwwwxxxxxxxxxxX
 xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww46xxxxxxX
 xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
-xxxxxxxxxxxxxW.Wxxc1'c++c'1cxxWW..Wxxxx4xxxxxxX
+xxxxxxxxxxxxxW.Wxxc1'c++c'8cxxWW..Wxxxx4xxxxxxX
 xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
 xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
 xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
@@ -948,9 +951,9 @@ xxxxxxxxW..WxxxW.5WxxW.4.WxxW5WxxxxxW...WxxxxxX
 xxxxxxxxxW..WxW..WxxxxW..WxxW..WxxW..WWWxxxxxxX
 xxxxxxxxxxW.5.W..WxxxxxW...WxxW..W..WWxxxxxxXXX
 xxxxxxxxxxxWW...Wxxxxxxx...xxxxWW5WWxxxxxXXXX
-xxxxxxxxxxxxxWWWxxxxxxxx...xxxxxxWxxxxxXXX
+xxxxxxxxxxxxxWWWxxxxxxxx===xxxxxxWxxxxxXXX
 xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
-XXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX99.....99XXXXXXXXX
 XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
 
