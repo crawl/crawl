@@ -2769,19 +2769,11 @@ int player_sust_abil(bool calc_unid)
 
 int player_warding(bool calc_unid)
 {
-    int ward = 0;
-
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-    {
-        // Note: when adding a new source of warding, please add it to
-        // melee_attack::attack_warded_off() as well.
-        ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
-
-        ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
-    }
-
-    return (ward);
+    // Note: when adding a new source of warding, please add it to
+    // melee_attack::attack_warded_off() as well.
+    return (!you.suppressed()
+            && (player_equip(EQ_AMULET, AMU_WARDING, calc_unid)
+                || player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid)));
 }
 
 int carrying_capacity(burden_state_type bs)
@@ -6186,7 +6178,7 @@ int calc_hunger(int food_cost)
 
 int player::warding() const
 {
-    return (30 * player_warding());
+    return (60 * player_warding());
 }
 
 bool player::paralysed() const
