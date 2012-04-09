@@ -61,6 +61,10 @@ A fountain of sparkling water
 
 Press 'q' to drink from this magic fountain. Expect magical effects, as long as it's still magic.
 %%%%
+A gate leading back out of here
+
+This gate seems to let you return whence you came from.
+%%%%
 A gate leading back out of this place
 
 This gate leads back to the dungeon.
