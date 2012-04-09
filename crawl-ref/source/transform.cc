@@ -187,7 +187,15 @@ _init_equipment_removal(transformation_type form)
     {
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
-        if (pitem && !form_can_wear_item(*pitem, form))
+
+        // Octopodes lose their extra ring slots in forms that do not
+        // have eight legs.
+        if (pitem && i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
+            && !(form_keeps_mutations(form) || form == TRAN_SPIDER))
+        {
+            result.insert(eq);
+        }
+        else if (pitem && !form_can_wear_item(*pitem, form))
             result.insert(eq);
     }
     return (result);
