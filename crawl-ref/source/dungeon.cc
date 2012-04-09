@@ -5165,15 +5165,9 @@ void place_spec_shop(int level_number,
     for (j = 0; j < 3; j++)
         env.shop[i].keeper_name[j] = 1 + random2(200);
 
-    if (!spec->name.empty())
-        env.shop[i].shop_name = spec->name;
-
-    if (!spec->type.empty())
-        env.shop[i].shop_type_name = spec->type;
-
-    if (!spec->suffix.empty())
-        env.shop[i].shop_suffix_name = spec->suffix;
-
+    env.shop[i].shop_name = spec->name;
+    env.shop[i].shop_type_name = spec->type;
+    env.shop[i].shop_suffix_name = spec->suffix;
     env.shop[i].level = level_number * 2;
 
     env.shop[i].type = static_cast<shop_type>(
