@@ -1278,6 +1278,50 @@ aaaw..ww
 ENDMAP
 
 ###############################################################################
+# Two stream minivaults
+NAME:   guppyfry_lair_drakes
+DEPTH:  Lair:3-7
+TAGS:   mini_float uniq_mini_stream
+MONS:   fire drake / swamp drake / mottled dragon
+MONS:   steam dragon
+MONS:   plant
+SUBST:  - = wwWW..%
+SHUFFLE: .t
+MAP
+.3WW-3.....
+.ttWW-ttt..
+.3ttW-tt.t.
+.ttWWtt...t
+tt1Wttt2.tt
+.ttWW-t3.t.
+..ttWW--1t.
+.tt1-WWttt.
+..tt--Wtt3.
+.tt3.tWWttW
+.ttt.ttWWW-
+....3.3-W-.
+ENDMAP
+
+NAME:   guppyfry_mini_stream
+DEPTH:  Lair
+TAGS:   mini_float uniq_mini_stream
+SUBST:  - = wW.%
+MAP
+..WW.......
+.ttWW.ttt..
+..ttW.tt.t.
+.ttWWtt...t
+tt0Wttt0.tt
+.ttWW.t..t.
+..ttWW-.0t.
+.tt0-WWttt.
+..tt.-Wtt..
+.tt..tWWtt.
+.ttt.ttWWtt
+........W..
+ENDMAP
+
+###############################################################################
 # Lair endings
 ###############################################################################
 
