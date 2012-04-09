@@ -237,8 +237,7 @@ struct dgn_colour_override_manager
 typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
 static std::auto_ptr<dungeon_colour_grid> dgn_colour_grid;
 
-typedef std::map<std::string, std::string> callback_map;
-static callback_map level_type_post_callbacks;
+static std::string branch_epilogues[NUM_BRANCHES];
 
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
@@ -374,6 +373,16 @@ static bool _build_level_vetoable(bool enable_random_maps,
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
     _dgn_map_colour_fixup();
+
+    // Call the branch epilogue, if any.
+    if (!branch_epilogues[you.where_are_you].empty())
+        if (!dlua.callfn(branch_epilogues[you.where_are_you].c_str(), 0, 0))
+        {
+            mprf(MSGCH_ERROR, "branch epilogue for %s failed: %s",
+                              level_id::current().describe().c_str(),
+                              dlua.error.c_str());
+            return false;
+        }
 
     // Discard any Lua chunks we loaded.
     strip_all_maps();
@@ -5748,13 +5757,11 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     die("Can't find any floor to put the player on.");
 }
 
-void dgn_set_lt_callback(std::string level_type_tag,
-                         std::string callback_name)
+void dgn_set_branch_epilogue(branch_type branch, std::string func_name)
 {
-    ASSERT(!level_type_tag.empty());
-    ASSERT(!callback_name.empty());
+    ASSERT(!func_name.empty());
 
-    level_type_post_callbacks[level_type_tag] = callback_name;
+    branch_epilogues[branch] = func_name;
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -6175,7 +6182,7 @@ static bool _fixup_interlevel_connectivity()
     return (true);
 }
 
-void run_map_epilogues ()
+void run_map_epilogues()
 {
     // Iterate over level vaults and run each map's epilogue.
     for (unsigned i = 0, size = env.level_vaults.size(); i < size; ++i)
