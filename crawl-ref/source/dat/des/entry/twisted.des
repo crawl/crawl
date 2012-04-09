@@ -938,6 +938,7 @@ ENDMAP
 # Three runes > orb of zot > upstairs
 NAME:   nicolae_entry_your_instructions
 TAGS:   entry no_monster_gen no_trap_gen no_item_gen
+WEIGHT: 1
 ORIENT: float
 SHUFFLE: [(
 SHUFFLE: ABCDEFHIJKLMNOPQR
