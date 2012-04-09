@@ -1069,7 +1069,8 @@ static void _build_river(dungeon_feature_type river_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-    env.level_build_method += make_stringf(" river [%d]", (int) river_type);
+    env.level_build_method += make_stringf(" river [%s]",
+                                           dungeon_feature_name(river_type));
 
     // Made rivers less wide... min width five rivers were too annoying. -- bwr
     width = 3 + random2(4);
@@ -1116,7 +1117,8 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-    env.level_build_method += make_stringf(" lake [%d]", (int) lake_type);
+    env.level_build_method += make_stringf(" lake [%s]",
+                                           dungeon_feature_name(lake_type));
 
     x1 = 5 + random2(GXM - 30);
     y1 = 5 + random2(GYM - 30);
