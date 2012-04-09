@@ -552,6 +552,12 @@ The ground
 
 No life grows here. It is completely dead.
 %%%%
+# wizlab: Golubria
+The dimension's edge
+
+On the edge of this tiny, isolated plane, space itself dissolves into oblivion. Entering or affecting
+this black void is impossible.
+%%%%
 # wizlab: Cloud Mage
 A damp floor
 
