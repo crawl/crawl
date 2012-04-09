@@ -1710,8 +1710,8 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 39
-    column_composer cols(3, 21, 39);
+    // 3 columns, splits at columns 21, 38
+    column_composer cols(3, 21, 38);
 
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
@@ -1789,7 +1789,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 2), _itosym2(rward),
+             _determine_colour_string(rward, 1), _itosym1(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
              _determine_colour_string(rclar, 1), _itosym1(rclar),
