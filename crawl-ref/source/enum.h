@@ -1163,29 +1163,25 @@ enum dungeon_feature_type
     DNGN_DETECTED_SECRET_DOOR,
     DNGN_SECRET_DOOR,
     DNGN_WAX_WALL,
+        DNGN_MINWALL = DNGN_WAX_WALL,
     DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
+        DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
+        // Lowest grid value which can be seen through.
+        DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
+        DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
     DNGN_GRATE,
 
-    // Lowest/highest grid value which is a wall.
-    DNGN_MINWALL = DNGN_WAX_WALL,
-    DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
-
-    // Highest grid value which is opaque.
-    DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
-
-    // Lowest grid value which can be seen through.
-    DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
 #if TAG_MAJOR_VERSION == 32
-    // Highest grid value which can't be reached through.
-    DNGN_MAX_NONREACH = DNGN_GRATE,
+        // Highest grid value which can't be reached through.
+        DNGN_MAX_NONREACH = DNGN_GRATE,
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
@@ -1197,17 +1193,16 @@ enum dungeon_feature_type
 #else
     DNGN_TREE,
     DNGN_SWAMP_TREE,
-
-    // Highest grid value which can't be reached through.
-    DNGN_MAX_NONREACH = DNGN_SWAMP_TREE,
+        // Highest grid value which can't be reached through.
+        DNGN_MAX_NONREACH = DNGN_SWAMP_TREE,
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
     DNGN_ORCISH_IDOL,
 #endif
     DNGN_GRANITE_STATUE = 21,
-    // Highest solid grid value.
-    DNGN_MAXSOLID = DNGN_GRANITE_STATUE,
+        // Highest solid grid value.
+        DNGN_MAXSOLID = DNGN_GRANITE_STATUE,
     // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
