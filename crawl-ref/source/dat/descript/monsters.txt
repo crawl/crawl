@@ -1814,7 +1814,7 @@ A large creature with a woman's head, a lion's body and the wings of a huge bird
 %%%%
 spider
 
-An ordinary orb-weaving spider with a with a distinctive white cross on its back. While not as grotesquely huge as other arachnids to be found in this environment, it is still as big as a small cat.
+An ordinary orb-weaving spider with a distinctive white cross on its back. While not as grotesquely huge as other arachnids to be found in this environment, it is still as big as a small cat.
 %%%%
 spiny frog
 
