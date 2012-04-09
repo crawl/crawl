@@ -62,8 +62,9 @@
 
     Further explanations copied from mon-util.h:
         hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-        min hp = [0]*[1]+[3]
-        max hp = [0]*times_do*{ [1]+random2([2])}, *then* + [3]
+        min hp = [0]*[1] + [3]
+        max hp = [0]*([1]+[2]) + [3]
+        hp     = [0] *times_do* { [1] + random2(1+[2]) }, *then* + [3]
         example: the Iron Golem, hpdice={15,7,4,0}
            15*7 < hp < 15*(7+4),
            105 < hp < 165
