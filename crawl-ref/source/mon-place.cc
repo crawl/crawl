@@ -1923,13 +1923,11 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // such as the Temple, HoB, and Slime Pits.
         if (!player_in_connected_branch()
             || player_in_hell()
-            || player_in_branch(BRANCH_HALL_OF_ZOT)
             || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
             || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
             || player_in_branch(BRANCH_CRYPT)
             || player_in_branch(BRANCH_TOMB)
             || player_in_branch(BRANCH_HALL_OF_BLADES)
-            || player_in_branch(BRANCH_SNAKE_PIT)
             || player_in_branch(BRANCH_SLIME_PITS)
             || one_chance_in(1000))
         {
