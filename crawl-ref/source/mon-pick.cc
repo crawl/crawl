@@ -25,6 +25,8 @@ int mons_rarity(monster_type mcls, const level_id &place)
     return branches[place.branch].mons_rarity_function(mcls);
 }
 
+/* ******************** END EXTERNAL FUNCTIONS ******************** */
+
 // The Ecumenical Temple and other places with no monster gen.
 int mons_null_level(monster_type mcls)
 {
@@ -345,8 +347,6 @@ int mons_pan_rare(monster_type mcls)
         return (0);
     }
 }
-
-/* ******************** END EXTERNAL FUNCTIONS ******************** */
 
 // The Main Dungeon
 int mons_standard_level(monster_type mcls)
