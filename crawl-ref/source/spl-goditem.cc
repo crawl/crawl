@@ -399,14 +399,20 @@ void antimagic()
         DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
 
+    bool need_msg = false;
+
     if (!you.permanent_levitation() && !you.permanent_flight()
         && you.duration[DUR_LEVITATION] > 11)
     {
         you.duration[DUR_LEVITATION] = 11;
+        need_msg = true;
     }
 
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
+    {
         you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+        need_msg = true;
+    }
 
     if (you.duration[DUR_TELEPORT] > 0)
     {
@@ -419,8 +425,22 @@ void antimagic()
         you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
+    {
         if (you.duration[dur_list[i]] > 1)
+        {
             you.duration[dur_list[i]] = 1;
+            need_msg = true;
+        }
+    }
+
+    bool danger = need_expiration_warning(you.pos());
+
+    if (need_msg)
+    {
+        mprf(danger ? MSGCH_DANGER : MSGCH_WARN,
+             "%sYour magical effects are unravelling.",
+             danger ? "Careful! " : "");
+    }
 
     contaminate_player(-1 * (1 + random2(5)));
 }
