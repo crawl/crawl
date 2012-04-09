@@ -1307,7 +1307,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // This should fix the "monster occurring under the player" bug.
         if (monster* mon = monster_at(you.pos()))
-            monster_teleport(mon, true, true);
+            for (distance_iterator di(you.pos()); di; ++di)
+                if (!monster_at(*di) && mon->is_habitable(*di))
+                {
+                    mon->moveto(*di);
+                    break;
+                }
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
