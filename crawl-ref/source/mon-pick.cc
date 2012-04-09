@@ -39,6 +39,8 @@ int mons_rarity(monster_type mcls, const level_id &place)
         return branches[place.branch].mons_rarity_function(mcls);
 }
 
+/* ******************** END EXTERNAL FUNCTIONS ******************** */
+
 // level_area_type != LEVEL_DUNGEON
 // NOTE: Labyrinths and portal vaults have no random monster generation.
 
@@ -337,8 +339,6 @@ int mons_pan_rare(monster_type mcls)
         return (0);
     }
 }
-
-/* ******************** END EXTERNAL FUNCTIONS ******************** */
 
 // LEVEL_DUNGEON
 
