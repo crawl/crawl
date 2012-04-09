@@ -650,8 +650,12 @@ bool melee_attack::handle_phase_damaged()
         if (defender->is_player())
             practise(EX_MONSTER_WILL_HIT);
 
+        // decapitate_hydra() returns true if the wound was cauterized or the
+        // last head was removed.  In the former case, we shouldn't apply
+        // the brand damage (so we return here).  If the monster was killed
+        // by the decapitation, we should stop the rest of the attack, too.
         if (decapitate_hydra(damage_done, attacker->damage_type(attack_number)))
-            return (true);
+            return (defender->alive());
 
         special_damage = 0;
         special_damage_message.clear();
