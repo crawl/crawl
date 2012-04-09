@@ -2703,7 +2703,7 @@ w:50
 
 @The_monster@ says, "Did all the warriors here go to shield school or something?"
 
-@The_monster@ says, "So, are the fast ones nagas, or not?"
+@The_monster@ says, "So, why is that serpent talking?"
 
 @The_monster@ says, "What sort of name is 'naga' anyway? They're not even good at nagging."
 
@@ -2713,7 +2713,7 @@ w:50
 
 @The_monster@ says, "I'm sick of this place. Or maybe that's poison..."
 
-@The_monster@ says, "At least the fast ones don't have weapons."
+@The_monster@ says, "I hate mutated serpents."
 
 @The_monster@ says, "So, nagas are stealthy? Don't make me laugh."
 
@@ -2953,6 +2953,10 @@ w:2
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
+
+@The_monster@ says, "Angels painted black are so last century."
+
+@The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
 %%%%
 Okawaru Donald
 
