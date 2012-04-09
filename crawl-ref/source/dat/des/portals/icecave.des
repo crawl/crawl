@@ -111,7 +111,7 @@ end
 -- Alter short feature descriptions for all ice cave destination vaults.
 function ice_cave_feat_descs()
     dgn.set_feature_desc_short("rock wall", "ice covered $BASE")
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+    dgn.set_feature_desc_short("gate leading back out of here",
                                "ice covered $BASE")
     dgn.set_feature_desc_short("empty arch of ancient stone",
                                "ice choked $BASE")
