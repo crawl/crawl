@@ -263,8 +263,7 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_lt_callback(std::string level_type_name,
-                         std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, std::string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 

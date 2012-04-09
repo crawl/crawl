@@ -988,19 +988,26 @@ static int dgn_cloud_at (lua_State *ls)
 }
 
 
-static int lua_dgn_set_lt_callback(lua_State *ls)
+static int lua_dgn_set_branch_epilogue(lua_State *ls)
 {
-    const char *level_type = luaL_checkstring(ls, 1);
+    const char *branch_name = luaL_checkstring(ls, 1);
 
-    if (level_type == NULL || strlen(level_type) == 0)
+    if (!branch_name)
         return (0);
 
-    const char *callback_name = luaL_checkstring(ls, 2);
+    branch_type br = str_to_branch(branch_name);
+    if (br == NUM_BRANCHES)
+    {
+        luaL_error(ls, make_stringf("unknown branch: '%s'.", branch_name).c_str());
+        return 0;
+    }
 
-    if (callback_name == NULL || strlen(callback_name) == 0)
+    const char *func_name = luaL_checkstring(ls, 2);
+
+    if (!func_name || !*func_name)
         return (0);
 
-    dgn_set_lt_callback(level_type, callback_name);
+    dgn_set_branch_epilogue(br, func_name);
 
     return (0);
 }
@@ -1887,7 +1894,7 @@ const struct luaL_reg dgn_dlib[] =
 { "get_rock_colour",  dgn_get_rock_colour },
 { "change_floor_colour", dgn_change_floor_colour },
 { "change_rock_colour",  dgn_change_rock_colour },
-{ "set_lt_callback", lua_dgn_set_lt_callback },
+{ "set_branch_epilogue", lua_dgn_set_branch_epilogue },
 { "set_border_fill_type", lua_dgn_set_border_fill_type },
 { "fixup_stairs", dgn_fixup_stairs },
 { "floor_halo", dgn_floor_halo },
