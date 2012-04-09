@@ -111,7 +111,7 @@ function volcano_portal (e)
 end
 
 function volcano_feat_descs()
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+    dgn.set_feature_desc_short("gate leading back out of here",
                                "rocky tunnel leading out of this place")
     dgn.set_feature_desc_short("empty arch of ancient stone",
                                "rock-blocked tunnel")
