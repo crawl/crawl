@@ -971,7 +971,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
             if (slots == EQ_AMULET)
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
                 && item->sub_type == sub_type
                 && (calc_unid
                     || item_type_known(*item)))
@@ -987,7 +987,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
             if (slots == EQ_AMULET)
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
                 && item->sub_type == sub_type
                 && (calc_unid
                     || item_type_known(*item)))
@@ -1003,7 +1003,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
             if (slots == EQ_AMULET)
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
                 && item->sub_type == sub_type
                 && (calc_unid
                     || item_type_known(*item)))
