@@ -23,6 +23,7 @@
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
+#include "mon-pick.h"
 #include "ng-init.h"
 #include "state.h"
 #include "stuff.h"
@@ -167,6 +168,7 @@ namespace crawl_tests
 
         _run_test("makeitem", makeitem_tests);
         _run_test("zotdef_wave", debug_waves);
+        _run_test("mon-pick", debug_monpick);
 
         // Get a list of Lua files in test. Order of execution of
         // tests should be irrelevant.

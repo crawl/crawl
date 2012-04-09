@@ -9,6 +9,8 @@
 
 #include "externs.h"
 #include "branch.h"
+#include "errors.h"
+#include "libutil.h"
 #include "mon-util.h"
 #include "place.h"
 
@@ -24,6 +26,50 @@ int mons_rarity(monster_type mcls, const level_id &place)
 {
     return branches[place.branch].mons_rarity_function(mcls);
 }
+
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+void debug_monpick()
+{
+    std::string fails;
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        level_id place((branch_type)i);
+
+        for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
+        {
+            int lev = mons_level(m, place);
+            int rare = mons_rarity(m, place);
+
+            if (lev >= 99) // FIXME?
+                lev = 0;
+
+            if (lev && !rare)
+            {
+                fails += make_stringf("%s: no rarity for %s\n",
+                                      branches[i].abbrevname,
+                                      mons_class_name(m));
+            }
+            if (rare && !lev)
+            {
+                fails += make_stringf("%s: no depth for %s\n",
+                                      branches[i].abbrevname,
+                                      mons_class_name(m));
+            }
+        }
+    }
+
+    if (!fails.empty())
+    {
+        FILE *f = fopen("mon-pick.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-pick mismatches (dumped to mon-pick.out)");
+    }
+}
+#endif
 
 /* ******************** END EXTERNAL FUNCTIONS ******************** */
 
@@ -962,8 +1008,11 @@ int mons_mineorc_level(monster_type mcls)
     case MONS_FUNGUS:
     case MONS_GOBLIN:
     case MONS_ORC:
-    default:
         mlev += 0;
+        break;
+
+    default:
+        return 99;
     }
 
     return (mlev);
@@ -1807,10 +1856,10 @@ int mons_pitslime_level(monster_type mcls)
 
     case MONS_ROYAL_JELLY:
         mlev += 6;
+        break;
 
     default:
-        mlev += 0;
-        break;
+        return 99;
     }
 
     return (mlev);

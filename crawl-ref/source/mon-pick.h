@@ -10,8 +10,9 @@
 #include "externs.h"
 
 int mons_rarity(monster_type mcls, const level_id &place = level_id::current());
-
 int mons_level(monster_type mcls, const level_id &place = level_id::current());
+
+void debug_monpick();
 
 int mons_null_level(monster_type mcls);
 int mons_null_rare(monster_type mcls);
