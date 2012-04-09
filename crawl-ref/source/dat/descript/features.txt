@@ -639,7 +639,7 @@ A sarcophagus
 
 An ancient sarcophagus. It appears to be empty.
 %%%%
-# Vault:8
+# Vaults:8
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome

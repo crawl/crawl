@@ -163,7 +163,7 @@ function choose_mset_1(e)
     e.kmons("1 = centaur / yaktaur")
 -- Vaults
   elseif rnd < 95 then
-    e.kmons("1 = place:Vault:1")
+    e.kmons("1 = place:Vaults:1")
 -- Pan
   elseif rnd < 97 then
     e.kmons("1 = lesser demon / common demon w:2 / pandemonium lord w:1")
@@ -264,7 +264,7 @@ function choose_mset_2(e)
                yaktaur captain w:3")
 -- Vaults
   elseif rnd < 109 then
-    e.kmons("1 = place:Vault:3 / yaktaur w:2 / vault guard w:5")
+    e.kmons("1 = place:Vaults:3 / yaktaur w:2 / vault guard w:5")
 -- Pan
   elseif rnd < 114 then
     e.kmons("1 = lesser demon / common demon w:5 / pandemonium lord w:2")

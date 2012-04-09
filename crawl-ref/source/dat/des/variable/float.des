@@ -7,7 +7,7 @@
 #            are stored in the files listed in mini.des.
 #            Vaults using global lua functions go into individual .des files.
 #
-#            All maps dealing with the Vault branch system, including Vaults:8
+#            All maps dealing with the Vaults branch system, including Vaults:8
 #            reside in vaults.des.
 ###############################################################################
 
@@ -19,7 +19,7 @@ default-depth: D:12-26
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D:2-26, Vault:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
+DEPTH:   D:2-26, Vaults:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 TAGS:    allow_dup
 SUBST:   m:mn
@@ -572,7 +572,7 @@ ENDMAP
 # An old-fashioned vault, by Lemuel
 #
 NAME:  lemuel_traditional_vault
-DEPTH: D:12-27, Vault
+DEPTH: D:12-27, Vaults
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
@@ -633,7 +633,7 @@ ENDMAP
 NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
-DEPTH:  D:5-12, Elf, Vault
+DEPTH:  D:5-12, Elf, Vaults
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
@@ -749,7 +749,7 @@ ENDMAP
 #
 NAME:    lemuel_vampire_tower
 ORIENT:  float
-DEPTH:   D:12-26, Vault, Crypt
+DEPTH:   D:12-26, Vaults, Crypt
 MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
@@ -1058,7 +1058,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:23-27, Vault
+DEPTH:   D:23-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 COLOUR:  - : yellow
 SUBST:   - : +
@@ -1098,7 +1098,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27, Vault
+DEPTH:   D:18-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1149,7 +1149,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27, Vault
+DEPTH:   D:18-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1494,7 +1494,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-27, Vault
+DEPTH:   D:5-27, Vaults
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -1668,7 +1668,7 @@ ENDMAP
 # outer ring contains 10 to 30 monsters, mean of 16.7
 #
 NAME:   evilmike_marble_ring
-DEPTH:  D:14-, Vault:1-7
+DEPTH:  D:14-, Vaults:1-7
 ORIENT: float
 COLOUR: b-+89*| = white
 FTILE:  b-+89*| = FLOOR_MARBLE
@@ -1840,7 +1840,7 @@ ENDMAP
 # Cross vault (evilmike)
 #
 NAME:   evilmike_cross
-DEPTH:  D:14-, Vault:1-7
+DEPTH:  D:14-, Vaults:1-7
 ORIENT: float
 MAP
 ...................

@@ -6,7 +6,7 @@ end
 
 local function sanity_checks()
   local places = {
-    "Zot:$", "Snake:$", "Swamp:$", "Slime:$", "Vault:$",
+    "Zot:$", "Snake:$", "Swamp:$", "Slime:$", "Vaults:$",
     "Tomb:$", "Coc:$", "Tar:$", "Dis:$", "Geh:$"
   }
   for _, place in ipairs(places) do

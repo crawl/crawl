@@ -34,7 +34,7 @@
 //
 // Usage: goto_place("placename", <bind_entrance>)
 // "placename" is the name of the place as used in maps, such as "Lair:2",
-// "Vault:$", etc.
+// "Vaults:$", etc.
 //
 // If <bind_entrance> is specified, the entrance point of
 // the branch specified in place_name is bound to the given level in the
