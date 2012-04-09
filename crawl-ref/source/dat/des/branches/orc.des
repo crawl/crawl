@@ -877,6 +877,63 @@ llllx..xllll
 ENDMAP
 
 ##################################################
+# The orcs dug into a natural cave and used the bats as a shooting gallery.
+NAME:   mines_bat_river
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+DEPTH:  Orc
+MONS:   bat
+MONS:   generate_awake orc ; bow ego:flame | bow ego:frost | bow ego:vorpal . arrow q:10
+NSUBST: . = 2:2 / 2:c
+NSUBST: c = *: 2 .
+KITEM:  d = arrow q:1
+NSUBST: b = 3:1 / 10:d / 4:e / *: .:20 1:1 d:2 e:2
+: dgn.delayed_decay(_G, 'e', 'bat corpse')
+SHUFFLE: ABC
+SUBST:  A = @
+SUBST:  B = x
+SUBST:  C = x
+MAP
+     xxx
+   xxxxxxx
+   xxxww.xx
+   xxbww..AA
+  xxbbww...Ax
+ xxbbbbwwW..x
+ xbbbbbbwwW.x
+xxbbbbbbbwW.xx
+xbbbbbbbbww..x
+xxbxbbbbWWww.B
+ xxbbbbbW.WW.B
+ xxxbbbwwWW..x
+  xxxxwwWW..xx
+    xxxwW..CC
+    xxxxxxxC
+     xxxxxxx
+ENDMAP
+
+##################################################
+# The orcs piled up some loose rubble.
+NAME:   rock_pile
+TAGS:   no_item_gen no_monster_gen mini_float
+DEPTH:  Orc
+MONS:   orc ; sling . stone q:30, boulder beetle
+KITEM:  d = w:3 stone / w:1 large rock q:1
+SUBST:  a = .:4 b
+NSUBST: b = 1:2 / 5:1 / *:d
+SUBST:  1 = 1 .
+MAP
+     . .
+   ....
+ ..axaxa..
+ .xabbbax..
+..aabbaxa...
+ .xaaaax..
+  .aaxa....
+   . . ..
+    ...
+ENDMAP
+
+##################################################
 NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen
 PLACE:   Orc:4
