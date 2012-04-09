@@ -99,7 +99,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
-      "Vaults", "the Vaults", "Vault",
+      "Vaults", "the Vaults", "Vaults",
       NULL,
       true, LIGHTGREY, BROWN,
       mons_vaults_rare, mons_vaults_level,

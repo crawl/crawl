@@ -551,7 +551,7 @@ ENDMAP
 
 NAME:  bloody_makhleb
 TAGS:  uniq_altar_makhleb temple_overflow_makhleb
-DEPTH: D:2-12, Orc, Vault
+DEPTH: D:2-12, Orc, Vaults
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_makhleb
 KITEM: _ = robe, whip
@@ -725,7 +725,7 @@ ENDMAP
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
-DEPTH:  D:2-18, Elf, Vault
+DEPTH:  D:2-18, Elf, Vaults
 TAGS:   no_monster_gen temple_overflow_sif_muna uniq_altar_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
@@ -775,7 +775,7 @@ ENDMAP
 
 NAME:  bloody_trog
 TAGS:  uniq_altar_trog temple_overflow_trog
-DEPTH: D:2-12, Orc, Vault
+DEPTH: D:2-12, Orc, Vaults
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog
 KITEM: _ = animal skin, dagger

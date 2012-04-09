@@ -354,7 +354,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
 -- population (with dgn.set_random_mon_list). As an example:
 mset(spec_fn(function ()
                local d = math.max(0, zig().depth - 12)
-               return "place:Vault:$ w:60 / ancient lich w:" .. d
+               return "place:Vaults:$ w:60 / ancient lich w:" .. d
              end))
 
 mset(spec_fn(function ()
