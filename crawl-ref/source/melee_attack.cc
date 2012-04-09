@@ -445,7 +445,7 @@ bool melee_attack::handle_phase_dodged()
  * Determines damage and passes off execution to handle_phase_damaged
  * Also applies weapon brands
  *
- * Returns (continue combat)
+ * Returns true if combat should continue, false if it should end here.
  */
 bool melee_attack::handle_phase_hit()
 {
@@ -490,7 +490,7 @@ bool melee_attack::handle_phase_hit()
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.  We muse
     if (attacker->is_player())
-        stop_hit = player_monattk_hit_effects();
+        stop_hit = !player_monattk_hit_effects();
 
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
@@ -2024,7 +2024,13 @@ void melee_attack::player_weapon_upsets_god()
     }
 }
 
-// Returns true if the combat round should end here.
+/* Apply player-specific effects as well as brand damage.
+ *
+ * Called after damage is calculated, but before unrand effects and before
+ * damage is dealt.
+ *
+ * Returns true if combat should continue, false if it should end here.
+ */
 bool melee_attack::player_monattk_hit_effects()
 {
     player_weapon_upsets_god();
@@ -2047,7 +2053,7 @@ bool melee_attack::player_monattk_hit_effects()
     }
 
     if (!defender->alive())
-        return (true);
+        return (false);
 
     // These effects apply only to monsters that are still alive:
 
@@ -2058,13 +2064,13 @@ bool melee_attack::player_monattk_hit_effects()
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
-        return (!defender->alive());
+        return (defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
     apply_staff_damage();
 
     if (!defender->alive())
-        return (true);
+        return (false);
 
     if (special_damage || special_damage_flavour)
     {
@@ -2088,7 +2094,7 @@ bool melee_attack::player_monattk_hit_effects()
         }
     }
 
-    return (false);
+    return (true);
 }
 
 void melee_attack::_defender_die()
