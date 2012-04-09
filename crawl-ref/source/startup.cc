@@ -175,7 +175,7 @@ static void _initialize()
         init_player_doll();
 #endif
         crawl_state.show_more_prompt = false;
-        crawl_tests::run_tests(true);
+        run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.
         end(0, false);
