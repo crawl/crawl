@@ -953,3 +953,50 @@ xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
 XXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXX
 XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
+
+NAME:   guppyfry_spider_rune
+PLACE:  Spider:5
+ORIENT: southwest
+KITEM:  O = gossamer rune of zot
+KMONS:  O = ghost moth
+KITEM:  * = piece of ambrosia q:3
+KMONS:  * = emperor scorpion
+MONS:   moth of wrath / ghost moth, ghost moth
+MONS:   yellow wasp / red wasp / w:5 nothing
+MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
+MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
+        w:5 brain worm / w:7 nothing
+MONS:   trapdoor spider / nothing
+MONS:   w:9 orb spider / w:1 nothing
+KFEAT:  ^ = web
+SUBST:  - = ....WWW^
+SUBST:  = = +.
+SHUFFLE: O12*
+MAP
+xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxccccccccccccc==cccccccccccccxxxxxx
+xxxxxxxxxxcccccccccccc-.--ccccccccccccxxxxxxx
+xxxxxxxxxxc6Wccccccccc.x.-cccccccccW6cxxxxxxxx
+xxxxxxxxxxc6...++.ccccx.-xccccc++...6cxxxxxxxx
+xxxxxxxxxxcW--.ccc45Oc6--6c154.cc.--Wcxxxxxxxx
+xxxxxxxxxxcc.--ccc55ccx.-xcc55ccc--.ccxxxxxxxx
+xxxxxxxxxxcccW--cccwcc.---ccwccc--Wcccxxxxxxxx
+xxxxxxxxxxcccc.--cc7ccx.-xcc7cc--.ccccxxxxxxxx
+xxxxxxxxxxccccxW--cwcc--.-ccwc--Wxccccxxxxxxxx
+xxxxxxxxxxcccc-.-xx^-x-xx.x-^xx-.-ccccxxxxxxxx
+xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
+xxxxxxxxxxccc.333.^.-.5445.-.^.333.cccxxxxxxxx
+xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
+xxxxxxxxxxcccc-.-xx^-x.xx-x-^xx-.-ccccxxxxxxxx
+xxxxxxxxxxccccxW--cwcc-.--ccwc--Wxccccxxxxxxxx
+xxxxxxxxxxcccc.--cc7ccx-.xcc7cc--.ccccxxxxxxxx
+xxxxxxxxxxcccW--cccwcc---.ccwccc--Wcccxxxxxxxx
+xxxxxxxxxxcc.--ccc55ccx-.xcc55ccc--.ccxxxxxxxx
+xxxxxxxxxxcW--.cc.45*c7--7c254.cc.--Wcxxxxxxxx
+xxxxxxxxxxc6...++cccccc-.cccccc++...6cxxxxxxxx
+xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
+xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
