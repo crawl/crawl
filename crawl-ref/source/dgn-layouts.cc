@@ -161,7 +161,8 @@ void dgn_build_bigger_room_level(void)
 // A more chaotic version of city level.
 void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
-    env.level_build_method += make_stringf(" chaotic_city [%d]", (int) force_wall);
+    env.level_build_method += make_stringf(" chaotic_city [%s]",
+        force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
     env.level_layout_types.insert("city");
 
     int number_boxes = 5000;
@@ -455,8 +456,8 @@ static void _builder_extras(int level_number)
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor)
 {
-    env.level_build_method += make_stringf(" octa_room [%d %d]", oblique_max,
-                                     (int) type_floor);
+    env.level_build_method += make_stringf(" octa_room [%d %s]", oblique_max,
+                                           dungeon_feature_name(type_floor));
 
     int x,y;
 
@@ -1027,8 +1028,8 @@ static void _many_pools(dungeon_feature_type pool_type)
     const int num_pools = 20 + random2avg(9, 2);
     int pools = 0;
 
-    env.level_build_method += make_stringf(" many_pools [%d %d]", (int)pool_type,
-                                           num_pools);
+    env.level_build_method += make_stringf(" many_pools [%s %d]",
+        dungeon_feature_name(pool_type), num_pools);
 
     for (int timeout = 0; pools < num_pools && timeout < 30000; ++timeout)
     {
