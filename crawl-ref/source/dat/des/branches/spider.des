@@ -959,6 +959,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_rune
 PLACE:  Spider:5
+TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
