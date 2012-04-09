@@ -464,7 +464,8 @@ static bool _octa_room(dgn_region& region, int oblique_max,
     coord_def br = region.end();
 
     // Hack - avoid lava in the crypt {gdl}
-    if ((player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
+    if ((player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB)
+         || player_in_branch(BRANCH_COCYTUS))
          && type_floor == DNGN_LAVA)
     {
         type_floor = DNGN_SHALLOW_WATER;
