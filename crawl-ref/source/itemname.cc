@@ -226,7 +226,7 @@ std::string item_def::name(description_level_type descrip,
                     buff << ")";
                     break;
                 case EQ_AMULET:
-                    if (you.species == SP_OCTOPODE)
+                    if (you.species == SP_OCTOPODE && form_keeps_mutations())
                         buff << " (around mantle)";
                     else
                         buff << " (around neck)";
