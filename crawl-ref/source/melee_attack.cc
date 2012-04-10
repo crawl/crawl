@@ -4439,10 +4439,7 @@ void melee_attack::mons_apply_attack_flavour()
                                                     10);
 
         if (needs_message && ground)
-        {
-            mprf("Some of the food beneath you is devoured!",
-                    atk_name(DESC_THE).c_str());
-        }
+            mpr("Some of the food beneath you is devoured!");
         break;
     }
 
