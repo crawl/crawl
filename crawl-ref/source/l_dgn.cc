@@ -1040,40 +1040,6 @@ static int lua_dgn_set_border_fill_type (lua_State *ls)
     return (0);
 }
 
-static int dgn_fixup_stairs(lua_State *ls)
-{
-    const dungeon_feature_type up_feat =
-    dungeon_feature_by_name(luaL_checkstring(ls, 1));
-
-    const dungeon_feature_type down_feat =
-    dungeon_feature_by_name(luaL_checkstring(ls, 2));
-
-    if (up_feat == DNGN_UNSEEN && down_feat == DNGN_UNSEEN)
-        return 0;
-
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        const dungeon_feature_type feat = grd(*ri);
-        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
-        {
-            dungeon_feature_type new_feat = DNGN_UNSEEN;
-
-            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-                new_feat = down_feat;
-            else
-                new_feat = up_feat;
-
-            if (new_feat != DNGN_UNSEEN)
-            {
-                grd(*ri) = new_feat;
-                env.markers.add(new map_feature_marker(*ri, new_feat));
-            }
-        }
-    }
-
-    return (0);
-}
-
 static int dgn_floor_halo(lua_State *ls)
 {
     std::string error = "";
@@ -1896,7 +1862,6 @@ const struct luaL_reg dgn_dlib[] =
 { "change_rock_colour",  dgn_change_rock_colour },
 { "set_branch_epilogue", lua_dgn_set_branch_epilogue },
 { "set_border_fill_type", lua_dgn_set_border_fill_type },
-{ "fixup_stairs", dgn_fixup_stairs },
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
