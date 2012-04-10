@@ -138,6 +138,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_BAT:
     case TRAN_PIG:
     case TRAN_SPIDER:
+    case TRAN_ICE_BEAST:
         return false;
 
     // And some need more complicated logic.
@@ -147,9 +148,6 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_STATUE:
         return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
              || eqslot == EQ_SHIELD);
-
-    case TRAN_ICE_BEAST:
-        return (eqslot == EQ_CLOAK);
 
     default:                // Bug-catcher.
         die("Unknown transformation type %d in form_can_wear_item", you.form);
