@@ -3264,8 +3264,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     const item_def *rings[8];
     char slots[8];
 
-    const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
-                           ? 8 : 2);
+    const int num_rings = (form_keeps_mutations() ? 8 : 2);
 
     for (int i = 0; i < num_rings; i++)
     {
