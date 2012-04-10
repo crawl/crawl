@@ -4443,15 +4443,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
 
-    case AF_CRUSH:
-    /*
-        mprf("%s %s being crushed%s",
-             def_name(DESC_THE).c_str(),
-             defender->conj_verb("are").c_str(),
-             special_attack_punctuation().c_str());
-    */
-        break;
-
     case AF_HOLY:
         if (defender->is_evil() || defender->is_unholy())
             special_damage = attk_damage * 0.75;
