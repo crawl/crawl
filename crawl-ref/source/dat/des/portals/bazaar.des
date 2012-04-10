@@ -59,9 +59,12 @@ function random_bazaar_colour()
   return ret
 end
 
-function fixup_bazaar()
-  dgn.fixup_stairs("stone_arch", "exit_portal_vault")
+function bazaar_setup(e)
+  e.kfeat("< = stone_arch")
+  e.kfeat("> = exit_portal_vault")
+end
 
+function fixup_bazaar()
   dgn.change_floor_colour(random_bazaar_colour())
 
   local default = {rock="wall_vault", floor="floor_vault", halo="halo_vault"}
@@ -333,6 +336,7 @@ KFEAT:   F = scroll shop / distillery shop
 SUBST:   w = W
 : end
 #
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -405,6 +409,7 @@ SUBST: w = l
 : end
 #
 SUBST:   w:wWx, l:lx
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxxxxxx
@@ -447,6 +452,7 @@ SUBST: w = l
 : end
 #
 SUBST:   w:wWx, l:lx
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxGxxxxxxxxxxxxxxxx
@@ -467,6 +473,7 @@ KFEAT:   A = any shop / antique armour shop
 KFEAT:   B = any shop / antique weapon shop
 KFEAT:   C = any shop / jewellery shop
 KFEAT:   D = any shop / book shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -518,6 +525,7 @@ SUBST:   G : G.
 SUBST:   ' = x
 SUBST:   G = .
 :end
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx...xxxxxxxxxxxxxx
@@ -551,6 +559,7 @@ SUBST:     ab = !, AB = ., cd = !, CD = ., EeFf = $
 KFEAT:     ! = any shop
 KFEAT:     ? = any shop / T
 LFLOORCOL: blue
+:          bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxx
@@ -609,6 +618,7 @@ SUBST:   A = !, B = T
 KFEAT:   ! = any shop
 KFEAT:   ? = any shop / T
 SUBST:   T : Tc
+:        bazaar_setup(_G)
 MAP
        xxxxx
        x...x
@@ -637,6 +647,7 @@ ORIENT: encompass
 WEIGHT: 200
 KFEAT:  ! = any shop
 SUBST:  T = TU
+:       bazaar_setup(_G)
 MAP
         xxxxx
         x...x
@@ -663,6 +674,7 @@ TAGS:   no_rotate
 WEIGHT: 50
 ORIENT: encompass
 KFEAT:  A = any shop
+:       bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxx
 xxxxxxx>xxxxxxx
@@ -692,6 +704,7 @@ KFEAT:   B = antique weapon shop / weapon shop
 KFEAT:   C = antique armour shop / armour shop
 ITEM:    any weapon / w:2 good_item any weapon
 ITEM:    any armour / w:2 good_item any armour
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxx
 xxxx>xxxx
@@ -711,6 +724,7 @@ WEIGHT:  50
 ORIENT:  encompass
 SUBST:   A = TVBG
 KFEAT:   B = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxx
 xxxB.....Bxxx
@@ -744,6 +758,7 @@ SUBST: w = l
 : end
 : end
 #
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxwwwwwxxxxxx
@@ -776,6 +791,7 @@ SUBST: w = l
 : end
 : end
 #
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx......>......xxxxxxxxxx
@@ -808,6 +824,7 @@ ORIENT:  encompass
 SHUFFLE: ABCD, EFGH
 SUBST:   H=>, A=T, B=T
 KFEAT:   CDEFG = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -843,6 +860,7 @@ ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   H=>, D=T, C=T
 KFEAT:   ABEFG = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -878,6 +896,7 @@ ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   A=>, D=T, C=T
 KFEAT:   BHEFG = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -913,6 +932,7 @@ ORIENT:  encompass
 SHUFFLE: ABCDEF
 KFEAT:   ABCDE = any shop
 SUBST:   F = T
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -946,6 +966,7 @@ WEIGHT:  10
 TAGS:    no_rotate
 ORIENT:  encompass
 KFEAT:   CDEFG = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -988,6 +1009,7 @@ KFEAT:   C = any shop / distillery shop
 KFEAT:   D = any shop / wand shop / food shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1036,6 +1058,7 @@ SUBST:   X = <, A = >
 SUBST:   B : T G
 KFEAT:   C = any shop
 KFEAT:   D = weapon shop / book shop / jewellery shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx.x
@@ -1065,6 +1088,7 @@ SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1101,6 +1125,7 @@ SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1138,6 +1163,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1175,6 +1201,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1211,6 +1238,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1:> / 1:T C / 3=T:30 V / *:C
 SUBST:   B = > C:20
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1245,6 +1273,7 @@ WEIGHT: 50
 ORIENT: encompass
 KFEAT:  ! = any shop
 KFEAT:  ? = any shop / T
+:       bazaar_setup(_G)
 MAP
 xxxxxxxxx
 x.......x
@@ -1273,6 +1302,7 @@ SUBST:     "=. , '=l , A=! , B=l
 : end
 KFEAT:     ! = jewellery shop / jewellery shop / wand shop / scroll shop / book shop
 : set_border_fill_type("endless_lava")
+:          bazaar_setup(_G)
 MAP
 lllllllllllllllllllllllllllllllllllll
 ll...lllllllllllllllll'''llllllllllll
@@ -1351,6 +1381,7 @@ MONS:      bush
 KFEAT:     ! = any shop
 KFEAT:     ? = any shop / .
 LFLOORCOL: green
+:          bazaar_setup(_G)
 MAP
 ttttttttttttttt
 ttttttttttttttt
@@ -1375,6 +1406,7 @@ WEIGHT: 50
 ORIENT: encompass
 KFEAT:  A = antique weapon shop
 KFEAT:  B = antique armour shop
+:       bazaar_setup(_G)
 MAP
       xxxxx
      xx...xx
@@ -1413,6 +1445,7 @@ WEIGHT: 50
 ORIENT: encompass
 KFEAT:  ! = food shop
 KFEAT:  ? = any shop / T
+:       bazaar_setup(_G)
 MAP
  xxxxx         xxxxx         xxxxx
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
@@ -1459,6 +1492,7 @@ MONS:      plant / bush w:5
 KFEAT:     ! = any shop
 LFLOORCOL: green
 SUBST:     " = ....111t
+:          bazaar_setup(_G)
 MAP
 """"""""""""""""""""""""""""""""">
 """"""""""""""""""""""""""""""""""
@@ -1510,6 +1544,7 @@ SUBST:   A = <
 KFEAT:   B = any shop / antique armour shop / jewellery shop
 SUBST:   C = >
 SUBST:   D = T
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxAxxxC............+...xxxxxxxxx
@@ -1531,6 +1566,7 @@ KFEAT:   A = armour shop / weapon shop / wand shop
 KFEAT:   B = general shop / food shop
 KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx.................===.xxxxxxxxx
@@ -1559,6 +1595,7 @@ WEIGHT:  10
 SHUFFLE: AB
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxCxxxxxxxxxxxxxx
@@ -1589,6 +1626,7 @@ KFEAT:    B = general shop / food shop
 KFEAT:    C = scroll shop / book shop / distillery shop
 SHUFFLE:  '"
 SUBST:    '=+, "==
+:         bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
@@ -1632,6 +1670,7 @@ SUBST:   T = V T U:1
 SHUFFLE: XY
 SUBST:   X = T
 NSUBST:  Y = 1:< / *:>
+:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx'''...'''xxxxxxxx
@@ -1669,6 +1708,7 @@ SUBST:  . = 2 .:200
 SUBST:  ' = .
 SUBST:  3 = 2.
 MONS:   oklob plant, plant
+:       bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx.........xxxxxxxxx
@@ -1704,6 +1744,7 @@ MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
              size = 10, walk_dist = 0, spread_rate= 0 }
 ITEM:   nothing
 NSUBST: < = 1:< / *:.
+:       bazaar_setup(_G)
 MAP
 xxxxxxxxx     xxxxxxxxx
 x.......x     x.......x
@@ -1737,6 +1778,7 @@ ORIENT: encompass
 WEIGHT: 10
 KFEAT:  ! = distillery shop / scroll shop / general shop
 KFEAT:  ~ = teleport trap
+:       bazaar_setup(_G)
 MAP
 xxxxx
 x...xxx
@@ -1789,4 +1831,5 @@ WEIGHT: 1
     _G.nsubst('C = 1:< / 1:> / *:C')
     _G.subst('X = x')
     _G.kfeat('C = any shop')
+    bazaar_setup(_G)
 }}
