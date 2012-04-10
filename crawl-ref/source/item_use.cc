@@ -3264,15 +3264,10 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     const item_def *rings[8];
     char slots[8];
 
-    int min_ring = 0;
-    int max_ring = 7;
+    const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
+                           ? 8 : 2);
 
-    if (you.form == TRAN_BLADE_HANDS)
-        min_ring = 2;
-    else if (!form_keeps_mutations() && you.form != TRAN_SPIDER)
-        max_ring = 1;
-
-    for (int i = min_ring; i <= max_ring; i++)
+    for (int i = 0; i < num_rings; i++)
     {
         rings[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
         ASSERT(rings[i]);
@@ -3288,7 +3283,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 // (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
 
-    for (int i = min_ring; i <= max_ring; i++)
+    for (int i = 0; i < num_rings; i++)
         mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
     flush_prev_message();
 
@@ -3302,7 +3297,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     do
     {
         c = getchm();
-        for (int i = min_ring; i <= max_ring; i++)
+        for (int i = 0; i < num_rings; i++)
             if (c == slots[i])
             {
                 eqslot = EQ_RING_ONE + i;
@@ -3645,15 +3640,6 @@ static bool _puton_item(int item_slot)
         if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
-            return (false);
-        }
-
-        // Bat and pig form can't handle jewellery at all, and were handled
-        // elsewhere; blade hands can wear jewellery, but doesn't have ring
-        // slot unless also an octopode.
-        if (you.form == TRAN_BLADE_HANDS && you.species != SP_OCTOPODE)
-        {
-            mpr("You can't wear that in your present form.");
             return (false);
         }
 
