@@ -2229,7 +2229,7 @@ static std::string _status_mut_abilities(int sw)
         mutations.push_back("almost no armour");
         mutations.push_back(_annotate_form_based(
             "8 rings",
-            !form_keeps_mutations()));
+            !form_keeps_mutations() && you.form != TRAN_SPIDER));
         mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
