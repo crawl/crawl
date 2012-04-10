@@ -186,6 +186,14 @@ A rock wall
 
 This wall consists of simple rock.
 %%%%
+A rock-blocked tunnel
+
+The way you came in doesn't seem to be passable anymore.
+%%%%
+A rocky tunnel leading out of this place
+
+This unstable passage seems to lead to places that are decidedly less hot.
+%%%%
 A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
