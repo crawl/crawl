@@ -3463,8 +3463,10 @@ static bool _swap_rings(int ring_slot)
     const item_def* lring = you.slot_item(EQ_LEFT_RING, true);
     const item_def* rring = you.slot_item(EQ_RIGHT_RING, true);
 
-    // If both ring slots were melded, we should have been prevented
-    // from putting on the ring at all.
+    // If ring slots were melded, we should have been prevented from
+    // putting on the ring at all.  If it becomes possible for just
+    // one ring slot to be melded, the subsequent code will need to
+    // be revisited, so prevent that, too.
     ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
 
     if (lring->cursed() && rring->cursed())
@@ -3551,7 +3553,9 @@ static bool _swap_rings_octopode(int ring_slot)
     }
     else if (available == 0)
     {
-        mpr("You're already wearing " + number_in_words(cursed) + " cursed rings! Isn't that enough for you?");
+        mprf("You're already wearing %s cursed rings!%s",
+             number_in_words(cursed).c_str(),
+             (cursed == 8 ? " Isn't that enough for you?" : ""));
         return (false);
     }
     // The simple case - only one available ring.
@@ -3782,10 +3786,8 @@ bool remove_ring(int slot, bool announce)
 
             has_jewellery = true;
         }
-        else if (you.slot_item(static_cast<equipment_type>(eq), true))
-        {
+        else if (you.melded[eq])
             has_melded = true;
-        }
     }
 
     if (!has_jewellery)
