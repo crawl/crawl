@@ -928,12 +928,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
+bool player_can_handle_equipment();
 bool player_can_reach_floor(std::string feat = "", bool quiet = false);
-
-inline bool player_can_handle_equipment()
-{
-    return player_can_open_doors();
-}
 
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);

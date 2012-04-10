@@ -3720,12 +3720,6 @@ static bool _puton_item(int item_slot)
 
 bool puton_ring(int slot)
 {
-    if (!player_can_handle_equipment())
-    {
-        mpr("You can't put on anything in your present form.");
-        return (false);
-    }
-
     int item_slot;
 
     if (inv_count() < 1)
@@ -3757,12 +3751,6 @@ bool puton_ring(int slot)
 
 bool remove_ring(int slot, bool announce)
 {
-    if (!player_can_handle_equipment())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return (false);
-    }
-
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
     bool has_jewellery = false;
@@ -3925,15 +3913,9 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID || !player_can_handle_equipment())
     {
         mpr("You have no means to grasp a wand firmly enough.");
-        return;
-    }
-
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
         return;
     }
 
@@ -4244,7 +4226,7 @@ void drink(int slot)
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (you.form == TRAN_BAT)
     {
        canned_msg(MSG_PRESENT_FORM);
        _vampire_corpse_help();
@@ -5028,12 +5010,6 @@ void read_scroll(int slot)
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
         return;
     }
 

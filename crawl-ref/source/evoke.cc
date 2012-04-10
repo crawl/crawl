@@ -657,12 +657,6 @@ bool evoke_item(int slot)
         return (false);
     }
 
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        return (false);
-    }
-
     if (slot == -1)
     {
         slot = prompt_invent_item("Evoke which item? (* to show all)",
