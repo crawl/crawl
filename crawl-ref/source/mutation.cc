@@ -527,7 +527,9 @@ std::string describe_mutations()
 
     case SP_OCTOPODE:
         result += "You cannot wear most types of armour.\n";
-        result += "You can wear up to eight rings at the same time.\n";
+        result += _annotate_form_based(
+            "You can wear up to eight rings at the same time.",
+            !form_keeps_mutations());
         result += "You are amphibious.\n";
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
