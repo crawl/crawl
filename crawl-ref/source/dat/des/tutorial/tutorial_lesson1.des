@@ -21,10 +21,9 @@ function tutorial_msg.start ()
 
     local text = "You can move "
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "by clicking somewhere with your <white>mouse</white>, or "
+        text = text .. "by clicking somewhere with your <white>[Mouse]</white>, or "
     end
-    text = text .. "with the <white>arrow keys</white>. "
-           .. "To begin with, head over to that <lightblue>blue</lightblue> square to the right!"
+    text = text .. "with the <white>[arrow keys]</white>. "
     crawl.mpr(text, "tutorial")
 end
 
@@ -34,7 +33,7 @@ function tutorial_msg.go_on ()
 end
 
 function tutorial_msg.diagonal1 ()
-    local text = "You can move diagonally by way of the <white>number pad</white> (try Numlock on/off) or by using the <white>vi keys</white>.\n"
+    local text = "You can move diagonally by way of the <white>[number pad]</white> (try Numlock on/off) or by using the <white>[vi keys]</white>.\n"
                  .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
                  .. "                 \\|/                         " .. "\\|/\n"
@@ -43,40 +42,25 @@ function tutorial_msg.diagonal1 ()
                  .. "                 /|\\                         " .. "/|\\\n"
                  .. "                <white>1 2 3</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
-                 .. "For example, you can move down that corridor with <white>3</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. ", or again, via <white>mouse click</white>"
-    end
-
+                 if crawl.is_tiles() and not crawl.is_webtiles() then
+                                        text = text .. "You can also move using <white>[Mouse clicks]</white>"
+                                end
     text = text .. "."
     return tutorial_message(text)
 end
 
-function tutorial_msg.diagonal2 ()
-    local text = "Move to the upper right with <white>9</white> or "
-                 .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.diagonal3 ()
-    local text = "Move to the upper left with <white>7</white> or "
-                 .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.diagonal4 ()
-    local text = "Move to the lower left with <white>1</white> or "
-                 .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
+function tutorial_msg.shiftmove ()
+    local text = "A quicker way to 'run' through a corridor is to press "
+                 .. "<white>[Shift]</white> along with the <white>[number pad]</white> (try Numlock on/off) or <white>[vi keys]</white>."
     return tutorial_message(text)
 end
 
 function tutorial_msg.downstairs ()
     local text = "When standing on a staircase leading downwards, you can enter "
-                 .. "the next level with "
-                 .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
+                 .. "the next level with <white>[</white>"
+                 .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "<white>]</white>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-      text = text .. " or with <white>Shift-Click</white> on your character"
+      text = text .. " or with <white>[Shift-Click]</white> on your character"
     end
 
     text = text .. ".\n"
@@ -86,8 +70,7 @@ end
 
 -- The second part of the map.
 function tutorial_msg.levelmap ()
-    local text = "What's this? You've arrived in a completely different part of "
-                 .. "the level! To find out where you are, "
+    local text = "What's this? To find out where you are, "
 
     if crawl.is_webtiles() then
         text = text .. "have a look at the <white>minimap</white> to the right of "
@@ -112,33 +95,22 @@ end
 function tutorial_msg.autoexplore ()
     return tutorial_message("Exploring manually can get tedious after a while, "
                             .. "so you might want to let that happen automatically. "
-                            .. "Try it by pressing "
-                            .. tutorial_get_cmd("CMD_EXPLORE") .. ".")
+                            .. "Try it by pressing <white>[</white>"
+                            .. tutorial_get_cmd("CMD_EXPLORE") .. "<white>]</white>.")
 end
 
 function tutorial_msg.exclusion ()
 
-    local text = "Some types of clouds and also some monsters are automatically "
-                 .. "marked as dangerous, so autotravel doesn't lead you right "
-                 .. "into danger. These '<white>exclusions</white>' "
+    local text = "Some type of terrain is marked as dangerous <white>exclusions</white>. "
+                 .. "Autoexplore "
 
-    if crawl.is_tiles() then
-        text = text .. "are shown as <red>red X</red>'s."
-    else
-        text = text .. "are highlighted in red on the level map ("
-                    .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. ")."
-    end
-
-    text = text .. " You cannot autotravel "
     if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "(including by mouseclick!) "
     end
 
-    text = text .. "to or through excluded terrain, but in these cases manual "
-                .. "movement is usually much safer anyway. However, autotravel "
-                .. "will try to move you safely around the danger, so you can "
-                .. "simply press " .. tutorial_get_cmd("CMD_EXPLORE")
-                .. " and continue traveling."
+    text = text .. "will not lead you into this type of terrain. Instead you will automatically stop.\n"
+                                .. "However, autoexplore will move you safely around dangerous terrain so you may continue by pressing <white>[</white>"
+                                .. tutorial_get_cmd("CMD_EXPLORE") .. "<white>]</white>."
 
     return tutorial_message(text)
 end
@@ -149,8 +121,8 @@ function tutorial_msg.autoexplore_announce ()
     if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "click on them or you can "
     end
-    text = text .. "press "
-                .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w><< Enter</w>."
+    text = text .. "press <w>[</w>"
+                .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w> << Enter]</w>."
     return tutorial_message(text)
 end
 
@@ -167,13 +139,14 @@ function tutorial_msg.tutorial_end ()
     return tutorial_message(text)
 end
 
+
 -----------------------------------------------------------
 -- Lua code for level 2.
 -----------------------------------------------------------
 function tutorial_msg.newlevel ()
     local text = "A new level! To begin with, head over to that door to the right.\n"
-                 .. "Also, remember: You can reread old messages with "
-                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+                 .. "Also, remember: You can reread old messages with <white>[</white>"
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "<white>]</white>."
 
     crawl.mesclr(true)
     crawl.mpr(text, "tutorial")
@@ -181,34 +154,16 @@ end
 
 function tutorial_msg.door ()
     local text = "You can open a closed door by walking into it. To close an open "
-                 .. "door, press "
-                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.shiftmove ()
-    local text = "A quicker way to 'run' through a corridor is to press "
-                 .. "<white>Shift</white> along with the vi or arrow keys. "
-                 .. "For example, try pressing " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.shiftmove2 ()
-    local text = "Run down this corridor with <white>Shift-Numpad3</white> or "
-                 .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+                 .. "door, press <white>[</white>"
+                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "<white>]</white>."
     return tutorial_message(text)
 end
 
 function tutorial_msg.secret_door_glass ()
     return tutorial_message("It doesn't look like the corridor ends here. Try "
-                            .. "searching for a secret door with "
-                            .. tutorial_get_cmd("CMD_REST") .. ".")
-end
-
-function tutorial_msg.shiftmove3 ()
-    local text = "Run down this corridor with <white>Shift-Numpad1</white> or "
-                 .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
-    return tutorial_message(text)
+                            .. "searching for a secret door with <white>[</white>"
+                            .. tutorial_get_cmd("CMD_REST") .. "<white>]</white>.\n"
+                            .. "This process might spend multiple turns.")
 end
 
 function tutorial_msg.water ()
@@ -216,22 +171,16 @@ function tutorial_msg.water ()
                             .. "through deep water.")
 end
 
-function tutorial_msg.shiftmove4 ()
-    local text = "Run up this corridor with <white>Shift-Numpad7</white> or "
-                 .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
-    return tutorial_message(text)
-end
-
 function tutorial_msg.secret_door_wall ()
     return tutorial_message("A dead-end! Or, wait... is it another secret door? "
-                            .. "Try searching again with "
-                            .. tutorial_get_cmd("CMD_REST") .. ".")
+                            .. "Try searching again with <white>[</white>"
+                            .. tutorial_get_cmd("CMD_REST") .. "<white>]</white> once again.")
 end
 
 function tutorial_msg.upstairs ()
     local text = "When standing on a staircase leading upwards, you can enter "
-                 .. "the previous level with "
-                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+                 .. "the previous level with <white>[</white>"
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "<white>]</white> "
     if crawl.is_tiles() and not crawl.is_webtiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end
@@ -291,17 +240,14 @@ NAME:    tutorial_lesson1
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 1: Movement and Exploration"
 ORIENT:  encompass
-KFEAT:   ABCDEF = .
-KFEAT:   HI$ = '
-COLOUR:  ABCDEFHI$ = lightblue
+KFEAT:   ABCDE = .
+KFEAT:   HFI = '
+COLOUR:  ABCDEFHI = lightblue
 COLOUR:  ' = brown
 FTILE:   G'[ = floor_swamp, t = floor_grass
 FTILE:   ABCDEFHI$ = tutorial_pad
-MARKER:  A = lua:tutorial_msg.go_on()
-MARKER:  B = lua:tutorial_msg.diagonal1()
-MARKER:  C = lua:tutorial_msg.diagonal2()
-MARKER:  D = lua:tutorial_msg.diagonal3()
-MARKER:  E = lua:tutorial_msg.diagonal4()
+MARKER:  A = lua:tutorial_msg.diagonal1()
+MARKER:  B = lua:tutorial_msg.shiftmove()
 MARKER:  ) = lua:tutorial_msg.downstairs()
 MARKER:  } = lua:tutorial_msg.levelmap()
 MARKER:  F = lua:tutorial_msg.autoexplore()
@@ -324,31 +270,31 @@ xxxxxxxxxxxxxxxxxxxxxxttttttttttttttttttxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxttttttttttttttttttttttxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxtttttttttt'''tttttttttttttxxxxxxxxx
 xxxxxxxxxxxxxxxxxttttttttttt'''''tttttttttttttttxxxxxx
-xxxxxxxxxxxxxxxxxtttttttttt''G'G''tttttttttttttttxxxxx
-xxxxxxxxxxxxxxxxxtttttttttt'''[''''''ttttttttttttttxxx
-xxxxxxxxxxxxxxxxxtttttttttt''G'G''ttt'I''ttttttttttttx
-xxxxxxxxxxxxxxxxxxtttttttttt'''''tttttttt'''tttttttttt
-xxxxxxxxxxxxxxxxxxxtttttttttt'''tttttttttttt''tttttttt
-xxxxxxxxxxxxxxxxxxxxxxtttttttttttttttttttttttt'ttttttt
-xxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttttttttttttt'tttttt
-xxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttttttttttt'tttttt
-xx.....xxxxxxxxxxxxxxxxxxxxxxttttttttttttttttt'ttttttt
-xx..{......A.xxxxxxxxxxxxxxxxxxxttttttttttttt'tttttttt
-xx.....xxxxx.xxxxxxxxxxxxxxxxxxxxtttttttttt''ttttttttt
-xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxttttt'''ttttttttttt
-xxxxxxxxxxx......xxxxxxxExxxxxxxxxttttt'''''tttttttttt
-xxxxxxxxxxxbbbb..xxxxxx.x.xxxxxxxttttt''WWW''ttttttttt
-xxxxxxxxxxx......xxxxx.xxx.xxxxxxttttt''WlW''ttttttttt
-xxxxxxxxxxx..bbbbxxxx.xxxxx.xxxxxttttt''WWW''ttttttttt
-xxxxxxxxxxx.......Bxx.).xxxxDxxxxtttttt'''''tttttttttt
-xxxxxxxxxxxxxxxxxxx.xx.xxxx.xxxxxttttttt'''ttttttttttt
-xxxxxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxtttttttHtttttttttttt
-xxxxxxxxxxxxxxxxxxxxx.xxx.xxxxxxxtttttt''ttttttttttttt
-xxxxxxxxxxxxxxxxxxxxxx.x.xxxxxtxtttttt'ttttttttttttttt
-xxxxxxxxxxxxxxxxxxxxxxxCxxxxxxttttttt'tttttttttttttttt
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttt'tttttttttttttttt
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'ttttttttttttttt
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt''ttttttt'ttttt
+xxxxxxxxxx)...xxxtttttttttt'''''''tttttttttttttttxxxxx
+xxxxxxxxxxxxx..xxxttttttttt'''['''''''tttttttttttttxxx
+xxxxxxxxxxxxxx..xxttttttttt'''''''ttt'Ittttttttttttxxx
+xxxxxxxxxxxxxxx..xxttttttttt'''''tttttt''tttttttttttxx
+xxxxxxxxxxxxxxxx..xxttttttttt'''tttttttt''tttttttttttt
+xxxxxxxxxxxxxxxxx..xxxttttttttttttttttttt''ttttttttttt
+xxxxxxxxxxxxxxxx..xxxxxxxtttttttttttttttttt''ttttttttt
+xxxxxxxxxxxxxxx..xxxxxxxxxxttttttttttttttttt''tttttttt
+xx.....x...xxx..xxxxxxxxxxxxxttttttttttttttttt'ttttttt
+xx..{..A...xx..xxxxxxxxxxxxxxxxxtttttttttttt''tttttttt
+xx.....x...x..xxxxxxxxxxxxxxxxxxxtttttttttt''ttttttttt
+xxxxxxxxxx.B.xxxxxxxxxxxxxxxxxxxxxxttttttt''tttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt''''ttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'WWW'ttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'WlW'ttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'WWW'ttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt'''tttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttHttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt'ttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttttt'ttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtxttttttttt''ttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttt'''''ttttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttt'tttttttttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttt'''tttttttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'''ttttttt'ttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt'''ttt'''tttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttt'F''}''ttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttttttttt'''tttt
@@ -364,52 +310,53 @@ NAME:    tutorial_lesson1_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
 PLACE:   D:2
 ORIENT:  encompass
-KFEAT:   ABCDEFGH = .
-COLOUR:  ABCDEFGH = lightblue
-FTILE:   ABCDEFGH = tutorial_pad
+KFEAT:   ABCD = .
+COLOUR:  ABCD = lightblue
+FTILE:   ABCD = tutorial_pad
 MARKER:  A = lua:tutorial_msg.door()
-MARKER:  B = lua:tutorial_msg.shiftmove()
-MARKER:  C = lua:tutorial_msg.shiftmove2()
-MARKER:  D = lua:tutorial_msg.secret_door_glass()
-MARKER:  E = lua:tutorial_msg.shiftmove3()
-MARKER:  F = lua:tutorial_msg.water()
-MARKER:  G = lua:tutorial_msg.shiftmove4()
-MARKER:  H = lua:tutorial_msg.secret_door_wall()
+MARKER:  B = lua:tutorial_msg.secret_door_glass()
+MARKER:  C = lua:tutorial_msg.water()
+MARKER:  D = lua:tutorial_msg.secret_door_wall()
 MARKER:  { = lua:tutorial_msg.upstairs()
+MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
+             pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
+             size_max = 2, spread_rate = 0 }
 epilogue{{
   tutorial_msg.newlevel()
 }}
 MAP
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-vvvvv.......vvvvvvvvvvvvvvvvvv
-vvvvv..(...A+.B.....Cvvvvvvvvv
-vvvvv.......vvvvvvvvv.vvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvv.vvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvv.vvvvvv
-vvvvvvvvvvvvvvvvvvvvvvvv.vvvvv
-vvvvvvvvvvvvvvvvvvvvvvvvv.vvvv
-vvvvvvvvvvvvvvvvvvvvvvvvvv.vvv
-vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvvvvvvvvvvvvvvvvvvvvvv.D.v
-vvv.....vvvvvvvvvvvvvvvvvvn=nv
-vvv.....vvvvvvvvvvvvvvvvvv...v
-vvv..{..vvvvvvvvvvvvvvvvvvv.vv
-vvv.....vvvvvvvvvvvvvvvvvvv.vv
-vvv.....vvvvvvvvvvvvvvvvvvv.vv
-vvvvv=vvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvHvvvvvvvvvvvvvvvvvvvvvEvv
-vvvvv.vvvvvvvvvvvvvvvvvvvv.vvv
-vvvvvv.vvvvvvvvvvvvvvvvvv.vvvv
-vvvvvvv.vvvvvvvvvvvvvvvv.vvvvv
-vvvvvvvv.vvvvvvvvvvvvvv.vvvvvv
-vvvvvvvvv.vv..WWWW..vv.vvvvvvv
-vvvvvvvvvv.v.WWwwWW.v.vvvvvvvv
-vvvvvvvvvvvG.WWwwWW.Fvvvvvvvvv
-vvvvvvvvvvvv.WWwwWW.vvvvvvvvvv
-vvvvvvvvvvvv..WWWW..vvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvv.www.vvvvvvvvvvvvv
+vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
+vv.(..A+...B=.....wwwww..D=.{.vvvvvv
+vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
+vvvvvvvvvvvvvvvvv.wwwww.vvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvCwwwww.vvvvvvvvvvvv
+vvvvvvvvvvvvvvvvv..www..vvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvv.www.vvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvv.WWW.vvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 ENDMAP

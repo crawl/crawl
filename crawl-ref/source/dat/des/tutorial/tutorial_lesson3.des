@@ -16,52 +16,47 @@ function tutorial_msg3.start ()
 end
 
 function tutorial_msg3.armour ()
-    local text = "Pick up these boots with "
-                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white> "
-                 .. "and then wear them with "
-                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "."
+    local text = "Pick up these boots with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_PICKUP") .. "<w>]</w> or <white>[g]</white> "
+                 .. "and then wear them with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "<w>]</w>."
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " Or simply <white>mouseclick</white> on them."
+        text = text .. " Or simply <white>[mouseclick]</white> on them."
     end
 
     return tutorial_message(text)
 end
 
 function tutorial_msg3.autopickup ()
-    local text = "Some types of items (mostly magical items and food) are picked "
-                 .. "up automatically as you step on them."
+    local text = "Some types of items "
 
     if crawl.is_tiles() then
-        text = text .. " You can recognize these items by their green frame."
+        text = text .. " with green frame"
     end
 
-    text = text .. "\nYou can eat this ration with "
-                .. tutorial_get_cmd("CMD_EAT")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</white>"
-    end
-    text = text .. "."
+    text = text .. " are <w>automatically picked up</w>. "
+                                .. "\nThis scroll of identify is familiar to your character "
+                                .. "so you do not need to find out what it does. "
 
     return tutorial_message(text)
 end
 
 function tutorial_msg3.scroll_noautopickup ()
-    local text = "Autopickup doesn't happen if there's a monster around. "
-                 .. "You can pick up these scrolls now with "
-                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white>"
+    local text = "Autopickup does not work if there's a monster around.\n"
+                 .. "You can either pick up this scroll now with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_PICKUP") .. "<w>]</w> or <white>[g]</white>"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>,"
+        text = text .. " or by <white>[mouseclick]</white>,"
     end
 
-    text = text .. " or you can first dispatch the goblin and then come back for "
-                .. "it afterwards. "
-                .. "Either way, you can read this scroll with "
-                .. tutorial_get_cmd("CMD_READ")
+    text = text .. "\nor you can fight the nearby enemy and pick it up afterwards.\n"
+                .. "Either way, you should identify it by using your scroll of identify with <w>[</w>"
+                .. tutorial_get_cmd("CMD_READ") .. "<w>]</w>"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>[mouseclick]</white>"
     end
 
     text = text .. "."
@@ -70,25 +65,22 @@ function tutorial_msg3.scroll_noautopickup ()
 end
 
 function tutorial_msg3.ego_weapon ()
-    return tutorial_message("An item described as <lightblue>runed</lightblue> "
-                            .. "or <lightblue>glowing</lightblue> will always be "
-                            .. "enchanted, or have special properties, or both. "
-                            .. "You need to wield this scimitar to find out what "
+    return tutorial_message("An item described as <white>runed</white> "
+                            .. "or <white>glowing</white> will always be "
+                            .. "enchanted, have special properties, or both.\n"
+                            .. "You need to <w>[w]</w>ield this scimitar to find out what "
                             .. "those are.")
 end
 
 function tutorial_msg3.inventory ()
-    local text = "To find out what your cool new weapon actually does, you can "
-                 .. "access its description from your inventory with "
-                 .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY")
-
+    local text = "You can inspect your new weapon with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY") .. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> "
+        text = text .. ", or by <white>[mouseover]</white> / <white>[rightclick]</white> "
                     .. "in the inventory panel"
     end
 
-    text = text .. ". When doing so, you will notice that all the item commands "
-                .. "also work from the item description screens."
+    text = text .. ".\nNotice that all the item commands also work from the item description screens."
 
     return tutorial_message(text)
 end
@@ -107,17 +99,14 @@ function tutorial_msg3.downstairs ()
                             .. ".")
 end
 
------------------------------------------------------------
--- Lua code for level 2.
------------------------------------------------------------
 function tutorial_msg3.command_help ()
     local text = "If the many commands are too confusing, you can also look them "
-                 .. "up in the command help ("
+                 .. "up in the command help <w>[</w>"
                  .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS")
-                 .. "<w>?</w>). "
+                 .. "<w>]</w>.\n "
     if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "Also, a number of commands are available in the clickable "
-                    .. "<w>command panel</w> to the right of the screen. And, "
+                    .. "<w>command panel</w> to the right of the screen.\nAnd, "
                     .. "as usual, you "
     else
         text = text .. "Also, remember: You "
@@ -130,62 +119,43 @@ function tutorial_msg3.command_help ()
 end
 
 function tutorial_msg3.potion ()
-    local text = "You can quaff this potion with "
-                 .. tutorial_get_cmd("CMD_QUAFF")
+    local text = "You already know this potion, drink it to remove the poison by <w>[</w>"
+                 .. tutorial_get_cmd("CMD_QUAFF") .. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or <white>[mouseclick]</white>"
     end
     text = text .. "."
 
     return tutorial_message(text)
 end
 
-function tutorial_msg3.weapon_swap ()
-    local text = "It is possible to quickly switch between two weapons in slots "
-                 .. "a and b. First, you need to adjust your main weapon to slot "
-                 .. "a. To do that, type "
-                 .. tutorial_get_cmd("CMD_ADJUST_INVENTORY")
-                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> at "
-                 .. "the subsequent prompt.\n"
-                 .. "Follow the same steps to set the sling to slot <w>b</w>. "
-                 .. "Once that is done you can toggle between both of them with "
-                 .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg3.weapon_swap2 ()
-    return tutorial_message("Use the sling for ranged combat ("
-                            ..  tutorial_get_cmd("CMD_FIRE") .. "<w>f</w>)"
-                            .. " to soften up an enemy, then use "
-                            .. tutorial_get_cmd("CMD_WEAPON_SWAP")
-                            .. " to switch to melee once it's reached you.")
-end
-
-function tutorial_msg3.retreat_reminder ()
-    return tutorial_message("Keep in mind that you can retreat to minimize the "
-                            .. "number of foes you are fighting at a time.")
+function tutorial_msg3.optional_battle ()
+    return tutorial_message("Warning, this way leads to a <lightred>hard battle</lightred>.\n"
+                                                        .. "You may choose to test what you've learned so far\n"
+                                                        .. "or you may choose to ignore this room and continue into the forest.")
 end
 
 function tutorial_msg3.quantified_drop ()
-    local text = "These meat rations weigh too much to carry all at once. If you "
-                 .. "pick up the rest of the stack (with "
-                 .. tutorial_get_cmd("CMD_PICKUP")
-                 .. "), you'll become <lightred>burdened</lightred>!\n"
-                 .. "You can drop them again with "
-                 .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop "
-                 .. "e.g. 20, by typing "
-                 .. tutorial_get_cmd("CMD_DROP") .. ", <white>20</white>, selecting "
-                 .. "the meat rations, and confirming with <white>Enter</white>."
+    local text = "Carrying too much weight will cause you to become <lightred>burdened</lightred>!\n"
+                                 .. "Being <lightred>burdened</lightred> will slow you down and hinder your combat. "
+                 .. "You can drop things you do not need with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_DROP") .. "<w>]</w>,\n"
+                                 .. "or you can only drop the amount you want e.g. 20, by typing <w>[</w>"
+                 .. tutorial_get_cmd("CMD_DROP") .. "<white>, 20]</white>, selecting "
+                 .. "the meat rations, and confirming with <white>[Enter]</white>."
+
+        if crawl.is_tiles() and not crawl.is_webtiles() then
+                text = text .. "\nOr by <white>[Shift-mouseclicking]</white> on meat rations"
+        end
 
     return tutorial_message(text)
 end
 
 function tutorial_msg3.jewellery ()
-    local text = "You can put on jewellery with "
-                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
+    local text = "Remember, you can put on jewellery with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY") .. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>[mouseclick]</white>"
     end
     text = text .. "."
 
@@ -193,50 +163,41 @@ function tutorial_msg3.jewellery ()
 end
 
 function tutorial_msg3.artefact_armour ()
-    local text = "Items with <white>unusual adjectives</white> in their descriptions "
-                 .. "are artefacts, which can have a number of special properties.\n"
-                 .. "Wear this cloak with "
-                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
+    local text = "Items with <white>unusual name</white> are artefacts\n"
+                                 .. "Artefacts can have a number of special properties.\n"
+                 .. "Equip this cloak with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>[mouseclick]</white>"
     end
-    text = text .. " to find out what those are."
+    text = text .. " to find out what those are, or waste identifying scroll for it."
 
     return tutorial_message(text)
 end
-
------------------------------------------------------------
--- Lua code for level 3.
------------------------------------------------------------
 
 function tutorial_msg3.gold ()
     return tutorial_message("Gold has no weight, cannot be dropped, and can be "
                             .. "spent in shops.")
 end
 
-function tutorial_msg3.shop ()
-    return tutorial_message("Shops offer a variety of items, but don't accept "
-                            .. "merchandise from anyone.")
-end
-
 function tutorial_msg3.enter_shop ()
-    local text = "To enter this shop, press "
-                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+    local text = "To enter this shop, press <w>[</w>"
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "<w>]</w>"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or <white>Shift</white> + <white>mouseclick</white>"
+        text = text .. " or <white>[Shift-mouseclick]</white>"
     end
-    text = text .. ". You can switch to description mode with <w>!</w> "
-                .. "and confirm your selection with <w>Enter</w>."
+    text = text .. ". To buy items, select them with hotkey, hit <w>[Enter]</w> and confirm with <w>[y]es</w>"
+                .. "\nYou can switch to description mode with <w>!</w> "
 
     return tutorial_message(text, false)
 end
 
 function tutorial_msg3.wand_fire ()
-    local text = "You can evoke a wand with "
-                 .. tutorial_get_cmd("CMD_EVOKE")
+    local text = "You can evoke a wand with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_EVOKE").. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>[mouseclick]</white>"
     end
     text = text .. "."
 
@@ -244,25 +205,25 @@ function tutorial_msg3.wand_fire ()
 end
 
 function tutorial_msg3.wand_digging ()
-    local text = "If you simply want to shoot into a straight direction, you can "
-                 .. "press <w>Shift</w> together with the direction keys.\n"
-                 .. "Find out which of the nearby walls you can destroy! "
-                 .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w> "
+    local text = "When zapping with wand, you can "
+                 .. "hold <w>[Shift]</w> together with the direction keys to shoot in straight line.\n"
+                 .. "With wand of digging you may destroy some walls, like the ones on that collabsed corridor. "
+                 .. "Use <w>[</w>" .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>, v]</w> "
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
+        text = text .. "or <white>[mouseover]</white> / <white>[rightclick]</white> "
     end
-    text = text .. "to check the wall types. "
+    text = text .. "to check the wall types.\n??"
                 .. "(You can look up the direction keys in the command help help "
-                .. "with <w>??</w>.)"
+                .. "with <w>[?]</w>.)"
 
     return tutorial_message(text)
 end
 
 function tutorial_msg3.amulet ()
-    local text = "Amulets are another type of jewellery and can be put on with "
-                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
+    local text = "Amulets are type of jewellery and can be put on with <w>[</w>"
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY").. "<w>]</w>"
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>[mouseclick]</white>"
     end
     text = text .. ".\nSome types of jewellery, when equipped, don't identify "
                 .. "automatically. For that, you'll need a scroll of identify."
@@ -271,30 +232,26 @@ function tutorial_msg3.amulet ()
 end
 
 function tutorial_msg3.scroll_id ()
-    return tutorial_message("These three scrolls can be used to enchant armour, "
-                            .. "recharge wands, and identify unknown items. Try "
-                            .. "working out which is which by using them on "
-                            .. "different items that they might be able to "
-                            .. "affect. Note that artefacts cannot be further "
-                            .. "enchanted by enchant armour scrolls, but that "
-                            .. "your robe can!")
+    return tutorial_message("Yet another unidentified scroll!\n"
+                                                        .. "You normally find out the properties of scrolls by using them and figuring out what they do.\n"
+                                                        .. "Alternatively you can use one of your identifying scrolls as you happen to have them.")
 end
 
 function tutorial_msg3.go_shopping ()
-    local text = "Now that you've got more money, maybe you'd like to go back "
-                 .. "to the shop. The quickest way to do so is by searching "
-                 .. "for it. Type "
-                 .. tutorial_get_cmd("CMD_SEARCH_STASHES")
+    local text = "To prepare, you may want to go back to the shop to gear up. "
+                 .. "The quickest way to do so is by searching for it.\n"
+                 .. "Type <w>[</w>"
+                 .. tutorial_get_cmd("CMD_SEARCH_STASHES") .. "<w>]</w>"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " (or click in the <w>command panel</w>)"
+        text = text .. " or <w>[mouseclick]</w> in the <w>command panel</w>"
     end
 
     text = text .. ", and then enter \"<w>shop</w>\". Select the result to start "
                 .. "traveling.\n"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on the <white>minimap</white>"
+        text = text .. "Or travel by <white>[mouseclicking]</white> on the <white>minimap</white>"
     end
     text = text .. "."
 
@@ -306,9 +263,14 @@ function tutorial_msg3.item_use ()
                             .. "Remember to use the items you hopefully just bought!")
 end
 
+function tutorial_msg3.travel_reminder ()
+    return tutorial_message("Remember that you can automatically explore the map using <w>[</w>"
+                            .. tutorial_get_cmd("CMD_EXPLORE") .. "<w>]</w>"
+                                                        .. ".")
+end
+
 function tutorial_msg3.tutorial_end ()
-    return tutorial_message("Well done! To exit the tutorial, simply go down "
-                            .. "these stairs.")
+    return tutorial_message("Well done! To exit the tutorial, simply enter the door ")
 end
 
 function tutorial_msg3.exit ()
@@ -338,7 +300,6 @@ function tutorial_msg3.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_USE_ABILITY") .. "  use an ability\n"
                 .. "  " .. tutorial_get_cmd("CMD_RESISTS_SCREEN") .. "  display character overview\n"
                 .. "  " .. tutorial_get_cmd("CMD_ADJUST_INVENTORY") .. "  reassign inventory slots\n"
-                .. "  " .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "  swap between weapons in slots <w>a</w> and <w>b</w>\n"
                 .. "  " .. tutorial_get_cmd("CMD_SEARCH_STASHES") .. "  search for items/features previously seen\n"
 
     if crawl.is_tiles() and not crawl.is_webtiles() then
@@ -360,59 +321,79 @@ NAME:    tutorial_lesson3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 3: Items and Inventory"
 ORIENT:  encompass
-KFEAT:   AC = .
-KFEAT:   B = +
-COLOUR:  defgAC = lightblue
-FTILE:   defgAC = tutorial_pad
+COLOUR:  ABCDEdefgi = lightblue
+COLOUR:  ' = brown
+FTILE:   ABCDEdefgi = tutorial_pad
+FTILE:   'h[ = floor_swamp, t = floor_grass
+KFEAT:   S = general shop use_all ; \
+         potion of curing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
+         wand of paralysis | ring mail | buckler ego:none | ring of slaying | scroll of enchant weapon II
+KFEAT:   ABCDE = '
+
 ITEM:    pair of boots race:no_race mundane not_cursed
-ITEM:    bread ration
-ITEM:    scroll of remove curse q:2
-ITEM:    scimitar race:none ego:venom not_cursed
+ITEM:    scroll of identify q:4 ident:all
+ITEM:    scroll of enchant armour q:3
+ITEM:    meat ration q:50
+ITEM:    scroll of recharging q:3
+ITEM:    ring of levitation
+ITEM:    gold q:60
 MONS:    goblin ; nothing
-MONS:    rat, giant cockroach, hobgoblin ; nothing
+MONS:    gnoll ; flail ego:none | spiked flail ego:none | halberd ego:none . \
+         leather armour ego:fire_resistance | ring mail ego:fire_resistance
+MONS:    orc ; scimitar ego:none | battleaxe ego:none . \
+         ring mail ego:fire_resistance | chain mail ego:fire_resistance
+
 MARKER:  d = lua:tutorial_msg3.armour()
 MARKER:  e = lua:tutorial_msg3.autopickup()
 MARKER:  f = lua:tutorial_msg3.scroll_noautopickup()
-MARKER:  g = lua:tutorial_msg3.ego_weapon()
-MARKER:  A = lua:tutorial_msg3.inventory()
-MARKER:  B = lua:tutorial_msg3.battle()
+MARKER:  g = lua:tutorial_msg3.quantified_drop()
+MARKER:  S = lua:tutorial_msg3.enter_shop()
+MARKER:  A = lua:tutorial_msg3.go_shopping()
+MARKER:  B = lua:tutorial_msg3.scroll_id()
+MARKER:  C = lua:tutorial_msg3.item_use()
+MARKER:  D = lua:tutorial_msg3.optional_battle()
+MARKER:  E = lua:tutorial_msg3.travel_reminder()
+MARKER:  i = lua:tutorial_msg3.jewellery()
+
 MARKER:  } = lua:tutorial_msg3.downstairs()
-MARKER:  ] = lua:tutorial_msg3.downstairs()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson3", \
                                  onclimb = "tutorial_msg3.exit" }
-MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson3", \
-                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  [ = lua:tutorial_msg3.tutorial_end()
 MARKER:  [ = lua:one_way_stair { dst  = "tutorial_lesson3", \
-                                 onclimb = "tutorial_msg3.exit" }
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg3.win" }
 epilogue{{
   tutorial_msg3.start()
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxx
-xxxxx.....xxxxxxxxxx.......e..xxxxxxxxxxx
-xxxxx1....xxxxxxxx...xxxx.....xxxx..(..xx
-xxxxx....f+........xxxxxxxxx......d...{xx
-xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx..[..xx
-xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.xxxxxxxxxxtttttttttttttttxx
-xxxxxxxxxxttx+xttxxxxxxxtttttttttttttttxx
-xxxxxxxxxttt...tttttttttttt....3.t..tttxx
-xxxxxxxxxtt.T.G.tttttttttt..3.t.t..2}ttxx
-xxxxxxxxxtt..g..A.......B......T.4..tttxx
-xxxxxxxxxtt.G.T.tttttttttt2...t.t.3.]ttxx
-xxxxxxxxxttt...tttttttttttt..3...t..tttxx
-xxxxxxxxxtttttttttxxxxxxtttttttttttttttxx
-xxxxxxxxxxttttttttxxxxxxtttttttttttttttxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttttttttttttttttttttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttttttttttttttttttttt
+xxxxxxxxxxxx{xxxxxxxxxxxxxxxxttttttttttttttttttttttttt
+xxxxxxxxxxx...xxxxxxxxxxxxxxxttttttttttttttttttttttttt
+xxxxxxxxxxx...xxxxxxxxxxxxxxttttttt'''tttttttttttttttt
+x..+..e...d...xxxxxxxxxxxxxttttttt'')'tttttttttttttttt
+x..xxxxxxxxxxxxxxxxxxxxxxxttttttttt''''ttttttttttttttt
+xfxxxxxxxxxxxxxxxxxxxxxxxtttttttttttBttttttttttttttttt
+x.xxxxxxxxXXXXXXXX..jjxxxttttttttttt''''tttttttttttttt
+x..xxxxxxxXX..31.+..jjxxxttttttttttt''h'tttttttttttttt
+x1.xxxxxxxXX.2.1.+..xxxxxttttttttttttt''tttwwwwttttttt
+x..xxxxxxxXX.3..XXxAxxttttttttttttttttWWWWWwwtwwwttttt
+xx.xxxxxxxXX2.2.XXx''''tttttttttttttwwwwt'S'ttwwwttttt
+xxgxxxxxxxXX.3..XXxxxx'ttttttt''''wwwwwttt''ttttwttttt
+x..xxx.]xxXXXXXXXXxx''D''''''''wwwwwtttttttE'ttttttttt
+x....+..xXXXxxxxxxx'''tttttt''iwwwwwwtttttt'''tttttttt
+xxxxxxxxxxxxxxxxxx''''tttttttwwwww''''ttttttt'tttttttt
+XXxtttttttttxxxwwwWW'tttttwwwwwwwtt'['ttttttt'tttttttt
+wttttttttttwwxwwwwwWWWwwwwwwwwwwttt'''ttttttt'tttttttt
+wwwttttwwwwwwwwwttwwWWWwwwwtwwwwttttttttttttt'tttttttt
+wwwwwwwwwwwwwwtttttwwWWWtttttwtttttttttttttt''tttttttt
+twwwwwwwwwwwtttttttt'''''tttt''''''''''''''''ttttttttt
+tttttwwwwwwwwtttttttt''''tttt''ttttttttttttttttttttttt
+ttttttttttwwttttttttt'''''''''tttttttttttttttttttttttt
+tttttttttttttttttttttt'''ttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ##########################################################
@@ -423,151 +404,59 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 PLACE:   D:2
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
-KFEAT:   ABCD = .
-COLOUR:  ABCDdefg = lightblue
-COLOUR:  .1234h = brown
-FTILE:   .{})^1234h = floor_swamp, t = floor_grass
-FTILE:   ABCDdefg = tutorial_pad
-ITEM:    potion of curing q:2
-ITEM:    meat ration q:50
-ITEM:    ring of levitation
+KFEAT:   AB = .
+COLOUR:  ABdefghij = lightblue
+FTILE:   ABdefghij = tutorial_pad
+RTILE:   c = wall_vines
+
+ITEM:    potion of curing q:2 ident:all
+ITEM:    scimitar race:none ego:venom not_cursed
 ITEM:    cloak unrand:ratskin_cloak
-# Some more stones, in case that goblin was under-equipped.
-ITEM:    stone q:20
-MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed
-MONS:    jackal
-MONS:    kobold ; dart ego:none q:10
+ITEM:    wand of flame charges:9 ident:all
+ITEM:    wand of digging charges:15 ident:all
+ITEM:    amulet of inaccuracy mundane not_cursed
+ITEM:    gold q:60
+MONS:    rat hp:4, giant cockroach hp:5, hobgoblin ; nothing
+MONS:    gnoll ; spear mundane
+MONS:    orc ; nothing
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 MARKER:  d = lua:tutorial_msg3.potion()
-MARKER:  A = lua:tutorial_msg3.weapon_swap()
-MARKER:  B = lua:tutorial_msg3.weapon_swap2()
-MARKER:  C = lua:tutorial_msg3.retreat_reminder()
-MARKER:  e = lua:tutorial_msg3.quantified_drop()
-MARKER:  f = lua:tutorial_msg3.jewellery()
-MARKER:  g = lua:tutorial_msg3.artefact_armour()
+MARKER:  e = lua:tutorial_msg3.ego_weapon()
+MARKER:  f = lua:tutorial_msg3.artefact_armour()
+MARKER:  g = lua:tutorial_msg3.wand_fire()
+MARKER:  h = lua:tutorial_msg3.wand_digging()
+MARKER:  i = lua:tutorial_msg3.amulet()
+MARKER:  j = lua:tutorial_msg3.gold()
+MARKER:  A = lua:tutorial_msg3.inventory()
+MARKER:  B = lua:tutorial_msg3.battle()
 epilogue{{
   tutorial_msg3.command_help()
 }}
 MAP
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttt...ttttttttt
-ttttttttttttttttttttttttttttttttttttttt..{.ttttttttt
-tttttttttttttttttttttttttttttttttttttttt....tttttttt
-ttttttttttttttttttttttttttttttttttttttttt^tttttttttt
-ttttttttttttttttttttttttttttttttttttttttttdttttttttt
-ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
-ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
-tttttttttttttttttttttttttttttttttttttttttttt.ttttttt
-tttttttttttttttttttttttttttttttttttttttttttt..tttttt
-ttttttttttttttttttttttttttttttttttttttttttt..t.ttttt
-tttttttttttttttttttttttttttttttttttttttttttt...twwww
-ttttttttttttttttttttttttttttttttttttttttttttwWWwwwww
-tttttttttttttt..tttttttttttttttttttttttttwwwwW...ttw
-ttttttttttttt...t..ttttttttttttttttttttwwwwwt..1tttt
-ttttttttttt...f.2.ttt.tttttttttttttttwwwwttttt...ttt
-tttttttttt....2..e..2..ttttttttttttwwwwwwwtttttt.ttt
-ttttttttt..wwwwww....t2.ttttttttwwwwwwwttttttttthttt
-ttttttttt.wwwwwwwwW2..ttttwwwwwwwwwwwtttttttttt.tttt
-wtttttttwwwwwwwwwwwW.WwwwwwwtwwwwwtttttttttttttAtttt
-wwwtttttwwww3..wwwwwWWWwwwwttttttttttttttttttttt.ttt
-wwwwwwwwwww..g}.3.wwwWWWttttttttt..2..ttttt..tt.tttt
-wwwwwwwwwwwww3...wwww....tttttt..ttttt....Btt..ttttt
-tttttwwwwwwwwwwwwwww.....Cttt..ttttttttttttttttttttt
-ttttttttttwwwwwwwwt....ttt..2ttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
-
-##########################################################
-# Level 3: Shopping and wands
-##########################################################
-NAME:    tutorial_lesson3_level3
-TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
-PLACE:   D:3
-ORIENT:  encompass
-KFEAT:   ABC = .
-COLOUR:  ABCdefgh = lightblue
-FTILE:   ABCdefgh = tutorial_pad
-# TODO: Highlight tiles.
-KFEAT:   ' = .
-COLOUR:  ' = red
-KFEAT:   S = general shop use_all ; \
-         potion of curing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
-         wand of paralysis | ring mail | buckler ego:none | ring of slaying | scroll of enchant weapon II
-ITEM:    gold q:40
-ITEM:    wand of flame charges:9
-ITEM:    wand of digging charges:15
-ITEM:    gold q:180
-ITEM:    amulet of inaccuracy mundane not_cursed
-ITEM:    scroll of identify q:3
-ITEM:    scroll of enchant armour q:3
-ITEM:    scroll of recharging q:3
-SHUFFLE: ijk
-MONS:    gnoll ; spear ego:none | mace ego:none
-MONS:    crimson imp
-MONS:    gnoll ; flail ego:none | spiked flail ego:none | halberd ego:none . \
-         leather armour ego:fire_resistance | ring mail ego:fire_resistance
-MONS:    orc ; scimitar ego:none | battleaxe ego:none | halberd ego:none . \
-         ring mail ego:fire_resistance | chain mail ego:fire_resistance
-MARKER:  d = lua:tutorial_msg3.gold()
-MARKER:  A = lua:tutorial_msg3.shop()
-MARKER:  S = lua:tutorial_msg3.enter_shop()
-MARKER:  e = lua:tutorial_msg3.wand_fire()
-# fire cloud trigger
-MARKER:  f = lua:tutorial_msg3.wand_digging()
-MARKER:  g = lua:tutorial_msg3.go_shopping()
-MARKER:  h = lua:tutorial_msg3.amulet()
-# inaccuracy trigger
-MARKER:  B = lua:tutorial_msg3.scroll_id()
-MARKER:  C = lua:tutorial_msg3.item_use()
-# healing reminder trigger
-MARKER:  } = lua:tutorial_msg3.tutorial_end()
-MARKER:  ) = lua:tutorial_msg3.tutorial_end()
-MARKER:  ] = lua:tutorial_msg3.tutorial_end()
-MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson3", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg3.win" }
-MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson3", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg3.win" }
-MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson3", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg3.win" }
-epilogue{{
-  tutorial_msg3.command_help()
-}}
-MAP
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XX..d...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XX{.XXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXX....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXX.S..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXX....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX.XXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX......e.XXXXXXXXX.ijk.XXXXXXXXXXXXXXXX.].}.).X
-XXXXXXXXXXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXX..4.4..X
-XXXXXXXXXXXXX+XXXXXXXXXXXXBXXXXXXXXXXXXXXXXXX...2...X
-XXXXXXXXXXXXX.XXXXXXXXXXX...XXXXXXXXXXXXXXXXX.3...3.X
-XXXXXXXXXXXXX.XXXXXXXvXX..h..XXvXXXXXXXXXXXXX...3...X
-XXXXXXXXXXXXX.XXXXXXXXvXXXxXXXvXXXXXXXXXXXXXXXXX+XXXX
-XXXXXXXXXXXXX.XXXXXXXXXvXXxXXvXXXXXXXXXXXXXXXXXX.XXXX
-XXXXXXXXXXXXX.XXXXXXXXXXvXxXvXXXXXXXXXXXXXXXXXXXCXXXX
-XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXXXXXXXXXXXXXXX.XXXX
-XXXXXXXXXXX..1............f........XXXXXXXXXXXXX.XXXX
-XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXX..XXXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXbXcXxXXXXXXXX.XXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXbXXcXXxXXXXX..XXXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXXbXXXcXXX.....XXXXXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXbXXXXcXXG$$T...............XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX$$g$..XXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX$$$GXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+cXXXXXccccccccccccccccccccc
+cX[..Xccccccccccccccccccccc
+cX...Xccccccccccccccccccccc
+XX...Xccccccccccccccccccccc
+XXX.XXccccccccccccccccccccc
+XXX^XXccccccccccccccccccccc
+ccc.ccccccccccccccccccccccc
+cccdccccccccccccccccccccccc
+ccc.ccccccccccccccccccccccc
+ccc..cccccccccccccccccccccc
+ccc......A....ccccccccccccc
+ccce.ccccccccBcc....ccccccc
+cccccc.cccccc+cc(...ccccccc
+ccccc...cccc2.1c....ccccccc
+cccc..g.+...352ccjicccccccc
+ccccc...cccc.3.cc..cccccccc
+cccccc+cccccccccc..cccccccc
+cccccc.ccccccccccXxcccccccc
+cccccc.ccccccccccXxcccccccc
+cccccc.cccccccccc..cccccccc
+ccccc...ccccccccc.hcccccccc
+ccccc..............cccccccc
+ccccc.f...........ccccccccc
+ccccc.4.ccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
 ENDMAP
