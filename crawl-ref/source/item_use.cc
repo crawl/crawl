@@ -3639,6 +3639,12 @@ static bool _puton_item(int item_slot)
 
     if (!is_amulet)     // i.e. it's a ring
     {
+        if (!you_tran_can_wear(item))
+        {
+            mpr("You can't wear that in your present form.");
+            return (false);
+        }
+
         const item_def* gloves = you.slot_item(EQ_GLOVES, false);
         // Cursed gloves cannot be removed.
         if (gloves && gloves->cursed())
