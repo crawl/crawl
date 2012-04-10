@@ -159,6 +159,17 @@ static void _wizard_go_to_level(const level_pos &pos)
         stair_taken = branches[pos.id.branch].entry_stairs;
     }
 
+    if (is_connected_branch(pos.id.branch))
+        you.level_stack.clear();
+    else
+    {
+        for (int i = you.level_stack.size() - 1; i >= 0; i--)
+            if (you.level_stack[i].id == pos.id)
+                you.level_stack.resize(i);
+        if (you.where_are_you != pos.id.branch)
+            you.level_stack.push_back(level_pos::current());
+    }
+
     const level_id old_level = level_id::current();
     const bool keep_travel_data = can_travel_interlevel();
 
