@@ -3264,7 +3264,15 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     const item_def *rings[8];
     char slots[8];
 
-    for (int i = 0; i < 8; i++)
+    int min_ring = 0;
+    int max_ring = 7;
+
+    if (you.form == TRAN_BLADE_HANDS)
+        min_ring = 2;
+    else if (!form_keeps_mutations() && you.form != TRAN_SPIDER)
+        max_ring = 1;
+
+    for (int i = min_ring; i <= max_ring; i++)
     {
         rings[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
         ASSERT(rings[i]);
@@ -3275,12 +3283,12 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 //    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
 
     mprf(MSGCH_PROMPT,
-         "You're wearing eight rings. Remove which one?");
+         "You're wearing all the rings you can. Remove which one?");
 //I think it looks better without the letters.
 // (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
 
-    for (int i = 0; i < 8; i++)
+    for (int i = min_ring; i <= max_ring; i++)
         mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
     flush_prev_message();
 
@@ -3294,7 +3302,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     do
     {
         c = getchm();
-        for (int i = 0; i < 8; i++)
+        for (int i = min_ring; i <= max_ring; i++)
             if (c == slots[i])
             {
                 eqslot = EQ_RING_ONE + i;
@@ -3461,6 +3469,10 @@ static bool _swap_rings(int ring_slot)
     const item_def* lring = you.slot_item(EQ_LEFT_RING, true);
     const item_def* rring = you.slot_item(EQ_RIGHT_RING, true);
 
+    // If both ring slots were melded, we should have been prevented
+    // from putting on the ring at all.
+    ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
+
     if (lring->cursed() && rring->cursed())
     {
         mprf("You're already wearing two cursed rings!");
@@ -3514,42 +3526,49 @@ static bool _swap_rings_octopode(int ring_slot)
     int array = 0;
     int unwanted = 0;
     int cursed = 0;
-    int uncursed = 0;
+    int melded = 0; // Both melded rings and unavailable slots.
+    int available = 0;
 
     for (int slots = EQ_RING_ONE;
          slots < NUM_EQUIP && array < 8;
          ++slots, ++array)
     {
-        if (ring[array] != NULL)
+        if (!you_tran_can_wear(slots) || you.melded[slots])
+            melded++;
+        else if (ring[array] != NULL)
         {
             if (ring[array]->cursed())
-            {
                 cursed++;
-                continue;
-            }
             else
             {
-                uncursed++;
+                available++;
                 unwanted = you.equip[slots];
             }
         }
     }
 
     // We can't put a ring on, because we're wearing 8 cursed ones.
-    if (cursed == 8)
+    if (melded == 8)
     {
-        mpr("You're already wearing eight cursed rings! Isn't that enough for you?");
+        // Shouldn't happen, because hogs and bats can't put on jewellery at
+        // all and thus won't get this far.
+        mpr("You can't wear that in your present form.");
         return (false);
     }
-    // The simple case - only one uncursed ring.
-    else if (uncursed == 1)
+    else if (available == 0)
+    {
+        mpr("You're already wearing " + number_in_words(cursed) + " cursed rings! Isn't that enough for you?");
+        return (false);
+    }
+    // The simple case - only one available ring.
+    else if (available == 1)
     {
         if (!remove_ring(unwanted, false))
             return (false);
     }
     // We can't put a ring on without swapping - because we found
-    // multiple uncursed rings.
-    else if (uncursed > 1)
+    // multiple available rings.
+    else if (available > 1)
     {
         unwanted = _prompt_ring_to_remove_octopode(ring_slot);
         if (!remove_ring(unwanted, false))
@@ -3606,11 +3625,17 @@ static bool _puton_item(int item_slot)
     {
         blinged_octopode = true;
         for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
+        {
+            // Skip unavailable slots.
+            if (!you_tran_can_wear(eq))
+                continue;
+
             if (!you.slot_item((equipment_type)eq, true))
             {
                 blinged_octopode = false;
                 break;
             }
+        }
     }
 
     if (!is_amulet)     // i.e. it's a ring
@@ -3620,6 +3645,15 @@ static bool _puton_item(int item_slot)
         if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
+            return (false);
+        }
+
+        // Bat and pig form can't handle jewellery at all, and were handled
+        // elsewhere; blade hands can wear jewellery, but doesn't have ring
+        // slot unless also an octopode.
+        if (you.form == TRAN_BLADE_HANDS && you.species != SP_OCTOPODE)
+        {
+            mpr("You can't wear that in your present form.");
             return (false);
         }
 
@@ -3662,6 +3696,10 @@ static bool _puton_item(int item_slot)
         for (hand_used = EQ_RING_ONE; hand_used <= EQ_RING_EIGHT;
              hand_used = (equipment_type)(hand_used + 1))
         {
+            // Skip unavailble slots.
+            if (!you_tran_can_wear(hand_used))
+                continue;
+
             if (!you.slot_item(hand_used, true))
                 break;
         }
@@ -3739,6 +3777,7 @@ bool remove_ring(int slot, bool announce)
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
     bool has_jewellery = false;
+    bool has_melded = false;
     const equipment_type first = you.species == SP_OCTOPODE ? EQ_AMULET
                                                             : EQ_LEFT_RING;
     const equipment_type last = you.species == SP_OCTOPODE ? EQ_RING_EIGHT
@@ -3758,11 +3797,19 @@ bool remove_ring(int slot, bool announce)
 
             has_jewellery = true;
         }
+        else if (you.slot_item(static_cast<equipment_type>(eq), true))
+        {
+            has_melded = true;
+        }
     }
 
     if (!has_jewellery)
     {
-        mpr("You aren't wearing any rings or amulets.");
+        if (has_melded)
+            mpr("You aren't wearing any unmelded rings or amulets.");
+        else
+            mpr("You aren't wearing any rings or amulets.");
+
         return (false);
     }
 

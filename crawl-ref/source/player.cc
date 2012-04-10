@@ -787,7 +787,7 @@ bool you_tran_can_wear(const item_def &item)
 
     case OBJ_JEWELLERY:
         return you_tran_can_wear(jewellery_is_amulet(item) ? EQ_AMULET
-                                                           : EQ_LEFT_RING);
+                                                           : EQ_RINGS);
     case OBJ_ARMOUR:
         if (item.sub_type == ARM_NAGA_BARDING)
             return (you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS));
@@ -811,10 +811,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species != SP_OCTOPODE)
-        eq = EQ_LEFT_RING;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species == SP_OCTOPODE)
-        eq = EQ_RING_ONE;
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
+        eq = EQ_RINGS;
 
     // Everybody can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
@@ -853,9 +851,23 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if ((you.form == TRAN_BAT || you.form == TRAN_PIG) && eq != EQ_AMULET)
         return (false);
 
-    // Everyone else can wear jewellery, at least.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET || eq == EQ_RING_ONE)
+    // Everyone else can wear amulets
+    if (eq == EQ_AMULET)
         return (true);
+
+    // Everyone else but blade hands non-octopodes can wear rings . . .
+    if (eq == EQ_RINGS)
+        return (you.form != TRAN_BLADE_HANDS || you.species == SP_OCTOPODE);
+
+    // . . . but not necessarily in all slots.
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
+        || eq == EQ_RING_ONE || eq == EQ_RING_TWO)
+    {
+        return (you.form != TRAN_BLADE_HANDS);
+    }
+
+    if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
+        return (form_keeps_mutations() || you.form == TRAN_SPIDER);
 
     // These cannot use anything but jewellery.
     if (you.form == TRAN_SPIDER || you.form == TRAN_DRAGON)
