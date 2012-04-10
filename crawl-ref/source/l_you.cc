@@ -126,7 +126,6 @@ LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
 LUARET1(you_swift, boolean, you.duration[DUR_SWIFTNESS])
 LUARET1(you_paralysed, boolean, you.paralysed())
-LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -262,6 +261,16 @@ static int you_can_consume_corpses(lua_State *ls)
                     can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
                     || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
                   );
+    return (1);
+}
+
+LUAFN(you_caught)
+{
+    if (you.caught())
+        lua_pushstring(ls, held_status(&you));
+    else
+        lua_pushnil(ls);
+
     return (1);
 }
 
