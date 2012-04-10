@@ -2974,7 +2974,7 @@ int monster::warding() const
 {
     const item_def *w = primary_weapon();
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
-        return 30;
+        return 60;
     return 0;
 }
 
