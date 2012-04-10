@@ -212,10 +212,11 @@ end
 
 function attack(allow_movement)
   local x, y, info = get_target()
+  local caught = you.caught()
   if you.confused() then
     crawl.mpr("You are too confused!")
-  elseif you.caught() then
-    crawl.mpr("You are held in a net!")
+  elseif caught then
+    crawl.mpr("You are " .. caught .. "!")
   elseif hp_is_low() then
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
