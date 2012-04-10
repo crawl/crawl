@@ -188,26 +188,18 @@ _init_equipment_removal(transformation_type form)
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
 
-        // Two cases are handled specially because they distingish between
-        // slots of different types.
-        //
-        // 1. Octopodes lose their extra ring slots (3--8) in forms that do
-        //    not have eight limbs.
-        //
-        // 2. All races lose the first two ring slots (left and right, or
-        //    1 and 2 for octopodes) under Blade Hands.
-        if (pitem && i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
+        if (!pitem)
+            continue;
+
+        // Octopodes lose their extra ring slots (3--8) in forms that do not
+        // have eight limbs.  Handled specially here because we do have to
+        // distinguish between slots the same type.
+        if (i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
             && !(form_keeps_mutations(form) || form == TRAN_SPIDER))
         {
             result.insert(eq);
         }
-        else if (pitem && (form == TRAN_BLADE_HANDS)
-                 && (i == EQ_LEFT_RING || i == EQ_RIGHT_RING
-                     || i == EQ_RING_ONE || i == EQ_RING_TWO))
-        {
-            result.insert(eq);
-        }
-        else if (pitem && !form_can_wear_item(*pitem, form))
+        else if (!form_can_wear_item(*pitem, form))
             result.insert(eq);
     }
     return (result);
