@@ -189,11 +189,11 @@ _init_equipment_removal(transformation_type form)
         if (!pitem)
             continue;
 
-        // Octopodes lose their extra ring slots (3--8) in forms that change
-        // their overall shape.  Handled specially here because we do have to
+        // Octopodes lose their extra ring slots (3--8) in forms that do not
+        // have eight limbs.  Handled specially here because we do have to
         // distinguish between slots the same type.
         if (i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
-            && !form_keeps_mutations(form))
+            && !(form_keeps_mutations(form) || form == TRAN_SPIDER))
         {
             result.insert(eq);
         }
