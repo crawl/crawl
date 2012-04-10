@@ -861,10 +861,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     // . . . but not necessarily in all slots.
     if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
-    {
-        return (you.species == SP_OCTOPODE
-                && (form_keeps_mutations() || you.form == TRAN_SPIDER));
-    }
+        return (you.species == SP_OCTOPODE && form_keeps_mutations());
 
     // These cannot use anything but jewellery.
     if (you.form == TRAN_SPIDER || you.form == TRAN_DRAGON)
