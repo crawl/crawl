@@ -3210,77 +3210,85 @@ bool melee_attack::chop_hydra_head(int dam,
     if (attacker->is_monster() && !one_chance_in(4))
         return (false);
 
-    if ((dam_type == DVORP_SLICING || dam_type == DVORP_CHOPPING
-            || dam_type == DVORP_CLAWING)
-        && dam > 0
-        && (dam >= 4 || wpn_brand == SPWPN_VORPAL || coinflip()))
+    // Only cutting implements.
+    if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
+        && dam_type != DVORP_CLAWING || dam <= 0)
     {
-        const char *verb = NULL;
+        return false;
+    }
 
-        if (dam_type == DVORP_CLAWING)
-        {
-            static const char *claw_verbs[] = { "rip", "tear", "claw" };
-            verb = RANDOM_ELEMENT(claw_verbs);
-        }
-        else
-        {
-            static const char *slice_verbs[] =
-            {
-                "slice", "lop", "chop", "hack"
-            };
-            verb = RANDOM_ELEMENT(slice_verbs);
-        }
+    if (dam < 4 && wpn_brand != SPWPN_VORPAL && coinflip())
+        return false;
 
-        if (defender->as_monster()->number == 1) // will be zero afterwards
+    // Small claws are not big enough.
+    if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
+        return false;
+
+    const char *verb = NULL;
+
+    if (dam_type == DVORP_CLAWING)
+    {
+        static const char *claw_verbs[] = { "rip", "tear", "claw" };
+        verb = RANDOM_ELEMENT(claw_verbs);
+    }
+    else
+    {
+        static const char *slice_verbs[] =
         {
-            if (defender_visible)
+            "slice", "lop", "chop", "hack"
+        };
+        verb = RANDOM_ELEMENT(slice_verbs);
+    }
+
+    if (defender->as_monster()->number == 1) // will be zero afterwards
+    {
+        if (defender_visible)
+        {
+            mprf("%s %s %s's last head off!",
+                 atk_name(DESC_THE).c_str(),
+                 attacker->conj_verb(verb).c_str(),
+                 def_name(DESC_THE).c_str());
+        }
+        defender->as_monster()->number--;
+
+        if (!defender->is_summoned())
+            bleed_onto_floor(defender->pos(), defender->type,
+                             defender->as_monster()->hit_points, true);
+
+        defender->hurt(attacker, INSTANT_DEATH);
+
+        return (true);
+    }
+    else
+    {
+        if (defender_visible)
+        {
+            mprf("%s %s one of %s's heads off!",
+                 atk_name(DESC_THE).c_str(),
+                 attacker->conj_verb(verb).c_str(),
+                 def_name(DESC_THE).c_str());
+        }
+        defender->as_monster()->number--;
+
+        // Only living hydras get to regenerate heads.
+        if (defender->holiness() == MH_NATURAL)
+        {
+            unsigned int limit = 20;
+            if (defender->type == MONS_LERNAEAN_HYDRA)
+                limit = 27;
+
+            if (wpn_brand == SPWPN_FLAMING)
             {
-                mprf("%s %s %s's last head off!",
-                     atk_name(DESC_THE).c_str(),
-                     attacker->conj_verb(verb).c_str(),
-                     def_name(DESC_THE).c_str());
+                if (defender_visible)
+                    mpr("The flame cauterises the wound!");
+                return (true);
             }
-            defender->as_monster()->number--;
-
-            if (!defender->is_summoned())
-                bleed_onto_floor(defender->pos(), defender->type,
-                                 defender->as_monster()->hit_points, true);
-
-            defender->hurt(attacker, INSTANT_DEATH);
-
-            return (true);
-        }
-        else
-        {
-            if (defender_visible)
+            else if (defender->as_monster()->number < limit - 1)
             {
-                mprf("%s %s one of %s's heads off!",
-                     atk_name(DESC_THE).c_str(),
-                     attacker->conj_verb(verb).c_str(),
-                     def_name(DESC_THE).c_str());
-            }
-            defender->as_monster()->number--;
-
-            // Only living hydras get to regenerate heads.
-            if (defender->holiness() == MH_NATURAL)
-            {
-                unsigned int limit = 20;
-                if (defender->type == MONS_LERNAEAN_HYDRA)
-                    limit = 27;
-
-                if (wpn_brand == SPWPN_FLAMING)
-                {
-                    if (defender_visible)
-                        mpr("The flame cauterises the wound!");
-                    return (true);
-                }
-                else if (defender->as_monster()->number < limit - 1)
-                {
-                    simple_monster_message(defender->as_monster(),
-                                           " grows two more!");
-                    defender->as_monster()->number += 2;
-                    defender->heal(8 + random2(8), true);
-                }
+                simple_monster_message(defender->as_monster(),
+                                       " grows two more!");
+                defender->as_monster()->number += 2;
+                defender->heal(8 + random2(8), true);
             }
         }
     }

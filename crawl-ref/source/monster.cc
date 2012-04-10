@@ -474,6 +474,23 @@ int monster::damage_type(int which_attack)
     return (get_vorpal_type(*mweap));
 }
 
+int monster::has_claws(bool allow_tran) const
+{
+    for (int i = 0; i < MAX_NUM_ATTACKS; i++)
+    {
+        const mon_attack_def atk = mons_attack_spec(this, i);
+        if (atk.type == AT_CLAW)
+        {
+            // Some better criteria would be better.
+            if (body_size() < SIZE_LARGE || atk.damage < 15)
+                return 1;
+            return 3;
+        }
+    }
+
+    return 0;
+}
+
 item_def *monster::missiles()
 {
     return (inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL);

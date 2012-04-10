@@ -72,6 +72,9 @@ enum extra_monster_index_type
     MISC_MISCAST,
 };
 
+// number of monster attack specs
+#define MAX_NUM_ATTACKS 4
+
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
 
