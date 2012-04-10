@@ -217,6 +217,7 @@ public:
     int         total_weight() const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
+    int         has_claws(bool allow_tran = true) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false);
     item_def *mslot_item(mon_inv_type sl) const;
