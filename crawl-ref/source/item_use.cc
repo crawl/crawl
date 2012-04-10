@@ -4561,14 +4561,12 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_CHAOS:
         mprf("%s erupts in a glittering mayhem of all colours.", itname.c_str());
-        success = !one_chance_in(3); // You mean, you wanted this... guaranteed?
         // need to affix it immediately, otherwise transformation will break it
-        if (success)
-            you.duration[DUR_WEAPON_BRAND] = 0;
+        you.duration[DUR_WEAPON_BRAND] = 0;
         xom_is_stimulated(200);
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
-        switch (random2(success ? 2 : 4))
+        switch (random2(coinflip() ? 2 : 4))
         {
         case 3:
             if (transform(50, coinflip() ? TRAN_PIG :
