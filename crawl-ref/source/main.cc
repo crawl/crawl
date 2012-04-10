@@ -3431,7 +3431,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     if (mon && player_can_hit_monster(mon))
     {
         if (mon->caught() && mon->friendly()
-            && player_can_open_doors() && !you.confused())
+            && player_can_handle_equipment() && !you.confused())
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
@@ -3457,7 +3457,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     {
         if (!you.confused())
         {
-            if (!player_can_open_doors())
+            if (!player_can_handle_equipment())
             {
                 mpr("You can't disarm traps in your present form.");
                 return (true);

@@ -498,9 +498,15 @@ bool player_in_bat_form()
 
 bool player_can_open_doors()
 {
-    // Bats and pigs can't open/close doors.
-    return (you.form != TRAN_BAT
-            && you.form != TRAN_PIG);
+    return (you.form != TRAN_BAT);
+}
+
+bool player_can_handle_equipment()
+{
+    return you.form != TRAN_BAT
+        && you.form != TRAN_PIG
+        && you.form != TRAN_SPIDER
+        && you.form != TRAN_ICE_BEAST;
 }
 
 bool player_can_reach_floor(std::string feat, bool quiet)
