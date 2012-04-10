@@ -1325,6 +1325,9 @@ int player_regen()
     if (you.stat_zero[STAT_STR])
         rr /= 4;
 
+    if (you.disease)
+        rr = 0;
+
     // Trog's Hand.  This circumvents the slow healing effect.
     if (you.attribute[ATTR_DIVINE_REGENERATION])
         rr += 100;
