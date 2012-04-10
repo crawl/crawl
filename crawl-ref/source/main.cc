@@ -2910,7 +2910,7 @@ static void _regenerate_hp_and_mp(int delay)
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = you.hit_points_regeneration;
 
-    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
+    if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
