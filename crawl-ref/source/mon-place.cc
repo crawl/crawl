@@ -534,9 +534,6 @@ monster_type pick_random_monster(const level_id &place, int power,
         die("requested DEPTH_ABYSS monster for %s", place.describe().c_str());
 #endif
 
-    if (place == BRANCH_MAIN_DUNGEON && one_chance_in(4))
-        lev_mons = random2(power);
-
     const int original_level = lev_mons;
 
     // OODs do not apply to the Abyss, Pan, etc.
