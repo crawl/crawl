@@ -950,8 +950,11 @@ void wizard_set_xl()
         return;
     }
 
-    const bool train = yesno("Train skills?", true, 'n');
+    set_xl(newxl, yesno("Train skills?", true, 'n'));
+}
 
+void set_xl(const int newxl, const bool train)
+{
     no_messages mx;
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
