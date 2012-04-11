@@ -372,7 +372,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
         if (return_value > this_step)
             return_value = ((return_value - this_step) / 2) + this_step;
         else
-            break;              // exit loop iff value fully "stepped down"
+            break;              // exit loop if value fully "stepped down"
     }
 
     // "no final ceiling" == -1
