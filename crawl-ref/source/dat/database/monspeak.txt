@@ -4689,6 +4689,20 @@ _Maud_rare_
 @The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
 
 @The_monster@ asks @foe,@ "Will you think of me as you die?"
+%%%%
+confused Maud
+
+@The_monster@ thinks out loud, "I seem to be forgetting something..."
+
+@The_monster@ asks @foe,@ "What was I looking for, again?"
+
+@The_monster@ thinks out loud, "Enter... Enterror?"
+
+@The_monster@ wonders, "Who am I anyway?"
+
+VISUAL:@The_monster@'s expression loosens as @possessive@ mind turns inward.
+
+VISUAL:@The_monster@ slowly smiles as @possessive@ mind releases itself from mundane concerns.
 ## END Maud ##
 %%%%
 ############ MAURICE ### A thief.
