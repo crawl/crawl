@@ -40,8 +40,8 @@ struct Branch
     bool has_uniques;
     colour_t floor_colour;          // Zot needs special handling.
     colour_t rock_colour;
-    int       (*mons_rarity_function)(int);
-    int       (*mons_level_function)(int);
+    int (*mons_rarity_function)(monster_type);
+    int (*mons_level_function)(monster_type);
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
