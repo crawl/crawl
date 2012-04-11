@@ -525,6 +525,9 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             place.set(where.x + random2(fuzz_diam) - fuzz_radius,
                       where.y + random2(fuzz_diam) - fuzz_radius);
 
+            if (!map_bounds(place))
+                continue;
+
             // If the player would be able to see a monster at this location
             // don't place it there.
             if (you.see_cell(place))
@@ -536,7 +539,7 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
 
             // Don't print monsters on terrain they cannot pass through,
             // not even if said terrain has since changed.
-            if (map_bounds(place) && !env.map_knowledge(place).changed()
+            if (!env.map_knowledge(place).changed()
                 && mon->can_pass_through_feat(grd(place)))
             {
                 found_good = true;
