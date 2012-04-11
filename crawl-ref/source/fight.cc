@@ -197,6 +197,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // date so that we don't cause excess energy loss in monsters
         if (!melee_attk.attack())
             effective_attack_number = melee_attk.effective_attack_number;
+        else if (did_hit and not *did_hit)
+            *did_hit = melee_attk.did_hit;
     }
 
     return (true);
