@@ -13,7 +13,7 @@
 #include "place.h"
 
 // NOTE: The lower the level the earlier a monster may appear.
-int mons_level(int mcls, const level_id &place)
+int mons_level(monster_type mcls, const level_id &place)
 {
     int monster_level = 0;
 
@@ -29,7 +29,7 @@ int mons_level(int mcls, const level_id &place)
 
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
-int mons_rarity(int mcls, const level_id &place)
+int mons_rarity(monster_type mcls, const level_id &place)
 {
     if (place.level_type == LEVEL_ABYSS)
         return mons_abyss_rare(mcls);
@@ -43,7 +43,7 @@ int mons_rarity(int mcls, const level_id &place)
 // NOTE: Labyrinths and portal vaults have no random monster generation.
 
 // The Abyss
-int mons_abyss_rare(int mcls)
+int mons_abyss_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -230,7 +230,7 @@ int mons_abyss_rare(int mcls)
 }
 
 // Pandemonium
-int mons_pan_rare(int mcls)
+int mons_pan_rare(monster_type mcls)
 {
     // Note: this is used as-is by place:Pan, but not by actual Pan
     // generation.  For that, there is only a 1/40 chance of picking from
@@ -343,7 +343,7 @@ int mons_pan_rare(int mcls)
 // LEVEL_DUNGEON
 
 // The Main Dungeon
-int mons_standard_level(int mcls)
+int mons_standard_level(monster_type mcls)
 {
     switch (mcls)
     {
@@ -597,7 +597,7 @@ int mons_standard_level(int mcls)
     }
 }
 
-int mons_standard_rare(int mcls)
+int mons_standard_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -872,7 +872,7 @@ int mons_standard_rare(int mcls)
 }
 
 // The Dwarven Hall
-int mons_dwarf_level(int mcls)
+int mons_dwarf_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_DWARVEN_HALL, 1);
 
@@ -882,7 +882,7 @@ int mons_dwarf_level(int mcls)
     return mlev + 1;
 }
 
-int mons_dwarf_rare(int mcls)
+int mons_dwarf_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -917,7 +917,7 @@ int mons_dwarf_rare(int mcls)
 }
 
 // The Orcish Mines
-int mons_mineorc_level(int mcls)
+int mons_mineorc_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_ORCISH_MINES, 1);
 
@@ -963,7 +963,7 @@ int mons_mineorc_level(int mcls)
     return (mlev);
 }
 
-int mons_mineorc_rare(int mcls)
+int mons_mineorc_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1015,7 +1015,7 @@ int mons_mineorc_rare(int mcls)
 }
 
 // The Elven Halls
-int mons_hallelf_level(int mcls)
+int mons_hallelf_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_ELVEN_HALLS, 1);
 
@@ -1068,7 +1068,7 @@ int mons_hallelf_level(int mcls)
     return (mlev);
 }
 
-int mons_hallelf_rare(int mcls)
+int mons_hallelf_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1130,7 +1130,7 @@ int mons_hallelf_rare(int mcls)
 }
 
 // The Lair
-int mons_lair_level(int mcls)
+int mons_lair_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_LAIR, 1);
 
@@ -1229,7 +1229,7 @@ int mons_lair_level(int mcls)
     return (mlev);
 }
 
-int mons_lair_rare(int mcls)
+int mons_lair_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1355,7 +1355,7 @@ int mons_lair_rare(int mcls)
 }
 
 // The Swamp
-int mons_swamp_level(int mcls)
+int mons_swamp_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SWAMP, 1);
 
@@ -1417,7 +1417,7 @@ int mons_swamp_level(int mcls)
     return (mlev);
 }
 
-int mons_swamp_rare(int mcls)
+int mons_swamp_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1500,7 +1500,7 @@ int mons_swamp_rare(int mcls)
 }
 
 // The Shoals
-int mons_shoals_level(int mcls)
+int mons_shoals_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SHOALS, 1);
     switch (mcls)
@@ -1544,7 +1544,7 @@ int mons_shoals_level(int mcls)
     return mlev;
 }
 
-int mons_shoals_rare(int mcls)
+int mons_shoals_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1591,7 +1591,7 @@ int mons_shoals_rare(int mcls)
 }
 
 // The Snake Pit
-int mons_pitsnake_level(int mcls)
+int mons_pitsnake_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SNAKE_PIT, 1);
 
@@ -1629,7 +1629,7 @@ int mons_pitsnake_level(int mcls)
     return (mlev);
 }
 
-int mons_pitsnake_rare(int mcls)
+int mons_pitsnake_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1661,7 +1661,7 @@ int mons_pitsnake_rare(int mcls)
 }
 
 // The Spider Nest
-int mons_spidernest_level(int mcls)
+int mons_spidernest_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SPIDER_NEST, 1);
 
@@ -1712,7 +1712,7 @@ int mons_spidernest_level(int mcls)
     return (mlev);
 }
 
-int mons_spidernest_rare(int mcls)
+int mons_spidernest_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1765,7 +1765,7 @@ int mons_spidernest_rare(int mcls)
 }
 
 // The Slime Pits
-int mons_pitslime_level(int mcls)
+int mons_pitslime_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SLIME_PITS, 1);
 
@@ -1813,7 +1813,7 @@ int mons_pitslime_level(int mcls)
     return (mlev);
 }
 
-int mons_pitslime_rare(int mcls)
+int mons_pitslime_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1853,7 +1853,7 @@ int mons_pitslime_rare(int mcls)
 }
 
 // The Hive
-int mons_hive_level(int mcls)
+int mons_hive_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_HIVE, 1);
 
@@ -1875,7 +1875,7 @@ int mons_hive_level(int mcls)
     return (mlev);
 }
 
-int mons_hive_rare(int mcls)
+int mons_hive_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1894,18 +1894,18 @@ int mons_hive_rare(int mcls)
 }
 
 // The Vaults
-int mons_vaults_level(int mcls)
+int mons_vaults_level(monster_type mcls)
 {
     return mons_standard_level(mcls);
 }
 
-int mons_vaults_rare(int mcls)
+int mons_vaults_rare(monster_type mcls)
 {
     return mons_standard_rare(mcls);
 }
 
 // The Hall of Blades
-int mons_hallblade_level(int mcls)
+int mons_hallblade_level(monster_type mcls)
 {
     if (mcls == MONS_DANCING_WEAPON)
         return absdungeon_depth(BRANCH_HALL_OF_BLADES, 1);
@@ -1913,13 +1913,13 @@ int mons_hallblade_level(int mcls)
         return 0;
 }
 
-int mons_hallblade_rare(int mcls)
+int mons_hallblade_rare(monster_type mcls)
 {
     return ((mcls == MONS_DANCING_WEAPON) ? 1000 : 0);
 }
 
 // The Crypt
-int mons_crypt_level(int mcls)
+int mons_crypt_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_CRYPT, 1);
 
@@ -1985,7 +1985,7 @@ int mons_crypt_level(int mcls)
     return (mlev);
 }
 
-int mons_crypt_rare(int mcls)
+int mons_crypt_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2069,7 +2069,7 @@ int mons_crypt_rare(int mcls)
 }
 
 // The Tomb
-int mons_tomb_level(int mcls)
+int mons_tomb_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_TOMB, 1);
 
@@ -2111,7 +2111,7 @@ int mons_tomb_level(int mcls)
     return (mlev);
 }
 
-int mons_tomb_rare(int mcls)
+int mons_tomb_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2155,7 +2155,7 @@ int mons_tomb_rare(int mcls)
 }
 
 // The Enchanted Forest
-int mons_forest_level(int mcls)
+int mons_forest_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_FOREST, 1);
 
@@ -2188,7 +2188,7 @@ int mons_forest_level(int mcls)
     return (mlev);
 }
 
-int mons_forest_rare(int mcls)
+int mons_forest_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2217,7 +2217,7 @@ int mons_forest_rare(int mcls)
 }
 
 // The Halls of Zot
-int mons_hallzot_level(int mcls)
+int mons_hallzot_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_HALL_OF_ZOT, 0);
 
@@ -2275,7 +2275,7 @@ int mons_hallzot_level(int mcls)
     return (mlev);
 }
 
-int mons_hallzot_rare(int mcls)
+int mons_hallzot_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2330,7 +2330,7 @@ int mons_hallzot_rare(int mcls)
 // The Hells
 
 // The Vestibule of Hell
-int mons_vestibule_level(int mcls)
+int mons_vestibule_level(monster_type mcls)
 {
     int mlev = absdungeon_depth(BRANCH_VESTIBULE_OF_HELL, 1);
 
@@ -2340,7 +2340,7 @@ int mons_vestibule_level(int mcls)
     return mlev + 1;
 }
 
-int mons_vestibule_rare(int mcls)
+int mons_vestibule_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2382,7 +2382,7 @@ int mons_vestibule_rare(int mcls)
 }
 
 // The Iron City of Dis
-int mons_dis_level(int mcls)
+int mons_dis_level(monster_type mcls)
 {
     int mlev = 26;
 
@@ -2456,7 +2456,7 @@ int mons_dis_level(int mcls)
     return (mlev);
 }
 
-int mons_dis_rare(int mcls)
+int mons_dis_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2543,7 +2543,7 @@ int mons_dis_rare(int mcls)
 }
 
 // Gehenna - the fire hell
-int mons_gehenna_level(int mcls)
+int mons_gehenna_level(monster_type mcls)
 {
     int mlev = 26;
 
@@ -2610,7 +2610,7 @@ int mons_gehenna_level(int mcls)
     return (mlev);
 }
 
-int mons_gehenna_rare(int mcls)
+int mons_gehenna_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2699,7 +2699,7 @@ int mons_gehenna_rare(int mcls)
 }
 
 // Cocytus - the ice hell
-int mons_cocytus_level(int mcls)
+int mons_cocytus_level(monster_type mcls)
 {
     int mlev = 26;
 
@@ -2761,7 +2761,7 @@ int mons_cocytus_level(int mcls)
     return (mlev);
 }
 
-int mons_cocytus_rare(int mcls)
+int mons_cocytus_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -2840,7 +2840,7 @@ int mons_cocytus_rare(int mcls)
 }
 
 // Tartarus - the undead hell
-int mons_tartarus_level(int mcls)
+int mons_tartarus_level(monster_type mcls)
 {
     int mlev = 26;
 
@@ -2909,7 +2909,7 @@ int mons_tartarus_level(int mcls)
     return (mlev);
 }
 
-int mons_tartarus_rare(int mcls)
+int mons_tartarus_rare(monster_type mcls)
 {
     switch (mcls)
     {
