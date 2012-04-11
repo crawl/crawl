@@ -91,7 +91,7 @@ install: build
 		usr/share/icons/hicolor/32x32/apps/crawl.png
 	mkdir -p debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps
 	cp -p source/util/dcss.svg \
-		debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps/crawl.png
+		debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps/crawl.svg
 
 # Build architecture-independent files here.
 binary-indep: install
