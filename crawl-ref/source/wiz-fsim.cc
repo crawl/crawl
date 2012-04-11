@@ -588,16 +588,9 @@ void wizard_fight_sim(bool double_scale)
     _write_mon(o, *mon);
     fprintf(o,"\n");
 
-    // this block of stuff is useful whenever you're going to change skill data
-    // but don't want it to be saved (no guarantees that everything will be
-    // the same, but things should still be playable). it resets your skills
-    // after this function ends (during the destructor).
-    unwind_var<FixedVector<uint8_t, NUM_SKILLS> > skills(you.skills);
-    unwind_var<FixedVector<unsigned int, NUM_SKILLS> > skill_points(you.skill_points);
-    unwind_var<std::list<skill_type> > exercises(you.exercises);
-    unwind_var<std::list<skill_type> > exercises_all(you.exercises_all);
-    unwind_var<FixedVector<int8_t, NUM_STATS> > stats(you.base_stats);
-    unwind_var<int> xp(you.experience_level);
+    skill_state skill_backup;
+    skill_backup.save();
+    int xl = you.experience_level;
 
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
@@ -628,6 +621,12 @@ void wizard_fight_sim(bool double_scale)
 
     fprintf(o, "-----------------------------------\n\n");
     fclose(o);
+
+    skill_backup.restore_levels();
+    skill_backup.restore_training();
+    if (you.experience_level != xl)
+        set_xl(xl, false);
+
     _uninit_fsim(mon);
     mprf("Done.");
 }
