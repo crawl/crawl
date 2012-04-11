@@ -32,10 +32,13 @@
 #include "skills2.h"
 #include "species.h"
 #include "stuff.h"
+#include "wiz-you.h"
 
 #ifdef WIZARD
 
 fight_data null_fight = {0.0,0,0,0.0,0.0,0.0};
+typedef std::map<skill_type, int8_t> skill_map;
+typedef std::map<skill_type, int8_t>::iterator skill_map_iterator;
 
 static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvEffDam"; // 55 columns
@@ -390,19 +393,86 @@ void wizard_quick_fsim()
     return;
 }
 
+static std::string _init_scale(skill_map &scale, bool &xl_mode)
+{
+    std::string ret;
+
+    for (int i = 0, size = Options.fsim_scale.size(); i < size; ++i)
+    {
+        std::string sk_str = lowercase_string(Options.fsim_scale[i]);
+        if (sk_str == "xl")
+        {
+            xl_mode = true;
+            ret = "XL";
+            continue;
+        }
+
+        int divider = 1;
+        skill_type sk;
+
+        std::string::size_type sep = sk_str.find("/");
+        if (sep == std::string::npos)
+            sep = sk_str.find(":");
+        if (sep != std::string::npos)
+        {
+            std::string divider_str = sk_str.substr(sep + 1);
+            sk_str = sk_str.substr(0, sep);
+            trim_string(sk_str);
+            trim_string(divider_str);
+            divider = atoi(divider_str.c_str());
+        }
+
+        if (sk_str == "weapon")
+            sk = _equipped_skill();
+        else
+            sk = skill_from_name(sk_str.c_str());
+
+        scale[sk] = divider;
+        if (divider == 1 && ret.empty())
+            ret = skill_name(sk);
+    }
+
+    if (xl_mode)
+    {
+        you.training.init(0);
+        for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
+            you.training[it->first] = it->second;
+    }
+
+    return ret;
+}
+
 static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
 {
-    skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
-    const char* title = make_stringf("%10.10s | %s", skill_name(sk),
+    skill_map scale;
+    bool xl_mode = false;
+    std::string col_name;
+
+    if (Options.fsim_scale.empty())
+    {
+        skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
+        scale[sk] = 1;
+        col_name = skill_name(sk);
+    }
+    else
+        col_name = _init_scale(scale, xl_mode);
+
+    const char* title = make_stringf("%10.10s | %s", col_name.c_str(),
                                      _title_line).c_str();
     fprintf(o, "%s\n", title);
     mpr(title);
 
     const int iter_limit = Options.fsim_rounds;
-    for(int i = 0; i <= 27; i++)
+    for(int i = xl_mode ? 1 : 0; i <= 27; i++)
     {
         mesclr();
-        set_skill_level(sk, i);
+
+        if (xl_mode)
+            set_xl(i, true);
+        else
+            for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
+                set_skill_level(it->first, i / it->second);
+
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
         const std::string line = make_stringf("        %2d | %s", i,
                                               _fight_string(fdata).c_str());

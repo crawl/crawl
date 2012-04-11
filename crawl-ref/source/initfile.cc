@@ -881,6 +881,7 @@ void game_options::reset_options()
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_mons   = "";
+    fsim_scale.clear();
     fsim_kit.clear();
 #endif
 
@@ -2812,6 +2813,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
+    else if (key == "fsim_scale")
+        append_vector(fsim_scale, split_string(",", field));
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));
     else if (key == "fsim_rounds")

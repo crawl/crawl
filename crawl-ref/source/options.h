@@ -321,6 +321,7 @@ public:
     std::string fsim_mode;
     int         fsim_rounds;
     std::string fsim_mons;
+    std::vector<std::string> fsim_scale;
     std::vector<std::string> fsim_kit;
 #endif  // WIZARD
 
