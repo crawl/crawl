@@ -629,6 +629,12 @@ bool mons_is_native_in_branch(const monster* mons,
                 || mons->type == MONS_KILLER_BEE
                 || mons->type == MONS_QUEEN_BEE);
 
+    case BRANCH_SPIDER_NEST:
+        return (mons_genus(mons->type) == MONS_SPIDER);
+
+    case BRANCH_FOREST:
+        return (mons_genus(mons->type) == MONS_SPRIGGAN);
+
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
 
