@@ -17,8 +17,7 @@
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_level(monster_type mcls, const level_id &place)
 {
-    return branches[place.branch].mons_level_function(mcls)
-         + absdungeon_depth(place.branch, 0);
+    return branches[place.branch].mons_level_function(mcls);
 }
 
 // NOTE: Higher values returned means the monster is "more common".
@@ -89,8 +88,8 @@ int mons_null_rare(monster_type mcls)
 int mons_abyss_level(monster_type mcls)
 {
     if (mons_abyss_rare(mcls))
-        return DEPTH_ABYSS;
-    return 0;
+        return 1;
+    return 99;
 }
 
 int mons_abyss_rare(monster_type mcls)
@@ -283,8 +282,8 @@ int mons_abyss_rare(monster_type mcls)
 int mons_pan_level(monster_type mcls)
 {
     if (mons_pan_rare(mcls))
-        return DEPTH_PAN;
-    return 0;
+        return 1;
+    return 99;
 }
 
 int mons_pan_rare(monster_type mcls)

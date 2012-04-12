@@ -207,7 +207,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_dwarf_rare, mons_dwarf_level,
       'K', false, 0 },
 
-    { BRANCH_ABYSS, NUM_BRANCHES, DEPTH_ABYSS, DEPTH_ABYSS, 1,
+    { BRANCH_ABYSS, NUM_BRANCHES, 24, 24, 1,
           BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
@@ -216,7 +216,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_abyss_rare, mons_abyss_level,
       'J', false, 0 },
 
-    { BRANCH_PANDEMONIUM, NUM_BRANCHES, DEPTH_PAN, DEPTH_PAN, 1,
+    { BRANCH_PANDEMONIUM, NUM_BRANCHES, 24, 24, 1,
           BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",

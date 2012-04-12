@@ -296,8 +296,7 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
     {
         dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
         int thing_created = items(1, OBJ_MISCELLANY,
-                                  MISC_RUNE_OF_ZOT, true,
-                                  DEPTH_ABYSS, 0);
+                                  MISC_RUNE_OF_ZOT, true, 0, 0);
         if (thing_created != NON_ITEM)
         {
             mitm[thing_created].plus = RUNE_ABYSSAL;
@@ -326,7 +325,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1. Abyss in sprint games has no items.
-    int num_items = 150, items_level = DEPTH_ABYSS;
+    int num_items = 150, items_level = 52;
     int items_placed = 0;
 
     if (crawl_state.game_is_sprint())
