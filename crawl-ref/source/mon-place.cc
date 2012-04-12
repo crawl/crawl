@@ -527,10 +527,11 @@ monster_type pick_random_monster(const level_id &place, int power,
 
     const int original_level = lev_mons;
 
-    // OODs do not apply to the Abyss, Pan, etc.
-    // They do to parts(?!?) of Hell but not Zot.  Probably related to an old
-    // DEPTH_ABYSS hack removed in 3d2760f8.
-    if (is_connected_branch(place) && lev_mons <= 27)
+    // OODs do not apply to any portal vaults, any 1-level branches, Zot and
+    // hells.
+    if (is_connected_branch(place)
+        && startdepth[place.branch] < 27
+        && brdepth[place.branch] > 1)
     {
         // Apply moderate OOD fuzz where appropriate.
         lev_mons = _fuzz_mons_level(lev_mons);
