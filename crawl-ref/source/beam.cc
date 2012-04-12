@@ -454,7 +454,7 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
-        if (wearing_amulet(AMU_INACCURACY))
+        if (player_effect_inaccuracy())
             pbolt.hit = std::max(0, pbolt.hit - 5);
     }
 
@@ -463,8 +463,10 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
 
     // One special case
     if (z_type == ZAP_ICE_STORM)
+    {
         pbolt.ench_power = power; // used for radius
-
+        pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
+    }
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }
@@ -2253,6 +2255,63 @@ static void _create_feat_splash(coord_def center,
     }
 }
 
+static void _imb_explosion(actor *agent,
+                           coord_def origin,
+                           coord_def center,
+                           dice_def dam)
+{
+    const int dist = grid_distance(center, origin);
+    if (dist == 0 || !x_chance_in_y(3, 2 + 2 * dist))
+        return;
+    bolt beam;
+    beam.name           = "mystic blast";
+    beam.aux_source     = "orb of energy";
+    beam.beam_source    = agent->mindex();
+    beam.thrower        = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    beam.range          = 3;
+    beam.hit            = AUTOMATIC_HIT;
+    beam.damage         = dam;
+    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour         = MAGENTA;
+    beam.flavour        = BEAM_MMISSILE;
+    beam.obvious_effect = true;
+    beam.is_beam        = false;
+    beam.is_explosion   = false;
+    beam.is_tracer      = false;
+    beam.aimed_at_spot  = true;
+    if (you.see_cell(center))
+        beam.seen = true;
+    if (const monster* mons = agent->as_monster())
+        beam.source_name = mons->name(DESC_PLAIN, true);
+    beam.source = center;
+    bool first = true;
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            if (x == 0 && y == 0)
+                continue;
+            // Don't hit the caster (the explosion doesn't reach back that far).
+            if (origin == center + coord_def(x, y) || origin == center + coord_def(2 * x, 2 * y))
+                continue;
+            // Don't go far away from the caster (not enough momentum).
+            if (distance(origin, center + coord_def(2 * x, 2 * y)) > LOS_RADIUS_SQ)
+                continue;
+            if (x_chance_in_y(3, 4))
+            {
+                if (first)
+                {
+                    mpr("The orb of energy explodes!");
+                    noisy(10, center);
+                    first = false;
+                }
+                beam.target = center + coord_def(2 * x, 2 * y);
+                beam.fire();
+            }
+        }
+    }
+}
+
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
     if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
@@ -2406,6 +2465,9 @@ void bolt::affect_endpoint()
     {
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
     }
+
+    if (name == "orb of energy")
+        _imb_explosion(agent(), source, pos(), damage);
 }
 
 bool bolt::stop_at_target() const
@@ -2499,11 +2561,8 @@ void bolt::affect_ground()
     if (is_explosion && flavour == BEAM_SPORE
         && this->agent() && !this->agent()->is_summoned())
     {
-        if (env.grid(pos()) >= DNGN_FLOOR_MIN
-            && env.grid(pos())<= DNGN_FLOOR_MAX)
-        {
+        if (env.grid(pos()) == DNGN_FLOOR)
             env.pgrid(pos()) |= FPROP_MOLD;
-        }
 
         if (x_chance_in_y(2, 21)
            && !crawl_state.game_is_zotdef() // Turn off in Zotdef
@@ -4403,6 +4462,10 @@ void bolt::affect_monster(monster* mon)
             beam_hit -= 2 + random2(4);
     }
 
+    // The monster may block the beam.
+    if (!engulfs && is_blockable() && attempt_block(mon))
+        return;
+
     defer_rand r;
     int rand_ev = random2(mon->ev);
     int defl = mon->missile_deflection();
@@ -4437,10 +4500,6 @@ void bolt::affect_monster(monster* mon)
         }
         return;
     }
-
-    // The monster may block the beam.
-    if (!engulfs && is_blockable() && attempt_block(mon))
-        return;
 
     update_hurt_or_helped(mon);
     enable_attack_conducts(conducts);
@@ -5142,12 +5201,6 @@ void bolt::refine_for_explosion()
         colour     = LIGHTCYAN;
         damage.num = 1;
         ex_size    = 2;
-    }
-
-    if (name == "orb of energy")
-    {
-        seeMsg  = "The orb of energy explodes!";
-        hearMsg = "You hear an explosion!";
     }
 
     if (name == "metal orb")

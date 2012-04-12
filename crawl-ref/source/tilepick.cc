@@ -274,21 +274,25 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME_PITS:
     case DNGN_ENTER_VAULTS:
     case DNGN_ENTER_CRYPT:
     case DNGN_ENTER_HALL_OF_BLADES:
     case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_SNAKE_PIT:
     case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_ENTER_TOMB:
-    case DNGN_ENTER_SWAMP:
-    case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
 
+    case DNGN_ENTER_SNAKE_PIT:
+        return TILE_DNGN_ENTER_SNAKE_PIT;
+    case DNGN_ENTER_SWAMP:
+        return TILE_DNGN_ENTER_SWAMP;
     case DNGN_ENTER_SPIDER_NEST:
         return TILE_DNGN_ENTER_SPIDER_NEST;
+    case DNGN_ENTER_SHOALS:
+        return TILE_DNGN_ENTER_SHOALS;
+    case DNGN_ENTER_SLIME_PITS:
+        return TILE_DNGN_ENTER_SLIME_PITS;
 
     case DNGN_ENTER_ZOT:
         if (you.opened_zot)
@@ -2447,6 +2451,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return TILEP_MONS_AGATE_SNAIL
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
 
+        case MONS_BOULDER_BEETLE:
+            return (mon.is(MB_ROLLING)
+                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
+                    : TILEP_MONS_BOULDER_BEETLE);
+
         case MONS_ITEM_MIMIC:
         {
             tileidx_t t = tileidx_item(*mon.get_mimic_item());
@@ -2801,8 +2810,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_GIANT_SPIKED_CLUB:
         return TILE_WPN_GIANT_SPIKED_CLUB;
 
+#if TAG_MAJOR_VERSION == 32
     case WPN_ANKUS:
         return TILE_WPN_ANKUS;
+#endif
 
     case WPN_WHIP:
         return TILE_WPN_WHIP;
@@ -3903,7 +3914,7 @@ tileidx_t tileidx_item(const item_def &item)
         {
             if (item.flags & ISFLAG_KNOW_TYPE)
             {
-                return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
+                return TILE_ROD_ID_FIRST + type - STAFF_FIRST_ROD;
             }
 
             int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
@@ -4042,21 +4053,33 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     {
         int type = label - TILE_POT_ID_FIRST;
         int desc = you.item_description[IDESC_POTIONS][type] % NDSC_POT_PRI;
-        return (TILE_POTION_OFFSET + desc);
+
+        if (get_ident_type(OBJ_POTIONS, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_POTION;
+        else
+            return (TILE_POTION_OFFSET + desc);
     }
 
     if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
     {
         int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
-        return (TILE_RING_NORMAL_OFFSET + desc);
+
+        if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_RING;
+        else
+            return (TILE_RING_NORMAL_OFFSET + desc);
     }
 
     if (label >= TILE_AMU_ID_FIRST && label <= TILE_AMU_ID_LAST)
     {
         int type = label - TILE_AMU_ID_FIRST + AMU_FIRST_AMULET;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
-        return (TILE_AMU_NORMAL_OFFSET + desc);
+
+        if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_AMULET;
+        else
+            return (TILE_AMU_NORMAL_OFFSET + desc);
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
@@ -4066,7 +4089,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     {
         int type = label - TILE_WAND_ID_FIRST;
         int desc = you.item_description[IDESC_WANDS][type] % NDSC_WAND_PRI;
-        return (TILE_WAND_OFFSET + desc);
+
+        if (get_ident_type(OBJ_WANDS, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_WAND;
+        else
+            return (TILE_WAND_OFFSET + desc);
     }
 
     if (label >= TILE_STAFF_ID_FIRST && label <= TILE_STAFF_ID_LAST)
@@ -4074,7 +4101,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_STAFF_ID_FIRST;
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return (TILE_STAFF_OFFSET + desc);
+
+        if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_STAFF;
+        else
+            return (TILE_STAFF_OFFSET + desc);
     }
 
     if (label >= TILE_ROD_ID_FIRST && label <= TILE_ROD_ID_LAST)
@@ -4082,7 +4113,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         int type = label - TILE_ROD_ID_FIRST + STAFF_FIRST_ROD;
         int desc = you.item_description[IDESC_STAVES][type];
         desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return (TILE_ROD_OFFSET + desc);
+
+        if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
+            return TILE_UNSEEN_STAFF;
+        else
+            return (TILE_ROD_OFFSET + desc);
     }
 
     return (0);
@@ -4150,6 +4185,10 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
             case CLOUD_MAGIC_TRAIL:
                 ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
+                break;
+
+            case CLOUD_DUST_TRAIL:
+                ch = TILE_CLOUD_DUST_TRAIL_0 + dur;
                 break;
 
             case CLOUD_INK:

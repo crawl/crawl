@@ -669,7 +669,8 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     bool found_enhancer = false;
     int result = random2(NUM_STAVES);
 
-#define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) {result = x; found_enhancer = true;} }
+#define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) \
+                      {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
     case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;

@@ -334,7 +334,11 @@ int torment(actor *attacker, int taux, const coord_def& where)
     los.update();
     int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
+    {
+        if (attacker && !attacker->see_cell_no_trans(*ri))
+            continue;
         r += torment_monsters(*ri, attacker, taux);
+    }
     return (r);
 }
 
@@ -2090,7 +2094,8 @@ void handle_time()
         added_contamination++;
 
     bool mutagenic_randart = false;
-    if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
+    const int artefact_glow = player_effect_mutagenic();
+    if (artefact_glow)
     {
         // Reduced randart glow. Note that one randart will contribute
         // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
@@ -2267,7 +2272,8 @@ void handle_time()
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!player_res_mutation()
+                    || one_chance_in(10)))
             {
                 evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
             }
@@ -3103,6 +3109,11 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
+
+    // Skill calculations with a massive scale would overflow, cap it.
+    // The worst case, a -3 rod, takes 17000 aut to fully charge.
+    // -4 rods don't recharge at all.
+    aut = std::min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
 
     int rate = 4 + short(rod.props["rod_enchantment"]);
 

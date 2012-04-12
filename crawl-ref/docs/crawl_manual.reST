@@ -1555,8 +1555,8 @@ Nagas
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Their
   body shape also prevents them from gaining full protection from most armour. A
-  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. They
-  can also use their tails to constrict their foes.
+  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. Their
+  tails eventually grow strong enough to constrict their foes in combat.
 
   Every now and then, a Naga can spit poison; the range, accuracy and damage of
   this poison increases with the Naga's experience level.
@@ -1835,7 +1835,8 @@ Grey Draconians
 
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
-  good at air magic but feel cumbersome with earth magic.
+  good at air magic but feel cumbersome with earth magic. Their wings will
+  eventually grow larger, allowing them to fly temporarily.
 
 Mottled Draconians
   are somewhat in touch with fire, yet are not weak with ice. They can spit
@@ -2104,8 +2105,8 @@ There are a number of individual weapon skills for missile weapons:
 Throwing is the skill for all things hurled without a launcher: axes, spears,
 stones, nets, etc. The other skills refer to various types of missiles shot with
 a launcher. An exception to this are needles: these are launched using blowguns,
-an action which uses the Throwing skill. Since stones can be thrown
-without launchers to good effect, these skills crosstrain:
+an action which uses the Throwing skill. Since stones can be thrown without
+launchers to good effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2161,9 +2162,9 @@ Dodging
 
 Stealth
   Helps you avoid being noticed, and makes monsters more likely to lose track of
-  you when you leave their line of sight. Try not to wear heavy armour or be
-  encumbered if you want to be stealthy. Large creatures (like Trolls) are bad
-  at stealth. The big exception are Nagas, which are unusually stealthy.
+  you when you leave their line of sight. Wearing heavy armour or being
+  encumbered penalises stealth attempts. Large creatures (like Trolls) are bad
+  at stealth, except for Nagas, which are unusually stealthy.
 
 Stabbing
   Lets you make a very powerful first strike against a sleeping/resting monster
@@ -2197,10 +2198,10 @@ Evocations
   have certain powers (like crystal balls) work better for characters trained in
   this skill. Like Invocations, Evocations is easier to learn than other skills.
 
-  Invocations and Evocations also both affect your maximum magical reserves,
+  Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
-  bonuses are not cumulative - the highest contribution from Spellcasting,
-  Invocations and Evocations is used.
+  bonuses are not cumulative; the highest contribution from Spellcasting,
+  Invocations or Evocations is used.
 
 ****************************************
 4. List of keys and commands

@@ -28,6 +28,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         if (!map_knowledge.bounds())
             return;
 
+        var t1 = new Date();
+
         if (map_knowledge.reset_bounds_changed())
         {
             minimap.center();
@@ -51,6 +53,13 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         map_knowledge.reset_dirty();
 
         monster_list.update();
+
+        var render_time = (new Date() - t1);
+        if (!window.render_times)
+            window.render_times = [];
+        if (window.render_times.length > 20)
+            window.render_times.shift();
+        window.render_times.push(render_time);
     }
 
     function clear_map()

@@ -474,6 +474,23 @@ int monster::damage_type(int which_attack)
     return (get_vorpal_type(*mweap));
 }
 
+int monster::has_claws(bool allow_tran) const
+{
+    for (int i = 0; i < MAX_NUM_ATTACKS; i++)
+    {
+        const mon_attack_def atk = mons_attack_spec(this, i);
+        if (atk.type == AT_CLAW)
+        {
+            // Some better criteria would be better.
+            if (body_size() < SIZE_LARGE || atk.damage < 15)
+                return 1;
+            return 3;
+        }
+    }
+
+    return 0;
+}
+
 item_def *monster::missiles()
 {
     return (inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL);
@@ -2974,7 +2991,7 @@ int monster::warding() const
 {
     const item_def *w = primary_weapon();
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
-        return 30;
+        return 60;
     return 0;
 }
 
@@ -4289,6 +4306,10 @@ void monster::calc_speed()
         break;
     case MONS_HELL_BEAST:
         speed = 10 + random2(8);
+    case MONS_BOULDER_BEETLE:
+        // Boost boulder beetle speed when rolling
+        if (has_ench(ENCH_ROLLING))
+            speed = 14;
     default:
         break;
     }
@@ -5065,7 +5086,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
             if (monster *mons = mons_place(
                                   mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, 0, god)))
+                                            jpos, foe, MG_DONT_COME, god)))
             {
                 // Don't allow milking the royal jelly.
                 mons->flags |= MF_NO_REWARD;

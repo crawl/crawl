@@ -137,7 +137,7 @@ trick
 
 gambit
 
-strategy
+trap
 %%%%
 _smoke_or_steam_
 
@@ -2703,7 +2703,7 @@ w:50
 
 @The_monster@ says, "Did all the warriors here go to shield school or something?"
 
-@The_monster@ says, "So, are the fast ones nagas, or not?"
+@The_monster@ says, "So, why is that serpent talking?"
 
 @The_monster@ says, "What sort of name is 'naga' anyway? They're not even good at nagging."
 
@@ -2713,7 +2713,7 @@ w:50
 
 @The_monster@ says, "I'm sick of this place. Or maybe that's poison..."
 
-@The_monster@ says, "At least the fast ones don't have weapons."
+@The_monster@ says, "I hate mutated serpents."
 
 @The_monster@ says, "So, nagas are stealthy? Don't make me laugh."
 
@@ -2953,6 +2953,10 @@ w:2
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
+
+@The_monster@ says, "Angels painted black are so last century."
+
+@The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
 %%%%
 Okawaru Donald
 
@@ -4180,6 +4184,22 @@ _Ijyb_rare_
 @The_monster@ screams @at_foe@, "No! No, no, no, no!"
 
 @The_monster@ screams @at_foe@, "I no like you!"
+%%%%
+confused Ijyb
+
+@The_monster@ cowers and screams, "My head! Aaaah! Get out now!"
+
+@The_monster@ screams @at_foe@, "Me give you whole level! Then you leave me be!"
+
+@The_monster@ screams @at_foe@, "Me still stronger! You very nasty!"
+
+@The_monster@ screams @at_foe@, "Me deserve better than this!"
+
+@The_monster@ screams @at_foe@, "Me be nice to you! Me promise!"
+
+@The_monster@ screams @at_foe@, "Me back to killing you soon!"
+
+VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a pretty merfolk witch
@@ -4669,6 +4689,20 @@ _Maud_rare_
 @The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
 
 @The_monster@ asks @foe,@ "Will you think of me as you die?"
+%%%%
+confused Maud
+
+@The_monster@ thinks out loud, "I seem to be forgetting something..."
+
+@The_monster@ asks @foe,@ "What was I looking for, again?"
+
+@The_monster@ thinks out loud, "Enter... Enterror?"
+
+@The_monster@ wonders, "Who am I anyway?"
+
+VISUAL:@The_monster@'s expression loosens as @possessive@ mind turns inward.
+
+VISUAL:@The_monster@ slowly smiles as @possessive@ mind releases itself from mundane concerns.
 ## END Maud ##
 %%%%
 ############ MAURICE ### A thief.
@@ -5624,8 +5658,6 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 @The_monster@ asks @foe,@ "Do you want it fast or slow?"
 
 @The_monster@ says @to_foe@, "Don't bother to defend, it's @_pointless_@."
-
-@The_monster@ says @to_foe@, "I'll show you a few @_ploy_@s."
 
 @The_monster@ shouts @at_foe@, "Now you die!"
 

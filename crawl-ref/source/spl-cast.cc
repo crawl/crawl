@@ -373,7 +373,7 @@ int spell_fail(spell_type spell)
         }
     }
 
-    chance2 += 10 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
 
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
@@ -494,7 +494,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
+    if (player_effect_archmagi())
         enhanced++;
 
     enhanced += augmentation_amount();
@@ -536,7 +536,7 @@ static bool _can_cast()
     }
 
     // Randart weapons.
-    if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
+    if (player_effect_nocast())
     {
         mpr("Something interferes with your magic!");
         return false;
@@ -726,7 +726,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
-    const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
@@ -746,7 +745,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     dec_mp(spell_mana(spell));
 
-    if (!staff_energy && you.is_undead != US_UNDEAD)
+    if (you.is_undead != US_UNDEAD)
     {
         const int spellh = calc_hunger(spell_hunger(spell));
         if (spellh > 0)
@@ -1691,11 +1690,13 @@ static double _get_true_fail_rate(int raw_fail)
         //PIE: the negative term takes the maximum of 100 (or 99) into
         //consideration.  Note that only one term can exceed it in this case,
         //which is why this works.
-        return (double) (_tetrahedral_number(target) - 2*_tetrahedral_number(target-101) - _tetrahedral_number(target-100))/1020100;
+        return (double) (_tetrahedral_number(target)
+                         - 2*_tetrahedral_number(target - 101)
+                         - _tetrahedral_number(target - 100)) / 1020100;
     }
     //The random2avg distribution is symmetric, so the last interval is
     //essentially the same as the first interval.
-    return (double) (1020100 - _tetrahedral_number(300 - target))/1020100;
+    return (double) (1020100 - _tetrahedral_number(300 - target)) / 1020100;
 
 }
 

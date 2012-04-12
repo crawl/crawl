@@ -45,10 +45,14 @@ static map_section_type apply_vault_definition(
 
 static bool resolve_map(map_def &def);
 
+static bool _map_safe_vault_place(const map_def &map,
+                                  const coord_def &c,
+                                  const coord_def &size);
+
 // Globals: Use unwind_var to modify!
 
 // Checks whether a map place is valid.
-map_place_check_t map_place_valid = map_safe_vault_place;
+map_place_check_t map_place_valid = _map_safe_vault_place;
 
 // If non-empty, any floating vault's @ exit must land on these point.
 point_vector map_anchor_points;
@@ -131,20 +135,20 @@ static map_section_type write_vault(map_def &mdef,
     return (MAP_NONE);
 }
 
-void dgn_flush_map_environments()
+static void _dgn_flush_map_environments()
 {
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
 }
 
-void dgn_flush_map_environment_for(const std::string &mapname)
+static void _dgn_flush_map_environment_for(const std::string &mapname)
 {
     dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
 }
 
 static bool resolve_map_lua(map_def &map)
 {
-    dgn_flush_map_environment_for(map.name);
+    _dgn_flush_map_environment_for(map.name);
     map.reinit();
 
     std::string err = map.run_lua(true);
@@ -301,8 +305,10 @@ bool resolve_subvault(map_def &map)
     return (true);
 }
 
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
-                                int margin)
+// Given a rectangular region, slides it to fit into the map. size must be
+// smaller than (GXM,GYM).
+static void _fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
+                                        int margin)
 {
     const int X_1(X_BOUND_1 + margin);
     const int X_2(X_BOUND_2 - margin);
@@ -359,9 +365,9 @@ static bool _may_overwrite_feature(const coord_def p,
     return (true);
 }
 
-bool map_safe_vault_place(const map_def &map,
-                          const coord_def &c,
-                          const coord_def &size)
+static bool _map_safe_vault_place(const map_def &map,
+                                  const coord_def &c,
+                                  const coord_def &size)
 {
     if (size.zero())
         return (true);
@@ -508,13 +514,13 @@ static bool apply_vault_grid(map_def &def,
         if (map_bounds(place.pos))
         {
             start = place.pos - size / 2;
-            fit_region_into_map_bounds(start, size, minivault ? MAPGEN_BORDER : 0);
+            _fit_region_into_map_bounds(start, size, minivault ? MAPGEN_BORDER : 0);
         }
         else if (minivault)
         {
             start = _find_minivault_place(place, check_place);
             if (map_bounds(start))
-                fit_region_into_map_bounds(start, size, MAPGEN_BORDER);
+                _fit_region_into_map_bounds(start, size, MAPGEN_BORDER);
         }
         else
             start = def.float_place();
@@ -1065,7 +1071,7 @@ static std::set<std::string> map_files_read;
 
 extern int yylineno;
 
-void reset_map_parser()
+static void _reset_map_parser()
 {
     lc_map.init();
     lc_range.reset();
@@ -1301,7 +1307,7 @@ static void parse_maps(const std::string &s)
 #endif
 
     time_t mtime = file_modtime(dat);
-    reset_map_parser();
+    _reset_map_parser();
 
     extern int yyparse(void);
     extern FILE *yyin;
@@ -1319,7 +1325,7 @@ static void parse_maps(const std::string &s)
 void read_map(const std::string &file)
 {
     parse_maps(lc_desfile = datafile_path(file));
-    dgn_flush_map_environments();
+    _dgn_flush_map_environments();
     // Force GC to prevent heap from swelling unnecessarily.
     dlua.gc();
 }
@@ -1330,7 +1336,8 @@ void read_maps()
         end(1, false, "Lua error: %s", dlua.error.c_str());
 
     lc_loaded_maps.clear();
-    sanity_check_maps();
+
+    dlua.execfile("dlua/sanity.lua", true, true);
 }
 
 // If a .dsc file has been changed under the running Crawl, discard
@@ -1394,11 +1401,6 @@ void run_map_local_preludes()
 const map_def *map_by_index(int index)
 {
     return (&vdefs[index]);
-}
-
-void sanity_check_maps()
-{
-    dlua.execfile("dlua/sanity.lua", true, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////

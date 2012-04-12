@@ -48,7 +48,8 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
 
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true,
-                      const coord_def& from = INVALID_COORD);
+                      const coord_def& from = INVALID_COORD,
+                      const bool old_blood = false);
 void blood_spray(const coord_def& where, monster_type mon, int level);
 void generate_random_blood_spatter_on_level(
     const map_mask *susceptible_area = NULL);
@@ -125,6 +126,7 @@ void swap_with_monster(monster* mon_to_swap);
 
 void wear_id_type(item_def &item);
 void maybe_id_ring_TC();
+void maybe_id_resist(beam_type flavour);
 
 int apply_chunked_AC(int dam, int ac);
 

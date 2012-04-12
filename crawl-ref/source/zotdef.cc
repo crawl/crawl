@@ -928,7 +928,6 @@ bool create_trap(trap_type spec_type)
     args.top_prompt += trap_name(spec_type);
     args.top_prompt += " trap where?";
     direction(abild, args);
-    const dungeon_feature_type grid = grd(abild.target);
     if (!abild.isValid)
     {
         if (abild.isCancel)
@@ -936,7 +935,7 @@ bool create_trap(trap_type spec_type)
         return (false);
     }
     // only try to create on floor squares
-    if (!feat_is_floor(grid))
+    if (grd(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
         return (false);

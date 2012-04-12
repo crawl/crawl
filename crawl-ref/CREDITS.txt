@@ -56,6 +56,7 @@ Trent W. Buck
 Joe Buzzelli
 Henry Cipolla
 Aaron Curtis
+Simon Curtis
 Denzi
 Lothar Dierkes
 Mike Drinen
@@ -136,6 +137,7 @@ Solf
 Michael Spang
 Jan 'heftig' Steffens
 Johan Strandell
+Ben Striegel
 Pavel 'Curio' Svinarchuk
 Matthew Tadd
 William Tanksley, Jr.

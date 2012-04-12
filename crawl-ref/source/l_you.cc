@@ -127,7 +127,6 @@ LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
 LUARET1(you_swift, boolean, you.duration[DUR_SWIFTNESS])
 LUARET1(you_paralysed, boolean, you.paralysed())
-LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -169,6 +168,8 @@ LUARET1(you_see_cell_no_trans_rel, boolean,
 LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 LUARET1(you_max_burden, number, carrying_capacity(BS_UNENCUMBERED))
 LUARET1(you_burden, number, you.burden)
+LUARET1(you_constricted, boolean, you.is_constricted())
+LUARET1(you_constricting, boolean, you.is_constricting())
 
 static int l_you_genus(lua_State *ls)
 {
@@ -261,6 +262,16 @@ static int you_can_consume_corpses(lua_State *ls)
                     can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
                     || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
                   );
+    return (1);
+}
+
+LUAFN(you_caught)
+{
+    if (you.caught())
+        lua_pushstring(ls, held_status(&you));
+    else
+        lua_pushnil(ls);
+
     return (1);
 }
 
@@ -367,6 +378,8 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "max_burden",   you_max_burden },
     { "burden",       you_burden },
+    { "constricted",  you_constricted },
+    { "constricting", you_constricting },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },

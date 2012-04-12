@@ -1,6 +1,6 @@
 # A bot to exercise player-vs-monsters combat and Abyss generation.
 #
-# Usage: rm -f saves/Avyss_walker.cs && ./crawl --rc test/stress/abyss.rc
+# Usage: rm -f saves/Abyss_walker.cs && ./crawl --rc test/stress/abyss.rc
 #
 # Wizmode is needed.
 

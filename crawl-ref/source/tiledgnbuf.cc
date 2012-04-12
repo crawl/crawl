@@ -190,8 +190,8 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         tileidx_t basetile;
         if (is_wall)
         {
-            basetile = TILE_WALL_BLOOD_S + tile_dngn_count(TILE_WALL_BLOOD_S)
-                                           * cell.blood_rotation;
+            basetile = cell.old_blood ? TILE_WALL_OLD_BLOOD : TILE_WALL_BLOOD_S;
+            basetile += tile_dngn_count(basetile) * cell.blood_rotation;
         }
         else
             basetile = TILE_BLOOD;

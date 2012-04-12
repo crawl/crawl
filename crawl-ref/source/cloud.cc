@@ -23,6 +23,7 @@
 #include "fprop.h"
 #include "godconduct.h"
 #include "los.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "monster.h"
 #include "mapmark.h"
@@ -1106,7 +1107,10 @@ int actor_apply_cloud(actor *act)
         cloud.announce_actor_engulfed(act);
     }
     if (player && cloud_max_base_damage > 0 && resist > 0)
+    {
         canned_msg(MSG_YOU_RESIST);
+        maybe_id_resist(cloud_flavour);
+    }
 
     if (player && cloud_flavour != BEAM_NONE)
         expose_player_to_element(cloud_flavour, 7);
@@ -1191,6 +1195,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_NONE:
     case CLOUD_TLOC_ENERGY:
     case CLOUD_MAGIC_TRAIL:
+    case CLOUD_DUST_TRAIL:
     case CLOUD_GLOOM:
     case CLOUD_INK:
     case CLOUD_DEBUGGING:
@@ -1240,9 +1245,17 @@ static const char *_terse_cloud_names[] =
     "flame", "noxious fumes", "freezing vapour", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
-    "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
+    "steam", "gloom", "ink",
+#if TAG_MAJOR_VERSION > 32
+    "calcifying dust",
+#endif
+    "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
-    "raging winds", "calcifying dust",
+    "raging winds",
+#if TAG_MAJOR_VERSION == 32
+    "calcifying dust",
+#endif
+    "sparse dust",
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1251,9 +1264,16 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "thick gloom", "ink", "blessed fire",
-    "dark miasma", "thin mist", "seething chaos", "the rain",
-    "mutagenic fog", "magical condensation", "raging winds", "calcifying dust",
+    "a cloud of scalding steam", "thick gloom", "ink",
+#if TAG_MAJOR_VERSION > 32
+    "calcifying dust",
+#endif
+    "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
+    "mutagenic fog", "magical condensation", "raging winds",
+#if TAG_MAJOR_VERSION == 32
+    "calcifying dust",
+#endif
+    "sparse dust",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1441,6 +1461,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_MAGIC_TRAIL:
         which_colour = ETC_MAGIC;
+        break;
+
+    case CLOUD_DUST_TRAIL:
+        which_colour = ETC_EARTH;
         break;
 
     case CLOUD_HOLY_FLAMES:

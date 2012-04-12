@@ -180,7 +180,9 @@ static bool _snakable_weapon(const item_def& item)
     return (item.base_type == OBJ_WEAPONS
             && !is_artefact(item)
             && (item.sub_type == WPN_CLUB
+#if TAG_MAJOR_VERSION == 32
                 || item.sub_type == WPN_ANKUS
+#endif
                 || item.sub_type == WPN_GIANT_CLUB
                 || item.sub_type == WPN_GIANT_SPIKED_CLUB
                 || item.sub_type == WPN_SPEAR
@@ -1214,7 +1216,7 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
+coord_def find_gateway_location (actor* caster)
 {
     coord_def point = coord_def(0, 0);
 
@@ -1224,7 +1226,6 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
-    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1237,7 +1238,7 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
+            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
@@ -1274,15 +1275,19 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
-                                is_player ? "" : caster->as_monster()->full_name(DESC_A, true),
-                                is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                is_player ? ""
+                                    : caster->as_monster()->full_name(DESC_A, true),
+                                is_player ? BEH_FRIENDLY
+                                    : attitude_creation_behavior(
+                                      caster->as_monster()->attitude),
                                 god,
                                 pow));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
 
         noisy(10, point);
-        mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
+        mpr("The dungeon shakes, a horrible noise fills the air, and a portal "
+            "to some otherworldly place is opened!", MSGCH_WARN);
 
         if (one_chance_in(5) && caster->is_player())
         {

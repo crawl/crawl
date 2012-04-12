@@ -39,6 +39,10 @@ stop = Your stomach is not as upset anymore. and you want to eat\.
 stop = If you dropped the corpses? in your pack you could butcher
 ignore = Your stomach is not as upset anymore
 
+# Enchantments
+#
+ignore = Your skin is crawling a little less now.
+
 # Ghouls
 #
 : if you.race() == "Ghoul" then

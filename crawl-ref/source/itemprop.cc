@@ -193,12 +193,14 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
+#if TAG_MAJOR_VERSION == 32
     { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON,  1 },
+        DAMV_CRUSHING | DAM_PIERCE,  1 },
+#endif
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
@@ -207,13 +209,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
         SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 2 },
+        DAMV_CRUSHING | DAM_PIERCE, 2 },
     { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
@@ -222,7 +224,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 10 },
+        DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
 #if TAG_MAJOR_VERSION == 32
@@ -324,7 +326,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
@@ -422,30 +424,30 @@ static int Food_index[NUM_FOODS];
 static food_def Food_prop[NUM_FOODS] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
-    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1, FFL_NONE },
+    { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
     { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3, FFL_NONE },
-    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
+    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
 
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_FRUIT},
-    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1, FFL_FRUIT},
-    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1, FFL_FRUIT},
-    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1, FFL_FRUIT},
-    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1, FFL_FRUIT},
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1, FFL_FRUIT},
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1, FFL_FRUIT},
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1, FFL_FRUIT},
-    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1, FFL_FRUIT},
-    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1, FFL_FRUIT},
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 2, FFL_FRUIT},
+    { FOOD_ORANGE,       "orange",       1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_BANANA,       "banana",       1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_LEMON,        "lemon",        1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_PEAR,         "pear",          700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APPLE,        "apple",         700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APRICOT,      "apricot",       700,  -200,   200,  15, 2, FFL_FRUIT},
+    { FOOD_CHOKO,        "choko",         600,  -200,   200,  30, 2, FFL_FRUIT},
+    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_LYCHEE,       "lychee",        600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_STRAWBERRY,   "strawberry",    200,   -50,    50,   5, 2, FFL_FRUIT},
+    { FOOD_GRAPE,        "grape",         100,   -20,    20,   2, 1, FFL_FRUIT},
+    { FOOD_SULTANA,      "sultana",        70,   -20,    20,   1, 1, FFL_FRUIT},
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1, FFL_NONE },
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
-    { FOOD_PIZZA,        "pizza",        1500,  -100,     0,  40, 1, FFL_NONE },
-    { FOOD_CHEESE,       "cheese",       1200,   100,     0,  40, 1, FFL_NONE },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  5000,     0,     0,  55, 2, FFL_NONE },
+    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
     { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE },
 };
 
@@ -531,6 +533,10 @@ void do_curse_item(item_def &item, bool quiet)
 
     // This might prevent a carried item from allowing training.
     maybe_change_train(item, false);
+
+    // If the item isn't equipped, you might not be able to use it for training.
+    if (!item_is_equipped(item))
+        item_skills(item, you.stop_train);
 
     item.flags |= ISFLAG_CURSED;
 
@@ -1406,7 +1412,6 @@ int weapon_rarity(int w_type)
     case WPN_GREAT_MACE:
         return (3);
 
-    case WPN_ANKUS:
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:
@@ -1421,6 +1426,7 @@ int weapon_rarity(int w_type)
 #if TAG_MAJOR_VERSION == 32
     case WPN_KATANA:
     case WPN_BLESSED_KATANA:
+    case WPN_ANKUS:
 #endif
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
@@ -2355,24 +2361,21 @@ bool is_fizzing_potion (const item_def &item)
     return (item.sub_type == POT_FIZZING);
 }
 
-// Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
-
-    // XXX: This needs to be better merged with the mutation system.
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
     int ret = food.value;
 
-    ret += (carn * food.carn_mod);
-    ret += (herb * food.herb_mod);
+    ret += carn * food.carn_mod;
+    ret += herb * food.herb_mod;
 
-    return ((ret > 0) ? div_rand_round(ret, food.turns) : 0);
+    return ret;
 }
 
 int food_turns(const item_def &item)

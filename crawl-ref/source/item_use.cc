@@ -1263,6 +1263,11 @@ static bool _fire_validate_item(int slot, std::string &err)
         err = "You are wearing that object!";
         return (false);
     }
+    else if (you.inv[slot].base_type == OBJ_ORBS)
+    {
+       err = "You don't feel like leaving the orb behind!";
+       return (false);
+    }
     return (true);
 }
 
@@ -3259,7 +3264,10 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     const item_def *rings[8];
     char slots[8];
 
-    for (int i = 0; i < 8; i++)
+    const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
+                           ? 8 : 2);
+
+    for (int i = 0; i < num_rings; i++)
     {
         rings[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
         ASSERT(rings[i]);
@@ -3270,12 +3278,12 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 //    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
 
     mprf(MSGCH_PROMPT,
-         "You're wearing eight rings. Remove which one?");
+         "You're wearing all the rings you can. Remove which one?");
 //I think it looks better without the letters.
 // (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < num_rings; i++)
         mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
     flush_prev_message();
 
@@ -3289,7 +3297,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     do
     {
         c = getchm();
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < num_rings; i++)
             if (c == slots[i])
             {
                 eqslot = EQ_RING_ONE + i;
@@ -3456,6 +3464,12 @@ static bool _swap_rings(int ring_slot)
     const item_def* lring = you.slot_item(EQ_LEFT_RING, true);
     const item_def* rring = you.slot_item(EQ_RIGHT_RING, true);
 
+    // If ring slots were melded, we should have been prevented from
+    // putting on the ring at all.  If it becomes possible for just
+    // one ring slot to be melded, the subsequent code will need to
+    // be revisited, so prevent that, too.
+    ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
+
     if (lring->cursed() && rring->cursed())
     {
         mprf("You're already wearing two cursed rings!");
@@ -3509,42 +3523,51 @@ static bool _swap_rings_octopode(int ring_slot)
     int array = 0;
     int unwanted = 0;
     int cursed = 0;
-    int uncursed = 0;
+    int melded = 0; // Both melded rings and unavailable slots.
+    int available = 0;
 
     for (int slots = EQ_RING_ONE;
          slots < NUM_EQUIP && array < 8;
          ++slots, ++array)
     {
-        if (ring[array] != NULL)
+        if (!you_tran_can_wear(slots) || you.melded[slots])
+            melded++;
+        else if (ring[array] != NULL)
         {
             if (ring[array]->cursed())
-            {
                 cursed++;
-                continue;
-            }
             else
             {
-                uncursed++;
+                available++;
                 unwanted = you.equip[slots];
             }
         }
     }
 
     // We can't put a ring on, because we're wearing 8 cursed ones.
-    if (cursed == 8)
+    if (melded == 8)
     {
-        mpr("You're already wearing eight cursed rings! Isn't that enough for you?");
+        // Shouldn't happen, because hogs and bats can't put on jewellery at
+        // all and thus won't get this far.
+        mpr("You can't wear that in your present form.");
         return (false);
     }
-    // The simple case - only one uncursed ring.
-    else if (uncursed == 1)
+    else if (available == 0)
+    {
+        mprf("You're already wearing %s cursed rings!%s",
+             number_in_words(cursed).c_str(),
+             (cursed == 8 ? " Isn't that enough for you?" : ""));
+        return (false);
+    }
+    // The simple case - only one available ring.
+    else if (available == 1)
     {
         if (!remove_ring(unwanted, false))
             return (false);
     }
     // We can't put a ring on without swapping - because we found
-    // multiple uncursed rings.
-    else if (uncursed > 1)
+    // multiple available rings.
+    else if (available > 1)
     {
         unwanted = _prompt_ring_to_remove_octopode(ring_slot);
         if (!remove_ring(unwanted, false))
@@ -3601,15 +3624,27 @@ static bool _puton_item(int item_slot)
     {
         blinged_octopode = true;
         for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
+        {
+            // Skip unavailable slots.
+            if (!you_tran_can_wear(eq))
+                continue;
+
             if (!you.slot_item((equipment_type)eq, true))
             {
                 blinged_octopode = false;
                 break;
             }
+        }
     }
 
     if (!is_amulet)     // i.e. it's a ring
     {
+        if (!you_tran_can_wear(item))
+        {
+            mpr("You can't wear that in your present form.");
+            return (false);
+        }
+
         const item_def* gloves = you.slot_item(EQ_GLOVES, false);
         // Cursed gloves cannot be removed.
         if (gloves && gloves->cursed())
@@ -3657,6 +3692,10 @@ static bool _puton_item(int item_slot)
         for (hand_used = EQ_RING_ONE; hand_used <= EQ_RING_EIGHT;
              hand_used = (equipment_type)(hand_used + 1))
         {
+            // Skip unavailble slots.
+            if (!you_tran_can_wear(hand_used))
+                continue;
+
             if (!you.slot_item(hand_used, true))
                 break;
         }
@@ -3688,12 +3727,6 @@ static bool _puton_item(int item_slot)
 
 bool puton_ring(int slot)
 {
-    if (!player_can_handle_equipment())
-    {
-        mpr("You can't put on anything in your present form.");
-        return (false);
-    }
-
     int item_slot;
 
     if (inv_count() < 1)
@@ -3725,15 +3758,10 @@ bool puton_ring(int slot)
 
 bool remove_ring(int slot, bool announce)
 {
-    if (!player_can_handle_equipment())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return (false);
-    }
-
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
     bool has_jewellery = false;
+    bool has_melded = false;
     const equipment_type first = you.species == SP_OCTOPODE ? EQ_AMULET
                                                             : EQ_LEFT_RING;
     const equipment_type last = you.species == SP_OCTOPODE ? EQ_RING_EIGHT
@@ -3753,11 +3781,17 @@ bool remove_ring(int slot, bool announce)
 
             has_jewellery = true;
         }
+        else if (you.melded[eq])
+            has_melded = true;
     }
 
     if (!has_jewellery)
     {
-        mpr("You aren't wearing any rings or amulets.");
+        if (has_melded)
+            mpr("You aren't wearing any unmelded rings or amulets.");
+        else
+            mpr("You aren't wearing any rings or amulets.");
+
         return (false);
     }
 
@@ -3886,15 +3920,9 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID || !player_can_handle_equipment())
     {
         mpr("You have no means to grasp a wand firmly enough.");
-        return;
-    }
-
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
         return;
     }
 
@@ -4205,7 +4233,7 @@ void drink(int slot)
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (you.form == TRAN_BAT)
     {
        canned_msg(MSG_PRESENT_FORM);
        _vampire_corpse_help();
@@ -4522,14 +4550,12 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_CHAOS:
         mprf("%s erupts in a glittering mayhem of all colours.", itname.c_str());
-        success = !one_chance_in(3); // You mean, you wanted this... guaranteed?
         // need to affix it immediately, otherwise transformation will break it
-        if (success)
-            you.duration[DUR_WEAPON_BRAND] = 0;
+        you.duration[DUR_WEAPON_BRAND] = 0;
         xom_is_stimulated(200);
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
-        switch (random2(success ? 2 : 4))
+        switch (random2(coinflip() ? 2 : 4))
         {
         case 3:
             if (transform(50, coinflip() ? TRAN_PIG :
@@ -4620,7 +4646,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         || (wpn.base_type == OBJ_WEAPONS
             && wpn.sub_type == WPN_BLOWGUN))
     {
-        acc = std::max(acc, dam);
+        acc = acc + dam;
         dam = 0;
     }
 
@@ -4994,12 +5020,6 @@ void read_scroll(int slot)
         return;
     }
 
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        return;
-    }
-
     if (you.confused())
     {
         mpr("You're too confused.");
@@ -5132,7 +5152,7 @@ void read_scroll(int slot)
         // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
         // mpr("Your reading takes too long for the scroll to take effect.");
         // mpr("Your low mental capacity makes reading really difficult. You give up!");
-        mpr("You try to decipher the scroll, but fail in the attempt.");
+        mpr("You almost manage to decipher the scroll, but fail in this attempt.");
         return;
     }
 
@@ -5481,7 +5501,7 @@ bool wearing_slot(int inv_slot)
 
 bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
+    return (player_effect_notele(calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
             || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
@@ -5491,7 +5511,7 @@ bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (wearing_amulet(AMU_STASIS, calc_unid))
+    if (player_effect_stasis(calc_unid))
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
 

@@ -399,14 +399,20 @@ void antimagic()
         DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
 
+    bool need_msg = false;
+
     if (!you.permanent_levitation() && !you.permanent_flight()
         && you.duration[DUR_LEVITATION] > 11)
     {
         you.duration[DUR_LEVITATION] = 11;
+        need_msg = true;
     }
 
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
+    {
         you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+        need_msg = true;
+    }
 
     if (you.duration[DUR_TELEPORT] > 0)
     {
@@ -419,8 +425,22 @@ void antimagic()
         you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
+    {
         if (you.duration[dur_list[i]] > 1)
+        {
             you.duration[dur_list[i]] = 1;
+            need_msg = true;
+        }
+    }
+
+    bool danger = need_expiration_warning(you.pos());
+
+    if (need_msg)
+    {
+        mprf(danger ? MSGCH_DANGER : MSGCH_WARN,
+             "%sYour magical effects are unravelling.",
+             danger ? "Careful! " : "");
+    }
 
     contaminate_player(-1 * (1 + random2(5)));
 }
@@ -505,6 +525,9 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             place.set(where.x + random2(fuzz_diam) - fuzz_radius,
                       where.y + random2(fuzz_diam) - fuzz_radius);
 
+            if (!map_bounds(place))
+                continue;
+
             // If the player would be able to see a monster at this location
             // don't place it there.
             if (you.see_cell(place))
@@ -516,7 +539,7 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
 
             // Don't print monsters on terrain they cannot pass through,
             // not even if said terrain has since changed.
-            if (map_bounds(place) && !env.map_knowledge(place).changed()
+            if (!env.map_knowledge(place).changed()
                 && mon->can_pass_through_feat(grd(place)))
             {
                 found_good = true;
@@ -839,7 +862,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
-            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            if (!proceed && feat_is_reachable_past(grd(*ai)))
             {
                 success = false;
                 none_vis = false;

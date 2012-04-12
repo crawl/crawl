@@ -843,6 +843,7 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
                          && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
     {
+        find_first = false;
         return DNGN_ENTER_HELL;
     }
 

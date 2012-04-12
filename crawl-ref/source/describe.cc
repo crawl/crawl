@@ -23,7 +23,6 @@
 #include "artefact.h"
 #include "cio.h"
 #include "clua.h"
-#include "coord.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -2031,7 +2030,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                                     << max_charges << " charges.";
                     }
                     else
-                        description << "\nIt is fully charged.";
+                        description << "\nIts capacity can be increased no further.";
 
                     const int recharge_rate = short(item.props["rod_enchantment"]);
                     if (recharge_rate < max_recharge_rate)
@@ -3455,9 +3454,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (mi.pos.origin() || !monster_at(player2grid(mi.pos)))
+    if (mi.pos.origin() || !monster_at(mi.pos))
         return; // not a real monster
-    monster& mons = *monster_at(player2grid(mi.pos));
+    monster& mons = *monster_at(mi.pos);
 
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
@@ -3484,7 +3483,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << "; " << comma_separated_line(attitude.begin(),
                                                  attitude.end(),
                                                  "; ", "; ");
-    inf.body << "\n";
 
     if (mons.can_use_spells())
     {
@@ -3504,7 +3502,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                 inf.body << "    " << i << ": "
                          << spell_title(hspell_pass[i])
                          << " (" << static_cast<int>(hspell_pass[i])
-                         << ")\n";
+                         << ")";
             }
         }
     }
@@ -3516,10 +3514,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         {
             if (!has_item)
             {
-                inf.body << "\nMonster Inventory:\n";
+                inf.body << "\n\nMonster Inventory:\n";
                 has_item = true;
             }
-            inf.body << "    " << i << ") "
+            inf.body << "    " << i << ": "
                      << mitm[mons.inv[i]].name(DESC_A, false, true);
         }
     }

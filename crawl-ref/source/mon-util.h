@@ -124,7 +124,7 @@ struct monsterentry
     short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
 
-    mon_attack_def attack[4];
+    mon_attack_def attack[MAX_NUM_ATTACKS];
 
     // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
     // min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
@@ -159,7 +159,6 @@ enum mon_threat_level_type
     MTHRT_UNDEF,
 };
 
-habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(monster_type mc);
@@ -365,6 +364,7 @@ bool herd_monster(const monster* mon);
 int cheibriados_monster_player_speed_delta(const monster* mon);
 bool cheibriados_thinks_mons_is_fast(const monster* mon);
 bool mons_is_projectile(monster_type mc);
+bool mons_is_boulder(const monster * mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
@@ -421,6 +421,7 @@ bool player_or_mon_in_sanct(const monster* mons);
 bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
+bool monster_nearby();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
 

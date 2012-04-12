@@ -53,10 +53,6 @@ An amulet meticulously constructed with magical wards to block magical and physi
 
 While the amulet is effective against most translocular magic, plane shifts such as banishment are beyond its ability to block.
 %%%%
-ankus
-
-What mahouts steer their elephants with. It basically resembles a fireplace poker with a short, stout handle, and a bluntish spike and hook for communicating one's desires through the pachyderm's thick skin.
-%%%%
 animal skin
 
 The skins of several animals.
@@ -1134,7 +1130,9 @@ scroll of vorpalise weapon
 
 This scroll enchants the wielded weapon so as to make it far more effective at inflicting harm on its wielder's enemies. Using it on a weapon already affected by some kind of permanent branding is not advised. On the other hand, the scroll can make permanent the temporary branding of weapons obtained from some spells.
 
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha, the Shining One) cannot be affixed this way. Xom, on the other hand is, let's say... less than predictable.
+Brands that are closely tied to one of the gods (Trog, Lugonu,
+Kikubaaquadgha, the Shining One) cannot be affixed this way.
+Xom, on the other hand, wouldn't let such an opportunity for fun go to waste.
 %%%%
 scroll of vulnerability
 
@@ -1234,7 +1232,7 @@ This staff increases the power of charm and hex spells cast by its wielder. In t
 %%%%
 staff of energy
 
-This staff allows its wielder to cast magical spells without hungering as a result.
+This staff greatly reduces the hunger cost of the wielder's magical spells.
 %%%%
 staff of fire
 

@@ -280,7 +280,7 @@ This spell hurls a raging blizzard of ice, sleet and freezing gasses at the targ
 %%%%
 Ignite Poison
 
-This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. The caster and his gear are not affected.
+This spell attempts to convert all nearby poison into liquid flame, burning poisoned creatures from within. It is very effective against innately poisonous creatures. The caster is not affected.
 %%%%
 Inner Flame
 
@@ -296,7 +296,7 @@ This spell hides a creature from the sight of others. While invisible you will g
 %%%%
 Iskenderun's Mystic Blast
 
-This spell throws a crackling sphere of destructive energy.
+This spell throws a crackling sphere of destructive energy. The sphere will sometimes explode on impact, and the chance of it doing so is higher if the sphere has traveled less distance.
 %%%%
 Leda's Liquefaction
 

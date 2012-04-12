@@ -470,7 +470,9 @@ enum weapon_type
     WPN_LONGBOW,
     WPN_MAX_RACIAL = WPN_LONGBOW,
 
+#if TAG_MAJOR_VERSION == 32
     WPN_ANKUS,
+#endif
     WPN_DEMON_WHIP,
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,

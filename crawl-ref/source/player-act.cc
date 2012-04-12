@@ -257,7 +257,7 @@ brand_type player::damage_brand(int)
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
-// eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
+// eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded)
 {
     ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
@@ -636,7 +636,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
     // trigger when the player attempts to activate berserk,
     // auto-iding at that point, but also killing the berserk and
     // wasting a turn.
-    if (wearing_amulet(AMU_STASIS, false))
+    if (player_effect_stasis(false))
     {
         if (verbose)
         {

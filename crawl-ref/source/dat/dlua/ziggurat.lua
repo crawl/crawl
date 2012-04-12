@@ -313,8 +313,8 @@ end
 mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Snake:$", { weight = 5 }),
      with_props("place:Lair:$ w:90 / catoblepas", { weight = 5 }),
-     with_props("place:Spider:$ w:50 / ghost moth / red wasp / tarantella",
-                { weight = 5}),
+     "place:Spider:$ w:50 / ghost moth / red wasp / tarantella / orb spider/" ..
+                "redback",
      "place:Crypt:$",
      with_props("place:Dwarf:$", { weight = 5 }),
      "place:Abyss",

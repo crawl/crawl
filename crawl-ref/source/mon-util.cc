@@ -41,6 +41,7 @@
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "random.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -86,7 +87,7 @@ static int _mons_exp_mod(monster_type mclass);
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
-habitat_type grid2habitat(dungeon_feature_type grid)
+static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
     if (feat_is_watery(grid))
         return (HT_WATER);
@@ -149,7 +150,7 @@ monster_type random_monster_at_grid(dungeon_feature_type grid)
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = grid2habitat(grid);
+    const habitat_type ht = _grid2habitat(grid);
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
 
     ASSERT(!valid_mons.empty());
@@ -535,6 +536,11 @@ bool mons_is_projectile(monster_type mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+bool mons_is_boulder(const monster* mon)
+{
+    return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
@@ -876,6 +882,14 @@ void discover_mimic(const coord_def& pos, bool wake)
     {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
         mimic->seen_context = SC_JUST_SEEN;
+    }
+
+    // Orb mimics shriek.
+    if (item && item->base_type == OBJ_ORBS)
+    {
+        orb_pickup_noise(pos, 30,
+            "The orb mimic lets out a hideous shriek!",
+            "The orb mimic lets out a furious burst of light!");
     }
 
     // Just in case there's another one.
@@ -1382,7 +1396,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     const bool zombified = mons_is_zombified(mon);
 
-    if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
+    if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS || mon->has_hydra_multi_attack())
         attk_number = 0;
 
     if (mons_is_ghost_demon(mc))
@@ -4183,6 +4197,14 @@ int get_dist_to_nearest_monster()
             minRange = dist;
     }
     return (minRange);
+}
+
+bool monster_nearby()
+{
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+        if (monster_at(*ri))
+            return true;
+    return false;
 }
 
 actor *actor_by_mid(mid_t m)

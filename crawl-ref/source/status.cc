@@ -79,8 +79,6 @@ static duration_def duration_data[] =
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "", "You resist elements." },
-    { DUR_SAGE, true,
-      BLUE, "Sage", "", "" },
     { DUR_SEE_INVISIBLE, true,
       BLUE, "SInv", "", "You can see invisible." },
     { DUR_SLAYING, false,
@@ -228,6 +226,7 @@ static void _describe_rotting(status_info* inf);
 static void _describe_sickness(status_info* inf);
 static void _describe_nausea(status_info* inf);
 static void _describe_speed(status_info* inf);
+static void _describe_sage(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
@@ -361,6 +360,10 @@ void fill_status_info(int status, status_info* inf)
         _describe_speed(inf);
         break;
 
+    case STATUS_SAGE:
+        _describe_sage(inf);
+        break;
+
     case STATUS_AUGMENTED:
     {
          int level = augmentation_amount();
@@ -444,15 +447,6 @@ void fill_status_info(int status, status_info* inf)
             inf->short_text   = "";
         }
         break;
-
-    case DUR_SAGE:
-    {
-        std::string sk = skill_name(you.sage_bonus_skill);
-        inf->short_text = "studious about " + sk;
-        inf->long_text = "You are " + inf->short_text + ".";
-        _mark_expiring(inf, dur_expiring(DUR_SAGE));
-        break;
-    }
 
     case STATUS_MANUAL:
         if (!is_invalid_skill(you.manual_skill))
@@ -731,6 +725,23 @@ static void _describe_speed(status_info* inf)
     }
 }
 
+static void _describe_sage(status_info* inf)
+{
+    if (you.sage_skills.empty())
+        return;
+
+    std::vector<const char*> sages;
+    for (unsigned long i = 0; i < you.sage_skills.size(); ++i)
+        sages.push_back(skill_name(you.sage_skills[i]));
+
+    inf->light_colour = LIGHTBLUE;
+    inf->light_text   = "Sage";
+    inf->short_text   = "sage [" + comma_separated_line(sages.begin(),
+                        sages.end(), ", ") + "]";
+    inf->long_text    = "You feel studious about " + comma_separated_line(
+                        sages.begin(), sages.end()) + ".";
+}
+
 static void _describe_airborne(status_info* inf)
 {
     if (!you.airborne())
@@ -740,7 +751,7 @@ static void _describe_airborne(status_info* inf)
     const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
     const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
 
-    if (wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (player_effect_cfly())
     {
         inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
         inf->light_text   = "Fly";

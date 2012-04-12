@@ -62,11 +62,76 @@ LUAFN(moninf_get_is)
     return (1);
 }
 
-LUAFN(moninf_get_is_very_stabbable)
+static bool cant_see_you(const monster_info *mi)
+{
+    if (mons_class_flag(mi->type, M_SEE_INVIS))
+        return false;
+    if (mons_class_flag(mi->type, M_SENSE_INVIS)
+        && (you.pos() - mi->pos).abs() <= 17)
+    {
+        return false;
+    }
+    if (you.in_water())
+        return false;
+    return you.invisible() || mi->is(MB_BLIND);
+}
+
+LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    lua_pushboolean(ls, mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) ||
-                        mi->is(MB_PARALYSED));
+    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PARALYSED))
+        lua_pushnumber(ls, 1.0);
+    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
+             || mi->is(MB_PETRIFIED))
+    {
+        lua_pushnumber(ls, 0.5);
+    }
+    else if (mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi))
+        lua_pushnumber(ls, 0.25);
+    else if (mi->is(MB_DISTRACTED))
+        lua_pushnumber(ls, 0.16666666);
+    else
+        lua_pushnumber(ls, 0);
+
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricted)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, !mi->constrictor_name.empty());
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricting)
+{
+    MONINF(ls, 1, mi);
+    bool any = false;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (!mi->constricting_name[i].empty())
+        {
+            any = true;
+            break;
+        }
+    lua_pushboolean(ls, any);
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricting_you)
+{
+    MONINF(ls, 1, mi);
+    if (!you.is_constricted())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mi->constricting_name[i] == "you") // yay the interface
+        {
+            lua_pushboolean(ls, true);
+            return (1);
+        }
+    lua_pushboolean(ls, false);
     return (1);
 }
 
@@ -110,10 +175,13 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is),
     MIREG(is_safe),
     MIREG(is_firewood),
-    MIREG(is_very_stabbable),
+    MIREG(stabbability),
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
+    MIREG(is_constricted),
+    MIREG(is_constricting),
+    MIREG(is_constricting_you),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),

@@ -72,6 +72,9 @@ enum extra_monster_index_type
     MISC_MISCAST,
 };
 
+// number of monster attack specs
+#define MAX_NUM_ATTACKS 4
+
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
 
@@ -212,6 +215,21 @@ const int DEPTH_ABYSS = 51;
 const int DEPTH_PAN   = 52;
 
 const int BRANCH_DUNGEON_DEPTH = 27;
+
+//#define DEBUG_MIMIC
+#ifdef DEBUG_MIMIC
+// Missing stairs are replaced in fixup_branch_stairs, but replacing
+// too many breaks interlevel connectivity, so we don't use a chance of 1.
+  #define FEATURE_MIMIC_CHANCE 2
+  #define ITEM_MIMIC_CHANCE    1
+  #define FEATURE_MIMIC_DEPTH  1
+  #define ITEM_MIMIC_DEPTH     1
+#else
+  #define FEATURE_MIMIC_CHANCE 100
+  #define ITEM_MIMIC_CHANCE    500
+  #define FEATURE_MIMIC_DEPTH   10
+  #define ITEM_MIMIC_DEPTH       7
+#endif
 
 const int ANTITRAIN_PENALTY = 2;
 

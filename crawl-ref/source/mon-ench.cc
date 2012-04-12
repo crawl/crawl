@@ -259,6 +259,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         invalidate_agrid(true);
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        break;
+
     default:
         break;
     }
@@ -695,6 +699,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, "'s inner flame fades away.");
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        if (!quiet && alive())
+            simple_monster_message(this, " stops rolling.");
+        break;
+
     //The following should never happen, but just in case...
 
     case ENCH_MUTE:
@@ -850,6 +860,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
+        case ENCH_ROLLING:
             del_ench(i->first);
             break;
 
@@ -1044,6 +1055,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
+    // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
 
@@ -1248,7 +1260,10 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (mons_landlubbers_in_reach(this))
+        {
             del_ench(ENCH_SUBMERGED);
+            make_mons_stop_fleeing(this);
+        }
         break;
     }
     case ENCH_POISON:
@@ -1745,7 +1760,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner_flame", "roused", "breath timer", "deaths_door", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "rolling", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1974,6 +1989,14 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
+        // The duration is:
+        // deg = 1     90 aut
+        // deg = 2    180 aut
+        // deg = 3    270 aut
+        // deg = 4    360 aut
+        // deg = 5    810 aut
+        // deg = 6   1710 aut
+        // with a large fuzz
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
         if (deg >= 5)
@@ -1995,6 +2018,9 @@ int mon_enchant::calc_duration(const monster* mons,
         return (random_range(75, 125) * 10);
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
+    case ENCH_ROLLING:
+        cturn = 10000 / _mod_speed(25, mons->speed);
+        break;
     default:
         break;
     }
@@ -2002,6 +2028,8 @@ int mon_enchant::calc_duration(const monster* mons,
     cturn = std::max(2, cturn);
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
+    // Note: this fuzzing is _not_ symmetric, resulting in 90% of input
+    // on the average.
     raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
 
     dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);

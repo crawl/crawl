@@ -62,11 +62,8 @@ function setup_room(e, id)
     repeated=true }
   m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
   e.lua_marker('A', m_marker)
-  e.lua_marker('A', portal_desc {
-    desc = "teleporter" })
   e.colour("A = lightmagenta")
-  e.tile("A = dngn_the_teleporter_vaults")
-  e.subst("A = .")
+  e.kfeat("A = teleporter")
 
   if id > 1 then
     -- Place the teleporter exit

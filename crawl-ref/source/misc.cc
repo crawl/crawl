@@ -1061,8 +1061,12 @@ bool maybe_bloodify_square(const coord_def& where)
  *
  * @param where Coordinates of the wall where there is a blood splat.
  * @param from Coordinates of the source of the blood.
+ * @param old_blood blood splats created at level generation are old and can
+ * have some blood inscriptions. Only for south facing splats, so you don't
+ * have to turn your head to read the inscriptions.
  */
-static void _orient_wall_blood(const coord_def& where, coord_def from)
+static void _orient_wall_blood(const coord_def& where, coord_def from,
+                               bool old_blood)
 {
     if (!feat_is_wall(env.grid(where)))
         return;
@@ -1101,12 +1105,15 @@ static void _orient_wall_blood(const coord_def& where, coord_def from)
         env.pgrid(where) |= FPROP_BLOOD_NORTH;
     else if (diff == coord_def(-1, 0))
         env.pgrid(where) |= FPROP_BLOOD_EAST;
+    else if (old_blood && one_chance_in(10))
+        env.pgrid(where) |= FPROP_OLD_BLOOD;
 }
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
                                    bool smell_alert = true,
-                                   const coord_def& from = INVALID_COORD)
+                                   const coord_def& from = INVALID_COORD,
+                                   const bool old_blood = false)
 {
     if (amount < 1)
         return;
@@ -1128,7 +1135,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
-            _orient_wall_blood(where, from);
+            _orient_wall_blood(where, from, old_blood);
 
             if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
@@ -1145,7 +1152,10 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-                _maybe_bloodify_square(*ai, amount/15, false, true, from);
+            {
+                _maybe_bloodify_square(*ai, amount/15, false, true, from,
+                                       old_blood);
+            }
         }
     }
 }
@@ -1155,7 +1165,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, bool smell_alert,
-                      const coord_def& from)
+                      const coord_def& from, const bool old_blood)
 {
     ASSERT(in_bounds(where));
 
@@ -1170,7 +1180,8 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
             return;
     }
 
-    _maybe_bloodify_square(where, damage, spatter, smell_alert, from);
+    _maybe_bloodify_square(where, damage, spatter, smell_alert, from,
+                           old_blood);
 }
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
@@ -1214,7 +1225,7 @@ static void _spatter_neighbours(const coord_def& where, int chance,
         if (one_chance_in(chance))
         {
             env.pgrid(*ai) |= FPROP_BLOODY;
-            _orient_wall_blood(where, from);
+            _orient_wall_blood(where, from, true);
             _spatter_neighbours(*ai, chance+1, from);
         }
     }
@@ -2536,21 +2547,24 @@ void wear_id_type(item_def &item)
          item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-// AutoID an equipped ring of teleport.
-// Code copied from fire/ice in spl-cast.cc
-void maybe_id_ring_TC()
+static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
+                            jewellery_type amulet_type = NUM_JEWELLERY,
+                            artefact_prop_type artp = ARTP_NUM_PROPERTIES)
 {
-    if (you.duration[DUR_CONTROL_TELEPORT]
-        || player_mutation_level(MUT_TELEPORT_CONTROL))
-    {
-        return;
-    }
-
     int num_unknown = 0;
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
-        if (i == EQ_AMULET)
+        if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY
+            && artp == ARTP_NUM_PROPERTIES)
+        {
             continue;
+        }
+
+        if (i != EQ_AMULET && ring_type == NUM_JEWELLERY
+            && artp == ARTP_NUM_PROPERTIES)
+        {
+            continue;
+        }
 
         if (player_wearing_slot(i)
             && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
@@ -2559,20 +2573,86 @@ void maybe_id_ring_TC()
         }
     }
 
-    if (num_unknown == 0)
+    if (num_unknown != 1)
         return;
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
-        if (i == EQ_AMULET)
-            continue;
-
         if (player_wearing_slot(i))
         {
-            item_def& ring = you.inv[you.equip[i]];
-            if (ring.sub_type == RING_TELEPORT_CONTROL)
-                wear_id_type(ring);
+            item_def& item = you.inv[you.equip[i]];
+            if (item.sub_type == ring_type || item.sub_type == amulet_type)
+                wear_id_type(item);
+            bool known;
+            if (artp != ARTP_NUM_PROPERTIES && is_artefact(item)
+                && artefact_wpn_property(item, artp, known)
+                && !known)
+            {
+                artefact_wpn_learn_prop(item, artp);
+                mprf("You are wearing: %s",
+                     item.name(DESC_INVENTORY_EQUIP).c_str());
+            }
         }
+    }
+}
+
+// AutoID an equipped ring of teleport.
+void maybe_id_ring_TC()
+{
+    if (you.duration[DUR_CONTROL_TELEPORT]
+        || player_mutation_level(MUT_TELEPORT_CONTROL))
+    {
+        return;
+    }
+
+    _maybe_id_jewel(RING_TELEPORT_CONTROL);
+}
+
+void maybe_id_resist(beam_type flavour)
+{
+    switch (flavour)
+    {
+    case BEAM_FIRE:
+    case BEAM_LAVA:
+        if (player_res_fire(false))
+            return;
+        _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
+        break;
+
+    case BEAM_COLD:
+    case BEAM_ICE:
+        if (player_res_cold(false))
+            return;
+        _maybe_id_jewel(RING_PROTECTION_FROM_COLD, NUM_JEWELLERY, ARTP_COLD);
+        break;
+
+    case BEAM_ELECTRICITY:
+        if (player_res_electricity(false))
+            return;
+        _maybe_id_jewel(NUM_JEWELLERY, NUM_JEWELLERY, ARTP_ELECTRICITY);
+        break;
+
+    case BEAM_POISON:
+    case BEAM_POISON_ARROW:
+        if (player_res_poison(false))
+            return;
+        _maybe_id_jewel(RING_POISON_RESISTANCE, NUM_JEWELLERY, ARTP_POISON);
+        break;
+
+    case BEAM_NEG:
+        if (player_prot_life(false))
+            return;
+        _maybe_id_jewel(RING_LIFE_PROTECTION, AMU_WARDING, ARTP_NEGATIVE_ENERGY);
+        break;
+
+    case BEAM_STEAM:
+        if (player_res_steam(false))
+            return;
+        // rF+ grants rSteam, all possibly unidentified sources of rSteam are rF
+        _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
+        break;
+
+    default: ;
     }
 }
 
@@ -2601,7 +2681,10 @@ int apply_chunked_AC(int dam, int ac)
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->is_player()) ? "you" : act->name(DESC_THE).c_str());
+    {
+        mprf("The portal repels %s, its terrible forces doing untold damage!",
+             act->is_player() ? "you" : act->name(DESC_THE).c_str());
+    }
 
     act->blink(false);
     if (act->is_player())

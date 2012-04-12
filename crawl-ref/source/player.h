@@ -144,8 +144,9 @@ public:
   unsigned int  transfer_skill_points;
   unsigned int  transfer_total_skill_points;
 
-  skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
-  int sage_bonus_degree;        // How much bonus XP to give in that skill.
+  std::vector<skill_type> sage_skills; // skills with active Sage
+  std::vector<int> sage_xp;            // how much more XP to redirect
+  std::vector<int> sage_bonus;         // how much bonus XP to give in these skills
 
   skill_type manual_skill;
   int manual_index;
@@ -821,6 +822,18 @@ int player_res_torment(bool calc_unid = true, bool temp = true);
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
+int player_effect_inaccuracy();
+int player_effect_mutagenic();
+int player_res_mutation();
+int player_effect_gourmand();
+int player_effect_stasis(bool calc_unid = true);
+int player_effect_notele(bool calc_unid = true);
+int player_effect_running();
+int player_effect_cfly(bool calc_unid = true);
+int player_effect_faith();
+int player_effect_archmagi();
+int player_effect_nocast();
+int player_effect_angry();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
@@ -888,12 +901,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
+bool player_can_handle_equipment();
 bool player_can_reach_floor(std::string feat = "", bool quiet = false);
-
-inline bool player_can_handle_equipment()
-{
-    return player_can_open_doors();
-}
 
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);

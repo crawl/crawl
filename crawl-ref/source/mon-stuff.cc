@@ -562,13 +562,11 @@ void record_monster_defeat(monster* mons, killer_type killer)
 #if TAG_MAJOR_VERSION <= 33
 void note_montiers()
 {
-#if 0
     char buf[128];
     snprintf(buf, sizeof(buf), "Killed monsters: %d trivial, %d easy, "
         "%d tough, %d nasty; %d corpses", you.montiers[0], you.montiers[1],
         you.montiers[2], you.montiers[3], you.montiers[4]);
     take_note(Note(NOTE_MESSAGE, 0, 0, buf));
-#endif
     for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
         you.montiers[i] = 0;
 }
@@ -1627,7 +1625,9 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
-        else if (wearing_amulet(AMU_RAGE) && one_chance_in(30))
+        else if (!you.suppressed()
+                 && wearing_amulet(AMU_RAGE)
+                 && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;
 
@@ -2320,7 +2320,10 @@ int monster_die(monster* mons, killer_type killer,
         // Make sure that the monster looks dead.
         if (mons->alive() && !in_transit && (!summoned || duration > 0))
             mons->hit_points = -1;
-        mons_speaks(mons);
+        // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
+        // [malign] kraken has no valid head reference.
+        if (!mons_is_tentacle(mons->type))
+            mons_speaks(mons);
     }
 
     if (mons->type == MONS_BORIS && !in_transit)
@@ -2424,10 +2427,14 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     if (!wizard && !submerged && !was_banished)
-        _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned && !timeout, silent, summoned);
+    {
+        _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned
+                                 && !timeout, silent, summoned);
+    }
 
     int corpse = -1;
-    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout && !was_banished)
+    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned
+        && !timeout && !was_banished)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
@@ -3581,6 +3588,13 @@ monster* choose_random_monster_on_level(int weight,
 
     for (; ri; ++ri)
     {
+        if (in_sight)
+        {
+            // Seeing through glass/trees is not enough.
+            if (!you.see_cell_no_trans(*ri))
+                continue;
+        }
+
         if (monster* mon = monster_at(*ri))
         {
             if (suitable(mon))
@@ -4299,8 +4313,8 @@ bool monster_space_valid(const monster* mons, coord_def target,
     return monster_habitable_grid(mons, grd(target));
 }
 
-bool monster_random_space(const monster* mons, coord_def& target,
-                          bool forbid_sanctuary)
+static bool _monster_random_space(const monster* mons, coord_def& target,
+                                  bool forbid_sanctuary)
 {
     int tries = 0;
     while (tries++ < 1000)
@@ -4311,15 +4325,6 @@ bool monster_random_space(const monster* mons, coord_def& target,
     }
 
     return (false);
-}
-
-bool monster_random_space(monster_type mon, coord_def& target,
-                          bool forbid_sanctuary)
-{
-    monster dummy;
-    dummy.type = mon;
-
-    return (monster_random_space(&dummy, target, forbid_sanctuary));
 }
 
 void monster_teleport(monster* mons, bool instan, bool silent)
@@ -4373,7 +4378,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     }
 
     if (newpos.origin())
-        monster_random_space(mons, newpos, !mons->wont_attack());
+        _monster_random_space(mons, newpos, !mons->wont_attack());
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)

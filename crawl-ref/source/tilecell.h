@@ -33,6 +33,7 @@ struct packed_cell
     bool swamp_tree_water;
     uint8_t orb_glow;
     char blood_rotation;
+    bool old_blood;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -41,7 +42,7 @@ struct packed_cell
                     is_silenced(false), is_suppressed(false), halo(HALO_NONE),
                     is_moldy(false), glowing_mold(false), is_sanctuary(false),
                     is_liquefied(false), swamp_tree_water(false), orb_glow(0),
-                    blood_rotation(0) {}
+                    blood_rotation(0), old_blood(false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -55,7 +56,8 @@ struct packed_cell
                                         is_liquefied(c->is_liquefied),
                                         swamp_tree_water(c->swamp_tree_water),
                                         orb_glow(c->orb_glow),
-                                        blood_rotation(c->blood_rotation) {}
+                                        blood_rotation(c->blood_rotation),
+                                        old_blood(c->old_blood) {}
 
     void clear();
 };

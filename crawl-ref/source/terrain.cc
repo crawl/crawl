@@ -64,16 +64,6 @@ int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_featu
     return count;
 }
 
-bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
-{
-    return (checker(feat));
-}
-
-bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type))
-{
-    return (checker(grd(c)));
-}
-
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
@@ -320,11 +310,6 @@ bool cell_is_solid(const coord_def &c)
     return (feat_is_solid(grd(c)));
 }
 
-bool feat_is_floor(dungeon_feature_type feat)
-{
-    return (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX);
-}
-
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
     return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
@@ -378,8 +363,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
-            || feat == DNGN_SWAMP_TREE
-            || feat == DNGN_WATER_RESERVED);
+            || feat == DNGN_SWAMP_TREE);
 }
 
 bool feat_is_watery(dungeon_feature_type feat)
@@ -457,6 +441,15 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 bool feat_is_fountain(dungeon_feature_type feat)
 {
     return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
+}
+
+bool feat_is_reachable_past(dungeon_feature_type feat)
+{
+#if TAG_MAJOR_VERSION == 32
+    return feat > DNGN_MAX_NONREACH && !feat_is_tree(feat);
+#else
+    return feat > DNGN_MAX_NONREACH;
+#endif
 }
 
 // Find all connected cells containing ft, starting at d.
@@ -1644,13 +1637,17 @@ static const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
+#if TAG_MAJOR_VERSION == 32
 "open_sea", "tree", "orcish_idol", "swamp_tree", "endless_lava", "",
+#else
+"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol", "",
+#endif
 "granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
-"deep_water", "", "", "shallow_water", "water_stuck", "floor",
-"", "floor_reserved", "exit_hell", "enter_hell",
-"open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
+"deep_water", "", "", "shallow_water", "", "floor",
+"", "", "exit_hell", "enter_hell", "open_door", "teleporter", "",
+"trap_mechanical", "trap_magical", "trap_natural",
 "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
 "stone_stairs_down_i", "stone_stairs_down_ii",
 "stone_stairs_down_iii", "escape_hatch_down", "stone_stairs_up_i",

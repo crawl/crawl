@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "colour.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -22,6 +23,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "cloud.h"
@@ -308,7 +310,8 @@ static void _merge_ench_durations(monster* initial, monster* merge_to, bool useh
     {
         // Does the other creature have this enchantment as well?
         mon_enchant temp = merge_to->get_ench(i->first);
-        bool no_initial = temp.ench == ENCH_NONE;        // If not, use duration 0 for their part of the average.
+        // If not, use duration 0 for their part of the average.
+        bool no_initial = temp.ench == ENCH_NONE;
         int duration = no_initial ? 0 : temp.duration;
 
         i->second.duration = (i->second.duration * initial_count
@@ -1833,12 +1836,12 @@ bool valid_kraken_connection(const monster* mons)
 }
 
 
-bool valid_kraken_segment(monster * mons)
+static bool _valid_kraken_segment(monster * mons)
 {
     return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
-bool valid_demonic_connection(monster* mons)
+static bool _valid_demonic_connection(monster* mons)
 {
     return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
@@ -1937,13 +1940,13 @@ void move_demon_tentacle(monster* tentacle)
     std::map<coord_def, std::set<int> > connection_data;
 
     int visited_count = _collect_connection_data(tentacle,
-                                                 valid_demonic_connection,
+                                                 _valid_demonic_connection,
                                                  connection_data,
                                                  retract_pos);
 
     //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
 
-    _purge_connectors(tentacle->mindex(), valid_demonic_connection);
+    _purge_connectors(tentacle->mindex(), _valid_demonic_connection);
 
     if (severed)
     {
@@ -2068,8 +2071,10 @@ void move_demon_tentacle(monster* tentacle)
     {
         // This should really never fail for demonic tentacles (they don't
         // have the whole shifting base problem). -cao
-        mprf("tentacle connect failed! What the heck!  severed status %d", tentacle->has_ench(ENCH_SEVERED));
-        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y, old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
+        mprf("tentacle connect failed! What the heck!  severed status %d",
+             tentacle->has_ench(ENCH_SEVERED));
+        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y,
+             old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
 
 //        mgrd(tentacle->pos()) = tentacle->mindex();
 
@@ -2162,7 +2167,7 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        _purge_connectors(tentacle_idx, valid_kraken_segment);
+        _purge_connectors(tentacle_idx, _valid_kraken_segment);
 
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
@@ -2591,6 +2596,30 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_BOULDER_BEETLE:
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (!mons->has_ench(ENCH_ROLLING))
+        {
+            // Fleeing check
+            if (mons_is_fleeing(mons))
+            {
+                if (coinflip())
+                {
+                 //   behaviour_event(mons, ME_CORNERED);
+                    boulder_flee(mons, &beem);
+                }
+            }
+            // Normal check - don't roll at adjacent targets
+            else if (one_chance_in(3) &&
+                     !adjacent(mons->pos(), beem.target))
+            {
+                boulder_start(mons, &beem);
+            }
+        }
+        break;
+
     case MONS_MANTICORE:
         if (mons->has_ench(ENCH_CONFUSION))
             break;
@@ -2897,7 +2926,10 @@ void mon_nearby_ability(monster* mons)
             int confuse_power = 2 + random2(3);
 
             if (foe->is_player() && !can_see)
+            {
                 mpr("You feel you are being watched by something.");
+                interrupt_activity(AI_MONSTER_ATTACKS, mons);
+            }
 
             int res_margin = foe->check_res_magic((mons->hit_dice * 5)
                              * confuse_power);
@@ -2945,6 +2977,8 @@ void mon_nearby_ability(monster* mons)
             else
                 mpr("You feel you are being watched by something.");
 
+            interrupt_activity(AI_MONSTER_ATTACKS, mons);
+
             int mp = std::min(5 + random2avg(13, 3), you.magic_points);
             dec_mp(mp);
 
@@ -2976,7 +3010,7 @@ void ballisto_on_move(monster* mons, const coord_def & position)
     {
         dungeon_feature_type ftype = env.grid(mons->pos());
 
-        if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
+        if (ftype == DNGN_FLOOR)
             env.pgrid(mons->pos()) |= FPROP_MOLD;
 
         // The number field is used as a cooldown timer for this behavior.

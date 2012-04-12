@@ -96,8 +96,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
     monster* mons = monster_at(beam.target);
-    // don't allow targetting of submerged trapdoor spiders
-    if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
+    // don't allow targetting of submerged monsters (includes trapdoor spiders)
+    if (mons && mons->submerged())
         mons = NULL;
 
     const int x_first_middle = you.pos().x + (delta.x)/2;
@@ -112,8 +112,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("Your weapon cannot reach that far!");
         return (false); // Shouldn't happen with confused swings
     }
-    else if (grd(first_middle) <= DNGN_MAX_NONREACH
-             && grd(second_middle) <= DNGN_MAX_NONREACH)
+    else if (!feat_is_reachable_past(grd(first_middle))
+             && !feat_is_reachable_past(grd(second_middle)))
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
@@ -137,13 +137,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
-                     (grd(first_middle) <= DNGN_MAX_NONREACH ? second_middle :
-                     (grd(second_middle) <= DNGN_MAX_NONREACH ? first_middle :
-                     (coinflip() ? first_middle : second_middle)));
+        (!feat_is_reachable_past(grd(first_middle)) ? second_middle :
+         (!feat_is_reachable_past(grd(second_middle)) ? first_middle :
+          (coinflip() ? first_middle : second_middle)));
 
-    // BCR - Added a check for monsters in the way.  Only checks cardinal
-    //       directions.  Knight moves are ignored.  Assume the weapon
-    //       slips between the squares.
+    // Check for a monster in the way. If there is one, it blocks the reaching
+    // attack 50% of the time, and the attack tries to hit it if it is hostile.
 
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
@@ -655,12 +654,6 @@ bool evoke_item(int slot)
                        || !weapon_reach(*you.weapon())))
     {
         canned_msg(MSG_TOO_BERSERK);
-        return (false);
-    }
-
-    if (!player_can_handle_equipment())
-    {
-        canned_msg(MSG_PRESENT_FORM);
         return (false);
     }
 
