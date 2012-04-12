@@ -1821,8 +1821,8 @@ int mons_hive_rare(monster_type mcls)
 int mons_vaults_level(monster_type mcls)
 {
     return mons_standard_level(mcls)
-         + absdungeon_depth(BRANCH_VAULTS, 1)
-         - absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
+         - absdungeon_depth(BRANCH_VAULTS, 1)
+         + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
 }
 
 int mons_vaults_rare(monster_type mcls)
