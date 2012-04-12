@@ -41,16 +41,13 @@ void debug_monpick()
             int lev = mons_level(m, place);
             int rare = mons_rarity(m, place);
 
-            if (lev >= 99) // FIXME?
-                lev = 0;
-
-            if (lev && !rare)
+            if (lev < 99 && !rare)
             {
                 fails += make_stringf("%s: no rarity for %s\n",
                                       branches[i].abbrevname,
                                       mons_class_name(m));
             }
-            if (rare && !lev)
+            if (rare && lev >= 99)
             {
                 fails += make_stringf("%s: no depth for %s\n",
                                       branches[i].abbrevname,
@@ -76,7 +73,7 @@ void debug_monpick()
 // The Ecumenical Temple and other places with no monster gen.
 int mons_null_level(monster_type mcls)
 {
-    return 0;
+    return 99;
 }
 
 int mons_null_rare(monster_type mcls)
@@ -2907,7 +2904,7 @@ int mons_sewer_level(monster_type mcls)
     int mlev = absdungeon_depth(BRANCH_SEWER, 1);
 
     if (!mons_sewer_rare(mcls))
-        return 0;
+        return 99;
     return mlev + 1;
 }
 
@@ -2939,7 +2936,7 @@ int mons_volcano_level(monster_type mcls)
     int mlev = absdungeon_depth(BRANCH_VOLCANO, 1);
 
     if (!mons_volcano_rare(mcls))
-        return 0;
+        return 99;
     return mlev + 1;
 }
 
