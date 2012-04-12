@@ -56,9 +56,6 @@ function ice_cave_portal(e)
   e.rtile("X = wall_zot_cyan")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
-
-  dgn.set_branch_epilogue("IceCv", "ice_cave_feat_descs")
-
 end
 
 }}
@@ -89,7 +86,6 @@ function ice_cave_difficulty()
   end
 
   return difficulty
-
 end
 }}
 
@@ -107,29 +103,25 @@ end
 
 }}
 
-{{
--- Alter short feature descriptions for all ice cave destination vaults.
-function ice_cave_feat_descs()
-    dgn.set_feature_desc_short("rock wall", "ice covered $BASE")
-    dgn.set_feature_desc_short("gate leading back out of here",
-                               "ice covered $BASE")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "ice choked $BASE")
-    dgn.set_feature_desc_short("Some shallow water",
-                               "Some ice crusted shallow water")
-    dgn.set_feature_desc_short("Some deep water",
-                               "Some ice crusted deep water")
-end
-}}
-
 # For destination (not entry) vaults, use the following line after all
 # substitutions have been performed:
-# : ice_cave_colours(_G)
+# : ice_cave_appearance(_G)
 {{
-function ice_cave_colours(e)
+function ice_cave_appearance(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
   e.tile("< = dngn_portal_ice_cave")
+
+  -- Alter short feature descriptions for all ice cave destination vaults.
+  dgn.set_feature_desc_short("rock wall", "ice covered $BASE")
+  dgn.set_feature_desc_short("gate leading back out of here",
+                             "ice covered $BASE")
+  dgn.set_feature_desc_short("empty arch of ancient stone",
+                             "ice choked $BASE")
+  dgn.set_feature_desc_short("Some shallow water",
+                             "Some ice crusted shallow water")
+  dgn.set_feature_desc_short("Some deep water",
+                             "Some ice crusted deep water")
 end
 }}
 
@@ -474,7 +466,7 @@ WEIGHT:  6
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
@@ -554,7 +546,7 @@ WEIGHT:  6
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
 MONS:    ice beast
 MONS:    ice dragon
@@ -614,7 +606,7 @@ WEIGHT:  6
 KFEAT:   _ = altar_kikubaaqudgha
 SUBST:   - = ........-
 KFEAT:   - = alarm trap
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
 MONS:    ice beast
 MONS:    white imp
@@ -709,7 +701,7 @@ NSUBST:  w = 3:! / *:w
 : place_fog(_G, "freezing vapour", 50)
 SUBST:   ! = w
 {{
-ice_cave_colours(_G)
+ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil / nothing")
 }}
@@ -810,7 +802,7 @@ MONS:   necromancer
 : end
 ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
 KFEAT:  ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP
       xxxxx
@@ -883,7 +875,7 @@ SUBST: ' = .
 SUBST: - = x
 SUBST: _ = w
 : end
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 # Two different populations: undead/demon and natural/giant.
 : --FIXME: if you.level_type_tag() == "ice_cave_hard" then
 : if false then
@@ -965,7 +957,7 @@ SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 MAP
  xxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
  x::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xx  xx......xx
@@ -1034,7 +1026,7 @@ SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 MAP
                                  xxxxx
                                 xx.x.xx      xxxxxxxxxx
@@ -1108,7 +1100,7 @@ SUBST:  m- = .
 SUBST:  ! = *
 SUBST:  _ = <
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 xxx.........xxxxxxxxxxxccccccccccccc---------ccc
@@ -1132,7 +1124,7 @@ WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 MAP
 ccccccccccc
 c|*.....*|c
