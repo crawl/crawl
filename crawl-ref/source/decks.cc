@@ -2800,7 +2800,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         const int fee = fuzz_value(exper_value(mon), 15, 15);
         if (fee > you.gold)
         {
-            mprf("You cannot afford %s fee!", mon->name(DESC_ITS).c_str());
+            mprf("You cannot afford %s fee of %d gold!",
+                 mon->name(DESC_ITS).c_str(), fee);
             simple_monster_message(mon, " attacks!");
             return;
         }
