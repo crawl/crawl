@@ -29,6 +29,7 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "item_use.h"
+#include "lang-fake.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -587,7 +588,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_SILENCE,
         DUR_CONFUSING_TOUCH,
         DUR_BARGAIN,
-        DUR_SAGE,
+        STATUS_SAGE,
         DUR_FIRE_SHIELD,
         DUR_SLIMIFY,
         DUR_SURE_BLADE,
@@ -807,7 +808,7 @@ void print_stats(void)
     if (you.redraw_title)
     {
         you.redraw_title = false;
-        _redraw_title(you.your_name, player_title());
+        _redraw_title(you.your_name, filtered_lang(player_title()));
     }
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
@@ -1693,8 +1694,8 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 39
-    column_composer cols(3, 21, 39);
+    // 3 columns, splits at columns 21, 38
+    column_composer cols(3, 21, 38);
 
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
@@ -1710,7 +1711,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
+    const int rmuta = (player_res_mutation()
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
     const int rrott = (you.res_rotting()
@@ -1741,7 +1742,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const char* pregourmand;
     const char* postgourmand;
 
-    if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
+    if (player_effect_gourmand())
     {
         pregourmand = "Gourmand  : ";
         postgourmand = _itosym1(1);
@@ -1772,16 +1773,17 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 2), _itosym2(rward),
+             _determine_colour_string(rward, 1), _itosym1(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
              _determine_colour_string(rclar, 1), _itosym1(rclar),
              _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
-    const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
-    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
-                       || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
+    const int stasis = player_effect_stasis(calc_unid);
+    const int notele = player_effect_notele(calc_unid)
+                       || crawl_state.game_is_zotdef()
+                       && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
@@ -1804,7 +1806,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     int rctel = player_control_teleport(calc_unid);
     rctel = allow_control_teleport(true) ? rctel : -1;
     const int rlevi = you.airborne();
-    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    const int rcfli = player_effect_cfly(calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
@@ -2008,7 +2010,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_BARGAIN,
         DUR_SLAYING,
         STATUS_MANUAL,
-        DUR_SAGE,
+        STATUS_SAGE,
         DUR_MAGIC_SHIELD,
         DUR_FIRE_SHIELD,
         DUR_POISONING,
@@ -2115,8 +2117,7 @@ static std::string _status_mut_abilities(int sw)
               std::string help = "able to fly";
               if (you.experience_level > 14)
                   help += " continuously";
-              mutations.push_back(_annotate_form_based(help,
-                                                       player_is_shapechanged()));
+              mutations.push_back(help);
           }
           break;
 
@@ -2210,6 +2211,9 @@ static std::string _status_mut_abilities(int sw)
     if (you.species == SP_OCTOPODE)
     {
         mutations.push_back("almost no armour");
+        mutations.push_back(_annotate_form_based(
+            "8 rings",
+            !form_keeps_mutations() && you.form != TRAN_SPIDER));
         mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),

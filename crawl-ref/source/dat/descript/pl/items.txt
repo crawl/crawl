@@ -74,11 +74,6 @@ Nie wpływa on jednak na środki nie manipulujące czasoprzestrzenią — jak na
 przykład przemianę w kamień.  Nie działa on także na przejścia do innych
 światów, włącznie z rzuceniem w Otchłań.
 %%%%
-ankus
-
-Jest to oścień służący do kierowania słoniem.  Przypomina nadziak lub bosak,
-z krótką rękojeścią, hakiem i szpikulcem.
-%%%%
 animal skin
 
 Prymitywne okrycie ze zwierzęcej skóry.
@@ -1443,7 +1438,7 @@ wrogie uroki.
 %%%%
 staff of energy
 
-Ten kij pozwala rzucać czary bez powodowania głodu.
+Ten kij redukuje głód będący skutkiem rzucania czarów.
 %%%%
 staff of fire
 

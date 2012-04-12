@@ -606,7 +606,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
-    case CONTROL('F'): debug_fight_statistics(false, true); break;
+    case CONTROL('F'): wizard_fight_sim(true); break;
 #ifdef DEBUG_BONES
     case CONTROL('G'): debug_ghosts(); break;
 #endif
@@ -642,8 +642,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 't': wizard_tweak_object();                 break;
     case 'T': debug_make_trap();                     break;
     case '\\': debug_make_shop();                    break;
-    case 'f': debug_fight_statistics(false);         break;
-    case 'F': debug_fight_statistics(true);          break;
+    case 'f': wizard_quick_fsim();                   break;
+    case 'F': wizard_fight_sim(false);               break;
     case 'm': wizard_create_spec_monster();          break;
     case 'M': wizard_create_spec_monster_name();     break;
     case 'R': wizard_spawn_control();                break;
@@ -1223,12 +1223,16 @@ static void _input()
     {
         clear_macro_process_key_delay();
 
+        // At this point we are guaranteed to not be in any recursion, so the
+        // Lua stack must be empty.  Unless there's a leak.
+        ASSERT(lua_gettop(clua.state()) == 0);
+
         if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else
-                clua.callfn("ready", 0);
+                clua.callfn("ready", 0, 0);
         }
 
         // We're not in an infinite loop, reset the timer.
@@ -1347,11 +1351,15 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
 
 static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
 {
-    if (ygrd != DNGN_TRANSIT_PANDEMONIUM && ygrd != DNGN_EXIT_PANDEMONIUM)
+    if (ygrd != DNGN_TRANSIT_PANDEMONIUM
+        && ygrd != DNGN_EXIT_PANDEMONIUM
+        && ygrd != DNGN_ENTER_ABYSS)
+    {
         return true;
+    }
+
     item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
-    if (rune && (rune->plus == RUNE_CEREBOV || rune->plus == RUNE_LOM_LOBON
-                || rune->plus == RUNE_MNOLEG || rune->plus == RUNE_GLOORX_VLOQ))
+    if (rune && item_is_unique_rune(*rune))
     {
         return yesno("An item of great power still resides in this realm, "
                 "and once you leave you can never return. "
@@ -1442,15 +1450,8 @@ static void _go_upstairs()
                                           " This will make you lose the game!");
         if (player_has_orb())
             stay = !yesno("Are you sure you want to win?");
-        else if (yesno(prompt.c_str(), false, 'n'))
-        {
-            // You did pick up the Orb but are not carrying it, this deserves
-            // another warning due to automatism.
-            if (you.char_direction == GDT_ASCENDING)
-                stay = !yes_or_no("You're not carrying the Orb! Leave anyway");
-            else
-                stay = false;
-        }
+        else
+            stay = !yesno(prompt.c_str(), false, 'n');
 
         if (stay)
         {
@@ -2273,7 +2274,7 @@ static void _decrement_durations()
 {
     int delay = you.time_taken;
 
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    if (player_effect_gourmand())
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -2530,7 +2531,6 @@ static void _decrement_durations()
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     }
 
-    _decrement_a_duration(DUR_SAGE, delay, "You feel less studious.");
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
@@ -2890,7 +2890,7 @@ static void _regenerate_hp_and_mp(int delay)
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = you.hit_points_regeneration;
 
-    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
+    if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
@@ -3070,6 +3070,10 @@ static void _player_reacts()
     seen_monsters_react();
 
     update_stat_zero();
+
+    // XOM now ticks from here, to increase his reaction time to tension.
+    if (you.religion == GOD_XOM)
+        xom_tick();
 }
 
 // Ran after monsters and clouds get to act.
@@ -3405,7 +3409,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     if (mon && player_can_hit_monster(mon))
     {
         if (mon->caught() && mon->friendly()
-            && player_can_open_doors() && !you.confused())
+            && player_can_handle_equipment() && !you.confused())
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
@@ -3431,7 +3435,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     {
         if (!you.confused())
         {
-            if (!player_can_open_doors())
+            if (!player_can_handle_equipment())
             {
                 mpr("You can't disarm traps in your present form.");
                 return (true);
@@ -4357,7 +4361,7 @@ static void _move_player(coord_def move)
     apply_berserk_penalty = !attacking;
 
     if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
-        && player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+        && player_effect_running())
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

@@ -445,9 +445,9 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, 60, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, 200, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, 250, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, 2000, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, 2000, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, 3000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 0, 0, 3000, ABFLAG_ZOTDEF},
     { ABIL_MAKE_CURSE_SKULL, "Make curse skull",
       0, 0, 600, 0, 10000, ABFLAG_ZOTDEF|ABFLAG_NECRO_MISCAST_MINOR},
     { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
@@ -472,9 +472,9 @@ static const ability_def Ability_List[] =
       0, 30, 0, 0, 100, ABFLAG_ZOTDEF|ABFLAG_PERMANENT_HP},
     { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, 50, ABFLAG_ZOTDEF},
     { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0, 0, ABFLAG_ZOTDEF|ABFLAG_INSTANT},
+    { ABIL_MAKE_SAGE, "Sage", 0, 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
     { ABIL_REMOVE_CURSE, "Remove Curse",
-      0, 0, 300, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
+      0, 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, 0, ABFLAG_NONE},
 };
@@ -1772,8 +1772,11 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_SILVER_STATUE:
     case ABIL_MAKE_CURSE_SKULL:
     case ABIL_MAKE_LIGHTNING_SPIRE:
-        if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
+        if (!create_zotdef_ally(_monster_for_ability(abil),
+            _zd_mons_description_for_ability(abil).c_str()))
+        {
             return (false);
+        }
         break;
     // End ZotDef Allies
 
@@ -1783,6 +1786,7 @@ static bool _do_ability(const ability_def& abil)
 
     // ZotDef traps
     case ABIL_MAKE_TELEPORT_TRAP:
+        // BUG: it's the trap's position, not yours, that should matter.
         if ((you.pos() - env.orb_pos).abs() < 100)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
@@ -1881,11 +1885,12 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_REMOVE_CURSE:
         remove_curse();
-        lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)), false, "zot ability");
+        lose_stat(STAT_RANDOM, 1, false, "zot ability");
         break;
 
     case ABIL_MAKE_SAGE:
         sage_card(20, DECK_RARITY_RARE);
+        lose_stat(STAT_RANDOM, 1 + random2(3), false, "zot ability");
         break;
 
     case ABIL_MUMMY_RESTORATION:
@@ -2173,8 +2178,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_END_TRANSFORMATION:
-        mpr("You feel almost normal.");
-        you.set_duration(DUR_TRANSFORMATION, 2);
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
+        untransform();
         break;
 
     // INVOCATIONS:
@@ -3080,8 +3085,7 @@ std::vector<talent> your_talents(bool check_confused)
     if (you.species == SP_TENGU
         && !you.attribute[ATTR_PERM_LEVITATION]
         && you.experience_level >= 5
-        && (you.experience_level >= 15 || !you.airborne())
-        && (!form_changed_physiology() || you.form == TRAN_LICH))
+        && (you.experience_level >= 15 || !you.airborne()))
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -3097,7 +3101,6 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     if (you.attribute[ATTR_PERM_LEVITATION]
-        && (!form_changed_physiology() || you.form == TRAN_LICH)
         && you.species == SP_TENGU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);

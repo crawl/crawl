@@ -1563,7 +1563,7 @@ static bool make_item_for_monster(
     return (true);
 }
 
-void give_shield(monster* mon, int level)
+static void _give_shield(monster* mon, int level)
 {
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
@@ -1703,7 +1703,7 @@ void give_shield(monster* mon, int level)
     }
 }
 
-void give_armour(monster* mon, int level, bool spectral_orcs)
+static void _give_armour(monster* mon, int level, bool spectral_orcs)
 {
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -1764,22 +1764,19 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_ERICA:
-    case MONS_HAROLD:
     case MONS_JOSEPHINE:
-    case MONS_JOZEF:
     case MONS_PSYCHE:
-        if (x_chance_in_y(2, 5))
-        {
-            item.base_type = OBJ_ARMOUR;
-            item.sub_type  = random_choose_weighted(10, ARM_LEATHER_ARMOUR,
-                                                    3, ARM_RING_MAIL,
-                                                    1, ARM_TROLL_LEATHER_ARMOUR,
-                                                    1, ARM_STEAM_DRAGON_ARMOUR,
-                                                    1, ARM_MOTTLED_DRAGON_ARMOUR,
-                                                    0);
-        }
-        else
-            return;
+        if (one_chance_in(5))
+            level = MAKE_GOOD_ITEM;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        item_race      = MAKE_ITEM_NO_RACE;
+        break;
+
+    case MONS_HAROLD:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_RING_MAIL;
+        item_race      = MAKE_ITEM_NO_RACE;
         break;
 
     case MONS_GNOLL_SHAMAN:
@@ -1795,6 +1792,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_JOSEPH:
+    case MONS_JOZEF:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL,
@@ -1853,7 +1851,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         // deliberate fall through {dlb}
 
     case MONS_PALADIN:
-    case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_DONALD:
@@ -1864,6 +1861,12 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);
+        break;
+
+    case MONS_FREDERICK:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = random_choose(ARM_SCALE_MAIL,   ARM_CHAIN_MAIL,
+                                       ARM_SPLINT_MAIL, -1);
         break;
 
     case MONS_MARGERY:
@@ -2169,6 +2172,6 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
 
     _give_ammo(mons, level_number, item_race, mons_summoned);
 
-    give_armour(mons, 1 + level_number / 2, spectral_orcs);
-    give_shield(mons, 1 + level_number / 2);
+    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
+    _give_shield(mons, 1 + level_number / 2);
 }

@@ -64,7 +64,7 @@ void lua_push_floor_items(lua_State *ls, int link)
     }
 }
 
-void lua_push_inv_items(lua_State *ls = NULL)
+static void _lua_push_inv_items(lua_State *ls = NULL)
 {
     if (!ls)
         ls = clua.state();
@@ -697,7 +697,7 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-iflags_t str_to_item_status_flags (std::string flag)
+static iflags_t _str_to_item_status_flags (std::string flag)
 {
     iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
@@ -736,7 +736,7 @@ static int l_item_do_identified (lua_State *ls)
         else
         {
             const bool check_type = strip_tag(flags, "type");
-            iflags_t item_flags = str_to_item_status_flags(flags);
+            iflags_t item_flags = _str_to_item_status_flags(flags);
             known_status = ((item_flags || check_type)
                             && (!item_flags || item_ident(*item, item_flags))
                             && (!check_type || item_type_known(*item)));
@@ -807,7 +807,7 @@ IDEF(is_cursed)
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
-    lua_push_inv_items(ls);
+    _lua_push_inv_items(ls);
     return (1);
 }
 

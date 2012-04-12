@@ -425,15 +425,15 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     {
         for (int y = 0; y < GYM; y++)
         {
-            if (grd[x][y] < DNGN_FLOOR_MIN)
+            if (grd[x][y] < DNGN_FLOOR)
                 continue;
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR_MIN);
-            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR_MIN);
-            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR_MIN);
-            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR_MIN);
+            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR);
+            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR);
+            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR);
+            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR);
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);
@@ -742,6 +742,11 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
+
+    // Shallow water has its own modified tile for disturbances
+    // see tileidx_feature
+    if (env.map_knowledge(gc).feat() == DNGN_SHALLOW_WATER)
+        return;
 
     tileidx_t t = TILE_UNSEEN_MONSTER;
     if (!you.see_cell(gc))
@@ -1192,6 +1197,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
+            cell.old_blood = env.pgrid(gc) & FPROP_OLD_BLOOD;
         }
     }
 

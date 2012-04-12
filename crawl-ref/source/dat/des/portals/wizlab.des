@@ -51,6 +51,13 @@
 #    layout: graveyard
 #    colour: darkgrey, lightgrey
 #
+# The Roulette of Golubria
+#    threat: distortion, tloc-themed monsters, Abyss monsters
+#    loot:   tloc-themed consumables / rings / books, abyss escape aides, cloaks
+#    xp:     20000+
+#    layout: large maw shape with roulette through teeth, old-abyss-esque innards
+#    colour: green floor, green/rarely cyan walls
+#
 ## Random maps
 #
 # Cloud Mage's Chambers
@@ -377,6 +384,18 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
                                            triggerer, marker, ev)
   dgn.persist.wucad_mu_died = true
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
+end
+
+function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
 end
 
 }}
@@ -1475,6 +1494,196 @@ tttccccctttT...TTttTT....Tttcccccttttttt
 ttttttttttttTTTTttttTTTTTttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+##################################################################################
+# The Roulette of Golubria (by HangedMan.)
+# Golubria's fascination with translocations led him to warp out a sub-realm
+# of the Abyss into his own translocations playground, with some nasty and wild
+# security systems built in to defend his many assorted possessions.
+#
+NAME:    wizlab_golubria
+TAGS:    wizlab no_monster_gen no_item_gen allow_dup no_pool_fixup
+ORIENT:  encompass
+LFLAGS:  no_tele_control
+KMONS:   1 = spatial vortex / blink frog / insubstantial wisp w:1 / nothing w:4
+KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
+             rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
+             boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
+             wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
+KMONS:   3 = rakshasa w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             crimson imp ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             boggart w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             wizard ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
+# Disclaimer: the following three sets are all Abyss spawns.
+KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \
+              small skeleton / chaos spawn w:5 / soul eater / hellwing / orange demon / \
+              rotting devil / hell hound / red devil w:5 / lesser demon w:40 / \
+              flying skull / freezing wraith / octopode w:5 / base draconian w:5 / \
+              ugly thing w:30 / fire elemental w:5 / air elemental w:5
+KMONS:   95 = ynoxinul / smoke demon / sun demon w:5 / sixfirhy / efreet w:5 / \
+              hell knight w:5 / demonic crawler / very ugly thing w:5 / \
+              unseen horror / vapour w:5 / stone golem w:5 / \
+              guardian serpent / naga mage w:5 / brain worm / eidolon w:5 / \
+              shadow wraith / anaconda skeleton w:5 / flaming corpse / \
+              great orb of eyes w:5 / giant orange brain w:5
+KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
+             tormentor w:5 / lorocyproca w:5 / blizzard demon / green death / \
+             reaper / lich w:5 / angel / death drake w:5 / \
+             tentacled monstrosity / draconian shifter w:5 / profane servitor w:5
+KMONS:   7 = eldritch tentacle / nothing
+KMONS:   8 = silver statue
+# Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
+KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
+             wand of teleportation w:5 / any scroll w:1
+KITEM:   e = ring of teleport control w:5 / ring of teleportation
+KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
+             manual of translocations w:5 / randbook disc:translocation numspells:5 / \
+             randbook disc:translocation owner:Golubria numspells:7 \
+             spells:shroud_of_golubria|passage_of_golubria
+KITEM:   g = ring of levitation / potion of levitation q:2 / \
+             wand of digging w:5 / lantern of shadows / \
+             potion of speed w:5 / scroll of fog / potion of porridge / \
+             any wand w:1 / any potion w:1 / any scroll w:1
+KITEM:   h = pair of boots ego:levitation w:9 / pair of boots ego:running w:1 / \
+             pair of boots ego:stealth w:9 / pair of boots w:1
+KITEM:   i = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
+             cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
+KITEM:   j = wand of disintegration
+KITEM:   * = star_item / any w:5, any w:5 / nothing
+KITEM:   % = any level:3, any level:3 / nothing
+KFEAT:   - = rock_wall
+KFEAT:   J = metal_wall
+KFEAT:   K = green_crystal_wall
+KFEAT:   m = iron_grate
+KFEAT:   l = lava w:6 / deep_water w:4 / shallow_water
+KFEAT:   D = permarock_wall
+KFEAT:   ~ = known teleport trap
+KFEAT:   8_ = altar_lugonu
+KFEAT:   OPQRSTUVWXYZ&?[ = teleporter
+KFEAT:   opsrtuvwxyz@!] = floor
+KPROP:   "_a = no_rtele_into
+MARKER:  ~ = lua:fog_machine { cloud_type = "translocational energy",  \
+             pow_max = 15, delay_min = 30, delay_max = 60, size_min = 2, size_max = 3 }
+SHUFFLE: qtwz / twzq / wzqt / zqtw, ypsv / vyps / svyp / psvy, ]?A}
+NSUBST:  o = 1:o / 1:Q / 1:Y, p = 1:p / 1:R / 1:Z, q = 1:q / 1:S / 1:&
+NSUBST:  r = 1:r / 1:T / 1:O, s = 1:s / 1:U / 1:P, t = 1:t / 1:V / 1:Q
+NSUBST:  u = 1:u / 1:W / 1:R, v = 1:v / 1:X / 1:S, w = 1:w / 1:Y / 1:T
+NSUBST:  x = 1:x / 1:Z / 1:U, y = 1:y / 1:& / 1:V, z = 1:z / 1:O / 1:W
+NSUBST:  @ = 1:@ / 1:P / 1:X / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 4:i / 1:j / 5:% / *:`
+NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:! / 1:[ / *:<
+NSUBST:  { = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
+NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eeggh% / 1:gg% / 3:%
+SUBST:   a = ':70 -:40 ncCll, F = ":70 -:40 ncCll, c = cccJK, C = cJK, B = cJKn....
+SUBST:   e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544'', } = <
+: colour("' = " .. dgn.random_colour() )
+COLOUR:  OPQRSTUVWXYZ&?[ = warp
+COLOUR:  opqrstuvwxyz@!] = gold
+COLOUR:  D = darkgrey
+FTILE:   '"GcJKaFn45_+ = floor_demonic_green
+FTILE:   .012369AB{< = floor_rough_green / floor_pebble_green w:15
+FTILE:   `~78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
+FTILE:   defghijk*% = floor_rough_green
+LROCKTILE: wall_zot_green
+TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
+TILE:    K = dngn_crystal_green / dngn_crystal_cyan w:5
+TILE:    J = dngn_metal_wall_green / dngn_metal_wall_cyan w:5
+TILE:    n = dngn_transparent_wall_green / dngn_transparen_wall_cyan w:5
+TILE:    D = wall_stone_dark
+TILE:    OPQRSTUVWXYZ&?[ = dngn_trap_golubria
+FTILE:   OPQRSTUVWXYZ&?[ = floor_rough_green
+TILE:    opqrstuvwxyz@!] = floor_black_cobalt
+
+{{
+-- This isn't the prettiest way of handling the teleporters, but it guarantees
+-- they behave exactly the same way as in HangedMan's original version. All I've
+-- done is remove some massive code duplication. [evilmike]
+
+local teleporter_glyph = "OPQRSTUVWXYZ&?["
+local teleport_spot_glyph = "opqrstuvwxyz@!]"
+local tele_marker = {}
+
+for i = 1, #teleporter_glyph do
+    tele_marker[i] = TriggerableFunction:new {
+                     func="teleporter_golubria_switch_fn",
+                     data = {teleport_spot=i},
+                     repeated=true }
+    tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
+    lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
+    lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
+end
+
+set_border_fill_type('permarock_wall')
+dgn.set_feature_desc_short("unnaturally hard rock wall", "The dimension's edge")
+dgn.set_feature_desc_short("wall of green crystal", "wall of crystal")
+wizlab_setup(_G, "The Roulette of Golubria")
+}}
+
+epilogue{{
+            wizlab_milestone(_G, "The Roulette of Golubria")
+}}
+MAP
+               DDDDDDDDDD   DDDDDDDDDD
+    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+  DDDccccDDDDDDcc..o...ccccccc...p..ccDDDDDDccccDDD
+  Dccc.zcccccccco......ocaaacp......pccccccccq.cccD
+ DDcz....ccaaaan........naaan........naaaacc....qcDD
+ Dcc......caaa"n........n"a"n........n"aaac......ccD
+ Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
+ Dcz..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..qcD
+ Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
+ DDcc....2.0caaacc1....ccaaacc....1ccaaac1.2....ccDD
+  Dcccc...{.ccaaacc1.{.caaaaac.{.1ccaaacc1{...ccccD
+  Dcaannc11..ccaaacc...caaaaac...ccaaacc...0cnnaacD
+  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
+  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
+ DDca"aaaaaccc+FFaFF'F'FaaaaaF'F'FaaFF+cccaaaaa"acDD
+DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
+Dccy....ccaaaaFF'F'FFFFFF'G'FFFFFF'F'FFaaaacc....rccD
+Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc.......cD
+Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
+Dcy...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc1..BB...rcD
+Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
+Dc....B2..{..+FFFF'C'@C'``n``'C@'C'FFFF+..{..2B....cD
+Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
+Dccy....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....rccDDDDDDDD
+DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
+ Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn?.}nD
+ DcaaaaaaaaaaaF4GFF(nn``m787m``nn(FFG4FaaaaaaaaaaacDDDn...nD
+ Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn].AnD
+DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
+Dccx....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....sccDDDDDDDD
+Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
+Dc....B2..{..+FFF'CC'@C'`'n'`'C@'C'FFFF+..{..2B....cD
+Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
+Dcx...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc...BB...scD
+Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
+Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc1......cD
+Dccx....ccaaaaaF'F'FFFFFF'G'FFFFFF'F'Faaaaacc....sccD
+DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
+ DDca"aaaaaccc+FFaFF'F'FaFFFaF'F'FaaFF+cccaaaaa"acDD
+  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
+  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
+  Dcaannc0...ccaaacc...caaaaac...ccaaacc..11cnnaacD
+  Dcccc...{1ccaaacc1.{.caaaaac.{.1ccaaacc.{...ccccD
+ DDcc....2.1caaacc1....ccaaacc....1ccaaac0.2....ccDD
+ Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
+ Dcw..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..tcD
+ Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
+ Dcc......caaa"n........n"a"n........n"aaac......ccD
+ DDcw....ccaaaan........naaan........naaaacc....tcDD
+  Dccc.wccccccccv......vcaaacu......ucccccccct.cccD
+  DDDccccDDDDDDcc..v...ccccccc...u..ccDDDDDDccccDDD
+    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+               DDDDDDDDDD   DDDDDDDDDD
 ENDMAP
 
 ###############################################################################

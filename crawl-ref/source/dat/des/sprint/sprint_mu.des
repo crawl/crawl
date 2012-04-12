@@ -822,7 +822,7 @@ KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
 KMONS: a = patrolling Jozef hd:15 hp:100 \
  spells:poison_arrow;teleport_other;.;minor_healing;slow \
  ; dire flail ego:distortion
-KMONS: b = patrolling Joseph hd:5 hp:150 ; ankus ego:freezing \
+KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
  . blowgun . needle ego:curare q:7
 : else
 # changed Francis to Wiglaf for now
@@ -917,7 +917,7 @@ MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
 MONS: skeletal warrior
 KMONS: 8 = silver statue
 KMONS: f = butterfly
-KMONS: U = Norris ; ankus ego:vorpal . large shield ego:reflection / \
+KMONS: U = Norris ; spiked flail ego:vorpal . large shield ego:reflection / \
            Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt

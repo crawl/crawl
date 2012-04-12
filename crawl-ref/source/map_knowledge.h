@@ -320,7 +320,7 @@ void clear_terrain_visibility();
 
 int count_detected_mons(void);
 
-void clear_map(bool clear_items = false, bool clear_mons = true);
+void clear_map(bool clear_items = true, bool clear_mons = true);
 
 map_feature get_cell_map_feature(const map_cell& cell);
 

@@ -216,36 +216,27 @@ std::string item_def::name(description_level_type descrip,
                     break;
                 case EQ_LEFT_RING:
                 case EQ_RIGHT_RING:
+                case EQ_RING_ONE:
+                case EQ_RING_TWO:
                     buff << " (";
-                    buff << (eq == EQ_LEFT_RING ? "left" : "right");
+                    buff << ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
+                             ? "left" : "right");
                     buff << " ";
                     buff << you.hand_name(false);
                     buff << ")";
                     break;
                 case EQ_AMULET:
-                    if (you.species == SP_OCTOPODE)
+                    if (you.species == SP_OCTOPODE && form_keeps_mutations())
                         buff << " (around mantle)";
                     else
                         buff << " (around neck)";
                     break;
-                case EQ_RING_ONE:
-                case EQ_RING_TWO:
                 case EQ_RING_THREE:
                 case EQ_RING_FOUR:
-                    if (you.form == TRAN_SPIDER)
-                    {
-                        buff << " (on front leg)";
-                        break;
-                    }
                 case EQ_RING_FIVE:
                 case EQ_RING_SIX:
                 case EQ_RING_SEVEN:
                 case EQ_RING_EIGHT:
-                    if (you.form == TRAN_SPIDER)
-                    {
-                        buff << " (on hind leg)";
-                        break;
-                    }
                     buff << " (on tentacle)";
                     break;
                 default:
@@ -2704,8 +2695,10 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_CURSE_ARMOUR:
-        case SCR_CURSE_JEWELLERY:
         case SCR_CURSE_WEAPON:
+            if (you.species == SP_FELID)
+                return false;
+        case SCR_CURSE_JEWELLERY:
             return (you.religion != GOD_ASHENZARI);
         case SCR_SUMMONING:
             // Summoning will always produce hostile monsters if you

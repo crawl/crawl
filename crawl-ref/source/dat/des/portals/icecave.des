@@ -1101,10 +1101,10 @@ lua_marker('M', m_marker)
 -- And the slave.
 lua_marker('m', portal_desc { teleport_spot=1})
 }}
-COLOUR: M = yellow
-TILE:   M = dngn_the_teleporter_ice_cave
+KFEAT:  M = teleporter
+TILE:   M = dngn_teleporter_ice_cave
 KPROP:  -2!m_| = no_tele_into
-SUBST:  Mm- = .
+SUBST:  m- = .
 SUBST:  ! = *
 SUBST:  _ = <
 : dgn.set_random_mon_list("ice beast w:90 / nothing")

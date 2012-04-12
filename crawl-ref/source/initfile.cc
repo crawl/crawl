@@ -880,9 +880,8 @@ void game_options::reset_options()
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
-    fsim_mons   = "worm";
-    fsim_str = fsim_int = fsim_dex = -1;
-    fsim_xl  = -1;
+    fsim_mons   = "";
+    fsim_scale.clear();
     fsim_kit.clear();
 #endif
 
@@ -1024,7 +1023,9 @@ void game_options::reset_options()
     stat_colour.clear();
     stat_colour.push_back(std::pair<int, int>(3, RED));
     enemy_hp_colour.clear();
-    enemy_hp_colour.push_back(GREEN); // I think these defaults are pretty ugly but apparently OS X has problems with lighter colours
+    // I think these defaults are pretty ugly but apparently OS X has problems
+    // with lighter colours
+    enemy_hp_colour.push_back(GREEN);
     enemy_hp_colour.push_back(GREEN);
     enemy_hp_colour.push_back(BROWN);
     enemy_hp_colour.push_back(BROWN);
@@ -2197,6 +2198,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = "de";
         else if (field == "fr" || field == "french" || field == "français")
             lang = "fr";
+        else if (field == "dwarven" || field == "dwarf")
+            lang = "dwarven";
+        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
+            lang = "jägerkin";
+        else if (field == "lisp" || field == "lithp")
+            lang = "lisp";
+        else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
+            lang = "wide";
+        else if (field == "en" || field == "english")
+            lang = 0;
         else
         {
             report_error(make_stringf("No translations for language: %s\n",
@@ -2800,6 +2811,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
+    else if (key == "fsim_mode")
+        fsim_mode = field;
+    else if (key == "fsim_scale")
+        append_vector(fsim_scale, split_string(",", field));
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));
     else if (key == "fsim_rounds")
@@ -2812,14 +2827,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fsim_mons")
         fsim_mons = field;
-    else if (key == "fsim_str")
-        fsim_str = atoi(field.c_str());
-    else if (key == "fsim_int")
-        fsim_int = atoi(field.c_str());
-    else if (key == "fsim_dex")
-        fsim_dex = atoi(field.c_str());
-    else if (key == "fsim_xl")
-        fsim_xl = atoi(field.c_str());
 #endif // WIZARD
     else if (key == "sort_menus")
     {

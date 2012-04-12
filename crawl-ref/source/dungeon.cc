@@ -2022,20 +2022,6 @@ static void _ruin_level(Iterator ri,
     }
 }
 
-//#define DEBUG_MIMIC
-#ifdef DEBUG_MIMIC
-// Missing stairs are replaced in fixup_branch_stairs, but replacing
-// too many breaks interlevel connectivity, so we don't use a chance of 1.
-  #define FEATURE_MIMIC_CHANCE 2
-  #define ITEM_MIMIC_CHANCE    1
-  #define FEATURE_MIMIC_DEPTH  1
-  #define ITEM_MIMIC_DEPTH     1
-#else
-  #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    500
-  #define FEATURE_MIMIC_DEPTH   10
-  #define ITEM_MIMIC_DEPTH       7
-#endif
 static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 {
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
@@ -5027,15 +5013,9 @@ void place_spec_shop(const coord_def& where,
     for (j = 0; j < 3; j++)
         env.shop[i].keeper_name[j] = 1 + random2(200);
 
-    if (!spec->name.empty())
-        env.shop[i].shop_name = spec->name;
-
-    if (!spec->type.empty())
-        env.shop[i].shop_type_name = spec->type;
-
-    if (!spec->suffix.empty())
-        env.shop[i].shop_suffix_name = spec->suffix;
-
+    env.shop[i].shop_name = spec->name;
+    env.shop[i].shop_type_name = spec->type;
+    env.shop[i].shop_suffix_name = spec->suffix;
     env.shop[i].level = level_number * 2;
 
     env.shop[i].type = static_cast<shop_type>(

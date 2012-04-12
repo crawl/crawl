@@ -731,39 +731,24 @@ static void _get_randart_properties(const item_def &item,
 
         if (is_range_weapon(item))
         {
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
+            proprt[ARTP_BRAND] = random_choose_weighted(
+                2, SPWPN_SPEED,
+                4, SPWPN_VENOM,
+                4, SPWPN_VORPAL,
+                4, SPWPN_FLAME,
+                4, SPWPN_FROST,
+                0);
 
-            if (one_chance_in(3))
+            if (atype == WPN_BLOWGUN)
+                proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
+            else if (atype == WPN_CROSSBOW)
             {
-                int tmp = random2(20);
-
-                proprt[ARTP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
-                                     (tmp >= 14) ? SPWPN_PENETRATION :
-                                     (tmp >= 12) ? SPWPN_REAPING :
-                                     (tmp >=  8) ? SPWPN_VENOM
-                                                 : SPWPN_VORPAL + random2(3);
-
-                if (atype == WPN_BLOWGUN)
-                    proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-
-                // Removed slings from getting the venom attribute: they can
-                // be branded with it now using Poison Weapon, and perma-branded
-                // via vorpalise weapon.
-
-                if (atype == WPN_CROSSBOW && one_chance_in(5))
+                // Penetration and electrocution are only allowed on
+                // crossbows.  This may change in future.
+                if (one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-
-                // XXX: Penetration is only allowed on crossbows. This may change
-                // in future.
-                if (atype != WPN_CROSSBOW && proprt[ARTP_BRAND] == SPWPN_PENETRATION)
-                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
-
-                // XXX: Only allow reaping brand on bows. This may change.
-                if (atype != WPN_BOW && atype != WPN_LONGBOW
-                    && proprt[ARTP_BRAND] == SPWPN_REAPING)
-                {
-                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
-                }
+                else if (one_chance_in(5))
+                    proprt[ARTP_BRAND] = SPWPN_PENETRATION;
             }
         }
 
@@ -957,15 +942,11 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // prot_life - no necromantic brands on weapons allowed
+    // prot_life
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
-        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR)
-        && proprt[ARTP_BRAND] != SPWPN_DRAINING
-        && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
-        && proprt[ARTP_BRAND] != SPWPN_PAIN
-        && proprt[ARTP_BRAND] != SPWPN_REAPING)
+        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR))
     {
         proprt[ARTP_NEGATIVE_ENERGY] = 1;
         power_level++;

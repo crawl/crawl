@@ -182,10 +182,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         {
             resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
-        hurted = resist_adjust_damage(&you, flavour, resist,
-                                      hurted, true);
+            hurted = resist_adjust_damage(&you, flavour, resist,
+                                          hurted, true);
             if (resist > 0)
-            canned_msg(MSG_YOU_RESIST);
+                canned_msg(MSG_YOU_RESIST);
         }
         else
         {
@@ -317,7 +317,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!player_res_mutation()
+                    || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give
                 // aux as well
@@ -351,9 +352,13 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
             hurted += hurted / 2;
         break;
     }
+
     default:
         break;
     }                           // end switch
+
+    if (doEffects && hurted != original)
+        maybe_id_resist(flavour);
 
     return (hurted);
 }
@@ -434,7 +439,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
+    if (player_res_corr() && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;
@@ -655,24 +660,23 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
-                     break;
+                    break;
 
                 case OBJ_FOOD:
-                    // Message handled elsewhere.
-                    if (flavour == BEAM_DEVOUR_FOOD)
-                        break;
-                    mprf("%s %s %s covered with spores!",
+                    mprf("%s %s %s %s!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                     break;
+                         (num_dest == 1) ? "is" : "are",
+                         (flavour == BEAM_DEVOUR_FOOD) ?
+                             "devoured" : "covered with spores");
+                    break;
 
                 default:
                     mprf("%s %s %s destroyed!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
-                     break;
+                    break;
                 }
 
                 total_dest += num_dest;
@@ -1102,6 +1106,8 @@ static void _place_player_corpse(bool explode)
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
+    if (you.hp_max <= 0)
+        unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)

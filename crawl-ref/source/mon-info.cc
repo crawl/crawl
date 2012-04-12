@@ -144,6 +144,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BREATH_WEAPON;
     case ENCH_DEATHS_DOOR:
         return MB_DEATHS_DOOR;
+    case ENCH_ROLLING:
+        return MB_ROLLING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -835,7 +837,8 @@ std::string monster_info::_core_name() const
     return s;
 }
 
-std::string monster_info::_apply_adjusted_description(description_level_type desc, const std::string& s) const
+std::string monster_info::_apply_adjusted_description(description_level_type desc,
+                                                      const std::string& s) const
 {
     if (desc == DESC_ITS)
         desc = DESC_THE;
@@ -961,6 +964,8 @@ std::string monster_info::mimic_name() const
         {
             s = "rune";
         }
+        else if (item->base_type == OBJ_ORBS)
+            s = "orb";
         else
             s = item->name(DESC_BASENAME);
     }
@@ -1338,6 +1343,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("standing in death's doorway");
     if (is(MB_REGENERATION))
         v.push_back("regenerating");
+    if (is(MB_ROLLING))
+        v.push_back("rolling");
     return v;
 }
 

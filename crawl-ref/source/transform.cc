@@ -65,8 +65,7 @@ bool form_can_wield(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
-    if ((form == TRAN_NONE || form == TRAN_LICH || form == TRAN_APPENDAGE)
-        && you.species == SP_TENGU
+    if (you.species == SP_TENGU
         && (you.experience_level >= 15 || you.airborne()))
     {
         return (true);
@@ -139,6 +138,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_BAT:
     case TRAN_PIG:
     case TRAN_SPIDER:
+    case TRAN_ICE_BEAST:
         return false;
 
     // And some need more complicated logic.
@@ -148,9 +148,6 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_STATUE:
         return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
              || eqslot == EQ_SHIELD);
-
-    case TRAN_ICE_BEAST:
-        return (eqslot == EQ_CLOAK);
 
     default:                // Bug-catcher.
         die("Unknown transformation type %d in form_can_wear_item", you.form);
@@ -188,7 +185,19 @@ _init_equipment_removal(transformation_type form)
     {
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
-        if (pitem && !form_can_wear_item(*pitem, form))
+
+        if (!pitem)
+            continue;
+
+        // Octopodes lose their extra ring slots (3--8) in forms that do not
+        // have eight limbs.  Handled specially here because we do have to
+        // distinguish between slots the same type.
+        if (i >= EQ_RING_THREE && i <= EQ_RING_EIGHT
+            && !(form_keeps_mutations(form) || form == TRAN_SPIDER))
+        {
+            result.insert(eq);
+        }
+        else if (!form_can_wear_item(*pitem, form))
             result.insert(eq);
     }
     return (result);
@@ -497,7 +506,7 @@ static bool _slot_conflict(equipment_type eq)
     if (you.equip[eq] != -1)
     {
         // Horns + hat is fine.
-        if (eq != EQ_HELMET || is_hard_helmet(*(you.slot_item(eq))))
+        if (eq != EQ_HELMET || you.melded[eq] || is_hard_helmet(*(you.slot_item(eq))))
             return true;
     }
 
@@ -790,6 +799,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (just_check)
         return (true);
 
+    // Switching between forms takes a bit longer.
+    if (!force && previous_trans != TRAN_NONE && previous_trans != which_trans)
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
+
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
@@ -1056,6 +1069,11 @@ void untransform(bool skip_wielding, bool skip_move)
     {
         move_player_to_grid(you.pos(), false, true);
     }
+
+#ifdef USE_TILE
+    if (you.species == SP_MERFOLK)
+        init_player_doll();
+#endif
 
     if (form_can_butcher_barehanded(old_form))
         stop_butcher_delay();

@@ -253,8 +253,9 @@ bool TextDB::_needs_update() const
         // No point in empty databases, although for simplicity keep ones
         // for disappeared translations for now.
         ASSERT(english);
-        delete english->translation;
-        english->translation = 0;
+        TextDB *en = english;
+        delete en->translation; // ie, ourself
+        en->translation = 0;
         return false;
     }
 
@@ -309,11 +310,13 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
+#ifndef DGAMELAUNCH
 static void* init_db(void *arg)
 {
     AllDBs[(intptr_t)arg].init();
     return 0;
 }
+#endif
 
 #define NUM_DB ARRAYSZ(AllDBs)
 
@@ -594,6 +597,9 @@ static std::string _getWeightedString(TextDB &db, const std::string &key,
                                       const std::string &suffix,
                                       int fixed_weight = -1)
 {
+    if (!db.get()) // when called by Gretell's "monster"
+        return "";
+
     // We have to canonicalise the key (in case the user typed it
     // in and got the case wrong.)
     std::string canonical_key = key + suffix;

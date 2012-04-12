@@ -3050,6 +3050,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gateway to Hell");
     case DNGN_EXIT_HELL:
         return ("gateway back into the Dungeon");
+    case DNGN_TELEPORTER:
+        return ("teleporter");
     case DNGN_TRAP_MECHANICAL:
         return ("mechanical trap");
     case DNGN_TRAP_MAGICAL:

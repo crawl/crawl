@@ -106,7 +106,7 @@ struct spell_desc
      0,
      SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of striking
      1,
-     25,
+     50,
      5, 5,
      0,
      NULL,
@@ -647,7 +647,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
-     5, 5,
+     7, 7,
      0,
      NULL,
      true,

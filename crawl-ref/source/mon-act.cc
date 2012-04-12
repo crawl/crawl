@@ -808,7 +808,7 @@ static bool _handle_reaching(monster* mons)
         && delta.abs() <= reach_range(range)
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
-        && (grd(middle) > DNGN_MAX_NONREACH
+        && (feat_is_reachable_past(grd(middle))
             || mons->see_cell_no_trans(foepos))
         // The foe should be on the map (not stepped from time).
         && in_bounds(foepos))
@@ -1940,7 +1940,13 @@ void handle_noattack_constrictions(actor *attacker)
         {
             // Constriction should have stopped the moment the actors
             // became non-adjacent.
-            ASSERT(adjacent(attacker->pos(), defender->pos()));
+            if (!adjacent(attacker->pos(), defender->pos()))
+            {
+                // Yet disabling constriction by hand in every single place
+                // is too error-prone.
+                attacker->stop_constricting(defender->mindex(), false);
+                continue;
+            }
 
             int damage;
 
@@ -1948,18 +1954,18 @@ void handle_noattack_constrictions(actor *attacker)
                 damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
-            DIAG_ONLY(int basedam = damage);
+            DIAG_ONLY(const int basedam = damage);
             damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
             if (attacker->is_player())
                 damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-            DIAG_ONLY(int durdam = damage);
+            DIAG_ONLY(const int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
-            DIAG_ONLY(int acdam = damage);
+            DIAG_ONLY(const int acdam = damage);
             damage = timescale_damage(attacker, damage);
-            DIAG_ONLY(int timescale_dam = damage);
+            DIAG_ONLY(const int timescale_dam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-            DIAG_ONLY(int infdam = damage);
+            DIAG_ONLY(const int infdam = damage);
 
             std::string exclams;
             if (damage <= 0 && attacker->is_player()
@@ -2193,6 +2199,14 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
+        if (mons_is_boulder(mons))
+        {
+            if (boulder_act(*mons))
+                return;
+            mons->lose_energy(EUT_MOVE);
+            continue;
+        }
+
         mons->shield_blocks = 0;
 
         const int  cloud_num   = env.cgrid(mons->pos());
@@ -2269,10 +2283,11 @@ void handle_monster_move(monster* mons)
             && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
                 || mons_itemeat(mons) != MONEAT_NOTHING))
         {
-            // Keep neutral and charmed monsters from picking up stuff.
+            // Keep neutral, charmed, summoned monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
-            if (!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-                || (you.religion == GOD_JIYVA && mons_is_slime(mons))
+            if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
+                 || (you.religion == GOD_JIYVA && mons_is_slime(mons)))
+                && !mons->is_summoned()
                 && (!mons->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {

@@ -62,8 +62,9 @@
 
     Further explanations copied from mon-util.h:
         hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-        min hp = [0]*[1]+[3]
-        max hp = [0]*times_do*{ [1]+random2([2])}, *then* + [3]
+        min hp = [0]*[1] + [3]
+        max hp = [0]*([1]+[2]) + [3]
+        hp     = [0] *times_do* { [1] + random2(1+[2]) }, *then* + [3]
         example: the Iron Golem, hpdice={15,7,4,0}
            15*7 < hp < 15*(7+4),
            105 < hp < 165
@@ -1927,12 +1928,12 @@ static monsterentry mondata[] = {
 {
     MONS_EMPEROR_SCORPION, 's', LIGHTGREY, "emperor scorpion",
     M_NO_SKELETON,
-    MR_VUL_POISON,
+    MR_RES_POISON,
     900, 9, MONS_SCORPION, MONS_EMPEROR_SCORPION, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_MEDIUM, 30}, {AT_HIT, AF_PLAIN, 11},
-      {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK },
-    { 14, 4, 5, 0 },
-    18, 8, MST_NO_SPELLS, CE_POISON_CONTAM, Z_BIG, S_SILENT,
+    { {AT_STING, AF_POISON_NASTY, 30}, {AT_CLAW, AF_PLAIN, 15},
+      {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
+    { 14, 6, 5, 0 },
+    20, 12, MST_NO_SPELLS, CE_POISON_CONTAM, Z_BIG, S_SILENT,
     I_INSECT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
@@ -2609,9 +2610,9 @@ static monsterentry mondata[] = {
     MR_VUL_POISON,
     2050, 8, MONS_GOLIATH_BEETLE, MONS_BOULDER_BEETLE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    { 9, 6, 5, 0 },
     20, 2, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT,
-    I_INSECT, HT_LAND, FL_NONE, 3, DEFAULT_ENERGY,
+    I_INSECT, HT_LAND, FL_NONE, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
@@ -3592,8 +3593,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_OKLOB_SAPLING, 'P', LIGHTCYAN, "oklob sapling",
-    // if we decide to allow this for normal games, please remove M_NO_POLY_TO
-    M_STATIONARY | M_NO_POLY_TO,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ACID,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5280,13 +5280,12 @@ static monsterentry mondata[] = {
 // explodey things / orb of fire ('*')
 {
     MONS_BALL_LIGHTNING, '*', LIGHTCYAN, "ball lightning",
-    M_CONFUSED | M_SPELLCASTER | M_INSUBSTANTIAL
-        | M_GLOWS_LIGHT | M_FAKE_SPELLS,
+    M_CONFUSED | M_INSUBSTANTIAL | M_GLOWS_LIGHT,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD, 3),
     0, 20, MONS_BALL_LIGHTNING, MONS_BALL_LIGHTNING, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 0, 0, 1 },
-    0, 10, MST_STORM_DRAGON, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_LEVITATE, 20, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },

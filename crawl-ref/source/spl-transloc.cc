@@ -219,7 +219,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+            if (!wizard_blink)
+                place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -561,7 +563,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+                if (!wizard_tele)
+                    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 move_player_to_grid(pos, false, true);
 
@@ -753,7 +756,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
 
-    if (you.trans_wall_blocking(where))
+    if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;
@@ -805,7 +808,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         else
             mpr("The mass is resisting your pull.");
 
-            return SPRET_SUCCESS;
+        return SPRET_SUCCESS;
     }
 
     // We need to modify the item *before* we move it, because
@@ -818,14 +821,17 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         // There's also a 1-in-6 flat chance of apport failing.
         if (one_chance_in(6))
         {
-            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
-                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks and becomes a dead weight against your magic!",
+                "The orb lets out a furious burst of light and becomes "
+                    "a dead weight against your magic!");
             return SPRET_SUCCESS;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
-            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
-                             "The orb lets out a furious burst of light as your magic touches it!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks as your magic touches it!",
+                "The orb lets out a furious burst of light as your magic touches it!");
         }
     }
 

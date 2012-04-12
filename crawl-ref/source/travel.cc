@@ -279,8 +279,10 @@ bool feat_is_traversable(dungeon_feature_type feat)
     if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
 #endif
         return false;
-    else if (feat >= DNGN_FLOOR_MIN || feat == DNGN_DETECTED_SECRET_DOOR
-             || feat == DNGN_CLOSED_DOOR || feat == DNGN_SHALLOW_WATER)
+    else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
+        return false;
+    else if (feat >= DNGN_MOVEMENT_MIN || feat == DNGN_DETECTED_SECRET_DOOR
+             || feat == DNGN_CLOSED_DOOR)
     {
         return true;
     }
@@ -2350,14 +2352,20 @@ bool travel_kill_monster(monster_type mons)
         return (false);
 
     // Don't auto-kill things with berserkitis or *rage.
-    if ((player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY)
-         || player_equip_unrand(UNRAND_TROG))
-        && !wearing_amulet(AMU_STASIS, false)
-        && !player_mental_clarity(false)
-        && you.is_undead != US_UNDEAD
-        && you.is_undead != US_HUNGRY_DEAD)
+    if (player_mutation_level(MUT_BERSERK)
+        || player_effect_angry())
     {
-        return (false);
+        if (player_effect_stasis(false)
+            || player_mental_clarity(false)
+            || you.is_undead == US_UNDEAD
+            || you.is_undead == US_HUNGRY_DEAD)
+        {
+            return (true);
+        }
+        else
+        {
+            return (false);
+        }
     }
 
     return (true);
@@ -3909,9 +3917,6 @@ const runrest &runrest::operator = (int newrunmode)
 
 static dungeon_feature_type _base_feat_type(dungeon_feature_type grid)
 {
-    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        return (DNGN_FLOOR);
-
     // Merge walls.
     if (feat_is_wall(grid))
         return (DNGN_ROCK_WALL);

@@ -298,12 +298,7 @@ static void _check_inventory_skills()
 
 static void _check_equipment_skills()
 {
-    skill_set_iter it = you.stop_train.find(SK_ARMOUR);
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, true);
-    if (it != you.stop_train.end() && armour && property(*armour, PARM_EVASION))
-        you.stop_train.erase(it);
-
-    it = you.stop_train.find(SK_SHIELDS);
+    skill_set_iter it = you.stop_train.find(SK_SHIELDS);
     if (it != you.stop_train.end() && you.slot_item(EQ_SHIELD, true))
         you.stop_train.erase(it);
 }
@@ -441,6 +436,7 @@ bool training_restricted(skill_type sk)
     case SK_FIGHTING:
     // Requiring missiles would mean disabling the skill when you run out.
     case SK_THROWING:
+    case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
     case SK_STABBING:
@@ -562,13 +558,13 @@ void init_training()
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (skill_trained(i))
-            skills[i] = you.skill_points[i];
+            skills[i] = pow(you.skill_points[i], 2);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        skills[i] = you.skill_points[i];
+        skills[i] = pow(you.skill_points[i], 2);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises_all, skills);
@@ -1058,6 +1054,7 @@ void set_skill_level(skill_type skill, double amount)
         // Maximum number of skill points to transfer in one go.
         // It's max_xp*10/cost rounded up.
         int max_skp = (max_xp * 10 + cost - 1) / cost;
+        max_skp = std::max(max_skp, 1);
         int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
                                       max_skp);
         int delta_xp = (delta_skp * cost + 9) / 10;

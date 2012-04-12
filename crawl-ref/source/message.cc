@@ -1104,20 +1104,13 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
 
+    formatted_string fs = formatted_string::parse_string(text);
     if (you.duration[DUR_QUAD_DAMAGE])
-    {
-        // No sound, so we simulate the reverb with all caps.
-        formatted_string fs = formatted_string::parse_string(text);
-        fs.all_caps();
-        text = fs.to_colour_string();
-    }
+        fs.all_caps(); // No sound, so we simulate the reverb with all caps.
     else if (cap)
-    {
-        // Hate, hate, hate tagged strings.
-        formatted_string fs = formatted_string::parse_string(text);
         fs.capitalize();
-        text = fs.to_colour_string();
-    }
+    fs.filter_lang();
+    text = fs.to_colour_string();
 
     message_item msg = message_item(text, channel, param, join);
     messages.add(msg);

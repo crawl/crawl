@@ -521,7 +521,8 @@ void spirit_fades(monster *spirit)
 /**
  * Determine if a monster is a phoenix.
  *
- * Monsters that were previously phoenixes are not considered phoenixes for phoenix resurrection purposes, I suppose.
+ * Monsters that were previously phoenixes are not considered phoenixes for
+ * phoenix resurrection purposes, I suppose.
  *
  * @param mons      The monster to check.
  * @returns         True if Phoenix, False otherwise.
@@ -592,9 +593,9 @@ void timeout_phoenix_markers(int duration)
         if (mmark->duration < 0)
         {
             // Now, look for the corpse
-            bool found_body;
+            bool found_body = false;
             coord_def place_at;
-            bool from_inventory;
+            bool from_inventory = false;
 
             for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
             {

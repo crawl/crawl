@@ -165,6 +165,10 @@ bool monster_habitable_grid(monster_type mt,
     if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
         return (false);
 
+    // Monsters can't use teleporters, and standing there would look just wrong.
+    if (actual_grid == DNGN_TELEPORTER)
+        return (false);
+
     const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(mt));
     const dungeon_feature_type feat_nonpreferred =
@@ -235,7 +239,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
             return (feat == DNGN_LAVA);
         case HT_LAND:
             // Currently, trapdoor spider and air elemental only.
-            return (feat_is_floor(feat));
+            return (feat == DNGN_FLOOR);
         default:
             return (false);
         }
@@ -520,9 +524,6 @@ monster_type pick_random_monster(const level_id &place, int power,
     monster_type mon_type = MONS_PROGRAM_BUG;
 
     lev_mons = power;
-
-    if (place == BRANCH_MAIN_DUNGEON && one_chance_in(4))
-        lev_mons = random2(power);
 
     const int original_level = lev_mons;
 
@@ -856,23 +857,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
         chosen = MONS_NO_MONSTER;
 
     return (chosen);
-}
-
-// Given a monster_type that includes meta-monster types such as
-// RANDOM_MONSTER, converts them into a level-appropriate monster.
-monster_type resolve_monster_type(monster_type mon_type,
-                                  dungeon_feature_type feat)
-{
-    monster_type base = MONS_NO_MONSTER;
-    coord_def dummy(GXM - 1, GYM - 1);
-    unwind_var<dungeon_feature_type> dummgrid(grd(dummy), feat);
-    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int level = env.absdepth0;
-    bool chose_ood = false;
-
-    return _resolve_monster_type(mon_type, PROX_ANYWHERE, base,
-                                 dummy, 0, &stair_type, &level,
-                                 &chose_ood);
 }
 
 // A short function to check the results of near_stairs().
@@ -1728,8 +1712,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "summoned by ";
 
         if (mg.summoner != NULL && mg.summoner->alive()
-            && mg.summoner->is_monster()
-            && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
+            && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
         }
@@ -1738,16 +1721,13 @@ static monster* _place_monster_aux(const mgen_data &mg,
         blame_prefix = "animated by ";
     else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
         blame_prefix = "transmuted by ";
-    else
+    else if (mg.cls == MONS_ELDRITCH_TENTACLE
+             || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
-        blame_prefix = "created by ";
-
-        if (mg.cls == MONS_ELDRITCH_TENTACLE
-            || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
-        {
-            blame_prefix = "called by ";
-        }
+        blame_prefix = "called by ";
     }
+    else
+        blame_prefix = "created by ";
 
     if (!mg.non_actor_summoner.empty())
         mons_add_blame(mon, blame_prefix + mg.non_actor_summoner);

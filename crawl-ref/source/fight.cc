@@ -65,7 +65,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
     if (defender->is_player())
     {
@@ -77,6 +77,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
 
         // It's hard to attack from within a shell.
         if (attacker->as_monster()->withdrawn())
+            return (false);
+
+        // Boulders can't melee while they're rolling past you
+        if (attacker->as_monster()->rolling())
             return (false);
 
         // In case the monster hasn't noticed you, bumping into it will
@@ -94,6 +98,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         }
 
         melee_attack attk(&you, defender);
+
+        if (simu)
+            attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
@@ -183,10 +190,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         melee_attack melee_attk(attacker, defender, attack_number,
                           effective_attack_number);
 
+        if (simu)
+            melee_attk.simu = true;
+
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters
         if (!melee_attk.attack())
             effective_attack_number = melee_attk.effective_attack_number;
+        else if (did_hit and not *did_hit)
+            *did_hit = melee_attk.did_hit;
     }
 
     return (true);

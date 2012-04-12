@@ -403,9 +403,9 @@ std::string describe_mutations()
             std::string msg = "You can fly";
             if (you.experience_level > 14)
                 msg += " continuously";
-            msg += ".";
+            msg += ".\n";
 
-            result += _annotate_form_based(msg, player_is_shapechanged());
+            result += msg;
             have_any = true;
         }
         break;
@@ -527,7 +527,9 @@ std::string describe_mutations()
 
     case SP_OCTOPODE:
         result += "You cannot wear most types of armour.\n";
-        result += "You can wear up to eight rings at the same time.\n";
+        result += _annotate_form_based(
+            "You can wear up to eight rings at the same time.",
+            !form_keeps_mutations() && you.form != TRAN_SPIDER);
         result += "You are amphibious.\n";
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
@@ -1218,8 +1220,8 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         // resistance mutation.
         if (!god_gift)
         {
-            if ((wearing_amulet(AMU_RESIST_MUTATION)
-                    && !one_chance_in(10) && !stat_gain_potion)
+            if ((player_res_mutation()
+                 && !one_chance_in(10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(3)))
@@ -1624,6 +1626,10 @@ bool delete_mutation(mutation_type which_mutation, const std::string &reason,
             }
 
             if (you.innate_mutations[mutat] >= you.mutation[mutat])
+                continue;
+
+            // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
+            if (mutat && mutat == you.attribute[ATTR_APPENDAGE])
                 continue;
 
             const mutation_def& mdef = get_mutation_def(mutat);

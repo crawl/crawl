@@ -2561,7 +2561,7 @@ int piety_scale(int piety)
     if (piety < 0)
         return (-piety_scale(-piety));
 
-    if (wearing_amulet(AMU_FAITH))
+    if (player_effect_faith())
         return (piety + div_rand_round(piety, 3));
 
     return (piety);
@@ -3862,7 +3862,8 @@ void handle_god_time()
         switch (you.religion)
         {
         case GOD_XOM:
-            xom_tick();
+// Moved to _player_reacts()
+//            xom_tick();
             return;
 
         case GOD_ELYVILON:

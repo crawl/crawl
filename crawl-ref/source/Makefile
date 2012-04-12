@@ -43,9 +43,14 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
-#    ASSERTS       -- set to enable assertion checks (implied in debug mode)
+#    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
+#
+#    PROPORTIONAL_FONT -- set to a .ttf file you want to use for a proportional
+#                         font; if not set, a copy of Bitstream Vera Sans
+#                         shipped with Crawl will be used
+#    MONOSPACED_FONT   -- monospaced font; Bitstream Vera Mono Sans
 #
 #    WEBTILES      -- set to anything to compile for Webtiles
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
@@ -60,8 +65,6 @@
 #    them somewhere in the near future.
 
 GAME = crawl
-
-ASSERTS = yes
 
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
@@ -702,7 +705,7 @@ export CCACHE_CPP2 = yes
 endif
 endif
 
-ifdef ASSERTS
+ifndef NOASSERTS
 DEFINES += -DASSERTS
 endif
 
@@ -1158,8 +1161,8 @@ endif
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
-	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
-	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/
+	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
@@ -1288,6 +1291,9 @@ ifdef NO_INLINE_DEPGEN
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+ifndef NO_INLINE_DEPGEN
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+endif
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o

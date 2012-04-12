@@ -894,6 +894,10 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     case SPELL_IOOD: // tracer only
         beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
+        // Doesn't take distance into account, but this is just a tracer so
+        // we'll ignore that.  We need some damage on the tracer so the monster
+        // doesn't think the spell is useless against other monsters.
+        beam.damage   = dice_def(9, stepdown_value(power, 30, 30, 200, -1) / 4);
         break;
 
     case SPELL_SUNRAY:
@@ -2151,9 +2155,9 @@ void mons_cast_spectral_orcs(monster* mons)
 static bool _mons_vampiric_drain(monster *mons)
 {
     actor *target = mons->get_foe();
-    if (grid_distance(mons->pos(), target->pos()) > 1)
+    if (!target)
         return (false);
-    if (target->undead_or_demonic())
+    if (grid_distance(mons->pos(), target->pos()) > 1)
         return (false);
 
     int fnum = 5;
@@ -2165,8 +2169,16 @@ static bool _mons_vampiric_drain(monster *mons)
 
     hp_cost = std::min(hp_cost, target->stat_hp());
     hp_cost = std::min(hp_cost, mons->max_hit_points - mons->hit_points);
+    if (target->res_negative_energy() > 0)
+        hp_cost -= hp_cost * target->res_negative_energy() / 3;
+
     if (!hp_cost)
+    {
+        simple_monster_message(mons,
+                               " is infused with unholy energy, but nothing happens.",
+                               MSGCH_MONSTER_SPELL);
         return (false);
+    }
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
@@ -2182,19 +2194,25 @@ static bool _mons_vampiric_drain(monster *mons)
     if (target->is_player())
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
-        simple_monster_message(mons,
-                               " draws life force from you and is healed!");
+        if (mons->heal(hp_cost / 2))
+        {
+            simple_monster_message(mons,
+                " draws life force from you and is healed!");
+        }
     }
     else
     {
         monster* mtarget = target->as_monster();
         const std::string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
-        simple_monster_message(mons,
-                               make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
+        if (mons->heal(hp_cost / 2))
+        {
+            simple_monster_message(mons,
+                make_stringf(" draws life force from %s and is healed!",
+                targname.c_str()).c_str());
+        }
         if (mtarget->alive())
             print_wounds(mtarget);
-        mons->heal(hp_cost / 2);
     }
 
     return (true);
@@ -2668,7 +2686,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TROGS_HAND:
     {
         simple_monster_message(mons,
-                               make_stringf(" invokes %s's protection!", god_name(mons->god).c_str()).c_str(),
+                               make_stringf(" invokes %s's protection!",
+                                   god_name(mons->god).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
         const int dur = BASELINE_DELAY
             * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
@@ -3101,7 +3120,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MALIGN_GATEWAY:
         if (!can_cast_malign_gateway())
-            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_THE).c_str(), count_malign_gateways());
+        {
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! "
+                 "Counted %d gateways.", mons->name(DESC_THE).c_str(),
+                 count_malign_gateways());
+        }
         cast_malign_gateway(mons, 200);
         return;
 
@@ -3456,7 +3479,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
                     proceed = true;
 
-            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            if (!proceed && feat_is_reachable_past(grd(*ai)))
                 sumcount++;
         }
 
@@ -4146,6 +4169,9 @@ bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell)
 
 bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
 {
+    if (ms_waste_of_time(mon, monspell))
+        return (false);
+
     bool targ_adj      = false;
     bool targ_sanct    = false;
     bool targ_friendly = false;
@@ -4178,9 +4204,6 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     {
     case SPELL_TELEPORT_OTHER:
         return !targ_sanct && !targ_friendly;
-    case SPELL_TELEPORT_SELF:
-        // Don't cast again if already about to teleport.
-        return !mon->has_ench(ENCH_TP);
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
@@ -4200,10 +4223,6 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_INK_CLOUD:
         if (mon->type == MONS_KRAKEN)
             return true;
-    case SPELL_DEATHS_DOOR:
-        return !mon->has_ench(ENCH_DEATHS_DOOR);
-    case SPELL_INVISIBILITY:
-        return !mon->has_ench(ENCH_INVIS);
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
@@ -4298,10 +4317,18 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         ret = (!foe || !foe->is_player());
         break;
 
+    case SPELL_VAMPIRIC_DRAINING:
+        if (mon->hit_points + 1 >= mon->max_hit_points
+            || grid_distance(mon->pos(), foe->pos()) > 1)
+        {
+            ret = true;
+        }
+    // fall through
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
-        ret = (!foe || _foe_should_res_negative_energy(foe));
+        if (!foe || _foe_should_res_negative_energy(foe))
+            ret = true;
         break;
     case SPELL_MIASMA:
         ret = (!foe || foe->res_rotting());
@@ -4337,8 +4364,11 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_REGENERATION:
-        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR))
+        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR)
+            || mon->holiness() == MH_UNDEAD)
+        {
             ret = true;
+        }
         break;
 
     case SPELL_MIRROR_DAMAGE:

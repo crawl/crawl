@@ -2269,17 +2269,22 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_LEVITATION:
         if (slot == EQ_BODY_ARMOUR)
             return (true);
+        // deliberate fall-through
     case SPARM_RUNNING:
     case SPARM_STEALTH:
         return (slot == EQ_BOOTS);
 
     case SPARM_ARCHMAGI:
-        return (type == ARM_ROBE);
+        return (strict ? (type == ARM_ROBE)
+                       : (slot == EQ_BODY_ARMOUR));
 
     case SPARM_PONDEROUSNESS:
         return (true);
 
     case SPARM_PRESERVATION:
+        if (type == ARM_PLATE_ARMOUR && !strict)
+            return (true);
+        // deliberate fall-through
     case SPARM_DARKNESS:
         return (slot == EQ_CLOAK);
 
@@ -2287,9 +2292,12 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_PROTECTION:
         return (slot == EQ_SHIELD);
 
-    case SPARM_ARCHERY:
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
+        if (!strict)
+            return true;
+        // deliberate fall-through
+    case SPARM_ARCHERY:
         return (slot == EQ_GLOVES);
 
     case SPARM_SEE_INVISIBLE:
@@ -2310,15 +2318,17 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_MAGIC_RESISTANCE:
         if (type == ARM_WIZARD_HAT)
             return (true);
+        // deliberate fall-through
     case SPARM_POISON_RESISTANCE:
     case SPARM_POSITIVE_ENERGY:
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return (false); // contradictory or redundant
 
-        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK);
+        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK
+                || !strict);
 
     case SPARM_SPIRIT_SHIELD:
-        return (type == ARM_CAP || slot == EQ_SHIELD);
+        return (type == ARM_CAP || slot == EQ_SHIELD || !strict);
 
     case NUM_SPECIAL_ARMOURS:
         die("invalid armour brand");
@@ -3419,17 +3429,6 @@ jewellery_type get_random_ring_type()
     }
 
     return (j);
-}
-
-armour_type get_random_body_armour_type(int item_level)
-{
-    for (int tries = 100; tries > 0; --tries)
-    {
-        const armour_type tr = _get_random_armour_type(item_level);
-        if (get_armour_slot(tr) == EQ_BODY_ARMOUR)
-            return (tr);
-    }
-    return (ARM_ROBE);
 }
 
 // FIXME: Need to clean up this mess.

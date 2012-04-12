@@ -1601,14 +1601,14 @@ LUAFN(_dgn_map_parameters)
     return clua_stringtable(ls, map_parameters);
 }
 
-int dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
+static int _dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
 {
     return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
 }
 
 LUAFN(_dgn_maps_used_here)
 {
-    return clua_gentable(ls, env.level_vaults, dgn_push_vault_placement);
+    return clua_gentable(ls, env.level_vaults, _dgn_push_vault_placement);
 }
 
 LUAFN(_dgn_vault_at)
@@ -1616,13 +1616,9 @@ LUAFN(_dgn_vault_at)
     GETCOORD(c, 1, 2, map_bounds);
     vault_placement *place = dgn_vault_at(c);
     if (place)
-    {
-        dgn_push_vault_placement(ls, place);
-    }
+        _dgn_push_vault_placement(ls, place);
     else
-    {
         lua_pushnil(ls);
-    }
 
     return 1;
 }

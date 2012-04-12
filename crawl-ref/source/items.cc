@@ -603,24 +603,11 @@ void item_was_lost(const item_def &item)
     xom_check_lost_item(item);
 }
 
-static void _note_item_destruction(const item_def &item)
-{
-    if (item_is_orb(item))
-    {
-        mprf(MSGCH_WARN, "A great rumbling fills the air... "
-             "the Orb of Zot has been destroyed!");
-        mark_milestone("orb.destroy", "destroyed the Orb of Zot");
-        env.orb_pos.reset();
-        invalidate_agrid(false);
-    }
-}
-
 void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
-    _note_item_destruction(item);
     xom_check_destroyed_item(item, cause);
 }
 
@@ -1991,10 +1978,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     igrd(p) = ob;
 
     if (item_is_orb(item))
-    {
         env.orb_pos = p;
-        invalidate_agrid(true);
-    }
 
     return (true);
 }
@@ -2204,6 +2188,12 @@ bool drop_item(int item_dropped, int quant_drop)
         if (remove_ring(item_dropped, true))
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
 
+        return (false);
+    }
+
+    if (you.inv[item_dropped].base_type == OBJ_ORBS)
+    {
+        mpr("You don't feel like leaving the orb behind!");
         return (false);
     }
 
@@ -2976,7 +2966,8 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
         for (int x = 0; x < GXM; ++x)
             for (stack_iterator si(coord_def(x,y)); si; ++si)
                 if (si->defined()
-                    && si->base_type == cls && si->sub_type == sub_type)
+                    && si->base_type == cls && si->sub_type == sub_type
+                    && !(si->flags & ISFLAG_MIMIC))
                 {
                     return (& (*si));
                 }
@@ -3912,7 +3903,10 @@ item_info get_item_info(const item_def& item)
                     found_unmarked = true;
                 }
             }
-            // TODO: this leaks both whether the seen cards are still there and their order: the representation needs to be fixed
+            // TODO: this leaks both whether the seen cards are still there
+            // and their order: the representation needs to be fixed
+
+            // The above comment seems obsolete now that Mark Four is gone.
             for (int i = 0; i < num_cards; ++i)
             {
                 uint8_t flags;
@@ -3988,19 +3982,7 @@ int runes_in_pack()
 
 bool player_has_orb()
 {
-    if (you.char_direction != GDT_ASCENDING)
-        return false;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_ORBS
-            && you.inv[i].sub_type == ORB_ZOT)
-        {
-            return (true);
-        }
-    }
-    return false;
+    return you.char_direction == GDT_ASCENDING;
 }
 
 static const object_class_type _mimic_item_classes[] =
