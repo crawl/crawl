@@ -758,13 +758,6 @@ bool mons_is_feat_mimic(monster_type mc)
     return (mc == MONS_FEATURE_MIMIC);
 }
 
-static bool _mons_is_weapon_mimic(const monster* mon)
-{
-    return (mons_is_item_mimic(mon->type)
-            && get_mimic_item(mon)
-            && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
-}
-
 void discover_mimic(const coord_def& pos, bool wake)
 {
     item_def* item = item_mimic_at(pos);
@@ -834,6 +827,16 @@ void discover_mimic(const coord_def& pos, bool wake)
     if (wake)
         mg.flags |= MG_DONT_COME;
 
+    // HD is scaled with depth
+    const int level = you.absdepth0 + 1;
+    mg.hd = stepdown_value(level, 12, 12, 24, 36);
+
+    // Number of attacks
+    if (x_chance_in_y(level - 6, 6))
+        ++mg.number;
+    if (x_chance_in_y(level - 15, 6))
+        ++mg.number;
+
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))
@@ -866,9 +869,6 @@ void discover_mimic(const coord_def& pos, bool wake)
 
     if (!mimic->move_to_pos(pos))
         die("Moving mimic into position failed.");
-
-    if (item && item->base_type == OBJ_ARMOUR)
-        mimic->ac += 10;
 
     if (wake)
         behaviour_event(mimic, ME_ALERT, MHITYOU);
@@ -1451,8 +1451,12 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
 
-    if (_mons_is_weapon_mimic(mon))
-        attk.damage += 5;
+    if (mons_is_mimic(mon->type))
+    {
+        if (attk_number > (int)mon->number)
+            return (mon_attack_def::attk(0, AT_NONE));
+        attk.damage += mon->hit_dice;
+    }
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }

@@ -1496,8 +1496,10 @@ size_type monster_info::body_size() const
             ret = SIZE_TINY;
         else if (mass < 100)
             ret = SIZE_LITTLE;
-        else
+        else if (mass < 200)
             ret = SIZE_SMALL;
+        else
+            ret = SIZE_MEDIUM;
     }
 
     return (ret);
