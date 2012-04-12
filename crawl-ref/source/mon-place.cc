@@ -2976,7 +2976,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
         interesting = false;
     else if (crawl_state.game_is_zotdef()
-             && mons_level(mons->type) > you.experience_level)
+             && mons_level(mons->type) + 4 > you.experience_level)
     {
         interesting = true;
     }
