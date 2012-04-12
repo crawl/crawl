@@ -30,9 +30,7 @@ function ice_cave_portal(e)
                                "$F{The} is almost completely melted.")
     }
 
-  local difficulty = ice_cave_difficulty()
-
-  dgn.persist.ice_cave_type = difficulty
+  dgn.persist.ice_cave_hard = ice_cave_difficulty()
 
   e.lua_marker('O',
       timed_marker {
@@ -40,7 +38,6 @@ function ice_cave_portal(e)
         desc = "frozen archway",
         entity = 'archway',
         dst = "IceCv",
-        ice_cave_type = difficulty,
         dstname = "ice_cave",
         overview = "frozen archway",
         turns = timeout_turns_long,
@@ -69,23 +66,21 @@ end
 function ice_cave_difficulty()
 
   -- First default to easy destinations.
-  local difficulty = "ice_cave_easy"
+  local hard = false
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
   if you.branch() == "D" and you.depth() == 14 or
      you.branch() == "Elf" and you.depth() < 3 then
-      if crawl.coinflip() then
-          difficulty = "ice_cave_hard"
-      end
+      hard = crawl.coinflip()
   end
 
   if you.branch() == "D" and you.depth() >= 15 or
      you.branch() == "Elf" or
      you.branch() == "Vaults" then
-      difficulty = "ice_cave_hard"
+      hard = true
   end
 
-  return difficulty
+  return hard
 end
 }}
 
@@ -412,41 +407,17 @@ ENDMAP
 
 # The destination vaults ############
 #
-# For ice_cave_easy, there are currently five cave vaults (each of weight 6,
+# For easy caves, there are currently five cave vaults (each of weight 6,
 # total 30), three cavern vaults (each of weight 5, total 15) and two ice
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 30+15+10=55.
 #
-# For ice_cave_hard, there are currently two cave vaults (each of weight 6,
+# For hard caves, there are currently two cave vaults (each of weight 6,
 # total 12), three cavern vaults (each of weight 5, total 15) and two ice
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 12+15+10=37, so the latter types are more common in hard ice caves.
 
-default-depth:
-
-NAME:   ice_cave
-TAGS:   allow_dup
-PLACE:  IceCv
-ORIENT: encompass
-{{
-  local difficulty = dgn.persist.ice_cave_type
-  -- Wizmode
-  if not difficulty then
-    if crawl.coinflip() then
-      difficulty = "ice_cave_easy"
-    else
-      difficulty = "ice_cave_hard"
-    end
-    dgn.persist.ice_cave_type = difficulty
-  end
-  if crawl.game_started() then
-    local map = dgn.map_by_tag(difficulty)
-    assert(map, "Couldn't find a map for " .. difficulty)
-    dgn.place_map(map, true, false)
-  end
-}}
-MAP
-ENDMAP
+default-depth: IceCv
 
 ###############################################################################
 # The small caves.
@@ -461,7 +432,8 @@ ENDMAP
 # Loot: heavy weapons and rC gear wearable by big races,
 #       plus some useful potions in the freezer.
 NAME:    ice_cave_small_giant
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 # Randomize the layout slightly.
@@ -541,7 +513,8 @@ ENDMAP
 # Foes: ice beasts, ice dragons & ice statues.
 # Loot: some gold, jewellery (approximately three rings).
 NAME:    ice_cave_small_dragons
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 # Randomize the layout slightly.
@@ -601,7 +574,8 @@ ENDMAP
 # Foes: mostly in the undead vein, plus a necromancer and an ice statue.
 # Loot: ice magic loot, gear of cold resistance (one piece).
 NAME:    ice_cave_small_necro
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 KFEAT:   _ = altar_kikubaaqudgha
@@ -676,7 +650,7 @@ ENDMAP
 # Foes: ice & blue devils, white imps & ufetubi, an ice statue.
 # Loot: weapons and/or armour.
 NAME:    ice_cave_small_demon
-TAGS:    ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 NSUBST:  . = 9:1 / 1:2 / *:.
@@ -684,7 +658,7 @@ SHUFFLE: Qq / Zz / Nn / Bb / Mm
 SUBST:   Q=2, Z=2, N=., B=., M=.
 SUBST:   q=!, z=!, n=., b=., m=.
 # Replaces '!'s with fog generators, then makes them floor.
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : place_fog(_G, "freezing vapour", 100)
 : else
 : place_fog(_G, "freezing vapour", 30)
@@ -705,7 +679,7 @@ ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil / nothing")
 }}
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
 MONS:    ice devil / blue devil w:3 / nothing w:2
 MONS:    ice statue
@@ -777,7 +751,7 @@ NAME: ice_cave_tombish
 # This is an ice cave which is also a tomb of a necromancer who likes staying
 # alive and simulacrums, or just a chillout of an ice fiend. By Zaba.
 # Weighted as a small cave, although this is pretty tough. --Eino
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 6
 # S is either an ice statue or a granite statue.
@@ -786,7 +760,7 @@ KMONS:  S = ice statue
 # I is an ice statue with loot underneath.
 KITEM:  I = any scroll q:3
 KMONS:  I = ice statue
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 MONS:   ice devil / blue devil / nothing w:7
 # FIXME: I can't quite make up more simulacrums
 MONS:   grizzly bear simulacrum w:20 / dragon simulacrum /\
@@ -860,7 +834,7 @@ ENDMAP
 # The caverns are more rare than the caves.
 
 NAME: ice_cave_caverns_01
-TAGS: ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # A bit of layout randomization.
@@ -875,7 +849,7 @@ SUBST: _ = w
 : end
 : ice_cave_appearance(_G)
 # Two different populations: undead/demon and natural/giant.
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 : ice_cave_caverns_undead_demon_loot(_G)
@@ -914,7 +888,7 @@ xx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxx
 ENDMAP
 
 NAME:   ice_cave_caverns_02
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # Two different populations: undead/demon and natural/giant.
@@ -922,7 +896,7 @@ ORIENT: encompass
 # doesn't have enough cold resistance for many clouds. The ';' placeholder
 # symbol gives the natural monsters some safety padding from generator
 # placement.
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 : ice_cave_caverns_undead_demon_loot(_G)
@@ -981,13 +955,13 @@ xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xx
 ENDMAP
 
 NAME: ice_cave_caverns_03
-TAGS: ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # Two different populations: undead/demon (hard) and natural/giant (easy).
 # Different fog generator generation according to population,
 # as the natural monsters can't stomach the clouds.
-: if dgn.persist.ice_cave_type == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 : ice_cave_caverns_undead_demon_loot(_G)
@@ -1070,7 +1044,7 @@ ENDMAP
 # them (if they want loot, that is).
 
 NAME:   ice_cave_statue_garden_01
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast
@@ -1114,7 +1088,7 @@ xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ice_cave_statue_garden_02
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
