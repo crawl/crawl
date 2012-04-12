@@ -1685,7 +1685,7 @@ static const char *dngn_feature_names[] =
 #if TAG_MAJOR_VERSION == 32
 "open_sea", "tree", "orcish_idol", "swamp_tree", "endless_lava", "",
 #else
-"tree", "swamp tree", "open_sea", "endless_lava", "orcish_idol", "",
+"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol", "",
 #endif
 "granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
