@@ -1311,7 +1311,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             for (distance_iterator di(you.pos()); di; ++di)
                 if (!monster_at(*di) && mon->is_habitable(*di))
                 {
-                    mon->moveto(*di);
+                    mon->move_to_pos(*di);
                     break;
                 }
     }
