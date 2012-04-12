@@ -4677,7 +4677,7 @@ bool hints_monster_interesting(const monster* mons)
         return (true);
 
     // The monster is (seriously) out of depth.
-    return (mons_level(mons->type) >= env.absdepth0 + 8);
+    return (mons_level(mons->type) >= you.depth + 8);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4723,7 +4723,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             // Since I'm too lazy to come up with any measurement of my own
             // I'll simply reuse that one.
             const int level_diff = mons_level(mi.type)
-                                 - (env.absdepth0 + 8);
+                                 - (you.depth + 8);
 
             if (level_diff >= 0)
             {

@@ -34,6 +34,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -62,11 +63,6 @@ static std::vector<int> vault_mon_weights;
 #define VAULT_MON_TYPES_KEY   "vault_mon_types"
 #define VAULT_MON_BASES_KEY   "vault_mon_bases"
 #define VAULT_MON_WEIGHTS_KEY "vault_mon_weights"
-
-// NEW place_monster -- note that power should be set to:
-// DEPTH_ABYSS for abyss
-// DEPTH_PAN for pandemonium
-// x otherwise
 
 // proximity is the same as for mons_place:
 // 0 is no restrictions
@@ -576,11 +572,9 @@ monster_type pick_random_monster(const level_id &place, int power,
             continue;
         }
 
-        level  = mons_level(mon_type, place);
-        if (original_level >= DEPTH_ABYSS)
-            diff = 0;
-        else
-            diff = level - lev_mons;
+        level = mons_level(mon_type, place) + absdungeon_depth(place.branch, 0);
+        diff = level - lev_mons;
+        ASSERT(brdepth[place.branch] > 1 || !diff);
 
         // If we're running low on tries, ignore level differences.
         if (monster_pick_tries < n_relax_margin)
@@ -1402,7 +1396,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
     {
         monster_type ztype = mg.base_type;
 
-        if (ztype == MONS_NO_MONSTER)
+        if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
         {
             ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls,
                                                    fpos);
@@ -1931,7 +1925,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
 
-        level = mons_level(base) - 4;
+        level = mons_level(base) + absdungeon_depth(you.where_are_you, 0) - 4;
         diff  = level - power;
 
         chance = (ignore_rarity) ? 100
@@ -2040,6 +2034,7 @@ static void _roll_zombie_ac_ev(monster* mon)
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
     ASSERT(ztype != MONS_NO_MONSTER);
+    ASSERT(!invalid_monster_type(ztype));
     ASSERT(mons_class_is_zombified(cs));
 
     monster_type base = mons_species(ztype);
@@ -2983,7 +2978,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     }
     else if (player_in_branch(BRANCH_MAIN_DUNGEON)
              && !crawl_state.game_is_zotdef()
-             && mons_level(mons->type) >= env.absdepth0 + Options.ood_interesting
+             && mons_level(mons->type) >= you.depth + Options.ood_interesting
              && mons_level(mons->type) < 99
              && !(mons->type >= MONS_EARTH_ELEMENTAL
                   && mons->type <= MONS_AIR_ELEMENTAL)
