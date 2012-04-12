@@ -80,6 +80,9 @@ enum card_type
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
+#if TAG_MAJOR_VERSION != 32
+    CARD_MERCENARY,
+#endif
 
     CARD_CRUSADE,
     CARD_SUMMON_ANIMAL,
@@ -93,11 +96,13 @@ enum card_type
     CARD_POTION,
     CARD_FOCUS,
     CARD_SHUFFLE,
-
     CARD_EXPERIENCE,
     CARD_WILD_MAGIC,
     CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
+#if TAG_MAJOR_VERSION != 32
+    CARD_ALCHEMIST,
+#endif
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
@@ -121,10 +126,11 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
-    CARD_ALCHEMIST,
 
 #if TAG_MAJOR_VERSION == 32
+    CARD_ALCHEMIST,
     CARD_ORB,
+    CARD_MERCENARY,
 #endif
 
     NUM_CARDS
