@@ -2353,9 +2353,9 @@ int mons_dis_rare(monster_type mcls)
     case MONS_ROTTING_DEVIL:
     case MONS_SOUL_EATER:
     case MONS_STONE_GOLEM:
+    case MONS_IRON_DRAGON:
         return 10;
 
-    case MONS_IRON_DRAGON:
     case MONS_CRIMSON_IMP:
         return 5;
 
