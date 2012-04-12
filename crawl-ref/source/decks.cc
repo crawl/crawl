@@ -2778,6 +2778,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     };
 
     const int merc = power_level + random2(3 * (power_level + 1));
+    ASSERT(merc < (int)ARRAYSZ(merctypes));
 
     mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
                  0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
