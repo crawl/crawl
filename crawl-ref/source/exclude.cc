@@ -33,8 +33,9 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
     if (mons_is_stationary(mon))
         return (!sleepy);
 
-    // Auto exclusion only makes sense if the monster is still asleep.
-    return (mon->asleep());
+    // Auto exclusion only makes sense if the monster is still asleep or if it
+    // is lurking (discovered mimics).
+    return (mon->asleep() || mons_is_lurking(mon));
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
@@ -84,6 +85,8 @@ void set_auto_exclude(const monster* mon)
         int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             rad = 2;
+        else if (mons_is_mimic(mon->type))
+            rad = 1;
         set_exclude(mon->pos(), rad, true);
         // FIXME: If this happens for several monsters in the same turn
         //        (as is possible for some vaults), this could be really
