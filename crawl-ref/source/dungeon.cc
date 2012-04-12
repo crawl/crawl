@@ -2075,9 +2075,6 @@ static void _place_feature_mimics(int level_number,
         return;
     }
 
-    if (level_number < FEATURE_MIMIC_DEPTH)
-        return;
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def pos = *ri;
@@ -2158,9 +2155,6 @@ static void _place_feature_mimics(int level_number,
 
 static void _place_item_mimics(int level_number)
 {
-
-    if (level_number < ITEM_MIMIC_DEPTH)
-        return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
@@ -3346,7 +3340,6 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
         const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
-                           && dlevel >= FEATURE_MIMIC_DEPTH
                            && player_branch_depth() >= b->mindepth
                            && player_branch_depth() <= b->maxdepth
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
