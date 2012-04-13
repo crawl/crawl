@@ -9,6 +9,19 @@
 
 #include "tag-version.h"
 
+enum lang_t
+{
+    LANG_EN = 0,
+    LANG_PL,
+    LANG_DE,
+    LANG_FR,
+    // fake languages
+    LANG_DWARVEN,
+    LANG_JAGERKIN,
+    LANG_LISP,
+    LANG_WIDE,
+};
+
 enum ability_type
 {
     ABIL_NON_ABILITY = -1,

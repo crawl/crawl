@@ -52,11 +52,11 @@ class TextDB
     bool open_db();
     const char* const _db_name;
     std::string _directory;
-    const char* const _lang;
     std::vector<std::string> _input_files;
     DBM* _db;
     std::string timestamp;
-    TextDB *english;
+    TextDB *_parent;
+    const char* lang() { return _parent ? Options.lang_name : 0; }
 public:
     TextDB *translation;
 };
@@ -155,8 +155,8 @@ static std::string _db_cache_path(std::string db, const char *lang)
 // ----------------------------------------------------------------------
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
-    : _db_name(db_name), _directory(dir), _lang(0),
-      _db(NULL), timestamp(""), english(0), translation(0)
+    : _db_name(db_name), _directory(dir),
+      _db(NULL), timestamp(""), _parent(0), translation(0)
 {
     va_list args;
     va_start(args, dir);
@@ -175,10 +175,10 @@ TextDB::TextDB(const char* db_name, const char* dir, ...)
 }
 
 TextDB::TextDB(TextDB *parent)
-    : _db_name(parent->_db_name), _lang(Options.lang),
-      _db(NULL), timestamp(""), english(parent), translation(0)
+    : _db_name(parent->_db_name),
+      _db(NULL), timestamp(""), _parent(parent), translation(0)
 {
-    _directory = parent->_directory + _lang + "/";
+    _directory = parent->_directory + Options.lang_name + "/";
     _input_files = parent->_input_files; // FIXME: pointless copy
 }
 
@@ -187,7 +187,7 @@ bool TextDB::open_db()
     if (_db)
         return true;
 
-    const std::string full_db_path = _db_cache_path(_db_name, _lang);
+    const std::string full_db_path = _db_cache_path(_db_name, lang());
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
     if (!_db)
         return false;
@@ -201,7 +201,7 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
-    if (Options.lang && !_lang)
+    if (Options.lang_name && !_parent)
     {
         translation = new TextDB(this);
         translation->init();
@@ -216,7 +216,7 @@ void TextDB::init()
     if (!open_db())
     {
         end(1, true, "Failed to open DB: %s",
-            _db_cache_path(_db_name, _lang).c_str());
+            _db_cache_path(_db_name, lang()).c_str());
     }
 }
 
@@ -239,7 +239,7 @@ bool TextDB::_needs_update() const
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, !_lang);
+        full_input_path = datafile_path(full_input_path, !_parent);
         long mtime = file_modtime(full_input_path);
         if (mtime)
             no_files = false;
@@ -252,8 +252,8 @@ bool TextDB::_needs_update() const
     {
         // No point in empty databases, although for simplicity keep ones
         // for disappeared translations for now.
-        ASSERT(english);
-        TextDB *en = english;
+        ASSERT(_parent);
+        TextDB *en = _parent;
         delete en->translation; // ie, ourself
         en->translation = 0;
         return false;
@@ -266,13 +266,13 @@ void TextDB::_regenerate_db()
 {
     shutdown();
 #ifdef DEBUG_DIAGNOSTICS
-    if (_lang)
-        printf("Regenerating db: %s [%s]\n", _db_name, _lang);
+    if (_parent)
+        printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
     else
         printf("Regenerating db: %s\n", _db_name);
 #endif
 
-    std::string db_path = _db_cache_path(_db_name, _lang);
+    std::string db_path = _db_cache_path(_db_name, lang());
     std::string full_db_path = db_path + ".db";
 
     {
@@ -292,12 +292,12 @@ void TextDB::_regenerate_db()
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, !_lang);
+        full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
         long mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%ld", mtime);
         ts += buf;
-        if (mtime || !_lang) // english is mandatory
+        if (mtime || !_parent) // english is mandatory
             _store_text_db(full_input_path, _db);
     }
     _add_entry(_db, "TIMESTAMP", ts);

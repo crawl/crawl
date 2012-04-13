@@ -1476,7 +1476,8 @@ void read_options(const std::string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
-    lang = 0; // FIXME: obtain from gettext
+    lang = LANG_EN; // FIXME: obtain from gettext
+    lang_name = 0;
     reset_options();
 }
 
@@ -2192,22 +2193,25 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "language")
     {
         // FIXME: should talk to gettext/etc instead
-        if (field == "pl" || field == "polish" || field == "polski")
-            lang = "pl";
+        if (field == "en" || field == "english")
+            lang = LANG_EN, lang_name = 0; // disable the db
+        else if (field == "pl" || field == "polish" || field == "polski")
+            lang = LANG_PL, lang_name = "pl";
         else if (field == "de" || field == "german" || field == "deutch")
-            lang = "de";
+            lang = LANG_DE, lang_name = "de";
         else if (field == "fr" || field == "french" || field == "français")
-            lang = "fr";
+            lang = LANG_FR, lang_name = "fr";
+        // Fake languages do not reset lang_name, allowing a translated
+        // database in an actual language.  This is probably pointless for
+        // most fake langs, though.
         else if (field == "dwarven" || field == "dwarf")
-            lang = "dwarven";
+            lang = LANG_DWARVEN;
         else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
-            lang = "jägerkin";
+            lang = LANG_JAGERKIN;
         else if (field == "lisp" || field == "lithp")
-            lang = "lisp";
+            lang = LANG_LISP;
         else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
-            lang = "wide";
-        else if (field == "en" || field == "english")
-            lang = 0;
+            lang = LANG_WIDE;
         else
         {
             report_error(make_stringf("No translations for language: %s\n",
