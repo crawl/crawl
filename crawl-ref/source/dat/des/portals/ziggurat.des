@@ -504,11 +504,5 @@ ENDMAP
 NAME: ziggurat1
 PLACE: Zig
 : ziggurat_level(_G)
-epilogue {{
-  if you.depth() > 1 then
-    crawl.mark_milestone("zig",
-                         "reached level " .. you.depth() .. " of a Ziggurat.")
-  end
-}}
 MAP
 ENDMAP
