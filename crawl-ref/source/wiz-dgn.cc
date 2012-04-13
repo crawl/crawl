@@ -229,6 +229,7 @@ bool wizard_create_portal(const coord_def& pos)
     env.markers.add(marker);
     env.markers.clear_need_activate();
     dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
+    mprf("A portal to %s appears before you.", dest.describe().c_str());
     return true;
 }
 
