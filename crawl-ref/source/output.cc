@@ -23,6 +23,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
+#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "initfile.h"
@@ -660,7 +661,13 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT_SAVE(wherex() == crawl_view.hudp.x);
+#ifdef ASSERTS
+    if (wherex() != crawl_view.hudp.x)
+    {
+        save_game(false); // should be safe
+        die("misaligned HUD (is %d, should be %d)", wherex(), crawl_view.hudp.x);
+    }
+#endif
 
     size_t i_light = 0;
     while (true)
