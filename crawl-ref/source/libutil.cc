@@ -938,8 +938,14 @@ void cgotoxy(int x, int y, GotoRegion region)
     const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
-    ASSERT_SAVE(x >= 1 && x <= sz.x);
-    ASSERT_SAVE(y >= 1 && y <= sz.y);
+#ifdef ASSERTS
+    if (x < 1 || y < 1 || x > sz.x || y > sz.y)
+    {
+        save_game(false); // should be safe
+        die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
+            sz.x, sz.y);
+    }
+#endif
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 
