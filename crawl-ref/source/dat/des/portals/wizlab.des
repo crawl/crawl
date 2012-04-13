@@ -1547,7 +1547,7 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
              tormentor w:5 / lorocyproca w:5 / blizzard demon / green death / \
              reaper / lich w:5 / angel / death drake w:5 / \
              tentacled monstrosity / draconian shifter w:5 / profane servitor w:5
-KMONS:   7 = eldritch tentacle / nothing
+KMONS:   7 = eldritch tentacle
 KMONS:   8 = silver statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
@@ -1590,6 +1590,7 @@ NSUBST:  @ = 1:@ / 1:P / 1:X / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 4:i / 1:j / 5:% / *
 NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:! / 1:[ / *:<
 NSUBST:  { = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
 NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eeggh% / 1:gg% / 3:%
+NSUBST:  7 = 7 / *=7``
 SUBST:   a = ':70 -:40 ncCll, F = ":70 -:40 ncCll, c = cccJK, C = cJK, B = cJKn....
 SUBST:   e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544'', } = <
 : colour("' = " .. dgn.random_colour() )
@@ -1628,6 +1629,14 @@ for i = 1, #teleporter_glyph do
     lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
     lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
 end
+
+set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
+                    boggart w:5 / blink frog w:5 / shadow wraith w:5 / unseen horror /
+                    ynoxinul / neqoxec / chaos spawn / giant orange brain /
+                    large abomination w:20 / small abomination w:20 / large skeleton w:20 /
+                    small skeleton w:20 / hellwing w:5 / smoke demon w:5 /
+                    skeletal warrior w:5 / hell hound w:5 / very ugly thing w:5 /
+                    golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
 
 set_border_fill_type('permarock_wall')
 dgn.set_feature_desc_short("unnaturally hard rock wall", "The dimension's edge")
