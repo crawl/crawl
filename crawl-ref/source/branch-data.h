@@ -228,7 +228,7 @@ const Branch branches[NUM_BRANCHES] = {
     { BRANCH_ZIGGURAT, NUM_BRANCHES, 27, 27, 27,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
-      "Ziggurat", "a ziggurat", "Zig",
+      "Ziggurat", "a Ziggurat", "Zig",
       "You land on top of a ziggurat so tall you cannot make out the ground.",
       false, BLACK, BLACK,
       mons_null_rare, mons_null_level, // overridden later

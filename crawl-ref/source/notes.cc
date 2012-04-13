@@ -458,13 +458,18 @@ void Note::check_milestone() const
 
         if (br != -1)
         {
+            ASSERT(br >= 0 && br < NUM_BRANCHES);
             std::string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
-                mark_milestone("br.enter", "entered " + branch + ".", true);
-            else if (dep == _dungeon_branch_depth(br) || dep == 14)
+            {
+                mark_milestone(br == BRANCH_ZIGGURAT ? "zig.enter" : "br.enter",
+                               "entered " + branch + ".", true);
+            }
+            else if (dep == _dungeon_branch_depth(br) || dep == 14
+                     || br == BRANCH_ZIGGURAT)
             {
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
@@ -472,7 +477,9 @@ void Note::check_milestone() const
 
                 std::ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone(dep == 14 ? "br.mid" : "br.end", branch_finale.str());
+                mark_milestone(br == BRANCH_ZIGGURAT ? "zig" :
+                               dep == 14 ? "br.mid" : "br.end",
+                               branch_finale.str());
             }
         }
     }
