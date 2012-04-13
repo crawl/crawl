@@ -972,6 +972,9 @@ bool food_change(bool suppress_message)
             default:
                 return (state_changed);
             }
+
+            if (!less_hungry)
+                maybe_id_ring_hunger();
         }
     }
 
