@@ -562,7 +562,7 @@ void wear_armour(int slot) // slot is for tiles
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (!form_can_wear())
     {
         mpr("You can't wear anything in your present form.");
         return;
@@ -3920,7 +3920,7 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID || !player_can_handle_equipment())
+    if (you.species == SP_FELID || !form_can_wield())
     {
         mpr("You have no means to grasp a wand firmly enough.");
         return;
@@ -5755,7 +5755,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_ARMOUR:
-            if (!player_can_handle_equipment())
+            if (!form_can_wear())
             {
                 mpr("You can't wear or remove anything in your present form.");
                 return;

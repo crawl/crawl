@@ -1693,7 +1693,7 @@ static void _do_remove_armour()
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (!form_can_wear())
     {
         mpr("You can't wear or remove anything in your present form.");
         return;
@@ -3430,8 +3430,8 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mon->friendly()
-            && player_can_handle_equipment() && !you.confused())
+        if (mon->caught() && mon->friendly() && form_can_wield()
+            && !you.confused())
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
@@ -3457,7 +3457,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     {
         if (!you.confused())
         {
-            if (!player_can_handle_equipment())
+            if (!form_can_wield())
             {
                 mpr("You can't disarm traps in your present form.");
                 return (true);
