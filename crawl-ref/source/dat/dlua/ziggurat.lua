@@ -488,11 +488,6 @@ local function ziggurat_create_loot_at(c)
     return spaces
   end
 
-  local loot_depth = 20
-  if you.absdepth() > loot_depth then
-    loot_depth = you.absdepth() - 1
-  end
-
   -- dgn.good_scrolls is a list of items with total weight 1000
   local good_loot = dgn.item_spec("* w:7000 / " .. dgn.good_scrolls)
   local super_loot = dgn.item_spec("| w:7000 / potion of experience w:200 /" ..
@@ -519,7 +514,7 @@ local function ziggurat_create_loot_at(c)
 
   local function place_loot(what)
     local p = next_loot_spot()
-    dgn.create_item(p.x, p.y, what, loot_depth)
+    dgn.create_item(p.x, p.y, what, 27)
   end
 
   for i = 1, nloot do
