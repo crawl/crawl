@@ -28,9 +28,6 @@ function zig()
 end
 
 function callback.ziggurat_onclimb()
-  crawl.mark_milestone("zig.exit",
-                       "left a Ziggurat at level " ..
-                         you.depth() .. ".")
   dgn.persist.ziggurat = { }
 end
 
