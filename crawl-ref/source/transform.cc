@@ -63,6 +63,11 @@ bool form_can_wield(transformation_type form)
             || form == TRAN_APPENDAGE);
 }
 
+bool form_can_wear(transformation_type form)
+{
+    return form_can_wield(form) || form == TRAN_BLADE_HANDS;
+}
+
 bool form_can_fly(transformation_type form)
 {
     if (you.species == SP_TENGU

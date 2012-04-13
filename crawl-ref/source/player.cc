@@ -501,15 +501,6 @@ bool player_can_open_doors()
     return (you.form != TRAN_BAT);
 }
 
-bool player_can_handle_equipment()
-{
-    return you.form != TRAN_BAT
-        && you.form != TRAN_PIG
-        && you.form != TRAN_SPIDER
-        && you.form != TRAN_ICE_BEAST
-        && you.form != TRAN_BLADE_HANDS;
-}
-
 bool player_can_reach_floor(std::string feat, bool quiet)
 {
     if (you.flight_mode() != FL_LEVITATE)
