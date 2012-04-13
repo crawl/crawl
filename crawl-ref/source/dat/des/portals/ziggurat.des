@@ -340,11 +340,11 @@ TAGS: ziggurat_pillar centered
 MONS: ancient lich / boggart / curse skull
 MONS: eye of draining / eye of devastation / giant eyeball
 MONS: plant col:lightred
-: if zig().depth > 21 then
+: if you.depth() > 21 then
 SUBST: 3 = 12222
-: elseif zig().depth > 15 then
+: elseif you.depth() > 15 then
 SUBST: 3 = 12
-: elseif zig().depth > 8 and crawl.coinflip() then
+: elseif you.depth() > 8 and crawl.coinflip() then
 SUBST: 3 = 12
 : end
 KFEAT: n = iron_grate
@@ -502,12 +502,12 @@ ENDMAP
 #######################################################################
 
 NAME: ziggurat1
+PLACE: Zig
 : ziggurat_level(_G)
 epilogue {{
-  local depth = zig().depth
-  if depth > 1 then
+  if you.depth() > 1 then
     crawl.mark_milestone("zig",
-                         "reached level " .. depth .. " of a Ziggurat.")
+                         "reached level " .. you.depth() .. " of a Ziggurat.")
   end
 }}
 MAP

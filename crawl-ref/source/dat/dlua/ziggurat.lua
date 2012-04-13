@@ -18,7 +18,7 @@ require("dlua/lm_toll.lua")
 ZIGGURAT_MAX = 27
 
 function zig()
-  if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth or
+  if not dgn.persist.ziggurat or
    not dgn.persist.ziggurat.portal then
     dgn.persist.ziggurat = { }
     -- Initialise here to handle ziggurats accessed directly by &P.
@@ -30,14 +30,13 @@ end
 function callback.ziggurat_onclimb()
   crawl.mark_milestone("zig.exit",
                        "left a Ziggurat at level " ..
-                         zig().depth .. ".")
+                         you.depth() .. ".")
   dgn.persist.ziggurat = { }
 end
 
 function cleanup_ziggurat()
   return one_way_stair {
     onclimb = "callback.ziggurat_onclimb",
-    dstplace = zig().origin_level
   }
 end
 
@@ -54,8 +53,6 @@ function initialise_ziggurat(z, portal)
     z.portal = portal.props
   end
 
-  z.depth = 1
-
   -- Any given ziggurat will use the same builder for all its levels,
   -- and the same colours for outer walls. Before choosing the builder,
   -- we specify a global excentricity. If zig_exc=0, then the ellipses
@@ -67,8 +64,6 @@ function initialise_ziggurat(z, portal)
   z.builder = ziggurat_choose_builder()
   z.colour = ziggurat_wall_colour()
   z.level  = { }
-
-  z.origin_level = dgn.level_name(dgn.level_id())
 end
 
 function callback.ziggurat_initialiser(portal)
@@ -83,13 +78,7 @@ end
 -- Increments the depth in the ziggurat when the player takes a
 -- downstair in the ziggurat.
 function callback.zig_depth_increment()
-  zig().depth = zig().depth + 1
   zig().level = { }
-end
-
--- Returns the current depth in the ziggurat.
-local function zig_depth()
-  return zig().depth or 0
 end
 
 -- Common setup for ziggurat entry vaults.
@@ -145,16 +134,14 @@ end
 function ziggurat_build_level(e)
   local builder = zig().builder
 
-  local depth = zig().depth
-
   -- Deeper levels can have all monsters awake.
   -- Does never happen at depths 1-4; does always happen at depths 25-27.
-  local generate_awake = depth > 4 + crawl.random2(21)
+  local generate_awake = you.depth() > 4 + crawl.random2(21)
   zig().monster_hook = generate_awake and global_function("ziggurat_awaken_all")
 
   -- Deeper levels may block controlled teleports.
   -- Does never happen at depths 1-6; does always happen at depths 25-27.
-  if depth > 6 + crawl.random2(19) then
+  if you.depth() > 6 + crawl.random2(19) then
     dgn.change_level_flags("no_tele_control")
   end
 
@@ -167,7 +154,6 @@ local zigstair = dgn.gridmark
 
 -- Creates a Lua marker table that increments ziggurat depth.
 local function zig_go_deeper()
-  local newdepth = zig().depth + 1
   return one_way_stair {
     onclimb = "callback.zig_depth_increment",
   }
@@ -176,7 +162,7 @@ end
 -- the estimated total map area for ziggurat maps of given depth
 -- this is (almost) independent of the layout type
 local function map_area()
-  return 30 + 18*zig_depth() + zig_depth()*zig_depth()
+  return 30 + 18*you.depth() + you.depth()*you.depth()
 end
 
 local function clamp_in(val, low, high)
@@ -240,20 +226,19 @@ end
 
 local function depth_ge(lev)
   return function ()
-           return zig().depth >= lev
+           return you.depth() >= lev
          end
 end
 
 local function depth_range(low, high)
   return function ()
-           local depth = zig().depth
-           return depth >= low and depth <= high
+           return you.depth() >= low and you.depth() <= high
          end
 end
 
 local function depth_lt(lev)
   return function ()
-           return zig().depth < lev
+           return you.depth() < lev
          end
 end
 
@@ -353,30 +338,30 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
 -- returned by this function will also be used to init the monster
 -- population (with dgn.set_random_mon_list). As an example:
 mset(spec_fn(function ()
-               local d = math.max(0, zig().depth - 12)
+               local d = math.max(0, you.depth() - 12)
                return "place:Vaults:$ w:60 / ancient lich w:" .. d
              end))
 
 mset(spec_fn(function ()
-               local d = math.max(0, zig().depth - 5)
+               local d = math.max(0, you.depth() - 5)
                return "place:Pan w:45 / pandemonium lord w:" .. d
              end))
 
 mset(spec_fn(function ()
-               local d = zig().depth + 5
+               local d = you.depth() + 5
                return "place:Tomb:$ w:200 / greater mummy w:" .. d
              end))
 
 mset(spec_fn(function ()
-               local d = 300 - 10 * zig().depth
+               local d = 300 - 10 * you.depth()
                return "place:Elf:$ w:" .. d .. " / deep elf sorcerer / " ..
                  "deep elf blademaster / deep elf master archer / " ..
                  "deep elf annihilator / deep elf demonologist"
              end))
 
 mset(spec_fn(function ()
-               local d = 310 - 10 * zig().depth
-               local e = math.max(0, zig().depth - 20)
+               local d = 310 - 10 * you.depth()
+               local e = math.max(0, you.depth() - 20)
                return "place:Orc:$ w:" .. d .. " / orc warlord / orc knight / " ..
                  "orc high priest w:5 / orc sorcerer w:5 / stone giant / " ..
                  "moth of wrath w:" .. e
@@ -451,8 +436,7 @@ end
 local dgn_passable = dgn.passable_excluding("closed_door")
 
 local function ziggurat_create_monsters(p, mfn)
-  local depth = zig_depth()
-  local hd_pool = depth * (depth + 8)
+  local hd_pool = you.depth() * (you.depth() + 8)
 -- (was depth * (depth + 8) before and too easy)
 
   local nth = 1
@@ -489,7 +473,7 @@ end
 local function ziggurat_create_loot_at(c)
   -- Basically, loot grows linearly with depth. However, the entry fee
   -- affects the loot randomly (separatedly on each stage).
-  local depth = zig_depth()
+  local depth = you.depth()
   local nloot = depth
   nloot = nloot + crawl.random2(math.floor(nloot * zig().portal.amount / 10000))
 
@@ -702,7 +686,7 @@ end
 local function ziggurat_stairs(entry, exit)
   zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
 
-  if zig().depth < ZIGGURAT_MAX then
+  if you.depth() < ZIGGURAT_MAX then
     zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
   end
 
@@ -755,8 +739,8 @@ local function ziggurat_rectangle_builder(e)
 
   -- exc is the local eccentricity for the two rectangles
   -- exc grows with depth as 0-1, 1, 1-2, 2, 2-3 ...
-  local exc = math.floor(zig().depth / 2)
-  if ((zig().depth-1) % 2) == 0 and crawl.coinflip() then
+  local exc = math.floor(you.depth() / 2)
+  if ((you.depth()-1) % 2) == 0 and crawl.coinflip() then
     exc = exc + 1
   end
 
@@ -770,9 +754,9 @@ local function ziggurat_rectangle_builder(e)
 
   local zig_exc = zig().zig_exc
   local nx1 = cx + y1 - cy
-  local ny1 = cy + x1 - cx + math.floor(zig().depth/2*(200-zig_exc)/300)
+  local ny1 = cy + x1 - cx + math.floor(you.depth()/2*(200-zig_exc)/300)
   local nx2 = cx + y2 - cy
-  local ny2 = cy + x2 - cx - math.floor(zig().depth/2*(200-zig_exc)/300)
+  local ny2 = cy + x2 - cx - math.floor(you.depth()/2*(200-zig_exc)/300)
   nx1, ny1 = clamp_in_bounds(nx1, ny1)
   nx2, ny2 = clamp_in_bounds(nx2, ny2)
   dgn.fill_grd_area(nx1, ny1, nx2, ny2, "floor")
@@ -780,7 +764,7 @@ local function ziggurat_rectangle_builder(e)
   local entry = dgn.point(x1, cy)
   local exit = dgn.point(x2, cy)
 
-  if zig_depth() % 2 == 0 then
+  if you.depth() % 2 == 0 then
     entry, exit = exit, entry
   end
 
@@ -817,7 +801,7 @@ local function ziggurat_ellipse_builder(e)
   local entry = dgn.point(cx-a+2, cy)
   local exit  = dgn.point(cx+a-2, cy)
 
-  if zig_depth() % 2 == 0 then
+  if you.depth() % 2 == 0 then
     entry, exit = exit, entry
   end
 
@@ -863,7 +847,7 @@ local function ziggurat_hexagon_builder(e)
   local entry = left + dgn.point(1,0)
   local exit  = right - dgn.point(1, 0)
 
-  if zig_depth() % 2 == 0 then
+  if you.depth() % 2 == 0 then
     entry, exit = exit, entry
   end
 
