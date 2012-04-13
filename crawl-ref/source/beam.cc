@@ -2256,12 +2256,13 @@ static void _create_feat_splash(coord_def center,
 }
 
 static void _imb_explosion(actor *agent,
+                           std::vector<coord_def> *prior_path,
                            coord_def origin,
                            coord_def center,
                            dice_def dam)
 {
-    const int dist = grid_distance(center, origin);
-    if (dist == 0 || !x_chance_in_y(3, 2 + 2 * dist))
+    const int dist = prior_path->size();
+    if (origin == center || !x_chance_in_y(3, 2 + 2 * dist))
         return;
     bolt beam;
     beam.name           = "mystic blast";
@@ -2291,8 +2292,13 @@ static void _imb_explosion(actor *agent,
         {
             if (x == 0 && y == 0)
                 continue;
-            // Don't hit the caster (the explosion doesn't reach back that far).
-            if (origin == center + coord_def(x, y) || origin == center + coord_def(2 * x, 2 * y))
+            // Don't go back along the path of the beam (the explosion doesn't
+            // reverse direction). We do this to avoid hitting the caster and
+            // also because we don't want aiming one
+            // square past a lone monster to be optimal.
+            if (origin == center + coord_def(x, y))
+                continue;
+            if (dist > 1 && (*prior_path)[dist - 2] == center + coord_def(x, y))
                 continue;
             // Don't go far away from the caster (not enough momentum).
             if (distance(origin, center + coord_def(2 * x, 2 * y)) > LOS_RADIUS_SQ)
@@ -2467,7 +2473,7 @@ void bolt::affect_endpoint()
     }
 
     if (name == "orb of energy")
-        _imb_explosion(agent(), source, pos(), damage);
+        _imb_explosion(agent(), &path_taken, source, pos(), damage);
 }
 
 bool bolt::stop_at_target() const
