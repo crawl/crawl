@@ -1759,7 +1759,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     }
 
     if (you.duration[DUR_NAUSEA] && sapro < 3)
-        ratio = std::min(ratio + 333, 1000);
+        ratio = 1000 - (1000 - ratio) / 2;
 
     return ratio;
 }
