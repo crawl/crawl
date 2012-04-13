@@ -1722,6 +1722,12 @@ static bool _branch_entrances_are_connected()
     return (true);
 }
 
+static bool _branch_needs_stairs()
+{
+    // Irrelevant for branches with a single level and all encompass maps.
+    return (you.where_are_you != BRANCH_ZIGGURAT);
+}
+
 static void _dgn_verify_connectivity(unsigned nvaults)
 {
     // After placing vaults, make sure parts of the level have not been
@@ -1762,7 +1768,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         throw dgn_veto_exception("Isolated areas with no stairs.");
     }
 
-    if (!_fixup_stone_stairs(true))
+    if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
     {
         dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
