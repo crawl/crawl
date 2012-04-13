@@ -1528,7 +1528,6 @@ static void _save_game_exit()
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
-        && !crawl_state.game_wants_emergency_save
         && yesno("Save macros?", true, 'n'))
     {
         macro_save();
@@ -1567,13 +1566,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    // Exit unless this is an emergency save, in which case let the
-    // crash handler re-raise the crashy signal.
-    if (!crawl_state.game_wants_emergency_save)
-    {
-        end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-            farewellmsg? farewellmsg : you.your_name.c_str());
-    }
+    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+        farewellmsg? farewellmsg : you.your_name.c_str());
 }
 
 // Saves the game without exiting.
