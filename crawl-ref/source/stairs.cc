@@ -259,10 +259,12 @@ static void _clear_golubria_traps()
 static void _leaving_level_now(dungeon_feature_type stair_used)
 {
     if (player_in_branch(BRANCH_ZIGGURAT)
-        && stair_used == DNGN_EXIT_PORTAL_VAULT
-        && you.depth == 27)
+        && stair_used == DNGN_EXIT_PORTAL_VAULT)
     {
-        you.zigs_completed++;
+        if (you.depth == 27)
+            you.zigs_completed++;
+        mark_milestone("zig.exit", make_stringf("left a Ziggurat at level %d.",
+                       you.depth));
     }
 
     // Note the name ahead of time because the events may cause markers
