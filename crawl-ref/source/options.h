@@ -314,7 +314,8 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
-    const char* lang;           // Translation to use.
+    lang_t      lang;                // Translation to use.
+    const char* lang_name;           // Database name of the language.
 
 #ifdef WIZARD
     // Parameters for fight simulations.
