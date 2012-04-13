@@ -43,7 +43,7 @@ TAGS:   transparent extra
 # (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
 # of getting a Labyrinth every game, skewed towards earlier depths.
 CHANCE: 500
-DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
+DEPTH:  D:11-21, Elf, Lair, Vaults:1-5
 : lab_portal(_G)
 MAP
 O
