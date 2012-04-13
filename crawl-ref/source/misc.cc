@@ -2610,6 +2610,11 @@ void maybe_id_ring_TC()
     _maybe_id_jewel(RING_TELEPORT_CONTROL);
 }
 
+void maybe_id_ring_hunger()
+{
+    _maybe_id_jewel(RING_HUNGER, NUM_JEWELLERY, ARTP_METABOLISM);
+}
+
 void maybe_id_resist(beam_type flavour)
 {
     switch (flavour)
