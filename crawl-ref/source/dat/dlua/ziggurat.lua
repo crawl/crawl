@@ -18,11 +18,10 @@ require("dlua/lm_toll.lua")
 ZIGGURAT_MAX = 27
 
 function zig()
-  if not dgn.persist.ziggurat or
-   not dgn.persist.ziggurat.portal then
-    dgn.persist.ziggurat = { }
+  if not dgn.persist.ziggurat then
+    dgn.persist.ziggurat = { entry_fee = 0 }
     -- Initialise here to handle ziggurats accessed directly by &P.
-    initialise_ziggurat(dgn.persist.ziggurat, ziggurat_portal(nil, true))
+    initialise_ziggurat(dgn.persist.ziggurat)
   end
   return dgn.persist.ziggurat
 end
@@ -47,7 +46,7 @@ end
 
 function initialise_ziggurat(z, portal)
   if portal then
-    z.portal = portal.props
+    z.entry_fee = portal.props.amount
   end
 
   -- Any given ziggurat will use the same builder for all its levels,
@@ -64,8 +63,8 @@ function initialise_ziggurat(z, portal)
 end
 
 function callback.ziggurat_initialiser(portal)
-  -- First ziggurat will be initialised twice.
-  initialise_ziggurat(zig(), portal)
+  dgn.persist.ziggurat = { }
+  initialise_ziggurat(dgn.persist.ziggurat, portal)
 end
 
 local function random_floor_colour()
@@ -472,7 +471,7 @@ local function ziggurat_create_loot_at(c)
   -- affects the loot randomly (separatedly on each stage).
   local depth = you.depth()
   local nloot = depth
-  nloot = nloot + crawl.random2(math.floor(nloot * zig().portal.amount / 10000))
+  nloot = nloot + crawl.random2(math.floor(nloot * zig().entry_fee / 10000))
 
   local function find_free_space(nspaces)
     local spaces = { }
