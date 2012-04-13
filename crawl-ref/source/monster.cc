@@ -1421,6 +1421,14 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_MENNAS)
             return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
+
+        if (mons->type == MONS_ARACHNE)
+        {
+            return (weapon.base_type == OBJ_STAVES
+                    && weapon.sub_type == STAFF_POISON
+                 || weapon.base_type == OBJ_WEAPONS
+                    && weapon.special == UNRAND_OLGREB);
+        }
     }
 
     if (mons->is_holy())
