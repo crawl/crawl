@@ -3015,6 +3015,10 @@ bool fedhas_evolve_flora()
         break;
     }
 
+    case MONS_OKLOB_SAPLING:
+        simple_monster_message(target, " appears stronger.");
+        break;
+
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
         simple_monster_message(target,
