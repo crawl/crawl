@@ -2068,7 +2068,8 @@ static void _ruin_level(Iterator ri,
 static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
 {
-    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+    if (!level_number
+        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
         || player_in_branch(BRANCH_SLIME_PITS))
     {
@@ -2155,6 +2156,9 @@ static void _place_feature_mimics(int level_number,
 
 static void _place_item_mimics(int level_number)
 {
+    // No mimics on D:1
+    if (!level_number)
+        return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
