@@ -337,9 +337,7 @@ bool melee_attack::handle_phase_attempted()
                      defender->name(DESC_THE).c_str());
             }
             else
-            {
                 mprf("You hit the %s.", feat_name.c_str());
-            }
         }
         else
         {
