@@ -2979,7 +2979,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (player_in_branch(BRANCH_MAIN_DUNGEON)
              && !crawl_state.game_is_zotdef()
              && mons_level(mons->type) >= you.depth + Options.ood_interesting
-             && mons_level(mons->type) < 99
+             && mons_level(mons->type) < 999
              && !(mons->type >= MONS_EARTH_ELEMENTAL
                   && mons->type <= MONS_AIR_ELEMENTAL)
              && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
