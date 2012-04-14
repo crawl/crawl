@@ -316,11 +316,17 @@ class message_window
     //       and then just writing the actual non-empty lines.
     void place_cursor() const
     {
+        // XXX: the screen may have resized since the last time we
+        //  called lines.resize().  We can't actually resize lines
+        //  here because this is a const method.  Consider only the
+        //  last height() lines if this has happened.
+        const int diff = std::max(int(lines.size()) - height(), 0);
+
         int i;
-        for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
-        if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
-        else if (i < 0)
+        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
+        if (i >= diff && (int) lines[i].width() < crawl_view.msgsz.x)
+            cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
+        else if (i < diff)
         {
             // If there were no lines, put the cursor at the upper left.
             cgotoxy(1, 1, GOTO_MSG);
@@ -468,8 +474,15 @@ public:
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolor(LIGHTGREY);
-        for (size_t i = 0; i < lines.size(); ++i)
-            out_line(lines[i], i);
+
+        // XXX: the screen may have resized since the last time we
+        //  called lines.resize().  We can't actually resize lines
+        //  here because this is a const method.  Display the last
+        //  height() lines if this has happened.
+        const int diff = std::max(int(lines.size()) - height(), 0);
+
+        for (size_t i = diff; i < lines.size(); ++i)
+            out_line(lines[i], i - diff);
         place_cursor();
 #ifdef USE_TILE
         tiles.set_need_redraw();
