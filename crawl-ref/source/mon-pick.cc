@@ -2901,11 +2901,9 @@ int mons_tartarus_rare(monster_type mcls)
 // Sewers
 int mons_sewer_level(monster_type mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_SEWER, 1);
-
     if (!mons_sewer_rare(mcls))
         return 999;
-    return mlev + 1;
+    return 1;
 }
 
 int mons_sewer_rare(monster_type mcls)
@@ -2933,11 +2931,9 @@ int mons_sewer_rare(monster_type mcls)
 // Volcano
 int mons_volcano_level(monster_type mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_VOLCANO, 1);
-
     if (!mons_volcano_rare(mcls))
         return 999;
-    return mlev + 1;
+    return 1;
 }
 
 int mons_volcano_rare(monster_type mcls)
