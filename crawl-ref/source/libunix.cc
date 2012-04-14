@@ -432,6 +432,8 @@ void console_startup(void)
 
     scrollok(stdscr, FALSE);
 
+    // Must call refresh() for ncurses to update COLS and LINES.
+    refresh();
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
