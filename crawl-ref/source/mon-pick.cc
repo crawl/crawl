@@ -41,13 +41,13 @@ void debug_monpick()
             int lev = mons_level(m, place);
             int rare = mons_rarity(m, place);
 
-            if (lev < 99 && !rare)
+            if (lev < 999 && !rare)
             {
                 fails += make_stringf("%s: no rarity for %s\n",
                                       branches[i].abbrevname,
                                       mons_class_name(m));
             }
-            if (rare && lev >= 99)
+            if (rare && lev >= 999)
             {
                 fails += make_stringf("%s: no depth for %s\n",
                                       branches[i].abbrevname,
@@ -73,7 +73,7 @@ void debug_monpick()
 // The Ecumenical Temple and other places with no monster gen.
 int mons_null_level(monster_type mcls)
 {
-    return 99;
+    return 999;
 }
 
 int mons_null_rare(monster_type mcls)
@@ -86,7 +86,7 @@ int mons_abyss_level(monster_type mcls)
 {
     if (mons_abyss_rare(mcls))
         return 1;
-    return 99;
+    return 999;
 }
 
 int mons_abyss_rare(monster_type mcls)
@@ -280,7 +280,7 @@ int mons_pan_level(monster_type mcls)
 {
     if (mons_pan_rare(mcls))
         return 1;
-    return 99;
+    return 999;
 }
 
 int mons_pan_rare(monster_type mcls)
@@ -642,7 +642,7 @@ int mons_standard_level(monster_type mcls)
         return 500;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -924,7 +924,7 @@ int mons_standard_rare(monster_type mcls)
 int mons_dwarf_level(monster_type mcls)
 {
     if (!mons_dwarf_rare(mcls))
-        return 99;
+        return 999;
     // Depths are irrelevant for a depth-1 branch.
     return 1;
 }
@@ -1001,7 +1001,7 @@ int mons_mineorc_level(monster_type mcls)
         return 1;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1094,7 +1094,7 @@ int mons_hallelf_level(monster_type mcls)
         return 7;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1243,7 +1243,7 @@ int mons_lair_level(monster_type mcls)
         return 8;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1423,7 +1423,7 @@ int mons_swamp_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1544,7 +1544,7 @@ int mons_shoals_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1620,7 +1620,7 @@ int mons_pitsnake_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1694,7 +1694,7 @@ int mons_spidernest_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1785,7 +1785,7 @@ int mons_pitslime_level(monster_type mcls)
         return 7;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1841,7 +1841,7 @@ int mons_hive_level(monster_type mcls)
         return 2;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -1882,7 +1882,7 @@ int mons_hallblade_level(monster_type mcls)
     if (mcls == MONS_DANCING_WEAPON)
         return 1;
     else
-        return 99;
+        return 999;
 }
 
 int mons_hallblade_rare(monster_type mcls)
@@ -1943,7 +1943,7 @@ int mons_crypt_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2060,7 +2060,7 @@ int mons_tomb_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2130,7 +2130,7 @@ int mons_forest_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2206,7 +2206,7 @@ int mons_hallzot_level(monster_type mcls)
     case MONS_ELECTRIC_GOLEM:
         return 1;
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2268,7 +2268,7 @@ int mons_hallzot_rare(monster_type mcls)
 int mons_vestibule_level(monster_type mcls)
 {
     if (!mons_vestibule_rare(mcls))
-        return 99;
+        return 999;
     // Depths are irrelevant for a depth-1 branch.
     return 1;
 }
@@ -2375,7 +2375,7 @@ int mons_dis_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2519,7 +2519,7 @@ int mons_gehenna_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2660,7 +2660,7 @@ int mons_cocytus_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2798,7 +2798,7 @@ int mons_tartarus_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return 999;
     }
 }
 
@@ -2904,7 +2904,7 @@ int mons_sewer_level(monster_type mcls)
     int mlev = absdungeon_depth(BRANCH_SEWER, 1);
 
     if (!mons_sewer_rare(mcls))
-        return 99;
+        return 999;
     return mlev + 1;
 }
 
@@ -2936,7 +2936,7 @@ int mons_volcano_level(monster_type mcls)
     int mlev = absdungeon_depth(BRANCH_VOLCANO, 1);
 
     if (!mons_volcano_rare(mcls))
-        return 99;
+        return 999;
     return mlev + 1;
 }
 
