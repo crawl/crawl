@@ -175,9 +175,7 @@ local function clamp_in_bounds(x, y)
   return clamp_in(x, 2, dgn.GXM - 3), clamp_in(y, 2, dgn.GYM - 3)
 end
 
-local function set_tiles_for_place(place)
---  local rock  = dgn.lev_rocktile(place)
---  local floor = dgn.lev_floortile(place)
+local function set_wall_tiles()
   local tileset = {
     blue      = "wall_zot_blue",
     red       = "wall_zot_red",
@@ -187,7 +185,7 @@ local function set_tiles_for_place(place)
     white     = "wall_vault"
   }
 
-  local wall = tileset[ziggurat_wall_colour()]
+  local wall = tileset[zig().colour]
   if (wall == nil) then
     wall = "wall_vault"
   end
@@ -262,9 +260,6 @@ local function monster_creator_fn(arg)
     local function mspec(x, y, nth)
       if branch then
         set_floor_colour(dgn.br_floorcol(branch))
-      end
-      if place then
-        set_tiles_for_place(place)
       end
       return mcreator(x, y)
     end
@@ -716,6 +711,7 @@ local function ziggurat_furnish(centre, entry, exit)
   end
 
   dgn.colour_map(needs_colour, zig().colour)
+  set_wall_tiles()
 end
 
 -- builds ziggurat maps consisting of two overimposed rectangles
