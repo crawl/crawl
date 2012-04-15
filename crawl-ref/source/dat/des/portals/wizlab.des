@@ -1503,7 +1503,7 @@ ENDMAP
 # security systems built in to defend his many assorted possessions.
 #
 NAME:    wizlab_golubria
-TAGS:    wizlab no_monster_gen no_item_gen allow_dup no_pool_fixup
+TAGS:    no_monster_gen no_item_gen allow_dup no_pool_fixup
 ORIENT:  encompass
 LFLAGS:  no_tele_control
 KMONS:   1 = spatial vortex / blink frog / insubstantial wisp w:1 / nothing w:4
