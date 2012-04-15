@@ -2089,6 +2089,14 @@ static void _place_feature_mimics(int level_number,
         if (!is_valid_mimic_feat(feat))
             continue;
 
+        // Reduce the number of stairs and door mimics since those features
+        // are very common.
+        if ((feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
+             || feat_is_door(feat)) && !one_chance_in(4))
+        {
+            continue;
+        }
+
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
             continue;
