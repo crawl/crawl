@@ -441,11 +441,43 @@ int form_hp_mod()
     }
 }
 
+static bool _levitating_in_new_form(transformation_type which_trans)
+{
+    //if our levitation is uncancellable (or tenguish) then it's not from evoking
+    if (you.attribute[ATTR_LEV_UNCANCELLABLE] || you.permanent_flight())
+        return true;
+
+    if (!you.is_levitating())
+        return false;
+
+    int sources = player_evokable_levitation();
+    int sources_removed = 0;
+    std::set<equipment_type> removed = _init_equipment_removal(which_trans);
+    for (std::set<equipment_type>::iterator iter = removed.begin();
+         iter != removed.end(); ++iter)
+    {
+        item_def *item = you.slot_item(*iter, true);
+        if (item == NULL)
+            continue;
+        item_info inf = get_item_info(*item);
+
+        //similar code to safe_to_remove from item_use.cc
+        if (inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION)
+            sources_removed++;
+        if (inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION)
+            sources_removed++;
+        if (is_artefact(inf) && artefact_known_wpn_property(inf, ARTP_LEVITATE))
+            sources_removed++;
+    }
+
+    return (sources > sources_removed);
+}
+
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat)
 {
     // Everything is okay if we can fly.
-    if (form_can_fly(which_trans) || you.is_levitating())
+    if (form_can_fly(which_trans) || _levitating_in_new_form(which_trans))
         return (false);
 
     // We can only cling for safety if we're already doing so.
