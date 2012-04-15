@@ -756,12 +756,12 @@ bool mons_is_mimic(monster_type mc)
 
 bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc == MONS_ITEM_MIMIC);
+    return (mc == MONS_ITEM_MIMIC || mc == MONS_INEPT_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc == MONS_FEATURE_MIMIC);
+    return (mc == MONS_FEATURE_MIMIC || mc == MONS_INEPT_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -837,11 +837,9 @@ void discover_mimic(const coord_def& pos, bool wake)
     const int level = you.absdepth0 + 1;
     mg.hd = stepdown_value(level, 12, 12, 24, 36);
 
-    // Number of attacks
-    if (x_chance_in_y(level - 6, 6))
-        ++mg.number;
-    if (x_chance_in_y(level - 15, 6))
-        ++mg.number;
+    // Early levels get inept mimics instead
+    if (!x_chance_in_y(level - 6, 6))
+        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
 
     if (feature_mimic)
     {
@@ -1458,11 +1456,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
         attk.damage *= mon->number;
 
     if (mons_is_mimic(mon->type))
-    {
-        if (attk_number > (int)mon->number)
-            return (mon_attack_def::attk(0, AT_NONE));
         attk.damage += mon->hit_dice;
-    }
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }

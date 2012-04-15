@@ -953,21 +953,24 @@ const item_def* monster_info::get_mimic_item() const
 std::string monster_info::mimic_name() const
 {
     std::string s;
+    if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
+        s = "inept ";
+
     if (props.exists("feat_type"))
-        s = feat_type_name(get_mimic_feature());
+        s += feat_type_name(get_mimic_feature());
     else if (item_def* item = inv[MSLOT_MISCELLANY].get())
     {
         if (item->base_type == OBJ_GOLD)
-            s = "pile of gold";
+            s += "pile of gold";
         else if (item->base_type == OBJ_MISCELLANY
                  && item->sub_type == MISC_RUNE_OF_ZOT)
         {
-            s = "rune";
+            s += "rune";
         }
         else if (item->base_type == OBJ_ORBS)
-            s = "orb";
+            s += "orb";
         else
-            s = item->name(DESC_BASENAME);
+            s += item->name(DESC_BASENAME);
     }
 
     if (!s.empty())
