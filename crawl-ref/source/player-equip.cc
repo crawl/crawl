@@ -1045,7 +1045,10 @@ static void _unequip_armour_effect(item_def& item, bool meld)
             if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
                 you.attribute[ATTR_PERM_LEVITATION] = 0;
         }
-        land_player();
+        if (player_evokable_levitation())
+            levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
+        else
+            land_player();
         break;
 
     case SPARM_MAGIC_RESISTANCE:

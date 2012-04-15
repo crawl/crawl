@@ -1000,7 +1000,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
-void levitate_player(int pow);
+void levitate_player(int pow, bool silent = false);
 void float_player(bool fly);
 bool land_player();
 
