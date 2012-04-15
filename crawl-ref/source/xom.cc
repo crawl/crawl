@@ -2075,6 +2075,8 @@ static int _xom_change_scenery(bool debug = false)
 
         if (success)
         {
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                           "scenery: create altars"), true);
             god_speaks(GOD_XOM, speech.c_str());
             return (XOM_GOOD_SCENERY);
         }
@@ -2140,7 +2142,7 @@ static int _xom_change_scenery(bool debug = false)
 
     god_speaks(GOD_XOM, speech.c_str());
 
-    std::vector<std::string> effects;
+    std::vector<std::string> effects, terse;
     if (fountains_flow > 0)
     {
         snprintf(info, INFO_SIZE,
@@ -2149,6 +2151,7 @@ static int _xom_change_scenery(bool debug = false)
                  fountains_flow == 1 ? ""  : "s",
                  fountains_flow == 1 ? "s" : "");
         effects.push_back(info);
+        terse.push_back(make_stringf("%d fountains restart", fountains_flow));
     }
     if (fountains_blood > 0)
     {
@@ -2165,6 +2168,7 @@ static int _xom_change_scenery(bool debug = false)
         if (effects.empty())
             fountains = uppercase_first(fountains);
         effects.push_back(fountains);
+        terse.push_back(make_stringf("%d fountains blood", fountains_blood));
     }
     if (!effects.empty())
     {
@@ -2183,6 +2187,7 @@ static int _xom_change_scenery(bool debug = false)
                  doors_open == 1 ? ""  : "s",
                  doors_open == 1 ? "s" : "");
         effects.push_back(info);
+        terse.push_back(make_stringf("%d doors open", doors_open));
     }
     if (doors_close > 0)
     {
@@ -2198,9 +2203,13 @@ static int _xom_change_scenery(bool debug = false)
         if (effects.empty())
             closed = uppercase_first(closed);
         effects.push_back(closed);
+        terse.push_back(make_stringf("%d doors close", doors_close));
     }
     if (!effects.empty())
     {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ("scenery: "
+            + comma_separated_line(terse.begin(), terse.end(), ", ", ", ")).c_str()),
+            true);
         mprf("%s!",
              comma_separated_line(effects.begin(), effects.end(),
                                   ", and ").c_str());
@@ -3211,6 +3220,8 @@ static int _xom_colour_smoke_trail(bool debug = false)
         return (XOM_BAD_COLOUR_SMOKE_TRAIL);
 
     you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "colour smoke trail"), true);
 
     const std::string speech = _get_xom_speech("colour smoke trail");
     god_speaks(GOD_XOM, speech.c_str());
