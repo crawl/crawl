@@ -5618,10 +5618,10 @@ void float_player(bool fly)
     you.check_clinging(true);
 }
 
-void levitate_player(int pow, bool silent)
+void levitate_player(int pow, bool already_levitating)
 {
-    bool standing = !you.airborne();
-    if (!silent)
+    bool standing = !you.airborne() && !already_levitating;
+    if (!already_levitating)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
@@ -6876,6 +6876,11 @@ flight_type player::flight_mode() const
         return (FL_NONE);
 }
 
+bool player::cancellable_levitation() const
+{
+    return you.duration[DUR_LEVITATION] && !you.permanent_levitation()
+           && !you.attribute[ATTR_LEV_UNCANCELLABLE];
+}
 bool player::permanent_levitation() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
