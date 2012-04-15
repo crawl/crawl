@@ -117,8 +117,8 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, cset, feature, mon_glyph, pizza,
-                use_fake_player_cursor, show_player_species
+                colour, cset, feature, mon_glyph, use_fake_player_cursor,
+                show_player_species
 
 6-b     DOS and Windows.
                 dos_use_background_intensity
@@ -2222,9 +2222,6 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              demonspawn
              demigod
              halfling
-
-pizza = <topping name>
-        The player's choice of pizza topping.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

@@ -394,7 +394,6 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
-# pizza            = Sausage
 # show_player_species = true
 
 # See options_guide.txt for the options
