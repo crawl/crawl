@@ -5618,11 +5618,11 @@ void float_player(bool fly)
     you.check_clinging(true);
 }
 
-void levitate_player(int pow)
+void levitate_player(int pow, bool silent)
 {
     bool standing = !you.airborne();
-    mprf(MSGCH_DURATION,
-         "You feel %s buoyant.", standing ? "very" : "more");
+    if (!silent)
+        mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
