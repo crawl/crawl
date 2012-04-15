@@ -605,7 +605,6 @@ enum zap_count_type
     ZAPCOUNT_EMPTY       = -1,
     ZAPCOUNT_UNKNOWN     = -2,
     ZAPCOUNT_RECHARGED   = -3,
-    ZAPCOUNT_MAX_CHARGED = -4,
 };
 
 enum food_type

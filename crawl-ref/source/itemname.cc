@@ -1498,8 +1498,6 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (item_plus2 == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
-            else if (item_plus2 == ZAPCOUNT_MAX_CHARGED)
-                buff << " {fully recharged}";
             else if (item_plus2 == ZAPCOUNT_RECHARGED)
                 buff << " {recharged}";
             else if (item_plus2 > 0)

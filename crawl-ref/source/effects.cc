@@ -947,9 +947,15 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
+            if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
+            {
+                mprf("It has %d charges and is fully charged.", new_charges);
+                set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+            }
+
             // Reinitialise zap counts.
             wand.plus  = new_charges;
-            wand.plus2 = (charged ? ZAPCOUNT_RECHARGED : ZAPCOUNT_MAX_CHARGED);
+            wand.plus2 = ZAPCOUNT_RECHARGED;
         }
         else // It's a rod.
         {

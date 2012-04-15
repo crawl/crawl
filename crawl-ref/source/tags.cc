@@ -2924,6 +2924,13 @@ void unmarshallItem(reader &th, item_def &item)
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
     item.flags       = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        if (item.base_type == OBJ_WANDS && item.plus2 == -4)
+        {
+            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+            item.plus2 = 0;
+        }
+#endif
     item.link        = unmarshallShort(th);
 
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
