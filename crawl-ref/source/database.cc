@@ -891,5 +891,8 @@ std::string getMiscString(const std::string &misc,
 {
     int num_replacements = 0;
 
-    return _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
+    std::string txt = _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
+    _execute_embedded_lua(txt);
+
+    return txt;
 }

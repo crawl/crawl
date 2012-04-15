@@ -365,3 +365,47 @@ Sheep cheese
 
 Yak cheese
 %%%%
+eating_pizza
+
+@_carni_mmm_@ Ham and pineapple.
+
+@_carni_mmm_@ Super Supreme.
+
+# Apparently, in some locales "pepperoni" is a word for sausage rather than
+# a type of bell peppers like in Europe.
+@_carni_mmm_@ Pepperoni.
+
+Yeuchh! Anchovies.
+
+@_carni_mmm_@ Chicken.
+
+Mmm... That's the fabled Pandemonium Pizza!
+
+Mmm... Cheesy.
+
+@_herbi_mmm_@ Vegetable.
+
+@_herbi_mmm_@ Peppers.
+
+@_herbi_mmm_@ Mushroom.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivorous") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivorous") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
+%%%%
