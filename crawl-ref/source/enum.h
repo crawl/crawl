@@ -2546,6 +2546,8 @@ enum monster_type                      // (int) menv[].type
     MONS_ARACHNE,
     MONS_MOTH,
     MONS_MOTH_OF_SUPPRESSION,
+    MONS_INEPT_ITEM_MIMIC,
+    MONS_INEPT_FEATURE_MIMIC,
 
     NUM_MONSTERS,                      // used for polymorph
 
