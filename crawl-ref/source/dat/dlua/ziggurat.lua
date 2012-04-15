@@ -67,10 +67,6 @@ function callback.ziggurat_initialiser(portal)
   initialise_ziggurat(dgn.persist.ziggurat, portal)
 end
 
-local function random_floor_colour()
-  return ziggurat_wall_colour()
-end
-
 -- Increments the depth in the ziggurat when the player takes a
 -- downstair in the ziggurat.
 function callback.zig_depth_increment()
@@ -190,18 +186,6 @@ local function set_wall_tiles()
     wall = "wall_vault"
   end
   dgn.change_rock_tile(wall)
-  dgn.change_floor_tile("floor_vault")
-end
-
-local function set_floor_colour(colour)
-  if not zig().level.floor_colour then
-    zig().level.floor_colour = colour
-    dgn.change_floor_colour(colour)
-  end
-end
-
-local function set_random_floor_colour()
-  set_floor_colour( random_floor_colour() )
 end
 
 local function with_props(spec, props)
@@ -253,14 +237,9 @@ end
 local function monster_creator_fn(arg)
   local atyp = type(arg)
   if atyp == "string" then
-    local _, _, branch = string.find(arg, "^place:(%w+):")
-    local _, _, place = string.find(arg, "^place:(%w+):?")
     local mcreator = zig_monster_fn(arg)
 
     local function mspec(x, y, nth)
-      if branch then
-        set_floor_colour(dgn.br_floorcol(branch))
-      end
       return mcreator(x, y)
     end
     return { fn = mspec, spec = arg }
@@ -364,7 +343,6 @@ local function mons_drac_gen(x, y, nth)
   if nth == 1 then
     dgn.set_random_mon_list("random draconian")
   end
-  set_random_floor_colour()
   return drac_creator(x, y)
 end
 
@@ -372,7 +350,6 @@ local pan_lord_fn = zig_monster_fn("pandemonium lord")
 local pan_critter_fn = zig_monster_fn("place:Pan")
 
 local function mons_panlord_gen(x, y, nth)
-  set_random_floor_colour()
   if nth == 1 then
     dgn.set_random_mon_list("place:Pan")
     return pan_lord_fn(x, y)
