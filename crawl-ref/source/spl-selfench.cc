@@ -220,6 +220,7 @@ spret_type cast_fly(int power, bool fail)
 
     you.increase_duration(DUR_LEVITATION, dur_change, 100);
     you.increase_duration(DUR_CONTROLLED_FLIGHT, dur_change, 100);
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
 
     burden_change();
 
