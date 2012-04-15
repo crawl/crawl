@@ -20,6 +20,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
@@ -2053,17 +2054,10 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_CHEESE:
     {
-        int temp_rand = random2(9);
-        mprf("Mmm...%s.",
-             (temp_rand == 0) ? "Cheddar" :
-             (temp_rand == 1) ? "Edam" :
-             (temp_rand == 2) ? "Wensleydale" :
-             (temp_rand == 3) ? "Camembert" :
-             (temp_rand == 4) ? "Goat cheese" :
-             (temp_rand == 5) ? "Fruit cheese" :
-             (temp_rand == 6) ? "Mozzarella" :
-             (temp_rand == 7) ? "Sheep cheese"
-                              : "Yak cheese");
+        std::string taste = getMiscString("eating_cheese");
+        if (taste.empty())
+            taste = "Yeuchh! Moldy bug cheese.";
+        mprf("%s", taste.c_str());
         break;
     }
     default:
