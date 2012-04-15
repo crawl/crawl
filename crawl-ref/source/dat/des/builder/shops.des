@@ -105,7 +105,7 @@ KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:2 rod of venom | w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
 SUBST:   ? = 2..
-: if you.absdepth() < 8 then
+: if you.absdepth() < 13 then
 SUBST:   2 = 1
 : end
 MAP
