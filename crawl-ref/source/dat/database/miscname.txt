@@ -305,7 +305,13 @@ The safety of the most sacred Orb of Zot relies on you.
 %%%%
 hell_effect
 
-Brimstone rains from above.
+{{
+if you.can_smell() then
+    return "You smell brimstone."
+else
+    return "Brimstone rains from above."
+end
+}}
 
 You feel lost and a long, long way from home...
 
