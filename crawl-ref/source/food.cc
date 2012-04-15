@@ -2035,8 +2035,6 @@ void finished_eating_message(int food_type)
         std::string taste = getMiscString("eating_pizza");
         if (taste.empty())
             taste = "Bleh, bug pizza.";
-        if (!Options.pizza.empty() && !one_chance_in(3))
-            taste = "Mmm... " + Options.pizza + ".";
         mprf("%s", taste.c_str());
         break;
     }

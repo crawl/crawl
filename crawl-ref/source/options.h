@@ -164,8 +164,6 @@ public:
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
-    std::string pizza;
-
 #ifdef WIZARD
     int                      wiz_mode;   // no, never, start in wiz mode
     std::vector<std::string> terp_files; // Lua files to load for luaterp
