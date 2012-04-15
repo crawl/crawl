@@ -26,16 +26,6 @@ function zig()
   return dgn.persist.ziggurat
 end
 
-function callback.ziggurat_onclimb()
-  dgn.persist.ziggurat = { }
-end
-
-function cleanup_ziggurat()
-  return one_way_stair {
-    onclimb = "callback.ziggurat_onclimb",
-  }
-end
-
 local wall_colours = {
   "blue", "red", "lightblue", "magenta", "green", "white"
 }
@@ -59,18 +49,11 @@ function initialise_ziggurat(z, portal)
   z.zig_exc = crawl.random2(101)
   z.builder = ziggurat_choose_builder()
   z.colour = ziggurat_wall_colour()
-  z.level  = { }
 end
 
 function callback.ziggurat_initialiser(portal)
   dgn.persist.ziggurat = { }
   initialise_ziggurat(dgn.persist.ziggurat, portal)
-end
-
--- Increments the depth in the ziggurat when the player takes a
--- downstair in the ziggurat.
-function callback.zig_depth_increment()
-  zig().level = { }
 end
 
 -- Common setup for ziggurat entry vaults.
@@ -143,13 +126,6 @@ function ziggurat_build_level(e)
 end
 
 local zigstair = dgn.gridmark
-
--- Creates a Lua marker table that increments ziggurat depth.
-local function zig_go_deeper()
-  return one_way_stair {
-    onclimb = "callback.zig_depth_increment",
-  }
-end
 
 -- the estimated total map area for ziggurat maps of given depth
 -- this is (almost) independent of the layout type
@@ -649,11 +625,11 @@ local function ziggurat_stairs(entry, exit)
   zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
 
   if you.depth() < ZIGGURAT_MAX then
-    zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
+    zigstair(exit.x, exit.y, "stone_stairs_down_i")
   end
 
-  zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
-  zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
+  zigstair(exit.x, exit.y + 1, "exit_portal_vault")
+  zigstair(exit.x, exit.y - 1, "exit_portal_vault")
 end
 
 local function ziggurat_furnish(centre, entry, exit)
