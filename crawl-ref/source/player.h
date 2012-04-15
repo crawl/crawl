@@ -636,6 +636,7 @@ public:
     bool slowable() const;
 
     flight_type flight_mode() const;
+    bool cancellable_levitation() const;
     bool permanent_levitation() const;
     bool permanent_flight() const;
 
@@ -1000,7 +1001,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
-void levitate_player(int pow, bool silent = false);
+void levitate_player(int pow, bool already_levitating = false);
 void float_player(bool fly);
 bool land_player();
 

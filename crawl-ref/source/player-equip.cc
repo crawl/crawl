@@ -381,10 +381,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES] = 0;
 
-    if (proprt[ARTP_LEVITATE] != 0
-        && you.duration[DUR_LEVITATION]
-        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && !you.permanent_levitation()
+    if (proprt[ARTP_LEVITATE] != 0 && you.cancellable_levitation()
         && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 0;
@@ -1038,17 +1035,22 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.attribute[ATTR_PERM_LEVITATION] == 0)
-            break;
-        else if (you.species != SP_TENGU || you.experience_level < 15)
+        if (you.attribute[ATTR_PERM_LEVITATION]
+            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
+            && (you.species != SP_TENGU || you.experience_level < 15))
         {
-            if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
                 you.attribute[ATTR_PERM_LEVITATION] = 0;
+                if (player_evokable_levitation())
+                    levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
         }
-        if (player_evokable_levitation())
-            levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
-        else
+
+        //since a permlev item can keep templev evocations going
+        // we should check templev here too
+        if (you.cancellable_levitation() && !player_evokable_levitation())
+        {
+            you.duration[DUR_LEVITATION] = 0;
             land_player();
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1494,9 +1496,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         break;
 
     case RING_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-            && !player_evokable_levitation())
+        if (you.cancellable_levitation() && !player_evokable_levitation())
         {
             you.duration[DUR_LEVITATION] = 0;
             land_player();
