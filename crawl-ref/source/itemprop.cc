@@ -1242,9 +1242,8 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
             return (true);
 
         // Don't offer wands already maximally charged.
-        if (it.plus2 == ZAPCOUNT_MAX_CHARGED
-            || item_ident(it, ISFLAG_KNOW_PLUSES)
-               && it.plus >= wand_max_charges(it.sub_type))
+        if (item_ident(it, ISFLAG_KNOW_PLUSES)
+            && it.plus >= wand_max_charges(it.sub_type))
         {
             return (false);
         }
