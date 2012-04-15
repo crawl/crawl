@@ -795,7 +795,7 @@ static int _xom_give_item(int power, bool debug = false)
     // better than random object), and it is sometimes tuned to the
     // player's skills and nature.  Being tuned to the player's skills
     // and nature is not very Xomlike...
-    if (x_chance_in_y(power, 256))
+    if (x_chance_in_y(power, 201))
     {
         if (debug)
             return (XOM_GOOD_ACQUIREMENT);
