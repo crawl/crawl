@@ -2502,24 +2502,6 @@ static int _random_wand_subtype()
     return rc;
 }
 
-// This differs quite a bit from the maximum amount allowed
-// when recharging wands. (See wand_max_charges() for that.)
-static int _wand_max_initial_charges(int subtype)
-{
-    switch (subtype)
-    {
-    case WAND_HEAL_WOUNDS: case WAND_HASTING: case WAND_INVISIBILITY:
-        return 8;
-
-    case WAND_FLAME: case WAND_FROST: case WAND_MAGIC_DARTS:
-    case WAND_RANDOM_EFFECTS:
-        return 28;
-
-    default:
-        return 16;
-    }
-}
-
 bool is_high_tier_wand(int type)
 {
     switch (type)
@@ -2549,7 +2531,7 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     }
 
     // Generate charges randomly...
-    item.plus = random2avg(_wand_max_initial_charges(item.sub_type), 3);
+    item.plus = random2avg(wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
     if (item.plus == 0)
