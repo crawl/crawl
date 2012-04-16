@@ -379,9 +379,6 @@ local function ziggurat_vet_monster(fmap)
                   if mons.experience == 0 or mons.hd > hdmax * 1.3 then
                     mons.dismiss()
                   else
-                    if mons.muse == "eats_items" then
-                      zig().level.jelly_protect = true
-                    end
                     -- Monster is ok!
                     return mons
                   end
@@ -507,6 +504,8 @@ function ziggurat_loot_spot(e, key)
   e.kfeat("@ = +")
 end
 
+local has_loot_chamber = false
+
 local function ziggurat_create_loot_vault(entry, exit)
   local inc = (exit - entry):sgn()
 
@@ -527,7 +526,7 @@ local function ziggurat_create_loot_vault(entry, exit)
   local function place_loot_chamber()
     local res = dgn.place_map(map, false, true)
     if res then
-      zig().level.loot_chamber = true
+      has_loot_chamber = true
     end
     return res
   end
@@ -573,8 +572,8 @@ local function ziggurat_create_loot_vault(entry, exit)
   end
 end
 
-local function ziggurat_locate_loot(entrance, exit)
-  if zig().level.jelly_protect then
+local function ziggurat_locate_loot(entrance, exit, jelly_protect)
+  if jelly_protect then
     return ziggurat_create_loot_vault(entrance, exit)
   else
     return exit
@@ -658,22 +657,19 @@ local function ziggurat_stairs(entry, exit)
 end
 
 local function ziggurat_furnish(centre, entry, exit)
+  has_loot_chamber = false
   local monster_generation = choose_monster_set()
 
   if type(monster_generation.spec) == "string" then
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
-  -- If we're going to spawn jellies, do our loot protection thing.
-  if monster_generation.jelly_protect then
-    zig().level.jelly_protect = true
-  end
-
   -- Identify where we're going to place loot, but don't actually put
   -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit)
+  local lootspot = ziggurat_locate_loot(entry, exit,
+    monster_generation.jelly_protect)
 
-  if not zig().level.loot_chamber then
+  if not has_loot_chamber then
     -- Place pillars if we did not create a loot chamber.
     ziggurat_place_pillars(centre)
   end
