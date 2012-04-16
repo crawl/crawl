@@ -415,13 +415,12 @@ static void _print_stats_wp(int y)
         col = LIGHTGREY;
         text = "Nothing wielded"; // Default
 
-        if (you.has_usable_claws(true))
-            text = "Claws";
-        if (you.has_usable_tentacles(true))
-            text = "Tentacles";
-
         if (you.species == SP_FELID)
             text = "Teeth and claws";
+        else if (you.has_usable_claws(true))
+            text = "Claws";
+        else if (you.has_usable_tentacles(true))
+            text = "Tentacles";
 
         switch (you.form)
         {
