@@ -283,11 +283,6 @@ void fill_doll_equipment(dolls_data &result)
         {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_TENTACLE;
-        }
         else if (item == -1)
         {
             result.parts[TILEP_PART_HAND1] = 0;
@@ -304,11 +299,6 @@ void fill_doll_equipment(dolls_data &result)
         if (you.form == TRAN_BLADE_HANDS)
         {
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
-        }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_TENTACLE;
         }
         else if (item == -1)
         {

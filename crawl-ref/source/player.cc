@@ -673,11 +673,8 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_GLOVES:
-        if (player_mutation_level(MUT_CLAWS, false) == 3
-            || player_mutation_level(MUT_TENTACLES, false) == 3)
-        {
+        if (player_mutation_level(MUT_CLAWS, false) == 3)
             return (false);
-        }
         // These species cannot wear gloves.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
@@ -819,12 +816,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
-        if (eq == EQ_GLOVES
-            && (you.has_claws(false) == 3
-                || you.has_tentacles(false) == 3))
-        {
+        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
             return (false);
-        }
 
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return (false);
@@ -7267,12 +7260,15 @@ int player::has_tentacles(bool allow_tran) const
             return (0);
     }
 
-    return (player_mutation_level(MUT_TENTACLES, allow_tran));
+    if (you.species == SP_OCTOPODE)
+        return (1);
+
+    return (0);
 }
 
 int player::has_usable_tentacles(bool allow_tran) const
 {
-    return (!player_wearing_slot(EQ_GLOVES) && has_tentacles(allow_tran));
+    return (has_tentacles(allow_tran));
 }
 
 bool player::sicken(int amount, bool allow_hint)

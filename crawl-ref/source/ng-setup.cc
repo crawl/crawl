@@ -332,7 +332,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     case SP_OCTOPODE:
-        you.mutation[MUT_TENTACLES]       = 3;
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
