@@ -7189,7 +7189,7 @@ int player::has_tail(bool allow_tran) const
         if (form == TRAN_DRAGON)
             return (1);
 
-        // most transformations will override a tail
+        // Most transformations suppress a tail.
         if (!form_keeps_mutations())
             return (0);
     }
