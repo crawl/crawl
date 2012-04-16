@@ -1124,16 +1124,19 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Felids have innate claws, and unlike trolls/ghouls, there are no
     // increases for them. Felids cannot get tentacles, since they have
     // no fingers, hands or arms to mutate into tentacles.
-    if ((mutat == MUT_CLAWS || mutat == MUT_TENTACLES)
-        && you.species == SP_FELID)
+    if (you.species == SP_FELID
+        && (mutat == MUT_CLAWS || mutat == MUT_TENTACLES))
     {
         return (true);
     }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
-    if (you.species == SP_MERFOLK && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    if (you.species == SP_MERFOLK
+        && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    {
         return (true);
+    }
 
     equipment_type eq_type = EQ_NONE;
 
