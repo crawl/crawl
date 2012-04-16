@@ -132,8 +132,8 @@ SUBST: b = ~:8  .
 SUBST: c = ~:12 .
 SUBST: d = ~:16 .
 KFEAT: X = .
-KFEAT: Y = blade trap
-KFEAT: Z = blade trap
+KFEAT: Y = bolt trap
+KFEAT: Z = bolt trap
 KFEAT: O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
