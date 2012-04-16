@@ -666,13 +666,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear gloves with your huge claws!");
             return (false);
         }
-
-        if (you.has_tentacles(false) == 3)
-        {
-            if (verbose)
-                mpr("Gloves don't fit your tentacles!");
-            return (false);
-        }
     }
 
     if (sub_type == ARM_BOOTS)
@@ -814,7 +807,7 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            if (you.has_tentacles(false) == 3)
+            if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
             else
                 mprf("You'd need three %s to do that!", you.hand_name(true).c_str());

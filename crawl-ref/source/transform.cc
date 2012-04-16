@@ -428,7 +428,7 @@ std::string blade_parts(bool terse)
 {
     if (you.species == SP_FELID)
         return terse ? "paws" : "front paws";
-    if (you.mutation[MUT_TENTACLES] > 1)
+    if (you.species == SP_OCTOPODE)
         return "tentacles";
     return "hands";
 }
@@ -531,7 +531,7 @@ static mutation_type appendages[] =
 {
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
-    MUT_TENTACLES,
+    MUT_CLAWS,
     MUT_TALONS,
 };
 
@@ -815,8 +815,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
             case MUT_TENTACLE_SPIKE:
                 msg = "One of your tentacles grows a vicious spike.";
                 break;
-            case MUT_TENTACLES:
-                msg = "Your arms morph into several tentacles.";
+            case MUT_CLAWS:
+                msg = "Your hands morph into claws.";
                 break;
             case MUT_TALONS:
                 msg = "Your feet morph into talons.";

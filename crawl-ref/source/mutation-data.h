@@ -826,6 +826,7 @@
   "talons"
 },
 
+#if TAG_MAJOR_VERSION == 32
 { MUT_TENTACLES,                 0,  3, false, true, true,
   "tentacles",
 
@@ -843,6 +844,7 @@
 
    "tentacles"
 },
+#endif
 
 // Octopode only
 { MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,

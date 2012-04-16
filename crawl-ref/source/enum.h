@@ -2639,7 +2639,6 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
-    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 

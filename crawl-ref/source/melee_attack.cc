@@ -1224,7 +1224,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         // and this secondary, high damage attack.
     case UNAT_TENTACLES:
         aux_attack = aux_verb = "squeeze";
-        aux_damage += 4 * you.has_usable_tentacles();
+        aux_damage += 12 * you.has_usable_tentacles();
         noise_factor = 100; // quieter than slapping
         break;
 

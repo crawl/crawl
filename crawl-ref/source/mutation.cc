@@ -63,7 +63,6 @@ static const body_facet_def _body_facets[] =
     { EQ_HELMET, MUT_ANTENNAE, 1 },
     //{ EQ_HELMET, MUT_BEAK, 1 },
     { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_GLOVES, MUT_TENTACLES, 3 },
     { EQ_BOOTS, MUT_HOOVES, 3 },
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
@@ -77,7 +76,6 @@ equipment_type beastly_slot(int mut)
     case MUT_BEAK:
         return EQ_HELMET;
     case MUT_CLAWS:
-    case MUT_TENTACLES:
         return EQ_GLOVES;
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -816,7 +814,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
     case MUT_CLAWS:
-    case MUT_TENTACLES:
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -978,7 +975,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_REGENERATION,     MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,     MUT_BLURRY_VISION,    0},
         { MUT_FAST,             MUT_SLOW,             0},
-        { MUT_CLAWS,            MUT_TENTACLES,       -1},
         { MUT_FANGS,            MUT_BEAK,            -1},
         { MUT_HOOVES,           MUT_TALONS,          -1},
         { MUT_TRANSLUCENT_SKIN, MUT_CAMOUFLAGE,      -1},
@@ -1128,13 +1124,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them. Felids cannot get tentacles, since they have
-    // no fingers, hands or arms to mutate into tentacles.
-    if (you.species == SP_FELID
-        && (mutat == MUT_CLAWS || mutat == MUT_TENTACLES))
-    {
+    // increases for them.
+    if (you.species == SP_FELID && mutat == MUT_CLAWS)
         return (true);
-    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
@@ -1457,8 +1449,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         break;
 
     case MUT_CLAWS:
-    case MUT_TENTACLES:
-        // Gloves aren't prevented until level 3 of claws or tentacles.
+        // Claws force gloves off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
@@ -1985,7 +1976,6 @@ try_again:
                     fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2
-                    || m == MUT_TENTACLES && i == 2
                     || m == MUT_HORNS && i == 0
                     || m == MUT_BEAK && i == 0
                     || m == MUT_ANTENNAE && i == 0
