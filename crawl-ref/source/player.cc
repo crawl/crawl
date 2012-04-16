@@ -842,14 +842,18 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     }
 
     // No further restrictions.
-    if (you.form == TRAN_NONE || you.form == TRAN_LICH || you.form == TRAN_APPENDAGE)
+    if (you.form == TRAN_NONE
+        || you.form == TRAN_LICH
+        || you.form == TRAN_APPENDAGE)
+    {
         return (true);
+    }
 
     // Bats and pigs cannot wear anything except amulets.
     if ((you.form == TRAN_BAT || you.form == TRAN_PIG) && eq != EQ_AMULET)
         return (false);
 
-    // Everyone else can wear jewellery . . .
+    // Everyone else can wear jewellery...
     if (eq == EQ_AMULET || eq == EQ_RINGS
         || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
         || eq == EQ_RING_ONE || eq == EQ_RING_TWO)
@@ -857,7 +861,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (true);
     }
 
-    // . . . but not necessarily in all slots.
+    // ...but not necessarily in all slots.
     if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
     {
         return (you.species == SP_OCTOPODE
