@@ -7273,12 +7273,19 @@ int player::has_usable_pseudopods(bool allow_tran) const
 
 int player::has_tentacles(bool allow_tran) const
 {
+    if (allow_tran)
+    {
+        // Most transformations suppress tentacles.
+        if (!form_keeps_mutations())
+            return (0);
+    }
+
     return (player_mutation_level(MUT_TENTACLES, allow_tran));
 }
 
 int player::has_usable_tentacles(bool allow_tran) const
 {
-    return (has_tentacles(allow_tran));
+    return (!player_wearing_slot(EQ_GLOVES) && has_tentacles(allow_tran));
 }
 
 bool player::sicken(int amount, bool allow_hint)
