@@ -691,7 +691,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 mpr("A huge blade swings out and slices into you!");
-                const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
+                const int damage = 48 + random2avg(29, 2)
                     - random2(1 + you.armour_class());
                 std::string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
@@ -1053,7 +1053,7 @@ int trap_def::max_damage(const actor& act)
         case TRAP_SPEAR:  return 10 + level;
         case TRAP_BOLT:   return 13 + level;
         case TRAP_AXE:    return 15 + level;
-        case TRAP_BLADE:  return (level ? 2*level : 10) + 28;
+        case TRAP_BLADE:  return (act.is_monster() ? 48 : 10) + 28;
         default:          return  0;
     }
 
@@ -1947,7 +1947,7 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
 
     if (random2(1 + level_number) > 7)
         type = TRAP_BOLT;
-    if (random2(1 + level_number) > 11)
+    if (random2(1 + level_number) > 14)
         type = TRAP_BLADE;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3)
