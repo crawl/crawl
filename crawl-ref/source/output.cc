@@ -830,12 +830,6 @@ void print_stats(void)
     {
         cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-#ifdef DEBUG_DIAGNOSTICS
-        cprintf("XP: ");
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%d/%d (%d) ",
-                you.experience_level, you.skill_cost_level, you.exp_available);
-#else
         cprintf("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%2d ", you.experience_level);
@@ -846,7 +840,6 @@ void print_stats(void)
             textcolor(HUD_VALUE_COLOUR);
             cprintf("%2d%% ", get_exp_progress());
         }
-#endif
         if (crawl_state.game_is_zotdef())
         {
             cgotoxy(1, 9, GOTO_STAT);
