@@ -2808,21 +2808,24 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
         hand_vec.push_back("mandible");
         plural_vec.push_back(true);
     }
-    else if (you.species != SP_MUMMY && !player_mutation_level(MUT_BEAK)
-             || form_changed_physiology())
+    else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
+             && !player_mutation_level(MUT_BEAK)
+          || form_changed_physiology())
     {
         hand_vec.push_back("nose");
         plural_vec.push_back(false);
     }
 
     if (you.form == TRAN_BAT
-        || you.species != SP_MUMMY && !form_changed_physiology())
+        || you.species != SP_MUMMY && you.species != SP_OCTOPODE
+           && !form_changed_physiology())
     {
         hand_vec.push_back("ear");
         plural_vec.push_back(true);
     }
 
-    if (!form_changed_physiology())
+    if (!form_changed_physiology()
+        && you.species != SP_FELID && you.species != SP_OCTOPODE)
     {
         hand_vec.push_back("elbow");
         plural_vec.push_back(true);
