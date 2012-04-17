@@ -829,6 +829,11 @@ void TilesFramework::_send_map(bool force_full)
         {
             coord_def gc(x, y);
 
+            if (!is_dirty(gc) && !force_full)
+                continue;
+            else
+                mark_clean(gc);
+
             if (m_origin.equals(-1, -1))
                 m_origin = gc;
 
@@ -963,6 +968,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                 draw_cell(cell, grid, false, m_next_flash_colour);
                 cell->tile.flv = env.tile_flv(grid);
                 pack_cell_overlays(grid, &(cell->tile));
+
+                mark_dirty(grid);
             }
         }
 
@@ -984,6 +991,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
             cell->tile.flv = env.tile_flv(grid);
             pack_cell_overlays(grid, &(cell->tile));
+
+            mark_dirty(grid);
         }
 
     m_next_gc = gc;
@@ -1186,6 +1195,8 @@ void TilesFramework::update_minimap(const coord_def& gc)
     draw_cell(cell, gc, false, m_next_flash_colour);
     cell->tile.flv = env.tile_flv(gc);
     pack_cell_overlays(gc, &(cell->tile));
+
+    mark_dirty(gc);
 }
 
 void TilesFramework::clear_minimap()

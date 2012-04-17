@@ -12,6 +12,7 @@
 #include "viewgeom.h"
 #include "map_knowledge.h"
 #include <map>
+#include <bitset>
 #include <sys/un.h>
 
 class Menu;
@@ -177,6 +178,11 @@ protected:
     coord_def m_next_gc;
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
+
+    std::bitset<GXM * GYM> m_dirty_cells;
+    void mark_dirty(const coord_def& gc) { m_dirty_cells[gc.y * GXM + gc.x] = true; }
+    void mark_clean(const coord_def& gc) { m_dirty_cells[gc.y * GXM + gc.x] = false; }
+    bool is_dirty(const coord_def& gc) { return m_dirty_cells[gc.y * GXM + gc.x]; }
 
     int m_current_flash_colour;
     int m_next_flash_colour;
