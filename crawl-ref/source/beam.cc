@@ -4815,7 +4815,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (you.level_type == LEVEL_ABYSS)
             simple_monster_message(mon, " wobbles for a moment.");
         else
-            mon->banish();
+            mon->banish(agent() ? agent()->name(DESC_PLAIN, true) : "");
         obvious_effect = true;
         return (MON_AFFECTED);
 

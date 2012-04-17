@@ -22,6 +22,7 @@
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "items.h"
@@ -2819,7 +2820,7 @@ void monster::expose_to_element(beam_type flavour, int strength)
     }
 }
 
-void monster::banish(const std::string &)
+void monster::banish(const std::string &attacker)
 {
     coord_def old_pos = pos();
 
@@ -2827,6 +2828,11 @@ void monster::banish(const std::string &)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
+    if (attacker == "you" && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
+        && !has_ench(ENCH_FAKE_ABJURATION))
+    {
+        did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+    }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
