@@ -2239,7 +2239,9 @@ void display_runes()
 
     InvMenu menu;
 
-    menu.set_title("Runes of Zot");
+    menu.set_title(make_stringf("Runes of Zot: %d/%d",
+                                (int)items.size(),
+                                you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
     menu.load_items(items, discoveries_item_mangle);
