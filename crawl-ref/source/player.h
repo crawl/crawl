@@ -965,9 +965,6 @@ void rot_mp(int mp_loss);
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
-void inc_max_mp(int mp_gain);
-void dec_max_mp(int mp_loss);
-
 void deflate_hp(int new_level, bool floor);
 void set_hp(int new_amount);
 

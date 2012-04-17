@@ -726,26 +726,30 @@ void gotoxy_sys(int x, int y)
 }
 
 typedef cchar_t char_info;
-inline bool operator == (const cchar_t &a, const cchar_t &b)
+static inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
     return (a.attr == b.attr && *a.chars == *b.chars);
 }
-inline char_info character_at(int y, int x)
+
+static inline char_info character_at(int y, int x)
 {
     cchar_t c;
     // (void) is to hush an incorrect clang warning.
     (void)mvin_wch(y, x, &c);
     return (c);
 }
-inline bool valid_char(const cchar_t &c)
+
+static inline bool valid_char(const cchar_t &c)
 {
     return *c.chars;
 }
-inline void write_char_at(int y, int x, const cchar_t &ch)
+
+static inline void write_char_at(int y, int x, const cchar_t &ch)
 {
     move(y, x);
     add_wchnstr(&ch, 1);
 }
+
 static void flip_colour(cchar_t &ch)
 {
     const unsigned colour = (ch.attr & A_COLOR);

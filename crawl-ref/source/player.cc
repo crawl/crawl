@@ -4888,25 +4888,6 @@ void dec_max_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-void inc_max_mp(int mp_gain)
-{
-    you.magic_points += mp_gain;
-    you.mp_max_perm += mp_gain;
-    calc_mp();
-
-    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = true;
-}
-
-void dec_max_mp(int mp_loss)
-{
-    you.mp_max_perm -= mp_loss;
-    calc_mp();
-
-    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = true;
-}
-
 // Use of floor: false = hp max, true = hp min. {dlb}
 void deflate_hp(int new_level, bool floor)
 {
