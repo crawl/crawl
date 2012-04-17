@@ -16,6 +16,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 
 #include <stack>
 
@@ -324,64 +325,52 @@ void redraw_screen(void)
     update_screen();
 }
 
-// STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
-// it is a bit more extensible and optimises the logical structure, as well
-// usage: cast_summon_swarm() cast_haunt() cast_summon_scorpions()
-//        cast_summon_horrible_things()
-// ex(1): stepdown_value (foo, 2, 2, 6, 8) replaces the following block:
-//
+double stepdown(double value, double step)
+{
+    return step * log2(1 + value / step);
+}
 
-/*
-   if (foo > 2)
-     foo = (foo - 2) / 2 + 2;
-   if (foo > 4)
-     foo = (foo - 4) / 2 + 4;
-   if (foo > 6)
-     foo = (foo - 6) / 2 + 6;
-   if (foo > 8)
-     foo = 8;
- */
+int stepdown(int value, int step, bool rand_round, int max)
+{
+    double ret = stepdown((double) value, double(step));
 
-//
-// ex(2): bar = stepdown_value(bar, 2, 2, 6, -1) replaces the following block:
-//
+    if (max && ret > max)
+        return max;
 
-/*
-   if (bar > 2)
-     bar = (bar - 2) / 2 + 2;
-   if (bar > 4)
-     bar = (bar - 4) / 2 + 4;
-   if (bar > 6)
-     bar = (bar - 6) / 2 + 6;
- */
+    // Randomised rounding
+    if (rand_round)
+    {
+        double intpart;
+        double fracpart = modf(ret, &intpart);
+        if (random_real() > fracpart)
+            ++intpart;
+        return intpart;
+    }
 
-// I hope this permits easier/more experimentation with value stepdowns
-// in the code.  It really needs to be rewritten to accept arbitrary
-// (unevenly spaced) steppings.
+    // Round to closest
+    return ret + 0.5;
+}
+
+// Deprecated defintion. Call directly stepdown instead.
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value)
 {
-    int return_value = base_value;
+    UNUSED(last_step);
 
-    // values up to the first "step" returned unchanged:
-    if (return_value <= first_step)
-        return return_value;
+    // Disabling max used to be -1.
+    if (ceiling_value == -1)
+        ceiling_value = 0;
 
-    for (int this_step = first_step; this_step <= last_step;
-         this_step += stepping)
+    if (first_step != stepping)
     {
-        if (return_value > this_step)
-            return_value = ((return_value - this_step) / 2) + this_step;
-        else
-            break;              // exit loop if value fully "stepped down"
+        if (base_value < first_step)
+            return base_value;
+
+        int diff = first_step - stepping;
+        return diff + stepdown(base_value - diff, stepping, false, ceiling_value);
     }
-
-    // "no final ceiling" == -1
-    if (ceiling_value != -1 && return_value > ceiling_value)
-        return ceiling_value;   // highest value to return is "ceiling"
     else
-        return return_value;    // otherwise, value returned "as is"
-
+        return stepdown(base_value, stepping, false, ceiling_value);
 }
 
 int div_round_up(int num, int den)
