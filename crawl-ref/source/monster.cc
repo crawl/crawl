@@ -2820,7 +2820,7 @@ void monster::expose_to_element(beam_type flavour, int strength)
     }
 }
 
-void monster::banish(const std::string &attacker)
+void monster::banish(actor *agent, const std::string &)
 {
     coord_def old_pos = pos();
 
@@ -2828,10 +2828,18 @@ void monster::banish(const std::string &attacker)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (attacker == "you" && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
+    if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
         && !has_ench(ENCH_FAKE_ABJURATION))
     {
-        did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+        // scale existing damage counts, easier than fudging current hp
+        damage_total *= 2;
+        damage_friendly *= 2;
+        blame_damage(agent, hit_points);
+        // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
+        // distinguishable from others of the same kind in the Abyss.
+
+        if (agent->is_player())
+            did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 

@@ -2241,7 +2241,7 @@ bool melee_attack::distortion_affects_defender()
         else if (defender_visible)
             obvious_effect = true;
 
-        defender->banish(attacker->name(DESC_PLAIN, true));
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true));
         return (true);
     }
 
