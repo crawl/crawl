@@ -1498,6 +1498,9 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
+    if (you.religion == GOD_CHEIBRIADOS)
+        return simple_god_message(" protects you from inadvertent hurry.");
+
     const int power_level = _get_power_level(power, rarity);
     if (power_level >= 2)
     {
@@ -1594,7 +1597,10 @@ static void _flight_card(int power, deck_rarity_type rarity)
     else if (power_level >= 1)
     {
         cast_fly(random2(power/4));
-        cast_swiftness(random2(power/4));
+        if (you.religion != GOD_CHEIBRIADOS)
+            cast_swiftness(random2(power/4));
+        else
+            simple_god_message(" protects you from inadvertent hurry.");
     }
 
     if (power_level == 2) // Stacks with the above.
@@ -1951,6 +1957,12 @@ static void _potion_card(int power, deck_rarity_type rarity)
 
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
+
+    if (you.religion == GOD_CHEIBRIADOS && pot == POT_SPEED)
+    {
+        simple_god_message(" protects you from inadvertent hurry.");
+        pot = POT_WATER;
+    }
 
     potion_effect(pot, random2(power/4));
 }
