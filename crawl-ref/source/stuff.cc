@@ -334,7 +334,7 @@ int stepdown(int value, int step, bool rand_round, int max)
 {
     double ret = stepdown((double) value, double(step));
 
-    if (max && ret > max)
+    if (max > 0 && ret > max)
         return max;
 
     // Randomised rounding
@@ -358,22 +358,17 @@ int stepdown_value(int base_value, int stepping, int first_step,
     UNUSED(last_step);
 
     // Disabling max used to be -1.
-    if (ceiling_value == -1)
+    if (ceiling_value < 0)
         ceiling_value = 0;
 
-    if (first_step != stepping)
-    {
-        if (base_value < first_step)
-            return base_value;
+    if (base_value < first_step || ceiling_value && ceiling_value < first_step)
+        return std::min(base_value, ceiling_value);
 
-        int diff = first_step - stepping;
-        if (ceiling_value < diff)
-            ceiling_value = diff;
-        return diff + stepdown(base_value - diff, stepping, false,
-                               ceiling_value - diff);
-    }
-    else
-        return stepdown(base_value, stepping, false, ceiling_value);
+    const int diff = first_step - stepping;
+    // Since diff < first_step, we can assume here that ceiling_value > diff
+    // or ceiling_value == 0.
+    return diff + stepdown(base_value - diff, stepping, false,
+                           ceiling_value ? ceiling_value - diff : 0);
 }
 
 int div_round_up(int num, int den)
