@@ -325,6 +325,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_BANISH:
+            if (you.religion != GOD_LUGONU)
+                break;
         case DID_KILL_LIVING:
             switch (you.religion)
             {
@@ -353,7 +356,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
-                simple_god_message(" accepts your kill.");
+                if (thing_done == DID_BANISH)
+                    simple_god_message(" claims a new guest.");
+                else
+                    simple_god_message(" accepts your kill.");
                 retval = true;
                 piety_denom = level + 18 - you.experience_level / 2;
                 piety_change = piety_denom - 6;
@@ -1050,7 +1056,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Undead", "Undead Slave Kill Demon",
                 "Servant Kill Demon", "Servant Kill Natural Unholy",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
-                "Servant Kill Holy", "Spell Memorise", "Spell Cast",
+                "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Cards",
                 "Drink Blood", "Cannibalism","Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",

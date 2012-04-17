@@ -1545,7 +1545,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
             break;              // Don't banish anything else.
         }
         else
-            mon_to_banish->banish();
+            mon_to_banish->banish("you");
     }
 
 }
