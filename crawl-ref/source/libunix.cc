@@ -400,7 +400,7 @@ void console_startup(void)
     // only spams when not relevant, but cannot even be selectively hushed
     // by (void) casts like all other such warnings.
     // "if ();" is an unsightly hack...
-    if (write(1, KPADAPP, strlen(KPADAPP)));
+    if (write(1, KPADAPP, strlen(KPADAPP))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -451,7 +451,7 @@ void console_shutdown()
     tcsetattr(0, TCSAFLUSH, &def_term);
 #ifdef CURSES_USE_KEYPAD
     // "if ();" to avoid undisableable spurious warning.
-    if (write(1, KPADCUR, strlen(KPADCUR)));
+    if (write(1, KPADCUR, strlen(KPADCUR))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
