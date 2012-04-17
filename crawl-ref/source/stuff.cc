@@ -342,13 +342,13 @@ int stepdown(int value, int step, bool rand_round, int max)
     {
         double intpart;
         double fracpart = modf(ret, &intpart);
-        if (random_real() > fracpart)
+        if (random_real() < fracpart)
             ++intpart;
         return intpart;
     }
 
-    // Round to closest
-    return ret + 0.5;
+    // Round down
+    return ret;
 }
 
 // Deprecated defintion. Call directly stepdown instead.
@@ -367,7 +367,10 @@ int stepdown_value(int base_value, int stepping, int first_step,
             return base_value;
 
         int diff = first_step - stepping;
-        return diff + stepdown(base_value - diff, stepping, false, ceiling_value);
+        if (ceiling_value < diff)
+            ceiling_value = diff;
+        return diff + stepdown(base_value - diff, stepping, false,
+                               ceiling_value - diff);
     }
     else
         return stepdown(base_value, stepping, false, ceiling_value);
