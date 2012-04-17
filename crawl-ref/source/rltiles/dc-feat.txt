@@ -122,6 +122,8 @@ sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 sarcophagus_pedestal_left DNGN_SARCOPHAGUS_PEDESTAL_LEFT
 sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
 
+dimension_edge DNGN_DIMENSION_EDGE
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
