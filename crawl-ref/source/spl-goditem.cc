@@ -420,6 +420,12 @@ void antimagic()
         mpr("You feel strangely stable.");
     }
 
+    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    {
+        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+        mpr("Your charged fireball dissipates.");
+    }
+
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
         you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
