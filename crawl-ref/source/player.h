@@ -575,7 +575,7 @@ public:
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const std::string &reason);
     void backlight();
-    void banish(const std::string &who = "");
+    void banish(actor *agent, const std::string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
