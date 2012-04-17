@@ -2180,7 +2180,11 @@ static void _place_item_mimics(int level_number)
         }
 
         if (one_chance_in(ITEM_MIMIC_CHANCE))
+        {
             item.flags |= ISFLAG_MIMIC;
+            dprf("Placed a %s mimic at (%d,%d).",
+                 item.name(DESC_BASENAME).c_str(), item.pos.x, item.pos.y);
+        }
     }
 
 }
