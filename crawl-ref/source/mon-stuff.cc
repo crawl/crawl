@@ -2271,7 +2271,11 @@ int monster_die(monster* mons, killer_type killer,
 
             // Monster goes to the Abyss.
             mons->flags |= MF_BANISHED;
-            mons->set_transit(level_id(LEVEL_ABYSS));
+            {
+                unwind_var<int> dt(mons->damage_total, 0);
+                unwind_var<int> df(mons->damage_friendly, 0);
+                mons->set_transit(level_id(LEVEL_ABYSS));
+            }
             set_unique_annotation(mons, LEVEL_ABYSS);
             in_transit = true;
             drop_items = false;
