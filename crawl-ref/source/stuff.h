@@ -15,6 +15,8 @@ std::string make_file_time(time_t when);
 
 void set_redraw_status(uint64_t flags);
 
+double stepdown(double value, double step);
+int stepdown(int value, int step, bool rand_round = false, int max = 0);
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 unsigned char get_ch();
