@@ -424,11 +424,8 @@ void up_stairs(dungeon_feature_type force_stair)
 
         for (int i = 0; i < ENDOFPACK; i++)
         {
-            if (you.inv[i].defined()
-                && you.inv[i].base_type == OBJ_ORBS)
-            {
+            if (you.inv[i].defined() && you.inv[i].base_type == OBJ_ORBS)
                 ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
-            }
         }
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
@@ -568,13 +565,6 @@ static void _maybe_destroy_trap(const coord_def &p)
     trap_def* trap = find_trap(p);
     if (trap)
         trap->destroy();
-}
-
-static bool _is_portal_exit(dungeon_feature_type stair)
-{
-    return stair == DNGN_EXIT_HELL
-        || stair == DNGN_EXIT_ABYSS
-        || stair == DNGN_EXIT_PORTAL_VAULT;
 }
 
 void down_stairs(dungeon_feature_type force_stair)
@@ -790,16 +780,6 @@ void down_stairs(dungeon_feature_type force_stair)
     else
         _player_change_level_downstairs(stair_find, dst);
 
-    // When going downstairs into a special level, delete any previous
-    // instances of it.
-    if (!player_in_connected_branch() && !_is_portal_exit(stair_find))
-    {
-        // FIXME: this needs to be done only on exit
-        std::string lname = level_id::current().describe();
-        dprf("Deleting: %s", lname.c_str());
-        you.save->delete_chunk(lname);
-    }
-
     // Did we enter a new branch.
     const bool entered_branch(
         you.where_are_you != old_level.branch
@@ -839,9 +819,6 @@ void down_stairs(dungeon_feature_type force_stair)
     }
 
     dungeon_feature_type stair_taken = stair_find;
-
-    if (player_in_branch(BRANCH_ABYSS))
-        stair_taken = DNGN_ENTER_ABYSS;
 
     if (shaft)
         stair_taken = DNGN_TRAP_NATURAL;
