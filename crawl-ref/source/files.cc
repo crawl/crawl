@@ -1129,6 +1129,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         return_pos = you.level_stack.back().pos;
         you.level_stack.pop_back();
+        env.level_state |= LSTATE_DELETED;
+    }
+    else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
+          || stair_taken == DNGN_EXIT_THROUGH_ABYSS
+          || stair_taken == DNGN_STONE_STAIRS_DOWN_I
+             && old_level.branch == BRANCH_ZIGGURAT)
+    {
+        env.level_state |= LSTATE_DELETED;
     }
 
     if (is_level_on_stack(level_id::current()))
@@ -1185,13 +1193,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         _grab_followers();
 
-        if (is_connected_branch(old_level)
-            || old_level.branch != you.where_are_you)
-        {
-            _save_level(old_level);
-        }
+        if (env.level_state & LSTATE_DELETED)
+            delete_level(old_level), dprf("<lightmagenta>Deleting level.");
         else
-            delete_level(old_level);
+            _save_level(old_level);
 
         // The player is now between levels.
         you.position.reset();
@@ -1873,7 +1878,6 @@ bool is_existing_level(const level_id &level)
 
 void delete_level(const level_id &level)
 {
-    env.level_state |= LSTATE_DELETED;
     travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
     if (you.save)

@@ -172,7 +172,6 @@ static void _wizard_go_to_level(const level_pos &pos)
     }
 
     const level_id old_level = level_id::current();
-    const bool keep_travel_data = can_travel_interlevel();
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
@@ -185,8 +184,6 @@ static void _wizard_go_to_level(const level_pos &pos)
     seen_monsters_react();
     viewwindow();
 
-    if (!keep_travel_data)
-        travel_cache.erase_level_info(old_level);
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
 }
@@ -806,6 +803,7 @@ void wizard_recreate_level()
         {
             remove_unique_annotation(*mi);
             you.unique_creatures[mi->type] = false;
+            mi->flags |= MF_TAKING_STAIRS; // no Abyss transit
         }
     }
 
@@ -816,8 +814,7 @@ void wizard_recreate_level()
         stair_taken = branches[lev.branch].entry_stairs;
 
     you.get_place_info().levels_seen--;
-    if (you.save)
-        you.save->delete_chunk(lev.describe());
+    delete_level(lev);
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
     tile_new_level(newlevel);
     if (!crawl_state.test)
@@ -826,7 +823,6 @@ void wizard_recreate_level()
     seen_monsters_react();
     viewwindow();
 
-    travel_cache.erase_level_info(lev);
     trackers_init_new_level(true);
 }
 
