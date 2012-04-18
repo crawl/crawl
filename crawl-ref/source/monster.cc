@@ -1998,7 +1998,7 @@ bool monster::pickup_scroll(item_def &item, int near)
 {
     if (item.sub_type != SCR_TELEPORTATION
         && item.sub_type != SCR_BLINKING
-        && item.sub_type != SCR_SUMMONING)
+        && item.sub_type != SCR_UNHOLY_CREATION)
     {
         return (false);
     }

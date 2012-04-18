@@ -643,7 +643,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_NOISE:              return "noise";
     case SCR_REMOVE_CURSE:       return "remove curse";
     case SCR_DETECT_CURSE:       return "detect curse";
-    case SCR_SUMMONING:          return "summoning";
+    case SCR_UNHOLY_CREATION:    return "unholy creation";
     case SCR_ENCHANT_WEAPON_I:   return "enchant weapon I";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
@@ -2701,7 +2701,7 @@ bool is_bad_item(const item_def &item, bool temp)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return (you.religion != GOD_ASHENZARI);
-        case SCR_SUMMONING:
+        case SCR_UNHOLY_CREATION:
             // Summoning will always produce hostile monsters if you
             // worship a good god. (Use temp to allow autopickup to
             // prevent monsters from reading it.)

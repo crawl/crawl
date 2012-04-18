@@ -906,7 +906,7 @@ static bool _handle_scroll(monster* mons)
         }
         break;
 
-    case SCR_SUMMONING:
+    case SCR_UNHOLY_CREATION:
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");

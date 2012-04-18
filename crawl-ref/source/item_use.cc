@@ -5244,7 +5244,7 @@ void read_scroll(int slot)
         noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
-    case SCR_SUMMONING:
+    case SCR_UNHOLY_CREATION:
     {
         if (monster *mons = create_monster(
                             mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
