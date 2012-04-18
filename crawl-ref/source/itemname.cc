@@ -2133,7 +2133,8 @@ void check_item_knowledge(bool unknown_items)
             // Potions of fizzing liquid are not something that
             // need to be identified, because they never randomly
             // generate! [due]
-            if (i == OBJ_POTIONS && j == POT_FIZZING)
+            // Water is never interesting either. [1KB]
+            if (i == OBJ_POTIONS && (j == POT_FIZZING || j == POT_WATER))
                 continue;
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
