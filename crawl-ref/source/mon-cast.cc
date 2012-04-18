@@ -190,7 +190,8 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
         // Shedu only heal each other.
         if (mons_is_shedu(caster))
             if (mons_is_shedu(*targ) && caster->mid == targ->number
-                && caster->number == targ->mid)
+                && caster->number == targ->mid
+                && _flavour_benefits_monster(pbolt.flavour, **targ))
             {
                 got_target = true;
             }
