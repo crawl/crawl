@@ -361,8 +361,10 @@ int stepdown_value(int base_value, int stepping, int first_step,
     if (ceiling_value < 0)
         ceiling_value = 0;
 
-    if (base_value < first_step || ceiling_value && ceiling_value < first_step)
+    if (ceiling_value && ceiling_value < first_step)
         return std::min(base_value, ceiling_value);
+    if (base_value < first_step)
+        return base_value;
 
     const int diff = first_step - stepping;
     // Since diff < first_step, we can assume here that ceiling_value > diff
