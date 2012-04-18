@@ -2831,7 +2831,8 @@ void monster::banish(actor *agent, const std::string &)
     if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
         && !has_ench(ENCH_FAKE_ABJURATION))
     {
-        // scale existing damage counts, easier than fudging current hp
+        // Double the existing damage blame counts, so the unassigned xp for
+        // remaining hp is effectively halved.  No need to pass flags this way.
         damage_total *= 2;
         damage_friendly *= 2;
         blame_damage(agent, hit_points);
