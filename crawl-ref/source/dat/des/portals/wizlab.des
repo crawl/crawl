@@ -1142,7 +1142,7 @@ KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of morphology / randbook disc:transmutation \
                 owner:Cigotuvi spell:cigotuvi's_degeneration
 KITEM:      | = staff of death
-KITEM:      l = scroll of summoning
+KITEM:      l = scroll of unholy creation
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 :           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
@@ -1903,9 +1903,9 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
 MARKER:     1 = lua:MonPropsMarker:new {description="A mighty spellcaster, " \
             .. "wreathed in arcane energies, and muttering the most profane incantations " \
             .. "you might ever have heard.\n"}
-KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
+KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of unholy creation
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
-            amulet of conservation / scroll of torment / scroll of summoning /\
+            amulet of conservation / scroll of torment / scroll of unholy creation /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning

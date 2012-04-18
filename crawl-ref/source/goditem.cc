@@ -98,7 +98,7 @@ bool is_unholy_item(const item_def& item)
         retval = is_demonic(item);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
     case OBJ_STAVES:
@@ -165,7 +165,7 @@ bool is_corpse_violating_item(const item_def& item)
         break;
     }
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
     case OBJ_STAVES:
@@ -284,7 +284,7 @@ bool is_chaotic_item(const item_def& item)
         retval = (item.sub_type == POT_MUTATION);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
     case OBJ_STAVES:
