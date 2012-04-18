@@ -26,7 +26,7 @@
 
 static uint8_t _random_potion_description()
 {
-    int desc, nature, colour;
+    int desc, colour;
 
     do
     {
@@ -35,15 +35,12 @@ static uint8_t _random_potion_description()
         if (coinflip())
             desc %= PDC_NCOLOURS;
 
-        nature = PQUAL(desc);
         colour = PCOLOUR(desc);
 
         // nature and colour correspond to primary and secondary in
-        // itemname.cc.  This check ensures clear potions don't get odd
-        // qualifiers.
+        // itemname.cc.
     }
-    while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
-           || desc == PDESCS(PDC_CLEAR));
+    while (colour == PDC_CLEAR); // only water can be clear
 
     return desc;
 }
@@ -261,6 +258,7 @@ void initialise_item_descriptions()
     you.item_description.init(255);
 
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
+    set_ident_type(OBJ_POTIONS, POT_WATER, ID_KNOWN_TYPE);
     you.item_description[IDESC_POTIONS][POT_PORRIDGE]
         = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]
