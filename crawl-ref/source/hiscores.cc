@@ -418,11 +418,12 @@ void show_hiscore_table()
 {
 
     const int max_line   = get_number_of_lines() - 1;
+    const int max_col    = get_number_of_cols() - 1;
 
     const int scores_col_start = 4;
     const int descriptor_col_start = 4;
     const int scores_row_start = 10;
-    const int scores_col_end = get_number_of_cols() - 1;
+    const int scores_col_end = max_col;
     const int scores_row_end = max_line;
 
     bool smart_cursor_enabled = is_smart_cursor_enabled();
@@ -452,6 +453,21 @@ void show_hiscore_table()
 #endif
     highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
     menu.attach_object(highlighter);
+
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
+    // This freeform will only contain unfocusable texts
+    freeform->allow_focus(false);
+    freeform->set_visible(true);
+    menu.attach_object(freeform);
+
+    NoSelectTextItem* tmp = new NoSelectTextItem();
+    std::string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
+    tmp->set_text(text);
+    tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
+    tmp->set_fg_colour(CYAN);
+    freeform->attach_item(tmp);
+    tmp->set_visible(true);
 
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
