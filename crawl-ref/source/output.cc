@@ -1722,7 +1722,6 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
-    const int racid = player_res_acid(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
@@ -1736,7 +1735,6 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
-             "%sRes.Acid. : %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
              "%sSust.Abil.: %s\n"
@@ -1745,7 +1743,6 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rfire, 3), _itosym3(rfire),
              _determine_colour_string(rcold, 3), _itosym3(rcold),
              _determine_colour_string(rlife, 3), _itosym3(rlife),
-             _determine_colour_string(racid, 3), _itosym3(racid),
              _determine_colour_string(rpois, 1), _itosym1(rpois),
              _determine_colour_string(relec, 1), _itosym1(relec),
              _determine_colour_string(rsust, 2), _itosym2(rsust),
