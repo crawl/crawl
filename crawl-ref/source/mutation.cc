@@ -1094,8 +1094,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
         return (true);
 
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
+    // No feet.
+    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
+        && !player_has_feet(false))
+    {
         return (true);
+    }
 
     // Only Nagas can get this upgrade.
     if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
