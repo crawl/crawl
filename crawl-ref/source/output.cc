@@ -1798,15 +1798,14 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int stasis = player_effect_stasis(calc_unid);
     const int notele = player_effect_notele(calc_unid)
                        || crawl_state.game_is_zotdef()
-                       && orb_haloed(you.pos());
+                          && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
-    else
-    if (rrtel && !stasis)
+    else if (rrtel && !stasis)
     {
         snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
