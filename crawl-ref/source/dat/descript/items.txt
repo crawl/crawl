@@ -1114,8 +1114,8 @@ Reading this scroll removes curses from the items you are using.
 %%%%
 scroll of unholy creation
 
-This scroll draws material from the Abyss and creates a terrible beast from
-unformed lumps of flesh from the beyond.
+This scroll draws unformed lumps of flesh from the Abyss to create a
+terrible beast.
 %%%%
 scroll of teleportation
 
