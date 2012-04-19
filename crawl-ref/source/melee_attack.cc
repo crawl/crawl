@@ -1220,7 +1220,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         noise_factor = 125;
         break;
 
-        // Tentacles both gives you a main attack (replacing punch)
+        // Tentacles both give you a main attack (replacing punch)
         // and this secondary, high damage attack.
     case UNAT_TENTACLES:
         aux_attack = aux_verb = "squeeze";
