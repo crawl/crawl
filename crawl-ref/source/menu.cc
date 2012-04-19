@@ -2282,7 +2282,7 @@ void PrecisionMenu::_clear_selections()
 }
 
 /**
- * Finds the closest rectangle to given entry start on a caardinal
+ * Finds the closest rectangle to given entry start on a cardinal
  * direction from it.
  * If no entries are found, NULL is returned.
  *
@@ -3816,6 +3816,50 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         return MenuObject::INPUT_FOCUS_RELEASE_LEFT;
     case CK_RIGHT:
         return MenuObject::INPUT_FOCUS_RELEASE_RIGHT;
+	case CK_PGUP:
+	{	//brackets needed when initializing variables inside switch cases
+		if (m_currently_active != m_topmost_visible)
+		{
+			set_active_item(m_topmost_visible);
+			return MenuObject::INPUT_ACTIVE_CHANGED;
+		}
+		else
+		{
+			if (m_currently_active == 0)
+				return MenuObject::INPUT_FOCUS_RELEASE_UP;
+			else
+			{
+				int new_active = m_currently_active - m_items_shown;
+				if (new_active < 0)
+					new_active = 0;
+				set_active_item(new_active);
+				return MenuObject::INPUT_ACTIVE_CHANGED;
+			}
+		}
+	}
+	case CK_PGDN:
+	{	//brackets needed when initializing variables inside switch cases
+		int last_item_visible = m_topmost_visible + m_items_shown - 1;
+		int last_menu_item = m_entries.size() - 1;
+		if ( last_item_visible > m_currently_active )
+		{
+			set_active_item(last_item_visible);
+			return MenuObject::INPUT_ACTIVE_CHANGED;
+		}
+		else
+		{
+			if (m_currently_active == last_menu_item)
+				return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
+			else
+			{
+				int new_active = m_currently_active + m_items_shown - 1;
+				if (new_active > last_menu_item)
+					new_active = last_menu_item;
+				set_active_item(new_active);
+				return MenuObject::INPUT_ACTIVE_CHANGED;
+			}
+		}
+	}
     default:
         find_entry = select_item_by_hotkey(key);
         if (find_entry != NULL)

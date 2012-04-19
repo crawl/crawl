@@ -804,7 +804,7 @@ protected:
     coord_def m_max_coord;
     std::string m_object_name;
     // by default, entries are held in a vector
-    // if you need a different behaviour, pleare override the
+    // if you need a different behaviour, please override the
     // affected methods
     std::vector<MenuItem*> m_entries;
 #ifdef USE_TILE_LOCAL
