@@ -2216,8 +2216,11 @@ bool melee_attack::distortion_affects_defender()
     {
         if (defender_visible)
             obvious_effect = true;
-        if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+        if ((crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+            && defender->is_player())
+        {
             canned_msg(MSG_STRANGE_STASIS);
+        }
         else
             defender->teleport(coinflip(), one_chance_in(5));
         return (false);
