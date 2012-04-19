@@ -1699,6 +1699,12 @@ int player_res_corr(bool calc_unid, bool items)
             return 1;
     }
 
+    if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
+        && you.species == SP_YELLOW_DRACONIAN)
+    {
+        return 1;
+    }
+
     return 0;
 }
 
