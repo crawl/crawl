@@ -314,18 +314,8 @@ void hiscores_print_list(int display_count, int format)
 
 static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
 {
-#ifdef USE_TILE_LOCAL
-    TextTileItem* tmp = NULL;
-#else
     TextItem* tmp = NULL;
-#endif
-
-#ifdef USE_TILE_LOCAL
-    tmp = new TextTileItem();
-    //tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
-#else
     tmp = new TextItem();
-#endif
 
     coord_def min_coord(1,1);
     coord_def max_coord(1,2);
@@ -429,15 +419,10 @@ void show_hiscore_table()
 
     const int max_line   = get_number_of_lines() - 1;
 
-#ifdef USE_TILE_LOCAL
-    const int scores_col_start = 20;
-    const int descriptor_col_start = 15;
-#else
-    const int scores_col_start = 10;
+    const int scores_col_start = 4;
     const int descriptor_col_start = 4;
-#endif
     const int scores_row_start = 10;
-    const int scores_col_end = scores_col_start + 55;
+    const int scores_col_end = get_number_of_cols() - 1;
     const int scores_row_end = max_line;
 
     bool smart_cursor_enabled = is_smart_cursor_enabled();
