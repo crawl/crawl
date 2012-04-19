@@ -435,7 +435,7 @@ std::string describe_mutations()
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
-        scale_type = "dull grey";
+        scale_type = "dull iron-grey";
         break;
 
     case SP_RED_DRACONIAN:
@@ -566,10 +566,12 @@ std::string describe_mutations()
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
         std::ostringstream num;
-        num << 4 + you.experience_level / 3;
+        num << 4 + you.experience_level / 3
+                 + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const std::string msg = "Your " + scale_type + " scales are hard"
-                                " (AC +" + num.str() + ").";
+        const std::string msg = "Your " + scale_type + " scales are "
+              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
+              + " (AC +" + num.str() + ").";
 
         result += _annotate_form_based(msg,
                       player_is_shapechanged() && you.form != TRAN_DRAGON);

@@ -3071,7 +3071,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start taking on a dull grey colour.",
+        mpr("Your scales start taking on a dull iron-grey colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
         break;
@@ -3701,7 +3701,7 @@ int check_stealth(void)
     int stealth = you.dex() * 3;
 
     int race_mod = 0;
-    if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
+    if (player_genus(GENPC_DRACONIAN))
         race_mod = 12;
     else
     {
@@ -3732,7 +3732,6 @@ int check_stealth(void)
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
-        case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
         case SP_FELID:
         case SP_OCTOPODE:
@@ -6413,7 +6412,8 @@ int player::armour_class() const
         if (player_genus(GENPC_DRACONIAN))
         {
            AC += 400 + 100 * (you.experience_level / 3);  // max 13
-
+           if (species == SP_GREY_DRACONIAN) // no breath
+               AC += 500;
            if (form == TRAN_DRAGON)
                AC += 1000;
         }
