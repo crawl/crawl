@@ -1407,10 +1407,10 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
     case MUT_LARGE_BONE_PLATES:
         {
             const char *arms;
-            if (you.mutation[MUT_TENTACLES] >= 3)
-                arms = "tentacles";
-            else if (you.species == SP_FELID)
+            if (you.species == SP_FELID)
                 arms = "legs";
+            else if (you.mutation[MUT_TENTACLES] >= 3)
+                arms = "tentacles";
             else
                 break;
             mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
