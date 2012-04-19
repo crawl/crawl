@@ -1080,42 +1080,42 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return (true);
 
     // Only Nagas and Draconians can get this one.
-    if (mutat == MUT_STINGER
-        && you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN))
+    if (you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN)
+        && mutat == MUT_STINGER)
     {
         return (true);
     }
 
     // Need tentacles to grow something on them.
-    if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
+    if (you.species != SP_OCTOPODE && mutat == MUT_TENTACLE_SPIKE)
         return (true);
 
     // No bones.
-    if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && mutat == MUT_THIN_SKELETAL_STRUCTURE)
         return (true);
 
     // No feet.
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
-        && !player_has_feet(false))
+    if (!player_has_feet(false)
+        && (mutat == MUT_HOOVES || mutat == MUT_TALONS))
     {
         return (true);
     }
 
     // Only Nagas can get this upgrade.
-    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
+    if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
         return (true);
 
     // Red Draconians can already breathe flames.
-    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
+    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
         return (true);
 
     // Green Draconians can breathe mephitic, poison is not really redundant
     // but its name might confuse players a bit ("noxious" vs "poison").
-    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
+    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return (true);
 
     // Only Draconians can get wings.
-    if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
+    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
         return (true);
 
     // Vampires' healing and thirst rates depend on their blood level.
