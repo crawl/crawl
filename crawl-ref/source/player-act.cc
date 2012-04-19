@@ -129,11 +129,11 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return (species == SP_GREY_DRACONIAN
-             || grid == DNGN_SHALLOW_WATER
-               && (species == SP_NAGA                   // tails, not feet
-                 || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                    && (form == TRAN_LICH || form == TRAN_STATUE
-                        || !form_changed_physiology()));
+               || grid == DNGN_SHALLOW_WATER
+                   && (species == SP_NAGA // tails, not feet
+                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
+                   && (form == TRAN_LICH || form == TRAN_STATUE
+                       || !form_changed_physiology()));
 }
 
 int player::get_experience_level() const
