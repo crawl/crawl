@@ -260,7 +260,8 @@ bool monster::submerged() const
 
     if (grd(pos()) == DNGN_DEEP_WATER
         && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
-            || type == MONS_GREY_DRACONIAN)
+            || (mons_genus(type) == MONS_DRACONIAN
+                && draco_subspecies(this) == MONS_GREY_DRACONIAN))
         && !can_drown())
     {
         return (true);
@@ -272,9 +273,11 @@ bool monster::submerged() const
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
-    return (grid == DNGN_SHALLOW_WATER
-            && (mons_genus(type) == MONS_NAGA             // tails, not feet
-                || body_size(PSIZE_BODY) >= SIZE_LARGE));
+    return ((mons_genus(type) == MONS_DRACONIAN
+             && draco_subspecies(this) == MONS_GREY_DRACONIAN)
+                 || grid == DNGN_SHALLOW_WATER
+                    && (mons_genus(type) == MONS_NAGA // tails, not feet
+                        || body_size(PSIZE_BODY) >= SIZE_LARGE));
 }
 
 bool monster::extra_balanced() const
