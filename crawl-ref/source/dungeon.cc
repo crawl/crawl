@@ -2061,17 +2061,20 @@ static void _ruin_level(Iterator ri,
     }
 }
 
+static bool _mimic_at_level(int level_number)
+{
+    return level_number
+           && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+           && !player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+           && !player_in_branch(BRANCH_SLIME_PITS)
+           && !player_in_branch(BRANCH_TOMB)
+           && !player_in_level_area(LEVEL_PANDEMONIUM)
+           && !player_in_hell();
+}
+
 static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
 {
-    if (!level_number
-        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-        || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-        || player_in_branch(BRANCH_SLIME_PITS))
-    {
-        return;
-    }
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def pos = *ri;
@@ -2248,7 +2251,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
         //      connectivity can be ensured
         _place_uniques(level_number, level_type);
 
-        _place_feature_mimics(level_number, dest_stairs_type);
+        if (_mimic_at_level(level_number))
+            _place_feature_mimics(level_number, dest_stairs_type);
 
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
@@ -2270,7 +2274,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
     _fixup_misplaced_items();
 
     link_items();
-    _place_item_mimics(level_number);
+    if (_mimic_at_level(level_number))
+        _place_item_mimics(level_number);
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)
