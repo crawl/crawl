@@ -330,7 +330,7 @@ double stepdown(double value, double step)
     return step * log2(1 + value / step);
 }
 
-int stepdown(int value, int step, bool rand_round, int max)
+int stepdown(int value, int step, rounding_type rounding, int max)
 {
     double ret = stepdown((double) value, double(step));
 
@@ -338,7 +338,7 @@ int stepdown(int value, int step, bool rand_round, int max)
         return max;
 
     // Randomised rounding
-    if (rand_round)
+    if (rounding == ROUND_RANDOM)
     {
         double intpart;
         double fracpart = modf(ret, &intpart);
@@ -347,8 +347,7 @@ int stepdown(int value, int step, bool rand_round, int max)
         return intpart;
     }
 
-    // Round down
-    return ret;
+    return ret + (rounding == ROUND_CLOSE ? 0.5 : 0);
 }
 
 // Deprecated defintion. Call directly stepdown instead.
@@ -369,7 +368,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
     const int diff = first_step - stepping;
     // Since diff < first_step, we can assume here that ceiling_value > diff
     // or ceiling_value == 0.
-    return diff + stepdown(base_value - diff, stepping, false,
+    return diff + stepdown(base_value - diff, stepping, ROUND_DOWN,
                            ceiling_value ? ceiling_value - diff : 0);
 }
 
