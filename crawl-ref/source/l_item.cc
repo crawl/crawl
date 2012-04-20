@@ -871,9 +871,7 @@ static int dmx_get_qty(lua_State *ls, int ndx, int subndx)
         lua_pop(ls, 1);
     }
     else if (lua_isnumber(ls, ndx))
-    {
         qty = luaL_checkint(ls, ndx);
-    }
     return (qty);
 }
 

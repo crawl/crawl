@@ -652,9 +652,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
         else if (keyin == '.' || keyin == CK_ENTER)
-        {
             spell = you.last_cast_spell;
-        }
         else if (!isaalpha(keyin))
         {
             mpr("You don't know that spell.");

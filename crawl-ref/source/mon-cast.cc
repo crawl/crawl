@@ -1668,9 +1668,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         }
                     }
                     else if (!mons->can_see(&menv[mons->foe]))
-                    {
                         spellOK = false;
-                    }
                     else if (mons->type == MONS_DAEVA
                              && mons->god == GOD_SHINING_ONE)
                     {

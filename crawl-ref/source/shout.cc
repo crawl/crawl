@@ -234,9 +234,7 @@ void handle_monster_shouts(monster* mons, bool force)
                                   << std::endl;
     }
     else if (s_type == S_SILENT && (msg.empty() || msg == "__NONE"))
-    {
         ; // No "visual shout" defined for silent monster, do nothing.
-    }
     else if (msg.empty()) // Still nothing found?
     {
         msg::streams(MSGCH_DIAGNOSTICS)

@@ -436,21 +436,13 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 2) + "ices";
     }
     else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
-    {
         return name + "es";
-    }
     else if (ends_with(name, "cyclops"))
-    {
         return name.substr(0, name.length() - 1) + "es";
-    }
     else if (name == "catoblepas")
-    {
         return "catoblepae";
-    }
     else if (ends_with(name, "s"))
-    {
         return name;
-    }
     else if (ends_with(name, "y"))
     {
         if (name == "y")

@@ -292,9 +292,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
         c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
-    {
         _send_everything();
-    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");

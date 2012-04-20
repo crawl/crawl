@@ -2349,9 +2349,7 @@ int monster_die(monster* mons, killer_type killer,
         pikel_band_neutralise();
     }
     else if (mons->is_named() && created_friendly)
-    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
-    }
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(mons) && !in_transit)
@@ -2393,9 +2391,7 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
     else if (mons_is_elven_twin(mons) && mons_near(mons))
-    {
         elven_twin_died(mons, in_transit, killer, killer_index);
-    }
     else if (mons_is_shedu(mons))
     {
         if (was_banished) // Don't try resurrecting them.

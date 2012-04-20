@@ -147,9 +147,7 @@ static int _get_mons_colour(const monster_info& mi)
     if (mi.attitude == ATT_FRIENDLY)
         col |= COLFLAG_FRIENDLY_MONSTER;
     else if (mi.attitude != ATT_HOSTILE)
-    {
         col |= COLFLAG_NEUTRAL_MONSTER;
-    }
     else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {

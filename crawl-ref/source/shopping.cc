@@ -1497,9 +1497,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 50;
         }
         else if (item_type_known(item) && get_equip_desc(item) != 0)
-        {
             valued += 20;
-        }
 
         if (item_known_cursed(item))
         {

@@ -574,9 +574,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(m))
-        {
             mb.set(MB_FLEEING);
-        }
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
             if (mons_is_stationary(m))
@@ -1181,13 +1179,9 @@ std::string monster_info::pluralised_name(bool fullname) const
     // Specialcase mimics, so they don't get described as piles of gold
     // when that would be inappropriate. (HACK)
     else if (mons_is_mimic(type))
-    {
         return "mimics";
-    }
     else if (mons_genus(type) == MONS_DRACONIAN)
-    {
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    }
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
              || !fullname)

@@ -1406,9 +1406,7 @@ static void _go_upstairs()
     }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         if (ygrd == DNGN_STONE_ARCH)
@@ -1520,9 +1518,7 @@ static void _go_downstairs()
     }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_DOWNSTAIRS
              && !shaft)
     {
@@ -1807,9 +1803,7 @@ static void _do_cycle_quiver(int dir)
             mpr("No other missiles available. Use F to throw any item.");
     }
     else if (cur == -1)
-    {
         mpr("No missiles available. Use F to throw any item.");
-    }
 }
 
 static void _do_list_gold()

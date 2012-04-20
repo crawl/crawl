@@ -293,9 +293,7 @@ bool resolve_subvault(map_def &map)
         map.hmirror();
     }
     else if (idx == 2)
-    {
         map.hmirror();
-    }
 
     ASSERT(map.subvault_mismatch_count(svplace) == min_mismatch);
 

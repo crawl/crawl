@@ -1934,9 +1934,7 @@ static void _bindkey(std::string field)
         return;
     }
     else if (key_str.length() == 1)
-    {
         key = key_str[0];
-    }
     else if (key_str.length() == 2)
     {
         if (key_str[0] != '^')
@@ -2111,9 +2109,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == "include")
         include(field, true, runscript);
     else if (key == "opt" || key == "option")
-    {
         split_parse(field, ",", &game_options::set_option_fragment);
-    }
     else if (key == "autopickup")
     {
         // clear out autopickup

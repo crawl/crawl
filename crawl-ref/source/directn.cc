@@ -983,9 +983,7 @@ bool direction_chooser::move_is_ok() const
                     return (false);
                 }
                 else if (Options.allow_self_target == CONFIRM_PROMPT)
-                {
                     return yesno("Really target yourself?", false, 'n');
-                }
             }
 
             if (cancel_at_self)

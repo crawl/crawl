@@ -476,9 +476,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
             return;
     }
     else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
-    {
         return;
-    }
 
     if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
     {
