@@ -1698,60 +1698,25 @@ int player_res_corr(bool calc_unid, bool items)
         return 1;
     }
 
+    if (form_keeps_mutations()
+        && player_mutation_level(MUT_YELLOW_SCALES) >= 3)
+    {
+        return 1;
+    }
+
     return 0;
 }
 
 int player_res_acid(bool calc_unid, bool items)
 {
-    int res = 0;
-    if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
-        && you.species == SP_YELLOW_DRACONIAN)
-    {
-        res += 2;
-    }
-
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-    {
-        if (items)
-        {
-            if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid, true))
-                res++;
-
-            if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION))
-                res++;
-        }
-    }
-
-    // mutations:
-    res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
-
-    if (res > 3)
-        res = 3;
-
-    return (res);
+    return player_res_corr(calc_unid, items);
 }
 
 // Returns a factor X such that post-resistance acid damage can be calculated
 // as pre_resist_damage * X / 100.
 int player_acid_resist_factor()
 {
-    int res = player_res_acid();
-
-    int factor = 100;
-
-    if (res == 1)
-        factor = 50;
-    else if (res == 2)
-        factor = 34;
-    else if (res > 2)
-    {
-        factor = 30;
-        while (res-- > 2 && factor >= 20)
-            factor = factor * 90 / 100;
-    }
-
-    return (factor);
+    return (player_res_acid() ? 50 : 100);
 }
 
 int player_res_electricity(bool calc_unid, bool temp, bool items)
