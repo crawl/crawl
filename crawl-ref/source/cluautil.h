@@ -24,8 +24,10 @@ extern "C" {
         return (0); \
     }
 #define PLUARET(type, val) \
+    { \
         lua_push##type(ls, val); \
-        return (1);
+        return (1); \
+    }
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
