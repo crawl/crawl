@@ -60,7 +60,8 @@ The contents of this text are:
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
                 easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus, spell_slot, autofight_stop
+                easy_exit_menu, sort_menus, spell_slot, autofight_stop,
+                autofight_throw
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -379,11 +380,13 @@ The available stock Lua scripts are
                    Stops if HP <= (autofight_stop)% * MHP, where
                    autofight_stop = 30 by default but can be set by the player.
                    Never moves if hit_adjacent is used instead of hit_closest.
+                   Will use thrown weapons only if autofight_throw is true
+                   (off by default).
                    Tab is automatically bound to hit_closest and shift-tab to
                    hit_adjacent.
                    Requires non-rebound vi keys.
                    New macroable functions: hit_closest, hit_adjacent
-                   New options: autofight_stop
+                   New options: autofight_stop, autofight_throw
 
 
 The above mentioned Lua functions can be macroed in-game by setting the
