@@ -224,7 +224,7 @@ const int BRANCH_DUNGEON_DEPTH = 27;
   #define ITEM_MIMIC_CHANCE    1
 #else
   #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    500
+  #define ITEM_MIMIC_CHANCE    1000
 #endif
 
 const int ANTITRAIN_PENALTY = 2;
