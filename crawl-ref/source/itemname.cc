@@ -2914,8 +2914,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // No potion is useless if it can be used for Evaporate.
-        if ((you.char_class == JOB_TRANSMUTER || you.char_class == JOB_STALKER)
-             && !you.num_turns
+        if (you.char_class == JOB_STALKER && !you.num_turns
             || you.has_spell(SPELL_EVAPORATE))
         {
             return (false);
