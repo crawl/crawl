@@ -335,7 +335,7 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
 static void _construct_hiscore_table(MenuScroller* scroller)
 {
     FILE *scores = _hs_open("r", _score_file_name());
-    int i, total_entries;
+    int i;
 
     if (scores == NULL)
         return;
@@ -347,7 +347,6 @@ static void _construct_hiscore_table(MenuScroller* scroller)
         if (_hs_read(scores, *hs_list[i]) == false)
             break;
     }
-    total_entries = i;
 
     _hs_close(scores, "r", _score_file_name());
 
