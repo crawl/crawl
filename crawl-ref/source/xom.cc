@@ -1275,7 +1275,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                 {
                     summons[i]->attitude = ATT_HOSTILE;
                     // XXX need to reset summon quota here?
-                    behaviour_event(summons[i], ME_ALERT, MHITYOU);
+                    behaviour_event(summons[i], ME_ALERT, &you);
                 }
             }
 
@@ -2901,7 +2901,7 @@ static int _xom_chaos_upgrade_nearby_monster(bool debug = false)
     ASSERT(rc);
 
     // Wake the monster up.
-    behaviour_event(mon, ME_ALERT, MHITYOU);
+    behaviour_event(mon, ME_ALERT, &you);
 
     if (rc)
     {

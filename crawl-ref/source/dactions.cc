@@ -139,7 +139,7 @@ static void _apply_daction(daction_type act)
                 dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
                 mi->attitude = ATT_HOSTILE;
                 mi->del_ench(ENCH_CHARM, true);
-                behaviour_event(*mi, ME_ALERT, MHITYOU);
+                behaviour_event(*mi, ME_ALERT, &you);
                 // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
                 mons_att_changed(*mi);
 

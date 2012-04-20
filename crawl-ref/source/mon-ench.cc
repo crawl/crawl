@@ -1341,7 +1341,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                   me.agent()));
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
-                        behaviour_event(mon, ME_SCARE, me.who);
+                        behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
                 }
@@ -1494,7 +1494,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
             this->attitude = ATT_NEUTRAL;
-            behaviour_event(this, ME_ALERT, MHITNOT);
+            behaviour_event(this, ME_ALERT);
         }
     }
     break;
@@ -1518,7 +1518,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             }
 
             this->attitude = ATT_HOSTILE;
-            behaviour_event(this, ME_ALERT, MHITYOU);
+            behaviour_event(this, ME_ALERT, &you);
         }
     }
     break;

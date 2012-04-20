@@ -600,6 +600,7 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
 
+    bool wont_attack() const { return true; };
     int warding() const;
 
     monster_type mons_species(bool zombie_base = false) const;

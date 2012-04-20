@@ -1119,7 +1119,7 @@ int actor_apply_cloud(actor *act)
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
 
     if (!player && (side_effects || final_damage > 0))
-        behaviour_event(mons, ME_DISTURB, MHITNOT, act->pos());
+        behaviour_event(mons, ME_DISTURB, 0, act->pos());
 
     if (final_damage)
     {

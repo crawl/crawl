@@ -134,7 +134,7 @@ void seen_monsters_react()
 #endif
            )
         {
-            behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos(), false);
+            behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
             handle_monster_shouts(*mi);
         }
 

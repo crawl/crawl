@@ -221,7 +221,7 @@ private:
     bool found_player() const;
     bool need_regress() const;
 
-    int beam_source_as_target() const;
+    const actor* beam_source_as_target() const;
 
     int range_used_on_hit() const;
 

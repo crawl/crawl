@@ -627,7 +627,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     {
         set_attack_conducts(conducts, mons);
 
-        behaviour_event(mons, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(mons, ME_WHACK, &you, you.pos());
     }
 
     enable_attack_conducts(conducts);
@@ -715,7 +715,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 
         mprf("You freeze %s.", mons->name(DESC_THE).c_str());
 
-        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        behaviour_event(mons, ME_ANNOY, &you);
     }
 
     enable_attack_conducts(conducts);
@@ -795,7 +795,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
          mons->name(DESC_THE).c_str());
     noisy(4, beam.target);
 
-    behaviour_event(mons, ME_ANNOY, MHITYOU);
+    behaviour_event(mons, ME_ANNOY, &you);
 
     enable_attack_conducts(conducts);
 
@@ -830,7 +830,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         if (m.alive())
         {
             print_wounds(&m);
-            behaviour_event(&m, ME_WHACK, MHITYOU);
+            behaviour_event(&m, ME_WHACK, &you);
         }
         else
         {
@@ -1341,7 +1341,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 
         if (mon->alive())
         {
-            behaviour_event(mon, ME_WHACK, actor->mindex());
+            behaviour_event(mon, ME_WHACK, actor);
 
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);

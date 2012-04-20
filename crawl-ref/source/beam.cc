@@ -1966,7 +1966,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
-                behaviour_event(*mi, ME_SCARE, MHITYOU);
+                behaviour_event(*mi, ME_SCARE, &you);
         }
     }
 
@@ -2083,7 +2083,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
-        behaviour_event(mons, ME_ANNOY, who ? who->mindex() : MHITNOT);
+        behaviour_event(mons, ME_ANNOY, who);
     }
 
     // Finally, take care of deity preferences.
@@ -2151,7 +2151,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels,
         if (verbose)
             simple_monster_message(mons, " is covered in liquid flames!");
         ASSERT(who);
-        behaviour_event(mons, ME_WHACK, who->mindex());
+        behaviour_event(mons, ME_WHACK, who);
     }
 
     return (new_flame.degree > old_flame.degree);
@@ -2894,13 +2894,12 @@ bool bolt::fuzz_invis_tracer()
     if (dist > 2)
         return (false);
 
-    const int beam_src = beam_source_as_target();
-    if (beam_src != MHITNOT && beam_src != MHITYOU)
+    const actor *beam_src = beam_source_as_target();
+    if (beam_src && beam_src->is_monster()
+        && mons_sense_invis(beam_src->as_monster()))
     {
         // Monsters that can sense invisible
-        const monster* mon = &menv[beam_src];
-        if (mons_sense_invis(mon))
-            return (dist == 0);
+        return (dist == 0);
     }
 
     // Apply fuzz now.
@@ -2945,13 +2944,13 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
 
 std::string bolt::zapper() const
 {
-    const int beam_src = beam_source_as_target();
-    if (beam_src == MHITYOU)
-        return ("self");
-    else if (beam_src == MHITNOT)
-        return ("");
+    const actor* beam_src = beam_source_as_target();
+    if (!beam_src)
+        return "";
+    else if (beam_src->is_player())
+        return "self";
     else
-        return menv[beam_src].name(DESC_PLAIN);
+        return beam_src->name(DESC_PLAIN);
 }
 
 bool bolt::is_harmless(const monster* mon) const
@@ -3774,12 +3773,18 @@ void bolt::affect_player()
         beam_hits_actor(&you);
 }
 
-int bolt::beam_source_as_target() const
+const actor* bolt::beam_source_as_target() const
 {
-    return (MON_KILL(thrower)       ? beam_source :
-            thrower == KILL_MISCAST ? beam_source :
-            thrower == KILL_MISC    ? MHITNOT
-                                    : MHITYOU);
+    // This looks totally wrong. Preserving old behaviour for now, but it
+    // probably needs to be investigated and rewritten (like most of beam
+    // blaming). -- 1KB
+    if (MON_KILL(thrower) || thrower == KILL_MISCAST)
+    {
+        if (beam_source == MHITYOU)
+            return &you;
+        return invalid_monster_index(beam_source) ? 0 : &menv[beam_source];
+    }
+    return (thrower == KILL_MISC) ? 0 : &you;
 }
 
 void bolt::update_hurt_or_helped(monster* mon)
@@ -4373,7 +4378,7 @@ void bolt::affect_monster(monster* mon)
     // Visual - wake monsters.
     if (flavour == BEAM_VISUAL)
     {
-        behaviour_event(mon, ME_DISTURB, beam_source, source);
+        behaviour_event(mon, ME_DISTURB, agent(), source);
         apply_hit_funcs(mon, 0);
         return;
     }
@@ -4617,14 +4622,14 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, /*beam_source_as_target()*/beam_source);
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, /*beam_source_as_target()*/beam_source);
         }
     }
 

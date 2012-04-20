@@ -348,6 +348,7 @@ public:
             || petrifying();
     }
 
+    virtual bool wont_attack() const = 0;
     virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
