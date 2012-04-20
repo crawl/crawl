@@ -968,7 +968,7 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
 }
 
 // Parts index to string
-void tilep_part_to_str(int number, char *buf)
+static void _tilep_part_to_str(int number, char *buf)
 {
     //special
     if (number == TILEP_SHOW_EQUIP)
@@ -984,7 +984,7 @@ void tilep_part_to_str(int number, char *buf)
 }
 
 // Parts string to index
-int tilep_str_to_part(char *str)
+static int _tilep_str_to_part(char *str)
 {
     //special
     if (str[0] == '*')
@@ -1040,7 +1040,7 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
         ibuf[ccount] = '\0';
         gcount++;
 
-        const tileidx_t idx = tilep_str_to_part(ibuf);
+        const tileidx_t idx = _tilep_str_to_part(ibuf);
         if (idx == TILEP_SHOW_EQUIP)
             doll.parts[p] = TILEP_SHOW_EQUIP;
         else if (p == TILEP_PART_BASE)
@@ -1090,7 +1090,7 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
                     idx = 0;
             }
         }
-        tilep_part_to_str(idx, ptr);
+        _tilep_part_to_str(idx, ptr);
 
         ptr += 3;
 
