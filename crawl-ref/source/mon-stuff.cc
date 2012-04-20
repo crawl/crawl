@@ -2450,7 +2450,7 @@ int monster_die(monster* mons, killer_type killer,
          || killer == KILL_YOU_MISSILE
          || killer == KILL_YOU_CONF
          || pet_kill)
-             && corpse > 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
+             && corpse >= 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
