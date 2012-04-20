@@ -781,8 +781,7 @@ static unsigned short _dos_hilite_brand(unsigned short colour,
     return (colour);
 }
 
-unsigned short dos_brand(unsigned short colour,
-                         unsigned brand)
+static unsigned short _dos_brand(unsigned short colour, unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);
@@ -836,7 +835,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);
-        raw_colour = dos_brand(raw_colour & 0xFF, brand);
+        raw_colour = _dos_brand(raw_colour & 0xFF, brand);
     }
 #endif
 
