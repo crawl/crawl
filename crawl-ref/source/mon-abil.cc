@@ -2019,9 +2019,7 @@ void move_demon_tentacle(monster* tentacle)
             if (mtemp)
                 tentacle->foe = mtemp->mindex();
             else if (new_pos == you.pos())
-            {
                 tentacle->foe = MHITYOU;
-            }
 
             new_pos = old_pos;
         }
@@ -2196,9 +2194,7 @@ void move_kraken_tentacles(monster* kraken)
             if (mtemp)
                 tentacle->foe = mtemp->mindex();
             else if (new_pos == you.pos())
-            {
                 tentacle->foe = MHITYOU;
-            }
 
             new_pos = old_pos;
         }

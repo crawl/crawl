@@ -70,9 +70,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
     }
     else if (fg_idx == TILEP_PLAYER)
-    {
         pack_player(x, y, in_water);
-    }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);

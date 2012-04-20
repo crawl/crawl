@@ -976,9 +976,7 @@ static bool _herd_ok(monster * mon)
                 break;
             }
             else if (g_dist < intermediate_thresh)
-            {
                 intermediate_range = true;
-            }
         }
     }
 

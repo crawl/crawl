@@ -1908,9 +1908,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
     else if (mons_is_firewood(mons))
-    {
         return (true);
-    }
     else  // trying to enchant an unnatural creature doesn't work
     {
         if (simple_monster_message(mons, " is unaffected."))

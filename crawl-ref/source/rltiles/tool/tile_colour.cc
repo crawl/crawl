@@ -70,13 +70,9 @@ int tile_colour::get_hue() const
     if (max_rgb == r)
         return ((60 * (g - b)) / diff + 360) % 360;
     else if (max_rgb == g)
-    {
         return (60 * (b - r)) / diff + 120;
-    }
     else // if (max_rgb == b)
-    {
         return (60 * (r - g)) / diff + 240;
-    }
 }
 
 int tile_colour::get_max_rgb() const

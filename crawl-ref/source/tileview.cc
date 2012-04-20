@@ -548,21 +548,13 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
                     env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
             }
             else if (u_spc && l_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_SE;
-            }
             else if (u_spc && r_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_SW;
-            }
             else if (d_spc && l_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_NE;
-            }
             else if (d_spc && r_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_NW;
-            }
             else
             {
                 env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
@@ -1088,9 +1080,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = orig + flv.special % tile_dngn_count(orig);
     }
     else if (orig < TILE_DNGN_MAX)
-    {
         *bg = _pick_random_dngn_tile(orig, flv.special);
-    }
 
     *bg |= flag;
 }

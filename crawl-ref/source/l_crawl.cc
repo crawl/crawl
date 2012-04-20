@@ -295,9 +295,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         }
     }
     else if (lua_isnumber(ls, argi))
-    {
         macro_sendkeys_end_add_expanded(luaL_checkint(ls, argi));
-    }
 }
 
 /*

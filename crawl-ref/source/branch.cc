@@ -29,9 +29,7 @@ level_id branch_entry_level(branch_type branch)
                         subdungeon_depth(you.hell_branch, you.hell_exit));
     }
     else if (is_hell_subbranch(branch))
-    {
         return level_id(BRANCH_VESTIBULE_OF_HELL, 1);
-    }
 
     const branch_type parent = branches[branch].parent_branch;
     const int subdepth = branches[branch].startdepth;

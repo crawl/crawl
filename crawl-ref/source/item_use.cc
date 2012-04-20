@@ -2452,9 +2452,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
         else if (wepType == MI_THROWING_NET)
-        {
             max_range = range = 2 + you.body_size(PSIZE_BODY);
-        }
         else
         {
             max_range = range = LOS_RADIUS;
@@ -5664,9 +5662,7 @@ void tile_item_use_secondary(int idx)
             fire_thing(idx); // fire weapons
     }
     else if (you.equip[EQ_WEAPON] == idx)
-    {
         wield_weapon(true, SLOT_BARE_HANDS);
-    }
     else if (_valid_weapon_swap(item))
     {
         // secondary wield for several spells and such

@@ -1313,9 +1313,7 @@ void pickup(bool partial_quantity)
     if (o == NON_ITEM)
         mpr("There are no items here.");
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
-    {
         mpr("You can't reach the bottom while floating on water.");
-    }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
         // Deliberately allowing the player to pick up

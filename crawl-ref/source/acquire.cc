@@ -71,9 +71,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
                 result = ARM_LARGE_SHIELD; // prefer big shields for giant races
         }
         else if (arm == NUM_ARMOURS)
-        {
             result = ARM_ROBE;  // no heavy armour, see below
-        }
         break;
 
     case SP_RED_DRACONIAN:
@@ -458,9 +456,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
         quantity = 8 + random2avg(15, 2);
     // giving more of the lower food value items
     else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
-    {
         quantity += random2avg(10, 2);
-    }
     else if (type_wanted == POT_BLOOD)
     {
     // this was above in the vampire block, but gets overwritten by line 1371

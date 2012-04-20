@@ -109,9 +109,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
             // nothing
         }
         else if (full_fire_order.empty())
-        {
             *no_item_reason = "No suitable missiles.";
-        }
         else
         {
             const int skipped_item = full_fire_order[0];

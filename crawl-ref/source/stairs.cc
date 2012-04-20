@@ -573,9 +573,7 @@ static void _update_travel_cache(bool collect_travel_data,
         }
     }
     else // !collect_travel_data
-    {
         travel_cache.erase_level_info(old_level);
-    }
 }
 
 void up_stairs(dungeon_feature_type force_stair,

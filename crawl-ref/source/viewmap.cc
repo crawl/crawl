@@ -834,9 +834,7 @@ bool show_map(level_pos &lpos,
                     screen_y = min_y + half_screen;
                 }
                 else if (screen_y + half_screen > max_y)
-                {
                     screen_y = max_y - half_screen;
-                }
 
                 curs_x = lpos.pos.x - start_x + 1;
                 curs_y = lpos.pos.y - screen_y + half_screen + 1;

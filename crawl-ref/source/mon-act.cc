@@ -1684,9 +1684,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     if (mons->has_ench(ENCH_BATTLE_FRENZY))
         frenzy_degree = mons->get_ench(ENCH_BATTLE_FRENZY).degree;
     else if (mons->has_ench(ENCH_ROUSED))
-    {
         frenzy_degree = mons->get_ench(ENCH_ROUSED).degree;
-    }
 
     if (frenzy_degree != -1)
     {

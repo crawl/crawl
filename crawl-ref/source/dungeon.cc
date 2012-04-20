@@ -5263,9 +5263,7 @@ void place_spec_shop(int level_number,
                         stock_loc, item_level);
             }
             else if (!spec->items.empty() && spec->use_all && j < (int)spec->items.size())
-            {
                 orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
-            }
             else
             {
                 orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,

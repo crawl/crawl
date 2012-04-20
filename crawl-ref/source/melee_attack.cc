@@ -1039,9 +1039,7 @@ void melee_attack::adjust_noise()
         }
     }
     else if (weapon == NULL)
-    {
         noise_factor = 150;
-    }
 }
 
 void melee_attack::check_autoberserk()
@@ -5081,13 +5079,9 @@ int melee_attack::calc_damage()
             damage = damage * 3 / 2;
         }
         else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
-        {
             frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
-        }
         else if (as_mon->has_ench(ENCH_ROUSED))
-        {
             frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-        }
 
         if (frenzy_degree != -1)
         {
