@@ -106,6 +106,9 @@ LUARET1(you_skill_progress, number,
         lua_isstring(ls, 1)
             ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
             : 0)
+LUARET1(you_can_train_skill, boolean,
+        lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
+                            : false)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -292,6 +295,19 @@ LUAFN(you_mutation)
     return (luaL_argerror(ls, 1, err.c_str()));
 }
 
+LUAFN(you_train_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    if (lua_gettop(ls) >= 2 && you.can_train[sk])
+    {
+        you.train[sk] = std::min(std::max(luaL_checkint(ls, 2), 0), 2);
+        reset_training();
+    }
+
+    PLUARET(number, you.train[sk]);
+}
+
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -317,6 +333,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
+    { "can_train_skill", you_can_train_skill },
+    { "train_skill", you_train_skill },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
