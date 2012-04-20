@@ -127,7 +127,7 @@ static const char* jager[][4] =
   {"ing","ink"},
   {"irl","url"},
   {"ish","eesh"},
-  {"^i$","hy"},
+  {"^i","hy", 0, ")"LETTERS},
   {"ve$","ff", "!"LETTERS},
   {"ect$","eck"},
   {"and","und"},
