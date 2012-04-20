@@ -2739,7 +2739,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
     {
-        if ((flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        if (flags & MF_NAME_MASK)
         {
             // Remove the replacement name from the new monster
             flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
