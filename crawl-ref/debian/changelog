@@ -1,3 +1,17 @@
+crawl (2:0.10.2-2) unstable; urgency=low
+
+  * Build-Depend on libpng-dev.
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 14 Apr 2012 18:21:54 +0200
+
+crawl (2:0.10.2-1) unstable; urgency=low
+
+  * New upstream bugfix release. Closes: #668321
+  * Tell the makefile to not strip instead of patching that out.
+  * Install the SVG icon as .svg rather than .png.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 12 Apr 2012 18:19:04 +0200
+
 crawl (2:0.10.0-2) unstable; urgency=low
 
   * Fix link to .txt files in /usr/share/doc/crawl-common/. Closes: #660388
