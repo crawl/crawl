@@ -502,9 +502,7 @@ void show_hiscore_table()
             tiles.get_crt()->attach_menu(&menu);
 #endif
         }
-        if (!menu.process_key(keyn))
-        {
-        }
+        menu.process_key(keyn);
     }
 }
 
