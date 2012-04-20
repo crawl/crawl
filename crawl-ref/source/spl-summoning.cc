@@ -2390,9 +2390,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     fail_check();
     mpr("Send 'em back where they came from!");
     for (monster_iterator mi(you.get_los()); mi; ++mi)
-    {
         _abjuration(pow, *mi);
-    }
 
     return SPRET_SUCCESS;
 }

@@ -1909,9 +1909,7 @@ static trap_type _random_trap_slime(int level_number)
     trap_type type = NUM_TRAPS;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3))
-    {
         type = TRAP_ZOT;
-    }
 
     if (one_chance_in(5) && is_valid_shaft_level(level_id::current()))
         type = TRAP_SHAFT;

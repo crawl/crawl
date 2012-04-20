@@ -79,9 +79,7 @@ void OGLStateManager::set(const GLState& state)
     if (state.array_colour != m_current_state.array_colour)
     {
         if (state.array_colour)
-        {
             glEnableClientState(GL_COLOR_ARRAY);
-        }
         else
         {
             glDisableClientState(GL_COLOR_ARRAY);

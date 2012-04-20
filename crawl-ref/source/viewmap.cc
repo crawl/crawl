@@ -827,9 +827,7 @@ bool show_map(level_pos &lpos,
                 // keep the top line clear... which makes things look a whole
                 // lot better for small maps.
                 if (num_lines > map_lines)
-                {
                     screen_y = min_y + half_screen - 1;
-                }
                 else if (num_lines == map_lines
                          || screen_y - half_screen < min_y)
                 {

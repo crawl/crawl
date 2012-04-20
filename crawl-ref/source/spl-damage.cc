@@ -1259,9 +1259,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
     int strength = 0;
 
     for (stack_iterator si(where); si; ++si)
-    {
         strength += _ignite_poison_affect_item(*si, false);
-    }
 
     if (strength > 0)
     {

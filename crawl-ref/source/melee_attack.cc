@@ -832,9 +832,7 @@ bool melee_attack::attack()
     }
 
     if (shield_blocked)
-    {
         handle_phase_blocked();
-    }
     else
     {
         if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
@@ -3852,9 +3850,7 @@ random_var melee_attack::player_unarmed_speed()
 
     // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
-    {
         unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
-    }
     // Bats are faster (for what good it does them).
     if (player_in_bat_form())
         unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);

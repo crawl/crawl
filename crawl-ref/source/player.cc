@@ -2262,9 +2262,7 @@ int player_movement_speed(bool ignore_burden)
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
-    {
         mv -= player_mutation_level(MUT_FAST) + 1;
-    }
 
     if (player_mutation_level(MUT_SLOW) > 0 && !you.swimming())
     {
@@ -2333,9 +2331,7 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
     const mutation_activity_type active = mutation_activity_level(mut);
 
     if (active >= minact)
-    {
         return (mlevel);
-    }
     else if (active == MUTACT_HUNGER)
     {
         switch (you.hunger_state)
@@ -2767,9 +2763,7 @@ int player_sust_abil(bool calc_unid)
 
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
-    }
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
         sa += 1;
@@ -3020,9 +3014,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 
     if (crawl_state.game_is_sprint())
-    {
         exp_gained = sprint_modify_exp(exp_gained);
-    }
 
     you.exp_available += exp_gained;
 
@@ -4285,9 +4277,7 @@ int player_effect_inaccuracy()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_INACCURACY);
-    }
     else
     {
         return 0;
@@ -4299,9 +4289,7 @@ int player_effect_mutagenic()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_MUTAGENIC);
-    }
     else
     {
         return 0;
@@ -4312,9 +4300,7 @@ int player_res_mutation()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_RESIST_MUTATION);
-    }
     else
     {
         return 0;
@@ -4325,9 +4311,7 @@ int player_effect_gourmand()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_THE_GOURMAND);
-    }
     else
     {
         return 0;
@@ -4338,9 +4322,7 @@ int player_effect_stasis(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_STASIS, calc_unid);
-    }
     else
     {
         return 0;
@@ -4356,9 +4338,7 @@ int player_effect_notele(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
-    }
     else
     {
         return 0;
@@ -4370,9 +4350,7 @@ int player_effect_running()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING);
-    }
     else
     {
         return 0;
@@ -4383,9 +4361,7 @@ int player_effect_cfly(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
-    }
     else
     {
         return 0;
@@ -4396,9 +4372,7 @@ int player_effect_faith()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_FAITH);
-    }
     else
     {
         return 0;
@@ -4409,9 +4383,7 @@ int player_effect_archmagi()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
-    }
     else
     {
         return 0;
@@ -4422,9 +4394,7 @@ int player_effect_nocast()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_PREVENT_SPELLCASTING);
-    }
     else
     {
         return 0;

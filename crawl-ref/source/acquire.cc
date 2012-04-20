@@ -455,9 +455,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
     quantity = 3 + random2(5);
 
     if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE)
-    {
         quantity = 8 + random2avg(15, 2);
-    }
     // giving more of the lower food value items
     else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
     {

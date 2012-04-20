@@ -221,9 +221,7 @@ bool direction_chooser::choose_compass()
 
 #ifdef USE_TILE
         if (key_command == CMD_TARGET_MOUSE_MOVE)
-        {
             continue;
-        }
         else if (key_command == CMD_TARGET_MOUSE_SELECT)
         {
             const coord_def &gc = tiles.get_cursor();
@@ -254,9 +252,7 @@ bool direction_chooser::choose_compass()
 
         const int i = _targetting_cmd_to_compass(key_command);
         if (i != -1)
-        {
             moves.delta = Compass[i];
-        }
         else if (key_command == CMD_TARGET_CANCEL)
         {
             moves.isCancel = true;
@@ -340,9 +336,7 @@ std::string direction_chooser::build_targetting_hint_string() const
     const monster* p_target = get_current_target();
 
     if (f_target && f_target == p_target)
-    {
         hint_string = ", f/p - " + f_target->name(DESC_PLAIN);
-    }
     else
     {
         if (f_target)
@@ -1050,9 +1044,7 @@ static void _update_mlist(bool enable)
     crawl_state.mlist_targetting = enable;
     const int full_info = update_monster_pane();
     if (enable && full_info != -1)
-    {
         _fill_monster_list(full_info);
-    }
     else
         crawl_state.mlist_targetting = false;
 }
@@ -3713,9 +3705,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
     // and armour are cloned with him.
 
     if (mi.type != MONS_DANCING_WEAPON)
-    {
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
-    }
     else if (level == DESC_IDENTIFIED)
         return " " + mi.full_name(DESC_A);
 

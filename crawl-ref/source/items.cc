@@ -1311,9 +1311,7 @@ void pickup(bool partial_quantity)
     you.last_pickup.clear();
 
     if (o == NON_ITEM)
-    {
         mpr("There are no items here.");
-    }
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
     {
         mpr("You can't reach the bottom while floating on water.");

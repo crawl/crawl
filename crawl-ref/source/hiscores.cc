@@ -352,9 +352,7 @@ static void _construct_hiscore_table(MenuScroller* scroller)
     _hs_close(scores, "r", _score_file_name());
 
     for (int j=0; j<i; j++)
-    {
         _add_hiscore_row(scroller, *hs_list[j], j);
-    }
 
 }
 
@@ -1199,9 +1197,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
 
             if (indirectkiller.find(" by ") != std::string::npos)
-            {
                 indirectkiller.erase(0, indirectkiller.find(" by ") + 4);
-            }
 
             killerpath = "";
 
@@ -2388,9 +2384,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 }
 
                 if (semiverbose)
-                {
                     desc += std::string(summoners.size(), ')');
-                }
             }
 
             if (!semiverbose)

@@ -74,9 +74,7 @@ struct JsonWrapper
     void check(JsonTag tag)
     {
         if (!node || node->tag != tag)
-        {
             throw malformed;
-        }
     }
 
     JsonNode* node;
@@ -127,22 +125,16 @@ bool TilesFramework::initialise()
     // Init socket
     m_sock = socket(PF_UNIX, SOCK_DGRAM, 0);
     if (m_sock < 0)
-    {
         die("Can't open the webtiles socket!");
-    }
     sockaddr_un addr;
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, m_sock_name.c_str());
     if (bind(m_sock, (sockaddr*) &addr, sizeof (sockaddr_un)))
-    {
         die("Can't bind the webtiles socket!");
-    }
 
     int bufsize = 64 * 1024;
     if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof (bufsize)))
-    {
         die("Can't set buffer size!");
-    }
     m_max_msg_size = bufsize;
 
     if (m_await_connection)
@@ -243,9 +235,7 @@ void TilesFramework::send_message(const char *format, ...)
 void TilesFramework::_await_connection()
 {
     while (m_dest_addrs.size() == 0)
-    {
         _receive_control_message();
-    }
 }
 
 wint_t TilesFramework::_receive_control_message()
@@ -261,9 +251,7 @@ wint_t TilesFramework::_receive_control_message()
                        (sockaddr *) &srcaddr, &srcaddr_len);
 
     if (len == -1)
-    {
         die("Socket read error: %s", strerror(errno));
-    }
 
     std::string data(buf, len);
     try
@@ -314,9 +302,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
         // last visible item is sent too, but currently unused
 
         if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
-        {
             m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
-        }
     }
     else if (msgtype == "*request_menu_range")
     {
@@ -350,9 +336,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             FD_SET(m_sock, &fds);
 
             if (block)
-            {
                 result = select(maxfd + 1, &fds, NULL, NULL, NULL);
-            }
             else
             {
                 timeval timeout;
@@ -365,9 +349,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
         while (result == -1 && errno == EINTR);
 
         if (result == 0)
-        {
             return false;
-        }
         else if (result > 0)
         {
             if (FD_ISSET(m_sock, &fds))
@@ -406,9 +388,7 @@ void TilesFramework::push_prefix(const std::string& prefix)
 void TilesFramework::pop_prefix(const std::string& suffix)
 {
     if (!m_prefixes.empty())
-    {
         m_prefixes.pop_back();
-    }
     else
     {
         write_message(suffix.c_str());
@@ -584,9 +564,7 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
-    {
         tiles.write_message("[%d,%d,%d],", dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
-    }
 
     tiles.write_message("],");
 }
@@ -676,9 +654,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
             write_message("fg:%u,", next_pc.fg);
             if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-            {
                 write_message("base:%d,", tileidx_known_base_item(fg_idx));
-            }
         }
 
         if ((force_full && next_pc.bg != TILE_FLAG_UNSEEN)
@@ -747,9 +723,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                {
                     _send_mcache(entry, in_water);
-                }
                 else
                     write_message("doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
             }
@@ -765,9 +739,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 last_player_doll = result;
             }
             if (fg_changed || player_doll_changed)
-            {
                 _send_doll(last_player_doll, in_water, false);
-            }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
         {
@@ -816,9 +788,7 @@ void TilesFramework::_send_map(bool force_full)
     push_prefix("{msg:\"map\",");
 
     if (force_full)
-    {
         write_message("clear:1,");
-    }
 
     coord_def last_gc(0, 0);
     bool send_gc = true;
@@ -945,9 +915,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     m_view_loaded = true;
 
     if (m_ui_state == UI_CRT)
-    {
         set_ui_state(UI_NORMAL);
-    }
 
     m_next_flash_colour = you.flash_colour;
     if (m_next_flash_colour == BLACK)
@@ -1348,9 +1316,7 @@ void TilesFramework::put_string(char *buffer)
                 buf2[j + 1] = 0;
 
             if (j - 1 != 0)
-            {
                 put_ucs_string(buf2);
-            }
         }
     } while (clen);
 }

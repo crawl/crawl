@@ -718,9 +718,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 // No monsters spawned in the Temple.
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
-                {
                     proximity = PROX_AWAY_FROM_PLAYER;
-                }
                 else
                 {
                     if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level

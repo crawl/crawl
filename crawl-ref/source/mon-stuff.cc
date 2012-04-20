@@ -310,9 +310,7 @@ monster_type fill_out_corpse(const monster* mons,
     if (corpse.colour == BLACK)
     {
         if (mons)
-        {
             corpse.colour = mons->colour;
-        }
         else
         {
             // [ds] Ick: no easy way to get a monster's colour
@@ -1287,9 +1285,7 @@ void mons_relocated(monster* mons)
         int base_id = mons->mindex();
 
         if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-        {
             base_id = mons->number;
-        }
 
         for (monster_iterator connect; connect; ++connect)
         {
@@ -2263,9 +2259,7 @@ int monster_die(monster* mons, killer_type killer,
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
                 if (!mons->is_summoned())
-                {
                     drop_items = false;
-                }
                 break;
             }
 
@@ -2341,9 +2335,7 @@ int monster_die(monster* mons, killer_type killer,
         you.uniq_map_names.erase("uniq_boris");
     }
     if (mons->type == MONS_JORY && !in_transit)
-    {
         blood_spray(mons->pos(), MONS_JORY, 50);
-    }
     else if (mons_is_kirke(mons)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))

@@ -379,9 +379,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
         (static_cast<int>(you.where_are_you) << 8) + you.absdepth0 - 1731813538;
 
     if (seed == cache_seed && !random)
-    {
         return cache;
-    }
 
     if (!random)
     {
@@ -396,9 +394,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
             cache[x][y] = random2(100);
 
     if (!random)
-    {
         pop_rng_state();
-    }
 
     return cache;
 }
@@ -415,9 +411,7 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
             (*map)(coord_def(x,y)) = false;
 
             if (feat_is_stair(grd[x][y]))
-            {
                 flood_from.push_back(coord_def(x, y));
-            }
         }
 
     flood_from.push_back(you.pos());
@@ -442,9 +436,7 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
         }
 
         if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
-        {
             continue;
-        }
 
         for (int dy = -1; dy <= 1; ++dy)
             for (int dx = -1; dx <= 1; ++dx)

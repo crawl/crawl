@@ -93,9 +93,7 @@ static int dgn_create_item(lua_State *ls)
 static int dgn_item_property_remove(lua_State *ls)
 {
     if (item_def *item = clua_get_item(ls, 1))
-    {
         item->props.erase(luaL_checkstring(ls, 2));
-    }
     return (0);
 }
 

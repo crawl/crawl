@@ -441,9 +441,7 @@ static int _abyss_exit_chance()
 {
     int exit_chance = 7500;
     if (crawl_state.game_is_sprint())
-    {
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
-    }
     return exit_chance;
 }
 

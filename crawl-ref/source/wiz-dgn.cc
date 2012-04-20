@@ -291,9 +291,7 @@ bool wizard_create_feature(const coord_def& pos)
     }
 
     if (int feat_num = atoi(specs))
-    {
         feat = static_cast<dungeon_feature_type>(feat_num);
-    }
     else
     {
         std::string name = lowercase_string(specs);

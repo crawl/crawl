@@ -972,9 +972,7 @@ void tilep_part_to_str(int number, char *buf)
 {
     //special
     if (number == TILEP_SHOW_EQUIP)
-    {
         buf[0] = buf[1] = buf[2] = '*';
-    }
     else
     {
         //normal 2 digits

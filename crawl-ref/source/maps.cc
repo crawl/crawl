@@ -286,9 +286,7 @@ bool resolve_subvault(map_def &map)
 
     // Flip the map (currently vmirror'd) to the correct orientation.
     if (idx == 0)
-    {
         map.vmirror();
-    }
     else if (idx == 1)
     {
         map.vmirror();

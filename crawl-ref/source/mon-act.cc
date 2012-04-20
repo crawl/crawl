@@ -1682,9 +1682,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     int frenzy_degree = -1;
 
     if (mons->has_ench(ENCH_BATTLE_FRENZY))
-    {
         frenzy_degree = mons->get_ench(ENCH_BATTLE_FRENZY).degree;
-    }
     else if (mons->has_ench(ENCH_ROUSED))
     {
         frenzy_degree = mons->get_ench(ENCH_ROUSED).degree;
@@ -1732,9 +1730,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
     // The item can be destroyed before returning.
     if (really_returns && thrown_object_destroyed(&item, pbolt.target))
-    {
         really_returns = false;
-    }
 
     if (really_returns)
     {
@@ -2506,9 +2502,7 @@ void handle_monster_move(monster* mons)
                 bool basis = targ->props.exists("outwards");
                 int out_idx = basis ? targ->props["outwards"].get_int() : -1;
                 if (out_idx != -1)
-                {
                     menv[out_idx].props["inwards"].get_int() = mons->mindex();
-                }
 
                 monster_die(targ,
                             KILL_MISC, NON_MONSTER, true);
@@ -2573,9 +2567,7 @@ void handle_monster_move(monster* mons)
     if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (mons->pos() != kraken_last_update)
-        {
             move_kraken_tentacles(mons);
-        }
         move_kraken_tentacles(mons);
     }
 

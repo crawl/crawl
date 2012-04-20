@@ -236,17 +236,13 @@ std::string get_cache_name(const std::string &filename)
 {
     std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
     while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
         pos = filename.rfind(FILE_SEPARATOR, pos - 1);
-    }
     if (pos != std::string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
     while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
         pos = filename.rfind(ALT_FILE_SEPARATOR, pos - 1);
-    }
     if (pos != std::string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #endif

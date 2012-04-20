@@ -1595,9 +1595,7 @@ std::string item_def::name_aux(description_level_type desc,
             buff << " ";
 
         if (know_type)
-        {
             buff << "of " << scroll_type_name(item_typ);
-        }
         else
         {
             const uint32_t sseed =

@@ -766,9 +766,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 
     // Add name tags.
     if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
-    {
         return;
-    }
 
     const tag_pref pref = Options.tile_tag_pref;
     if (pref == TAGPREF_NONE)
@@ -811,9 +809,7 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     bool disturbance = false;
 
     if (env.map_knowledge(gc).invisible_monster())
-    {
         disturbance = true;
-    }
 
     if (you.see_cell(gc))
     {
@@ -903,9 +899,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
-    {
         flv->special = random2(256);
-    }
     else if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
              || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {

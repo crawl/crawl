@@ -218,9 +218,7 @@ struct simple_connect
     simple_connect()
     {
         for (unsigned i=0; i<8; i++)
-        {
             compass_idx[i] = i;
-        }
     }
 
     void operator()(const position_node & node,
@@ -297,9 +295,7 @@ void search_astar(position_node & start,
             res = visited.insert(expansion[i]);
 
             if (!res.second)
-            {
                 continue;
-            }
 
             if (valid_target(res.first->pos))
             {
@@ -309,9 +305,7 @@ void search_astar(position_node & start,
             }
 
             if (res.first->path_distance < DISCONNECT_DIST)
-            {
                 fringe.push(res.first);
-            }
         }
         if (done)
             break;

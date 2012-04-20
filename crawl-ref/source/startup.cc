@@ -765,9 +765,7 @@ again:
             {
                 int i = _find_save(chars, input_string);
                 if (i == -1)
-                {
                     menu.set_active_object(game_modes);
-                }
                 else
                 {
                     menu.set_active_object(save_games);
@@ -963,9 +961,7 @@ bool startup_step()
     if (choice.filename.empty())
         choice.filename = get_save_filename(choice.name);
     if (save_exists(choice.filename) && restore_game(choice.filename))
-    {
         save_player_name();
-    }
     else if (choose_game(&ng, &choice, defaults)
              && restore_game(ng.filename))
     {

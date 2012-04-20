@@ -367,9 +367,7 @@ static bool _sort_monster_list(int a, int b)
     const unsigned glyph1 = mons_char(m1->type);
     const unsigned glyph2 = mons_char(m2->type);
     if (glyph1 != glyph2)
-    {
         return (glyph1 < glyph2);
-    }
 
     return (m1->type < m2->type);
 }

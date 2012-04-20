@@ -1049,9 +1049,7 @@ void map_markers::read(reader &inf)
         // used by tools
         unmarshallInt(inf);
         if (map_marker *mark = map_marker::read_marker(inf))
-        {
             add(mark);
-        }
     }
 }
 

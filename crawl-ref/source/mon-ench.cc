@@ -1471,9 +1471,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // env.mons means we can appear to be alive, but in fact be
             // an entirely different monster.
             if (alive() && type == mtype)
-            {
                 add_ench(ENCH_EXPLODING);
-            }
         }
 
     }
@@ -1486,14 +1484,10 @@ void monster::apply_enchantment(const mon_enchant &me)
             coord_def base_position = this->props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
-            {
                 mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
-            }
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
-            {
                 env.grid(base_position) = DNGN_FLOOR;
-            }
 
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
