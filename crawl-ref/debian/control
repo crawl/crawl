@@ -7,7 +7,7 @@ DM-Upload-Allowed: yes
 Standards-Version: 3.9.3
 Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
 	pkg-config, libsdl-image1.2-dev, libsdl1.2-dev, libsqlite3-dev,
-	libfreetype6-dev, advancecomp
+	libfreetype6-dev, advancecomp, libpng-dev
 Homepage: http://crawl.develz.org/
 
 Package: crawl-common
