@@ -210,7 +210,7 @@ static monster* _init_fsim()
     monster * mon = NULL;
     monster_type mtype = get_monster_by_name(Options.fsim_mons);
 
-    if(mtype == MONS_PROGRAM_BUG && monster_nearby())
+    if (mtype == MONS_PROGRAM_BUG && monster_nearby())
     {
         // get a monster via targetting.
         dist moves;
@@ -303,7 +303,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     no_messages mx;
     const int hunger = you.hunger;
 
-    if(!defend) // you're the attacker
+    if (!defend) // you're the attacker
     {
         for (int i = 0; i < iter_limit; i++)
         {
@@ -379,7 +379,7 @@ void wizard_quick_fsim()
     // the actual monsters that are made will be slightly different,
     // so it's safer to do it here.
     monster *mon = _init_fsim();
-    if(!mon)
+    if (!mon)
         return;
 
     const int iter_limit = Options.fsim_rounds;
@@ -464,7 +464,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     mpr(title);
 
     const int iter_limit = Options.fsim_rounds;
-    for(int i = xl_mode ? 1 : 0; i <= 27; i++)
+    for (int i = xl_mode ? 1 : 0; i <= 27; i++)
     {
         mesclr();
 
@@ -507,16 +507,16 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
 
     fprintf(o, "%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
     fprintf(o, "  ");
-    for(int y = 1; y <= 27; y += 2)
+    for (int y = 1; y <= 27; y += 2)
         fprintf(o,"   %2d", y);
 
     fprintf(o,"\n");
 
     const int iter_limit = Options.fsim_rounds;
-    for(int y = 1; y <= 27; y += 2)
+    for (int y = 1; y <= 27; y += 2)
     {
         fprintf(o, "%2d", y);
-        for(int x = 1; x <= 27; x += 2)
+        for (int x = 1; x <= 27; x += 2)
         {
             mesclr();
             set_skill_level(skx, x);
@@ -542,7 +542,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
 void wizard_fight_sim(bool double_scale)
 {
     monster * mon = _init_fsim();
-    if(!mon)
+    if (!mon)
         return;
 
     bool defense = false;

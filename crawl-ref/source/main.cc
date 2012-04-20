@@ -3179,7 +3179,7 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
-    if(crawl_state.viewport_monster_hp)
+    if (crawl_state.viewport_monster_hp)
     {
         crawl_state.viewport_monster_hp = false;
         viewwindow();
