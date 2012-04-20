@@ -824,9 +824,7 @@ bool unmarshallBoolean(reader &th)
 std::string make_date_string(time_t in_date)
 {
     if (in_date <= 0)
-    {
         return ("");
-    }
 
     struct tm *date = TIME_FN(&in_date);
 
@@ -848,9 +846,7 @@ void marshallEnumVal(writer& wr, const enum_info *ei, int val)
         ei->collect(values);
 
         for (unsigned i = 0; i < values.size(); ++i)
-        {
             ews.names.insert(values[i]);
-        }
 
         ews.store_type = 1;
 
@@ -3579,9 +3575,7 @@ static void tag_read_level(reader &th)
         env.cloud[i].tile   = unmarshallString(th);
 #if TAG_MAJOR_VERSION == 32
         if (th.getMinorVersion() < TAG_MINOR_TEMPORARY_CLOUDS)
-        {
             env.cloud[i].excl_rad = -1;
-        }
         else
         {
             env.cloud[i].excl_rad = unmarshallInt(th);

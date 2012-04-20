@@ -1807,9 +1807,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     {
         dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
-        {
             throw dgn_veto_exception("Failed to fix stone stairs.");
-        }
     }
 
     if (!_branch_entrances_are_connected())
@@ -2002,9 +2000,7 @@ static void _ruin_level(Iterator ri,
         /* chance of removing the tile is dependent on the number of adjacent
          * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-        {
             to_replace.push_back(coord_feat(*ri, replacement));
-        }
     }
 
     for (coord_feats::const_iterator it = to_replace.begin();
@@ -2825,9 +2821,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
     {
         int label = connectivity_map(*pos);
         if (label  != 0)
-        {
             connectivity_map(*pos) = _min_transitive_label(intermediate_components[label]);
-        }
     }
 }
 
@@ -2904,9 +2898,7 @@ static void _slime_connectivity_fixup()
     {
         int count = 0;
         if (!_passable_square(*ri))
-        {
             count = DISCONNECT_DIST;
-        }
         else
         {
             for (adjacent_iterator adj(*ri); adj; ++adj)
@@ -2997,9 +2989,7 @@ static void _slime_connectivity_fixup()
                             // squares should have adjacency of DISCONNECT_DIST
                             // but oh well
                             if (env.level_map_mask(*adj_it) & MMT_VAULT)
-                            {
                                 mprf("Whoops, nicked a vault in slime connectivity fixup");
-                            }
                             env.grid(*adj_it) = DNGN_FLOOR;
                         }
                     }
@@ -3067,9 +3057,7 @@ static void _builder_normal(int level_number)
     }
 
     if (use_random_maps)
-    {
         vault = random_map_in_depth(level_id::current());
-    }
 
     // We'll accept any kind of primary vault in the main dungeon, but only
     // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
@@ -4774,9 +4762,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         int spec = 250;
 
         if (vgrid == '$')
-        {
             which_class = OBJ_GOLD;
-        }
         else if (vgrid == '|')
         {
             which_class = random_choose_weighted(
@@ -4796,9 +4782,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
                            which_depth, spec);
 
         if (item_made != NON_ITEM)
-        {
             mitm[item_made].pos = where;
-        }
     }
 
     // defghijk - items
@@ -5184,9 +5168,7 @@ void place_spec_shop(int level_number,
                                       : random2(NUM_SHOPS));
 
     if (env.shop[i].type == SHOP_FOOD)
-    {
         env.shop[i].greed = 10 + random2(5);
-    }
     else if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
              && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
              && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
@@ -5635,9 +5617,7 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
             c + coord_def(static_cast<int>(radius * cos(angle)),
                           static_cast<int>(radius * sin(angle)));
         if (map_bounds_with_margin(res, margin))
-        {
             return res;
-        }
     }
     return coord_def();
 }

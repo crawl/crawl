@@ -88,9 +88,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     }
 
     if (you.confused())
-    {
         beam.confusion_fuzz(2);
-    }
 
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);

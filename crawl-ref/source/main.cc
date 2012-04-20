@@ -1573,9 +1573,7 @@ static void _go_downstairs()
     you.stop_being_constricted();
 
     if (shaft)
-    {
         start_delay(DELAY_DESCENDING_STAIRS, 0);
-    }
     else
     {
         if (_marker_vetoes_stair())
@@ -4184,9 +4182,7 @@ static void _move_player(coord_def move)
         {
             // Probably need better messages. -cao
             if (mons_genus(targ_monst->type) == MONS_FUNGUS)
-            {
                 mprf("You walk carefully through the fungus.");
-            }
             else
                 mprf("You walk carefully through the plants.");
         }

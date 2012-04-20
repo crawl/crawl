@@ -3350,9 +3350,7 @@ void MenuFreeform::render()
 
     std::vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
         (*it)->render();
-    }
 }
 
 /**
@@ -3770,9 +3768,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
 MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
 {
     if (!m_allow_focus || !m_visible)
-    {
         return INPUT_NO_ACTION;
-    }
 
     if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
     {
@@ -3857,9 +3853,7 @@ void MenuScroller::render()
 
     std::vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
         (*it)->render();
-    }
 }
 
 MenuItem* MenuScroller::get_active_item()

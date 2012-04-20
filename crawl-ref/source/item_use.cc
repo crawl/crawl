@@ -1066,9 +1066,7 @@ void fire_target_behaviour::set_prompt()
 
     // Build the action.
     if (!active_item())
-    {
         msg << "Firing ";
-    }
     else
     {
         const launch_retval projected = is_launched(&you, you.weapon(),
@@ -1088,9 +1086,7 @@ void fire_target_behaviour::set_prompt()
 
     // Describe the selected item for firing.
     if (!active_item())
-    {
         msg << "<red>" << m_noitem_reason << "</red>";
-    }
     else
     {
         const char* colour = (selected_from_inventory ? "lightgrey" : "w");
@@ -2767,14 +2763,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Note that branded missile damage goes through defender
         // resists.
         if (ammo_brand == SPMSL_STEEL)
-        {
             dice_mult = dice_mult * 130 / 100;
-        }
 
         if (elemental_missile_beam(bow_brand, ammo_brand))
-        {
             dice_mult = dice_mult * 140 / 100;
-        }
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
@@ -2885,9 +2877,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // for launchers. Hand-thrown stones do only half
             // base damage. Yet another evil 4.0ism.
             if (wepClass == OBJ_MISSILES && wepType == MI_STONE)
-            {
                 baseDam = div_rand_round(baseDam, 2);
-            }
 
             // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
@@ -4057,9 +4047,7 @@ void zap_wand(int slot)
     }
 
     if (you.confused())
-    {
         zap_wand.confusion_fuzz();
-    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;

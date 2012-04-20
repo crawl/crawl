@@ -330,9 +330,7 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     std::string::size_type pos = s.find(tagprefix);
 
     while (pos && pos != std::string::npos && !isspace(s[pos - 1]))
-    {
         pos = s.find(tagprefix, pos + 1);
-    }
 
     if (pos == std::string::npos)
         return ("");

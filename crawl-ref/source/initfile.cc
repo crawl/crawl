@@ -433,9 +433,7 @@ void game_options::str_to_enemy_hp_colour(const std::string &colours)
 {
     std::vector<std::string> colour_list = split_string(" ", colours, true, true);
     for (int i = 0, csize = colour_list.size(); i < csize; i++)
-    {
         enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
-    }
 }
 
 #ifdef USE_TILE
@@ -2111,9 +2109,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
     if (key == "include")
-    {
         include(field, true, runscript);
-    }
     else if (key == "opt" || key == "option")
     {
         split_parse(field, ",", &game_options::set_option_fragment);
@@ -4195,9 +4191,7 @@ int game_options::o_int(const char *name, int def) const
     int val = def;
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
-    {
         val = atoi(i->second.c_str());
-    }
     return (val);
 }
 

@@ -1230,9 +1230,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             // for note taking
             std::string damage_desc;
             if (!see_source)
-            {
                 damage_desc = make_stringf("something (%d)", dam);
-            }
             else
             {
                 damage_desc = scorefile_entry(dam, death_source,

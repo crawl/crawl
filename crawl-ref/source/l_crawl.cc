@@ -441,9 +441,7 @@ static int crawl_bindkey(lua_State *ls)
 {
     const char *s = NULL;
     if (lua_isstring(ls, 1))
-    {
         s = lua_tostring(ls, 1);
-    }
 
     if (!s || !lua_isfunction(ls, 2) || lua_gettop(ls) != 2)
         return (0);

@@ -285,9 +285,7 @@ LUAFN(you_mutation)
 
         const mutation_def& mdef = get_mutation_def(mut);
         if (!strcmp(mutname.c_str(), mdef.wizname))
-        {
             PLUARET(integer, you.mutation[mut]);
-        }
     }
 
     std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());

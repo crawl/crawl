@@ -2200,9 +2200,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     coord_def n_pos;
     bool no_next_connect = !mon.props.exists("outwards");
     if (!no_next_connect)
-    {
         n_pos = t_pos + mon.props["outwards"].get_coord();
-    }
 
     if (no_head_connect && no_next_connect)
     {
@@ -3843,9 +3841,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_WANDS:
         if (item.flags & ISFLAG_KNOW_TYPE)
-        {
             return TILE_WAND_ID_FIRST + type;
-        }
         else
             return TILE_WAND_OFFSET + special % NDSC_WAND_PRI;
 
@@ -3854,9 +3850,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_SCROLLS:
         if (item.flags & ISFLAG_KNOW_TYPE)
-        {
             return TILE_SCR_ID_FIRST + type;
-        }
         return TILE_SCROLL;
 
     case OBJ_GOLD:
@@ -3890,9 +3884,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_POTIONS:
         if (item.flags & ISFLAG_KNOW_TYPE)
-        {
             return TILE_POT_ID_FIRST + type;
-        }
         else
             return TILE_POTION_OFFSET + item.plus % NDSC_POT_PRI;
 
@@ -3921,9 +3913,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (item_is_rod(item))
         {
             if (item.flags & ISFLAG_KNOW_TYPE)
-            {
                 return TILE_ROD_ID_FIRST + type - STAFF_FIRST_ROD;
-            }
 
             int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
             return TILE_ROD_OFFSET + desc;
@@ -3931,9 +3921,7 @@ tileidx_t tileidx_item(const item_def &item)
         else
         {
             if (item.flags & ISFLAG_KNOW_TYPE)
-            {
                 return TILE_STAFF_ID_FIRST + type;
-            }
 
             int desc = (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
             return TILE_STAFF_OFFSET + desc;

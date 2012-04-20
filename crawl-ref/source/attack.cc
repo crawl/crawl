@@ -161,9 +161,7 @@ std::string attack::special_attack_punctuation()
 std::string attack::attack_strength_punctuation()
 {
     if (attacker->is_player())
-    {
         return get_exclams(damage_done);
-    }
     else
         return (damage_done < HIT_WEAK ? "." : "!");
 }

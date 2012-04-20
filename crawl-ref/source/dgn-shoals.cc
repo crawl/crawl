@@ -1064,9 +1064,7 @@ static void _shoals_init_tide()
         props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int() = 0;
     }
     if (!env.properties.exists(PROPS_SHOALS_TIDE_KEY))
-    {
         env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = 0;
-    }
 }
 
 static monster* _shoals_find_tide_caller()

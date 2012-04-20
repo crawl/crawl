@@ -893,9 +893,7 @@ static bool _band_wander_target(monster * mon)
 
         int dist = grid_distance(*r_it, band_leader->pos());
         if (dist < HERD_COMFORT_RANGE)
-        {
             positions.push_back(*r_it);
-        }
     }
 
     if (positions.empty())

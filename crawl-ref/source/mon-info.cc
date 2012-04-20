@@ -1177,9 +1177,7 @@ std::string monster_info::pluralised_name(bool fullname) const
     // arena.  This prevens "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
-    {
         return common_name();
-    }
     // Specialcase mimics, so they don't get described as piles of gold
     // when that would be inappropriate. (HACK)
     else if (mons_is_mimic(type))

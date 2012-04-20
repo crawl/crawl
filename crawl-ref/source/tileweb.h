@@ -242,9 +242,7 @@ public:
     {
         tiles.m_crt_mode = mode;
         if (mode == CRT_MENU)
-        {
             tiles.push_crt_menu(tag);
-        }
     }
 
     ~tiles_crt_control()

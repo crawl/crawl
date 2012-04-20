@@ -5738,9 +5738,7 @@ void bolt::set_agent(actor *actor)
         return;
 
     if (actor->is_player())
-    {
         thrower = KILL_YOU_MISSILE;
-    }
     else
     {
         thrower = KILL_MON_MISSILE;

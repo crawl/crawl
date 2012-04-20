@@ -634,9 +634,7 @@ static void _construct_species_menu(const newgame_def* ng,
         menu->attach_item(tmp);
         tmp->set_visible(true);
         if (defaults.species == species)
-        {
             menu->set_active_item(tmp);
-        }
     }
 
     // Add all the special button entries
@@ -651,9 +649,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->add_hotkey('+');
     // If the player has a job chosen, use VIABLE, otherwise use RANDOM
     if (ng->job != JOB_UNKNOWN)
-    {
         tmp->set_id(M_VIABLE);
-    }
     else
     {
         tmp->set_id(M_RANDOM);
@@ -825,9 +821,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
 
     // Did we have a previous species?
     if (menu.get_active_item() == NULL)
-    {
         freeform->activate_first_item();
-    }
 
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
@@ -990,9 +984,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
         menu->attach_item(tmp);
         tmp->set_visible(true);
         if (defaults.job == job)
-        {
             menu->set_active_item(tmp);
-        }
     }
 }
 
@@ -1055,9 +1047,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->add_hotkey('+');
     // If the player has species chosen, use VIABLE, otherwise use RANDOM
     if (ng->species != SP_UNKNOWN)
-    {
         tmp->set_id(M_VIABLE);
-    }
     else
     {
         tmp->set_id(M_RANDOM);
@@ -1232,9 +1222,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
 
     // Did we have a previous background?
     if (menu.get_active_item() == NULL)
-    {
         freeform->activate_first_item();
-    }
 
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
@@ -1416,9 +1404,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
         tmp->set_visible(true);
         // Is this item our default weapon?
         if (weapons[i].first == defweapon)
-        {
             menu->set_active_item(tmp);
-        }
     }
     // Add all the special button entries
     tmp = new TextItem();
@@ -1551,9 +1537,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 
     // Did we have a previous weapon?
     if (menu.get_active_item() == NULL)
-    {
         freeform->activate_first_item();
-    }
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
 #ifdef USE_TILE_LOCAL
@@ -2074,9 +2058,7 @@ static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     const mapref_vector maps = find_maps_for_tag(type_name);
 
     if (maps.empty())
-    {
         end(1, true, "No %s maps found.", type_name.c_str());
-    }
 
     if (ng_choice->map.empty())
     {

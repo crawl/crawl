@@ -2197,9 +2197,7 @@ std::string shop_name(const coord_def& where)
     std::string sh_name = "";
 
     if (!cshop->shop_name.empty())
-    {
         sh_name += apostrophise(cshop->shop_name) + " ";
-    }
     else
     {
         uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
@@ -2215,9 +2213,7 @@ std::string shop_name(const coord_def& where)
         sh_name += shop_type_name(type);
 
     if (!cshop->shop_suffix_name.empty())
-    {
         sh_name += " " + cshop->shop_suffix_name;
-    }
     else
     {
         std::string sh_suffix = _shop_type_suffix(type, where);

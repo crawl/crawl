@@ -209,9 +209,7 @@ void monster::reset_client_id()
 void monster::ensure_has_client_id()
 {
     if (client_id == 0)
-    {
         client_id = ++last_client_id;
-    }
 }
 
 mon_attitude_type monster::temp_attitude() const

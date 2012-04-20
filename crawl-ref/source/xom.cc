@@ -1968,9 +1968,7 @@ static int _xom_change_scenery(bool debug = false)
 
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
-        {
             candidates.push_back(*ri);
-        }
         else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR)
         {
             // Check whether this door is already included in a gate.

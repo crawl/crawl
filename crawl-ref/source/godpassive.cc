@@ -422,9 +422,7 @@ bool god_id_item(item_def& item, bool silent)
         }
 
         if (_jewel_auto_id(item))
-        {
             ided |= ISFLAG_EQ_JEWELLERY_MASK;
-        }
 
         if (item.base_type == OBJ_ARMOUR
             && you.piety >= piety_breakpoint(0)

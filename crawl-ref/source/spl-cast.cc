@@ -914,9 +914,7 @@ static int _setup_evaporate_cast()
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
 
     if (prompt_failed(rc))
-    {
         rc = -1;
-    }
     else if (you.inv[rc].base_type != OBJ_POTIONS)
     {
         mpr("This spell works only on potions!");
@@ -1682,9 +1680,7 @@ static double _get_true_fail_rate(int raw_fail)
     int target = raw_fail * 3;
 
     if (target <= 100)
-    {
         return (double) _tetrahedral_number(target)/1020100;
-    }
     if (target <= 200)
     {
         //PIE: the negative term takes the maximum of 100 (or 99) into

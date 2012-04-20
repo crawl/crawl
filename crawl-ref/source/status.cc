@@ -184,9 +184,7 @@ static int _bad_ench_colour(int lvl, int orange, int red)
 static int _dur_colour(int exp_colour, bool expiring)
 {
     if (expiring)
-    {
         return (exp_colour);
-    }
     else
     {
         switch (exp_colour)
@@ -645,9 +643,7 @@ static void _describe_regen(status_info* inf)
     }
 
     if ((you.disease && !regen) || no_heal)
-    {
        inf->short_text = "non-regenerating";
-    }
     else if (regen)
     {
         if (you.disease)

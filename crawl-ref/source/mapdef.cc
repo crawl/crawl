@@ -1328,9 +1328,7 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
 
             // Merge overlays
             if (vlines.overlay.get())
-            {
                 (*overlay)(x, y) = (*vlines.overlay)(vx, vy);
-            }
             else
             {
                 // Erase any existing overlay, as the vault's doesn't exist.
@@ -5528,9 +5526,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
     if (parts.size() > 2)
-    {
         err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
-    }
 
     item_list items;
     if (parts.size() == 2)
