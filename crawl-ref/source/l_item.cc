@@ -11,7 +11,9 @@
 #include "l_libs.h"
 
 #include "artefact.h"
+#include "cluautil.h"
 #include "colour.h"
+#include "coord.h"
 #include "command.h"
 #include "env.h"
 #include "enum.h"
@@ -20,6 +22,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "l_defs.h"
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
@@ -982,6 +985,17 @@ static int l_item_inslot(lua_State *ls)
     return (1);
 }
 
+static int l_item_get_items_at(lua_State *ls)
+{
+    COORDSHOW(s, 1, 2)
+    coord_def p = player2grid(s);
+    if (!you.see_cell(p))
+        return (0);
+
+    lua_push_floor_items(ls, env.igrid(p));
+    return (1);
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1058,6 +1072,7 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped_at },
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
+    { "get_items_at",      l_item_get_items_at },
     { NULL, NULL },
 };
 
