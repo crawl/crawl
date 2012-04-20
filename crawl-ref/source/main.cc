@@ -1857,10 +1857,12 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        clua.callfn("hit_closest", 0, 0);
+        if (!clua.callfn("hit_closest", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
     case CMD_AUTOFIGHT_NOMOVE:
-        clua.callfn("hit_adjacent", 0, 0);
+        if (!clua.callfn("hit_adjacent", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
 #endif
     case CMD_REST:            _do_rest(); break;
