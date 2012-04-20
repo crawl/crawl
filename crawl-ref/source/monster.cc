@@ -2830,7 +2830,8 @@ void monster::banish(actor *agent, const std::string &)
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
-        && !has_ench(ENCH_FAKE_ABJURATION))
+        && !has_ench(ENCH_FAKE_ABJURATION)
+        && !mons_class_flag(type, M_NO_EXP_GAIN))
     {
         // Double the existing damage blame counts, so the unassigned xp for
         // remaining hp is effectively halved.  No need to pass flags this way.
