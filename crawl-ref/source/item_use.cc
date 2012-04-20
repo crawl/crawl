@@ -4970,7 +4970,7 @@ static void _vulnerability_scroll()
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
-                behaviour_event(mon, ME_ANNOY, MHITYOU);
+                behaviour_event(mon, ME_ANNOY, &you);
         }
     }
 

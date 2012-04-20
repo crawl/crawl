@@ -2317,11 +2317,8 @@ static int _mons_cause_fear(monster* mons, bool actual)
     {
         if (ai->is_player())
         {
-            if (mons->pacified()
-                || mons->friendly())
-            {
+            if (mons->pacified() || mons->friendly())
                 continue;
-            }
 
             if (you.holiness() != MH_NATURAL)
             {
@@ -2390,9 +2387,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 if (you.can_see(m))
                     simple_monster_message(m, " looks frightened!");
 
-                behaviour_event(m, ME_SCARE,
-                                mons->kill_alignment() == KC_YOU ? MHITYOU
-                                                                 : MHITNOT);
+                behaviour_event(m, ME_SCARE, mons);
 
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);

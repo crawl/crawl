@@ -3354,7 +3354,7 @@ bool player_angers_monster(monster* mon)
     {
         mon->attitude = ATT_HOSTILE;
         mon->del_ench(ENCH_CHARM);
-        behaviour_event(mon, ME_ALERT, MHITYOU);
+        behaviour_event(mon, ME_ALERT, &you);
 
         if (you.can_see(mon))
         {

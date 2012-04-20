@@ -530,7 +530,7 @@ bool melee_attack::handle_phase_hit()
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def(), !stab_attempt);
 
         // [ds] Monster may disappear after behaviour event.
@@ -901,7 +901,7 @@ bool melee_attack::attack()
         && attacker->alive() && defender->alive()
         && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
     {
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
     }
 
     // If an enemy attacked a friend, set the pet target if it isn't set
@@ -1360,7 +1360,7 @@ bool melee_attack::player_aux_unarmed()
         if (player_aux_test_hit())
         {
             // Upset the monster.
-            behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
+            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
             if (!defender->alive())
                 return (true);
 
@@ -1518,7 +1518,7 @@ void melee_attack::player_warn_miss()
     did_hit = false;
     // Upset only non-sleeping monsters if we missed.
     if (!defender->asleep())
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
     mprf("%s%s.",
          player_why_missed().c_str(),

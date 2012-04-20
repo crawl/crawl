@@ -1026,7 +1026,7 @@ static void _orc_battle_cry(monster* chief)
                         seen_affected.push_back(*mi);
 
                     if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
                 }
             }
         }
@@ -1125,7 +1125,7 @@ static void _cherub_hymn(monster* chief)
                         seen_affected.push_back(*mi);
 
                     if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
                 }
             }
         }
@@ -2577,7 +2577,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 if (coinflip())
                 {
-                 //   behaviour_event(mons, ME_CORNERED);
+                //  behaviour_event(mons, ME_CORNERED);
                     boulder_flee(mons, &beem);
                 }
             }

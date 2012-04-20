@@ -875,11 +875,11 @@ void discover_mimic(const coord_def& pos, bool wake)
         die("Moving mimic into position failed.");
 
     if (wake)
-        behaviour_event(mimic, ME_ALERT, MHITYOU);
+        behaviour_event(mimic, ME_ALERT, &you);
 
     // Friendly monsters don't appreciate being pushed away.
     if (act && !act->is_player() && act->as_monster()->friendly())
-        behaviour_event(act->as_monster(), ME_WHACK, mimic->mindex());
+        behaviour_event(act->as_monster(), ME_WHACK, mimic);
 
     // Announce the mimic.
     if (mons_near(mimic))
@@ -2742,7 +2742,7 @@ void mons_start_fleeing_from_sanctuary(monster* mons)
 {
     mons->flags |= MF_FLEEING_FROM_SANCTUARY;
     mons->target = env.sanctuary_pos;
-    behaviour_event(mons, ME_SCARE, MHITNOT, env.sanctuary_pos);
+    behaviour_event(mons, ME_SCARE, 0, env.sanctuary_pos);
 }
 
 void mons_stop_fleeing_from_sanctuary(monster* mons)
@@ -2750,7 +2750,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
     const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
     mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
-        behaviour_event(mons, ME_EVAL, MHITYOU);
+        behaviour_event(mons, ME_EVAL, &you);
 }
 
 void mons_pacify(monster* mon, mon_attitude_type att)

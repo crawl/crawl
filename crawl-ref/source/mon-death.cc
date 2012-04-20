@@ -314,7 +314,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     // If you've stabbed one of them, the other one is likely asleep still.
     if (mons->asleep())
-        behaviour_event(mons, ME_DISTURB, MHITNOT, mons->pos());
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
 
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
@@ -465,7 +465,7 @@ void elven_twins_unpacify(monster* twin)
     if (!found_duvessa && !found_dowan)
         return;
 
-    behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
+    behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
 }
 
 /**
@@ -760,7 +760,7 @@ void shedu_do_resurrection(const monster* mons)
 
     // Wake the other one up if it's asleep.
     if (my_pair->asleep())
-        behaviour_event(my_pair, ME_DISTURB, MHITNOT, my_pair->pos());
+        behaviour_event(my_pair, ME_DISTURB, 0, my_pair->pos());
 
     if (you.can_see(my_pair))
         simple_monster_message(my_pair, " ceases action and prepares to resurrect its fallen mate.");

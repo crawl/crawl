@@ -2600,7 +2600,7 @@ void alert_nearby_monsters(void)
     // calling noisy() before calling this function. - bwr
     for (monster_iterator mi(you.get_los()); mi; ++mi)
         if (!mi->asleep())
-             behaviour_event(*mi, ME_ALERT, MHITYOU);
+             behaviour_event(*mi, ME_ALERT, &you);
 }
 
 static bool _valid_morph(monster* mons, monster_type new_mclass)

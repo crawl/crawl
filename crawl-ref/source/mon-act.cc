@@ -2382,10 +2382,7 @@ void handle_monster_move(monster* mons)
                         // FIXME: None of these work!
                         // Instead run away!
                         if (mons->add_ench(mon_enchant(ENCH_FEAR)))
-                        {
-                            behaviour_event(mons, ME_SCARE,
-                                            MHITNOT, newcell);
-                        }
+                            behaviour_event(mons, ME_SCARE, 0, newcell);
                         break;
                     }
                 }
@@ -3619,7 +3616,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         {
             dprf("Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
-            behaviour_event(m2, ME_ALERT, MHITNOT);
+            behaviour_event(m2, ME_ALERT);
         }
         return (false);
     }

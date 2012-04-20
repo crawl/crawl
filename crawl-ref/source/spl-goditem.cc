@@ -1022,7 +1022,7 @@ bool cast_smiting(int pow, monster* mons)
 
         mprf("You smite %s!", mons->name(DESC_THE).c_str());
 
-        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        behaviour_event(mons, ME_ANNOY, &you);
     }
 
     enable_attack_conducts(conducts);
