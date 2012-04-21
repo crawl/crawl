@@ -985,14 +985,16 @@ static int l_item_inslot(lua_State *ls)
     return (1);
 }
 
-static int l_item_get_items_at(lua_State *ls)
+static int l_item_get_item_at(lua_State *ls)
 {
     COORDSHOW(s, 1, 2)
     coord_def p = player2grid(s);
-    if (!you.see_cell(p))
-        return (0);
 
-    lua_push_floor_items(ls, env.igrid(p));
+    const int item = you.visible_igrd(p);
+    if (you.see_cell(p) && item != NON_ITEM)
+        clua_push_item(ls, &mitm[item]);
+    else
+        lua_pushnil(ls);
     return (1);
 }
 
@@ -1072,7 +1074,7 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped_at },
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
-    { "get_items_at",      l_item_get_items_at },
+    { "get_item_at",       l_item_get_item_at },
     { NULL, NULL },
 };
 
