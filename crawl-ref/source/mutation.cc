@@ -1400,7 +1400,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
             const char *arms;
             if (you.species == SP_FELID)
                 arms = "legs";
-            else if (you.mutation[MUT_TENTACLES] >= 3)
+            else if (you.species == SP_OCTOPODE)
                 arms = "tentacles";
             else
                 break;
