@@ -2287,7 +2287,7 @@ void reveal_secret_door(const coord_def& p)
 bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());
-    if (you.confused() || !you.can_see(mon))
+    if (!you.can_see(mon))
         return (false);
 
     bool retval = false;

@@ -4113,21 +4113,46 @@ static void _move_player(coord_def move)
     if (you.confused())
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
+        monster *bad_mons = 0;
+        std::string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
             if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
+                break;
+            }
+            else
+            {
+                std::string suffix, adj;
+                monster *mons = monster_at(*ai);
+                if (mons && bad_attack(mons, adj, suffix))
+                {
+                    bad_mons = mons;
+                    bad_suff = suffix;
+                    bad_adj = adj;
+                    break;
+                }
             }
         }
-        if (dangerous != DNGN_FLOOR)
+        if (dangerous != DNGN_FLOOR || bad_mons)
         {
             std::string prompt = "Are you sure you want to move while confused "
                                  "and next to ";
-                        prompt += (dangerous == DNGN_LAVA ? "lava"
-                                                          : "deep water");
-                        prompt += "?";
+
+            if (dangerous != DNGN_FLOOR)
+                prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
+            else
+            {
+                std::string name = bad_mons->name(DESC_PLAIN);
+                if (name.find("the ") == 0)
+                    name.erase(0, 4);
+                if (bad_adj.find("your") != 0)
+                    bad_adj = "the " + bad_adj;
+                prompt += bad_adj + name + bad_suff;
+            }
+            prompt += "?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
