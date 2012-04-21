@@ -493,7 +493,8 @@ void show_hiscore_table()
             enable_smart_cursor(smart_cursor_enabled);
             return;
         }
-        if (keyn == CK_ENTER)
+
+        if (menu.process_key(keyn))
         {
             _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
             clrscr();
@@ -501,7 +502,6 @@ void show_hiscore_table()
             tiles.get_crt()->attach_menu(&menu);
 #endif
         }
-        menu.process_key(keyn);
     }
 }
 
