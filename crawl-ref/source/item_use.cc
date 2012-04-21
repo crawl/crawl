@@ -983,7 +983,7 @@ bool item_is_quivered(const item_def &item)
 int get_next_fire_item(int current, int direction)
 {
     std::vector<int> fire_order;
-    you.m_quiver->get_fire_order(fire_order);
+    you.m_quiver->get_fire_order(fire_order, true);
 
     if (fire_order.empty())
         return -1;
