@@ -184,7 +184,6 @@ static int l_you_genus(lua_State *ls)
     return (1);
 }
 
-void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
 {
     lua_push_floor_items(ls, env.igrid(you.pos()));
