@@ -421,7 +421,7 @@ void show_hiscore_table()
     const int descriptor_col_start = 4;
     const int scores_row_start = 10;
     const int scores_col_end = max_col;
-    const int scores_row_end = max_line;
+    const int scores_row_end = max_line - 1;
 
     bool smart_cursor_enabled = is_smart_cursor_enabled();
 
