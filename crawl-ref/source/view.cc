@@ -740,8 +740,12 @@ void view_update_at(const coord_def &pos)
             : g.col;
 
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    put_colour_ch(cell_colour, g.ch);
+    // Don't draw off-screen.
+    if (crawl_view.in_viewport_v(vp))
+    {
+        cgotoxy(vp.x, vp.y, GOTO_DNGN);
+        put_colour_ch(cell_colour, g.ch);
+    }
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
