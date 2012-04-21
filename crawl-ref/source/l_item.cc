@@ -985,16 +985,32 @@ static int l_item_inslot(lua_State *ls)
     return (1);
 }
 
-static int l_item_get_item_at(lua_State *ls)
+static int l_item_get_items_at(lua_State *ls)
 {
-    COORDSHOW(s, 1, 2)
+    coord_def s;
+    s.x = luaL_checkint(ls, 1);
+    s.y = luaL_checkint(ls, 2);
     coord_def p = player2grid(s);
+    if (!map_bounds(p))
+        return 0;
 
-    const int item = you.visible_igrd(p);
-    if (you.see_cell(p) && item != NON_ITEM)
-        clua_push_item(ls, &mitm[item]);
-    else
-        lua_pushnil(ls);
+    item_def* top = env.map_knowledge(p).item();
+    if (!top || !top->defined())
+        return 0;
+
+    lua_newtable(ls);
+
+    // FIXME: the whole known stash should be pushed
+    clua_push_item(ls, top);
+    lua_rawseti(ls, -2, 1);
+#if 0
+    int index = 0;
+    for (; link != NON_ITEM; link = mitm[link].link)
+    {
+        clua_push_item(ls, &mitm[link]);
+        lua_rawseti(ls, -2, ++index);
+    }
+#endif
     return (1);
 }
 
@@ -1074,7 +1090,7 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped_at },
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
-    { "get_item_at",       l_item_get_item_at },
+    { "get_items_at",      l_item_get_items_at },
     { NULL, NULL },
 };
 
