@@ -1088,14 +1088,11 @@ std::string base_type_string (object_class_type type, bool known)
     }
 }
 
-std::string sub_type_string (const item_def &item, bool known)
+std::string sub_type_string(const item_def &item, bool known)
 {
-    return sub_type_string(item.base_type, item.sub_type, known, item.plus);
-}
+    const object_class_type type = item.base_type;
+    const int sub_type = item.sub_type;
 
-std::string sub_type_string(object_class_type type, int sub_type,
-                            bool known, int plus)
-{
     switch (type)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
@@ -1112,7 +1109,7 @@ std::string sub_type_string(object_class_type type, int sub_type,
         if (sub_type == BOOK_MANUAL)
         {
             std::string bookname = "manual of ";
-            bookname += skill_name(static_cast<skill_type>(plus));
+            bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
         }
         else if (sub_type == BOOK_NECRONOMICON)

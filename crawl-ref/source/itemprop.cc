@@ -636,6 +636,12 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
+static bool _in_shop(const item_def &item)
+{
+    // yay the shop hack...
+    return (item.pos.x == 0 && item.pos.y >= 5);
+}
+
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -647,7 +653,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (in_shop(item))
+    if (_in_shop(item))
         return (int)item_value(item) < you.gold;
 
     // Explicitly marked by a vault.
@@ -1804,11 +1810,6 @@ int weapon_str_weight(const item_def &wpn)
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
 }
 
-int weapon_dex_weight(const item_def &wpn)
-{
-    return (10 - weapon_str_weight(wpn));
-}
-
 // Returns melee skill of item.
 skill_type weapon_skill(const item_def &item)
 {
@@ -2912,12 +2913,6 @@ std::string food_type_name (int sub_type)
 const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
-}
-
-bool in_shop(const item_def &item)
-{
-    // yay the shop hack...
-    return (item.pos.x == 0 && item.pos.y >= 5);
 }
 
 void seen_item(const item_def &item)
