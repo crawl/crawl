@@ -780,11 +780,6 @@ void SkillMenu::cancel_help()
     set_default_help();
 }
 
-void SkillMenu::clear_selections()
-{
-    _clear_selections();
-}
-
 // Before we exit, make sure there's at least one skill enabled.
 bool SkillMenu::exit()
 {

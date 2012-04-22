@@ -2145,7 +2145,7 @@ bool PrecisionMenu::process_key(int key)
     case MenuObject::INPUT_END_MENU_SUCCESS:
         return true;
     case MenuObject::INPUT_END_MENU_ABORT:
-        _clear_selections();
+        clear_selections();
         return true;
     case MenuObject::INPUT_ACTIVE_CHANGED:
         break;
@@ -2229,7 +2229,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             // something got clicked that needs to signal the menu to end
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_END_MENU_ABORT:
-            _clear_selections();
+            clear_selections();
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_FOCUS_LOST:
             if (*it == m_active_object)
@@ -2245,7 +2245,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
 }
 #endif
 
-void PrecisionMenu::_clear_selections()
+void PrecisionMenu::clear_selections()
 {
     std::vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
