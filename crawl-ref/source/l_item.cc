@@ -27,6 +27,7 @@
 #include "player.h"
 #include "skills2.h"
 #include "spl-summoning.h"
+#include "stash.h"
 #include "stuff.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@
 struct item_wrapper
 {
     item_def *item;
+    bool temp; // Does item need to be freed when the wrapper is GCed?
     int turn;
 
     bool valid() const { return turn == you.num_turns; }
@@ -44,6 +46,17 @@ void clua_push_item(lua_State *ls, item_def *item)
 {
     item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
     iw->item = item;
+    iw->temp = false;
+    iw->turn = you.num_turns;
+}
+
+// Push a (wrapped) temporary item_def.  A copy of the item will be allocated,
+// then deleted when the wrapper is GCed.
+void clua_push_item_temp(lua_State *ls, const item_def &item)
+{
+    item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
+    iw->item = new item_def(item);
+    iw->temp = true;
     iw->turn = you.num_turns;
 }
 
@@ -1000,17 +1013,23 @@ static int l_item_get_items_at(lua_State *ls)
 
     lua_newtable(ls);
 
-    // FIXME: the whole known stash should be pushed
-    clua_push_item(ls, top);
-    lua_rawseti(ls, -2, 1);
-#if 0
-    int index = 0;
-    for (; link != NON_ITEM; link = mitm[link].link)
+    if (StashTracker::is_level_untrackable())
     {
-        clua_push_item(ls, &mitm[link]);
-        lua_rawseti(ls, -2, ++index);
+        // You can still see the top item.
+        clua_push_item(ls, top);
+        lua_rawseti(ls, -2, 1);
     }
-#endif
+    else
+    {
+        const std::vector<item_def> items = item_list_in_stash(p);
+        int index = 0;
+        for (std::vector<item_def>::const_iterator i = items.begin();
+             i != items.end(); ++i)
+        {
+            clua_push_item_temp(ls, *i);
+            lua_rawseti(ls, -2, ++index);
+        }
+    }
     return (1);
 }
 
@@ -1094,11 +1113,23 @@ static const struct luaL_reg item_lib[] =
     { NULL, NULL },
 };
 
+static int _delete_wrapped_item(lua_State *ls)
+{
+    item_wrapper *iw = static_cast<item_wrapper*>(lua_touserdata(ls, 1));
+    if (iw && iw->temp)
+        delete iw->item;
+    return (0);
+}
+
 void cluaopen_item(lua_State *ls)
 {
     luaL_newmetatable(ls, ITEM_METATABLE);
     lua_pushstring(ls, "__index");
     lua_pushcfunction(ls, item_get);
+    lua_settable(ls, -3);
+
+    lua_pushstring(ls, "__gc");
+    lua_pushcfunction(ls, _delete_wrapped_item);
     lua_settable(ls, -3);
 
     // Pop the metatable off the stack.
