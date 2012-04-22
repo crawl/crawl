@@ -257,5 +257,10 @@ function hit_adjacent()
   attack(false)
 end
 
+function toggle_autothrow()
+  AUTOFIGHT_THROW = not AUTOFIGHT_THROW
+  crawl.mpr(AUTOFIGHT_THROW and "Enabling autothrow." or "Disabling autothrow.")
+end
+
 chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_throw = set_af_throw
