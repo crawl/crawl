@@ -493,6 +493,7 @@ void show_hiscore_table()
 
         if (menu.process_key(keyn))
         {
+            menu.clear_selections();
             _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
             clrscr();
 #ifdef USE_TILE_LOCAL
