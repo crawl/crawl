@@ -357,7 +357,6 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 
 static void _show_morgue(scorefile_entry& se)
 {
-
     formatted_scroller morgue_file;
     int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
     if (Options.easy_exit_menu)
@@ -413,7 +412,6 @@ static void _show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
-
     const int max_line   = get_number_of_lines() - 1;
     const int max_col    = get_number_of_cols() - 1;
 
@@ -442,21 +440,18 @@ void show_hiscore_table()
             coord_def(get_number_of_cols(), scores_row_start - 1),
             "descriptor");
 
-    menu.attach_object(descriptor);
 #ifdef USE_TILE_LOCAL
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
 #else
     BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
 #endif
     highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
-    menu.attach_object(highlighter);
 
     MenuFreeform* freeform = new MenuFreeform();
     freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
     // This freeform will only contain unfocusable texts
     freeform->allow_focus(false);
     freeform->set_visible(true);
-    menu.attach_object(freeform);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
     std::string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
@@ -474,7 +469,10 @@ void show_hiscore_table()
     descriptor->set_visible(true);
     highlighter->set_visible(true);
 
+    menu.attach_object(freeform);
     menu.attach_object(score_entries);
+    menu.attach_object(descriptor);
+    menu.attach_object(highlighter);
 
     menu.set_active_object(score_entries);
     score_entries->activate_first_item();
@@ -484,7 +482,6 @@ void show_hiscore_table()
     {
         menu.draw_menu();
         textcolor(WHITE);
-
         const int keyn = getch_ck();
 
         if (key_is_escape(keyn))
