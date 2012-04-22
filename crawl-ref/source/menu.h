@@ -1082,6 +1082,7 @@ public:
     virtual MenuObject* get_object_by_name(const std::string& search);
     virtual MenuItem* get_active_item();
     virtual void set_active_object(MenuObject* object);
+    virtual void clear_selections();
 protected:
     // These correspond to the Arrow keys when used for browsing the menus
     enum Direction
@@ -1091,7 +1092,6 @@ protected:
         LEFT,
         RIGHT,
     };
-    void _clear_selections();
     MenuObject* _find_object_by_direction(const MenuObject* start, Direction dir);
 
     std::vector<MenuObject*> m_attached_objects;
