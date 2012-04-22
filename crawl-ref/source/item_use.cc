@@ -503,6 +503,15 @@ void warn_armour_penalties()
     }
 }
 
+static bool _wearing_slot(int inv_slot)
+{
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
+        if (inv_slot == you.equip[i])
+            return (true);
+
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // armour_prompt
@@ -788,7 +797,7 @@ bool do_wear_armour(int item, bool quiet)
         return (false);
     }
 
-    if (wearing_slot(item))
+    if (_wearing_slot(item))
     {
         if (Options.equip_unequip)
             return (!takeoff_armour(item));
@@ -900,7 +909,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!wearing_slot(item))
+    if (!_wearing_slot(item))
     {
         if (Options.equip_unequip)
             return do_wear_armour(item, true);
@@ -1247,7 +1256,7 @@ static bool _fire_validate_item(int slot, std::string &err)
         err = "That weapon is stuck to your " + you.hand_name(false) + "!";
         return (false);
     }
-    else if (wearing_slot(slot))
+    else if (_wearing_slot(slot))
     {
         err = "You are wearing that object!";
         return (false);
@@ -5467,15 +5476,6 @@ void examine_object(void)
     describe_item(you.inv[item_slot], true);
     redraw_screen();
     mesclr();
-}
-
-bool wearing_slot(int inv_slot)
-{
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
-        if (inv_slot == you.equip[i])
-            return (true);
-
-    return (false);
 }
 
 bool item_blocks_teleport(bool calc_unid, bool permit_id)

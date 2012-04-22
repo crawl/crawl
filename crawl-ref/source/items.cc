@@ -1415,7 +1415,7 @@ bool is_stackable_item(const item_def &item)
     return (false);
 }
 
-iflags_t ident_flags(const item_def &item)
+static iflags_t _ident_flags(const item_def &item)
 {
     const iflags_t identmask = full_ident_mask(item);
     iflags_t flags = item.flags & identmask;
@@ -1453,7 +1453,7 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     }
 
     // Check the ID flags.
-    if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
+    if (!ignore_ident && _ident_flags(item1) != _ident_flags(item2))
         return (false);
 
     // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
@@ -1767,14 +1767,14 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 // If only one of the stacks is identified,
                 // identify the other to a similar extent.
-                if (ident_flags(mitm[obj]) != ident_flags(you.inv[m]))
+                if (_ident_flags(mitm[obj]) != _ident_flags(you.inv[m]))
                 {
                     if (!quiet)
                         mpr("These items seem quite similar.");
                     mitm[obj].flags |=
-                        ident_flags(you.inv[m]) & you.inv[m].flags;
+                        _ident_flags(you.inv[m]) & you.inv[m].flags;
                     you.inv[m].flags |=
-                        ident_flags(mitm[obj]) & mitm[obj].flags;
+                        _ident_flags(mitm[obj]) & mitm[obj].flags;
                 }
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);

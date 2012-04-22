@@ -1016,7 +1016,7 @@ std::string unwrap_desc(std::string desc)
 // FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
 // function isn't included in msys, so I don't know how to do that. Instead, I just check
 // if we are running vista or higher. -rla
-bool _is_aero()
+static bool _is_aero()
 {
     OSVERSIONINFOEX osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);

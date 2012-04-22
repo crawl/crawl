@@ -109,7 +109,6 @@ int get_damage_type(const item_def &item);
 int single_damage_type(const item_def &item);
 
 int weapon_str_weight(const item_def &wpn);
-int weapon_dex_weight(const item_def &wpn);
 
 skill_type weapon_skill(const item_def &item);
 skill_type weapon_skill(object_class_type wclass, int wtype);
@@ -178,7 +177,6 @@ bool gives_resistance(const item_def &item);
 int item_mass(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
-bool in_shop(const item_def &item);
 
 std::string item_base_name(const item_def &item);
 std::string item_base_name (object_class_type type, int sub_type);

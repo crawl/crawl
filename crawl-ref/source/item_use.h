@@ -98,8 +98,6 @@ int launcher_final_speed(const item_def &launcher,
 void warn_shield_penalties();
 void warn_armour_penalties();
 
-bool wearing_slot(int inv_slot);
-
 bool item_blocks_teleport(bool calc_unid, bool permit_id);
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
