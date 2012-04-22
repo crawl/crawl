@@ -1710,21 +1710,6 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }
 
-trap_type random_trap()
-{
-    return (static_cast<trap_type>(random2(TRAP_MAX_REGULAR+1)));
-}
-
-trap_type random_trap(dungeon_feature_type feat)
-{
-    ASSERT(feat_is_trap(feat, false));
-    trap_type trap = NUM_TRAPS;
-    do
-        trap = random_trap();
-    while (trap_category(trap) != feat);
-    return trap;
-}
-
 bool is_valid_shaft_level(const level_id &place)
 {
     if (crawl_state.test

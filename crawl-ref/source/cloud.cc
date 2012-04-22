@@ -1218,16 +1218,6 @@ bool in_what_cloud(cloud_type type)
     return (false);
 }
 
-cloud_type in_what_cloud()
-{
-    int cl = env.cgrid(you.pos());
-
-    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
-        return (CLOUD_NONE);
-
-    return (env.cloud[cl].type);
-}
-
 std::string cloud_name_at_index(int cloudno)
 {
     if (!env.cloud[cloudno].name.empty())
