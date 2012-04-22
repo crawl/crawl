@@ -2145,7 +2145,7 @@ void handle_time()
 
     // Labyrinth and Abyss maprot.
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        forget_map(0);
+        forget_map(true);
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))

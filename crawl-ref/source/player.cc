@@ -2835,22 +2835,11 @@ int burden_change(void)
     return (you.burden);
 }
 
-void forget_map(bool force)
-{
-    forget_map(100, force);
-}
-
-// force is true for forget_map command on level map.
-void forget_map(int chance_forgotten, bool force)
+void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (force && !yesno("Really forget level map?", true, 'n'))
-        return;
-
     // Labyrinth and the Abyss use special rotting rules.
-    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH
-                              || you.level_type == LEVEL_ABYSS);
     const bool rot_resist = you.level_type == LEVEL_LABYRINTH
                                 && you.species == SP_MINOTAUR
                             || you.level_type == LEVEL_ABYSS
@@ -2865,27 +2854,19 @@ void forget_map(int chance_forgotten, bool force)
         if (you.see_cell(p) || !env.map_knowledge(p).known())
             continue;
 
-        const int dist = distance(you.pos(), p);
-        bool doDecay = (force || chance_forgotten == 100);
-        if (!doDecay)
+        if (rot)
         {
-            if (rotting_map)
-            {
-                int chance = pow(geometric_chance,
-                                 std::max(1, (dist - radius) / 40)) * scalar;
-                doDecay = !x_chance_in_y(chance, scalar);
-            }
-            else
-                doDecay = !x_chance_in_y(chance_forgotten, 100);
+            const int dist = distance(you.pos(), p);
+            int chance = pow(geometric_chance,
+                             std::max(1, (dist - radius) / 40)) * scalar;
+            if (x_chance_in_y(chance, scalar))
+                continue;
         }
 
-        if (doDecay)
-        {
-            env.map_knowledge(p).clear();
+        env.map_knowledge(p).clear();
 #ifdef USE_TILE
-            tile_forget_map(p);
+        tile_forget_map(p);
 #endif
-        }
     }
 
     ash_detect_portals(is_map_persistent());

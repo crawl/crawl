@@ -919,7 +919,8 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_FORGET:
-                forget_map(100, true);
+                if (yesno("Really forget level map?", true, 'n'))
+                    forget_map();
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:

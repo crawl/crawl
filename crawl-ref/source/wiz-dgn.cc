@@ -747,7 +747,7 @@ void debug_test_explore()
     _debug_kill_traps();
     _debug_destroy_doors();
 
-    forget_map(100);
+    forget_map();
 
     // Remember where we are now.
     const coord_def where = you.pos();
