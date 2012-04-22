@@ -242,18 +242,24 @@ swamp1
 swamp2
 swamp3
 
+%weight 20
 spider00 FLOOR_SPIDER
 spider01
 spider02
 spider03
+%weight 10
 spider04
+%weight 1
 spider05
 spider06
+%weight 5
 spider07
 spider08
 spider09
+%weight 1
 spider10
 spider11
+%weight 3
 
 tomb0 FLOOR_TOMB
 tomb1
