@@ -344,11 +344,6 @@ bool feat_is_solid(dungeon_feature_type feat)
     return (feat <= DNGN_MAXSOLID || feat == DNGN_MALIGN_GATEWAY);
 }
 
-bool cell_is_solid(int x, int y)
-{
-    return (feat_is_solid(grd[x][y]));
-}
-
 bool cell_is_solid(const coord_def &c)
 {
     return (feat_is_solid(grd(c)));
