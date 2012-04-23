@@ -533,6 +533,12 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
     case DNGN_EXIT_PANDEMONIUM:
         if (you.level_stack.empty())
         {
+            if (you.wizard)
+            {
+                mpr("Error: no return path. You did create the exit manually, "
+                    "didn't you? Let's go to D:1.", MSGCH_ERROR);
+                return level_id(BRANCH_MAIN_DUNGEON, 1);
+            }
             die("no return path from a portal (%s)",
                 level_id::current().describe().c_str());
         }
