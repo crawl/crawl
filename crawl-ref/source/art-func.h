@@ -678,8 +678,13 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (!mondied || !defender || !is_dragonkind(defender))
+    if (!mondied || !defender || !is_dragonkind(defender)
+        || defender->is_summoned()
+        || defender->is_monster()
+           && testbits(defender->as_monster()->flags, MF_NO_REWARD))
+    {
         return;
+    }
     if (defender->is_player())
     {
         // can't currently happen even on a death blow
