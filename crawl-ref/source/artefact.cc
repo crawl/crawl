@@ -389,7 +389,7 @@ void autoid_unrand(item_def &item)
     if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
         return;
 
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
     add_autoinscription(item);
 }
 
@@ -2088,7 +2088,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         && !(unrand->flags & UNRAND_FLAG_UNIDED)
         && !strcmp(unrand->name, unrand->unid_name))
     {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
         add_autoinscription(item);
     }
 
