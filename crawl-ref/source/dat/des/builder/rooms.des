@@ -126,7 +126,7 @@ end
 ##########################
 
 NAME:   special_room_kobold
-DEPTH:  6-14, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis, !Spider
+DEPTH:  D:7-15, Orc, Elf
 TAGS:   special_room allow_dup unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -134,7 +134,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_orc
-DEPTH:  8-, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis, !Spider
+DEPTH:  D:9-, Orc, Elf, Snake, Vaults
 TAGS:   special_room allow_dup unrand
 WEIGHT: 59 (8-14), 50 (15-16), 40 (17), 25 (18-20), 15 (21-)
 : sroom_orc_lair(_G)
@@ -142,7 +142,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_bee
-DEPTH:  8-, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:9-, Lair, Orc, Elf, Snake, Spider, Vaults
 TAGS:   special_room allow_dup unrand
 WEIGHT: 30 (8-14), 25 (15-17), 33 (18-20), 8 (21-)
 : sroom_beehive(_G)
@@ -150,7 +150,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_morgue
-DEPTH:  15-, !Lair, !Spider
+DEPTH:  D:16-, Vaults, Snake:2-, Crypt, Dis, Tar, Coc, Geh
 TAGS:   special_room allow_dup unrand
 WEIGHT: 25 (15-16), 27 (17), 29 (18-20), 32 (21-)
 : sroom_morgue(_G)
@@ -158,7 +158,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_jelly
-DEPTH:  17-, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:18-, Vaults, Slime
 TAGS:   special_room allow_dup unrand
 WEIGHT: 9 (17), 13 (18-20), 45 (21-)
 : sroom_jelly_pit(_G)
