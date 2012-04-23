@@ -273,8 +273,11 @@ int m_getch()
             c = proc_mouse_event(c, &me);
         }
 #endif
-    } while (c == -KEY_RESIZE
-             || ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+    } while (
+#ifdef KEY_RESIZE
+             c == -KEY_RESIZE ||
+#endif
+             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
                  && !crawl_state.mouse_enabled));
 
     return (c);
