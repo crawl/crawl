@@ -630,15 +630,22 @@ static void debug_load_map_by_name(std::string name, bool primary)
         wizard_recreate_level();
         you.props.erase("force_map");
     }
-    else if (dgn_place_map(toplace, true, false, where))
-    {
-        mprf("Successfully placed %s.", toplace->name.c_str());
-        // Fix up doors from vaults and any changes to the default walls
-        // and floors from the vault.
-        tile_init_flavour();
-    }
     else
-        mprf("Failed to place %s.", toplace->name.c_str());
+    {
+        unwind_var<string_set> um(you.uniq_map_names, string_set());
+        unwind_var<string_set> umt(you.uniq_map_tags, string_set());
+        unwind_var<string_set> lum(env.level_uniq_maps, string_set());
+        unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
+        if (dgn_place_map(toplace, true, false, where))
+        {
+            mprf("Successfully placed %s.", toplace->name.c_str());
+            // Fix up doors from vaults and any changes to the default walls
+            // and floors from the vault.
+            tile_init_flavour();
+        }
+        else
+            mprf("Failed to place %s.", toplace->name.c_str());
+    }
 }
 
 static input_history mini_hist(10), primary_hist(10);
