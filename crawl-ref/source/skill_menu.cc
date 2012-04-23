@@ -192,7 +192,10 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (is_selectable(keep_hotkey))
     {
         if (!keep_hotkey)
+        {
             m_name->add_hotkey(++m_letter);
+            m_name->add_hotkey(m_letter - 'a' + 1);
+        }
         m_name->set_id(m_sk);
         m_name->allow_highlight(true);
     }
@@ -1260,6 +1263,8 @@ void SkillMenu::set_skills()
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     ASSERT(you.can_train[sk]);
+    if (keyn > 0 && keyn < 'a')
+        you.train.init(0);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
         you.train[sk] = !you.train[sk];
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
