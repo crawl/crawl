@@ -2324,38 +2324,33 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
-bool create_altar(bool disallow_no_altar)
+static void _create_altar(coord_def pos)
 {
-    // Generate an altar.
-    if (grd(you.pos()) == DNGN_FLOOR)
-    {
-        god_type god;
+    god_type god;
 
-        do
-            god = random_god(disallow_no_altar);
-        while (is_unavailable_god(god));
+    do
+        god = random_god(true);
+    while (is_unavailable_god(god));
 
-        grd(you.pos()) = altar_for_god(god);
-
-        if (grd(you.pos()) != DNGN_FLOOR)
-        {
-            mprf("An altar to %s grows from the floor before you!",
-                 god_name(god).c_str());
-            return (true);
-        }
-    }
-
-    return (false);
+    grd(pos) = altar_for_god(god);
+    ASSERT(grd(pos) != DNGN_FLOOR);
+    mprf("An altar to %s grows from the floor before you!",
+         god_name(god).c_str());
 }
 
 static void _trowel_card(int power, deck_rarity_type rarity)
 {
-    // Early exit: don't clobber important features.
-    if (is_critical_feature(grd(you.pos())))
+    coord_def p;
+    for (distance_iterator di(you.pos(), true, false); di; ++di)
     {
-        mpr("The dungeon trembles momentarily.");
-        return;
+        if (feat_is_solid(grd(*di)) || is_critical_feature(grd(*di)))
+            continue;
+        p = *di;
+        break;
     }
+
+    if (p.origin()) // can't happen outside wizmode
+        return mpr("The dungeon trembles momentarily.");
 
     const int power_level = _get_power_level(power, rarity);
     bool done_stuff = false;
@@ -2377,7 +2372,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
 
             {
                 no_messages n;
-                if (dgn_safe_place_map(map, true, true, you.pos()))
+                if (dgn_safe_place_map(map, true, true, p))
                 {
                     tries = -1; // hrm no_messages
                     break;
@@ -2448,7 +2443,10 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         }
     }
     else
-        done_stuff = create_altar();
+    {
+        _create_altar(p);
+        done_stuff = true;
+    }
 
     if (!done_stuff)
         canned_msg(MSG_NOTHING_HAPPENS);
