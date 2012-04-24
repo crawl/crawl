@@ -18,7 +18,7 @@
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
 TAGS:   trowel_portal unrand
-DEPTH:  *, !Zig, !Abyss
+DEPTH:  *, !Zig
 veto {{
   for d = 1,27 do
     if you.is_level_on_stack("Zig:" .. d) then

@@ -106,7 +106,7 @@ ENDMAP
 
 NAME:   bzr_entry_trowel
 TAGS:   transparent trowel_portal unrand allow_dup
-DEPTH:  *, !Bazaar, !Abyss
+DEPTH:  *, !Bazaar
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G)
 MAP

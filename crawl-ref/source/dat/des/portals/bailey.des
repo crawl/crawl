@@ -163,7 +163,7 @@ ENDMAP
 
 NAME:   bailey_entry_trowel
 TAGS:   transparent trowel_portal unrand
-DEPTH:  *, !Bailey, !Abyss
+DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
