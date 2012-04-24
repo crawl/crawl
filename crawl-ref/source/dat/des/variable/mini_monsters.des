@@ -3354,6 +3354,12 @@ TAGS: allow_dup luniq no_item_gen layout_basic
 CHANCE: 10% (Spider), 20%
 DEPTH: 6-30
 {{
+    -- An incredibly ugly kludge to avoid duplicating the list of valid
+    -- branches/depths (and causing mysterious errors if it's not up to date).
+    if not dgn.map_by_tag("special_room") then
+      return
+    end
+
     local width = 5 + crawl.random2avg(6, 2)
     local height = 5 + crawl.random2avg(6, 2)
 
