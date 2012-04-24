@@ -235,8 +235,7 @@ NAME:   elyvilon_altar_3
 TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup
 DEPTH:  D:2-20
 KFEAT:  C = altar_elyvilon
-KMASK:  w = no_monster_gen
-KMASK:  W = no_monster_gen
+KMASK:  wW = no_monster_gen
 MONS:   butterfly
 MAP
         ttttttttttttt
