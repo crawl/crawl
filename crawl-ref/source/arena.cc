@@ -30,6 +30,7 @@
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "ng-init.h"
+#include "ng-setup.h"
 #include "options.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
@@ -1422,6 +1423,7 @@ int arena_cull_items()
 
 static void _init_arena()
 {
+    initialise_branch_depths();
     run_map_global_preludes();
     run_map_local_preludes();
     initialise_item_descriptions();
@@ -1434,7 +1436,7 @@ NORETURN void run_arena(const std::string& teams)
     ASSERT(!crawl_state.arena_suspended);
 
 #ifdef WIZARD
-    // The playe has wizard powers for the duration of the arena.
+    // The player has wizard powers for the duration of the arena.
     unwind_bool wiz(you.wizard, true);
 #endif
 
