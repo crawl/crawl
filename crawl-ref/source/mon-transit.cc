@@ -115,7 +115,8 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
 
-    dprf("Monster in transit: %s", m.name(DESC_PLAIN, true).c_str());
+    dprf("Monster in transit to %s: %s", lid.describe().c_str(),
+         m.name(DESC_PLAIN, true).c_str());
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)

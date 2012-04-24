@@ -1097,7 +1097,7 @@ static void _do_lost_monsters()
     // there's no need to special-case that.
     if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
-            if (mons_is_unique(mi->type))
+            if (mons_is_unique(mi->type) && !(mi->flags & MF_TAKING_STAIRS))
                 you.unique_creatures[mi->type] = false;
 }
 
@@ -1883,7 +1883,8 @@ void delete_level(const level_id &level)
     StashTrack.remove_level(level);
     if (you.save)
         you.save->delete_chunk(level.describe());
-    save_abyss_uniques();
+    if (level.branch == BRANCH_ABYSS)
+        save_abyss_uniques();
     _do_lost_monsters();
     _do_lost_items();
 }
