@@ -562,18 +562,19 @@ ENDMAP
 NAME:   minmay_temple_entry_mist
 TAGS:   temple_entry
 ORIENT: float
-MARKER: l = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+MARKER: ! = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
         size_max = 3, spread_rate = -1 }
-KMASK:  Wl = no_monster_gen
+KMASK:  W! = no_monster_gen
+KFEAT:  ! = shallow_water
 KFEAT:  O = enter_temple
 MAP
 ..WWW..
-.WWWWW.
+.WW!WW.
 WWWWWWW
-WWWOWWW
+W!WOW!W
 WWWWWWW
-.WWWWW.
+.WW!WW.
 ..WWW..
 ENDMAP
 
