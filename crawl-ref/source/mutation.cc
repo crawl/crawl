@@ -1934,6 +1934,7 @@ try_again:
     int slots_lost = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
+    int cloud_producing = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -1969,6 +1970,9 @@ try_again:
                 if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
+                if (m == MUT_SAPROVOROUS || m == MUT_IGNITE_BLOOD)
+                    cloud_producing++;
+
                 if (m == MUT_CLAWS && i == 2
                     || m == MUT_HORNS && i == 0
                     || m == MUT_BEAK && i == 0
@@ -1991,6 +1995,9 @@ try_again:
         goto try_again;
 
     if (ice_elemental + fire_elemental > 1)
+        goto try_again;
+
+    if (cloud_producing > 1)
         goto try_again;
 
     return ret;
