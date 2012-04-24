@@ -1161,14 +1161,28 @@ ShopInfo &LevelStashes::get_shop(const coord_def& c)
 bool LevelStashes::update_stash(const coord_def& c)
 {
     Stash *s = find_stash(c);
-    if (s)
-    {
-        s->update();
-        if (s->empty())
-            kill_stash(*s);
-        return (true);
-    }
-    return (false);
+    if (!s)
+        return false;
+
+    s->update();
+    if (s->empty())
+        kill_stash(*s);
+    return (true);
+}
+
+void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
+{
+    ASSERT(from != to);
+
+    Stash *s = find_stash(from);
+    if (!s)
+        return;
+
+    int old_abs = s->abs_pos();
+    s->x = to.x;
+    s->y = to.y;
+    m_stashes.insert(std::pair<int, Stash>(s->abs_pos(), *s));
+    m_stashes.erase(old_abs);
 }
 
 // Removes a Stash from the level.
@@ -1418,9 +1432,6 @@ LevelStashes *StashTracker::find_level(const level_id &id)
 
 LevelStashes *StashTracker::find_current_level()
 {
-    if (is_level_untrackable())
-        return (NULL);
-
     return find_level(level_id::current());
 }
 
@@ -1438,6 +1449,13 @@ bool StashTracker::update_stash(const coord_def& c)
     return (false);
 }
 
+void StashTracker::move_stash(const coord_def& from, const coord_def& to)
+{
+    LevelStashes *lev = find_current_level();
+    if (lev)
+        lev->move_stash(from, to);
+}
+
 void StashTracker::remove_level(const level_id &place)
 {
     levels.erase(place);
@@ -1445,8 +1463,6 @@ void StashTracker::remove_level(const level_id &place)
 
 void StashTracker::no_stash(int x, int y)
 {
-    if (is_level_untrackable())
-        return ;
     LevelStashes &current = get_current_level();
     current.no_stash(x, y);
     if (!current.stash_count())
@@ -1455,8 +1471,6 @@ void StashTracker::no_stash(int x, int y)
 
 void StashTracker::add_stash(int x, int y, bool verbose)
 {
-    if (is_level_untrackable())
-        return ;
     LevelStashes &current = get_current_level();
     current.add_stash(x, y);
 
@@ -1527,12 +1541,8 @@ void StashTracker::load(reader& inf)
     }
 }
 
-void StashTracker::update_visible_stashes(
-                                    StashTracker::stash_update_mode mode)
+void StashTracker::update_visible_stashes(StashTracker::stash_update_mode mode)
 {
-    if (is_level_untrackable())
-        return;
-
     LevelStashes *lev = find_current_level();
     coord_def c;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
@@ -1567,11 +1577,8 @@ std::string StashTracker::stash_search_prompt()
     if (!lastsearch.empty())
         opts.push_back(
             make_stringf("Enter for \"%s\"", lastsearch.c_str()));
-    if (branch_is_stash_trackable(you.where_are_you)
-        && lastsearch != ".")
-    {
+    if (lastsearch != ".")
         opts.push_back("? for help");
-    }
 
     std::string prompt_qual =
         comma_separated_line(opts.begin(), opts.end(), ", or ", ", or ");
@@ -1713,11 +1720,6 @@ void StashTracker::search_stashes()
 
     if (csearch == ".")
     {
-        if (!branch_is_stash_trackable(you.where_are_you))
-        {
-            mpr("Cannot track items on this level.");
-            return;
-        }
 #if defined(REGEX_PCRE) || defined(REGEX_POSIX)
 #define RE_ESCAPE "\\"
 #else

@@ -112,11 +112,6 @@ bool branch_allows_followers(branch_type branch)
     return (is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM);
 }
 
-bool branch_is_stash_trackable(branch_type branch)
-{
-    return (branch != BRANCH_ABYSS && branch != BRANCH_LABYRINTH);
-}
-
 std::vector<level_id> all_dungeon_ids()
 {
     std::vector<level_id> out;
