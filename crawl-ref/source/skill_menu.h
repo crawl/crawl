@@ -51,7 +51,7 @@ class SkillMenu;
 class SkillMenuEntry
 {
 public:
-    static menu_letter m_letter;
+    static menu_letter2 m_letter;
     static SkillMenu* m_skm;
 
     SkillMenuEntry() {};

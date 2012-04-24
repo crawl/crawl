@@ -57,6 +57,31 @@ struct menu_letter
     }
 };
 
+// XXX Use inheritence instead of duplicate code
+struct menu_letter2
+{
+    char letter;
+
+    menu_letter2() : letter('a') { }
+    menu_letter2(char c) : letter(c) { }
+
+    operator char () const { return letter; }
+    const menu_letter2 &operator ++ ()
+    {
+        letter = letter == 'z'? '0' :
+                 letter == '9'? 'a' :
+                                letter + 1;
+        return *this;
+    }
+
+    menu_letter2 operator ++ (int)
+    {
+        menu_letter2 copy = *this;
+        this->operator++();
+        return copy;
+    }
+};
+
 struct item_def;
 class Menu;
 
