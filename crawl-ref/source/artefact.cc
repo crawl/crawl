@@ -95,7 +95,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_CHEIBRIADOS:
-        // Slow god: no quick blades, no berserking, no resist slowing.
+        // Slow god: no quick blades, no berserking.
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
             type_bad = true;
 
@@ -284,7 +284,7 @@ std::string replace_name_parts(const std::string &name_in, const item_def& item)
         else
         {
             do
-                which_god = random_god(true);
+                which_god = random_god(false); // Fedhas in ZotDef only
             while (!_god_fits_artefact(which_god, item, true));
         }
 

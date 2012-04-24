@@ -2326,11 +2326,7 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
 
 static void _create_altar(coord_def pos)
 {
-    god_type god;
-
-    do
-        god = random_god(true);
-    while (is_unavailable_god(god));
+    god_type god = random_god();
 
     grd(pos) = altar_for_god(god);
     ASSERT(grd(pos) != DNGN_FLOOR);
@@ -2475,7 +2471,7 @@ static void _godly_wrath()
     int tries = 100;
     while (tries-- > 0)
     {
-        god_type god = random_god(true);
+        god_type god = random_god();
 
         // Don't recursively make player draw from the Deck of Punishment.
         if (god == GOD_NEMELEX_XOBEH)

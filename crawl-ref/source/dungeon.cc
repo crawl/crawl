@@ -4953,7 +4953,7 @@ static dungeon_feature_type _pick_an_altar()
 
         default:
             do
-                god = random_god(true);
+                god = random_god();
             while (god == GOD_NEMELEX_XOBEH
                    || god == GOD_LUGONU
                    || god == GOD_BEOGH

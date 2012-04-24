@@ -494,9 +494,8 @@ static dungeon_feature_type _abyss_pick_altar()
     god_type god;
 
     do
-        god = random_god(true);
-    while (is_good_god(god)
-           || is_unavailable_god(god));
+        god = random_god();
+    while (is_good_god(god));
 
     return (altar_for_god(god));
 }
