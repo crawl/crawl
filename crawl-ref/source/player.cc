@@ -75,6 +75,7 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
+#include "stash.h"
 #include "state.h"
 #include "status.h"
 #include "stuff.h"
@@ -2923,6 +2924,7 @@ void forget_map(int chance_forgotten, bool force)
         if (doDecay)
         {
             env.map_knowledge(p).clear();
+            StashTrack.update_stash(p);
 #ifdef USE_TILE
             tile_forget_map(p);
 #endif

@@ -950,6 +950,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     // Move player's knowledge.
     env.map_knowledge(dst) = env.map_knowledge(src);
+    StashTrack.move_stash(src, dst);
 }
 
 static bool _dgn_shift_feature(const coord_def &pos)

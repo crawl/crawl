@@ -41,6 +41,7 @@
 #include "shopping.h"
 #include "showsymb.h"
 #include "sprint.h"
+#include "stash.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -692,6 +693,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
+    StashTrack.update_stash(p);
 }
 
 // Removes monsters, clouds, dungeon features, and items from the
