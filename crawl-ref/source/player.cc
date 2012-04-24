@@ -1782,9 +1782,8 @@ int player_res_torment(bool, bool temp)
             || you.form == TRAN_LICH
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
-            || (temp &&
-                (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-                 > random2(100))));
+            || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
+                && coinflip()));
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
