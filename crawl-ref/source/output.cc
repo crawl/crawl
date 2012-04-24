@@ -2311,10 +2311,6 @@ static std::string _status_mut_abilities(int sw)
                 snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
                 current = info;
                 break;
-            case MUT_STOCHASTIC_TORMENT_RESISTANCE:
-                snprintf(info, INFO_SIZE, "%d%% torment resistance", level*20);
-                current = info;
-                break;
             case MUT_ICEMAIL:
                 AC_change += player_icemail_armour_class();
                 break;
