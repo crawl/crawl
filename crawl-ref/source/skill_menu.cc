@@ -21,7 +21,7 @@
 #include "tilepick.h"
 #include "tilereg-crt.h"
 
-menu_letter SkillMenuEntry::m_letter;
+menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu* SkillMenuEntry::m_skm;
 SkillMenu* SkillMenuSwitch::m_skm;
 
@@ -194,7 +194,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         if (!keep_hotkey)
         {
             m_name->add_hotkey(++m_letter);
-            m_name->add_hotkey(m_letter - 'a' + 1);
+            m_name->add_hotkey(toupper(m_letter));
         }
         m_name->set_id(m_sk);
         m_name->allow_highlight(true);
@@ -1116,7 +1116,7 @@ void SkillMenu::refresh_display()
 
 void SkillMenu::refresh_names()
 {
-    SkillMenuEntry::m_letter = 'Z';
+    SkillMenuEntry::m_letter = '9';
     bool default_set = false;
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
@@ -1218,7 +1218,7 @@ void SkillMenu::set_skills()
     else
         previous_active = -1;
 
-    SkillMenuEntry::m_letter = 'Z';
+    SkillMenuEntry::m_letter = '9';
     bool default_set = false;
     clear_flag(SKMF_CROSSTRAIN);
     clear_flag(SKMF_ANTITRAIN);
@@ -1263,7 +1263,7 @@ void SkillMenu::set_skills()
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     ASSERT(you.can_train[sk]);
-    if (keyn > 0 && keyn < 'a')
+    if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(0);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
         you.train[sk] = !you.train[sk];
