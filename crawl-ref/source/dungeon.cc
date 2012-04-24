@@ -4171,8 +4171,9 @@ retry:
                 props["randbook_title"].get_string());
         }
 
-        // Remove unsuitable inscriptions such as {god gift}.
-        item.inscription.clear();
+        // Remove {god gift} from the inscription (could have been added if
+        // the item spec contains "acquire:moloch").
+        trim_god_gift_inscrip(item);
         // And wipe item origin to remove "this is a god gift!" from there,
         // unless we're dealing with a corpse.
         if (!spec.corpselike())
