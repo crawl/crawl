@@ -39,17 +39,6 @@ NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
 CHANCE: 0 : 90%
 
-# Trowel portal
-# TODO: should have some alternates, so there's more than one option.  What
-# about a friendly malign gateway?
-NAME: abyss_exit_trowel
-DEPTH: Abyss
-TAGS: transparent trowel_portal unrand
-KFEAT: O = exit_abyss
-MAP
-O
-ENDMAP
-
 ###############################################################################
 NAME: abyss_furniture_001
 TAGS: abyss allow_dup

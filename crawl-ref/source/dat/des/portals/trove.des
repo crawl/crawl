@@ -335,7 +335,7 @@ ENDMAP
 
 NAME:   trove_entry_trowel
 TAGS:   transparent trowel_portal unrand uniq_trove
-DEPTH:  *, !Trove, !Abyss
+DEPTH:  *, !Trove
 veto {{ return you.is_level_on_stack("Trove") }}
 : trove.portal(_G)
 MAP

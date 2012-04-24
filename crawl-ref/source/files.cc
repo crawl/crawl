@@ -1134,12 +1134,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
           || stair_taken == DNGN_EXIT_THROUGH_ABYSS
           || stair_taken == DNGN_STONE_STAIRS_DOWN_I
-             && old_level.branch == BRANCH_ZIGGURAT)
+             && old_level.branch == BRANCH_ZIGGURAT
+          || old_level.branch == BRANCH_ABYSS)
     {
         env.level_state |= LSTATE_DELETED;
     }
 
-    if (is_level_on_stack(level_id::current()))
+    if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
     {
         std::vector<std::string> stack;
         for (unsigned int i = 0; i < you.level_stack.size(); i++)
@@ -1295,10 +1296,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _clear_clouds();
 
-        if (!return_pos.origin())
-            you.moveto(return_pos);
-        else if (just_created_level && player_in_branch(BRANCH_ABYSS))
+        if (player_in_branch(BRANCH_ABYSS))
             you.moveto(ABYSS_CENTRE);
+        else if (!return_pos.origin())
+            you.moveto(return_pos);
         else
             _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
 

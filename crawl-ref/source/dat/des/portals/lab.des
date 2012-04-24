@@ -51,7 +51,7 @@ ENDMAP
 
 NAME:   lab_entry_trowel
 TAGS:   transparent trowel_portal unrand
-DEPTH:  *, !Lab, !Abyss
+DEPTH:  *, !Lab
 veto {{ return you.is_level_on_stack("Lab") }}
 : lab_portal(_G)
 MAP
