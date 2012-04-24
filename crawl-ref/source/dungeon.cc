@@ -4841,7 +4841,7 @@ static void _vault_grid(vault_placement &place,
                         const coord_def& where,
                         keyed_mapspec *mapsp)
 {
-    if (mapsp)
+    if (mapsp && mapsp->replaces_glyph())
         _vault_grid_mapspec(place, where, *mapsp);
     else
         _vault_grid_glyph(place, where, vgrid);

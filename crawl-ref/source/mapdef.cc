@@ -5648,14 +5648,6 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         return (err);
     }
 
-    // If not also a KFEAT...
-    if (feat.feats.empty())
-    {
-        feature_spec fsp(-1, 10);
-        fsp.glyph = key_glyph;
-        feat.feats.push_back(fsp);
-    }
-
     return (err);
 }
 
@@ -5692,6 +5684,11 @@ item_list &keyed_mapspec::get_items()
 map_flags &keyed_mapspec::get_mask()
 {
     return (map_mask);
+}
+
+bool keyed_mapspec::replaces_glyph()
+{
+    return !(mons.empty() && item.empty() && feat.feats.empty());
 }
 
 //////////////////////////////////////////////////////////////////////////

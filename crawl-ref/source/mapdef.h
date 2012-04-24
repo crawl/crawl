@@ -883,6 +883,9 @@ public:
     item_list   &get_items();
     map_flags   &get_mask();
 
+    // Does this mapspec specify a feature, item, or monster?  If so, the
+    // glyph should be ignored.
+    bool replaces_glyph();
 private:
     std::string err;
 
