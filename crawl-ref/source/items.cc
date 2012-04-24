@@ -1757,12 +1757,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 if (floor_god_gift && !inv_god_gift
                     || inv_god_gift && !floor_god_gift)
                 {
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift, ", "");
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift", "");
+                    trim_god_gift_inscrip(you.inv[m]);
                 }
 
                 // If only one of the stacks is identified,
