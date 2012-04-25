@@ -3194,8 +3194,6 @@ static void _place_specific_stair(dungeon_feature_type stair,
 
 static void _place_branch_entrances()
 {
-    int dlevel = env.absdepth0;
-
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
