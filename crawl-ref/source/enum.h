@@ -436,12 +436,13 @@ enum branch_type                // you.where_are_you
     BRANCH_FIRST_NON_DUNGEON = BRANCH_ECUMENICAL_TEMPLE,
     BRANCH_ORCISH_MINES,
     BRANCH_ELVEN_HALLS,
+    BRANCH_DWARVEN_HALL,
     BRANCH_LAIR,
     BRANCH_SWAMP,
     BRANCH_SHOALS,
-    BRANCH_SLIME_PITS,
     BRANCH_SNAKE_PIT,
-    BRANCH_HIVE,
+    BRANCH_SPIDER_NEST,
+    BRANCH_SLIME_PITS,
     BRANCH_VAULTS,
     BRANCH_HALL_OF_BLADES,
     BRANCH_CRYPT,
@@ -455,8 +456,6 @@ enum branch_type                // you.where_are_you
       BRANCH_LAST_HELL = BRANCH_TARTARUS,
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
-    BRANCH_SPIDER_NEST,
-    BRANCH_DWARVEN_HALL,
     BRANCH_ABYSS,
     BRANCH_PANDEMONIUM,
     BRANCH_ZIGGURAT,
@@ -469,6 +468,7 @@ enum branch_type                // you.where_are_you
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
+    BRANCH_HIVE,
     NUM_BRANCHES
 };
 

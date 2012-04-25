@@ -49,6 +49,14 @@ const Branch branches[NUM_BRANCHES] = {
       mons_hallelf_rare, mons_hallelf_level,
       'E', true, 0 },
 
+    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, 2, 2, 1, 0, 0,
+      DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
+      "Dwarven Hall", "the Dwarven Hall", "Dwarf",
+      NULL,
+      true, YELLOW, BROWN,
+      mons_dwarf_rare, mons_dwarf_level,
+      'K', false, 0 },
+
     { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 13, 8, 0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
@@ -73,14 +81,6 @@ const Branch branches[NUM_BRANCHES] = {
       mons_shoals_rare, mons_shoals_level,
       'A', true, 3 },
 
-    { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 8, 6, BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
-      "Slime Pits", "the Pits of Slime", "Slime",
-      NULL,
-      true, GREEN, BROWN,
-      mons_pitslime_rare, mons_pitslime_level,
-      'M', true, -5 },
-
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 0, 0,
       DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -89,13 +89,21 @@ const Branch branches[NUM_BRANCHES] = {
       mons_pitsnake_rare, mons_pitsnake_level,
       'P', true, 0 },
 
-    { BRANCH_HIVE, NUM_BRANCHES, 11, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
-      "Hive", "the Hive", "Hive",
-      "You hear a buzzing sound coming from all directions.",
-      false, YELLOW, BROWN,
-      mons_hive_rare, mons_hive_level,
-      'H', true, 5 },
+    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 0, 0,
+      DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
+      "Spider Nest", "the Spider Nest", "Spider",
+      NULL,
+      true, BROWN, YELLOW,
+      mons_spidernest_rare, mons_spidernest_level,
+      'N', true, 0 },
+
+    { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 8, 6, BFLAG_NO_ITEMS, 0,
+      DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
+      "Slime Pits", "the Pits of Slime", "Slime",
+      NULL,
+      true, GREEN, BROWN,
+      mons_pitslime_rare, mons_pitslime_level,
+      'M', true, -5 },
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
@@ -190,22 +198,6 @@ const Branch branches[NUM_BRANCHES] = {
       true, BROWN, BROWN,
       mons_forest_rare, mons_forest_level,
       'F', true, 0 },
-
-    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 0, 0,
-      DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
-      "Spider Nest", "the Spider Nest", "Spider",
-      NULL,
-      true, BROWN, YELLOW,
-      mons_spidernest_rare, mons_spidernest_level,
-      'N', true, 0 },
-
-    { BRANCH_DWARVEN_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 1, 0, 0,
-      DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
-      "Dwarven Hall", "the Dwarven Hall", "Dwarf",
-      NULL,
-      true, YELLOW, BROWN,
-      mons_dwarf_rare, mons_dwarf_level,
-      'K', false, 0 },
 
     { BRANCH_ABYSS, NUM_BRANCHES, 24, 24, 1,
           BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
@@ -314,6 +306,14 @@ const Branch branches[NUM_BRANCHES] = {
       false, LIGHTGREY, BROWN, // set per-map
       mons_null_rare, mons_null_level,
       '8', false, 0 },
+
+    { BRANCH_HIVE, NUM_BRANCHES, 11, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Hive", "the Hive", "Hive",
+      "You hear a buzzing sound coming from all directions.",
+      false, YELLOW, BROWN,
+      mons_hive_rare, mons_hive_level,
+      'H', true, 5 },
 };
 
 #endif
