@@ -573,21 +573,16 @@ spret_type cast_summon_elemental(int pow, god_type god,
         horde_penalty *= _count_summons(mon);
 
     // silly - ice for water? 15jan2000 {dlb}
-    // little change here to help with the above... and differentiate
-    // elements a bit... {bwr}
-    // - Water elementals are now harder to be made reliably friendly.
-    // - Air elementals are harder because they're more dynamic/dangerous.
-    // - Earth elementals are more static and easy to tame (as before).
-    // - Fire elementals fall in between the two (10 is still fairly easy).
+
+    // - Air elementals are harder to tame because they're more dynamic and
+    //   like to hide.
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_FIRE_MAGIC)
                                              - horde_penalty, 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_ICE_MAGIC)
-                                             - horde_penalty,
-                                             (you.species == SP_MERFOLK) ? 5
-                                                                         : 15))
+                                             - horde_penalty, 10))
 
                         && (mon != MONS_AIR_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_AIR_MAGIC)
@@ -595,7 +590,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
                         && (mon != MONS_EARTH_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_EARTH_MAGIC)
-                                             - horde_penalty, 5))
+                                             - horde_penalty, 10))
 
                         && random2(100) >= unfriendly);
 
