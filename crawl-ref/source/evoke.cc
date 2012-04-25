@@ -783,13 +783,6 @@ bool evoke_item(int slot)
                 pract = 2;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case MISC_CRYSTAL_BALL_OF_SEEING:
-            mpr("Nothing happens.");
-            pract = 0;
-            break;
-#endif
-
         case MISC_AIR_ELEMENTAL_FAN:
             if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -836,13 +829,6 @@ bool evoke_item(int slot)
             else if (_ball_of_energy())
                 pract = 1;
             break;
-
-#if TAG_MAJOR_VERSION == 32
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
-            mpr("Nothing happens.");
-            pract = 0;
-            break;
-#endif
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())

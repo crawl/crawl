@@ -971,9 +971,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 35;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case WPN_ANKUS:
-#endif
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
         case WPN_SABRE:
@@ -1042,10 +1039,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case WPN_KATANA:
-        case WPN_BLESSED_KATANA:
-#endif
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
         case WPN_EUDEMON_BLADE:
@@ -1342,9 +1335,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case ARM_BANDED_MAIL:
-#endif
         case ARM_CENTAUR_BARDING:
         case ARM_NAGA_BARDING:
             valued += 150;

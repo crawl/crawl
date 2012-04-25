@@ -61,13 +61,6 @@ protected:
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
 
-#if TAG_MAJOR_VERSION == 32
-#define MAX_NUM_GODS    21
-#else
-// FIXME: remove after save bump
-#define MAX_NUM_GODS NUM_GODS
-#endif
-
 #define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
 
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
@@ -381,10 +374,6 @@ public:
         : branch(ot.branch), depth(ot.depth)
     {
     }
-
-#if TAG_MAJOR_VERSION == 32
-    void upgrade();
-#endif
 
     static level_id parse_level_id(const std::string &s) throw (std::string);
     static level_id from_packed_place(const unsigned short place);

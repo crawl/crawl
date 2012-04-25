@@ -653,10 +653,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
 static bool _is_opaque_cloud(cloud_type ctype)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (ctype == CLOUD_PETRIFY)
-        return true;
-#endif
     return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
 }
 
@@ -1236,15 +1232,10 @@ static const char *_terse_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink",
-#if TAG_MAJOR_VERSION > 32
     "calcifying dust",
-#endif
     "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
-#if TAG_MAJOR_VERSION == 32
-    "calcifying dust",
-#endif
     "sparse dust",
 };
 
@@ -1255,14 +1246,9 @@ static const char *_verbose_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "thick gloom", "ink",
-#if TAG_MAJOR_VERSION > 32
     "calcifying dust",
-#endif
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
-#if TAG_MAJOR_VERSION == 32
-    "calcifying dust",
-#endif
     "sparse dust",
 };
 

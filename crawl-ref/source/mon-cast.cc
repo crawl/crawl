@@ -1749,10 +1749,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->lose_energy(EUT_SPELL);
             return (true);
         }
-#if TAG_MAJOR_VERSION == 32
-        if (spell_cast == SPELL_TUKIMAS_BALL)
-            return false; // The party's over.
-#endif
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
@@ -2998,16 +2994,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           god));
         }
         return;
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_TUKIMAS_BALL:
-        //Tukima's dance NOT handled here.
-        //Instead, handle above in handle_mon_spell
-        //so nothing happens if no weapons animated.
-        mpr("Haunting music fills the air, and weapons rise to join the dance!");
-        noisy(12, mons->pos(), mons->mindex());
-        return;
-#endif
 
     case SPELL_ANIMATE_DEAD:
         animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),

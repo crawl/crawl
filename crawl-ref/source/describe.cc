@@ -3697,7 +3697,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
     return (gstr.str());
 }
 
-extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
+extern ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES];
 
 static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
                                        const ability_type abil)

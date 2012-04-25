@@ -253,12 +253,6 @@ std::string Note::describe(bool when, bool where, bool what) const
 
     if (where)
     {
-#if TAG_MAJOR_VERSION == 32
-        if (!place_abbrev.empty())
-            result << "| " << chop_string(place_abbrev, MAX_NOTE_PLACE_LEN)
-                   << " | ";
-        else
-#endif
         result << "| " << chop_string(short_place_name(packed_place),
                                       MAX_NOTE_PLACE_LEN) << " | ";
     }
@@ -433,9 +427,6 @@ Note::Note()
 
 Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
     type(t), first(f), second(s)
-#if TAG_MAJOR_VERSION == 32
-    , place_abbrev("")
-#endif
 {
     if (n)
         name = std::string(n);
@@ -493,9 +484,6 @@ void Note::save(writer& outf) const
     marshallInt(outf, first);
     marshallInt(outf, second);
     marshallString4(outf, name);
-#if TAG_MAJOR_VERSION == 32
-    marshallString4(outf, place_abbrev);
-#endif
     marshallString4(outf, desc);
 }
 
@@ -507,9 +495,6 @@ void Note::load(reader& inf)
     first  = unmarshallInt(inf);
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
-#if TAG_MAJOR_VERSION == 32
-    unmarshallString4(inf, place_abbrev);
-#endif
     unmarshallString4(inf, desc);
 }
 

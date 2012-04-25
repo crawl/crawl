@@ -5858,13 +5858,7 @@ void init_level_connectivity()
 
 void read_level_connectivity(reader &th)
 {
-#if TAG_MAJOR_VERSION == 32
-    int nb = 23;
-    if (th.getMinorVersion() >= TAG_MINOR_NUM_LEVEL_CONN)
-        nb = unmarshallInt(th);
-#else
     int nb = unmarshallInt(th);
-#endif
     for (int i = 0; i < nb; i++)
     {
         unsigned int depth = brdepth[i] > 0 ? brdepth[i] : 0;

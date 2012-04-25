@@ -5772,10 +5772,6 @@ actor* bolt::agent() const
 
 bool bolt::is_enchantment() const
 {
-#if TAG_MAJOR_VERSION == 32
-    if (flavour == BEAM_INNER_FLAME)
-        return (true);
-#endif
     return (flavour >= BEAM_FIRST_ENCHANTMENT
             && flavour <= BEAM_LAST_ENCHANTMENT);
 }

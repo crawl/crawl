@@ -272,12 +272,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
 // Ignores swimming, flying, and travel_avoid_terrain.
 bool feat_is_traversable(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION == 32
-    if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
-        || feat == DNGN_TRAP_WEB)
-#else
     if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
-#endif
         return false;
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
