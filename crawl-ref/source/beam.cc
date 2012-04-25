@@ -2305,7 +2305,8 @@ static void _imb_explosion(actor *agent,
             {
                 if (first)
                 {
-                    mpr("The orb of energy explodes!");
+                    if (you.see_cell(center))
+                        mpr("The orb of energy explodes!");
                     noisy(10, center);
                     first = false;
                 }
