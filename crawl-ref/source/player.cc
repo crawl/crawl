@@ -7135,7 +7135,7 @@ bool player::has_usable_offhand() const
 
 bool player::has_usable_tentacle() const
 {
-    if (species != SP_OCTOPODE)
+    if (!has_usable_tentacles())
         return (false);
 
     int free_tentacles = std::min(8, MAX_CONSTRICT);
