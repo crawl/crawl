@@ -70,5 +70,7 @@ int mons_sewer_level(monster_type mcls);
 int mons_sewer_rare(monster_type mcls);
 int mons_volcano_level(monster_type mcls);
 int mons_volcano_rare(monster_type mcls);
+int mons_icecave_level(monster_type mcls);
+int mons_icecave_rare(monster_type mcls);
 
 #endif
