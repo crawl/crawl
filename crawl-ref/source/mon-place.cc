@@ -247,6 +247,7 @@ static bool _is_spawn_scaled_area(const level_id &here)
 {
     return (is_connected_branch(here.branch)
             && !is_hell_subbranch(here.branch)
+            && here.branch != BRANCH_VESTIBULE_OF_HELL
             && here.branch != BRANCH_HALL_OF_ZOT);
 }
 
@@ -315,7 +316,7 @@ static int _fuzz_mons_level(int level)
     return (level);
 }
 
-static void _hell_spawn_random_monsters()
+static int _vestibule_spawn_rate()
 {
     // Monster generation in the Vestibule drops off quickly.
     const int taper_off_turn = 500;
@@ -327,14 +328,7 @@ static void _hell_spawn_random_monsters()
         genodds  = (genodds < 0 ? 20000 : std::min(genodds, 20000));
     }
 
-    if (x_chance_in_y(5, genodds))
-    {
-        mgen_data mg(WANDERING_MONSTER);
-        mg.proximity = (one_chance_in(10) ? PROX_NEAR_STAIRS
-                                          : PROX_AWAY_FROM_PLAYER);
-        mons_place(mg);
-        viewwindow();
-    }
+    return genodds;
 }
 
 //#define DEBUG_MON_CREATION
@@ -359,13 +353,8 @@ void spawn_random_monsters()
 #ifdef DEBUG_MON_CREATION
     mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
 #endif
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-    {
-        _hell_spawn_random_monsters();
-        return;
-    }
-
-    if (env.spawn_random_rate == 0)
+    int rate = env.spawn_random_rate;
+    if (!rate)
     {
 #ifdef DEBUG_MON_CREATION
         mpr("random monster gen turned off", MSGCH_DIAGNOSTICS);
@@ -373,11 +362,12 @@ void spawn_random_monsters()
         return;
     }
 
-    int rate = (you.char_direction == GDT_DESCENDING) ?
-        _scale_spawn_parameter(env.spawn_random_rate,
-                               6 * env.spawn_random_rate,
-                               0)
-        : (you.religion == GOD_CHEIBRIADOS) ? 16 : 8;
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+        rate = _vestibule_spawn_rate();
+
+    rate = (you.char_direction == GDT_DESCENDING) ?
+            _scale_spawn_parameter(rate, 6 * rate, 0)
+            : (you.religion == GOD_CHEIBRIADOS) ? 16 : 8;
 
     if (rate == 0)
     {
