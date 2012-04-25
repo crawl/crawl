@@ -295,7 +295,7 @@ public:
     bool can_safely_mutate() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const std::string &reason);
-    void banish(const std::string &who = "");
+    void banish(actor *agent, const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
     monster_type mons_species(bool zombie_base = false) const;

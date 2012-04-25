@@ -598,6 +598,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
+    case GOD_LUGONU:
+        likes.push_back("you banish creatures to the Abyss");
+        break;
+
     default:
         break;
     }

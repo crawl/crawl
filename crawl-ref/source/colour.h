@@ -114,11 +114,6 @@ bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
-unsigned short dos_brand(unsigned short colour,
-                         unsigned brand = CHATTR_REVERSE);
-#endif
-
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
 

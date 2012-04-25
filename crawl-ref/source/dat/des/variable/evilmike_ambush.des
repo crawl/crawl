@@ -127,14 +127,14 @@ ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_1
 TAGS:    evilmike_ambush_inner allow_dup
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: AB / {(
 SUBST:   AB = .
 SHUFFLE: yxX / "">
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
-SUBST:   > = [[}>
+SUBST:   > = }>
 MAP
  .....
 ...y...
@@ -147,14 +147,14 @@ ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_2
 TAGS:    evilmike_ambush_inner allow_dup
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: AB / {(
 SUBST:   AB = .
-SHUFFLE: yxX / """
+SHUFFLE: yxX / ""<
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
-SUBST:   > = [[}>
+SUBST:   > = }>
 MAP
  .....
 ..y.y..

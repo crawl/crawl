@@ -496,15 +496,6 @@ bool player_can_open_doors()
     return (you.form != TRAN_BAT);
 }
 
-bool player_can_handle_equipment()
-{
-    return you.form != TRAN_BAT
-        && you.form != TRAN_PIG
-        && you.form != TRAN_SPIDER
-        && you.form != TRAN_ICE_BEAST
-        && you.form != TRAN_BLADE_HANDS;
-}
-
 bool player_can_reach_floor(std::string feat, bool quiet)
 {
     if (you.flight_mode() != FL_LEVITATE)
@@ -677,11 +668,8 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_GLOVES:
-        if (player_mutation_level(MUT_CLAWS, false) == 3
-            || player_mutation_level(MUT_TENTACLES, false) == 3)
-        {
+        if (player_mutation_level(MUT_CLAWS, false) == 3)
             return (false);
-        }
         // These species cannot wear gloves.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
@@ -823,12 +811,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
-        if (eq == EQ_GLOVES
-            && (you.has_claws(false) == 3
-                || you.has_tentacles(false) == 3))
-        {
+        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
             return (false);
-        }
 
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return (false);
@@ -846,14 +830,18 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     }
 
     // No further restrictions.
-    if (you.form == TRAN_NONE || you.form == TRAN_LICH || you.form == TRAN_APPENDAGE)
+    if (you.form == TRAN_NONE
+        || you.form == TRAN_LICH
+        || you.form == TRAN_APPENDAGE)
+    {
         return (true);
+    }
 
     // Bats and pigs cannot wear anything except amulets.
     if ((you.form == TRAN_BAT || you.form == TRAN_PIG) && eq != EQ_AMULET)
         return (false);
 
-    // Everyone else can wear jewellery . . .
+    // Everyone else can wear jewellery...
     if (eq == EQ_AMULET || eq == EQ_RINGS
         || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
         || eq == EQ_RING_ONE || eq == EQ_RING_TWO)
@@ -861,7 +849,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (true);
     }
 
-    // . . . but not necessarily in all slots.
+    // ...but not necessarily in all slots.
     if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
     {
         return (you.species == SP_OCTOPODE
@@ -1699,60 +1687,31 @@ int player_res_corr(bool calc_unid, bool items)
             return 1;
     }
 
+    if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
+        && you.species == SP_YELLOW_DRACONIAN)
+    {
+        return 1;
+    }
+
+    if (form_keeps_mutations()
+        && player_mutation_level(MUT_YELLOW_SCALES) >= 3)
+    {
+        return 1;
+    }
+
     return 0;
 }
 
 int player_res_acid(bool calc_unid, bool items)
 {
-    int res = 0;
-    if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
-        && you.species == SP_YELLOW_DRACONIAN)
-    {
-        res += 2;
-    }
-
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-    {
-        if (items)
-        {
-            if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid, true))
-                res++;
-
-            if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION))
-                res++;
-        }
-    }
-
-    // mutations:
-    res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
-
-    if (res > 3)
-        res = 3;
-
-    return (res);
+    return player_res_corr(calc_unid, items);
 }
 
 // Returns a factor X such that post-resistance acid damage can be calculated
 // as pre_resist_damage * X / 100.
 int player_acid_resist_factor()
 {
-    int res = player_res_acid();
-
-    int factor = 100;
-
-    if (res == 1)
-        factor = 50;
-    else if (res == 2)
-        factor = 34;
-    else if (res > 2)
-    {
-        factor = 30;
-        while (res-- > 2 && factor >= 20)
-            factor = factor * 90 / 100;
-    }
-
-    return (factor);
+    return (player_res_acid() ? 50 : 100);
 }
 
 int player_res_electricity(bool calc_unid, bool temp, bool items)
@@ -1818,9 +1777,8 @@ int player_res_torment(bool, bool temp)
             || you.form == TRAN_LICH
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
-            || (temp &&
-                (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-                 > random2(100))));
+            || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
+                && coinflip()));
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -2263,9 +2221,7 @@ int player_movement_speed(bool ignore_burden)
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
-    {
         mv -= player_mutation_level(MUT_FAST) + 1;
-    }
 
     if (player_mutation_level(MUT_SLOW) > 0 && !you.swimming())
     {
@@ -2334,9 +2290,7 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
     const mutation_activity_type active = mutation_activity_level(mut);
 
     if (active >= minact)
-    {
         return (mlevel);
-    }
     else if (active == MUTACT_HUNGER)
     {
         switch (you.hunger_state)
@@ -2768,9 +2722,7 @@ int player_sust_abil(bool calc_unid)
 
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
-    }
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
         sa += 1;
@@ -2877,22 +2829,11 @@ int burden_change(void)
     return (you.burden);
 }
 
-void forget_map(bool force)
-{
-    forget_map(100, force);
-}
-
-// force is true for forget_map command on level map.
-void forget_map(int chance_forgotten, bool force)
+void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (force && !yesno("Really forget level map?", true, 'n'))
-        return;
-
     // Labyrinth and the Abyss use special rotting rules.
-    const bool rotting_map = (player_in_branch(BRANCH_LABYRINTH)
-                              || player_in_branch(BRANCH_ABYSS));
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
                             || player_in_branch(BRANCH_ABYSS)
@@ -2907,28 +2848,20 @@ void forget_map(int chance_forgotten, bool force)
         if (you.see_cell(p) || !env.map_knowledge(p).known())
             continue;
 
-        const int dist = distance(you.pos(), p);
-        bool doDecay = (force || chance_forgotten == 100);
-        if (!doDecay)
+        if (rot)
         {
-            if (rotting_map)
-            {
-                int chance = pow(geometric_chance,
-                                 std::max(1, (dist - radius) / 40)) * scalar;
-                doDecay = !x_chance_in_y(chance, scalar);
-            }
-            else
-                doDecay = !x_chance_in_y(chance_forgotten, 100);
+            const int dist = distance(you.pos(), p);
+            int chance = pow(geometric_chance,
+                             std::max(1, (dist - radius) / 40)) * scalar;
+            if (x_chance_in_y(chance, scalar))
+                continue;
         }
 
-        if (doDecay)
-        {
-            env.map_knowledge(p).clear();
-            StashTrack.update_stash(p);
+        env.map_knowledge(p).clear();
+        StashTrack.update_stash(p);
 #ifdef USE_TILE
-            tile_forget_map(p);
+        tile_forget_map(p);
 #endif
-        }
     }
 
     ash_detect_portals(is_map_persistent());
@@ -3022,9 +2955,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 
     if (crawl_state.game_is_sprint())
-    {
         exp_gained = sprint_modify_exp(exp_gained);
-    }
 
     you.exp_available += exp_gained;
 
@@ -3072,7 +3003,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start taking on a dull grey colour.",
+        mpr("Your scales start taking on a dull iron-grey colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
         break;
@@ -3702,7 +3633,7 @@ int check_stealth(void)
     int stealth = you.dex() * 3;
 
     int race_mod = 0;
-    if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
+    if (player_genus(GENPC_DRACONIAN))
         race_mod = 12;
     else
     {
@@ -3733,7 +3664,6 @@ int check_stealth(void)
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
-        case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
         case SP_FELID:
         case SP_OCTOPODE:
@@ -4288,9 +4218,7 @@ int player_effect_inaccuracy()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_INACCURACY);
-    }
     else
     {
         return 0;
@@ -4302,9 +4230,7 @@ int player_effect_mutagenic()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_MUTAGENIC);
-    }
     else
     {
         return 0;
@@ -4315,9 +4241,7 @@ int player_res_mutation()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_RESIST_MUTATION);
-    }
     else
     {
         return 0;
@@ -4328,9 +4252,7 @@ int player_effect_gourmand()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_THE_GOURMAND);
-    }
     else
     {
         return 0;
@@ -4341,9 +4263,7 @@ int player_effect_stasis(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_STASIS, calc_unid);
-    }
     else
     {
         return 0;
@@ -4359,9 +4279,7 @@ int player_effect_notele(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
-    }
     else
     {
         return 0;
@@ -4373,9 +4291,7 @@ int player_effect_running()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING);
-    }
     else
     {
         return 0;
@@ -4386,9 +4302,7 @@ int player_effect_cfly(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
-    }
     else
     {
         return 0;
@@ -4399,9 +4313,7 @@ int player_effect_faith()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return wearing_amulet(AMU_FAITH);
-    }
     else
     {
         return 0;
@@ -4412,9 +4324,7 @@ int player_effect_archmagi()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
-    }
     else
     {
         return 0;
@@ -4425,9 +4335,7 @@ int player_effect_nocast()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return scan_artefacts(ARTP_PREVENT_SPELLCASTING);
-    }
     else
     {
         return 0;
@@ -4887,25 +4795,6 @@ void dec_max_hp(int hp_loss)
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     you.redraw_hit_points = true;
-}
-
-void inc_max_mp(int mp_gain)
-{
-    you.magic_points += mp_gain;
-    you.mp_max_perm += mp_gain;
-    calc_mp();
-
-    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = true;
-}
-
-void dec_max_mp(int mp_loss)
-{
-    you.mp_max_perm -= mp_loss;
-    calc_mp();
-
-    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = true;
 }
 
 // Use of floor: false = hp max, true = hp min. {dlb}
@@ -5623,11 +5512,11 @@ void float_player(bool fly)
     you.check_clinging(true);
 }
 
-void levitate_player(int pow)
+void levitate_player(int pow, bool already_levitating)
 {
-    bool standing = !you.airborne();
-    mprf(MSGCH_DURATION,
-         "You feel %s buoyant.", standing ? "very" : "more");
+    bool standing = !you.airborne() && !already_levitating;
+    if (!already_levitating)
+        mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
@@ -6152,7 +6041,7 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(const std::string &who)
+void player::banish(actor *agent, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6416,7 +6305,8 @@ int player::armour_class() const
         if (player_genus(GENPC_DRACONIAN))
         {
            AC += 400 + 100 * (you.experience_level / 3);  // max 13
-
+           if (species == SP_GREY_DRACONIAN) // no breath
+               AC += 500;
            if (form == TRAN_DRAGON)
                AC += 1000;
         }
@@ -6864,6 +6754,11 @@ flight_type player::flight_mode() const
         return (FL_NONE);
 }
 
+bool player::cancellable_levitation() const
+{
+    return you.duration[DUR_LEVITATION] && !you.permanent_levitation()
+           && !you.attribute[ATTR_LEV_UNCANCELLABLE];
+}
 bool player::permanent_levitation() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
@@ -7172,7 +7067,7 @@ int player::has_tail(bool allow_tran) const
         if (form == TRAN_DRAGON)
             return (1);
 
-        // most transformations will override a tail
+        // Most transformations suppress a tail.
         if (!form_keeps_mutations())
             return (0);
     }
@@ -7219,7 +7114,7 @@ bool player::has_usable_offhand() const
 
 bool player::has_usable_tentacle() const
 {
-    if (species != SP_OCTOPODE)
+    if (!has_usable_tentacles())
         return (false);
 
     int free_tentacles = std::min(8, MAX_CONSTRICT);
@@ -7252,7 +7147,17 @@ int player::has_usable_pseudopods(bool allow_tran) const
 
 int player::has_tentacles(bool allow_tran) const
 {
-    return (player_mutation_level(MUT_TENTACLES, allow_tran));
+    if (allow_tran)
+    {
+        // Most transformations suppress tentacles.
+        if (!form_keeps_mutations())
+            return (0);
+    }
+
+    if (you.species == SP_OCTOPODE)
+        return (1);
+
+    return (0);
 }
 
 int player::has_usable_tentacles(bool allow_tran) const

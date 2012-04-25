@@ -199,7 +199,7 @@ bool yred_slaves_abandon_you()
             }
 
             mons->attitude = ATT_HOSTILE;
-            behaviour_event(mons, ME_ALERT, MHITYOU);
+            behaviour_event(mons, ME_ALERT, &you);
             // For now CREATED_FRIENDLY stays.
             mons_att_changed(mons);
 
@@ -257,7 +257,7 @@ bool beogh_followers_abandon_you()
                 }
 
                 mons->attitude = ATT_HOSTILE;
-                behaviour_event(mons, ME_ALERT, MHITYOU);
+                behaviour_event(mons, ME_ALERT, &you);
                 // For now CREATED_FRIENDLY stays.
                 mons_att_changed(mons);
 
@@ -344,7 +344,7 @@ void good_god_holy_attitude_change(monster* holy)
     holy->god = GOD_SHINING_ONE;
 
     // Avoid immobile "followers".
-    behaviour_event(holy, ME_ALERT, MHITNOT);
+    behaviour_event(holy, ME_ALERT);
 
     mons_att_changed(holy);
 }
@@ -434,7 +434,7 @@ void beogh_convert_orc(monster* orc, bool emergency,
         orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
 
     // Avoid immobile "followers".
-    behaviour_event(orc, ME_ALERT, MHITNOT);
+    behaviour_event(orc, ME_ALERT);
 
     mons_att_changed(orc);
 }

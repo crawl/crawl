@@ -520,9 +520,7 @@ static bool _yredelemnul_retribution()
     if (random2(you.experience_level) > 4)
     {
         if (you.religion == god && coinflip() && yred_slaves_abandon_you())
-        {
             ;
-        }
         else
         {
             const bool zombified = one_chance_in(4);

@@ -20,6 +20,7 @@
 #include "files.h"
 #include "food.h"
 #include "godpassive.h"
+#include "hiscores.h"
 #include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -447,6 +448,24 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_description_text("Pit computer controlled teams versus each other!");
     menu->attach_item(tmp);
     tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_HIGH_SCORES), TEX_GUI));
+#else
+    tmp = new TextItem();
+#endif
+    text = "High Scores";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_id(GAME_TYPE_HIGH_SCORES);
+    // Scroller does not care about x-coordinates and only cares about
+    // item height obtained from max.y - min.y
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("View the high score list.");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 }
 
 static void _construct_save_games_menu(MenuScroller* menu,
@@ -743,9 +762,7 @@ again:
             {
                 int i = _find_save(chars, input_string);
                 if (i == -1)
-                {
                     menu.set_active_object(game_modes);
-                }
                 else
                 {
                     menu.set_active_object(save_games);
@@ -772,6 +789,8 @@ again:
                     // it it clashes for now.
                     if (_find_save(chars, input_string) != -1)
                         input_string = "";
+                    break;
+                case GAME_TYPE_HIGH_SCORES:
                     break;
 
                 case '?':
@@ -825,6 +844,10 @@ again:
         case '?':
             list_commands();
             // restart because help messes up CRTRegion
+            goto again;
+
+        case GAME_TYPE_HIGH_SCORES:
+            show_hiscore_table();
             goto again;
 
         default:
@@ -935,9 +958,7 @@ bool startup_step()
     if (choice.filename.empty())
         choice.filename = get_save_filename(choice.name);
     if (save_exists(choice.filename) && restore_game(choice.filename))
-    {
         save_player_name();
-    }
     else if (choose_game(&ng, &choice, defaults)
              && restore_game(ng.filename))
     {

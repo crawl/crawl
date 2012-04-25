@@ -1908,9 +1908,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
     else if (mons_is_firewood(mons))
-    {
         return (true);
-    }
     else  // trying to enchant an unnatural creature doesn't work
     {
         if (simple_monster_message(mons, " is unaffected."))
@@ -1968,7 +1966,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
-                behaviour_event(*mi, ME_SCARE, MHITYOU);
+                behaviour_event(*mi, ME_SCARE, &you);
         }
     }
 
@@ -2085,7 +2083,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
-        behaviour_event(mons, ME_ANNOY, who ? who->mindex() : MHITNOT);
+        behaviour_event(mons, ME_ANNOY, who);
     }
 
     // Finally, take care of deity preferences.
@@ -2153,7 +2151,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels,
         if (verbose)
             simple_monster_message(mons, " is covered in liquid flames!");
         ASSERT(who);
-        behaviour_event(mons, ME_WHACK, who->mindex());
+        behaviour_event(mons, ME_WHACK, who);
     }
 
     return (new_flame.degree > old_flame.degree);
@@ -2256,12 +2254,13 @@ static void _create_feat_splash(coord_def center,
 }
 
 static void _imb_explosion(actor *agent,
+                           std::vector<coord_def> *prior_path,
                            coord_def origin,
                            coord_def center,
                            dice_def dam)
 {
-    const int dist = grid_distance(center, origin);
-    if (dist == 0 || !x_chance_in_y(3, 2 + 2 * dist))
+    const int dist = prior_path->size();
+    if (origin == center || !x_chance_in_y(3, 2 + 2 * dist))
         return;
     bolt beam;
     beam.name           = "mystic blast";
@@ -2291,8 +2290,13 @@ static void _imb_explosion(actor *agent,
         {
             if (x == 0 && y == 0)
                 continue;
-            // Don't hit the caster (the explosion doesn't reach back that far).
-            if (origin == center + coord_def(x, y) || origin == center + coord_def(2 * x, 2 * y))
+            // Don't go back along the path of the beam (the explosion doesn't
+            // reverse direction). We do this to avoid hitting the caster and
+            // also because we don't want aiming one
+            // square past a lone monster to be optimal.
+            if (origin == center + coord_def(x, y))
+                continue;
+            if (dist > 1 && (*prior_path)[dist - 2] == center + coord_def(x, y))
                 continue;
             // Don't go far away from the caster (not enough momentum).
             if (distance(origin, center + coord_def(2 * x, 2 * y)) > LOS_RADIUS_SQ)
@@ -2301,7 +2305,8 @@ static void _imb_explosion(actor *agent,
             {
                 if (first)
                 {
-                    mpr("The orb of energy explodes!");
+                    if (you.see_cell(center))
+                        mpr("The orb of energy explodes!");
                     noisy(10, center);
                     first = false;
                 }
@@ -2467,7 +2472,7 @@ void bolt::affect_endpoint()
     }
 
     if (name == "orb of energy")
-        _imb_explosion(agent(), source, pos(), damage);
+        _imb_explosion(agent(), &path_taken, source, pos(), damage);
 }
 
 bool bolt::stop_at_target() const
@@ -2890,13 +2895,12 @@ bool bolt::fuzz_invis_tracer()
     if (dist > 2)
         return (false);
 
-    const int beam_src = beam_source_as_target();
-    if (beam_src != MHITNOT && beam_src != MHITYOU)
+    const actor *beam_src = beam_source_as_target();
+    if (beam_src && beam_src->is_monster()
+        && mons_sense_invis(beam_src->as_monster()))
     {
         // Monsters that can sense invisible
-        const monster* mon = &menv[beam_src];
-        if (mons_sense_invis(mon))
-            return (dist == 0);
+        return (dist == 0);
     }
 
     // Apply fuzz now.
@@ -2941,13 +2945,13 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
 
 std::string bolt::zapper() const
 {
-    const int beam_src = beam_source_as_target();
-    if (beam_src == MHITYOU)
-        return ("self");
-    else if (beam_src == MHITNOT)
-        return ("");
+    const actor* beam_src = beam_source_as_target();
+    if (!beam_src)
+        return "";
+    else if (beam_src->is_player())
+        return "self";
     else
-        return menv[beam_src].name(DESC_PLAIN);
+        return beam_src->name(DESC_PLAIN);
 }
 
 bool bolt::is_harmless(const monster* mon) const
@@ -3770,12 +3774,18 @@ void bolt::affect_player()
         beam_hits_actor(&you);
 }
 
-int bolt::beam_source_as_target() const
+const actor* bolt::beam_source_as_target() const
 {
-    return (MON_KILL(thrower)       ? beam_source :
-            thrower == KILL_MISCAST ? beam_source :
-            thrower == KILL_MISC    ? MHITNOT
-                                    : MHITYOU);
+    // This looks totally wrong. Preserving old behaviour for now, but it
+    // probably needs to be investigated and rewritten (like most of beam
+    // blaming). -- 1KB
+    if (MON_KILL(thrower) || thrower == KILL_MISCAST)
+    {
+        if (beam_source == MHITYOU)
+            return &you;
+        return invalid_monster_index(beam_source) ? 0 : &menv[beam_source];
+    }
+    return (thrower == KILL_MISC) ? 0 : &you;
 }
 
 void bolt::update_hurt_or_helped(monster* mon)
@@ -4369,7 +4379,7 @@ void bolt::affect_monster(monster* mon)
     // Visual - wake monsters.
     if (flavour == BEAM_VISUAL)
     {
-        behaviour_event(mon, ME_DISTURB, beam_source, source);
+        behaviour_event(mon, ME_DISTURB, agent(), source);
         apply_hit_funcs(mon, 0);
         return;
     }
@@ -4613,14 +4623,14 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, /*beam_source_as_target()*/beam_source);
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, /*beam_source_as_target()*/beam_source);
         }
     }
 
@@ -4809,7 +4819,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (player_in_branch(BRANCH_ABYSS))
             simple_monster_message(mon, " wobbles for a moment.");
         else
-            mon->banish();
+            mon->banish(agent());
         obvious_effect = true;
         return (MON_AFFECTED);
 
@@ -5732,9 +5742,7 @@ void bolt::set_agent(actor *actor)
         return;
 
     if (actor->is_player())
-    {
         thrower = KILL_YOU_MISSILE;
-    }
     else
     {
         thrower = KILL_MON_MISSILE;

@@ -46,7 +46,6 @@ coord_def get_cloud_originator(const coord_def& pos);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
-bool in_what_cloud (cloud_type type);
-cloud_type in_what_cloud();
+bool in_what_cloud(cloud_type type);
 
 #endif

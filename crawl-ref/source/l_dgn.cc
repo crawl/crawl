@@ -74,9 +74,7 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
 static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
 {
     if (lua_gettop(ls) < s)
-    {
         PLUARET(string, dr.describe().c_str());
-    }
 
     if (lua_isnil(ls, s))
     {
@@ -324,9 +322,7 @@ int dgn_map_add_transform(lua_State *ls,
     for (int i = 2, size = lua_gettop(ls); i <= size; ++i)
     {
         if (lua_isnil(ls, i))
-        {
             luaL_error(ls, "Unexpected nil.");
-        }
         else
         {
             std::string err = (map->map.*add)(luaL_checkstring(ls, i));
@@ -726,9 +722,7 @@ static int dgn_lfloorcol(lua_State *ls)
             std::string error;
 
             if (colour == BLACK)
-            {
                 error = "Can't set floor to black.";
-            }
             else
             {
                 error = "No such colour as '";
@@ -759,9 +753,7 @@ static int dgn_lrockcol(lua_State *ls)
             std::string error;
 
             if (colour == BLACK)
-            {
                 error = "Can't set rock to black.";
-            }
             else
             {
                 error = "No such colour as '";

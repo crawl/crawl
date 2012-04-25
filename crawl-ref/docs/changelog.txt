@@ -1,3 +1,17 @@
+Stone Soup 0.10.2 (20120411)
+----------------------------
+* A bunch of crash fixes.
+* A number of description updates, to match 0.10 changes.
+* Allies cannot smite enemies through glass anymore.
+* Reaching cannot be used while caught in a net/web.
+* Fix a number of oddities with the shopping list.
+* Fix multiple compiles often repeating work -- especially jarring for
+  "make; make install".
+* Unknown items in shop use a neutral tile colour, fixing an information
+  leak (you can't learn the appearances this way anymore).
+* Fix allies not using IOOD at all.
+* A lot of other minor fixes.
+
 Stone Soup 0.10.1 (20120315)
 ----------------------------
 * Fix "non tried" question mark in tiles being sometimes missing.

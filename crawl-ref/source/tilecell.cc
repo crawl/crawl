@@ -53,9 +53,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)
-    {
         if (dngn_overlay[i] != other.dngn_overlay[i]) return false;
-    }
     return true;
 }
 
@@ -363,9 +361,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
         return; // Don't put overlays on unseen tiles
 
     if (player_in_branch(BRANCH_SHOALS))
-    {
         _pack_shoal_waves(gc, cell);
-    }
     else
     {
         _pack_default_waves(gc, cell);

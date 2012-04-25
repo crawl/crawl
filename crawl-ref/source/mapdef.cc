@@ -1319,9 +1319,7 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
 
             // Merge overlays
             if (vlines.overlay.get())
-            {
                 (*overlay)(x, y) = (*vlines.overlay)(vx, vy);
-            }
             else
             {
                 // Erase any existing overlay, as the vault's doesn't exist.
@@ -5508,9 +5506,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
     if (parts.size() > 2)
-    {
         err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
-    }
 
     item_list items;
     if (parts.size() == 2)
@@ -5632,14 +5628,6 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         return (err);
     }
 
-    // If not also a KFEAT...
-    if (feat.feats.empty())
-    {
-        feature_spec fsp(-1, 10);
-        fsp.glyph = key_glyph;
-        feat.feats.push_back(fsp);
-    }
-
     return (err);
 }
 
@@ -5676,6 +5664,11 @@ item_list &keyed_mapspec::get_items()
 map_flags &keyed_mapspec::get_mask()
 {
     return (map_mask);
+}
+
+bool keyed_mapspec::replaces_glyph()
+{
+    return !(mons.empty() && item.empty() && feat.feats.empty());
 }
 
 //////////////////////////////////////////////////////////////////////////

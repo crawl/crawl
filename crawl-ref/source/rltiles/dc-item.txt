@@ -613,7 +613,7 @@ i-fear SCR_FEAR
 i-noise SCR_NOISE
 i-remove_curse SCR_REMOVE_CURSE
 i-detect_curse SCR_DETECT_CURSE
-i-summoning SCR_SUMMONING
+i-unholy_creation SCR_UNHOLY_CREATION
 i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
 i-enchant_armour SCR_ENCHANT_ARMOUR
 i-torment SCR_TORMENT

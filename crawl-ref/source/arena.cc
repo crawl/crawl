@@ -608,7 +608,7 @@ namespace arena
     void fixup_foes()
     {
         for (monster_iterator mons; mons; ++mons)
-            behaviour_event(*mons, ME_DISTURB, MHITNOT, mons->pos());
+            behaviour_event(*mons, ME_DISTURB, 0, mons->pos());
     }
 
     void dump_messages()

@@ -559,7 +559,6 @@ int mons_standard_level(monster_type mcls)
     case MONS_NAGA_WARRIOR:
     case MONS_NECROMANCER:
     case MONS_ORC_KNIGHT:
-    case MONS_QUEEN_BEE:
     case MONS_RED_WASP:
     case MONS_SHADOW_WRAITH:
     case MONS_SPINY_WORM:
@@ -626,21 +625,6 @@ int mons_standard_level(monster_type mcls)
     case MONS_TITAN:
         return 31;
 
-    case MONS_DEEP_ELF_BLADEMASTER:
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-        return 34;
-
-    case MONS_BIG_FISH:
-    case MONS_ELECTRIC_EEL:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_JELLYFISH:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_LAVA_WORM:
-    case MONS_SWAMP_WORM:
-    case MONS_WATER_ELEMENTAL:
-        return 500;
-
     default:
         return 999;
     }
@@ -650,18 +634,6 @@ int mons_standard_rare(monster_type mcls)
 {
     switch (mcls)
     {
-    case MONS_BIG_FISH:
-    case MONS_ELECTRIC_EEL:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_JELLYFISH:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_LAVA_WORM:
-    case MONS_SWAMP_WORM:
-    case MONS_WATER_ELEMENTAL:
-    case MONS_SALAMANDER:
-        return 500;
-
     case MONS_BAT:
     case MONS_GIANT_FROG:
     case MONS_GOBLIN:
@@ -672,7 +644,6 @@ int mons_standard_rare(monster_type mcls)
     case MONS_SKELETON_LARGE:
     case MONS_ORC:
     case MONS_RAT:
-    case MONS_RED_DEVIL:
     case MONS_SKELETON_SMALL:
     case MONS_UGLY_THING:
     case MONS_ZOMBIE_LARGE:
@@ -684,18 +655,11 @@ int mons_standard_rare(monster_type mcls)
     case MONS_ADDER:
         return 80;
 
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
-    case MONS_FLYING_SKULL:
     case MONS_SLIME_CREATURE:
         return 75;
 
-    case MONS_HELL_HOUND:
-        return 71;
-
     case MONS_CENTAUR:
     case MONS_CYCLOPS:
-    case MONS_HELLION:
     case MONS_HOUND:
     case MONS_OGRE:
     case MONS_ORC_WARRIOR:
@@ -706,7 +670,6 @@ int mons_standard_rare(monster_type mcls)
 
     case MONS_JELLY:
     case MONS_ORC_KNIGHT:
-    case MONS_ROTTING_DEVIL:
         return 60;
 
     case MONS_SHAPESHIFTER:
@@ -730,7 +693,6 @@ int mons_standard_rare(monster_type mcls)
     case MONS_ORC_WIZARD:
     case MONS_QUOKKA:
     case MONS_SCORPION:
-    case MONS_TORMENTOR:
     case MONS_UNSEEN_HORROR:
     case MONS_WORM:
         return 50;
@@ -753,7 +715,6 @@ int mons_standard_rare(monster_type mcls)
     case MONS_JACKAL:
     case MONS_MOTTLED_DRAGON:
     case MONS_PHANTOM:
-    case MONS_REAPER:
     case MONS_TWO_HEADED_OGRE:
     case MONS_WIGHT:
     case MONS_WRAITH:
@@ -785,7 +746,6 @@ int mons_standard_rare(monster_type mcls)
     case MONS_WATER_MOCCASIN:
     case MONS_DRAGON:
     case MONS_ETTIN:
-    case MONS_FIRE_VORTEX:
     case MONS_CROCODILE:
     case MONS_GIANT_MITE:
     case MONS_GNOLL:
@@ -795,7 +755,6 @@ int mons_standard_rare(monster_type mcls)
     case MONS_QUASIT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_BALL_PYTHON:
-    case MONS_SOUL_EATER:
     case MONS_SPINY_WORM:
     case MONS_VAMPIRE:
     case MONS_YELLOW_WASP:
@@ -1386,7 +1345,6 @@ int mons_swamp_level(monster_type mcls)
     case MONS_RAT:
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
-    case MONS_SWAMP_WORM:
     case MONS_GIANT_LEECH:
     case MONS_ALLIGATOR:
         return 2;
@@ -1494,7 +1452,6 @@ int mons_swamp_rare(monster_type mcls)
     case MONS_NECROPHAGE:
         return 12;
 
-    case MONS_SIREN:
     case MONS_BLINK_FROG:
     case MONS_GIANT_AMOEBA:
     case MONS_GIANT_GECKO:
@@ -1781,9 +1738,6 @@ int mons_pitslime_level(monster_type mcls)
     case MONS_GIANT_ORANGE_BRAIN:
         return 6;
 
-    case MONS_ROYAL_JELLY:
-        return 7;
-
     default:
         return 999;
     }
@@ -1867,8 +1821,8 @@ int mons_hive_rare(monster_type mcls)
 int mons_vaults_level(monster_type mcls)
 {
     return mons_standard_level(mcls)
-         + absdungeon_depth(BRANCH_VAULTS, 1)
-         - absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
+         - absdungeon_depth(BRANCH_VAULTS, 1)
+         + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
 }
 
 int mons_vaults_rare(monster_type mcls)
@@ -1939,7 +1893,6 @@ int mons_crypt_level(monster_type mcls)
     case MONS_REAPER:
     case MONS_ANCIENT_LICH:
     case MONS_LICH:
-    case MONS_CURSE_SKULL:
         return 6;
 
     default:
@@ -2096,11 +2049,10 @@ int mons_tomb_rare(monster_type mcls)
         return 4;
 
     case MONS_ANCIENT_LICH:
-        return 2;
-
+    case MONS_GREATER_MUMMY:
     // A nod to the fabled pyramid traps, these should be really rare.
     case MONS_TRAPDOOR_SPIDER:
-        return 1;
+        return 2;
 
     default:
         return 0;
@@ -2175,7 +2127,6 @@ int mons_hallzot_level(monster_type mcls)
     case MONS_SHADOW_DRAGON:
     case MONS_STORM_DRAGON:
     case MONS_CURSE_TOE:
-    case MONS_ORB_GUARDIAN:
     case MONS_GHOST_MOTH:
         return 5;
     case MONS_DEATH_COB:
@@ -2350,7 +2301,6 @@ int mons_dis_level(monster_type mcls)
 
     case MONS_FLAYED_GHOST:
     case MONS_FREEZING_WRAITH:
-    case MONS_DEATH_DRAKE:
     case MONS_IRON_DEVIL:
     case MONS_IRON_IMP:
     case MONS_VAMPIRE:
@@ -2361,7 +2311,6 @@ int mons_dis_level(monster_type mcls)
     case MONS_DANCING_WEAPON:
     case MONS_FLAMING_CORPSE:
     case MONS_ICE_DEVIL:
-    case MONS_ICE_DRAGON:
     case MONS_LICH:
     case MONS_PHANTASMAL_WARRIOR:
     case MONS_REAPER:
@@ -2383,7 +2332,6 @@ int mons_dis_rare(monster_type mcls)
 {
     switch (mcls)
     {
-    case MONS_CRIMSON_IMP:
     case MONS_IRON_DEVIL:
     case MONS_IRON_IMP:
     case MONS_ZOMBIE_LARGE:
@@ -2451,9 +2399,10 @@ int mons_dis_rare(monster_type mcls)
     case MONS_ROTTING_DEVIL:
     case MONS_SOUL_EATER:
     case MONS_STONE_GOLEM:
+    case MONS_IRON_DRAGON:
         return 10;
 
-    case MONS_IRON_DRAGON:
+    case MONS_CRIMSON_IMP:
         return 5;
 
     case MONS_ANCIENT_LICH:
@@ -2497,6 +2446,7 @@ int mons_gehenna_level(monster_type mcls)
     case MONS_HELL_KNIGHT:
     case MONS_VAMPIRE:
     case MONS_WRAITH:
+    case MONS_IRON_DEVIL:
         return 3;
 
     case MONS_EFREET:
@@ -2573,7 +2523,6 @@ int mons_gehenna_rare(monster_type mcls)
 
     case MONS_HELL_HOG:
     case MONS_CRIMSON_IMP:
-    case MONS_IRON_DEVIL:
     case MONS_BALRUG:
         return 30;
 
@@ -2584,6 +2533,7 @@ int mons_gehenna_rare(monster_type mcls)
         return 21;
 
     case MONS_PHANTASMAL_WARRIOR:
+    case MONS_IRON_DEVIL:
         return 20;
 
     case MONS_BONE_DRAGON:
@@ -2761,6 +2711,7 @@ int mons_tartarus_level(monster_type mcls)
     case MONS_WIGHT:
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
+    case MONS_DEATH_DRAKE:
         return 1;
 
     case MONS_FREEZING_WRAITH:

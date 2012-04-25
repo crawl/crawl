@@ -241,7 +241,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     case POT_POISON:
     case POT_STRONG_POISON:
-        if (player_res_poison())
+        if (player_res_poison() > 0)
         {
             mprf("You feel %s nauseous.",
                  (pot_eff == POT_POISON) ? "slightly" : "quite");

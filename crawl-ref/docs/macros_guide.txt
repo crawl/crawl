@@ -36,7 +36,7 @@ can vary between different systems.
 By default, most upper- and lowercase alphanumeric keys are already
 assigned functions in Crawl. While you are free to remap those keys as
 well, it might be best to start with some of the currently unused keys,
-such as Tab or the function keys (F1 to F12), possibly combined with
+such as Ins or the function keys (F1 to F12), possibly combined with
 Ctrl, Shift or both. On some systems, it may also be possible to
 incorporate the Alt (Meta) key.
 

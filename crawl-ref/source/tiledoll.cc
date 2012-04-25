@@ -47,9 +47,7 @@ dolls_data::~dolls_data()
 bool dolls_data::operator==(const dolls_data& other) const
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-    {
         if (parts[i] != other.parts[i]) return false;
-    }
     return true;
 }
 
@@ -280,18 +278,9 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
-        {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
-        }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_TENTACLE;
-        }
         else if (item == -1)
-        {
             result.parts[TILEP_PART_HAND1] = 0;
-        }
         else
         {
             result.parts[TILEP_PART_HAND1] = tilep_equ_weapon(you.inv[item]);
@@ -302,18 +291,9 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.equip[EQ_SHIELD];
         if (you.form == TRAN_BLADE_HANDS)
-        {
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
-        }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_TENTACLE;
-        }
         else if (item == -1)
-        {
             result.parts[TILEP_PART_HAND2] = 0;
-        }
         else
         {
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
@@ -342,9 +322,7 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.equip[EQ_HELMET];
         if (item != -1)
-        {
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
-        }
         else if (player_mutation_level(MUT_HORNS) > 0)
         {
             switch (player_mutation_level(MUT_HORNS))

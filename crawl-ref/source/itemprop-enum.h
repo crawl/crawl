@@ -310,7 +310,7 @@ enum scroll_type
     SCR_NOISE,
     SCR_REMOVE_CURSE,
     SCR_DETECT_CURSE,
-    SCR_SUMMONING,
+    SCR_UNHOLY_CREATION,
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
@@ -605,7 +605,6 @@ enum zap_count_type
     ZAPCOUNT_EMPTY       = -1,
     ZAPCOUNT_UNKNOWN     = -2,
     ZAPCOUNT_RECHARGED   = -3,
-    ZAPCOUNT_MAX_CHARGED = -4,
 };
 
 enum food_type

@@ -44,7 +44,7 @@ local function test_findray()
     ray:advance()
     rx, ry = ray:pos()
     ray_p = dgn.point(rx, ry)
-    while(ray_p ~= p) do
+    while (ray_p ~= p) do
       if feat.is_opaque(rx, ry) then
         dgn.fprop_changed(x, y, "highlight")
         debug.dump_map(FAILMAP)

@@ -305,7 +305,13 @@ The safety of the most sacred Orb of Zot relies on you.
 %%%%
 hell_effect
 
-Brimstone rains from above.
+{{
+if you.can_smell() then
+    return "You smell brimstone."
+else
+    return "Brimstone rains from above."
+end
+}}
 
 You feel lost and a long, long way from home...
 
@@ -340,4 +346,72 @@ SOUND:A gut-wrenching scream fills the air!
 SOUND:You hear words spoken in a strange and terrible language...
 
 SOUND:You hear diabolical laughter!
+%%%%
+eating_cheese
+
+Mmm...@_cheese_kind_@.
+%%%%
+_cheese_kind_
+
+Cheddar
+
+Edam
+
+Wensleydale
+
+Camembert
+
+Goat cheese
+
+Fruit cheese
+
+Mozzarella
+
+Sheep cheese
+
+Yak cheese
+%%%%
+eating_pizza
+
+@_carni_mmm_@ Ham and pineapple.
+
+@_carni_mmm_@ Super Supreme.
+
+# Apparently, in some locales "pepperoni" is a word for sausage rather than
+# a type of bell peppers like in Europe.
+@_carni_mmm_@ Pepperoni.
+
+Yeuchh! Anchovies.
+
+@_carni_mmm_@ Chicken.
+
+Mmm... That's the fabled Pandemonium Pizza!
+
+Mmm... Cheesy.
+
+@_herbi_mmm_@ Vegetable.
+
+@_herbi_mmm_@ Peppers.
+
+@_herbi_mmm_@ Mushroom.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivorous") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivorous") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
 %%%%

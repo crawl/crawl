@@ -1504,9 +1504,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 50;
         }
         else if (item_type_known(item) && get_equip_desc(item) != 0)
-        {
             valued += 20;
-        }
 
         if (item_known_cursed(item))
         {
@@ -1726,7 +1724,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 200;
                 break;
 
-            case SCR_SUMMONING:
+            case SCR_UNHOLY_CREATION:
                 valued += 95;
                 break;
 
@@ -2204,9 +2202,7 @@ std::string shop_name(const coord_def& where)
     std::string sh_name = "";
 
     if (!cshop->shop_name.empty())
-    {
         sh_name += apostrophise(cshop->shop_name) + " ";
-    }
     else
     {
         uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
@@ -2222,9 +2218,7 @@ std::string shop_name(const coord_def& where)
         sh_name += shop_type_name(type);
 
     if (!cshop->shop_suffix_name.empty())
-    {
         sh_name += " " + cshop->shop_suffix_name;
-    }
     else
     {
         std::string sh_suffix = _shop_type_suffix(type, where);

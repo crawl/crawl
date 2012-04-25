@@ -142,9 +142,7 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
-    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
-    }
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",

@@ -326,7 +326,7 @@ void tornado_damage(actor *caster, int dur)
                             else
                                 mon->add_ench(ench);
                         }
-                        behaviour_event(mon, ME_ANNOY, caster->mindex());
+                        behaviour_event(mon, ME_ANNOY, caster);
                     }
                     else if (!leda)
                     {

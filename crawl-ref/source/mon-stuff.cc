@@ -310,9 +310,7 @@ monster_type fill_out_corpse(const monster* mons,
     if (corpse.colour == BLACK)
     {
         if (mons)
-        {
             corpse.colour = mons->colour;
-        }
         else
         {
             // [ds] Ick: no easy way to get a monster's colour
@@ -1287,9 +1285,7 @@ void mons_relocated(monster* mons)
         int base_id = mons->mindex();
 
         if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-        {
             base_id = mons->number;
-        }
 
         for (monster_iterator connect; connect; ++connect)
         {
@@ -2263,15 +2259,17 @@ int monster_die(monster* mons, killer_type killer,
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
                 if (!mons->is_summoned())
-                {
                     drop_items = false;
-                }
                 break;
             }
 
             // Monster goes to the Abyss.
             mons->flags |= MF_BANISHED;
-            mons->set_transit(level_id(BRANCH_ABYSS));
+            {
+                unwind_var<int> dt(mons->damage_total, 0);
+                unwind_var<int> df(mons->damage_friendly, 0);
+                mons->set_transit(level_id(BRANCH_ABYSS));
+            }
             set_unique_annotation(mons, BRANCH_ABYSS);
             in_transit = true;
             drop_items = false;
@@ -2337,9 +2335,7 @@ int monster_die(monster* mons, killer_type killer,
         you.uniq_map_names.erase("uniq_boris");
     }
     if (mons->type == MONS_JORY && !in_transit)
-    {
         blood_spray(mons->pos(), MONS_JORY, 50);
-    }
     else if (mons_is_kirke(mons)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))
@@ -2353,9 +2349,7 @@ int monster_die(monster* mons, killer_type killer,
         pikel_band_neutralise();
     }
     else if (mons->is_named() && created_friendly)
-    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
-    }
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(mons) && !in_transit)
@@ -2397,9 +2391,7 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
     else if (mons_is_elven_twin(mons) && mons_near(mons))
-    {
         elven_twin_died(mons, in_transit, killer, killer_index);
-    }
     else if (mons_is_shedu(mons))
     {
         if (was_banished) // Don't try resurrecting them.
@@ -2453,7 +2445,7 @@ int monster_die(monster* mons, killer_type killer,
          || killer == KILL_YOU_MISSILE
          || killer == KILL_YOU_CONF
          || pet_kill)
-             && corpse > 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
+             && corpse >= 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
@@ -2608,7 +2600,7 @@ void alert_nearby_monsters(void)
     // calling noisy() before calling this function. - bwr
     for (monster_iterator mi(you.get_los()); mi; ++mi)
         if (!mi->asleep())
-             behaviour_event(*mi, ME_ALERT, MHITYOU);
+             behaviour_event(*mi, ME_ALERT, &you);
 }
 
 static bool _valid_morph(monster* mons, monster_type new_mclass)
@@ -2747,7 +2739,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
     {
-        if ((flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        if (flags & MF_NAME_MASK)
         {
             // Remove the replacement name from the new monster
             flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR

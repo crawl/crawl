@@ -629,6 +629,12 @@ bool mons_is_native_in_branch(const monster* mons,
                 || mons->type == MONS_KILLER_BEE
                 || mons->type == MONS_QUEEN_BEE);
 
+    case BRANCH_SPIDER_NEST:
+        return (mons_genus(mons->type) == MONS_SPIDER);
+
+    case BRANCH_FOREST:
+        return (mons_genus(mons->type) == MONS_SPRIGGAN);
+
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
 
@@ -750,19 +756,12 @@ bool mons_is_mimic(monster_type mc)
 
 bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc == MONS_ITEM_MIMIC);
+    return (mc == MONS_ITEM_MIMIC || mc == MONS_INEPT_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc == MONS_FEATURE_MIMIC);
-}
-
-static bool _mons_is_weapon_mimic(const monster* mon)
-{
-    return (mons_is_item_mimic(mon->type)
-            && get_mimic_item(mon)
-            && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
+    return (mc == MONS_FEATURE_MIMIC || mc == MONS_INEPT_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -834,6 +833,14 @@ void discover_mimic(const coord_def& pos, bool wake)
     if (wake)
         mg.flags |= MG_DONT_COME;
 
+    // HD is scaled with depth
+    const int level = env.absdepth0 + 1;
+    mg.hd = stepdown_value(level, 12, 12, 24, 36);
+
+    // Early levels get inept mimics instead
+    if (!x_chance_in_y(level - 6, 6))
+        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
+
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))
@@ -867,15 +874,12 @@ void discover_mimic(const coord_def& pos, bool wake)
     if (!mimic->move_to_pos(pos))
         die("Moving mimic into position failed.");
 
-    if (item && item->base_type == OBJ_ARMOUR)
-        mimic->ac += 10;
-
     if (wake)
-        behaviour_event(mimic, ME_ALERT, MHITYOU);
+        behaviour_event(mimic, ME_ALERT, &you);
 
     // Friendly monsters don't appreciate being pushed away.
     if (act && !act->is_player() && act->as_monster()->friendly())
-        behaviour_event(act->as_monster(), ME_WHACK, mimic->mindex());
+        behaviour_event(act->as_monster(), ME_WHACK, mimic);
 
     // Announce the mimic.
     if (mons_near(mimic))
@@ -1451,8 +1455,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
 
-    if (_mons_is_weapon_mimic(mon))
-        attk.damage += 5;
+    if (mons_is_mimic(mon->type))
+        attk.damage += mon->hit_dice;
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
@@ -2449,9 +2453,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     mon->mname = _get_proper_monster_name(mon);
 
     if (mon->friendly())
-    {
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
-    }
 
     return (mon->is_named());
 }
@@ -2740,7 +2742,7 @@ void mons_start_fleeing_from_sanctuary(monster* mons)
 {
     mons->flags |= MF_FLEEING_FROM_SANCTUARY;
     mons->target = env.sanctuary_pos;
-    behaviour_event(mons, ME_SCARE, MHITNOT, env.sanctuary_pos);
+    behaviour_event(mons, ME_SCARE, 0, env.sanctuary_pos);
 }
 
 void mons_stop_fleeing_from_sanctuary(monster* mons)
@@ -2748,7 +2750,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
     const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
     mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
-        behaviour_event(mons, ME_EVAL, MHITYOU);
+        behaviour_event(mons, ME_EVAL, &you);
 }
 
 void mons_pacify(monster* mon, mon_attitude_type att)

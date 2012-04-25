@@ -574,9 +574,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(m))
-        {
             mb.set(MB_FLEEING);
-        }
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
             if (mons_is_stationary(m))
@@ -953,21 +951,24 @@ const item_def* monster_info::get_mimic_item() const
 std::string monster_info::mimic_name() const
 {
     std::string s;
+    if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
+        s = "inept ";
+
     if (props.exists("feat_type"))
-        s = feat_type_name(get_mimic_feature());
+        s += feat_type_name(get_mimic_feature());
     else if (item_def* item = inv[MSLOT_MISCELLANY].get())
     {
         if (item->base_type == OBJ_GOLD)
-            s = "pile of gold";
+            s += "pile of gold";
         else if (item->base_type == OBJ_MISCELLANY
                  && item->sub_type == MISC_RUNE_OF_ZOT)
         {
-            s = "rune";
+            s += "rune";
         }
         else if (item->base_type == OBJ_ORBS)
-            s = "orb";
+            s += "orb";
         else
-            s = item->name(DESC_BASENAME);
+            s += item->name(DESC_BASENAME);
     }
 
     if (!s.empty())
@@ -1174,19 +1175,13 @@ std::string monster_info::pluralised_name(bool fullname) const
     // arena.  This prevens "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
-    {
         return common_name();
-    }
     // Specialcase mimics, so they don't get described as piles of gold
     // when that would be inappropriate. (HACK)
     else if (mons_is_mimic(type))
-    {
         return "mimics";
-    }
     else if (mons_genus(type) == MONS_DRACONIAN)
-    {
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    }
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
              || !fullname)
@@ -1496,8 +1491,10 @@ size_type monster_info::body_size() const
             ret = SIZE_TINY;
         else if (mass < 100)
             ret = SIZE_LITTLE;
-        else
+        else if (mass < 200)
             ret = SIZE_SMALL;
+        else
+            ret = SIZE_MEDIUM;
     }
 
     return (ret);

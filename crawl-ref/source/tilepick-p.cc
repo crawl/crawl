@@ -388,7 +388,23 @@ tileidx_t tileidx_player()
             }
             break;
         }
-        case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
+        case TRAN_DRAGON:
+        {
+            switch (you.species)
+            {
+            case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
+            case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
+            case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
+            case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
+            case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
+            case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
+            case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
+            case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
+            case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+            default:                   ch = TILEP_TRAN_DRAGON;         break;
+            }
+            break;
+        }
         case TRAN_LICH:
         {
             switch (you.species)
@@ -952,13 +968,11 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
 }
 
 // Parts index to string
-void tilep_part_to_str(int number, char *buf)
+static void _tilep_part_to_str(int number, char *buf)
 {
     //special
     if (number == TILEP_SHOW_EQUIP)
-    {
         buf[0] = buf[1] = buf[2] = '*';
-    }
     else
     {
         //normal 2 digits
@@ -970,7 +984,7 @@ void tilep_part_to_str(int number, char *buf)
 }
 
 // Parts string to index
-int tilep_str_to_part(char *str)
+static int _tilep_str_to_part(char *str)
 {
     //special
     if (str[0] == '*')
@@ -1026,7 +1040,7 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
         ibuf[ccount] = '\0';
         gcount++;
 
-        const tileidx_t idx = tilep_str_to_part(ibuf);
+        const tileidx_t idx = _tilep_str_to_part(ibuf);
         if (idx == TILEP_SHOW_EQUIP)
             doll.parts[p] = TILEP_SHOW_EQUIP;
         else if (p == TILEP_PART_BASE)
@@ -1076,7 +1090,7 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
                     idx = 0;
             }
         }
-        tilep_part_to_str(idx, ptr);
+        _tilep_part_to_str(idx, ptr);
 
         ptr += 3;
 

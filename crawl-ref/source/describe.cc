@@ -366,6 +366,12 @@ void trim_randart_inscrip(item_def& item)
     trim_string(item.inscription);
 }
 
+void trim_god_gift_inscrip(item_def& item)
+{
+    item.inscription = replace_all(item.inscription, "god gift, ", "");
+    item.inscription = replace_all(item.inscription, "god gift", "");
+}
+
 std::string artefact_auto_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
@@ -1716,9 +1722,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
     bool ret = false;
 
     if (is_known_artefact(item))
-    {
         ret = item_ident(item, ISFLAG_KNOW_PROPERTIES);
-    }
     else if (verbose && item.base_type == OBJ_ARMOUR
              && item_type_known(item))
     {

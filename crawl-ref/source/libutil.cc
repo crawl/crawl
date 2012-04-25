@@ -330,9 +330,7 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     std::string::size_type pos = s.find(tagprefix);
 
     while (pos && pos != std::string::npos && !isspace(s[pos - 1]))
-    {
         pos = s.find(tagprefix, pos + 1);
-    }
 
     if (pos == std::string::npos)
         return ("");
@@ -438,21 +436,13 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 2) + "ices";
     }
     else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
-    {
         return name + "es";
-    }
     else if (ends_with(name, "cyclops"))
-    {
         return name.substr(0, name.length() - 1) + "es";
-    }
     else if (name == "catoblepas")
-    {
         return "catoblepae";
-    }
     else if (ends_with(name, "s"))
-    {
         return name;
-    }
     else if (ends_with(name, "y"))
     {
         if (name == "y")
@@ -930,8 +920,14 @@ void cgotoxy(int x, int y, GotoRegion region)
     const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
-    ASSERT_SAVE(x >= 1 && x <= sz.x);
-    ASSERT_SAVE(y >= 1 && y <= sz.y);
+#ifdef ASSERTS
+    if (x < 1 || y < 1 || x > sz.x || y > sz.y)
+    {
+        save_game(false); // should be safe
+        die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
+            sz.x, sz.y);
+    }
+#endif
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 
@@ -1020,7 +1016,7 @@ std::string unwrap_desc(std::string desc)
 // FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
 // function isn't included in msys, so I don't know how to do that. Instead, I just check
 // if we are running vista or higher. -rla
-bool _is_aero()
+static bool _is_aero()
 {
     OSVERSIONINFOEX osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);

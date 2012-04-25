@@ -1030,7 +1030,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 simple_monster_message(mon, " tries to escape the wrath of Zin.");
             else
                 simple_monster_message(mon, " flees in terror at the wrath of Zin!");
-            behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
+            behaviour_event(mon, ME_SCARE, 0, you.pos());
             affected = true;
         }
         break;
@@ -1167,7 +1167,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                                     : "'s chaotic flesh runs like molten wax.");
 
                     print_wounds(mon);
-                    behaviour_event(mon, ME_WHACK, MHITYOU);
+                    behaviour_event(mon, ME_WHACK, &you);
                     affected = true;
                 }
                 else
@@ -1690,7 +1690,7 @@ void yred_drain_life()
         mprf("You draw life from %s.",
              mi->name(DESC_THE).c_str());
 
-        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(*mi, ME_WHACK, &you, you.pos());
 
         mi->hurt(&you, hurted);
 
@@ -1768,7 +1768,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
-    behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
+    behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
     mon->stop_constricting_all(false);
     mon->stop_being_constricted();
@@ -1988,7 +1988,7 @@ int fedhas_fungal_bloom()
 
                     downgrade_zombie_to_skeleton(target);
 
-                    behaviour_event(target, ME_ALERT, MHITYOU);
+                    behaviour_event(target, ME_ALERT, &you);
 
                     if (piety)
                         processed_count++;
@@ -2244,7 +2244,7 @@ bool fedhas_sunlight()
             else
             {
                 backlight_monsters(target, 1, 0);
-                behaviour_event(mons, ME_ALERT, MHITYOU);
+                behaviour_event(mons, ME_ALERT, &you);
             }
 
             processed_count++;
@@ -2847,6 +2847,11 @@ static bool _possible_evolution(const monster* input,
         possible_monster.fruit_cost = 1;
         break;
 
+    case MONS_OKLOB_SAPLING:
+        possible_monster.new_type = MONS_OKLOB_PLANT;
+        possible_monster.piety_cost = 4;
+        break;
+
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
@@ -3010,6 +3015,10 @@ bool fedhas_evolve_flora()
         break;
     }
 
+    case MONS_OKLOB_SAPLING:
+        simple_monster_message(target, " appears stronger.");
+        break;
+
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
         simple_monster_message(target,
@@ -3062,7 +3071,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
         return (0);
 
     if (!mon->friendly())
-        behaviour_event(mon, ME_ANNOY, MHITYOU);
+        behaviour_event(mon, ME_ANNOY, &you);
 
     int res_margin = mon->check_res_magic(pow * 2);
     if (res_margin > 0)

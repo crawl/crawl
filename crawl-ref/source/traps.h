@@ -32,9 +32,6 @@ void destroy_trap(const coord_def& pos);
 trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
-trap_type random_trap();
-trap_type random_trap(dungeon_feature_type feat);
-
 bool     is_valid_shaft_level(const level_id &place = level_id::current());
 bool     shaft_known(int depth, bool randomly_placed);
 level_id generic_shaft_dest(coord_def pos, bool known);

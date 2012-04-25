@@ -636,6 +636,12 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
+static bool _in_shop(const item_def &item)
+{
+    // yay the shop hack...
+    return (item.pos.x == 0 && item.pos.y >= 5);
+}
+
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -647,7 +653,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (in_shop(item))
+    if (_in_shop(item))
         return (int)item_value(item) < you.gold;
 
     // Explicitly marked by a vault.
@@ -964,16 +970,6 @@ short get_helmet_desc(const item_def &item)
     return item.plus2;
 }
 
-void set_helmet_desc(item_def &item, helmet_desc_type type)
-{
-    ASSERT(is_helmet(item));
-
-    if (!is_hard_helmet(item) && type > THELM_DESC_MAX_SOFT)
-        type = THELM_DESC_PLAIN;
-
-    item.plus2 = type;
-}
-
 bool is_helmet(const item_def& item)
 {
     return (item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET);
@@ -1242,9 +1238,8 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
             return (true);
 
         // Don't offer wands already maximally charged.
-        if (it.plus2 == ZAPCOUNT_MAX_CHARGED
-            || item_ident(it, ISFLAG_KNOW_PLUSES)
-               && it.plus >= wand_max_charges(it.sub_type))
+        if (item_ident(it, ISFLAG_KNOW_PLUSES)
+            && it.plus >= wand_max_charges(it.sub_type))
         {
             return (false);
         }
@@ -1815,11 +1810,6 @@ int weapon_str_weight(const item_def &wpn)
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
 }
 
-int weapon_dex_weight(const item_def &wpn)
-{
-    return (10 - weapon_str_weight(wpn));
-}
-
 // Returns melee skill of item.
 skill_type weapon_skill(const item_def &item)
 {
@@ -2002,49 +1992,6 @@ void maybe_change_train(const item_def& item, bool start)
                 item_skills(you.inv[i], start ? you.start_train : you.stop_train);
             }
         }
-}
-
-// Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
-// to protect a body of size "body".
-int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
-                     bool hide_hidden)
-{
-    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
-
-    int ret = 0;
-
-    // Note: ret currently measured in halves (see skill factor).
-    if (is_whip_type(wpn.sub_type) || weapon_skill(wpn) == SK_POLEARMS)
-        ret = 3 + (dex / 5);
-
-    // Weapons of reaching are naturally a bit longer/flexier.
-    if (!hide_hidden || item_type_known(wpn))
-    {
-        if (get_weapon_brand(wpn) == SPWPN_REACHING)
-            ret += 1;
-    }
-
-    // Only consider additional modifications if we have a positive base:
-    if (ret > 0)
-    {
-        // Size factors:
-        // - large characters can't cover their flanks as well
-        // - note that not all weapons are available to small characters
-        if (body > SIZE_LARGE)
-            ret -= (4 * (body - SIZE_LARGE) - 2);
-        else if (body < SIZE_MEDIUM)
-            ret += 1;
-
-        // apply skill (and dividing by 2)
-        ret = (ret * (skill + 10)) / 20;
-
-        // Make sure things can't get too insane.
-        if (ret > 8)
-            ret = 8 + (ret - 8) / 2;
-    }
-
-    // Note: this is always a bonus.
-    return ((ret > 0) ? ret : 0);
 }
 
 static size_type weapon_size(const item_def &item)
@@ -2332,18 +2279,6 @@ bool ring_has_stackable_effect(const item_def &item)
 //
 // Food functions:
 //
-bool food_is_meat(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
-}
-
-bool food_is_veg(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
-}
-
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
@@ -2881,73 +2816,6 @@ int item_mass(const item_def &item)
     return ((unit_mass > 0) ? unit_mass : 0);
 }
 
-// Note that this function, and item sizes in general aren't quite on the
-// same scale as PCs and monsters.
-size_type item_size(const item_def &item)
-{
-    int size = SIZE_TINY;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-        size = Weapon_prop[ Weapon_index[item.sub_type] ].fit_size - 1;
-        break;
-
-    case OBJ_ARMOUR:
-        size = SIZE_MEDIUM;
-
-        switch (item.sub_type)
-        {
-        case ARM_GLOVES:
-        case ARM_HELMET:
-        case ARM_CAP:
-        case ARM_WIZARD_HAT:
-        case ARM_BOOTS:
-        case ARM_BUCKLER:
-            // tiny armour
-            size = SIZE_TINY;
-            break;
-
-        case ARM_SHIELD:
-            size = SIZE_LITTLE;
-            break;
-
-        case ARM_LARGE_SHIELD:
-            size = SIZE_SMALL;
-            break;
-
-        default:        // Body armours and bardings.
-            size = SIZE_MEDIUM;
-            break;
-        }
-        break;
-
-    case OBJ_MISSILES:
-        if (item.sub_type == MI_LARGE_ROCK)
-            size = SIZE_SMALL;
-        break;
-
-    case OBJ_MISCELLANY:
-        break;
-
-    case OBJ_CORPSES:
-        // FIXME: This should depend on the original monster's size!
-        size = SIZE_SMALL;
-        break;
-
-    default:            // sundry tiny items
-        break;
-    }
-
-    if (size < SIZE_TINY)
-        size = SIZE_TINY;
-    else if (size > SIZE_HUGE)
-        size = SIZE_HUGE;
-
-    return (static_cast<size_type>(size));
-}
-
 equipment_type get_item_slot(const item_def& item)
 {
     return get_item_slot(item.base_type, item.sub_type);
@@ -3045,12 +2913,6 @@ std::string food_type_name (int sub_type)
 const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
-}
-
-bool in_shop(const item_def &item)
-{
-    // yay the shop hack...
-    return (item.pos.x == 0 && item.pos.y >= 5);
 }
 
 void seen_item(const item_def &item)

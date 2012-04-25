@@ -1341,7 +1341,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                   me.agent()));
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
-                        behaviour_event(mon, ME_SCARE, me.who);
+                        behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
                 }
@@ -1471,9 +1471,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // env.mons means we can appear to be alive, but in fact be
             // an entirely different monster.
             if (alive() && type == mtype)
-            {
                 add_ench(ENCH_EXPLODING);
-            }
         }
 
     }
@@ -1486,21 +1484,17 @@ void monster::apply_enchantment(const mon_enchant &me)
             coord_def base_position = this->props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
-            {
                 mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
-            }
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
-            {
                 env.grid(base_position) = DNGN_FLOOR;
-            }
 
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
             this->attitude = ATT_NEUTRAL;
-            behaviour_event(this, ME_ALERT, MHITNOT);
+            behaviour_event(this, ME_ALERT);
         }
     }
     break;
@@ -1524,7 +1518,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             }
 
             this->attitude = ATT_HOSTILE;
-            behaviour_event(this, ME_ALERT, MHITYOU);
+            behaviour_event(this, ME_ALERT, &you);
         }
     }
     break;

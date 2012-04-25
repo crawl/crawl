@@ -826,6 +826,7 @@
   "talons"
 },
 
+#if TAG_MAJOR_VERSION == 32
 { MUT_TENTACLES,                 0,  3, false, true, true,
   "tentacles",
 
@@ -843,6 +844,7 @@
 
    "tentacles"
 },
+#endif
 
 // Octopode only
 { MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,
@@ -1003,17 +1005,11 @@
     "wild magic"
 },
 
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  3, false, false, false,
-  NULL,
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  1, false, false, false,
+  "50% torment resistance",
 
-  {"You are somewhat able to resist unholy torments (1 in 5 success).",
-   "You are decently able to resist unholy torments (2 in 5 success).",
-   "You are rather able to resist unholy torments (3 in 5 success)."},
-
-  {"You feel a slight anaesthesia.",
-   "You feel a slight anaesthesia.",
-   "You feel a strange anaesthesia."},
-
+  {"You are somewhat able to resist unholy torments (1 in 2 success).","",""},
+  {"You feel a strange anaesthesia.","",""},
   {"","",""},
 
   "stochastic torment resistance"
@@ -1440,8 +1436,8 @@
   NULL,
 
   {"You are partially covered in yellow scales (AC +1).",
-   "You are mostly covered in yellow scales (AC +2, rAcid+).",
-   "You are completely covered in yellow scales (AC +3, rAcid++)."},
+   "You are mostly covered in yellow scales (AC +2).",
+   "You are completely covered in yellow scales (AC +3, rCorr)."},
 
   {"Yellow scales grow over part of your body.",
    "Yellow scales spread over more of your body.",

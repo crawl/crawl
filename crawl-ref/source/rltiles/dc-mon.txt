@@ -941,6 +941,15 @@ statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
+dragon_form_red TRAN_DRAGON_RED
+dragon_form_white TRAN_DRAGON_WHITE
+dragon_form_green TRAN_DRAGON_GREEN
+dragon_form_yellow TRAN_DRAGON_YELLOW
+dragon_form_grey TRAN_DRAGON_GREY
+dragon_form_black TRAN_DRAGON_BLACK
+dragon_form_purple TRAN_DRAGON_PURPLE
+dragon_form_mottled TRAN_DRAGON_MOTTLED
+dragon_form_pale TRAN_DRAGON_PALE
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_centaur TRAN_LICH_CENTAUR

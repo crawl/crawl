@@ -417,7 +417,7 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->foe       = MHITYOU;
                 mon->target    = center;
                 mon->behaviour = BEH_SEEK;
-                behaviour_event(mon, ME_EVAL, MHITYOU);
+                behaviour_event(mon, ME_EVAL, &you);
             }
             else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {

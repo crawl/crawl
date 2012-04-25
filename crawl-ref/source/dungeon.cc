@@ -1966,9 +1966,7 @@ static void _ruin_level(Iterator ri,
         /* chance of removing the tile is dependent on the number of adjacent
          * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-        {
             to_replace.push_back(coord_feat(*ri, replacement));
-        }
     }
 
     for (coord_feats::const_iterator it = to_replace.begin();
@@ -2029,19 +2027,19 @@ static void _ruin_level(Iterator ri,
     }
 }
 
+static bool _mimic_at_level()
+{
+    return (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
+           && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+           && !player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+           && !player_in_branch(BRANCH_SLIME_PITS)
+           && !player_in_branch(BRANCH_TOMB)
+           && !player_in_branch(BRANCH_PANDEMONIUM)
+           && !player_in_hell();
+}
+
 static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 {
-    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-        || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-        || player_in_branch(BRANCH_SLIME_PITS)
-        || !player_in_connected_branch())
-    {
-        return;
-    }
-
-    if (env.absdepth0 < FEATURE_MIMIC_DEPTH)
-        return;
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def pos = *ri;
@@ -2054,6 +2052,14 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         // Only features valid for mimicing.
         if (!is_valid_mimic_feat(feat))
             continue;
+
+        // Reduce the number of stairs and door mimics since those features
+        // are very common.
+        if ((feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
+             || feat_is_door(feat)) && !one_chance_in(4))
+        {
+            continue;
+        }
 
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
@@ -2115,8 +2121,8 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
 static void _place_item_mimics()
 {
-
-    if (env.absdepth0 < ITEM_MIMIC_DEPTH)
+    // No mimics on D:1
+    if (!env.absdepth0)
         return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -2131,7 +2137,11 @@ static void _place_item_mimics()
         }
 
         if (one_chance_in(ITEM_MIMIC_CHANCE))
+        {
             item.flags |= ISFLAG_MIMIC;
+            dprf("Placed a %s mimic at (%d,%d).",
+                 item.name(DESC_BASENAME).c_str(), item.pos.x, item.pos.y);
+        }
     }
 
 }
@@ -2188,7 +2198,8 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         //      connectivity can be ensured
         _place_uniques();
 
-        _place_feature_mimics(dest_stairs_type);
+        if (_mimic_at_level())
+            _place_feature_mimics(dest_stairs_type);
 
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
@@ -2209,7 +2220,8 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     _fixup_misplaced_items();
 
     link_items();
-    _place_item_mimics();
+    if (_mimic_at_level())
+        _place_item_mimics();
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)
@@ -2676,9 +2688,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
     {
         int label = connectivity_map(*pos);
         if (label  != 0)
-        {
             connectivity_map(*pos) = _min_transitive_label(intermediate_components[label]);
-        }
     }
 }
 
@@ -2755,9 +2765,7 @@ static void _slime_connectivity_fixup()
     {
         int count = 0;
         if (!_passable_square(*ri))
-        {
             count = DISCONNECT_DIST;
-        }
         else
         {
             for (adjacent_iterator adj(*ri); adj; ++adj)
@@ -2848,9 +2856,7 @@ static void _slime_connectivity_fixup()
                             // squares should have adjacency of DISCONNECT_DIST
                             // but oh well
                             if (env.level_map_mask(*adj_it) & MMT_VAULT)
-                            {
                                 mprf("Whoops, nicked a vault in slime connectivity fixup");
-                            }
                             env.grid(*adj_it) = DNGN_FLOOR;
                         }
                     }
@@ -3201,7 +3207,6 @@ static void _place_branch_entrances()
 
         const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
-                           && dlevel >= FEATURE_MIMIC_DEPTH
                            && you.depth >= b->mindepth
                            && you.depth <= b->maxdepth
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
@@ -4022,8 +4027,9 @@ retry:
                 props["randbook_title"].get_string());
         }
 
-        // Remove unsuitable inscriptions such as {god gift}.
-        item.inscription.clear();
+        // Remove {god gift} from the inscription (could have been added if
+        // the item spec contains "acquire:moloch").
+        trim_god_gift_inscrip(item);
         // And wipe item origin to remove "this is a god gift!" from there,
         // unless we're dealing with a corpse.
         if (!spec.corpselike())
@@ -4621,9 +4627,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         int spec = 250;
 
         if (vgrid == '$')
-        {
             which_class = OBJ_GOLD;
-        }
         else if (vgrid == '|')
         {
             which_class = random_choose_weighted(
@@ -4643,9 +4647,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
                            which_depth, spec);
 
         if (item_made != NON_ITEM)
-        {
             mitm[item_made].pos = where;
-        }
     }
 
     // defghijk - items
@@ -4699,7 +4701,7 @@ static void _vault_grid(vault_placement &place,
                         const coord_def& where,
                         keyed_mapspec *mapsp)
 {
-    if (mapsp)
+    if (mapsp && mapsp->replaces_glyph())
         _vault_grid_mapspec(place, where, *mapsp);
     else
         _vault_grid_glyph(place, where, vgrid);
@@ -5030,9 +5032,7 @@ void place_spec_shop(const coord_def& where,
                                       : random2(NUM_SHOPS));
 
     if (env.shop[i].type == SHOP_FOOD)
-    {
         env.shop[i].greed = 10 + random2(5);
-    }
     else if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
              && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
              && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
@@ -5126,9 +5126,7 @@ void place_spec_shop(const coord_def& where,
                         stock_loc, item_level);
             }
             else if (!spec->items.empty() && spec->use_all && j < (int)spec->items.size())
-            {
                 orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
-            }
             else
             {
                 orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
@@ -5480,9 +5478,7 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
             c + coord_def(static_cast<int>(radius * cos(angle)),
                           static_cast<int>(radius * sin(angle)));
         if (map_bounds_with_margin(res, margin))
-        {
             return res;
-        }
     }
     return coord_def();
 }

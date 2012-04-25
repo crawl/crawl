@@ -24,8 +24,10 @@ extern "C" {
         return (0); \
     }
 #define PLUARET(type, val) \
+    { \
         lua_push##type(ls, val); \
-        return (1);
+        return (1); \
+    }
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
@@ -138,6 +140,7 @@ struct MonsterWrap
 // XXX: These are currently defined outside cluautil.cc.
 void push_monster(lua_State *ls, monster* mons);
 void clua_push_item(lua_State *ls, item_def *item);
+void clua_push_item_temp(lua_State *ls, const item_def &item);
 item_def *clua_get_item(lua_State *ls, int ndx);
 void lua_push_floor_items(lua_State *ls, int link);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);

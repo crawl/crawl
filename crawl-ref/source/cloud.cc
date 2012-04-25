@@ -1119,7 +1119,7 @@ int actor_apply_cloud(actor *act)
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
 
     if (!player && (side_effects || final_damage > 0))
-        behaviour_event(mons, ME_DISTURB, MHITNOT, act->pos());
+        behaviour_event(mons, ME_DISTURB, 0, act->pos());
 
     if (final_damage)
     {
@@ -1216,16 +1216,6 @@ bool in_what_cloud(cloud_type type)
         return (true);
 
     return (false);
-}
-
-cloud_type in_what_cloud()
-{
-    int cl = env.cgrid(you.pos());
-
-    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
-        return (CLOUD_NONE);
-
-    return (env.cloud[cl].type);
 }
 
 std::string cloud_name_at_index(int cloudno)

@@ -826,18 +826,14 @@ bool show_map(level_pos &lpos,
                 // keep the top line clear... which makes things look a whole
                 // lot better for small maps.
                 if (num_lines > map_lines)
-                {
                     screen_y = min_y + half_screen - 1;
-                }
                 else if (num_lines == map_lines
                          || screen_y - half_screen < min_y)
                 {
                     screen_y = min_y + half_screen;
                 }
                 else if (screen_y + half_screen > max_y)
-                {
                     screen_y = max_y - half_screen;
-                }
 
                 curs_x = lpos.pos.x - start_x + 1;
                 curs_y = lpos.pos.y - screen_y + half_screen + 1;
@@ -922,7 +918,8 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_FORGET:
-                forget_map(100, true);
+                if (yesno("Really forget level map?", true, 'n'))
+                    forget_map();
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:

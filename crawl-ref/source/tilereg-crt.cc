@@ -62,9 +62,7 @@ void CRTRegion::render()
 
     // render the attached menu if it exists
     if (m_attached_menu != NULL)
-    {
         m_attached_menu->draw_menu();
-    }
 }
 
 void CRTRegion::attach_menu(PrecisionMenu* menu)

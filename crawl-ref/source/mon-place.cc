@@ -664,9 +664,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 // No monsters spawned in the Temple.
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
-                {
                     proximity = PROX_AWAY_FROM_PLAYER;
-                }
                 else
                 {
                     if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
@@ -3293,7 +3291,7 @@ bool player_angers_monster(monster* mon)
     {
         mon->attitude = ATT_HOSTILE;
         mon->del_ench(ENCH_CHARM);
-        behaviour_event(mon, ME_ALERT, MHITYOU);
+        behaviour_event(mon, ME_ALERT, &you);
 
         if (you.can_see(mon))
         {
@@ -3528,7 +3526,6 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
     switch (hbct)
     {
     case HOLY_BEING_WARRIOR:
-        // XXX: Add MONS_CHERUB to this list when they're improved.
         mon = random_choose_weighted(
             1, MONS_ANGEL,
             1, MONS_DAEVA,

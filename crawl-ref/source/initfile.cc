@@ -433,9 +433,7 @@ void game_options::str_to_enemy_hp_colour(const std::string &colours)
 {
     std::vector<std::string> colour_list = split_string(" ", colours, true, true);
     for (int i = 0, csize = colour_list.size(); i < csize; i++)
-    {
         enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
-    }
 }
 
 #ifdef USE_TILE
@@ -875,8 +873,6 @@ void game_options::reset_options()
                    false);
 
     item_stack_summary_minimum = 5;
-
-    pizza.clear();
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
@@ -1476,7 +1472,8 @@ void read_options(const std::string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
-    lang = 0; // FIXME: obtain from gettext
+    lang = LANG_EN; // FIXME: obtain from gettext
+    lang_name = 0;
     reset_options();
 }
 
@@ -1937,9 +1934,7 @@ static void _bindkey(std::string field)
         return;
     }
     else if (key_str.length() == 1)
-    {
         key = key_str[0];
-    }
     else if (key_str.length() == 2)
     {
         if (key_str[0] != '^')
@@ -2112,13 +2107,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
     if (key == "include")
-    {
         include(field, true, runscript);
-    }
     else if (key == "opt" || key == "option")
-    {
         split_parse(field, ",", &game_options::set_option_fragment);
-    }
     else if (key == "autopickup")
     {
         // clear out autopickup
@@ -2192,22 +2183,25 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "language")
     {
         // FIXME: should talk to gettext/etc instead
-        if (field == "pl" || field == "polish" || field == "polski")
-            lang = "pl";
+        if (field == "en" || field == "english")
+            lang = LANG_EN, lang_name = 0; // disable the db
+        else if (field == "pl" || field == "polish" || field == "polski")
+            lang = LANG_PL, lang_name = "pl";
         else if (field == "de" || field == "german" || field == "deutch")
-            lang = "de";
+            lang = LANG_DE, lang_name = "de";
         else if (field == "fr" || field == "french" || field == "français")
-            lang = "fr";
+            lang = LANG_FR, lang_name = "fr";
+        // Fake languages do not reset lang_name, allowing a translated
+        // database in an actual language.  This is probably pointless for
+        // most fake langs, though.
         else if (field == "dwarven" || field == "dwarf")
-            lang = "dwarven";
+            lang = LANG_DWARVEN;
         else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
-            lang = "jägerkin";
+            lang = LANG_JAGERKIN;
         else if (field == "lisp" || field == "lithp")
-            lang = "lisp";
+            lang = LANG_LISP;
         else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
-            lang = "wide";
-        else if (field == "en" || field == "english")
-            lang = 0;
+            lang = LANG_WIDE;
         else
         {
             report_error(make_stringf("No translations for language: %s\n",
@@ -2426,11 +2420,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal);
-    else if (key == "pizza")
-    {
-        // field is already cleaned up from trim_string()
-        pizza = field;
-    }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -4198,9 +4187,7 @@ int game_options::o_int(const char *name, int def) const
     int val = def;
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
-    {
         val = atoi(i->second.c_str());
-    }
     return (val);
 }
 

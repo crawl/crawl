@@ -332,7 +332,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     case SP_OCTOPODE:
-        you.mutation[MUT_TENTACLES]       = 3;
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
@@ -1038,7 +1037,7 @@ static void _give_species_bonus_mp()
     {
     case SP_VAMPIRE:
     case SP_DEMIGOD:
-        inc_max_mp(1);
+        you.mp_max_perm++;
         break;
 
     default:
@@ -1100,7 +1099,7 @@ static void _setup_tutorial_miscs()
     you.gold = 0;
 
     // Give him some mana to play around with.
-    inc_max_mp(2);
+    you.mp_max_perm += 2;
 
     _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 

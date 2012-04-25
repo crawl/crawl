@@ -618,7 +618,7 @@ bool MiscastEffect::_send_to_abyss()
     if (player_in_branch(BRANCH_ABYSS) || source == HELL_EFFECT_MISCAST)
         return (_malign_gateway()); // attempt to degrade to malign gateway
 
-    target->banish(cause);
+    target->banish(act_source, cause);
     return (true);
 }
 

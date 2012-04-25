@@ -643,7 +643,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_NOISE:              return "noise";
     case SCR_REMOVE_CURSE:       return "remove curse";
     case SCR_DETECT_CURSE:       return "detect curse";
-    case SCR_SUMMONING:          return "summoning";
+    case SCR_UNHOLY_CREATION:    return "unholy creation";
     case SCR_ENCHANT_WEAPON_I:   return "enchant weapon I";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
@@ -1088,14 +1088,11 @@ std::string base_type_string (object_class_type type, bool known)
     }
 }
 
-std::string sub_type_string (const item_def &item, bool known)
+std::string sub_type_string(const item_def &item, bool known)
 {
-    return sub_type_string(item.base_type, item.sub_type, known, item.plus);
-}
+    const object_class_type type = item.base_type;
+    const int sub_type = item.sub_type;
 
-std::string sub_type_string(object_class_type type, int sub_type,
-                            bool known, int plus)
-{
     switch (type)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
@@ -1112,7 +1109,7 @@ std::string sub_type_string(object_class_type type, int sub_type,
         if (sub_type == BOOK_MANUAL)
         {
             std::string bookname = "manual of ";
-            bookname += skill_name(static_cast<skill_type>(plus));
+            bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
         }
         else if (sub_type == BOOK_NECRONOMICON)
@@ -1498,8 +1495,6 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (item_plus2 == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
-            else if (item_plus2 == ZAPCOUNT_MAX_CHARGED)
-                buff << " {fully recharged}";
             else if (item_plus2 == ZAPCOUNT_RECHARGED)
                 buff << " {recharged}";
             else if (item_plus2 > 0)
@@ -1597,9 +1592,7 @@ std::string item_def::name_aux(description_level_type desc,
             buff << " ";
 
         if (know_type)
-        {
             buff << "of " << scroll_type_name(item_typ);
-        }
         else
         {
             const uint32_t sseed =
@@ -2135,7 +2128,8 @@ void check_item_knowledge(bool unknown_items)
             // Potions of fizzing liquid are not something that
             // need to be identified, because they never randomly
             // generate! [due]
-            if (i == OBJ_POTIONS && j == POT_FIZZING)
+            // Water is never interesting either. [1KB]
+            if (i == OBJ_POTIONS && (j == POT_FIZZING || j == POT_WATER))
                 continue;
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
@@ -2241,7 +2235,9 @@ void display_runes()
 
     InvMenu menu;
 
-    menu.set_title("Runes of Zot");
+    menu.set_title(make_stringf("Runes of Zot: %d/%d",
+                                (int)items.size(),
+                                you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
     menu.load_items(items, discoveries_item_mangle);
@@ -2700,7 +2696,7 @@ bool is_bad_item(const item_def &item, bool temp)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return (you.religion != GOD_ASHENZARI);
-        case SCR_SUMMONING:
+        case SCR_UNHOLY_CREATION:
             // Summoning will always produce hostile monsters if you
             // worship a good god. (Use temp to allow autopickup to
             // prevent monsters from reading it.)
@@ -2913,8 +2909,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // No potion is useless if it can be used for Evaporate.
-        if ((you.char_class == JOB_TRANSMUTER || you.char_class == JOB_STALKER)
-             && !you.num_turns
+        if (you.char_class == JOB_STALKER && !you.num_turns
             || you.has_spell(SPELL_EVAPORATE))
         {
             return (false);

@@ -129,7 +129,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "set_rc": self.set_rc,
             }
 
-    client_closed = property(lambda self: self.ws_connection and self.ws_connection.client_terminated)
+    client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
 
     def _process_log_msg(self, msg, kwargs):
         return "#%-5s %s" % (self.id, msg), kwargs

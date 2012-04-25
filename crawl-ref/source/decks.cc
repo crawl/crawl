@@ -130,6 +130,7 @@ const deck_archetype deck_of_battle[] = {
     { CARD_HELM,          {5, 5, 5} },
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
+    { CARD_MERCENARY,     {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -352,6 +353,7 @@ const char* card_name(card_type card)
     case CARD_SWINE:           return "the Swine";
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
+    case CARD_MERCENARY:       return "the Mercenary";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -1496,6 +1498,9 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
+    if (you.religion == GOD_CHEIBRIADOS)
+        return simple_god_message(" protects you from inadvertent hurry.");
+
     const int power_level = _get_power_level(power, rarity);
     if (power_level >= 2)
     {
@@ -1540,7 +1545,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
             break;              // Don't banish anything else.
         }
         else
-            mon_to_banish->banish();
+            mon_to_banish->banish(&you);
     }
 
 }
@@ -1592,7 +1597,10 @@ static void _flight_card(int power, deck_rarity_type rarity)
     else if (power_level >= 1)
     {
         cast_fly(random2(power/4));
-        cast_swiftness(random2(power/4));
+        if (you.religion != GOD_CHEIBRIADOS)
+            cast_swiftness(random2(power/4));
+        else
+            simple_god_message(" protects you from inadvertent hurry.");
     }
 
     if (power_level == 2) // Stacks with the above.
@@ -1949,6 +1957,12 @@ static void _potion_card(int power, deck_rarity_type rarity)
 
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
+
+    if (you.religion == GOD_CHEIBRIADOS && pot == POT_SPEED)
+    {
+        simple_god_message(" protects you from inadvertent hurry.");
+        pot = POT_WATER;
+    }
 
     potion_effect(pot, random2(power/4));
 }
@@ -2768,6 +2782,62 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     }
 }
 
+static void _mercenary_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    const monster_type merctypes[] = {
+        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_TENGU,
+        MONS_DEEP_DWARF_SCION, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
+        MONS_SPRIGGAN_RIDER, MONS_OGRE_MAGE, MONS_MINOTAUR,
+        RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
+    };
+
+    const int merc = power_level + random2(3 * (power_level + 1));
+    ASSERT(merc < (int)ARRAYSZ(merctypes));
+
+    mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
+                 0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    monster *mon = create_monster(mg);
+
+    if (mon)
+    {
+        redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+        if (player_will_anger_monster(mon))
+        {
+            simple_monster_message(mon, " is repulsed!");
+            return;
+        }
+
+        const int fee = fuzz_value(exper_value(mon), 15, 15);
+        if (fee > you.gold)
+        {
+            mprf("You cannot afford %s fee of %d gold!",
+                 mon->name(DESC_ITS).c_str(), fee);
+            simple_monster_message(mon, " attacks!");
+            return;
+        }
+
+        const std::string prompt = make_stringf("Pay %s fee of %d gold?",
+                                                mon->name(DESC_ITS).c_str(), fee);
+        if (!yesno(prompt.c_str()))
+        {
+            simple_monster_message(mon, " attacks!");
+            return;
+        }
+
+        simple_monster_message(mon, " joins your ranks!");
+        mon->attitude = ATT_FRIENDLY;
+        mons_att_changed(mon);
+        you.del_gold(fee);
+    }
+    else
+        mpr("You see a puff of smoke.");
+}
+
 static void _alchemist_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2921,6 +2991,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
+    case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
 
     case CARD_VENOM:
         if (coinflip())

@@ -24,7 +24,7 @@
 #include "hints.h"
 
 game_state::game_state()
-    : game_crashed(false), game_wants_emergency_save(false),
+    : game_crashed(false),
       mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
       need_save(false),

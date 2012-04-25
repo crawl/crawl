@@ -553,7 +553,7 @@ Elyvilon holy
 
 Elyvilon hisses: "You foul beast! How dare you!"
 
-Elyvilon sadly speaks: "How it came to be that such cruelty exists."
+Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
 
 Elyvilon whispers: "No one should ever harm others. Ever!"
 %%%%

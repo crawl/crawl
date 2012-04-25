@@ -554,6 +554,12 @@ crawling corpse
 
 A corpse weakly animated by necromancy. It is easily destroyed, but capable of merging with others to form more potent horrors.
 %%%%
+crazed wizard
+
+This guy seems to be obsessed with Hell and dealing with demons that live
+there. That can't end in any way but one... watch out for now, or that end
+will be yours first.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.

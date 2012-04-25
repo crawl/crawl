@@ -32,7 +32,6 @@ int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_featu
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain);
 
-bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);

@@ -190,7 +190,8 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
         // Shedu only heal each other.
         if (mons_is_shedu(caster))
             if (mons_is_shedu(*targ) && caster->mid == targ->number
-                && caster->number == targ->mid)
+                && caster->number == targ->mid
+                && _flavour_benefits_monster(pbolt.flavour, **targ))
             {
                 got_target = true;
             }
@@ -1667,9 +1668,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         }
                     }
                     else if (!mons->can_see(&menv[mons->foe]))
-                    {
                         spellOK = false;
-                    }
                     else if (mons->type == MONS_DAEVA
                              && mons->god == GOD_SHINING_ONE)
                     {
@@ -2318,11 +2317,8 @@ static int _mons_cause_fear(monster* mons, bool actual)
     {
         if (ai->is_player())
         {
-            if (mons->pacified()
-                || mons->friendly())
-            {
+            if (mons->pacified() || mons->friendly())
                 continue;
-            }
 
             if (you.holiness() != MH_NATURAL)
             {
@@ -2391,9 +2387,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 if (you.can_see(m))
                     simple_monster_message(m, " looks frightened!");
 
-                behaviour_event(m, ME_SCARE,
-                                mons->kill_alignment() == KC_YOU ? MHITYOU
-                                                                 : MHITNOT);
+                behaviour_event(m, ME_SCARE, mons);
 
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);

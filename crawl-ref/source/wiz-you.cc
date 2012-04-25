@@ -1050,7 +1050,7 @@ static void _wizard_modify_character(std::string inputdata)
 {
     std::vector<std::string>  tokens = split_string(" ", inputdata);
     int size = tokens.size();
-    if(size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
+    if (size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
     {
         skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
         double amount = atof(tokens[2].c_str());
@@ -1067,11 +1067,11 @@ static void _wizard_modify_character(std::string inputdata)
         return;
     }
 
-    if(size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
+    if (size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Str")
+            if (tokens[k] == "Str")
             {
                 you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);
@@ -1081,11 +1081,11 @@ static void _wizard_modify_character(std::string inputdata)
         }
     }
 
-    if(size > 5 && tokens[0] == "MP")
+    if (size > 5 && tokens[0] == "MP")
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Int")
+            if (tokens[k] == "Int")
             {
                 you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);
@@ -1094,11 +1094,11 @@ static void _wizard_modify_character(std::string inputdata)
             }
         }
     }
-    if(size > 5 && tokens[0] == "Gold")
+    if (size > 5 && tokens[0] == "Gold")
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Dex")
+            if (tokens[k] == "Dex")
             {
                 you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);

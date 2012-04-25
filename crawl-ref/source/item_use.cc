@@ -503,6 +503,15 @@ void warn_armour_penalties()
     }
 }
 
+static bool _wearing_slot(int inv_slot)
+{
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
+        if (inv_slot == you.equip[i])
+            return (true);
+
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // armour_prompt
@@ -562,7 +571,7 @@ void wear_armour(int slot) // slot is for tiles
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (!form_can_wear())
     {
         mpr("You can't wear anything in your present form.");
         return;
@@ -664,13 +673,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You can't wear gloves with your huge claws!");
-            return (false);
-        }
-
-        if (you.has_tentacles(false) == 3)
-        {
-            if (verbose)
-                mpr("Gloves don't fit your tentacles!");
             return (false);
         }
     }
@@ -795,7 +797,7 @@ bool do_wear_armour(int item, bool quiet)
         return (false);
     }
 
-    if (wearing_slot(item))
+    if (_wearing_slot(item))
     {
         if (Options.equip_unequip)
             return (!takeoff_armour(item));
@@ -814,10 +816,10 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            const char* how_many = you.has_tentacles(false) == 3 ? "six"
-                                                                 : "three";
-            mprf("You'd need %s %s to do that!", how_many,
-                 you.hand_name(true).c_str());
+            if (you.species == SP_OCTOPODE)
+                mpr("You need the rest of your tentacles for walking.");
+            else
+                mprf("You'd need three %s to do that!", you.hand_name(true).c_str());
         }
         return (false);
     }
@@ -907,7 +909,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!wearing_slot(item))
+    if (!_wearing_slot(item))
     {
         if (Options.equip_unequip)
             return do_wear_armour(item, true);
@@ -990,7 +992,7 @@ bool item_is_quivered(const item_def &item)
 int get_next_fire_item(int current, int direction)
 {
     std::vector<int> fire_order;
-    you.m_quiver->get_fire_order(fire_order);
+    you.m_quiver->get_fire_order(fire_order, true);
 
     if (fire_order.empty())
         return -1;
@@ -1073,9 +1075,7 @@ void fire_target_behaviour::set_prompt()
 
     // Build the action.
     if (!active_item())
-    {
         msg << "Firing ";
-    }
     else
     {
         const launch_retval projected = is_launched(&you, you.weapon(),
@@ -1095,9 +1095,7 @@ void fire_target_behaviour::set_prompt()
 
     // Describe the selected item for firing.
     if (!active_item())
-    {
         msg << "<red>" << m_noitem_reason << "</red>";
-    }
     else
     {
         const char* colour = (selected_from_inventory ? "lightgrey" : "w");
@@ -1258,7 +1256,7 @@ static bool _fire_validate_item(int slot, std::string &err)
         err = "That weapon is stuck to your " + you.hand_name(false) + "!";
         return (false);
     }
-    else if (wearing_slot(slot))
+    else if (_wearing_slot(slot))
     {
         err = "You are wearing that object!";
         return (false);
@@ -2463,9 +2461,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
         else if (wepType == MI_THROWING_NET)
-        {
             max_range = range = 2 + you.body_size(PSIZE_BODY);
-        }
         else
         {
             max_range = range = LOS_RADIUS;
@@ -2774,14 +2770,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Note that branded missile damage goes through defender
         // resists.
         if (ammo_brand == SPMSL_STEEL)
-        {
             dice_mult = dice_mult * 130 / 100;
-        }
 
         if (elemental_missile_beam(bow_brand, ammo_brand))
-        {
             dice_mult = dice_mult * 140 / 100;
-        }
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
@@ -2892,9 +2884,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // for launchers. Hand-thrown stones do only half
             // base damage. Yet another evil 4.0ism.
             if (wepClass == OBJ_MISSILES && wepType == MI_STONE)
-            {
                 baseDam = div_rand_round(baseDam, 2);
-            }
 
             // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
@@ -3920,7 +3910,7 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID || !player_can_handle_equipment())
+    if (you.species == SP_FELID || !form_can_wield())
     {
         mpr("You have no means to grasp a wand firmly enough.");
         return;
@@ -4064,9 +4054,7 @@ void zap_wand(int slot)
     }
 
     if (you.confused())
-    {
         zap_wand.confusion_fuzz();
-    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
@@ -4127,7 +4115,7 @@ void zap_wand(int slot)
     wand.plus--;
 
     // Zap counts count from the last recharge.
-    if (wand.plus2 == ZAPCOUNT_MAX_CHARGED || wand.plus2 == ZAPCOUNT_RECHARGED)
+    if (wand.plus2 == ZAPCOUNT_RECHARGED)
         wand.plus2 = 0;
     // Increment zap count.
     if (wand.plus2 >= 0)
@@ -4991,7 +4979,7 @@ static void _vulnerability_scroll()
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
-                behaviour_event(mon, ME_ANNOY, MHITYOU);
+                behaviour_event(mon, ME_ANNOY, &you);
         }
     }
 
@@ -5244,7 +5232,7 @@ void read_scroll(int slot)
         noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
-    case SCR_SUMMONING:
+    case SCR_UNHOLY_CREATION:
     {
         if (monster *mons = create_monster(
                             mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
@@ -5490,15 +5478,6 @@ void examine_object(void)
     mesclr();
 }
 
-bool wearing_slot(int inv_slot)
-{
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
-        if (inv_slot == you.equip[i])
-            return (true);
-
-    return (false);
-}
-
 bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
     return (player_effect_notele(calc_unid)
@@ -5683,9 +5662,7 @@ void tile_item_use_secondary(int idx)
             fire_thing(idx); // fire weapons
     }
     else if (you.equip[EQ_WEAPON] == idx)
-    {
         wield_weapon(true, SLOT_BARE_HANDS);
-    }
     else if (_valid_weapon_swap(item))
     {
         // secondary wield for several spells and such
@@ -5755,7 +5732,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_ARMOUR:
-            if (!player_can_handle_equipment())
+            if (!form_can_wear())
             {
                 mpr("You can't wear or remove anything in your present form.");
                 return;

@@ -51,7 +51,7 @@ class SkillMenu;
 class SkillMenuEntry
 {
 public:
-    static menu_letter m_letter;
+    static menu_letter2 m_letter;
     static SkillMenu* m_skm;
 
     SkillMenuEntry() {};
@@ -127,7 +127,6 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    void clear_selections();
     bool exit();
     int get_raw_skill_level(skill_type sk);
     int get_saved_skill_level(skill_type sk, bool real);
