@@ -386,10 +386,6 @@ void spawn_random_monsters()
         return;
     }
 
-    // No random monsters in the Labyrinth.
-    if (player_in_branch(BRANCH_LABYRINTH))
-        return;
-
     if (player_in_branch(BRANCH_ABYSS))
     {
         // In Abyss, monsters spawn regularly every 5 turns which might look
