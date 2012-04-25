@@ -2,8 +2,6 @@
 #
 # Vaults with water and suitable monsters.  Some will appear with
 # no monsters at all.
-#
-# All vaults use an empty DEPTH line which means they cannot appear normally.
 
 NAME:   serial_pond
 TAGS:   allow_dup luniq
@@ -17,9 +15,10 @@ CHANCE: 1%
   end)
 }}
 
+default-depth:
+
 # 30 vaults: all have plants and normally generated water monsters.
 NAME:   minmay_pond_plants_a
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -36,7 +35,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_b
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -56,7 +54,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_c
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -75,7 +72,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_d
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -93,7 +89,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_e
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -111,7 +106,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_f
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -132,7 +126,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_g
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -159,7 +152,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_h
-DEPTH:
 WEIGHT: 2
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -186,7 +178,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_i
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -206,7 +197,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_j
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -225,7 +215,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_k
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -244,7 +233,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_l
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -263,7 +251,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_m
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -289,7 +276,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_n
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -310,7 +296,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_o
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -328,7 +313,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_p
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -348,7 +332,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_q
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -363,7 +346,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_r
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -385,7 +367,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_s
-DEPTH:
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -405,7 +386,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_t
-DEPTH:
 WEIGHT: 2
 TAGS:   serial_pond extra allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -433,7 +413,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_u
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -452,7 +431,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_v
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -475,7 +453,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_w
-DEPTH:
 WEIGHT: 2
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -504,7 +481,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_x
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -526,7 +502,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_y
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -545,7 +520,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_z
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -568,7 +542,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_aa
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -587,7 +560,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_ab
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -606,7 +578,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_ac
-DEPTH:
 WEIGHT: 2
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
@@ -626,7 +597,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_plants_ad
-DEPTH:
 TAGS:   serial_pond allow_dup
 MONS:   plant / nothing w:40, plant / nothing w:90
 MAP
@@ -644,7 +614,6 @@ ENDMAP
 # 10 vaults: all have fungi and wandering mushrooms.  5 have giant spores.
 # Includes normally generated water monsters.  D:7-14 and Lair.
 NAME:   minmay_pond_fungi_a
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -659,7 +628,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_b
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -676,7 +644,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_c
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -693,7 +660,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_d
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -709,7 +675,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_e
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -725,7 +690,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_f
-DEPTH:
 WEIGHT: 2
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1
@@ -746,7 +710,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_g
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1, giant spore w:1 / nothing
@@ -764,7 +727,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_h
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1, giant spore w:1 / nothing
@@ -784,7 +746,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_i
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1, giant spore w:1 / nothing
@@ -806,7 +767,6 @@ MAP
 ENDMAP
 
 NAME:   minmay_pond_fungi_j
-DEPTH:
 WEIGHT: 5
 TAGS:   serial_pond allow_dup
 MONS:   fungus / nothing w:39 / wandering mushroom w:1, giant spore w:1 / nothing
