@@ -1887,8 +1887,8 @@ enum targ_mode_type
     TARG_NUM_MODES
 };
 
-// NOTE: Changing this order will break saves!
-enum monster_type                      // (int) menv[].type
+// NOTE: Changing this order will break saves! Appending does not.
+enum monster_type                      // menv[].type
 {
     MONS_PROGRAM_BUG,
         MONS_0 = MONS_PROGRAM_BUG,
