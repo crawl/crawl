@@ -317,6 +317,11 @@ force_more_message = Careful!
 force_more_message = interdimensional caravan
 force_more_message = distant snort
 
+# Abyss exits and rune
+force_more_message = Found a gateway leading out of the Abyss
+force_more_message = Found .* abyssal rune of Zot
+
+
 ##### 4-k       Firing Commands #######################
 #
 # fire_items_start = a
