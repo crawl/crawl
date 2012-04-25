@@ -1214,6 +1214,7 @@ void dgn_reset_level(bool enable_random_maps)
     // Set default random monster generation rate (smaller is more often,
     // except that 0 == no random monsters).
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+        && you.char_direction == GDT_DESCENDING // except for the Orb run
         || crawl_state.game_is_tutorial())
     {
         // No random monsters in tutorial or ecu temple
