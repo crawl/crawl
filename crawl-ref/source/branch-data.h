@@ -276,7 +276,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Ossuary", "a tomb", "Ossuary",
       NULL,
       false, WHITE, YELLOW,
-      mons_null_rare, mons_null_level,
+      mons_ossuary_rare, mons_ossuary_level,
       '4', false, 0 },
 
     { BRANCH_BAILEY, NUM_BRANCHES, 7, 16, 1,
@@ -285,7 +285,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Bailey", "the bailey", "Bailey",
       NULL,
       false, WHITE, LIGHTGREY,
-      mons_null_rare, mons_null_level,
+      mons_bailey_rare, mons_bailey_level,
       '5', false, 0 },
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, 11, 19, 1,
