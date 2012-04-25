@@ -432,12 +432,8 @@ void spawn_random_monsters()
         return;
     }
 
-    if (x_chance_in_y(5, rate))
-    {
-        mons_place(mgen_data(WANDERING_MONSTER));
-        viewwindow();
-    }
-
+    mons_place(mgen_data(WANDERING_MONSTER));
+    viewwindow();
 }
 
 // Caller must use !invalid_monster_type to check if the return value
