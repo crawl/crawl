@@ -704,9 +704,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // of the time it replaces an element in an unchosen
         // slot -- but we don't care about them).
         if (count <= max_targs)
-        {
             targs[count - 1] = *ai;
-        }
         else if (x_chance_in_y(max_targs, count))
         {
             const int pick = random2(max_targs);

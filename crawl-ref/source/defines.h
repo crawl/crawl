@@ -219,13 +219,9 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 // too many breaks interlevel connectivity, so we don't use a chance of 1.
   #define FEATURE_MIMIC_CHANCE 2
   #define ITEM_MIMIC_CHANCE    1
-  #define FEATURE_MIMIC_DEPTH  1
-  #define ITEM_MIMIC_DEPTH     1
 #else
   #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    500
-  #define FEATURE_MIMIC_DEPTH   10
-  #define ITEM_MIMIC_DEPTH       7
+  #define ITEM_MIMIC_CHANCE    1000
 #endif
 
 const int ANTITRAIN_PENALTY = 2;

@@ -172,8 +172,7 @@ NAME:  solitary_fountain
 DEPTH: D, Elf, Vaults
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
-KMASK: T = no_monster_gen
-KMASK: U = no_monster_gen
+KMASK: TU = no_monster_gen
 MAP
 .....
 .....
@@ -410,8 +409,7 @@ ENDMAP
 NAME:  minmay_fountain_box
 TAGS:  extra luniq_mini
 DEPTH: D, Elf
-KMASK: T = no_monster_gen
-KMASK: U = no_monster_gen
+KMASK: TU = no_monster_gen
 SUBST: x : xxxxccbv
 MAP
 xxxx+xxxx
@@ -634,8 +632,7 @@ NAME:   minmay_misc_feat_room
 TAGS:   extra luniq_mini
 DEPTH:  D
 SUBST:  ? = GGGTUV
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 MAP
 .......
 .xxxxx.

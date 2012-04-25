@@ -3054,10 +3054,16 @@ commands:
   automatically be marked.
 
 =f
-  item is excluded when cycling ammunition and from automatic quivering
+  item is excluded from automatic quivering
 
 \+f
-  item is included when cycling ammunition and in automatic quivering
+  item is included in automatic quivering
+
+=F
+  item is excluded when cycling ammunition
+
+\+F
+  item is included when cycling ammunition
 
 !D
   prompt before performing an action that might destroy this item. If you're

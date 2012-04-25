@@ -548,7 +548,7 @@ public:
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const std::string &reason);
     void backlight();
-    void banish(const std::string &who = "");
+    void banish(actor *agent, const std::string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
@@ -573,6 +573,7 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
 
+    bool wont_attack() const { return true; };
     int warding() const;
 
     monster_type mons_species(bool zombie_base = false) const;
@@ -609,6 +610,7 @@ public:
     bool slowable() const;
 
     flight_type flight_mode() const;
+    bool cancellable_levitation() const;
     bool permanent_levitation() const;
     bool permanent_flight() const;
 
@@ -894,14 +896,13 @@ int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-void forget_map(int chance_forgotten = 100, bool force = false);
+void forget_map(bool rot = false);
 
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
-bool player_can_handle_equipment();
 bool player_can_reach_floor(std::string feat = "", bool quiet = false);
 
 void level_change(bool skip_attribute_increase = false);
@@ -938,9 +939,6 @@ void rot_mp(int mp_loss);
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
-void inc_max_mp(int mp_gain);
-void dec_max_mp(int mp_loss);
-
 void deflate_hp(int new_level, bool floor);
 void set_hp(int new_amount);
 
@@ -974,7 +972,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
-void levitate_player(int pow);
+void levitate_player(int pow, bool already_levitating = false);
 void float_player(bool fly);
 bool land_player();
 

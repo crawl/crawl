@@ -420,6 +420,12 @@ void antimagic()
         mpr("You feel strangely stable.");
     }
 
+    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    {
+        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+        mpr("Your charged fireball dissipates.");
+    }
+
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
         you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
@@ -1016,7 +1022,7 @@ bool cast_smiting(int pow, monster* mons)
 
         mprf("You smite %s!", mons->name(DESC_THE).c_str());
 
-        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        behaviour_event(mons, ME_ANNOY, &you);
     }
 
     enable_attack_conducts(conducts);

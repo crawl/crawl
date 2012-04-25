@@ -11,13 +11,9 @@
 static int _clamp_stealth (int stealth)
 {
     if (stealth > 3)
-    {
         return (3);
-    }
     else if (stealth < -3)
-    {
         return (-3);
-    }
     else
     {
         return (stealth);

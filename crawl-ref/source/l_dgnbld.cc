@@ -152,9 +152,7 @@ static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, i
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
-        {
             lines(x, y) = fill;
-        }
 
     return (0);
 }
@@ -727,14 +725,10 @@ LUAFN(dgn_replace_first)
         return (0);
 
     if (xdir < -1 || xdir > 1)
-    {
         return (luaL_error(ls, "Invalid xdir: %d", xdir));
-    }
 
     if (ydir < -1 || ydir > 1)
-    {
         return (luaL_error(ls, "Invalid ydir: %d", ydir));
-    }
 
     while (lines.in_bounds(coord_def(x, y)))
     {

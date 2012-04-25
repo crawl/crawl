@@ -30,10 +30,12 @@
 #include <unistd.h>
 #endif
 
+#include "hiscores.h"
+
 #include "branch.h"
+#include "chardump.h"
 #include "files.h"
 #include "dungeon.h"
-#include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -41,6 +43,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "menu.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
@@ -55,6 +58,13 @@
 #include "status.h"
 #include "env.h"
 #include "tags.h"
+
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilereg-crt.h"
+#endif
 
 #include "skills2.h"
 #define SCORE_VERSION "0.1"
@@ -301,6 +311,198 @@ void hiscores_print_list(int display_count, int format)
             textcolor(LIGHTGREY);
     }
 }
+
+static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
+{
+    TextItem* tmp = NULL;
+    tmp = new TextItem();
+
+    coord_def min_coord(1,1);
+    coord_def max_coord(1,2);
+
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+
+    tmp->set_text(hiscores_format_single(se));
+    tmp->set_description_text(hiscores_format_single_long(se, true));
+    tmp->set_id(id);
+    tmp->set_bounds(coord_def(1,1), coord_def(1,2));
+
+    scroller->attach_item(tmp);
+    tmp->set_visible(true);
+}
+
+static void _construct_hiscore_table(MenuScroller* scroller)
+{
+    FILE *scores = _hs_open("r", _score_file_name());
+    int i;
+
+    if (scores == NULL)
+        return;
+
+    // read highscore file
+    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
+    {
+        hs_list[i].reset(new scorefile_entry);
+        if (_hs_read(scores, *hs_list[i]) == false)
+            break;
+    }
+
+    _hs_close(scores, "r", _score_file_name());
+
+    for (int j=0; j<i; j++)
+        _add_hiscore_row(scroller, *hs_list[j], j);
+
+}
+
+static void _show_morgue(scorefile_entry& se)
+{
+    formatted_scroller morgue_file;
+    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+    if (Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
+
+    morgue_file.set_flags(flags, false);
+    morgue_file.set_tag("morgue");
+
+    morgue_file.set_more(formatted_string::parse_string(
+#ifdef USE_TILE_LOCAL
+                            "<cyan>[ +/L-click : Page down.   - : Page up."
+                            "           Esc/R-click exits.]"));
+#else
+                            "<cyan>[ + : Page down.   - : Page up."
+                            "                           Esc exits.]"));
+#endif
+    std::string morgue_path = morgue_directory() + morgue_name(se.get_name(), se.get_death_time()) + ".txt";
+    FILE* morgue = lk_open("r", morgue_path);
+
+    if (!morgue)
+        return;
+
+    char buf[200];
+    std::string morgue_text = "";
+
+    while (fgets(buf, sizeof buf, morgue) != NULL)
+    {
+        std::string line = std::string(buf);
+        line.erase(line.find_last_of('\n'));
+        morgue_text += "<w>" + line + "</w>" + '\n';
+    }
+
+    lk_close(morgue, "r", morgue_path);
+
+    clrscr();
+
+
+    column_composer cols(2, 40);
+    cols.add_formatted(
+            0,
+            morgue_text,
+            true, true);
+
+    std::vector<formatted_string> blines = cols.formatted_lines();
+
+    unsigned i;
+    for (i = 0; i < blines.size(); ++i)
+        morgue_file.add_item_formatted_string(blines[i]);
+
+    textcolor(WHITE);
+    morgue_file.show();
+}
+
+void show_hiscore_table()
+{
+    const int max_line   = get_number_of_lines() - 1;
+    const int max_col    = get_number_of_cols() - 1;
+
+    const int scores_col_start = 4;
+    const int descriptor_col_start = 4;
+    const int scores_row_start = 10;
+    const int scores_col_end = max_col;
+    const int scores_row_end = max_line - 1;
+
+    bool smart_cursor_enabled = is_smart_cursor_enabled();
+
+    clrscr();
+
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+
+    MenuScroller* score_entries = new MenuScroller();
+
+    score_entries->init(coord_def(scores_col_start, scores_row_start),
+            coord_def(scores_col_end, scores_row_end), "score entries");
+
+    _construct_hiscore_table(score_entries);
+
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(descriptor_col_start, 1),
+            coord_def(get_number_of_cols(), scores_row_start - 1),
+            "descriptor");
+
+#ifdef USE_TILE_LOCAL
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+#else
+    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+#endif
+    highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
+
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
+    // This freeform will only contain unfocusable texts
+    freeform->allow_focus(false);
+    freeform->set_visible(true);
+
+    NoSelectTextItem* tmp = new NoSelectTextItem();
+    std::string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
+    tmp->set_text(text);
+    tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
+    tmp->set_fg_colour(CYAN);
+    freeform->attach_item(tmp);
+    tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    score_entries->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
+
+    menu.attach_object(freeform);
+    menu.attach_object(score_entries);
+    menu.attach_object(descriptor);
+    menu.attach_object(highlighter);
+
+    menu.set_active_object(score_entries);
+    score_entries->activate_first_item();
+
+    enable_smart_cursor(false);
+    while (true)
+    {
+        menu.draw_menu();
+        textcolor(WHITE);
+        const int keyn = getch_ck();
+
+        if (key_is_escape(keyn))
+        {
+            // Go back to the menu and return the smart cursor to its previous state
+            enable_smart_cursor(smart_cursor_enabled);
+            return;
+        }
+
+        if (menu.process_key(keyn))
+        {
+            menu.clear_selections();
+            _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+            clrscr();
+#ifdef USE_TILE_LOCAL
+            tiles.get_crt()->attach_menu(&menu);
+#endif
+        }
+    }
+}
+
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
 static const char *_range_type_verb(const char *const aux)
@@ -983,9 +1185,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
 
             if (indirectkiller.find(" by ") != std::string::npos)
-            {
                 indirectkiller.erase(0, indirectkiller.find(" by ") + 4);
-            }
 
             killerpath = "";
 
@@ -2169,9 +2369,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 }
 
                 if (semiverbose)
-                {
                     desc += std::string(summoners.size(), ')');
-                }
             }
 
             if (!semiverbose)

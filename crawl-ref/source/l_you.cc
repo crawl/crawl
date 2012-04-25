@@ -107,6 +107,9 @@ LUARET1(you_skill_progress, number,
         lua_isstring(ls, 1)
             ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
             : 0)
+LUARET1(you_can_train_skill, boolean,
+        lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
+                            : false)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -182,7 +185,6 @@ static int l_you_genus(lua_State *ls)
     return (1);
 }
 
-void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
 {
     lua_push_floor_items(ls, env.igrid(you.pos()));
@@ -286,9 +288,7 @@ LUAFN(you_mutation)
 
         const mutation_def& mdef = get_mutation_def(mut);
         if (!strcmp(mutname.c_str(), mdef.wizname))
-        {
             PLUARET(integer, you.mutation[mut]);
-        }
     }
 
     std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
@@ -310,6 +310,19 @@ LUAFN(you_is_level_on_stack)
 
     PLUARET(boolean, is_level_on_stack(lev));
 }
+
+LUAFN(you_train_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    if (lua_gettop(ls) >= 2 && you.can_train[sk])
+    {
+        you.train[sk] = std::min(std::max(luaL_checkint(ls, 2), 0), 2);
+        reset_training();
+    }
+
+    PLUARET(number, you.train[sk]);
+}
+
 
 static const struct luaL_reg you_clib[] =
 {
@@ -336,6 +349,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
+    { "can_train_skill", you_can_train_skill },
+    { "train_skill", you_train_skill },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },

@@ -441,9 +441,7 @@ static int _abyss_exit_chance()
 {
     int exit_chance = 7500;
     if (crawl_state.game_is_sprint())
-    {
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
-    }
     return exit_chance;
 }
 
@@ -1196,8 +1194,6 @@ static void _generate_area(const map_mask &abyss_genlevel_mask)
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 #endif
 
-    // Nuke map knowledge.
-    env.map_knowledge.init(map_cell());
     _abyss_apply_terrain(abyss_genlevel_mask);
 
     bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);

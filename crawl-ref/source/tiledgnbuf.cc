@@ -70,9 +70,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
     }
     else if (fg_idx == TILEP_PLAYER)
-    {
         pack_player(x, y, in_water);
-    }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
@@ -421,9 +419,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
-    {
         m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
-    }
     else if (bg & TILE_FLAG_CURSOR)
     {
         int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?

@@ -476,9 +476,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
             return;
     }
     else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
-    {
         return;
-    }
 
     if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
     {
@@ -1148,7 +1146,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 // Wake the monster if it's asleep.
                 if (m)
-                    behaviour_event(m, ME_ALERT, MHITYOU);
+                    behaviour_event(m, ME_ALERT, &you);
             }
             else
                 move_player_to_grid(pass, false, true);

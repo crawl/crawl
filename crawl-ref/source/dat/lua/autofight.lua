@@ -13,6 +13,7 @@ local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
 AUTOFIGHT_STOP = 30
+AUTOFIGHT_THROW = false
 
 local function delta_to_vi(dx, dy)
   local d2v = {
@@ -54,6 +55,10 @@ end
 local function have_ranged()
   local wp = items.equipped_at("weapon")
   return wp and wp.is_ranged and not wp.is_melded
+end
+
+local function have_throwing()
+  return AUTOFIGHT_THROW and items.fired_item() ~= nil
 end
 
 local function try_move(dx, dy)
@@ -125,6 +130,10 @@ local function get_monster_info(dx,dy)
     else
       info.attack_type = view.can_reach(dx, dy) and 1 or 0
     end
+  end
+  if info.attack_type == 0 and have_throwing() and you.see_cell_no_trans(dx, dy) then
+    -- Melee is better than throwing.
+    info.attack_type = 3
   end
   info.can_attack = (info.attack_type > 0) and 1 or 0
   info.safe = m:is_safe() and -1 or 0
@@ -207,6 +216,10 @@ local function set_stop_level(key, value)
   AUTOFIGHT_STOP = tonumber(value)
 end
 
+local function set_af_throw(key, value)
+  AUTOFIGHT_THROW = string.lower(value) ~= "false"
+end
+
 local function hp_is_low()
   local hp, mhp = you.hp()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
@@ -244,4 +257,10 @@ function hit_adjacent()
   attack(false)
 end
 
+function toggle_autothrow()
+  AUTOFIGHT_THROW = not AUTOFIGHT_THROW
+  crawl.mpr(AUTOFIGHT_THROW and "Enabling autothrow." or "Disabling autothrow.")
+end
+
 chk_lua_option.autofight_stop = set_stop_level
+chk_lua_option.autofight_throw = set_af_throw

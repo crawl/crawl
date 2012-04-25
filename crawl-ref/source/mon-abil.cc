@@ -1026,7 +1026,7 @@ static void _orc_battle_cry(monster* chief)
                         seen_affected.push_back(*mi);
 
                     if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
                 }
             }
         }
@@ -1125,7 +1125,7 @@ static void _cherub_hymn(monster* chief)
                         seen_affected.push_back(*mi);
 
                     if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
                 }
             }
         }
@@ -1387,9 +1387,7 @@ struct tentacle_attack_constraints
     tentacle_attack_constraints()
     {
         for (int i=0; i<8; i++)
-        {
             connect_idx[i] = i;
-        }
     }
 
     int min_dist(const coord_def & pos)
@@ -1426,18 +1424,14 @@ struct tentacle_attack_constraints
                 continue;
 
             if (!base_monster->is_habitable(temp.pos))
-            {
                 temp.path_distance = DISCONNECT_DIST;
-            }
             else
             {
                 actor * act_at = actor_at(temp.pos);
                 monster* mons_at = monster_at(temp.pos);
 
                 if (!act_at)
-                {
                     temp.path_distance += 1;
-                }
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
                 else if (mons_at && mons_is_firewood(mons_at)
@@ -1473,17 +1467,13 @@ struct tentacle_attack_constraints
                     if (probe->second.find(connect_level) != probe->second.end())
                     {
                         while (probe->second.find(connect_level + 1) != probe->second.end())
-                        {
                             connect_level++;
-                        }
                     }
 
                     int delta = connect_level - base_connect_level;
                     temp.connect_level = connect_level;
                     if (delta)
-                    {
                         temp.string_distance -= delta;
-                    }
                 }
 
 
@@ -1522,9 +1512,7 @@ struct tentacle_connect_constraints
     tentacle_connect_constraints()
     {
         for (int i=0; i<8; i++)
-        {
             connect_idx[i] = i;
-        }
     }
 
     int connect_idx[8];
@@ -1718,9 +1706,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     if (it != connect_costs.connection_constraints->end())
     {
         while (it->second.find(start_level + 1) != it->second.end())
-        {
             start_level++;
-        }
     }
 
     // Find the tentacle -> head path
@@ -1742,9 +1728,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
                  visited, candidates);
 
     if (candidates.empty())
-    {
         return (false);
-    }
 
     _establish_connection(tentacle_idx, base_idx,candidates[0], connect_type);
 
@@ -1878,9 +1862,7 @@ static int _collect_connection_data(monster* start_monster,
         {
             current_mon = &menv[next_idx];
             if (int(current_mon->number) != start_monster->mindex())
-            {
                 mprf("link information corruption!!! tentacle in chain doesn't match mindex");
-            }
             if (!retract_found)
             {
                 retract_pos = current_mon->pos();
@@ -1920,9 +1902,7 @@ void move_demon_tentacle(monster* tentacle)
 
     coord_def base_position;
     if (!tentacle->props.exists("base_position"))
-    {
         tentacle->props["base_position"].get_coord() = tentacle->pos();
-    }
 
     base_position = tentacle->props["base_position"].get_coord();
 
@@ -2037,13 +2017,9 @@ void move_demon_tentacle(monster* tentacle)
             tentacle->target = new_pos;
             monster* mtemp = monster_at(new_pos);
             if (mtemp)
-            {
                 tentacle->foe = mtemp->mindex();
-            }
             else if (new_pos == you.pos())
-            {
                 tentacle->foe = MHITYOU;
-            }
 
             new_pos = old_pos;
         }
@@ -2200,9 +2176,7 @@ void move_kraken_tentacles(monster* kraken)
         if (no_foe || !path_found)
         {
             if (retract_found)
-            {
                 new_pos = retract_pos;
-            }
             else
             {
                 // What happened here? Usually retract found should be true
@@ -2218,13 +2192,9 @@ void move_kraken_tentacles(monster* kraken)
             tentacle->target = new_pos;
             monster* mtemp = monster_at(new_pos);
             if (mtemp)
-            {
                 tentacle->foe = mtemp->mindex();
-            }
             else if (new_pos == you.pos())
-            {
                 tentacle->foe = MHITYOU;
-            }
 
             new_pos = old_pos;
         }
@@ -2607,7 +2577,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 if (coinflip())
                 {
-                 //   behaviour_event(mons, ME_CORNERED);
+                //  behaviour_event(mons, ME_CORNERED);
                     boulder_flee(mons, &beem);
                 }
             }
@@ -2853,9 +2823,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     // XXX: Unless monster dragons get abilities that are not a breath
     // weapon...
     if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
-    {
         setup_breath_timeout(mons);
-    }
 
     return (used);
 }

@@ -235,8 +235,7 @@ NAME:   elyvilon_altar_3
 TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup
 DEPTH:  D:2-20
 KFEAT:  C = altar_elyvilon
-KMASK:  w = no_monster_gen
-KMASK:  W = no_monster_gen
+KMASK:  wW = no_monster_gen
 MONS:   butterfly
 MAP
         ttttttttttttt
@@ -1137,9 +1136,9 @@ COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
 MONS:   angel god:zin name:glowing n_adj / \
-        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
-        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
-        angel god:zin name:glowing n_adj ; mace ego:holy_wrath
+        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath ident:type / \
+        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath ident:type / \
+        angel god:zin name:glowing n_adj ; mace ego:holy_wrath ident:type
 MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"}
 DEPTH:  2-27
 MAP

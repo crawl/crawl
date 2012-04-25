@@ -1142,7 +1142,7 @@ KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of morphology / randbook disc:transmutation \
                 owner:Cigotuvi spell:cigotuvi's_degeneration
 KITEM:      | = staff of death
-KITEM:      l = scroll of summoning
+KITEM:      l = scroll of unholy creation
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 :           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
@@ -1547,7 +1547,7 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
              tormentor w:5 / lorocyproca w:5 / blizzard demon / green death / \
              reaper / lich w:5 / angel / death drake w:5 / \
              tentacled monstrosity / draconian shifter w:5 / profane servitor w:5
-KMONS:   7 = eldritch tentacle / nothing
+KMONS:   7 = eldritch tentacle
 KMONS:   8 = silver statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
@@ -1590,6 +1590,7 @@ NSUBST:  @ = 1:@ / 1:P / 1:X / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 4:i / 1:j / 5:% / *
 NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:! / 1:[ / *:<
 NSUBST:  { = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
 NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eeggh% / 1:gg% / 3:%
+NSUBST:  7 = 7 / *=7``
 SUBST:   a = ':70 -:40 ncCll, F = ":70 -:40 ncCll, c = cccJK, C = cJK, B = cJKn....
 SUBST:   e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544'', } = <
 : colour("' = " .. dgn.random_colour() )
@@ -1605,7 +1606,7 @@ TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
 TILE:    K = dngn_crystal_green / dngn_crystal_cyan w:5
 TILE:    J = dngn_metal_wall_green / dngn_metal_wall_cyan w:5
 TILE:    n = dngn_transparent_wall_green / dngn_transparen_wall_cyan w:5
-TILE:    D = wall_stone_dark
+TILE:    D = dngn_dimension_edge
 TILE:    OPQRSTUVWXYZ&?[ = dngn_trap_golubria
 FTILE:   OPQRSTUVWXYZ&?[ = floor_rough_green
 TILE:    opqrstuvwxyz@!] = floor_black_cobalt
@@ -1628,6 +1629,14 @@ for i = 1, #teleporter_glyph do
     lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
     lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
 end
+
+set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
+                    boggart w:5 / blink frog w:5 / shadow wraith w:5 / unseen horror /
+                    ynoxinul / neqoxec / chaos spawn / giant orange brain /
+                    large abomination w:20 / small abomination w:20 / large skeleton w:20 /
+                    small skeleton w:20 / hellwing w:5 / smoke demon w:5 /
+                    skeletal warrior w:5 / hell hound w:5 / very ugly thing w:5 /
+                    golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
 
 set_border_fill_type('permarock_wall')
 dgn.set_feature_desc_short("unnaturally hard rock wall", "The dimension's edge")
@@ -1894,9 +1903,9 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
 MARKER:     1 = lua:MonPropsMarker:new {description="A mighty spellcaster, " \
             .. "wreathed in arcane energies, and muttering the most profane incantations " \
             .. "you might ever have heard.\n"}
-KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
+KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of unholy creation
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
-            amulet of conservation / scroll of torment / scroll of summoning /\
+            amulet of conservation / scroll of torment / scroll of unholy creation /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning

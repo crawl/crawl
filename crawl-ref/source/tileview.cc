@@ -175,7 +175,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SPIDER_NEST:
-        flv.wall  = TILE_WALL_LAIR;
+        flv.wall  = TILE_WALL_SPIDER;
         flv.floor = TILE_FLOOR_SPIDER;
         return;
 
@@ -573,21 +573,13 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
                     env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
             }
             else if (u_spc && l_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_SE;
-            }
             else if (u_spc && r_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_SW;
-            }
             else if (d_spc && l_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_NE;
-            }
             else if (d_spc && r_spc)
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_NW;
-            }
             else
             {
                 env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
@@ -791,9 +783,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 
     // Add name tags.
     if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
-    {
         return;
-    }
 
     const tag_pref pref = Options.tile_tag_pref;
     if (pref == TAGPREF_NONE)
@@ -836,9 +826,7 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     bool disturbance = false;
 
     if (env.map_knowledge(gc).invisible_monster())
-    {
         disturbance = true;
-    }
 
     if (you.see_cell(gc))
     {
@@ -928,9 +916,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
-    {
         flv->special = random2(256);
-    }
     else if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
              || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {

@@ -2240,7 +2240,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
     _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
-    _add_command(cols, 1, CMD_LIST_WEAPONS, "display current weapons", 2);
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
     _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
     _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
@@ -2260,11 +2259,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         pickup part of a single stack\n",
                        false, true, _cmdhelp_textfilter);
 
-
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
-    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
+    cols.add_formatted(1, "         in view\n",
+                       false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
 #ifndef USE_TILE
     _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
 #endif

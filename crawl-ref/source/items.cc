@@ -1295,13 +1295,9 @@ void pickup(bool partial_quantity)
     you.last_pickup.clear();
 
     if (o == NON_ITEM)
-    {
         mpr("There are no items here.");
-    }
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
-    {
         mpr("You can't reach the bottom while floating on water.");
-    }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
         // Deliberately allowing the player to pick up
@@ -1403,7 +1399,7 @@ bool is_stackable_item(const item_def &item)
     return (false);
 }
 
-iflags_t ident_flags(const item_def &item)
+static iflags_t _ident_flags(const item_def &item)
 {
     const iflags_t identmask = full_ident_mask(item);
     iflags_t flags = item.flags & identmask;
@@ -1441,7 +1437,7 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     }
 
     // Check the ID flags.
-    if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
+    if (!ignore_ident && _ident_flags(item1) != _ident_flags(item2))
         return (false);
 
     // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
@@ -1470,8 +1466,11 @@ bool items_stack(const item_def &item1, const item_def &item2,
 {
     // Both items must be stackable.
     if (!force_merge
-        && (!is_stackable_item(item1) || !is_stackable_item(item2)))
+        && (!is_stackable_item(item1) || !is_stackable_item(item2))
+        || static_cast<int>(item1.quantity) + item2.quantity > 32767)
     {
+        COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
+
         return (false);
     }
 
@@ -1742,24 +1741,19 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 if (floor_god_gift && !inv_god_gift
                     || inv_god_gift && !floor_god_gift)
                 {
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift, ", "");
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift", "");
+                    trim_god_gift_inscrip(you.inv[m]);
                 }
 
                 // If only one of the stacks is identified,
                 // identify the other to a similar extent.
-                if (ident_flags(mitm[obj]) != ident_flags(you.inv[m]))
+                if (_ident_flags(mitm[obj]) != _ident_flags(you.inv[m]))
                 {
                     if (!quiet)
                         mpr("These items seem quite similar.");
                     mitm[obj].flags |=
-                        ident_flags(you.inv[m]) & you.inv[m].flags;
+                        _ident_flags(you.inv[m]) & you.inv[m].flags;
                     you.inv[m].flags |=
-                        ident_flags(mitm[obj]) & mitm[obj].flags;
+                        _ident_flags(mitm[obj]) & mitm[obj].flags;
                 }
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);

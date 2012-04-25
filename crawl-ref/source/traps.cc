@@ -691,7 +691,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 mpr("A huge blade swings out and slices into you!");
-                const int damage = (env.absdepth0 * 2) + random2avg(29, 2)
+                const int damage = 48 + random2avg(29, 2)
                     - random2(1 + you.armour_class());
                 std::string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
@@ -1053,7 +1053,7 @@ int trap_def::max_damage(const actor& act)
         case TRAP_SPEAR:  return 10 + level;
         case TRAP_BOLT:   return 13 + level;
         case TRAP_AXE:    return 15 + level;
-        case TRAP_BLADE:  return (level ? 2*level : 10) + 28;
+        case TRAP_BLADE:  return (act.is_monster() ? 48 : 10) + 28;
         default:          return  0;
     }
 
@@ -1710,21 +1710,6 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }
 
-trap_type random_trap()
-{
-    return (static_cast<trap_type>(random2(TRAP_MAX_REGULAR+1)));
-}
-
-trap_type random_trap(dungeon_feature_type feat)
-{
-    ASSERT(feat_is_trap(feat, false));
-    trap_type trap = NUM_TRAPS;
-    do
-        trap = random_trap();
-    while (trap_category(trap) != feat);
-    return trap;
-}
-
 bool is_valid_shaft_level(const level_id &place)
 {
     if (crawl_state.test
@@ -1902,9 +1887,7 @@ static trap_type _random_trap_slime(int level_number)
     trap_type type = NUM_TRAPS;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3))
-    {
         type = TRAP_ZOT;
-    }
 
     if (one_chance_in(5) && is_valid_shaft_level(level_id::current()))
         type = TRAP_SHAFT;
@@ -1940,7 +1923,7 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
 
     if (random2(1 + level_number) > 7)
         type = TRAP_BOLT;
-    if (random2(1 + level_number) > 11)
+    if (random2(1 + level_number) > 14)
         type = TRAP_BLADE;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3)

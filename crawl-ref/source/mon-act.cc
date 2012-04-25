@@ -799,7 +799,8 @@ static bool _handle_reaching(monster* mons)
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
     const int grid_distance(delta.rdist());
-    const coord_def middle(mons->pos() + delta / 2);
+    const coord_def first_middle(mons->pos() + delta / 2);
+    const coord_def second_middle(foepos - delta / 2);
 
     if (grid_distance == 2
         // The monster has to be attacking the correct position.
@@ -807,9 +808,9 @@ static bool _handle_reaching(monster* mons)
         // With a reaching attack with a large enough range:
         && delta.abs() <= reach_range(range)
         // And with no dungeon furniture in the way of the reaching
-        // attack; if the middle square is empty, skip the LOS check.
-        && (feat_is_reachable_past(grd(middle))
-            || mons->see_cell_no_trans(foepos))
+        // attack;
+        && (feat_is_reachable_past(grd(first_middle))
+            || feat_is_reachable_past(grd(second_middle)))
         // The foe should be on the map (not stepped from time).
         && in_bounds(foepos))
     {
@@ -902,7 +903,7 @@ static bool _handle_scroll(monster* mons)
         }
         break;
 
-    case SCR_SUMMONING:
+    case SCR_UNHOLY_CREATION:
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
@@ -1678,13 +1679,9 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     int frenzy_degree = -1;
 
     if (mons->has_ench(ENCH_BATTLE_FRENZY))
-    {
         frenzy_degree = mons->get_ench(ENCH_BATTLE_FRENZY).degree;
-    }
     else if (mons->has_ench(ENCH_ROUSED))
-    {
         frenzy_degree = mons->get_ench(ENCH_ROUSED).degree;
-    }
 
     if (frenzy_degree != -1)
     {
@@ -1728,9 +1725,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
     // The item can be destroyed before returning.
     if (really_returns && thrown_object_destroyed(&item, pbolt.target))
-    {
         really_returns = false;
-    }
 
     if (really_returns)
     {
@@ -2384,10 +2379,7 @@ void handle_monster_move(monster* mons)
                         // FIXME: None of these work!
                         // Instead run away!
                         if (mons->add_ench(mon_enchant(ENCH_FEAR)))
-                        {
-                            behaviour_event(mons, ME_SCARE,
-                                            MHITNOT, newcell);
-                        }
+                            behaviour_event(mons, ME_SCARE, 0, newcell);
                         break;
                     }
                 }
@@ -2502,9 +2494,7 @@ void handle_monster_move(monster* mons)
                 bool basis = targ->props.exists("outwards");
                 int out_idx = basis ? targ->props["outwards"].get_int() : -1;
                 if (out_idx != -1)
-                {
                     menv[out_idx].props["inwards"].get_int() = mons->mindex();
-                }
 
                 monster_die(targ,
                             KILL_MISC, NON_MONSTER, true);
@@ -2569,9 +2559,7 @@ void handle_monster_move(monster* mons)
     if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (mons->pos() != kraken_last_update)
-        {
             move_kraken_tentacles(mons);
-        }
         move_kraken_tentacles(mons);
     }
 
@@ -3625,7 +3613,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         {
             dprf("Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
-            behaviour_event(m2, ME_ALERT, MHITNOT);
+            behaviour_event(m2, ME_ALERT);
         }
         return (false);
     }

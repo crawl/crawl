@@ -127,7 +127,7 @@ static const char* jager[][4] =
   {"ing","ink"},
   {"irl","url"},
   {"ish","eesh"},
-  {"^i$","hy"},
+  {"^i","hy", 0, ")"LETTERS},
   {"ve$","ff", "!"LETTERS},
   {"ect$","eck"},
   {"and","und"},
@@ -352,23 +352,27 @@ static void _wide(std::string &txt)
 
 void filter_lang(std::string &str)
 {
-    if (!Options.lang)
-        return;
-
     const char* (*repl)[4];
 
-    if (!strcmp(Options.lang, "dwarven"))
+    switch (Options.lang)
+    {
+    case LANG_DWARVEN:
         repl = dwarven;
-    else if (!strcmp(Options.lang, "jägerkin"))
+        break;
+    case LANG_JAGERKIN:
         repl = jager;
-    else if (!strcmp(Options.lang, "lisp"))
+        break;
+    case LANG_LISP:
         repl = lisp;
-    else if (!strcmp(Options.lang, "de"))
+        break;
+    case LANG_DE:
         _german(str), repl = german;
-    else if (!strcmp(Options.lang, "wide"))
+        break;
+    case LANG_WIDE:
         return _wide(str);
-    else
+    default:
         return;
+    }
 
     for (; **repl; repl++)
         _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);

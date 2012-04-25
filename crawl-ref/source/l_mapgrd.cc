@@ -41,9 +41,7 @@ static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
 
     map_lines &lines = mapc->map->map;
     if (row < 0 || col < 0 || col >= lines.width() || row >= lines.height())
-    {
         return (NULL);
-    }
 
     coord_def mc(col, row);
     return (&lines(mc));

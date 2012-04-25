@@ -251,7 +251,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 }
 
 // This function should be removed once we can support more than ISO-8859-1.
-ucs_t _fallback_char(ucs_t c)
+static ucs_t _fallback_char(ucs_t c)
 {
     // Weed out characters we can't draw.
     if (c > 0xFF) // TODO: try to transliterate

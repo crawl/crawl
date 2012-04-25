@@ -550,13 +550,9 @@ static int _tagged_string_printable_length(const std::string& s)
                 ++len;           // len wasn't incremented before
             }
             else if (*ci == '>') // tag close, still nothing printed
-            {
                 in_tag = false;
-            }
             else                 // tag continues
-            {
                 ++last_taglen;
-            }
         }
         else if (*ci == '<')     // tag starts
         {
@@ -564,9 +560,7 @@ static int _tagged_string_printable_length(const std::string& s)
             last_taglen = 1;
         }
         else                     // normal, printable character
-        {
             ++len;
-        }
     }
     return (len);
 }

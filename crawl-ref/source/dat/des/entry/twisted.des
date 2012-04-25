@@ -960,7 +960,8 @@ KITEM:  P = obsidian rune of zot mimic
 KITEM:  Q = bone rune of zot mimic
 KITEM:  R = golden rune of zot mimic
 KITEM:  Z = Orb of Zot mimic
-KPROP:  -><ABCDEFHIJKLMNOPQRZ = no_rtele_into
+KFEAT:  < = escape_hatch_up mimic
+KPROP:  ->ABCDEFHIJKLMNOPQRZ = no_rtele_into
 SUBST:  - = .
 MAP
 xxxxxxxxxxxxxxxxxx

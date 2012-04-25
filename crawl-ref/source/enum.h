@@ -9,6 +9,19 @@
 
 #include "tag-version.h"
 
+enum lang_t
+{
+    LANG_EN = 0,
+    LANG_PL,
+    LANG_DE,
+    LANG_FR,
+    // fake languages
+    LANG_DWARVEN,
+    LANG_JAGERKIN,
+    LANG_LISP,
+    LANG_WIDE,
+};
+
 enum ability_type
 {
     ABIL_NON_ABILITY = -1,
@@ -925,6 +938,7 @@ enum conduct_type
     DID_NATURAL_EVIL_KILLED_BY_SERVANT,   // TSO
     DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
     DID_HOLY_KILLED_BY_SERVANT,
+    DID_BANISH,
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
     DID_SPELL_PRACTISE,
@@ -1071,6 +1085,7 @@ enum game_type
     GAME_TYPE_HINTS,
     GAME_TYPE_ZOTDEF,
     GAME_TYPE_INSTRUCTIONS,
+    GAME_TYPE_HIGH_SCORES,
     NUM_GAME_TYPE
 };
 
@@ -2521,6 +2536,8 @@ enum monster_type                      // (int) menv[].type
     MONS_ARACHNE,
     MONS_MOTH,
     MONS_MOTH_OF_SUPPRESSION,
+    MONS_INEPT_ITEM_MIMIC,
+    MONS_INEPT_FEATURE_MIMIC,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2610,7 +2627,6 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
-    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 

@@ -32,9 +32,7 @@ VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
         m_state.texture = true;
     }
     if (m_colour_verts)
-    {
         m_state.array_colour = true;
-    }
 }
 
 void VertBuffer::draw() const

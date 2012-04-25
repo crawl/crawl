@@ -166,7 +166,7 @@ void holy_word_monsters(coord_def where, int pow, int caster,
         // because it can kill them, and because hostile
         // monsters don't use it.
         if (attacker != NULL)
-            behaviour_event(mons, ME_ANNOY, attacker->mindex());
+            behaviour_event(mons, ME_ANNOY, attacker);
 
         if (mons->speed_increment >= 25)
             mons->speed_increment -= 20;
@@ -316,8 +316,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
-        behaviour_event(mons, ME_ALERT,
-                        attacker ? attacker->mindex() : MHITNOT);
+        behaviour_event(mons, ME_ALERT, attacker);
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
@@ -580,7 +579,7 @@ void direct_effect(monster* source, spell_type spell,
     if (def)
     {
         // annoy the target
-        behaviour_event(def, ME_ANNOY, source->mindex());
+        behaviour_event(def, ME_ANNOY, source);
     }
 
     int damage_taken = 0;
@@ -816,9 +815,15 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
+            if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
+            {
+                mprf("It has %d charges and is fully charged.", new_charges);
+                set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+            }
+
             // Reinitialise zap counts.
             wand.plus  = new_charges;
-            wand.plus2 = (charged ? ZAPCOUNT_RECHARGED : ZAPCOUNT_MAX_CHARGED);
+            wand.plus2 = ZAPCOUNT_RECHARGED;
         }
         else // It's a rod.
         {
@@ -2009,7 +2014,7 @@ void handle_time()
 
     // Labyrinth and Abyss maprot.
     if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
-        forget_map(0);
+        forget_map(true);
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))

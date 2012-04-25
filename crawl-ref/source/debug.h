@@ -38,16 +38,11 @@
 
 #ifdef ASSERTS
 
-NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game);
+NORETURN void AssertFailed(const char *expr, const char *file, int line);
 
-#define ASSERT_SAVE(p)                                                  \
-    do {                                                                \
-        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, true);           \
-    } while (false)
-
-#define ASSERT(p)                                                       \
-    do {                                                                \
-        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, false);          \
+#define ASSERT(p)                                       \
+    do {                                                \
+        if (!(p)) AssertFailed(#p, __FILE__, __LINE__); \
     } while (false)
 
 #define VERIFY(p)       ASSERT(p)

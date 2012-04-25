@@ -300,11 +300,6 @@ bool feat_is_solid(dungeon_feature_type feat)
     return (feat <= DNGN_MAXSOLID || feat == DNGN_MALIGN_GATEWAY);
 }
 
-bool cell_is_solid(int x, int y)
-{
-    return (feat_is_solid(grd[x][y]));
-}
-
 bool cell_is_solid(const coord_def &c)
 {
     return (feat_is_solid(grd(c)));
@@ -610,9 +605,7 @@ coord_def get_random_stair()
     {
         const dungeon_feature_type feat = grd(*ri);
         if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat))
-        {
             st.push_back(*ri);
-        }
     }
     if (st.empty())
         return coord_def();        // sanity check: shouldn't happen

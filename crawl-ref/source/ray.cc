@@ -373,9 +373,7 @@ static geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
 
     // Now go through the cases separately.
     if (rx && ry && !rxy)
-    {
         rmirr = _bounce_diag_corridor(rmirr);
-    }
     else
     {
         // These all reduce to reflection at one line.

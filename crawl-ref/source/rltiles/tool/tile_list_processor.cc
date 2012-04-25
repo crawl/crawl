@@ -1532,9 +1532,7 @@ bool tile_list_processor::write_data()
                     lcenum[c] = std::tolower(lcenum[c]);
 
                 if (i == 0 || m_page.m_counts[i] == 1)
-                {
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
-                }
                 else
                 {
                     total_prob = m_page.m_probs[i + m_page.m_counts[i] - 1];
@@ -1626,9 +1624,7 @@ bool tile_list_processor::write_data()
         {
             fprintf(fp, "define([\"jquery\",");
             for (size_t i = 0; i < m_abstract.size(); ++i)
-            {
                 fprintf(fp, "\"./tileinfo-%s\", ", m_abstract[i].first.c_str());
-            }
             fprintf(fp, "],\n       function ($, ");
             for (size_t i = 0; i < m_abstract.size(); ++i)
             {
@@ -1645,9 +1641,7 @@ bool tile_list_processor::write_data()
         if (m_abstract.size() > 0)
         {
             for (size_t i = 0; i < m_abstract.size(); ++i)
-            {
                 fprintf(fp, "$.extend(exports, %s);\n", m_abstract[i].first.c_str());
-            }
         }
 
         if (m_start_value_module.size() > 0)

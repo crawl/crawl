@@ -385,9 +385,7 @@ move_again:
             if (!shield_reflects(*shield))
             {
                 if (victim->is_player())
-                {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-                }
                 else
                 {
                     simple_monster_message(mons, (" blocks "
@@ -769,9 +767,7 @@ move_again:
             if (!shield_reflects(*shield))
             {
                 if (victim->atype() == ACT_PLAYER)
-                {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-                }
                 else
                 {
                     simple_monster_message(mons, (" blocks "

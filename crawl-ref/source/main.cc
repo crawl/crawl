@@ -1394,9 +1394,7 @@ static void _go_upstairs()
     }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         if (ygrd == DNGN_STONE_ARCH)
@@ -1501,9 +1499,7 @@ static void _go_downstairs()
     }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_DOWNSTAIRS
              && !shaft)
     {
@@ -1553,9 +1549,7 @@ static void _go_downstairs()
     you.stop_being_constricted();
 
     if (shaft)
-    {
         start_delay(DELAY_DESCENDING_STAIRS, 0);
-    }
     else
     {
         if (_marker_vetoes_stair())
@@ -1673,7 +1667,7 @@ static void _do_remove_armour()
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (!form_can_wear())
     {
         mpr("You can't wear or remove anything in your present form.");
         return;
@@ -1789,9 +1783,7 @@ static void _do_cycle_quiver(int dir)
             mpr("No other missiles available. Use F to throw any item.");
     }
     else if (cur == -1)
-    {
         mpr("No missiles available. Use F to throw any item.");
-    }
 }
 
 static void _do_list_gold()
@@ -1845,10 +1837,12 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        clua.callfn("hit_closest", 0, 0);
+        if (!clua.callfn("hit_closest", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
     case CMD_AUTOFIGHT_NOMOVE:
-        clua.callfn("hit_adjacent", 0, 0);
+        if (!clua.callfn("hit_adjacent", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
 #endif
     case CMD_REST:            _do_rest(); break;
@@ -3019,6 +3013,11 @@ static void _player_reacts()
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
             you_teleport_now(false, true); // to new area of the Abyss
+
+            // It's effectively a new level, make a checkpoint save so eventual
+            // crashes lose less of the player's progress (and fresh new bad
+            // mutations).
+            save_game(false);
         }
     }
 
@@ -3154,7 +3153,7 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
-    if(crawl_state.viewport_monster_hp)
+    if (crawl_state.viewport_monster_hp)
     {
         crawl_state.viewport_monster_hp = false;
         viewwindow();
@@ -3408,8 +3407,8 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mon->friendly()
-            && player_can_handle_equipment() && !you.confused())
+        if (mon->caught() && mon->friendly() && form_can_wield()
+            && !you.confused())
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
@@ -3435,7 +3434,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     {
         if (!you.confused())
         {
-            if (!player_can_handle_equipment())
+            if (!form_can_wield())
             {
                 mpr("You can't disarm traps in your present form.");
                 return (true);
@@ -4092,21 +4091,46 @@ static void _move_player(coord_def move)
     if (you.confused())
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
+        monster *bad_mons = 0;
+        std::string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
             if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
+                break;
+            }
+            else
+            {
+                std::string suffix, adj;
+                monster *mons = monster_at(*ai);
+                if (mons && bad_attack(mons, adj, suffix))
+                {
+                    bad_mons = mons;
+                    bad_suff = suffix;
+                    bad_adj = adj;
+                    break;
+                }
             }
         }
-        if (dangerous != DNGN_FLOOR)
+        if (dangerous != DNGN_FLOOR || bad_mons)
         {
             std::string prompt = "Are you sure you want to move while confused "
                                  "and next to ";
-                        prompt += (dangerous == DNGN_LAVA ? "lava"
-                                                          : "deep water");
-                        prompt += "?";
+
+            if (dangerous != DNGN_FLOOR)
+                prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
+            else
+            {
+                std::string name = bad_mons->name(DESC_PLAIN);
+                if (name.find("the ") == 0)
+                    name.erase(0, 4);
+                if (bad_adj.find("your") != 0)
+                    bad_adj = "the " + bad_adj;
+                prompt += bad_adj + name + bad_suff;
+            }
+            prompt += "?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
@@ -4157,9 +4181,7 @@ static void _move_player(coord_def move)
         {
             // Probably need better messages. -cao
             if (mons_genus(targ_monst->type) == MONS_FUNGUS)
-            {
                 mprf("You walk carefully through the fungus.");
-            }
             else
                 mprf("You walk carefully through the plants.");
         }

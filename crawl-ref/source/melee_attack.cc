@@ -337,9 +337,7 @@ bool melee_attack::handle_phase_attempted()
                      defender->name(DESC_THE).c_str());
             }
             else
-            {
                 mprf("You hit the %s.", feat_name.c_str());
-            }
         }
         else
         {
@@ -532,7 +530,7 @@ bool melee_attack::handle_phase_hit()
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def(), !stab_attempt);
 
         // [ds] Monster may disappear after behaviour event.
@@ -834,9 +832,7 @@ bool melee_attack::attack()
     }
 
     if (shield_blocked)
-    {
         handle_phase_blocked();
-    }
     else
     {
         if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
@@ -905,7 +901,7 @@ bool melee_attack::attack()
         && attacker->alive() && defender->alive()
         && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
     {
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
     }
 
     // If an enemy attacked a friend, set the pet target if it isn't set
@@ -1043,9 +1039,7 @@ void melee_attack::adjust_noise()
         }
     }
     else if (weapon == NULL)
-    {
         noise_factor = 150;
-    }
 }
 
 void melee_attack::check_autoberserk()
@@ -1222,11 +1216,11 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         noise_factor = 125;
         break;
 
-        // Tentacles both gives you a main attack (replacing punch)
+        // Tentacles give you both a main attack (replacing punch)
         // and this secondary, high damage attack.
     case UNAT_TENTACLES:
         aux_attack = aux_verb = "squeeze";
-        aux_damage = 4 * you.has_usable_tentacles();
+        aux_damage += 12 * you.has_usable_tentacles();
         noise_factor = 100; // quieter than slapping
         break;
 
@@ -1366,7 +1360,7 @@ bool melee_attack::player_aux_unarmed()
         if (player_aux_test_hit())
         {
             // Upset the monster.
-            behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
+            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
             if (!defender->alive())
                 return (true);
 
@@ -1524,7 +1518,7 @@ void melee_attack::player_warn_miss()
     did_hit = false;
     // Upset only non-sleeping monsters if we missed.
     if (!defender->asleep())
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
     mprf("%s%s.",
          player_why_missed().c_str(),
@@ -2218,8 +2212,11 @@ bool melee_attack::distortion_affects_defender()
     {
         if (defender_visible)
             obvious_effect = true;
-        if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+        if ((crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+            && defender->is_player())
+        {
             canned_msg(MSG_STRANGE_STASIS);
+        }
         else
             defender->teleport(coinflip(), one_chance_in(5));
         return (false);
@@ -2243,7 +2240,7 @@ bool melee_attack::distortion_affects_defender()
         else if (defender_visible)
             obvious_effect = true;
 
-        defender->banish(attacker->name(DESC_PLAIN, true));
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true));
         return (true);
     }
 
@@ -3851,9 +3848,7 @@ random_var melee_attack::player_unarmed_speed()
 
     // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
-    {
         unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
-    }
     // Bats are faster (for what good it does them).
     if (player_in_bat_form())
         unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
@@ -5084,13 +5079,9 @@ int melee_attack::calc_damage()
             damage = damage * 3 / 2;
         }
         else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
-        {
             frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
-        }
         else if (as_mon->has_ench(ENCH_ROUSED))
-        {
             frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-        }
 
         if (frenzy_degree != -1)
         {

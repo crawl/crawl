@@ -22,6 +22,7 @@
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "items.h"
@@ -208,9 +209,7 @@ void monster::reset_client_id()
 void monster::ensure_has_client_id()
 {
     if (client_id == 0)
-    {
         client_id = ++last_client_id;
-    }
 }
 
 mon_attitude_type monster::temp_attitude() const
@@ -259,7 +258,8 @@ bool monster::submerged() const
 
     if (grd(pos()) == DNGN_DEEP_WATER
         && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
-            || type == MONS_GREY_DRACONIAN)
+            || (mons_genus(type) == MONS_DRACONIAN
+                && draco_subspecies(this) == MONS_GREY_DRACONIAN))
         && !can_drown())
     {
         return (true);
@@ -271,9 +271,11 @@ bool monster::submerged() const
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
-    return (grid == DNGN_SHALLOW_WATER
-            && (mons_genus(type) == MONS_NAGA             // tails, not feet
-                || body_size(PSIZE_BODY) >= SIZE_LARGE));
+    return ((mons_genus(type) == MONS_DRACONIAN
+             && draco_subspecies(this) == MONS_GREY_DRACONIAN)
+                 || grid == DNGN_SHALLOW_WATER
+                    && (mons_genus(type) == MONS_NAGA // tails, not feet
+                        || body_size(PSIZE_BODY) >= SIZE_LARGE));
 }
 
 bool monster::extra_balanced() const
@@ -1421,6 +1423,14 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_MENNAS)
             return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
+
+        if (mons->type == MONS_ARACHNE)
+        {
+            return (weapon.base_type == OBJ_STAVES
+                    && weapon.sub_type == STAFF_POISON
+                 || weapon.base_type == OBJ_WEAPONS
+                    && weapon.special == UNRAND_OLGREB);
+        }
     }
 
     if (mons->is_holy())
@@ -1989,7 +1999,7 @@ bool monster::pickup_scroll(item_def &item, int near)
 {
     if (item.sub_type != SCR_TELEPORTATION
         && item.sub_type != SCR_BLINKING
-        && item.sub_type != SCR_SUMMONING)
+        && item.sub_type != SCR_UNHOLY_CREATION)
     {
         return (false);
     }
@@ -2811,7 +2821,7 @@ void monster::expose_to_element(beam_type flavour, int strength)
     }
 }
 
-void monster::banish(const std::string &)
+void monster::banish(actor *agent, const std::string &)
 {
     coord_def old_pos = pos();
 
@@ -2819,6 +2829,21 @@ void monster::banish(const std::string &)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
+    if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
+        && !has_ench(ENCH_FAKE_ABJURATION)
+        && !mons_class_flag(type, M_NO_EXP_GAIN))
+    {
+        // Double the existing damage blame counts, so the unassigned xp for
+        // remaining hp is effectively halved.  No need to pass flags this way.
+        damage_total *= 2;
+        damage_friendly *= 2;
+        blame_damage(agent, hit_points);
+        // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
+        // distinguishable from others of the same kind in the Abyss.
+
+        if (agent->is_player())
+            did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+    }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);

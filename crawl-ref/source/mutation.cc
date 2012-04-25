@@ -63,7 +63,6 @@ static const body_facet_def _body_facets[] =
     { EQ_HELMET, MUT_ANTENNAE, 1 },
     //{ EQ_HELMET, MUT_BEAK, 1 },
     { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_GLOVES, MUT_TENTACLES, 3 },
     { EQ_BOOTS, MUT_HOOVES, 3 },
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
@@ -77,7 +76,6 @@ equipment_type beastly_slot(int mut)
     case MUT_BEAK:
         return EQ_HELMET;
     case MUT_CLAWS:
-    case MUT_TENTACLES:
         return EQ_GLOVES;
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -222,7 +220,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_RUGGED_BROWN_SCALES:
             return (MUTACT_PARTIAL);
         case MUT_YELLOW_SCALES:
-            return (you.mutation[mut] > 1 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
         case MUT_ICY_BLUE_SCALES:
         case MUT_MOLTEN_SCALES:
         case MUT_SLIMY_GREEN_SCALES:
@@ -435,7 +432,7 @@ std::string describe_mutations()
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
-        scale_type = "dull grey";
+        scale_type = "dull iron-grey";
         break;
 
     case SP_RED_DRACONIAN:
@@ -527,10 +524,10 @@ std::string describe_mutations()
 
     case SP_OCTOPODE:
         result += "You cannot wear most types of armour.\n";
+        result += "You are amphibious.\n";
         result += _annotate_form_based(
             "You can wear up to eight rings at the same time.",
             !form_keeps_mutations() && you.form != TRAN_SPIDER);
-        result += "You are amphibious.\n";
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
             !form_keeps_mutations());
@@ -566,10 +563,12 @@ std::string describe_mutations()
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
         std::ostringstream num;
-        num << 4 + you.experience_level / 3;
+        num << 4 + you.experience_level / 3
+                 + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const std::string msg = "Your " + scale_type + " scales are hard"
-                                " (AC +" + num.str() + ").";
+        const std::string msg = "Your " + scale_type + " scales are "
+              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
+              + " (AC +" + num.str() + ").";
 
         result += _annotate_form_based(msg,
                       player_is_shapechanged() && you.form != TRAN_DRAGON);
@@ -814,7 +813,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
     case MUT_CLAWS:
-    case MUT_TENTACLES:
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -976,7 +974,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_REGENERATION,     MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,     MUT_BLURRY_VISION,    0},
         { MUT_FAST,             MUT_SLOW,             0},
-        { MUT_CLAWS,            MUT_TENTACLES,       -1},
         { MUT_FANGS,            MUT_BEAK,            -1},
         { MUT_HOOVES,           MUT_TALONS,          -1},
         { MUT_TRANSLUCENT_SKIN, MUT_CAMOUFLAGE,      -1},
@@ -1078,38 +1075,42 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return (true);
 
     // Only Nagas and Draconians can get this one.
-    if (mutat == MUT_STINGER
-        && you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN))
+    if (you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN)
+        && mutat == MUT_STINGER)
     {
         return (true);
     }
 
     // Need tentacles to grow something on them.
-    if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
+    if (you.species != SP_OCTOPODE && mutat == MUT_TENTACLE_SPIKE)
         return (true);
 
     // No bones.
-    if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && mutat == MUT_THIN_SKELETAL_STRUCTURE)
         return (true);
 
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
+    // No feet.
+    if (!player_has_feet(false)
+        && (mutat == MUT_HOOVES || mutat == MUT_TALONS))
+    {
         return (true);
+    }
 
     // Only Nagas can get this upgrade.
-    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
+    if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
         return (true);
 
     // Red Draconians can already breathe flames.
-    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
+    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
         return (true);
 
     // Green Draconians can breathe mephitic, poison is not really redundant
     // but its name might confuse players a bit ("noxious" vs "poison").
-    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
+    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return (true);
 
     // Only Draconians can get wings.
-    if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
+    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
         return (true);
 
     // Vampires' healing and thirst rates depend on their blood level.
@@ -1122,18 +1123,17 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them. Felids cannot get tentacles, since they have
-    // no fingers, hands or arms to mutate into tentacles.
-    if ((mutat == MUT_CLAWS || mutat == MUT_TENTACLES)
-        && you.species == SP_FELID)
-    {
+    // increases for them.
+    if (you.species == SP_FELID && mutat == MUT_CLAWS)
         return (true);
-    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
-    if (you.species == SP_MERFOLK && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    if (you.species == SP_MERFOLK
+        && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    {
         return (true);
+    }
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1398,10 +1398,10 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
     case MUT_LARGE_BONE_PLATES:
         {
             const char *arms;
-            if (you.mutation[MUT_TENTACLES] >= 3)
-                arms = "tentacles";
-            else if (you.species == SP_FELID)
+            if (you.species == SP_FELID)
                 arms = "legs";
+            else if (you.species == SP_OCTOPODE)
+                arms = "tentacles";
             else
                 break;
             mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
@@ -1448,8 +1448,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         break;
 
     case MUT_CLAWS:
-    case MUT_TENTACLES:
-        // Gloves aren't prevented until level 3 of claws or tentacles.
+        // Claws force gloves off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
@@ -1812,9 +1811,6 @@ static const facet_def _demon_facets[] =
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_NEGATIVE_ENERGY_RESISTANCE },
-      { 3, 3, 3 } },
-    { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
@@ -1825,8 +1821,6 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
       { 2, 2, 2 } },
     { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
-      { 2, 2, 2 } },
-    { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
       { 2, 2, 2 } },
     { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
       { 2, 2, 2 } },
@@ -1940,6 +1934,7 @@ try_again:
     int slots_lost = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
+    int cloud_producing = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -1975,8 +1970,10 @@ try_again:
                 if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
+                if (m == MUT_SAPROVOROUS || m == MUT_IGNITE_BLOOD)
+                    cloud_producing++;
+
                 if (m == MUT_CLAWS && i == 2
-                    || m == MUT_TENTACLES && i == 2
                     || m == MUT_HORNS && i == 0
                     || m == MUT_BEAK && i == 0
                     || m == MUT_ANTENNAE && i == 0
@@ -1998,6 +1995,9 @@ try_again:
         goto try_again;
 
     if (ice_elemental + fire_elemental > 1)
+        goto try_again;
+
+    if (cloud_producing > 1)
         goto try_again;
 
     return ret;

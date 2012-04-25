@@ -24,6 +24,7 @@
 #include "coord.h"
 #include "describe.h"
 #include "env.h"
+#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "initfile.h"
@@ -415,13 +416,12 @@ static void _print_stats_wp(int y)
         col = LIGHTGREY;
         text = "Nothing wielded"; // Default
 
-        if (you.has_usable_claws(true))
-            text = "Claws";
-        if (you.has_usable_tentacles(true))
-            text = "Tentacles";
-
         if (you.species == SP_FELID)
             text = "Teeth and claws";
+        else if (you.has_usable_claws(true))
+            text = "Claws";
+        else if (you.has_usable_tentacles(true))
+            text = "Tentacles";
 
         switch (you.form)
         {
@@ -661,7 +661,13 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT_SAVE(wherex() == crawl_view.hudp.x);
+#ifdef ASSERTS
+    if (wherex() != crawl_view.hudp.x)
+    {
+        save_game(false); // should be safe
+        die("misaligned HUD (is %d, should be %d)", wherex(), crawl_view.hudp.x);
+    }
+#endif
 
     size_t i_light = 0;
     while (true)
@@ -825,12 +831,6 @@ void print_stats(void)
     {
         cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-#ifdef DEBUG_DIAGNOSTICS
-        cprintf("XP: ");
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%d/%d (%d) ",
-                you.experience_level, you.skill_cost_level, you.exp_available);
-#else
         cprintf("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%2d ", you.experience_level);
@@ -841,7 +841,6 @@ void print_stats(void)
             textcolor(HUD_VALUE_COLOUR);
             cprintf("%2d%% ", get_exp_progress());
         }
-#endif
         if (crawl_state.game_is_zotdef())
         {
             cgotoxy(1, 9, GOTO_STAT);
@@ -1707,7 +1706,6 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
-    const int racid = player_res_acid(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
@@ -1721,7 +1719,6 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
-             "%sRes.Acid. : %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
              "%sSust.Abil.: %s\n"
@@ -1730,7 +1727,6 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rfire, 3), _itosym3(rfire),
              _determine_colour_string(rcold, 3), _itosym3(rcold),
              _determine_colour_string(rlife, 3), _itosym3(rlife),
-             _determine_colour_string(racid, 3), _itosym3(racid),
              _determine_colour_string(rpois, 1), _itosym1(rpois),
              _determine_colour_string(relec, 1), _itosym1(relec),
              _determine_colour_string(rsust, 2), _itosym2(rsust),
@@ -1783,15 +1779,14 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int stasis = player_effect_stasis(calc_unid);
     const int notele = player_effect_notele(calc_unid)
                        || crawl_state.game_is_zotdef()
-                       && orb_haloed(you.pos());
+                          && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
-    else
-    if (rrtel && !stasis)
+    else if (rrtel && !stasis)
     {
         snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
@@ -2211,10 +2206,10 @@ static std::string _status_mut_abilities(int sw)
     if (you.species == SP_OCTOPODE)
     {
         mutations.push_back("almost no armour");
+        mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
             "8 rings",
             !form_keeps_mutations() && you.form != TRAN_SPIDER));
-        mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
             !form_keeps_mutations()));
@@ -2298,10 +2293,6 @@ static std::string _status_mut_abilities(int sw)
                 break;
             case MUT_HIGH_MAGIC:
                 snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
-                current = info;
-                break;
-            case MUT_STOCHASTIC_TORMENT_RESISTANCE:
-                snprintf(info, INFO_SIZE, "%d%% torment resistance", level*20);
                 current = info;
                 break;
             case MUT_ICEMAIL:

@@ -20,6 +20,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
@@ -972,6 +973,9 @@ bool food_change(bool suppress_message)
             default:
                 return (state_changed);
             }
+
+            if (!less_hungry)
+                maybe_id_ring_hunger();
         }
     }
 
@@ -1736,7 +1740,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     }
 
     if (you.duration[DUR_NAUSEA] && sapro < 3)
-        ratio = std::min(ratio + 333, 1000);
+        ratio = 1000 - (1000 - ratio) / 2;
 
     return ratio;
 }
@@ -2027,40 +2031,19 @@ void finished_eating_message(int food_type)
         // It will be converted to mp by normal food use (but not costs).
         break;
     case FOOD_PIZZA:
-        if (!Options.pizza.empty() && !one_chance_in(3))
-            mprf("Mmm... %s.", Options.pizza.c_str());
-        else
-        {
-            int temp_rand = random2(10);
-            mprf("%s %s",
-                (carnivorous && temp_rand >= 7
-                 || herbivorous && temp_rand <= 4
-                 || temp_rand == 3) ? "Yeuchh!" : "Mmm...",
-                (temp_rand == 0) ? "Ham and pineapple." :
-                (temp_rand == 1) ? "Super Supreme." :
-                (temp_rand == 2) ? "Pepperoni." :
-                (temp_rand == 3) ? "Anchovies." :
-                (temp_rand == 4) ? "Chicken." :
-                (temp_rand == 5) ? "That's the fabled Pandemonium Pizza!" :
-                (temp_rand == 6) ? "Cheesy." :
-                (temp_rand == 7) ? "Vegetable." :
-                (temp_rand == 8) ? "Peppers."
-                                 : "Mushroom.");
-        }
+    {
+        std::string taste = getMiscString("eating_pizza");
+        if (taste.empty())
+            taste = "Bleh, bug pizza.";
+        mprf("%s", taste.c_str());
         break;
+    }
     case FOOD_CHEESE:
     {
-        int temp_rand = random2(9);
-        mprf("Mmm...%s.",
-             (temp_rand == 0) ? "Cheddar" :
-             (temp_rand == 1) ? "Edam" :
-             (temp_rand == 2) ? "Wensleydale" :
-             (temp_rand == 3) ? "Camembert" :
-             (temp_rand == 4) ? "Goat cheese" :
-             (temp_rand == 5) ? "Fruit cheese" :
-             (temp_rand == 6) ? "Mozzarella" :
-             (temp_rand == 7) ? "Sheep cheese"
-                              : "Yak cheese");
+        std::string taste = getMiscString("eating_cheese");
+        if (taste.empty())
+            taste = "Yeuchh! Moldy bug cheese.";
+        mprf("%s", taste.c_str());
         break;
     }
     default:

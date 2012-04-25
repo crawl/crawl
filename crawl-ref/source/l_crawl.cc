@@ -295,9 +295,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         }
     }
     else if (lua_isnumber(ls, argi))
-    {
         macro_sendkeys_end_add_expanded(luaL_checkint(ls, argi));
-    }
 }
 
 /*
@@ -441,9 +439,7 @@ static int crawl_bindkey(lua_State *ls)
 {
     const char *s = NULL;
     if (lua_isstring(ls, 1))
-    {
         s = lua_tostring(ls, 1);
-    }
 
     if (!s || !lua_isfunction(ls, 2) || lua_gettop(ls) != 2)
         return (0);

@@ -278,7 +278,11 @@ void Stash::update()
         feat = DNGN_FLOOR;
 
     if (feat_is_trap(feat))
+    {
         trap = get_trap_type(p);
+        if (trap == TRAP_WEB)
+            feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
+    }
 
     // If this is your position, you know what's on this square
     if (p == you.pos())

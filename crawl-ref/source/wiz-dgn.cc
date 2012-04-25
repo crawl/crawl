@@ -247,9 +247,7 @@ bool wizard_create_feature(const coord_def& pos)
     }
 
     if (int feat_num = atoi(specs))
-    {
         feat = static_cast<dungeon_feature_type>(feat_num);
-    }
     else
     {
         std::string name = lowercase_string(specs);
@@ -735,7 +733,7 @@ void debug_test_explore()
     _debug_kill_traps();
     _debug_destroy_doors();
 
-    forget_map(100);
+    forget_map();
 
     // Remember where we are now.
     const coord_def where = you.pos();
