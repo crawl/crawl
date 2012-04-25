@@ -1145,10 +1145,23 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         std::vector<std::string> stack;
         for (unsigned int i = 0; i < you.level_stack.size(); i++)
             stack.push_back(you.level_stack[i].id.describe());
-        die("Attempt to enter a portal (%s) twice; stack: %s",
-            level_id::current().describe().c_str(),
-            comma_separated_line(stack.begin(), stack.end(),
-                                 ", ", ", ").c_str());
+        if (you.wizard)
+        {
+            // warn about breakage so testers know it's an abnormal situation.
+            mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+                 "the same level (%s) twice! It will be trampled upon return.\n"
+                 "The stack has: %s.",
+                 level_id::current().describe().c_str(),
+                 comma_separated_line(stack.begin(), stack.end(),
+                                      ", ", ", ").c_str());
+        }
+        else
+        {
+            die("Attempt to enter a portal (%s) twice; stack: %s",
+                level_id::current().describe().c_str(),
+                comma_separated_line(stack.begin(), stack.end(),
+                                     ", ", ", ").c_str());
+        }
     }
 
     unwind_var<dungeon_feature_type> stair(
