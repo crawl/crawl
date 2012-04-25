@@ -2992,3 +2992,56 @@ int mons_icecave_rare(monster_type mcls)
         return 0;
     }
 }
+
+// Bailey
+int mons_bailey_level(monster_type mcls)
+{
+    if (!mons_bailey_rare(mcls))
+        return 999;
+    return 1;
+}
+
+int mons_bailey_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ORC:
+    case MONS_GNOLL:
+        return 50;
+
+    case MONS_ORC_WARRIOR:
+        return 35;
+
+    case MONS_ORC_KNIGHT:
+        return 10;
+
+    // no randomly spawning warlords
+
+    default:
+        return 0;
+    }
+}
+
+// Ossuary
+int mons_ossuary_level(monster_type mcls)
+{
+    if (!mons_ossuary_rare(mcls))
+        return 999;
+    return 1;
+}
+
+int mons_ossuary_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_SKELETON_SMALL:
+        return 50;
+
+    case MONS_MUMMY:
+        return 20;
+
+    default:
+        return 0;
+    }
+}
