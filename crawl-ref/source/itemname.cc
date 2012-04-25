@@ -911,10 +911,8 @@ static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC:
-        return "Minor Magic";
-    case BOOK_CONJURATIONS_II:
-        return "Conjurations";
+    case BOOK_MINOR_MAGIC:            return "Minor Magic";
+    case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
     case BOOK_SUMMONINGS:             return "Summonings";

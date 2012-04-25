@@ -232,7 +232,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_MALEDICT:
         return 2;
 
-    case BOOK_CONJURATIONS_II:
+    case BOOK_CONJURATIONS:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
     case BOOK_WIZARDRY:
