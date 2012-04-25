@@ -70,9 +70,7 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
-#if TAG_MAJOR_VERSION != 32
     CARD_ORB,
-#endif
 
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
@@ -80,9 +78,7 @@ enum card_type
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
-#if TAG_MAJOR_VERSION != 32
     CARD_MERCENARY,
-#endif
 
     CARD_CRUSADE,
     CARD_SUMMON_ANIMAL,
@@ -100,19 +96,11 @@ enum card_type
     CARD_WILD_MAGIC,
     CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
-#if TAG_MAJOR_VERSION != 32
     CARD_ALCHEMIST,
-#endif
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
-#if TAG_MAJOR_VERSION == 32
-    CARD_MAP,                   // magic mapping
-#endif
     CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
-#if TAG_MAJOR_VERSION == 32
-    CARD_SPADE,                 // dig
-#endif
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
     CARD_STAIRS,                // moves stairs around
@@ -126,12 +114,6 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
-
-#if TAG_MAJOR_VERSION == 32
-    CARD_ALCHEMIST,
-    CARD_ORB,
-    CARD_MERCENARY,
-#endif
 
     NUM_CARDS
 };

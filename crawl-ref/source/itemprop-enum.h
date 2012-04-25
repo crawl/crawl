@@ -11,9 +11,6 @@ enum armour_type
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
     ARM_SPLINT_MAIL,
-#if TAG_MAJOR_VERSION == 32
-    ARM_BANDED_MAIL,
-#endif
     ARM_PLATE_ARMOUR,
 
     ARM_CLOAK,
@@ -216,9 +213,6 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,
-#if TAG_MAJOR_VERSION == 32
-    MISC_CRYSTAL_BALL_OF_SEEING,
-#endif
     MISC_AIR_ELEMENTAL_FAN,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_EARTH_ELEMENTALS,
@@ -227,9 +221,6 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
     MISC_EMPTY_EBONY_CASKET,
-#if TAG_MAJOR_VERSION == 32
-    MISC_CRYSTAL_BALL_OF_FIXATION,
-#endif
     MISC_DISC_OF_STORMS,
 
     // pure decks
@@ -319,9 +310,6 @@ enum scroll_type
     SCR_CURSE_ARMOUR,
     SCR_IMMOLATION,
     SCR_BLINKING,
-#if TAG_MAJOR_VERSION == 32
-    SCR_PAPER,
-#endif
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
@@ -376,9 +364,6 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_RETURNING,
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
-#if TAG_MAJOR_VERSION == 32
-    SPMSL_REAPING,
-#endif
     SPMSL_DISPERSAL,
     SPMSL_EXPLODING,
     SPMSL_STEEL,
@@ -470,17 +455,9 @@ enum weapon_type
     WPN_LONGBOW,
     WPN_MAX_RACIAL = WPN_LONGBOW,
 
-#if TAG_MAJOR_VERSION == 32
-    WPN_ANKUS,
-#endif
     WPN_DEMON_WHIP,
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
-
-#if TAG_MAJOR_VERSION == 32
-    WPN_KNIFE,
-    WPN_KATANA,
-#endif
 
     WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,
@@ -489,9 +466,7 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
-#if TAG_MAJOR_VERSION != 32
     WPN_STAFF,
-#endif
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 
@@ -501,18 +476,11 @@ enum weapon_type
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,
-#if TAG_MAJOR_VERSION == 32
-    WPN_BLESSED_KATANA,
-#endif
     WPN_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
-
-#if TAG_MAJOR_VERSION == 32
-    WPN_STAFF,
-#endif
 
     NUM_WEAPONS,
 

@@ -70,10 +70,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_CHAIN_MAIL,           "chain mail",             7, -4,  400,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-#if TAG_MAJOR_VERSION == 32
-    { ARM_BANDED_MAIL,          "banded mail",            8, -5,  500,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
-#endif
     { ARM_SPLINT_MAIL,          "splint mail",            8, -5,  550,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -6,  650,
@@ -193,11 +189,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
-#if TAG_MAJOR_VERSION == 32
-    { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_CRUSHING | DAM_PIERCE,  1 },
-#endif
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
@@ -227,11 +218,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
-#if TAG_MAJOR_VERSION == 32
-    { WPN_KNIFE,             "knife",               3,  5, 10,  10,  1,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
-        DAMV_STABBING | DAM_SLICE, 0 },
-#endif
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_STABBING | DAM_SLICE, 10 },
@@ -264,14 +250,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-#if TAG_MAJOR_VERSION == 32
-    { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
-        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 0 },
-    { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
-        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 0 },
-#endif
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
@@ -858,9 +836,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             break;
         case OBJ_ARMOUR:
             if (item.sub_type == ARM_SPLINT_MAIL
-#if TAG_MAJOR_VERSION == 32
-                || item.sub_type == ARM_BANDED_MAIL
-#endif
                 || item.sub_type == ARM_PLATE_ARMOUR
                 || is_hard_helmet(item))
             {
@@ -1418,11 +1393,6 @@ int weapon_rarity(int w_type)
     case WPN_BARDICHE:
         return (1);
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:
-    case WPN_BLESSED_KATANA:
-    case WPN_ANKUS:
-#endif
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
     case WPN_EXECUTIONERS_AXE:
@@ -1633,9 +1603,6 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_FALCHION:
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
-#if TAG_MAJOR_VERSION == 32
-        case WPN_BLESSED_KATANA:
-#endif
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
@@ -1696,14 +1663,6 @@ bool convert2good(item_def &item, bool allow_blessed)
         else
             item.sub_type = WPN_EUDEMON_BLADE;
         break;
-
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:
-        if (!allow_blessed)
-            return (false);
-        item.sub_type = WPN_BLESSED_KATANA;
-        break;
-#endif
 
     case WPN_DOUBLE_SWORD:
         if (!allow_blessed)
@@ -1769,12 +1728,6 @@ bool convert2bad(item_def &item)
     case WPN_EUDEMON_BLADE:
         item.sub_type = WPN_DEMON_BLADE;
         break;
-
-#if TAG_MAJOR_VERSION == 32
-    case WPN_BLESSED_KATANA:
-        item.sub_type = WPN_KATANA;
-        break;
-#endif
 
     case WPN_BLESSED_DOUBLE_SWORD:
         item.sub_type = WPN_DOUBLE_SWORD;

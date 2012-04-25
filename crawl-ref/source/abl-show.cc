@@ -176,7 +176,7 @@ static monster_type _monster_for_ability (const ability_def& abil);
  *
  * @note Declaring this const messes up externs later, so don't do it!
  */
-ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -3246,7 +3246,7 @@ static int _is_god_ability(ability_type abil)
     if (abil == ABIL_NON_ABILITY)
         return (GOD_NO_GOD);
 
-    for (int i = 0; i < MAX_NUM_GODS; ++i)
+    for (int i = 0; i < NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
         {
             if (god_abilities[i][j] == abil)

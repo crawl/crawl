@@ -4428,9 +4428,6 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "returning",
         "chaos",
         "penetration",
-#if TAG_MAJOR_VERSION == 32
-        "reaping",
-#endif
         "dispersal",
         "exploding",
         "steel",

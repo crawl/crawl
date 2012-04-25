@@ -55,9 +55,6 @@ orcish_hammer2
 dwarven_hammer1 WPN_HAMMER_DWARF
 dwarven_hammer2
 %rim 1
-#... if TAG_MAJOR_VERSION == 32
-ankus WPN_ANKUS
-#...
 bullwhip WPN_WHIP
 bullwhip2
 %rim 0

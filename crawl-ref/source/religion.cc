@@ -3643,7 +3643,7 @@ void god_pitch(god_type which_god)
 int had_gods()
 {
     int count = 0;
-    for (int i = 0; i < MAX_NUM_GODS; i++)
+    for (int i = 0; i < NUM_GODS; i++)
         count += you.worshipped[i];
     return count;
 }

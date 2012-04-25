@@ -117,13 +117,8 @@ std::string item_def::name(description_level_type descrip,
     monster_flag_type corpse_flags;
 
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
-         && !(((corpse_flags =
-#if TAG_MAJOR_VERSION == 32
-                 (int64_t)props[CORPSE_NAME_TYPE_KEY]
-#else
-                 props[CORPSE_NAME_TYPE_KEY].get_int64()
-#endif
-               ) & MF_NAME_SPECIES)
+         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+               & MF_NAME_SPECIES)
               && !(corpse_flags & MF_NAME_DEFINITE))
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
@@ -634,9 +629,6 @@ static const char* scroll_type_name(int scrolltype)
 {
     switch (static_cast<scroll_type>(scrolltype))
     {
-#if TAG_MAJOR_VERSION == 32
-    case SCR_PAPER:              return "old paper";
-#endif
     case SCR_IDENTIFY:           return "identify";
     case SCR_TELEPORTATION:      return "teleportation";
     case SCR_FEAR:               return "fear";
@@ -862,10 +854,6 @@ static const char* misc_type_name(int type, bool known)
     case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
     case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-#if TAG_MAJOR_VERSION == 32
-    case MISC_CRYSTAL_BALL_OF_FIXATION:
-    case MISC_CRYSTAL_BALL_OF_SEEING:   return "old crystal ball";
-#endif
     case MISC_BOX_OF_BEASTS:            return "box of beasts";
     case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
     case MISC_AIR_ELEMENTAL_FAN:        return "air elemental fan";
@@ -924,15 +912,7 @@ static const char* _book_type_name(int booktype)
     switch (static_cast<book_type>(booktype))
     {
     case BOOK_MINOR_MAGIC:
-#if TAG_MAJOR_VERSION == 32
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
-#endif
         return "Minor Magic";
-#if TAG_MAJOR_VERSION == 32
-    case BOOK_CONJURATIONS_I:
-        return "Old Conjurations";
-#endif
     case BOOK_CONJURATIONS_II:
         return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
@@ -1885,22 +1865,6 @@ std::string item_def::name_aux(description_level_type desc,
                 break;
             }
             break;
-#if TAG_MAJOR_VERSION == 32
-        case OBJ_BOOKS:
-            switch (item_typ)
-            {
-            case BOOK_MINOR_MAGIC_II:
-                buff << " [frost]";
-                break;
-            case BOOK_MINOR_MAGIC_III:
-                buff << " [summ]";
-                break;
-            case BOOK_CONJURATIONS_I:
-                buff << " [fire+earth]";
-                break;
-            }
-            break;
-#endif
 
         default:
             break;
@@ -2118,10 +2082,6 @@ void check_item_knowledge(bool unknown_items)
             continue;
         for (int j = 0; j < get_max_subtype(i); j++)
         {
-#if TAG_MAJOR_VERSION == 32
-            if (i == OBJ_SCROLLS && j == SCR_PAPER)
-                continue;
-#endif
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
@@ -3400,11 +3360,7 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return ("");
 
     if (name_type != NULL)
-#if TAG_MAJOR_VERSION == 32
-        *name_type = (int64_t)corpse.props[CORPSE_NAME_TYPE_KEY];
-#else
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
-#endif
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }

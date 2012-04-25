@@ -440,11 +440,7 @@ bool feat_is_fountain(dungeon_feature_type feat)
 
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION == 32
-    return feat > DNGN_MAX_NONREACH && !feat_is_tree(feat);
-#else
     return feat > DNGN_MAX_NONREACH;
-#endif
 }
 
 // Find all connected cells containing ft, starting at d.
@@ -1631,11 +1627,7 @@ static const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-#if TAG_MAJOR_VERSION == 32
-"open_sea", "tree", "orcish_idol", "swamp_tree", "endless_lava", "",
-#else
 "tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol", "",
-#endif
 "granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
