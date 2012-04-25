@@ -1897,6 +1897,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_GECKO,
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
+    MONS_BASILISK,
+    MONS_BAT,
+    MONS_FIRE_BAT,
     MONS_BALL_PYTHON,
     MONS_ADDER,
     MONS_WATER_MOCCASIN,
@@ -1918,6 +1921,7 @@ enum monster_type                      // (int) menv[].type
     MONS_HELL_HOUND,
     MONS_HOG,
     MONS_HELL_HOG,
+    MONS_HOLY_SWINE,            // porkalator
     MONS_GIANT_SLUG,
     MONS_AGATE_SNAIL,
     MONS_ELEPHANT_SLUG,
@@ -1929,6 +1933,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SHEEP,
     MONS_YAK,
     MONS_DEATH_YAK,
+    MONS_CATOBLEPAS,
     MONS_ELEPHANT,
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
@@ -2008,10 +2013,13 @@ enum monster_type                      // (int) menv[].type
     MONS_WOLF_SPIDER,
     MONS_TRAPDOOR_SPIDER,
     MONS_JUMPING_SPIDER,
+    MONS_ORB_SPIDER,
     MONS_TARANTELLA,
     MONS_REDBACK,
     MONS_SCORPION,
     MONS_EMPEROR_SCORPION,
+    MONS_MOTH,                  // genus
+    MONS_MOTH_OF_SUPPRESSION,
     MONS_GHOST_MOTH,
     MONS_MOTH_OF_WRATH,
     MONS_DEMONIC_CRAWLER,
@@ -2033,6 +2041,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPHINX,
     MONS_ORB_GUARDIAN,
 
+    MONS_GOLEM,                 // genus
     MONS_CLAY_GOLEM,
     MONS_WOOD_GOLEM,
     MONS_STONE_GOLEM,
@@ -2052,6 +2061,8 @@ enum monster_type                      // (int) menv[].type
     MONS_VAPOUR,
 
     // Mimics:
+    MONS_INEPT_ITEM_MIMIC,
+    MONS_INEPT_FEATURE_MIMIC,
     MONS_ITEM_MIMIC,
     MONS_FEATURE_MIMIC,
 
@@ -2071,6 +2082,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GOBLIN,
     MONS_HOBGOBLIN,
     MONS_GNOLL,
+    MONS_GNOLL_SHAMAN,
+    MONS_GNOLL_SERGEANT,
     MONS_BOGGART,
     MONS_KOBOLD,
     MONS_BIG_KOBOLD,
@@ -2112,6 +2125,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_RIDER,
     MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
+    MONS_SPRIGGAN_AIR_MAGE,
     MONS_FIREFLY,
     MONS_TENGU,
     MONS_MINOTAUR,
@@ -2120,6 +2134,7 @@ enum monster_type                      // (int) menv[].type
     MONS_NAGA_MAGE,
     MONS_GREATER_NAGA,
     MONS_GUARDIAN_SERPENT,
+    MONS_OCTOPODE,
     MONS_MERFOLK,
     MONS_MERMAID,
     MONS_SIREN,
@@ -2137,6 +2152,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ROCK_TROLL,
     MONS_IRON_TROLL,
     MONS_DEEP_TROLL,
+    MONS_GIANT,                 // genus
     MONS_HILL_GIANT,
     MONS_CYCLOPS,
     MONS_ETTIN,
@@ -2204,6 +2220,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
+    MONS_LIGHTNING_SPIRE,
 
     // Demons:
     MONS_CRIMSON_IMP,
@@ -2259,6 +2276,8 @@ enum monster_type                      // (int) menv[].type
     MONS_TENTACLED_MONSTROSITY,
     MONS_ABOMINATION_SMALL,
     MONS_ABOMINATION_LARGE,
+    MONS_CRAWLING_CORPSE,
+    MONS_MACABRE_MASS,
 
     // Undead:
     MONS_ROTTING_HULK,
@@ -2292,6 +2311,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
     MONS_CURSE_SKULL,
+    MONS_PROFANE_SERVITOR,
     MONS_SKELETON_SMALL,
     MONS_SKELETON_LARGE,
     MONS_ZOMBIE_SMALL,
@@ -2304,6 +2324,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ANGEL,
     MONS_DAEVA,
     MONS_CHERUB,
+    MONS_SERAPH,
     MONS_PHOENIX,
     MONS_SILVER_STAR,
     MONS_BLESSED_TOE,
@@ -2387,6 +2408,8 @@ enum monster_type                      // (int) menv[].type
     MONS_MARA_FAKE,
     MONS_GRINDER,
     MONS_JORY,
+    MONS_IGNACIO,
+    MONS_ARACHNE,
     // Sprint uniques:
     MONS_CHUCK,
     MONS_IRON_GIANT,
@@ -2398,42 +2421,19 @@ enum monster_type                      // (int) menv[].type
     MONS_PLAYER_GHOST,
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
-    MONS_HELL_LORD,
+    MONS_PILLAR_OF_SALT,
+    MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_SENSED,                // dummy monster for unspecified sensed mons
-    MONS_PLAYER,                // a certain ugly creature
-    MONS_TEST_SPAWNER,
-
-    // Add new monsters here:
     MONS_SENSED_TRIVIAL,
     MONS_SENSED_EASY,
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
-    MONS_PILLAR_OF_SALT,
-    MONS_BAT,
-    MONS_SPRIGGAN_AIR_MAGE,
-    MONS_FIRE_BAT,
-    MONS_IGNACIO,
-    MONS_HOLY_SWINE,            // porkalator
     MONS_SENSED_FRIENDLY,
-    MONS_GIANT,
-    MONS_BASILISK,
-    MONS_OCTOPODE,
-    MONS_LIGHTNING_SPIRE,
-    MONS_CATOBLEPAS,
-    MONS_GOLEM,
-    MONS_PROFANE_SERVITOR,
-    MONS_GNOLL_SHAMAN,
-    MONS_GNOLL_SERGEANT,
-    MONS_CRAWLING_CORPSE,
-    MONS_MACABRE_MASS,
-    MONS_SERAPH,
-    MONS_ORB_SPIDER,
-    MONS_ARACHNE,
-    MONS_MOTH,
-    MONS_MOTH_OF_SUPPRESSION,
-    MONS_INEPT_ITEM_MIMIC,
-    MONS_INEPT_FEATURE_MIMIC,
+    MONS_PLAYER,                // a certain ugly creature
+    MONS_TEST_SPAWNER,
+
+    // Add new monsters here:
 
     NUM_MONSTERS,                      // used for polymorph
 
