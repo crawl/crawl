@@ -803,7 +803,8 @@ static bool _handle_reaching(monster* mons)
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
     const int grid_distance(delta.rdist());
-    const coord_def middle(mons->pos() + delta / 2);
+    const coord_def first_middle(mons->pos() + delta / 2);
+    const coord_def second_middle(foepos - delta / 2);
 
     if (grid_distance == 2
         // The monster has to be attacking the correct position.
@@ -811,9 +812,9 @@ static bool _handle_reaching(monster* mons)
         // With a reaching attack with a large enough range:
         && delta.abs() <= reach_range(range)
         // And with no dungeon furniture in the way of the reaching
-        // attack; if the middle square is empty, skip the LOS check.
-        && (feat_is_reachable_past(grd(middle))
-            || mons->see_cell_no_trans(foepos))
+        // attack;
+        && (feat_is_reachable_past(grd(first_middle))
+            || feat_is_reachable_past(grd(second_middle)))
         // The foe should be on the map (not stepped from time).
         && in_bounds(foepos))
     {
