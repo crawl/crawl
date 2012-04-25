@@ -294,7 +294,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Ice Cave", "an ice cave", "IceCv",
       NULL,
       false, BLUE, WHITE,
-      mons_null_rare, mons_null_level,
+      mons_icecave_rare, mons_icecave_level,
       '6', false, 0 },
 
     { BRANCH_VOLCANO, NUM_BRANCHES, 8, 21, 1,

@@ -2958,3 +2958,37 @@ int mons_volcano_rare(monster_type mcls)
         return 0;
     }
 }
+
+// Ice Cave
+int mons_icecave_level(monster_type mcls)
+{
+    if (!mons_icecave_rare(mcls))
+        return 999;
+    return 1;
+}
+
+int mons_icecave_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ICE_BEAST:
+    case MONS_WHITE_IMP:
+    case MONS_ICE_DEVIL:
+    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM_SMALL:
+        return 50;
+
+    case MONS_FREEZING_WRAITH:
+        return 35;
+
+    case MONS_YAK:
+    case MONS_POLAR_BEAR:
+        return 20;
+
+    case MONS_BLUE_DEVIL:
+        return 10;
+
+    default:
+        return 0;
+    }
+}
