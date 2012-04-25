@@ -369,7 +369,7 @@ enum beam_type                  // beam[].flavour
 enum book_type
 {
     BOOK_MINOR_MAGIC,
-    BOOK_CONJURATIONS_II,
+    BOOK_CONJURATIONS,
     BOOK_FLAMES,
     BOOK_FROST,
     BOOK_SUMMONINGS,

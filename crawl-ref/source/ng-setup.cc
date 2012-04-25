@@ -770,7 +770,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CONJURER:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS_II);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS);
 
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 1;

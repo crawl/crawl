@@ -2216,8 +2216,8 @@ bool do_god_gift(bool forced)
                     gift = OBJ_RANDOM;
                 else if (you.religion == GOD_VEHUMET)
                 {
-                    if (!you.had_book[BOOK_CONJURATIONS_II])
-                        gift = BOOK_CONJURATIONS_II;
+                    if (!you.had_book[BOOK_CONJURATIONS])
+                        gift = BOOK_CONJURATIONS;
                     else if (!you.had_book[BOOK_POWER])
                         gift = BOOK_POWER;
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
