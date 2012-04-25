@@ -278,68 +278,62 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     _clear_golubria_traps();
 }
 
-static void _update_travel_cache(bool collect_travel_data,
-                                 const level_id& old_level,
+static void _update_travel_cache(const level_id& old_level,
                                  const coord_def& stair_pos)
 {
-    if (collect_travel_data)
-    {
-        // Update stair information for the stairs we just ascended, and the
-        // down stairs we're currently on.
-        level_id  new_level_id    = level_id::current();
+    // If the old level is gone, nothing to save.
+    if (!you.save || !you.save->has_chunk(old_level.describe()))
+        return;
 
-        if (can_travel_interlevel())
+    // Update stair information for the stairs we just ascended, and the
+    // down stairs we're currently on.
+    level_id  new_level_id    = level_id::current();
+
+    if (can_travel_interlevel())
+    {
+        LevelInfo &old_level_info =
+                    travel_cache.get_level_info(old_level);
+        LevelInfo &new_level_info =
+                    travel_cache.get_level_info(new_level_id);
+        new_level_info.update();
+
+        // First we update the old level's stair.
+        level_pos lp;
+        lp.id  = new_level_id;
+        lp.pos = you.pos();
+
+        bool guess = false;
+        // Ugly hack warning:
+        // The stairs in the Vestibule of Hell exhibit special behaviour:
+        // they always lead back to the dungeon level that the player
+        // entered the Vestibule from. This means that we need to pretend
+        // we don't know where the upstairs from the Vestibule go each time
+        // we take it. If we don't, interlevel travel may try to use portals
+        // to Hell as shortcuts between dungeon levels, which won't work,
+        // and will confuse the dickens out of the player (well, it confused
+        // the dickens out of me when it happened).
+        if (new_level_id == BRANCH_MAIN_DUNGEON
+            && old_level == BRANCH_VESTIBULE_OF_HELL)
         {
-            LevelInfo &old_level_info =
-                        travel_cache.get_level_info(old_level);
-            LevelInfo &new_level_info =
-                        travel_cache.get_level_info(new_level_id);
-            new_level_info.update();
-
-            // First we update the old level's stair.
-            level_pos lp;
-            lp.id  = new_level_id;
-            lp.pos = you.pos();
-
-            bool guess = false;
-            // Ugly hack warning:
-            // The stairs in the Vestibule of Hell exhibit special behaviour:
-            // they always lead back to the dungeon level that the player
-            // entered the Vestibule from. This means that we need to pretend
-            // we don't know where the upstairs from the Vestibule go each time
-            // we take it. If we don't, interlevel travel may try to use portals
-            // to Hell as shortcuts between dungeon levels, which won't work,
-            // and will confuse the dickens out of the player (well, it confused
-            // the dickens out of me when it happened).
-            if (new_level_id == BRANCH_MAIN_DUNGEON
-                && old_level == BRANCH_VESTIBULE_OF_HELL)
-            {
-                old_level_info.clear_stairs(DNGN_EXIT_HELL);
-            }
-            else
-            {
-                old_level_info.update_stair(stair_pos, lp, guess);
-            }
-
-            // We *guess* that going up a staircase lands us on a downstair,
-            // and that we can descend that downstair and get back to where we
-            // came from. This assumption is guaranteed false when climbing out
-            // of one of the branches of Hell.
-            if (new_level_id != BRANCH_VESTIBULE_OF_HELL
-                || !is_hell_subbranch(old_level.branch))
-            {
-                // Set the new level's stair, assuming arbitrarily that going
-                // downstairs will land you on the same upstairs you took to
-                // begin with (not necessarily true).
-                lp.id = old_level;
-                lp.pos = stair_pos;
-                new_level_info.update_stair(you.pos(), lp, true);
-            }
+            old_level_info.clear_stairs(DNGN_EXIT_HELL);
         }
-    }
-    else // !collect_travel_data
-    {
-        travel_cache.erase_level_info(old_level);
+        else
+            old_level_info.update_stair(stair_pos, lp, guess);
+
+        // We *guess* that going up a staircase lands us on a downstair,
+        // and that we can descend that downstair and get back to where we
+        // came from. This assumption is guaranteed false when climbing out
+        // of one of the branches of Hell.
+        if (new_level_id != BRANCH_VESTIBULE_OF_HELL
+            || !is_hell_subbranch(old_level.branch))
+        {
+            // Set the new level's stair, assuming arbitrarily that going
+            // downstairs will land you on the same upstairs you took to
+            // begin with (not necessarily true).
+            lp.id = old_level;
+            lp.pos = stair_pos;
+            new_level_info.update_stair(you.pos(), lp, true);
+        }
     }
 }
 
@@ -480,7 +474,7 @@ void up_stairs(dungeon_feature_type force_stair)
 
     new_level();
 
-    _update_travel_cache(collect_travel_data, old_level, stair_pos);
+    _update_travel_cache(old_level, stair_pos);
 
     env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
@@ -960,7 +954,7 @@ void down_stairs(dungeon_feature_type force_stair)
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     trackers_init_new_level(true);
-    _update_travel_cache(collect_travel_data, old_level, stair_pos);
+    _update_travel_cache(old_level, stair_pos);
 
     env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
