@@ -35,7 +35,9 @@ sub load_file {
         }
         elsif ($key) {
             if ($value) {
-                $value .= (/^\s+/ or /^$/) ? "\n" : " ";
+                $value .= /^\s*$/ ? "\n\n" :
+                          /^\s+/  ? "\n"
+                                  : " ";
             }
             $value .= $_;
         } else {
