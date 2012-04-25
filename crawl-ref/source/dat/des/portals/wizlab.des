@@ -84,6 +84,7 @@
 # *MUST* make these look awesome in tiles, too.
 #
 # Overall todo: random monster lists for each vault (shadows for Wucad Mu)
+# (must have them or Shadow Creatures won't work)
 #
 ##
 
@@ -921,15 +922,17 @@ SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
 SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 :           end
 #           Monsters
-#            0 Tomb set: zombies, mummies
+#            0 Tomb set: zombies, mummies (weight *2)
 #            1 Demons (if demons are added or reclassified, please change!)
 #            2 Golems
-#            3 Holy set (for later)
+#            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
 KMONS:      % = clay golem / wood golem / toenail golem w:2
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
+:           set_random_mon_list("clay golem / wood golem / toenail golem w:2 / " ..
+:                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
@@ -937,10 +940,16 @@ KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
 KMONS:      | = blizzard demon / green death / hell sentinel / brimstone fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
+:           set_random_mon_list(
+:               "blue devil / iron devil / ynoxinul / neqoxec / ice devil /" ..
+:               "/ chaos spawn / demonic crawler / hellwing / orange demon /" ..
+:               "soul eater / sun demon / " ..
+:               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2
 KMONS:      * = place:D:27 zombie / greater mummy w:5
 KMONS:      | = ancient lich
+:           set_random_mon_list("place:D:15 zombie / place:D:27 zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
@@ -987,7 +996,6 @@ lua_marker("A", box_marker)
 :           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
 :           dgn.set_feature_desc_short("floor", "rough-hewn floor")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
-:           set_random_mon_list("mummy")
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
