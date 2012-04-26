@@ -266,11 +266,7 @@ function FogMachine:read(marker, th)
   self.colour              = file.unmarshall_string(th)
   self.name                = file.unmarshall_string(th)
   self.tile                = file.unmarshall_string(th)
-  if file.minor_version(th) < tags.TAG_MINOR_TEMPORARY_CLOUDS then
-    self.excl_rad = -1
-  else
-    self.excl_rad            = file.unmarshall_number(th)
-  end
+  self.excl_rad            = file.unmarshall_number(th)
 
   setmetatable(self, FogMachine)
 
