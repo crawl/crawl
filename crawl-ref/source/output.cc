@@ -1115,10 +1115,10 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 
         if (printed < crawl_view.mlistsz.x)
         {
-            int desc_color;
+            int desc_colour;
             std::string desc;
-            mons[start].to_string(count, desc, desc_color, zombified);
-            textcolor(desc_color);
+            mons[start].to_string(count, desc, desc_colour, zombified);
+            textcolor(desc_colour);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
             cprintf("%s", desc.c_str());
         }

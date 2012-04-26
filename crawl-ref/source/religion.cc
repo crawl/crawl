@@ -1396,7 +1396,7 @@ static bool _give_nemelex_gift(bool forced = false)
             item_def &deck(mitm[thing_created]);
 
             deck.special = rarity;
-            deck.colour  = deck_rarity_to_color(rarity);
+            deck.colour  = deck_rarity_to_colour(rarity);
             deck.inscription = "god gift";
 
             simple_god_message(" grants you a gift!");

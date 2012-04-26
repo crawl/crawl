@@ -2427,7 +2427,7 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
     MONS_PILLAR_OF_SALT,
     MONS_HELL_LORD,             // genus
-    MONS_MERGED_SLIME_CREATURE, // used only for recoloring
+    MONS_MERGED_SLIME_CREATURE, // used only for recolouring
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_SENSED_TRIVIAL,
     MONS_SENSED_EASY,

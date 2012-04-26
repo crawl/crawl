@@ -51,7 +51,7 @@
 #define NOLSTRING         /* lstr* string management routines */
 #define NODBCS            /* Double-byte character set routines */
 #define NOKEYBOARDINFO    /* Keyboard driver routines */
-#define NOCOLOR           /* COLOR_* color values */
+#define NOCOLOR           /* COLOR_* colour values */
 #define NODRAWTEXT        /* DrawText() and related definitions */
 #define NOSCALABLEFONT    /* Truetype scalable font support */
 #define NOMETAFILE        /* Metafile support */
