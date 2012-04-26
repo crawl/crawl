@@ -521,7 +521,6 @@ WEIGHT:  6
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_appearance(_G)
-: dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
 MONS:    ice beast
 MONS:    ice dragon
 MONS:    ice beast generate_awake
@@ -677,7 +676,7 @@ SUBST:   ! = w
 {{
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
-                         ice devil / nothing")
+                         ice devil")
 }}
 : if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
@@ -1068,7 +1067,6 @@ KPROP:  -2!m_| = no_tele_into
 SUBST:  m- = .
 SUBST:  ! = *
 SUBST:  _ = <
-: dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
@@ -1092,7 +1090,6 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
-: dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_appearance(_G)
 MAP
 ccccccccccc
