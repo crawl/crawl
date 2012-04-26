@@ -810,16 +810,10 @@ static int _get_dest_stair_type(branch_type old_branch,
                                 bool &find_first)
 {
     // Order is important here.
-    if (stair_taken == DNGN_EXIT_PANDEMONIUM)
-    {
-        find_first = false;
-        return DNGN_ENTER_PANDEMONIUM;
-    }
-
     if (stair_taken == DNGN_EXIT_ABYSS)
     {
         find_first = false;
-        return DNGN_ENTER_ABYSS;
+        return DNGN_EXIT_DUNGEON;
     }
 
     if (stair_taken == DNGN_EXIT_HELL)
@@ -827,14 +821,6 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (stair_taken == DNGN_ENTER_HELL)
         return DNGN_EXIT_HELL;
-
-    if (stair_taken == DNGN_EXIT_PORTAL_VAULT
-        || (old_branch == BRANCH_LABYRINTH
-            || is_portal_vault(old_branch))
-           && feat_is_escape_hatch(stair_taken))
-    {
-        return DNGN_EXIT_PORTAL_VAULT;
-    }
 
     if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
                          && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
@@ -861,7 +847,7 @@ static int _get_dest_stair_type(branch_type old_branch,
         return stair_taken;
 
     if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-        && stair_taken < 150) // 20 slots reserved
+        && stair_taken <= DNGN_RETURN_FROM_LAST_BRANCH)
     {
         // Find entry point to subdungeon when leaving.
         return stair_taken + DNGN_ENTER_FIRST_BRANCH
