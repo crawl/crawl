@@ -505,7 +505,7 @@ NAME:    erik_entry_cave_to_temple
 TAGS:    cave_to_temple_subvault no_rotate
 SUBST:   X : nnG
 NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
-KPROP:   'tCD<> = no_rtele_into
+KPROP:   'tCD> = no_rtele_into
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
 KFEAT:   C = altar_beogh
@@ -541,7 +541,7 @@ MAP
 ...T....ccc.
 ............
 ...xxxxxxxx.
-..xxxxt't<x.
+..xxxxt't>x.
 .xxxxx''''x.
 .G.x$X'C''x.
 ...+0x''''x.
