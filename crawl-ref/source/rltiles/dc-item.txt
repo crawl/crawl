@@ -66,8 +66,6 @@ giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
 
 ##Edged
-knife WPN_KNIFE
-
 dagger WPN_DAGGER
 dagger2
 dagger3
