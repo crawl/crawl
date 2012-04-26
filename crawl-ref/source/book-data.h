@@ -1,4 +1,4 @@
-{   // Minor Magic I (fire)
+{   // Minor Magic (fire)
     SPELL_MAGIC_DART,
     SPELL_BLINK,
     SPELL_CALL_IMP,
@@ -9,7 +9,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Conjurations II - Air and Ice
+{   // Book of Conjurations (Air and Ice)
     SPELL_MAGIC_DART,
     SPELL_THROW_FROST,
     SPELL_MEPHITIC_CLOUD,
