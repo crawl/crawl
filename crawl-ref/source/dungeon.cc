@@ -5691,11 +5691,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     if (found)
         return result;
 
-    // Still hosed? If we're in a portal vault, convert to a search for
-    // any stone arch.
-    if (is_portal_vault(you.where_are_you) && stair_to_find != DNGN_STONE_ARCH)
-        return dgn_find_nearby_stair(DNGN_STONE_ARCH, base_pos, find_closest);
-
     // Look for any clear terrain and abandon the idea of looking
     // nearby now. This is used when taking transit Pandemonium gates,
     // or landing in Labyrinths. Never land the PC inside a Pan or Lab

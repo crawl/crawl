@@ -100,23 +100,3 @@ bool branch_is_unfinished(branch_type branch)
     return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL
            || branch == BRANCH_HIVE;
 }
-
-bool is_portal_vault(branch_type branch)
-{
-    switch (branch)
-    {
-    // somehow not BRANCH_LABYRINTH
-    case BRANCH_ZIGGURAT:
-    case BRANCH_BAZAAR:
-    case BRANCH_TROVE:
-    case BRANCH_SEWER:
-    case BRANCH_OSSUARY:
-    case BRANCH_BAILEY:
-    case BRANCH_ICE_CAVE:
-    case BRANCH_VOLCANO:
-    case BRANCH_WIZLAB:
-        return true;
-    default:
-        return false;
-    }
-}
