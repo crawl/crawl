@@ -5533,23 +5533,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
          find_closest ? "closest " : "",
          stair_to_find, dungeon_feature_name(stair_to_find));
 
-    if (stair_to_find == DNGN_EXIT_PORTAL_VAULT)
-    {
-        const coord_def pos(dgn_find_feature_marker(stair_to_find));
-        if (in_bounds(pos))
-        {
-            if (map_marker *marker = env.markers.find(pos, MAT_FEATURE))
-                env.markers.remove(marker);
-            return (pos);
-        }
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_WARN, "Ouch, no portal vault exit point!");
-#endif
-
-        stair_to_find = DNGN_FLOOR;
-    }
-
     // Shafts and hatches.
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
@@ -5707,11 +5690,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     if (found)
         return result;
-
-    // Look for marker with the desired feature. This is used by zigs.
-    const coord_def pos(dgn_find_feature_marker(stair_to_find));
-    if (in_bounds(pos))
-        return (pos);
 
     // Still hosed? If we're in a portal vault, convert to a search for
     // any stone arch.

@@ -522,8 +522,10 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
         you.hell_exit = you.depth;
         return level_id(BRANCH_VESTIBULE_OF_HELL);
 
-    case DNGN_EXIT_PORTAL_VAULT:
     case DNGN_EXIT_ABYSS:
+        if (you.char_direction == GDT_GAME_START)
+            return level_id(BRANCH_MAIN_DUNGEON, 1);
+    case DNGN_EXIT_PORTAL_VAULT:
     case DNGN_EXIT_PANDEMONIUM:
         if (you.level_stack.empty())
         {
