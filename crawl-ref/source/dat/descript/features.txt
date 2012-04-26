@@ -63,7 +63,7 @@ Press 'q' to drink from this magic fountain. Expect magical effects, as long as 
 %%%%
 A gate leading back out of here
 
-This gate seems to let you return whence you came from.
+This gate seems to let you return whence you came.
 %%%%
 A gate leading back out of this place
 
@@ -401,7 +401,7 @@ A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adve
 An exit through the horrors of the Abyss
 
 If you ever wanted to escape out of the pan into the fire, this is your
-chance. This gateway allows you to return from this place by a nice scenic
+chance. This gateway allows you to return from this place via a nice scenic
 path through infinite madness.
 %%%%
 An iron altar of Okawaru
