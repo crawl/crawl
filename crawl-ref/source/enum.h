@@ -1201,7 +1201,7 @@ enum dungeon_feature_type
     DNGN_DEEP_WATER,
 
     DNGN_SHALLOW_WATER = 65,
-    DNGN_MOVEMENT_MIN = DNGN_SHALLOW_WATER,
+        DNGN_MINWALK = DNGN_SHALLOW_WATER,
 
     // Lowest grid value that an item can be placed on.
     DNGN_MINITEM = DNGN_SHALLOW_WATER,

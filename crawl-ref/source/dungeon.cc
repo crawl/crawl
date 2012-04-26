@@ -2952,7 +2952,7 @@ static bool _shaft_is_in_corridor(const coord_def& c)
 {
     for (orth_adjacent_iterator ai(c); ai; ++ai)
     {
-        if (!in_bounds(*ai) || grd(*ai) < DNGN_MOVEMENT_MIN)
+        if (!in_bounds(*ai) || grd(*ai) < DNGN_MINWALK)
             return (true);
     }
     return (false);
