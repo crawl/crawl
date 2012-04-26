@@ -9,6 +9,8 @@
 
 #include "externs.h"
 
+#define DEPTH_NOWHERE 999
+
 int mons_rarity(monster_type mcls, const level_id &place = level_id::current());
 int mons_level(monster_type mcls, const level_id &place = level_id::current());
 
