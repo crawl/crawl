@@ -98,13 +98,7 @@ std::string prep_branch_level_name()
 
 int absdungeon_depth(branch_type branch, int subdepth)
 {
-    --subdepth;
-    while (branch != NUM_BRANCHES)
-    {
-        subdepth += (branches[branch].mindepth + branches[branch].maxdepth) / 2;
-        branch = branches[branch].parent_branch;
-    }
-    return subdepth;
+    return branches[branch].absdepth + subdepth - 1;
 }
 
 bool branch_allows_followers(branch_type branch)

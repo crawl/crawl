@@ -26,6 +26,7 @@ struct Branch
     int maxdepth;
 
     int numlevels;              // depth of the branch
+    int absdepth;               // base item generation/etc depth
 
     uint32_t branch_flags;
     uint32_t default_level_flags;
