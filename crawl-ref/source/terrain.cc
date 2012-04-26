@@ -297,7 +297,7 @@ bool feat_is_opaque(dungeon_feature_type feat)
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXSOLID || feat == DNGN_MALIGN_GATEWAY);
+    return (feat <= DNGN_MAXSOLID);
 }
 
 bool cell_is_solid(const coord_def &c)
@@ -1627,8 +1627,8 @@ static const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol", "",
-"granite_statue", "", "", "", "", "", "", "", "", "", "",
+"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol",
+"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "", "floor",
@@ -1657,7 +1657,7 @@ static const char *dngn_feature_names[] =
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
 "return_from_forest", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
-"malign_gateway", "expired_portal", "", "", "", "", "",
+"expired_portal", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "",
 "", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
@@ -1674,6 +1674,7 @@ static const char *dngn_feature_names[] =
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
 {
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
+
     if (name.empty())
         return (DNGN_UNSEEN);
 
