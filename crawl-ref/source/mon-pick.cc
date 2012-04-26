@@ -1819,9 +1819,11 @@ int mons_hive_rare(monster_type mcls)
 // The Vaults
 int mons_vaults_level(monster_type mcls)
 {
-    return mons_standard_level(mcls)
-         - absdungeon_depth(BRANCH_VAULTS, 1)
-         + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
+    int lev = mons_standard_level(mcls);
+    if (lev == DEPTH_NOWHERE)
+        return lev;
+    return lev - absdungeon_depth(BRANCH_VAULTS, 1)
+               + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
 }
 
 int mons_vaults_rare(monster_type mcls)
