@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Config::Tiny;
 use File::Basename;
+use open ':encoding(utf8)';
 
 die "Usage: $0 description_files\n" unless (@ARGV);
 
@@ -14,11 +14,11 @@ sub main {
         my $basename = basename($file, '.txt');
         my %DESCRIPTIONS;
         load_file($file, \%DESCRIPTIONS);
-        my $Config = Config::Tiny->new;
-        foreach (keys %DESCRIPTIONS) {
-            $Config->{_}->{$_} = $DESCRIPTIONS{$_};
+        open OUT, ">$basename.ini";
+        foreach (sort keys %DESCRIPTIONS) {
+            print OUT $_, "=", $DESCRIPTIONS{$_}, "\n";
         }
-        $Config->write("$basename.ini");
+        close OUT;
    }
 }
 
