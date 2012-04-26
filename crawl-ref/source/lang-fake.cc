@@ -150,12 +150,6 @@ static const char* jager[][4] =
   {0}
 };
 
-static const char* lisp[][4] =
-{
-  {"s", "th"},
-  {0}
-};
-
 static void _replace_cap_variants(std::string &str,
                                   std::string a,
                                   std::string b,
@@ -361,9 +355,6 @@ void filter_lang(std::string &str)
         break;
     case LANG_JAGERKIN:
         repl = jager;
-        break;
-    case LANG_LISP:
-        repl = lisp;
         break;
     case LANG_KRAUT:
         _german(str), repl = german;

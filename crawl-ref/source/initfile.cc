@@ -2202,8 +2202,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = LANG_DWARVEN;
         else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
             lang = LANG_JAGERKIN;
-        else if (field == "lisp" || field == "lithp")
-            lang = LANG_LISP;
         else if (field == "kraut" || field == "jerry" || field == "fritz")
             lang = LANG_KRAUT;
         else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
