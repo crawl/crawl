@@ -1190,9 +1190,10 @@ enum dungeon_feature_type
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
     DNGN_ORCISH_IDOL,
-    DNGN_GRANITE_STATUE = 21,
+    DNGN_GRANITE_STATUE,
+    DNGN_MALIGN_GATEWAY,
         // Highest solid grid value.
-        DNGN_MAXSOLID = DNGN_GRANITE_STATUE,
+        DNGN_MAXSOLID = DNGN_MALIGN_GATEWAY,
     // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
@@ -1290,7 +1291,6 @@ enum dungeon_feature_type
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
-    DNGN_MALIGN_GATEWAY,
     DNGN_EXPIRED_PORTAL,
 
     // Order of altars must match order of gods (god_type)
