@@ -69,10 +69,7 @@ void initialise_branch_depths()
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
         const Branch *b = &branches[branch];
-        if (!is_connected_branch(b->id))
-           // hopefully unused, but let's have a reasonable estimate just in case
-            startdepth[branch] = (b->mindepth + b->maxdepth) / 2;
-        else if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
+        if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
             startdepth[branch] = -1;
         else
             startdepth[branch] = random_range(b->mindepth, b->maxdepth);
