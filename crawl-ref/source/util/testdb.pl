@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use DB_File;
 
 tie %descriptions, 'DB_File', "descriptions.db";
