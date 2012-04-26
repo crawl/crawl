@@ -866,8 +866,7 @@ std::string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (number ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA
-            || mons_genus(base_type) == MONS_HYDRA)
+    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
         && number > 0)
     {
         if (number < 11)
