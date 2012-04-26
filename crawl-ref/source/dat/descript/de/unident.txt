@@ -1,0 +1,21 @@
+%%%%
+amulet
+
+Ein Schmuckstück.
+%%%%
+book
+
+Ein Buch mit Zaubersprüchen. Nimm dich in Acht, denn mit einigen der mächtigeren Zauberbüchern ist nicht zu spaßen.
+%%%%
+potion
+
+Eine kleine Flasche Flüssigkeit.
+%%%%
+ring
+
+Ein Schmuckstück.
+%%%%
+wand
+
+Ein Stab. Vielleicht ist er magisch.
+%%%%
