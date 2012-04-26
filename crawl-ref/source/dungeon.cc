@@ -5691,6 +5691,10 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     if (found)
         return result;
 
+    const coord_def pos(dgn_find_feature_marker(stair_to_find));
+    if (in_bounds(pos))
+        return (pos);
+
     // Look for any clear terrain and abandon the idea of looking
     // nearby now. This is used when taking transit Pandemonium gates,
     // or landing in Labyrinths. Never land the PC inside a Pan or Lab
