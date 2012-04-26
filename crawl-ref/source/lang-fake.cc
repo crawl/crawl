@@ -365,7 +365,7 @@ void filter_lang(std::string &str)
     case LANG_LISP:
         repl = lisp;
         break;
-    case LANG_DE:
+    case LANG_KRAUT:
         _german(str), repl = german;
         break;
     case LANG_WIDE:

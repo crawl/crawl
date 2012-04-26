@@ -20,6 +20,7 @@ enum lang_t
     // fake languages
     LANG_DWARVEN,
     LANG_JAGERKIN,
+    LANG_KRAUT,
     LANG_LISP,
     LANG_WIDE,
 };
