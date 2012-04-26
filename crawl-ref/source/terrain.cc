@@ -1631,7 +1631,7 @@ static const char *dngn_feature_names[] =
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "",
 
 // DNGN_MINMOVE
-"lava", "deep_water", "", "", "",
+"lava", "deep_water",
 
 // DNGN_MINWALK
 "shallow_water", "floor", "open_door",
@@ -1675,7 +1675,7 @@ static const char *dngn_feature_names[] =
 
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
-"permadry_fountain", "", "", "",
+"permadry_fountain",
 
 "explore_horizon",
 };
