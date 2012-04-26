@@ -4668,6 +4668,5 @@ static void _compile_time_asserts()
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
         ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
-    // these enums still use magic values, and thus notoriously go out of sync
-    ASSERT(!strcmp(dungeon_feature_name(DNGN_ABANDONED_SHOP), "abandoned_shop"));
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
 }
