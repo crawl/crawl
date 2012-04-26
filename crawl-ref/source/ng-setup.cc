@@ -61,9 +61,6 @@ static void _species_stat_init(species_type which_species)
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
     case SP_SLUDGE_ELF:         sb =  6; ib =  7; db =  7;      break;  // 20
 
-#if TAG_MAJOR_VERSION == 32
-    case SP_MOUNTAIN_DWARF:     sb =  9; ib =  4; db =  5;      break;  // 18
-#endif
     case SP_DEEP_DWARF:         sb =  9; ib =  6; db =  6;      break;  // 21
 
     case SP_TROLL:              sb = 13; ib =  2; db =  3;      break;  // 18
@@ -773,7 +770,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CONJURER:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS_II);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS);
 
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
@@ -1419,9 +1416,6 @@ static void _setup_generic(const newgame_def& ng)
     // Make sure the starting player is fully charged up.
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
-
-    // tmpfile purging removed in favour of marking
-    Generated_Levels.clear();
 
     initialise_branch_depths();
     initialise_temples();

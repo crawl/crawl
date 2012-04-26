@@ -1379,8 +1379,6 @@ void merfolk_stop_swimming()
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
-    if (transit)
-        stash_init_new_level();
 }
 
 std::string weird_glowing_colour()
@@ -2020,7 +2018,7 @@ void timeout_tombs(int duration)
 
 void bring_to_safety()
 {
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         return abyss_teleport(true);
 
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
@@ -2166,7 +2164,7 @@ void setup_environment_effects()
             const int grid = grd[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
-                        && you.where_are_you == BRANCH_SWAMP))
+                        && player_in_branch(BRANCH_SWAMP)))
             {
                 const coord_def c(x, y);
                 sfx_seeds.push_back(c);

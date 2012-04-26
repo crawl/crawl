@@ -553,7 +553,6 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
         spellenum = std::min(nxomspells, spellenum);
         spell     = _xom_nontension_spells[random2(spellenum)];
-
     }
 
     // Don't attempt to cast spells the undead cannot memorise.
@@ -2301,7 +2300,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_rearrange_pieces(sever, debug);
     else if (random2(tension) < 15 && x_chance_in_y(14, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(15, sever))
+    else if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(15, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -3440,7 +3439,7 @@ static int _xom_do_banishment(bool debug = false)
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
     // Handles note taking.
-    banished(DNGN_ENTER_ABYSS, "Xom");
+    banished("Xom");
     const int result = _xom_maybe_reverts_banishment(debug);
 
     return (result);
@@ -3491,7 +3490,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_chaos_upgrade_nearby_monster(debug);
             badness = 2 + coinflip();
         }
-        else if (x_chance_in_y(10, sever) && you.level_type != LEVEL_ABYSS)
+        else if (x_chance_in_y(10, sever) && !player_in_branch(BRANCH_ABYSS))
         {
             // Try something else if teleportation is impossible.
             if (!_teleportation_check())
@@ -3573,7 +3572,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
         }
-        else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
+        else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
             done    = _xom_do_banishment(debug);
             badness = (done == XOM_BAD_BANISHMENT ? 5 : 1);
@@ -3754,8 +3753,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     ASSERT(!_player_is_dead());
 #endif
 
-    entry_cause_type old_entry_cause = you.entry_cause;
-
     sever = std::max(1, sever);
 
     god_type which_god = GOD_XOM;
@@ -3858,17 +3855,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 
     _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
-
-    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM)
-    {
-        if (old_entry_cause != you.entry_cause
-            && you.entry_cause_god == GOD_XOM)
-        {
-            you.entry_cause_god = crawl_state.which_god_acting();
-        }
-    }
 
     if (you.religion == GOD_XOM && one_chance_in(5))
     {

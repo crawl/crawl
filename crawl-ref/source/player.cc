@@ -75,6 +75,7 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
+#include "stash.h"
 #include "state.h"
 #include "status.h"
 #include "stuff.h"
@@ -468,20 +469,14 @@ bool is_map_persistent(void)
     return (!testbits(env.level_flags, LFLAG_NO_MAP));
 }
 
-bool player_in_branch(int branch)
-{
-    return (you.level_type == LEVEL_DUNGEON && you.where_are_you == branch);
-}
-
-bool player_in_level_area(level_area_type area)
-{
-    return (you.level_type == area);
-}
-
 bool player_in_hell(void)
 {
-    return (you.level_type == LEVEL_DUNGEON
-            && is_hell_subbranch(you.where_are_you));
+    return is_hell_subbranch(you.where_are_you);
+}
+
+bool player_in_connected_branch(void)
+{
+    return is_connected_branch(you.where_are_you);
 }
 
 bool player_likes_water(bool permanently)
@@ -2839,9 +2834,9 @@ void forget_map(bool rot)
     ASSERT(!crawl_state.game_is_arena());
 
     // Labyrinth and the Abyss use special rotting rules.
-    const bool rot_resist = you.level_type == LEVEL_LABYRINTH
+    const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
-                            || you.level_type == LEVEL_ABYSS
+                            || player_in_branch(BRANCH_ABYSS)
                                 && you.religion == GOD_LUGONU;
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
@@ -2863,6 +2858,7 @@ void forget_map(bool rot)
         }
 
         env.map_knowledge(p).clear();
+        StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);
 #endif
@@ -2888,7 +2884,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
         return;
-    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
+    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS))
         return;
 
     if (crawl_state.game_is_zotdef())
@@ -3157,13 +3153,6 @@ void level_change(bool skip_attribute_increase)
                                 "level gain");
                 }
                 break;
-
-#if TAG_MAJOR_VERSION == 32
-            case SP_MOUNTAIN_DWARF:
-                if (!(you.experience_level % 4))
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-#endif
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
@@ -5674,8 +5663,6 @@ void player::init()
 
     pet_target      = MHITNOT;
 
-    absdepth0       = 0;
-
     duration.init(0);
     rotting         = 0;
     berserk_penalty = 0;
@@ -5720,14 +5707,8 @@ void player::init()
         delete kills;
     kills = new KillMaster();
 
-    level_type       = LEVEL_DUNGEON;
-    level_type_name.clear();
-    level_type_ext.clear();
-    level_type_name_abbrev.clear();
-    level_type_origin.clear();
-    level_type_tag.clear();
-
     where_are_you    = BRANCH_MAIN_DUNGEON;
+    depth            = 1;
 
     branch_stairs.init(0);
 
@@ -5791,6 +5772,7 @@ void player::init()
     beholders.clear();
     fearmongers.clear();
     dactions.clear();
+    level_stack.clear();
     type_ids.init(ID_UNKNOWN_TYPE);
     type_id_props.clear();
 
@@ -5844,8 +5826,6 @@ void player::init()
     time_taken          = 0;
     shield_blocks       = 0;
 
-    entry_cause         = EC_SELF_EXPLICIT;
-    entry_cause_god     = GOD_NO_GOD;
     abyss_speed         = 0;
 
     old_hunger          = hunger;
@@ -5874,16 +5854,8 @@ void player::init()
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        branch_info[i].level_type = LEVEL_DUNGEON;
-        branch_info[i].branch     = i;
+        branch_info[i].branch = (branch_type)i;
         branch_info[i].assert_validity();
-    }
-
-    for (int i = 0; i < (NUM_LEVEL_AREA_TYPES - 1); i++)
-    {
-        non_branch_info[i].level_type = i + 1;
-        non_branch_info[i].branch     = -1;
-        non_branch_info[i].assert_validity();
     }
 }
 
@@ -6674,9 +6646,6 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
-#if TAG_MAJOR_VERSION == 32
-    case SP_MOUNTAIN_DWARF:
-#endif
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
@@ -7514,10 +7483,8 @@ void player::set_place_info(PlaceInfo place_info)
 
     if (place_info.is_global())
         global_info = place_info;
-    else if (place_info.level_type == LEVEL_DUNGEON)
-        branch_info[place_info.branch] = place_info;
     else
-        non_branch_info[place_info.level_type - 1] = place_info;
+        branch_info[place_info.branch] = place_info;
 }
 
 std::vector<PlaceInfo> player::get_all_place_info(bool visited_only,
@@ -7528,21 +7495,11 @@ std::vector<PlaceInfo> player::get_all_place_info(bool visited_only,
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         if (visited_only && branch_info[i].num_visits == 0
-            || dungeon_only && branch_info[i].level_type != LEVEL_DUNGEON)
+            || dungeon_only && !is_connected_branch((branch_type)i))
         {
             continue;
         }
         list.push_back(branch_info[i]);
-    }
-
-    for (int i = 0; i < (NUM_LEVEL_AREA_TYPES - 1); i++)
-    {
-        if (visited_only && non_branch_info[i].num_visits == 0
-            || dungeon_only && non_branch_info[i].level_type != LEVEL_DUNGEON)
-        {
-            continue;
-        }
-        list.push_back(non_branch_info[i]);
     }
 
     return list;
@@ -7641,12 +7598,10 @@ void player::set_duration(duration_type dur, int turns,
 
 void player::goto_place(const level_id &lid)
 {
-    level_type = lid.level_type;
-    if (level_type == LEVEL_DUNGEON)
-    {
-        where_are_you = static_cast<branch_type>(lid.branch);
-        absdepth0 = absdungeon_depth(lid.branch, lid.depth);
-    }
+    where_are_you = static_cast<branch_type>(lid.branch);
+    depth = lid.depth;
+    ASSERT(depth >= 1);
+    ASSERT(depth <= brdepth[you.where_are_you]);
 }
 
 void player::accum_been_constricted()

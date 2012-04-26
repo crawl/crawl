@@ -232,7 +232,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_MALEDICT:
         return 2;
 
-    case BOOK_CONJURATIONS_II:
+    case BOOK_CONJURATIONS:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
     case BOOK_WIZARDRY:
@@ -297,13 +297,6 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
-
-#if TAG_MAJOR_VERSION == 32
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
-    case BOOK_CONJURATIONS_I:
-#endif
-       return 100;
 
     default:
         return 1;
@@ -418,22 +411,7 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-    {
-        const int level = book.plus;
-#if TAG_MAJOR_VERSION == 32
-        god_type god;
-        if (level > 0 && level <= 9)
-        {
-            if (origin_is_acquirement(book)
-                || origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
-            {
-                you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
-            }
-        }
-#else
-        ASSERT(level > 0 && level <= 9);
-#endif
-    }
+        ASSERT(book.plus > 0 && book.plus <= 9); // book's level
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());

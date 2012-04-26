@@ -4,8 +4,7 @@
 class PlaceInfo
 {
 public:
-    int level_type;     // enum level_area_type
-    int branch;         // enum branch_type if LEVEL_DUNGEON; otherwise -1
+    branch_type branch;
 
     unsigned int num_visits;
     unsigned int levels_seen;

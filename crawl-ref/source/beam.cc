@@ -836,7 +836,7 @@ void bolt::digging_wall_effect()
             }
             else if (feat == DNGN_SLIMY_WALL)
                 wall = "slime";
-            else if (you.level_type == LEVEL_PANDEMONIUM)
+            else if (player_in_branch(BRANCH_PANDEMONIUM))
                 wall = "weird stuff";
             else
                 wall = "rock";
@@ -3280,7 +3280,7 @@ void bolt::affect_player_enchantment()
 
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.
-        if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
+        if (flavour == BEAM_TELEPORT && player_in_branch(BRANCH_ABYSS))
             xom_is_stimulated(200);
 
         extra_range_used += range_used_on_hit();
@@ -3378,7 +3378,7 @@ void bolt::affect_player_enchantment()
         // An enemy helping you escape while in the Abyss, or an
         // enemy stabilizing a teleport that was about to happen.
         if (!mons_att_wont_attack(attitude)
-            && you.level_type == LEVEL_ABYSS)
+            && player_in_branch(BRANCH_ABYSS))
         {
             xom_is_stimulated(200);
         }
@@ -3407,7 +3407,7 @@ void bolt::affect_player_enchantment()
             mpr("This spell isn't strong enough to banish yourself.");
             break;
         }
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You feel trapped.");
             break;
@@ -4816,7 +4816,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_BANISH:
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
             simple_monster_message(mon, " wobbles for a moment.");
         else
             mon->banish(agent());
@@ -5772,10 +5772,6 @@ actor* bolt::agent() const
 
 bool bolt::is_enchantment() const
 {
-#if TAG_MAJOR_VERSION == 32
-    if (flavour == BEAM_INNER_FLAME)
-        return (true);
-#endif
     return (flavour >= BEAM_FIRST_ENCHANTMENT
             && flavour <= BEAM_LAST_ENCHANTMENT);
 }

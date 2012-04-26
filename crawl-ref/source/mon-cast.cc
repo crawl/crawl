@@ -1749,10 +1749,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->lose_energy(EUT_SPELL);
             return (true);
         }
-#if TAG_MAJOR_VERSION == 32
-        if (spell_cast == SPELL_TUKIMAS_BALL)
-            return false; // The party's over.
-#endif
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
@@ -2143,7 +2139,7 @@ void mons_cast_spectral_orcs(monster* mons)
             orc->number = (int) mon;
 
             // give gear using the base type
-            give_item(orc, you.absdepth0, true, true);
+            give_item(orc, env.absdepth0, true, true);
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
@@ -2929,7 +2925,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER)))
+                          mons->colour, -1, PROX_CLOSE_TO_PLAYER)))
             {
                 created_count++;
                 tentacle->props["inwards"].get_int() = kraken_index;
@@ -2998,16 +2994,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           god));
         }
         return;
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_TUKIMAS_BALL:
-        //Tukima's dance NOT handled here.
-        //Instead, handle above in handle_mon_spell
-        //so nothing happens if no weapons animated.
-        mpr("Haunting music fills the air, and weapons rise to join the dance!");
-        noisy(12, mons->pos(), mons->mindex());
-        return;
-#endif
 
     case SPELL_ANIMATE_DEAD:
         animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),

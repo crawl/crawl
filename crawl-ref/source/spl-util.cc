@@ -1161,9 +1161,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (player_movement_speed() <= 6)
             return (true);
         break;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_LEVITATION:
-#endif
     case SPELL_FLY:
         if (you.species == SP_TENGU && you.experience_level >= 15)
             return (true);

@@ -14,11 +14,6 @@
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (speci == SP_MOUNTAIN_DWARF)
-        return CC_BANNED;
-#endif
-
     switch (job)
     {
     case JOB_FIGHTER:

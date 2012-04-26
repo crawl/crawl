@@ -160,7 +160,7 @@ function choose_mset_1(e)
     e.kmons("1 = centaur / yaktaur")
 -- Vaults
   elseif rnd < 95 then
-    e.kmons("1 = place:Vault:1")
+    e.kmons("1 = place:Vaults:1")
 -- Pan
   elseif rnd < 97 then
     e.kmons("1 = lesser demon / common demon w:2 / pandemonium lord w:1")
@@ -261,7 +261,7 @@ function choose_mset_2(e)
                yaktaur captain w:3")
 -- Vaults
   elseif rnd < 109 then
-    e.kmons("1 = place:Vault:3 / yaktaur w:2 / vault guard w:5")
+    e.kmons("1 = place:Vaults:3 / yaktaur w:2 / vault guard w:5")
 -- Pan
   elseif rnd < 114 then
     e.kmons("1 = lesser demon / common demon w:5 / pandemonium lord w:2")
@@ -533,7 +533,7 @@ local rnd = crawl.random2(149)
     e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
 -- Elf
   elseif rnd < 121 then
-    e.kmons("1 = place:Elf:5 w:50 / deep elf sorcerer / deep elf blademaster /\
+    e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster /\
                deep elf master archer / deep elf annihilator / deep elf high priest")
 -- Orc
   elseif rnd < 126 then

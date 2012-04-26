@@ -1013,23 +1013,15 @@ static int l_item_get_items_at(lua_State *ls)
 
     lua_newtable(ls);
 
-    if (StashTracker::is_level_untrackable())
+    const std::vector<item_def> items = item_list_in_stash(p);
+    int index = 0;
+    for (std::vector<item_def>::const_iterator i = items.begin();
+         i != items.end(); ++i)
     {
-        // You can still see the top item.
-        clua_push_item(ls, top);
-        lua_rawseti(ls, -2, 1);
+        clua_push_item_temp(ls, *i);
+        lua_rawseti(ls, -2, ++index);
     }
-    else
-    {
-        const std::vector<item_def> items = item_list_in_stash(p);
-        int index = 0;
-        for (std::vector<item_def>::const_iterator i = items.begin();
-             i != items.end(); ++i)
-        {
-            clua_push_item_temp(ls, *i);
-            lua_rawseti(ls, -2, ++index);
-        }
-    }
+
     return (1);
 }
 

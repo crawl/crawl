@@ -176,7 +176,7 @@ static void _initialize()
         init_player_doll();
 #endif
         crawl_state.show_more_prompt = false;
-        crawl_tests::run_tests(true);
+        run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.
         end(0, false);
@@ -210,16 +210,13 @@ static void _post_init(bool newc)
 
     run_map_local_preludes();
 
+    // Abyssal Knights start out in the Abyss.
     if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Chaos Knights of Lugonu start out in the Abyss.
-        you.level_type  = LEVEL_ABYSS;
-        you.entry_cause = EC_UNKNOWN;
-    }
+        you.where_are_you = BRANCH_ABYSS;
 
     // XXX: Any invalid level_id should do.
     level_id old_level;
-    old_level.level_type = NUM_LEVEL_AREA_TYPES;
+    old_level.branch = NUM_BRANCHES;
 
     load_level(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :

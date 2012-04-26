@@ -244,14 +244,11 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        if (player_in_branch(BRANCH_MAIN_DUNGEON)
-            && player_branch_depth() == 1)
-        {
-            return TILE_DNGN_EXIT_DUNGEON;
-        }
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
+    case DNGN_EXIT_DUNGEON:
+        return TILE_DNGN_EXIT_DUNGEON;
     case DNGN_ENTER_DIS:
         return TILE_DNGN_ENTER_DIS;
     case DNGN_ENTER_GEHENNA:
@@ -261,6 +258,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TARTARUS:
         return TILE_DNGN_ENTER_TARTARUS;
     case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
         return TILE_DNGN_ENTER_ABYSS;
     case DNGN_EXIT_HELL:
         return TILE_DNGN_RETURN_HELL;
@@ -275,7 +273,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_VAULTS:
     case DNGN_ENTER_CRYPT:
@@ -304,7 +301,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_VAULTS:
@@ -507,12 +503,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
 #ifdef USE_TILE
 tileidx_t tileidx_out_of_bounds(int branch)
 {
-    if (branch == BRANCH_SHOALS
-        && you.level_type != LEVEL_LABYRINTH
-        && you.level_type != LEVEL_PORTAL_VAULT)
-    {
+    if (branch == BRANCH_SHOALS)
         return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
-    }
     else
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
@@ -2652,10 +2644,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 
     switch (item.sub_type)
     {
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KNIFE:
-        return TILE_WPN_KNIFE;
-#endif
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_DAGGER_ORC;
@@ -2697,9 +2685,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_GREAT_SWORD_ORC;
         return TILE_WPN_GREAT_SWORD;
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:
-#endif
     case WPN_SCIMITAR:
         return TILE_WPN_SCIMITAR;
 
@@ -2816,11 +2801,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_GIANT_SPIKED_CLUB:
         return TILE_WPN_GIANT_SPIKED_CLUB;
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_ANKUS:
-        return TILE_WPN_ANKUS;
-#endif
-
     case WPN_WHIP:
         return TILE_WPN_WHIP;
 
@@ -2857,9 +2837,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLESSED_LONG_SWORD:
         return TILE_WPN_LONG_SWORD;
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_BLESSED_KATANA:
-#endif
     case WPN_BLESSED_SCIMITAR:
         return TILE_WPN_SCIMITAR;
 
@@ -2985,9 +2962,6 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
             return TILE_ARM_CHAIN_MAIL_ORC;
         return TILE_ARM_CHAIN_MAIL;
 
-#if TAG_MAJOR_VERSION == 32
-    case ARM_BANDED_MAIL:
-#endif
     case ARM_SPLINT_MAIL:
         return TILE_ARM_SPLINT_MAIL;
 
@@ -4268,9 +4242,6 @@ tileidx_t tileidx_spell(spell_type spell)
     // Air
     case SPELL_SHOCK:                    return TILEG_SHOCK;
     case SPELL_SWIFTNESS:                return TILEG_SWIFTNESS;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_LEVITATION:               return TILEG_LEVITATION;
-#endif
     case SPELL_REPEL_MISSILES:           return TILEG_REPEL_MISSILES;
     case SPELL_MEPHITIC_CLOUD:           return TILEG_MEPHITIC_CLOUD;
     case SPELL_DISCHARGE:                return TILEG_STATIC_DISCHARGE;
@@ -4349,9 +4320,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_EXTENSION:                return TILEG_EXTENSION;
-#endif
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
@@ -4361,9 +4329,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
     case SPELL_PORTAL_PROJECTILE:        return TILEG_PORTAL_PROJECTILE;
     case SPELL_BLINK:                    return TILEG_BLINK;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_BANISHMENT:               return TILEG_BANISHMENT;
-#endif
     case SPELL_CONTROL_TELEPORT:         return TILEG_CONTROLLED_TELEPORT;
     case SPELL_TELEPORT_OTHER:           return TILEG_TELEPORT_OTHER;
     case SPELL_PHASE_SHIFT:              return TILEG_PHASE_SHIFT;
@@ -4413,9 +4378,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;
     case SPELL_CONTROL_UNDEAD:           return TILEG_CONTROL_UNDEAD;
     case SPELL_BOLT_OF_DRAINING:         return TILEG_BOLT_OF_DRAINING;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_SYMBOL_OF_TORMENT:        return TILEG_SYMBOL_OF_TORMENT;
-#endif
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
 
@@ -4428,9 +4390,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
     case SPELL_POLYMORPH_OTHER:          return TILEG_POLYMORPH_OTHER;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_ALTER_SELF:               return TILEG_ALTER_SELF;
-#endif
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;
 

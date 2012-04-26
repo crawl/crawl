@@ -211,9 +211,6 @@ const int MAX_KNOWN_SPELLS = 21;
 
 const int INVALID_ABSDEPTH = -1000;
 
-const int DEPTH_ABYSS = 51;
-const int DEPTH_PAN   = 52;
-
 const int BRANCH_DUNGEON_DEPTH = 27;
 
 //#define DEBUG_MIMIC

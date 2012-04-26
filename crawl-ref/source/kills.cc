@@ -712,9 +712,6 @@ void kill_monster_desc::load(reader& inf)
 {
     monnum = static_cast<monster_type>(unmarshallShort(inf));
     modifier = (name_modifier) unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 32
-    ASSERT(monnum != -1);
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////

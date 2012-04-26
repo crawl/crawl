@@ -88,17 +88,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-#if TAG_MAJOR_VERSION == 32
-    case WPN_ANKUS:             return TILEP_HAND1_ANKUS;
-#endif
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
     case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
 
     // Edge
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KNIFE:                return TILEP_HAND1_DAGGER_SLANT;
-#endif
     case WPN_DAGGER:               return TILEP_HAND1_DAGGER_SLANT;
     case WPN_SHORT_SWORD:          return TILEP_HAND1_SHORT_SWORD_SLANT;
     case WPN_LONG_SWORD:           return TILEP_HAND1_LONG_SWORD_SLANT;
@@ -108,10 +102,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SABRE:                return TILEP_HAND1_SABRE;
     case WPN_DEMON_BLADE:          return TILEP_HAND1_DEMON_BLADE;
     case WPN_QUICK_BLADE:          return TILEP_HAND1_DAGGER;
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:               return TILEP_HAND1_KATANA_SLANT;
-    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
-#endif
     case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
     case WPN_EUDEMON_BLADE:        return TILEP_HAND1_BLESSED_BLADE;
@@ -199,9 +189,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
     case ARM_SPLINT_MAIL:        return TILEP_BODY_SPLINT;
-#if TAG_MAJOR_VERSION == 32
-    case ARM_BANDED_MAIL:        return TILEP_BODY_SPLINT;
-#endif
     case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
     case ARM_CRYSTAL_PLATE_ARMOUR:return TILEP_BODY_CRYSTAL_PLATE;
 
@@ -691,17 +678,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case JOB_PALADIN:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_IRON;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_GRAY;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
-            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
-            break;
-#endif
-
         case JOB_CHAOS_KNIGHT:
             parts[TILEP_PART_BODY]  = TILEP_BODY_MESH_BLACK;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_DARKBROWN;
@@ -726,15 +702,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BODY]  = TILEP_BODY_ANIMAL_SKIN;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;
             break;
-
-#if TAG_MAJOR_VERSION == 32
-        case JOB_REAVER:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BLACK_GOLD;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
-            parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_RED_DIM;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
-            break;
-#endif
 
         case JOB_STALKER:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_GREEN;

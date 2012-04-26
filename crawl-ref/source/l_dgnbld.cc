@@ -982,7 +982,7 @@ LUAFN(dgn_farthest_from)
 
 LUAFN(dgn_layout_basic)
 {
-    dgn_build_basic_level(you.absdepth0);
+    dgn_build_basic_level();
     return 0;
 }
 
@@ -1000,13 +1000,13 @@ LUAFN(dgn_layout_chaotic_city)
 
 LUAFN(dgn_layout_shoals)
 {
-    dgn_build_shoals_level(you.absdepth0);
+    dgn_build_shoals_level();
     return 0;
 }
 
 LUAFN(dgn_layout_swamp)
 {
-    dgn_build_swamp_level(you.absdepth0);
+    dgn_build_swamp_level();
     return 0;
 }
 

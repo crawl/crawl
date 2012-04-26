@@ -65,6 +65,7 @@
 #include "spl-summoning.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "state.h"
 #include "areas.h"
 #include "transform.h"
@@ -175,7 +176,7 @@ static monster_type _monster_for_ability (const ability_def& abil);
  *
  * @note Declaring this const messes up externs later, so don't do it!
  */
-ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -1492,7 +1493,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (true);
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        if (you.level_type != LEVEL_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You aren't in the Abyss!");
             return (false);
@@ -1503,7 +1504,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (!is_level_incorruptible());
 
     case ABIL_LUGONU_ABYSS_ENTER:
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You're already here!");
             return (false);
@@ -2479,7 +2480,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        banished(DNGN_EXIT_ABYSS);
+        down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
@@ -2533,7 +2534,7 @@ static bool _do_ability(const ability_def& abil)
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
-        banished(DNGN_ENTER_ABYSS);
+        banished();
         activate_notes(note_status);
         break;
     }
@@ -3245,7 +3246,7 @@ static int _is_god_ability(ability_type abil)
     if (abil == ABIL_NON_ABILITY)
         return (GOD_NO_GOD);
 
-    for (int i = 0; i < MAX_NUM_GODS; ++i)
+    for (int i = 0; i < NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
         {
             if (god_abilities[i][j] == abil)

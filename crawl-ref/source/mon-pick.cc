@@ -9,45 +9,86 @@
 
 #include "externs.h"
 #include "branch.h"
+#include "errors.h"
+#include "libutil.h"
 #include "mon-util.h"
 #include "place.h"
 
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_level(monster_type mcls, const level_id &place)
 {
-    int monster_level = 0;
-
-    if (place.level_type == LEVEL_ABYSS)
-        monster_level = ((mons_abyss_rare(mcls)) ? place.absdepth() : 0);
-    else if (place.level_type == LEVEL_PANDEMONIUM)
-        monster_level = ((mons_pan_rare(mcls)) ? place.absdepth() : 0);
-    else if (place.level_type == LEVEL_DUNGEON)
-    {
-        monster_level = branches[place.branch].mons_level_function(mcls)
-                      + absdungeon_depth(place.branch, 0);
-    }
-
-    return monster_level;
+    return branches[place.branch].mons_level_function(mcls);
 }
 
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
 int mons_rarity(monster_type mcls, const level_id &place)
 {
-    if (place.level_type == LEVEL_ABYSS)
-        return mons_abyss_rare(mcls);
-    else if (place.level_type == LEVEL_PANDEMONIUM)
-        return mons_pan_rare(mcls);
-    else
-        return branches[place.branch].mons_rarity_function(mcls);
+    return branches[place.branch].mons_rarity_function(mcls);
 }
+
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+void debug_monpick()
+{
+    std::string fails;
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        level_id place((branch_type)i);
+
+        for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
+        {
+            int lev = mons_level(m, place);
+            int rare = mons_rarity(m, place);
+
+            if (lev < DEPTH_NOWHERE && !rare)
+            {
+                fails += make_stringf("%s: no rarity for %s\n",
+                                      branches[i].abbrevname,
+                                      mons_class_name(m));
+            }
+            if (rare && lev >= DEPTH_NOWHERE)
+            {
+                fails += make_stringf("%s: no depth for %s\n",
+                                      branches[i].abbrevname,
+                                      mons_class_name(m));
+            }
+        }
+    }
+
+    if (!fails.empty())
+    {
+        FILE *f = fopen("mon-pick.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-pick mismatches (dumped to mon-pick.out)");
+    }
+}
+#endif
 
 /* ******************** END EXTERNAL FUNCTIONS ******************** */
 
-// level_area_type != LEVEL_DUNGEON
-// NOTE: Labyrinths and portal vaults have no random monster generation.
+// The Ecumenical Temple and other places with no monster gen.
+int mons_null_level(monster_type mcls)
+{
+    return DEPTH_NOWHERE;
+}
+
+int mons_null_rare(monster_type mcls)
+{
+    return 0;
+}
 
 // The Abyss
+int mons_abyss_level(monster_type mcls)
+{
+    if (mons_abyss_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
 int mons_abyss_rare(monster_type mcls)
 {
     switch (mcls)
@@ -235,6 +276,13 @@ int mons_abyss_rare(monster_type mcls)
 }
 
 // Pandemonium
+int mons_pan_level(monster_type mcls)
+{
+    if (mons_pan_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
 int mons_pan_rare(monster_type mcls)
 {
     // Note: this is used as-is by place:Pan, but not by actual Pan
@@ -342,8 +390,6 @@ int mons_pan_rare(monster_type mcls)
         return (0);
     }
 }
-
-// LEVEL_DUNGEON
 
 // The Main Dungeon
 int mons_standard_level(monster_type mcls)
@@ -580,7 +626,7 @@ int mons_standard_level(monster_type mcls)
         return 31;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -836,10 +882,9 @@ int mons_standard_rare(monster_type mcls)
 // The Dwarven Hall
 int mons_dwarf_level(monster_type mcls)
 {
-    if (!mons_dwarf_rare(mcls))
-        return 99;
-    // Depths are irrelevant for a depth-1 branch.
-    return 1;
+    if (mons_dwarf_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
 }
 
 int mons_dwarf_rare(monster_type mcls)
@@ -911,8 +956,10 @@ int mons_mineorc_level(monster_type mcls)
     case MONS_FUNGUS:
     case MONS_GOBLIN:
     case MONS_ORC:
-    default:
         return 1;
+
+    default:
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -989,25 +1036,23 @@ int mons_hallelf_level(monster_type mcls)
     case MONS_DEEP_ELF_PRIEST:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_DEEP_ELF_KNIGHT:
-        return 3;
-
     case MONS_ORC_PRIEST:
     case MONS_ORC_HIGH_PRIEST:
-        return 4;
+        return 3;
 
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
-        return 6;
+        return 4;
 
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
-        return 9;
+        return 7;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1156,7 +1201,7 @@ int mons_lair_level(monster_type mcls)
         return 8;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1335,7 +1380,7 @@ int mons_swamp_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1455,7 +1500,7 @@ int mons_shoals_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1531,7 +1576,7 @@ int mons_pitsnake_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1605,7 +1650,7 @@ int mons_spidernest_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1693,7 +1738,7 @@ int mons_pitslime_level(monster_type mcls)
         return 6;
 
     default:
-        return 1;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1749,7 +1794,7 @@ int mons_hive_level(monster_type mcls)
         return 2;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1774,9 +1819,11 @@ int mons_hive_rare(monster_type mcls)
 // The Vaults
 int mons_vaults_level(monster_type mcls)
 {
-    return mons_standard_level(mcls)
-         - absdungeon_depth(BRANCH_VAULTS, 1)
-         + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
+    int lev = mons_standard_level(mcls);
+    if (lev == DEPTH_NOWHERE)
+        return lev;
+    return lev - absdungeon_depth(BRANCH_VAULTS, 1)
+               + absdungeon_depth(BRANCH_MAIN_DUNGEON, 1);
 }
 
 int mons_vaults_rare(monster_type mcls)
@@ -1790,7 +1837,7 @@ int mons_hallblade_level(monster_type mcls)
     if (mcls == MONS_DANCING_WEAPON)
         return 1;
     else
-        return 99;
+        return DEPTH_NOWHERE;
 }
 
 int mons_hallblade_rare(monster_type mcls)
@@ -1850,7 +1897,7 @@ int mons_crypt_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -1967,7 +2014,7 @@ int mons_tomb_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2036,7 +2083,7 @@ int mons_forest_level(monster_type mcls)
         return 6;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2111,7 +2158,7 @@ int mons_hallzot_level(monster_type mcls)
     case MONS_ELECTRIC_GOLEM:
         return 1;
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2172,10 +2219,10 @@ int mons_hallzot_rare(monster_type mcls)
 // The Vestibule of Hell
 int mons_vestibule_level(monster_type mcls)
 {
-    if (!mons_vestibule_rare(mcls))
-        return 99;
     // Depths are irrelevant for a depth-1 branch.
-    return 1;
+    if (mons_vestibule_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
 }
 
 int mons_vestibule_rare(monster_type mcls)
@@ -2278,7 +2325,7 @@ int mons_dis_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2423,7 +2470,7 @@ int mons_gehenna_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2564,7 +2611,7 @@ int mons_cocytus_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2703,7 +2750,7 @@ int mons_tartarus_level(monster_type mcls)
         return 5;
 
     default:
-        return 99;
+        return DEPTH_NOWHERE;
     }
 }
 
@@ -2797,6 +2844,154 @@ int mons_tartarus_rare(monster_type mcls)
 
     case MONS_ANCIENT_LICH:
         return 6;
+
+    default:
+        return 0;
+    }
+}
+
+// Sewers
+int mons_sewer_level(monster_type mcls)
+{
+    if (mons_sewer_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
+int mons_sewer_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_BAT:
+    case MONS_GIANT_NEWT:
+        return 100;
+
+    case MONS_BALL_PYTHON:
+    case MONS_OOZE:
+    case MONS_WORM:
+    case MONS_ADDER:
+    case MONS_GIANT_COCKROACH:
+    case MONS_GIANT_MITE:
+    case MONS_GIANT_GECKO:
+        return 50;
+
+    default:
+        return 0;
+    }
+}
+
+// Volcano
+int mons_volcano_level(monster_type mcls)
+{
+    if (mons_volcano_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
+int mons_volcano_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_FIRE_ELEMENTAL:
+    case MONS_FIRE_VORTEX:
+    case MONS_FIRE_DRAKE:
+    case MONS_LINDWURM:
+    case MONS_CRIMSON_IMP:
+    case MONS_MANTICORE:
+    case MONS_HELL_HOUND:
+    case MONS_HELL_HOG:
+    case MONS_FLAYED_GHOST:
+    case MONS_TOENAIL_GOLEM:
+    case MONS_EFREET:
+    case MONS_VAMPIRE:
+        return 50;
+
+    default:
+        return 0;
+    }
+}
+
+// Ice Cave
+int mons_icecave_level(monster_type mcls)
+{
+    if (mons_icecave_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
+int mons_icecave_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ICE_BEAST:
+    case MONS_WHITE_IMP:
+    case MONS_ICE_DEVIL:
+    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM_SMALL:
+        return 50;
+
+    case MONS_FREEZING_WRAITH:
+        return 35;
+
+    case MONS_YAK:
+    case MONS_POLAR_BEAR:
+        return 20;
+
+    case MONS_BLUE_DEVIL:
+        return 10;
+
+    default:
+        return 0;
+    }
+}
+
+// Bailey
+int mons_bailey_level(monster_type mcls)
+{
+    if (mons_bailey_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
+int mons_bailey_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ORC:
+    case MONS_GNOLL:
+        return 50;
+
+    case MONS_ORC_WARRIOR:
+        return 35;
+
+    case MONS_ORC_KNIGHT:
+        return 10;
+
+    // no randomly spawning warlords
+
+    default:
+        return 0;
+    }
+}
+
+// Ossuary
+int mons_ossuary_level(monster_type mcls)
+{
+    if (mons_ossuary_rare(mcls))
+        return 1;
+    return DEPTH_NOWHERE;
+}
+
+int mons_ossuary_rare(monster_type mcls)
+{
+    switch (mcls)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_SKELETON_SMALL:
+        return 50;
+
+    case MONS_MUMMY:
+        return 20;
 
     default:
         return 0;

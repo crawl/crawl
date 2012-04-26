@@ -66,75 +66,14 @@ void tile_new_level(bool first_time, bool init_unseen)
 
 void tile_init_default_flavour()
 {
-    tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
+    tile_default_flv(you.where_are_you, env.tile_default);
 }
 
-void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
+void tile_default_flv(branch_type br, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;
     flv.floor   = TILE_FLOOR_NORMAL;
     flv.special = 0;
-
-    if (lev == LEVEL_PANDEMONIUM)
-    {
-        switch (random2(9))
-        {
-            default:
-            case 0: flv.wall = TILE_WALL_BARS_RED; break;
-            case 1: flv.wall = TILE_WALL_BARS_BLUE; break;
-            case 2: flv.wall = TILE_WALL_BARS_CYAN; break;
-            case 3: flv.wall = TILE_WALL_BARS_GREEN; break;
-            case 4: flv.wall = TILE_WALL_BARS_MAGENTA; break;
-            case 5: flv.wall = TILE_WALL_BARS_BROWN; break;
-            case 6: flv.wall = TILE_WALL_BARS_LIGHTGRAY; break;
-            case 7: flv.wall = TILE_WALL_BARS_DARKGRAY; break;
-            // Wall_flesh used to have a 1/3 chance
-            case 8: flv.wall = TILE_WALL_FLESH; break;
-        }
-
-        switch (random2(8))
-        {
-            default:
-            case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
-            case 1: flv.floor = TILE_FLOOR_DEMONIC_BLUE; break;
-            case 2: flv.floor = TILE_FLOOR_DEMONIC_GREEN; break;
-            case 3: flv.floor = TILE_FLOOR_DEMONIC_CYAN; break;
-            case 4: flv.floor = TILE_FLOOR_DEMONIC_MAGENTA; break;
-            case 5: flv.floor = TILE_FLOOR_DEMONIC_BROWN; break;
-            case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
-            case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
-        }
-
-        return;
-    }
-    else if (lev == LEVEL_ABYSS)
-    {
-        flv.floor = TILE_FLOOR_NERVES;
-        switch (random2(6))
-        {
-        default:
-        case 0: flv.wall = TILE_WALL_HIVE; break;
-        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
-        case 2: flv.wall = TILE_WALL_SLIME; break;
-        case 3: flv.wall = TILE_WALL_ICE; break;
-        case 4: flv.wall = TILE_WALL_HALL; break;
-        case 5: flv.wall = TILE_WALL_UNDEAD; break;
-        }
-        return;
-    }
-    else if (lev == LEVEL_LABYRINTH)
-    {
-        flv.wall  = TILE_WALL_LAB_ROCK;
-        flv.floor = TILE_FLOOR_LABYRINTH;
-        return;
-    }
-    else if (lev == LEVEL_PORTAL_VAULT)
-    {
-        // These should be handled in the respective lua files.
-        flv.wall  = TILE_WALL_NORMAL;
-        flv.floor = TILE_FLOOR_NORMAL;
-        return;
-    }
 
     switch (br)
     {
@@ -243,6 +182,92 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     case BRANCH_HALL_OF_ZOT:
         flv.wall  = TILE_WALL_ZOT_YELLOW;
         flv.floor = TILE_FLOOR_TOMB;
+        return;
+
+    case BRANCH_ABYSS:
+        flv.floor = TILE_FLOOR_NERVES;
+        switch (random2(6))
+        {
+        default:
+        case 0: flv.wall = TILE_WALL_HIVE; break;
+        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
+        case 2: flv.wall = TILE_WALL_SLIME; break;
+        case 3: flv.wall = TILE_WALL_ICE; break;
+        case 4: flv.wall = TILE_WALL_HALL; break;
+        case 5: flv.wall = TILE_WALL_UNDEAD; break;
+        }
+        return;
+
+    case BRANCH_PANDEMONIUM:
+        switch (random2(9))
+        {
+            default:
+            case 0: flv.wall = TILE_WALL_BARS_RED; break;
+            case 1: flv.wall = TILE_WALL_BARS_BLUE; break;
+            case 2: flv.wall = TILE_WALL_BARS_CYAN; break;
+            case 3: flv.wall = TILE_WALL_BARS_GREEN; break;
+            case 4: flv.wall = TILE_WALL_BARS_MAGENTA; break;
+            case 5: flv.wall = TILE_WALL_BARS_BROWN; break;
+            case 6: flv.wall = TILE_WALL_BARS_LIGHTGRAY; break;
+            case 7: flv.wall = TILE_WALL_BARS_DARKGRAY; break;
+            // Wall_flesh used to have a 1/3 chance
+            case 8: flv.wall = TILE_WALL_FLESH; break;
+        }
+
+        switch (random2(8))
+        {
+            default:
+            case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
+            case 1: flv.floor = TILE_FLOOR_DEMONIC_BLUE; break;
+            case 2: flv.floor = TILE_FLOOR_DEMONIC_GREEN; break;
+            case 3: flv.floor = TILE_FLOOR_DEMONIC_CYAN; break;
+            case 4: flv.floor = TILE_FLOOR_DEMONIC_MAGENTA; break;
+            case 5: flv.floor = TILE_FLOOR_DEMONIC_BROWN; break;
+            case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
+            case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
+        }
+        break;
+
+    case BRANCH_ZIGGURAT:
+    case BRANCH_BAZAAR:
+    case BRANCH_TROVE:
+        flv.wall  = TILE_WALL_VAULT;
+        flv.floor = TILE_FLOOR_VAULT;
+        return;
+
+    case BRANCH_LABYRINTH:
+        flv.wall  = TILE_WALL_LAB_ROCK;
+        flv.floor = TILE_FLOOR_LABYRINTH;
+        return;
+
+    case BRANCH_SEWER:
+        flv.wall  = TILE_WALL_SLIME;
+        flv.floor = TILE_FLOOR_SLIME;
+        return;
+
+    case BRANCH_OSSUARY:
+        flv.wall  = TILE_WALL_SANDSTONE;
+        flv.floor = TILE_FLOOR_SANDSTONE;
+        return;
+
+    case BRANCH_BAILEY:
+        flv.wall  = TILE_WALL_BRICK_BROWN;
+        flv.floor = TILE_FLOOR_COBBLE_BLOOD;
+        return;
+
+    case BRANCH_ICE_CAVE:
+        flv.wall  = TILE_WALL_ZOT_CYAN;
+        flv.floor = TILE_FLOOR_ICE;
+        return;
+
+    case BRANCH_VOLCANO:
+        flv.wall  = TILE_WALL_PEBBLE_RED;
+        flv.floor = TILE_FLOOR_ROUGH_RED;
+        return;
+
+    case BRANCH_WIZLAB:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
         return;
 
     case NUM_BRANCHES:
@@ -998,23 +1023,21 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
     // TODO: allow the stone type to be set in a cleaner way.
-    if (you.level_type == LEVEL_LABYRINTH)
+    if (player_in_branch(BRANCH_LABYRINTH))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
     }
-    else if (you.level_type == LEVEL_DUNGEON
-             && you.where_are_you == BRANCH_CRYPT)
+    else if (player_in_branch(BRANCH_CRYPT))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_CRYPT;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_CRYPT_METAL;
     }
-    else if (you.level_type == LEVEL_DUNGEON
-             && you.where_are_you == BRANCH_TOMB)
+    else if (player_in_branch(BRANCH_TOMB))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_TOMB;
@@ -1046,6 +1069,16 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_DNGN_STONE_WALL_RED;
         if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_DNGN_METAL_WALL_RED;
+    }
+    else if (player_in_branch(BRANCH_BAILEY))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_STONE_BRICK;
+    }
+    else if (player_in_branch(BRANCH_OSSUARY))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_DNGN_STONE_WALL_BROWN;
     }
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);

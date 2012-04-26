@@ -792,11 +792,11 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int force_type)
 {
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         return (false);
 
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  you.level_type == LEVEL_ABYSS);
+                                  player_in_branch(BRANCH_ABYSS));
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return (true);
@@ -1438,9 +1438,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_BLESSED_FALCHION:      // special gifts of TSO
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
-#if TAG_MAJOR_VERSION == 32
-        case WPN_BLESSED_KATANA:
-#endif
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
@@ -1646,7 +1643,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
-                              _determine_weapon_brand(item, 2+2*you.absdepth0));
+                _determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
         item.plus  -= 1 + random2(3);
         item.plus2 -= 1 + random2(3);
@@ -2119,9 +2116,6 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
         case ARM_SCALE_MAIL:
         case ARM_CHAIN_MAIL:
         case ARM_SPLINT_MAIL:
-#if TAG_MAJOR_VERSION == 32
-        case ARM_BANDED_MAIL:
-#endif
         case ARM_PLATE_ARMOUR:
             if (item.sub_type <= ARM_CHAIN_MAIL && one_chance_in(6))
                 rc = ISFLAG_ELVEN;
@@ -2401,7 +2395,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_ARMOUR,
-                _determine_armour_ego(item, item.sub_type, 2+2*you.absdepth0));
+                _determine_armour_ego(item, item.sub_type,
+                2 + 2 * env.absdepth0));
         }
 
         item.plus -= 1 + random2(3);
@@ -3007,10 +3002,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
              || item.sub_type == MISC_HORN_OF_GERYON
              || item.sub_type == MISC_DECK_OF_PUNISHMENT
              || item.sub_type == MISC_QUAD_DAMAGE
-#if TAG_MAJOR_VERSION == 32
-             || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
-             || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
-#endif
              || item.sub_type == MISC_EMPTY_EBONY_CASKET
              // Pure decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE

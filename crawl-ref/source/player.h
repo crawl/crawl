@@ -103,8 +103,6 @@ public:
 
   unsigned short pet_target;
 
-  int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
-
   durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
@@ -174,32 +172,8 @@ public:
   // memory being freed twice.
   KillMaster* kills;
 
-  level_area_type level_type;
-
-  // Human-readable name for portal vault. Will be set to level_type_tag
-  // if not explicitly set by the entry portal.
-  std::string level_type_name;
-
-  // Three-letter extension for portal vault bones files. Will be set
-  // to first three letters of level_type_tag if not explicitly set by
-  // the entry portal.
-  std::string level_type_ext;
-
-  // Abbreviation of portal vault name, for use in notes.  If not
-  // explicitly set by the portal vault, will be set from level_type_name
-  // or level_type_tag if either is short enough, or the shorter of the
-  // two will be truncated if neither is short enough.
-  std::string level_type_name_abbrev;
-
-  // Item origin string for items from portal vaults, so that dumps
-  // can have origins like "You found it in on level 2 of a ziggurat".
-  // Will be set relative to level_type_name if not explicitly set.
-  std::string level_type_origin;
-
-  // .des file tag for portal vault
-  std::string level_type_tag;
-
   branch_type where_are_you;
+  int depth;
 
   FixedVector<uint8_t, 30> branch_stairs;
 
@@ -209,11 +183,11 @@ public:
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
-  FixedVector<uint8_t, MAX_NUM_GODS>  penance;
-  FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
-  FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
-  FixedVector<uint8_t, MAX_NUM_GODS>  piety_max;
+  FixedVector<uint8_t, NUM_GODS>  penance;
+  FixedVector<uint8_t, NUM_GODS>  worshipped;
+  FixedVector<short,   NUM_GODS>  num_current_gifts;
+  FixedVector<short,   NUM_GODS>  num_total_gifts;
+  FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   // Nemelex sacrifice toggles
   FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
@@ -277,6 +251,9 @@ public:
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
+
+  // Path back from portal levels.
+  std::vector<level_pos> level_stack;
 
   // The player's knowledge about item types.
   id_arr type_ids;
@@ -358,9 +335,6 @@ public:
 
   int shield_blocks;         // number of shield blocks since last action
 
-  entry_cause_type entry_cause;
-  god_type         entry_cause_god;
-
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
@@ -399,7 +373,6 @@ public:
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
-    FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
 
 public:
     player();
@@ -708,10 +681,7 @@ public:
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info
-    PlaceInfo& get_place_info(branch_type branch,
-                              level_area_type level_type2) const;
     PlaceInfo& get_place_info(branch_type branch) const;
-    PlaceInfo& get_place_info(level_area_type level_type2) const;
     void clear_place_info();
 
     void goto_place(const level_id &level);
@@ -792,9 +762,12 @@ bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool is_map_persistent(void);
-bool player_in_branch(int branch);
-bool player_in_level_area(level_area_type area);
+bool player_in_mappable_area(void);
+bool player_in_connected_branch(void);
 bool player_in_hell(void);
+
+static inline bool player_in_branch(int branch)
+{ return you.where_are_you == branch; };
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);

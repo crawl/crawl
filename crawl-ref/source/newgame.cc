@@ -181,11 +181,6 @@ static bool _is_job_valid_choice(job_type job)
     if (job < 0 || job > NUM_JOBS)
         return (false);
 
-#if TAG_MAJOR_VERSION == 32
-    if (job == JOB_PALADIN || job == JOB_REAVER)
-        return (false);
-#endif
-
     return (true);
 }
 

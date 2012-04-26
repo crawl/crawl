@@ -12,7 +12,7 @@ struct bolt;
 class monster;
 struct item_def;
 
-void banished(dungeon_feature_type gate_type, const std::string &who = "");
+void banished(const std::string &who = "");
 
 bool forget_spell(void);
 

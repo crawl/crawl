@@ -350,7 +350,7 @@ void hints_new_turn()
 
         if (you.attribute[ATTR_HELD])
             learned_something_new(HINT_CAUGHT_IN_NET);
-        else if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
+        else if (i_feel_safe() && !player_in_branch(BRANCH_ABYSS))
         {
             // We don't want those "Whew, it's safe to rest now" messages
             // if you were just cast into the Abyss. Right?
@@ -2784,7 +2784,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         const int      old_piety = gc.y;
 
         god_type old_god = GOD_NO_GOD;
-        for (int i = 0; i < MAX_NUM_GODS; i++)
+        for (int i = 0; i < NUM_GODS; i++)
             if (you.worshipped[i] > 0)
             {
                 old_god = (god_type) i;
@@ -4403,35 +4403,32 @@ static void _hints_describe_feature(int x, int y)
             Hints.hints_events[HINT_SEEN_STAIRS] = false;
             break;
 
+       case DNGN_EXIT_DUNGEON:
+            ostr << "These stairs lead out of the dungeon. Following them "
+                    "will end the game. The only way to win is to "
+                    "transport the fabled Orb of Zot outside.";
+            break;
+
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
        case DNGN_STONE_STAIRS_UP_III:
-            if (you.absdepth0 < 1)
-            {
-                ostr << "These stairs lead out of the dungeon. Following them "
-                        "will end the game. The only way to win is to "
-                        "transport the fabled Orb of Zot outside.";
-            }
-            else
-            {
-                ostr << "You can enter the previous (shallower) level by "
-                        "following these up (<w><<</w>). This is ideal for "
-                        "retreating or finding a safe resting spot, since the "
-                        "previous level will have less monsters and monsters "
-                        "on this level can't follow you up unless they're "
-                        "standing right next to you. To get back to this "
-                        "level again, press <w>></w> while standing on the "
-                        "downstairs.";
+            ostr << "You can enter the previous (shallower) level by "
+                    "following these up (<w><<</w>). This is ideal for "
+                    "retreating or finding a safe resting spot, since the "
+                    "previous level will have less monsters and monsters "
+                    "on this level can't follow you up unless they're "
+                    "standing right next to you. To get back to this "
+                    "level again, press <w>></w> while standing on the "
+                    "downstairs.";
 #ifdef USE_TILE
-                ostr << " In Tiles, you can perform either action simply by "
-                        "clicking the <w>left mouse button</w> while pressing "
-                        "<w>Shift</w> instead. ";
+            ostr << " In Tiles, you can perform either action simply by "
+                    "clicking the <w>left mouse button</w> while pressing "
+                    "<w>Shift</w> instead. ";
 #endif
-                if (is_unknown_stair(where))
-                {
-                    ostr << "\n\nYou have not yet passed through this "
-                            "particular set of stairs. ";
-                }
+            if (is_unknown_stair(where))
+            {
+                ostr << "\n\nYou have not yet passed through this "
+                        "particular set of stairs. ";
             }
             Hints.hints_events[HINT_SEEN_STAIRS] = false;
             break;
@@ -4680,12 +4677,7 @@ bool hints_monster_interesting(const monster* mons)
         return (true);
 
     // The monster is (seriously) out of depth.
-    if (you.level_type == LEVEL_DUNGEON
-        && mons_level(mons->type) >= you.absdepth0 + 8)
-    {
-        return (true);
-    }
-    return (false);
+    return (mons_level(mons->type) >= you.depth + 8);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4730,9 +4722,10 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             // 8 is the default value for the note-taking of OOD monsters.
             // Since I'm too lazy to come up with any measurement of my own
             // I'll simply reuse that one.
-            const int level_diff = mons_level(mi.type) - (you.absdepth0 + 8);
+            const int level_diff = mons_level(mi.type)
+                                 - (you.depth + 8);
 
-            if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+            if (level_diff >= 0)
             {
                 ostr << "This kind of monster is usually only encountered "
                      << (level_diff > 5 ? "much " : "")

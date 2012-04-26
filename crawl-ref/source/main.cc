@@ -650,8 +650,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'r': wizard_change_species();               break;
     case '>': wizard_place_stairs(true);             break;
     case '<': wizard_place_stairs(false);            break;
-    case 'P': wizard_create_portal();                break;
-    case 'L': debug_place_map();                     break;
+    case 'p': wizard_create_portal();                break;
+    case 'L': debug_place_map(false);                break;
+    case 'P': debug_place_map(true);                 break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
     case 'z': wizard_cast_spec_spell();              break;
@@ -697,14 +698,14 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'B':
-        if (you.level_type != LEVEL_ABYSS)
-            banished(DNGN_ENTER_ABYSS, "wizard command");
+        if (!player_in_branch(BRANCH_ABYSS))
+            banished("wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case CONTROL('A'):
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
             abyss_teleport(true);
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
@@ -735,16 +736,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         while (result == 0);
         break;
     }
-    case 'p':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
-        break;
-
-    case 'l':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_LABYRINTH, false);
-        break;
 
     case 'k':
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
@@ -1398,12 +1392,6 @@ static void _go_upstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
         ;
@@ -1438,8 +1426,7 @@ static void _go_upstairs()
         return;
     }
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -1510,12 +1497,6 @@ static void _go_downstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
         ;
@@ -1551,8 +1532,7 @@ static void _go_downstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -2862,11 +2842,11 @@ static void _check_banished()
     if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
-        if (you.level_type != LEVEL_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
-            banished(DNGN_ENTER_ABYSS, you.banished_by);
+            banished(you.banished_by);
         }
         you.banished_by.clear();
     }
@@ -3028,7 +3008,7 @@ static void _player_reacts()
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(80))
+        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
@@ -3244,8 +3224,7 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && you.level_type == LEVEL_DUNGEON
-        && you.where_are_you == BRANCH_MAIN_DUNGEON
+        && player_in_branch(BRANCH_MAIN_DUNGEON)
         && you.num_turns > 100)
     {
         zotdef_bosses_check();
@@ -3284,8 +3263,7 @@ void world_reacts()
         if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
-                || you.where_are_you == BRANCH_MAIN_DUNGEON
-                   && you.level_type == LEVEL_DUNGEON)
+                || player_in_branch(BRANCH_MAIN_DUNGEON))
             {
                 you.num_turns++;
             }
@@ -4399,7 +4377,7 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;
@@ -4679,7 +4657,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t));
     // Travel cache, traversable_terrain.
     COMPILE_CHECK(NUM_FEATURES <= 256);
-    COMPILE_CHECK(NUM_GODS <= MAX_NUM_GODS);
+    COMPILE_CHECK(NUM_GODS <= NUM_GODS);
     COMPILE_CHECK(TAG_CHR_FORMAT < 256);
     COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
     COMPILE_CHECK(NUM_TAG_MINORS < 256);
@@ -4689,5 +4667,6 @@ static void _compile_time_asserts()
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
-        ASSERT(branches[i].id == i);
+        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
 }

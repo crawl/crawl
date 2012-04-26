@@ -69,7 +69,7 @@ struct Note
     int first, second;
     long turn;
     unsigned short packed_place;
-    std::string place_abbrev;
+
     std::string name;
     std::string desc;
 };

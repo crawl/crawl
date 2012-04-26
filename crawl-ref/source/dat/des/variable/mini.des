@@ -4,10 +4,10 @@
 #           vaults without any ORIENT line. General vaults with ORIENT lines
 #           are stored in either float.des or large.des. For specific branch
 #           vaults or altars, there are separate files. In particular, maps
-#           maps dealing with the Vault branch system, including Vaults:8,
+#           maps dealing with the Vaults branch system, including Vaults:8,
 #           reside in vaults.des.
 #
-# mini.des:          this file: dummy and general notes for minivault makers
+# mini.des:          this file: general notes for minivault makers
 # mini_features.des: often flavour only; loot/risk optional; no monsters
 # mini_monsters.des: minivaults with monsters (and with or without loot)
 #
@@ -15,9 +15,6 @@
 
 ##############################################################################
 # Some notes on minivaults for designers:
-#
-# *Cannot* place 8,9 or 0 monsters in branch vaults which neither use the
-# normal mons_level function or are around level 35, or generation will crash.
 #
 # Minivaults were traditionally drawn after rotating the vault by 90 degrees
 # anticlockwise. Under the new dungeon vault handling, the map may be freely
@@ -31,19 +28,3 @@
 # makes the map a normal vault, and mayhem can result.
 #
 ###############################################################################
-
-
-# Default depth for minivaults. If your minivault is suitable for one of the
-# branches, add it via DEPTH: Lair or similar.
-default-depth: D:8-27
-
-##############################################################################
-# Minivault balancer
-#
-NAME: mini_dummy
-DEPTH: 1-50, !D:1-27
-TAGS: dummy
-WEIGHT: 90
-MAP
-.
-ENDMAP

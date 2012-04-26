@@ -252,7 +252,7 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures[type] = false;
 
-    if (!dgn_place_monster(mspec, you.absdepth0, place, true, false))
+    if (!dgn_place_monster(mspec, -1, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -1034,7 +1034,7 @@ static void _move_player(const coord_def& where)
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true);
     // If necessary, update the Abyss.
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 }
 

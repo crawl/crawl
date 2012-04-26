@@ -70,9 +70,7 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
-#if TAG_MAJOR_VERSION != 32
     CARD_ORB,
-#endif
 
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
@@ -80,9 +78,7 @@ enum card_type
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
-#if TAG_MAJOR_VERSION != 32
     CARD_MERCENARY,
-#endif
 
     CARD_CRUSADE,
     CARD_SUMMON_ANIMAL,
@@ -100,19 +96,11 @@ enum card_type
     CARD_WILD_MAGIC,
     CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
-#if TAG_MAJOR_VERSION != 32
     CARD_ALCHEMIST,
-#endif
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
-#if TAG_MAJOR_VERSION == 32
-    CARD_MAP,                   // magic mapping
-#endif
     CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
-#if TAG_MAJOR_VERSION == 32
-    CARD_SPADE,                 // dig
-#endif
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
     CARD_STAIRS,                // moves stairs around
@@ -126,12 +114,6 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
-
-#if TAG_MAJOR_VERSION == 32
-    CARD_ALCHEMIST,
-    CARD_ORB,
-    CARD_MERCENARY,
-#endif
 
     NUM_CARDS
 };
@@ -156,7 +138,7 @@ card_type top_card(const item_def &item);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
 deck_rarity_type deck_rarity(const item_def &item);
-colour_t deck_rarity_to_color(deck_rarity_type rarity);
+colour_t deck_rarity_to_colour(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
 int cards_in_deck(const item_def &deck);
@@ -166,7 +148,6 @@ card_type get_card_and_flags(const item_def& deck, int idx,
 // Used elsewhere in ZotDef.
 void sage_card(int power, deck_rarity_type rarity);
 void create_pond(const coord_def& center, int radius, bool allow_deep);
-bool create_altar(bool disallow_no_altar = false);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.

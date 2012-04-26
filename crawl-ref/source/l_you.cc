@@ -24,6 +24,7 @@
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "place.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -148,11 +149,12 @@ LUARET1(you_lives, number, you.lives)
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
-LUARET1(you_subdepth, number, level_id::current().depth)
+LUARET1(you_depth, number, you.depth)
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
-LUARET1(you_absdepth, number, you.absdepth0 + 1)
+// [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
+LUARET1(you_absdepth, number, env.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
@@ -161,7 +163,6 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
-LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
 
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
@@ -294,6 +295,22 @@ LUAFN(you_mutation)
     return (luaL_argerror(ls, 1, err.c_str()));
 }
 
+LUAFN(you_is_level_on_stack)
+{
+    std::string levname = luaL_checkstring(ls, 1);
+    level_id lev;
+    try
+    {
+        lev = level_id::parse_level_id(levname);
+    }
+    catch (const std::string &err)
+    {
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+
+    PLUARET(boolean, is_level_on_stack(lev));
+}
+
 LUAFN(you_train_skill)
 {
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
@@ -389,13 +406,12 @@ static const struct luaL_reg you_clib[] =
 
     { "where",        you_where },
     { "branch",       you_branch },
-    { "subdepth",     you_subdepth },
+    { "depth",        you_depth },
     { "absdepth",     you_absdepth },
+    { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
-
-    { "level_type_tag",    you_level_type_tag },
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },

@@ -61,9 +61,13 @@ A fountain of sparkling water
 
 Press 'q' to drink from this magic fountain. Expect magical effects, as long as it's still magic.
 %%%%
+A gate leading back out of here
+
+This gate seems to let you return whence you came from.
+%%%%
 A gate leading back out of this place
 
-This gate leads back to the dungeon. Just don't forget your runes if you intend to return.
+This gate leads back to the dungeon.
 %%%%
 A gate leading out of Pandemonium
 
@@ -182,6 +186,14 @@ A rock wall
 
 This wall consists of simple rock.
 %%%%
+A rock-blocked tunnel
+
+The way you came in doesn't seem to be passable anymore.
+%%%%
+A rocky tunnel leading out of this place
+
+An unstable passage in the volcanic rock, admitting a draft of cool air from beyond.
+%%%%
 A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
@@ -238,6 +250,12 @@ A staircase back to the Vaults
 
 These stairs lead back to the mighty Vaults.
 %%%%
+A staircase leading out of the dungeon
+
+This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that kind of stuff. Also taxes and whatever else you ran from.
+
+Climbing these stairs will end your quest, whatever you'll carry the Orb with you or not.
+%%%%
 A staircase to the Crypt
 
 These stairs lead to an ancient crypt. Unfortunately, not everything that was buried there had the decency to stay dead.
@@ -253,10 +271,6 @@ A wide stair down to the murky depths of the halls of the deep elves, skilled wa
 A staircase to the Hall of Blades
 
 These stairs lead to the Hall of Blades. The steps seem to have been beaten and chipped by assaults from the animated weapons therein.
-%%%%
-A staircase to the Hive
-
-You hear an angry and manifold buzzing.
 %%%%
 A staircase to the Lair
 
@@ -383,6 +397,12 @@ A spring-loaded one-way escape hatch set in the ceiling.
 An escape hatch in the floor
 
 A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adventurer beset by adversaries to exchange the perils of this level for the perils of the next.
+%%%%
+An exit through the horrors of the Abyss
+
+If you ever wanted to escape out of the pan into the fire, this is your
+chance. This gateway allows you to return from this place by a nice scenic
+path through infinite madness.
 %%%%
 An iron altar of Okawaru
 
@@ -641,7 +661,7 @@ A sarcophagus
 
 An ancient sarcophagus. It appears to be empty.
 %%%%
-# Vault:8
+# Vaults:8
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome

@@ -45,7 +45,6 @@ FEATF(_feat_is_stone_stair, feat_is_stone_stair)
 FEATF(_feat_is_staircase, feat_is_staircase)
 FEATF(_feat_is_escape_hatch, feat_is_escape_hatch)
 FEATF(_feat_is_trap, feat_is_trap)
-FEATF(_feat_is_sealable_portal, feat_sealable_portal)
 FEATF(_feat_is_portal, feat_is_portal)
 FEATF(_feat_is_stair, feat_is_stair)
 FEATF(_feat_is_travelable_stair, feat_is_travelable_stair)
@@ -73,7 +72,6 @@ const struct luaL_reg feat_dlib[] =
 { "is_staircase", _feat_is_staircase },
 { "is_escape_hatch", _feat_is_escape_hatch },
 { "is_trap", _feat_is_trap },
-{ "is_sealable_portal", _feat_is_sealable_portal },
 { "is_portal", _feat_is_portal },
 { "is_stair", _feat_is_stair },
 { "is_travelable_stair", _feat_is_travelable_stair },

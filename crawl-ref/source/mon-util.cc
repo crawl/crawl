@@ -756,12 +756,12 @@ bool mons_is_mimic(monster_type mc)
 
 bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc == MONS_ITEM_MIMIC || mc == MONS_INEPT_ITEM_MIMIC);
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_VORPAL_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc == MONS_FEATURE_MIMIC || mc == MONS_INEPT_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_VORPAL_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -834,7 +834,7 @@ void discover_mimic(const coord_def& pos, bool wake)
         mg.flags |= MG_DONT_COME;
 
     // HD is scaled with depth
-    const int level = you.absdepth0 + 1;
+    const int level = env.absdepth0 + 1;
     mg.hd = stepdown_value(level, 12, 12, 24, 36);
 
     // Early levels get inept mimics instead

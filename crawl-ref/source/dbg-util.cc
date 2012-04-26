@@ -78,8 +78,8 @@ void debug_dump_levgen()
             type = props[LAYOUT_TYPE_KEY].get_string();
     }
 
-    mprf("level build method = %s, level layout type  = %s, absdepth0 = %d",
-         method.c_str(), type.c_str(), you.absdepth0);
+    mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
+         method.c_str(), type.c_str(), env.absdepth0);
 
     if (props.exists(LEVEL_EXTRAS_KEY))
     {

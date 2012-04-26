@@ -48,9 +48,19 @@ static uint8_t _random_potion_description()
 void initialise_branches_for_game_type()
 {
     if (crawl_state.game_is_sprint())
-        branches[BRANCH_MAIN_DUNGEON].depth = 1;
-    else
-        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
+    {
+        brdepth.init(-1);
+        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_ABYSS] = 1;
+        return;
+    }
+
+    for (int i = 0; i < NUM_BRANCHES; i++)
+        brdepth[i] = branches[i].numlevels;
+
+    // In trunk builds, test variable-length branches.
+    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
+        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
 }
 
 // Determine starting depths of branches.
@@ -58,11 +68,14 @@ void initialise_branch_depths()
 {
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
-        Branch *b = &branches[branch];
-        if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
-            b->startdepth = -1;
-        else if (branch <= BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
-            b->startdepth = random_range(b->mindepth, b->maxdepth);
+        const Branch *b = &branches[branch];
+        if (!is_connected_branch(b->id))
+           // hopefully unused, but let's have a reasonable estimate just in case
+            startdepth[branch] = (b->mindepth + b->maxdepth) / 2;
+        else if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
+            startdepth[branch] = -1;
+        else
+            startdepth[branch] = random_range(b->mindepth, b->maxdepth);
     }
 
 #if 0
@@ -84,7 +97,7 @@ void initialise_branch_depths()
     for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
     {
         dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
-        branches[disabled_branch[i]].startdepth = -1;
+        startdepth[disabled_branch[i]] = -1;
     }
 
     initialise_branches_for_game_type();

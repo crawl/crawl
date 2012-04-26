@@ -41,6 +41,7 @@
 #include "shopping.h"
 #include "showsymb.h"
 #include "sprint.h"
+#include "stash.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -296,8 +297,7 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
     {
         dprf("Placing abyssal rune at (%d,%d)", chosen_spot.x, chosen_spot.y);
         int thing_created = items(1, OBJ_MISCELLANY,
-                                  MISC_RUNE_OF_ZOT, true,
-                                  DEPTH_ABYSS, 0);
+                                  MISC_RUNE_OF_ZOT, true, 0, 0);
         if (thing_created != NON_ITEM)
         {
             mitm[thing_created].plus = RUNE_ABYSSAL;
@@ -326,7 +326,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1. Abyss in sprint games has no items.
-    int num_items = 150, items_level = DEPTH_ABYSS;
+    int num_items = 150, items_level = 52;
     int items_placed = 0;
 
     if (crawl_state.game_is_sprint())
@@ -493,9 +493,8 @@ static dungeon_feature_type _abyss_pick_altar()
     god_type god;
 
     do
-        god = random_god(true);
-    while (is_good_god(god)
-           || is_unavailable_god(god));
+        god = random_god();
+    while (is_good_god(god));
 
     return (altar_for_god(god));
 }
@@ -565,7 +564,7 @@ public:
 static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_abyss_transit())
-        mons.set_transit(level_id(LEVEL_ABYSS));
+        mons.set_transit(level_id(BRANCH_ABYSS));
 
     mons.destroy_inventory();
     monster_cleanup(&mons);
@@ -692,6 +691,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
+    StashTrack.update_stash(p);
 }
 
 // Removes monsters, clouds, dungeon features, and items from the
@@ -918,16 +918,20 @@ static void _abyss_shift_level_contents_around_player(
 static void _abyss_generate_monsters(int nmonsters)
 {
     mgen_data mons;
-    mons.level_type = LEVEL_ABYSS;
     mons.proximity  = PROX_AWAY_FROM_PLAYER;
 
     for (int mcount = 0; mcount < nmonsters; mcount++)
-        mons_place(mons);
+    {
+        mons.cls = pick_random_monster_for_place(BRANCH_ABYSS, MONS_NO_MONSTER,
+                                                 false, false, false);
+        if (!invalid_monster_type(mons.cls))
+            mons_place(mons);
+    }
 }
 
 void maybe_shift_abyss_around_player()
 {
-    ASSERT(you.level_type == LEVEL_ABYSS);
+    ASSERT(player_in_branch(BRANCH_ABYSS));
     if (map_bounds_with_margin(you.pos(),
                                MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
     {
@@ -963,7 +967,7 @@ void save_abyss_uniques()
         if (mi->needs_abyss_transit()
             && !testbits(mi->flags, MF_TAKING_STAIRS))
         {
-            mi->set_transit(level_id(LEVEL_ABYSS));
+            mi->set_transit(level_id(BRANCH_ABYSS));
         }
 }
 
@@ -1374,7 +1378,7 @@ retry:
 
 void abyss_morph(double duration)
 {
-    if (you.level_type != LEVEL_ABYSS)
+    if (!player_in_branch(BRANCH_ABYSS))
         return;
 
     // Between .02 and .07 per ten ticks, half that for Chei worshippers.
@@ -1494,12 +1498,13 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         }
 
         // Got a place, summon the beast.
-        monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS));
+        monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
         if (invalid_monster_type(mons))
             return (false);
 
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
+        mg.place = BRANCH_ABYSS;
 
         return create_monster(mg);
     }
@@ -1701,7 +1706,7 @@ static void _corrupt_level_features(const corrupt_env &cenv)
 
 static bool _is_level_corrupted()
 {
-    if (player_in_level_area(LEVEL_ABYSS))
+    if (player_in_branch(BRANCH_ABYSS))
         return (true);
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
