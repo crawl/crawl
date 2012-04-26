@@ -534,7 +534,7 @@ monster_type pick_random_monster(const level_id &place, int power,
 
         level = mons_level(mon_type, place) + absdungeon_depth(place.branch, 0);
         diff = level - lev_mons;
-        ASSERT(brdepth[place.branch] > 1 || !diff);
+        ASSERT(branches[place.branch].numlevels > 1 || !diff);
 
         // If we're running low on tries, ignore level differences.
         if (monster_pick_tries < n_relax_margin)
