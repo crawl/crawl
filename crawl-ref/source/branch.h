@@ -56,7 +56,6 @@ bool is_hell_subbranch(branch_type branch);
 bool is_random_lair_subbranch(branch_type branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
-level_id branch_entry_level(branch_type branch);
 level_id current_level_parent();
 
 branch_type str_to_branch(const std::string &branch,
