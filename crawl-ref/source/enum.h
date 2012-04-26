@@ -1198,9 +1198,6 @@ enum dungeon_feature_type
     DNGN_LAVA            = 30,
         DNGN_MINMOVE = DNGN_LAVA, // Can be moved through.
     DNGN_DEEP_WATER,
-    DNGN_UNUSED_UNWALKABLE_1,
-    DNGN_UNUSED_UNWALKABLE_2,
-    DNGN_UNUSED_UNWALKABLE_3,
 
     DNGN_SHALLOW_WATER,
         DNGN_MINWALK = DNGN_SHALLOW_WATER,
@@ -1295,8 +1292,6 @@ enum dungeon_feature_type
         DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_FOREST,
     DNGN_UNUSED_RETURN_BRANCH_1,
 
-    // Portals to various places unknown.
-
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_ZIN,
         DNGN_ALTAR_FIRST_GOD = DNGN_ALTAR_ZIN,
@@ -1329,11 +1324,7 @@ enum dungeon_feature_type
     DNGN_DRY_FOUNTAIN_BLOOD,
     DNGN_PERMADRY_FOUNTAIN,
 
-    DNGN_UNUSED_FEATURE_1,
-    DNGN_UNUSED_FEATURE_2,
-    DNGN_UNUSED_FEATURE_3,
-
-    // Values below should never be saved.
+    // Not meant to ever appear in grd().
     DNGN_EXPLORE_HORIZON, // dummy for redefinition
 
     NUM_FEATURES
