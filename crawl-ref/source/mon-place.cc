@@ -727,15 +727,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 return (mon_type);
             }
         }
-        else if (is_portal_vault(you.where_are_you)
-                 && !branch_has_monsters(you.where_are_you))
-        {
-            // XXX: We don't have a random monster list here, so pick one
-            // from where we were.
-            place.branch = BRANCH_MAIN_DUNGEON;
-            place.depth  = startdepth[you.where_are_you];
-            *lev_mons = env.absdepth0;
-        }
 
         int tries = 0;
         while (tries++ < 300)
