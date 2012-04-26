@@ -1,0 +1,37 @@
+%%%%
+amulet
+
+Un artículo de joyería.
+%%%%
+book
+
+Un libro con hechizos mágicos. Ten cuidado, ya que los grimorios más poderosos no están hechos para juguetear con ellos.
+%%%%
+deck of cards
+
+Un mazo de poderosas cartas mágicas dibujadas con icor de demonios. Echar estas cartas puede tener efectos muy variados, tanto útiles, como perjudiciales.
+%%%%
+magical staff
+
+Una vara cargada con propiedades mágicas.
+%%%%
+potion
+
+Una pequeña botella llena de líquido.
+%%%%
+ring
+
+Un artículo de joyería.
+%%%%
+rod
+
+Una vara cargada con propiedades mágicas.
+%%%%
+scroll
+
+Un rollo de papel cubierto de escritos mágicos.
+%%%%
+wand
+
+Una vara. Quizás sea mágica.
+%%%%

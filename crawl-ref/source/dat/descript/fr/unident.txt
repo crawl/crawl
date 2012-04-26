@@ -1,0 +1,37 @@
+%%%%
+amulet
+
+Un bijou.
+%%%%
+book
+
+Un livre de sorts. Attention, car certains des plus puissants grimoires doivent être manipulés avec précautions.
+%%%%
+deck of cards
+
+Un jeu de puissantes cartes magiques peintes avec l'ichor des démons. Elles peuvent provoquer de précieux ou dangereux effets quand elles sont tirées.
+%%%%
+magical staff
+
+Un bâton doté de propriétés magiques.
+%%%%
+potion
+
+Une petite bouteille pleine de liquide.
+%%%%
+ring
+
+Un bijou.
+%%%%
+rod
+
+Un bâtonnet doté de propriétés magiques.
+%%%%
+scroll
+
+un parchemin de papier couvert d'inscriptions magiques.
+%%%%
+wand
+
+Une baguette. Peut-être est-elle magique.
+%%%%
