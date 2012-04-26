@@ -491,7 +491,7 @@ static std::string _get_branches(bool display)
     return _get_seen_branches(display) + _get_unseen_branches();
 }
 
-// iterate through every god and display their altar's discovery state by color
+// iterate through every god and display their altar's discovery state by colour
 static std::string _get_altars(bool display)
 {
     // Just wastes space for demigods.
@@ -513,7 +513,7 @@ static std::string _get_altars(bool display)
     return disp;
 }
 
-// Loops through gods, printing their altar status by color.
+// Loops through gods, printing their altar status by colour.
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display)
 {

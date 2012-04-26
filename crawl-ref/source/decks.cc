@@ -3097,7 +3097,7 @@ deck_rarity_type deck_rarity(const item_def &item)
     return static_cast<deck_rarity_type>(item.special);
 }
 
-colour_t deck_rarity_to_color(deck_rarity_type rarity)
+colour_t deck_rarity_to_colour(deck_rarity_type rarity)
 {
     switch (rarity)
     {
@@ -3156,7 +3156,7 @@ void init_deck(item_def &item)
     props.assert_validity();
 
     item.plus2  = 0;
-    item.colour = deck_rarity_to_color((deck_rarity_type) item.special);
+    item.colour = deck_rarity_to_colour((deck_rarity_type) item.special);
 }
 
 static void _unmark_deck(item_def& deck)
