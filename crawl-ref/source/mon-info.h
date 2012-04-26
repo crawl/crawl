@@ -63,9 +63,6 @@ enum monster_info_flags
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
-#if TAG_MAJOR_VERSION == 32
-    MB_HELPLESS,
-#endif
     MB_DAZED,
     MB_MUTE,
     MB_BLIND,
@@ -155,7 +152,7 @@ struct monster_info : public monster_info_base
         return *this;
     }
 
-    void to_string(int count, std::string& desc, int& desc_color, bool fullname = true) const;
+    void to_string(int count, std::string& desc, int& desc_colour, bool fullname = true) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];

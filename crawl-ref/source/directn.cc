@@ -557,26 +557,17 @@ void full_describe_view()
         if (oid == NON_ITEM)
             continue;
 
-        if (StashTracker::is_level_untrackable())
-        {
-            // On levels with no stashtracker, you can still see the top
-            // item.
-            list_items.push_back(mitm[oid]);
-        }
-        else
-        {
-            const std::vector<item_def> items = item_list_in_stash(*ri);
+        const std::vector<item_def> items = item_list_in_stash(*ri);
 
 #ifdef DEBUG_DIAGNOSTICS
-            if (items.empty())
-            {
-                mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
-                     mitm[oid].name(DESC_PLAIN).c_str());
-                more();
-            }
-#endif
-            list_items.insert(list_items.end(), items.begin(), items.end());
+        if (items.empty())
+        {
+            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
+                 mitm[oid].name(DESC_PLAIN).c_str());
+            more();
         }
+#endif
+        list_items.insert(list_items.end(), items.begin(), items.end());
     }
 
     // Get monsters via the monster_info, sorted by difficulty.
@@ -2971,7 +2962,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("stone wall");
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
-        if (you.level_type == LEVEL_PANDEMONIUM)
+        if (player_in_branch(BRANCH_PANDEMONIUM))
             return ("wall of the weird stuff which makes up Pandemonium");
         else
             return ("rock wall");
@@ -3033,12 +3024,9 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        if (player_in_branch(BRANCH_MAIN_DUNGEON)
-            && player_branch_depth() == 1)
-        {
-            return ("staircase leading out of the dungeon");
-        }
         return ("stone staircase leading up");
+    case DNGN_EXIT_DUNGEON:
+        return ("staircase leading out of the dungeon");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
     case DNGN_EXIT_HELL:
@@ -3071,6 +3059,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("one-way gate to the infinite horrors of the Abyss");
     case DNGN_EXIT_ABYSS:
         return ("gateway leading out of the Abyss");
+    case DNGN_EXIT_THROUGH_ABYSS:
+        return ("exit through the horrors of the Abyss");
     case DNGN_STONE_ARCH:
         return ("empty arch of ancient stone");
     case DNGN_ENTER_PANDEMONIUM:
@@ -3083,8 +3073,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("staircase to the Dwarven Hall");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
-    case DNGN_ENTER_HIVE:
-        return ("staircase to the Hive");
     case DNGN_ENTER_LAIR:
         return ("staircase to the Lair");
     case DNGN_ENTER_SLIME_PITS:
@@ -3126,7 +3114,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("collapsed entrance");
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:

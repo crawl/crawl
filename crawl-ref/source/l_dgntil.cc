@@ -43,10 +43,10 @@ tileidx_t get_tile_idx(lua_State *ls, int arg)
 
 LUAFN(dgn_lev_floortile)
 {
-    LEVEL(lev, br, 1);
+    LEVEL(br, 1);
 
     tile_flavour flv;
-    tile_default_flv(lev, br, flv);
+    tile_default_flv(br, flv);
 
     const char *tile_name = tile_dngn_name(flv.floor);
     PLUARET(string, tile_name);
@@ -54,10 +54,10 @@ LUAFN(dgn_lev_floortile)
 
 LUAFN(dgn_lev_rocktile)
 {
-    LEVEL(lev, br, 1);
+    LEVEL(br, 1);
 
     tile_flavour flv;
-    tile_default_flv(lev, br, flv);
+    tile_default_flv(br, flv);
 
     const char *tile_name = tile_dngn_name(flv.wall);
     PLUARET(string, tile_name);

@@ -953,6 +953,10 @@ std::string monster_info::mimic_name() const
     std::string s;
     if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
         s = "inept ";
+    if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
+        s = "ravenous ";
+    if (type == MONS_VORPAL_ITEM_MIMIC || type == MONS_VORPAL_FEATURE_MIMIC)
+        s = "vorpal";
 
     if (props.exists("feat_type"))
         s += feat_type_name(get_mimic_feature());
@@ -1195,7 +1199,7 @@ std::string monster_info::pluralised_name(bool fullname) const
 }
 
 void monster_info::to_string(int count, std::string& desc,
-                                  int& desc_color, bool fullname) const
+                                  int& desc_colour, bool fullname) const
 {
     std::ostringstream out;
 
@@ -1220,32 +1224,32 @@ void monster_info::to_string(int count, std::string& desc,
     {
     case ATT_FRIENDLY:
         //out << " (friendly)";
-        desc_color = GREEN;
+        desc_colour = GREEN;
         break;
     case ATT_GOOD_NEUTRAL:
     case ATT_NEUTRAL:
         //out << " (neutral)";
-        desc_color = BROWN;
+        desc_colour = BROWN;
         break;
     case ATT_STRICT_NEUTRAL:
          out << " (fellow slime)";
-         desc_color = BROWN;
+         desc_colour = BROWN;
          break;
     case ATT_HOSTILE:
         // out << " (hostile)";
         switch (threat)
         {
-        case MTHRT_TRIVIAL: desc_color = DARKGREY;  break;
-        case MTHRT_EASY:    desc_color = LIGHTGREY; break;
-        case MTHRT_TOUGH:   desc_color = YELLOW;    break;
-        case MTHRT_NASTY:   desc_color = LIGHTRED;  break;
+        case MTHRT_TRIVIAL: desc_colour = DARKGREY;  break;
+        case MTHRT_EASY:    desc_colour = LIGHTGREY; break;
+        case MTHRT_TOUGH:   desc_colour = YELLOW;    break;
+        case MTHRT_NASTY:   desc_colour = LIGHTRED;  break;
         default:;
         }
         break;
     }
 
     if (count == 1 && is(MB_EVIL_ATTACK))
-        desc_color = Options.evil_colour;
+        desc_colour = Options.evil_colour;
 
     desc = out.str();
 }

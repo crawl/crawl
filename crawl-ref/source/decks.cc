@@ -317,9 +317,6 @@ const char* card_name(card_type card)
     case CARD_TOMB:            return "the Tomb";
     case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
-#if TAG_MAJOR_VERSION == 32
-    case CARD_MAP:             return "the Map";
-#endif
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_CRUSADE:         return "the Crusade";
@@ -343,9 +340,6 @@ const char* card_name(card_type card)
     case CARD_HAMMER:          return "the Hammer";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
-#if TAG_MAJOR_VERSION == 32
-    case CARD_SPADE:           return "the Spade";
-#endif
     case CARD_BARGAIN:         return "the Bargain";
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";
@@ -1300,7 +1294,7 @@ static int _xom_check_card(item_def &deck, card_type card,
 
     case CARD_DAMNATION:
         // Nothing happened, boring.
-        if (you.level_type != LEVEL_DUNGEON)
+        if (player_in_branch(BRANCH_ABYSS))
             amusement = 0;
         break;
 
@@ -1515,7 +1509,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
 static void _damnation_card(int power, deck_rarity_type rarity)
 {
-    if (you.level_type != LEVEL_DUNGEON)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
@@ -1541,7 +1535,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
 
         if (!mon_to_banish) // Banish yourself!
         {
-            banished(DNGN_ENTER_ABYSS, "drawing a card");
+            banished("drawing a card");
             break;              // Don't banish anything else.
         }
         else
@@ -1554,7 +1548,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         mpr("The power of the Abyss blocks your magic.");
         return;
@@ -1632,7 +1626,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
         if (grd(*ri) == DNGN_FLOOR && !find_trap(*ri)
             && one_chance_in(4 - power_level))
         {
-            if (you.level_type == LEVEL_ABYSS)
+            if (player_in_branch(BRANCH_ABYSS))
                 grd(*ri) = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
             else
                 place_specific_trap(*ri, TRAP_RANDOM);
@@ -2338,62 +2332,62 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
-bool create_altar(bool disallow_no_altar)
+static void _create_altar(coord_def pos)
 {
-    // Generate an altar.
-    if (grd(you.pos()) == DNGN_FLOOR)
-    {
-        god_type god;
+    god_type god = random_god();
 
-        do
-            god = random_god(disallow_no_altar);
-        while (is_unavailable_god(god));
-
-        grd(you.pos()) = altar_for_god(god);
-
-        if (grd(you.pos()) != DNGN_FLOOR)
-        {
-            mprf("An altar to %s grows from the floor before you!",
-                 god_name(god).c_str());
-            return (true);
-        }
-    }
-
-    return (false);
+    grd(pos) = altar_for_god(god);
+    ASSERT(grd(pos) != DNGN_FLOOR);
+    mprf("An altar to %s grows from the floor before you!",
+         god_name(god).c_str());
 }
 
 static void _trowel_card(int power, deck_rarity_type rarity)
 {
-    // Early exit: don't clobber important features.
-    if (is_critical_feature(grd(you.pos())))
+    coord_def p;
+    for (distance_iterator di(you.pos(), true, false); di; ++di)
     {
-        mpr("The dungeon trembles momentarily.");
-        return;
+        if (feat_is_solid(grd(*di)) || is_critical_feature(grd(*di)))
+            continue;
+        p = *di;
+        break;
     }
+
+    if (p.origin()) // can't happen outside wizmode
+        return mpr("The dungeon trembles momentarily.");
 
     const int power_level = _get_power_level(power, rarity);
     bool done_stuff = false;
 
-    // [ds] FIXME: Remove the LEVEL_DUNGEON restriction once Crawl
-    // handles stacked level_area_types correctly. We should also
-    // review whether Trowel being able to create infinite portal
-    // vaults is a Good Thing, because it looks pretty broken to me.
-    if (power_level >= 2 && you.level_type == LEVEL_DUNGEON
-        && crawl_state.game_standard_levelgen())
+    if (power_level >= 2 && crawl_state.game_standard_levelgen())
     {
-        // Generate a portal to something.
-        const map_def *map = random_map_for_tag("trowel_portal");
-        if (!map)
-            mpr("A buggy portal flickers into view, then vanishes.");
-        else
+        // Vetoes are done too late, should not pass random_map_for_tag()
+        // at all.  Thus, allow retries.
+        int tries;
+        for (tries = 100; tries > 0; tries--)
         {
+            // Generate a portal to something.
+            const map_def *map = random_map_for_tag("trowel_portal", true, true);
+
+            // Bazaar is the only trowel with allow_dup, pulling more there will
+            // fail if other portals are exhausted.
+            if (!map)
+                break;
+
             {
                 no_messages n;
-                dgn_safe_place_map(map, true, true, you.pos());
+                if (dgn_safe_place_map(map, true, true, p))
+                {
+                    tries = -1; // hrm no_messages
+                    break;
+                }
             }
-            mpr("A mystic portal forms.");
         }
-        done_stuff = true;
+        if (tries > -1)
+            mpr("A portal flickers into view, then vanishes.");
+        else
+            mpr("A mystic portal forms.");
+        return;
     }
     else if (power_level == 1)
     {
@@ -2453,7 +2447,10 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         }
     }
     else
-        done_stuff = create_altar();
+    {
+        _create_altar(p);
+        done_stuff = true;
+    }
 
     if (!done_stuff)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2482,7 +2479,7 @@ static void _godly_wrath()
     int tries = 100;
     while (tries-- > 0)
     {
-        god_type god = random_god(true);
+        god_type god = random_god();
 
         // Don't recursively make player draw from the Deck of Punishment.
         if (god == GOD_NEMELEX_XOBEH)
@@ -3044,13 +3041,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         }
         break;
 
-#if TAG_MAJOR_VERSION == 32
-    case CARD_MAP:
-    case CARD_SPADE:
-        mpr("This card no longer exists!");
-        break;
-#endif
-
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);
@@ -3107,7 +3097,7 @@ deck_rarity_type deck_rarity(const item_def &item)
     return static_cast<deck_rarity_type>(item.special);
 }
 
-colour_t deck_rarity_to_color(deck_rarity_type rarity)
+colour_t deck_rarity_to_colour(deck_rarity_type rarity)
 {
     switch (rarity)
     {
@@ -3166,7 +3156,7 @@ void init_deck(item_def &item)
     props.assert_validity();
 
     item.plus2  = 0;
-    item.colour = deck_rarity_to_color((deck_rarity_type) item.special);
+    item.colour = deck_rarity_to_colour((deck_rarity_type) item.special);
 }
 
 static void _unmark_deck(item_def& deck)
@@ -3206,10 +3196,9 @@ void shuffle_all_decks_on_level()
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on level %d, branch %d",
+            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on %s",
                  item.name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
+                 level_id::current().describe().c_str());
 #endif
             _unmark_and_shuffle_deck(item);
         }

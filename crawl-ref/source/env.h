@@ -104,6 +104,7 @@ struct crawl_environment
     int sanctuary_time;
     int forest_awoken_until;
     int density;
+    int absdepth0;
 
     // Volatile level flags, not saved.
     uint32_t level_state;

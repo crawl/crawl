@@ -935,7 +935,7 @@ static std::vector<std::string> _get_branch_keys()
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
     {
         branch_type which_branch = static_cast<branch_type>(i);
-        Branch     &branch       = branches[which_branch];
+        const Branch &branch     = branches[which_branch];
 
         // Skip unimplemented branches
         if (branch_is_unfinished(which_branch))
@@ -943,15 +943,6 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-
-    //add handpicked places
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_ABYSS)), false));
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_PANDEMONIUM)), false));
-
     return (names);
 }
 
@@ -2597,10 +2588,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Z</w>      : gain lots of Zot Points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
-                       "<w>l</w>      : make entrance to labyrinth\n"
                        "<w>L</w>      : place a vault by name\n"
-                       "<w>p</w>      : make entrance to pandemonium\n"
-                       "<w>P</w>      : make a portal\n"
+                       "<w>p</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>      : turn cell into feature\n"
@@ -2623,7 +2612,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>}</w>      : detect all traps on level\n"
                        "<w>)</w>      : change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> : dump level builder information\n"
-                       "<w>Ctrl-R</w> : regenerate current level\n",
+                       "<w>Ctrl-R</w> : regenerate current level\n"
+                       "<w>P</w>      : create a level based on a vault\n",
                        true, true);
 
     cols.add_formatted(1,

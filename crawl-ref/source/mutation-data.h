@@ -375,26 +375,6 @@
   "deformed"
 },
 
-#if TAG_MAJOR_VERSION == 32
-{ MUT_TELEPORT_AT_WILL,           0,  3, false, false, false,
-  "teleport at will",
-
-  {"You can teleport at will.",
-   "You are good at teleporting at will.",
-   "You can teleport instantly at will."},
-
-  {"You feel jumpy.",
-   "You feel more jumpy.",
-   "You feel even more jumpy."},
-
-  {"You feel a little less jumpy.",
-   "You feel less jumpy.",
-   "You feel less jumpy."},
-
-  "teleport at will"
-},
-#endif
-
 { MUT_SPIT_POISON,                8,  3, false, false, false,
   "spit poison",
 
@@ -685,28 +665,6 @@
   "hurl hellfire"
 },
 
-#if TAG_MAJOR_VERSION == 32
-{ MUT_THROW_FLAMES,               0,  1, false, false, false,
-  "throw flames of Gehenna",
-
-  {"You can throw forth the flames of Gehenna.", "", ""},
-  {"You smell the fires of Gehenna.", "", ""},
-  {"", "", ""},
-
-  "throw flames"
-},
-
-{ MUT_THROW_FROST,                0,  1, false, false, false,
-  "throw frost of Cocytus",
-
-  {"You can throw forth the frost of Cocytus.", "", ""},
-  {"You feel the icy cold of Cocytus chill your soul.", "", ""},
-  {"", "", ""},
-
-  "throw frost"
-},
-#endif
-
 // body-slot facets
 { MUT_HORNS,                      7,  3, false,  true, true,
   "horns",
@@ -825,26 +783,6 @@
 
   "talons"
 },
-
-#if TAG_MAJOR_VERSION == 32
-{ MUT_TENTACLES,                 0,  3, false, true, true,
-  "tentacles",
-
-  {"You have a mass of small tentacles instead of fingers.",
-   "You have a mass of tentacles instead of hands.",
-   "You have a mass of large tentacles instead of arms."},
-
-  {"Your fingers turn into small tentacles.",
-   "Your hands turn into tentacles.",
-   "Your arms turn into large tentacles."},
-
-  {"Your fingers look less like tentacles.",
-   "Your hands look less like tentacles.",
-   "Your arms look less like tentacles."},
-
-   "tentacles"
-},
-#endif
 
 // Octopode only
 { MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,

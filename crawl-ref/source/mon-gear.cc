@@ -1433,7 +1433,7 @@ static void _give_ammo(monster* mon, int level,
 
         case MONS_ORC_WARRIOR:
             if (one_chance_in(
-                    you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
+                    player_in_branch(BRANCH_ORCISH_MINES)? 9 : 20))
             {
                 weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
                 qty       = random_range(4, 8);
@@ -2159,6 +2159,8 @@ void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spect
 
 void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
+    ASSERT(level_number > -1); // debugging absdepth0 changes
+
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);
 

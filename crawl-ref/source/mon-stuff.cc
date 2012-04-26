@@ -1510,7 +1510,7 @@ int monster_die(monster* mons, killer_type killer,
 
     // If a monster was banished to the Abyss and then killed there,
     // then its death wasn't a banishment.
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         mons->flags &= ~MF_BANISHED;
 
     if (!silent && !fake
@@ -2268,9 +2268,9 @@ int monster_die(monster* mons, killer_type killer,
             {
                 unwind_var<int> dt(mons->damage_total, 0);
                 unwind_var<int> df(mons->damage_friendly, 0);
-                mons->set_transit(level_id(LEVEL_ABYSS));
+                mons->set_transit(level_id(BRANCH_ABYSS));
             }
-            set_unique_annotation(mons, LEVEL_ABYSS);
+            set_unique_annotation(mons, BRANCH_ABYSS);
             in_transit = true;
             drop_items = false;
             mons->firing_pos.reset();
@@ -2929,7 +2929,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
         return (false);
-    ASSERT(!(mons->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
+    ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
     int source_power, target_power, relax;
     int source_tier, target_tier;

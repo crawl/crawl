@@ -1036,7 +1036,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 int trap_def::max_damage(const actor& act)
 {
-    int level = you.absdepth0;
+    int level = env.absdepth0;
 
     // Trap damage to monsters is not a function of level, because
     // they are fairly stupid and tend to have fewer hp than
@@ -1104,15 +1104,6 @@ trap_def* find_trap(const coord_def& pos)
         return (NULL);
 
     unsigned short t = env.tgrid(pos);
-
-#if TAG_MAJOR_VERSION == 32
-    // Fix breakage from a brief _ruin_level() bug.
-    if (t == NON_ENTITY || t >= MAX_TRAPS)
-    {
-        grd(pos) = DNGN_FLOOR;
-        return (NULL);
-    }
-#endif
 
     ASSERT(t != NON_ENTITY && t < MAX_TRAPS);
     ASSERT(env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED);
@@ -1185,11 +1176,11 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(you.absdepth0 + 5))
+    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(env.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
-            practise(EX_TRAP_DISARM_FAIL, you.absdepth0);
+        if (random2(you.dex()) > 5 + random2(5 + env.absdepth0))
+            practise(EX_TRAP_DISARM_FAIL, env.absdepth0);
         else
         {
             if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
@@ -1211,7 +1202,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        practise(EX_TRAP_DISARM, you.absdepth0);
+        practise(EX_TRAP_DISARM, env.absdepth0);
     }
 }
 
@@ -1587,7 +1578,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (you.absdepth0*2)) * random2(200) / 100;
+    int trap_hit = (20 + (env.absdepth0*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 
@@ -1719,12 +1710,12 @@ bool is_valid_shaft_level(const level_id &place)
         return (false);
     }
 
-    if (place.level_type != LEVEL_DUNGEON)
+    if (!is_connected_branch(place))
         return (false);
 
     // Shafts are now allowed on the first two levels, as they have a
     // good chance of being detected. You'll also fall less deep.
-    /* if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
+    /* if (place == BRANCH_MAIN_DUNGEON && you.depth < 3)
         return (false); */
 
     // Don't generate shafts in branches where teleport control
@@ -1732,7 +1723,7 @@ bool is_valid_shaft_level(const level_id &place)
     // reaching stairs, and also keeps player from getting stuck
     // on lower levels with the innability to use teleport control to
     // get back up.
-    if (testbits(get_branch_flags(place.branch), BFLAG_NO_TELE_CONTROL))
+    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL))
         return (false);
 
     const Branch &branch = branches[place.branch];
@@ -1744,7 +1735,7 @@ bool is_valid_shaft_level(const level_id &place)
     if (env.turns_on_level == -1 && branch.dangerous_bottom_level)
         min_delta = 2;
 
-    return ((branch.depth - place.depth) >= min_delta);
+    return ((brdepth[place.branch] - place.depth) >= min_delta);
 }
 
 // Shafts can be generated visible.
@@ -1764,11 +1755,11 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
 
-    if (lid.level_type != LEVEL_DUNGEON)
+    if (!is_connected_branch(lid))
         return lid;
 
-    int      curr_depth = lid.depth;
-    Branch   &branch    = branches[lid.branch];
+    int curr_depth = lid.depth;
+    int max_depth = brdepth[lid.branch];
 
     // Shaft traps' behavior depends on whether it is entered intentionally.
     // Knowingly entering one is more likely to drop you 1 level.
@@ -1791,8 +1782,8 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
         lid.depth += 1 + random2(std::min(lid.depth, 3));
     }
 
-    if (lid.depth > branch.depth)
-        lid.depth = branch.depth;
+    if (lid.depth > max_depth)
+        lid.depth = max_depth;
 
     if (lid.depth == curr_depth)
         return lid;
@@ -1802,9 +1793,9 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
     // be created during level generation time.
     // Include level 27 of the main dungeon here, but don't restrict
     // shaft creation (so don't set branch.dangerous_bottom_level).
-    if (branch.dangerous_bottom_level
-        && lid.depth == branch.depth
-        && (branch.depth - curr_depth) > 1)
+    if (branches[lid.branch].dangerous_bottom_level
+        && lid.depth == max_depth
+        && (max_depth - curr_depth) > 1)
     {
         lid.depth--;
     }
@@ -1865,28 +1856,21 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-int num_traps_for_place(int level_number, const level_id &place)
+int num_traps_for_place(const level_id &place)
 {
-    if (level_number == -1)
-        level_number = place.absdepth();
-
-    switch (place.level_type)
+    switch (place.branch)
     {
-    case LEVEL_DUNGEON:
-        if (place.branch == BRANCH_ECUMENICAL_TEMPLE)
-            return 0;
-    case LEVEL_PANDEMONIUM:
-        return random2avg(9, 2);
-    case LEVEL_LABYRINTH:
-    case LEVEL_PORTAL_VAULT:
+    case BRANCH_ECUMENICAL_TEMPLE:
+        return 0;
+    case BRANCH_LABYRINTH:
         die("invalid place for traps");
         break;
-    case LEVEL_ABYSS:
     default:
-        return 0;
+        if (!is_connected_branch(place.branch))
+            return 0;
+    case BRANCH_PANDEMONIUM:
+        return random2avg(9, 2);
     }
-
-    return 0;
 }
 
 static trap_type _random_trap_slime(int level_number)
@@ -1949,10 +1933,9 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
     return (type);
 }
 
-trap_type random_trap_for_place(int level_number, const level_id &place)
+trap_type random_trap_for_place(const level_id &place)
 {
-    if (level_number == -1)
-        level_number = place.absdepth();
+    int level_number = place.absdepth();
 
     if (place == BRANCH_SLIME_PITS)
         return _random_trap_slime(level_number);

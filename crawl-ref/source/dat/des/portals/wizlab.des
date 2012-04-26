@@ -84,6 +84,7 @@
 # *MUST* make these look awesome in tiles, too.
 #
 # Overall todo: random monster lists for each vault (shadows for Wucad Mu)
+# (must have them or Shadow Creatures won't work)
 #
 ##
 
@@ -108,9 +109,7 @@ function wizlab_portal (e)
         disappear = "The portal disappears completely.",
         desc = "magical portal",
         entity = 'portal',
-        dst = 'wizlab',
-        dstname_abbrev = "WizLab",
-        dstorigin = "in a Wizard's Laboratory",
+        dst = 'WizLab',
         overview = "magical portal",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
@@ -121,18 +120,12 @@ function wizlab_portal (e)
     e.tile("O = no_random dngn_portal_wizard_lab")
 end
 
-function wizlab_feat_descs()
-end
-
-dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
-
 -- Destinations:
 function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
-    dgn.set_level_type_origin("in " .. wizlab_desc)
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+    dgn.set_feature_desc_short("gate leading back out of here",
                                "portal leading out of here")
     if wizlab_desc ~= "Eringya's Formal Garden" then
       dgn.set_feature_desc_short("empty arch of ancient stone",
@@ -408,7 +401,7 @@ end
 
 }}
 
-default-depth: Vault:2-7, Crypt, D:22-27, Elf:3-5
+default-depth: Vaults:2-7, Crypt, D:22-27, Elf:3-5
 
 ###############################################################################
 # Portal entrances.
@@ -614,7 +607,7 @@ ENDMAP
 #
 ###############################################################################
 
-default-depth:
+default-depth: WizLab
 
 ###############################################################################
 # And arrivals!
@@ -623,7 +616,7 @@ default-depth:
 #
 NAME:       wizlab_tukima
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       dancing weapon
 KFEAT:      M = granite_statue
 TILE:       M = dngn_machine_tukima
@@ -743,7 +736,7 @@ ENDMAP
 #       on their own - and these could be aggressive ballistos, too!
 NAME:       wizlab_eringya
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       centaur col:green, centaur warrior col:lightgreen
 MONS:       oklob plant
 MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
@@ -836,7 +829,7 @@ ENDMAP
 # TODO: Tiles.
 NAME:       wizlab_doroklohe
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 LROCKCOL:   yellow
 KFEAT:      ! = x
 {{
@@ -929,15 +922,17 @@ SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
 SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 :           end
 #           Monsters
-#            0 Tomb set: zombies, mummies
+#            0 Tomb set: zombies, mummies (weight *2)
 #            1 Demons (if demons are added or reclassified, please change!)
 #            2 Golems
-#            3 Holy set (for later)
+#            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
 KMONS:      % = clay golem / wood golem / toenail golem w:2
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
+:           set_random_mon_list("clay golem / wood golem / toenail golem w:2 / " ..
+:                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
@@ -945,10 +940,16 @@ KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
 KMONS:      | = blizzard demon / green death / hell sentinel / brimstone fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
+:           set_random_mon_list(
+:               "blue devil / iron devil / ynoxinul / neqoxec / ice devil /" ..
+:               "/ chaos spawn / demonic crawler / hellwing / orange demon /" ..
+:               "soul eater / sun demon / " ..
+:               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2
 KMONS:      * = place:D:27 zombie / greater mummy w:5
 KMONS:      | = ancient lich
+:           set_random_mon_list("place:D:15 zombie / place:D:27 zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
@@ -995,7 +996,6 @@ lua_marker("A", box_marker)
 :           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
 :           dgn.set_feature_desc_short("floor", "rough-hewn floor")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
-:           set_random_mon_list("mummy")
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
@@ -1058,7 +1058,7 @@ ENDMAP
 #           * Cigotuvi's Monster needs a much bigger buff. Convert to unique?
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
 KMONS:      a = human name:sickly n_adj n_spe tile:mons_deformed_human / \
@@ -1199,7 +1199,7 @@ ENDMAP
 #       you're going to get.
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup patrolling
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup patrolling
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
 MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
             / nothing
@@ -1265,7 +1265,7 @@ ENDMAP
 # Zonguldrok's Shrine
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Zonguldrok's Shrine")
 SUBST:      ? = txxx
 SUBST:      ! = t..
@@ -1381,7 +1381,7 @@ ENDMAP
 # TODO: I think this is done, apart from not having "alien"-esque statue tiles.
 NAME:       wizlab_wucad
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the hd:20 hp:300
 KITEM:      8 = staff unrand:staff_of_wucad_mu, book of enchantments
@@ -1511,7 +1511,7 @@ ENDMAP
 # security systems built in to defend his many assorted possessions.
 #
 NAME:    wizlab_golubria
-TAGS:    wizlab no_monster_gen no_item_gen allow_dup no_pool_fixup
+TAGS:    no_monster_gen no_item_gen allow_dup no_pool_fixup
 ORIENT:  encompass
 LFLAGS:  no_tele_control
 KMONS:   1 = spatial vortex / blink frog / insubstantial wisp w:1 / nothing w:4
@@ -1714,7 +1714,7 @@ ENDMAP
 #       Most everything else is done, except redescriptions.
 NAME:       wizlab_cloud
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 {{
 wizname = crawl.make_name()
 
@@ -1835,7 +1835,7 @@ ENDMAP
 # Halls of the Hellbinder (by Mu.)
 NAME:       wizlab_demon
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
 LFLOORCOL:  red
 LROCKCOL:   red
 LFLOORTILE: floor_pebble_lightred
@@ -2026,7 +2026,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alistair
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Alistair's Brewery")
 epilogue{{
@@ -2041,7 +2041,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lee
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Lee's Rapid Deconstructor")
 epilogue{{
@@ -2056,7 +2056,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lehudib
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Lehudib's Crystal Spire")
 epilogue{{
@@ -2071,7 +2071,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_maxwell
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Maxwell's Forge")
 epilogue{{
@@ -2086,7 +2086,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_olgreb
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
 epilogue{{
@@ -2101,7 +2101,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Ozocubu's Refrigerator")
 epilogue{{
@@ -2116,7 +2116,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_cekugob
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Cekugob's Oubliette")
 epilogue{{
@@ -2131,7 +2131,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_botono
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Botono's Bayou")
 epilogue{{
@@ -2146,7 +2146,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ukta
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Ukta's Hut")
 epilogue{{
@@ -2161,7 +2161,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alchemist
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "The Alchemist's Tower")
 epilogue{{

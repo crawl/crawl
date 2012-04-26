@@ -108,9 +108,6 @@ enum attack_flavour
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
-#if TAG_MAJOR_VERSION == 32
-    AF_SUBTRACTOR,
-#endif
     AF_ENSNARE,
 };
 
@@ -169,13 +166,8 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
-#if TAG_MAJOR_VERSION == 32
-    MONEAT_FOOD,
-    MONEAT_HONEY,
-#else
     MONEAT_HONEY,
     MONEAT_FOOD,
-#endif
 
     NUM_MONEAT
 };

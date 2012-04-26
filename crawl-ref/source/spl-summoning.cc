@@ -180,9 +180,6 @@ static bool _snakable_weapon(const item_def& item)
     return (item.base_type == OBJ_WEAPONS
             && !is_artefact(item)
             && (item.sub_type == WPN_CLUB
-#if TAG_MAJOR_VERSION == 32
-                || item.sub_type == WPN_ANKUS
-#endif
                 || item.sub_type == WPN_GIANT_CLUB
                 || item.sub_type == WPN_GIANT_SPIKED_CLUB
                 || item.sub_type == WPN_SPEAR

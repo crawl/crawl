@@ -391,6 +391,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_THROUGH_ABYSS:
             f.colour      = ETC_RANDOM;
             f.dchar       = DCHAR_ARCH;
             f.flags      |= FFT_NOTABLE;
@@ -440,7 +441,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
         case DNGN_ENTER_VAULTS:
@@ -471,9 +471,16 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_EXIT_DUNGEON:
+            f.colour      = LIGHTBLUE;
+            f.dchar       = DCHAR_STAIRS_UP;
+            f.map_colour  = GREEN;
+            f.seen_colour = LIGHTBLUE;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
-        case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
         case DNGN_RETURN_FROM_VAULTS:

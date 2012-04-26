@@ -194,6 +194,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_COCYTUS:
         case DNGN_ENTER_TARTARUS:
         case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_THROUGH_ABYSS:
         case DNGN_EXIT_ABYSS:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
@@ -213,7 +214,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
-        case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
         case DNGN_RETURN_FROM_VAULTS:
@@ -241,7 +241,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
         case DNGN_ENTER_VAULTS:
@@ -933,7 +932,7 @@ bool show_map(level_pos &lpos,
 
                 // Cycle the radius of an exclude.
             case CMD_MAP_EXCLUDE_AREA:
-                if (you.level_type == LEVEL_LABYRINTH)
+                if (!is_map_persistent())
                     break;
 
                 cycle_exclude_radius(lpos.pos);
@@ -1033,7 +1032,7 @@ bool show_map(level_pos &lpos,
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
 
                 if (pos.id.depth < 1
-                    || pos.id.depth > branches[pos.id.branch].depth
+                    || pos.id.depth > brdepth[pos.id.branch]
                     || !is_existing_level(pos.id))
                 {
                     canned_msg(MSG_OK);
@@ -1199,7 +1198,7 @@ bool show_map(level_pos &lpos,
                 redraw_screen();
                 le.go_to(lpos.id);
 
-                if (lpos.id.level_type != LEVEL_DUNGEON)
+                if (!is_map_persistent())
                 {
                     mpr("You can't annotate this level.");
                     more();
@@ -1289,8 +1288,8 @@ bool emphasise(const coord_def& where)
 {
     dungeon_feature_type feat = env.map_knowledge(where).feat();
     return (is_unknown_stair(where)
-            && (you.absdepth0 || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
+            && !player_in_branch(BRANCH_VESTIBULE_OF_HELL));
 }
 
 #ifndef USE_TILE_LOCAL

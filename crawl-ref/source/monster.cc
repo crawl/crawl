@@ -4175,8 +4175,7 @@ bool monster::needs_abyss_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
-                || you.level_type == LEVEL_DUNGEON
-                   && hit_dice > 8 + random2(25)
+                || hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
             && !has_ench(ENCH_ABJ));
 }

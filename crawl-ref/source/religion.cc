@@ -501,13 +501,13 @@ bool is_unavailable_god(god_type god)
     return (false);
 }
 
-god_type random_god(bool disallow_no_god)
+god_type random_god(bool available)
 {
     god_type god;
 
     do
-        god = static_cast<god_type>(random2(NUM_GODS - 1));
-    while (disallow_no_god && god == GOD_NO_GOD);
+        god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+    while (available && is_unavailable_god(god));
 
     return (god);
 }
@@ -1396,7 +1396,7 @@ static bool _give_nemelex_gift(bool forced = false)
             item_def &deck(mitm[thing_created]);
 
             deck.special = rarity;
-            deck.colour  = deck_rarity_to_color(rarity);
+            deck.colour  = deck_rarity_to_colour(rarity);
             deck.inscription = "god gift";
 
             simple_god_message(" grants you a gift!");
@@ -2216,8 +2216,8 @@ bool do_god_gift(bool forced)
                     gift = OBJ_RANDOM;
                 else if (you.religion == GOD_VEHUMET)
                 {
-                    if (!you.had_book[BOOK_CONJURATIONS_II])
-                        gift = BOOK_CONJURATIONS_II;
+                    if (!you.had_book[BOOK_CONJURATIONS])
+                        gift = BOOK_CONJURATIONS;
                     else if (!you.had_book[BOOK_POWER])
                         gift = BOOK_POWER;
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
@@ -2577,7 +2577,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     if (original_gain <= 0)
         return;
 
-    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS && !force)
+    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS) && !force)
         return;
 
     // Xom uses piety differently...
@@ -3643,7 +3643,7 @@ void god_pitch(god_type which_god)
 int had_gods()
 {
     int count = 0;
-    for (int i = 0; i < MAX_NUM_GODS; i++)
+    for (int i = 0; i < NUM_GODS; i++)
         count += you.worshipped[i];
     return count;
 }
@@ -4230,7 +4230,7 @@ int get_tension(god_type god)
 
     tension /= div;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         if (tension < 2)
             tension = 2;

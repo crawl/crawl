@@ -22,6 +22,7 @@
 #include "mon-place.h"
 #include "mon-pick.h"
 #include "mon-util.h"
+#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -594,13 +595,12 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
                        ? ((strength * 3) / 2)
-                       : mons_level(mon_type, place);
+                       : mons_level(mon_type, place)
+                         + absdungeon_depth(place.branch, 0);
 
         // if >50, bail out - these are special flags
         if (lev_mons >= 50)
             continue;
-
-        //int orig_lev_mons = lev_mons;
 
         // adjust level based on strength, as weak monsters with high
         // level pop up on some branches and we want to allow them

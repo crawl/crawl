@@ -76,7 +76,7 @@ static int _dungeon_branch_depth(uint8_t branch)
 {
     if (branch >= NUM_BRANCHES)
         return -1;
-    return branches[branch].depth;
+    return brdepth[branch];
 }
 
 static bool _is_noteworthy_dlevel(unsigned short place)
@@ -85,7 +85,7 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     const int lev = (place & 0xFF);
 
     // Special levels (Abyss, etc.) are always interesting.
-    if (lev == 0xFF)
+    if (!is_connected_branch(static_cast<branch_type>(branch)))
         return (true);
 
     if (lev == _dungeon_branch_depth(branch)
@@ -177,13 +177,10 @@ static bool _is_noteworthy(const Note& note)
         if (!_is_noteworthy_dlevel(note.packed_place))
             return (false);
 
-        // Labyrinths and portal vaults are always interesting.
-        if ((note.packed_place & 0xFF) == 0xFF
-            && ((note.packed_place >> 8) == LEVEL_LABYRINTH
-                || (note.packed_place >> 8) == LEVEL_PORTAL_VAULT))
-        {
+        level_id place = level_id::from_packed_place(note.packed_place);
+        // Non-persistent places are always interesting.
+        if (!is_connected_branch(place))
             return (true);
-        }
     }
 
     // Learning a spell is always noteworthy if note_all_spells is set.
@@ -256,12 +253,8 @@ std::string Note::describe(bool when, bool where, bool what) const
 
     if (where)
     {
-        if (!place_abbrev.empty())
-            result << "| " << chop_string(place_abbrev, MAX_NOTE_PLACE_LEN)
-                   << " | ";
-        else
-            result << "| " << chop_string(short_place_name(packed_place),
-                                          MAX_NOTE_PLACE_LEN) << " | ";
+        result << "| " << chop_string(short_place_name(packed_place),
+                                      MAX_NOTE_PLACE_LEN) << " | ";
     }
 
     if (what)
@@ -430,13 +423,10 @@ Note::Note()
 {
     turn         = you.num_turns;
     packed_place = get_packed_place();
-
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        place_abbrev = you.level_type_name_abbrev;
 }
 
 Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
-    type(t), first(f), second(s), place_abbrev("")
+    type(t), first(f), second(s)
 {
     if (n)
         name = std::string(n);
@@ -445,9 +435,6 @@ Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
 
     turn         = you.num_turns;
     packed_place = get_packed_place();
-
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        place_abbrev = you.level_type_name_abbrev;
 }
 
 void Note::check_milestone() const
@@ -457,23 +444,23 @@ void Note::check_milestone() const
 
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
-        if (place_type(packed_place) == LEVEL_PANDEMONIUM)
-        {
-            mark_milestone("br.enter", "entered Pandemonium.");
-            return;
-        }
         const int br = place_branch(packed_place),
                  dep = place_depth(packed_place);
 
         if (br != -1)
         {
+            ASSERT(br >= 0 && br < NUM_BRANCHES);
             std::string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
-                mark_milestone("br.enter", "entered " + branch + ".", true);
-            else if (dep == _dungeon_branch_depth(br) || dep == 14)
+            {
+                mark_milestone(br == BRANCH_ZIGGURAT ? "zig.enter" : "br.enter",
+                               "entered " + branch + ".", true);
+            }
+            else if (dep == _dungeon_branch_depth(br) || dep == 14
+                     || br == BRANCH_ZIGGURAT)
             {
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
@@ -481,7 +468,9 @@ void Note::check_milestone() const
 
                 std::ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone(dep == 14 ? "br.mid" : "br.end", branch_finale.str());
+                mark_milestone(br == BRANCH_ZIGGURAT ? "zig" :
+                               dep == 14 ? "br.mid" : "br.end",
+                               branch_finale.str());
             }
         }
     }
@@ -495,7 +484,6 @@ void Note::save(writer& outf) const
     marshallInt(outf, first);
     marshallInt(outf, second);
     marshallString4(outf, name);
-    marshallString4(outf, place_abbrev);
     marshallString4(outf, desc);
 }
 
@@ -507,7 +495,6 @@ void Note::load(reader& inf)
     first  = unmarshallInt(inf);
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
-    unmarshallString4(inf, place_abbrev);
     unmarshallString4(inf, desc);
 }
 

@@ -691,12 +691,7 @@ void map_phoenix_marker::read(reader &in)
     duration = unmarshallShort(in);
     mon_num = unmarshallShort(in);
     behaviour = static_cast<beh_type>(unmarshallUByte(in));
-#if TAG_MAJOR_VERSION == 32
-    if (in.getMinorVersion() < TAG_MINOR_PHOENIX_ATTITUDE)
-        attitude = ATT_HOSTILE;
-    else
-#endif
-        attitude = static_cast<mon_attitude_type>(unmarshallUByte(in));
+    attitude = static_cast<mon_attitude_type>(unmarshallUByte(in));
     god       = static_cast<god_type>(unmarshallByte(in));
     corpse_pos = unmarshallCoord(in);
 }

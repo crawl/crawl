@@ -9,10 +9,19 @@
 
 #include "externs.h"
 
+#define DEPTH_NOWHERE 999
+
 int mons_rarity(monster_type mcls, const level_id &place = level_id::current());
 int mons_level(monster_type mcls, const level_id &place = level_id::current());
 
+void debug_monpick();
+
+int mons_null_level(monster_type mcls);
+int mons_null_rare(monster_type mcls);
+
+int mons_abyss_level(monster_type mcls);
 int mons_abyss_rare(monster_type mcls);
+int mons_pan_level(monster_type mcls);
 int mons_pan_rare(monster_type mcls);
 
 int mons_cocytus_level(monster_type mcls);
@@ -59,5 +68,15 @@ int mons_vaults_level(monster_type mcls);
 int mons_vaults_rare(monster_type mcls);
 int mons_vestibule_level(monster_type mcls);
 int mons_vestibule_rare(monster_type mcls);
+int mons_sewer_level(monster_type mcls);
+int mons_sewer_rare(monster_type mcls);
+int mons_volcano_level(monster_type mcls);
+int mons_volcano_rare(monster_type mcls);
+int mons_icecave_level(monster_type mcls);
+int mons_icecave_rare(monster_type mcls);
+int mons_bailey_level(monster_type mcls);
+int mons_bailey_rare(monster_type mcls);
+int mons_ossuary_level(monster_type mcls);
+int mons_ossuary_rare(monster_type mcls);
 
 #endif

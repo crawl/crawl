@@ -516,159 +516,28 @@ static std::string _who_banished(const std::string &who)
     return (who.empty() ? who : " (" + who + ")");
 }
 
-void banished(dungeon_feature_type gate_type, const std::string &who)
+void banished(const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (crawl_state.game_is_zotdef())
         return;
 
-    if (gate_type == DNGN_ENTER_ABYSS)
+    mark_milestone("abyss.enter",
+                   "is cast into the Abyss!" + _who_banished(who));
+
+    if (player_in_branch(BRANCH_ABYSS))
     {
-        mark_milestone("abyss.enter",
-                       "is cast into the Abyss!" + _who_banished(who));
-    }
-    else if (gate_type == DNGN_EXIT_ABYSS)
-    {
-        mark_milestone("abyss.exit",
-                       "escaped from the Abyss!" + _who_banished(who));
-    }
-
-    std::string cast_into;
-
-    switch (gate_type)
-    {
-    case DNGN_ENTER_ABYSS:
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "the Abyss";
-
-        // Too problematic with level_type hackery.
-        if (you.level_type == LEVEL_PORTAL_VAULT)
-            break;
-        you.props["abyss_return_name"] = you.level_type_name;
-        you.props["abyss_return_abbrev"] = you.level_type_name_abbrev;
-        you.props["abyss_return_origin"] = you.level_type_origin;
-        you.props["abyss_return_tag"] = you.level_type_tag;
-        you.props["abyss_return_ext"] = you.level_type_ext;
-        you.props["abyss_return_desc"] = level_id::current().describe();
-        break;
-
-    case DNGN_EXIT_ABYSS:
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_PANDEMONIUM:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "Pandemonium";
-        break;
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            banished(DNGN_ENTER_PANDEMONIUM, who);
-            return;
-        }
-        break;
-
-    case DNGN_EXIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_LABYRINTH:
-        if (you.level_type == LEVEL_LABYRINTH)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "a Labyrinth";
-        break;
-
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-        if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        cast_into = "Hell";
-        break;
-
-    default:
-        die("Invalid banished() gateway %d", static_cast<int>(gate_type));
+        // Can't happen outside wizmode.
+        mpr("You feel trapped.");
+        return;
     }
 
-    // Now figure out how we got here.
-    if (crawl_state.is_god_acting())
-    {
-        // down_stairs() will take care of setting things.
-        you.entry_cause = EC_UNKNOWN;
-    }
-    else if (who.find("self") != std::string::npos || who == you.your_name
-             || who == "you" || who == "You")
-    {
-        you.entry_cause = EC_SELF_EXPLICIT;
-    }
-    else if (who.find("distortion") != std::string::npos)
-    {
-        if (who.find("wield") != std::string::npos)
-        {
-            if (who.find("unknowing") != std::string::npos)
-                you.entry_cause = EC_SELF_ACCIDENT;
-            else
-                you.entry_cause = EC_SELF_RISKY;
-        }
-        else if (who.find("affixation") != std::string::npos)
-            you.entry_cause = EC_SELF_ACCIDENT;
-        else if (who.find("branding")  != std::string::npos)
-            you.entry_cause = EC_SELF_RISKY;
-        else
-            you.entry_cause = EC_MONSTER;
-    }
-    else if (who == "drawing a card")
-        you.entry_cause = EC_SELF_RISKY;
-    else if (who.find("you miscast") != std::string::npos)
-        you.entry_cause = EC_MISCAST;
-    else if (who == "wizard command")
-        you.entry_cause = EC_SELF_EXPLICIT;
-    else if (who.find("effects of Hell") != std::string::npos)
-        you.entry_cause = EC_ENVIRONMENT;
-    else if (who.find("Zot") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else if (who.find("trap") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else
-        you.entry_cause = EC_MONSTER;
-
-    if (!crawl_state.is_god_acting())
-        you.entry_cause_god = GOD_NO_GOD;
-
-    if (!cast_into.empty() && you.entry_cause != EC_SELF_EXPLICIT)
-    {
-        const std::string what = "Cast into " + cast_into + _who_banished(who);
-        take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
-    }
+    const std::string what = "Cast into the Abyss" + _who_banished(who);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
     push_features_to_abyss();
-    down_stairs(gate_type, you.entry_cause);  // heh heh
+    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 }
 
 bool forget_spell(void)
@@ -2144,7 +2013,7 @@ void handle_time()
     }
 
     // Labyrinth and Abyss maprot.
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
         forget_map(true);
 
     // Every 20 turns, a variety of other effects.
@@ -2329,10 +2198,10 @@ void handle_time()
     practise(EX_WAIT);
 
     // From time to time change a section of the labyrinth.
-    if (you.level_type == LEVEL_LABYRINTH && one_chance_in(10))
+    if (player_in_branch(BRANCH_LABYRINTH) && one_chance_in(10))
         change_labyrinth();
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
@@ -2419,7 +2288,7 @@ void handle_time()
         }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(20 / (6 - player_branch_depth())), true);
+        place_webs(random2(20 / (6 - you.depth)), true);
 }
 
 // Move monsters around to fake them walking around while player was
@@ -3296,9 +3165,7 @@ void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    const int depth = player_in_branch(BRANCH_SLIME_PITS)
-                      ? player_branch_depth()
-                      : 1;
+    const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
 
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)

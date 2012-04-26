@@ -307,7 +307,7 @@ bool MapRegion::update_tip_text(std::string& tip)
         return (false);
 
     tip = "[L-Click] Travel / [R-Click] View";
-    if (you.level_type != LEVEL_LABYRINTH
+    if (!player_in_branch(BRANCH_LABYRINTH)
         && (you.hunger_state > HS_STARVING || you_min_hunger())
         && i_feel_safe())
     {

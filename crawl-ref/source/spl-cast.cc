@@ -1327,13 +1327,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_LEDAS_LIQUEFACTION:
         return cast_liquefaction(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_SYMBOL_OF_TORMENT:
-    case SPELL_TUKIMAS_BALL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_OZOCUBUS_REFRIGERATION:
         return cast_refrigeration(powc, false, true, fail);
 
@@ -1469,12 +1462,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_INSULATION:
         return cast_insulation(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_RESIST_POISON:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_SEE_INVISIBLE:
         return cast_see_invisible(powc, fail);
 
@@ -1494,12 +1481,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FREEZING_AURA:
         return brand_weapon(SPWPN_FREEZING, powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_MAXWELLS_SILVER_HAMMER:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_POISON_WEAPON:
         return brand_weapon(SPWPN_VENOM, powc, fail);
@@ -1535,12 +1516,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_NECROMUTATION:
         return cast_transform(powc, TRAN_LICH, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_ALTER_SELF:
-        mpr("You feel quite happy just as you are, actually.");
-        return SPRET_ABORT;
-#endif
-
     // General enhancement.
     case SPELL_REGENERATION:
         return cast_regen(powc, false, fail);
@@ -1554,20 +1529,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_LEVITATION:
-#endif
     case SPELL_FLY:
         return cast_fly(powc, fail);
 
     case SPELL_STONESKIN:
         return cast_stoneskin(powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_STONEMAIL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_CONDENSATION_SHIELD:
         return cast_condensation_shield(powc, fail);
@@ -1582,12 +1548,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_silence(powc, fail);
 
     // other
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_EXTENSION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_BORGNJORS_REVIVIFICATION:
         return cast_revivification(powc, fail);
 
@@ -1609,14 +1569,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_DETECT_SECRET_DOORS:
-    case SPELL_DETECT_ITEMS:
-    case SPELL_DETECT_CREATURES:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_PROJECTED_NOISE:
         return project_noise(fail);
