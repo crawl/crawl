@@ -2191,6 +2191,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = LANG_DE, lang_name = "de";
         else if (field == "fr" || field == "french" || field == "français")
             lang = LANG_FR, lang_name = "fr";
+        else if (field == "es" || field == "spanish" || field == "español")
+            lang = LANG_ES, lang_name = "es";
+        else if (field == "el" || field == "greek" || field == "ελληνικά")
+            lang = LANG_EL, lang_name = "el";
         // Fake languages do not reset lang_name, allowing a translated
         // database in an actual language.  This is probably pointless for
         // most fake langs, though.
