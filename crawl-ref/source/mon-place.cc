@@ -1346,10 +1346,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
         monster_type ztype = mg.base_type;
 
         if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
-        {
-            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls,
-                                                   fpos);
-        }
+            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
     }
@@ -1992,7 +1989,8 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
            || zombie_class_size(cs) == mons_zombie_size(base));
 
     // Set type to the original type to calculate appropriate stats.
-    mon->type = ztype;
+    mon->type         = ztype;
+    mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
 
     mon->type         = cs;
