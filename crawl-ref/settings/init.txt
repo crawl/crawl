@@ -395,6 +395,8 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
+# language = polski
+#
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
