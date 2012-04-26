@@ -211,8 +211,6 @@ const int MAX_KNOWN_SPELLS = 21;
 
 const int INVALID_ABSDEPTH = -1000;
 
-const int BRANCH_DUNGEON_DEPTH = 27;
-
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
 // Missing stairs are replaced in fixup_branch_stairs, but replacing
