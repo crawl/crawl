@@ -66,6 +66,4 @@ bool branch_has_monsters(branch_type branch);
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
-
-bool is_portal_vault(branch_type branch); // AXE ME!
 #endif
