@@ -1788,10 +1788,8 @@ int mons_hive_level(monster_type mcls)
     {
     case MONS_PLANT:
     case MONS_KILLER_BEE:
-        return 1;
-
     case MONS_KILLER_BEE_LARVA:
-        return 2;
+        return 1;
 
     default:
         return DEPTH_NOWHERE;
