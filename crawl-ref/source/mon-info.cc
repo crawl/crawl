@@ -953,6 +953,10 @@ std::string monster_info::mimic_name() const
     std::string s;
     if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
         s = "inept ";
+    if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
+        s = "ravenous ";
+    if (type == MONS_VORPAL_ITEM_MIMIC || type == MONS_VORPAL_FEATURE_MIMIC)
+        s = "vorpal";
 
     if (props.exists("feat_type"))
         s += feat_type_name(get_mimic_feature());

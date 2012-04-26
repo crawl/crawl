@@ -756,12 +756,12 @@ bool mons_is_mimic(monster_type mc)
 
 bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc == MONS_ITEM_MIMIC || mc == MONS_INEPT_ITEM_MIMIC);
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_VORPAL_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc == MONS_FEATURE_MIMIC || mc == MONS_INEPT_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_VORPAL_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
