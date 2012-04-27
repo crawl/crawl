@@ -80,6 +80,8 @@
 #include "viewchar.h"
 #include "xom.h"
 
+static void _update_corpses(int elapsedTime);
+
 static void _holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!you.undead_or_demonic())
@@ -2024,7 +2026,7 @@ void handle_time()
 
     // Update all of the corpses, food chunks, and potions of blood on
     // the floor.
-    update_corpses(time_delta);
+    _update_corpses(time_delta);
 
     if (crawl_state.game_is_arena())
         return;
@@ -2492,7 +2494,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    update_corpses(elapsedTime);
+    _update_corpses(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
@@ -3049,7 +3051,7 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 // Update all of the corpses and food chunks on the floor.
 //
 //---------------------------------------------------------------
-void update_corpses(int elapsedTime)
+static void _update_corpses(int elapsedTime)
 {
     if (elapsedTime <= 0)
         return;

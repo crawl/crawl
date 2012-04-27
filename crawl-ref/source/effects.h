@@ -70,7 +70,6 @@ void cleansing_flame(int pow, int caster, coord_def where,
 void change_labyrinth(bool msg = false);
 
 bool vitrify_area(int radius);
-void update_corpses(int elapsedTime);
 void update_level(int elapsedTime);
 void handle_time();
 void recharge_rods(int aut, bool floor_only);
