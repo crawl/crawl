@@ -102,6 +102,12 @@ A gateway leading out of the Abyss
 
 A gateway out of this accursed place, shimmering and shifting in the impermanent landscape.
 %%%%
+A gateway to a ziggurat
+
+This portal leads to an ancient ziggurat, a place of untold challenges and untold riches.
+
+The portal is usable just once, and there's a large monetary fee to be paid.
+%%%%
 A gateway to the ashen valley of Gehenna
 
 You can feel the heat. Gehenna seems to be made out of nothing but flames, lava and hellfire.
