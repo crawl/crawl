@@ -65,8 +65,8 @@ const std::string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-const static char *obj_syms = ")([/%.?=!.+\\0}X$";
-const static int   obj_syms_len = 16;
+const static char obj_syms[] = ")([/%?=!+\\0}X$";
+const static int  obj_syms_len = sizeof(obj_syms);
 
 template<class A, class B> static void append_vector(A &dest, const B &src)
 {
