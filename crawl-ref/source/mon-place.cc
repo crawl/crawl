@@ -592,22 +592,37 @@ bool drac_colour_incompatible(int drac, int colour)
 // Finds a random square as close to a staircase as possible
 static bool _find_mon_place_near_stairs(coord_def& pos,
                                         dungeon_char_type *stair_type,
-                                        branch_type &branch)
+                                        level_id &place)
 {
     pos = get_random_stair();
     const dungeon_feature_type feat = grd(pos);
     *stair_type = get_feature_dchar(feat);
+
+    // First, assume a regular stair.
+    switch (feat_stair_direction(feat))
+    {
+    case CMD_GO_UPSTAIRS:
+        if (place.depth > 1)
+            place.depth--;
+        break;
+    case CMD_GO_DOWNSTAIRS:
+        if (place.depth < brdepth[place.branch])
+            place.depth++;
+        break;
+    default: ;
+    }
+
     // Is it a branch stair?
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (branches[i].entry_stairs == feat)
         {
-            branch = branches[i].id;
+            place = static_cast<branch_type>(i);
             break;
         }
         else if (branches[i].exit_stairs == feat)
         {
-            branch = branches[i].parent_branch;
+            place = level_id(branches[i].parent_branch, startdepth[i]);
             break;
         }
     }
@@ -656,28 +671,22 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     else if (_is_random_monster(mon_type))
     {
         level_id place = level_id::current();
+        const int original_level = *lev_mons;
 
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         {
-            if (_find_mon_place_near_stairs(pos, stair_type, place.branch))
+            if (_find_mon_place_near_stairs(pos, stair_type, place))
             {
                 // No monsters spawned in the Temple.
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
                     proximity = PROX_AWAY_FROM_PLAYER;
                 else
-                {
-                    if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
-                       ++*lev_mons;
-                    else if (*stair_type == DCHAR_STAIRS_UP) // higher level
-                       --*lev_mons;
-                }
-
+                    *lev_mons = place.absdepth();
             }
             else
-            {
                 proximity = PROX_AWAY_FROM_PLAYER;
-            }
+            dprf("foreign monster from %s", place.describe().c_str());
 
         } // end proximity check
 
@@ -690,17 +699,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             int base = vault_mon_bases[i];
 
             if (type == -1)
-            {
                 place = level_id::from_packed_place(base);
-                // If lev_mons is set to you.absdepth0, it was probably
-                // set as a default meaning "the current dungeon depth",
-                // which for a portal vault using its own definition
-                // of random monsters means "the depth of whatever place
-                // we're using for picking the random monster".
-                if (*lev_mons == env.absdepth0)
-                    *lev_mons = place.absdepth();
-                // pick_random_monster() is called below
-            }
             else
             {
                 base_type = (monster_type) base;
@@ -722,7 +721,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         int tries = 0;
         while (tries++ < 300)
         {
-            const int original_level = *lev_mons;
             // Now pick a monster of the given branch and level.
             mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
                                        chose_ood_monster,
@@ -744,10 +742,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             proximity = PROX_AWAY_FROM_PLAYER;
 
             // Reset target level.
-            if (*stair_type == DCHAR_STAIRS_DOWN)
-                --*lev_mons;
-            else if (*stair_type == DCHAR_STAIRS_UP)
-                ++*lev_mons;
+            *lev_mons = original_level;
 
             mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
                                        chose_ood_monster,
@@ -921,8 +916,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // have been set.
     if (mg.proximity == PROX_NEAR_STAIRS && mg.pos.origin())
     {
-        branch_type b;
-        if (!_find_mon_place_near_stairs(mg.pos, &stair_type, b))
+        level_id lev;
+        if (!_find_mon_place_near_stairs(mg.pos, &stair_type, lev))
             mg.proximity = PROX_AWAY_FROM_PLAYER;
     } // end proximity check
 
