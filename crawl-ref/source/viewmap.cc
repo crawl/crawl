@@ -1286,9 +1286,7 @@ bool show_map(level_pos &lpos,
 
 bool emphasise(const coord_def& where)
 {
-    dungeon_feature_type feat = env.map_knowledge(where).feat();
     return (is_unknown_stair(where)
-            && feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
             && !player_in_branch(BRANCH_VESTIBULE_OF_HELL));
 }
 
