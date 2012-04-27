@@ -399,6 +399,596 @@ MAP
  .......
 ENDMAP
 
+NAME:    infiniplex_staircase_squiggle
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: }]){[(
+MAP
+    xxxxx
+xxxxx...x
+x}..x.x.xx
+xxx.x.x..@
+  x...xxxx
+  xxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_1
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D: 2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+x}..x...x
+xxx.x.x.x
+x...x.x.x
+x.xxx.x.x
+x.....x.x
+xxxxxxx.x
+@.......x
+x@xxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_2
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxxxxxx
+x}..x...x...x
+xxx.x.x.x.x.x
+xxx...x.x.x.x
+xxxxxxx.x.x.x
+xxxxxxx...x.x
+xxxxxxxxxxx@x
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_3
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx@x
+xxxxx...x.x
+xxxxx.x.x.x
+x}..x.x.x.x
+xxx...x.x.x
+xxxxxxx.x.x
+xxxxxxx...x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_4
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+x.......x
+x.xxxxx.x
+x.....x.x
+xxxxx.x.x
+x}..x.x.x
+xxx.x.x.x
+x...x.x.x
+x.xxx.x.x
+x.....x.@
+xxxxxxx@x
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_5
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxx@x
+x.....x.@
+x.xxx.x.x
+x...x.x.x
+xxx.x.x.x
+x}x.x.x.x
+x.x.x.x.x
+x...x.x.x
+xxxxx.x.x
+x.....x.x
+x.xxxxx.x
+x.......x
+xxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_spiral
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+@.......x
+xxxxxxx.x
+x.....x.x
+x.xxx.x.x
+x.x}..x.x
+x.xxxxx.x
+x.......x
+xxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_spiral_double
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+SUBST:   m : mxxxx
+MAP
+xxxxxxxxxxx
+@.........x
+xmxxxxxmx.x
+x.......x.x
+x.xxxxx.x.x
+x.m..}..m.x
+x.x.xxxxx.x
+x.x.......x
+x.xmxxxxxmx
+x.........@
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_x
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   D : .x
+SHUFFLE: }]){[(
+MAP
+@xx   xx@
+x.xx xx.x
+xx.xxx.xx
+ xx.D.xx
+  xD}Dx
+ xx.D.xx
+xx.xxx.xx
+x.xx xx.x
+@xx   xx@
+ENDMAP
+
+NAME:    infiniplex_staircase_split_hallway
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+  x@x
+ xx.xx
+xxx.xxx
+xx...xx
+x.x+x.x
+x.x.x.x
+x.x}x.x
+x.x.x.x
+x.x+x.x
+xx...xx
+xxx.xxx
+ xx.xx
+  x@x
+ENDMAP
+
+NAME:    infiniplex_staircase_trident
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  } = 1:} / *:.
+NSUBST:  ~ = 1:~ / *:.
+SHUFFLE: })]{([
+MAP
+xxxxxxx
+x}x}x}x
+x.x.x.x
+x.x.x.x
+x.x.x.x
+x.x.x.x
+x+x+x+x
+x~~~~~x
+x.....x
+x.....x
+xx...xx
+ xx.xx
+  x@x
+ENDMAP
+
+NAME:    infiniplex_staircase_hallway_doors
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D: 2-26
+WEIGHT:  3
+SHUFFLE: DEHJK
+SUBST:   D : +
+SUBST:   E : +xx
+SUBST:   H : +xx
+SUBST:   J : +xx
+SUBST:   K : +xx
+SHUFFLE: py/qz
+SUBST:   p = .
+SUBST:   q = x
+SUBST:   y = @
+SUBST:   z = x
+SHUFFLE: })]{([
+MAP
+    xxxxxxxxxxxxxxxxxzxyx
+    @.................ppx
+xxxxxHxDxExDxKxDxExDxHxxx
+xxx}....................J
+xxxxxHxDxExDxKxDxExDxHxxx
+    @.................ppx
+    xxxxxxxxxxxxxxxxxzxyx
+ENDMAP
+
+NAME:    infiniplex_staircase_diamond
+ORIENT:  float
+TAGS:    extra luniq_staircase allow_dup
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +x
+SHUFFLE: }]){[(
+MAP
+   x!x
+  xx.xx
+ xx...xx
+xx..c..xx
+x}.ccc..!
+xx..c..xx
+ xx...xx
+  xx.xx
+   x!x
+ENDMAP
+
+NAME:    infiniplex_staircase_star
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   D : .x
+SUBST:   x : x:40 c:5 m:4 b:1
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+...!...!...
+....DxD....
+....xxx....
+!...DxD...!
+.DxD...DxD.
+.xxx.}.xxx.
+.DxD...DxD.
+!...DxD...!
+....xxx....
+....DxD....
+...!...!...
+ENDMAP
+
+NAME:    infiniplex_staircase_door_maze
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  D = 1:+ / *:x
+NSUBST:  E = 1:+ / *:x
+NSUBST:  H = 1:+ / *:x
+SHUFFLE: }]){[(
+MAP
+xExExExEx
+E.D.D.H.E
+x+x+x+x+x
+E.D.D.x.E
+x+x+x+x+x
+E.D}D.x.E
+x+xxx+x+x
+E.+.+.H.E
+xExExExEx
+ENDMAP
+
+NAME:    infiniplex_staircase_9_rooms
+ORIENT:  float
+TAGS:    extra luniq_staircase no_monster_gen
+DEPTH:   D:2-26
+WEIGHT:  2
+# Room contents
+NSUBST:  } = 1:} / *:0
+SHUFFLE: }]){[(
+NSUBST:  0 = 1:% / 2:0 / *:.
+# Doors
+NSUBST:  @ = 1:+ / *:Z
+NSUBST:  D = 1:+ / *:Z
+NSUBST:  E = 1:+ / *:Z
+NSUBST:  H = 1:+ / *:Z
+NSUBST:  J = 1:Z / *:+
+SUBST:   Z = +xxxxxxxxx
+MAP
+xxExxxZxxx+xx
+x...x...x...x
+E.0.E.}.J.0.+
+x...x...x...x
+xxExxxJxxxJxx
+x...x...x...x
++.}.+.}.J.}.Z
+x...x...x...x
+xxDxxxDxxxHxx
+x...x...x...x
+D.0.+.}.H.0.H
+x...x...x...x
+xxDxxxDxxxHxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_1
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+MAP
+   xxx
+   x)x
+  xxqxx
+xxx...xx
+x}p.c..@
+xxx...xx
+  xxrxx
+   x]x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_2
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x   x@x
+  xxqxx xxDxx
+xxx...xxx...xx
+x}p.c.....c.E'
+xxx...xxx...xx
+  xxrxx xxHxx
+   x]x   x"x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_3a
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x
+  xxqxx xxxxx
+xxx...xxx...x
+x}p.c.....c.x
+xxx...xxx...x
+  xxrxx xx.xx
+   x]x   x.x
+   xxx  xx.xx
+       xx...xx
+       "H.c.D@
+       xx...xx
+        xxExx
+         x'x
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_3b
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  2
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x         x@x
+  xxqxx xxxxx xxDxx
+xxx...xxx...xxx...xx
+x}p.c.....c.....c.E'
+xxx...xxx...xxx...xx
+  xxrxx xxxxx xxHxx
+   x]x         x"x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_river
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  D = 1:W / *:w
+NSUBST:  E = 1:W / *:w
+NSUBST:  H = 1:W / *:w
+NSUBST:  } = 1:} / *:.
+SHUFFLE: }]){[(
+MAP
+xxxxxx
+x....x
+x.}}.x
+x.}}.x
+x....x
+xww..x
+xwDDwx
+xwEEwx
+xwHHwx
+x..wwx
+x....x
+x@..@x
+ENDMAP
+
+NAME:    infiniplex_staircase_pool_1
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen
+DEPTH:   D:2-26
+WEIGHT:  3
+# Water
+SUBST:   D = WW.
+SUBST:   E = W..
+# Place @(s)
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+     .!.
+   ..EDE..
+  !EDWWWDE!
+ .EwwwWwwwE.
+ .DwcwWwcwD.
+.EWwwwWwwwWE.
+!DWWWW}WWWWD!
+.EWwwwWwwwWE.
+ .DwcwWwcwD.
+ .EwwwWwwwE.
+  !EDWWWDE!
+   ..EDE..
+     .!.
+ENDMAP
+
+NAME:    infiniplex_staircase_pool_2
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase no_monster_gen
+DEPTH:   D:2-26, Lair:*, Swamp:*
+WEIGHT:  3 (D), 10 (Swamp)
+# Water
+SUBST:   D = WW.
+SUBST:   E = W..
+SUBST:   Z = wwW
+# Guarentee a path
+NSUBST:  S = 1:W / *:w
+# Place @(s)
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+  !EEDEE!
+ EDWZZZWDE
+!DZwwwwwZD!
+EWwwwwwwwWE
+EZwwDEDwwZE
+DZwwE}EwwZD
+EZwwDEDwwZE
+EWwSWwwwwWE
+!DZSSSwwZD!
+ EDWZZZWDE
+  !EEDEE!
+ENDMAP
+
+# This is replaced by infiniplex_staircase_pool_lava for low levels
+NAME:    infiniplex_staircase_pool
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-20, Lair:*, Swamp:*
+WEIGHT:  2 (D), 20 (Swamp)
+SUBST:   D = ww.
+SUBST:   E = w..
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+   ...
+  !....E!
+ .D.}.DwDE
+ EwDEDwwwD.
+Ewwwwwwwww!
+Dwwwwwwwww.
+Ewwwwwwww.
+!wwwwwwwE.
+ .DwwwDE!
+  ..!...
+ENDMAP
+
+#  This is about the same as infiniplex_staircase_pool but with lava.
+#    There are a few small changes to accout for lava being impassible.
+NAME:    infiniplex_staircase_pool_lava
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:21-26
+WEIGHT:  2
+SUBST:   D = ll.
+SUBST:   E = l..
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+   ...
+  !....E!.
+ .D.}.DlDE.
+.ElDEDlllD.
+Elllllllll!
+Dlllllllll.
+Ellllllll.
+!lllllllE.
+ .DlllDE!
+  ..!...
+ENDMAP
+
 ##############################################################################
 # Cavepeople
 #
