@@ -2230,7 +2230,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_STUPIDITY:
     case KILLED_BY_WEAKNESS:
     case KILLED_BY_CLUMSINESS:
-        if (terse)
+        if (terse || oneline)
         {
             desc += " (";
             desc += auxkilldata;
