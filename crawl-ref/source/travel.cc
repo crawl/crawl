@@ -535,7 +535,7 @@ void prevent_travel_to(const std::string &feature)
         forbidden_terrain[feature_type] = 1;
 }
 
-bool is_branch_stair(const coord_def& pos)
+static bool _is_branch_stair(const coord_def& pos)
 {
     const level_id curr = level_id::current();
     const level_id next = level_id::get_next_level_id(pos);
@@ -3434,7 +3434,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
 
         if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
-            && (env.map_knowledge(*ri).seen() || !is_branch_stair(*ri)))
+            && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri)))
         {
             st.push_back(*ri);
         }

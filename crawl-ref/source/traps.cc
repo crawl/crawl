@@ -1751,7 +1751,7 @@ bool shaft_known(int depth, bool randomly_placed)
         return (coinflip() || x_chance_in_y(3, depth));
 }
 
-level_id generic_shaft_dest(level_pos lpos, bool known = false)
+static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
 
@@ -1805,7 +1805,7 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
 
 level_id generic_shaft_dest(coord_def pos, bool known = false)
 {
-    return generic_shaft_dest(level_pos(level_id::current(), pos));
+    return _generic_shaft_dest(level_pos(level_id::current(), pos));
 }
 
 void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
