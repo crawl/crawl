@@ -186,12 +186,6 @@ function TroveMarker:read(marker, th)
   TroveMarker.super.read(self, marker, th)
   self.toll_item = lmark.unmarshall_table(th)
 
-  if self.toll_item.base_type == "wand" and self.toll_item.sub_type == "healing" then
-    self.toll_item.sub_type = "heal wounds"
-  elseif self.toll_item.base_type == "potion" and self.toll_item.sub_type == "healing" then
-    self.toll_item.sub_type = "curing"
-  end
-
   setmetatable(self, TroveMarker)
   return self
 end
