@@ -2264,7 +2264,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (!_can_shoplist(_pos->id.branch))
+    if (!_can_shoplist(pos.id.branch))
     {
         mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
