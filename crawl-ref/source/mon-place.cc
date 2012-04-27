@@ -670,16 +670,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
                        ++*lev_mons;
                     else if (*stair_type == DCHAR_STAIRS_UP) // higher level
-                    {
-                       // Monsters don't come from outside the dungeon.
-                       if (*lev_mons <= 0)
-                       {
-                           proximity = PROX_AWAY_FROM_PLAYER;
-                           // In that case lev_mons stays as it is.
-                       }
-                       else
-                           --*lev_mons;
-                    }
+                       --*lev_mons;
                 }
 
             }

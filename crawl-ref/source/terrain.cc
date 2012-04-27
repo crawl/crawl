@@ -600,8 +600,11 @@ coord_def get_random_stair()
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat))
+        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
+            && feat != DNGN_EXIT_DUNGEON)
+        {
             st.push_back(*ri);
+        }
     }
     if (st.empty())
         return coord_def();        // sanity check: shouldn't happen

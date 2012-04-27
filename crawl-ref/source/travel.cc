@@ -231,12 +231,8 @@ bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
 
-    // While the stairs out of the dungeon are not precisely known
-    // to the travel cache, the player does know where they lead.
-    if (you.depth == 1 && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
-        return (false);
-
-    return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
+    return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p)
+            && feat != DNGN_EXIT_DUNGEON);
 }
 
 // Returns true if the character can cross this dungeon feature, and
