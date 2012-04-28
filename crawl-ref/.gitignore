@@ -161,3 +161,7 @@ passwd.db3
 
 # junk when compiled with DGAMELAUNCH
 /source/cache*
+
+# generated .ini files for translations (transifex)
+source/dat/database/*.ini
+source/dat/descript/*.ini

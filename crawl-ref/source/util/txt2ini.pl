@@ -11,10 +11,10 @@ main();
 
 sub main {
    foreach my $file (@ARGV) {
-        my $basename = basename($file, '.txt');
+        my ($basename,$path) = fileparse($file, '.txt');
         my %DESCRIPTIONS;
         load_file($file, \%DESCRIPTIONS);
-        open OUT, ">$basename.ini";
+        open OUT, ">$path/$basename.ini";
         foreach (sort keys %DESCRIPTIONS) {
             print OUT $_, "=", $DESCRIPTIONS{$_}, "\n";
         }

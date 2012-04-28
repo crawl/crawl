@@ -11,9 +11,9 @@ main();
 
 sub main {
    foreach my $file (@ARGV) {
-        my $basename = basename($file, '.ini');
+        my ($basename,$path) = fileparse($file, '.ini');
         open IN, $file;
-        open OUT, ">$basename.txt";
+        open OUT, ">$path/$basename.txt";
         while (<IN>) {
             my ($key, $value) = /(.*?)=(.*)/;
             print OUT "%%%%\n";

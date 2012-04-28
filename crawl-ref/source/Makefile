@@ -148,6 +148,7 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
+TXT2INI = util/txt2ini.pl
 
 export AR
 export RANLIB
@@ -948,7 +949,8 @@ DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
-                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua
+                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
+                   $(INI_OBJECTS)
 
 GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
@@ -1332,6 +1334,16 @@ artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
 
+#############################################################################
+# Translation files
+#
+build-ini: $(INI_OBJECTS)
+
+%.ini: %.txt
+	$(TXT2INI) $*.txt
+
+clean-ini:
+	$(RM) $(INI_OBJECTS)
 #############################################################################
 # RLTiles
 #
