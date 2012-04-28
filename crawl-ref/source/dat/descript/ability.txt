@@ -288,7 +288,7 @@ Depending on your Invocations skill, restore a large amount of, and temporarily 
 # Lugonu
 Depart the Abyss
 
-Leave the Abyss to return into the branch and level you last were in when you left the dungeon.
+Leave the Abyss to return into the place you came from.
 %%%%
 Bend Space
 
