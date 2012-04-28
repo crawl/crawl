@@ -143,6 +143,11 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
+int num_to_lines(int num)
+{
+    return tiles.to_lines(num);
+}
+
 int getch_ck()
 {
     return (tiles.getch_ck());

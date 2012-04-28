@@ -522,27 +522,9 @@ static bool _game_defined(const newgame_def& ng)
 static const int SCROLLER_MARGIN_X  = 18;
 static const int NAME_START_Y       = 5;
 static const int GAME_MODES_START_Y = 7;
-static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 1 + NUM_GAME_TYPE;
-static const int MISC_TEXT_START_Y  = 19;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;
-
-// Display more than just two saved characters if more are available
-// and there's enough space.
-static int _misc_text_start_y(int num)
-{
-    const int max_lines = get_number_of_lines() - NUM_MISC_LINES;
-
-#ifdef USE_TILE_LOCAL
-    return (max_lines);
-#else
-    if (num <= 2)
-        return (MISC_TEXT_START_Y);
-
-    return (std::min(MISC_TEXT_START_Y + num - 1, max_lines));
-#endif
-}
 
 /**
  * Saves game mode and player name to ng_choice.
@@ -553,24 +535,22 @@ static void _show_startup_menu(newgame_def* ng_choice,
 again:
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
+    const int num_modes = NUM_GAME_TYPE;
     static int type = GAME_TYPE_UNSPECIFIED;
 
 #ifdef USE_TILE_LOCAL
     const int max_col    = tiles.get_crt()->mx;
 #else
-    const int max_col    = get_number_of_cols() - 1;
+    const int max_col    = get_number_of_cols();
 #endif
-    const int max_line   = get_number_of_lines() - 1;
-    const int help_start = _misc_text_start_y(num_saves);
+    const int max_line   = get_number_of_lines();
+    const int help_start = std::min(GAME_MODES_START_Y + num_to_lines(num_saves + num_modes) + 2,
+                                    max_line - NUM_MISC_LINES + 1);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
-    const int desc_y     = help_end;
-#ifdef USE_TILE_LOCAL
-    const int game_mode_bottom = GAME_MODES_START_Y + tiles.to_lines(NUM_GAME_TYPE);
-    const int game_save_top = help_start - 2 - tiles.to_lines(std::min(2, num_saves));
+
+    const int game_mode_bottom = GAME_MODES_START_Y + num_to_lines(num_modes);
+    const int game_save_top = help_start - 2 - num_to_lines(std::min(2, num_saves));
     const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
-#else
-    const int save_games_start_y = SAVE_GAMES_START_Y;
-#endif
 
     clrscr();
     PrecisionMenu menu;
@@ -635,7 +615,7 @@ again:
     menu.attach_object(save_games);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(1, desc_y), coord_def(max_col, desc_y + 1),
+    descriptor->init(coord_def(1, help_end), coord_def(max_col, help_end + 1),
                      "descriptor");
     menu.attach_object(descriptor);
 

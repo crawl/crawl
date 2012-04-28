@@ -549,6 +549,11 @@ int get_number_of_cols(void)
     return (COLS);
 }
 
+int num_to_lines(int num)
+{
+    return num;
+}
+
 void clrscr()
 {
     textcolor(LIGHTGREY);
