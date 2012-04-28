@@ -1995,9 +1995,9 @@ unsigned int item_value(item_def item, bool ident)
     if (valued < 1)
         valued = 1;
 
-    valued *= item.quantity;
+    valued = stepdown_value(valued, 1000, 1000, 10000, 10000);
 
-    return stepdown_value(valued, 1000, 1000, 10000, 10000);
+    return (item.quantity * valued);
 }
 
 bool is_worthless_consumable(const item_def &item)
