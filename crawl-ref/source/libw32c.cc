@@ -890,4 +890,9 @@ int get_number_of_cols()
     return (screensize.X);
 }
 
+int num_to_lines(int num)
+{
+    return num;
+}
+
 #endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL) */
