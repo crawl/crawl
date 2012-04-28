@@ -430,7 +430,7 @@ KMONS:   1 = giant centipede w:35 / scorpion w:20 / spider w:13 / \
 KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler
-KMONS:   5eE = place:Spider:5 zombie
+KMONS:   5eE = place:Spider:$ zombie
 KMONS:   6cCfF = spiny worm / emperor scorpion w:8
 KMONS:   0% = crawling corpse hd:3 / nothing
 KMONS:   X = rock worm w:19 / rock worm zombie w:1
@@ -903,7 +903,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   spider_rune_water
-PLACE:  Spider:5
+PLACE:  Spider:$
 ORIENT: northwest
 KITEM:  O = piece of ambrosia q:3, gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
@@ -958,7 +958,7 @@ XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
 
 NAME:   guppyfry_spider_rune
-PLACE:  Spider:5
+PLACE:  Spider:$
 TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot

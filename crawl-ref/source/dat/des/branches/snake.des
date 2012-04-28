@@ -432,7 +432,7 @@ ENDMAP
 # Snake Pit: the hunt
 #
 NAME:    snake_hunt
-PLACE:   Snake:5
+PLACE:   Snake:$
 TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = weight:2 teleport trap / .
@@ -500,7 +500,7 @@ ENDMAP
 # Snake Pit: old level
 #
 NAME:   snake_pit
-PLACE:  Snake:5
+PLACE:  Snake:$
 ORIENT: southwest
 TAGS:   no_rotate
 MONS:   greater naga / nothing
@@ -552,7 +552,7 @@ ENDMAP
 # Snake Pit: Coiled (minmay)
 #
 NAME:    minmay_snake_end_coiled
-PLACE:   Snake:5
+PLACE:   Snake:$
 TAGS:    no_rotate
 ORIENT:  southwest
 MONS:    naga, naga warrior, naga mage, greater naga
@@ -612,7 +612,7 @@ ENDMAP
 # by popular request
 #
 NAME:   snake_pit_salamanders_mu
-PLACE:  Snake:5
+PLACE:  Snake:$
 ORIENT: north
 TAGS:   no_rotate
 MONS:   naga

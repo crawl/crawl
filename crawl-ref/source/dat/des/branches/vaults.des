@@ -419,7 +419,7 @@ ENDMAP
 # The main vault for Vaults:8.
 #
 NAME:     vaults_vault
-PLACE:    Vaults:8
+PLACE:    Vaults:$
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
 SHUFFLE:  ABCD
