@@ -1695,7 +1695,7 @@ char* failure_rate_to_string(int fail)
     return buffer;
 }
 
-const char* spell_hunger_string(spell_type spell, bool rod)
+std::string spell_hunger_string(spell_type spell, bool rod)
 {
     return hunger_cost_string(spell_hunger(spell, rod));
 }
