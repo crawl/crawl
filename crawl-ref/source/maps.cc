@@ -15,6 +15,7 @@
 #include <unistd.h>
 #endif
 
+#include "branch.h"
 #include "coordit.h"
 #include "dbg-maps.h"
 #include "dungeon.h"
@@ -1333,7 +1334,13 @@ void read_maps()
 
     lc_loaded_maps.clear();
 
-    dlua.execfile("dlua/sanity.lua", true, true);
+    {
+        unwind_var<FixedVector<int, NUM_BRANCHES> > depths(brdepth);
+        // let the sanity check place maps
+        for (int i = 0; i < NUM_BRANCHES; i++)
+            brdepth[i] = branches[i].numlevels;
+        dlua.execfile("dlua/sanity.lua", true, true);
+    }
 }
 
 // If a .dsc file has been changed under the running Crawl, discard
