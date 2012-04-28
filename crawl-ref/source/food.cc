@@ -2717,6 +2717,11 @@ std::string hunger_cost_string(const int hunger)
     if (you.is_undead == US_UNDEAD)
         return ("N/A");
 
+#ifdef WIZARD
+    if (you.wizard)
+        return make_stringf("%d", hunger);
+#endif
+
     const int breakpoints[] = { 1, 15, 41, 121, 401 };
     const int numbars = breakpoint_rank(hunger, breakpoints, ARRAYSZ(breakpoints));
 
