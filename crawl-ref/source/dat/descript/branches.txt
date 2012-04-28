@@ -111,11 +111,16 @@ A decaying netherworld. Over time, the undead, demons and devils of this place d
 
 Tartarus is seven levels deep and contains the bone rune. It can be accessed via the Vestibule of Hell.
 %%%%
-Pan
+Pandemonium
 
-Pandemonium is an infinite realm of pain and suffering. It contains four special runes, as well as generic ones, in addition to lots of loot. All these treasures are guarded by demons and even crueller demon lords. Many a hero, confusing confidence with megalomania, has died unsuspectingly in the barrage of torment and hellfire.
+Pandemonium is an infinite realm of pain and suffering. It contains four
+special runes, as well as generic ones, in addition to lots of loot.
+All these treasures are guarded by demons and even crueller demon lords.
+Many a hero, confusing confidence with megalomania, has died unsuspectingly
+in the barrage of torment and hellfire.
 
-Pandemonium is endless. Portals there are found abundantly in the deeper parts of the main dungeon. Note that getting back might be more difficult.
+Pandemonium is endless. Portals there are found abundantly in the deeper
+parts of the main dungeon. Note that getting back might be more difficult.
 %%%%
 Abyss
 
