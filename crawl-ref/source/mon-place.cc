@@ -686,7 +686,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
             else
                 proximity = PROX_AWAY_FROM_PLAYER;
-            dprf("foreign monster from %s", place.describe().c_str());
+            if (proximity == PROX_NEAR_STAIRS)
+                dprf("foreign monster from %s", place.describe().c_str());
+            else // we dunt cotton to no ferrniers in these here parts
+                place = level_id::current();
 
         } // end proximity check
 
@@ -721,6 +724,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         int tries = 0;
         while (tries++ < 300)
         {
+            const int target_level = *lev_mons;
             // Now pick a monster of the given branch and level.
             mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
                                        chose_ood_monster,
@@ -734,7 +738,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 break;
             }
-            *lev_mons = original_level;
+            *lev_mons = target_level;
         }
 
         if (proximity == PROX_NEAR_STAIRS && tries >= 300)
