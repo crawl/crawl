@@ -27,7 +27,7 @@ Whereas most elven folk would never move into a dark subterranean complex
 like this, the deep elves did. Their halls are filled with riches, but any
 passers-by should be aware of the legendary magical prowess of this species.
 
-The Elven Halls are five levels deep.
+The Elven Halls are three levels deep.
 %%%%
 Dwarven Hall
 
@@ -50,7 +50,7 @@ Swamp
 A swampy wasteland, complete with ooze, muck, flies and large slavering carnivorous monsters.
 
 The Swamp is five levels deep and contains the decaying rune.
-A dungeon features only two of the Snake Pit, Swamp and Shoals branches.
+A dungeon features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches.
 If the Swamp is present, the entrance is located between Lair:2 and Lair:5.
 %%%%
 Shoals
@@ -62,7 +62,7 @@ scream fills the air, followed by a gurgle. Anxiously, you look around and
 wonder: Who is the predator? And who is the prey?
 
 The Shoals are five levels deep and contain the barnacled rune.
-A dungeon features only two of the Snake Pit, Swamp and Shoals branches.
+A dungeon features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches.
 If the Shoals are present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Snake Pit
@@ -70,13 +70,17 @@ Snake Pit
 Home of the serpent, lair of the naga.
 
 The Snake Pit is five levels deep and contains the serpentine rune.
-A dungeon features only two of the Snake Pit, Swamp and Shoals branches.
+A dungeon features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches.
 If the Snake Pit is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Spider Nest
 
 And you thought you'll just wield a shoe and be done? If you don't have
 arachnophobia yet, you will soon.
+
+The Spider Nest is five levels deep and contains the gossamer rune.
+A dungeon features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches.
+If the Spider Nest is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Slime Pits
 
@@ -178,22 +182,27 @@ would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
+The abyssal rune can be found there.
 The Abyss can be purposefully reached through portals in the deeper levels of the main dungeon.
 %%%%
 Pandemonium
 
-Pandemonium is an infinite realm of pain and suffering. It contains four
-special runes, as well as generic ones, in addition to lots of loot.
-All these treasures are guarded by demons and even crueller demon lords.
-Many a hero, confusing confidence with megalomania, has died unsuspectingly
-in the barrage of torment and hellfire.
+Pandemonium is an infinite realm of pain and suffering. While you can find a
+good deal of loot there, all these treasures are guarded by demons and even
+crueller demon lords. Many a hero, confusing confidence with megalomania,
+has died unsuspectingly in the barrage of torment and hellfire.
 
 Pandemonium is endless. Portals there are found abundantly in the deeper
 parts of the main dungeon. Note that getting back might be more difficult.
+
+You can find no less than five runes in the Pandemonium:
+ • fiery in the well-heated realm of Cerebov
+ • glowing in the radioactive domain on Mnoleg
+ • magical is guarded by arcane powers of Lom Lobon and his minions
+ • dark lies in the shadowy dwelling of Gloorx Vloq
+ • demonic runes exist in multiple copies, owned by less famous lords
 %%%%
 Hive
 
 You hear a manifold buzzing.
-
-The Hive is two levels deep. The entry is located between dungeon levels 11 and 16.
 %%%%
