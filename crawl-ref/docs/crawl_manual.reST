@@ -1004,9 +1004,8 @@ experience levels or advance the Spellcasting skill, your maximum increases; you
 will need to save up for several levels to memorise the more powerful spells.
 When casting a spell, you temporarily expend some of your magical energy and
 become hungrier (although high intelligence and Spellcasting help against hunger
-from spells). Pressing 'II' (or 'I!') displays the hunger costs of your spells
-in terms of food, on a scale of none, sultana, strawberry, choko, honeycomb and
-ration. Casting the spell five times will cost at most the displayed food item.
+from spells). Pressing 'II' (or 'I!') displays the relative hunger costs of your
+spells.
 
 You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to display a
 list of all memorised spells without actually casting one. The spells available
