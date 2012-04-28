@@ -1275,6 +1275,10 @@ static int _num_mons_wanted()
     if (player_in_branch(BRANCH_PANDEMONIUM))
         return random2avg(28, 3);
 
+    // Except for Abyss and Pan, no other portal gets random monsters.
+    if (!player_in_connected_branch())
+        return 0;
+
     if (!branch_has_monsters(you.where_are_you))
         return 0;
 
