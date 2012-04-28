@@ -1,0 +1,188 @@
+[main]
+host = https://www.transifex.net
+
+[dcss.items]
+file_filter = source\dat\descript\<lang>\items.ini
+source_file = source\dat\descript\items.ini
+source_lang = en_AU
+type = INI
+
+[dcss.unident]
+file_filter = source\dat\descript\<lang>\unident.ini
+source_file = source\dat\descript\unident.ini
+source_lang = en_AU
+type = INI
+
+[dcss.quotes]
+file_filter = source\dat\database\<lang>\quotes.ini
+source_file = source\dat\database\quotes.ini
+source_lang = en_AU
+type = INI
+
+[dcss.ability]
+file_filter = source\dat\descript\<lang>\ability.ini
+source_file = source\dat\descript\ability.ini
+source_lang = en_AU
+type = INI
+
+[dcss.backgrounds]
+file_filter = source\dat\descript\<lang>\backgrounds.ini
+source_file = source\dat\descript\backgrounds.ini
+source_lang = en_AU
+type = INI
+
+[dcss.branches]
+file_filter = source\dat\descript\<lang>\branches.ini
+source_file = source\dat\descript\branches.ini
+source_lang = en_AU
+type = INI
+
+[dcss.cards]
+file_filter = source\dat\descript\<lang>\cards.ini
+source_file = source\dat\descript\cards.ini
+source_lang = en_AU
+type = INI
+
+[dcss.commands]
+file_filter = source\dat\descript\<lang>\commands.ini
+source_file = source\dat\descript\commands.ini
+source_lang = en_AU
+type = INI
+
+[dcss.features]
+file_filter = source\dat\descript\<lang>\features.ini
+source_file = source\dat\descript\features.ini
+source_lang = en_AU
+type = INI
+
+[dcss.gods]
+file_filter = source\dat\descript\<lang>\gods.ini
+source_file = source\dat\descript\gods.ini
+source_lang = en_AU
+type = INI
+
+[dcss.monsters]
+file_filter = source\dat\descript\<lang>\monsters.ini
+source_file = source\dat\descript\monsters.ini
+source_lang = en_AU
+type = INI
+
+[dcss.skills]
+file_filter = source\dat\descript\<lang>\skills.ini
+source_file = source\dat\descript\skills.ini
+source_lang = en_AU
+type = INI
+
+[dcss.species]
+file_filter = source\dat\descript\<lang>\species.ini
+source_file = source\dat\descript\species.ini
+source_lang = en_AU
+type = INI
+
+[dcss.spells]
+file_filter = source\dat\descript\<lang>\spells.ini
+source_file = source\dat\descript\spells.ini
+source_lang = en_AU
+type = INI
+
+[dcss.unrand]
+file_filter = source\dat\descript\<lang>\unrand.ini
+source_file = source\dat\descript\unrand.ini
+source_lang = en_AU
+type = INI
+
+[dcss.FAQ]
+file_filter = source\dat\database\<lang>\FAQ.ini
+source_file = source\dat\database\FAQ.ini
+source_lang = en_AU
+type = INI
+
+[dcss.godspeak]
+file_filter = source\dat\database\<lang>\godspeak.ini
+source_file = source\dat\database\godspeak.ini
+source_lang = en_AU
+type = INI
+
+[dcss.help]
+file_filter = source\dat\database\<lang>\help.ini
+source_file = source\dat\database\help.ini
+source_lang = en_AU
+type = INI
+
+[dcss.insult]
+file_filter = source\dat\database\<lang>\insult.ini
+source_file = source\dat\database\insult.ini
+source_lang = en_AU
+type = INI
+
+[dcss.miscname]
+file_filter = source\dat\database\<lang>\miscname.ini
+source_file = source\dat\database\miscname.ini
+source_lang = en_AU
+type = INI
+
+[dcss.monflee]
+file_filter = source\dat\database\<lang>\monflee.ini
+source_file = source\dat\database\monflee.ini
+source_lang = en_AU
+type = INI
+
+[dcss.monname]
+file_filter = source\dat\database\<lang>\monname.ini
+source_file = source\dat\database\monname.ini
+source_lang = en_AU
+type = INI
+
+[dcss.monspeak]
+file_filter = source\dat\database\<lang>\monspeak.ini
+source_file = source\dat\database\monspeak.ini
+source_lang = en_AU
+type = INI
+
+[dcss.monspell]
+file_filter = source\dat\database\<lang>\monspell.ini
+source_file = source\dat\database\monspell.ini
+source_lang = en_AU
+type = INI
+
+[dcss.rand_all]
+file_filter = source\dat\database\<lang>\rand_all.ini
+source_file = source\dat\database\rand_all.ini
+source_lang = en_AU
+type = INI
+
+[dcss.rand_arm]
+file_filter = source\dat\database\<lang>\rand_arm.ini
+source_file = source\dat\database\rand_arm.ini
+source_lang = en_AU
+type = INI
+
+[dcss.rand_wpn]
+file_filter = source\dat\database\<lang>\rand_wpn.ini
+source_file = source\dat\database\rand_wpn.ini
+source_lang = en_AU
+type = INI
+
+[dcss.randbook]
+file_filter = source\dat\database\<lang>\randbook.ini
+source_file = source\dat\database\randbook.ini
+source_lang = en_AU
+type = INI
+
+[dcss.randname]
+file_filter = source\dat\database\<lang>\randname.ini
+source_file = source\dat\database\randname.ini
+source_lang = en_AU
+type = INI
+
+[dcss.shout]
+file_filter = source\dat\database\<lang>\shout.ini
+source_file = source\dat\database\shout.ini
+source_lang = en_AU
+type = INI
+
+[dcss.wpnnoise]
+file_filter = source\dat\database\<lang>\wpnnoise.ini
+source_file = source\dat\database\wpnnoise.ini
+source_lang = en_AU
+type = INI
