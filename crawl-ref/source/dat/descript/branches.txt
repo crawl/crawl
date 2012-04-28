@@ -237,11 +237,11 @@ Trove
 
 Once upon a time, an enterprising thief and wizard, terrified of being
 caught committing an act of burglary, created a system of portals leading
-into the secret treasure troves and chambers of the rich.
-Too scared to loot them himself, he instead charged an extortionate fee for
-entry to anyone who wanted to rifle through them.
-A clever artificer, he designed his portals to direct the entrant to the
-trove most suited to their needs.
+into the secret treasure troves and chambers of the rich. Too scared to loot
+them himself, he instead charged an extortionate fee for entry to anyone who
+wanted to rifle through them. A clever artificer, he designed his portals to
+direct the entrant to the trove most suited to their needs.
+
 The items inside this trove are likely to be useful, but beware: the wizard
 is long dead, and even while alive he never offered a money-back guarantee.
 %%%%
