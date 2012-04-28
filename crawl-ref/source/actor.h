@@ -34,7 +34,9 @@ public:
         ASSERT(this);
         if (atype() == ACT_PLAYER)
         {
+#ifndef DEBUG_GLOBALS
             ASSERT(this == (actor*)&you); // there can be only one
+#endif
             return true;
         }
         return false;
