@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 use File::Basename;
-use open ':encoding(utf8)';
+if ($^O ne 'msys') {
+    use open ':encoding(utf8)';
+}
 
 die "Usage: $0 description_files\n" unless (@ARGV);
 
