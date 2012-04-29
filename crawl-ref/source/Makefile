@@ -149,6 +149,7 @@ DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
 TXT2INI = util/txt2ini.pl
+INI2TXT = util/ini2txt.pl
 
 export AR
 export RANLIB
@@ -1344,6 +1345,12 @@ build-ini: $(INI_OBJECTS)
 
 clean-ini:
 	$(RM) $(INI_OBJECTS)
+
+build-txt:
+	$(INI2TXT) $(INI_OBJECTS)
+	$(INI2TXT) dat/descript/*/*.ini
+	$(INI2TXT) dat/database/*/*.ini
+
 #############################################################################
 # RLTiles
 #
