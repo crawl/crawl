@@ -1207,7 +1207,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     _construct_backgrounds_menu(ng, defaults, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
+                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 3),
                      "descriptor");
     menu.attach_object(descriptor);
 
