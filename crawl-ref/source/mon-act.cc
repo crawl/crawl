@@ -2019,6 +2019,40 @@ void handle_noattack_constrictions(actor *attacker)
     }
 }
 
+static void _confused_move_dir(monster *mons)
+{
+    mmov.reset();
+    int pfound = 0;
+    for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+        if (mons->can_pass_through(*ai))
+        {
+            // Highly intelligent monsters don't move if they might drown.
+            if (mons_intel(mons) == I_HIGH
+                && !mons->is_habitable(*ai))
+            {
+                // Players without a spoiler sheet have no way to know which
+                // monsters are I_HIGH, and this behaviour is obscure.
+                // Thus, give a message.
+                const std::string where = make_stringf("%s@%d,%d",
+                    level_id::current().describe().c_str(),
+                    mons->pos().x, mons->pos().y);
+                if (!mons->props.exists("no_conf_move")
+                    || mons->props["no_conf_move"].get_string() != where)
+                {
+                    // But don't spam.
+                    mons->props["no_conf_move"] = where;
+                    simple_monster_message(mons,
+                        make_stringf(" stays still, afraid of the %s.",
+                        feat_type_name(grd(*ai))).c_str());
+                }
+                mmov.reset();
+                break;
+            }
+            else if (one_chance_in(++pfound))
+                mmov = *ai - mons->pos();
+        }
+}
+
 void handle_monster_move(monster* mons)
 {
     mons->has_constricted_this_turn = false;
@@ -2345,21 +2379,7 @@ void handle_monster_move(monster* mons)
                 || mons->type == MONS_AIR_ELEMENTAL
                    && mons->submerged())
             {
-                mmov.reset();
-                int pfound = 0;
-                for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-                    if (mons->can_pass_through(*ai))
-                    {
-                        // Intelligent monsters don't move if they might drown.
-                        if (mons_intel(mons) == I_HIGH
-                            && !mons->is_habitable(*ai))
-                        {
-                            mmov.reset();
-                            break;
-                        }
-                        else if (one_chance_in(++pfound))
-                            mmov = *ai - mons->pos();
-                    }
+                _confused_move_dir(mons);
 
                 // OK, mmov determined.
                 const coord_def newcell = mmov + mons->pos();
