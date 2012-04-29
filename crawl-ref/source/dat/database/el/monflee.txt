@@ -1,0 +1,15 @@
+%%%%
+sheep flee
+
+w:30 @The_monster@ ουρλιάζει με τρόμο.
+
+VISUAL:@The_monster@ πανικοβάλλεται!
+
+VISUAL:@The_monster@ πανικοβάλλεται και προσπαθεί να φύγει.
+
+VISUAL:Ένα τρομοκρατημένο @monster@ πηδάει μακριά.
+
+VISUAL:@The_monster@ αρχίζει να τρέχει στα τυφλά.
+
+VISUAL:@The_monster@ τρέπεται σε άτακτη φυγή.
+%%%%
