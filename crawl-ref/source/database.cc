@@ -120,7 +120,7 @@ static TextDB AllDBs[] =
             "miscname.txt", // names for miscellaneous things
             NULL),
 
-    TextDB("quotes", "database/",
+    TextDB("quotes", "descript/",
             "quotes.txt",   // quotes for items and monsters
             NULL),
 
