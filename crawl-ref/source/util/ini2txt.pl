@@ -15,6 +15,7 @@ sub main {
         open IN, $file;
         open OUT, ">$path/$basename.txt";
         while (<IN>) {
+            next if (/^#/);
             my ($key, $value) = /(.*?)=(.*)/;
             print OUT "%%%%\n";
             print OUT "$key\n\n";
