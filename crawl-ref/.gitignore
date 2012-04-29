@@ -164,4 +164,6 @@ passwd.db3
 
 # generated .ini files for translations (transifex)
 source/dat/database/*.ini
+source/dat/descript/*/*.ini
+source/dat/database/*/*.ini
 source/dat/descript/*.ini
