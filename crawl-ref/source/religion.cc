@@ -4067,10 +4067,20 @@ colour_t god_message_altar_colour(god_type god)
 
 int piety_rank(int piety)
 {
-    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
-    const int numbreakpoints = ARRAYSZ(breakpoints);
     if (piety < 0)
         piety = you.piety;
+
+    if (you.religion == GOD_XOM)
+    {
+        const int breakpoints[] = { 20, 50, 80, 120, 180, INT_MAX };
+        for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
+            if (piety <= breakpoints[i])
+                return i + 1;
+        die("INT_MAX is no good");
+    }
+
+    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
+    const int numbreakpoints = ARRAYSZ(breakpoints);
 
     for (int i = 0; i < numbreakpoints; ++i)
     {
