@@ -1351,6 +1351,17 @@ build-txt:
 	$(INI2TXT) dat/descript/*/*.ini
 	$(INI2TXT) dat/database/*/*.ini
 
+tx-config:
+	tx init
+	for TXT_FILE in $(INI_OBJECTS:%.ini=%.txt); do \
+        DIR=$$(dirname $$TXT_FILE); \
+        RES=$$(basename $$TXT_FILE .txt); \
+        tx set --auto-local -r dcss.$$RES "$$DIR/<lang>/$$RES.ini" --source-lang en_AU --source-file $$DIR/$$RES.ini --execute; \
+        tx set -r dcss.$$RES -l en $$DIR/$$RES.ini; \
+	done
+	perl -pi~ -e 'print "type = INI\n" unless ($$. < 6 || ($$. + 3) % 6)' .tx/config
+	$(RM) .tx/config~
+
 #############################################################################
 # RLTiles
 #
