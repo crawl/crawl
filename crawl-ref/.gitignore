@@ -167,3 +167,7 @@ source/dat/database/*.ini
 source/dat/descript/*/*.ini
 source/dat/database/*/*.ini
 source/dat/descript/*.ini
+
+# transifex client
+source/util/tx.exe
+source/util/tx
