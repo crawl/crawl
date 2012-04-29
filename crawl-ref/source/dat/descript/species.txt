@@ -63,10 +63,6 @@ Minotaur
 
 A large muscular human with the head of a bull. They excel at all forms of close and ranged combat.
 %%%%
-Mountain Dwarf
-
-Sturdy, strong and not too intelligent, they love heavy weapons and armours.
-%%%%
 Mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse.
