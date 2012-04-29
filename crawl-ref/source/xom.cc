@@ -4049,14 +4049,6 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     const std::string key = _get_death_type_keyword(death_type);
     std::string speech = _get_xom_speech("life saving " + key);
-    if (speech.find("@xom_plaything@") != std::string::npos)
-    {
-        std::string toy_name = (you.piety > 180) ? "teddy bear" :
-                               (you.piety >  80) ? "toy"
-                                                 : "plaything";
-
-        speech = replace_all(speech, "@xom_plaything@", toy_name);
-    }
     god_speaks(GOD_XOM, speech.c_str());
 
     // Give back some hp.

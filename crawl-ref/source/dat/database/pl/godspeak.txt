@@ -419,7 +419,7 @@ Xom life saving general
 
 „Eee, już robiło się ciekawie.”
 
-„NIEEEEEE, nie moja @xom_plaything@!”
+„NIEEEEEE, nie moja @_xom_plaything_@!”
 
 „Nie tak, nie teraz.”
 
@@ -430,11 +430,11 @@ Xom life saving actor
 w:20
 @Xom life saving general@
 
-„Hej, to moja @xom_plaything@!”
+„Hej, to moja @_xom_plaything_@!”
 
 „O nie, łapy precz!”
 
-„To moja @xom_plaything@, znajdź sobie własną!”
+„To moja @_xom_plaything_@, znajdź sobie własną!”
 
 „Zostaw moją zabawkę w spokoju!”
 %%%%
@@ -463,6 +463,19 @@ Xom uważa że to zabawne.
 Xom chichocze.
 
 Xom się smieje.
+%%%%
+_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "misiek"
+elseif you.piety_rank() > 2 then
+    return "zabawka"
+else
+    return "rozrywka"
+end
+}}
 %%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
