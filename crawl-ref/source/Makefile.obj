@@ -291,7 +291,6 @@ dat/database/monflee.ini \
 dat/database/monname.ini \
 dat/database/monspeak.ini \
 dat/database/monspell.ini \
-dat/database/quotes.ini \
 dat/database/rand_all.ini \
 dat/database/rand_arm.ini \
 dat/database/rand_wpn.ini \
@@ -308,6 +307,7 @@ dat/descript/features.ini \
 dat/descript/gods.ini \
 dat/descript/items.ini \
 dat/descript/monsters.ini \
+dat/descript/quotes.ini \
 dat/descript/skills.ini \
 dat/descript/species.ini \
 dat/descript/spells.ini \
