@@ -12,42 +12,31 @@ main();
 sub main {
    foreach my $file (@ARGV) {
         my ($basename,$path) = fileparse($file, '.txt');
-        my %DESCRIPTIONS;
-        load_file($file, \%DESCRIPTIONS);
+        open IN, $file or die "Cannot open $file";
         open OUT, ">$path/$basename.ini";
-        foreach (sort keys %DESCRIPTIONS) {
-            print OUT $_, "=", $DESCRIPTIONS{$_}, "\n";
+        my ($key, $value);
+        while(<IN>) {
+            next if (/^#/);
+            chomp;
+            if (/^%%%%$/) {
+                print OUT "$key=$value\n" if ($key);
+                $key = "";
+                $value = "";
+            }
+            elsif ($key) {
+                if ($value) {
+                    if (/^\s*$/ or /^\s+/ or substr($value,-2) eq '\n') {
+                        $value .= '\n';
+                    } else {
+                        $value .= " ";
+                    }
+                }
+                $value .= $_;
+            } else {
+                $key = $_;
+            }
         }
+        close IN;
         close OUT;
    }
-}
-
-sub load_file {
-    my ($input, $hash) = @_;
-    open IN, $input or die "Cannot open $input";
-    my ($key, $value);
-    while(<IN>) {
-        next if (/^#/);
-        chomp;
-        if (/^%%%%$/) {
-            if ($key) {
-                $hash->{$key} = $value;
-            }
-            $key = "";
-            $value = "";
-        }
-        elsif ($key) {
-            if ($value) {
-                if (/^\s*$/ or /^\s+/ or substr($value,-2) eq '\n') {
-                    $value .= '\n';
-                } else {
-                    $value .= " ";
-                }
-            }
-            $value .= $_;
-        } else {
-            $key = $_;
-        }
-   }
-   close IN;
 }
