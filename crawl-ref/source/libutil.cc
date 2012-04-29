@@ -726,7 +726,9 @@ static const std::string _get_indent(const std::string &s)
     if (starts_with(s, "\"")    // ASCII quotes
         || starts_with(s, "“")  // English quotes
         || starts_with(s, "„")  // Polish/German/... quotes
-        || starts_with(s, "«")) // French quotes
+        || starts_with(s, "«")  // French quotes
+        || starts_with(s, "»")  // Danish/... quotes
+        || starts_with(s, "•")) // bulleted lists
     {
         return " ";
     }
