@@ -171,3 +171,8 @@ source/dat/descript/*.ini
 # transifex client
 source/util/tx.exe
 source/util/tx
+
+# eclipse project files
+.cproject
+.project
+.settings/
