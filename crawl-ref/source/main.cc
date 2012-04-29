@@ -2899,8 +2899,8 @@ static void _regenerate_hp_and_mp(int delay)
     ASSERT(tmp >= 0 && tmp < 100);
     you.hit_points_regeneration = tmp;
 
-    // XXX: Don't let DD use guardian spirit for free HP. (due, dpeg)
-    if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
+    // XXX: Don't let non-healers use guardian spirit for free HP. (due, dpeg)
+    if (player_spirit_shield() && player_mutation_level(MUT_SLOW_HEALING) == 3)
         return;
 
     // XXX: Doing the same as the above, although overflow isn't an
