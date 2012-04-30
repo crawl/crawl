@@ -4,7 +4,15 @@
 ####################################################
 Tomb
 
-“In the depths of every heart, there is a tomb and a dungeon, though the lights, the music, and revelry above may cause us to forget their existence, and the buried ones, or prisoners whom they hide. But sometimes, and oftenest at midnight, those dark receptacles are flung wide open. In an hour like this, when the mind has a passive sensibility, but no active strength; when the imagination is a mirror, imparting vividness to all ideas, without the power of selecting or controlling them; then pray that your grieves may slumber, and the brotherhood of remorse not break their chain.”
+“In the depths of every heart, there is a tomb and a dungeon, though the
+lights, the music, and revelry above may cause us to forget their
+existence, and the buried ones, or prisoners whom they hide. But sometimes,
+and oftenest at midnight, those dark receptacles are flung wide open. In an
+hour like this, when the mind has a passive sensibility, but no active
+strength; when the imagination is a mirror, imparting vividness to all
+ideas, without the power of selecting or controlling them; then pray that
+your grieves may slumber, and the brotherhood of remorse not break their
+chain.”
     -Nathaniel Hawthorne
 %%%%
 ####################################################
@@ -12,11 +20,11 @@ Tomb
 ####################################################
 A gas trap
 
-“Good your grace, an’ I had room for such a thundergust within mine ancient
-bowels, ’tis not in reason I coulde discharge ye same and live to thank God
-for yt. He did choose handmaid so humble whereby to shew his power. Nay, ’tis
-not I yt have broughte forth this rich o’ermastering fog, this fragrant
-gloom, so pray you seeke ye further.”
+“Good your grace, an’ I had room for such a thundergust within mine
+ancient bowels, ’tis not in reason I coulde discharge ye same and live to
+thank God for yt. He did choose handmaid so humble whereby to shew his
+power. Nay, ’tis not I yt have broughte forth this rich o’ermastering
+fog, this fragrant gloom, so pray you seeke ye further.”
     -Mark Twain, “1601”, 1880.
 %%%%
 A gateway to a ziggurat
@@ -111,7 +119,10 @@ A tree
 ####################################################
 Ice Storm
 
-“Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall Stay These Messengers About Their Sacred Business. Do Not Ask Us About Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
+“Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells
+Shall Stay These Messengers About Their Sacred Business. Do Not Ask Us
+About Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The
+Goddess Czol.”
     -Anghammarad, “Going Postal”, Terry Pratchett.
 %%%%
 ####################################################
@@ -119,7 +130,12 @@ Ice Storm
 ####################################################
 apple
 
-“MINERVA was the goddess of wisdom, but on one occasion she did a very foolish thing; she entered into competition with Juno and Venus for the prize of beauty. It happened thus: At the nuptials of Peleus and Thetis all the gods were invited with the exception of Eris, or Discord. Enraged at her exclusion, the goddess threw a golden apple among the guests, with the inscription, ‘For the fairest.’”
+“MINERVA was the goddess of wisdom, but on one occasion she did a very
+foolish thing; she entered into competition with Juno and Venus for the
+prize of beauty. It happened thus: At the nuptials of Peleus and Thetis all
+the gods were invited with the exception of Eris, or Discord. Enraged at
+her exclusion, the goddess threw a golden apple among the guests, with the
+inscription, ‘For the fairest.’”
     -Bullfinch’s Mythology, Chap. XXVII. a.
 %%%%
 apricot
@@ -302,7 +318,17 @@ that species which had ever reached his country.”
 ####################################################
 __c_suffix
 
-“When Peleus, some distance away, saw him torn apart by the frightful wound he shouted: ‘Accept this tribute to the dead, at least, Crantor, dearest of youths’, and with his powerful arm, he hurled his ash spear, at full strength, at Demoleon. It ruptured the ribcage, and stuck quivering in the bone. The centaur pulled out the shaft minus its head (he tried with difficulty to reach that also) but the head was caught in his lung. The pain itself strengthened his will: wounded, he reared up at his enemy and beat the hero down with his hooves. Peleus received the resounding blows on helmet and shield, and defending his upper arms, and controlling the weapon he held out, with one blow through the arm he pierced the bi-formed breast.”
+“When Peleus, some distance away, saw him torn apart by the frightful
+wound he shouted: ‘Accept this tribute to the dead, at least, Crantor,
+dearest of youths’, and with his powerful arm, he hurled his ash spear,
+at full strength, at Demoleon. It ruptured the ribcage, and stuck quivering
+in the bone. The centaur pulled out the shaft minus its head (he tried with
+difficulty to reach that also) but the head was caught in his lung. The
+pain itself strengthened his will: wounded, he reared up at his enemy and
+beat the hero down with his hooves. Peleus received the resounding blows on
+helmet and shield, and defending his upper arms, and controlling the weapon
+he held out, with one blow through the arm he pierced the bi-formed
+breast.”
     -Ovid, _Metamorphoses_, XII 330
 %%%%
 __r_suffix

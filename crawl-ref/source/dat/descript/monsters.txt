@@ -2,12 +2,13 @@
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
+
 {{
-if you.race() == "Naga" then
-    return "It is particularly attractive."
-else
-    return "It is strange and repulsive."
-end
+    if you.race() == "Naga" then
+        return "It is particularly attractive."
+    else
+        return "It is strange and repulsive."
+    end
 }}
 %%%%
 __cap-T_suffix
@@ -26,11 +27,18 @@ power.
 # Uniques
 Aizul
 
-Once the primary guardian serpent of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. He now slithers about the dungeon, seeking vengeance against all would-be looters. He is an accomplished spellcaster, but no more deadly in melee combat than others of his kind.
+Once the primary guardian serpent of a legendary treasure hoard, he was
+disgraced after thieves looted it while he slept. He now slithers about the
+dungeon, seeking vengeance against all would-be looters. He is an
+accomplished spellcaster, but no more deadly in melee combat than others of
+his kind.
 %%%%%
 Agnes
 
-A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
+A tall (for her kind) and beautiful warrior, as vain as she is quick. You
+can't help but notice both her exotic weapon and graceful movements. She
+searches the dungeon for aesthetically pleasing objects to surround herself
+with.
 %%%%
 Antaeus
 
@@ -101,14 +109,20 @@ hold a form.
 %%%%
 Donald
 
-{{  local descript = "An adventurer just like you, trying to find the Orb."
+{{
+    local descript = "An adventurer just like you, trying to find the Orb."
+
     if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
         descript = descript .. " Unlike you, and d"
     else
         descript = descript .. " D"
     end
-    descript = descript .. "espite his hatred of it, he takes to water like a fowl."
-    return descript }}
+
+    descript = descript .. "espite his hatred of it, he takes to water " ..
+                           "like a fowl."
+
+    return descript
+}}
 %%%%
 Dowan
 
@@ -416,11 +430,13 @@ Urug
 
 A rude orc.
 
-{{  if you.can_smell() then
+{{
+    if you.can_smell() then
         return "He smells terrible."
     else
         return ""
-    end }}
+    end
+}}
 %%%%
 Wiglaf
 
@@ -429,11 +445,13 @@ avenge his mountain dwarf kin, who were driven from their lands by hill
 orcs and others. From the way he looks at you, he also seems to hold you
 responsible.
 
-{{  if you.can_smell() then
+{{
+    if you.can_smell() then
         return "He reeks of alcohol."
     else
         return ""
-    end }}
+    end
+}}
 %%%%
 Xtahua
 
@@ -1419,7 +1437,9 @@ it looks dishevelled, and has a lean and hungry look.
 # Stolen from http://rustyandco.com/frequently-asked-questions/monster-guide/
 human
 
-An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as fragile, elves think of them as clumsy, and monsters think of them as tasty.
+An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as
+fragile, elves think of them as clumsy, and monsters think of them as
+tasty.
 %%%%
 hungry ghost
 
@@ -2072,7 +2092,8 @@ A hideous, miserable creature covered in oozing sores, afflicted by some
 horrible disease. Bits and pieces fall from its body as it shambles toward
 its next victim.
 
-{{  if you.can_smell() then
+{{
+    if you.can_smell() then
         if you.saprovorous() == 3 then
             return "It smells delicious."
         else
@@ -2080,7 +2101,8 @@ its next victim.
         end
     else
         return ""
-    end }}
+    end
+}}
 %%%%%
 rotting hulk
 
@@ -2384,11 +2406,13 @@ swamp drake
 
 A small and slimy dragon, covered in swamp muck.
 
-{{  if you.can_smell() then
+{{
+    if you.can_smell() then
         return "It smells terrible."
     else
         return ""
-    end }}
+    end
+}}
 %%%%%
 swamp worm
 
@@ -2625,7 +2649,8 @@ minions under its command.
 # Vault-defined monsters
 air elemental statue
 
-A delicate statue of a tengu gliding through the air. It looks quite insubstantial.
+A delicate statue of a tengu gliding through the air. It looks quite
+insubstantial.
 %%%%
 ancient champion
 

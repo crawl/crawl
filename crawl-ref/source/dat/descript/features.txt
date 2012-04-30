@@ -520,10 +520,13 @@ wand quite easily. It's too strong to be breakable by hand, though.
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and {{ if
-crawl.is_tiles() then
-    return "either doing Ctrl-L-Click on the door or pressing 'C'." else
-    return "pressing 'C'." end}}
+A wooden door. You can close it by standing next to it and {{
+    if crawl.is_tiles() then
+        return "either doing Ctrl-L-Click on the door or pressing 'C'."
+    else
+        return "pressing 'C'."
+    end
+}}
 %%%%
 An orcish idol
 
@@ -579,11 +582,11 @@ lost beyond all hope in short order - better not risk it.
 # wizlab: Wucad Mu
 An autumnal tree
 
-These trees, large as they are, appear to be
-permanently locked in an autumnal moment: leaves, coloured red and gold,
-fall from branches and float gracefully to the floor. Before they even
-reach the ground, however, a shadow passes, and when the shimmer is gone,
-the leaves are once more on the branch, ready to fall again.
+These trees, large as they are, appear to be permanently locked in an
+autumnal moment: leaves, coloured red and gold, fall from branches and
+float gracefully to the floor. Before they even reach the ground, however,
+a shadow passes, and when the shimmer is gone, the leaves are once more on
+the branch, ready to fall again.
 %%%%
 A crumbled stone wall
 
@@ -657,7 +660,8 @@ It is rough and uneven in places.
 # wizlab: Cigotuvi
 Viscous fluid
 
-This sticky fluid seems to be secreted by the nearby walls. It looks disgusting.
+This sticky fluid seems to be secreted by the nearby walls. It looks
+disgusting.
 %%%%
 A sinewy wall
 
@@ -688,8 +692,8 @@ No life grows here. It is completely dead.
 # wizlab: Golubria
 The dimension's edge
 
-On the edge of this tiny, isolated plane, space itself dissolves into oblivion. Entering or affecting
-this black void is impossible.
+On the edge of this tiny, isolated plane, space itself dissolves into
+oblivion. Entering or affecting this black void is impossible.
 %%%%
 # wizlab: Cloud Mage
 A damp floor
@@ -724,7 +728,7 @@ This tree is as dead as everything else here.
 # Dis:7
 An iron statue
 
-A heavy-looking iron statue. You can't help but feel like it's watching you.
+The statue has no mouth. Creepy!
 %%%%
 # Geh:7
 Ashen ground
@@ -767,8 +771,8 @@ This wall is made of pure silver.
 A rune carved stone wall
 
 This strangely slime-free stone wall is carved all over with countless
-mystical runes. One often repeated set of runes seems to refer to
-'the royal jelly.'
+mystical runes. One often repeated set of runes seems to refer to 'the
+royal jelly.'
 %%%%
 # Tomb:1
 A sarcophagus
@@ -779,8 +783,8 @@ An ancient sarcophagus. It appears to be empty.
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome
-detail, exactly what will be done to anyone caught stealing from the Vaults.
-It makes you feel queasy.
+detail, exactly what will be done to anyone caught stealing from the
+Vaults. It makes you feel queasy.
 %%%%
 A heavily etched wall of green crystal
 
@@ -821,8 +825,8 @@ The statue has no mouth. Creepy!
 # Dwarf
 A granite statue of a fallen hero
 
-A life-size granite statue of a dwarf standing guard in this hall. You can't
-help but feel as though it's watching you.
+A life-size granite statue of a dwarf standing guard in this hall. You
+can't help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
@@ -837,7 +841,8 @@ This floating ball radiates with shimmering light.
 # ldierk_statue_collapse
 A very old granite statue
 
-There is a crevice running across its chest. Maybe it will break if you hit it?
+There is a crevice running across its chest. Maybe it will break if you hit
+it?
 %%%%
 # ragdoll_tomb_raider
 A sealed sarcophagus
@@ -859,10 +864,10 @@ A flickering gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
 dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have
-better stock than the sedentary ones, sometimes even at a bargain.
-Once you hear the clinking of coins, be sure to hurry up and find the
-impromptu marketplace before the caravan moves on!
+to place. Bazaars feature a number of different shops and often have better
+stock than the sedentary ones, sometimes even at a bargain. Once you hear
+the clinking of coins, be sure to hurry up and find the impromptu
+marketplace before the caravan moves on!
 
 Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave
@@ -873,8 +878,8 @@ A gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
 dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have
-better stock than the sedentary ones, sometimes even at a bargain.
+to place. Bazaars feature a number of different shops and often have better
+stock than the sedentary ones, sometimes even at a bargain.
 
 Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave
