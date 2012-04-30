@@ -971,7 +971,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 {
     const int conflict[][3] = {
         { MUT_REGENERATION,     MUT_SLOW_METABOLISM,  0},
-        { MUT_REGENERATION,     MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,     MUT_BLURRY_VISION,    0},
         { MUT_FAST,             MUT_SLOW,             0},
         { MUT_FANGS,            MUT_BEAK,            -1},
