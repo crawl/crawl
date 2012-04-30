@@ -1351,7 +1351,7 @@ build-txt:
 	$(INI2TXT) -w $(INI_OBJECTS)
 	$(INI2TXT) -ow dat/descript/*/*.ini
 
-tx-config:
+tx-config: build-ini
 	tx init
 	for TXT_FILE in $(INI_OBJECTS:%.ini=%.txt); do \
         DIR=$$(dirname $$TXT_FILE); \
