@@ -374,7 +374,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Brands
+{   // Book of Debilitation
     SPELL_CORONA,
     SPELL_SLOW,
     SPELL_INNER_FLAME,
