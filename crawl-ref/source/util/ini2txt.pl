@@ -14,6 +14,8 @@ use warnings;
 use File::Basename;
 use Getopt::Std;
 use Text::Wrap;
+$Text::Wrap::unexpand = 0;
+
 if ($^O ne 'msys') {
     use open ':encoding(utf8)';
 }
@@ -57,7 +59,7 @@ foreach my $file (@ARGV) {
                 print OUT "\n", $Text{$key}, "\n" if ($new_text);
                 $key = "";
             }
-            elsif (!$key) {
+            elsif (!$key and !/^#/) {
                 chomp ($key = $_);
             }
             print OUT "$_\n";
