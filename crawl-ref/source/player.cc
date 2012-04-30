@@ -2724,9 +2724,6 @@ int player_sust_abil(bool calc_unid)
     if (!you.suppressed())
         sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
-        sa += 1;
-
     if (sa > 2)
         sa = 2;
 
