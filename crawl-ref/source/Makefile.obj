@@ -282,22 +282,6 @@ util/levcomp.tab.o \
 util/levcomp.lex.o
 
 INI_OBJECTS = \
-dat/database/FAQ.ini \
-dat/database/godspeak.ini \
-dat/database/help.ini \
-dat/database/insult.ini \
-dat/database/miscname.ini \
-dat/database/monflee.ini \
-dat/database/monname.ini \
-dat/database/monspeak.ini \
-dat/database/monspell.ini \
-dat/database/rand_all.ini \
-dat/database/rand_arm.ini \
-dat/database/rand_wpn.ini \
-dat/database/randbook.ini \
-dat/database/randname.ini \
-dat/database/shout.ini \
-dat/database/wpnnoise.ini \
 dat/descript/ability.ini \
 dat/descript/backgrounds.ini \
 dat/descript/branches.ini \
