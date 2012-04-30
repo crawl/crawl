@@ -870,7 +870,8 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
         // Except for VISUAL, none of the above influence these.
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
-        else if (line == "__MORE" && !silence)
+
+        if (line == "__MORE" && !silence)
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
             noticed = old_noticed;
