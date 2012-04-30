@@ -2205,12 +2205,12 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
     case MONS_BALRUG:
         natural_leader = true;
-        band = BAND_BALRUG;      // RED gr demon
+        band = BAND_BALRUG;
         band_size = 2 + random2(3);
         break;
     case MONS_CACODEMON:
         natural_leader = true;
-        band = BAND_CACODEMON;      // BROWN gr demon
+        band = BAND_CACODEMON;
         band_size = 1 + random2(3);
         break;
 
@@ -2218,7 +2218,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         if (coinflip())
         {
             natural_leader = true;
-            band = BAND_EXECUTIONER;  // DARKGREY gr demon
+            band = BAND_EXECUTIONER;
             band_size = 1 + random2(3);
         }
         break;
@@ -2232,7 +2232,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     case MONS_HELLWING:
         if (coinflip())
         {
-            band = BAND_HELLWING;  // LIGHTGREY gr demon
+            band = BAND_HELLWING;
             band_size = 1 + random2(4);
         }
         break;
