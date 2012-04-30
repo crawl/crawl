@@ -927,7 +927,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             {
                 dec_mp(you.magic_points);
                 mpr("You feel spirits watching over you.");
-                if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+                if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
             }
             break;
@@ -1081,7 +1081,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         if (!player_spirit_shield())
         {
             mpr("You feel strangely alone.");
-            if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+            if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
         }
         else if (player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
@@ -1339,7 +1339,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         {
             dec_mp(you.magic_points);
             mpr("You feel your power drawn to a protective spirit.");
-            if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+            if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
             ident = ID_KNOWN_TYPE;
         }
@@ -1526,7 +1526,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         break;
 
     case AMU_GUARDIAN_SPIRIT:
-        if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+        if (you.species == SP_DEEP_DWARF)
             mpr("Your magic begins regenerating once more.");
         break;
     }
