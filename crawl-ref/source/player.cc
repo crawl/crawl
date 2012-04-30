@@ -3551,7 +3551,7 @@ void level_change(bool skip_attribute_increase)
     while (you.experience >= exp_needed(you.max_level + 1))
     {
         ASSERT(you.experience_level == 27);
-        ASSERT(you.max_level < 127);
+        ASSERT(you.max_level < 127); // marshalled as an 1-byte value
         you.max_level++;
         if (you.species == SP_FELID)
             _felid_extra_life();
