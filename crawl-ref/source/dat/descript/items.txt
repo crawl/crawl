@@ -78,7 +78,7 @@ such as banishment are beyond its ability to block.
 %%%%
 animal skin
 
-The skins of several animals.
+The skin of an animal.
 %%%%
 apple
 
