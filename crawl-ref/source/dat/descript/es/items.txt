@@ -1,15 +1,20 @@
 %%%%
 air elemental fan
 
-Un artilugio mágico que sirve para invocar elementales de aire. Es poco fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la magia del aire.
+Un artilugio mágico que sirve para invocar elementales de aire. Es poco
+fiable, y normalmente hacen falta varios intentos para lograr que funcione.
+Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento
+de la magia del aire.
 %%%%
 amulet of clarity
 
-Este amuleto protege a su portador de algunas formas de confusión mental, incluyendo la furia involuntaria.
+Este amuleto protege a su portador de algunas formas de confusión mental,
+incluyendo la furia involuntaria.
 %%%%
 amulet of conservation
 
-Este amuleto protege de la destrucción algunas de las pertenencias de su portador, aunque no de una forma infalible.
+Este amuleto protege de la destrucción algunas de las pertenencias de su
+portador, aunque no de una forma infalible.
 %%%%
 amulet of rage
 
@@ -17,11 +22,13 @@ Este amuleto permite a su portador entrar en un estado de furia.
 %%%%
 amulet of resist corrosion
 
-Este amuleto protege a su portador y su equipamiento de la corrosión causada por ácidos, aunque no de forma infalible.
+Este amuleto protege a su portador y su equipamiento de la corrosión
+causada por ácidos, aunque no de forma infalible.
 %%%%
 amulet of resist mutation
 
-Este amuleto previene que su portador adquiera mutaciones, aunque no es infalible.
+Este amuleto previene que su portador adquiera mutaciones, aunque no es
+infalible.
 %%%%
 apple
 
@@ -33,7 +40,9 @@ Una tira de carne curada de vaca o toro.
 %%%%
 blowgun
 
-Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran daño, su principal uso es el de disparar agujas envenenadas a distancia. Es muy silencioso.
+Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un
+gran daño, su principal uso es el de disparar agujas envenenadas a
+distancia. Es muy silencioso.
 %%%%
 bolt
 
@@ -41,11 +50,13 @@ Un perno para ballesta.
 %%%%
 corpse
 
-Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
+Un cadáver. Puedes descuartizarlo para conseguir trozos de carne
+comestible.
 %%%%
 crossbow
 
-Un artilugio usado para disparar pernos, que requiere un cierto tiempo para recargar y disparar. Es capaz de hacer un gran daño en combate.
+Un artilugio usado para disparar pernos, que requiere un cierto tiempo para
+recargar y disparar. Es capaz de hacer un gran daño en combate.
 %%%%
 dart
 

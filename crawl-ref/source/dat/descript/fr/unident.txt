@@ -5,15 +5,14 @@ Un bijou.
 %%%%
 book
 
-Un livre de sorts. Attention, car certains des plus puissants grimoires doivent être manipulés avec précautions.
+Un livre de sorts. Attention, car certains des plus puissants grimoires
+doivent être manipulés avec précautions.
 %%%%
 deck of cards
 
-Un jeu de puissantes cartes magiques peintes avec l'ichor des démons. Elles peuvent provoquer de précieux ou dangereux effets quand elles sont tirées.
-%%%%
-magical staff
-
-Un bâton doté de propriétés magiques.
+Un jeu de puissantes cartes magiques peintes avec l'ichor des démons.
+Elles peuvent provoquer de précieux ou dangereux effets quand elles sont
+tirées.
 %%%%
 potion
 
@@ -30,6 +29,10 @@ Un bâtonnet doté de propriétés magiques.
 scroll
 
 un parchemin de papier couvert d'inscriptions magiques.
+%%%%
+magical staff
+
+Un bâton doté de propriétés magiques.
 %%%%
 wand
 
