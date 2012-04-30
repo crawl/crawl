@@ -37,7 +37,7 @@ foreach my $file (@ARGV) {
         }
         elsif ($key) {
             if ($value) {
-                if (not $opt_u or /^\s*$/ or /^\s+/ or substr($value,-2) eq '\n') {
+                if (not $opt_u or /^\s*$/ or /^\s+/ or /^[{}]{2}/ or substr($value,-2) eq '\n') {
                     $value .= '\n';
                 } else {
                     $value .= " ";
