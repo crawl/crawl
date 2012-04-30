@@ -1362,6 +1362,11 @@ tx-config: build-ini
 	perl -pi~ -e 'print "type = INI\n" unless ($$. < 6 || ($$. + 3) % 6)' .tx/config
 	$(RM) .tx/config~
 
+tx-sync: clean-ini build-ini
+	tx push -s
+	tx pull -a --minimum-perc=1 --mode=reviewed
+	make build-txt
+
 #############################################################################
 # RLTiles
 #
