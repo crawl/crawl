@@ -1065,6 +1065,7 @@ BOOL:     unided
 NAME:    milk chocolate
 OBJ:     OBJ_JEWELLERY/AMU_STASIS
 COLOUR:  BROWN
+TILE:    urand_air
 ACC:     60
 ANGRY:   1
 COLD:    3
@@ -1085,6 +1086,7 @@ BOOL:    nogen, berserk, blink, cursed, elec, inv, lev, life, nospell, notelep, 
 NAME:    dark chocolate
 OBJ:     OBJ_JEWELLERY/AMU_RESIST_CORROSION
 COLOUR:  DARKGREY
+TILE:    urand_bloodlust
 ACC:     -60
 COLD:    -3
 DAM:     -60
