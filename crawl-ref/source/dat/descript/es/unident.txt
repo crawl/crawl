@@ -5,15 +5,14 @@ Un artículo de joyería.
 %%%%
 book
 
-Un libro con hechizos mágicos. Ten cuidado, ya que los grimorios más poderosos deben ser manipulados con cuidado.
+Un libro con hechizos mágicos. Ten cuidado, ya que los grimorios más
+poderosos deben ser manipulados con cuidado.
 %%%%
 deck of cards
 
-Un mazo de poderosas cartas mágicas dibujadas con icor de demonios. Echar estas cartas puede tener efectos muy variados, tanto útiles, como perjudiciales.
-%%%%
-magical staff
-
-Una vara cargada con propiedades mágicas.
+Un mazo de poderosas cartas mágicas dibujadas con icor de demonios. Echar
+estas cartas puede tener efectos muy variados, tanto útiles, como
+perjudiciales.
 %%%%
 potion
 
@@ -27,9 +26,9 @@ rod
 
 Una vara con propiedades mágicas.
 %%%%
-scroll
+magical staff
 
-Un rollo de papel cubierto de escritos mágicos.
+Una vara con propiedades mágicas.
 %%%%
 wand
 

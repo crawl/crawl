@@ -5,7 +5,8 @@ Ein Schmuckstück.
 %%%%
 book
 
-Ein Buch mit Zaubersprüchen. Nimm dich in Acht, denn mit einigen der mächtigeren Zauberbüchern ist nicht zu spaßen.
+Ein Buch mit Zaubersprüchen. Nimm dich in Acht, denn mit einigen der
+mächtigeren Zauberbüchern ist nicht zu spaßen.
 %%%%
 potion
 
