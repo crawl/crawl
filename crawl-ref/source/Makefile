@@ -1339,6 +1339,7 @@ mon-util.d: mon-mst.h
 # Translation files
 #
 build-ini: $(INI_OBJECTS)
+	util/add-missing-quotes.pl
 
 # XXX for database file, we'll need a conditional to remove the -u option.
 %.ini: %.txt
