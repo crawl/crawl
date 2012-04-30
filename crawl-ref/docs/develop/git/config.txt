@@ -40,6 +40,12 @@ Some useful config options:
       git config --global pack.threads 2
 
 -------------------------
+Install a pre-commit sanity check
+
+From the root of the git tree type:
+cp crawl-ref/git-hooks/pre-commit .git/hooks
+
+-------------------------
 
 Nice hunk markers for .des files:
 
