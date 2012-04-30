@@ -1712,8 +1712,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rmuta = (player_res_mutation()
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
-    const int rrott = (you.res_rotting()
-                       || you.religion == GOD_ZIN && you.piety >= 150);
+    const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,
              "%sRes.Fire  : %s\n"
