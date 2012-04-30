@@ -30,7 +30,7 @@ foreach my $file (@ARGV) {
     while(<IN>) {
         next if (/^#/);
         chomp;
-        if (/^%%%%$/) {
+        if (/^%+$/) {
             print OUT "$key=$value\n" if ($key);
             $key = "";
             $value = "";

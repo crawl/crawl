@@ -52,8 +52,8 @@ foreach my $file (@ARGV) {
         while (<IN>) {
             chomp;
             my $new_text = $key && $Text{$key};
-            next if (!/^%%%%$/ and $new_text);
-            if (/^%%%%$/) {
+            next if (!/^%+$/ and $new_text);
+            if (/^%+$/) {
                 print OUT "\n", $Text{$key}, "\n" if ($new_text);
                 $key = "";
             }
