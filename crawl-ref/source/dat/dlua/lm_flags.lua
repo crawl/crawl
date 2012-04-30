@@ -4,13 +4,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
--- There are three different types of pre-packaged "change level and
--- branch flags" marker types.  All three share the following parameters:
+-- There are three different types of pre-packaged "change level flags"
+-- marker types.  All three share the following parameters:
 --
 -- * level_flags: A space separated list of level flag names to set or unset.
 --       To unset a flag, prefix the name with "!".
---
--- * branch_flags: Like level_flags, but for branch flags to set or unset.
 --
 -- * group: Different flag change markers on the same level can be put
 --       into the same group by giving them the same group name.
@@ -72,15 +70,13 @@ function ChangeFlags:new(pars)
   local cf = self.super.new(self)
 
   pars.level_flags  = pars.level_flags  or ""
-  pars.branch_flags = pars.branch_flags or ""
   pars.msg          = pars.msg          or ""
 
-  if pars.level_flags == "" and pars.branch_flags == "" then
-    error("Must provide at least one of level_flags or branch_flags.")
+  if pars.level_flags == "" then
+    error("No level_flags given.")
   end
 
   cf.level_flags  = pars.level_flags
-  cf.branch_flags = pars.branch_flags
   cf.msg          = pars.msg
   cf.props        = util.append( cf.props, { flag_group = pars.group } )
 
@@ -89,7 +85,6 @@ end
 
 function ChangeFlags:on_trigger(triggerer, marker, ev)
   local did_change1 = false
-  local did_change2 = false
   local silent      = self.msg and self.msg ~= ""
 
   if self.props.flag_group and self.props.flag_group ~= "" then
@@ -105,13 +100,9 @@ function ChangeFlags:on_trigger(triggerer, marker, ev)
     did_change1 = dgn.change_level_flags(self.level_flags, silent)
   end
 
-  if self.branch_flags and self.branch_flags ~= "" then
-    did_change2 = dgn.change_branch_flags(self.branch_flags, silent)
-  end
-
   self:remove(marker)
 
-  if did_change1 or did_change2 then
+  if did_change1 then
     if self.msg and self.msg ~= "" then
       crawl.mpr(self.smg)
     end
@@ -126,7 +117,7 @@ function ChangeFlags:write(marker, th)
   ChangeFlags.super.write(self, marker, th)
 
   file.marshall(th, self.level_flags)
-  file.marshall(th, self.branch_flags)
+  file.marshall(th, "")
   file.marshall(th, self.msg)
   lmark.marshall_table(th, self.props)
 end
@@ -135,7 +126,7 @@ function ChangeFlags:read(marker, th)
   ChangeFlags.super.read(self, marker, th)
 
   self.level_flags  = file.unmarshall_string(th)
-  self.branch_flags = file.unmarshall_string(th)
+  file.unmarshall_string(th)
   self.msg          = file.unmarshall_string(th)
   self.props        = lmark.unmarshall_table(th)
 

@@ -22,6 +22,7 @@
 #include "branch.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "dbg-util.h"
 #include "debug.h"
 #include "decks.h"
@@ -1665,6 +1666,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
             mpr("Press } to see all the runes you have collected.");
         }
+
+        if (mitm[obj].plus == RUNE_TOMB)
+            add_daction(DACT_TOMB_CTELE);
 
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());

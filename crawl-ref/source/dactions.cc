@@ -10,6 +10,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mon-behv.h"
@@ -42,6 +43,7 @@ static const char *daction_names[] =
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
     "corpses rot",
+    "Tomb loses -cTele",
 };
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
@@ -205,6 +207,10 @@ static void _apply_daction(daction_type act)
         for (int i = 0; i < MAX_ITEMS; i++)
             if (mitm[i].base_type == OBJ_CORPSES && mitm[i].sub_type == CORPSE_BODY)
                 mitm[i].special = 1; // thoroughly rotten
+        break;
+    case DACT_TOMB_CTELE:
+        if (player_in_branch(BRANCH_TOMB))
+            unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
         break;
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:
