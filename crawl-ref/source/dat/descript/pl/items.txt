@@ -1,7 +1,7 @@
 %%%%
 air elemental fan
 
-Magiczny przedmiot służący do przywoływania żywiołaków powietrza. 
+Magiczny przedmiot służący do przywoływania żywiołaków powietrza.
 Nie jest zbyt niezawodny, i zwykle wymaga paru prób zanim poprawnie
 zadziała.  Użycie nie jest wskazane jeśli nie posiadasz wysokich
 umiejętności w Magii Powietrza.
@@ -138,7 +138,7 @@ Magiczny miecz z trzema wielkimi ostrzami, pobłogosławiony przez moc
 blowgun
 
 Długa, lekka rurka.  Igły z niej wystrzelone same z siebie nie zadają
-niemal żadnych obrażeń, jednak zwykle zatruwa się je czymś paskudnym. 
+niemal żadnych obrażeń, jednak zwykle zatruwa się je czymś paskudnym.
 Jest to wyjątkowo cicha metoda niesienia śmierci.
 %%%%
 bolt
@@ -212,7 +212,7 @@ Księga czarów.
 %%%%
 book of dreams
 
-Przejrzysta książka.	Promienie światła dziwnie grają na jej
+Przejrzysta książka.  Promienie światła dziwnie grają na jej
 powierzchni.
 %%%%
 book of enchantments
@@ -323,7 +323,7 @@ umarłych.
 %%%%
 book of war chants
 
-Księga czarów dla wojownika.	Zawarte tu czary podane są w formie
+Księga czarów dla wojownika.  Zawarte tu czary podane są w formie
 przyśpiewek, według tradycji skaldów.  Działają one tak samo dobrze
 jak ich tradycyjne formy, jednak dla muzykalnych osób są one prostsze w
 użyciu.
@@ -334,7 +334,7 @@ Księga czarów.
 %%%%
 bottled efreet
 
-Jakiś czarodziej schwytał potężnego ifryta i zaklął go w butelkę. 
+Jakiś czarodziej schwytał potężnego ifryta i zaklął go w butelkę.
 Zerwanie laku wypuści go na wolność, pozwalając odegrać gniew.  A
 gniew ifryta to rzecz straszna, a wdzięczność niepewna.
 %%%%
@@ -405,7 +405,7 @@ bronią, jednak zadają naprawdę dobre obrażenia.
 %%%%
 crystal ball of energy
 
-Magiczny przedmiot za pomocą którego można odzyskać magiczną moc. 
+Magiczny przedmiot za pomocą którego można odzyskać magiczną moc.
 Użycie tej kuli niesie ze sobą ryzyko zupełnego wydrenowania aktualnie
 posiadanej mocy — tym większe im mniej mocy masz w danej chwili.
 %%%%
@@ -416,7 +416,7 @@ kawału wytrzymałego kryształu.
 %%%%
 dagger
 
-Długi ostry nóż, dobry do walki w zwarciu jak też i do rzucania. 
+Długi ostry nóż, dobry do walki w zwarciu jak też i do rzucania.
 Powoduje ogromne obrażenia w czasie ataku znienacka.
 %%%%
 dart
@@ -474,7 +474,7 @@ Torment.
 %%%%
 deck of summonings
 
-Talia magicznych kart, z rysunkami przedziwnych istot.	Oczywiście,
+Talia magicznych kart, z rysunkami przedziwnych istot.  Oczywiście,
 rysunki te wchodzą w życie.
 
 TODO: It may contain the following cards: the Crusade, the Herd, the
@@ -558,7 +558,7 @@ Miecz z szerokim tnącym ostrzem.
 %%%%
 fire dragon armour
 
-Ta zbroja została wykonana skóry smoka właściwego.	Zapewnia ona
+Ta zbroja została wykonana skóry smoka właściwego.  Zapewnia ona
 wspaniałą ochronę przed ogniem, ale czyni swego nosiciela wrażliwym na
 zimno.
 %%%%
@@ -711,7 +711,7 @@ string.find(you.race(), &quot;Ogre&quot;)
     return &quot;W sam raz dla ciebie.&quot; else
     return &quot;Jakkolwiek stanowi świetną osłonę. jest bardzo
 niewygodna do &quot; ..
-	   &quot;noszenia i utrudnia sprawne posługiwanie się
+           &quot;noszenia i utrudnia sprawne posługiwanie się
 bronią.&quot; end }}
 %%%%
 leather armour
@@ -777,7 +777,7 @@ necronomicon
 Najmroczniejsza księga jaka kiedykolwiek powstała, potężna i
 przeklęta.  To wydanie które masz w ręku jest oprawione w ludzką (lub
 może elfią?) skórę, pisane jest krwią i zawiera diagramy które nawet
-laik rozpozna jako najczarniejszą z czarnych rodzajów magii.	Próba
+laik rozpozna jako najczarniejszą z czarnych rodzajów magii.  Próba
 okiełznania mocy opisanych w tej księdze rzadko kończy się czymkolwiek
 lepszym niż totalną zagładą czarodzieja wystarczająco głupiego aby
 tego spróbować.
@@ -818,7 +818,7 @@ Smakowity, soczysty owoc.
 pearl dragon armour
 
 Zbroja wykonana ze skóry perłowego smoka.  Jest bardzo wytrzymała, lecz
-jednocześnie lekka i giętka.	Zapewnia także ochronę przed
+jednocześnie lekka i giętka.  Zapewnia także ochronę przed
 nekromancją.
 %%%%
 pearl dragon hide
@@ -851,7 +851,7 @@ Eliksir który pozwala wprowadzić się w bitewny szał.
 %%%%
 potion of blood
 
-Jest to zwykła krew, taka jak płynie w żyłach większości stworzeń. 
+Jest to zwykła krew, taka jak płynie w żyłach większości stworzeń.
 Może stanowić posiłek dla kogokolwiek zdolnego do trawienia mięsa,
 jakkolwiek cywilizowane osoby uznają to za odrażające.  Bardziej
 potworne istoty nie mają takich oporów.  Zaś wampiry i komary...
@@ -877,7 +877,7 @@ Eliksir który usuwa mutacje będące skutkiem skażenia magią.
 %%%%
 potion of curing
 
-Dobroczynny płyn który leczy rany, przejaśnia umysł i leczy choroby. 
+Dobroczynny płyn który leczy rany, przejaśnia umysł i leczy choroby.
 Użyty przez osobę w pełni lub niemal pełni sił, może nawet w
 niewielkim stopniu uleczyć skutki trwałej zgnilizny.
 %%%%
@@ -953,7 +953,7 @@ truciznę.
 %%%%
 potion of restore abilities
 
-Eliksir który przywraca utraconą siłę, inteligencję i zręczność. 
+Eliksir który przywraca utraconą siłę, inteligencję i zręczność.
 Usuwa także skutki zmęczenia lub bezdechu.
 %%%%
 potion of slowing
@@ -1186,7 +1186,7 @@ pobłogosławiony przez dobrych bogów.  Jest ulubioną bronią sług
 sausage
 
 Flak wypruty z jelita zwierzęcia, wypełniony podrobami, wnętrznościami
-i chrząstką.	Jesteś głodny?
+i chrząstką.  Jesteś głodny?
 %%%%
 scale mail
 
@@ -1242,7 +1242,7 @@ stworzeń — zwykle trolli i smoków.
 scroll of enchant weapon i
 
 Ten zwój pozwala na poprawienie jakości broni lub garści pocisków
-trzymanych w dłoni w czwili odczytania zwoju.	Zwiększa on celność.
+trzymanych w dłoni w czwili odczytania zwoju.  Zwiększa on celność.
 Broń która już jest wysokiej jakości może nie poddać się działaniu
 tego zwoju — szansa porażki jest coraz większa.  Bezwzględny limit to
 +9.
@@ -1250,9 +1250,9 @@ tego zwoju — szansa porażki jest coraz większa.  Bezwzględny limit to
 scroll of enchant weapon ii
 
 Ten zwój pozwala na poprawienie jakości broni lub garści pocisków
-trzymanych w dłoni w czwili odczytania zwoju.	Zwiększa on zadawane
+trzymanych w dłoni w czwili odczytania zwoju.  Zwiększa on zadawane
 obrażenia. Broń która już jest wysokiej jakości może nie poddać się
-działaniu tego zwoju — szansa porażki jest coraz większa. 
+działaniu tego zwoju — szansa porażki jest coraz większa.
 Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon iii
@@ -1267,7 +1267,7 @@ scroll of fear
 
 Ten zwój tworzy chwilową iluzję wokół czytającego — wszystkim
 którzy go widzą wydaje się że zmienił się on lub ona w istotę
-której widzący najbardziej się boi.	Zwykle powoduje to paniczny strach.
+której widzący najbardziej się boi.  Zwykle powoduje to paniczny strach.
 %%%%
 scroll of fog
 
@@ -1324,7 +1324,7 @@ przylegające do twego ciała.
 %%%%
 scroll of unholy creation
 
-Ten zwój czerpie z mocy Otchłani i tworzy paskudną bestię.	Bestia ta
+Ten zwój czerpie z mocy Otchłani i tworzy paskudną bestię.  Bestia ta
 jest przyjaźnie nastawiona do czytającego, chyba że Fedhas lub jeden z
 dobrych bogów ma coś do powiedzenia.
 %%%%
@@ -1457,7 +1457,7 @@ Ten kij zwiększa moc czarów Magii Niszczenia.
 staff of death
 
 Ten kij zwiększa moc czarów Nekromancji, a także zapewnia przed
-nekromancją ochronę.	Jeśli użytkownik posiada umiejętności zarówno
+nekromancją ochronę.  Jeśli użytkownik posiada umiejętności zarówno
 w Nekromancji jak i użyciu przedmiotów magicznym, żywe istoty uderzone
 tym kijem ucierpią dodatkowe obrażenia.
 %%%%
@@ -1470,7 +1470,7 @@ w Magii Ziemi.
 %%%%
 staff of enchantment
 
-Ten kij zwiększa moc Uroków jak i Magii Wspomagania.	Przy
+Ten kij zwiększa moc Uroków jak i Magii Wspomagania.  Przy
 wystarczających umiejętnościach w dowolnej z tych dwóch szkół, także
 poprawia odporność na wrogie uroki.
 %%%%
@@ -1568,7 +1568,7 @@ swamp dragon hide
 
 Oślizgła{{ if you.can_smell() then
     return &quot;, śmierdząca&quot; else
-    return &quot;&quot; end }} surowa skóra bagiennego smoka.	Zapewnia
+    return &quot;&quot; end }} surowa skóra bagiennego smoka.  Zapewnia
 odporność na trucizny i jady, i można z niej wykonać zbroję.
 %%%%
 throwing net
@@ -1583,7 +1583,7 @@ else
 %%%%
 tome of destruction
 
-Bardzo potężna ale zupełnie nieprzewidywalna księga dzikiej magii. 
+Bardzo potężna ale zupełnie nieprzewidywalna księga dzikiej magii.
 Jest zupełnie odmienna od zwykłego rzucania czarów: jest to bardziej
 magiczny przedmiot niż księga, i wymaga umiejętności używania
 magicznych przedmiotów. Nie można nauczyć się wpisów tej księgi na
@@ -1602,7 +1602,7 @@ Magiczny miecz z trzema wielkimi ostrymi ostrzami.
 trishula
 
 Błogosławiony trójząb uformowany w świetym ogniu, z trzema zębami
-symbolizującymi połączoną potęgę trójcy dobrych bogów.	Jest to
+symbolizującymi połączoną potęgę trójcy dobrych bogów.  Jest to
 ulubiona broń sług Świetlistego.
 %%%%
 troll hide
