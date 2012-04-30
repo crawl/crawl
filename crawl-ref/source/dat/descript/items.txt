@@ -662,12 +662,16 @@ but renders its wearer susceptible to fire.
 %%%%
 javelin
 
-A long, light stick that can be thrown by hand. {{ if you.race() ==
-"Halfling"
-    or you.race() == "Kobold"
-    or you.race() == "Spriggan" then
-    return "Unfortunately, it is too long and awkward for you to use." else
-    return "" end }}
+A long, light stick that can be thrown by hand. {{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Unfortunately, it is too long and awkward for you to use."
+    else
+        return ""
+    end
+}}
 %%%%
 lajatang
 
@@ -688,20 +692,29 @@ with a small cost attached.
 %%%%
 large rock
 
-A rock, used by giants as a missile. {{ if string.find(you.race(), "Ogre")
-   or you.race() == "Troll" then
-    return "" else
-    return "Unfortunately, it is too heavy and awkward for you to use." end
+A rock, used by giants as a missile. {{
+    if string.find(you.race(), "Ogre")
+       or you.race() == "Troll"
+    then
+        return ""
+    else
+        return "Unfortunately, it is too heavy and awkward for you to use."
+    end
 }}
 %%%%
 large shield
 
-Like a normal shield, only larger. {{ if string.find(you.race(), "Ogre")
-   or string.find(you.race(), "Draconian")
-   or you.race() == "Troll" then
-    return "It looks like it would fit you well." else
-    return "It is very cumbersome to wear, and slows the rate at " ..
-	   "which you may attack." end }}
+Like a normal shield, only larger. {{
+    if string.find(you.race(), "Ogre")
+       or string.find(you.race(), "Draconian")
+       or you.race() == "Troll"
+    then
+        return "It looks like it would fit you well."
+    else
+        return "It is very cumbersome to wear, and slows the rate at " ..
+               "which you may attack."
+    end
+}}
 %%%%
 leather armour
 
@@ -821,7 +834,8 @@ mental focus for a short period.
 # often filled with mail.
 plate armour
 
-A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate and greaves. Chainmail covers gaps, allowing movement.
+A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist
+plate and greaves. Chainmail covers gaps, allowing movement.
 
 It provides excellent protection, yet donning it takes forever.
 %%%%
@@ -1518,21 +1532,26 @@ resistance to poison on its wearer.
 swamp dragon hide
 
 The slimy{{
-if you.can_smell() then
-    return ", smelly"
-else
-    return ""
-end
-}} skin of a swamp-dwelling dragon. It confers resistance to poison on its wearer, and it may be turned into proper armour by magical means.
+    if you.can_smell() then
+        return ", smelly"
+    else
+        return ""
+    end
+}} skin of a swamp-dwelling dragon. It confers resistance to poison on its
+wearer, and it may be turned into proper armour by magical means.
 %%%%
 throwing net
 
-A throwing net as used by gladiators. {{ if you.race() == "Halfling"
-    or you.race() == "Kobold"
-    or you.race() == "Spriggan" then
-    return "Unfortunately, it is too large and awkward for you to use."
-else
-    return "" end }}
+A throwing net as used by gladiators. {{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Unfortunately, it is too large and awkward for you to use."
+    else
+        return ""
+    end
+}}
 %%%%
 tome of destruction
 

@@ -87,7 +87,9 @@ off like that of a snake.
 Octopode
 
 A species of amphibious cephalopods. They can wear eight rings, but almost
-no armour fits them. %%%%%%%% Ogre
+no armour fits them.
+%%%%%%%%
+Ogre
 
 Large and strong, they're mostly seen as brutes. Ogres are very comfortable
 with the basics of magic, however.

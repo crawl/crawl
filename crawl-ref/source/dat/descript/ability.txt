@@ -136,15 +136,23 @@ Revert to your normal form, with a short delay.
 # Zin
 Recite
 
-Preach to monsters about Zin's laws, which can lead to various results. There are four books you can preach from:
+Preach to monsters about Zin's laws, which can lead to various results.
+There are four books you can preach from:
 
-* Book of Abominations: This book deals with the very thing most abhorrent to Zin - chaos in all its forms. These recitations will invoke Zin's most powerful smiting.
+* Book of Abominations: This book deals with the very thing most abhorrent
+to Zin - chaos in all its forms. These recitations will invoke Zin's most
+powerful smiting.
 
-* Book of Ablutions: The impure are nearly as loathed by the Law-Giver. Recitations from this book will deal damage to such creatures.
+* Book of Ablutions: The impure are nearly as loathed by the Law-Giver.
+Recitations from this book will deal damage to such creatures.
 
-* Book of Apostates: Intelligent creatures who do not worship Zin but do no other evil will be dealt with least harshly. The recitations from this book merely sow confusion. Yet those who dare to worship a god alien to Zin may be permanently deprived of means to spread their foul faith.
+* Book of Apostates: Intelligent creatures who do not worship Zin but do no
+other evil will be dealt with least harshly. The recitations from this book
+merely sow confusion. Yet those who dare to worship a god alien to Zin may
+be permanently deprived of means to spread their foul faith.
 
-* Book of Anathema: Demons and the undead are hated by Zin. This book gives you means to rebuke them.
+* Book of Anathema: Demons and the undead are hated by Zin. This book gives
+you means to rebuke them.
 %%%%
 Vitalisation
 
@@ -172,7 +180,9 @@ Cure all your mutations - but only once.
 # The Shining One
 Divine Shield
 
-The Shining One grants you a divine shield. Because it is held aloft by godly power, it does not interfere with your equipment. However, it is controlled by your willpower, and your skill with Shields will improve it.
+The Shining One grants you a divine shield. Because it is held aloft by
+godly power, it does not interfere with your equipment. However, it is
+controlled by your willpower, and your skill with Shields will improve it.
 %%%%
 Cleansing Flame
 
@@ -188,7 +198,8 @@ blessed by the Shining One to stay longer in this world.
 # Kikubaaqudgha
 Receive Corpses
 
-Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Necromancy skill.
+Create one or more reanimatable monster corpses near yourself. The number
+and freshness of these are dependent on Necromancy skill.
 %%%%
 Torment
 
@@ -201,7 +212,8 @@ Kikubaaqudgha may choose to protect you from it... or may not.
 # Yredelemnul
 Animate Remains
 
-Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on.
+Reanimate a single corpse or skeleton as a follower. Note that zombies and
+skeletons cannot leave the level they were created on.
 %%%%
 Recall Undead Slaves
 
@@ -242,7 +254,8 @@ If you get this description, it is a bug.
 # Okawaru
 Heroism
 
-Temporarily increase all of your combat skills, including the ability to sneak around or avoid traps.
+Temporarily increase all of your combat skills, including the ability to
+sneak around or avoid traps.
 %%%%
 Finesse
 
@@ -272,7 +285,8 @@ skill.
 # Sif Muna
 Channel Energy
 
-Replenish your magical reservoir by an amount depending on your Invocations skill.
+Replenish your magical reservoir by an amount depending on your Invocations
+skill.
 %%%%
 Forget Spell
 
@@ -282,7 +296,9 @@ memory to learn others.
 # Trog
 Burn Spellbooks
 
-Set all spellbooks within your field of vision on fire. The fire is fuelled by Trog's hatred, and Trog likes it most when you don't even care which books of madness burst into flames.
+Set all spellbooks within your field of vision on fire. The fire is fuelled
+by Trog's hatred, and Trog likes it most when you don't even care which
+books of madness burst into flames.
 %%%%
 Berserk
 
@@ -308,7 +324,10 @@ Summon huge angry allies to wreak havoc.
 # Elyvilon
 Divine Protection
 
-Beseech Elyvilon to save your life. If you are mortally wounded, the Healer may undo the killing blow. Especially pious individuals may be certain of this help, but in that case, any actual intervention costs piety (as opposed to merely asking for intervention, which is always free).
+Beseech Elyvilon to save your life. If you are mortally wounded, the Healer
+may undo the killing blow. Especially pious individuals may be certain of
+this help, but in that case, any actual intervention costs piety (as
+opposed to merely asking for intervention, which is always free).
 
 Beware: killing others while asking to be spared yourself is a major sin!
 %%%%
@@ -429,7 +448,8 @@ Subsequently, you can draw these cards in the order you chose.
 # Beogh
 Smiting
 
-Smite an enemy within your field of vision. This doesn't require a direct path, just seeing the enemy is enough.
+Smite an enemy within your field of vision. This doesn't require a direct
+path, just seeing the enemy is enough.
 %%%%
 Recall Orcish Followers
 
@@ -439,7 +459,10 @@ surroundings.
 # Fedhas
 Sunlight
 
-Call sunlight down over a small area of the dungeon. Monsters illuminated by the light will be easier to hit. Water affected by the sunlight will evaporate. In particular, deep water will become shallow water, and shallow water will dry up completely, revealing the dungeon floor.
+Call sunlight down over a small area of the dungeon. Monsters illuminated
+by the light will be easier to hit. Water affected by the sunlight will
+evaporate. In particular, deep water will become shallow water, and shallow
+water will dry up completely, revealing the dungeon floor.
 %%%%
 Growth
 
@@ -468,7 +491,8 @@ and oklob plants are more likely to spit acid at higher invocations.
 # Cheibriados
 Bend Time
 
-Attempt to slow down everyone adjacent to you. High Invocations skill makes it harder to resist.
+Attempt to slow down everyone adjacent to you. High Invocations skill makes
+it harder to resist.
 %%%%
 Temporal Distortion
 
@@ -509,7 +533,8 @@ Remove a randomly selected bad mutation.
 # Ashenzari
 Scrying
 
-Gain astral sight to see through walls. This is not enough to let you target spells and abilities, even those that work through glass.
+Gain astral sight to see through walls. This is not enough to let you
+target spells and abilities, even those that work through glass.
 %%%%
 Transfer Knowledge
 
