@@ -1349,7 +1349,6 @@ clean-ini:
 build-txt:
 	$(INI2TXT) $(INI_OBJECTS)
 	$(INI2TXT) dat/descript/*/*.ini
-	$(INI2TXT) dat/database/*/*.ini
 
 tx-config:
 	tx init
