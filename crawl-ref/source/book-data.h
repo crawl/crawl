@@ -1,4 +1,4 @@
-{   // Minor Magic (fire)
+{   // Minor Magic (Fire)
     SPELL_MAGIC_DART,
     SPELL_BLINK,
     SPELL_CALL_IMP,
