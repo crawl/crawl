@@ -206,7 +206,13 @@ Xom przestawia.
 %%%%
 Xom swap weapons
 
-@Xom rearrange the pieces@
+“Zamieńcie się!”
+
+“To damy tobie, a to tobie.”
+
+“Czas na małą zamianę.”
+
+“Przewaga broni, tak?  Tak będzie bardziej sprawiedliwie.”
 %%%%
 Xom teleportation journey
 
