@@ -445,6 +445,21 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
+static std::string _stat_name(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return ("strength");
+    case STAT_INT:
+        return ("intelligence");
+    case STAT_DEX:
+        return ("dexterity");
+    default:
+        die("invalid stat");
+    }
+}
+
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const char *cause, bool see_source)
 {
@@ -455,6 +470,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
+        if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mprf("Your divine stamina protects you from %s loss.",
+                 _stat_name(which_stat).c_str());
+            return (false);
+        }
+
         int sust = player_sust_abil();
         stat_loss >>= sust;
 
@@ -541,21 +563,6 @@ bool lose_stat(stat_type which_stat, int stat_loss,
     }
 
     return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
-}
-
-static std::string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return ("strength");
-    case STAT_INT:
-        return ("intelligence");
-    case STAT_DEX:
-        return ("dexterity");
-    default:
-        die("invalid stat");
-    }
 }
 
 static stat_type _random_lost_stat()
