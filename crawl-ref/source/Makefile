@@ -1340,15 +1340,16 @@ mon-util.d: mon-mst.h
 #
 build-ini: $(INI_OBJECTS)
 
+# XXX for database file, we'll need a conditional to remove the -u option.
 %.ini: %.txt
-	$(TXT2INI) $*.txt
+	$(TXT2INI) -u $*.txt
 
 clean-ini:
 	$(RM) $(INI_OBJECTS)
 
 build-txt:
-	$(INI2TXT) $(INI_OBJECTS)
-	$(INI2TXT) dat/descript/*/*.ini
+	$(INI2TXT) -w $(INI_OBJECTS)
+	$(INI2TXT) -ow dat/descript/*/*.ini
 
 tx-config:
 	tx init
