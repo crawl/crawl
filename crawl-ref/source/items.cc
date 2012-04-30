@@ -29,6 +29,7 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "evoke.h"
@@ -1669,6 +1670,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         if (mitm[obj].plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
+
+        if (mitm[obj].plus >= RUNE_DIS && mitm[obj].plus <= RUNE_TARTARUS)
+            unset_level_flags(LFLAG_NO_TELE_CONTROL);
 
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
