@@ -19,6 +19,10 @@ getopts('u');
 our($opt_u);
 
 foreach my $file (@ARGV) {
+    unless (-e $file) {
+        print "$file not found\n";
+        next;
+    }
     my ($basename,$path) = fileparse($file, '.txt');
     open IN, $file or die "Cannot open $file";
     open OUT, ">$path/$basename.ini";
