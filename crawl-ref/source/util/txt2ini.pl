@@ -1,7 +1,9 @@
 #!/usr/bin/env perl
-# Generate an ini file from a txt file (database or description)
+# Generate a .ini file (to be pushed to transifex)
+# from a .txt file (database or description)
 # Use option -u unwrap the file (remove all newlines except if the next line
-# starts with a space).
+# starts with a space). This option is meant to be used for description files
+# but not for database files
 
 use strict;
 use warnings;
@@ -31,7 +33,7 @@ foreach my $file (@ARGV) {
         }
         elsif ($key) {
             if ($value) {
-                if ($opt_u or /^\s*$/ or /^\s+/ or substr($value,-2) eq '\n') {
+                if (not $opt_u or /^\s*$/ or /^\s+/ or substr($value,-2) eq '\n') {
                     $value .= '\n';
                 } else {
                     $value .= " ";
