@@ -16,7 +16,8 @@
     e.nsubst("Z = 1:Z / *:O")
     e.subst("O = O:1 .:9")
     e.kitem("O = Orb of Zot mimic")
-    e.subvault("Z : zot5_orb")
+    e.kitem("Z = Orb of Zot")
+    e.kmask("OZ = no_item_gen")
   end
 
 }}
@@ -920,17 +921,6 @@ XXXXXXXXXcc...5..8..8.8....8.ccXXc.............cXXcc8.....8....8..5.8.ccXXXXXXXX
 XXXXXXXXXXcc8......8....8.8.ccXXcc.............ccXXcc.8.8....8....8..ccXXXXXXXXX
 XXXXXXXXXXXcc..............ccXXXc...............cXXXcc..............ccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
-ENDMAP
-
-###########################################################
-# The orb!
-###########################################################
-
-NAME: zot5_orb
-TAGS: zot5_orb no_item_gen
-KITEM:  Z = Orb of Zot
-MAP
-Z
 ENDMAP
 
 ###########################################################
