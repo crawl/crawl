@@ -10,9 +10,8 @@ doivent être manipulés avec précautions.
 %%%%
 deck of cards
 
-Un jeu de puissantes cartes magiques peintes avec l'ichor des démons.
-Elles peuvent provoquer de précieux ou dangereux effets quand elles sont
-tirées.
+Un jeu de puissantes cartes magiques peintes avec l'ichor des démons. Elles
+peuvent provoquer de précieux ou dangereux effets quand elles sont tirées.
 %%%%
 potion
 
