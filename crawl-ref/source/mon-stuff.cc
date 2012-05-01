@@ -1160,7 +1160,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
 
     if (YOU_KILL(killer) && beam.aux_source.empty())
-        beam.aux_source = "set off by themselves";
+        beam.aux_source = "set off by themself";
     else if (pet_kill)
         beam.aux_source = "set off by their pet";
 
