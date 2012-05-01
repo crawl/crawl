@@ -13,8 +13,7 @@ use strict;
 use warnings;
 use File::Basename;
 use Getopt::Std;
-use Text::Wrap;
-$Text::Wrap::unexpand = 0;
+use Text::WrapI18N qw(wrap);
 
 if ($^O ne 'msys') {
     use open ':encoding(utf8)';
@@ -44,6 +43,11 @@ foreach my $file (@ARGV) {
             $value =~ s/\\n/\n/g;
             $value =~ tr/\r//d;
             $value = wrap("", "", $value) if $opt_w;
+
+            # WrapIl8N adds spaces at the end of lines and don't support the
+            # unexpand option.
+            $value =~ s/\s+$//mg;
+            $value =~ s/\t/ {8}/mg;
             $Text{$key} = $value;
         }
         close IN;
