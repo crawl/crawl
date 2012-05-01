@@ -328,7 +328,7 @@ And this shield surely will be heard!
 amulet of the Air
 
 It appears that a powerful air mage enchanted this sky-blue amulet with a
-good deal of protective charms his school can bestow upon people.
+good deal of protective charms from his school of magic.
 %%%%
 ring of Shadows
 
@@ -346,8 +346,8 @@ strength to shrug off hostile magic.
 %%%%
 necklace of Bloodlust
 
-You wonder what a crude brute would wear a bloodstained necklace made of
-human and beast teeth and something that appears to be a ripped piece of
+You wonder what crude brute would wear a bloodstained necklace made of
+human and animal teeth, plus something that appears to be a ripped piece of
 spine.
 %%%%
 ring of Shaolin
