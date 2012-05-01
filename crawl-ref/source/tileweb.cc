@@ -148,11 +148,16 @@ bool TilesFramework::initialise()
     return (true);
 }
 
-void TilesFramework::write_message(const char *format, ...)
+void TilesFramework::write_message()
 {
     for (unsigned int i = 0; i < m_prefixes.size(); ++i)
         m_msg_buf.append(m_prefixes[i].data());
     m_prefixes.clear();
+}
+
+void TilesFramework::write_message(const char *format, ...)
+{
+    write_message(); // prefixes
 
     char buf[2048];
     int len;
@@ -212,11 +217,15 @@ void TilesFramework::finish_message()
     m_msg_buf.clear();
 }
 
+void TilesFramework::send_message()
+{
+    write_message();
+    finish_message();
+}
+
 void TilesFramework::send_message(const char *format, ...)
 {
-    for (unsigned int i = 0; i < m_prefixes.size(); ++i)
-        m_msg_buf.append(m_prefixes[i].data());
-    m_prefixes.clear();
+    write_message();
 
     char buf[2048];
     int len;
@@ -860,14 +869,14 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         last = m_current_map_knowledge(gc).monsterinfo();
 
         if (last && (last->client_id != m->client_id))
-            write_message(""); // Force sending at least the id
+            write_message(); // Force sending at least the id
     }
     else
     {
         last = m_current_map_knowledge(it->second).monsterinfo();
 
         if (it->second != gc)
-            write_message(""); // As above
+            write_message(); // As above
     }
 
     if (last == NULL)
