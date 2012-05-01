@@ -44,20 +44,20 @@ Antaeus
 
 Once a mighty and renowned Titan, his arrogance was his undoing. Now he is
 corrupt and tainted, a powerful demon who lords over the frozen wastes of
-Cocytus. His gigantic body seems as though it would be easily struck by
-your attacks; unfortunately, it also seems like it would remain unscathed
-by all but the strongest of them.
+Cocytus. His gigantic body seems as though it would be easily struck by your
+attacks; unfortunately, it also seems like it would remain unscathed by all
+but the strongest of them.
 %%%%
 Arachne
 
-Once the best human weaver, Arachne was cursed by being transformed into
-her present form: half-human, half-spider. No longer ageing, she has the
-youth and beauty of a human female, along with the legs and abdomen of a
-monstrous giant spider.
+Once the best human weaver, Arachne was cursed by being transformed into her
+present form: half-human, half-spider. No longer ageing, she has the youth
+and beauty of a human female, along with the legs and abdomen of a monstrous
+giant spider.
 
 Thousands years old, she has learned magic and quite a few other tricks.
-Expect to be ensnared by webs and magic while her pets digest and then
-drink you dry.
+Expect to be ensnared by webs and magic while her pets digest and then drink
+you dry.
 %%%%
 Asmodeus
 
@@ -74,8 +74,7 @@ rainbow-coloured suspenders from somewhere. They're not helping.
 %%%%
 Boris
 
-An ancient lich. The air around his shrouded form crackles with evil
-energy.
+An ancient lich. The air around his shrouded form crackles with evil energy.
 %%%%
 Cerebov
 
@@ -84,9 +83,9 @@ shining golden armour and wielding a huge twisted sword.
 %%%%
 Chuck
 
-Chuck the stone giant loves rocks, the bigger the better! Over the years,
-he has managed to amass quite the collection, including some rare,
-enchanted ones.
+Chuck the stone giant loves rocks, the bigger the better! Over the years, he
+has managed to amass quite the collection, including some rare, enchanted
+ones.
 %%%%
 Crazy Yiuf
 
@@ -103,9 +102,9 @@ Dissolution
 The Pits of Slime used to be a thriving civilization, and Dissolution was
 the prophet of their god. When the city was overtaken by its current
 residents, only Dissolution survived, for he alone turned faithfully to the
-Slime God. Dissolution became a tremendous mass of acidic ooze, yet
-retained his intelligence. He is filled with hatred for anything that can
-hold a form.
+Slime God. Dissolution became a tremendous mass of acidic ooze, yet retained
+his intelligence. He is filled with hatred for anything that can hold a
+form.
 %%%%
 Donald
 
@@ -133,16 +132,15 @@ prowess.
 Duvessa
 
 A plain-looking elven fighter who is technically brilliant in many forms of
-combat, but over-confident because of it. She is complemented by the
-magical skills of her twin brother, Dowan.
+combat, but over-confident because of it. She is complemented by the magical
+skills of her twin brother, Dowan.
 %%%%
 Edmund
 
-A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He
-has none of Sigmund's skills in magic, but makes up for it with his skills
-in fighting and a canny head for money. He is eager to prove his
-superiority by killing hapless adventurers with his expensive flail and
-quick wit.
+A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He has
+none of Sigmund's skills in magic, but makes up for it with his skills in
+fighting and a canny head for money. He is eager to prove his superiority by
+killing hapless adventurers with his expensive flail and quick wit.
 %%%%
 the Enchantress
 
@@ -191,8 +189,7 @@ knowledge of spells: by consuming their former owner, a powerful wizard.
 Geryon
 
 A huge, three-headed arch-demon, guardian of the Vestibule of Hell. Legends
-say that his silver horn is used to throw open the gates of Hell
-themselves.
+say that his silver horn is used to throw open the gates of Hell themselves.
 %%%%
 Gloorx Vloq
 
@@ -214,8 +211,8 @@ A middle aged bounty hunter, hired to kill you. He is in a hurry.
 %%%%
 Ignacio
 
-While a mortal cannot turn into a demon aside from divine intervention,
-this is what happened to Ignacio after Makhleb saw his love for his job and
+While a mortal cannot turn into a demon aside from divine intervention, this
+is what happened to Ignacio after Makhleb saw his love for his job and
 smiled upon him. He is now slated to continue the joy of his life for all
 eternity.
 
@@ -269,10 +266,10 @@ A beautiful enchantress.
 %%%%
 the Lernaean hydra
 
-An ancient, outsized serpent-like water beast that possesses numerous
-heads. The poets mention more heads than vase-painters can paint, poisonous
-venom coming out of its eyes, and that this hydra is a guardian of an
-entrance to the Underworld. What of this is true, you do not know.
+An ancient, outsized serpent-like water beast that possesses numerous heads.
+The poets mention more heads than vase-painters can paint, poisonous venom
+coming out of its eyes, and that this hydra is a guardian of an entrance to
+the Underworld. What of this is true, you do not know.
 %%%%
 Lom Lobon
 
@@ -302,9 +299,9 @@ distracting humanoid males has its value in combat, as well.
 %%%%
 Maud
 
-A mysterious warrior princess from a far-off kingdom, on a quest to
-retrieve the legendary sword 'Entarex'. Countless have been the admirers
-who, thinking about Maud, forgot everything else.
+A mysterious warrior princess from a far-off kingdom, on a quest to retrieve
+the legendary sword 'Entarex'. Countless have been the admirers who,
+thinking about Maud, forgot everything else.
 %%%%
 Maurice
 
@@ -358,9 +355,9 @@ in and out of reality.
 %%%%
 Norris
 
-A relaxed peace-in-death cultist with a healthy tan and a soothing voice.
-He doesn't really care if it is you or him who dies - "both" would probably
-be the best option.
+A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
+doesn't really care if it is you or him who dies - "both" would probably be
+the best option.
 %%%%
 Pikel
 
@@ -441,8 +438,8 @@ A rude orc.
 Wiglaf
 
 A fat dwarf wearing a stupid-looking hat. In Okawaru's name, he's here to
-avenge his mountain dwarf kin, who were driven from their lands by hill
-orcs and others. From the way he looks at you, he also seems to hold you
+avenge his mountain dwarf kin, who were driven from their lands by hill orcs
+and others. From the way he looks at you, he also seems to hold you
 responsible.
 
 {{
@@ -464,8 +461,8 @@ A lump of sickly pustulent flesh, dripping with lethal acid.
 %%%%
 adder
 
-The common dungeon snake. A species of troglodytic reptile commonly found
-in subterranean spaces.
+The common dungeon snake. A species of troglodytic reptile commonly found in
+subterranean spaces.
 %%%%
 agate snail
 
@@ -474,8 +471,8 @@ hide when frightened.
 %%%%
 air elemental
 
-A spirit drawn from the elemental plane of air. It exists in this world as
-a swirling vortex of air, often dissipating and reforming.
+A spirit drawn from the elemental plane of air. It exists in this world as a
+swirling vortex of air, often dissipating and reforming.
 %%%%
 air elemental statue
 
@@ -484,9 +481,9 @@ insubstantial.
 %%%%
 alligator
 
-A sneaky crocodilian that hides in water and waits patiently for its prey
-to get too close, at which point it puts on a great burst of speed and
-crushes its victim with massive jaws.
+A sneaky crocodilian that hides in water and waits patiently for its prey to
+get too close, at which point it puts on a great burst of speed and crushes
+its victim with massive jaws.
 %%%%
 alligator snapping turtle
 
@@ -508,8 +505,7 @@ angel
 
 A divine warrior of the Shining One, it is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light. It appears
-to be weightless and quite agile while flying, despite wearing heavy
-armour.
+to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 ant larva
 
@@ -518,8 +514,8 @@ completely defenseless, and therefore under constant protection.
 %%%%
 apis
 
-A placid, sacred bull of Elyvilon. Beware, evildoers, as it will surely
-turn on you!
+A placid, sacred bull of Elyvilon. Beware, evildoers, as it will surely turn
+on you!
 %%%%
 azure jelly
 
@@ -528,9 +524,9 @@ the air around it.
 %%%%
 baby alligator
 
-A juvenile alligator. While it does not have crushing jaws, nor the
-strength to put on massive bursts of speed, it is more limber than the
-adult form, and its milk-tooth is still very sharp.
+A juvenile alligator. While it does not have crushing jaws, nor the strength
+to put on massive bursts of speed, it is more limber than the adult form,
+and its milk-tooth is still very sharp.
 %%%%
 ball lightning
 
@@ -580,14 +576,14 @@ venom.
 %%%%
 blessed toe
 
-A sacred relic from the body of a pious saint. It floats through the air
-and shines with a divine light.
+A sacred relic from the body of a pious saint. It floats through the air and
+shines with a divine light.
 %%%%
 blink frog
 
 A species of giant frog that possesses the ability to blink at will. It can
-blink itself close to its intended prey, or blink away to escape harm. It
-is commonly found in packs.
+blink itself close to its intended prey, or blink away to escape harm. It is
+commonly found in packs.
 %%%%
 blizzard demon
 
@@ -608,8 +604,8 @@ pests can also cloud one's mind and render themselves unseen.
 bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many
-dragons by powerful necromantic magic. This creature is unique among
-dragons in that it lacks a typical dragon's fearsome breath.
+dragons by powerful necromantic magic. This creature is unique among dragons
+in that it lacks a typical dragon's fearsome breath.
 %%%%
 bog mummy
 
@@ -629,8 +625,8 @@ rolling at its foes at high speed.
 %%%%
 brain worm
 
-A slimy mauve worm with a greatly distended head, this creature feeds on
-the intellects of sentient beings.
+A slimy mauve worm with a greatly distended head, this creature feeds on the
+intellects of sentient beings.
 %%%%
 Brimstone Fiend
 
@@ -644,9 +640,9 @@ dissolve and consume.
 %%%%
 bush
 
-A woody plant. It looks dry enough to be easily set on fire, and its
-foliage is not very dense, permitting missiles to pass through it. However,
-it is firmly rooted, and requires much effort to destroy.
+A woody plant. It looks dry enough to be easily set on fire, and its foliage
+is not very dense, permitting missiles to pass through it. However, it is
+firmly rooted, and requires much effort to destroy.
 %%%%
 burning bush
 
@@ -688,16 +684,15 @@ weapons and able to use them skillfully.
 chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then
-losing eyes, mouths, claws and tentacles. It corrupts everything it
-touches.
+losing eyes, mouths, claws and tentacles. It corrupts everything it touches.
 %%%%
 cherub
 
 Behold! A throne-bearer of the Gods, whose head is beset by four faces: one
 of a man, one of an ox, one of a lion, one of an eagle. It is one of the
 three angelic beings who stand before the Good Gods, singing eternal hymns
-of praise to their Glory and Goodness. Indeed, these hymns have the power
-to rouse greatness in hearts pure and true.
+of praise to their Glory and Goodness. Indeed, these hymns have the power to
+rouse greatness in hearts pure and true.
 %%%%
 clay golem
 
@@ -716,8 +711,8 @@ will be yours first.
 %%%%
 crimson imp
 
-A small, ugly minor demon. Its fanged maw seems locked in a permanent
-malign grin, and its horns protrude obscenely from its scaly pate.
+A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
+grin, and its horns protrude obscenely from its scaly pate.
 %%%%
 crocodile
 
@@ -731,8 +726,8 @@ most forms of magic.
 curse skull
 
 A charred skull floating in the air and rotating slowly. Mystic symbols
-carved into its blackened surface indicate its resistance to almost any
-form of attack.
+carved into its blackened surface indicate its resistance to almost any form
+of attack.
 %%%%
 curse toe
 
@@ -756,8 +751,8 @@ A weapon enchanted to dance through the air and attack under its own power.
 %%%%
 death cob
 
-A dreadful undead cob of maize. Look, this one was probably a mistake.
-We're sorry.
+A dreadful undead cob of maize. Look, this one was probably a mistake. We're
+sorry.
 %%%%
 death drake
 
@@ -770,14 +765,14 @@ A putrid undead mass of decaying flesh that spurts pestilent slime.
 %%%%
 death yak
 
-A larger and beefier relative of the common dungeon yak. Its little red
-eyes gleam with hunger for living flesh.
+A larger and beefier relative of the common dungeon yak. Its little red eyes
+gleam with hunger for living flesh.
 %%%%
 deep elf annihilator
 
-A deep elf who exults in conjured mayhem and destruction. It is widely
-hated and feared, both for the power and for the precision of its
-destructive magics.
+A deep elf who exults in conjured mayhem and destruction. It is widely hated
+and feared, both for the power and for the precision of its destructive
+magics.
 %%%%
 deep elf blademaster
 
@@ -863,8 +858,8 @@ combat.
 %%%%
 deep dwarf death knight
 
-A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to
-the dark god and calls forth the dead.
+A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the
+dark god and calls forth the dead.
 %%%%
 deep dwarf necromancer
 
@@ -911,9 +906,9 @@ draconian
 
 A bipedal reptilian creature slightly larger than a human. Draconians have
 fearsome dragonish heads, rudimentary wings, tails, and a covering of tough
-scales. In their mature form, their scales take on a distinct colouring,
-and they acquire a destructive breath whose nature is signified by their
-colour. Whether draconians arose naturally, or are the product of twisted
+scales. In their mature form, their scales take on a distinct colouring, and
+they acquire a destructive breath whose nature is signified by their colour.
+Whether draconians arose naturally, or are the product of twisted
 experimentation by mad wizards on the crossbreeding of dragons and humans,
 is a matter of much doubt.
 %%%%
@@ -930,8 +925,8 @@ of drakes.
 draconian knight
 
 Protected by both its thick scales and its skill in use of weapons and
-armour, this draconian is a dangerous opponent. It complements its
-abilities in combat with powerful magic.
+armour, this draconian is a dangerous opponent. It complements its abilities
+in combat with powerful magic.
 %%%%
 draconian monk
 
@@ -963,19 +958,19 @@ from its toothy maw.
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their
-deep dwarf cousins, yet less skilled in magical lore, dwarves excel in
-armed hand to hand combat.
+deep dwarf cousins, yet less skilled in magical lore, dwarves excel in armed
+hand to hand combat.
 %%%%
 dwarf mountain bat
 
 A species of bat that lives in mountain caves. How it got into the dungeon
-is a mystery - probably something related to the sudden demise of dwarves
-in those lands. But don't worry, an eradication team is on the way.
+is a mystery - probably something related to the sudden demise of dwarves in
+those lands. But don't worry, an eradication team is on the way.
 %%%%
 earth elemental
 
-A spirit drawn from the elemental plane of earth, which exists in this
-world by inhabiting a lump of earth and rocks.
+A spirit drawn from the elemental plane of earth, which exists in this world
+by inhabiting a lump of earth and rocks.
 %%%%
 earth elemental statue
 
@@ -1017,8 +1012,7 @@ with its trunk.
 %%%%
 elephant slug
 
-A grey gastropod of impressive size, with folds upon folds of wrinkled
-skin.
+A grey gastropod of impressive size, with folds upon folds of wrinkled skin.
 %%%%
 elf
 
@@ -1064,8 +1058,7 @@ fire crab
 
 These crabs are prized for their brilliantly jewelled shells. The rarity of
 these shells is only enhanced by the vicious, fiery nature of the animal,
-and their almost supernatural ability to expel massive quantities of
-flames.
+and their almost supernatural ability to expel massive quantities of flames.
 %%%%
 fire elemental
 
@@ -1087,8 +1080,8 @@ A small but dangerous dragon, puffing clouds of smoke.
 %%%%
 flaming corpse
 
-A black, thoroughly charred cadaver covered in unquenchable fire, likely
-the remains of some unfortunate adventurer. It now rushes madly through the
+A black, thoroughly charred cadaver covered in unquenchable fire, likely the
+remains of some unfortunate adventurer. It now rushes madly through the
 dungeon, seeking to share its fate with others.
 %%%%
 flayed ghost
@@ -1104,8 +1097,8 @@ periodically emits loud, blood-curdling shrieks.
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely
-the remains of some unfortunate adventurer. It now floats slowly through
-the dungeon, seeking to share its fate with others.
+the remains of some unfortunate adventurer. It now floats slowly through the
+dungeon, seeking to share its fate with others.
 %%%%
 frost giant
 
@@ -1134,8 +1127,7 @@ ambrosia, much valued by gods and wizards.
 %%%%
 ghost-faced bat
 
-Does this bat merely possess the visage of a ghost, or is it a ghost
-itself?
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
 %%%%
 ghoul
 
@@ -1157,8 +1149,8 @@ being it encounters is a potential meal.
 %%%%
 bat
 
-A large grey bat that, despite being herbivorous, is quite aggressive. It
-is myopic and uses echolocation to navigate.
+A large grey bat that, despite being herbivorous, is quite aggressive. It is
+myopic and uses echolocation to navigate.
 %%%%
 megabat
 
@@ -1171,8 +1163,8 @@ armour.
 %%%%
 giant centipede
 
-A chilopod of quite an unusual size, the giant centipede mostly comes out
-to hunt when it is dark. Physically weak, it relies on its nasty poison to
+A chilopod of quite an unusual size, the giant centipede mostly comes out to
+hunt when it is dark. Physically weak, it relies on its nasty poison to
 dispatch its victims.
 %%%%
 giant cockroach
@@ -1229,8 +1221,8 @@ mutagenic energies. Every now and then it seems to pulsate.
 emperor scorpion
 
 Though the ordinary dungeon scorpion may be both large and dangerous, this
-sinister relative is even more so. The wicked-looking barb on its tail
-drips with a deadly venom.
+sinister relative is even more so. The wicked-looking barb on its tail drips
+with a deadly venom.
 %%%%
 giant slug
 
@@ -1238,8 +1230,8 @@ A huge and disgusting gastropod, squirming slowly across the dungeon floor.
 %%%%
 giant spore
 
-A deceptively fast, floating ball filled with gas and spores, prone to
-burst at the slightest disturbance.
+A deceptively fast, floating ball filled with gas and spores, prone to burst
+at the slightest disturbance.
 %%%%
 giga bat
 
@@ -1268,8 +1260,8 @@ how it earned its rank.
 %%%%
 gnoll shaman
 
-A haggard old gnoll, wise and wicked. Its strange chants and ululations
-send other gnolls into a wild frenzy.
+A haggard old gnoll, wise and wicked. Its strange chants and ululations send
+other gnolls into a wild frenzy.
 %%%%
 gnome
 
@@ -1300,8 +1292,8 @@ energies.
 %%%%
 greater mummy
 
-An ancient pharaoh, embalmed and cursed to undeath, now capable of great
-and terrifying feats of magic.
+An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
+terrifying feats of magic.
 %%%%
 greater naga
 
@@ -1309,8 +1301,7 @@ A formidable naga that is skilled in both martial and magical arts.
 %%%%
 green death
 
-A bloated form covered in oozing sores and exhaling clouds of lethal
-poison.
+A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
@@ -1347,9 +1338,9 @@ guardian serpent
 
 Serpents are distinct and rare members of scaly society. They are light and
 swift like snakes, yet also intelligent like nagas. Their lack of hands,
-together with an extreme sense of duty, makes them renowned guardians. It
-is said that a guardian serpent would rather die in battle than leave
-anything to an intruder.
+together with an extreme sense of duty, makes them renowned guardians. It is
+said that a guardian serpent would rather die in battle than leave anything
+to an intruder.
 %%%%
 halfling
 
@@ -1377,8 +1368,8 @@ accompanied by other unsavoury beings of its ilk.
 %%%%
 hell hog
 
-An extremely large and aggressive swine, bred in Hell, whose fiery breath
-is capable of setting unwary adventurers alight.
+An extremely large and aggressive swine, bred in Hell, whose fiery breath is
+capable of setting unwary adventurers alight.
 %%%%
 hell beast
 
@@ -1426,8 +1417,8 @@ intelligent, and nearly hairless.
 %%%%
 holy swine
 
-A rare celestial version of a usually filthy animal. They are said to be
-not natural creatures, but angelic beings who succumbed to hostile magic.
+A rare celestial version of a usually filthy animal. They are said to be not
+natural creatures, but angelic beings who succumbed to hostile magic.
 %%%%
 hound
 
@@ -1438,8 +1429,7 @@ it looks dishevelled, and has a lean and hungry look.
 human
 
 An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as
-fragile, elves think of them as clumsy, and monsters think of them as
-tasty.
+fragile, elves think of them as clumsy, and monsters think of them as tasty.
 %%%%
 hungry ghost
 
@@ -1476,13 +1466,13 @@ A white, frost-coated dragon. Snowflakes trickle from its nostrils.
 %%%%
 Ice Fiend
 
-A huge frigid demon covered in frost and wreathed in freezing air. It is
-one of the most terrible denizens of the many Hells.
+A huge frigid demon covered in frost and wreathed in freezing air. It is one
+of the most terrible denizens of the many Hells.
 %%%%
 ice statue
 
-An imposing idol of some nameless arctic god, carved in glistening deep
-blue ice. Freezing vapours swirl about it, and a chill pervades the air.
+An imposing idol of some nameless arctic god, carved in glistening deep blue
+ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
 iguana
 
@@ -1540,9 +1530,9 @@ and grows a little each time...
 %%%%
 jellyfish
 
-A pulsating glob of transparent flesh, waiting just below the surface of
-the water to sting its prey with its many tentacles. The tentacles do
-little harm on their own, but the poisonous toxins they inject can cause
+A pulsating glob of transparent flesh, waiting just below the surface of the
+water to sting its prey with its many tentacles. The tentacles do little
+harm on their own, but the poisonous toxins they inject can cause
 significant damage to muscle tissue.
 %%%%
 jumping spider
@@ -1581,8 +1571,8 @@ culprits.
 %%%%
 kobold demonologist
 
-A kobold who is in league with demonic powers and can call forth beings
-from the depths of Hell.
+A kobold who is in league with demonic powers and can call forth beings from
+the depths of Hell.
 %%%%
 komodo dragon
 
@@ -1658,9 +1648,9 @@ give off an eerie green glow.
 %%%%
 macabre mass
 
-A fused and twisted collection of body parts, weakly animated by
-necromancy. It is easily destroyed, but capable of merging with others to
-form more potent horrors.
+A fused and twisted collection of body parts, weakly animated by necromancy.
+It is easily destroyed, but capable of merging with others to form more
+potent horrors.
 %%%%
 mad acolyte of Lugonu
 
@@ -1739,13 +1729,13 @@ moth of suppression
 An ill, greasy-looking moth, fluttering wanly in the stale air. The
 atmosphere in its vicinity seems to shimmer with a dull, dusty haze.
 Regarded as a nuisance, these creatures were driven from the surface
-centuries ago due to their naturally inhibitive effect on magical spells
-and items in their vicinity.
+centuries ago due to their naturally inhibitive effect on magical spells and
+items in their vicinity.
 %%%%
 moth of wrath
 
-A rare species of moth, eradicated from the surface centuries ago due to
-its ability to drive those who look upon it insane with rage.
+A rare species of moth, eradicated from the surface centuries ago due to its
+ability to drive those who look upon it insane with rage.
 %%%%
 mottled draconian
 
@@ -1753,14 +1743,14 @@ A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 mottled dragon
 
-A small purple dragon with curiously mottled scales, its mouth dripping
-with a strange liquid flame.
+A small purple dragon with curiously mottled scales, its mouth dripping with
+a strange liquid flame.
 %%%%
 mummy
 
-An undead figure covered in bandages and embalming fluids, compelled to
-walk by an ancient curse. It radiates a malign aura to those who intrude on
-its domain.
+An undead figure covered in bandages and embalming fluids, compelled to walk
+by an ancient curse. It radiates a malign aura to those who intrude on its
+domain.
 %%%%
 mummy priest
 
@@ -1783,15 +1773,14 @@ A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
 %%%%
 necromancer
 
-An evil wizard who is devoted to the practice of death magic, the mastery
-of unholy energies, and the raising of corpses into a parody of life.
+An evil wizard who is devoted to the practice of death magic, the mastery of
+unholy energies, and the raising of corpses into a parody of life.
 %%%%
 necrophage
 
 A vile undead creation of the most unholy necromancy, these creatures are
 made from the decaying corpses of humanoid creatures. They exist to spread
-disease and decay, and gain power from the decaying corpses of other
-beings.
+disease and decay, and gain power from the decaying corpses of other beings.
 %%%%
 neqoxec
 
@@ -1826,8 +1815,8 @@ A young oklob plant, but already dangerous.
 %%%%
 ooze
 
-A glob of grey sludge that has somehow developed a rudimentary awareness
-and limited motility.
+A glob of grey sludge that has somehow developed a rudimentary awareness and
+limited motility.
 %%%%
 ophan
 
@@ -1856,8 +1845,8 @@ energies.
 %%%%
 Orb Guardian
 
-A huge, glowing, four-limbed purple creature with heightened senses,
-created by the Orb to watch over itself. It guards the Orb with enormous
+A huge, glowing, four-limbed purple creature with heightened senses, created
+by the Orb to watch over itself. It guards the Orb with enormous
 punctiliousness and violence.
 %%%%
 orb of fire
@@ -1878,19 +1867,19 @@ and delight in outbursts of insane violence.
 %%%%
 orc high priest
 
-An exalted servant of the orc god Beogh and a master of many black rites,
-to whose aid Beogh will even send beings from the netherworld.
+An exalted servant of the orc god Beogh and a master of many black rites, to
+whose aid Beogh will even send beings from the netherworld.
 %%%%
 orc knight
 
-A heavily armoured orc, covered in scars from many past battles. Orc
-knights command their brethren in battle, rousing them to greater, more
-violent efforts with bloodcurdling shouts.
+A heavily armoured orc, covered in scars from many past battles. Orc knights
+command their brethren in battle, rousing them to greater, more violent
+efforts with bloodcurdling shouts.
 %%%%
 orc priest
 
-A servant of Beogh, the ancient and cruel god of the orcs. Beogh rewards
-the prayers of devoted servants by striking down their enemies.
+A servant of Beogh, the ancient and cruel god of the orcs. Beogh rewards the
+prayers of devoted servants by striking down their enemies.
 %%%%
 orc sorcerer
 
@@ -1900,13 +1889,12 @@ malevolence.
 %%%%
 orc warlord
 
-A supreme commander of an orc host, skilled at both melee and ranged
-combat.
+A supreme commander of an orc host, skilled at both melee and ranged combat.
 %%%%
 orc warrior
 
-An experienced, armoured and well-armed orc soldier, able to command a
-small mob of its fellows.
+An experienced, armoured and well-armed orc soldier, able to command a small
+mob of its fellows.
 %%%%
 orc wizard
 
@@ -1985,8 +1973,8 @@ A vicious rodent with a coat of sharp quills and a painful bite.
 %%%%
 profane servitor
 
-This blasphemous being used to be an angel of the Shining One. Now it
-stands as unliving proof that not even the holiest of beings are beyond
+This blasphemous being used to be an angel of the Shining One. Now it stands
+as unliving proof that not even the holiest of beings are beyond
 Yredelemnul's grasp.
 %%%%
 program bug
@@ -2007,8 +1995,8 @@ A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 quasit
 
-A cowardly little demon with a long, viciously pointed tail. Its sharp
-claws are coated with a venom that stiffens muscles.
+A cowardly little demon with a long, viciously pointed tail. Its sharp claws
+are coated with a venom that stiffens muscles.
 %%%%
 queen ant
 
@@ -2045,8 +2033,8 @@ environment.
 %%%%
 raven
 
-An opportunistic scavenger bird that is quite proactive in the production
-of carrion. It has a particularly unhealthy fascination with eyeballs and
+An opportunistic scavenger bird that is quite proactive in the production of
+carrion. It has a particularly unhealthy fascination with eyeballs and
 things resembling eyeballs, such as pickled onions, walnuts and olives.
 %%%%
 reaper
@@ -2145,8 +2133,8 @@ puissance of living beings.
 shadow demon
 
 A mysterious demonic figure, constantly blurring into multiple shadows of
-itself. It weaves creatures into existence from the very shadows
-surrounding it.
+itself. It weaves creatures into existence from the very shadows surrounding
+it.
 %%%%
 shadow dragon
 
@@ -2156,8 +2144,8 @@ stink of the grave.
 Shadow Fiend
 
 A horrible being that appears as a great mass of writhing shadows which
-occasionally reveals a huge, horned skeleton. It is one of the most
-terrible denizens of the many Hells.
+occasionally reveals a huge, horned skeleton. It is one of the most terrible
+denizens of the many Hells.
 %%%%
 shadow imp
 
@@ -2250,8 +2238,8 @@ it would surely appreciate being freed.
 %%%%
 slime creature
 
-An icky glob of slime, which slithers along the ground, occasionally
-merging with other nearby globs...
+An icky glob of slime, which slithers along the ground, occasionally merging
+with other nearby globs...
 %%%%
 small abomination
 
@@ -2271,9 +2259,9 @@ A corpse raised to undeath by necromancy.
 %%%%
 smoke demon
 
-An infernal demon that manifests itself as a writhing cloud of smoke.
-Having considerable pyrokinetic powers, it can very effectively attack its
-enemies from afar.
+An infernal demon that manifests itself as a writhing cloud of smoke. Having
+considerable pyrokinetic powers, it can very effectively attack its enemies
+from afar.
 %%%%
 snapping turtle
 
@@ -2283,14 +2271,14 @@ retreat inside its shell.
 %%%%
 soldier ant
 
-A tough ant with a disproportionately large head with strong mandibles and
-a vicious sting capable of injecting a painful venom. It is a soldier, and
+A tough ant with a disproportionately large head with strong mandibles and a
+vicious sting capable of injecting a painful venom. It is a soldier, and
 thus tasked with protecting the colony from invaders.
 %%%%
 soul eater
 
-This demon looks like a malignantly shifting shadow gliding through the
-air. It radiates an intense aura of negative force.
+This demon looks like a malignantly shifting shadow gliding through the air.
+It radiates an intense aura of negative force.
 %%%%
 spatial vortex
 
@@ -2425,8 +2413,8 @@ to break into a frenzied dance.
 %%%%
 tentacle
 
-This mighty tentacle is a part of a kraken. Any damage dealt to it hurts
-the whole creature.
+This mighty tentacle is a part of a kraken. Any damage dealt to it hurts the
+whole creature.
 %%%%
 tentacle segment
 
@@ -2469,8 +2457,8 @@ by concealing itself in crannies in the dungeon floor.
 troll
 
 The common troll is a huge and physically powerful humanoid creature. Short
-on intelligence but long on brawn, its thick knobbly hide heals rapidly
-from most wounds.
+on intelligence but long on brawn, its thick knobbly hide heals rapidly from
+most wounds.
 %%%%
 twister
 
@@ -2503,9 +2491,9 @@ rather that they hadn't.
 %%%%
 vampire
 
-A human cursed with vampirism, drifting in a state between life and
-undeath, perpetually hungry for the blood of the living. It has power over
-beasts and the minds of lesser men, and can appear in the form of a bat.
+A human cursed with vampirism, drifting in a state between life and undeath,
+perpetually hungry for the blood of the living. It has power over beasts and
+the minds of lesser men, and can appear in the form of a bat.
 %%%%
 vampire bat
 
@@ -2514,8 +2502,7 @@ preferred form for vampires in disguise.
 %%%%
 vampire knight
 
-A powerful vampire noble who complements its combat prowess with dark
-magic.
+A powerful vampire noble who complements its combat prowess with dark magic.
 %%%%
 vampire mage
 
@@ -2562,8 +2549,8 @@ orcs.
 %%%%
 water elemental
 
-A spirit drawn from the elemental plane of water. It exists on this world
-as part of a body of water.
+A spirit drawn from the elemental plane of water. It exists on this world as
+part of a body of water.
 %%%%
 water moccasin
 
@@ -2678,8 +2665,8 @@ basalt. The air around it seems to shimmer.
 firespitter statue
 
 A statue of a large humanoid head, roughly cut from greyish gabbro. Its
-mouth is blackened with scorch-marks, and there is a faint ember glow in
-its empty eyes.
+mouth is blackened with scorch-marks, and there is a faint ember glow in its
+empty eyes.
 %%%%
 flesh golem
 
@@ -2756,6 +2743,6 @@ zot statue
 
 An utterly bizarre statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether the
-statue is intended to represent some creature or personage, or is
-completely abstract. One thing is certain: it is profoundly disturbing.
+statue is intended to represent some creature or personage, or is completely
+abstract. One thing is certain: it is profoundly disturbing.
 %%%%

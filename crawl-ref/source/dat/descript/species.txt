@@ -19,8 +19,8 @@ attributes and health.
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire strong demonic
-mutations as they grow.
+Demonspawn are half human, half demon. They acquire strong demonic mutations
+as they grow.
 %%%%
 Draconian
 
@@ -48,8 +48,8 @@ Proud elves, who can cast spells as well as they can fight with the sword.
 %%%%
 Hill Orc
 
-Orcs are skilled in close combat, and often dabble in offensive magic.
-Hated by most, orcs are very proud and many of them feel superior.
+Orcs are skilled in close combat, and often dabble in offensive magic. Hated
+by most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
@@ -76,13 +76,13 @@ close and ranged combat.
 %%%%
 Mummy
 
-An undead figure covered in bandages and embalming fluids, compelled to
-walk by an ancient curse.
+An undead figure covered in bandages and embalming fluids, compelled to walk
+by an ancient curse.
 %%%%
 Naga
 
-A hybrid; human from the chest up, with a scaly, muscular torso trailing
-off like that of a snake.
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off
+like that of a snake.
 %%%%
 Octopode
 
@@ -96,8 +96,8 @@ with the basics of magic, however.
 %%%%
 Sludge Elf
 
-A depraved type of elf, who prefers cunning to fair fighting, and dark
-magic to other wizardry.
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic
+to other wizardry.
 %%%%
 Spriggan
 
@@ -106,8 +106,8 @@ stabbers and spellcasters.
 %%%%
 Troll
 
-Large brutes, ready to maim anything with their claws, never thinking
-twice. They're always hungry.
+Large brutes, ready to maim anything with their claws, never thinking twice.
+They're always hungry.
 %%%%
 Vampire
 

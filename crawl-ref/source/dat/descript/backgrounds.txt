@@ -1,8 +1,8 @@
 %%%%
 Abyssal Knight
 
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the
-Dungeon to spread corruption and chaos.
+Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon
+to spread corruption and chaos.
 %%%%
 Air Elementalist
 
@@ -51,8 +51,8 @@ the spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
-Enchanters use spells to boost themselves in battle, or incapacitate
-others. They also start with good darts.
+Enchanters use spells to boost themselves in battle, or incapacitate others.
+They also start with good darts.
 %%%%
 Fighter
 
@@ -71,8 +71,8 @@ weapon of their choice.
 %%%%
 Healer
 
-Healers are followers of Elyvilon, ready to heal themselves and others.
-Such healing will possibly pacify beasts and brutes, yielding experience.
+Healers are followers of Elyvilon, ready to heal themselves and others. Such
+healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 
@@ -86,8 +86,8 @@ book's other spells are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on everything in the dungeon wearing just a robe
-and using their body.
+Monks are ready to take on everything in the dungeon wearing just a robe and
+using their body.
 %%%%
 Necromancer
 
@@ -135,6 +135,6 @@ learn spells from the book of Spatial Translocations.
 %%%%
 Wizard
 
-Wizards start with a book of Minor Magic, containing a wide range of
-spells. They have higher magical reserves than any other background.
+Wizards start with a book of Minor Magic, containing a wide range of spells.
+They have higher magical reserves than any other background.
 %%%%

@@ -19,8 +19,8 @@ An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 %%%%
 A burning altar of Makhleb
 
-An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes
-are visible in the flames.
+An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
+visible in the flames.
 %%%%
 A closed detected secret door
 
@@ -53,10 +53,9 @@ A dried-up fountain that has seen better days.
 %%%%
 A flagged portal
 
-This portal leads to a forbidden dungeon of the mad chevalier. You know
-this because of the black pennant bearing weapons in saltire. It seems as
-if you had better enter the portal before the standard is lowered to the
-ground.
+This portal leads to a forbidden dungeon of the mad chevalier. You know this
+because of the black pennant bearing weapons in saltire. It seems as if you
+had better enter the portal before the standard is lowered to the ground.
 %%%%
 A fountain of clear blue water
 
@@ -69,8 +68,8 @@ Press 'q' to drink from this fountain, if you absolutely wish to.
 %%%%
 A fountain of sparkling water
 
-Press 'q' to drink from this magic fountain. Expect magical effects, as
-long as it's still magic.
+Press 'q' to drink from this magic fountain. Expect magical effects, as long
+as it's still magic.
 %%%%
 A gate leading back out of here
 
@@ -93,16 +92,16 @@ A one-way gate leading to the halls of Pandemonium
 
 This gate leads to the endless halls of Pandemonium. Tales about successful
 lootings of these netherworlds are rare. Even the strongest and most
-experienced characters can die there. On the other hand, these halls
-contain several runes and lots of valuable items. It is much easier to get
-in than to get out.
+experienced characters can die there. On the other hand, these halls contain
+several runes and lots of valuable items. It is much easier to get in than
+to get out.
 %%%%
 A gas trap
 
 You're lucky to have noticed this trap, for it would have released a cloud
-of deadly gas at you. Exactly what gas it holds, you cannot tell —
-perhaps it is plain poison, perhaps mutagenic fumes, perhaps flammable
-vapour, or perhaps something yet nastier.
+of deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps
+it is plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or
+perhaps something yet nastier.
 %%%%
 A gate to the Realm of Zot
 
@@ -115,8 +114,8 @@ the Orb are strong and strange - some of them nowhere encountered but here.
 A gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have better
+dungeon, there are others trying to make a living by traveling from place to
+place. Bazaars feature a number of different shops and often have better
 stock than the sedentary ones, sometimes even at a bargain.
 
 Also be warned that their nomadic lifestyle has taught these sellers to
@@ -133,8 +132,7 @@ A gateway to a ziggurat
 This portal leads to an ancient ziggurat, a place of untold challenges and
 untold riches.
 
-The portal is usable just once, and there's a large monetary fee to be
-paid.
+The portal is usable just once, and there's a large monetary fee to be paid.
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -143,8 +141,7 @@ lava and hellfire.
 %%%%
 A gateway to Hell
 
-This gateway leads to the Vestibule of Hell. Few would go there
-voluntarily.
+This gateway leads to the Vestibule of Hell. Few would go there voluntarily.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -179,8 +176,8 @@ followers are expected to be, and glowing gently.
 %%%%
 A granite statue
 
-Despite the hardness of the stone, this statue's features have long
-withered away.
+Despite the hardness of the stone, this statue's features have long withered
+away.
 %%%%
 A hole to the Spider Nest
 
@@ -234,8 +231,8 @@ vacuum from consuming and swallowing everything in sight.
 %%%%
 A radiant altar of Vehumet
 
-An altar, ablaze in the lights of Iskenderun and promising great
-destructive powers to those who would follow Vehumet.
+An altar, ablaze in the lights of Iskenderun and promising great destructive
+powers to those who would follow Vehumet.
 %%%%
 A rock wall
 
@@ -247,8 +244,8 @@ The way you came in doesn't seem to be passable anymore.
 %%%%
 A rocky tunnel leading out of this place
 
-An unstable passage in the volcanic rock, admitting a draft of cool air
-from beyond.
+An unstable passage in the volcanic rock, admitting a draft of cool air from
+beyond.
 %%%%
 A roughly hewn altar of Beogh
 
@@ -268,15 +265,15 @@ it?
 %%%%
 A shattered altar of Ashenzari
 
-This crystal altar shattered to pieces when Ashenzari was cursed. But
-still, there is power here: a dark aura holds the shards in mid-explosion,
+This crystal altar shattered to pieces when Ashenzari was cursed. But still,
+there is power here: a dark aura holds the shards in mid-explosion,
 suspended in time and space much like the god they herald.
 %%%%
 A shimmering altar of Xom
 
 This altar constantly shimmers in all visible colours and probably some
-invisible ones, too, matching the whims of Xom the Unpredictable, to whom
-it is dedicated.
+invisible ones, too, matching the whims of Xom the Unpredictable, to whom it
+is dedicated.
 %%%%
 A shop
 
@@ -340,8 +337,7 @@ insanity of the dungeon.
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves,
-skilled warriors with blades and bows, and fearsome sorcerers and
-magicians.
+skilled warriors with blades and bows, and fearsome sorcerers and magicians.
 %%%%
 A staircase to the Hall of Blades
 
@@ -387,8 +383,8 @@ slavering carnivorous monsters.
 %%%%
 A staircase to the Tomb
 
-A way to the Tomb of the Ancients, a place of damnation, of horrors
-animated by the vilest necromancy.
+A way to the Tomb of the Ancients, a place of damnation, of horrors animated
+by the vilest necromancy.
 %%%%
 A staircase to the Vaults
 
@@ -459,18 +455,18 @@ sufficient heat.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
 
-This wall is made from the weird stuff which makes up Pandemonium, but
-seems to be like rock in most other aspects.
+This wall is made from the weird stuff which makes up Pandemonium, but seems
+to be like rock in most other aspects.
 %%%%
 A white marble altar of Elyvilon
 
-An altar to Elyvilon the Healer, made from purest white marble and topped
-by a sculpture of the Chalice of Purification.
+An altar to Elyvilon the Healer, made from purest white marble and topped by
+a sculpture of the Chalice of Purification.
 %%%%
 A web
 
-The spider who left this web must have been huge, as it seems to be made
-for trapping {{ return you.genus(true) }} rather than flies.
+The spider who left this web must have been huge, as it seems to be made for
+trapping {{ return you.genus(true) }} rather than flies.
 %%%%
 An abandoned shop
 
@@ -499,8 +495,8 @@ A spring-loaded one-way escape hatch set in the ceiling.
 An escape hatch in the floor
 
 A spring-loaded one-way escape hatch set in the dungeon floor, allowing the
-adventurer beset by adversaries to exchange the perils of this level for
-the perils of the next.
+adventurer beset by adversaries to exchange the perils of this level for the
+perils of the next.
 %%%%
 An exit through the horrors of the Abyss
 
@@ -510,8 +506,8 @@ path through infinite madness.
 %%%%
 An iron altar of Okawaru
 
-An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges
-are surprisingly sharp.
+An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
+surprisingly sharp.
 %%%%
 An iron grate
 
@@ -547,9 +543,9 @@ The endless lava
 A sea of fire and brimstone that goes as far as you can see. Which is not
 far because of thick smoke.
 
-Unlike small pools of lava where flight or levitation may allow short
-trips, floating above this inferno would cook you in no time thanks to
-runaway convection.
+Unlike small pools of lava where flight or levitation may allow short trips,
+floating above this inferno would cook you in no time thanks to runaway
+convection.
 %%%%
 A floor
 
@@ -557,10 +553,10 @@ Dungeon floor.
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. No sane traveller would try to
-set foot into it, apart from those who fly or swim. Let it be a warning for
-you: many confused adventurers found their death at the depths, and an
-untimely end of levitation drowned even more hopeful trespassers.
+This water is as deep as it is dangerous. No sane traveller would try to set
+foot into it, apart from those who fly or swim. Let it be a warning for you:
+many confused adventurers found their death at the depths, and an untimely
+end of levitation drowned even more hopeful trespassers.
 %%%%
 Some lava
 
@@ -583,10 +579,10 @@ lost beyond all hope in short order - better not risk it.
 An autumnal tree
 
 These trees, large as they are, appear to be permanently locked in an
-autumnal moment: leaves, coloured red and gold, fall from branches and
-float gracefully to the floor. Before they even reach the ground, however,
-a shadow passes, and when the shimmer is gone, the leaves are once more on
-the branch, ready to fall again.
+autumnal moment: leaves, coloured red and gold, fall from branches and float
+gracefully to the floor. Before they even reach the ground, however, a
+shadow passes, and when the shimmer is gone, the leaves are once more on the
+branch, ready to fall again.
 %%%%
 A crumbled stone wall
 
@@ -682,8 +678,8 @@ A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.
 %%%%
 A gravestone
 
-A nameless grave. The question remains: is it the grave that is nameless,
-or the person who lies in that grave?
+A nameless grave. The question remains: is it the grave that is nameless, or
+the person who lies in that grave?
 %%%%
 The ground
 
@@ -771,8 +767,8 @@ This wall is made of pure silver.
 A rune carved stone wall
 
 This strangely slime-free stone wall is carved all over with countless
-mystical runes. One often repeated set of runes seems to refer to 'the
-royal jelly.'
+mystical runes. One often repeated set of runes seems to refer to 'the royal
+jelly.'
 %%%%
 # Tomb:1
 A sarcophagus
@@ -783,8 +779,8 @@ An ancient sarcophagus. It appears to be empty.
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome
-detail, exactly what will be done to anyone caught stealing from the
-Vaults. It makes you feel queasy.
+detail, exactly what will be done to anyone caught stealing from the Vaults.
+It makes you feel queasy.
 %%%%
 A heavily etched wall of green crystal
 
@@ -825,8 +821,8 @@ The statue has no mouth. Creepy!
 # Dwarf
 A granite statue of a fallen hero
 
-A life-size granite statue of a dwarf standing guard in this hall. You
-can't help but feel as though it's watching you.
+A life-size granite statue of a dwarf standing guard in this hall. You can't
+help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
@@ -854,17 +850,16 @@ This ancient sarcophagus is sealed shut.
 ###########################
 A flagged portal
 
-This portal leads to a forbidden dungeon of the mad chevalier. You know
-this because of the black pennant bearing weapons in saltire. It seems as
-if you had better enter the portal before the standard is lowered to the
-ground.
+This portal leads to a forbidden dungeon of the mad chevalier. You know this
+because of the black pennant bearing weapons in saltire. It seems as if you
+had better enter the portal before the standard is lowered to the ground.
 %%%%
 # timed bazaar
 A flickering gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have better
+dungeon, there are others trying to make a living by traveling from place to
+place. Bazaars feature a number of different shops and often have better
 stock than the sedentary ones, sometimes even at a bargain. Once you hear
 the clinking of coins, be sure to hurry up and find the impromptu
 marketplace before the caravan moves on!
@@ -877,8 +872,8 @@ quickly, probably to sell them elsewhere.
 A gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have better
+dungeon, there are others trying to make a living by traveling from place to
+place. Bazaars feature a number of different shops and often have better
 stock than the sedentary ones, sometimes even at a bargain.
 
 Also be warned that their nomadic lifestyle has taught these sellers to
@@ -917,14 +912,14 @@ A portal to a secret trove of treasure
 
 Once upon a time, an enterprising thief and wizard, terrified of being
 caught committing an act of burglary, created a system of portals leading
-into the secret treasure troves and chambers of the rich. Too scared to
-loot them himself, he instead charged an extortionate fee for entry to
-anyone who wanted to rifle through them.
+into the secret treasure troves and chambers of the rich. Too scared to loot
+them himself, he instead charged an extortionate fee for entry to anyone who
+wanted to rifle through them.
 
-The secrets of the gateways died with him when his fellow thieves,
-disgusted by his betrayal of their 'ideals', had him murdered. With his
-death, the now-uncontrolled portals began moving rapidly from one dimension
-to the next, stopping only long enough to absorb magical energy.
+The secrets of the gateways died with him when his fellow thieves, disgusted
+by his betrayal of their 'ideals', had him murdered. With his death, the
+now-uncontrolled portals began moving rapidly from one dimension to the
+next, stopping only long enough to absorb magical energy.
 %%%%
 A dark tunnel
 
