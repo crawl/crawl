@@ -16,10 +16,10 @@ It is rather unreliable.
 %%%%
 Glaive of Prune
 
-It is the creation of a mad god, and carries a curse which transforms
-anyone possessing it into a prune. Fortunately, the curse works very
-slowly, and one can use it briefly with no consequences worse than slightly
-purple skin and a few wrinkles.
+It is the creation of a mad god, and carries a curse which transforms anyone
+possessing it into a prune. Fortunately, the curse works very slowly, and
+one can use it briefly with no consequences worse than slightly purple skin
+and a few wrinkles.
 %%%%
 Sword of Power
 
@@ -41,9 +41,9 @@ damaging the user's mind.
 %%%%
 Vampire's Tooth
 
-This ivory-like dagger looks like it could actually have been created from
-a tooth of some enormous predatory creature, although obviously not an
-average human-sized bloodsucker.
+This ivory-like dagger looks like it could actually have been created from a
+tooth of some enormous predatory creature, although obviously not an average
+human-sized bloodsucker.
 
 It is lethally vampiric.
 %%%%
@@ -84,10 +84,9 @@ ever existed.
 %%%%
 mace of Brilliance
 
-This mace will let you shine some light into the dungeon, and also will
-make sure enemies are well-warned of your presence. Its light is hated by
-the undead, and can reveal any machinations of those who try to stay
-invisible.
+This mace will let you shine some light into the dungeon, and also will make
+sure enemies are well-warned of your presence. Its light is hated by the
+undead, and can reveal any machinations of those who try to stay invisible.
 %%%%
 #demon blade "Leech"
 %%%%
@@ -204,15 +203,15 @@ It is almost unerringly accurate.
 %%%%
 Lehudib's crystal spear
 
-Presumably this relic led to the invention of the famous spell, or maybe
-the other way around.
+Presumably this relic led to the invention of the famous spell, or maybe the
+other way around.
 %%%%
 captain's cutlass
 
 This infamous weapon was used by a vile pirate captain to slaughter
-countless innocents. Finally, he met his destiny when a kraken swallowed
-his ship with all the crew aboard. The cutlass was thought to be forever
-lost, but now you have proof to the contrary in your very hands.
+countless innocents. Finally, he met his destiny when a kraken swallowed his
+ship with all the crew aboard. The cutlass was thought to be forever lost,
+but now you have proof to the contrary in your very hands.
 %%%%
 storm bow
 
@@ -301,8 +300,8 @@ hat of the Alchemist
 A dirty hat. It bears signs of surviving many weird explosions, which
 suggests it may have means of protecting the head inside from the risks
 involved with alchemy experiments. And with the kind of protections granted
-by this hat, it's certain some prior head damage was a prerequisite for
-even thinking about such experiments.
+by this hat, it's certain some prior head damage was a prerequisite for even
+thinking about such experiments.
 %%%%
 fencer's gloves
 
@@ -314,10 +313,10 @@ A phosphorescent cloak, woven of pure light beams.
 %%%%
 ratskin cloak
 
-An enchantress with a magic loom and way too much time on her hands
-stitched this cloak from the hides of hundreds of rats, most of them
-orange. It's a bit awkward to wear and looks rather foolish, but it
-provides excellent protection from rats of all kinds.
+An enchantress with a magic loom and way too much time on her hands stitched
+this cloak from the hides of hundreds of rats, most of them orange. It's a
+bit awkward to wear and looks rather foolish, but it provides excellent
+protection from rats of all kinds.
 %%%%
 shield of the gong
 
@@ -363,9 +362,8 @@ care.
 obsidian axe
 
 This axe has had a curse placed on it by one of the lords of Pandemonium so
-that unsuspecting adventurers like you would unleash demons into this
-world. Beware, for this axe has ways of taking its wielder under its
-command...
+that unsuspecting adventurers like you would unleash demons into this world.
+Beware, for this axe has ways of taking its wielder under its command...
 %%%%
 lightning scales
 
@@ -396,8 +394,8 @@ You guess this stick is loaded with something else than just lead.
 %%%%
 dragonskin cloak
 
-This opalescent cloak gleams with all dragon colours. It protects its
-wearer from elemental attacks of all kinds, although somewhat unreliably.
+This opalescent cloak gleams with all dragon colours. It protects its wearer
+from elemental attacks of all kinds, although somewhat unreliably.
 %%%%
 ring of the Octopus King
 

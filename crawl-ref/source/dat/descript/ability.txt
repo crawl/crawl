@@ -31,15 +31,14 @@ Breathe a blast of poison gas at a targeted monster.
 %%%%
 Breathe Lightning
 
-Release a great discharge of electricity causing an uncontrollable
-lightning storm.
+Release a great discharge of electricity causing an uncontrollable lightning
+storm.
 %%%%
 Breathe Sticky Flame
 
-Breathe a blast of sticky flame at a targeted monster. As the name
-suggests, sticky flame will stick around, so the monster may be covered in
-flames for several rounds until they eventually go out. It may splash on
-impact.
+Breathe a blast of sticky flame at a targeted monster. As the name suggests,
+sticky flame will stick around, so the monster may be covered in flames for
+several rounds until they eventually go out. It may splash on impact.
 %%%%
 Breathe Steam
 
@@ -101,12 +100,12 @@ Randomly translocate a short distance.
 %%%%
 Evoke Berserk Rage
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit
-points and damage output in melee fights. It will time out quickly if you
-don't kill anything, but may be extended by multiple kills. While berserk,
-you cannot perform a number of actions such as, for example, (un)wield a
-weapon, quaff something, evoke wands or items, or cast spells. Such a rage
-is usually followed by deep exhaustion, a time during which you are slowed
+Go berserk. Going berserk greatly, if temporarily, increases your hit points
+and damage output in melee fights. It will time out quickly if you don't
+kill anything, but may be extended by multiple kills. While berserk, you
+cannot perform a number of actions such as, for example, (un)wield a weapon,
+quaff something, evoke wands or items, or cast spells. Such a rage is
+usually followed by deep exhaustion, a time during which you are slowed
 down, cannot berserk again, and occasionally even pass out.
 %%%%
 Evoke Invisibility
@@ -163,9 +162,9 @@ Dexterity.
 %%%%
 Imprison
 
-Temporarily imprison a monster surrounded by empty space in walls of
-silver. The duration of the prison is increased by Invocations skill, but
-strong enemies will be able to break free more easily.
+Temporarily imprison a monster surrounded by empty space in walls of silver.
+The duration of the prison is increased by Invocations skill, but strong
+enemies will be able to break free more easily.
 %%%%
 Sanctuary
 
@@ -186,9 +185,9 @@ controlled by your willpower, and your skill with Shields will improve it.
 %%%%
 Cleansing Flame
 
-Invoke a huge blast of divine fury centered on you, severely damaging
-undead and demons. All other hostiles also take damage, if less so, whereas
-you and your allies are never affected.
+Invoke a huge blast of divine fury centered on you, severely damaging undead
+and demons. All other hostiles also take damage, if less so, whereas you and
+your allies are never affected.
 %%%%
 Summon Divine Warrior
 
@@ -203,9 +202,9 @@ and freshness of these are dependent on Necromancy skill.
 %%%%
 Torment
 
-Sacrifice a cadaver to make everyone in sight, including you, experience
-all the pain that being suffered in its life. This will decimate the
-resilience of all those who can feel it.
+Sacrifice a cadaver to make everyone in sight, including you, experience all
+the pain that being suffered in its life. This will decimate the resilience
+of all those who can feel it.
 
 Kikubaaqudgha may choose to protect you from it... or may not.
 %%%%
@@ -226,8 +225,8 @@ Hurt attacking monsters by reflecting damage they do to you back at them.
 %%%%
 Animate Dead ability
 
-Reanimate all corpses and skeletons in your vicinity as followers. Note
-that zombies and skeletons cannot leave the level they were created on.
+Reanimate all corpses and skeletons in your vicinity as followers. Note that
+zombies and skeletons cannot leave the level they were created on.
 %%%%
 Drain Life
 
@@ -239,10 +238,10 @@ Mark a living intelligent monster's soul as ripe for the taking. Once the
 marked monster dies, its soul will be yours.
 
 The enslaved soul will retain the monster's faculties, equipment and
-abilities, as well as some of its innate healing. However, only a
-relatively uninjured monster can have its soul marked, and only one soul
-can be enslaved at a time. Furthermore, the duration of the mark is
-dependent on Invocations skill.
+abilities, as well as some of its innate healing. However, only a relatively
+uninjured monster can have its soul marked, and only one soul can be
+enslaved at a time. Furthermore, the duration of the mark is dependent on
+Invocations skill.
 
 Note that enslaved souls can follow you beyond the level they were created
 on.
@@ -259,9 +258,9 @@ sneak around or avoid traps.
 %%%%
 Finesse
 
-Greatly increase your combat speed, with no loss of accuracy. This
-unnatural effect causes small amounts of magic contamination, prolonged
-exposure to which may be bad for your health.
+Greatly increase your combat speed, with no loss of accuracy. This unnatural
+effect causes small amounts of magic contamination, prolonged exposure to
+which may be bad for your health.
 %%%%
 # Makhleb
 Minor Destruction
@@ -302,12 +301,12 @@ books of madness burst into flames.
 %%%%
 Berserk
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit
-points and damage output in melee fights. It will time out quickly if you
-don't kill anything, but may be extended by multiple kills. While berserk,
-you cannot perform a number of actions such as, for example, (un)wield a
-weapon, quaff something, evoke wands or items, or cast spells. Such a rage
-is usually followed by deep exhaustion, a time during which you are slowed
+Go berserk. Going berserk greatly, if temporarily, increases your hit points
+and damage output in melee fights. It will time out quickly if you don't
+kill anything, but may be extended by multiple kills. While berserk, you
+cannot perform a number of actions such as, for example, (un)wield a weapon,
+quaff something, evoke wands or items, or cast spells. Such a rage is
+usually followed by deep exhaustion, a time during which you are slowed
 down, and cannot berserk again. Unlike other sources of rage, depending on
 your piety Trog may occasionally prevent you from passing out.
 %%%%
@@ -326,8 +325,8 @@ Divine Protection
 
 Beseech Elyvilon to save your life. If you are mortally wounded, the Healer
 may undo the killing blow. Especially pious individuals may be certain of
-this help, but in that case, any actual intervention costs piety (as
-opposed to merely asking for intervention, which is always free).
+this help, but in that case, any actual intervention costs piety (as opposed
+to merely asking for intervention, which is always free).
 
 Beware: killing others while asking to be spared yourself is a major sin!
 %%%%
@@ -355,8 +354,8 @@ Depending on your Invocations skill, heal a small amount of hit points.
 Purification
 
 Purge your body of all bad effects such as sickness, poisoning, slowness,
-petrification, confusion and rot, and fully restore your Strength,
-Dexterity and Intelligence.
+petrification, confusion and rot, and fully restore your Strength, Dexterity
+and Intelligence.
 %%%%
 Greater Healing
 
@@ -369,10 +368,10 @@ pacified while it is asleep. The chance for successful pacification depends
 on the healing power, so it is significantly better than using Lesser
 Healing.
 
-Whether the pacification succeeds or not, the invested food, piety and
-magic points are lost. If it does succeed, the monster is healed and you
-gain half the monster's experience value and possibly some piety.
-Otherwise, the monster is unaffected and you gain nothing.
+Whether the pacification succeeds or not, the invested food, piety and magic
+points are lost. If it does succeed, the monster is healed and you gain half
+the monster's experience value and possibly some piety. Otherwise, the
+monster is unaffected and you gain nothing.
 
 You can also heal allies and neutral monsters.
 %%%%
@@ -412,8 +411,8 @@ corrupted or in the Abyss.
 Enter the Abyss
 
 Transfer yourself to Lugonu's realm instantly... at the cost of permanently
-reducing your maximum health and magic. The effort of even using the
-ability will leave your health and magic depleted.
+reducing your maximum health and magic. The effort of even using the ability
+will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
 Draw One
@@ -434,15 +433,15 @@ which one to keep, discarding the other two.
 %%%%
 Deal Four
 
-Deal four cards from any unmarked deck in the time it normally takes to
-draw a single card. The rest of the deck is lost. If the deck does not
-contain enough cards, Nemelex will give you one extra card, but you might
-not like it.
+Deal four cards from any unmarked deck in the time it normally takes to draw
+a single card. The rest of the deck is lost. If the deck does not contain
+enough cards, Nemelex will give you one extra card, but you might not like
+it.
 %%%%
 Stack Five
 
-Draw five cards from any unmarked deck in your inventory, losing the rest
-of the deck. Look at the cards and sort them into any order you'd like.
+Draw five cards from any unmarked deck in your inventory, losing the rest of
+the deck. Look at the cards and sort them into any order you'd like.
 Subsequently, you can draw these cards in the order you chose.
 %%%%
 # Beogh
@@ -459,17 +458,17 @@ surroundings.
 # Fedhas
 Sunlight
 
-Call sunlight down over a small area of the dungeon. Monsters illuminated
-by the light will be easier to hit. Water affected by the sunlight will
+Call sunlight down over a small area of the dungeon. Monsters illuminated by
+the light will be easier to hit. Water affected by the sunlight will
 evaporate. In particular, deep water will become shallow water, and shallow
 water will dry up completely, revealing the dungeon floor.
 %%%%
 Growth
 
 Use fruit to grow a ring of plants around yourself. If a complete ring
-cannot be formed (because you do not have enough fruit), plants will grow
-on squares adjacent to you that are close to monsters. The plants you
-create gain bonus HP proportional to your invocations skill.
+cannot be formed (because you do not have enough fruit), plants will grow on
+squares adjacent to you that are close to monsters. The plants you create
+gain bonus HP proportional to your invocations skill.
 %%%%
 Rain
 
@@ -483,10 +482,10 @@ explode, causing damage to you or your enemies.
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you into stronger species. Upgrading
-fungi requires piety, upgrading plants requires fruit. Plants upgraded gain
-a bonus to attack accuracy proportional to the user's invocations skill,
-and oklob plants are more likely to spit acid at higher invocations.
+Turn plants and fungi adjacent to you into stronger species. Upgrading fungi
+requires piety, upgrading plants requires fruit. Plants upgraded gain a
+bonus to attack accuracy proportional to the user's invocations skill, and
+oklob plants are more likely to spit acid at higher invocations.
 %%%%
 # Cheibriados
 Bend Time
@@ -533,8 +532,8 @@ Remove a randomly selected bad mutation.
 # Ashenzari
 Scrying
 
-Gain astral sight to see through walls. This is not enough to let you
-target spells and abilities, even those that work through glass.
+Gain astral sight to see through walls. This is not enough to let you target
+spells and abilities, even those that work through glass.
 %%%%
 Transfer Knowledge
 

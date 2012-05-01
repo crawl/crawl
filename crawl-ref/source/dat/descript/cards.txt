@@ -3,8 +3,8 @@
 the Portal card
 
 This card teleports you to a random location, allowing control of the
-translocation at high power. It is usually found in decks of escape and
-war, or in Nemelex Xobeh's deck of punishment.
+translocation at high power. It is usually found in decks of escape and war,
+or in Nemelex Xobeh's deck of punishment.
 %%%%
 the Warp card
 
@@ -19,8 +19,8 @@ found in decks of escape and war.
 %%%%
 Velocity card
 
-This card makes you move or even act faster. It is usually found in decks
-of escape and war.
+This card makes you move or even act faster. It is usually found in decks of
+escape and war.
 %%%%
 # decks of emergency -> escape
 the Tomb card
@@ -60,13 +60,13 @@ escape and war.
 # deck of battle -> changes, defence, war
 the Elixir card
 
-This card heals you and may also drain or restore your magical energy in
-the process. It is usually found in decks of changes, defence and war.
+This card heals you and may also drain or restore your magical energy in the
+process. It is usually found in decks of changes, defence and war.
 %%%%
 Battlelust card
 
-This card makes you more powerful in physical combat. It is usually found
-in decks of changes, defence and war.
+This card makes you more powerful in physical combat. It is usually found in
+decks of changes, defence and war.
 %%%%
 Metamorphosis card
 
@@ -101,8 +101,8 @@ magical potion. It is usually found in decks of changes and wonders.
 %%%%
 Focus card
 
-This card further boosts your strongest attribute at the cost of your
-worst. It is usually found in decks of changes and wonders.
+This card further boosts your strongest attribute at the cost of your worst.
+It is usually found in decks of changes and wonders.
 %%%%
 Shuffle card
 
@@ -116,8 +116,8 @@ changes and wonders.
 %%%%
 Wild Magic card
 
-This card causes wild magic, as if from miscasting a spell, to act upon
-you. It is usually found in decks of changes and wonders.
+This card causes wild magic, as if from miscasting a spell, to act upon you.
+It is usually found in decks of changes and wonders.
 %%%%
 the Helix card
 
@@ -133,8 +133,8 @@ found in decks of changes and wonders.
 %%%%
 the Alchemist card
 
-This card transmutes some of your gold into health and magical energy. It
-is usually found in decks of changes and wonders.
+This card transmutes some of your gold into health and magical energy. It is
+usually found in decks of changes and wonders.
 %%%%
 # deck of dungeons -> also changes
 Water card
@@ -149,13 +149,13 @@ and dungeons.
 %%%%
 the Map card
 
-This card reveals your surroundings. It is usually found in decks of
-changes and dungeons.
+This card reveals your surroundings. It is usually found in decks of changes
+and dungeons.
 %%%%
 Dowsing card
 
-This card lets you detect secret doors, traps, creatures or some
-combination thereof. It is usually found in decks of changes and dungeons.
+This card lets you detect secret doors, traps, creatures or some combination
+thereof. It is usually found in decks of changes and dungeons.
 %%%%
 the Spade card
 
@@ -164,9 +164,9 @@ of changes and dungeons.
 %%%%
 the Trowel card
 
-This card may create an altar, a statue, a golem or even a portal, but
-works best only in the main dungeon and its branches. It is usually found
-in decks of changes and dungeons.
+This card may create an altar, a statue, a golem or even a portal, but works
+best only in the main dungeon and its branches. It is usually found in decks
+of changes and dungeons.
 %%%%
 the Minefield card
 
@@ -232,13 +232,13 @@ It is usually found in decks of destruction and war.
 %%%%
 the Spark card
 
-This card unleashes an electrical attack spell. It is usually found in
-decks of destruction and war.
+This card unleashes an electrical attack spell. It is usually found in decks
+of destruction and war.
 %%%%
 the Hammer card
 
-This card unleashes a physical attack spell. It is usually found in decks
-of destruction and war.
+This card unleashes a physical attack spell. It is usually found in decks of
+destruction and war.
 %%%%
 Pain card
 
@@ -248,13 +248,12 @@ well. It is usually found in decks of destruction and war.
 Torment card
 
 This card calls on the powers of darkness to cause agonising injury to any
-nearby living creature. It is usually found in decks of destruction and
-war.
+nearby living creature. It is usually found in decks of destruction and war.
 %%%%
 the Orb card
 
-This card unleashes a destructive orb of pure magic, sometimes even
-multiple ones. It is usually found in decks of destruction and war.
+This card unleashes a destructive orb of pure magic, sometimes even multiple
+ones. It is usually found in decks of destruction and war.
 %%%%
 # deck of punishment (along with a few others)
 Wrath card
