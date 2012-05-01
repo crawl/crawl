@@ -14,7 +14,6 @@ Arcane Marksman
 Magiczni Strzelcy noszą broń miotającą, i używają magii aby uczynić wrogów
 bardziej narażonymi na ataki z dystansu.
 %%%%
-%%%%
 Assassin
 
 Zabójcy poruszają się ukradkiem, wbijając sztylet nieuważnym wrogom. Używają
