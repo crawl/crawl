@@ -325,21 +325,44 @@ certain mystics, beating on such a gong can grant you spiritual protection.
 
 And this shield surely will be heard!
 %%%%
-#amulet of the Air
+amulet of the Air
+
+It appears that a powerful air mage enchanted this sky-blue amulet with a
+good deal of protective charms his school can bestow upon people.
 %%%%
-#ring of Shadows
+ring of Shadows
+
+A black ring that can make its wearer one with the shadows.
 %%%%
-#amulet of Cekugob
+amulet of Cekugob
+
+A strange-looking piece of crystal on an ordinary-looking string, with an
+odd selection of powers.
 %%%%
-#amulet of the Four Winds
+amulet of the Four Winds
+
+This pendant made of purest jade grants its wearer an immense mystic
+strength to shrug off hostile magic.
 %%%%
-#necklace of Bloodlust
+necklace of Bloodlust
+
+You wonder what a crude brute would wear a bloodstained necklace made of
+human and beast teeth and something that appears to be a ripped piece of
+spine.
 %%%%
-#ring of Shaolin
+ring of Shaolin
+
+An unadorned jade ring that gives its wearer an uncanny knowledge of one's
+body, allowing for impressive feats of dexterity.
 %%%%
-#ring of Robustness
+ring of Robustness
+
+A plain steel ring.
 %%%%
-#ring of the Mage
+ring of the Mage
+
+An enchanted sapphire, inset into a ring. It aids the spellcasting of its
+wearer.
 %%%%
 brooch of Shielding
 
