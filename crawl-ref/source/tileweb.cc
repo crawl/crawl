@@ -397,9 +397,7 @@ void TilesFramework::pop_prefix(const std::string& suffix)
     if (!m_prefixes.empty())
         m_prefixes.pop_back();
     else
-    {
-        write_message(suffix.c_str());
-    }
+        write_message("%s", suffix.c_str());
 }
 
 bool TilesFramework::prefix_popped()
