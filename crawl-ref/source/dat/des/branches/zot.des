@@ -928,9 +928,6 @@ ENDMAP
 
 NAME: zot5_orb
 TAGS: zot5_orb no_item_gen
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
 KITEM:  Z = Orb of Zot
 MAP
 Z
