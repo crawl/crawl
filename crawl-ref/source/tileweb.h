@@ -81,9 +81,11 @@ public:
     void pop_menu();
     void close_all_menus();
 
-    void write_message(const char *format, ...);
+    void write_message();
+    void write_message(PRINTF(1, ));
     void finish_message();
-    void send_message(const char *format = "", ...);
+    void send_message();
+    void send_message(PRINTF(1, ));
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }
