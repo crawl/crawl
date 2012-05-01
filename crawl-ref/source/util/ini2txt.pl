@@ -24,6 +24,31 @@ die "Usage: $0 ini_files\n" unless (@ARGV);
 getopts('ow');
 our($opt_o, $opt_w);
 
+sub clean_value {
+    $_ = shift;
+
+    # transifex returns html encoded quotes
+    s/&quot;/"/mg;
+
+    # convert literal \n to actual newlines
+    s/\\n/\n/g;
+
+    # In case we have some windows newline format, remove them
+    tr/\r//d;
+
+    # If using -w, wrap the text
+    if ($opt_w) {
+        $_ = wrap("", "", $_) ;
+
+        # WrapIl8N adds spaces at the end of lines and doesn't support the
+        # unexpand option.
+        s/ +$//mg;
+        s/\t/ {8}/mg;
+    }
+
+    return $_;
+}
+
 foreach my $file (@ARGV) {
     unless (-e $file) {
         print "$file not found\n";
@@ -40,15 +65,7 @@ foreach my $file (@ARGV) {
             chomp;
             next if (/^#/);
             my ($key, $value) = /(.*?)=(.*)$/;
-            $value =~ s/\\n/\n/g;
-            $value =~ tr/\r//d;
-            $value = wrap("", "", $value) if $opt_w;
-
-            # WrapIl8N adds spaces at the end of lines and don't support the
-            # unexpand option.
-            $value =~ s/ +$//mg;
-            $value =~ s/\t/ {8}/mg;
-            $Text{$key} = $value;
+            $Text{$key} = clean_value($value);
         }
         close IN;
 
@@ -80,9 +97,7 @@ foreach my $file (@ARGV) {
             my ($key, $value) = /(.*?)=(.*)/;
             print OUT "%%%%\n";
             print OUT "$key\n\n";
-            $value =~ s/\\n/\n/g;
-            $value = wrap("", "", $value) if $opt_w;
-            print OUT $value, "\n";
+            print OUT clean_value($value), "\n";
         }
         close IN;
         if ($empty) {
