@@ -346,9 +346,8 @@ strength to shrug off hostile magic.
 %%%%
 necklace of Bloodlust
 
-You wonder what crude brute would wear a bloodstained necklace made of
-human and animal teeth, plus something that appears to be a ripped piece of
-spine.
+You wonder what crude brute would wear a bloodstained necklace made of human
+and animal teeth, plus something that appears to be a ripped piece of spine.
 %%%%
 ring of Shaolin
 

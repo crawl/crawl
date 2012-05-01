@@ -57,7 +57,7 @@ basados en energías negativas.
 %%%%
 animal skin
 
-Las piel de un animal.
+La piel de un animal.
 %%%%
 apple
 
@@ -343,10 +343,130 @@ Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el Mercenario, la Poción,
 Foco, Barajar, Experiencia, Magia Salvaje, la Hélice, el Sabio, Agua, el
 Mapa, el Zahorí, la Pala, el Campo Minado.
 %%%%
+deck of defence
+
+Un mazo de cartas mágicas, la mayoría de las cuales protegen a su usuario de
+distintas formas.
+
+Puede contener las siguientes cartas: la Tumba, la Banshee, Condenación,
+Soledad, el Urdidor, Vuelo, Sed de Sangre, Metamorfosis, el Yelmo, la
+Cuchilla, la Sombra, el Mercenario.
+%%%%
 deck of destruction
 
 Un mazo de cartas mágicas, la mayoría de las cuales sirven para sembrar la
 muerte y destrucción de los adversarios de uno (o de uno mismo, si hay mala
-suerte). Puede contener las siguientes cartas: Virulencia, Llama, Escarcha,
-Veneno, la Centella, el Martillo, Dolor, el Orbe.
+suerte).
+
+Puede contener las siguientes cartas: Virulencia, Llama, Escarcha, Veneno,
+la Centella, el Martillo, Dolor, el Orbe.
+%%%%
+deck of dungeons
+
+Un mazo de cartas mágicas que versan sobre la forma del calabozo.
+
+Puede contener las siguientes cartas: Agua, Vitrificación, el Mapa, el
+Zahorí, la Pala, Mortero, el Campo Minado.
+%%%%
+deck of escape
+
+Un mazo de cartas mágicas que principalmente versan sobre diversos
+mecanismos de escape. Ten cuidado, ya que el uso incauto de esta baraja
+puede hacer que una situación mala se vuelva aún peor.
+
+Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
+Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo.
+%%%%
+deck of punishment
+
+Un mazo de cartas mágicas que causan estragos sobre su usuario.
+
+Puede contener las siguientes cartas: Furia, el Espectro, la Maldición, Xom,
+Hambruna, Magia Salvaje, el Portal, la Tumba, Condenación, el Campo Minado,
+Tormento.
+%%%%
+deck of summonings
+
+Un mazo de cartas mágicas que retratan un extraño y maravilloso elenco de
+criaturas.
+
+Puede contener las siguientes cartas: la Cruzada, la Manada, el Pentagrama,
+la Danza, Foxfire, los Huesos, Repelencia.
+%%%%
+deck of war
+
+Un mazo de cartas mágicas útiles antes, y durante, el combate.
+
+Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
+Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo, el
+Elixir, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el
+Mercenario, la Cruzada, la Manada, el Pentagrama, la Danza, Foxfire, los
+Huesos, Repelencia, Virulencia, Llama, Escarcha, Veneno, la Centella, el
+Martillo, Dolor, Tormento.
+%%%%
+deck of wonders
+
+Un mazo de cartas mágicas y misteriosas, que pueden alterar, para mejor o
+peor, las condiciones físicas o psíquicas de su usuario.
+
+Puede contener las siguientes cartas: la Poción, Foco, Intercambio,
+Experiencia, Magia Salvaje, la Hélice, el Sabio, el Alquimista.
+%%%%
+demon blade
+
+Un arma terrible, forjada en las llamas del Infierno.
+%%%%
+demon trident
+
+Un arma terrible, moldeada por el fuego y el azufre.
+%%%%
+demon whip
+
+Un arma terrible, fabricada en las profundidades del Hades.
+%%%%
+dire flail
+
+Un flagelo con puntiagudas protuberancias en ambos extremos.
+%%%%
+disc of storms
+
+Este objeto extremadamente poderoso es capaz de de desencadenar una
+destructiva tormenta eléctrica. Su efectividad mejora considerablemente
+cuando está en las manos de alguien habilidoso en el uso de dispositivos
+mágicos, pero es imposible su uso por parte de alguien que no sea
+conductivo.
+%%%%
+double sword
+
+Un arma mágica con dos cuchillas muy afiladas.
+%%%%
+eggplant
+
+Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
+ves este mensaje, se trata de un error del programa.)
+%%%%
+empty ebony casket
+
+Una caja mágica cuyo poder se ha agotado.
+%%%%
+eveningstar
+
+Lo contrario del lucero del alba.
+%%%%
+executioner's axe
+
+Esta terrorífica arma, aunque cubierta de sangre seca y unos bastos grabados
+sobre la tortura y la muerte, aún conserva una cuchilla bien afilada. Su
+enorme cabeza parece muy capaz de desmembrar cualquiera que se haga el loco,
+y tienes la certeza de que un solo golpe bastaría.
+%%%%
+falchion
+
+Una espada con una amplia cuchilla cortante.
+%%%%
+fire dragon armour
+
+Una armadura mágica confeccionada a partir de las escamas de un dragón que
+exhalaba fuego. Proporciona gran protección contra los efectos del fuego,
+pero hace a su usuario más vulnerable a los efectos del frío.
 %%%%
