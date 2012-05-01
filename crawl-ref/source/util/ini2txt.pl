@@ -46,7 +46,7 @@ foreach my $file (@ARGV) {
 
             # WrapIl8N adds spaces at the end of lines and don't support the
             # unexpand option.
-            $value =~ s/\s+$//mg;
+            $value =~ s/ +$//mg;
             $value =~ s/\t/ {8}/mg;
             $Text{$key} = $value;
         }
