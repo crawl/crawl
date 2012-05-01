@@ -223,7 +223,7 @@ ENDMAP
 NAME:   erik_lair_island
 TAGS:   lair_entry
 ORIENT: float
-MONS:   w:60 troll / Snorg
+MONS:   troll
 MONS:   w:30 hound / jackal / w:20 war dog
 SUBST:  ? = w.
 KFEAT:  O = enter_lair
