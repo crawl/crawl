@@ -1,10 +1,10 @@
 %%%%
 air elemental fan
 
-Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est
-pas très fiable, et requiert habituellement plusieurs essais avant de
-fonctionner correctement. L'utiliser suscite un risque qui est réduit
-selon l'affinité de l'usager pour l'élément approprié.
+Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas
+très fiable, et requiert habituellement plusieurs essais avant de
+fonctionner correctement. L'utiliser suscite un risque qui est réduit selon
+l'affinité de l'usager pour l'élément approprié.
 %%%%
 amulet of clarity
 
@@ -13,28 +13,27 @@ mentale, dont celle d'être enragé contre sa volonté.
 %%%%
 amulet of conservation
 
-Cette amulette protège de la destruction certaines possessions, mais pas
-de manière infaillible.
+Cette amulette protège de la destruction certaines possessions, mais pas de
+manière infaillible.
 %%%%
 amulet of controlled flight
 
-Si le porteur de cette amulette venait à léviter par un moyen magique, il
-ou elle serait capable d'exercer un certain contrôle sur ses mouvements.
-Ceci autorise par exemple la descente d'escaliers et l'accès aux objets
-situés au sol, sans toutefois priver le porteur des bénéfices de la
-lévitation.
+Si le porteur de cette amulette venait à léviter par un moyen magique, il ou
+elle serait capable d'exercer un certain contrôle sur ses mouvements. Ceci
+autorise par exemple la descente d'escaliers et l'accès aux objets situés au
+sol, sans toutefois priver le porteur des bénéfices de la lévitation.
 %%%%
 amulet of guardian spirit
 
 Cette amulette rend son porteur moins susceptible aux blessures physiques,
-drainant sa puissance magique à la place. Si les réserves magiques
-viennent à être vidées, l'esprit ne pourra apporter sa protection
-jusqu'à ce que davantage de pouvoir soit disponible.
+drainant sa puissance magique à la place. Si les réserves magiques viennent
+à être vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que
+davantage de pouvoir soit disponible.
 %%%%
 amulet of inaccuracy
 
-Cette amulette rend le porteur moins précis dans ses attaques de mêlée
-et lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
+Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
+lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
 %%%%
 amulet of rage
 
@@ -60,27 +59,24 @@ initialement faibles.
 %%%%
 amulet of warding
 
-Cette amulette repousse une partie des attaques des créatures qui ont
-été convoquées par magie, et rend également le porteur plus résistant
-aux attaques qui drainent la force vitale.
+Cette amulette repousse une partie des attaques des créatures qui ont été
+convoquées par magie, et rend également le porteur plus résistant aux
+attaques qui drainent la force vitale.
 %%%%
 amulet of faith
 
 C'est un talisman façonné pour attirer l'attention des dieux sur son
-porteur. Cette attention divine facilite le contentement de votre dieu,
-mais celui-ci sera aussi moins amène à tolérer vos transgressions, et
-l'amulette drainera une part de vos faveurs divines lorsqu'elle sera
-retirée.
+porteur. Cette attention divine facilite le contentement de votre dieu, mais
+celui-ci sera aussi moins amène à tolérer vos transgressions, et l'amulette
+drainera une part de vos faveurs divines lorsqu'elle sera retirée.
 %%%%
 amulet of stasis
 
 Une amulette fabriquée méticuleusement avec des charmes pour bloquer les
 effets magiques et physiologiques qui pourraient autrement téléporter,
-ralentir, accélérer ou paralyser son porteur.
-
-Bien que l'amulette soit efficace contre la plupart des magies
-translocatives, les changements de plan tels que le bannissement sont au
-delà des ses capacités bloquantes.
+ralentir, accélérer ou paralyser son porteur. Bien que l'amulette soit
+efficace contre la plupart des magies translocatives, les changements de
+plan tels que le bannissement sont au delà des ses capacités bloquantes.
 %%%%
 animal skin
 
@@ -100,8 +96,7 @@ Un carreau d'arbalète.
 %%%%
 book of beasts
 
-Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre
-!
+Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
 %%%%
 book of callings
 
@@ -278,8 +273,8 @@ Un fruit tropical.
 %%%%
 manual
 
-Un livre précieux qui permet d'apprendre une certaine compétence de
-manière plus efficace.
+Un livre précieux qui permet d'apprendre une certaine compétence de manière
+plus efficace.
 %%%%
 morningstar
 
