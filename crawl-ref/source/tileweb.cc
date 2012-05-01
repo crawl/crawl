@@ -633,7 +633,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
         else if (glyph == '\'')
             write_message("g:'\\'',");
         else
-            write_message("g:'%lc',", glyph);
+        {
+            char buf[5];
+            buf[wctoutf8(buf, glyph)] = 0;
+            write_message("g:'%s',", buf);
+        }
     }
     if (force_full ? (next_sc.colour != 7) : (current_sc.colour != next_sc.colour))
     {
