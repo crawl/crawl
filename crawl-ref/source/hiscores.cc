@@ -2082,7 +2082,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themselves with bad targetting";
+        desc += terse? "shot self" : "Killed themself with bad targetting";
         needs_damage = true;
         break;
 
@@ -2114,7 +2114,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "bounced beam";
         else
         {
-            desc += "Killed themselves with a bounced ";
+            desc += "Killed themself with a bounced ";
             if (auxkilldata.empty())
                 desc += "beam";
             else
@@ -2128,7 +2128,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "suicidal targetting";
         else
         {
-            desc += "Shot themselves with a ";
+            desc += "Shot themself with a ";
             if (auxkilldata.empty())
                 desc += "beam";
             else
@@ -2211,7 +2211,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             if (death_source_name == "you")
-                desc += "Blew themselves up";
+                desc += "Blew themself up";
             else
                 desc += "Blown up by " + death_source_desc();
             needs_beam_cause_line = true;
