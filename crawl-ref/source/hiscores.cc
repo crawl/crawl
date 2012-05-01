@@ -373,7 +373,10 @@ static void _show_morgue(scorefile_entry& se)
                             "<cyan>[ + : Page down.   - : Page up."
                             "                           Esc exits.]"));
 #endif
-    std::string morgue_path = morgue_directory() + morgue_name(se.get_name(), se.get_death_time()) + ".txt";
+    std::string morgue_base = morgue_name(se.get_name(), se.get_death_time());
+    std::string morgue_path = morgue_directory()
+                              + strip_filename_unsafe_chars(morgue_base)
+                              + ".txt";
     FILE* morgue = lk_open("r", morgue_path);
 
     if (!morgue)
