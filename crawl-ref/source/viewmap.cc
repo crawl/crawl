@@ -212,6 +212,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
+        case DNGN_EXIT_DUNGEON:
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
