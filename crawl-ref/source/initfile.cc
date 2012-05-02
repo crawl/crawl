@@ -764,7 +764,6 @@ void game_options::reset_options()
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = true;
-    note_all_spells        = true;
     note_xom_effects       = true;
     note_hp_percent        = 5;
 
@@ -2546,7 +2545,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(note_all_skill_levels);
     else BOOL_OPTION(note_skill_max);
-    else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(note_xom_effects);
     else BOOL_OPTION(clear_messages);
     else BOOL_OPTION(show_more);

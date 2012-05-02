@@ -375,7 +375,6 @@ note_hp_percent = 5
 note_skill_levels = 1,5,10,15,27
 #note_all_skill_levels = true
 #note_skill_max  = false
-#note_all_spells = false
 #note_xom_effects = false
 note_items    = rod of, acquirement, preservation, running, of Zot
 note_messages = Your scales start

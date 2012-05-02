@@ -113,8 +113,8 @@ The contents of this text are:
 5-b     Notes.
                 user_note_prefix, note_items, note_monsters,
                 ood_interesting, note_hp_percent, note_skill_levels,
-                note_all_skill_levels, note_skill_max, note_all_spells,
-                note_xom_effects, note_messages
+                note_all_skill_levels, note_skill_max, note_xom_effects,
+                note_messages
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
@@ -2006,9 +2006,6 @@ note_skill_max = true
         skill levels is reached. If note_skill_max is true and
         note_skill_levels is nonempty, notes will be taken whenever
         either of the criteria are met.
-
-note_all_spells = true
-        Will add a note for each spell memorised.
 
 note_xom_effects = true
         This will add a note whenever Xom does something.
