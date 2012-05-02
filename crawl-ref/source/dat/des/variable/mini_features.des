@@ -1975,16 +1975,6 @@ x...x
 xxxxx
 ENDMAP
 
-NAME:  firewood_loft
-DEPTH: D:1-26
-KITEM: " = staff, staff, quarterstaff
-KITEM: ' = staff, staff / any magical staff w:3
-MAP
-xxxxx
-x"']x
-xxxxx
-ENDMAP
-
 NAME: nrook_loot_triangle
 DEPTH: D, Elf, Vaults, Snake, Dis
 MAP
