@@ -34,7 +34,6 @@ typedef bool (*db_find_filter)(std::string key, std::string body);
 
 std::string getQuoteString(const std::string &key);
 std::string getLongDescription(const std::string &key);
-std::string getWeightedRandomisedDescription(const std::string &key);
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
                                                 db_find_filter filter = NULL);
