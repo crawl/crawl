@@ -767,8 +767,6 @@ void game_options::reset_options()
     note_all_spells        = true;
     note_xom_effects       = true;
     note_hp_percent        = 5;
-    ood_interesting        = 8;
-    rare_interesting       = 9;
 
     // [ds] Grumble grumble.
     auto_list              = true;
@@ -2452,8 +2450,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str());
         }
     }
-    else INT_OPTION(ood_interesting, 0, 500);
-    else INT_OPTION(rare_interesting, 0, 99);
     else if (key == "note_monsters")
         append_vector(note_monsters, split_string(",", field));
     else if (key == "note_messages")

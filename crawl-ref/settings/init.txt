@@ -371,7 +371,6 @@ include = tiles_options.txt
 ##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
-ood_interesting = 8
 note_hp_percent = 5
 note_skill_levels = 1,5,10,15,27
 #note_all_skill_levels = true

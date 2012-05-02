@@ -2910,29 +2910,6 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
         interesting = false;
     else if (mons_threat_level(mons) == MTHRT_NASTY)
         interesting = true;
-    else if (crawl_state.game_is_zotdef()
-             && mons_level(mons->type) + 4 > you.experience_level)
-    {
-        interesting = true;
-    }
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON)
-             && !crawl_state.game_is_zotdef()
-             && mons_level(mons->type) >= you.depth + Options.ood_interesting
-             && mons_level(mons->type) < DEPTH_NOWHERE
-             && !(mons->type >= MONS_EARTH_ELEMENTAL
-                  && mons->type <= MONS_AIR_ELEMENTAL)
-             && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
-    {
-        interesting = true;
-    }
-    else if ((player_in_connected_branch() || player_in_branch(BRANCH_ABYSS))
-             && mons_rarity(mons->type) <= Options.rare_interesting
-             && mons->hit_dice > 2 // Don't note the really low-hd monsters.
-             && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-             && mons_rarity(mons->type) > 0)
-    {
-        interesting = true;
-    }
     // Don't waste time on moname() if user isn't using this option
     else if (!Options.note_monsters.empty())
     {
