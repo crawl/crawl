@@ -380,7 +380,6 @@ note_skill_levels = 1,5,10,15,27
 #note_xom_effects = false
 note_items    = rod of, acquirement, preservation, running, of Zot
 note_messages = You pass through the gate
-note_messages = cast .* Abyss
 note_messages = Your scales start
 note_messages = protects you from harm
 note_messages = You fall through a shaft
