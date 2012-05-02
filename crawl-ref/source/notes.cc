@@ -110,6 +110,7 @@ static bool _is_noteworthy(const Note& note)
 {
     // Always noteworthy.
     if (note.type == NOTE_XP_LEVEL_CHANGE
+        || note.type == NOTE_LEARN_SPELL
         || note.type == NOTE_GET_GOD
         || note.type == NOTE_GOD_GIFT
         || note.type == NOTE_GET_MUTATION
@@ -179,10 +180,6 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.packed_place);
 
-    // Learning a spell is always noteworthy if note_all_spells is set.
-    if (note.type == NOTE_LEARN_SPELL && Options.note_all_spells)
-        return (true);
-
     for (unsigned i = 0; i < note_list.size(); ++i)
     {
         if (note_list[i].type != note.type)
@@ -191,14 +188,6 @@ static bool _is_noteworthy(const Note& note)
         const Note& rnote(note_list[i]);
         switch (note.type)
         {
-        case NOTE_LEARN_SPELL:
-            if (spell_difficulty(static_cast<spell_type>(rnote.first))
-                >= spell_difficulty(static_cast<spell_type>(note.first)))
-            {
-                return (false);
-            }
-            break;
-
         case NOTE_GOD_POWER:
             if (rnote.first == note.first && rnote.second == note.second)
                 return (false);
