@@ -19,7 +19,7 @@ public:
                       bool clear_aliases = true);
 
     void include(const std::string &file, bool resolve, bool runscript);
-    void report_error(const std::string &error);
+    void report_error(PRINTF(1, ));
 
     std::string resolve_include(const std::string &file,
                                 const char *type = "");
