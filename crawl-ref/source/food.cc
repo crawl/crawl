@@ -1504,6 +1504,12 @@ int prompt_eat_chunks(bool only_auto)
         chunks.push_back(item);
     }
 
+    // Exempt undead from auto-eating since:
+    //  * Mummies don't eat.
+    //  * Vampire feeding takes a lot more time than eating a chunk
+    //    and may have unintended consequences.
+    //  * Ghouls may want to wait until chunks become rotten
+    //    or until they have some hp rot to heal.
     const bool easy_eat = (Options.easy_eat_chunks || only_auto)
         && !you.is_undead && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
@@ -1523,12 +1529,7 @@ int prompt_eat_chunks(bool only_auto)
 
             const bool contam = is_contaminated(*item);
             const bool bad    = is_bad_food(*item);
-            // Exempt undead from auto-eating since:
-            //  * Mummies don't eat.
-            //  * Vampire feeding takes a lot more time than eating a chunk
-            //    and may have unintended consequences.
-            //  * Ghouls may want to wait until chunks become rotten
-            //    or until they have some hp rot to heal.
+
             if (easy_eat && !bad && !contam)
             {
                 // If this chunk is safe to eat, just do so without prompting.
