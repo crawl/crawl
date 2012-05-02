@@ -118,6 +118,7 @@ static TextDB AllDBs[] =
 
     TextDB("misc", "database/",
             "miscname.txt", // names for miscellaneous things
+            "godname.txt",  // god-related names (mostly His Xomminess)
             NULL),
 
     TextDB("quotes", "descript/",
@@ -640,20 +641,6 @@ static void _call_recursive_replacement(std::string &str, TextDB &db,
                                         int &num_replacements,
                                         int recursion_depth = 0);
 
-static std::string _query_weighted_randomised(TextDB &db,
-                                              const std::string &key,
-                                              const std::string &suffix = "",
-                                              const int weight = -1)
-{
-    std::string result = _getWeightedString(db, key, suffix, weight);
-    if (result.empty())
-        return "";
-
-    int num_replacements = 0;
-    _call_recursive_replacement(result, db, suffix, num_replacements);
-    return (result);
-}
-
 static std::string _getRandomisedStr(TextDB &db, const std::string &key,
                                      const std::string &suffix,
                                      int &num_replacements,
@@ -764,12 +751,6 @@ std::string getQuoteString(const std::string &key)
 std::string getLongDescription(const std::string &key)
 {
     return unwrap_desc(_query_database(DescriptionDB, key, true, true));
-}
-
-// god names only
-std::string getWeightedRandomisedDescription(const std::string &key)
-{
-    return _query_weighted_randomised(DescriptionDB, key);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,

@@ -2317,7 +2317,7 @@ std::string god_name(god_type which_god, bool long_name)
     {
         const std::string shortname = god_name(which_god, false);
         const std::string longname =
-            getWeightedRandomisedDescription(shortname + " lastname");
+            getMiscString(shortname + " lastname");
         return (longname.empty()? shortname : longname);
     }
 
