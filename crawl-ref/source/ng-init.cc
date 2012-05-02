@@ -55,6 +55,14 @@ void initialise_branches_for_game_type()
         return;
     }
 
+    if (crawl_state.game_is_zotdef())
+    {
+        brdepth.init(-1);
+        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_BAZAAR] = 1;
+        return;
+    }
+
     for (int i = 0; i < NUM_BRANCHES; i++)
         brdepth[i] = branches[i].numlevels;
 
