@@ -1962,8 +1962,8 @@ static int _get_nearest_level_depth(uint8_t branch)
 // branch (which would make the branch a valid target for interlevel travel).
 static bool _is_known_branch_id(int branch)
 {
-    // The main dungeon is always known.
-    if (branch == BRANCH_MAIN_DUNGEON)
+    // The main dungeon is always known
+    if (branch == root_branch)
         return (true);
 
     // If we're in the branch, it darn well is known.

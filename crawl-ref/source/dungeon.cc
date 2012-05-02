@@ -2502,12 +2502,13 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     if (you.props.exists("force_map"))
         vault = find_map_by_name(you.props["force_map"].get_string());
-    else
+    else if (!crawl_state.game_is_zotdef())
+    {
+        // Don't want PLACE: Zot:1 vaults in ZotDef.
         vault = random_map_for_place(lid, minivault);
+    }
 
-    if (!vault
-        && lid.branch == BRANCH_MAIN_DUNGEON
-        && lid.depth == 1)
+    if (!vault && lid.branch == root_branch && lid.depth == 1)
     {
         if (crawl_state.game_is_sprint()
             || crawl_state.game_is_zotdef()

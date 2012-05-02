@@ -11,6 +11,7 @@
 #include "branch-data.h"
 
 FixedVector<int, NUM_BRANCHES> startdepth, brdepth;
+branch_type root_branch;
 
 const Branch& your_branch()
 {
