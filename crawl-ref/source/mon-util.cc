@@ -841,7 +841,7 @@ void discover_mimic(const coord_def& pos, bool wake)
     if (!x_chance_in_y(level - 6, 6))
         mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
     else if (level > 20)
-        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_ITEM_MIMIC;
+        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
 
     if (item && item->base_type == OBJ_ORBS)
         mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
