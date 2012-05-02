@@ -409,18 +409,12 @@ static unsigned curses_attribute(const std::string &field)
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
-        {
-            Options.report_error(
-                make_stringf("Bad highlight string -- %s\n", field.c_str()));
-        }
+            Options.report_error("Bad highlight string -- %s\n", field.c_str());
         else
             return CHATTR_HILITE | (colour << 8);
     }
     else if (field != "none")
-    {
-        Options.report_error(
-            make_stringf("Bad colour -- %s\n", field.c_str()));
-    }
+        Options.report_error("Bad colour -- %s\n", field.c_str());
     return CHATTR_NORMAL;
 }
 
@@ -524,11 +518,7 @@ void game_options::set_activity_interrupt(
         std::string delay_name = interrupt.substr(interrupt_prefix.length());
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
-        {
-            report_error (
-                make_stringf("Unknown delay: %s\n", delay_name.c_str()));
-            return;
-        }
+            return report_error("Unknown delay: %s\n", delay_name.c_str());
 
         FixedVector<bool, NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay];
@@ -543,10 +533,8 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        report_error (
-            make_stringf("Delay interrupt name \"%s\" not recognised.\n",
-                         interrupt.c_str()));
-        return;
+        return report_error("Delay interrupt name \"%s\" not recognised.\n",
+                            interrupt.c_str());
     }
 
     eints[ai] = true;
@@ -559,11 +547,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 {
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
-    {
-        report_error (
-            make_stringf("Unknown delay: %s\n", activity_name.c_str()));
-        return;
-    }
+        return report_error("Unknown delay: %s\n", activity_name.c_str());
 
     std::vector<std::string> interrupts = split_string(",", interrupt_names);
     FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
@@ -1160,8 +1144,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         }
     }
     if (!found)
-        report_error (
-            make_stringf("Unknown monster: \"%s\"", mons.c_str()));
+        report_error("Unknown monster: \"%s\"", mons.c_str());
 }
 
 mon_display game_options::parse_mon_glyph(const std::string &s) const
@@ -1978,9 +1961,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             this->_opt_var = col;                                       \
         } else {                                                        \
             /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
-            report_error (                                              \
-                make_stringf("Bad %s -- %s\n",                          \
-                    key.c_str(), field.c_str()));                       \
+            report_error("Bad %s -- %s\n", key.c_str(), field.c_str()); \
         }                                                               \
     } while (false)
 #define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt)
@@ -1997,12 +1978,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         const int max_val = (_max_val);                                 \
         int val = atoi(field.c_str());                                  \
         if (val < min_val) {                                            \
-            report_error (                                              \
-                make_stringf("Bad %s: %d < %d", _opt_str, val, min_val)); \
+            report_error("Bad %s: %d < %d", _opt_str, val, min_val);    \
             val = min_val;                                              \
         } else if (val > max_val) {                                     \
-            report_error (                                              \
-                make_stringf("Bad %s: %d > %d", _opt_str, val, max_val)); \
+            report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
             val = max_val;                                              \
         }                                                               \
         this->_opt_var = val;                                           \
@@ -2143,11 +2122,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (j < obj_syms_len)
                 autopickups |= (1 << j);
             else
-            {
-                report_error (
-                    make_stringf("Bad object type '%c' for autopickup.\n",
-                                 type));
-            }
+                report_error("Bad object type '%c' for autopickup.\n", type);
         }
     }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
@@ -2199,10 +2174,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
             lang = LANG_WIDE;
         else
-        {
-            report_error(make_stringf("No translations for language: %s\n",
-                                      field.c_str()));
-        }
+            report_error("No translations for language: %s\n", field.c_str());
     }
     else if (key == "default_autopickup")
     {
@@ -2288,7 +2260,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "yes" || field == "true")
             auto_drop_chunks = ADC_YES;
         else
-            report_error("Invalid auto_drop_chunks: \"" + field + "\"");
+            report_error("Invalid auto_drop_chunks: \"%s\"", field.c_str());
     }
     else if (key == "lua_file" && runscript)
     {
@@ -2584,10 +2556,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "yes")
             wiz_mode = WIZ_YES;
         else
-        {
-            report_error (
-                make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
-        }
+            report_error("Unknown wiz_mode option: %s\n", field.c_str());
     #endif
 #endif
     }
@@ -2630,44 +2599,30 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == "autoinscribe")
     {
         if (field.empty())
-        {
-            report_error("Autoinscribe string is empty");
-            return;
-        }
+            return report_error("Autoinscribe string is empty");
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
         if (first == std::string::npos || first != last)
         {
-            report_error (
-                make_stringf("Autoinscribe string must have exactly "
-                             "one colon: %s\n", field.c_str()));
-            return;
+            return report_error("Autoinscribe string must have exactly "
+                                "one colon: %s\n", field.c_str());
         }
 
         if (first == 0)
         {
-            report_error (
-                make_stringf("Autoinscribe pattern is empty: %s\n",
-                             field.c_str()));
+            report_error("Autoinscribe pattern is empty: %s\n", field.c_str());
             return;
         }
 
         if (last == field.length() - 1)
-        {
-            report_error (
-                make_stringf("Autoinscribe result is empty: %s\n",
-                             field.c_str()));
-            return;
-        }
+            return report_error("Autoinscribe result is empty: %s\n", field.c_str());
 
         std::vector<std::string> thesplit = split_string(":", field);
 
         if (thesplit.size() != 2)
         {
-            report_error (
-                make_stringf("Error parsing autoinscribe string: %s\n",
-                             field.c_str()));
+            report_error("Error parsing autoinscribe string: %s\n", field.c_str());
             return;
         }
 
@@ -2692,8 +2647,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad hp_colour string: %s\n", field.c_str()));
+                report_error("Bad hp_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2716,8 +2670,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad mp_colour string: %s\n", field.c_str()));
+                report_error("Bad mp_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2739,9 +2692,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (insplit.empty() || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad stat_colour string: %s\n",
-                                 field.c_str()));
+                report_error("Bad stat_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2770,9 +2721,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 note_skill_levels.push_back(num);
             else
             {
-                report_error (
-                    make_stringf("Bad skill level to note -- %s\n",
-                                 thesplit[i].c_str()));
+                report_error("Bad skill level to note -- %s\n",
+                             thesplit[i].c_str());
                 continue;
             }
         }
@@ -2781,12 +2731,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         std::vector<std::string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
-            {
-                report_error(
-                    make_stringf("Error parsing spell lettering string: %s\n",
-                    field.c_str()));
-                return;
-            }
+        {
+            return report_error("Error parsing spell lettering string: %s\n",
+                                field.c_str());
+        }
         lowercase(thesplit[0]);
         auto_spell_letters.push_back(
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
@@ -3205,15 +3153,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "constant")
     {
         if (variables.find(field) == variables.end())
-        {
-            report_error(make_stringf("No variable named '%s' to make "
-                                      "constant", field.c_str()));
-        }
+            report_error("No variable named '%s' to make constant", field.c_str());
         else if (constants.find(field) != constants.end())
-        {
-            report_error(make_stringf("'%s' is already a constant",
-                                      field.c_str()));
-        }
+            report_error("'%s' is already a constant", field.c_str());
         else
             constants.insert(field);
     }
@@ -3303,17 +3245,12 @@ std::string game_options::resolve_include(const std::string &file,
             resolve_include(this->filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
-        {
-            report_error(
-                make_stringf("Cannot find %sfile \"%s\".",
-                             type, file.c_str()));
-        }
+            report_error("Cannot find %sfile \"%s\".", type, file.c_str());
         return (resolved);
     }
     catch (const std::string &err)
     {
-        report_error(
-            make_stringf("Cannot include %sfile: %s", type, err.c_str()));
+        report_error("Cannot include %sfile: %s", type, err.c_str());
         return "";
     }
 }
@@ -3350,8 +3287,13 @@ void game_options::include(const std::string &rawfilename,
         read_options(fl, runscript, false);
 }
 
-void game_options::report_error(const std::string &error)
+void game_options::report_error(const char* format, ...)
 {
+    va_list args;
+    va_start(args, format);
+    std::string error = vmake_stringf(format, args);
+    va_end(args);
+
     // If called before game starts, log a startup error,
     // otherwise spam the warning channel.
     if (crawl_state.need_save)
