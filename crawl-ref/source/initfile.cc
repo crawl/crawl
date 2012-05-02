@@ -2401,40 +2401,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
     else BOOL_OPTION(show_no_ctele);
-    else if (key == "hp_warning")
-    {
-        hp_warning = atoi(field.c_str());
-        if (hp_warning < 0 || hp_warning > 100)
-        {
-            hp_warning = 0;
-            fprintf(stderr, "Bad HP warning percentage -- %s\n",
-                     field.c_str());
-        }
-    }
-    else if (key == "mp_warning")
-    {
-        magic_point_warning = atoi(field.c_str());
-        if (magic_point_warning < 0 || magic_point_warning > 100)
-        {
-            magic_point_warning = 0;
-            fprintf(stderr, "Bad MP warning percentage -- %s\n",
-                     field.c_str());
-        }
-    }
+    else INT_OPTION(hp_warning, 0, 100);
+    else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else if (key == "note_monsters")
         append_vector(note_monsters, split_string(",", field));
     else if (key == "note_messages")
         append_vector(note_messages, split_string(",", field));
-    else if (key == "note_hp_percent")
-    {
-        note_hp_percent = atoi(field.c_str());
-        if (note_hp_percent < 0 || note_hp_percent > 100)
-        {
-            note_hp_percent = 0;
-            fprintf(stderr, "Bad HP note percentage -- %s\n",
-                     field.c_str());
-        }
-    }
+    else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
