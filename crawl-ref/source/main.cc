@@ -1436,8 +1436,9 @@ static void _go_upstairs()
         return;
 
     const bool leaving_dungeon =
-        level_id::current() == level_id(root_branch, 1)
-        && !feat_is_gate(ygrd);
+        ygrd == DNGN_EXIT_DUNGEON
+        || level_id::current() == level_id(root_branch, 1)
+           && !feat_is_gate(ygrd);
 
     if (leaving_dungeon)
     {
