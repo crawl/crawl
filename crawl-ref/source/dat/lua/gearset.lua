@@ -22,8 +22,7 @@
 --
 -- You can also just define one set of equipment; in this case, every time
 -- you hit F3 (swapkit), the macro makes sure you're wearing all the items in
--- that set (and only the items in that set). This is handy for transmuters who
--- need to kit up after a transform ends.
+-- that set (and only the items in that set).
 ------------------------------------------------------------------------
 function scan_kit()
     local kit = { }
