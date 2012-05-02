@@ -268,6 +268,18 @@ c$$$ccccc$$$c
 ccccccccccccc
 ENDMAP
 
+NAME:   firewood_loft
+TAGS:   extra
+DEPTH:  D:1-26
+ORIENT: float
+KITEM:  " = staff, quarterstaff, quarterstaff
+KITEM:  ' = staff, staff / any magical staff w:3
+MAP
+xxxxx
+x"']x
+xxxxx
+ENDMAP
+
 
 ################################################################################
 # Staircase flavour vaults.
