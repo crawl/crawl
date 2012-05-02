@@ -787,9 +787,17 @@ void down_stairs(dungeon_feature_type force_stair)
         you.where_are_you != old_level.branch
         && branches[you.where_are_you].parent_branch == old_level.branch);
 
-    if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
+    if (stair_find == DNGN_EXIT_ABYSS
+        || stair_find == DNGN_EXIT_PANDEMONIUM
+        || stair_find == DNGN_EXIT_THROUGH_ABYSS)
     {
         mpr("You pass through the gate.");
+        take_note(Note(NOTE_MESSAGE, 0, 0,
+            stair_find == DNGN_EXIT_ABYSS ? "Escaped the Abyss." :
+            stair_find == DNGN_EXIT_PANDEMONIUM ? "Escaped the Pandemonium." :
+            stair_find == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss." :
+            "Buggered into bugdom."), true);
+
         if (!you.wizard || !crawl_state.is_replaying_keys())
             more();
     }
