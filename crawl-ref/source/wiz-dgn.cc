@@ -331,10 +331,7 @@ void wizard_list_branches()
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (branches[i].parent_branch == NUM_BRANCHES)
-        {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) has a base depth of %d",
-                 i, branches[i].longname, startdepth[i]);
-        }
+            continue;
         else if (startdepth[i] != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
