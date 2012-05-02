@@ -173,15 +173,7 @@ static bool _is_noteworthy(const Note& note)
     }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
-    {
-        if (!_is_noteworthy_dlevel(note.packed_place))
-            return (false);
-
-        level_id place = level_id::from_packed_place(note.packed_place);
-        // Non-persistent places are always interesting.
-        if (!is_connected_branch(place))
-            return (true);
-    }
+        return _is_noteworthy_dlevel(note.packed_place);
 
     // Learning a spell is always noteworthy if note_all_spells is set.
     if (note.type == NOTE_LEARN_SPELL && Options.note_all_spells)
@@ -195,11 +187,6 @@ static bool _is_noteworthy(const Note& note)
         const Note& rnote(note_list[i]);
         switch (note.type)
         {
-        case NOTE_DUNGEON_LEVEL_CHANGE:
-            if (rnote.packed_place == note.packed_place)
-                return (false);
-            break;
-
         case NOTE_LEARN_SPELL:
             if (spell_difficulty(static_cast<spell_type>(rnote.first))
                 >= spell_difficulty(static_cast<spell_type>(note.first)))

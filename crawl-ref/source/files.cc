@@ -1477,6 +1477,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Initialize halos, etc.
     invalidate_agrid(true);
 
+    // Maybe make a note if we reached a new level.  Returning to the Abyss
+    // is not noteworthy, even though the Abyss is not saved.
+    if (just_created_level && return_pos.origin())
+        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+
     return just_created_level;
 }
 

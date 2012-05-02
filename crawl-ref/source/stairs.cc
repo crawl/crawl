@@ -1020,8 +1020,6 @@ void new_level(bool restore)
 
     cancel_tornado();
 
-    take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-
     if (player_in_branch(BRANCH_ZIGGURAT))
         you.zig_max = std::max(you.zig_max, you.depth);
 }
