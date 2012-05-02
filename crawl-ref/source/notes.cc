@@ -84,7 +84,11 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     const uint8_t branch = (place >> 8) & 0xFF;
     const int lev = (place & 0xFF);
 
-    // Special levels (Abyss, etc.) are always interesting.
+    // The Abyss is noted a different way (since we care mostly about the cause).
+    if (branch == BRANCH_ABYSS)
+        return (false);
+
+    // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
         return (true);
 
