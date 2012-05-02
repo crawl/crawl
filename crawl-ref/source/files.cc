@@ -1828,11 +1828,6 @@ static bool _restore_game(const std::string& filename)
 // returns false if a new game should start instead
 bool restore_game(const std::string& filename)
 {
-    // [ds] Set up branch depths for the current game type before
-    // trying to load the game. This is important for Sprint because
-    // it reduces the dungeon to 1 level, making D:1's place name "D"
-    // in save chunks.
-    initialise_branches_for_game_type();
     try
     {
         return _restore_game(filename);
