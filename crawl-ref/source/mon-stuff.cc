@@ -4647,11 +4647,15 @@ void debuff_monster(monster* mon)
     // Dispel all magical enchantments...
     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
     {
-        // ...except for natural invisibility.
-        if (lost_enchantments[i] == ENCH_INVIS
-            && mons_class_flag(mon->type, M_INVIS))
+        if (lost_enchantments[i] == ENCH_INVIS)
         {
-            continue;
+            // ...except for natural invisibility.
+            if (mons_class_flag(mon->type, M_INVIS))
+                continue;
+
+            // For non-natural invisibility, turn autopickup back on manually,
+            // since dispelling invisibility quietly won't do so.
+            autotoggle_autopickup(false);
         }
 
         mon->del_ench(lost_enchantments[i], true, true);
