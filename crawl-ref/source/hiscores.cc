@@ -813,6 +813,9 @@ enum old_job_type
 {
     OLD_JOB_THIEF        = -1,
     OLD_JOB_DEATH_KNIGHT = -2,
+    OLD_JOB_PALADIN      = -3,
+    OLD_JOB_REAVER       = -4,
+    NUM_OLD_JOBS
 };
 
 static const char* _job_name(int job)
@@ -826,6 +829,10 @@ static const char* _job_name(int job)
         return "Thief";
     case OLD_JOB_DEATH_KNIGHT:
         return "Death Knight";
+    case OLD_JOB_PALADIN:
+        return "Paladin";
+    case OLD_JOB_REAVER:
+        return "Reaver";
     default:
         return "unknown";
     }
@@ -842,6 +849,10 @@ static const char* _job_abbrev(int job)
         return "Th";
     case OLD_JOB_DEATH_KNIGHT:
         return "DK";
+    case OLD_JOB_PALADIN:
+        return "Pa";
+    case OLD_JOB_REAVER:
+        return "Re";
     default:
         return "??";
     }
@@ -854,10 +865,9 @@ static int _job_by_name(const std::string& name)
     if (job != JOB_UNKNOWN)
         return (job);
 
-    if (name == "Thief")
-        return (OLD_JOB_THIEF);
-    else if (name == "Death Knight")
-        return (OLD_JOB_DEATH_KNIGHT);
+    for (job = -1; job > NUM_OLD_JOBS - 2; job--)
+        if (name == _job_name(job))
+            return (job);
 
     return (JOB_UNKNOWN);
 }
