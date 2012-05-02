@@ -341,6 +341,9 @@ std::string overview_description_string(bool display)
 // iterate through every dungeon branch, listing the ones which have been found
 static std::string _get_seen_branches(bool display)
 {
+    // Each branch entry takes up 26 spaces + 38 for tags.
+    const int width = 64;
+
     int num_printed_branches = 1;
     char buffer[100];
     std::string disp;
@@ -355,25 +358,15 @@ static std::string _get_seen_branches(bool display)
 
     level_id dungeon_lid(branches[0].id, 0);
     dungeon_lid = find_deepest_explored(dungeon_lid);
-    if (crawl_state.game_is_sprint())
-    {
-        snprintf(buffer, sizeof(buffer),
-                        "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
-    }
-    else if (crawl_state.game_is_zotdef())
-    {
-        snprintf(buffer, sizeof(buffer),
-                        "<yellow>Zot</yellow>     <darkgrey>(1/1)</darkgrey>");
-    }
-    else
-    {
-        snprintf(buffer, sizeof(buffer),
-                dungeon_lid.depth < 10 ?
-                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
-                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>           ",
-                dungeon_lid.depth);
-    }
+
+    snprintf(buffer, sizeof(buffer),
+            "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>",
+            crawl_state.game_is_zotdef() ? "Zot" : "Dungeon",
+            dungeon_lid.depth,
+            crawl_state.game_is_zotdef() ? 1 : brdepth[BRANCH_MAIN_DUNGEON]);
+
     disp += buffer;
+    disp += std::string(std::max<int>(width - strlen(buffer), 0), ' ');
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
@@ -403,8 +396,7 @@ static std::string _get_seen_branches(bool display)
 
             disp += (num_printed_branches % 3) == 0
                     ? "\n"
-                    // Each branch entry takes up 26 spaces + 38 for tags.
-                    : std::string(std::max<int>(64 - strlen(buffer), 0), ' ');
+                    : std::string(std::max<int>(width - strlen(buffer), 0), ' ');
         }
     }
 
