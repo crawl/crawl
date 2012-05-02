@@ -1976,15 +1976,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == _opt_str) do {                                           \
         const int min_val = (_min_val);                                 \
         const int max_val = (_max_val);                                 \
-        int val = atoi(field.c_str());                                  \
-        if (val < min_val) {                                            \
+        int val = _opt_var;                                             \
+        if (!parse_int(field.c_str(), val))                             \
+            report_error("Bad %s: \"%s\"", _opt_str, field.c_str());    \
+        else if (val < min_val)                                         \
             report_error("Bad %s: %d < %d", _opt_str, val, min_val);    \
-            val = min_val;                                              \
-        } else if (val > max_val) {                                     \
+        else if (val > max_val)                                         \
             report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
-            val = max_val;                                              \
-        }                                                               \
-        this->_opt_var = val;                                           \
+        else                                                            \
+            this->_opt_var = val;                                       \
     } while (false)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
