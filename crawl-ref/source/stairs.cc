@@ -743,9 +743,15 @@ void down_stairs(dungeon_feature_type force_stair)
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
     if (!force_stair && old_feat == DNGN_ENTER_ABYSS)
+    {
         mark_milestone("abyss.enter", "entered the Abyss!");
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Voluntarily entered the Abyss."), true);
+    }
     else if (old_feat == DNGN_EXIT_THROUGH_ABYSS)
+    {
         mark_milestone("abyss.enter", "escaped (hah) into the Abyss!");
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Took an exit into the Abyss."), true);
+    }
     else if (stair_find == DNGN_EXIT_ABYSS
              && you.char_direction != GDT_GAME_START)
     {
