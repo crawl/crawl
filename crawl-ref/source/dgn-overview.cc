@@ -344,7 +344,7 @@ static std::string _get_seen_branches(bool display)
     // Each branch entry takes up 26 spaces + 38 for tags.
     const int width = 64;
 
-    int num_printed_branches = 1;
+    int num_printed_branches = 0;
     char buffer[100];
     std::string disp;
 
@@ -356,23 +356,12 @@ static std::string _get_seen_branches(bool display)
     }
     disp += "\n";
 
-    level_id dungeon_lid(branches[0].id, 0);
-    dungeon_lid = find_deepest_explored(dungeon_lid);
-
-    snprintf(buffer, sizeof(buffer),
-            "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>",
-            crawl_state.game_is_zotdef() ? "Zot" : "Dungeon",
-            dungeon_lid.depth,
-            brdepth[BRANCH_MAIN_DUNGEON]);
-
-    disp += buffer;
-    disp += std::string(std::max<int>(width - strlen(buffer), 0), ' ');
-
-    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    for (int i = 0; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
-        if (stair_level.find(branch) != stair_level.end())
+        if (branch == root_branch
+            || stair_level.find(branch) != stair_level.end())
         {
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
@@ -384,12 +373,15 @@ static std::string _get_seen_branches(bool display)
                 entry_desc += " " + it->describe(false, true);
             }
 
+            // "D" is a little too short here.
+            const char *brname = (branch == BRANCH_MAIN_DUNGEON
+                                  ? branches[branch].shortname
+                                  : branches[branch].abbrevname);
+
             snprintf(buffer, sizeof buffer,
-                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
-                     branches[branch].abbrevname,
-                     lid.depth,
-                     brdepth[branch],
-                     entry_desc.c_str());
+                "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                branch == root_branch ? -7 : 7,
+                brname, lid.depth, brdepth[branch], entry_desc.c_str());
 
             disp += buffer;
             num_printed_branches++;

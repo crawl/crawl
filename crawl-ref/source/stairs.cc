@@ -411,7 +411,7 @@ void up_stairs(dungeon_feature_type force_stair)
         old_level_info.update();
     }
 
-    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1)
+    if (player_in_branch(root_branch) && you.depth == 1)
     {
         you.depth = 0;
         mpr("You have escaped!");

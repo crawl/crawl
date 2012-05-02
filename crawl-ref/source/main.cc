@@ -1436,7 +1436,7 @@ static void _go_upstairs()
         return;
 
     const bool leaving_dungeon =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
+        level_id::current() == level_id(root_branch, 1)
         && !feat_is_gate(ygrd);
 
     if (leaving_dungeon)
@@ -3225,7 +3225,7 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && player_in_branch(BRANCH_MAIN_DUNGEON)
+        && player_in_branch(root_branch)
         && you.num_turns > 100)
     {
         zotdef_bosses_check();
@@ -3260,14 +3260,11 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < INT_MAX)
+        // Zotdef: Time only passes in the hall of zot
+        if ((!crawl_state.game_is_zotdef() || player_in_branch(root_branch))
+            && you.num_turns < INT_MAX)
         {
-            if (!crawl_state.game_is_zotdef()
-                || player_in_branch(BRANCH_MAIN_DUNGEON))
-            {
-                you.num_turns++;
-            }
+            you.num_turns++;
         }
 
         if (env.turns_on_level < INT_MAX)

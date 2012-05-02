@@ -1406,6 +1406,9 @@ static void tag_construct_you_dungeon(writer &th)
         marshallInt(th, startdepth[j]);
     }
 
+    // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
+    marshallInt(th, root_branch);
+
     marshallMap(th, stair_level,
                 _marshall_as_int<branch_type>, marshall_level_id_set);
     marshallMap(th, shops_present,
@@ -2211,6 +2214,16 @@ static void tag_read_you_dungeon(reader &th)
         startdepth[j] = unmarshallInt(th);
     }
     ASSERT(you.depth <= brdepth[you.where_are_you]);
+
+    // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_ROOT_BRANCH)
+#endif
+        root_branch = static_cast<branch_type>(unmarshallInt(th));
+#if TAG_MAJOR_VERSION == 33
+    else
+        root_branch = BRANCH_MAIN_DUNGEON;
+#endif
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,

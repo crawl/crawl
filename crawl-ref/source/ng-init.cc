@@ -48,6 +48,8 @@ static uint8_t _random_potion_description()
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
+    root_branch = BRANCH_MAIN_DUNGEON;
+
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
         const Branch *b = &branches[branch];
@@ -89,8 +91,9 @@ void initialise_branch_depths()
 
     if (crawl_state.game_is_zotdef())
     {
+        root_branch = BRANCH_HALL_OF_ZOT;
         brdepth.init(-1);
-        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_HALL_OF_ZOT] = 1;
         brdepth[BRANCH_BAZAAR] = 1;
         return;
     }

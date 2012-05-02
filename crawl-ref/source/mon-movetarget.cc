@@ -2,6 +2,7 @@
 
 #include "mon-movetarget.h"
 
+#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -84,7 +85,7 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && player_in_branch(BRANCH_MAIN_DUNGEON)
+    if (crawl_state.game_is_zotdef() && player_in_branch(root_branch)
         && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
     {
         if (you.wizard)

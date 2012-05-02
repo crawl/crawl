@@ -7,6 +7,7 @@
 
 #include "abyss.h"
 #include "arena.h"
+#include "branch.h"
 #include "cio.h"
 #include "command.h"
 #include "ctest.h"
@@ -213,6 +214,8 @@ static void _post_init(bool newc)
     // Abyssal Knights start out in the Abyss.
     if (newc && you.char_direction == GDT_GAME_START)
         you.where_are_you = BRANCH_ABYSS;
+    else if (newc)
+        you.where_are_you = root_branch;
 
     // XXX: Any invalid level_id should do.
     level_id old_level;

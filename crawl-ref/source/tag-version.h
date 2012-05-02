@@ -13,6 +13,7 @@ enum tag_minor_version
 {
     TAG_MINOR_INVALID         = -1,
     TAG_MINOR_RESET           = 0, // Minor tags were reset
+    TAG_MINOR_ROOT_BRANCH,         // Save root branch (zotdef in Zot)
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
