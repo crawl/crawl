@@ -454,7 +454,7 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
-        if (wearing_amulet(AMU_INACCURACY))
+        if (wearing_amulet(AMU_INACCURACY) && pbolt.hit != AUTOMATIC_HIT)
             pbolt.hit = std::max(0, pbolt.hit - 5);
     }
 
@@ -1203,7 +1203,7 @@ bool bolt::hit_wall()
 void bolt::affect_cell()
 {
     // Shooting through clouds affects accuracy.
-    if (env.cgrid(pos()) != EMPTY_CLOUD)
+    if (env.cgrid(pos()) != EMPTY_CLOUD && hit != AUTOMATIC_HIT)
         hit = std::max(hit - 2, 0);
 
     fake_flavour();
