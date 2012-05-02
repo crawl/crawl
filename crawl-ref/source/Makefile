@@ -1,3 +1,4 @@
+# vim:set ts=8 sw=4 noexpandtab:
 #
 # Dungeon Crawl Stone Soup
 # GNU Makefile
