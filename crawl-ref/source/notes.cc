@@ -447,7 +447,8 @@ void Note::check_milestone() const
         const int br = place_branch(packed_place),
                  dep = place_depth(packed_place);
 
-        if (br != -1)
+        // Wizlabs report their milestones on their own.
+        if (br != -1 && br != BRANCH_WIZLAB)
         {
             ASSERT(br >= 0 && br < NUM_BRANCHES);
             std::string branch = place_name(packed_place, true, false).c_str();
