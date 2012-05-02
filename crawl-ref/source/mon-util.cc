@@ -756,12 +756,12 @@ bool mons_is_mimic(monster_type mc)
 
 bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_VORPAL_ITEM_MIMIC);
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_MONSTROUS_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_VORPAL_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_MONSTROUS_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -840,6 +840,11 @@ void discover_mimic(const coord_def& pos, bool wake)
     // Early levels get inept mimics instead
     if (!x_chance_in_y(level - 6, 6))
         mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
+    else if (level > 20)
+        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_ITEM_MIMIC;
+
+    if (item && item->base_type == OBJ_ORBS)
+        mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
 
     if (feature_mimic)
     {
