@@ -45,32 +45,6 @@ static uint8_t _random_potion_description()
     return desc;
 }
 
-void initialise_branches_for_game_type()
-{
-    if (crawl_state.game_is_sprint())
-    {
-        brdepth.init(-1);
-        brdepth[BRANCH_MAIN_DUNGEON] = 1;
-        brdepth[BRANCH_ABYSS] = 1;
-        return;
-    }
-
-    if (crawl_state.game_is_zotdef())
-    {
-        brdepth.init(-1);
-        brdepth[BRANCH_MAIN_DUNGEON] = 1;
-        brdepth[BRANCH_BAZAAR] = 1;
-        return;
-    }
-
-    for (int i = 0; i < NUM_BRANCHES; i++)
-        brdepth[i] = branches[i].numlevels;
-
-    // In trunk builds, test variable-length branches.
-    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
-        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
-}
-
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
@@ -105,7 +79,28 @@ void initialise_branch_depths()
         startdepth[disabled_branch[i]] = -1;
     }
 
-    initialise_branches_for_game_type();
+    if (crawl_state.game_is_sprint())
+    {
+        brdepth.init(-1);
+        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_ABYSS] = 1;
+        return;
+    }
+
+    if (crawl_state.game_is_zotdef())
+    {
+        brdepth.init(-1);
+        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_BAZAAR] = 1;
+        return;
+    }
+
+    for (int i = 0; i < NUM_BRANCHES; i++)
+        brdepth[i] = branches[i].numlevels;
+
+    // In trunk builds, test variable-length branches.
+    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
+        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
 }
 
 #define MAX_OVERFLOW_LEVEL 9
