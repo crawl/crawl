@@ -1500,6 +1500,13 @@ void scorefile_entry::init(time_t dt)
     wiz_mode = (you.wizard ? 1 : 0);
 }
 
+void scorefile_entry::set_place(level_id lev)
+{
+    branch    = lev.branch;
+    dlvl      = lev.depth;
+    absdepth  = lev.absdepth();
+}
+
 std::string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
 {
     std::string line = character_description(verbosity);
@@ -2603,12 +2610,17 @@ void mark_milestone(const std::string &type,
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))
     {
-        const scorefile_entry se(0, 0, KILL_MISC, NULL);
+        scorefile_entry se(0, 0, KILL_MISC, NULL);
+        if (report_origin_level)
+            se.set_place(current_level_parent());
         se.set_base_xlog_fields();
         xlog_fields xl = se.get_fields();
         if (report_origin_level)
+        {
+            // Redundant; does Henzell/Gretell need it?
             xl.add_field("oplace", "%s",
                          current_level_parent().describe().c_str());
+        }
         xl.add_field("time", "%s",
                      make_date_string(se.get_death_time()).c_str());
         xl.add_field("type", "%s", type.c_str());
