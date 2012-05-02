@@ -363,7 +363,7 @@ static std::string _get_seen_branches(bool display)
             "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>",
             crawl_state.game_is_zotdef() ? "Zot" : "Dungeon",
             dungeon_lid.depth,
-            crawl_state.game_is_zotdef() ? 1 : brdepth[BRANCH_MAIN_DUNGEON]);
+            brdepth[BRANCH_MAIN_DUNGEON]);
 
     disp += buffer;
     disp += std::string(std::max<int>(width - strlen(buffer), 0), ' ');
