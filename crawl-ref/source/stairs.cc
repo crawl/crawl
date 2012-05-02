@@ -833,7 +833,6 @@ void down_stairs(dungeon_feature_type force_stair)
         // Are these too long?
         mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
         mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
-        mark_milestone("br.enter", "entered a Labyrinth.");
         break;
 
     case BRANCH_ABYSS:
