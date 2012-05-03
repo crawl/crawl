@@ -46,8 +46,6 @@ Monsters
 * Boulder beetles can roll as a boulder.
 * Jumping spiders can ensnare in melee.
 * Monsters who submerge stop fleeing.
-* Jumping spiders can ensnare in melee.
-* Monsters who submerge stop fleeing.
 * Umbras don't give bonuses to demons anymore.
 
 Spells
