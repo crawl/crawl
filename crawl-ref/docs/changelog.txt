@@ -19,7 +19,8 @@ Character
 * Humans get slightly more stat increases.
 * Nagas get constriction only at XL13.
 * Tengu can fly when transformed.
-* Grey Draconians got better at Earth, worse at Air.
+* Grey Draconians are better at Earth and worse at Air, and no longer
+  fumble in water.
 * The Evocations skill increases max MP.
 * Forms without some sort of hands can't use wands/etc.
 
