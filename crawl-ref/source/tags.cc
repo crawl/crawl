@@ -1860,8 +1860,6 @@ static void tag_read_you(reader &th)
         you.skill_order[j]     = unmarshallByte(th);
     }
 
-    init_can_train();
-
     you.auto_training = unmarshallBoolean(th);
 
     count = unmarshallByte(th);
