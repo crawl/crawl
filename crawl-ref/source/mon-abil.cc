@@ -3109,7 +3109,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             {
                 mpr("Having destroyed the fungal colony, you feel a bit more "
                     "experienced.");
-                gain_exp(500);
+                gain_exp(200);
             }
 
             // Get rid of the mold, so it'll be more useful when new fungi
