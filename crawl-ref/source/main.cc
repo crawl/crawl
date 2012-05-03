@@ -4131,7 +4131,8 @@ static void _move_player(coord_def move)
             }
             prompt += "?";
 
-            if (!yesno(prompt.c_str(), false, 'n'))
+            if (!crawl_state.disables[DIS_CONFIRMATIONS]
+                && !yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
