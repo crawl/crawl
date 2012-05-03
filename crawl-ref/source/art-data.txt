@@ -1076,11 +1076,12 @@ FIRE:    3
 INT:     3
 MAGIC:   100
 METAB:   10
+HP:      10
 MP:      10
 MUTATE:  6
 STEALTH: 100
 STR:     3
-BOOL:    nogen, berserk, blink, cursed, elec, inv, lev, life, nospell, notelep, poison, seeinv
+BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv
 
 # This is the second of two amulets used to test suppression. See above.
 NAME:    dark chocolate
@@ -1095,6 +1096,7 @@ EV:      -3
 FIRE:    -3
 INT:     -3
 METAB:   -10
+HP:      -10
 MP:      -10
 STEALTH: -100
 STR:     -3
