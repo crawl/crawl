@@ -2626,7 +2626,7 @@ void mark_milestone(const std::string &type,
         xlog_fields xl = se.get_fields();
         if (report_origin_level)
         {
-            // Redundant; does Henzell/Gretell need it?
+            // The branch entrance location
             xl.add_field("oplace", "%s",
                          current_level_parent().describe().c_str());
         }
