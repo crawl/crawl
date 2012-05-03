@@ -4228,7 +4228,7 @@ int player_effect_mutagenic()
     }
 }
 
-int player_res_mutation()
+int player_res_mutation_from_item()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())

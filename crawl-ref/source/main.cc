@@ -90,6 +90,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
@@ -3132,6 +3133,25 @@ static void _player_reacts_to_monsters()
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
 
+    // Entering/leaving a suppression aura needs to redraw player stats
+    if (!you.props.exists("was_suppressed")
+        || you.props["was_suppressed"].get_bool() != you.suppressed())
+    {
+        // HP and MP generally aren't recalculated each step, so we do it now
+        calc_hp_artefact();  // different from calc_hp()
+        calc_mp();
+
+        // Redraw everything that suppression might affect
+        you.redraw_hit_points = true;
+        you.redraw_magic_points = true;
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        you.redraw_stats[STAT_STR] = true;
+        you.redraw_stats[STAT_DEX] = true;
+        you.redraw_stats[STAT_INT] = true;
+
+        you.props["was_suppressed"] = you.suppressed();
+    }
 }
 
 static void _update_golubria_traps()
