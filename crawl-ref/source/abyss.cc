@@ -18,6 +18,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "dbg-scan.h"
 #include "dungeon.h"
 #include "env.h"
 #include "itemprop.h"
@@ -1236,6 +1237,8 @@ static void abyss_area_shift(void)
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
     place_transiting_items();
+
+    check_map_validity();
 }
 
 static void _initialize_abyss_state()
@@ -1346,6 +1349,7 @@ retry:
     _write_abyssal_features();
     map_mask abyss_genlevel_mask(1);
     _abyss_apply_terrain(abyss_genlevel_mask);
+    check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is
     // an altar to Lugonu and there's an exit near-by.

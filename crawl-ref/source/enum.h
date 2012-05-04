@@ -2787,7 +2787,7 @@ enum sense_type
     SENSE_WEB_VIBRATION,
 };
 
-enum shop_type // (uint8_t) env.sh_type[], item_in_shop(), in_a_shop()
+enum shop_type
 {
     SHOP_WEAPON,
     SHOP_ARMOUR,

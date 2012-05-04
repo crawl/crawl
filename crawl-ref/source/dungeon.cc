@@ -387,6 +387,8 @@ static bool _build_level_vetoable(bool enable_random_maps,
     // Discard any Lua chunks we loaded.
     strip_all_maps();
 
+    check_map_validity();
+
     return (true);
 }
 
