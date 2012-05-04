@@ -4907,8 +4907,8 @@ int get_real_mp(bool include_items)
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
-    // Note that suppression doesn't affect the antimagic brand.
-    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
+    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC)
+        && !you.suppressed())
         enp /= 3;
 
     enp = std::max(enp, 0);
