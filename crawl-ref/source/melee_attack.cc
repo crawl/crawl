@@ -1655,21 +1655,6 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
     return (damage);
 }
 
-void melee_attack::player_weapon_auto_id()
-{
-    if (weapon
-        && weapon->base_type == OBJ_WEAPONS
-        && !is_range_weapon(*weapon)
-        && !item_ident(*weapon, ISFLAG_KNOW_PLUSES)
-        && x_chance_in_y(you.skill(wpn_skill, 100), 10000))
-    {
-        set_ident_flags(*weapon, ISFLAG_KNOW_PLUSES);
-        mprf("You are wielding %s.", weapon->name(DESC_A).c_str());
-        more();
-        you.wield_change = true;
-    }
-}
-
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     if (weapon && weapon->base_type == OBJ_WEAPONS
@@ -5135,8 +5120,6 @@ int melee_attack::calc_damage()
         damage_done = player_apply_fighting_skill(damage_done, false);
         damage_done = player_apply_misc_modifiers(damage_done);
         damage_done = player_apply_weapon_bonuses(damage_done);
-
-        player_weapon_auto_id();
 
         damage_done = player_stab(damage_done);
         damage_done = apply_defender_ac(damage_done);

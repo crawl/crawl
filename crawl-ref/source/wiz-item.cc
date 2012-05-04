@@ -25,6 +25,7 @@
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
+#include "misc.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -558,7 +559,7 @@ void wizard_tweak_object(void)
 
         // cursedness might have changed
         ash_check_bondage();
-        god_id_inventory();
+        auto_id_inventory();
     }
 }
 

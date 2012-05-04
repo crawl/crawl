@@ -1844,6 +1844,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         item.slot = index_to_letter(item.link);
 
     god_id_item(item);
+    maybe_id_weapon(item);
 
     note_inscribe_item(item);
 

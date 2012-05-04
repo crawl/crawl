@@ -22,6 +22,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "message.h"
+#include "misc.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -216,6 +217,10 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
         // The player symbol depends on best skill title.
         update_player_symbol();
     }
+
+    // Identify weapon pluses.
+    if (exsk <= SK_THROWING)
+        auto_id_inventory();
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
