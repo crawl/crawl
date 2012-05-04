@@ -710,7 +710,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             int base = vault_mon_bases[i];
 
             if (type == -1)
+            {
                 place = level_id::from_packed_place(base);
+                *lev_mons = place.absdepth();
+            }
             else
             {
                 base_type = (monster_type) base;
