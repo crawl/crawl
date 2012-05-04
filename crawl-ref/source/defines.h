@@ -9,7 +9,7 @@
 #define DEFINES_H
 
 // Minimum terminal size allowed.
-#define MIN_COLS  80
+#define MIN_COLS  79
 #define MIN_LINES 24
 
 #define NUM_MONSTER_SPELL_SLOTS  6
