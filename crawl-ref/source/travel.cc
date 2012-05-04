@@ -42,6 +42,7 @@
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "stairs.h"
 #include "stash.h"
 #include "stuff.h"
 #include "env.h"
@@ -2976,18 +2977,15 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     int gridc = grd(pos);
     level_id id = current();
 
+    if (gridc == branches[id.branch].exit_stairs)
+        return upstairs_destination();
+
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (gridc == branches[i].entry_stairs)
         {
             id.branch = static_cast<branch_type>(i);
             id.depth = 1;
-            break;
-        }
-        if (gridc == branches[i].exit_stairs)
-        {
-            id.branch = branches[i].parent_branch;
-            id.depth = startdepth[i];
             break;
         }
     }

@@ -107,38 +107,37 @@ static void _player_change_level_reset()
     you.prev_grd_targ.reset();
 }
 
-static void _player_change_level_upstairs(dungeon_feature_type stair_find)
+level_id upstairs_destination()
 {
-    if (player_in_hell())
-    {
-        you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
-        you.depth = 1;
-        return;
-    }
+    level_id result = level_id::current();
 
-    if (--you.depth)
-        return;
+    if (player_in_hell())
+        return level_id(BRANCH_VESTIBULE_OF_HELL, 1);
+
+    // Ordinary within-branch upstairs.
+    if (--result.depth)
+        return result;
+
+    // Leaving the dungeon; the outside world is D:0.
+    if (player_in_branch(BRANCH_MAIN_DUNGEON))
+        return result;
 
     // We're changing branches.
 
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-    {
-        you.where_are_you = you.hell_branch;
-        you.depth = you.hell_exit;
-        return;
-    }
+        return level_id(you.hell_branch, you.hell_exit);
 
-    you.depth = startdepth[you.where_are_you];
-    if (you.depth == -1)
+    result.depth = startdepth[you.where_are_you];
+    if (result.depth == -1)
     {
         // Wizmode, the branch wasn't generated this game.
         // Pick the middle of the range instead.
-        you.depth = (branches[you.where_are_you].mindepth
-                   + branches[you.where_are_you].maxdepth) / 2;
+        result.depth = (branches[you.where_are_you].mindepth
+                       + branches[you.where_are_you].maxdepth) / 2;
     }
-    you.where_are_you = branches[you.where_are_you].parent_branch;
+    result.branch = branches[you.where_are_you].parent_branch;
 
-    if (you.where_are_you == NUM_BRANCHES)
+    if (result.branch == NUM_BRANCHES)
     {
         // Ie, it was a portal of some kind.
         if (you.level_stack.empty())
@@ -147,11 +146,19 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find)
                 level_id::current().describe().c_str());
         }
 
-        you.where_are_you = you.level_stack.back().id.branch;
-        you.depth =         you.level_stack.back().id.depth;
+        result.branch = you.level_stack.back().id.branch;
+        result.depth  = you.level_stack.back().id.depth;
     }
 
-    ASSERT(you.where_are_you < NUM_BRANCHES);
+    ASSERT(result.depth < NUM_BRANCHES);
+    return result;
+}
+
+static void _player_change_level_upstairs()
+{
+    level_id lev = upstairs_destination();
+    you.depth         = lev.depth;
+    you.where_are_you = lev.branch;
 }
 
 static bool _marker_vetoes_level_change()
@@ -427,7 +434,7 @@ void up_stairs(dungeon_feature_type force_stair)
     }
 
     _player_change_level_reset();
-    _player_change_level_upstairs(stair_find);
+    _player_change_level_upstairs();
 
     if (old_level.branch == BRANCH_VESTIBULE_OF_HELL
         && !player_in_branch(BRANCH_VESTIBULE_OF_HELL))
