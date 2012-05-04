@@ -78,7 +78,7 @@ const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
 const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
-enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
+enum brand_type // item_def.special
 {
     SPWPN_FORBID_BRAND = -1,
     SPWPN_NORMAL,
