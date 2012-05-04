@@ -52,7 +52,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        god_id_inventory();
+        auto_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
@@ -704,6 +704,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
+        maybe_id_weapon(item);
         break;
     }
     default:

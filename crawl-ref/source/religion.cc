@@ -2692,7 +2692,7 @@ static void _gain_piety_point()
                     you.duration[DUR_CONF] = 0;
                 }
 
-                god_id_inventory();
+                auto_id_inventory();
             }
 
             // When you gain a piety level, you get another chance to
@@ -3357,7 +3357,7 @@ static void _god_welcome_identify_gear()
 
     if (you.religion == GOD_ASHENZARI)
     {
-        // Seemingly redundant with god_id_inventory(), but we don't want to
+        // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (int i = 0; i < ENDOFPACK; i++)
             if (you.inv[i].defined())
@@ -3368,13 +3368,13 @@ static void _god_welcome_identify_gear()
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_WEAPON, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
-        god_id_inventory();
+        auto_id_inventory();
         ash_detect_portals(true);
     }
 
     // detect evil weapons
     if (you.religion == GOD_ELYVILON)
-        god_id_inventory();
+        auto_id_inventory();
 }
 
 void god_pitch(god_type which_god)

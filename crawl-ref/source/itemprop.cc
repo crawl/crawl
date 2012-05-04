@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -543,7 +544,7 @@ void do_curse_item(item_def &item, bool quiet)
             }
 
             ash_check_bondage();
-            god_id_inventory();
+            auto_id_inventory();
         }
 
         xom_is_stimulated(amusement);

@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "misc.h"
-#include "notes.h"
 
 #include <string.h>
 #include <algorithm>
@@ -42,6 +41,7 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -60,6 +60,7 @@
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
@@ -2658,6 +2659,53 @@ void maybe_id_resist(beam_type flavour)
         break;
 
     default: ;
+    }
+}
+
+bool maybe_id_weapon(item_def &item, const char *msg)
+{
+    iflags_t id = 0;
+
+    // Weapons you have wielded or know enough about.
+    if (item.base_type == OBJ_WEAPONS
+        && !(item.flags & ISFLAG_KNOW_PLUSES))
+    {
+        int min_skill20 = ((int)item.rnd) * 2 / 3;
+
+        if (item.flags & ISFLAG_KNOW_CURSE
+            && item.flags & ISFLAG_KNOW_TYPE
+            && you.skill(weapon_skill(item), 20) > min_skill20)
+        {
+            id = ISFLAG_KNOW_PLUSES;
+        }
+        else if (is_throwable(&you, item)
+                 && you.skill(SK_THROWING, 20) > min_skill20)
+        {
+            id = ISFLAG_KNOW_PLUSES;
+        }
+    }
+
+    if ((item.flags | id) != item.flags)
+    {
+        set_ident_flags(item, id);
+        if (msg)
+            mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
+        return true;
+    }
+
+    return false;
+}
+
+void auto_id_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined())
+        {
+            maybe_id_weapon(item, "You determine that: ");
+            god_id_item(item, false);
+        }
     }
 }
 

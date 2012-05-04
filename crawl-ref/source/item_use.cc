@@ -2964,7 +2964,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // ID check
         if (!teleport
             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-            && x_chance_in_y(you.skill(SK_THROWING, 100), 10000))
+            && item.base_type == OBJ_MISSILES ?
+               x_chance_in_y(you.skill(SK_THROWING, 100), 10000) :
+               maybe_id_weapon(item))
         {
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);

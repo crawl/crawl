@@ -129,6 +129,9 @@ void maybe_id_ring_TC();
 void maybe_id_ring_hunger();
 void maybe_id_resist(beam_type flavour);
 
+bool maybe_id_weapon(item_def &item, const char *msg = 0);
+void auto_id_inventory();
+
 int apply_chunked_AC(int dam, int ac);
 
 void entered_malign_portal(actor* act);

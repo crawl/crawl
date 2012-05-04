@@ -506,19 +506,6 @@ bool god_id_item(item_def& item, bool silent)
     return false;
 }
 
-void god_id_inventory()
-{
-    if (you.religion != GOD_ASHENZARI && you.religion != GOD_ELYVILON)
-        return;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-            god_id_item(item, false);
-    }
-}
-
 void ash_id_monster_equipment(monster* mon)
 {
     if (you.religion != GOD_ASHENZARI)
