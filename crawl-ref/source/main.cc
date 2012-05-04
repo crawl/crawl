@@ -3134,8 +3134,9 @@ static void _player_reacts_to_monsters()
         you.awake();
 
     // Entering/leaving a suppression aura needs to redraw player stats
-    if (!you.props.exists("was_suppressed")
-        || you.props["was_suppressed"].get_bool() != you.suppressed())
+    // and generally recalculate some things that aren't generally recalc'd
+    // with every step. This is how we detect crossing the threshold.
+    if (you.props.exists("exists_if_suppressed") != you.suppressed())
     {
         // HP and MP generally aren't recalculated each step, so we do it now
         calc_hp_artefact();  // different from calc_hp()
@@ -3150,7 +3151,14 @@ static void _player_reacts_to_monsters()
         you.redraw_stats[STAT_DEX] = true;
         you.redraw_stats[STAT_INT] = true;
 
-        you.props["was_suppressed"] = you.suppressed();
+        if(you.suppressed())
+        {
+            you.props["exists_if_suppressed"] = true;
+        }
+        else
+        {
+           you.props.erase("exists_if_suppressed");
+        } 
     }
 }
 
