@@ -674,8 +674,13 @@ static void _dgn_unregister_vault(const map_def &map)
 bool dgn_square_travel_ok(const coord_def &c)
 {
     const dungeon_feature_type feat = grd(c);
-    return (feat_is_traversable(feat) || feat_is_trap(feat)
-            || feat == DNGN_SECRET_DOOR);
+    if (feat_is_trap(feat))
+    {
+        const trap_def * const trap = find_trap(c);
+        return !(trap && trap->type == TRAP_TELEPORT);
+    }
+    else
+        return (feat_is_traversable(feat) || feat == DNGN_SECRET_DOOR);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
