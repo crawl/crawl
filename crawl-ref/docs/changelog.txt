@@ -7,7 +7,7 @@ Highlights
 
 Branches, environment
 ---------------------
-* New wizlab: Golubria's Roulette.
+* New wizlab: Roulette of Golubria.
 * You don't lose portal vaults after being banished from one.
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
