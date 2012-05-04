@@ -178,7 +178,6 @@ static void _change_skill_level(skill_type exsk, int n)
     // right if you.skills[] hasn't been updated yet.
     if (exsk == SK_FIGHTING)
         calc_hp();
-    // TODO: also identify rings of wizardry.
 }
 
 // Called whenever a skill is trained.
