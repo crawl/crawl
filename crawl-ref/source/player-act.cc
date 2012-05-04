@@ -223,7 +223,7 @@ brand_type player::damage_brand(int)
 
     if (wpn != -1 && !you.melded[EQ_WEAPON])
     {
-        if (!is_range_weapon(inv[wpn]))
+        if (!is_range_weapon(inv[wpn]) && !you.suppressed())
             ret = get_weapon_brand(inv[wpn]);
     }
     else if (duration[DUR_CONFUSING_TOUCH])
