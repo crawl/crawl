@@ -1431,6 +1431,11 @@ void skill_menu(int flag, int exp)
                 }
             // Fallthrough
             default:
+                // Don't accept experience selections just because the user
+                // pressed a wrong letter or number.
+                if (skm.is_set(SKMF_EXPERIENCE) && isalnum(keyn))
+                    continue;
+
                 if (skm.exit())
                     return;
             }
