@@ -2079,7 +2079,7 @@ bool melee_attack::player_monattk_hit_effects()
         }
     }
 
-    return (defender->alive());
+    return (true);
 }
 
 void melee_attack::_defender_die()
