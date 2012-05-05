@@ -583,9 +583,13 @@ bool melee_attack::handle_phase_damaged()
         }
     }
 
+    // We have to check in_bounds() because removed kraken tentacles are
+    // temporarily returned to existence (without a position) when they
+    // react to damage.
     if (defender->can_bleed()
         && !defender->is_summoned()
-        && !defender->submerged())
+        && !defender->submerged()
+        && in_bounds(defender->pos()))
     {
         int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
@@ -2046,7 +2050,7 @@ bool melee_attack::player_monattk_hit_effects()
     if (decapitate_hydra(damage_done))
         return (defender->alive());
 
-    // These two (staff damage and damage brand) are mutually exclusive!
+    // Mutually exclusive with (overrides) brand damage!
     apply_staff_damage();
 
     if (!defender->alive())
@@ -2064,6 +2068,7 @@ bool melee_attack::player_monattk_hit_effects()
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
         && damage_done + special_damage > random2(defender->get_experience_level())
+        && defender->alive()
         && !defender->as_monster()->has_ench(ENCH_CONFUSION)
         && mons_class_is_confusable(defender->type))
     {
@@ -2074,7 +2079,7 @@ bool melee_attack::player_monattk_hit_effects()
         }
     }
 
-    return (true);
+    return (defender->alive());
 }
 
 void melee_attack::_defender_die()
