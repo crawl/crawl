@@ -118,32 +118,39 @@ static void _write_abyssal_features()
         return;
 
     const int count = abyssal_features.size();
+    ASSERT(count == 213);
     const int scalar = 0xFF;
     int index = 0;
-    for (radius_iterator ri(ABYSS_CENTRE, LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
     {
-        const int dist = distance(ABYSS_CENTRE, *ri);
-        int chance = pow(0.98, dist) * scalar;
-        if (!map_masked(*ri, MMT_VAULT))
+        for (int y = -LOS_RADIUS; y <= LOS_RADIUS; y++)
         {
-            if (dist < 4 || x_chance_in_y(chance, scalar))
+            coord_def p(x, y);
+            const int dist = p.abs();
+            if (dist > LOS_RADIUS * LOS_RADIUS + 1)
+                continue;
+            p += ABYSS_CENTRE;
+
+            int chance = pow(0.98, dist) * scalar;
+            if (!map_masked(p, MMT_VAULT))
             {
-                if (abyssal_features[index] != DNGN_UNSEEN)
+                if (dist < 4 || x_chance_in_y(chance, scalar))
                 {
-                    grd(*ri) = abyssal_features[index];
-                    env.level_map_mask(*ri) = MMT_VAULT;
+                    if (abyssal_features[index] != DNGN_UNSEEN)
+                    {
+                        grd(p) = abyssal_features[index];
+                        env.level_map_mask(p) = MMT_VAULT;
+                    }
+                }
+                else
+                {
+                    //Entombing the player is lame.
+                    grd(p) = DNGN_FLOOR;
                 }
             }
-            else
-            {
-                //Entombing the player is lame.
-                grd(*ri) = DNGN_FLOOR;
-            }
-        }
 
-        ++index;
-        if (index > count)
-            return;
+            ++index;
+        }
     }
 }
 
@@ -396,38 +403,44 @@ void push_features_to_abyss()
 {
     abyssal_features.clear();
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
     {
-        dungeon_feature_type feature = grd(*ri);
+        for (int y = -LOS_RADIUS; y <= LOS_RADIUS; y++)
+         {
+             coord_def p(x, y);
+             if (p.abs() > LOS_RADIUS * LOS_RADIUS + 1)
+                 continue;
 
-        if (!in_bounds(*ri))
-            feature = DNGN_UNSEEN;
+             p += you.pos();
 
-        if (feat_is_stair(feature))
-            feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
+             dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
 
-        if (feat_is_altar(feature))
-            feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
+             if (feat_is_stair(feature))
+                 feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
 
-        if (feat_is_trap(feature, true) || feature == DNGN_ENTER_SHOP)
-            feature = DNGN_FLOOR;
+             if (feat_is_altar(feature))
+                 feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
 
-        switch (feature)
-        {
-            // demote permarock
-            case DNGN_PERMAROCK_WALL:
-                feature = DNGN_ROCK_WALL;
-                break;
-            case DNGN_CLEAR_PERMAROCK_WALL:
-                feature = DNGN_CLEAR_ROCK_WALL;
-                break;
-            case DNGN_SLIMY_WALL:
-                feature = DNGN_GREEN_CRYSTAL_WALL;
-            default:
-                // handle more terrain types.
-                break;
+             if (feat_is_trap(feature, true) || feature == DNGN_ENTER_SHOP)
+                 feature = DNGN_FLOOR;
+
+             switch (feature)
+             {
+                 // demote permarock
+                 case DNGN_PERMAROCK_WALL:
+                     feature = DNGN_ROCK_WALL;
+                     break;
+                 case DNGN_CLEAR_PERMAROCK_WALL:
+                     feature = DNGN_CLEAR_ROCK_WALL;
+                     break;
+                 case DNGN_SLIMY_WALL:
+                     feature = DNGN_GREEN_CRYSTAL_WALL;
+                 default:
+                     // handle more terrain types.
+                     break;
+             }
+             abyssal_features.push_back(feature);
         }
-        abyssal_features.push_back(feature);
     }
 }
 
