@@ -118,8 +118,8 @@ level_id upstairs_destination()
     if (--result.depth)
         return result;
 
-    // Leaving the dungeon; the outside world is D:0.
-    if (player_in_branch(BRANCH_MAIN_DUNGEON))
+    // Leaving the dungeon; the outside world is level 0.
+    if (player_in_branch(root_branch))
         return result;
 
     // We're changing branches.
@@ -139,6 +139,10 @@ level_id upstairs_destination()
 
     if (result.branch == NUM_BRANCHES)
     {
+        // Maybe we started in the abyss?
+        if (you.char_direction == GDT_GAME_START)
+            return level_id(BRANCH_MAIN_DUNGEON, 1);
+
         // Ie, it was a portal of some kind.
         if (you.level_stack.empty())
         {
