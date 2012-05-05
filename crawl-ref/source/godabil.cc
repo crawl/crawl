@@ -2397,7 +2397,7 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
         msg::streams(MSGCH_PROMPT) << prompt << " (" << max << " max) "
                                    << std::endl;
 
-        const unsigned char keyin = get_ch();
+        const int keyin = get_ch();
 
         // Cancel
         if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')

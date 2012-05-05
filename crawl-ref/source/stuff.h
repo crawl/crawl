@@ -17,7 +17,7 @@ void set_redraw_status(uint64_t flags);
 
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
-unsigned char get_ch();
+int get_ch();
 
 void cio_init();
 void cio_cleanup();
