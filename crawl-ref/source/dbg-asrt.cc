@@ -95,25 +95,14 @@ static void _dump_compilation_info(FILE* file)
 
 static void _dump_level_info(FILE* file)
 {
-    CrawlHashTable &props = env.properties;
-
     fprintf(file, "Place info:\n");
 
     fprintf(file, "branch = %d, depth = %d\n\n",
             (int)you.where_are_you, you.depth);
 
     std::string place = level_id::current().describe();
-    std::string orig_place;
-
-    if (!props.exists(LEVEL_ID_KEY))
-        orig_place = "ABSENT";
-    else
-        orig_place = props[LEVEL_ID_KEY].get_string();
 
     fprintf(file, "Level id: %s\n", place.c_str());
-    if (place != orig_place)
-        fprintf(file, "Level id when level was generated: %s\n",
-                orig_place.c_str());
 
     debug_dump_levgen();
 }
