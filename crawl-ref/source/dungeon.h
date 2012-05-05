@@ -22,7 +22,6 @@
 #define LAYOUT_TYPE_KEY  "layout_type_key"
 #define LEVEL_VAULTS_KEY "level_vaults_key"
 #define LEVEL_EXTRAS_KEY "level_extras_key"
-#define LEVEL_ID_KEY     "level_id_key"
 
 // See _build_overflow_temples() in dungeon.cc for details on overflow
 // temples.

@@ -353,7 +353,6 @@ static bool _build_level_vetoable(bool enable_random_maps,
     // so we can include it in crash reports.
     env.properties[BUILD_METHOD_KEY] = env.level_build_method;
     env.properties[LAYOUT_TYPE_KEY]  = level_layout_type;
-    env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
 
     // Save information in the player's properties has table so
     // we can include it in the character dump.
