@@ -4673,7 +4673,9 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         mons_spec monster_type_thing(RANDOM_MONSTER);
 
         monster_level = place.level_number;
-        if (vgrid == '8')
+        if (branches[you.where_are_you].numlevels <= 1)
+            ; // no data that could be used for OODs there
+        else if (vgrid == '8')
             monster_level = 4 + (place.level_number * 2);
         else if (vgrid == '9')
             monster_level = 5 + place.level_number;
