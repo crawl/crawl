@@ -292,6 +292,8 @@ static bool _get_kraken_head(const monster*& mon)
     {
         if (invalid_monster_index(mon->number))
             return (false);
+        if (invalid_monster(&menv[mon->number]))
+            return (false);
 
         mon = &menv[mon->number];
     }
@@ -300,6 +302,8 @@ static bool _get_kraken_head(const monster*& mon)
     if (mon->type == MONS_KRAKEN_TENTACLE)
     {
         if (invalid_monster_index(mon->number))
+            return (false);
+        if (invalid_monster(&menv[mon->number]))
             return (false);
 
         mon = &menv[mon->number];
