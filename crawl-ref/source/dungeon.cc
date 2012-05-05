@@ -1363,7 +1363,10 @@ static void _fixup_misplaced_items()
             if (feat >= DNGN_MINITEM)
                 continue;
 
-            mprf(MSGCH_ERROR, "Item buggily placed in feature at (%d, %d).",
+            mprf(MSGCH_ERROR, "Item %s buggily placed in feature %s at (%d, %d).",
+                 item.name(DESC_PLAIN).c_str(),
+                 feature_description(item.pos, false, DESC_PLAIN,
+                                     false, false).c_str(),
                  item.pos.x, item.pos.y);
         }
         else
