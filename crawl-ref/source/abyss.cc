@@ -66,6 +66,7 @@ static std::vector<dungeon_feature_type> abyssal_features;
 static std::list<monster*> displaced_monsters;
 
 static void abyss_area_shift(void);
+static void _push_items(void);
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.  Returns the chosen location, or INVALID_COORD if it
@@ -154,6 +155,8 @@ static void _write_abyssal_features()
             ++index;
         }
     }
+
+    _push_items();
 }
 
 // Returns the roll to use to check if we want to create an abyssal rune.
