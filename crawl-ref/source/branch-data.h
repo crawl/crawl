@@ -56,7 +56,7 @@ const Branch branches[NUM_BRANCHES] = {
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       NULL,
-      true, YELLOW, BROWN,
+      true, BROWN, BROWN,
       mons_dwarf_rare, mons_dwarf_level,
       'K', false, 0 },
 
