@@ -1424,19 +1424,20 @@ void skill_menu(int flag, int exp)
                     continue;
             // Fallthrough. In experience mode, you can exit with enter.
             case CK_ESCAPE:
+                // Escape cancels help if it is being displayed.
                 if (skm.is_set(SKMF_HELP))
                 {
                     skm.cancel_help();
                     continue;
                 }
             // Fallthrough
-            default:
-                // Don't accept experience selections just because the user
-                // pressed a wrong letter or number.
-                if (skm.is_set(SKMF_EXPERIENCE) && isalnum(keyn))
-                    continue;
-
+            case ' ':
+                // Space and escape exit in any mode.
                 if (skm.exit())
+                    return;
+            default:
+                // Don't exit from !experience on random keys.
+                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit())
                     return;
             }
         }
