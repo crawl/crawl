@@ -960,8 +960,6 @@ static bool _grab_follower_at(const coord_def &pos)
         return (true);
 
     level_id dest = level_id::current();
-    if (you.char_direction == GDT_GAME_START)
-        dest.depth = 1;
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
