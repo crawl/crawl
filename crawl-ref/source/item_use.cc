@@ -4683,7 +4683,11 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     {
         you.wield_change = true;
         if (wpn.base_type == OBJ_MISSILES)
+        {
+            if (item_ident(wpn, ISFLAG_KNOW_PLUSES))
+                you.known_missiles.insert(missile_id(wpn));
             _merge_ammo_in_inventory(wpn.link);
+        }
     }
 
     return success;

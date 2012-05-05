@@ -260,6 +260,8 @@ public:
   // Additional information, about tried unidentified items.
   // (e.g. name of item, for scrolls of RC, ID, EA)
   CrawlHashTable type_id_props;
+  // Identified missiles (by packed _missile_id()).
+  std::set<int> known_missiles;
 
 #if TAG_MAJOR_VERSION <= 33
   int montiers[5]; // four monster tiers, plus corpse count

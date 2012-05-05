@@ -1340,6 +1340,13 @@ static void tag_construct_you_items(writer &th)
     // Additional identification info
     you.type_id_props.write(th);
 
+    marshallShort(th, you.known_missiles.size());
+    for (std::set<int>::const_iterator mk = you.known_missiles.begin();
+         mk != you.known_missiles.end(); ++mk)
+    {
+        marshallInt(th, *mk);
+    }
+
     // how many unique items?
     marshallByte(th, MAX_UNRANDARTS);
     for (j = 0; j < MAX_UNRANDARTS; ++j)
@@ -2103,6 +2110,17 @@ static void tag_read_you_items(reader &th)
 
     // Additional identification info
     you.type_id_props.read(th);
+
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_KNOWN_MISSILES)
+    {
+#endif
+    count = unmarshallShort(th);
+    for (i = 0; i < count; ++i)
+        you.known_missiles.insert(unmarshallInt(th));
+#if TAG_MAJOR_VERSION == 33
+    }
+#endif
 
     // how many unique items?
     count = unmarshallUByte(th);
