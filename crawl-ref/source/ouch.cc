@@ -1516,7 +1516,8 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory();
+    if (!crawl_state.disables[DIS_CONFIRMATIONS])
+        browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
@@ -1545,7 +1546,7 @@ void _end_game(scorefile_entry &se)
 #endif
 
     // just to pause, actual value returned does not matter {dlb}
-    if (!crawl_state.seen_hups)
+    if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         get_ch();
 
     if (se.get_death_type() == KILLED_BY_WINNING)
