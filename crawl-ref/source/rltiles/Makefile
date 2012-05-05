@@ -129,7 +129,7 @@ clean:
 distclean: clean
 
 %.o: %.cc .cflags
-	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
