@@ -994,7 +994,7 @@ void yell(bool force)
     mprf(" Anything else - Stay silent%s.",
          one_chance_in(20) ? " (and be thought a fool)" : "");
 
-    unsigned char keyn = get_ch();
+    int keyn = get_ch();
     mesclr();
 
     switch (keyn)
