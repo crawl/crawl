@@ -1967,7 +1967,7 @@ std::string get_item_description(const item_def &item, bool verbose,
             case CE_POISONOUS:
                 description << "\n\nThis meat is poisonous.";
                 break;
-            case CE_MUTAGEN_RANDOM:
+            case CE_MUTAGEN:
                 if (you.species != SP_GHOUL)
                 {
                     description << "\n\nEating this meat will cause random "

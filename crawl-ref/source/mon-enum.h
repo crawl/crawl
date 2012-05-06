@@ -21,8 +21,7 @@ enum corpse_effect_type
     CE_POISONOUS,
     CE_POISON_CONTAM,
     CE_ROT,
-    CE_MUTAGEN_RANDOM,
-    CE_MUTAGEN_BAD,     //    may be worth implementing {dlb}
+    CE_MUTAGEN,
     CE_ROTTEN,
 };
 

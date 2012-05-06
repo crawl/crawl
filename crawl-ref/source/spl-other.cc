@@ -439,11 +439,10 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         pot_type = POT_POISON;
         break;
 
-    case CE_MUTAGEN_RANDOM:
+    case CE_MUTAGEN:
         pot_type = POT_MUTATION;
         break;
 
-    case CE_MUTAGEN_BAD:    // unused
     case CE_ROTTEN:         // actually this only occurs via mangling
     case CE_ROT:            // necrophage
         pot_type = POT_DECAY;
