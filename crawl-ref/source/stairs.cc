@@ -146,6 +146,10 @@ level_id upstairs_destination()
         // Ie, it was a portal of some kind.
         if (you.level_stack.empty())
         {
+#if TAG_MAJOR_VERSION == 33
+            if (you.props.exists("ticket_to_D:1"))
+                return level_id(BRANCH_MAIN_DUNGEON, 1);
+#endif
             die("portal exit without return destination (%s)",
                 level_id::current().describe().c_str());
         }
@@ -541,7 +545,11 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
     case DNGN_EXIT_PANDEMONIUM:
         if (you.level_stack.empty())
         {
+#if TAG_MAJOR_VERSION == 33
+            if (you.wizard || you.props.exists("ticket_to_D:1"))
+#else
             if (you.wizard)
+#endif
             {
                 mpr("Error: no return path. You did create the exit manually, "
                     "didn't you? Let's go to D:1.", MSGCH_ERROR);
