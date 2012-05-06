@@ -1104,43 +1104,46 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
     coord_def return_pos;
-    if (!you.level_stack.empty()
-        && you.level_stack.back().id == level_id::current())
+    if (load_mode != LOAD_VISITOR)
     {
-        return_pos = you.level_stack.back().pos;
-        you.level_stack.pop_back();
-        env.level_state |= LSTATE_DELETED;
-    }
-    else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
-          || stair_taken == DNGN_EXIT_THROUGH_ABYSS
-          || stair_taken == DNGN_STONE_STAIRS_DOWN_I
-             && old_level.branch == BRANCH_ZIGGURAT
-          || old_level.branch == BRANCH_ABYSS)
-    {
-        env.level_state |= LSTATE_DELETED;
-    }
-
-    if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
-    {
-        std::vector<std::string> stack;
-        for (unsigned int i = 0; i < you.level_stack.size(); i++)
-            stack.push_back(you.level_stack[i].id.describe());
-        if (you.wizard)
+        if (!you.level_stack.empty()
+            && you.level_stack.back().id == level_id::current())
         {
-            // warn about breakage so testers know it's an abnormal situation.
-            mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
-                 "the same level (%s) twice! It will be trampled upon return.\n"
-                 "The stack has: %s.",
-                 level_id::current().describe().c_str(),
-                 comma_separated_line(stack.begin(), stack.end(),
-                                      ", ", ", ").c_str());
+            return_pos = you.level_stack.back().pos;
+            you.level_stack.pop_back();
+            env.level_state |= LSTATE_DELETED;
         }
-        else
+        else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
+              || stair_taken == DNGN_EXIT_THROUGH_ABYSS
+              || stair_taken == DNGN_STONE_STAIRS_DOWN_I
+                 && old_level.branch == BRANCH_ZIGGURAT
+              || old_level.branch == BRANCH_ABYSS)
         {
-            die("Attempt to enter a portal (%s) twice; stack: %s",
-                level_id::current().describe().c_str(),
-                comma_separated_line(stack.begin(), stack.end(),
-                                     ", ", ", ").c_str());
+            env.level_state |= LSTATE_DELETED;
+        }
+
+        if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
+        {
+            std::vector<std::string> stack;
+            for (unsigned int i = 0; i < you.level_stack.size(); i++)
+                stack.push_back(you.level_stack[i].id.describe());
+            if (you.wizard)
+            {
+                // warn about breakage so testers know it's an abnormal situation.
+                mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+                        "the same level (%s) twice! It will be trampled upon return.\n"
+                        "The stack has: %s.",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
+            else
+            {
+                die("Attempt to enter a portal (%s) twice; stack: %s",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
         }
     }
 
