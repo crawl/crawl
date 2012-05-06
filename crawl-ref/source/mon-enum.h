@@ -15,17 +15,17 @@
 
 enum corpse_effect_type
 {
-    CE_NOCORPSE,        //    0
-    CE_CLEAN,           //    1
-    CE_CONTAMINATED,    //    2
-    CE_POISONOUS,       //    3
-    CE_POISON_CONTAM,   //    4
-    CE_ROT,             //    5
-    CE_MUTAGEN_RANDOM,  //    6
-    CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
-    CE_RANDOM,          //    9 - not used, but may be worth implementing {dlb}
-    CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
+    CE_NOCORPSE,
+    CE_CLEAN,
+    CE_CONTAMINATED,
+    CE_POISONOUS,
+    CE_POISON_CONTAM,
+    CE_ROT,
+    CE_MUTAGEN_RANDOM,
+    CE_MUTAGEN_GOOD,    //    may be worth implementing {dlb}
+    CE_MUTAGEN_BAD,     //    may be worth implementing {dlb}
+    CE_RANDOM,          //    not used, but may be worth implementing {dlb}
+    CE_ROTTEN,
 };
 
 enum gender_type
