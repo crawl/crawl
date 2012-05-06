@@ -2327,8 +2327,7 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
-        you.attribute[ATTR_WAS_SILENCED] = 0;
+    _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
     _decrement_a_duration(DUR_REPEL_MISSILES, delay,
                           "You feel less protected from missiles.",
