@@ -79,9 +79,7 @@
      CE_POISON_CONTAM,   contaminated if poison-resistant, else poisonous
      CE_ROT,             causes rotting in non-Ghouls
      CE_MUTAGEN_RANDOM,  mutagenic
-     CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
      CE_MUTAGEN_BAD,   // may be worth implementing {dlb}
-     CE_RANDOM,        // not used, but may be worth implementing {dlb}
      CE_ROTTEN           always causes sickness (good for Ghouls)
 
    zombie_size
