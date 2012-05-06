@@ -21,6 +21,7 @@ enum lang_t
     LANG_DWARVEN,
     LANG_JAGERKIN,
     LANG_KRAUT,
+    LANG_CYRILLIC,
     LANG_WIDE,
 };
 
