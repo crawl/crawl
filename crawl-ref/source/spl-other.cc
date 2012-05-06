@@ -440,8 +440,6 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         break;
 
     case CE_MUTAGEN_RANDOM:
-    case CE_MUTAGEN_GOOD:   // unused
-    case CE_RANDOM:         // unused
         pot_type = POT_MUTATION;
         break;
 

@@ -499,8 +499,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     // Being naturally mutagenic isn't good either.
     corpse_effect_type ce = mons_corpse_effect(mon->type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
-         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !mon->is_chaotic())
+    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM
+         || ce == CE_MUTAGEN_BAD) && !mon->is_chaotic())
     {
         eligibility[RECITE_IMPURE]++;
     }

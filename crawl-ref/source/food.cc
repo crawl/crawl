@@ -1842,9 +1842,7 @@ static void _eat_chunk(item_def& food)
     }
 
     case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
-    case CE_MUTAGEN_GOOD:
     case CE_NOCORPSE:
-    case CE_RANDOM:
         mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
         break;
     }
