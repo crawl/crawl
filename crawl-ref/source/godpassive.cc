@@ -59,8 +59,8 @@ void jiyva_eat_offlevel_items()
 
         // Choose level based on main dungeon depth so that levels short branches
         // aren't picked more often.
-        ASSERT(brdepth[branch] <= brdepth[BRANCH_MAIN_DUNGEON]);
-        const int level  = random2(brdepth[BRANCH_MAIN_DUNGEON]) + 1;
+        ASSERT(brdepth[branch] <= MAX_BRANCH_DEPTH);
+        const int level  = random2(MAX_BRANCH_DEPTH) + 1;
 
         const level_id lid(static_cast<branch_type>(branch), level);
 

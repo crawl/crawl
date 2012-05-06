@@ -2227,6 +2227,8 @@ static void tag_read_you_dungeon(reader &th)
     for (int j = 0; j < count; ++j)
     {
         brdepth[j]    = unmarshallInt(th);
+        ASSERT(brdepth[j] >= -1);
+        ASSERT(brdepth[j] <= MAX_BRANCH_DEPTH);
         startdepth[j] = unmarshallInt(th);
     }
     ASSERT(you.depth <= brdepth[you.where_are_you]);

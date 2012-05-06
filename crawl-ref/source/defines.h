@@ -158,6 +158,8 @@ const int LABYRINTH_BORDER = 4;
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
 
+#define MAX_BRANCH_DEPTH 27
+
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
