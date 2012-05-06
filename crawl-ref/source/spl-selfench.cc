@@ -333,10 +333,7 @@ spret_type cast_see_invisible(int pow, bool fail)
 spret_type cast_silence(int pow, bool fail)
 {
     fail_check();
-    if (!you.attribute[ATTR_WAS_SILENCED])
-        mpr("A profound silence engulfs you.");
-
-    you.attribute[ATTR_WAS_SILENCED] = 1;
+    mpr("A profound silence engulfs you.");
 
     you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
     invalidate_agrid(true);

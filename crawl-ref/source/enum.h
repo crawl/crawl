@@ -227,8 +227,10 @@ enum attribute_type
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_CARD_COUNTDOWN,
-    ATTR_WAS_SILENCED,          //jmf: added for silenced messages
-    ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
+#if TAG_MAJOR_VERSION == 33
+    ATTR_UNUSED_1,
+    ATTR_UNUSED_2,
+#endif
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in

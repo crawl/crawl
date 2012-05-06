@@ -2094,7 +2094,6 @@ void revive()
     restore_stat(STAT_ALL, 0, true);
     you.rotting = 0;
 
-    you.attribute[ATTR_WAS_SILENCED] = 0;
     you.attribute[ATTR_DIVINE_REGENERATION] = 0;
     you.attribute[ATTR_DELAYED_FIREBALL] = 0;
     clear_trapping_net();
