@@ -49,6 +49,7 @@ std::string place_name(unsigned short place, bool long_name,
 {
     uint8_t branch = (place >> 8) & 0xFF;
     int lev = place & 0xFF;
+    ASSERT(branch < NUM_BRANCHES);
 
     std::string result = (long_name ?
               branches[branch].longname : branches[branch].abbrevname);
