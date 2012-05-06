@@ -499,11 +499,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     // Being naturally mutagenic isn't good either.
     corpse_effect_type ce = mons_corpse_effect(mon->type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM
-         || ce == CE_MUTAGEN_BAD) && !mon->is_chaotic())
-    {
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !mon->is_chaotic())
         eligibility[RECITE_IMPURE]++;
-    }
 
     // Death drakes and rotting devils get a bump to uncleanliness.
     if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)

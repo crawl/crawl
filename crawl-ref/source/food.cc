@@ -1770,18 +1770,11 @@ static void _eat_chunk(item_def& food)
 
     switch (chunk_effect)
     {
-    case CE_MUTAGEN_RANDOM:
+    case CE_MUTAGEN:
         mpr("This meat tastes really weird.");
         mutate(RANDOM_MUTATION, "mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
-        break;
-
-    case CE_MUTAGEN_BAD:
-        mpr("This meat tastes *really* weird.");
-        give_bad_mutation("spoiled mutagenic meat");
-        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-        xom_is_stimulated(random2(200));
         break;
 
     case CE_ROT:
@@ -2131,7 +2124,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             stop_delay();
             return;
 
-        case CE_MUTAGEN_RANDOM:
+        case CE_MUTAGEN:
             food_value /= 2;
             if (start_feeding)
                 mpr("This blood tastes really weird!");
@@ -2141,16 +2134,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             // Sometimes heal by one hp.
             if (end_feeding && corpse.special > 150 && coinflip())
                 _heal_from_food(1);
-            break;
-
-        case CE_MUTAGEN_BAD:
-            food_value /= 2;
-            if (start_feeding)
-                mpr("This blood tastes *really* weird!");
-            give_bad_mutation("spoiled mutagenic blood");
-            did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-            xom_is_stimulated(random2(200));
-            // No healing from bad mutagenic blood.
             break;
 
         case CE_ROT:
@@ -2194,7 +2177,7 @@ bool is_mutagenic(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN_RANDOM);
+    return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
 }
 
 // Returns true if a food item (also corpses) may cause sickness.
@@ -2557,7 +2540,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
     switch (chunktype)
     {
     case CE_ROT:
-    case CE_MUTAGEN_RANDOM:
+    case CE_MUTAGEN:
         if (you.species == SP_GHOUL)
             chunktype = CE_CLEAN;
         break;
@@ -2591,9 +2574,6 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
         case CE_CLEAN:
         case CE_CONTAMINATED:
             chunktype = CE_ROTTEN;
-            break;
-        case CE_MUTAGEN_RANDOM:
-            chunktype = CE_MUTAGEN_BAD;
             break;
         default:
             break;
@@ -2824,7 +2804,7 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
         corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
                                                             item.mon_type),
                                                         rotten);
-        if (ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_BAD || ce == CE_ROT)
+        if (ce == CE_MUTAGEN || ce == CE_ROT)
             continue; // no nutrition from those
         // We assume that carrying poisonous chunks means you can swap rPois in.
 
