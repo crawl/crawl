@@ -4663,6 +4663,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(NUM_TAG_MINORS < 256);
     COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
                                          // with untested signedness
+    COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
