@@ -350,7 +350,7 @@ int stepdown(int value, int step, rounding_type rounding, int max)
     return ret + (rounding == ROUND_CLOSE ? 0.5 : 0);
 }
 
-// Deprecated defintion. Call directly stepdown instead.
+// Deprecated definition. Call directly stepdown instead.
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value)
 {
