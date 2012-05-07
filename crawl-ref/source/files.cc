@@ -1103,6 +1103,9 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
+    // Did we get here by popping the level stack?  
+    bool popped = false;
+
     coord_def return_pos;
     if (load_mode != LOAD_VISITOR)
     {
@@ -1112,6 +1115,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             return_pos = you.level_stack.back().pos;
             you.level_stack.pop_back();
             env.level_state |= LSTATE_DELETED;
+            popped = true;
         }
         else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
               || stair_taken == DNGN_EXIT_THROUGH_ABYSS
@@ -1398,7 +1402,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (load_mode == LOAD_START_GAME
             || (load_mode == LOAD_ENTER_LEVEL
-                && old_level.branch != you.where_are_you))
+                && old_level.branch != you.where_are_you
+                && !popped))
         {
             delta.num_visits++;
         }
