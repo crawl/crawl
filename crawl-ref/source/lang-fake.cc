@@ -197,6 +197,7 @@ static const char* cyrillic[][4] =
   {"ia",  "я"},
   {"i",   "и"},
   {"y",   "ы"},
+  {0}
 };
 
 static void _replace_cap_variants(std::string &str,
