@@ -446,7 +446,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source = attacker->mindex();
+        beam.beam_source = attacker ? attacker->mindex() : MHITNOT;
     }
 
     beam.explode(false, true);
