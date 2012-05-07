@@ -2407,19 +2407,20 @@ void mark_milestone(const std::string &type,
 
     const std::string milestone_file =
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
+    const scorefile_entry se(0, 0, KILL_MISC, NULL);
+    se.set_base_xlog_fields();
+    xlog_fields xl = se.get_fields();
+    if (report_origin_level)
+        xl.add_field("oplace", "%s",
+                     current_level_parent().describe().c_str());
+    xl.add_field("time", "%s",
+                 make_date_string(se.get_death_time()).c_str());
+    xl.add_field("type", "%s", type.c_str());
+    xl.add_field("milestone", "%s", milestone.c_str());
+    const std::string xlog_line = xl.xlog_line();
     if (FILE *fp = lk_open("a", milestone_file))
     {
-        const scorefile_entry se(0, 0, KILL_MISC, NULL);
-        se.set_base_xlog_fields();
-        xlog_fields xl = se.get_fields();
-        if (report_origin_level)
-            xl.add_field("oplace", "%s",
-                         current_level_parent().describe().c_str());
-        xl.add_field("time", "%s",
-                     make_date_string(se.get_death_time()).c_str());
-        xl.add_field("type", "%s", type.c_str());
-        xl.add_field("milestone", "%s", milestone.c_str());
-        fprintf(fp, "%s\n", xl.xlog_line().c_str());
+        fprintf(fp, "%s\n", xlog_line.c_str());
         lk_close(fp, "a", milestone_file);
     }
 #endif // DGL_MILESTONES
