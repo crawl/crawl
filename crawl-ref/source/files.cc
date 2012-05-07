@@ -1103,7 +1103,7 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
-    // Did we get here by popping the level stack?  
+    // Did we get here by popping the level stack?
     bool popped = false;
 
     coord_def return_pos;
