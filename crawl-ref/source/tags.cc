@@ -974,6 +974,12 @@ void tag_read(reader &inf, tag_type tag_id)
         tag_read_you_dungeon(th);
         tag_read_lost_monsters(th);
         tag_read_lost_items(th);
+
+        // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
+        // Doing this here rather in tag_read_you() because you.can_train()
+        // requires the player's equipment be loaded.
+        init_can_train();
+        check_selected_skills();
         break;
     case TAG_LEVEL:
         tag_read_level(th);
@@ -1876,9 +1882,6 @@ static void tag_read_you(reader &th)
     count = unmarshallByte(th);
     for (i = 0; i < count; i++)
         you.exercises_all.push_back((skill_type)unmarshallInt(th));
-
-    // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
-    check_selected_skills();
 
     you.skill_menu_do = static_cast<skill_menu_state>(unmarshallByte(th));
     you.skill_menu_view = static_cast<skill_menu_state>(unmarshallByte(th));
