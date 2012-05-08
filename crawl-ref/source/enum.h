@@ -1661,7 +1661,7 @@ enum immolation_source_type
 {
     IMMOLATION_GENERIC = -1,
     IMMOLATION_SCROLL  = -2,
-    IMMOLATION_SPELL   = -3, // effect when fixing fire brand
+    IMMOLATION_AFFIX   = -3, // effect when fixing fire brand
     IMMOLATION_TOME    = -4, // exploding Tome of Destruction
 };
 
