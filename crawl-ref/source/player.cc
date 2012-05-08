@@ -6036,6 +6036,9 @@ void player::banish(actor *agent, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (you.elapsed_time <= you.attribute[ATTR_BANISHMENT_IMMUNITY])
+        return;
+
     banished    = true;
     banished_by = who;
 }

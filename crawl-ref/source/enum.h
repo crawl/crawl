@@ -229,8 +229,8 @@ enum attribute_type
     ATTR_CARD_COUNTDOWN,
 #if TAG_MAJOR_VERSION == 33
     ATTR_UNUSED_1,
-    ATTR_UNUSED_2,
 #endif
+    ATTR_BANISHMENT_IMMUNITY,   // banishment immunity until
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
