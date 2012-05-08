@@ -972,7 +972,8 @@ void scorefile_entry::set_base_xlog_fields() const
                                   race, str, dex, god).c_str());
 
     fields->add_field("place", "%s",
-                      level_id::current().describe().c_str());
+                      place_name(get_packed_place(branch, dlvl),
+                                 false, true).c_str());
 
     // Note: "br", "lvl" (and former "ltyp") are redundant with "place"
     // but may still be used by DGL logs.
