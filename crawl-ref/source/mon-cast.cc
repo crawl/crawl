@@ -639,7 +639,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.name     = "noxious blast";
         beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
-        beam.flavour  = BEAM_POTION_STINKING_CLOUD;
+        beam.flavour  = BEAM_POTION_MEPHITIC;
         beam.hit      = 18 + power / 25;
         beam.is_beam  = true;
         beam.is_big_cloud = true;
@@ -729,7 +729,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         // Well, it works, even if the name isn't quite intuitive.
-        beam.flavour  = BEAM_POTION_STINKING_CLOUD;
+        beam.flavour  = BEAM_POTION_MEPHITIC;
         beam.hit      = 14 + power / 30;
         beam.ench_power = power; // probably meaningless
         beam.is_explosion = true;

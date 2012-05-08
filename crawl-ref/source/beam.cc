@@ -2344,7 +2344,7 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
 {
     switch (flavour)
     {
-    case BEAM_POTION_STINKING_CLOUD:
+    case BEAM_POTION_MEPHITIC:
         return (GREEN);
 
     case BEAM_POTION_POISON:
@@ -2444,7 +2444,7 @@ void bolt::affect_endpoint()
     }
 
     if (name == "noxious blast")
-        big_cloud(CLOUD_STINK, agent(), pos(), 0, 8 + random2(5));
+        big_cloud(CLOUD_MEPHITIC, agent(), pos(), 0, 8 + random2(5));
 
     if (name == "blast of poison")
         big_cloud(CLOUD_POISON, agent(), pos(), 0, 8 + random2(5));
@@ -2739,7 +2739,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_POISON, p, random2(4) + 3, agent());
 
     if (name == "blast of choking fumes")
-        place_cloud(CLOUD_STINK, p, random2(4) + 3, agent());
+        place_cloud(CLOUD_MEPHITIC, p, random2(4) + 3, agent());
 
     if (name == "blast of calcifying dust")
         place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
@@ -2757,14 +2757,14 @@ void bolt::affect_place_explosion_clouds()
         return;
     }
 
-    if (flavour >= BEAM_POTION_STINKING_CLOUD && flavour <= BEAM_POTION_RANDOM)
+    if (flavour >= BEAM_POTION_MEPHITIC && flavour <= BEAM_POTION_RANDOM)
     {
         const int duration = roll_dice(2, 3 + ench_power / 20);
         cloud_type cl_type;
 
         switch (flavour)
         {
-        case BEAM_POTION_STINKING_CLOUD:
+        case BEAM_POTION_MEPHITIC:
         case BEAM_POTION_POISON:
         case BEAM_POTION_MIASMA:
         case BEAM_POTION_STEAM:
@@ -2783,7 +2783,7 @@ void bolt::affect_place_explosion_clouds()
             switch (random2(10))
             {
             case 0:  cl_type = CLOUD_FIRE;           break;
-            case 1:  cl_type = CLOUD_STINK;          break;
+            case 1:  cl_type = CLOUD_MEPHITIC;       break;
             case 2:  cl_type = CLOUD_COLD;           break;
             case 3:  cl_type = CLOUD_POISON;         break;
             case 4:  cl_type = CLOUD_BLACK_SMOKE;    break;
@@ -3033,7 +3033,7 @@ bool bolt::harmless_to_player() const
     case BEAM_POISON:
         return (player_res_poison(false) >= 3);
 
-    case BEAM_POTION_STINKING_CLOUD:
+    case BEAM_POTION_MEPHITIC:
         return (player_res_poison(false) > 0 || player_mental_clarity(false)
                 || you.is_unbreathing());
 
@@ -5257,7 +5257,7 @@ void bolt::refine_for_explosion()
         {
 
             name = "cloud";
-            ASSERT(flavour >= BEAM_POTION_STINKING_CLOUD
+            ASSERT(flavour >= BEAM_POTION_MEPHITIC
                    && flavour <= BEAM_POTION_RANDOM);
             const int newcolour = _potion_beam_flavour_to_colour(flavour);
             if (newcolour >= 0)
@@ -5822,7 +5822,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_MAGIC:                 return ("magic");
     case BEAM_ELECTRICITY:           return ("electricity");
 
-    case BEAM_POTION_STINKING_CLOUD: return ("noxious fumes");
+    case BEAM_POTION_MEPHITIC:       return ("noxious fumes");
 
     case BEAM_POTION_POISON:         // fall through
     case BEAM_POISON:                return ("poison");
