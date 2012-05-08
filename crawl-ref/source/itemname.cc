@@ -1913,11 +1913,8 @@ bool item_type_known(const item_def& item)
     if (is_artefact(item))
         return (false);
 
-    if (item.base_type == OBJ_MISSILES
-        && missile_brand_obvious(get_ammo_brand(item)))
-    {
+    if (item.base_type == OBJ_MISSILES)
         return (true);
-    }
 
     if (item.base_type == OBJ_MISCELLANY
         && (item.sub_type < MISC_FIRST_DECK || item.sub_type > MISC_LAST_DECK))

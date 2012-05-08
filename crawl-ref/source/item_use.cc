@@ -2068,10 +2068,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_name    += " of chaos";
         }
         else
-        {
-            set_ident_flags (item, ISFLAG_KNOW_TYPE);
             beam_changed = true;
-        }
         beam.colour  = ETC_RANDOM;
     }
     else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
@@ -2084,10 +2081,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_name    += " of flame";
         }
         else
-        {
-            set_ident_flags (item, ISFLAG_KNOW_TYPE);
             beam_changed = true;
-        }
 
         beam.colour  = RED;
     }
@@ -2101,10 +2095,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_name   += " of frost";
         }
         else
-        {
-            set_ident_flags (item, ISFLAG_KNOW_TYPE);
             beam_changed = true;
-        }
         beam.colour  = WHITE;
     }
 
@@ -2226,25 +2217,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "the " + ammo_name;
 
     return (false);
-}
-
-// XXX This is a bit too generous, as it lets the player determine
-// that the bolt of fire he just shot from a flaming bow is actually
-// a poison arrow. Hopefully this isn't too abusable.
-static bool determines_ammo_brand(int bow_brand, int ammo_brand)
-{
-    if (bow_brand == SPWPN_FLAME && ammo_brand == SPMSL_FLAME)
-        return (false);
-    if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_FROST)
-        return (false);
-    if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
-        return (false);
-    if (bow_brand == SPWPN_CHAOS && ammo_brand == SPMSL_CHAOS)
-        return (false);
-    if (bow_brand == SPWPN_PENETRATION && ammo_brand == SPMSL_PENETRATION)
-        return (false);
-
-    return (true);
 }
 
 static int stat_adjust(int value, int stat, int statbase,
@@ -2664,19 +2636,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         exHitBonus = (lnchHitBonus > 0 ? random2(lnchHitBonus + 1)
                                        : -random2(-lnchHitBonus + 1));
 
-        // Identify ammo type if the information is there. Note
-        // that the bow is always type-identified because it's
-        // wielded.
-        if (determines_ammo_brand(bow_brand, ammo_brand))
-        {
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-            if (ammo_brand != SPMSL_NORMAL)
-            {
-                set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
-                ammo_ided = true;
-            }
-        }
-
         practise(EX_WILL_LAUNCH, launcher_skill);
         count_action(CACT_FIRE, launcher.sub_type);
 
@@ -2906,10 +2865,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         if (wepClass == OBJ_MISSILES)
         {
-            // Identify ammo type.
-            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
-            ammo_ided = true;
-
             switch (wepType)
             {
             case MI_LARGE_ROCK:
