@@ -6,14 +6,22 @@
 # This behaviour is desired for updating the original files in english.
 # For translated files, use the -o option (overwrite). This way, keys deleted
 # in the original files will also be deleted in translated files.
-# Use the -w option to automatically wrap text at 80 columns (for description
-# files, not databasa ones).
+# If the output file won't be changed, it won't be overwritten with the same
+# content, even with -o.
+# Other options are:
+# -d: specify output file or directory
+# -t: only check if the output file would be changed and exit with an
+#     error if so.
+# -v: verbose output
+# -w: automatically wrap text at 76 columns (doesn't work on windows).
 
 use strict;
 use warnings;
 use File::Basename;
 use Getopt::Std;
 use Text::WrapI18N qw(wrap);
+# WrapI18N isn't supported under windows. Neither msys nor activeperl.
+#use Text::Wrap qw(wrap);
 
 if ($^O ne 'msys') {
     use open ':encoding(utf8)';
@@ -21,8 +29,8 @@ if ($^O ne 'msys') {
 
 die "Usage: $0 ini_files\n" unless (@ARGV);
 
-getopts('ow');
-our($opt_o, $opt_w);
+getopts('d:otvw');
+our($opt_d, $opt_o, $opt_t, $opt_v, $opt_w);
 
 sub clean_value {
     $_ = shift;
@@ -43,11 +51,13 @@ sub clean_value {
         # WrapIl8N adds spaces at the end of lines and doesn't support the
         # unexpand option.
         s/ +$//mg;
-        s/\t/ {8}/mg;
+        s/\t/        /mg;
     }
 
     return $_;
 }
+
+my $total_changed;
 
 foreach my $file (@ARGV) {
     unless (-e $file) {
@@ -56,10 +66,15 @@ foreach my $file (@ARGV) {
     }
     my ($basename,$path) = fileparse($file, '.ini');
     my $out_file = "$path/$basename.txt";
+    if ($opt_d) {
+        if (-d $opt_d) {
+            $out_file = "$opt_d/$basename.txt";
+        } else {
+            $out_file = $opt_d;
+        }
+    }
     open IN, $file;
-    if (-e $out_file and not $opt_o) {
-        my $original_file = $out_file . "~";
-        rename $out_file, $original_file;
+    if (-e $out_file) {
         my %Text;
         while (<IN>) {
             chomp;
@@ -69,25 +84,54 @@ foreach my $file (@ARGV) {
         }
         close IN;
 
-        my $key;
-        open IN, $original_file;
-        open OUT, ">$out_file";
+        my ($key, $value, $out_text, $line_number, $changed);
+        $value = "";
+        open IN, $out_file;
         while (<IN>) {
             chomp;
-            my $new_text = $key && $Text{$key};
-            next if (!/^%+$/ and $new_text);
+            $line_number++;
+            if (/^#/) {
+                $out_text .= "$_\n";
+                next;
+            }
             if (/^%+$/) {
-                print OUT "\n", $Text{$key}, "\n" if ($new_text);
+                if ($key and $Text{$key} and $Text{$key} ne $value) {
+                    if ($opt_t) {
+                        print STDERR "$file: line $line_number mismatch\n";
+                        if ($opt_v) {
+                            print "$file: $Text{$key}\n";
+                            print "$out_file: $value\n";
+                        }
+                        $total_changed++;
+                        last;
+                    }
+                    $changed = 1;
+                    $out_text .= "$Text{$key}\n";
+                } else {
+                    $out_text .= $value;
+                }
+                $out_text .= "$_\n";
                 $key = "";
+                $value = "";
             }
-            elsif (!$key and !/^#/) {
-                chomp ($key = $_);
+            elsif (!$key) {
+                $key = $_;
+                $out_text .= "$_\n\n";
+                $_ = <IN>;
+                $line_number++;
+                print STDERR "$file: missing empty line at $line_number\n" if ($_ ne "\n");
             }
-            print OUT "$_\n";
+            else {
+                $value .= "$_\n";
+            }
         }
         close IN;
-        close OUT;
-        unlink $original_file;
+        if ($changed and not $opt_t) {
+            open OUT, ">$out_file";
+            local $/;
+            print OUT $out_text;
+            close OUT;
+        }
     } else {
         my $empty = 1;
         open OUT, ">$out_file";
@@ -108,4 +152,9 @@ foreach my $file (@ARGV) {
             close OUT;
         }
     }
+}
+
+if ($opt_t and $total_changed) {
+    printf STDERR "%d file%s changed\n", $total_changed, $total_changed > 1 ? "s" : "";
+    exit 1;
 }

@@ -2,20 +2,23 @@
 use strict;
 use warnings;
 
-chomp (my $base_dir = `git rev-parse --show-toplevel`);
-my $desc_dir = "$base_dir/crawl-ref/source/dat/descript";
-my $quotes =  "$desc_dir/quotes.ini";
+die "usage: $0 quote_file output_file additional_files\n" if $#ARGV < 2;
+
+my $quotes = shift;
+my $quotes_all = shift;
 open IN, $quotes or die "Cannot find $quotes\n";
+open OUT, ">$quotes_all";
+
 my %Quotes;
 while (<IN>) {
     next if (/^#/);
+    print OUT $_;
     my ($key) = /(.*?)=/;
     $Quotes{$key} = 1;
 }
 close IN;
 
-open OUT, ">>$quotes";
-foreach my $file (<$desc_dir/*.ini>) {
+foreach my $file (@ARGV) {
     next if ($file eq $quotes);
     open IN, $file;
     while(<IN>) {
