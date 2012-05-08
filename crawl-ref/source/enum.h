@@ -3429,13 +3429,12 @@ enum disable_type
     NUM_DISABLEMENTS
 };
 
-// these are an unholy mess
 enum seen_context_type
 {
     SC_NONE,
-    SC_JUST_SEEN,       // \TODO: find out and describe what's the difference
-    SC_NEWLY_SEEN,      // /between these two
-    SC_ALREADY_SEEN,
+    SC_JUST_SEEN,       // has already been announced this turn
+    SC_NEWLY_SEEN,      // regular walking into view
+    SC_ALREADY_SEEN,    // wasn't a threat before, is now
     SC_TELEPORT_IN,
     SC_SURFACES,                      // land-capable
     SC_SURFACES_BRIEFLY,              // land-capable, submerged back
@@ -3443,8 +3442,8 @@ enum seen_context_type
     SC_FISH_SURFACES,                 // water/lava-only
     SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
     SC_UNCHARM,
-    SC_DOOR,
-    SC_GATE,
+    SC_DOOR,            // they opened a door
+    SC_GATE,            // ... or a big door
 };
 
 enum los_type
