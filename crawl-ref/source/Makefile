@@ -1388,17 +1388,17 @@ tx-txt:
 		$(TX-MKTXT) -w -d $(TX-DIR) $(TX-NEW-TEXT);\
 	fi
 	@git add $(TX-TTRANS)
-	@git diff --quiet HEAD || exit 0
-	@read -p "New translations. Review? (Y/n) " RESP;\
+	@git diff --quiet HEAD && exit 0;\
+	read -p "New translations. Review? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
-	fi
-	@git diff HEAD
-	@read -p "Commit? (Y/n) " RESP;\
+	fi;\
+	git diff HEAD;\
+	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
-	fi
-	@git commit -a -m "Transifex sync."
+	fi;\
+	git commit -a -m "Transifex sync."
 
 tx-init:
 	$(RM) $(TX-CONFIG)
@@ -1429,20 +1429,20 @@ tx-check: $(TX-INI)
 	@git diff --quiet HEAD || (echo "You have uncommited changes in your working tree. Commit or stash them before continuing."; exit 1)
 	@if $(TX-MKTXT) -tw $(TX-SOURCES) && $(TX-MKTXT) -otw $(TX-TRANS); then\
 		exit 0;\
-	fi
-	@echo "Changes detected when converting to transifex format."
-	@read -p "Attempt automatic fix? (Y/n) " RESP;\
+	fi;\
+	echo "Changes detected when converting to transifex format.";\
+	read -p "Attempt automatic fix? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
-	fi
-	@$(TX-MKTXT) -w $(TX-SOURCES)
-	@$(TX-MKTXT) -ow $(TX-TRANS)
-	@git diff
-	@read -p "Commit? (Y/n) " RESP;\
+	fi;\
+	$(TX-MKTXT) -w $(TX-SOURCES);\
+	$(TX-MKTXT) -ow $(TX-TRANS);\
+	git diff;\
+	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
-	fi
-	@git commit -a -m "Transifex format fix."
+	fi;\
+	git commit -a -m "Transifex format fix."
 
 tx-pull:
 	tx pull -a --minimum-perc=1 --mode=reviewed
