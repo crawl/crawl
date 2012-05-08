@@ -132,7 +132,6 @@ public:
                           const char *aux, const char *death_source_name);
     void init(time_t death_time = 0);
     void reset();
-    void set_place(level_id lev);
 
     enum death_desc_verbosity
     {
