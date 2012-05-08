@@ -106,11 +106,11 @@ foreach my $file (@ARGV) {
                         last;
                     }
                     $changed = 1;
-                    $out_text .= "$Text{$key}\n";
+                    $out_text .= "$Text{$key}";
                 } else {
                     $out_text .= $value;
                 }
-                $out_text .= "$_\n";
+                $out_text .= "\n$_\n";
                 $key = "";
                 $value = "";
             }
@@ -122,7 +122,8 @@ foreach my $file (@ARGV) {
                 print STDERR "$file: missing empty line at $line_number\n" if ($_ ne "\n");
             }
             else {
-                $value .= "$_\n";
+                $value .= "\n" if $value;
+                $value .= $_;
             }
         }
         close IN;
