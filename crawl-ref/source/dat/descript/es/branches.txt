@@ -198,13 +198,13 @@ Pandemonio es infinito. Hay abundantes portales que llevan a él en las
 profundidades del calabozo. Piensa que regresar puede ser más difícil.
 
 Puedes encontrar cinco runas en el Pandemonio:
-- La Runa Fiera en el caldeado reino de Cerebov.
-- La Runa Brillante en los radioactivos dominios de Mnoleg.
-- La Runa Mágica está custodiada por los poderes arcanos de Lom Lobon y sus
-secuaces.
-- La Runa Oscura yace en la morada sombría de Gloorx Vloq.
-- La Runa Demoníaca existe en múltiples copias, en posesión de otros señores
-de menos renombre.
+ - La Runa Fiera en el caldeado reino de Cerebov.
+ - La Runa Brillante en los radioactivos dominios de Mnoleg.
+ - La Runa Mágica está custodiada por los poderes arcanos de Lom Lobon y sus
+   secuaces.
+ - La Runa Oscura yace en la morada sombría de Gloorx Vloq.
+ - La Runa Demoníaca existe en múltiples copias, en posesión de otros
+   señores de menos renombre.
 %%%%
 Labyrinth
 
