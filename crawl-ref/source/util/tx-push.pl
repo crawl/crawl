@@ -12,6 +12,6 @@ my $util_dir = "$base_dir/crawl-ref/source/util";
 foreach my $file (<$tr_dir/*.txt>) {
     my $res = basename($file, '.txt');
     print "Generating ini file for $res\n";
-    print `$util_dir/txt2ini.pl -u $file`;
+    print `$util_dir/tx-mkini.pl -u $file`;
     print `tx push -t -l $lang -r dcss.$res`;
 }

@@ -149,8 +149,8 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
-TXT2INI = util/txt2ini.pl
-INI2TXT = util/ini2txt.pl
+TX-MKINI = util/tx-mkini.pl
+TX-MKTXT = util/tx-mktxt.pl
 
 export AR
 export RANLIB
@@ -1221,7 +1221,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver
+clean: clean-rltiles clean-webserver tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1339,35 +1339,123 @@ mon-util.d: mon-mst.h
 #############################################################################
 # Translation files
 #
-build-ini: $(INI_OBJECTS)
-	util/add-missing-quotes.pl
+# Only support a single dir for now
+TX = tx
+TX-CONFIG = .tx/config
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-DIR = dat/descript
+
+# List of languages
+TX-LANG = $(filter-out en, $(notdir $(wildcard $(TX-DIR)/??)))
+
+# Text source files under git versioning
+TX-TSOURCES = $(wildcard $(TX-DIR)/*.txt)
+TX-TTRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.txt))
+
+# Files generated from the source. To be pushed to transifex
+TX-SOURCES = $(TX-TSOURCES:.txt=.ini)
+TX-TRANS = $(TX-TTRANS:.txt=.ini)
+TX-INI = $(TX-SOURCES) $(TX-TRANS)
+
+# What file to used to generate the quote files to push to transifex
+# We add placeholder entries in it to allow users to submit new quotes
+TX-QUOTES = $(TX-DIR)/quotes.ini
+TX-QUOTES-ALL = $(TX-DIR)/quotes-all.ini
+TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-DIR)/$(name).ini)
+
+# Files pulled from transifex. It is different than TX-TRANS, because it can
+# contain new files for which we have no .txt yet
+TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
+TX-NEW-TEXT = $(wildcard $(TX-DIR)/en/*.ini)
+
+.PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
+
+tx-clean:
+	$(RM) $(TX-INI) $(TX-QUOTES-ALL)
+
+$(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
+	util/add-missing-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
 
 # XXX for database file, we'll need a conditional to remove the -u option.
 %.ini: %.txt
-	$(TXT2INI) -u $*.txt
+	$(TX-MKINI) -u $*.txt
 
-clean-ini:
-	$(RM) $(INI_OBJECTS)
+tx-txt:
+	-if [ "$(TX-NEW-TRANS)" != "" ]; then\
+		$(TX-MKTXT) -ow $(TX-NEW-TRANS);\
+	fi
+	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
+		$(TX-MKTXT) -w -d $(TX-DIR) $(TX-NEW-TEXT);\
+	fi
+	@git add $(TX-TTRANS)
+	@git diff --quiet HEAD || exit 0
+	@read -p "New translations. Review? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi
+	@git diff HEAD
+	@read -p "Commit? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi
+	@git commit -a -m "Transifex sync."
 
-build-txt:
-	$(INI2TXT) -w $(INI_OBJECTS)
-	$(INI2TXT) -ow dat/descript/*/*.ini
+tx-init:
+	$(RM) $(TX-CONFIG)
+	if [ -d .tx ]; then\
+		rmdir --ignore-fail-on-non-empty .tx;\
+	fi
+	$(MAKE) tx-setup
 
-tx-config: build-ini
-	tx init
-	for TXT_FILE in $(INI_OBJECTS:%.ini=%.txt); do \
-        DIR=$$(dirname $$TXT_FILE); \
-        RES=$$(basename $$TXT_FILE .txt); \
-        tx set --auto-local -r dcss.$$RES "$$DIR/<lang>/$$RES.ini" --source-lang en_AU --source-file $$DIR/$$RES.ini --execute; \
-        tx set -r dcss.$$RES -l en $$DIR/$$RES.ini; \
+tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
+	if [ ! -e $(TX-CONFIG) ]; then\
+		$(TX) init;\
+	fi
+	for FILE in $(TX-SOURCES); do\
+		DIR=$$(dirname $$FILE);\
+		RES=$$(basename $$FILE .ini);\
+		grep -q dcss.$$RES .tx/config;\
+		if [ $$? -ne 0 ]; then\
+			if [ $$RES = quotes ]; then\
+				SRC=$$DIR/quotes-all.ini;\
+			else\
+				SRC=$$DIR/$$RES.ini;\
+			fi;\
+			$(TX-SET) -r dcss.$$RES --source-file $$SRC "$$DIR/<lang>/$$RES.ini";\
+		fi;\
 	done
-	perl -pi~ -e 'print "type = INI\n" unless ($$. < 6 || ($$. + 3) % 6)' .tx/config
-	$(RM) .tx/config~
 
-tx-sync: clean-ini build-ini
-	tx push -s
+tx-check: $(TX-INI)
+	@git diff --quiet HEAD || (echo "You have uncommited changes in your working tree. Commit or stash them before continuing."; exit 1)
+	@if $(TX-MKTXT) -tw $(TX-SOURCES) && $(TX-MKTXT) -otw $(TX-TRANS); then\
+		exit 0;\
+	fi
+	@echo "Changes detected when converting to transifex format."
+	@read -p "Attempt automatic fix? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi
+	@$(TX-MKTXT) -w $(TX-SOURCES)
+	@$(TX-MKTXT) -ow $(TX-TRANS)
+	@git diff
+	@read -p "Commit? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi
+	@git commit -a -m "Transifex format fix."
+
+tx-pull:
 	tx pull -a --minimum-perc=1 --mode=reviewed
-	make build-txt
+
+tx-push: $(TX-INI) $(TX-QUOTES-ALL)
+	tx push -s
+	tx push -t --skip
+
+tx-sync:
+	$(MAKE) tx-check
+	$(MAKE) tx-pull
+	$(MAKE) tx-txt
+	$(MAKE) tx-push
 
 #############################################################################
 # RLTiles
