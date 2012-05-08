@@ -1,3 +1,4 @@
+
 %%%%
 air elemental fan
 
@@ -77,7 +78,10 @@ such as banishment are beyond its ability to block.
 %%%%
 animal skin
 
-The skin of an animal.
+A large piece of thick skin covered in fur, cut from the corpse of an animal
+and worn as a primitive garment. It offers rudimentary protection against
+harm, but having never been tanned it carries a light stench of rotting
+flesh.
 %%%%
 apple
 
@@ -89,7 +93,8 @@ A succulent yellow-orange fruit, prunus armeniaca.
 %%%%
 arrow
 
-An arrow, to be shot with a bow.
+A long shafted projectile intended to be shot with a bow or longbow,
+fletched with feathers at one end and a point at the other.
 %%%%
 banana
 
@@ -102,7 +107,8 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 battleaxe
 
-A large axe with a double-headed blade.
+A large two-handed war axe with formidable double-sided head, designed for
+use in battle by skilled warriors.
 %%%%
 beef jerky
 
@@ -140,48 +146,73 @@ by the Shining One's power.
 %%%%
 blowgun
 
-A long, light tube, open at both ends. Doing very little damage, its main
-use is to fire poisoned needles from afar. It makes very little noise.
+A long, light tube, open at both ends, through which various types of
+needles are propelled by puffs of breath at enemies. It makes very little
+noise.
 %%%%
 bolt
 
-A crossbow bolt.
+A metal projectile, shorter than an arrow, intended to be shot from a
+crossbow.
 %%%%
 book of air
 
-A book of magic spells. You feel a faint breeze as you open the pages.
+A primer on the elemental magics of Air. The pages often flip themselves, as
+if blown by a stiff breeze; at other times, the pages are stuck together by
+static electricity, and throw off brief sparks as they are separated.
 %%%%
 book of alchemy
 
-A slightly seared book, with a hole burnt through the cover.
+A book focusing on alchemical processes and their use in magic spells,
+collecting the wisdom of many ancient alchemists. When the book is opened,
+the text is revealed as the ink condenses from the air onto the pages.
 %%%%
 book of annihilations
 
-While browsing, you note blood leaking from the pages. Even an illiterate
-will feel the sheer impact of arcane fury contained in this book. It is
-sought after by sorcerers, for it allows the gifted and resourceful to
-command destruction with the ease of a twinkle. Feeble wizards, however, may
-well meet their doom when trying to read this opus.
+Blood leaks from the tattered pages of this book, and even an illiterate
+will feel the sheer impact of arcane fury contained within. It is sought
+after by sorcerers, for it allows the gifted and resourceful to command
+destruction with the ease of a twinkle. Feeble wizards, however, may well
+meet their doom when trying to read this opus.
+
+WARNING: If you fail in an attempt to memorise a spell from this book, the
+book will lash out at you.
 %%%%
 book of beasts
 
-A book of magic spells. Be careful to not get bitten!
+A book of spells focused on the magical production of beasts, with pages
+made from animal skins and covers lined with teeth. It reeks of a zoo, and
+will occasionally nip at the fingers of careless readers.
 %%%%
 book of burglary
 
-A worn-looking book, with a small key pressed between two pages.
+A book containing many diverse spells useful for theft, breaking and
+entering, and other miscellaneous larceny. Sorcerers who let their attention
+lapse while reading from this tome will occasionally turn a page to find
+that some small item from their pockets has been pilfered and placed between
+the pages.
 %%%%
 book of callings
 
-A book of magic spells.
+An introductory text on the magical Summoning of beasts and beings from
+other realms. Tiny flies and gnats seem to pop up out of nowhere when the
+book is opened, and then vanish when the book is closed.
 %%%%
 book of cantrips
 
-A book of magic spells.
+A book containing a small selection of very basic magic spells, intended for
+beginners who wish to learn the rudiments of one of the featured magical
+schools. Nonetheless, even experienced mages can still find use for the
+spells contained therein.
 %%%%
 book of changes
 
-A book of magic spells.
+A student's primer to the magic arts of Transmutations, with many lavish
+illustrations from the school's early experimental history:
+half-wizard-half-Spiders, wizards with Blade Noses, or beaked tentacles
+instead of legs. The text is full of reassurances that this kind of thing
+doesn't happen anymore, though some potential Transmuters decide to take up
+Charms instead.
 %%%%
 book of card effects
 
@@ -193,35 +224,64 @@ A book of magic spells.
 %%%%
 book of clouds
 
-A book of magic spells.
+A book of magic spells for creating an assortment of clouds, sheathed in a
+fine mist that sometimes makes the words appear a bit hazy. An insightful
+book, though occasionally the author gets sidetracked into boring
+discussions about what objects the cloud diagrams look like to him.
 %%%%
 book of conjurations
 
-A book of magic spells.
+A book containing an introduction to the destructive magical arts of
+Conjurations. It shudders with barely-contained power when it is opened. A
+very popular book, it is constantly being revised and updated: this year's
+edition has a focus on the elements of Ice and Air.
 %%%%
 book of control
 
-A book of magic spells.
+A book of magic spells for controlling minds, bodies, and even space.
+Wizards who see the book lying around may feel a compulsion to browse
+through its pages, and those who do sometimes find it hard to take their
+minds off the sigils and runes inside.
 %%%%
 book of death
 
-A black book containing spells written in a hasty scrawl.
+A ghoulishly illuminated manuscript containing dark spells of Necromancy,
+written with inks distilled from corpses. Each page is filled with grotesque
+art depicting scenes of disgusting decay and horrifying death, with much of
+the text incorporated into the drawings as coils of entrails or arrangements
+of bone.
 %%%%
 book of debilitation
 
-A book of magic spells.
+A book containing Hexes useful for an Arcane Marksman. Many of the pages
+inside are filled with holes, as if they had been used as archery targets
+before being inscribed and bound. This occult technique supposedly gives the
+spells an affinity for being used with ranged weapons, though in practice
+they appear to work no differently from the variants found in
+less-perforated texts.
 %%%%
 book of dreams
 
-A translucent book; light plays strangely on its surface.
+A record of the somniloquent utterings of an entranced mystic, describing a
+number of spells reflecting the mystic's dream state. Critics of the work
+argue that the spells are functionally no different from ones already known,
+but the book remains popular for its uniquely bizarre imagery and cryptic
+digressions.
 %%%%
 book of enchantments
 
-A book of magic spells.
+A spellbook containing an assortment of magical Hexes and Charms, which
+sparkles and shimmers as the pages are flipped. The quaintly anachronistic
+title reflects an earlier, more incomplete arcane understanding of these two
+schools of magic.
 %%%%
 book of envenomations
 
-A book of magic spells.
+A book of magic spells, glowing with a sickly green light. This book was
+first written by Olgreb, the infamous Venom Mage, who murdered many of his
+rivals by sending them highly poisonous copies as gifts. Current editions
+are harmless, though often dead bookworms and silverfish are found stuck
+between the pages.
 %%%%
 book of fixed level
 
@@ -233,91 +293,159 @@ A book of magic spells.
 %%%%
 book of fire
 
-A completely scorched book of magic spells.
+A book, containing advanced spells in the elemental school of Fire. Many
+Fire Elementalists have had their eyebrows and beards singed off by the
+momentary flame that issues forth when the book is first opened, and some
+have even found that when left unattended for months it can spontaneously
+combust, occasionally burning down whole libraries in terrible
+conflagrations.
 %%%%
 book of flames
 
-A slightly seared book of magic spells.
+The standard text used in arcane academies by students of the elemental
+magic of Fire. It is quite warm to the touch, and its edges are singed. The
+pages are inscribed with sigils of flame, that glow with flickering light to
+read by.
 %%%%
 book of frost
 
-A book of magic spells, cold to the touch.
+A book of magic spells, often used as an introduction to the elemental
+magics of Ice. The cover is cold to the touch, and the mystic runes are
+written in a flowing, jagged style, reminiscent of frost covering a window.
 %%%%
 book of geomancy
 
-A book of magic spells.
+A book containing basic spells involving the element of Earth. It feels
+quite dense, though no heavier than other spellbooks. When read, little bits
+of grit spill from the pages, which appear to be made of thin sheets of
+mica.
 %%%%
 book of hinderance
 
-A book of magic spells.
+A mystic manual dedicated to the art of slowing the minds and bodies of
+one's foes, written in a cramped, nearly incomprehensible script on very
+rigid pages that don't turn easily. Some wizards report a stiffness in their
+fingers while they read, which goes away when the book is closed.
 %%%%
 book of ice
 
-A book of magic spells. An icy wind chills you for a second as you open it.
+A book of advanced magical spells using the element of Ice. The book is
+freezing cold, and the pages are covered in flaky bits of frost. Even though
+they wear warm clothing, the scribes who write copies of this tome often
+suffer frostbite or hypothermia.
 %%%%
 book of maledictions
 
-A book of magic spells.
+This spellbook teaches Enchanters how to weaken and confound their enemies
+with Hexes before finishing them off. The frontispiece contains a depiction
+of an evil eye, an ancient cursed symbol; this has occasioned numerous tales
+of adventurers who met bad ends after carrying this book into the dungeon.
+Though, as sceptics point out, pretty much everybody who enters the dungeon
+meets a bad end.
 %%%%
 book of minor magic
 
-A book of magic spells.
+A spellbook containing a variety of simple but useful magical incantations.
+Many prominent spellcasters used this book to begin their arcane studies.
+First published three centuries ago, it is one of the most well-known
+grimoires in the world, and is currently on its eighty-eighth printing.
 %%%%
 book of morphology
 
-A book of magic spells.
+A book dedicated to Transmutations of form. The text is constantly changing
+and shifting, making it nearly impossible to use a table of contents or a
+bookmark. Still, most sorcerers manage to find what they are looking for in
+its pages.
 %%%%
 book of necromancy
 
-A dusty tome of forbidden magic.
+A macabre book of magic spells, often the very first grimoire a beginning
+Necromancer will learn from. Considering the hazards that can come with
+dabbling in necromantic magic, this also sometimes the very *last* grimoire
+a beginning Necromancer will study.
 %%%%
 book of party tricks
 
-A book of magic spells.
+This book contains a number of fun spells guaranteed to liven up any
+wizarding party, as well as a number of toasts, jokes, and party games, all
+written in bright colours and funny scripts. The spells in this book have
+been adjusted slightly so they can be sung to the tunes of popular drinking
+songs.
 %%%%
 book of power
 
-A book of magic spells.
+A book of powerful magic spells, coveted by ambitious wizards who seek to
+gain ascendance over their rivals. It crackles and shudders with
+barely-contained energies.
 %%%%
 book of spatial translocations
 
-A book of magic spells.
+The classic text of the magical field of Translocations, written by the
+archmage and accomplished warper Golubria two centuries ago. This book can
+still be found in magical libraries all across the world, although sometimes
+not on the same shelf where the librarian left it.
 %%%%
 book of stalking
 
-A book of magic spells.
+An instructional guide to the fundamentals of transmutational Stalking. This
+nondescript, unassuming book tends to blend in with the background, and many
+sorcerers don't give it a second glance.
 %%%%
 book of summonings
 
-A book of magic spells.
+An advanced treatise on Summoning magics, detailing ways of summoning and
+binding creatures from all manners of horrible realms. There are a number of
+dire warnings with graphic illustrations of the dangers of summoning such
+monsters, since not all of them will be friendly.
 %%%%
 book of the dragon
 
-A book of magic spells; it is warm to the touch.
+A magical book of spells which allow some command over dragons and their
+aspects. The book is warm to the touch, bound in a scaly sort of leather,
+and every page has a lavish illustration of a different variety of dragon,
+both real and imaginary.
 %%%%
 book of the earth
 
-A book of magic spells.
+A textbook for experienced Earth Elementalists. It has an aura of incredible
+density, making those who look upon it feel as though they are standing
+under hundreds of tons of rock, even when really under the open sky.
 %%%%
 book of the sky
 
-A book of magic spells. Sparks fly from the pages.
+A magical book containing powerful elemental spells of Air. The scribes who
+produce copies of this grimoire are sequestered in high towers in the
+plains, to better attune themselves to the forces of Air, and the
+coruscating runes are written in flickering lightning.
 %%%%
 book of the tempests
 
-A book of magic spells.
+This book contains magic spells which command some of the most destructive
+forces of nature. When opened, lightning crackles between the pages, winds
+gust against the reader's face, and the whole book shakes with violent
+tremors.
 %%%%
 book of the warp
 
-A book of magic spells.
+A book of Translocations spells for experienced Warpers. Its shimmering
+pages exist in multiple dimensions at once, not all of which obey the usual
+rules of geometry. Some pages disappear when they're turned, while others
+appear out of nowhere, and others pass directly through the other pages or
+themselves. Some of the pages have three sides, or only one, or have
+fractional numbers of corners. The effect can be disconcerting.
 %%%%
 book of transfigurations
 
-A book of magic spells.
+An advanced book of Transmutations spells, written on constantly changing
+material. At any given moment, a sorcerer could be reading words written on
+paper, silk, stone, parchment, etched glass, wool, metal foil, snakeskin,
+velvet, or a thousand other things.
 %%%%
 book of unlife
 
-A book of magic spells, filled with sigils for binding the dead.
+This unholy book describes a variety of magical methods for the creation and
+command of undead servants. The dreadful book radiates a malignant aura, and
+its parchment pages sometimes twitch and shudder on their own.
 %%%%
 book of war chants
 
@@ -327,7 +455,10 @@ though, they work the same as spells whose magic words are merely spoken.
 %%%%
 book of wizardry
 
-A book of magic spells.
+A book of various magic spells, useful for any sufficiently-talented
+spellcaster. Mages of a scholarly nature consider it a point of pride to
+have contributed in some way to this work, though more than a few of them
+have been slain by jealous rivals using their own spells against them.
 %%%%
 bottled efreet
 
@@ -350,11 +481,15 @@ A filling meal of stale, but hearty, bread.
 %%%%
 broad axe
 
-An axe with a large blade.
+A war axe improved with langets, spikes, a lengthed haft and a single-bladed
+crescent head. It can inflict grievous wounds, but is cumbersome to
+manoeuvre with just one hand due to its length and weight.
 %%%%
 buckler
 
-A small shield.
+A small piece of wood and metal, to be strapped on one arm for defence. It
+is somewhat cumbersome to wear, and, without a little training, slightly
+slows the rate at which a warrior attacks.
 %%%%
 cap
 
@@ -366,7 +501,9 @@ An armour made for centaurs, to wear over their equine half.
 %%%%
 chain mail
 
-A suit made of interlocking metal rings.
+A suit made entirely out of tiny metal rings. Offering strong protection
+against weapons, claws and carnassials, chain mail hinders quick and
+stealthy movement.
 %%%%
 cheese
 
@@ -386,8 +523,10 @@ A cloth cloak.
 %%%%
 club
 
-A heavy piece of wood, to be held or thrown. Coshing someone on the head
-while they're asleep is a great idea.
+A heavy piece of wood, with a place to grip on one end and most of its
+weight at the other, making it suitable for swinging or throwing at a foe.
+While clubs are rather primitive weapons, bashing someone's skull in with
+one remains a very popular and effective means of dispute resolution.
 %%%%
 corpse
 
@@ -395,7 +534,7 @@ A corpse. You can butcher it to produce edible meat chunks.
 %%%%
 crossbow
 
-A piece of machinery used for firing bolts, which takes some time to load
+A piece of machinery, used for firing bolts, which takes some time to load
 and fire. It does very good damage in combat.
 %%%%
 crystal ball of energy
@@ -412,12 +551,14 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 
-A long knife or a very short sword, which can be held or thrown. It causes
-massive damage when used for backstabbing.
+A double-edged fighting knife with a sharp point that can be thrown from
+afar. Seen by some as a weak weapon of last resort, others appreciate it as
+a perfect tool for assassinations.
 %%%%
 dart
 
-A small throwing weapon.
+A little, fletched, sharply pointed projectile designed to be thrown by
+hand.
 %%%%
 deck of changes
 
@@ -495,11 +636,12 @@ Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
-A terrible weapon, forged in the fires of Hell.
+A terrible weapon, forged in the fires of Hell. It becomes even more deadly
+when wielded by those of a demonic nature.
 %%%%
 demon trident
 
-A terrible weapon, moulded by fire and brimstone.
+A terrible three-pronged weapon, moulded by fire and brimstone.
 %%%%
 demon whip
 
@@ -507,7 +649,7 @@ A terrible weapon, woven in the depths of the inferno.
 %%%%
 dire flail
 
-A flail with spiked lumps on both ends.
+A spiked flail with longer spikes and a heavier head.
 %%%%
 disc of storms
 
@@ -517,7 +659,11 @@ magical devices, but cannot be used by one who is not a conductor.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+A magical weapon with twin razor-sharp blades. According to legend, a knight
+once suggested the idea of a double-bladed sword to a master forger as a
+joke, but was pleasantly surprised to find that not only was the forger
+capable of making such a sword, but that the weapon produced was extremely
+deadly.
 %%%%
 eggplant
 
@@ -530,12 +676,14 @@ A magical box after its power is spent.
 %%%%
 eudemon blade
 
-A glorious blade from the forges of Heaven, possessed by a good spirit. It
-is a favoured weapon of the Shining One's servants.
+A sacred blade from the forges of Heaven, inhabited by a good spirit. It is
+a favoured weapon of the Shining One's servants, and cannot be wielded by
+the forces of evil.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+The spikes of this type of morningstar are exeptionally long, allowing it to
+cause invidious wounds.
 %%%%
 executioner's axe
 
@@ -546,24 +694,25 @@ confident that a single stroke would suffice.
 %%%%
 falchion
 
-A sword with a broad slashing blade.
+A long single-edged sword with a slightly curved blade, with its weight
+concentrated at the point to increase its lethality.
 %%%%
 fire dragon armour
 
 A magical armour, made from the scales of a fire-breathing dragon. It
-provides great protection from the effects of fire, but renders its wearer
-more susceptible to the effects of cold.
+provides great protection from the effects of fire, while rendering its
+wearer more susceptible to the effects of cold.
 %%%%
 fire dragon hide
 
 The scaly skin of a common true dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the
-effects of fire but renders its wearer susceptible to cold.
+effects of fire while rendering its wearer susceptible to cold.
 %%%%
 flail
 
-Like a mace, but with a length of chain between the handle and the lump of
-metal.
+A mace with a short chain connecting the head to the haft. This adds
+slightly more force to the blow at the cost of complicating use.
 %%%%
 giant club
 
@@ -579,15 +728,16 @@ A pole with a large, heavy blade on one end.
 %%%%
 gold dragon armour
 
-A magical armour made from the golden scales of a golden dragon. It is
-extremely heavy and cumbersome, but confers resistances to fire, cold, and
-poison on its wearer.
+A magical armour made from the scales of a gold dragon. It is much heavier
+than most dragon scale armours, and grants its wearer resistance to poison,
+fire and cold.
 %%%%
 gold dragon hide
 
-The extremely tough and heavy skin of a golden dragon, covered in shimmering
-golden scales. It confers resistance to fire, cold and poison on its wearer,
-but provides little of its fabled protection against blows unless enchanted.
+The hide of a gold dragon, covered in extremely hard golden scales. In its
+raw form it does not provide much protection beyond resistance to poison,
+fire and cold, but with magical means it may be used to make excellent
+armour.
 %%%%
 gold piece
 
@@ -595,12 +745,15 @@ A pile of glittering gold coins.
 %%%%
 grand grimoire
 
-A deathly silence seems to surround you as you open this book; even the very
+A deathly silence seems to surround this book as it's opened; even the very
 air appears to recoil from the monstrosities pictured here. The pages,
 covered in abominable runes, describe how the mighty among summoners can
 bend to their will the terrible things from betwixt the planes. Many have
 been the unwary souls, however, who have toyed with this tome and been
 driven mad by eldritch horrors from beyond imagining.
+
+WARNING: If you fail in an attempt to memorise a spell from this book, the
+book will lash out at you.
 %%%%
 grape
 
@@ -608,23 +761,32 @@ A small fruit.
 %%%%
 great mace
 
-A large and heavy mace.
+An enormous metal war club, of great cumbrousness.
 %%%%
 great sword
 
-A sword with a very long, heavy blade and a long handle.
+A massive, straight, double-edged blade with a long hilt and heavy pommel.
+It has the potential to inflict devastating wounds, but must be wielded with
+both hands.
 %%%%
 halberd
 
-A long pole with a spiked axe head on one end.
+A two-handed military pole weapon consisting of an axe blade mounted on a
+long shaft reinforced with metal rims to block other weapons like swords.
+Topped with a spike and a thorn on the back side of the axe blade, this
+weapon can be very dangeous in trained hands.
 %%%%
 hammer
 
-The kind of thing you hit nails with, adapted for battle.
+Consisting of a spiked hammerhead on a medium haft reinforced by langets,
+this blunt weapon can deliver significant striking force and even pierce
+through armour.
 %%%%
 hand axe
 
-A small axe designed for either hand combat or throwing.
+A tool for rending apart the fibres of wood, or flesh. Small and crafted for
+fast, precise handling, it is also balanced such that it can be thrown if
+necessary.
 %%%%
 helm
 
@@ -647,18 +809,19 @@ to gain entry.
 ice dragon armour
 
 A magical armour, made from the scales of a cold-breathing dragon. It
-provides great protection from the effects of cold, but renders its wearer
-more susceptible to the effects of fire and heat.
+provides great protection from the effects of cold while rendering its
+wearer more susceptible to the effects of fire and heat.
 %%%%
 ice dragon hide
 
-The scaly skin of a dragon. It can be fashioned into proper armour, but even
-in its raw form it provides great protection from the effects of cold but
-renders its wearer susceptible to fire.
+The scaly skin of a cold-breathing dragon. It can be fashioned into proper
+armour, but even in its raw form it provides great protection from the
+effects of cold while rendering  its wearer susceptible to fire.
 %%%%
 javelin
 
-A long, light stick that can be thrown by hand. {{
+This lightweight spear is designed for throwing and can cause serious
+injury. {{
     if you.race() == "Halfling"
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
@@ -714,7 +877,9 @@ Like a normal shield, only larger. {{
 %%%%
 leather armour
 
-A suit made of hardened leather.
+A suit made from layers of tanned animal hide, this light armour provides
+basic protection with almost no hindrance to elaborate gestures or swift,
+stealthy movement.
 %%%%
 lemon
 
@@ -722,7 +887,9 @@ A yellow fruit.
 %%%%
 long sword
 
-A sword with a long, slashing blade.
+A straight, double-edged blade of medium size, with a sturdy hilt and
+pommel. This noble weapon combines accurate manoeuvrability with deadly
+force, and is quite powerful in the hand of one trained in its use.
 %%%%
 longbow
 
@@ -735,7 +902,8 @@ A tropical fruit.
 %%%%
 mace
 
-A long handle with a heavy lump on one end.
+A short metal spiked military club. This effective instrument dents armour
+and breaks bones through blunt force.
 %%%%
 manual
 
@@ -748,7 +916,9 @@ A filling ration of dried and preserved meats.
 %%%%
 morningstar
 
-A mace covered in spikes.
+A mace with with a head covered in short spikes. Trading increased force for
+only slightly reduced manoeuvrability, this weapon can be deadly in the
+hands of a well-trained combatant.
 %%%%
 mottled dragon armour
 
@@ -777,7 +947,10 @@ they could not hope to control.
 %%%%
 needle
 
-A needle. It can be fired with a blowgun.
+A thin piece of metal, typically coated in some harmful substance. It does
+little damage if thrown by hand, but when launched from a blowgun it can be
+deadly, delivering its toxins into the bloodstream of a living or demonic
+being.
 %%%%
 orange
 
@@ -810,14 +983,14 @@ A delicious juicy fruit.
 %%%%
 pearl dragon armour
 
-A magical armour made from the light but strong and flexible scales of a
-pearl dragon. It provides its wearer with protection from negative energy.
+A magical armour made from the nacreous scales of a pearl dragon. It grants
+its wearer resistance to negative energies.
 %%%%
 pearl dragon hide
 
-The scaly skin of a pearl dragon. It can be fashioned into proper armour,
-but even in its raw form it provides protection from negative energy to its
-wearer.
+The hide of a pearl dragon, covered in iridescent nacreous scales. In its
+raw form it does not provide much protection, but with magical means it may
+be used to make excellent armour.
 %%%%
 piece of ambrosia
 
@@ -980,7 +1153,10 @@ A sturdy wooden pole, meant for fighting.
 %%%%
 quick blade
 
-A small and magically quick sword.
+This carefully wrought short sword is preternaturally well-balanced, making
+it much easier for even inexperienced handlers to attack with it quickly.
+Not many swordsmiths have the requisite skill to make one, so they are only
+produced in small numbers, and are difficult to find.
 %%%%
 rambutan
 
@@ -989,7 +1165,8 @@ anyone's guess.
 %%%%
 ring mail
 
-A leather suit covered in little rings.
+A light leather suit reinforced with a covering of metal rings. Protective
+in combat, but slightly uncomfortable due to the added weight.
 %%%%
 ring of dexterity
 
@@ -1111,7 +1288,11 @@ This ring increases the ability of its wearer to use magical spells.
 %%%%
 robe
 
-A cloth robe.
+ A large, loose-fitting, wide-sleeved outer garment made of light cloth.
+Robes easily adjust to fit humanoid bodies of any size. Habiliments of this
+sort offer only a little protection against physical harm, but their
+generous cut does not hinder evasion from attack or the proper performance
+of thaumaturgical gestures.
 %%%%
 rod of demonology
 
@@ -1153,7 +1334,9 @@ A talisman which allows entry into Zot's domain.
 %%%%
 sabre
 
-A sword with a medium length slashing blade.
+Though originally designed to slash from a mounted position, this
+single-edged, slightly-curved short sword still works very well in the hands
+of unmounted warriors.
 %%%%
 sacred scourge
 
@@ -1167,11 +1350,14 @@ in an intestine. Yum!
 %%%%
 scale mail
 
-A leather suit covered in little metal plates.
+A leather suit covered with metal plates attached to each other in
+overlapping rows to provide full protection, but at the cost of reduced
+freedom of movement.
 %%%%
 scimitar
 
-A long sword with a curved blade.
+A long sabre. Its wide, curved blade increases the damage it deals, but also
+makes it a little bit harder to handle accurately.
 %%%%
 scroll of acquirement
 
@@ -1345,16 +1531,19 @@ fixtures have this property as well.
 %%%%
 scythe
 
-A farm implement, usually unsuited to combat.
+A farm implement, usually only used by untrained mobs in combat.
 %%%%
 shield
 
-A piece of metal, to be strapped on one's arm. It is cumbersome to wear, and
-slightly slows the rate at which you may attack.
+A piece of wood and metal, to be strapped on one arm for defence. It is
+cumbersome to wear, and, without training, slows the rate at which a warrior
+attacks.
 %%%%
 short sword
 
-A sword with a short, slashing blade.
+A small, double-edged blade with a short grip. Robust and easy to handle,
+this weapon is often found in the hands of those who wish to stab their foes
+unaware.
 %%%%
 skeleton
 
@@ -1373,9 +1562,8 @@ slow down its rate of fire.
 %%%%
 sling bullet
 
-A small, heavy projectile shaped specifically for use with slings, and more
-effective as ammunition than simple stones. It can also come with various
-enchantments.
+A small, heavy projectile specially shaped for use with slings. It is more
+effective as ammunition than simple stones.
 %%%%
 snozzcumber
 
@@ -1383,17 +1571,21 @@ A repulsive cucumber-shaped vegetable.
 %%%%
 spear
 
-A long stick with a pointy blade on one end, to be held or thrown.
+A hunting weapon consisting of a balanced wooden shaft with a pointed metal
+head fastened on one end. Shorter than other polearms, it can be wielded
+with one or two hands and is also light enough to be thrown.
 %%%%
 spiked flail
 
-A flail with large spikes on the metal lump.
+A flail improved by a longer chain and the addition of spikes on the
+striking head.
 %%%%
 splint mail
 
-A suit made of rectangular plates of metal, connected with rings. Such
-platemail provides good protection, while nowhere as good as solid metal
-armour, it allows much greater freedom of movement.
+A heavy suit of body armour consisting of narrow strips of metal which are
+attached lengthwise to a thick leather backing. While offering great
+protection, splint mail is quite difficult to move in without proper
+training.
 %%%%
 staff
 
@@ -1488,7 +1680,8 @@ proper armour by magical means.
 %%%%
 stone
 
-A stone. It can be thrown by hand or fired with a sling.
+A small chunk of dense but otherwise unremarkable natural mineral. It can be
+thrown by hand or launched with a sling.
 %%%%
 stone of earth elementals
 
@@ -1501,14 +1694,15 @@ elementals at the same time.
 storm dragon armour
 
 A magical armour made from the scales of a lightning-breathing dragon. It is
-heavier than most dragon scale armours, but gives its wearer great
+heavier than most dragon scale armours, and gives its wearer great
 resistance to electrical discharges.
 %%%%
 storm dragon hide
 
-The hide of a storm dragon, covered in extremely hard blue scales. In its
-raw form it does not provide much protection beyond resistance to electrical
-discharge, but with magical means it may be used to make excellent armour.
+The hide of a lightning-breathing dragon, covered in extremely hard blue
+scales. In its raw form it does not provide much protection beyond
+resistance to electrical discharge, but with magical means it may be used to
+make excellent armour.
 %%%%
 strawberry
 
@@ -1537,7 +1731,11 @@ wearer, and it may be turned into proper armour by magical means.
 %%%%
 throwing net
 
-A throwing net as used by gladiators. {{
+A mesh of ropes knotted together with weights around the edge. Originally
+used by hunters to entangle and entrap prey, it soon found obvious
+application in battle and gladiatorial arenas. Struggling victims can
+eventually destroy the net and break free, if they live long enough.
+ {{
     if you.race() == "Halfling"
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
@@ -1555,11 +1753,18 @@ may be hazardous to you or your surroundings!
 %%%%
 trident
 
-A hafted weapon with three points at one end.
+A fishing spear improved with longer shaft and a three-pronged metal head.
+It can be wielded with one or two hands, but due the added weight it cannot
+be thrown effectively.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+A magical weapon with three great razor-sharp blades. According to legend, a
+master forger created a sword with two blades at the facetious suggestion of
+a knight, who, finding that the resulting blade was quite functional,
+jovially quipped, Ah, very good, but could you make a *triple* sword? When
+the answer turned out to be yes, the knight was too shocked to ask about the
+possibilities of a quadruple sword.
 %%%%
 trishula
 
@@ -1569,9 +1774,8 @@ Shining One's servants.
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll, with magical regenerative properties.
-I suppose you could wear it if you really wanted to, although you probably
-want to enchant it into proper armour first.
+The stiff and knobbly hide of a troll. Wearable, like other beastly skins,
+it also reacts well to enchantment.
 %%%%
 troll leather armour
 
@@ -1671,11 +1875,13 @@ A magical device which causes a creature to be randomly translocated.
 %%%%
 war axe
 
-An axe intended for hand to hand combat.
+An one-handed military axe with a long haft and a single-bladed head.
 %%%%
 whip
 
-A whip.
+A long plaited strip of leather. Originally developed for use in
+disagreements with cattle, this simple weapon is now widely used to settle
+differences between all sorts of creatures.
 %%%%
 wizard hat
 
@@ -1683,5 +1889,8 @@ A conical cloth hat.
 %%%%
 young poisoner's handbook
 
-A book of magic spells.
+A introductory book for the magic arts of Poison. Much of it is written in
+inks which contain the very poisons described in the text, and mages with a
+tendency to lick their fingers before turning a page will usually quit the
+habit soon after they begin reading, one way or another.
 %%%%
