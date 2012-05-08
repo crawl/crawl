@@ -666,5 +666,6 @@ Create a blade trap at the targeted location.
 %%%%
 Make curse skull
 
-Construct a curse skull with the ability to summon the undead at the targeted location, at the cost of a necromantic backlash to yourself.
+Construct a curse skull with the ability to summon the undead at the
+targeted location, at the cost of a necromantic backlash to yourself.
 %%%%
