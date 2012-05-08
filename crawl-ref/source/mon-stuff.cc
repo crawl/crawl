@@ -3689,7 +3689,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return (false);
         break;
 
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
         if (mons->res_poison() > 0)
             return (false);
 

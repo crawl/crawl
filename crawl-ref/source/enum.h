@@ -338,7 +338,7 @@ enum beam_type                  // beam[].flavour
     BEAM_LAST_ENCHANTMENT = BEAM_INNER_FLAME,
 
     // new beams for evaporate
-    BEAM_POTION_STINKING_CLOUD,
+    BEAM_POTION_MEPHITIC,
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
     BEAM_POTION_STEAM,
@@ -552,7 +552,7 @@ enum cloud_type
 {
     CLOUD_NONE,
     CLOUD_FIRE,
-    CLOUD_STINK,
+    CLOUD_MEPHITIC,
     CLOUD_COLD,
     CLOUD_POISON,
     CLOUD_BLACK_SMOKE,

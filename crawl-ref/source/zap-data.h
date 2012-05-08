@@ -1041,7 +1041,7 @@
     new tohit_calculator<6, 1, 6>,
     GREEN,
     false,
-    BEAM_POTION_STINKING_CLOUD,
+    BEAM_POTION_MEPHITIC,
     DCHAR_FIRED_ZAP,
     true,
     true,

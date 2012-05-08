@@ -1278,7 +1278,7 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
     if (i != EMPTY_CLOUD)
     {
         cloud_struct& cloud = env.cloud[i];
-        if (cloud.type == CLOUD_STINK)
+        if (cloud.type == CLOUD_MEPHITIC)
         {
             cloud.decay /= 2;
 
