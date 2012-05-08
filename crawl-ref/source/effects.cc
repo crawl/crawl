@@ -352,22 +352,21 @@ void immolation(int pow, int caster, coord_def where, bool known,
 
     bolt beam;
 
-    if (caster < 0)
+    switch (caster)
     {
-        switch (caster)
-        {
-        case IMMOLATION_SCROLL:
-            aux = "scroll of immolation";
-            break;
+    case IMMOLATION_SCROLL:
+        aux = "scroll of immolation";
+        break;
 
-        case IMMOLATION_SPELL:
-            aux = "a fiery explosion";
-            break;
+    case IMMOLATION_AFFIX:
+        aux = "a fiery explosion";
+        break;
 
-        case IMMOLATION_TOME:
-            aux = "an exploding Tome of Destruction";
-            break;
-        }
+    case IMMOLATION_TOME:
+        aux = "an exploding Tome of Destruction";
+        break;
+
+    default:;
     }
 
     beam.flavour       = BEAM_FIRE;
@@ -380,7 +379,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = known;
-    beam.affects_items = (caster != IMMOLATION_SCROLL);
+    beam.affects_items = caster != IMMOLATION_SCROLL
+                         && caster != IMMOLATION_AFFIX;
 
     if (caster == IMMOLATION_GENERIC)
     {
