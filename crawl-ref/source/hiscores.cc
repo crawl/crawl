@@ -1681,7 +1681,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             desc += "Succumbed to " + ((death_source_name == "you")
-                      ? "your own" : apostrophise(death_source_name)) + " "
+                      ? "their own" : apostrophise(death_source_name)) + " "
                     + (auxkilldata.empty()? "poison" : auxkilldata);
         }
         break;
@@ -1699,7 +1699,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         {
             snprintf(scratch, sizeof(scratch), "Engulfed by %s%s %s",
                 death_source_name.empty() ? "a" :
-                  death_source_name == "you" ? "own" :
+                  death_source_name == "you" ? "their own" :
                   apostrophise(death_source_name).c_str(),
                 death_source_name.empty() ? " cloud of" : "",
                 auxkilldata.c_str());
