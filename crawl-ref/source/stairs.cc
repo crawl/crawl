@@ -776,6 +776,8 @@ void down_stairs(dungeon_feature_type force_stair)
              && you.char_direction != GDT_GAME_START)
     {
         mark_milestone("abyss.exit", "escaped from the Abyss!");
+        you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
+                                                  + random2(100);
     }
 
     // Interlevel travel data.
