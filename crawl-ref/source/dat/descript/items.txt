@@ -1761,7 +1761,7 @@ triple sword
 A magical weapon with three great razor-sharp blades. According to legend, a
 master forger created a sword with two blades at the facetious suggestion of
 a knight, who, finding that the resulting blade was quite functional,
-jovially quipped, Ah, very good, but could you make a *triple* sword? When
+jovially quipped, "Ah, very good, but could you make a *triple* sword?" When
 the answer turned out to be yes, the knight was too shocked to ask about the
 possibilities of a quadruple sword.
 %%%%
