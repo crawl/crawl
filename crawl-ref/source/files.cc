@@ -1484,7 +1484,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     invalidate_agrid(true);
 
     // Maybe make a note if we reached a new level.
-    if (just_created_level)
+    // Don't do so if we are just moving around inside Pan, though.
+    if (just_created_level && stair_taken != DNGN_TRANSIT_PANDEMONIUM)
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
 
     return just_created_level;
