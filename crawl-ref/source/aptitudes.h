@@ -1098,7 +1098,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
 
     // SP_FELID
-    APT(SP_FELID,           SK_FIGHTING,       -1),
+    APT(SP_FELID,           SK_FIGHTING,        0),
     APT(SP_FELID,           SK_SHORT_BLADES,  -99),
     APT(SP_FELID,           SK_LONG_BLADES,   -99),
     APT(SP_FELID,           SK_AXES,          -99),
@@ -1115,7 +1115,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_STABBING,        3),
     APT(SP_FELID,           SK_SHIELDS,       -99),
     APT(SP_FELID,           SK_TRAPS_DOORS,     2),
-    APT(SP_FELID,           SK_UNARMED_COMBAT, -1),
+    APT(SP_FELID,           SK_UNARMED_COMBAT,  0),
     APT(SP_FELID,           SK_SPELLCASTING,    0),
     APT(SP_FELID,           SK_CONJURATIONS,   -1),
     APT(SP_FELID,           SK_HEXES,           4),
