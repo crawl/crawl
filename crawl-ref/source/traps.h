@@ -37,8 +37,8 @@ bool     shaft_known(int depth, bool randomly_placed);
 level_id generic_shaft_dest(coord_def pos, bool known);
 void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 
-int       num_traps_for_place(const level_id &place = level_id::current());
-trap_type random_trap_for_place(const level_id &place = level_id::current());
+int       num_traps_for_place();
+trap_type random_trap_for_place();
 
 int count_traps(trap_type ttyp);
 void place_webs(int num, bool is_second_phase = false);

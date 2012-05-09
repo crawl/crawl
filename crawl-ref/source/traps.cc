@@ -1856,14 +1856,14 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-int num_traps_for_place(const level_id &place)
+int num_traps_for_place()
 {
-    switch (place.branch)
+    switch (you.where_are_you)
     {
     case BRANCH_ECUMENICAL_TEMPLE:
         return 0;
     default:
-        if (!is_connected_branch(place.branch))
+        if (!player_in_connected_branch())
             return 0;
     case BRANCH_PANDEMONIUM:
         return random2avg(9, 2);
@@ -1877,7 +1877,7 @@ static trap_type _random_trap_slime(int level_number)
     if (random2(1 + level_number) > 14 && one_chance_in(3))
         type = TRAP_ZOT;
 
-    if (one_chance_in(5) && is_valid_shaft_level(level_id::current()))
+    if (one_chance_in(5) && is_valid_shaft_level())
         type = TRAP_SHAFT;
     if (one_chance_in(5) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
@@ -1887,7 +1887,7 @@ static trap_type _random_trap_slime(int level_number)
     return (type);
 }
 
-static trap_type _random_trap_default(int level_number, const level_id &place)
+static trap_type _random_trap_default(int level_number)
 {
     trap_type type = TRAP_DART;
 
@@ -1915,12 +1915,12 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
         type = TRAP_BLADE;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3)
-        || (place == BRANCH_HALL_OF_ZOT && coinflip()))
+        || (player_in_branch(BRANCH_HALL_OF_ZOT) && coinflip()))
     {
         type = TRAP_ZOT;
     }
 
-    if (one_chance_in(20) && is_valid_shaft_level(place))
+    if (one_chance_in(20) && is_valid_shaft_level())
         type = TRAP_SHAFT;
     if (one_chance_in(20) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
@@ -1930,14 +1930,14 @@ static trap_type _random_trap_default(int level_number, const level_id &place)
     return (type);
 }
 
-trap_type random_trap_for_place(const level_id &place)
+trap_type random_trap_for_place()
 {
-    int level_number = place.absdepth();
+    int level_number = env.absdepth0;
 
-    if (place == BRANCH_SLIME_PITS)
+    if (player_in_branch(BRANCH_SLIME_PITS))
         return _random_trap_slime(level_number);
 
-    return _random_trap_default(level_number, place);
+    return _random_trap_default(level_number);
 }
 
 int count_traps(trap_type ttyp)
