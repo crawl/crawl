@@ -79,7 +79,7 @@ animal skin
 
 A large piece of thick skin covered in fur, cut from the corpse of an animal
 and worn as a primitive garment. It offers rudimentary protection against
-harm, but having never been tanned it carries a light stench of rotting
+harm, but, having never been tanned, it carries a light stench of rotting
 flesh.
 %%%%
 apple
@@ -255,7 +255,7 @@ book of debilitation
 A book containing Hexes useful for an Arcane Marksman. Many of the pages
 inside are filled with holes, as if they had been used as archery targets
 before being inscribed and bound. This occult technique supposedly gives the
-spells an affinity for being used with ranged weapons, though in practice
+spells an affinity for being used with ranged weapons, though, in practice,
 they appear to work no differently from the variants found in
 less-perforated texts.
 %%%%
@@ -295,7 +295,7 @@ book of fire
 A book, containing advanced spells in the elemental school of Fire. Many
 Fire Elementalists have had their eyebrows and beards singed off by the
 momentary flame that issues forth when the book is first opened, and some
-have even found that when left unattended for months it can spontaneously
+have even found that, when left unattended for months, it can spontaneously
 combust, occasionally burning down whole libraries in terrible
 conflagrations.
 %%%%
@@ -303,7 +303,7 @@ book of flames
 
 The standard text used in arcane academies by students of the elemental
 magic of Fire. It is quite warm to the touch, and its edges are singed. The
-pages are inscribed with sigils of flame, that glow with flickering light to
+pages are inscribed with sigils of flame that glow with flickering light to
 read by.
 %%%%
 book of frost
