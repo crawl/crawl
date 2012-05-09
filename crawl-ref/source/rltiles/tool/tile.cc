@@ -468,7 +468,7 @@ bool tile::load(const std::string &new_filename)
 #else
     m_width  = 0;
     m_height = 0;
-    m_pixels = new tile_colour[0];
+    m_pixels = new tile_colour[1];
 #endif
 
     return (true);
