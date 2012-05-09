@@ -1130,7 +1130,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_EARTH_MAGIC,    -2),
     APT(SP_FELID,           SK_POISON_MAGIC,   -1),
     APT(SP_FELID,           SK_INVOCATIONS,    -1),
-    APT(SP_FELID,           SK_EVOCATIONS,     -2),
+    APT(SP_FELID,           SK_EVOCATIONS,      1),
 
     // SP_OCTOPODE
     APT(SP_OCTOPODE,        SK_FIGHTING,        0),
