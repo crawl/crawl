@@ -5455,24 +5455,14 @@ bool place_specific_trap(const coord_def& where, trap_spec* spec)
 {
     trap_type spec_type = spec->tr_type;
 
-    if (spec_type == TRAP_RANDOM || spec_type == TRAP_NONTELEPORT
-        || spec_type == TRAP_SHAFT && !is_valid_shaft_level())
+    bool no_tele = spec_type == TRAP_NONTELEPORT;
+    bool no_shaft = no_tele || !is_valid_shaft_level();
+
+    while (spec_type >= NUM_TRAPS
+           || no_tele && spec_type == TRAP_TELEPORT
+           || no_shaft && spec_type == TRAP_SHAFT)
     {
-        trap_type forbidden1 = NUM_TRAPS;
-        trap_type forbidden2 = NUM_TRAPS;
-
-        if (spec_type == TRAP_NONTELEPORT)
-        {
-            forbidden1 = TRAP_SHAFT;
-            forbidden2 = TRAP_TELEPORT;
-        }
-        else if (!is_valid_shaft_level())
-            forbidden1 = TRAP_SHAFT;
-
-        do
-            spec_type = static_cast<trap_type>(random2(NUM_TRAPS));
-        while (spec_type == forbidden1 || spec_type == forbidden2 ||
-               spec_type == TRAP_GOLUBRIA || spec_type == TRAP_PLATE);
+        spec_type = static_cast<trap_type>(random2(TRAP_MAX_REGULAR + 1));
     }
 
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
