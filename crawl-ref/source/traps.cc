@@ -1862,9 +1862,6 @@ int num_traps_for_place(const level_id &place)
     {
     case BRANCH_ECUMENICAL_TEMPLE:
         return 0;
-    case BRANCH_LABYRINTH:
-        die("invalid place for traps");
-        break;
     default:
         if (!is_connected_branch(place.branch))
             return 0;
