@@ -815,7 +815,7 @@ ice dragon hide
 
 The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the
-effects of cold while rendering  its wearer susceptible to fire.
+effects of cold while rendering its wearer susceptible to fire.
 %%%%
 javelin
 
@@ -1287,7 +1287,7 @@ This ring increases the ability of its wearer to use magical spells.
 %%%%
 robe
 
- A large, loose-fitting, wide-sleeved outer garment made of light cloth.
+A large, loose-fitting, wide-sleeved outer garment made of light cloth.
 Robes easily adjust to fit humanoid bodies of any size. Habiliments of this
 sort offer only a little protection against physical harm, but their
 generous cut does not hinder evasion from attack or the proper performance
@@ -1734,7 +1734,7 @@ A mesh of ropes knotted together with weights around the edge. Originally
 used by hunters to entangle and entrap prey, it soon found obvious
 application in battle and gladiatorial arenas. Struggling victims can
 eventually destroy the net and break free, if they live long enough.
- {{
+{{
     if you.race() == "Halfling"
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
