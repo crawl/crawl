@@ -106,7 +106,7 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 battleaxe
 
-A large two-handed war axe with formidable double-sided head, designed for
+A large two-handed war axe with a formidable double-sided head, designed for
 use in battle by skilled warriors.
 %%%%
 beef jerky
@@ -360,7 +360,7 @@ book of necromancy
 
 A macabre book of magic spells, often the very first grimoire a beginning
 Necromancer will learn from. Considering the hazards that can come with
-dabbling in necromantic magic, this also sometimes the very *last* grimoire
+dabbling in necromantic magic, this is also sometimes the very *last* grimoire
 a beginning Necromancer will study.
 %%%%
 book of party tricks
@@ -1752,8 +1752,8 @@ may be hazardous to you or your surroundings!
 %%%%
 trident
 
-A fishing spear improved with longer shaft and a three-pronged metal head.
-It can be wielded with one or two hands, but due the added weight it cannot
+A fishing spear improved with a longer shaft and a three-pronged metal head.
+It can be wielded with one or two hands, but due to the added weight it cannot
 be thrown effectively.
 %%%%
 triple sword
