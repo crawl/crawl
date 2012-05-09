@@ -3193,32 +3193,28 @@ static std::string _monster_stat_description(const monster_info& mi)
     if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << uppercase_first(pronoun) << " is glowing with mutagenic radiation.\n";
 
-    // These differ between ghost demon monsters, so would be spoily.
-    if (!mons_is_ghost_demon(mi.type))
-    {
-        // Seeing/sensing invisible.
-        if (mons_class_flag(mi.type, M_SEE_INVIS))
-            result << uppercase_first(pronoun) << " can see invisible.\n";
-        else if (mons_class_flag(mi.type, M_SENSE_INVIS))
-            result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
+    // Seeing/sensing invisible.
+    if (mons_class_flag(mi.type, M_SEE_INVIS))
+        result << uppercase_first(pronoun) << " can see invisible.\n";
+    else if (mons_class_flag(mi.type, M_SENSE_INVIS))
+        result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
 
-        // Unusual monster speed.
-        const int speed = mi.base_speed();
-        if (speed != 10 && speed != 0)
-        {
-            result << uppercase_first(pronoun) << " is ";
-            if (speed < 7)
-                result << "very slow";
-            else if (speed < 10)
-                result << "slow";
-            else if (speed > 20)
-                result << "extremely fast";
-            else if (speed > 15)
-                result << "very fast";
-            else if (speed > 10)
-                result << "fast";
-            result << ".\n";
-        }
+    // Unusual monster speed.
+    const int speed = mi.base_speed();
+    if (speed != 10 && speed != 0)
+    {
+        result << uppercase_first(pronoun) << " is ";
+        if (speed < 7)
+            result << "very slow";
+        else if (speed < 10)
+            result << "slow";
+        else if (speed > 20)
+            result << "extremely fast";
+        else if (speed > 15)
+            result << "very fast";
+        else if (speed > 10)
+            result << "fast";
+        result << ".\n";
     }
 
     // Can the monster levitate/fly?
