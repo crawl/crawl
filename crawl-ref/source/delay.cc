@@ -1110,7 +1110,7 @@ static void _finish_delay(const delay_queue_item &delay)
             switch (grd(pass))
             {
             default:
-                if (!you.can_pass_through_feat(grd(pass)))
+                if (!you.is_habitable(pass))
                 {
                     mpr("...yet there is something new on the other side. "
                         "You quickly turn back.");
