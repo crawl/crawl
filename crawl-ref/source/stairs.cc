@@ -125,7 +125,19 @@ level_id upstairs_destination()
     // We're changing branches.
 
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-        return level_id(you.hell_branch, you.hell_exit);
+    {
+        // hell_exit should be zero only if uninitialized
+        if (you.hell_exit)
+            return level_id(you.hell_branch, you.hell_exit);
+        else if (you.wizard)
+        {
+            mpr("Error: no Hell exit level, how in the Vestibule did "
+                    "you get here? Let's go to D:1.", MSGCH_ERROR);
+            return level_id(BRANCH_MAIN_DUNGEON, 1);
+        }
+        else
+            die("hell exit without return destination");
+    }
 
     result.depth = startdepth[you.where_are_you];
     if (result.depth == -1)
@@ -143,7 +155,7 @@ level_id upstairs_destination()
         if (you.char_direction == GDT_GAME_START)
             return level_id(BRANCH_MAIN_DUNGEON, 1);
 
-        // Ie, it was a portal of some kind.
+        // Otherwise, it was a portal of some kind.
         if (you.level_stack.empty())
         {
 #if TAG_MAJOR_VERSION == 33
