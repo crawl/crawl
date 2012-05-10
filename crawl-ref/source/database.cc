@@ -860,7 +860,15 @@ std::string getFAQ_Question(const std::string &key)
 std::string getFAQ_Answer(const std::string &question)
 {
     std::string key = "a" + question.substr(1, question.length()-1);
-    return _query_database(FAQDB, key, false, true);
+    std::string val = unwrap_desc(_query_database(FAQDB, key, false, true));
+
+    // Remove blank lines between items on a bulleted list, for small
+    // terminals' sake.  Far easier to store them as separated paragraphs
+    // in the source.
+    // Also, use a nicer bullet as we're already here.
+    val = replace_all(val, "\n\n*", "\n•");
+
+    return val;
 }
 
 /////////////////////////////////////////////////////////////////////////////
