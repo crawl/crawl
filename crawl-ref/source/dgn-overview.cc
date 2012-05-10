@@ -1060,8 +1060,8 @@ void do_annotate(level_id& li)
             MSGCH_PROMPT);
     }
 
-    const std::string prompt = "New level annotation "
-                               "(include '!' for warning): ";
+    const std::string prompt = "New annotation for " + li.describe()
+                               + " (include '!' for warning): ";
 
     char buf[77];
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
