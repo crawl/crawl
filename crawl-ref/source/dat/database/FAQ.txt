@@ -78,18 +78,27 @@ A:roguelike difference
 A: First, you might want to read the philosophy section in the manual ('?N') to read about general important principles in Stone Soup's game design.
 
 As for specific differences, the most important are probably the following:
+
 * Species is *much* more important than the character background (or "class").
+
 * Bones files only contain ghosts, never their equipment or cause of death.
+
 * You cannot sell items to shops or elsewhere.
+
 * Resistances can be gained via mutations or items, never through eating.
+
 * Praying is mostly used to offer items or corpses to gods who'll accept them. To make use of divine powers use the 'a'bility command.
+
 * There are inevitable deaths, but new players can win without spoilers, if they learn from their mistakes. Very good players win streaks.
 
 Also, our aim is to give Crawl a really smooth interface, so you should really read through the command list ('??') some time. The most intriguing "newish" commands are probably the following:
 
 * 'o', for automatic exploration of an unknown level
+
 * 'G', for automatic travel to another level ('G?' for help)
+
 * 'X', to access the level map for travelling and other tasks ('X?')
+
 * 'Ctrl-F', to find and travel to items you've seen before ('Ctrl-F?')
 %%%%
 Q:survival
@@ -218,10 +227,15 @@ A:abyss
 A: If you are in the Abyss for the first time, chances of getting out are slim. Still, here are a few general hints:
 
 * You need to find a gateway leading out of the Abyss. These are rare!
+
 * Don't stick around to fight; move as much as possible!
+
 * If you have it, use defensive equipment (weapons of protection, etc.).
+
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
+
 * Teleportation might take much longer to kick in than in the Dungeon.
+
 * Consider switching your allegiance to Lugonu to get out of there.
 %%%%
 Q:oklobs
@@ -243,6 +257,7 @@ A:randart
 A: Apart from the standard items you'll find lying around in the dungeon, you might also stumble upon artefacts which come in two varieties:
 
 * randart: a random artefact, usually a weapon or type of armour with random properties such as conferring resistances or abilities
+
 * unrandart: an artefact that looks like a randart but is really predefined. While a few (formerly known as "fixed artefacts") have special hardcoded effects, for most there's no further difference except that players "in the know" can recognize such an item by its special description and/or colour/tile.
 
 Neither of these types can be enchanted or branded, either temporarily or permanently. There is another type of special item that pops up a bit more frequently:
@@ -293,10 +308,14 @@ The game keeps crashing. / I think I found a bug. What do I do?
 A:bug
 
 A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/), and give as much information as you can:
+
 * What were you doing at the time?
+
 * What did you expect to happen, what happened instead, etc.
+
 * Most importantly, what version are you playing?
   (If you're not sure, you can check in-game with '?v'.)
+
 * Console or tiles?
 
 For crashes or monsters/items/levels behaving oddly, we probably need a save file. If you're playing online, please create a copy of your save file for the developers to access before you continue playing. On CDO, you can do this from the main menu; on CAO you need to use the !copysave IRC command: !copysave username reason. Don't forget to include the server and your username in your bug report!
@@ -332,7 +351,9 @@ A: If you submitted a report on our Mantis tracker, you will get an email any ti
 We always try to give a reason for closing a request that has not been implemented, but it usually boils down to three reasons:
 
 * It doesn't fit into the Crawl world as we see it.
+
 * It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
+
 * We just don't think it's interesting enough to ever be implemented.
 
 Also, many requests that are reasonable but not urgent are moved to the wiki, where it's easier to keep track of them than in the bug tracker.
@@ -360,9 +381,13 @@ I cannot code, but I'd like to help improve the game. What can I do?
 A:help
 
 A: There are several areas where you can get creative and outside help is much appreciated. These are:
+
 * maps/vaults (see dat/ directory, docs/develop/levels/introduction.txt)
+
 * monster speech (see dat/database/, docs/develop/monster_speech.txt)
+
 * monster/item/spell descriptions (see dat/descript/)
+
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
 Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
