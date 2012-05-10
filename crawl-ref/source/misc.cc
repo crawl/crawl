@@ -2288,7 +2288,6 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
     if (!you.can_see(mon))
         return (false);
 
-    bool retval = false;
     adj.clear();
     suffix.clear();
 
@@ -2316,9 +2315,9 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
         adj += "non-hostile ";
 
     if (you.religion == GOD_JIYVA && mons_is_slime(mon))
-        retval = true;
+        return true;
 
-    return retval || !adj.empty() || !suffix.empty();
+    return !adj.empty() || !suffix.empty();
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
