@@ -1603,8 +1603,8 @@ static void _experience_check()
              / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
         mprf(you.lives < 2 ?
-             "You'll get an extra life in %d.%02d levels worth of XP." :
-             "If you died right now, you'd get an extra life in %d.%02d levels worth of XP.",
+             "You'll get an extra life in %d.%02d levels' worth of XP." :
+             "If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
              perc / 100, perc % 100);
     }
 
