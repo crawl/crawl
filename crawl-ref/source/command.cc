@@ -1307,7 +1307,7 @@ static bool _handle_FAQ()
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
-    const int width = std::min(80, get_number_of_cols());
+    const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
@@ -1355,7 +1355,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string(answer, width - 1);
+            linebreak_string(answer, width - 1, true);
             {
 #ifdef USE_TILE_WEB
                 tiles_crt_control show_as_menu(CRT_MENU, "faq_entry");

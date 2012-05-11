@@ -1762,7 +1762,7 @@ formatted_scroller::~formatted_scroller()
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
-int linebreak_string(std::string& s, int maxcol)
+int linebreak_string(std::string& s, int maxcol, bool indent)
 {
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
@@ -1774,7 +1774,7 @@ int linebreak_string(std::string& s, int maxcol)
 
     while (!s.empty())
     {
-        res += wordwrap_line(s, maxcol, true);
+        res += wordwrap_line(s, maxcol, true, indent);
         if (!s.empty())
         {
             res += "\n";

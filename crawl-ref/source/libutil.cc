@@ -723,6 +723,7 @@ std::vector<std::string> split_string(const std::string &sep,
 
 static const std::string _get_indent(const std::string &s)
 {
+    size_t prefix = 0;
     if (starts_with(s, "\"")    // ASCII quotes
         || starts_with(s, "“")  // English quotes
         || starts_with(s, "„")  // Polish/German/... quotes
@@ -730,15 +731,17 @@ static const std::string _get_indent(const std::string &s)
         || starts_with(s, "»")  // Danish/... quotes
         || starts_with(s, "•")) // bulleted lists
     {
-        return " ";
+        prefix = 1;
     }
-    if (starts_with(s, "「"))  // Chinese/Japanese quotes
-        return "  ";
+    else if (starts_with(s, "「"))  // Chinese/Japanese quotes
+        prefix = 2;
 
-    size_t nspaces = s.find_first_not_of(' ');
+    size_t nspaces = s.find_first_not_of(' ', prefix);
     if (nspaces == std::string::npos)
+        nspaces = 0;
+    if (!(prefix += nspaces))
         return "";
-    return s.substr(0, nspaces);
+    return std::string(prefix, ' ');
 }
 
 // The provided string is consumed!
