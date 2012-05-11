@@ -337,13 +337,11 @@ static int l_item_do_subtype (lua_State *ls)
         else
             lua_pushnil(ls);
 
-        lua_pushnumber(ls, item->sub_type);
-        return (2);
+        return (1);
     }
 
     lua_pushnil(ls);
-    lua_pushnil(ls);
-    return (2);
+    return (1);
 }
 
 IDEFN(subtype, do_subtype);
