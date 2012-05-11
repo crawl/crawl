@@ -1797,45 +1797,16 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
-    { 2,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+    { 0,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
       { -33, -33, -33 } },
-    { 2, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
+    { 0, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { -33, -33, -33 } },
-    { 2, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
+    { 0, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
       { -33, -33, -33 } },
-    { 2, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
+    { 0, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
       { -33, -33, -33 } },
-    { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+    { 0, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { -33, -33, -33 } },
-    // Tier 3 facets
-    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 50, 50, 50 } },
-    { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
-      { 50, 50, 50 } },
-    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
-      { 50, 50, 50 } },
-    { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_STOCHASTIC_TORMENT_RESISTANCE },
-      { 50, 50, 50 } },
-    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
-      { 50, 50, 50 } },
-    // Tier 2 facets
-    { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
-      { -33, 0, 0 } },
-    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-      { -33, 0, 0 } },
-    { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
-      { -33, 0, 0 } },
-    { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
-      { -33, 33, 66 } },
-    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
-      { -33, 0, 0 } },
-    { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
-      { -33, 0, 0 } },
-    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
-      { -33, 0, 0 } },
-    { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
-      { -33, 0, 0 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { -33, -33, 0 } },
@@ -1862,6 +1833,35 @@ static const facet_def _demon_facets[] =
       { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
+    // Tier 2 facets
+    { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
+      { -33, 0, 0 } },
+    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+      { -33, 0, 0 } },
+    { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
+      { -33, 0, 0 } },
+    { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
+      { -33, 33, 66 } },
+    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
+      { -33, 0, 0 } },
+    { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
+      { -33, 0, 0 } },
+    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
+      { -33, 0, 0 } },
+    { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+      { -33, 0, 0 } },
+    // Tier 3 facets
+    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+      { 50, 50, 50 } },
+    { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
+      { 50, 50, 50 } },
+    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
+      { 50, 50, 50 } },
+    { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
+          MUT_STOCHASTIC_TORMENT_RESISTANCE },
+      { 50, 50, 50 } },
+    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
+      { 50, 50, 50 } },
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)
@@ -1910,14 +1910,12 @@ static bool _slot_is_unique(const mutation_type mut[MUTS_IN_SLOT],
 
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
-    int NUM_BODY_SLOTS = 1;
-    int ct_of_tier[] = { 0, 1, 3, 1 };
+    int ct_of_tier[] = { 1, 1, 2, 1 };
     // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
     {
-        NUM_BODY_SLOTS = 3;
+        ct_of_tier[0] = 3;
         ct_of_tier[1] = 0;
-        ct_of_tier[2] = 5;
     }
 
 try_again:
@@ -1926,7 +1924,6 @@ try_again:
     ret.clear();
     int absfacet = 0;
     int scales = 0;
-    int slots_lost = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
     int cloud_producing = 0;
@@ -1967,16 +1964,6 @@ try_again:
 
                 if (m == MUT_SAPROVOROUS || m == MUT_IGNITE_BLOOD)
                     cloud_producing++;
-
-                if (m == MUT_CLAWS && i == 2
-                    || m == MUT_HORNS && i == 0
-                    || m == MUT_BEAK && i == 0
-                    || m == MUT_ANTENNAE && i == 0
-                    || m == MUT_HOOVES && i == 2
-                    || m == MUT_TALONS && i == 2)
-                {
-                    ++slots_lost;
-                }
             }
 
             ++absfacet;
@@ -1984,9 +1971,6 @@ try_again:
     }
 
     if (scales > 3)
-        goto try_again;
-
-    if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
     if (ice_elemental + fire_elemental > 1)
