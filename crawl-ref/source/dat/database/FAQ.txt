@@ -29,7 +29,7 @@
 #   means they will be displayed in bold in the html. This will only
 #   work for commands that don't contain spaces.
 # * Emphasis using asterisks will be replaced with italics.
-# * Hyperlinks should begin with http:// and should never be directly
+# * Hyperlinks should begin with https:// and should never be directly
 #   followed by a dot (reorder the sentence, if need be), so they can be
 #   turned into properly clickable links.
 #
@@ -131,7 +131,7 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: http://crawl.develz.org/mantis/
+A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: https://crawl.develz.org/mantis/
 
 If you're playing locally, be sure to upload your save file!
 
@@ -270,9 +270,9 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
+A: If you play online on https://crawl.akrasiac.org or https://crawl.develz.org, you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
 
-Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
+Check docs/ssh_guide.txt or https://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
 You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
 %%%%
@@ -295,9 +295,9 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become the next version) online on both http://crawl.akrasiac.org and http://crawl.develz.org; the latter site also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the next version) online on both https://crawl.akrasiac.org and https://crawl.develz.org; the latter site also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on our bug tracker (http://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (http://crawl.develz.org/wiki).
+Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (https://crawl.develz.org/wiki).
 
 When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
 %%%%
@@ -307,7 +307,7 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/), and give as much information as you can:
+A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and give as much information as you can:
 
 * What were you doing at the time?
 
@@ -334,7 +334,7 @@ A: Sorry, but no. At least not on ideas alone.
 
 All of the devteam members submitted a number of code intensive patches and/or took over responsibility over an important side project before joining. A good way to become indispensable is to help us with patches or vaults, etc.
 
-Please add your ideas in the appropriate section of the Mantis wiki: http://crawl.develz.org/wiki
+Please add your ideas in the appropriate section of the Mantis wiki: https://crawl.develz.org/wiki
 
 If they catch the interest of at least one coder, chances are they'll make it into the game.
 
@@ -366,7 +366,7 @@ I've written a patch for a cool new feature! Where should I send it?
 %%%%
 A:patch
 
-A: Please submit it as a new issue on our Mantis tracker: http://crawl.develz.org/mantis/
+A: Please submit it as a new issue on our Mantis tracker: https://crawl.develz.org/mantis/
 
 Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
 
@@ -392,7 +392,7 @@ A: There are several areas where you can get creative and outside help is much a
 
 Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
 
-If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from http://crawl.develz.org/trunk/).
+If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from https://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
 %%%%
