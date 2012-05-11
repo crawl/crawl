@@ -1788,90 +1788,85 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-// The tiers of each mutation within a facet should never exceed the overall
-// tier of the entire facet, lest ordering / scheduling issues arise.
+// The "when" numbers indicate the range of times in which the mutation tries
+// to place itself; it will be approximately placed between when% and
+// (when + 100)% of the way through the mutations. For example, you should
+// usually get all your body slot mutations in the first 2/3 of your
+// mutations and you should usually only start your tier 3 facet in the second
+// half of your mutations. See _order_ds_mutations() for details.
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
     { 2,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
-      { 2, 2, 2 } },
+      { -33, -33, -33 } },
     { 2, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
-      { 2, 2, 2 } },
+      { -33, -33, -33 } },
     { 2, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
-      { 2, 2, 2 } },
+      { -33, -33, -33 } },
     { 2, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
-      { 2, 2, 2 } },
+      { -33, -33, -33 } },
     { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
-      { 2, 2, 2 } },
+      { -33, -33, -33 } },
     // Tier 3 facets
     { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 3, 3, 3 } },
+      { 50, 50, 50 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
-      { 3, 3, 3 } },
+      { 50, 50, 50 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
-      { 3, 3, 3 } },
+      { 50, 50, 50 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
-      { 3, 3, 3 } },
+      { 50, 50, 50 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
-      { 3, 3, 3 } },
+      { 50, 50, 50 } },
     // Tier 2 facets
     { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
-      { 2, 2, 2 } },
+      { -33, 33, 66 } },
     { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
-      { 2, 2, 2 } },
+      { -33, 0, 0 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
         MUT_RUGGED_BROWN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
         MUT_THIN_METALLIC_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
         MUT_THIN_SKELETAL_STRUCTURE },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
-      { 1, 1, 1 } }
+      { -33, -33, 0 } },
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)
 {
     return facet.tier == tier;
-}
-
-static int _rank_for_tier(const facet_def& facet, int tier)
-{
-    int k;
-
-    for (k = 0; k < 3 && facet.tiers[k] <= tier; ++k);
-
-    return (k);
 }
 
 #define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
@@ -1954,11 +1949,11 @@ try_again:
 
             facets_used.insert(next_facet);
 
-            for (int i = 0; i < _rank_for_tier(*next_facet, tier); ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 mutation_type m = next_facet->muts[i];
 
-                ret.push_back(demon_mutation_info(m, next_facet->tiers[i],
+                ret.push_back(demon_mutation_info(m, next_facet->when[i],
                                                   absfacet));
 
                 if (_is_covering(m))
@@ -2007,36 +2002,42 @@ static std::vector<mutation_type>
 _order_ds_mutations(std::vector<demon_mutation_info> muts)
 {
     std::vector<mutation_type> out;
-
-    while (!muts.empty())
+    std::vector<int> times;
+    FixedVector<int, 1000> time_slots;
+    time_slots.init(-1);
+    for (unsigned int i = 0; i < muts.size(); i++)
     {
-        int first_tier = 99;
-
-        for (unsigned i = 0; i < muts.size(); ++i)
-            first_tier = std::min(first_tier, muts[i].tier);
-
-        int ix;
-
+        int first = std::max(0, muts[i].when);
+        int last = std::min(100, muts[i].when + 100);
+        int k;
         do
         {
-            ix = random2(muts.size());
+            k = 10 * first + random2(10 * (last - first));
         }
-        // Don't consider mutations from more than two tiers at a time
-        while (muts[ix].tier >= first_tier + 2);
+        while (time_slots[k] >= 0);
+        time_slots[k] = i;
+        times.push_back(k);
 
-        // Don't reorder mutations within a facet
-        for (int j = 0; j < ix; ++j)
+        // Don't reorder mutations within a facet.
+        for (unsigned int j = i; j > 0; j--)
         {
-            if (muts[j].facet == muts[ix].facet)
+            if (muts[j].facet == muts[j-1].facet && times[j] < times[j-1])
             {
-                ix = j;
-                break;
+                int earlier = times[j];
+                int later = times[j-1];
+                time_slots[earlier] = j-1;
+                time_slots[later] = j;
+                times[j-1] = earlier;
+                times[j] = later;
             }
+            else
+                break;
         }
-
-        out.push_back(muts[ix].mut);
-        muts.erase(muts.begin() + ix);
     }
+
+    for (int time = 0; time < 1000; time++)
+        if (time_slots[time] >= 0)
+            out.push_back(muts[time_slots[time]].mut);
 
     return out;
 }
