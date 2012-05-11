@@ -76,8 +76,7 @@ healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 
-Hunters are able to attack at range, without relying on pesky magic. The
-hunter's tool depends on species.
+Hunters are able to attack at range, without relying on pesky magic.
 %%%%
 Ice Elementalist
 
