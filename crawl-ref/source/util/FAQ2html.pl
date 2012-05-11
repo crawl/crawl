@@ -144,7 +144,7 @@ while (my $line = <FILE>)
 
             push @links, $b;
             my $l = "link$count";
-            $line = "$a<a href=$l>$l</a>$c ";
+            $line = "$a<a href=\"$l\">$l</a>$c ";
         }
         $count = 0;
         foreach my $l (@links)
