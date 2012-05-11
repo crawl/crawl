@@ -1,3 +1,4 @@
+
 %%%%
 ####################################################
 # Branches
@@ -1017,20 +1018,18 @@ small skeleton
 toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
- but my toes hardly notice. All they’re interested in is turning out
- toenails—semitransparent, flexible sheets of a hornlike material, as
- defense against—whom?”
+but my toes hardly notice. All they’re interested in is turning out
+toenails—semitransparent, flexible sheets of a hornlike material, as defense
+against—whom?”
     -Jorge Luis Borges
 %%%%
 ugly thing
 
 “Beauty is no quality in things themselves: It exists merely in the mind
-which
- contemplates them; and each mind perceives a different beauty. One person
-may
- even perceive deformity, where another is sensible of beauty; and every
- individual ought to acquiesce in his own sentiment, without pretending to
- regulate those of others.”
+which contemplates them; and each mind perceives a different beauty. One
+person may even perceive deformity, where another is sensible of beauty; and
+every individual ought to acquiesce in his own sentiment, without pretending
+to regulate those of others.”
     -David Hume
 %%%%
 worm
