@@ -133,7 +133,7 @@ while (my $line = <FILE>)
         #       same line.
         my @links;
         my $count = 0;
-        while ($line =~ /^(.*)\b(http[^\s\)\,]+)([\s\)\,].*)/g)
+        while ($line =~ /^(.*)\b(http(?:s?)[^\s\)\,]+)([\s\)\,].*)/g)
         {
             $count++;
 
