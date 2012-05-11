@@ -1874,7 +1874,7 @@ A magical device which causes a creature to be randomly translocated.
 %%%%
 war axe
 
-An one-handed military axe with a long haft and a single-bladed head.
+A one-handed military axe with a long haft and a single-bladed head.
 %%%%
 whip
 
