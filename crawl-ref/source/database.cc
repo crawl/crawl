@@ -868,7 +868,41 @@ std::string getFAQ_Answer(const std::string &question)
     // Also, use a nicer bullet as we're already here.
     val = replace_all(val, "\n\n*", "\n•");
 
-    return val;
+    std::string out;
+    for (const char *p = val.c_str(); *p; ++p)
+    {
+        if (*p == '\'')
+        {
+            for (const char *q = p + 1; *q && *q != ' ' && *q != '\n'; ++q)
+                if (*q == '\'')
+                {
+                    out.append("<white>");
+                    out.append(p + 1, q - p - 1);
+                    out.append("</white>");
+                    p = q;
+                    goto replaced;
+                }
+            out.push_back(*p);
+        }
+        else if (*p == '*')
+        {
+            for (const char *q = p + 1; *q && *q != '\n'; ++q)
+                if (*q == '*')
+                {
+                    out.append("<cyan>");
+                    out.append(p + 1, q - p - 1);
+                    out.append("</cyan>");
+                    p = q;
+                    goto replaced;
+                }
+            out.push_back(*p);
+        }
+        else
+            out.push_back(*p);
+replaced: ;
+    }
+
+    return out;
 }
 
 /////////////////////////////////////////////////////////////////////////////
