@@ -33,6 +33,9 @@
 #   followed by a dot (reorder the sentence, if need be), so they can be
 #   turned into properly clickable links.
 #
+T:html
+
+Dungeon Crawl Stone Soup - Frequently Asked Questions
 ##############################################
 # Beginners' questions about playing the game.
 ##############################################

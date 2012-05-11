@@ -19,6 +19,7 @@ my $text    = "";
 my $list    = 0;
 my $bullet  = 0;
 my $listct  = 0;
+my $title   = "no T:html key!";
 while (my $line = <FILE>)
 {
     next if ($line =~ /^#/);
@@ -41,6 +42,11 @@ while (my $line = <FILE>)
 
         push @keys, $key if (not exists $questions{$key});
         $current = "a";
+    }
+    elsif ($key eq "" && $line =~ /^T:(.+)$/)
+    {
+        $key = $1;
+        $current = "t";
     }
     elsif ($line =~ /^%%%%/)
     {
@@ -77,6 +83,7 @@ while (my $line = <FILE>)
         }
 
         $questions{$key} = $_ if ($current eq "q");
+        $title = $_ if ($current eq "t" && $key eq "html");
         $text = "";
         $key  = "";
         $listct = 0;
@@ -95,7 +102,7 @@ print OUTFILE <<END;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
         "http://www.w3.org/TR/html4/strict.dtd">
 <head>
- <title>Dungeon Crawl Stone Soup - Frequently Asked Questions</title>
+ <title>$title</title>
  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
  <style type="text/css">
 dt {font-weight:bold; margin-bottom:1em}
@@ -105,7 +112,7 @@ ul {margin-top:0.5em}
 </head>
 <body>
 <p><a name=\"top\"></a>
- <h1>Dungeon Crawl Stone Soup - Frequently Asked Questions</h1>
+ <h4>$title</h4>
  <ul style='list-style-type:none; padding-left:0'>
 END
 
