@@ -159,17 +159,17 @@ end
 
 local function is_candidate_for_attack(x,y)
   m = monster.get_monster_at(x, y)
-  --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:desc()) end
+  --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:name()) end
   if not m or m:attitude() ~= ATT_HOSTILE then
     return false
   end
-  if string.find(m:desc(), "butterfly")
-      or string.find(m:desc(), "orb of destruction") then
+  if m:name() == "butterfly"
+      or m:name() == "orb of destruction" then
     return false
   end
   if m:is_firewood() then
   --crawl.mpr("... is firewood.")
-    if string.find(m:desc(), "ballistomycete") then
+    if string.find(m:name(), "ballistomycete") then
       return true
     end
     return false
