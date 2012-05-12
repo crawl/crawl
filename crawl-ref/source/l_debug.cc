@@ -92,6 +92,14 @@ LUAFN(debug_generate_level)
     return (0);
 }
 
+LUAFN(debug_reveal_mimics)
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (mimic_at(*ri))
+            discover_mimic(*ri, false);
+    return (0);
+}
+
 LUAFN(debug_los_changed)
 {
     los_changed();
@@ -356,6 +364,7 @@ const struct luaL_reg debug_dlib[] =
 { "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
 { "generate_level", debug_generate_level },
+{ "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },
