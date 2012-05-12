@@ -2162,15 +2162,11 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 
     std::string name = item->name(DESC_PLAIN, false, true, false);
 
-    // Exploding missiles are always destroyed.
-    if (name.find("explod") != std::string::npos)
-        return (true);
-
     if (item->base_type != OBJ_MISSILES)
         return (false);
 
     int brand = get_ammo_brand(*item);
-    if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL)
+    if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL || brand == SPMSL_EXPLODING)
         return (true);
 
     // Nets don't get destroyed by throwing.
