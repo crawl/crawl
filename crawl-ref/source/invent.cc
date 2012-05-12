@@ -37,6 +37,7 @@
 #include "menu.h"
 #include "mon-util.h"
 #include "state.h"
+#include "throw.h"
 
 #ifdef USE_TILE
  #include "tiledef-icons.h"

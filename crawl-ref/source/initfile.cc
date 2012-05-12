@@ -44,6 +44,7 @@
 #include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "throw.h"
 #include "travel.h"
 #include "items.h"
 #include "view.h"

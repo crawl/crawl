@@ -40,7 +40,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
+#include "throw.h"
 #include "transform.h"
 
 

@@ -32,6 +32,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "stuff.h"
+#include "throw.h"
 #include "wiz-you.h"
 
 #ifdef WIZARD

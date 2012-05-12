@@ -29,6 +29,7 @@
 #include "spl-summoning.h"
 #include "stash.h"
 #include "stuff.h"
+#include "throw.h"
 
 /////////////////////////////////////////////////////////////////////
 // Item handling

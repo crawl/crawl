@@ -81,6 +81,7 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
+#include "throw.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
