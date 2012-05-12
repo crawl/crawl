@@ -32,8 +32,18 @@ You can also read these documents while playing Crawl by hitting '?' at the help
 menu. A list of frequently asked questions about gameplay and design can be
 accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can play with others
-over a server.  The relevant webpage, telnet and ssh addresses are:
+While Dungeon Crawl is strictly a single player game, you can interact with
+others over a server. Connecting to a server opens several interesting options.
+
+You can:
+  * watch other players and even communicate with them
+  * view your past games or those of others
+  * battle ghosts of other players
+  * compete using a common score list
+  * take part in the annual tournament
+  * play the most recent development version
+
+The relevant webpage, telnet and ssh addresses are:
 
 akrasiac.org (located in North America)
   :http: ``http://crawl.akrasiac.org``
@@ -42,19 +52,11 @@ akrasiac.org (located in North America)
 
 develz.org (located in Europe)
   :http: ``http://crawl.develz.org``
+  :tiles: ``https://tiles.crawl.develz.org/``
   :telnet: ``crawl.develz.org:345``
   :ssh: ``crawl@crawl.develz.org (ssh key required)``
-  :tiles: ``https://tiles.crawl.develz.org/``
 
 ssh key can be obtained at https://crawl.akrasiac.org/cao_key
-
-Connecting to a server opens several interesting options. You can:
-  * watch other players and even communicate with them
-  * view your past games or those of others
-  * battle ghosts of other players
-  * compete using a common score list
-  * take part in the annual tournament
-  * play the most recent development version on crawl.develz.org
 
 The servers carry no guarantees, though they are generally always running and
 no one has lost their save file yet. :) More information is available at the
@@ -1005,7 +1007,8 @@ will need to save up for several levels to memorise the more powerful spells.
 When casting a spell, you temporarily expend some of your magical energy and
 become hungrier (although high intelligence and Spellcasting help against hunger
 from spells). Pressing 'II' (or 'I!') displays the relative hunger costs of your
-spells.
+spells. The hunger cost is approximately proportional to the square of the
+number of # marks in this display.
 
 You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to display a
 list of all memorised spells without actually casting one. The spells available
@@ -1692,8 +1695,7 @@ Felids
   Their agility and stealth are legendary, as is their ability to get to hard
   to reach places. They move faster than most races, but don't run as fast as
   horses or Spriggans. Felids advance in levels very slowly, and are not very
-  gifted in directly damaging magic, but make good summoners, enchanters or
-  transmuters.
+  gifted in directly damaging magic, but make good enchanters or transmuters.
 
   The tale of a Felid who had nine lives isn't far from truth, as well.
 
