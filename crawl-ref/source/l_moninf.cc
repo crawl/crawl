@@ -165,6 +165,14 @@ LUAFN(moninf_get_desc)
     return (1);
 }
 
+LUAFN(moninf_get_name)
+{
+    MONINF(ls, 1, mi);
+    std::string s = mi->full_name();
+    lua_pushstring(ls, s.c_str());
+    return (1);
+}
+
 static const struct luaL_reg moninf_lib[] =
 {
     MIREG(type),
@@ -186,6 +194,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
+    MIREG(name),
 
     { NULL, NULL }
 };
