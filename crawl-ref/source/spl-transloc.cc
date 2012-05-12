@@ -39,6 +39,7 @@
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

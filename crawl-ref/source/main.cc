@@ -115,6 +115,7 @@
 #include "startup.h"
 #include "tags.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

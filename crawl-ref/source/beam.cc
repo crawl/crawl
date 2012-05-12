@@ -66,6 +66,7 @@
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif

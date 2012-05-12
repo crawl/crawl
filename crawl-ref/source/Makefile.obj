@@ -216,6 +216,7 @@ tagstring.o \
 target.o \
 teleport.o \
 terrain.o \
+throw.o \
 transform.o \
 traps.o \
 travel.o \

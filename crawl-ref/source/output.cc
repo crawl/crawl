@@ -47,6 +47,7 @@
 #include "status.h"
 #include "stuff.h"
 #include "tagstring.h"
+#include "throw.h"
 #include "transform.h"
 #include "travel.h"
 #include "viewchar.h"

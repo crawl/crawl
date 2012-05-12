@@ -20,6 +20,7 @@
 #include "player.h"
 #include "stuff.h"
 #include "tags.h"
+#include "throw.h"
 
 #include <algorithm>
 

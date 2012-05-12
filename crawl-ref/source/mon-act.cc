@@ -55,6 +55,7 @@
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #include "traps.h"
 #include "hints.h"
 #include "view.h"
