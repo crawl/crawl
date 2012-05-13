@@ -11,6 +11,7 @@
 #include "acquire.h"
 #include "areas.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
