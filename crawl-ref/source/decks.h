@@ -87,7 +87,9 @@ enum card_type
     CARD_SUMMON_FLYING,         // wisps and butterflies
     CARD_SUMMON_SKELETON,
     CARD_SUMMON_UGLY,
-    CARD_SUMMON_ANY,
+#if TAG_MAJOR_VERSION == 33
+    CARD_REMOVED_1,
+#endif
 
     CARD_POTION,
     CARD_FOCUS,

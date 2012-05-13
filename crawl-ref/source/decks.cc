@@ -326,7 +326,6 @@ const char* card_name(card_type card)
     case CARD_SUMMON_FLYING:   return "Foxfire";
     case CARD_SUMMON_SKELETON: return "the Bones";
     case CARD_SUMMON_UGLY:     return "Repulsiveness";
-    case CARD_SUMMON_ANY:      return "Summoning";
     case CARD_XOM:             return "Xom";
     case CARD_FAMINE:          return "Famine";
     case CARD_FEAST:           return "the Feast";
@@ -348,6 +347,7 @@ const char* card_name(card_type card)
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
     case CARD_MERCENARY:       return "the Mercenary";
+    case CARD_REMOVED_1:
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -2579,59 +2579,6 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _summon_any_monster(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    monster_type mon_chosen = NUM_MONSTERS;
-    coord_def chosen_spot;
-    int num_tries;
-
-    if (power_level == 0)
-        num_tries = 1;
-    else if (power_level == 1)
-        num_tries = 4;
-    else
-        num_tries = 18;
-
-    for (int i = 0; i < num_tries; ++i)
-    {
-        int dx, dy;
-        do
-        {
-            dx = random2(3) - 1;
-            dy = random2(3) - 1;
-        }
-        while (dx == 0 && dy == 0);
-
-        coord_def delta(dx,dy);
-
-        monster_type cur_try;
-        do
-            cur_try = random_monster_at_grid(you.pos() + delta);
-        while (mons_is_unique(cur_try));
-
-        if (mon_chosen == NUM_MONSTERS
-            || mons_power(mon_chosen) < mons_power(cur_try))
-        {
-            mon_chosen = cur_try;
-            chosen_spot = you.pos();
-        }
-    }
-
-    if (mon_chosen == NUM_MONSTERS) // Should never happen.
-        return;
-
-    const bool friendly = (power_level > 0 || !one_chance_in(4));
-
-    if (!create_monster(mgen_data(mon_chosen,
-                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                                  3, 0, chosen_spot, MHITYOU),
-                        false))
-    {
-        mpr("You see a puff of smoke.");
-    }
-}
-
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2975,7 +2922,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
     case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
-    case CARD_SUMMON_ANY:       _summon_any_monster(power, rarity); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
@@ -3041,6 +2987,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         }
         break;
 
+    case CARD_REMOVED_1:
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);
