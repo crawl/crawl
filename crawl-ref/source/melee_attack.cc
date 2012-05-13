@@ -1137,17 +1137,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
             // Minotaurs used to get +5 damage here, now they get
             // +6 because of the horns.
             aux_damage += player_mutation_level(MUT_HORNS) * 3;
-
-            item_def* helmet = you.slot_item(EQ_HELMET);
-            if (helmet && is_hard_helmet(*helmet))
-            {
-                aux_damage += 2;
-                if (get_helmet_desc(*helmet) == THELM_DESC_SPIKED
-                    || get_helmet_desc(*helmet) == THELM_DESC_HORNED)
-                {
-                    aux_damage += 3;
-                }
-            }
         }
         break;
 
