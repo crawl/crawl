@@ -82,13 +82,39 @@ animal skin
 
 La peau d'un animal.
 %%%%
+apple
+
+Un fruit rouge, ferme et délicieux, acide en bouche.
+%%%%
+apricot
+
+Un succulent fruit jaune-orange, prunus armeniaca.
+%%%%
 arrow
 
 Une flèche, pour le tir à l'arc.
 %%%%
+banana
+
+Un délicieux fruit jaune, sans doute cultivé et importé par une
+multi-nationale corrompue suite à un accord commercial verreux.
+%%%%
+bardiche
+
+Une longue perche avec une énorme lame tranchante au bout.
+%%%%
 battleaxe
 
 Une large hache munie d'un double tranchant.
+%%%%
+beef jerky
+
+Une tranche séchée de vache ou de bœuf mort.
+%%%%
+blessed double sword
+
+Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a
+été améliorée par Le Lumineux.
 %%%%
 bolt
 

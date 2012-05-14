@@ -1,7 +1,7 @@
 %%%%
 air elemental fan
 
-Un artilugio mágico que sirve para invocar elementales de aire. Es poco
+Un utensilio mágico que sirve para convocar elementales de aire. Es poco
 fiable, y normalmente hacen falta varios intentos para lograr que funcione.
 Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento
 de la magia del aire.
@@ -51,9 +51,19 @@ durante un periodo de tiempo prolongado.
 %%%%
 amulet of warding
 
-Este amuleto repele los ataques de criaturas que hayan sido invocadas
+Este amuleto repele los ataques de criaturas que hayan sido convocadas
 mediante magia, y también hace a su portador más resistente a los ataques
 basados en energías negativas.
+%%%%
+amulet of stasis
+
+Un amuleto que ha sido elaborado meticulosamente para bloquear los efectos
+mágicos o físicos que podrían tele-transportar, ralentizar, acelerar, o
+paralizar a su portador.
+
+Aunque el amuleto es efectivo contra la mayoría de las magias de
+translocación, los cambios de plano como el destierro están fuera de su
+alcance.
 %%%%
 animal skin
 
@@ -65,7 +75,7 @@ Una deliciosa, y tersa fruta roja, ácida al paladar.
 %%%%
 apricot
 
-Prunus armeniaca, una suculenta fruta amarilla-anaranjada.
+Prunus armeniaca, una suculenta fruta amarillenta o anaranjada.
 %%%%
 arrow
 
@@ -87,21 +97,21 @@ Una gran hacha con una cuchilla de doble filo.
 %%%%
 beef jerky
 
-Una tira de carne curada de vaca o toro.
+Una tira de carne seca de vaca o toro.
 %%%%
 blowgun
 
 Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un
-gran daño, su principal uso es el de disparar agujas envenenadas a
+gran daño, su principal uso es el de disparar dardos envenenados a
 distancia. Es muy silencioso.
 %%%%
 bolt
 
-Un perno para ballesta.
+Un virote para ballesta.
 %%%%
 book of air
 
-Un libro que contiene hechizos mágicos. Sientes una ligera brisa al hojear
+Un libro que contiene hechizos mágicos. Sientes una suave brisa al hojear
 sus páginas.
 %%%%
 book of alchemy
@@ -158,7 +168,7 @@ Un libro con hechizos mágicos.
 %%%%
 book of dreams
 
-Un libro translúcido. La luz se refleja de una forma extraña sobre su
+Un libro transparente. La luz se refleja de una forma extraña sobre su
 superficie.
 %%%%
 book of enchantments
@@ -196,6 +206,11 @@ Un libro con hechizos mágicos.
 book of hinderance
 
 Un libro con hechizos mágicos.
+%%%%
+book of ice
+
+Un libro con hechizos mágicos. Por un instante, un viento glacial te hiela
+al abrirlo.
 %%%%
 book of maledictions
 
@@ -264,6 +279,12 @@ book of wizardry
 
 Un libro con hechizos mágicos.
 %%%%
+bottled efreet
+
+Un poderoso ifrit, capturado por algún mago y sellado en un matraz de
+bronce. Romper el sello del frasco le hará libre para que cause estragos,
+quizás sobre ti.
+%%%%
 bow
 
 Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada
@@ -275,9 +296,17 @@ box of beasts
 Una caja mágica que contiene muchas bestias salvajes. Es posible levantar la
 tapa para permitir que salgan.
 %%%%
+broad axe
+
+Un hacha con una gran cuchilla.
+%%%%
 buckler
 
 Un pequeño escudo.
+%%%%
+cap
+
+Un sombrero de tela o cuero.
 %%%%
 centaur barding
 
@@ -302,6 +331,11 @@ Un trozo de carne encontrado en el calabozo.
 cloak
 
 Una capa de tela.
+%%%%
+club
+
+Un pesado trozo de madera que puede ser lanzado o empuñado. Golpear a
+alguien en la cabeza mientras que duerme, parece una gran idea.
 %%%%
 corpse
 
@@ -358,8 +392,8 @@ Un mazo de cartas mágicas, la mayoría de las cuales sirven para sembrar la
 muerte y destrucción de los adversarios de uno (o de uno mismo, si hay mala
 suerte).
 
-Puede contener las siguientes cartas: Virulencia, Llama, Escarcha, Veneno,
-la Centella, el Martillo, Dolor, el Orbe.
+Puede contener las siguientes cartas: Vitriolo, Llama, Escarcha, Veneno, la
+Centella, el Martillo, Dolor, el Orbe.
 %%%%
 deck of dungeons
 
@@ -401,7 +435,7 @@ Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
 Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo, el
 Elixir, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el
 Mercenario, la Cruzada, la Manada, el Pentagrama, la Danza, Foxfire, los
-Huesos, Repelencia, Virulencia, Llama, Escarcha, Veneno, la Centella, el
+Huesos, Repelencia, Vitriolo, Llama, Escarcha, Veneno, la Centella, el
 Martillo, Dolor, Tormento.
 %%%%
 deck of wonders
@@ -469,4 +503,122 @@ fire dragon armour
 Una armadura mágica confeccionada a partir de las escamas de un dragón que
 exhalaba fuego. Proporciona gran protección contra los efectos del fuego,
 pero hace a su usuario más vulnerable a los efectos del frío.
+%%%%
+fire dragon hide
+
+La escamosa piel de un auténtico dragón. Puede usarse para elaborar una
+armadura, pero incluso en su actual estado proporciona gran protección
+contra los efectos del fuego, aunque a costa de hacerte más vulnerable a los
+efectos del frío.
+%%%%
+flail
+
+Parecido a una maza, pero el mango y la masa de metal están unidos por una
+cadena.
+%%%%
+giant club
+
+Un gigantesco trozo de madera, del tamaño ideal para las manos de un ogro.
+%%%%
+giant spiked club
+
+Un gigantesco trozo de madera, con púas en uno de sus extremos.
+%%%%
+glaive
+
+Una garrocha con una enorme y pesada cuchilla en su extremo.
+%%%%
+gold dragon armour
+
+Una armadura mágica elaborada a partir de las escamas de un dragón dorado.
+Es muy pesado y aparatoso, pero proporciona gran protección contra el fuego,
+el frío, y el veneno.
+%%%%
+gold dragon hide
+
+La gruesa y pesada piel un dragón dorado, cubierta por deslumbrantes escamas
+doradas. Confiere resistencia al fuego, el frío, y el veneno a su usuario,
+pero solamente una pequeña parte de su legendaria protección contra ataques
+físicos, a menos que sea encantado.
+%%%%
+gold piece
+
+Una montón de brillantes monedas de oro.
+%%%%
+grape
+
+Una pequeña fruta.
+%%%%
+great mace
+
+Una enorme y pesada maza.
+%%%%
+great sword
+
+Una espada con una larguísima y pesada cuchilla y un gran mango.
+%%%%
+halberd
+
+Una larga garrocha con una prominente hacha en su extremo.
+%%%%
+hammer
+
+La cosa con la que clavas puntillas, modificada para el combate.
+%%%%
+hand axe
+
+Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser
+arrojada.
+%%%%
+helmet
+
+Una protección metálica para la cabeza.
+%%%%
+honeycomb
+
+Un trozo de un panal de miel, creado por abejas gigantes.
+%%%%
+horn of geryon
+
+La trompa que pertenecía a Geryon, guardián del Vestíbulo del Infierno. Las
+leyendas cuentan que si un mortal desea acceder a uno del Infiernos, primero
+debe usar esta trompa para poder entrar.
+%%%%
+ice dragon armour
+
+Una armadura mágica confeccionada a partir de las escamas de un dragón que
+exhalaba escarcha. Proporciona gran protección contra los efectos del frío,
+pero hace a su usuario más vulnerable a los efectos del fuego.
+%%%%
+ice dragon hide
+
+La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
+incluso en su actual estado proporciona gran protección contra los efectos
+del frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
+%%%%
+javelin
+
+Una larga y ligera vara que puede ser lanzada con la mano. {{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Por desgracia, es demasiada larga y rara para ti, así que
+eres incapaz de usarla."
+    else
+        return ""
+    end
+}}
+%%%%
+lajatang
+
+Una exótica y muy efectiva arma de importación. Consiste en una garrocha,
+con cuchillas en forma de media luna en ambos extremos.
+%%%%
+lamp of fire
+
+Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
+fiable, y normalmente hacen falta varios intentos para lograr que funcione.
+Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento
+de la magia del fuego.
 %%%%
