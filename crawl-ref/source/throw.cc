@@ -2180,26 +2180,26 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     switch (item->sub_type)
     {
     case MI_NEEDLE:
-        chance = (brand == SPMSL_CURARE ? 3 : 6);
+        chance = (brand == SPMSL_CURARE ? 6 : 12);
         break;
 
     case MI_SLING_BULLET:
     case MI_STONE:
     case MI_ARROW:
     case MI_BOLT:
-        chance = 4;
+        chance = 8;
         break;
 
     case MI_DART:
-        chance = 3;
+        chance = 6;
         break;
 
     case MI_JAVELIN:
-        chance = 10;
+        chance = 20;
         break;
 
     case MI_LARGE_ROCK:
-        chance = 25;
+        chance = 50;
         break;
 
     default:
@@ -2217,7 +2217,5 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     if (brand == SPMSL_FROST)
         chance /= 2;
 
-    // Enchanted projectiles get an extra shot at avoiding
-    // destruction: plus / (3 + plus) chance of survival.
-    return (x_chance_in_y(mult, chance) && x_chance_in_y(3, item->plus + 3));
+    return (x_chance_in_y(mult, chance));
 }
