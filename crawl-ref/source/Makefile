@@ -1445,6 +1445,7 @@ tx-check: $(TX-INI)
 	git commit -a -m "Transifex format fix."
 
 tx-pull:
+	$(RM) $(TX-NEW-TRANS) $(TX-NEW-TEXT)
 	tx pull -a --minimum-perc=1 --mode=reviewed
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
