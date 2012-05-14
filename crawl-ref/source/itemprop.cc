@@ -711,9 +711,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
-
-    if (item.flags & ISFLAG_KNOW_PLUSES && item.base_type == OBJ_MISSILES)
-        you.known_missiles.insert(missile_id(item));
 }
 
 void unset_ident_flags(item_def &item, iflags_t flags)
@@ -2887,11 +2884,6 @@ void seen_item(const item_def &item)
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
-    if (item.base_type == OBJ_MISSILES
-        && you.known_missiles.find(missile_id(item)) != you.known_missiles.end())
-    {
-        ((item_def*)&item)->flags |= ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
-    }
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

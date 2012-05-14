@@ -1305,46 +1305,6 @@ static int dex_adjust_thrown_tohit(int hit)
     return stat_adjust(hit, you.dex(), 13, 160, 90);
 }
 
-static void identify_floor_missiles_matching(item_def mitem, int idflags)
-{
-    mitem.flags &= ~idflags;
-
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            for (stack_iterator si(coord_def(x,y)); si; ++si)
-            {
-                if ((si->flags & ISFLAG_THROWN) && items_stack(*si, mitem))
-                    si->flags |= idflags;
-            }
-}
-
-void merge_ammo_in_inventory(int slot)
-{
-    if (!you.inv[slot].defined())
-        return;
-
-    bool done_anything = false;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (i == slot || !you.inv[i].defined())
-            continue;
-
-        // Merge with the thrower slot. This could be a bad
-        // thing if you're wielding IDed ammo and firing from
-        // an unIDed stack...but that's a pretty remote case.
-        if (items_stack(you.inv[i], you.inv[slot]))
-        {
-            if (!done_anything)
-                mpr("You combine your ammunition.");
-
-            inc_inv_item_quantity(slot, you.inv[i].quantity, true);
-            dec_inv_item_quantity(i, you.inv[i].quantity);
-            done_anything = true;
-        }
-    }
-}
-
 void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
     const item_def* launcher = act->weapon();
@@ -1404,7 +1364,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 {
     dist thr;
     int shoot_skill = 0;
-    bool ammo_ided = false;
 
     int baseHit      = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;  // from thrown or ammo
@@ -1797,33 +1756,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (elemental_missile_beam(bow_brand, ammo_brand))
             dice_mult = dice_mult * 140 / 100;
 
-        // ID check. Can't ID off teleported projectiles, uh, because
-        // it's too weird. Also it messes up the messages.
-        if (item_ident(*you.weapon(), ISFLAG_KNOW_PLUSES))
-        {
-            if (!teleport
-                && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-                && x_chance_in_y(shoot_skill, 100))
-            {
-                set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-                set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
-                ammo_ided = true;
-                identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
-                mprf("You are firing %s.",
-                     you.inv[throw_2].name(DESC_A).c_str());
-            }
-        }
-        else if (!teleport && x_chance_in_y(shoot_skill, 100))
-        {
-            item_def& weapon = *you.weapon();
-            set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
-
-            mprf("You are wielding %s.", weapon.name(DESC_A).c_str());
-
-            more();
-            you.wield_change = true;
-        }
-
         if (get_weapon_brand(launcher) == SPWPN_SPEED)
             speed_brand = true;
     }
@@ -1971,24 +1903,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             count_action(CACT_THROW, wepType);
         }
         else
-        {
             practise(EX_WILL_THROW_WEAPON);
-        }
-
-        // ID check
-        if (!teleport
-            && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-            && item.base_type == OBJ_MISSILES ?
-               x_chance_in_y(you.skill(SK_THROWING, 100), 10000) :
-               maybe_id_weapon(item))
-        {
-            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
-            identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
-            ammo_ided = true;
-            mprf("You are throwing %s.",
-                 you.inv[throw_2].name(DESC_A).c_str());
-        }
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
@@ -2144,9 +2059,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
     alert_nearby_monsters();
-
-    if (ammo_ided)
-        merge_ammo_in_inventory(throw_2);
 
     you.turn_is_over = true;
 

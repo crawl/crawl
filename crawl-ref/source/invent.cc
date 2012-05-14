@@ -120,7 +120,6 @@ bool InvEntry::is_item_glowing() const
             && (get_equip_desc(*item)
                 || (is_artefact(*item)
                     && (item->base_type == OBJ_WEAPONS
-                        || item->base_type == OBJ_MISSILES
                         || item->base_type == OBJ_ARMOUR
                         || item->base_type == OBJ_BOOKS))));
 }

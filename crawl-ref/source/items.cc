@@ -1401,18 +1401,7 @@ bool is_stackable_item(const item_def &item)
     return (false);
 }
 
-static iflags_t _ident_flags(const item_def &item)
-{
-    const iflags_t identmask = full_ident_mask(item);
-    iflags_t flags = item.flags & identmask;
-
-    if ((identmask & ISFLAG_KNOW_TYPE) && item_type_known(item))
-        flags |= ISFLAG_KNOW_TYPE;
-
-    return (flags);
-}
-
-bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ident)
+bool items_similar(const item_def &item1, const item_def &item2)
 {
     // Base and sub-types must always be the same to stack.
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
@@ -1438,18 +1427,8 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
         }
     }
 
-    // Check the ID flags.
-    if (!ignore_ident && _ident_flags(item1) != _ident_flags(item2))
-        return (false);
-
-    // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
-    // and note flags. Also, whether item was in inventory before.
-#define NON_IDENT_FLAGS ~(ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK | \
-                          ISFLAG_DROPPED | ISFLAG_THROWN | \
-                          ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
-                          ISFLAG_BEEN_IN_INV | ISFLAG_DROPPED_BY_ALLY)
-
-    if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
+#define NO_MERGE_FLAGS (ISFLAG_MIMIC | ISFLAG_SUMMONED)
+    if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
         return (false);
 
     // The inscriptions can differ if one of them is blank, but if they
@@ -1464,7 +1443,7 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
 }
 
 bool items_stack(const item_def &item1, const item_def &item2,
-                  bool force_merge, bool ignore_ident)
+                 bool force_merge)
 {
     // Both items must be stackable.
     if (!force_merge
@@ -1476,7 +1455,7 @@ bool items_stack(const item_def &item1, const item_def &item2,
         return (false);
     }
 
-    return items_similar(item1, item2, ignore_ident);
+    return items_similar(item1, item2);
 }
 
 void merge_item_stacks(item_def &source, item_def &dest, int quant)
@@ -1722,7 +1701,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack(you.inv[m], mitm[obj], false, true))
+            if (items_stack(you.inv[m], mitm[obj]))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
@@ -1750,18 +1729,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                     || inv_god_gift && !floor_god_gift)
                 {
                     trim_god_gift_inscrip(you.inv[m]);
-                }
-
-                // If only one of the stacks is identified,
-                // identify the other to a similar extent.
-                if (_ident_flags(mitm[obj]) != _ident_flags(you.inv[m]))
-                {
-                    if (!quiet)
-                        mpr("These items seem quite similar.");
-                    mitm[obj].flags |=
-                        _ident_flags(you.inv[m]) & you.inv[m].flags;
-                    you.inv[m].flags |=
-                        _ident_flags(mitm[obj]) & mitm[obj].flags;
                 }
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);

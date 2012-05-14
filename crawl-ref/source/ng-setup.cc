@@ -435,39 +435,37 @@ static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
 
-    const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
-
     switch (ng.weapon)
     {
     case WPN_ROCKS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, plus);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_JAVELINS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, plus);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_DARTS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, plus);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, plus);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
 
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, plus);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, plus);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25);
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -725,7 +723,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         // One free escape.
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20, 1);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
@@ -785,7 +783,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
         // Gets some darts - this job is difficult to start off with.
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
+        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;

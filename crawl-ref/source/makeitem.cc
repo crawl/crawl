@@ -1902,7 +1902,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 }
 
 static void _generate_missile_item(item_def& item, int force_type,
-                                   int item_level, int item_race)
+                                   int item_level)
 {
     const bool no_brand = (item.special == SPMSL_FORBID_BRAND);
     if (no_brand)
@@ -1964,9 +1964,6 @@ static void _generate_missile_item(item_def& item, int force_type,
         item.quantity = 1 + random2(9) + random2(12) + random2(12);
     else
         item.quantity = 1 + random2(9) + random2(12) + random2(12) + random2(15);
-
-    if (x_chance_in_y(11 + item_level, 100))
-        item.plus += random2(5);
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
@@ -3138,7 +3135,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISSILES:
-        _generate_missile_item(item, force_type, item_level, item_race);
+        _generate_missile_item(item, force_type, item_level);
         break;
 
     case OBJ_ARMOUR:
@@ -3357,16 +3354,6 @@ static bool _armour_is_visibly_special(const item_def &item)
     return (false);
 }
 
-static bool _missile_is_visibly_special(const item_def &item)
-{
-    // Ammo is runed if enchanted. Non-random so we don't
-    // get weird stacking behaviour.
-    if (item.plus)
-        return (true);
-
-    return (false);
-}
-
 jewellery_type get_random_amulet_type()
 {
     return (jewellery_type)
@@ -3524,11 +3511,6 @@ void item_set_appearance(item_def &item)
 
             set_equip_desc(item, RANDOM_ELEMENT(descs));
         }
-        break;
-
-    case OBJ_MISSILES:
-        if (_missile_is_visibly_special(item))
-            set_equip_desc(item, ISFLAG_RUNED);
         break;
 
     default:

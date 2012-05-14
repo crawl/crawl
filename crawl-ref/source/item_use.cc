@@ -209,10 +209,6 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return (you.species != SP_FELID);
 
-    // Also allow missiles to enchant them.
-    if (item.base_type == OBJ_MISSILES)
-        return (true);
-
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
                          && item.sub_type == MISC_LANTERN_OF_SHADOWS)
@@ -2366,18 +2362,14 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     std::string iname = wpn.name(DESC_YOUR);
     const char *s = wpn.quantity == 1 ? "s" : "";
 
-    // Missiles and blowguns only have one stat.
-    if (wpn.base_type == OBJ_MISSILES
-        || (wpn.base_type == OBJ_WEAPONS
-            && wpn.sub_type == WPN_BLOWGUN))
+    // Blowguns only have one stat.
+    if (wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
     {
         acc = acc + dam;
         dam = 0;
     }
 
-    if (wpn.base_type == OBJ_WEAPONS
-        || wpn.base_type == OBJ_MISSILES
-        || wpn.base_type == OBJ_STAVES)
+    if (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES)
     {
         if (!is_artefact(wpn) && wpn.base_type != OBJ_STAVES)
         {
@@ -2415,15 +2407,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (success)
-    {
         you.wield_change = true;
-        if (wpn.base_type == OBJ_MISSILES)
-        {
-            if (item_ident(wpn, ISFLAG_KNOW_PLUSES))
-                you.known_missiles.insert(missile_id(wpn));
-            merge_ammo_in_inventory(wpn.link);
-        }
-    }
 
     return success;
 }
@@ -2819,7 +2803,8 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_VORPALISE_WEAPON:
-            if (!you.weapon())
+            if (!you.weapon() || you.weapon()->base_type != OBJ_WEAPONS
+                              && you.weapon()->base_type != OBJ_STAVES)
             {
                 mpr("You are not wielding a weapon.");
                 return;
@@ -3035,7 +3020,6 @@ void read_scroll(int slot)
         }
         break;
 
-    // Everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
         _handle_enchant_weapon(1, 0, "green");
         break;
