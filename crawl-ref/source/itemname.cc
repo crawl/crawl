@@ -1295,7 +1295,7 @@ std::string item_def::name_aux(description_level_type desc,
         if (!terse && _missile_brand_is_prefix(brand))
             buff << _missile_brand_name(brand, MBN_NAME) << ' ';
 
-        if (item_typ == MI_THROWING_NET)
+        if (item_typ == MI_THROWING_NET && !basename && !qualname && !dbname)
         {
             // How torn the net is?
             // TODO: show it in a better way.
