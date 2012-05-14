@@ -251,6 +251,7 @@ Elyvilon puede deshacer el golpe mortal. Individuos especialmente piadosos
 pueden estar seguros de esta ayuda, pero en ese caso, cualquier intervención
 real cuesta piedad (al contrario que simplemente rogar por la intervención,
 que siempre es gratis).
+
 Cuidado: ¡matar a otros mientras pides que se te salve a ti mismo es un
 pecado capital!
 %%%%
