@@ -2121,7 +2121,7 @@ std::string shop_name(const coord_def& where, bool add_stop)
     return (name);
 }
 
-std::string shop_type_name (shop_type type)
+std::string shop_type_name(shop_type type)
 {
     switch (type)
     {
