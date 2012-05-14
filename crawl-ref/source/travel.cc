@@ -218,16 +218,6 @@ static inline int _feature_traverse_cost(dungeon_feature_type feature)
     return 1;
 }
 
-bool is_altar(const coord_def &c)
-{
-    return feat_is_altar(env.map_knowledge(c).feat());
-}
-
-inline bool is_player_altar(const coord_def &c)
-{
-    return feat_is_player_altar(env.map_knowledge(c).feat());
-}
-
 bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
@@ -2927,35 +2917,6 @@ void do_explore_cmd()
         mpr("No exploration algorithm can help you here.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);
-}
-
-// Given a feature vector, arranges the features in the order that the player
-// is most likely to be interested in. Currently, the only thing it does is to
-// put altars of the player's religion at the front of the list.
-void arrange_features(std::vector<coord_def> &features)
-{
-    for (int i = 0, count = features.size(); i < count; ++i)
-    {
-        if (is_player_altar(features[i]))
-        {
-            int place = i;
-            // Shuffle this altar as far up the list as possible.
-            for (int j = place - 1; j >= 0; --j)
-            {
-                if (is_altar(features[j]))
-                {
-                    if (is_player_altar(features[j]))
-                        break;
-
-                    coord_def temp = features[j];
-                    features[j] = features[place];
-                    features[place] = temp;
-
-                    place = j;
-                }
-            }
-        }
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////
