@@ -102,7 +102,6 @@ int travel_direction(uint8_t branch, int subdungeondepth);
 void prevent_travel_to(const std::string &dungeon_feature_name);
 
 // Sort dungeon features as appropriate.
-void arrange_features(std::vector<coord_def> &features);
 int level_distance(level_id first, level_id second);
 level_id find_deepest_explored(level_id curr);
 bool branch_entered(branch_type branch);

@@ -512,9 +512,6 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
         tp.set_feature_vector(&features);
         tp.get_features();
     }
-
-    // Sort features into the order the player is likely to prefer.
-    arrange_features(features);
 }
 
 // Sort glyphs within a group, for the feature list.
