@@ -204,10 +204,10 @@ static std::string _stk_genus_short_cap()
 
 static std::string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_TENGU   ? "Glider" :
+    return (Skill_Species == SP_NAGA     ? "Slider" :
+            Skill_Species == SP_TENGU    ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
-                                        : "Walker");
+                                         : "Walker");
 }
 
 static std::string _stk_weight()
