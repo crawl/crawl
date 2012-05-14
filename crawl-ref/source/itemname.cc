@@ -1292,46 +1292,26 @@ std::string item_def::name_aux(description_level_type desc,
     {
         special_missile_type brand  = get_ammo_brand(*this);
 
-        if (show_cosmetic
-            && get_equip_desc(*this) == ISFLAG_RUNED
-            && !testbits(ignore_flags, ISFLAG_RUNED))
-        {
-            buff << "runed ";
-        }
-
-        if (know_brand && !terse && _missile_brand_is_prefix(brand))
+        if (!terse && _missile_brand_is_prefix(brand))
             buff << _missile_brand_name(brand, MBN_NAME) << ' ';
 
-        if (know_pluses)
+        if (item_typ == MI_THROWING_NET)
         {
+            // How torn the net is?
+            // TODO: show it in a better way.
             output_with_sign(buff, it_plus);
             buff << ' ';
         }
 
-        if (!basename && !dbname)
-            buff << racial_description_string(*this, terse);
-
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (know_brand && brand != SPMSL_NORMAL)
+        if (brand != SPMSL_NORMAL)
         {
             if (terse)
                 buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
             else if (_missile_brand_is_postfix(brand))
                 buff << " of " << _missile_brand_name(brand, MBN_NAME);
         }
-
-        // Show "runed" in the quiver (== terse) so you know if
-        // you're quivering possibly branded ammo.
-        // Ammo in quiver differs from weapon wielded since the latter
-        // necessarily has a known brand.
-        if (terse && !know_brand && !dbname
-            && get_equip_desc(*this) == ISFLAG_RUNED
-            && !testbits(ignore_flags, ISFLAG_RUNED))
-        {
-            buff << " (runed)";
-        }
-
         break;
     }
     case OBJ_ARMOUR:

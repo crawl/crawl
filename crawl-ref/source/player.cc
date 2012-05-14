@@ -5773,7 +5773,6 @@ void player::init()
     level_stack.clear();
     type_ids.init(ID_UNKNOWN_TYPE);
     type_id_props.clear();
-    known_missiles.clear();
 
     zotdef_wave_name.clear();
     last_mid = 0;
