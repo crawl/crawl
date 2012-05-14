@@ -579,7 +579,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield, bool 
 
 // Determines if the combined launcher + ammo brands produce a
 // fire/frost/chaos beam.
-bool elemental_missile_beam(int launcher_brand, int ammo_brand)
+static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
 {
     if (launcher_brand == SPWPN_FLAME && ammo_brand == SPMSL_FROST ||
         launcher_brand == SPWPN_FROST && ammo_brand == SPMSL_FLAME)
@@ -1305,7 +1305,7 @@ static int dex_adjust_thrown_tohit(int hit)
     return stat_adjust(hit, you.dex(), 13, 160, 90);
 }
 
-void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
+static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
     const item_def* launcher = act->weapon();
 
@@ -1593,7 +1593,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // If we've a zero base damage + an elemental brand, up the damage
         // slightly so the brand has something to work with. This should
         // only apply to needles.
-        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
+        if (!baseDam && _elemental_missile_beam(bow_brand, ammo_brand))
             baseDam = 4;
 
         // [dshaligram] This is a horrible hack - we force beam.cc to consider
@@ -1753,7 +1753,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (ammo_brand == SPMSL_STEEL)
             dice_mult = dice_mult * 130 / 100;
 
-        if (elemental_missile_beam(bow_brand, ammo_brand))
+        if (_elemental_missile_beam(bow_brand, ammo_brand))
             dice_mult = dice_mult * 140 / 100;
 
         if (get_weapon_brand(launcher) == SPWPN_SPEED)
@@ -2054,7 +2054,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             canned_msg(MSG_EMPTY_HANDED_NOW);
     }
 
-    throw_noise(&you, pbolt, thrown);
+    _throw_noise(&you, pbolt, thrown);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
@@ -2247,7 +2247,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
         exHitBonus = (hitMult * mons->hit_dice) / 10 + 1;
         exDamBonus = (damMult * mons->hit_dice) / 10 + 1;
 
-        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
+        if (!baseDam && _elemental_missile_beam(bow_brand, ammo_brand))
             baseDam = 4;
 
         // [dshaligram] This is a horrible hack - we force beam.cc to
@@ -2348,7 +2348,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
     if (mons->observable())
         mpr(msg.c_str());
 
-    throw_noise(mons, beam, item);
+    _throw_noise(mons, beam, item);
 
     // Store misled values here, as the setting up of the aux source
     // will use the wrong monster name.

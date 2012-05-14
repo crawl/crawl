@@ -362,12 +362,6 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
     _remove_equipment(r, meld, mutation);
 }
 
-// FIXME: Switch to 4.1 transforms handling.
-size_type transform_size(int psize)
-{
-    return you.transform_size(you.form, psize);
-}
-
 size_type player::transform_size(transformation_type tform, int psize) const
 {
     switch (tform)

@@ -32,7 +32,6 @@ enum fire_type
 struct bolt;
 class dist;
 
-bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 bool item_is_quivered(const item_def &item);
 bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
@@ -42,8 +41,6 @@ void throw_item_no_quiver(void);
 
 bool setup_missile_beam(const actor *actor, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning);
-
-void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo);
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
