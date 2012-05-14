@@ -2156,6 +2156,409 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return (hit);
 }
 
+void setup_monster_throw_beam(monster* mons, struct bolt &beam)
+{
+    // FIXME we should use a sensible range here
+    beam.range = LOS_RADIUS;
+    beam.beam_source = mons->mindex();
+
+    beam.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
+    beam.flavour = BEAM_MISSILE;
+    beam.thrower = KILL_MON_MISSILE;
+    beam.aux_source.clear();
+    beam.is_beam = false;
+}
+
+// msl is the item index of the thrown missile (or weapon).
+bool mons_throw(monster* mons, struct bolt &beam, int msl)
+{
+    std::string ammo_name;
+
+    bool returning = false;
+    bool speed_brand = false;
+
+    int baseHit = 0, baseDam = 0;       // from thrown or ammo
+    int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
+    int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
+    int exHitBonus   = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
+    int lnchBaseDam  = 0;
+
+    int hitMult = 0;
+    int damMult  = 0;
+    int diceMult = 100;
+
+    // Some initial convenience & initializations.
+    const int wepClass  = mitm[msl].base_type;
+    const int wepType   = mitm[msl].sub_type;
+
+    const int weapon    = mons->inv[MSLOT_WEAPON];
+    const int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
+
+    mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
+    ASSERT(slot != NUM_MONSTER_SLOTS);
+
+    mons->lose_energy(EUT_MISSILE);
+    const int throw_energy = mons->action_energy(EUT_MISSILE);
+
+    // Dropping item copy, since the launched item might be different.
+    item_def item = mitm[msl];
+    item.quantity = 1;
+    if (mons->friendly())
+        item.flags |= ISFLAG_DROPPED_BY_ALLY;
+
+    // FIXME we should actually determine a sensible range here
+    beam.range         = LOS_RADIUS;
+
+    if (setup_missile_beam(mons, beam, item, ammo_name, returning))
+        return (false);
+
+    beam.aimed_at_spot = returning;
+
+    const launch_retval projected =
+        is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
+                    mitm[msl]);
+
+    // extract launcher bonuses due to magic
+    if (projected == LRET_LAUNCHED)
+    {
+        lnchHitBonus = mitm[weapon].plus;
+        lnchDamBonus = mitm[weapon].plus2;
+        lnchBaseDam  = property(mitm[weapon], PWPN_DAMAGE);
+    }
+
+    // extract weapon/ammo bonuses due to magic
+    ammoHitBonus = item.plus;
+    ammoDamBonus = item.plus2;
+
+    // Archers get a boost from their melee attack.
+    if (mons->is_archer())
+    {
+        const mon_attack_def attk = mons_attack_spec(mons, 0);
+        if (attk.type == AT_SHOOT)
+        {
+            if (projected == LRET_THROWN && wepClass == OBJ_MISSILES)
+                ammoHitBonus += random2avg(attk.damage, 2);
+            else
+                ammoDamBonus += random2avg(attk.damage, 2);
+        }
+    }
+
+    if (projected == LRET_THROWN)
+    {
+        // Darts are easy.
+        if (wepClass == OBJ_MISSILES && wepType == MI_DART)
+        {
+            baseHit = 11;
+            hitMult = 40;
+            damMult = 25;
+        }
+        else
+        {
+            baseHit = 6;
+            hitMult = 30;
+            damMult = 25;
+        }
+
+        baseDam = property(item, PWPN_DAMAGE);
+
+        if (wepClass == OBJ_MISSILES)   // throw missile
+        {
+            // ammo damage needs adjusting here - OBJ_MISSILES
+            // don't get separate tohit/damage bonuses!
+            ammoDamBonus = ammoHitBonus;
+
+            // [dshaligram] Thrown stones/darts do only half the damage of
+            // launched stones/darts. This matches 4.0 behaviour.
+            if (wepType == MI_DART || wepType == MI_STONE
+                || wepType == MI_SLING_BULLET)
+            {
+                baseDam = div_rand_round(baseDam, 2);
+            }
+        }
+
+        // give monster "skill" bonuses based on HD
+        exHitBonus = (hitMult * mons->hit_dice) / 10 + 1;
+        exDamBonus = (damMult * mons->hit_dice) / 10 + 1;
+    }
+
+    // Monsters no longer gain unfair advantages with weapons of
+    // fire/ice and incorrect ammo.  They now have the same restrictions
+    // as players.
+
+    const int  ammo_brand = get_ammo_brand(item);
+
+    if (projected == LRET_LAUNCHED)
+    {
+        int bow_brand = get_weapon_brand(mitm[weapon]);
+
+        switch (lnchType)
+        {
+        case WPN_BLOWGUN:
+            baseHit = 12;
+            hitMult = 60;
+            damMult = 0;
+            lnchDamBonus = 0;
+            break;
+        case WPN_BOW:
+        case WPN_LONGBOW:
+            baseHit = 0;
+            hitMult = 60;
+            damMult = 35;
+            // monsters get half the launcher damage bonus,
+            // which is about as fair as I can figure it.
+            lnchDamBonus = (lnchDamBonus + 1) / 2;
+            break;
+        case WPN_CROSSBOW:
+            baseHit = 4;
+            hitMult = 70;
+            damMult = 30;
+            break;
+        case WPN_SLING:
+            baseHit = 10;
+            hitMult = 40;
+            damMult = 20;
+            // monsters get half the launcher damage bonus,
+            // which is about as fair as I can figure it.
+            lnchDamBonus /= 2;
+            break;
+        }
+
+        // Launcher is now more important than ammo for base damage.
+        baseDam = property(item, PWPN_DAMAGE);
+        if (lnchBaseDam)
+            baseDam = lnchBaseDam + random2(1 + baseDam);
+
+        // missiles don't have pluses2;  use hit bonus
+        ammoDamBonus = ammoHitBonus;
+
+        exHitBonus = (hitMult * mons->hit_dice) / 10 + 1;
+        exDamBonus = (damMult * mons->hit_dice) / 10 + 1;
+
+        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
+            baseDam = 4;
+
+        // [dshaligram] This is a horrible hack - we force beam.cc to
+        // consider this beam "needle-like".
+        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
+            beam.ench_power = AUTOMATIC_HIT;
+
+        // elven bow w/ elven arrow, also orcish
+        if (get_equip_race(mitm[weapon])
+                == get_equip_race(mitm[msl]))
+        {
+            baseHit++;
+            baseDam++;
+
+            if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN)
+                beam.hit++;
+        }
+
+        // Vorpal brand increases damage dice size.
+        if (bow_brand == SPWPN_VORPAL)
+            diceMult = diceMult * 120 / 100;
+
+        // As do steel ammo.
+        if (ammo_brand == SPMSL_STEEL)
+            diceMult = diceMult * 130 / 100;
+
+        // Note: we already have throw_energy taken off.  -- bwr
+        int speed_delta = 0;
+        if (lnchType == WPN_CROSSBOW)
+        {
+            if (bow_brand == SPWPN_SPEED)
+            {
+                // Speed crossbows take 50% less time to use than
+                // ordinary crossbows.
+                speed_delta = div_rand_round(throw_energy * 2, 5);
+                speed_brand = true;
+            }
+            else
+            {
+                // Ordinary crossbows take 20% more time to use
+                // than ordinary bows.
+                speed_delta = -div_rand_round(throw_energy, 5);
+            }
+        }
+        else if (bow_brand == SPWPN_SPEED)
+        {
+            // Speed bows take 50% less time to use than
+            // ordinary bows.
+            speed_delta = div_rand_round(throw_energy, 2);
+            speed_brand = true;
+        }
+
+        mons->speed_increment += speed_delta;
+    }
+
+    // Chaos, flame, and frost.
+    if (beam.flavour != BEAM_MISSILE)
+    {
+        baseHit    += 2;
+        exDamBonus += 6;
+    }
+
+    // monster intelligence bonus
+    if (mons_intel(mons) == I_HIGH)
+        exHitBonus += 10;
+
+    // Identify before throwing, so we don't get different
+    // messages for first and subsequent missiles.
+    if (mons->observable())
+    {
+        if (projected == LRET_LAUNCHED
+               && item_type_known(mitm[weapon])
+            || projected == LRET_THROWN
+               && mitm[msl].base_type == OBJ_MISSILES)
+        {
+            set_ident_flags(mitm[msl], ISFLAG_KNOW_TYPE);
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        }
+    }
+
+    // Now, if a monster is, for some reason, throwing something really
+    // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
+    std::string msg = mons->name(DESC_THE);
+    msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
+
+    if (!beam.name.empty() && projected == LRET_LAUNCHED)
+        msg += article_a(beam.name);
+    else
+    {
+        // build shoot message
+        msg += item.name(DESC_A, false, false, false);
+
+        // build beam name
+        beam.name = item.name(DESC_PLAIN, false, false, false);
+    }
+    msg += ".";
+
+    if (mons->observable())
+        mpr(msg.c_str());
+
+    throw_noise(mons, beam, item);
+
+    // Store misled values here, as the setting up of the aux source
+    // will use the wrong monster name.
+    int misled = you.duration[DUR_MISLED];
+    you.duration[DUR_MISLED] = 0;
+
+    // [dshaligram] When changing bolt names here, you must edit
+    // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
+    if (projected == LRET_LAUNCHED)
+    {
+        beam.aux_source = make_stringf("Shot with a%s %s by %s",
+                 (is_vowel(beam.name[0]) ? "n" : ""), beam.name.c_str(),
+                 mons->name(DESC_A).c_str());
+    }
+    else
+    {
+        beam.aux_source = make_stringf("Hit by a%s %s thrown by %s",
+                 (is_vowel(beam.name[0]) ? "n" : ""), beam.name.c_str(),
+                 mons->name(DESC_A).c_str());
+    }
+
+    // And restore it here.
+    you.duration[DUR_MISLED] = misled;
+
+    // Add everything up.
+    beam.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
+    beam.damage =
+        dice_def(1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus);
+
+    if (projected == LRET_LAUNCHED)
+    {
+        beam.damage.size += lnchDamBonus;
+        beam.hit += lnchHitBonus;
+    }
+    beam.damage.size = diceMult * beam.damage.size / 100;
+
+    int frenzy_degree = -1;
+
+    if (mons->has_ench(ENCH_BATTLE_FRENZY))
+        frenzy_degree = mons->get_ench(ENCH_BATTLE_FRENZY).degree;
+    else if (mons->has_ench(ENCH_ROUSED))
+        frenzy_degree = mons->get_ench(ENCH_ROUSED).degree;
+
+    if (frenzy_degree != -1)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        const dice_def orig_damage = beam.damage;
+#endif
+
+        beam.damage.size = beam.damage.size * (115 + frenzy_degree * 15) / 100;
+
+        dprf("%s frenzy damage: %dd%d -> %dd%d",
+             mons->name(DESC_PLAIN).c_str(),
+             orig_damage.num, orig_damage.size,
+             beam.damage.num, beam.damage.size);
+    }
+
+    // Skilled fighters get better to-hit and damage.
+    if (mons->is_fighter())
+    {
+        beam.hit         = beam.hit * 120 / 100;
+        beam.damage.size = beam.damage.size * 120 / 100;
+    }
+
+    if (speed_brand)
+        beam.damage.size = div_rand_round(beam.damage.size * 9, 10);
+
+    scale_dice(beam.damage);
+
+    // decrease inventory
+    bool really_returns;
+    if (returning && !one_chance_in(mons_power(mons->type) + 3))
+        really_returns = true;
+    else
+        really_returns = false;
+
+    beam.drop_item = !really_returns;
+
+    // Redraw the screen before firing, in case the monster just
+    // came into view and the screen hasn't been updated yet.
+    viewwindow();
+    beam.fire();
+
+    // The item can be destroyed before returning.
+    if (really_returns && thrown_object_destroyed(&item, beam.target))
+        really_returns = false;
+
+    if (really_returns)
+    {
+        // Fire beam in reverse.
+        beam.setup_retrace();
+        viewwindow();
+        beam.fire();
+
+        // Only print a message if you can see the target or the thrower.
+        // Otherwise we get "The weapon returns whence it came from!" regardless.
+        if (you.see_cell(beam.target) || you.can_see(mons))
+        {
+            msg::stream << "The weapon returns "
+                        << (you.can_see(mons)?
+                              ("to " + mons->name(DESC_THE))
+                            : "from whence it came")
+                        << "!" << std::endl;
+        }
+
+        // Player saw the item return.
+        if (!is_artefact(item))
+        {
+            // Since this only happens for non-artefacts, also mark properties
+            // as known.
+            set_ident_flags(mitm[msl],
+                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
+        }
+    }
+    else if (dec_mitm_item_quantity(msl, 1))
+        mons->inv[slot] = NON_ITEM;
+
+    if (beam.special_explosion != NULL)
+        delete beam.special_explosion;
+
+    return (true);
+}
+
 bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
