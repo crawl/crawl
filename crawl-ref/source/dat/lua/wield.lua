@@ -46,13 +46,5 @@ function ch_item_wieldable(it)
         return true
     end
 
-    if it.class(true) == "missile" then
-        for _, it2 in ipairs(items.inventory()) do
-            if string.find( it2.name("qual"), "scroll of enchant weapon" ) then
-                return true
-            end
-        end
-    end
-
     return false
 end
