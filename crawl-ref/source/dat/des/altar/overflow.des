@@ -602,6 +602,7 @@ MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
 MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
             size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
+KFEAT:  RB = floor
 MAP
 CCCCCCCC+++CCCCCCCC
 Cnnnnnnn...nnnnnnnC
