@@ -53,4 +53,7 @@ int launcher_final_speed(const item_def &launcher,
                          const item_def *shield, bool scaled = true);
 
 void merge_ammo_in_inventory(int slot);
+
+void setup_monster_throw_beam(monster* mons, struct bolt &beam);
+bool mons_throw(monster* mons, struct bolt &beam, int msl);
 #endif
