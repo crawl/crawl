@@ -850,27 +850,29 @@ with a small cost attached.
 %%%%
 large rock
 
-A rock, used by giants as a missile. {{
+A very large and very heavy stone. {{
     if string.find(you.race(), "Ogre")
        or you.race() == "Troll"
-    then
-        return ""
-    else
-        return "Unfortunately, it is too heavy and awkward for you to use."
-    end
+   then
+       return ""
+   else
+       return "Exceptional strength is needed even to carry one, and " ..
+              "only large creatures are capable of throwing it."
+   end
 }}
 %%%%
 large shield
 
-Like a normal shield, only larger. {{
+A large piece of wood and metal, to be strapped on one arm for defence. {{
     if string.find(you.race(), "Ogre")
        or string.find(you.race(), "Draconian")
        or you.race() == "Troll"
     then
         return "It looks like it would fit you well."
     else
-        return "It is very cumbersome to wear, and slows the rate at " ..
-               "which you may attack."
+        return "It is very cumbersome to wear, and, without a great " ..
+               "deal of training, greatly slows the rate at which a " ..
+               "warrior attacks."
     end
 }}
 %%%%
@@ -1447,8 +1449,9 @@ If used on a deck of cards, this scroll will also give away the top card.
 %%%%
 scroll of immolation
 
-Small writing on the back of the scroll reads: "Warning: contents under
-pressure. May be harmful to the reader."
+This scroll is treated with an incredibly flammable substance, which
+explodes violently when the scroll is opened and read, scorching the reader
+and anything else nearby.
 %%%%
 scroll of magic mapping
 
@@ -1667,10 +1670,10 @@ spells.
 %%%%
 steam dragon armour
 
-A magical armour, made from the scales of a steam-breathing dragon. Although
-it does not provide its wearer with much in the way of special magical
-protection, unlike the armour made from the scales of some larger dragons,
-it is extremely light and as supple as cloth.
+A magical armour, made from the scales of a steam-breathing dragon.
+Although, unlike the armour made from the scales of some larger dragons, it
+does not provide its wearer with much in the way of special magical
+protection, it is extremely light and as supple as cloth.
 %%%%
 steam dragon hide
 
