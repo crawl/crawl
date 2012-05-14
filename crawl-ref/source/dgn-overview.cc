@@ -1005,19 +1005,11 @@ void annotate_level()
     {
         li2 = level_id::get_next_level_id(you.pos());
 
-        if (!is_connected_branch(li2) || li2.depth <= 0)
+        if (li2.depth <= 0)
             li2 = level_id::current();
     }
 
-    if (!player_in_connected_branch() && !is_connected_branch(li2))
-    {
-        mpr("You can't annotate this level.");
-        return;
-    }
-
-    if (!player_in_connected_branch())
-        li = li2;
-    else if (li2 != level_id::current())
+    if (li2 != level_id::current())
     {
         if (yesno("Annotate level on other end of current stairs?", true, 'n'))
             li = li2;
@@ -1051,6 +1043,11 @@ void do_annotate(level_id& li)
         mpr("Cleared.");
         level_annotations.erase(li);
     }
+}
+
+void clear_level_annotation(level_id li)
+{
+    level_annotations.erase(li);
 }
 
 void marshallUniqueAnnotations(writer& outf)
