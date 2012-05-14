@@ -731,6 +731,13 @@ static std::string _query_database(TextDB &db, std::string key,
 
     std::string str((const char *)result.dptr, result.dsize);
 
+    // <foo> is an alias to key foo
+    if (str[0] == '<' and str[str.size() - 2] == '>')
+    {
+        return _query_database(db, str.substr(1, str.size() - 3),
+                               canonicalise_key, run_lua, untranslated);
+    }
+
     if (run_lua)
         _execute_embedded_lua(str);
 
