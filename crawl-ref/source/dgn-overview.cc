@@ -892,9 +892,6 @@ static std::string unique_name(monster* mons)
 
 void set_unique_annotation(monster* mons, const level_id level)
 {
-    // Abyss persists its denizens.
-    if (!is_connected_branch(level) && level != BRANCH_ABYSS)
-        return;
     if (!mons_is_unique(mons->type)
         && !(mons->props.exists("original_was_unique")
             && mons->props["original_was_unique"].get_bool())
@@ -924,9 +921,12 @@ void remove_unique_annotation(monster* mons)
         else
             ++i;
     }
+
     for (std::set<level_id>::iterator i = affected_levels.begin();
          i != affected_levels.end(); ++i)
+    {
         _update_unique_annotation(*i);
+    }
 }
 
 void set_level_exclusion_annotation(std::string str, level_id li)
@@ -1045,9 +1045,24 @@ void do_annotate(level_id& li)
     }
 }
 
-void clear_level_annotation(level_id li)
+void clear_level_annotations(level_id li)
 {
     level_annotations.erase(li);
+
+    // Abyss persists its denizens.
+    if (li == BRANCH_ABYSS)
+        return;
+
+    std::set<monster_annotation>::iterator next;
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); i = next)
+    {
+        next = i;
+        ++next;
+        if (i->second == li)
+            auto_unique_annotations.erase(i);
+    }
+    level_uniques.erase(li);
 }
 
 void marshallUniqueAnnotations(writer& outf)
