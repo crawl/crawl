@@ -1244,15 +1244,6 @@ static std::string _describe_ammo(const item_def &item)
     else if (item.sub_type != MI_THROWING_NET)
         append_missile_info(description);
 
-    if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-        description += "\nIt cannot be enchanted further.";
-    else
-    {
-        description += "\nIt can be maximally enchanted to +";
-        _append_value(description, MAX_WPN_ENCHANT, false);
-        description += ".";
-    }
-
     return (description);
 }
 
@@ -1268,8 +1259,7 @@ void append_armour_stats(std::string &description, const item_def &item)
 
 void append_missile_info(std::string &description)
 {
-    description += "\nAll pieces of ammunition may get destroyed upon impact. "
-                   "Enchantment reduces the chances of such loss.";
+    description += "\nAll pieces of ammunition may get destroyed upon impact.";
 }
 
 //---------------------------------------------------------------
