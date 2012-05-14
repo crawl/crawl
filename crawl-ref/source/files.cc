@@ -1877,7 +1877,8 @@ void delete_level(const level_id &level)
     travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
     clear_level_exclusion_annotation(level);
-    clear_level_annotation(level);
+    clear_level_annotations(level);
+
     if (you.save)
         you.save->delete_chunk(level.describe());
     if (level.branch == BRANCH_ABYSS)
