@@ -1374,7 +1374,7 @@ tx-clean:
 	$(RM) $(TX-INI) $(TX-QUOTES-ALL)
 
 $(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
-	util/add-missing-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
+	util/tx-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
 
 # XXX for database file, we'll need a conditional to remove the -u option.
 %.ini: %.txt
@@ -1382,10 +1382,10 @@ $(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
 
 tx-txt:
 	-if [ "$(TX-NEW-TRANS)" != "" ]; then\
-		$(TX-MKTXT) -ow $(TX-NEW-TRANS);\
+		$(TX-MKTXT) -w $(TX-NEW-TRANS);\
 	fi
 	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
-		$(TX-MKTXT) -w -d $(TX-DIR) $(TX-NEW-TEXT);\
+		$(TX-MKTXT) -mw -d $(TX-DIR) $(TX-NEW-TEXT);\
 	fi
 	@git add $(TX-TTRANS)
 	@git diff --quiet HEAD && exit 0;\
@@ -1427,7 +1427,7 @@ tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
 
 tx-check: $(TX-INI)
 	@git diff --quiet HEAD || (echo "You have uncommited changes in your working tree. Commit or stash them before continuing."; exit 1)
-	@if $(TX-MKTXT) -tw $(TX-SOURCES) && $(TX-MKTXT) -otw $(TX-TRANS); then\
+	@if $(TX-MKTXT) -mtw $(TX-SOURCES) && $(TX-MKTXT) -tw $(TX-TRANS); then\
 		exit 0;\
 	fi;\
 	echo "Changes detected when converting to transifex format.";\
@@ -1435,8 +1435,8 @@ tx-check: $(TX-INI)
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
 	fi;\
-	$(TX-MKTXT) -w $(TX-SOURCES);\
-	$(TX-MKTXT) -ow $(TX-TRANS);\
+	$(TX-MKTXT) -mw $(TX-SOURCES);\
+	$(TX-MKTXT) -w $(TX-TRANS);\
 	git diff;\
 	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\

@@ -1,13 +1,14 @@
 #!/usr/bin/env perl
 # Generate or update a .txt file (database or description) from a .ini file
 # (normally downloaded from transifex). If the .txt file already exists,
-# the values of its keys found in the .ini will be updated, and the rest of the
-# file will be preserved (comments and keys not in the .ini).
-# This behaviour is desired for updating the original files in english.
-# For translated files, use the -o option (overwrite). This way, keys deleted
-# in the original files will also be deleted in translated files.
+# and the -m (merge) option is used, the values of its keys found in the .ini
+# will be updated, and the rest of the file will be preserved (comments and
+# keys not in the .ini).
+# This behaviour is desired for updating the original files in english,
+# but not for translated files, otherwise keys deleted in the original files
+# would not be deleted in them.
 # If the output file won't be changed, it won't be overwritten with the same
-# content, even with -o.
+# content.
 # Other options are:
 # -d: specify output file or directory
 # -t: only check if the output file would be changed and exit with an
@@ -29,8 +30,8 @@ if ($^O ne 'msys') {
 
 die "Usage: $0 ini_files\n" unless (@ARGV);
 
-getopts('d:otvw');
-our($opt_d, $opt_o, $opt_t, $opt_v, $opt_w);
+getopts('d:mtvw');
+our($opt_d, $opt_m, $opt_t, $opt_v, $opt_w);
 
 sub clean_value {
     $_ = shift;
@@ -73,29 +74,48 @@ foreach my $file (@ARGV) {
             $out_file = $opt_d;
         }
     }
-    open IN, $file;
+    open INI, $file;
+
     if (-e $out_file) {
         my %Text;
-        while (<IN>) {
+        my $out_text = "";
+
+        # First, we load the ini file.
+        while (<INI>) {
             chomp;
             next if (/^#/);
             my ($key, $value) = /(.*?)=(.*)$/;
             $Text{$key} = clean_value($value);
+            $out_text .= "%%%%\n";
+            $out_text .= "$key\n\n";
+            $out_text .= clean_value($value) . "\n";
         }
-        close IN;
+        close INI;
 
-        my ($key, $value, $out_text, $line_number, $changed);
+        if ($out_text) {
+            $out_text .= "%%%%\n";
+        }
+
+        my ($key, $value, $merged_text, $line_number, $changed);
         $value = "";
-        open IN, $out_file;
-        while (<IN>) {
+
+        # Now we load the .txt file and compare it with what's in the .ini
+        open TXT, $out_file;
+        while (<TXT>) {
             chomp;
             $line_number++;
+
+            # Comments are preserved
             if (/^#/) {
-                $out_text .= "$_\n";
+                $merged_text .= "$_\n";
                 next;
             }
+
+            # end of section, time to compare values
             if (/^%+$/) {
                 if ($key and $Text{$key} and $Text{$key} ne $value) {
+
+                    # In test mode, we report the mismatch and stop here.
                     if ($opt_t) {
                         print STDERR "$file: line $line_number mismatch\n";
                         if ($opt_v) {
@@ -106,51 +126,81 @@ foreach my $file (@ARGV) {
                         last;
                     }
                     $changed = 1;
-                    $out_text .= "$Text{$key}";
+                    $merged_text .= "$Text{$key}";
                 } else {
-                    $out_text .= $value;
+                    $merged_text .= $value;
                 }
-                $out_text .= "\n$_\n";
+
+                # When not in merged mode, we also check for new/deleted keys.
+                if ($key and not $opt_m) {
+                    if ($Text{$key}) {
+                        delete $Text{$key};
+                    } else {
+                        # The key has been deleted from the .ini, so the .txt
+                        # will need to be updated.
+                        $changed = 1;
+                    }
+                }
+
+                $merged_text .= "\n$_\n";
                 $key = "";
                 $value = "";
             }
+
+            # If key is unset, then we have a new key. Read it and skip the
+            # blank line.
             elsif (!$key) {
                 $key = $_;
-                $out_text .= "$_\n\n";
-                $_ = <IN>;
+                $merged_text .= "$_\n\n";
+                $_ = <TXT>;
                 $line_number++;
                 print STDERR "$file: missing empty line at $line_number\n" if ($_ ne "\n");
             }
+
+            # Otherwise, we're reading a value.
             else {
                 $value .= "\n" if $value;
                 $value .= $_;
             }
         }
-        close IN;
+        close TXT;
+
+        # When not in merge mode, if %Text isn't empty, it means that we have
+        # new keys, so we need to write the file.
+        if (not $opt_m and %Text) {
+            $changed = 1;
+        }
+
+        # File needs to be updated.
         if ($changed and not $opt_t) {
-            open OUT, ">$out_file";
+            open TXT, ">$out_file";
             local $/;
-            print OUT $out_text;
-            close OUT;
+            if ($opt_m) {
+                print TXT $merged_text;
+            } else {
+                print TXT $out_text;
+            }
+            close TXT;
         }
     } else {
+        # Destination file doesn't exists, so we just create it.
         my $empty = 1;
-        open OUT, ">$out_file";
-        while (<IN>) {
+        open TXT, ">$out_file";
+        while (<INI>) {
             next if (/^#/);
             $empty = 0;
             my ($key, $value) = /(.*?)=(.*)/;
-            print OUT "%%%%\n";
-            print OUT "$key\n\n";
-            print OUT clean_value($value), "\n";
+            print TXT "%%%%\n";
+            print TXT "$key\n\n";
+            print TXT clean_value($value), "\n";
         }
-        close IN;
+        close INI;
         if ($empty) {
-            close OUT;
+            close TXT;
             unlink $out_file;
         } else {
-            print OUT "%%%%\n";
-            close OUT;
+            print TXT "%%%%\n";
+            close TXT;
         }
     }
 }
