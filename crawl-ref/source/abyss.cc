@@ -36,6 +36,7 @@
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -1770,6 +1771,8 @@ bool lugonu_corrupt_level(int power)
         return (false);
 
     simple_god_message("'s Hand of Corruption reaches out!");
+    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
+              level_id::current().describe().c_str()).c_str()));
 
     flash_view(MAGENTA);
 
