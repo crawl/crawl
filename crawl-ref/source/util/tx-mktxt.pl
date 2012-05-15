@@ -128,9 +128,9 @@ foreach my $file (@ARGV) {
                         last;
                     }
                     $changed = 1;
-                    $merged_text .= "$Text{$key}";
-                } else {
-                    $merged_text .= $value;
+                    $merged_text .= "$Text{$key}\n";
+                } elsif ($value) {
+                    $merged_text .= "$value\n";
                 }
 
                 # When not in merged mode, we also check for new/deleted keys.
@@ -144,7 +144,7 @@ foreach my $file (@ARGV) {
                     }
                 }
 
-                $merged_text .= "\n$_\n";
+                $merged_text .= "$_\n";
                 $key = "";
                 $value = "";
             }
