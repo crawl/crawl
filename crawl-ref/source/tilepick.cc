@@ -3789,6 +3789,19 @@ static tileidx_t _tileidx_misc(const item_def &item)
     return TILE_ERROR;
 }
 
+static tileidx_t _tileidx_gold(const item_def &item)
+{
+    if (item.quantity >= 1 && item.quantity <= 10)
+        return TILE_GOLD01 + item.quantity - 1;
+    if (item.quantity < 20)
+        return TILE_GOLD16;
+    if (item.quantity < 30)
+        return TILE_GOLD19;
+    if (item.quantity < 100)
+        return TILE_GOLD23;
+    return TILE_GOLD25;
+}
+
 tileidx_t tileidx_item(const item_def &item)
 {
     int clas    = item.base_type;
@@ -3828,7 +3841,7 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_SCROLL;
 
     case OBJ_GOLD:
-        return TILE_GOLD;
+        return _tileidx_gold(item);
 
     case OBJ_JEWELLERY:
         if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
