@@ -3158,7 +3158,7 @@ static void _player_reacts_to_monsters()
         else
         {
            you.props.erase("exists_if_suppressed");
-        } 
+        }
     }
 }
 
