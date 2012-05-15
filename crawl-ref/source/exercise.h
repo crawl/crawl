@@ -18,7 +18,6 @@ enum exer_type
     EX_WILL_LAUNCH,          // launchers
     EX_WILL_THROW_MSL,       // missiles
     EX_WILL_THROW_WEAPON,    // weapons
-    EX_WILL_THROW_POTION,    // evaporate
     EX_WILL_THROW_OTHER,     // junk
     EX_USED_ABIL,
     EX_DID_CAST,
