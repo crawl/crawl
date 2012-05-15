@@ -6,8 +6,8 @@ alkuperästä lähtöisin olevilla voimilla.
 %%%%
 book
 
-Taikaloitsuja sisältävä kirja. Ole varuillasi, sillä tehokkaimmat loitsut
-eivät ole leikkimistä varten.
+Taikaloitsuja sisältävä kirja. Ole varuillasi, sillä tehokkaimmat loitsut eivät
+ole leikkimistä varten.
 %%%%
 deck of cards
 

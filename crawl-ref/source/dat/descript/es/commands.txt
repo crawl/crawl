@@ -18,8 +18,8 @@ Viajar entre niveles distantes
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Viajas automáticamente entre niveles distantes. El viaje es interrumpido
-cuando aparecen monstruos.
+Viajas automáticamente entre niveles distantes. El viaje es interrumpido cuando
+aparecen monstruos.
 %%%%
 CMD_USE_ABILITY
 
@@ -35,8 +35,8 @@ Buscar objetos/estructuras
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Buscas objetos o estructuras que hayan aparecido en otra parte y viajas
-hasta allí.
+Buscas objetos o estructuras que hayan aparecido en otra parte y viajas hasta
+allí.
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -48,8 +48,8 @@ Muestra un resumen del personaje
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-Muestra información sobre resistencias conocidas, habilidades, estadísticas
-del equipo, etc.
+Muestra información sobre resistencias conocidas, habilidades, estadísticas del
+equipo, etc.
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -122,8 +122,8 @@ CMD_CHARACTER_DUMP verbose
 
 Guarda una amplia cantidad de información sobre tu personaje en un archivo
 llamado 'nombredeljugador.txt' en la carpeta morgue, para leerla con
-detenimiento cuando quieras. Esto incluye las principales estadísticas,
-equipo, hechizos, capacidades, notas, etc.
+detenimiento cuando quieras. Esto incluye las principales estadísticas, equipo,
+hechizos, capacidades, notas, etc.
 %%%%
 CMD_AUTOFIGHT
 

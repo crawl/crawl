@@ -1,8 +1,8 @@
 %%%%
 Centaur
 
-Szybkie jak konie, silne jak konie, wielkie jak konie — lecz jedzą bardziej
-jak słonie.
+Szybkie jak konie, silne jak konie, wielkie jak konie — lecz jedzą bardziej jak
+słonie.
 %%%%
 Deep Dwarf
 
@@ -30,13 +30,13 @@ osiągają dojrzałość i ujawniają swój kolor.
 %%%%
 Felid
 
-Te koty posiadają ludzki umysł, lecz brak im chwytnych kończyn, nie
-pozwalając na użycie większości przedmiotów.
+Te koty posiadają ludzki umysł, lecz brak im chwytnych kończyn, nie pozwalając
+na użycie większości przedmiotów.
 %%%%
 Ghoul
 
-Nieumarli których ciała wiecznie gniją. Ciągle poszukują zepsutego mięsa
-które może wpaść im w szpony.
+Nieumarli których ciała wiecznie gniją. Ciągle poszukują zepsutego mięsa które
+może wpaść im w szpony.
 %%%%
 Halfling
 
@@ -67,8 +67,8 @@ zjedzą każde mięso.
 %%%%
 Merfolk
 
-Pół-ludzie, pół-ryby, merfolkowie czują się jak w domu zarówno w wodzie jak
-in na lądzie.
+Pół-ludzie, pół-ryby, merfolkowie czują się jak w domu zarówno w wodzie jak in
+na lądzie.
 %%%%
 Minotaur
 
@@ -81,8 +81,8 @@ Zabalsamowane zwłoki pokryte bandażami, poruszane mocą starożytnej klątwy.
 %%%%
 Naga
 
-Połączenie człowieka i węża: ludzka głowa, ręce i klatka piersiowa,
-muskularny brzuch i ogon węża.
+Połączenie człowieka i węża: ludzka głowa, ręce i klatka piersiowa, muskularny
+brzuch i ogon węża.
 %%%%
 Octopode
 
@@ -106,11 +106,11 @@ skradać się i robić niecne sztuczki.
 %%%%
 Troll
 
-Wielkie i brutalne, zdolne rozszarpać kogokolwiek swymi szponami, rzadko
-kiedy myślące, zawsze głodne potwory.
+Wielkie i brutalne, zdolne rozszarpać kogokolwiek swymi szponami, rzadko kiedy
+myślące, zawsze głodne potwory.
 %%%%
 Vampire
 
-Wampiry są częściowo żywe, częściowo nieumarłe. Są dobre w skradaniu się jak
-i w niektórych rodzajach magii.
+Wampiry są częściowo żywe, częściowo nieumarłe. Są dobre w skradaniu się jak i
+w niektórych rodzajach magii.
 %%%%

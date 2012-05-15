@@ -19,8 +19,8 @@ formas se pueden ver en las llamans.
 %%%%
 A closed detected secret door
 
-Una puerta de madera, astutamente oculta. Solía ser una puerta secreta, pero
-al menos para tí ya no es secreta.
+Una puerta de madera, astutamente oculta. Solía ser una puerta secreta, pero al
+menos para tí ya no es secreta.
 
 Para abrirla, simplemente camina hacia ella, o usa 'O'
 %%%%
@@ -30,8 +30,8 @@ Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
 %%%%
 A corrupted altar of Lugonu
 
-Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que
-fuera corrompido irrevocablemente.
+Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que fuera
+corrompido irrevocablemente.
 %%%%
 A crawl-hole back to the Lair
 
@@ -74,22 +74,21 @@ Esta puerta te lleva a otra región más del Pandemonio. Siempre habrán más.
 A gas trap
 
 Eres afortunado por haber detectado esta trampa, porque podría haber soltado
-una nube de gas mortal hacia ti. No puedes decir exactamente qué gas
-contiene - quizás es simplemente veneno, quizás humos mutagénicos, quizás
-vapor inflamable, o quizás algo aún peor.
+una nube de gas mortal hacia ti. No puedes decir exactamente qué gas contiene -
+quizás es simplemente veneno, quizás humos mutagénicos, quizás vapor
+inflamable, o quizás algo aún peor.
 %%%%
 A gate to the Realm of Zot
 
-Esta puerta lleva al Reino de Zot, la etapa final de tu aventura ya que en
-su nivel más profundo se halla el infame Orbe de Zot. Tanto el Orbe como
-este Reino tienen una temible y cuestionable reputación, pero algo parece
-ser cierto: los monstruos que habitan este área y protegen al Orbe son
-poderosos y extraños - algunos de ellos no se encuentran más que aquí.
+Esta puerta lleva al Reino de Zot, la etapa final de tu aventura ya que en su
+nivel más profundo se halla el infame Orbe de Zot. Tanto el Orbe como este
+Reino tienen una temible y cuestionable reputación, pero algo parece ser
+cierto: los monstruos que habitan este área y protegen al Orbe son poderosos y
+extraños - algunos de ellos no se encuentran más que aquí.
 %%%%
 A gateway to Hell
 
-Este portal lleva al Vestíbulo del Infierno. Pocos irían allí
-voluntariamente.
+Este portal lleva al Vestíbulo del Infierno. Pocos irían allí voluntariamente.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -123,13 +122,13 @@ Este árbol está tan muerto como todo lo demás aquí.
 A frozen archway
 
 Un frente permanentemente frío parece que rodea a este portal. Lo que quiera
-que viva al otro lado estará lleno de crueldad y furia ártica. Te percatas
-que el arco se está derritiendo.
+que viva al otro lado estará lleno de crueldad y furia ártica. Te percatas que
+el arco se está derritiendo.
 %%%%
 A dark tunnel
 
 Conduciendo directamente al interior de la roca hay un túnel oscuro y
 amenazador. Demasiado a menudo de su interior salen oleadas de aire tan
-caliente como para chamuscar tu cara y, como activadas por el aire, rocas
-caen del techo y de los lados del túnel, tapando lentamente la entrada.
+caliente como para chamuscar tu cara y, como activadas por el aire, rocas caen
+del techo y de los lados del túnel, tapando lentamente la entrada.
 %%%%
