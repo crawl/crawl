@@ -1449,6 +1449,7 @@ tx-pull:
 	tx pull -a --minimum-perc=1 --mode=reviewed
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
+	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
 	tx push -s
 	tx push -t --skip
 
@@ -1456,6 +1457,7 @@ tx-sync:
 	$(MAKE) tx-check
 	$(MAKE) tx-pull
 	$(MAKE) tx-txt
+	$(MAKE) tx-check
 	$(MAKE) tx-push
 
 #############################################################################
