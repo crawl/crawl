@@ -182,8 +182,12 @@ cloak
 %%%%
 club
 
-“Speak softly and carry a big stick.”
-    -Theodore Roosevelt
+“I have always been fond of the West African proverb: 'Speak softly and carry a
+big stick; you will go far.' If I had not carried the big stick, the
+organization would not have gotten behind me, and if I had yelled and
+blustered, as Pankhurst and the similar dishonest lunatics desired, I would not
+have had ten votes.”
+    -Theodore Roosevelt, in a letter to Henry L. Sprague. January 26, 1900.
 %%%%
 daeva
 
@@ -217,16 +221,19 @@ gold, than to possess the gold itself.”
 %%%%
 long sword
 
-“Oh I won’t get up, I won’t get up,
-   I can’t get up for my life
- For you have two long beaten swords
-   And I have but a pocket knife.
-
- Well it’s true I have two beaten swords,
-   They cost me deep in the purse
- But you will have the better of them
-   And I will have the worst.”
-    -English traditional ballad, “Mattie Groves”. Circa 1600.
+“While we were at grips with this great army and their dreadful broadswords
+(maquahuitl [made of obsidian]), many of the most powerful among the enemy seem
+to have decided to capture a horse. They began with a furious attack, and laid
+hands on a good mare well trained both for sport and battle. Her rider, Pedro
+de Moron, was a fine horseman; and as he charged with three other horsemen into
+the enemy ranks--they had been instructed to charge together for mutual
+support--some of them seized his lance so he could not use it, and others
+slashed at him with their broadswords (maquahuitl), wounding him severely. Then
+they slashed at his mare, cutting her head at the neck so that it only hung by
+the skin. The mare fell dead, and if his mounted comrades had not come to
+Moron's rescue, he would probably have been killed also.”
+    -Bernal Díaz del Castillo, _The Conquest of New Spain_. 1623.
+     trans. J.M.Cohen, 1963.
 %%%%
 lychee
 
@@ -779,8 +786,10 @@ the fire breathing knights in shining armor.”
 %%%%
 hobgoblin
 
-“A foolish consistency is the hobgoblin of little minds.”
-    -Ralph Waldo Emerson
+“A foolish consistency is the hobgoblin of little minds, adored by little
+statesmen and philosophers and divines.”
+    -Ralph Waldo Emerson, _Essays: First Series_, Essay II: Self-Reliance.
+     1841.
 %%%%
 hog
 
@@ -884,13 +893,12 @@ hee most desireth.”
 %%%%
 mermaid
 
-“To the Sirens first shalt thou come, who beguile all men whosoever comes to
-them. Whoso in ignorance draws near to them and hears the Sirens’ voice, he
-nevermore returns, that his wife and little children may stand at his side
-rejoicing, but the Sirens beguile him with their clear-toned song, as they sit
-in a meadow, and about them is a great heap of bones of mouldering men, and
-round the bones the skin is shrivelling.”
-    -Homer, _The Odyssey_, Book XII
+“Then up it raise the mermaiden,
+ Wi the comb an glass in her hand:
+ ‘Here’s a health to you, my merrie young men,
+ For you never will see dry land.’”
+    -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
+     Child, _The English and Scottish Popular Ballads_. 1898.
 %%%%
 moth of suppression
 
@@ -927,11 +935,11 @@ us ofte foresee.”
 %%%%
 pillar of salt
 
-“Then the LORD rained brimstone and fire on Sodom and Gomorrah, from the LORD
-out of the heavens. So He overthrew those cities, all the plain, all the
-inhabitants of the cities, and what grew on the ground. But his wife looked
-back behind him, and she became a pillar of salt.”
-    -Genesis 19:24-26 (New King James Version)
+“Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the
+LORD out of heaven; And he overthrew those cities, and all the plain, and all
+the inhabitants of the cities, and that which grew upon the ground. But his
+wife looked back from behind him, and she became a pillar of salt.”
+    -KJV Bible, Gen. XIX, 24-6.
 %%%%
 player ghost
 
@@ -957,9 +965,15 @@ woodpecker that came along would destroy civilization.”
 %%%%
 rakshasa
 
-“He is brilliant, yet utterly corrupt. Like rotten mackerel by moonlight, he
-both shines and stinks.”
-    -John Randolph
+“Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a
+Rakshasa by name Hidimva dwelt on the Sala tree. Possessed of great energy and
+prowess, he was a cruel cannibal of visage that was grim in consequence of his
+sharp and long teeth. He was now hungry and longing for human flesh. Of long
+shanks and a large belly, his locks and beard were both red in hue. His
+shoulders were broad like the neck of a tree; his ears were like unto arrows,
+and his features were frightful.”
+    -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
+     trans. Kisari Mohan Ganguli, 1883.
 %%%%
 raven
 
@@ -996,16 +1010,9 @@ shadow
 %%%%
 small skeleton
 
-“When you hear sweet syncopation
- And the music softly moans
- T’ain’t no sin to take off your skin
- And dance around in your bones.
-
- When it gets too hot for comfort
- And you can’t get ice cream cones
- T’ain’t no sin to take off your skin
- And dance around in your bones.”
-    -William S. Burroughs and Tom Waits, “T’ain’t no sin”
+“God save us from the skeleton
+ Who sitteth at the feast!”
+    -James Jeffrey Roche, “The Skeleton at the Feast”. 1890.
 %%%%
 toenail golem
 
