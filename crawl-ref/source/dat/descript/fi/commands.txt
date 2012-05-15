@@ -3,6 +3,10 @@ CMD_REST
 
 Paranna ja etsi hieman
 %%%%
+CMD_EXPLORE
+
+Tutki nykyinen taso automaattisesti.
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Matkusta kaukaisiin tasoihin
@@ -35,6 +39,10 @@ CMD_DISPLAY_OVERMAP verbose
 
 Näyttää sivuluolastojen, kauppojen ja muiden kohtaamiesi erikoisuuksien
 sijainnit.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Näytä uskonnon tila
 %%%%
 CMD_DISPLAY_RELIGION verbose
 

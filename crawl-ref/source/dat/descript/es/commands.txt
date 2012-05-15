@@ -12,6 +12,14 @@ CMD_EXPLORE
 
 Autoexploración del nivel actual
 %%%%
+CMD_EXPLORE verbose
+
+Este comando te permite viajar en modo piloto automático hacia regiones
+inexploradas del nivel actual, y tomar del suelo aquellos objetos que hayas
+especificado para ser recogidos automáticamente. El viaje se detiene tan pronto
+como un monstruo hostil aparezca, o cuando descubras objetos o estructuras
+novedosas.
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Viajar entre niveles distantes
@@ -28,6 +36,13 @@ Usar habilidades divinas o innatas
 CMD_PRAY
 
 Rezar a tu dios
+%%%%
+CMD_PRAY verbose
+
+Si a tu dios le gustan los sacrificios, este comando te permitirá  ofrecerle un
+cadáver u otro objeto. Si estás en un altar, te permitirá seguir al dios
+correspondiente. En el caso de algunos dioses, rezar también puede ocasionar
+otros efectos especiales.
 %%%%
 CMD_SEARCH_STASHES
 
