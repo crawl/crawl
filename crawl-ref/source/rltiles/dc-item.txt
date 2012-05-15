@@ -1026,35 +1026,37 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_defense
 %finish
-misc_rune MISC_RUNE_OF_ZOT
-runes/rune_tartarus MISC_RUNE_TARTARUS
-runes/rune_cocytus MISC_RUNE_COCYTUS
-runes/rune_dis MISC_RUNE_DIS
-runes/rune_gehenna MISC_RUNE_GEHENNA
-runes/rune_cerebov MISC_RUNE_CEREBOV
-runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
-runes/rune_mnoleg MISC_RUNE_MNOLEG
-runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
-runes/rune_snake MISC_RUNE_SNAKE
-runes/rune_swamp MISC_RUNE_SWAMP
-runes/rune_shoals MISC_RUNE_SHOALS
-runes/rune_spider MISC_RUNE_SPIDER
-runes/rune_slime MISC_RUNE_SLIME
-runes/rune_vaults MISC_RUNE_VAULTS
-runes/rune_tomb MISC_RUNE_TOMB
-runes/rune_abyss MISC_RUNE_ABYSS
-runes/rune_demonic_1 MISC_RUNE_DEMONIC
-runes/rune_demonic_2
-runes/rune_demonic_3
-runes/rune_demonic_4
-runes/rune_demonic_5
-runes/rune_demonic_6
 %rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1
+misc_rune MISC_RUNE_OF_ZOT
+%sdir item/misc/runes
+rune_tartarus MISC_RUNE_TARTARUS
+rune_cocytus MISC_RUNE_COCYTUS
+rune_dis MISC_RUNE_DIS
+rune_gehenna MISC_RUNE_GEHENNA
+rune_cerebov MISC_RUNE_CEREBOV
+rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
+rune_mnoleg MISC_RUNE_MNOLEG
+rune_lom_lobon MISC_RUNE_LOM_LOBON
+rune_snake MISC_RUNE_SNAKE
+rune_swamp MISC_RUNE_SWAMP
+rune_shoals MISC_RUNE_SHOALS
+rune_spider MISC_RUNE_SPIDER
+rune_slime MISC_RUNE_SLIME
+rune_vaults MISC_RUNE_VAULTS
+rune_tomb MISC_RUNE_TOMB
+rune_abyss MISC_RUNE_ABYSS
+rune_demonic_1 MISC_RUNE_DEMONIC
+rune_demonic_2
+rune_demonic_3
+rune_demonic_4
+rune_demonic_5
+rune_demonic_6
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt
 
+%sdir item/misc
 #OBJ_GOLD
 gold_pile GOLD UNSEEN_GOLD
