@@ -539,3 +539,11 @@ dart
 
 Pieni, tasapainotettu, teräväkärkinen ammus, suunniteltu kädellä heitettäväksi.
 %%%%
+gold piece
+
+Kasa kiiltäviä kultakolikoita.
+%%%%
+grape
+
+Pieni hedelmä.
+%%%%
