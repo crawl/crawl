@@ -24,6 +24,8 @@ use Text::WrapI18N qw(wrap);
 # WrapI18N isn't supported under windows. Neither msys nor activeperl.
 #use Text::Wrap qw(wrap);
 
+$Text::WrapI18N::columns = 79;
+
 if ($^O ne 'msys') {
     use open ':encoding(utf8)';
 }
