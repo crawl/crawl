@@ -2157,11 +2157,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = LANG_PL, lang_name = "pl";
         else if (field == "de" || field == "german" || field == "deutch")
             lang = LANG_DE, lang_name = "de";
-        else if (field == "fr" || field == "french" || field == "français")
+        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
             lang = LANG_FR, lang_name = "fr";
-        else if (field == "es" || field == "spanish" || field == "español")
+        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
             lang = LANG_ES, lang_name = "es";
-        else if (field == "el" || field == "greek" || field == "ελληνικά")
+        else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
             lang = LANG_EL, lang_name = "el";
         else if (field == "fi" || field == "finnish" || field == "suomi")
             lang = LANG_FI, lang_name = "fi";
