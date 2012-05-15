@@ -1305,7 +1305,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (brand != SPMSL_NORMAL)
+        if (brand != SPMSL_NORMAL && !basename && !qualname && !dbname)
         {
             if (terse)
                 buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
