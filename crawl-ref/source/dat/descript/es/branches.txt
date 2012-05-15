@@ -12,6 +12,11 @@ la historia.
 El calabozo tiene 27 niveles de profundidad pero, honestamente, eso es
 solamente el principio.
 %%%%
+Temple
+
+Un Templo a los Dioses, un lugar de paz y refugio lejos de la locura del
+calabozo. Está localizado entre los niveles 4 y 7 del calabozo principal.
+%%%%
 Orcish Mines
 
 Las minas de los orcos, repletas de su oro, pero traidoras y donde es fácil
@@ -109,11 +114,28 @@ entrada indican que también hay un cierto grado de violencia.
 Las Cámaras tienen ocho niveles y contienen la Runa Plateada. Su entrada se
 puede hallar entre los niveles 14 y 19 del calabozo principal.
 %%%%
+Hall of Blades
+
+Hace mucho tiempo todas las dagas, hachas y armas de asta se reunían durante la
+noche y bailaban el vals, soñando con campos de batalla sin hombres ni bestias.
+Ese tiempo ya pasó pero las armas todavía están ahí.
+
+La Sala de los Filos es un solo nivel y puede encontrarse entre Cámaras:4 y
+Cámaras:6.
+%%%%
 Crypt
 
 Escuchas quejidos y alaridos de almas torturadas, sufriendo actos innombrables.
 
 La Cripta tiene cinco niveles y puede hallarse entre Cámaras:2 y Cámaras:4.
+%%%%
+Tomb
+
+La Tumba de los Antiguos, un lugar de condenación, de horrores animados por la
+más vil necromancia.
+
+La Tumba tiene tres niveles y contiene la Runa Dorada. Su entrada está bien en
+Cripta:2 o Cripta:3.
 %%%%
 Hell
 
@@ -203,6 +225,16 @@ Puedes encontrar cinco runas en el Pandemonio:
  - La Runa Demoníaca existe en múltiples copias, en posesión de otros
    señores de menos renombre.
 %%%%
+Ziggurat
+
+Una serie de arenas, cada una contiene mayores fortunas e incluso mayores
+peligros que la anterior. Quien quiera que fuera la entidad que creó esta
+monstruosidad, pone un alto precio por entrar. Cuidado, porque un zigurat no es
+un lugar para los débiles de espíritu: incluso el aventurero más valiente y
+diestro ha encontrado su final aquí. Si bien un portal de seguridad se
+encuentra presente en cada nivel, a un zigurat no se puede volver a entrar una
+vez se abandona.
+%%%%
 Labyrinth
 
 El Laberinto es un complejo y vasto lugar diseñado por mentes sutiles y
@@ -225,6 +257,19 @@ Quedas avisado de que su estilo de vida nómada les ha enseñado a apropiarse de
 cualquier objeto que el aventurero pueda dejarse atrás, y entonces marcharse
 rápidamente, probablemente para venderlos en otra parte.
 %%%%
+Trove
+
+Hace mucho tiempo un mago y ladrón emprendedor, aterrado ante la idea de ser
+atrapado robando, creó un sistema de portales que llevaban a las cámaras
+secretas de los tesoros de los ricos. Demasiado espantado para saquearlas el
+mismo, en su lugar puso una fianza a la entrada para cualquiera que quisiera
+llegar a ellas. Siendo un competente artificiero, diseñó sus portales para
+dirigir a quien entrara, al tesoro más adecuado a sus necesidades.
+
+Los objetos que haya en el tesoro suelen ser útiles, pero precaución: el mago
+ya hace tiempo que murió e incluso mientras vivió nunca ofreció una garantía de
+devolución de dinero.
+%%%%
 Sewer
 
 Todos los emplazamientos conllevan desagradables alcantarillas y cloacas,
@@ -244,6 +289,12 @@ Bailey
 
 El castillo de algún señor. Está, sin duda alguna, protegido por barreras
 físicas y por soldados bien entrenados.
+%%%%
+Ice Cave
+
+Una caverna desolada y llena de ecos, excavada en el hielo. Las intrincadas
+tallas y esculturas que una vez decoraron sus muros, han sido borradas y
+ocultadas por siglos de lentos deshielos y congelaciones.
 %%%%
 Volcano
 

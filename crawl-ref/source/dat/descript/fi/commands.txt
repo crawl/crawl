@@ -1,0 +1,114 @@
+%%%%
+CMD_REST
+
+Paranna ja etsi hieman
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Matkusta kaukaisiin tasoihin
+%%%%
+CMD_USE_ABILITY
+
+Käytä pyhiä tai synnynnäisiä kykyjä
+%%%%
+CMD_PRAY
+
+Rukoile jumalaasi
+%%%%
+CMD_SEARCH_STASHES
+
+Etsi esineitä/erikoisuuksia
+%%%%
+CMD_REPLAY_MESSAGES
+
+Uudelleenlue viimeaikaiset viestit
+%%%%
+CMD_RESISTS_SCREEN
+
+Näytä hahmon kokonaiskatsaus
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Näytä luolaston kartta
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Näyttää sivuluolastojen, kauppojen ja muiden kohtaamiesi erikoisuuksien
+sijainnit.
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Näyttää jumalaasi miellyttävät ja vihastuttavat asiat, käytöksen, nykyisen
+uskonnollisen arvosi ja pyhät erikoiskyvyt.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Näytä mutaatiot
+%%%%
+CMD_DISPLAY_SKILLS
+
+Hallitse taitoja
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Näytä hahmon tila
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Näyttää aktiiviset taiat ja muutaman muun asian.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Näytä tunnetut esinetyypit
+%%%%
+CMD_SAVE_GAME_NOW
+
+Tallenna ja poistu
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Muokkaa pelaajatiiltä
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Muokkaa pelaajanukella näytettävää varustusta ja muita piirteitä.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Peliapu
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista komennoista, asetuksista jne.
+%%%%
+CMD_CHARACTER_DUMP
+
+Ota vedos hahmon etenemisestä
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Laittaa valtavan määrän tietoa hahmosta tiedostoon 'pelaajanimi.txt'
+morgue-kansioon, tutkimuksen vuoksi. Tämä sisältää statistiikat, varusteet,
+taiat, taidot, muistiinpanot jne.
+%%%%
+CMD_AUTOFIGHT
+
+Hyökkää lähintä hirviötä
+%%%%
+CMD_AUTOFIGHT verbose
+
+Liiku kohti lähintä vaarallista hirviötä ja hyökkää sitä kädessäsi olevalla
+aseella.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Hyökkää viereistä hirviötä
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Hyökkää viereistä hirviötä kädessäsi olevalla aseella.
+%%%%
+CMD_SEARCH
+
+Odota yksi vuoro
+%%%%
