@@ -208,11 +208,12 @@ A ray which does massive damage (1500 hp) and always hits.
 %%%%
 Deflect Missiles
 
-This spell protects the caster from any kind of projectile attack, by
-slowing and somewhat diverting their path. Successfully deflecting an
+This spell protects the caster from all kinds of projectile attacks, by
+slowing them and somewhat diverting their path. Successfully deflecting an
 incoming projectile still requires a reflexive action (your ability to do so
 is measured by the Evasion stat), but unlike lesser spells like Repel
-Missiles, it is typically so easy even a drunk plate-clad dwarf can do it.
+Missiles, Deflect Missiles typically makes this so easy that even a drunk
+plate-clad orc can do it.
 %%%%
 Delayed Fireball
 
