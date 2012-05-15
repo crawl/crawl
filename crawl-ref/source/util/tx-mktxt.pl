@@ -10,6 +10,7 @@
 # If the output file won't be changed, it won't be overwritten with the same
 # content.
 # Other options are:
+# -a: used with -m. Append additional keys to the end of the file.
 # -d: specify output file or directory
 # -t: only check if the output file would be changed and exit with an
 #     error if so.
@@ -32,8 +33,12 @@ if ($^O ne 'msys') {
 
 die "Usage: $0 ini_files\n" unless (@ARGV);
 
-getopts('d:mtvw');
-our($opt_d, $opt_m, $opt_t, $opt_v, $opt_w);
+getopts('ad:mtvw');
+our($opt_a, $opt_d, $opt_m, $opt_t, $opt_v, $opt_w);
+
+if ($opt_a) {
+    $opt_m = 1;
+}
 
 sub clean_value {
     $_ = shift;
@@ -80,6 +85,7 @@ foreach my $file (@ARGV) {
 
     if (-e $out_file) {
         my %Text;
+        my @Keys;
         my $out_text = "";
 
         # First, we load the ini file.
@@ -88,6 +94,7 @@ foreach my $file (@ARGV) {
             next if (/^#/);
             my ($key, $value) = /(.*?)=(.*)$/;
             $Text{$key} = clean_value($value);
+            push @Keys, $key;
             $out_text .= "%%%%\n";
             $out_text .= "$key\n\n";
             $out_text .= clean_value($value) . "\n";
@@ -134,10 +141,10 @@ foreach my $file (@ARGV) {
                 }
 
                 # When not in merged mode, we also check for new/deleted keys.
-                if ($key and not $opt_m) {
+                if ($key) {
                     if ($Text{$key}) {
                         delete $Text{$key};
-                    } else {
+                    } elsif (not $opt_m) {
                         # The key has been deleted from the .ini, so the .txt
                         # will need to be updated.
                         $changed = 1;
@@ -167,10 +174,23 @@ foreach my $file (@ARGV) {
         }
         close TXT;
 
-        # When not in merge mode, if %Text isn't empty, it means that we have
-        # new keys, so we need to write the file.
-        if (not $opt_m and %Text) {
-            $changed = 1;
+        if (%Text) {
+            # With -a, we append the remaining entries at the end of the file.
+            if ($opt_a) {
+                foreach $key (@Keys) {
+                    if ($Text{$key}) {
+                        $merged_text .= "\n$key\n\n$Text{$key}\n%%%%";
+                        $changed = 1;
+                    }
+                }
+                $merged_text .= "\n" if $changed;
+            }
+
+            # When not in merge mode, if %Text isn't empty, it means that we
+            # have new keys, so we need to write the file.
+            if (not $opt_m) {
+                $changed = 1;
+            }
         }
 
         # File needs to be updated.

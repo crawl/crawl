@@ -1366,7 +1366,8 @@ TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-
 # Files pulled from transifex. It is different than TX-TRANS, because it can
 # contain new files for which we have no .txt yet
 TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
-TX-NEW-TEXT = $(wildcard $(TX-DIR)/en/*.ini)
+TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
+TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
 
 .PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
 
@@ -1386,6 +1387,9 @@ tx-txt:
 	fi
 	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
 		$(TX-MKTXT) -mw -d $(TX-DIR) $(TX-NEW-TEXT);\
+	fi
+	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
+		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
 	fi
 	@git add $(TX-TTRANS)
 	@git diff --quiet HEAD && exit 0;\
@@ -1445,7 +1449,7 @@ tx-check: $(TX-INI)
 	git commit -a -m "Transifex format fix."
 
 tx-pull:
-	$(RM) $(TX-NEW-TRANS) $(TX-NEW-TEXT)
+	$(RM) $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
 	tx pull -a --minimum-perc=1 --mode=reviewed
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)

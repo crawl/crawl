@@ -176,4 +176,5 @@ source/.tx/config
 # eclipse project files
 .cproject
 .project
+.settings
 .settings/
