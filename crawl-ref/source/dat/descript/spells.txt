@@ -208,9 +208,11 @@ A ray which does massive damage (1500 hp) and always hits.
 %%%%
 Deflect Missiles
 
-This spell protects the caster from any kind of projectile attack, although
-particularly powerful attacks (lightning bolts, etc.) are deflected to a
-lesser extent than lighter missiles.
+This spell protects the caster from any kind of projectile attack, by
+slowing and somewhat diverting their path. Successfully deflecting an
+incoming projectile still requires a reflexive action (your ability to do so
+is measured by the Evasion stat), but unlike lesser spells like Repel
+Missiles, it is typically so easy even a drunk plate-clad dwarf can do it.
 %%%%
 Delayed Fireball
 
@@ -590,9 +592,8 @@ while also increasing the rate of food consumption.
 %%%%
 Repel Missiles
 
-This spell reduces the chance of projectile attacks striking the caster.
-Even powerful attacks such as lightning bolts or dragon breath are affected,
-although smaller missiles are repelled to a much greater extent.
+This spell reduces the chance of projectile attacks striking the caster, by
+making them significantly easier to dodge.
 %%%%
 Ring of Flames
 
