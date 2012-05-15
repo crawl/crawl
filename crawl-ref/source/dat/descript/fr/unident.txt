@@ -5,8 +5,8 @@ Un bijou.
 %%%%
 book
 
-Un livre de sorts. Attention, car certains des plus puissants grimoires
-doivent être manipulés avec précautions.
+Un livre de sorts. Attention, car certains des plus puissants grimoires doivent
+être manipulés avec précautions.
 %%%%
 deck of cards
 

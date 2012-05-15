@@ -1,8 +1,8 @@
 %%%%
 Abyssal Knight
 
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon
-to spread corruption and chaos.
+Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
+spread corruption and chaos.
 %%%%
 Air Elementalist
 
@@ -26,18 +26,17 @@ dagger and cloak, they carry nasty curare needles for their blowgun.
 %%%%
 Berserker
 
-Berserkers believe in Trog, the magic-hating god of frenzy. Not much can
-stop a raging berserker early on, apart from hubris.
+Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
+raging berserker early on, apart from hubris.
 %%%%
 Chaos Knight
 
-Chaos Knights are playthings of the unpredictable Xom, and are subject to
-the god's constantly changing moods.
+Chaos Knights are playthings of the unpredictable Xom, and are subject to the
+god's constantly changing moods.
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells from the book of
-Conjurations.
+Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Death Knight
 
@@ -46,8 +45,8 @@ Yredelemnul the Dark.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to increase
-the spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry stones to increase the
+spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
@@ -56,8 +55,8 @@ They also start with good darts.
 %%%%
 Fighter
 
-Fighters come with armour and shield, as well as a weapon of their choice.
-They have more health than any other background.
+Fighters come with armour and shield, as well as a weapon of their choice. They
+have more health than any other background.
 %%%%
 Fire Elementalist
 
@@ -66,8 +65,8 @@ spell. The other spells in their book focus on destruction as well.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, shield, nets and a
-weapon of their choice.
+Gladiators are ready for the arena with light armour, shield, nets and a weapon
+of their choice.
 %%%%
 Healer
 
@@ -80,8 +79,8 @@ Hunters are able to attack at range, without relying on pesky magic.
 %%%%
 Ice Elementalist
 
-Ice Elementalists start with the book of Frost and the Freeze spell. The
-book's other spells are quite versatile.
+Ice Elementalists start with the book of Frost and the Freeze spell. The book's
+other spells are quite versatile.
 %%%%
 Monk
 
@@ -100,8 +99,8 @@ inhabitants. Hill Orcs instead follow the orc god Beogh.
 %%%%
 Skald
 
-Skalds are melee fighters who can boost themselves in battle with spells
-from the book of War Chants.
+Skalds are melee fighters who can boost themselves in battle with spells from
+the book of War Chants.
 %%%%
 Stalker
 
@@ -110,18 +109,18 @@ victims.
 %%%%
 Summoner
 
-Summoners start with the book of Callings and are able to Summon Small
-Mammals from the start.
+Summoners start with the book of Callings and are able to Summon Small Mammals
+from the start.
 %%%%
 Transmuter
 
-Transmuters shift their form to fight in a beast's shape. They can turn
-sticks into snakes as well.
+Transmuters shift their form to fight in a beast's shape. They can turn sticks
+into snakes as well.
 %%%%
 Venom Mage
 
-Venom Mages start with the Young Poisoner's Handbook and the Sting spell.
-They have an easy time early on.
+Venom Mages start with the Young Poisoner's Handbook and the Sting spell. They
+have an easy time early on.
 %%%%
 Wanderer
 

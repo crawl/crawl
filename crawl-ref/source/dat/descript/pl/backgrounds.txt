@@ -36,13 +36,12 @@ boga, Yredelemnula.
 %%%%
 Fighter
 
-Wojownicy są wyposażeni w zbroję i tarczę, jak i oczywiście swą wybraną
-broń. Są najodporniejsi ze wszystkich postaci.
+Wojownicy są wyposażeni w zbroję i tarczę, jak i oczywiście swą wybraną broń.
+Są najodporniejsi ze wszystkich postaci.
 %%%%
 Gladiator
 
-Gladiatorzy są wyposażeni w lekką zbroję, tarczę, sieć i broń wedle
-upodobania.
+Gladiatorzy są wyposażeni w lekką zbroję, tarczę, sieć i broń wedle upodobania.
 %%%%
 Healer
 
@@ -65,8 +64,8 @@ znając czar „Ból”.
 %%%%
 Priest
 
-Kapłani Zina głoszą prawa swego boga mieszkańcom świata. Kapłani orków
-zamiast tego wyznają boga swej rasy, Beogha.
+Kapłani Zina głoszą prawa swego boga mieszkańcom świata. Kapłani orków zamiast
+tego wyznają boga swej rasy, Beogha.
 %%%%
 Skald
 

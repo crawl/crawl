@@ -5,8 +5,8 @@ Swift, strong and bulky, they need more food than other species.
 %%%%
 Deep Dwarf
 
-They live deep underground and cannot regenerate health naturally, but they
-are resilient and have tools to heal.
+They live deep underground and cannot regenerate health naturally, but they are
+resilient and have tools to heal.
 %%%%
 Deep Elf
 
@@ -19,23 +19,23 @@ attributes and health.
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire strong demonic mutations
-as they grow.
+Demonspawn are half human, half demon. They acquire strong demonic mutations as
+they grow.
 %%%%
 Draconian
 
-Draconians are versatile hybrids. They mature when reaching level 7 and
-develop a colour.
+Draconians are versatile hybrids. They mature when reaching level 7 and develop
+a colour.
 %%%%
 Felid
 
-These cats possess sentience, but are incapable of advanced item
-manipulation or the use of armour or weapons.
+These cats possess sentience, but are incapable of advanced item manipulation
+or the use of armour or weapons.
 %%%%
 Ghoul
 
-An undead, damned to rot eternally. They are always looking for rotten food
-to eat, hacking away with their claws.
+An undead, damned to rot eternally. They are always looking for rotten food to
+eat, hacking away with their claws.
 %%%%
 Halfling
 
@@ -48,8 +48,8 @@ Proud elves, who can cast spells as well as they can fight with the sword.
 %%%%
 Hill Orc
 
-Orcs are skilled in close combat, and often dabble in offensive magic. Hated
-by most, orcs are very proud and many of them feel superior.
+Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
+most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
@@ -62,8 +62,8 @@ fragile, but they learn to fly later on.
 %%%%
 Kobold
 
-Small, mischievous and a little fragile, but multi-talented. They can and
-will eat any meat.
+Small, mischievous and a little fragile, but multi-talented. They can and will
+eat any meat.
 %%%%
 Merfolk
 
@@ -76,8 +76,8 @@ close and ranged combat.
 %%%%
 Mummy
 
-An undead figure covered in bandages and embalming fluids, compelled to walk
-by an ancient curse.
+An undead figure covered in bandages and embalming fluids, compelled to walk by
+an ancient curse.
 %%%%
 Naga
 
@@ -86,8 +86,8 @@ like that of a snake.
 %%%%
 Octopode
 
-A species of amphibious cephalopods. They can wear eight rings, but almost
-no armour fits them.
+A species of amphibious cephalopods. They can wear eight rings, but almost no
+armour fits them.
 %%%%%%%%
 Ogre
 
@@ -96,13 +96,13 @@ with the basics of magic, however.
 %%%%
 Sludge Elf
 
-A depraved type of elf, who prefers cunning to fair fighting, and dark magic
-to other wizardry.
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic to
+other wizardry.
 %%%%
 Spriggan
 
-Very small, very frail and very fast. Spriggans make highly competent
-stabbers and spellcasters.
+Very small, very frail and very fast. Spriggans make highly competent stabbers
+and spellcasters.
 %%%%
 Troll
 
@@ -111,6 +111,6 @@ They're always hungry.
 %%%%
 Vampire
 
-Shifting between the states of life and undeath, they're accomplished
-stabbers and casters.
+Shifting between the states of life and undeath, they're accomplished stabbers
+and casters.
 %%%%

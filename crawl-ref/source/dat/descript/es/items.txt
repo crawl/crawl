@@ -2,9 +2,9 @@
 air elemental fan
 
 Un utensilio mágico que sirve para convocar elementales de aire. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione.
-Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento
-de la magia del aire.
+fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
+uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
+magia del aire.
 %%%%
 amulet of clarity
 
@@ -19,9 +19,9 @@ portador, aunque no de forma infalible.
 amulet of controlled flight
 
 Si el portador consigue comenzar a levitar de alguna forma, este amuleto le
-permitirá ejercer cierto control sobre el movimiento resultante. Por
-ejemplo, podrá descender escaleras, y tomar objetos del suelo. Todo ello,
-sin perder ninguna de las ventajas de levitar.
+permitirá ejercer cierto control sobre el movimiento resultante. Por ejemplo,
+podrá descender escaleras, y tomar objetos del suelo. Todo ello, sin perder
+ninguna de las ventajas de levitar.
 %%%%
 amulet of inaccuracy
 
@@ -44,16 +44,16 @@ infalible.
 %%%%
 amulet of the gourmand
 
-Este amuleto protege a su portador de caer enfermo al comer carne cruda, y
-le permite digerirla incluso cuando no está hambriento. No obstante, estos
-efectos son inicialmente pequeños, y se incrementarán al llevarlo puesto
-durante un periodo de tiempo prolongado.
+Este amuleto protege a su portador de caer enfermo al comer carne cruda, y le
+permite digerirla incluso cuando no está hambriento. No obstante, estos efectos
+son inicialmente pequeños, y se incrementarán al llevarlo puesto durante un
+periodo de tiempo prolongado.
 %%%%
 amulet of warding
 
-Este amuleto repele los ataques de criaturas que hayan sido convocadas
-mediante magia, y también hace a su portador más resistente a los ataques
-basados en energías negativas.
+Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
+magia, y también hace a su portador más resistente a los ataques basados en
+energías negativas.
 %%%%
 amulet of stasis
 
@@ -61,9 +61,8 @@ Un amuleto que ha sido elaborado meticulosamente para bloquear los efectos
 mágicos o físicos que podrían tele-transportar, ralentizar, acelerar, o
 paralizar a su portador.
 
-Aunque el amuleto es efectivo contra la mayoría de las magias de
-translocación, los cambios de plano como el destierro están fuera de su
-alcance.
+Aunque el amuleto es efectivo contra la mayoría de las magias de translocación,
+los cambios de plano como el destierro están fuera de su alcance.
 %%%%
 animal skin
 
@@ -83,9 +82,8 @@ Una flecha, hecha para ser disparada con un arco.
 %%%%
 banana
 
-Una deliciosa fruta amarillenta, probablemente cultivada e importada por
-alguna multinacional inmoral, para llevar a cabo un corrupto acuerdo
-comercial.
+Una deliciosa fruta amarillenta, probablemente cultivada e importada por alguna
+multinacional inmoral, para llevar a cabo un corrupto acuerdo comercial.
 %%%%
 bardiche
 
@@ -101,9 +99,9 @@ Una tira de carne seca de vaca o toro.
 %%%%
 blowgun
 
-Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un
-gran daño, su principal uso es el de disparar dardos envenenados a
-distancia. Es muy silencioso.
+Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran
+daño, su principal uso es el de disparar dardos envenenados a distancia. Es muy
+silencioso.
 %%%%
 bolt
 
@@ -111,8 +109,8 @@ Un virote para ballesta.
 %%%%
 book of air
 
-Un libro que contiene hechizos mágicos. Sientes una suave brisa al hojear
-sus páginas.
+Un libro que contiene hechizos mágicos. Sientes una suave brisa al hojear sus
+páginas.
 %%%%
 book of alchemy
 
@@ -209,8 +207,8 @@ Un libro con hechizos mágicos.
 %%%%
 book of ice
 
-Un libro con hechizos mágicos. Por un instante, un viento glacial te hiela
-al abrirlo.
+Un libro con hechizos mágicos. Por un instante, un viento glacial te hiela al
+abrirlo.
 %%%%
 book of maledictions
 
@@ -270,10 +268,10 @@ Un libro con hechizos mágicos.
 %%%%
 book of war chants
 
-Un libro con hechizos útiles para el guerrero. Las versiones contenidas en
-este libro están en forma musical, siguiendo las tradiciones de los
-escaldos. No obstante, desde el punto de vista funcional, son lo mismo que
-hechizos cuyas palabras mágicas son simplemente recitadas.
+Un libro con hechizos útiles para el guerrero. Las versiones contenidas en este
+libro están en forma musical, siguiendo las tradiciones de los escaldos. No
+obstante, desde el punto de vista funcional, son lo mismo que hechizos cuyas
+palabras mágicas son simplemente recitadas.
 %%%%
 book of wizardry
 
@@ -281,15 +279,15 @@ Un libro con hechizos mágicos.
 %%%%
 bottled efreet
 
-Un poderoso ifrit, capturado por algún mago y sellado en un matraz de
-bronce. Romper el sello del frasco le hará libre para que cause estragos,
-quizás sobre ti.
+Un poderoso ifrit, capturado por algún mago y sellado en un matraz de bronce.
+Romper el sello del frasco le hará libre para que cause estragos, quizás sobre
+ti.
 %%%%
 bow
 
 Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada
-para disparar flechas. Hace bastante daño en combate, y alguien con
-habilidad puede usarlo con gran eficiencia.
+para disparar flechas. Hace bastante daño en combate, y alguien con habilidad
+puede usarlo con gran eficiencia.
 %%%%
 box of beasts
 
@@ -334,8 +332,8 @@ Una capa de tela.
 %%%%
 club
 
-Un pesado trozo de madera que puede ser lanzado o empuñado. Golpear a
-alguien en la cabeza mientras que duerme, parece una gran idea.
+Un pesado trozo de madera que puede ser lanzado o empuñado. Golpear a alguien
+en la cabeza mientras que duerme, parece una gran idea.
 %%%%
 corpse
 
@@ -349,21 +347,20 @@ recargar y disparar. Es capaz de hacer un gran daño en combate.
 crystal ball of energy
 
 Un dispositivo mágico que sirve para recuperar energía mágica, pero su uso
-también conlleva el riesgo de vaciar completamente las reservas mágicas de
-su usuario en algunas ocasiones. Este riesgo es inversamente proporcional al
-porcentaje de energía mágica que actualmente posea el usuario. Por tanto,
-será más útil para aquellos que se encuentren cerca de tener llenas las
-reservas mágicas.
+también conlleva el riesgo de vaciar completamente las reservas mágicas de su
+usuario en algunas ocasiones. Este riesgo es inversamente proporcional al
+porcentaje de energía mágica que actualmente posea el usuario. Por tanto, será
+más útil para aquellos que se encuentren cerca de tener llenas las reservas
+mágicas.
 %%%%
 crystal plate armour
 
-Una armadura de cristal, increíblemente pesada, pero extremadamente
-efectiva.
+Una armadura de cristal, increíblemente pesada, pero extremadamente efectiva.
 %%%%
 dagger
 
-Un largo cuchillo, o pequeña espada, que puede ser empuñada o lanzada. Causa
-un daño enorme cuando se usa para apuñalar a alguien.
+Un largo cuchillo, o pequeña espada, que puede ser empuñada o lanzada. Causa un
+daño enorme cuando se usa para apuñalar a alguien.
 %%%%
 dart
 
@@ -373,9 +370,9 @@ deck of changes
 
 Un mazo de cartas mágicas que pueden inducir cambios en su usuario o su
 entorno. Puede contener las siguientes cartas: el Elixir, Sed de Sangre,
-Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el Mercenario, la Poción,
-Foco, Barajar, Experiencia, Magia Salvaje, la Hélice, el Sabio, Agua, el
-Mapa, el Zahorí, la Pala, el Campo Minado.
+Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el Mercenario, la Poción, Foco,
+Barajar, Experiencia, Magia Salvaje, la Hélice, el Sabio, Agua, el Mapa, el
+Zahorí, la Pala, el Campo Minado.
 %%%%
 deck of defence
 
@@ -383,8 +380,8 @@ Un mazo de cartas mágicas, la mayoría de las cuales protegen a su usuario de
 distintas formas.
 
 Puede contener las siguientes cartas: la Tumba, la Banshee, Condenación,
-Soledad, el Urdidor, Vuelo, Sed de Sangre, Metamorfosis, el Yelmo, la
-Cuchilla, la Sombra, el Mercenario.
+Soledad, el Urdidor, Vuelo, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla,
+la Sombra, el Mercenario.
 %%%%
 deck of destruction
 
@@ -399,14 +396,14 @@ deck of dungeons
 
 Un mazo de cartas mágicas que versan sobre la forma del calabozo.
 
-Puede contener las siguientes cartas: Agua, Vitrificación, el Mapa, el
-Zahorí, la Pala, Mortero, el Campo Minado.
+Puede contener las siguientes cartas: Agua, Vitrificación, el Mapa, el Zahorí,
+la Pala, Mortero, el Campo Minado.
 %%%%
 deck of escape
 
-Un mazo de cartas mágicas que principalmente versan sobre diversos
-mecanismos de escape. Ten cuidado, ya que el uso incauto de esta baraja
-puede hacer que una situación mala se vuelva aún peor.
+Un mazo de cartas mágicas que principalmente versan sobre diversos mecanismos
+de escape. Ten cuidado, ya que el uso incauto de esta baraja puede hacer que
+una situación mala se vuelva aún peor.
 
 Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
 Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo.
@@ -424,8 +421,8 @@ deck of summonings
 Un mazo de cartas mágicas que retratan un extraño y maravilloso elenco de
 criaturas.
 
-Puede contener las siguientes cartas: la Cruzada, la Manada, el Pentagrama,
-la Danza, Foxfire, los Huesos, Repelencia.
+Puede contener las siguientes cartas: la Cruzada, la Manada, el Pentagrama, la
+Danza, Foxfire, los Huesos, Repelencia.
 %%%%
 deck of war
 
@@ -440,8 +437,8 @@ Martillo, Dolor, Tormento.
 %%%%
 deck of wonders
 
-Un mazo de cartas mágicas y misteriosas, que pueden alterar, para mejor o
-peor, las condiciones físicas o psíquicas de su usuario.
+Un mazo de cartas mágicas y misteriosas, que pueden alterar, para mejor o peor,
+las condiciones físicas o psíquicas de su usuario.
 
 Puede contener las siguientes cartas: la Poción, Foco, Intercambio,
 Experiencia, Magia Salvaje, la Hélice, el Sabio, el Alquimista.
@@ -464,11 +461,10 @@ Un flagelo con puntiagudas protuberancias en ambos extremos.
 %%%%
 disc of storms
 
-Este objeto extremadamente poderoso es capaz de de desencadenar una
-destructiva tormenta eléctrica. Su efectividad mejora considerablemente
-cuando está en las manos de alguien habilidoso en el uso de dispositivos
-mágicos, pero es imposible su uso por parte de alguien que no sea
-conductivo.
+Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
+tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
+manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
+imposible su uso por parte de alguien que no sea conductivo.
 %%%%
 double sword
 
@@ -490,9 +486,9 @@ Lo contrario del lucero del alba.
 executioner's axe
 
 Esta terrorífica arma, aunque cubierta de sangre seca y unos bastos grabados
-sobre la tortura y la muerte, aún conserva una cuchilla bien afilada. Su
-enorme cabeza parece muy capaz de desmembrar cualquiera que se haga el loco,
-y tienes la certeza de que un solo golpe bastaría.
+sobre la tortura y la muerte, aún conserva una cuchilla bien afilada. Su enorme
+cabeza parece muy capaz de desmembrar cualquiera que se haga el loco, y tienes
+la certeza de que un solo golpe bastaría.
 %%%%
 falchion
 
@@ -501,15 +497,15 @@ Una espada con una amplia cuchilla cortante.
 fire dragon armour
 
 Una armadura mágica confeccionada a partir de las escamas de un dragón que
-exhalaba fuego. Proporciona gran protección contra los efectos del fuego,
-pero hace a su usuario más vulnerable a los efectos del frío.
+exhalaba fuego. Proporciona gran protección contra los efectos del fuego, pero
+hace a su usuario más vulnerable a los efectos del frío.
 %%%%
 fire dragon hide
 
 La escamosa piel de un auténtico dragón. Puede usarse para elaborar una
-armadura, pero incluso en su actual estado proporciona gran protección
-contra los efectos del fuego, aunque a costa de hacerte más vulnerable a los
-efectos del frío.
+armadura, pero incluso en su actual estado proporciona gran protección contra
+los efectos del fuego, aunque a costa de hacerte más vulnerable a los efectos
+del frío.
 %%%%
 flail
 
@@ -530,16 +526,16 @@ Una garrocha con una enorme y pesada cuchilla en su extremo.
 %%%%
 gold dragon armour
 
-Una armadura mágica elaborada a partir de las escamas de un dragón dorado.
-Es muy pesado y aparatoso, pero proporciona gran protección contra el fuego,
-el frío, y el veneno.
+Una armadura mágica elaborada a partir de las escamas de un dragón dorado. Es
+muy pesado y aparatoso, pero proporciona gran protección contra el fuego, el
+frío, y el veneno.
 %%%%
 gold dragon hide
 
 La gruesa y pesada piel un dragón dorado, cubierta por deslumbrantes escamas
-doradas. Confiere resistencia al fuego, el frío, y el veneno a su usuario,
-pero solamente una pequeña parte de su legendaria protección contra ataques
-físicos, a menos que sea encantado.
+doradas. Confiere resistencia al fuego, el frío, y el veneno a su usuario, pero
+solamente una pequeña parte de su legendaria protección contra ataques físicos,
+a menos que sea encantado.
 %%%%
 gold piece
 
@@ -567,8 +563,7 @@ La cosa con la que clavas puntillas, modificada para el combate.
 %%%%
 hand axe
 
-Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser
-arrojada.
+Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
 %%%%
 helmet
 
@@ -593,8 +588,8 @@ pero hace a su usuario más vulnerable a los efectos del fuego.
 ice dragon hide
 
 La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
-incluso en su actual estado proporciona gran protección contra los efectos
-del frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
+incluso en su actual estado proporciona gran protección contra los efectos del
+frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
 %%%%
 javelin
 
@@ -603,8 +598,8 @@ Una larga y ligera vara que puede ser lanzada con la mano. {{
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
     then
-        return "Por desgracia, es demasiada larga y rara para ti, así que
-eres incapaz de usarla."
+        return "Por desgracia, es demasiada larga y rara para ti, así que eres
+incapaz de usarla."
     else
         return ""
     end
@@ -612,13 +607,13 @@ eres incapaz de usarla."
 %%%%
 lajatang
 
-Una exótica y muy efectiva arma de importación. Consiste en una garrocha,
-con cuchillas en forma de media luna en ambos extremos.
+Una exótica y muy efectiva arma de importación. Consiste en una garrocha, con
+cuchillas en forma de media luna en ambos extremos.
 %%%%
 lamp of fire
 
 Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione.
-Su uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento
-de la magia del fuego.
+fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
+uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
+magia del fuego.
 %%%%

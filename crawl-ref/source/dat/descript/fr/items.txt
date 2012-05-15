@@ -1,15 +1,15 @@
 %%%%
 air elemental fan
 
-Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas
-très fiable, et requiert habituellement plusieurs essais avant de
-fonctionner correctement. L'utiliser suscite un risque qui est réduit selon
-l'affinité de l'usager pour l'élément approprié.
+Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas très
+fiable, et requiert habituellement plusieurs essais avant de fonctionner
+correctement. L'utiliser suscite un risque qui est réduit selon l'affinité de
+l'usager pour l'élément approprié.
 %%%%
 amulet of clarity
 
-Cette amulette protège le porteur contre certaines formes de confusion
-mentale, dont celle d'être enragé contre sa volonté.
+Cette amulette protège le porteur contre certaines formes de confusion mentale,
+dont celle d'être enragé contre sa volonté.
 %%%%
 amulet of conservation
 
@@ -26,9 +26,9 @@ sol, sans toutefois priver le porteur des bénéfices de la lévitation.
 amulet of guardian spirit
 
 Cette amulette rend son porteur moins susceptible aux blessures physiques,
-drainant sa puissance magique à la place. Si les réserves magiques viennent
-à être vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que
-davantage de pouvoir soit disponible.
+drainant sa puissance magique à la place. Si les réserves magiques viennent à
+être vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que davantage
+de pouvoir soit disponible.
 %%%%
 amulet of inaccuracy
 
@@ -42,8 +42,8 @@ furieuse.
 %%%%
 amulet of resist corrosion
 
-Cette amulette protège le porteur et son équipement des effets de la
-corrosion causée par des acides, mais pas de manière infaillible.
+Cette amulette protège le porteur et son équipement des effets de la corrosion
+causée par des acides, mais pas de manière infaillible.
 %%%%
 amulet of resist mutation
 
@@ -53,30 +53,30 @@ infaillible.
 amulet of the gourmand
 
 Cette amulette protège son porteur des malaises causés par l'ingestion de
-viande fraîche et permet de les digérer même s'il n'a pas faim. Mais ces
-effets sur la digestion du porteur s'accumulent avec le temps et sont
-initialement faibles.
+viande fraîche et permet de les digérer même s'il n'a pas faim. Mais ces effets
+sur la digestion du porteur s'accumulent avec le temps et sont initialement
+faibles.
 %%%%
 amulet of warding
 
 Cette amulette repousse une partie des attaques des créatures qui ont été
-convoquées par magie, et rend également le porteur plus résistant aux
-attaques qui drainent la force vitale.
+convoquées par magie, et rend également le porteur plus résistant aux attaques
+qui drainent la force vitale.
 %%%%
 amulet of faith
 
-C'est un talisman façonné pour attirer l'attention des dieux sur son
-porteur. Cette attention divine facilite le contentement de votre dieu, mais
-celui-ci sera aussi moins amène à tolérer vos transgressions, et l'amulette
-drainera une part de vos faveurs divines lorsqu'elle sera retirée.
+C'est un talisman façonné pour attirer l'attention des dieux sur son porteur.
+Cette attention divine facilite le contentement de votre dieu, mais celui-ci
+sera aussi moins amène à tolérer vos transgressions, et l'amulette drainera une
+part de vos faveurs divines lorsqu'elle sera retirée.
 %%%%
 amulet of stasis
 
-Une amulette fabriquée méticuleusement avec des charmes pour bloquer les
-effets magiques et physiologiques qui pourraient autrement téléporter,
-ralentir, accélérer ou paralyser son porteur. Bien que l'amulette soit
-efficace contre la plupart des magies translocatives, les changements de
-plan tels que le bannissement sont au delà des ses capacités bloquantes.
+Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
+magiques et physiologiques qui pourraient autrement téléporter, ralentir,
+accélérer ou paralyser son porteur. Bien que l'amulette soit efficace contre la
+plupart des magies translocatives, les changements de plan tels que le
+bannissement sont au delà des ses capacités bloquantes.
 %%%%
 animal skin
 
@@ -96,8 +96,8 @@ Une flèche, pour le tir à l'arc.
 %%%%
 banana
 
-Un délicieux fruit jaune, sans doute cultivé et importé par une
-multi-nationale corrompue suite à un accord commercial verreux.
+Un délicieux fruit jaune, sans doute cultivé et importé par une multi-nationale
+corrompue suite à un accord commercial verreux.
 %%%%
 bardiche
 
@@ -113,8 +113,8 @@ Une tranche séchée de vache ou de bœuf mort.
 %%%%
 blessed double sword
 
-Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a
-été améliorée par Le Lumineux.
+Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
+améliorée par Le Lumineux.
 %%%%
 bolt
 
@@ -316,8 +316,8 @@ Un délicieux et juteux fruit orange.
 %%%%
 orb of zot
 
-Une fois que vous vous êtes échappé à la surface avec cet inestimable
-artefact, votre quête est accomplie.
+Une fois que vous vous êtes échappé à la surface avec cet inestimable artefact,
+votre quête est accomplie.
 %%%%
 pair of boots
 
