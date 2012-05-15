@@ -225,24 +225,6 @@ Demonic Horde
 This spell calls forth a small swarm of small demons to do battle with the
 caster's foes (and sometimes with each other!).
 %%%%
-Detect Creatures
-
-This spell allows the caster to detect any creatures within a certain
-radius.
-%%%%
-Detect Items
-
-This spell detects any items lying about the caster's general vicinity.
-%%%%
-Detect Secret Doors
-
-This spell is beloved by lazy dungeoneers everywhere, for it can greatly
-reduce time-consuming searches.
-%%%%
-Detect Traps
-
-This spell reveals traps in the caster's vicinity.
-%%%%
 Dig
 
 This spell forms tunnels through unworked rock by liquefying it.
@@ -344,11 +326,6 @@ Haunt
 
 This spell calls wraiths and ghosts to haunt the caster's target. Calling on
 the undead exacts a toll on the caster's health, however.
-%%%%
-Hellfire
-
-This spell should only be available from Dispater's staff. So how are you
-reading this?
 %%%%
 Throw Icicle
 
