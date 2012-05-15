@@ -17,6 +17,7 @@ enum lang_t
     LANG_FR,
     LANG_ES,
     LANG_EL,
+    LANG_FI,
     // fake languages
     LANG_DWARVEN,
     LANG_JAGERKIN,
