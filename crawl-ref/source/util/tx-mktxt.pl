@@ -179,11 +179,10 @@ foreach my $file (@ARGV) {
             if ($opt_a) {
                 foreach $key (@Keys) {
                     if ($Text{$key}) {
-                        $merged_text .= "\n$key\n\n$Text{$key}\n%%%%";
+                        $merged_text .= "$key\n\n$Text{$key}\n%%%%\n";
                         $changed = 1;
                     }
                 }
-                $merged_text .= "\n" if $changed;
             }
 
             # When not in merge mode, if %Text isn't empty, it means that we
