@@ -367,7 +367,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Hints mode for Dungeon Crawl";
+    text = "Hints Mode for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
