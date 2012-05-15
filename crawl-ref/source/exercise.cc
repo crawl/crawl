@@ -376,7 +376,6 @@ void practise(exer_type ex, int param1)
         break;
 
     case EX_WILL_THROW_WEAPON:
-    case EX_WILL_THROW_POTION:
         if (coinflip())
             exercise(SK_THROWING, 1);
         break;
