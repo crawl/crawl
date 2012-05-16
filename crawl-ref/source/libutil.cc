@@ -447,9 +447,6 @@ std::string pluralise(const std::string &name,
     {
         if (name == "y")
             return ("ys");
-        // sensibility -> sensibilities
-        else if (name[name.length() - 2] == 'i')
-            return name.substr(0, name.length() - 1) + "es";
         // day -> days, boy -> boys, etc
         else if (is_vowel(name[name.length() - 2]))
             return name + "s";
