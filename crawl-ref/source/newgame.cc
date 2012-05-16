@@ -625,7 +625,7 @@ static void _construct_species_menu(const newgame_def* ng,
 
         tmp->add_hotkey(index_to_letter(i));
         tmp->set_id(species);
-        tmp->set_description_text(getGameStartDescription(species_name(species)));
+        tmp->set_description_text(unwrap_desc(getGameStartDescription(species_name(species))));
         menu->attach_item(tmp);
         tmp->set_visible(true);
         if (defaults.species == species)
@@ -974,7 +974,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
 
         tmp->add_hotkey(letter++);
         tmp->set_id(job);
-        tmp->set_description_text(getGameStartDescription(get_job_name(job)));
+        tmp->set_description_text(unwrap_desc(getGameStartDescription(get_job_name(job))));
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
