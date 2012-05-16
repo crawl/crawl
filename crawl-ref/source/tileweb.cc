@@ -14,6 +14,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "command.h"
 #include "coord.h"
 #include "directn.h"
 #include "english.h"
@@ -362,6 +363,21 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 
         if (Options.note_chat_messages)
             take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
+    }
+    else if (msgtype == "click_travel" &&
+             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        JsonWrapper force = json_find_member(obj.node, "force");
+
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
+        if (c != CK_MOUSE_CMD)
+            process_command((command_type) c);
+        c = CK_MOUSE_CMD;
     }
 
     return c;
