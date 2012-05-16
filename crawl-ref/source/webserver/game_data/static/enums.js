@@ -1,11 +1,22 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
-    var exports = {};
+    var exports = {}, val;
     // UI States (tileweb.h)
     exports.ui = {};
     exports.ui.NORMAL   = 0;
     exports.ui.CRT      = 1;
     exports.ui.VIEW_MAP = 2;
+
+    // Textures
+    val = 0;
+    exports.texture = {};
+    exports.texture.FLOOR = val++;   // floor.png
+    exports.texture.WALL = val++;    // wall.png
+    exports.texture.FEAT = val++;    // feat.png
+    exports.texture.PLAYER = val++;  // player.png
+    exports.texture.DEFAULT = val++; // main.png
+    exports.texture.GUI = val++;     // gui.png
+    exports.texture.ICONS = val++;   // icons.png
 
     // Cursors
     exports.CURSOR_MOUSE = 0;
@@ -234,31 +245,32 @@ define(function () {
 
     // Minimap features
     val = 0;
-    exports.MF_UNSEEN = val++;
-    exports.MF_FLOOR = val++;
-    exports.MF_WALL = val++;
-    exports.MF_MAP_FLOOR = val++;
-    exports.MF_MAP_WALL = val++;
-    exports.MF_DOOR = val++;
-    exports.MF_ITEM = val++;
-    exports.MF_MONS_FRIENDLY = val++;
-    exports.MF_MONS_PEACEFUL = val++;
-    exports.MF_MONS_NEUTRAL = val++;
-    exports.MF_MONS_HOSTILE = val++;
-    exports.MF_MONS_NO_EXP = val++;
-    exports.MF_STAIR_UP = val++;
-    exports.MF_STAIR_DOWN = val++;
-    exports.MF_STAIR_BRANCH = val++;
-    exports.MF_FEATURE = val++;
-    exports.MF_WATER = val++;
-    exports.MF_LAVA = val++;
-    exports.MF_TRAP = val++;
-    exports.MF_EXCL_ROOT = val++;
-    exports.MF_EXCL = val++;
-    exports.MF_PLAYER = val++;
-    exports.MF_MAX = val++;
+    exports.map_feature = {};
+    exports.map_feature.UNSEEN = val++;
+    exports.map_feature.FLOOR = val++;
+    exports.map_feature.WALL = val++;
+    exports.map_feature.MAP_FLOOR = val++;
+    exports.map_feature.MAP_WALL = val++;
+    exports.map_feature.DOOR = val++;
+    exports.map_feature.ITEM = val++;
+    exports.map_feature.MONS_FRIENDLY = val++;
+    exports.map_feature.MONS_PEACEFUL = val++;
+    exports.map_feature.MONS_NEUTRAL = val++;
+    exports.map_feature.MONS_HOSTILE = val++;
+    exports.map_feature.MONS_NO_EXP = val++;
+    exports.map_feature.STAIR_UP = val++;
+    exports.map_feature.STAIR_DOWN = val++;
+    exports.map_feature.STAIR_BRANCH = val++;
+    exports.map_feature.FEATURE = val++;
+    exports.map_feature.WATER = val++;
+    exports.map_feature.LAVA = val++;
+    exports.map_feature.TRAP = val++;
+    exports.map_feature.EXCL_ROOT = val++;
+    exports.map_feature.EXCL = val++;
+    exports.map_feature.PLAYER = val++;
+    exports.map_feature.MAX = val++;
 
-    exports.MF_SKIP = val++;
+    exports.map_feature.SKIP = val++;
 
     return exports;
 });

@@ -1,7 +1,6 @@
-
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
         "./settings", "./enums",
-        "./text", "./menu"],
+        "./text", "./menu", "./mouse_control"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) {
     var layout_parameters, ui_state;
 
