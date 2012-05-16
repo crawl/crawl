@@ -1176,20 +1176,11 @@ static void _new_god_conduct()
         return;
     }
 
-    if (is_good_god(you.religion))
-    {
-        // For the good gods, piety grows over time.
-        text << "From now on, " << new_god_name << " will watch over you and "
-                "judge your behaviour. Thus, your actions will greatly "
-                "influence your piety (divine favour). If your piety runs out ";
-    }
-    else
-    {
-        text << "Your piety (divine favour) will gradually decrease over time, "
-                "and if it runs out ";
-    }
-
-    text << new_god_name << " will excommunicate you and punish you. "
+    // Not the case for Chei, but not sure if we need to go into that much
+    // detail here.
+    text << "Your piety (divine favour) will gradually decrease over time, "
+            "and if it runs out "
+         << new_god_name << " will excommunicate you and punish you. "
             "You can prevent this, however, and even gain enough piety to get "
             "powers and divine gifts, by doing things to please "
          << new_god_name << ". But don't panic: you start out with a decent "
@@ -1519,8 +1510,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         else if (Hints.hints_type == HINT_MAGIC_CHAR)
         {
             text << "\nAs a spellslinger you don't need a weapon to fight. "
-                    "However, you should still carry at least one knife, "
-                    "dagger, sword or axe so that you can chop up corpses.";
+                    "It can be useful as a backup, though.";
         }
         break;
 
@@ -2099,28 +2089,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_KILLED_MONSTER:
         text << "Congratulations, your character just gained some experience "
-                "by killing this monster! Every action will use up some of "
-                "it to train certain skills. For example, fighting monsters ";
-
-        if (Hints.hints_type == HINT_BERSERK_CHAR)
-        {
-            text << "in melee battle will raise your Axes and Fighting "
-                    "skills.";
-        }
-        else if (Hints.hints_type == HINT_RANGER_CHAR)
-            text << "using bow and arrows will raise your Bows skill.";
-        else // if (Hints.hints_type == HINT_MAGIC_CHAR)
-        {
-            text << "with offensive magic will raise your Conjurations and "
-                    "Spellcasting skills.";
-        }
+                "by killing this monster! This will raise some of your skills, "
+                "making you more deadly.";
+        // A more detailed description of skills is given when you go past an
+        // integer point.
 
         if (you.religion == GOD_TROG)
         {
-            text << " Also, kills of living creatures are automatically "
-                    "dedicated to "
-                 << god_name(you.religion)
-                 << ".";
+            text << " Also, kills of demons and living creatures are grant you "
+                    "favour in the eyes of Trog.";
         }
         break;
 
@@ -2163,11 +2140,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SKILL_RAISE:
-        text << "One of your skills just got raised. The skills you use are "
-                "automatically trained whenever you gain experience (by killing"
-                " monsters). You can train your skills or pick up new ones by "
+
+        text << "One of your skills just passed a whole integer point. The "
+                "skills you use are automatically trained whenever you gain "
+                "experience (by killing monsters). By default, experience goes "
+                "towards skill you actively use, although you may choose "
+                "otherwise. You can train your skills or pick up new ones by "
                 "performing the corresponding actions. To view or manage your "
                 "skill set, type <w>%</w>.";
+
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
 
@@ -2187,7 +2168,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "more powerful in them. Some weapons are closely related, and "
                 "being trained in one will ease training the other. This is "
                 "true for the following pairs: Short Blades/Long Blades, "
-                "Axes/Polearms, Polearms/Staves, and Axes/Maces.";
+                "Axes/Polearms, Polearms/Staves, Axes/Maces and Maces/Staves.";
         break;
 
     case HINT_GAINED_RANGED_SKILL:
@@ -2757,15 +2738,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_GOD_DISPLEASED:
         text << "Uh-oh, " << god_name(you.religion) << " is growing "
                 "displeased because your piety is running low. Possibly this "
-                "is the case because you're committing heretic acts";
-
-        if (!is_good_god(you.religion))
-        {
-            // Piety decreases over time for non-good gods.
-            text << ", because " << god_name(you.religion) << " finds your "
-                    "worship lacking, or a combination of the two";
-        }
-        text << ". If your piety goes to zero, then you'll be excommunicated. "
+                "is the case because you're committing heretic acts, "
+                "because " << god_name(you.religion) << " finds your "
+                "worship lacking, or a combination of the two. "
+                "If your piety goes to zero, then you'll be excommunicated. "
                 "Better get cracking on raising your piety, and/or stop "
                 "annoying your god. ";
 
