@@ -70,7 +70,11 @@ rainbow-coloured suspenders from somewhere. They're not helping.
 %%%%
 Boris
 
-An ancient lich. The air around his shrouded form crackles with evil energy.
+An ancient and powerful lich. Like all true liches, Boris is immortal, and will
+regenerate its desiccated skeletal remains even if completely disintegrated.
+However, while this complicated process can often take months or even years,
+Boris has mastered it to the point of being able to reintegrate himself in a
+matter of minutes.
 %%%%
 Cerebov
 
@@ -181,8 +185,7 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed arch-demon, guardian of the Vestibule of Hell. Legends say
-that his silver horn is used to throw open the gates of Hell themselves.
+A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
 %%%%
 Gloorx Vloq
 
@@ -199,7 +202,9 @@ A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
 Harold
 
-A middle aged bounty hunter, hired to kill you. He is in a hurry.
+A middle-aged bounty hunter, anxious to retire from bounty-hunting after one
+final job. He hopes to settle down somewhere and live a quiet life with his
+family, using the money from his final bounty: you.
 %%%%
 Ignacio
 
@@ -213,7 +218,8 @@ test its edge.
 %%%%
 Ijyb
 
-A small and twisted goblin, wearing some ugly blue rags.
+A small and twisted goblin, wearing some ugly blue rags. He claims dominion
+over this level of the dungeon; the punishment for trespassing is death.
 %%%%
 Ilsuiw
 
@@ -240,7 +246,11 @@ Looks like a mercenary.
 %%%%
 Josephine
 
-An ugly elderly figure, dressed in Druidic clothes.
+A hideous crone, her face covered in warts, moles and the occasional patch of
+hair, Josephine's appearance may fool one to think she is some weak old woman,
+but she is truly a formidable necromancer. The use of black magic has taken a
+physical toll and has prematurely aged Josephine, turning a once beautiful lady
+into the ugly hag she now is.
 %%%%
 Jozef
 
@@ -273,7 +283,12 @@ thirsts for magical energies.
 %%%%
 Louise
 
-An unusually heavily armoured spellcaster.
+A mighty sorceress, clad from head to toe in heavy armour. Once an adventurer
+looking for the fabled Orb of Zot, she was cast into the Abyss and got
+hopelessly lost there. Toyed with by some greater power, she was stuck on the
+hostile plane for nearly a decade. When she finally emerged from the Abyss,
+Louise had become powerful indeed, but had also gone fully insane. She now
+wanders the halls of the dungeon, seeking other adventurers to share her fate.
 %%%%
 Mara
 
@@ -295,7 +310,10 @@ about Maud, forgot everything else.
 %%%%
 Maurice
 
-A sly, conniving thief.
+A sly, conniving thief. In his field of profession, Maurice is considered a
+legend - at least according to himself. He is skilled, nonetheless, and among
+all the thieves and rogues lured by the Orb, Maurice is undoubtedly the most
+crafty.
 %%%%
 Mennas
 
@@ -335,7 +353,7 @@ A withered sorceress, exceptionally ugly even by orc standards.
 %%%%
 Nessos
 
-A black centaur warrior with a malicious look in his eyes.
+A black centaur warrior with a malicious look in the eyes.
 %%%%
 Nikola
 
@@ -346,7 +364,7 @@ out of reality.
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or him who dies - "both" would probably be the
+doesn't really care if it is you or him who dies - “both” would probably be the
 best option.
 %%%%
 Pikel
@@ -358,11 +376,16 @@ cower with every crack of his whip.
 %%%%
 Polyphemus
 
-A cyclops shepherd, he is very protective of his charges.
+A cyclops shepherd, he is very protective of his charges whom he watches with
+an undying fervor through his single massive eye.
 %%%%
 Prince Ribbit
 
-A handsome prince before he was cursed, he now adventures for a cure.
+A handsome prince before he was cursed, he now adventures for a cure. Moving
+through the halls with great speed, he often disappears only to pop out of thin
+air somewhere else, usually to an adventurer's misfortune and dismay. On the
+top of his head he wears a crown tilted jauntily to one side. How it still
+holds in place on his head even after the transformation is a mystery.
 %%%%
 Psyche
 
@@ -394,29 +417,38 @@ nasty tactics.
 %%%%
 Snorg
 
-A hairy troll, angry and mean.
-
-You feel a lump in the pit of your stomach.
+A particularly corpulent troll with a short temper and a sizable gut.
+Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
+that is, easy meals - it attracts.
 %%%%
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
-daring leaps! But watch out for her knives!
+daring leaps! But watch out for her knives, it seems like the space round the
+edge of her weapon waved slightly for a split second... or did it?
+
+Her bleak canine body, hidden kindly underneath the flowing green attire, is in
+contrast with a pair of determined eyes surveying the surrounding from beneath
+the shadow casting upper edge of the beryl coloured cape. The nostrils on the
+exposed tip of her snout throb with excitement.
 %%%%
 Terence
 
-A mean-looking human fighter who likes to kill, and not much else.
+A violent murderer who kills for both pleasure and profit, Terence has been
+forced into hiding after a botched job, and can't really afford to risk anyone
+who has seen him to leave the dungeon alive - there is a prize on his head,
+after all.
 %%%%
 Tiamat
 
 A powerful dragon with mighty wings. Her scales seem to shimmer and change
 colour as you watch.
-
 %%%%
 Urug
 
-A rude orc.
-
+A coarse and lanky orc. Urug lost his eye in a fight with a harpy and has sworn
+to slay every last one of them. Unfortunately, the vision in his remaining eye
+is not very good and he has mistaken you for one.
 {{
     if you.can_smell() then
         return "He smells terrible."
@@ -427,22 +459,35 @@ A rude orc.
 %%%%
 Wiglaf
 
-A fat dwarf wearing a stupid-looking hat. In Okawaru's name, he's here to
-avenge his mountain dwarf kin, who were driven from their lands by hill orcs
-and others. From the way he looks at you, he also seems to hold you
-responsible.
-
-{{
+A fat dwarf wearing a stupid-looking hat. {{
     if you.can_smell() then
-        return "He reeks of alcohol."
+        return "He reeks of alcohol. "
     else
         return ""
     end
-}}
+}}There is something odd to his unsteady walk, as if this unprobable rotund
+person was accustomed to motion more swift than that of a drunken dwarf. His
+right hand is badly burned; judging from the extent of the injury it must've
+been something big that caused it.
+
+He sports an undersized linen shirt, which seems overly long for his stout
+silhouette. There is “Wiglaf” embroidered on the backside. It seems like the
+letters were patched over and changed.
 %%%%
 Xtahua
 
-An ancient and mighty dragon.
+An ancient and mighty dragon, its scorched body covered with crags of hardened
+lava towers above the dungeon floor, leaving a tangent smell of sulphur in its
+rumbling wake. Humongous sets of claws are protruding from the ends of its arms
+and their edges, jagged through years of use, look strong enough to tear a man
+apart without putting any thought in it. The warmth emanating from its sole
+presence makes the air uncomfortably hot, bending the dungeon features slightly
+not unlike sun on a summer day.
+
+Xtahua grew bitter after it found itself trapped in a dungeon after a weary
+battle with an adventurer hundreds of years ago. Most of its reasons to live
+were reduced only to that of setting aflame whatever is roaming these halls
+with a burning passion.
 %%%%
 # Non-unique monsters
 acid blob
