@@ -45,6 +45,7 @@ foreach my $file (@ARGV) {
         while (<INI>) {
             chomp;
                my ($comment, $key, $value) = /(# )?(.*?)=(.*)$/;
+               $value =~ s/&quot;/"/g;
                $Original{$key} = $value;
         }
         close INI;
