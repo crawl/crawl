@@ -2672,7 +2672,8 @@ bool maybe_id_weapon(item_def &item, const char *msg)
 
         if (item.flags & ISFLAG_KNOW_CURSE
             && item.flags & ISFLAG_KNOW_TYPE
-            && you.skill(weapon_skill(item), 20) > min_skill20)
+            && you.skill(is_range_weapon(item) ? range_skill(item)
+                         : weapon_skill(item), 20) > min_skill20)
         {
             id = ISFLAG_KNOW_PLUSES;
         }
