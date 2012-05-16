@@ -1063,6 +1063,9 @@ mad acolyte of Lugonu
 “And when you look long into an abyss, the abyss also looks into you.”
     -Friedrich Nietzche, “Beyond Good and Evil”, 1886
 %%%%
+####################################################
+# Pulled from Transifex
+####################################################
 amulet of clarity
 
 <amulet>
