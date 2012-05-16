@@ -528,9 +528,9 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
         else
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 4);
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -725,7 +725,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         // One free escape.
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
 
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
@@ -785,7 +785,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
         // Gets some darts - this job is difficult to start off with.
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16);
+        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 12);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
