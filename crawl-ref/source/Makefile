@@ -1369,6 +1369,8 @@ TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
 TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
 
+TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
+
 .PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
 
 tx-clean:
@@ -1402,7 +1404,7 @@ tx-txt:
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
 	fi;\
-	git commit -a -m "Transifex sync."
+	git commit -a -s -m "Transifex sync." --author=$(TX-COMMIT-AUTHOR)
 
 tx-init:
 	$(RM) $(TX-CONFIG)
@@ -1446,7 +1448,7 @@ tx-check: $(TX-INI)
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
 	fi;\
-	git commit -a -m "Transifex format fix."
+	git commit -a -s -m "Transifex format fix." --author=$(TX-COMMIT-AUTHOR)
 
 tx-pull:
 	$(RM) $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
