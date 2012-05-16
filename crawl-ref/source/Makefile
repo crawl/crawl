@@ -1391,7 +1391,7 @@ tx-txt:
 	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
 		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
 	fi
-	@git add $(TX-TTRANS)
+	@git add $(TX-TSOURCES) $(TX-DIR)/??/*.txt
 	@git diff --quiet HEAD && exit 0;\
 	read -p "New translations. Review? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
