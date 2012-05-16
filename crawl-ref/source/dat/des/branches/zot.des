@@ -61,7 +61,6 @@ COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
 TILE:   c = wall_zot_magenta
 FTILE:  .O+ = floor_hall
-MONS:   killer klown
 MAP
 xxxxxxxxx
 xxxcccxxx
