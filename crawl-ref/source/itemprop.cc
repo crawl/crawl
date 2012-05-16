@@ -728,9 +728,8 @@ iflags_t full_ident_mask(const item_def& item)
     {
     case OBJ_FOOD:
     case OBJ_CORPSES:
-        flagset = 0;
-        break;
     case OBJ_MISCELLANY:
+    case OBJ_MISSILES:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -753,11 +752,6 @@ iflags_t full_ident_mask(const item_def& item)
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
         if (ring_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
-        break;
-    case OBJ_MISSILES:
-        flagset = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            flagset &= ~ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
