@@ -438,34 +438,34 @@ static void _update_weapon(const newgame_def& ng)
     switch (ng.weapon)
     {
     case WPN_ROCKS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 4);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_JAVELINS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 5);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_DARTS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
 
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -917,9 +917,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
 
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 10);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 8);
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 3);
+        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
