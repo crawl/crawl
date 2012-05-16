@@ -1935,7 +1935,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1 + random2(9) + random2(12) + random2(15) + random2(12);
+        item.quantity = 1 + random2(7) + random2(10) + random2(12) + random2(10);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -1961,9 +1961,9 @@ static void _generate_missile_item(item_def& item, int force_type,
         item.quantity = random_range(2, 8);
     }
     else if (get_ammo_brand(item) != SPMSL_NORMAL)
-        item.quantity = 1 + random2(9) + random2(12) + random2(12);
+        item.quantity = 1 + random2(7) + random2(10) + random2(10);
     else
-        item.quantity = 1 + random2(9) + random2(12) + random2(12) + random2(15);
+        item.quantity = 1 + random2(7) + random2(10) + random2(10) + random2(12);
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
