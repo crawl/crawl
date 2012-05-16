@@ -2173,7 +2173,8 @@ bool do_god_gift(bool forced)
                 if (_jiyva_mutate())
                 {
                     _inc_gift_timeout(15 + roll_dice(2, 4));
-                    //num_total_gifts is used for tracking the Slime:6 walls
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
@@ -2271,10 +2272,9 @@ bool do_god_gift(bool forced)
                     simple_god_message(" grants you a gift!");
                     more();
 
-                    // HACK: you.num_total_gifts keeps track of
-                    // Necronomicon and weapon blessing for Kiku, so
-                    // don't increase it.  Also, timeouts are
-                    // meaningless for Kiku. evk
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
+                    // Timeouts are meaningless for Kiku.
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
                         // Vehumet gives books less readily.
@@ -2282,8 +2282,6 @@ bool do_god_gift(bool forced)
                             _inc_gift_timeout(10 + random2(10));
 
                         _inc_gift_timeout(40 + random2avg(19, 2));
-                        you.num_current_gifts[you.religion]++;
-                        you.num_total_gifts[you.religion]++;
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
@@ -2728,7 +2726,7 @@ static void _gain_piety_point()
         // In case the best skill is Invocations, redraw the god title.
         you.redraw_title = true;
 
-        if (!you.num_total_gifts[you.religion])
+        if (!you.one_time_ability_used[you.religion])
         {
             switch (you.religion)
             {
@@ -2752,8 +2750,7 @@ static void _gain_piety_point()
                    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
                        dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
-                   you.num_current_gifts[you.religion]++;
-                   you.num_total_gifts[you.religion]++;
+                   you.one_time_ability_used[you.religion] = true;
                    break;
                 default:
                     break;
@@ -2799,7 +2796,7 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && !you.num_total_gifts[you.religion])
+            && !you.one_time_ability_used[you.religion])
         {
             // In case the best skill is Invocations, redraw the god
             // title.

@@ -1203,6 +1203,8 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.num_current_gifts[i]);
     for (i = 0; i < NUM_GODS; i++)
         marshallShort(th, you.num_total_gifts[i]);
+    for (i = 0; i < NUM_GODS; i++)
+        marshallBoolean(th, you.one_time_ability_used[i]);
 
     // how much piety have you achieved at highest with each god?
     for (i = 0; i < NUM_GODS; i++)
@@ -1951,6 +1953,24 @@ static void tag_read_you(reader &th)
         you.num_current_gifts[i] = unmarshallShort(th);
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_ONE_TIME_ABILITIES)
+    {
+#endif
+    for (i = 0; i < count; i++)
+        you.one_time_ability_used[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 33
+    }
+    else
+    {
+        you.one_time_ability_used[GOD_JIYVA] = (bool)you.num_total_gifts[GOD_JIYVA];
+        you.one_time_ability_used[GOD_KIKUBAAQUDGHA] = (bool)you.num_total_gifts[GOD_KIKUBAAQUDGHA];
+        you.num_total_gifts[GOD_KIKUBAAQUDGHA] *= 2;
+        you.one_time_ability_used[GOD_LUGONU] = (bool)you.num_total_gifts[GOD_LUGONU];
+        you.one_time_ability_used[GOD_SHINING_ONE] = (bool)you.num_total_gifts[GOD_SHINING_ONE];
+        you.one_time_ability_used[GOD_ZIN] = (bool)you.num_total_gifts[GOD_ZIN];
+    }
+#endif
     for (i = 0; i < count; i++)
         you.piety_max[i] = unmarshallByte(th);
     count = unmarshallByte(th);

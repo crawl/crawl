@@ -1297,8 +1297,7 @@ bool zin_remove_all_mutations()
         return (false);
     }
 
-    you.num_current_gifts[GOD_ZIN]++;
-    you.num_total_gifts[GOD_ZIN]++;
+    you.one_time_ability_used[GOD_ZIN] = true;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");

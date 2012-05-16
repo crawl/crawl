@@ -3792,7 +3792,7 @@ static std::string _religion_help(god_type god)
     case GOD_ZIN:
         result += "You can pray at an altar to donate your money.";
         if (!player_under_penance() && you.piety > 160
-            && !you.num_total_gifts[god])
+            && !you.one_time_ability_used[god])
         {
             if (!result.empty())
                 result += " ";
@@ -3822,7 +3822,7 @@ static std::string _religion_help(god_type god)
                       "easier to hit.";
         }
         if (!player_under_penance() && you.piety > 160
-            && !you.num_total_gifts[god])
+            && !you.one_time_ability_used[god])
         {
             if (!result.empty())
                 result += " ";
@@ -3842,7 +3842,7 @@ static std::string _religion_help(god_type god)
 
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
-            && !you.num_total_gifts[god])
+            && !you.one_time_ability_used[god])
         {
             result += "You can pray at an altar to have your weapon "
                       "corrupted.";
@@ -3851,7 +3851,7 @@ static std::string _religion_help(god_type god)
 
     case GOD_KIKUBAAQUDGHA:
         if (!player_under_penance() && you.piety > 160
-            && !you.num_total_gifts[god])
+            && !you.one_time_ability_used[god])
         {
             result += "You can pray at an altar to have your necromancy "
                       "enhanced.";

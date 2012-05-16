@@ -5720,6 +5720,7 @@ void player::init()
     worshipped.init(0);
     num_current_gifts.init(0);
     num_total_gifts.init(0);
+    one_time_ability_used.init(false);
     piety_max.init(0);
     exp_docked       = 0;
     exp_docked_total = 0;
