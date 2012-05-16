@@ -3399,7 +3399,7 @@ std::vector<ability_type> get_god_abilities(bool include_unusable)
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
     }
 
-    if (you.religion == GOD_ZIN && !you.num_total_gifts[GOD_ZIN] && you.piety > 160)
+    if (you.religion == GOD_ZIN && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
 
     return abilities;
