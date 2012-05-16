@@ -28,6 +28,17 @@ define(function () {
     exports.mouse_mode.YESNO = val++;
     exports.mouse_mode.MAX = val++;
 
+    // Textures
+    val = 0;
+    exports.texture = {};
+    exports.texture.FLOOR = val++;   // floor.png
+    exports.texture.WALL = val++;    // wall.png
+    exports.texture.FEAT = val++;    // feat.png
+    exports.texture.PLAYER = val++;  // player.png
+    exports.texture.DEFAULT = val++; // main.png
+    exports.texture.GUI = val++;     // gui.png
+    exports.texture.ICONS = val++;   // icons.png
+
     // Cursors
     exports.CURSOR_MOUSE = 0;
     exports.CURSOR_TUTORIAL = 1;

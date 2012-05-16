@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
         "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
-        "./player"],
+        "./player", "./mouse_control"],
 function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
           options) {
     "use strict";
