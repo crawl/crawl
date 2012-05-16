@@ -2473,6 +2473,82 @@ void make_book_Roxanne_special(item_def *book)
                             SPELL_STATUE_FORM, "Roxanne");
 }
 
+void make_book_Kiku_gift(item_def &book, bool first)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spell_type chosen_spells[SPELLBOOK_SIZE];
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
+
+    if (first)
+    {
+        chosen_spells[0] = coinflip() ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
+        if (one_chance_in(3))
+        {
+            chosen_spells[1] = SPELL_CORPSE_ROT;
+            chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
+        }
+        else
+        {
+            chosen_spells[1] = coinflip() ? SPELL_CORPSE_ROT : SPELL_SUBLIMATION_OF_BLOOD;
+            chosen_spells[2] = SPELL_LETHAL_INFUSION;
+        }
+        chosen_spells[3] = coinflip() ? SPELL_REGENERATION : SPELL_VAMPIRIC_DRAINING;
+        chosen_spells[4] = SPELL_CONTROL_UNDEAD;
+    }
+    else
+    {
+        chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_TWISTED_RESURRECTION;
+        chosen_spells[1] = coinflip() ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
+        chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                         SPELL_SIMULACRUM,
+                                         SPELL_DEATH_CHANNEL,
+                                         -1);
+        spell_type extra_spell;
+        do
+        {
+            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
+                                        SPELL_TWISTED_RESURRECTION,
+                                        SPELL_AGONY,
+                                        SPELL_EXCRUCIATING_WOUNDS,
+                                        SPELL_BOLT_OF_DRAINING,
+                                        SPELL_SIMULACRUM,
+                                        SPELL_DEATH_CHANNEL,
+                                        -1);
+            for (int i = 0; i < 3; i++)
+                if (extra_spell == chosen_spells[i])
+                    extra_spell = SPELL_NO_SPELL;
+        }
+        while (extra_spell == SPELL_NO_SPELL);
+        chosen_spells[3] = extra_spell;
+        chosen_spells[4] = SPELL_DISPEL_UNDEAD;
+    }
+
+    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(SPELLBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(SPELLBOOK_SIZE);
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
+
+    std::string name = "Kikubaaqudgha's ";
+    book.props["is_named"].get_bool() = true;
+    name += getRandNameString("book_name") + " ";
+    std::string type_name = getRandNameString("Necromancy");
+    if (type_name.empty())
+        name += "Necromancy";
+    else
+        name += type_name;
+    set_artefact_name(book, name);
+}
+
 bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);

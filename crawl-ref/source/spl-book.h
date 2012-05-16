@@ -73,6 +73,7 @@ bool make_book_theme_randart(item_def &book,
                              int num_spells = -1, int max_levels = -1,
                              std::string owner = "", std::string title = "");
 void make_book_Roxanne_special(item_def *book);
+void make_book_Kiku_gift(item_def &book, bool first);
 
 bool book_has_title(const item_def &book);
 

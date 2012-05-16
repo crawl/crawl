@@ -2196,19 +2196,14 @@ bool do_god_gift(bool forced)
             if (you.religion == GOD_KIKUBAAQUDGHA)
             {
                 if (you.piety >= piety_breakpoint(0)
-                    && !you.had_book[BOOK_NECROMANCY])
+                    && you.num_total_gifts[you.religion] == 0)
                 {
                     gift = BOOK_NECROMANCY;
                 }
                 else if (you.piety >= piety_breakpoint(2)
-                         && !you.had_book[BOOK_DEATH])
+                         && you.num_total_gifts[you.religion] == 1)
                 {
                     gift = BOOK_DEATH;
-                }
-                else if (you.piety >= piety_breakpoint(3)
-                         && !you.had_book[BOOK_UNLIFE])
-                {
-                    gift = BOOK_UNLIFE;
                 }
             }
             else if (forced || you.piety > 160 && random2(you.piety) > 100)
@@ -2250,6 +2245,12 @@ bool do_god_gift(bool forced)
                     int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
                                               MAKE_ITEM_RANDOM_RACE,
                                               0, 0, you.religion);
+                    // Replace a Kiku gift by a custom-random book.
+                    if (you.religion == GOD_KIKUBAAQUDGHA)
+                    {
+                        make_book_Kiku_gift(mitm[thing_created],
+                                            gift == BOOK_NECROMANCY);
+                    }
                     if (thing_created == NON_ITEM)
                         return (false);
 
