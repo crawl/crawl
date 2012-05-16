@@ -2485,7 +2485,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
     if (first)
     {
         chosen_spells[0] = coinflip() ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
-        if (one_chance_in(3))
+        if (you.species == SP_FELID || one_chance_in(3))
         {
             chosen_spells[1] = SPELL_CORPSE_ROT;
             chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
@@ -2495,13 +2495,17 @@ void make_book_Kiku_gift(item_def &book, bool first)
             chosen_spells[1] = coinflip() ? SPELL_CORPSE_ROT : SPELL_SUBLIMATION_OF_BLOOD;
             chosen_spells[2] = SPELL_LETHAL_INFUSION;
         }
-        chosen_spells[3] = coinflip() ? SPELL_REGENERATION : SPELL_VAMPIRIC_DRAINING;
+        chosen_spells[3] = (you.species == SP_DEEP_DWARF
+                            || you.species == SP_MUMMY
+                            || coinflip())
+                           ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
         chosen_spells[4] = SPELL_CONTROL_UNDEAD;
     }
     else
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_TWISTED_RESURRECTION;
-        chosen_spells[1] = coinflip() ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
+        chosen_spells[1] = (you.species == SP_FELID || coinflip())
+                           ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_SIMULACRUM,
                                          SPELL_DEATH_CHANNEL,
@@ -2517,6 +2521,8 @@ void make_book_Kiku_gift(item_def &book, bool first)
                                         SPELL_SIMULACRUM,
                                         SPELL_DEATH_CHANNEL,
                                         -1);
+            if (you.species == SP_FELID && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+                extra_spell = SPELL_NO_SPELL;
             for (int i = 0; i < 3; i++)
                 if (extra_spell == chosen_spells[i])
                     extra_spell = SPELL_NO_SPELL;
