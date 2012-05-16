@@ -467,6 +467,7 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "f") && !ends_with(name, "ff"))
     {
         // elf -> elves, but not hippogriff -> hippogrives.
+        // TODO: if someone defines a "goblin chief", this should be revisited.
         return name.substr(0, name.length() - 1) + "ves";
     }
     else if (ends_with(name, "mage"))
@@ -477,7 +478,7 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
              || ends_with(name, "folk") || ends_with(name, "spawn")
              || ends_with(name, "tengu") || ends_with(name, "shedu")
-             || ends_with(name, "swine")
+             || ends_with(name, "swine") || ends_with(name, "efreet")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
@@ -486,8 +487,7 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "ch") || ends_with(name, "sh")
              || ends_with(name, "x"))
     {
-        // To handle cockroaches and sphinxes, and in case there's some monster
-        // ending with sh (except fish, which are caught in the previous check).
+        // To handle cockroaches, sphinxes, and bushes.
         return name + "es";
     }
     else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
@@ -495,11 +495,6 @@ std::string pluralise(const std::string &name,
         // simulacrum -> simulacra (correct Latin pluralisation)
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
-    }
-    else if (ends_with(name, "efreet"))
-    {
-        // efreet -> efreeti. Not sure this is correct.
-        return name + "i";
     }
     else if (name == "foot")
         return "feet";

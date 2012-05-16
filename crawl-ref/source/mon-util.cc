@@ -4054,7 +4054,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
         return (MON_SHAPE_HUMANOID);
     case 'P': // plants
         return (MON_SHAPE_PLANT);
-    case 'R': // rakshasa and efreeti; humanoid?
+    case 'R': // rakshasas and efreet; humanoid?
         return (MON_SHAPE_HUMANOID);
     case 'S': // snakes
         return (MON_SHAPE_SNAKE);

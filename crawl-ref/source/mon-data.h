@@ -3620,7 +3620,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
-// rakshasas and efreeti ('R')
+// rakshasas and efreet ('R')
 {
     MONS_EFREET, 'R', RED, "efreet",
     M_SPELLCASTER | M_SPEAKS | M_GLOWS_LIGHT,
