@@ -21,6 +21,7 @@ print OUT "    $_,\n" for @mons;
 print OUT <<END;
     MST_GHOST,
     NUM_MSTYPES,
-    MST_NO_SPELLS
+    MST_NO_SPELLS,
+    MST_RANDOM_SPELLS
 };
 END

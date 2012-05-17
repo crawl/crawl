@@ -1802,12 +1802,12 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     bool retval = true;
     int mon_type = mon->type;
 
-    book[0] = MST_NO_SPELLS;
-    book[1] = MST_NO_SPELLS;
-    book[2] = MST_NO_SPELLS;
-    book[3] = MST_NO_SPELLS;
-    book[4] = MST_NO_SPELLS;
-    book[5] = MST_NO_SPELLS;
+    book[0] = MST_RANDOM_SPELLS;
+    book[1] = MST_RANDOM_SPELLS;
+    book[2] = MST_RANDOM_SPELLS;
+    book[3] = MST_RANDOM_SPELLS;
+    book[4] = MST_RANDOM_SPELLS;
+    book[5] = MST_RANDOM_SPELLS;
 
     switch (mon_type)
     {
@@ -1896,14 +1896,14 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
 
 static void _get_spells(mon_spellbook_type book, monster* mon)
 {
-    if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
+    if (book == MST_RANDOM_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
     {
         mon_spellbook_type multi_book[6];
         if (_get_spellbook_list(multi_book, mon))
         {
             do
                 book = multi_book[random2(6)];
-            while (book == MST_NO_SPELLS);
+            while (book == MST_RANDOM_SPELLS);
         }
     }
 
