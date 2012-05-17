@@ -641,7 +641,7 @@ class monster_spells : public FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS
 {
 public:
     monster_spells()
-        : FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS>(monster_spell())//(SPELL_NO_SPELL)//(monster_spell)
+        : FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS>(monster_spell())
     { }
     void clear() { init(monster_spell()); }
 };
