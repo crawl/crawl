@@ -680,6 +680,12 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, true, false, false, true))
         return (false);
 
+    if (you.suppressed() && !weapon_reach(item))
+    {
+        canned_msg(MSG_EVOCATION_SUPPRESSED);
+        return false;
+    }
+
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;
@@ -691,12 +697,7 @@ bool evoke_item(int slot)
     {
         ASSERT(item_is_equipped(item));
 
-        if (you.suppressed())
-        {
-            canned_msg(MSG_EVOCATION_SUPPRESSED);
-            return false;
-        }
-        else if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
+        if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
         {
             if (!unevokable)
                 count_action(CACT_EVOKE, EVOC_MISC);
@@ -732,12 +733,6 @@ bool evoke_item(int slot)
         if (you.confused())
         {
             mpr("You're too confused.");
-            return false;
-        }
-
-        if (you.suppressed())
-        {
-            canned_msg(MSG_EVOCATION_SUPPRESSED);
             return false;
         }
 
@@ -783,12 +778,6 @@ bool evoke_item(int slot)
         if (is_deck(item))
         {
             ASSERT(wielded);
-
-            if (you.suppressed())
-            {
-                canned_msg(MSG_EVOCATION_SUPPRESSED);
-                return false;
-            }
 
             evoke_deck(item);
             pract = 1;
