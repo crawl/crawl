@@ -647,6 +647,7 @@ static bool _ball_of_energy(void)
 
 bool evoke_item(int slot)
 {
+
     if (you.berserk() && (slot == -1
                        || slot != you.equip[EQ_WEAPON]
                        || !weapon_reach(*you.weapon())))
@@ -728,6 +729,12 @@ bool evoke_item(int slot)
             return false;
         }
 
+        if (you.suppressed())
+        {
+            canned_msg(MSG_EVOCATION_SUPPRESSED);
+            return false;
+        }
+
         if (item_is_rod(item))
         {
             pract = staff_spell(slot);
@@ -770,6 +777,13 @@ bool evoke_item(int slot)
         if (is_deck(item))
         {
             ASSERT(wielded);
+
+            if (you.suppressed())
+            {
+                canned_msg(MSG_EVOCATION_SUPPRESSED);
+                return false;
+            }
+
             evoke_deck(item);
             pract = 1;
             count_action(CACT_EVOKE, EVOC_DECK);

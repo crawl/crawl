@@ -3138,46 +3138,48 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
     // Evocations from items.
-    if (scan_artefacts(ARTP_BLINK))
-        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+    if (!you.suppressed()) {
+        if (scan_artefacts(ARTP_BLINK))
+            _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
-    if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
-        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
+        if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
+            _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
-        // Now you can only turn invisibility off if you have an
-        // activatable item.  Wands and potions will have to time
-        // out. -- bwr
-        if (you.duration[DUR_INVIS])
-            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
-        else
-            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
-    }
-
-    if (player_evokable_levitation())
-    {
-        // Has no effect on permanently flying Tengu.
-        if (!you.permanent_flight())
+        if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
         {
-            // You can still evoke perm levitation if you have temporary one.
-            if (!you.is_levitating()
-                || !you.attribute[ATTR_PERM_LEVITATION]
-                   && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
-            {
-                _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
-            }
-            // Now you can only turn levitation off if you have an
-            // activatable item.  Potions and miscast effects will
-            // have to time out (this makes the miscast effect actually
-            // a bit annoying). -- bwr
-            if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
-                _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+            // Now you can only turn invisibility off if you have an
+            // activatable item.  Wands and potions will have to time
+            // out. -- bwr
+            if (you.duration[DUR_INVIS])
+                _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
+            else
+                _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
         }
-    }
 
-    if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
-        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+        if (player_evokable_levitation())
+        {
+            // Has no effect on permanently flying Tengu.
+            if (!you.permanent_flight())
+            {
+                // You can still evoke perm levitation if you have temporary one.
+                if (!you.is_levitating()
+                    || !you.attribute[ATTR_PERM_LEVITATION]
+                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+                {
+                    _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+                }
+                // Now you can only turn levitation off if you have an
+                // activatable item.  Potions and miscast effects will
+                // have to time out (this makes the miscast effect actually
+                // a bit annoying). -- bwr
+                if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+                    _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+            }
+        }
+
+        if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
+            _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)

@@ -529,6 +529,7 @@ enum canned_message_type
     MSG_CALL_DEAD,
     MSG_ANIMATE_REMAINS,
     MSG_DECK_EXHAUSTED,
+    MSG_EVOCATION_SUPPRESSED,
 };
 
 enum char_set_type
