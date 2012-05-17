@@ -3731,11 +3731,12 @@ int check_stealth(void)
             stealth -= penalty;
         }
 
-        if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
-            stealth += 20;
-
         stealth += scan_artefacts(ARTP_STEALTH);
     }
+
+    // Not exactly magical, so not suppressed.
+    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
+        stealth += 20;
 
     if (you.duration[DUR_STEALTH])
         stealth += 80;
@@ -3758,14 +3759,12 @@ int check_stealth(void)
     // No stealth bonus from boots if you're airborne or in water
     else if (boots)
     {
-        if (!you.suppressed())
-        {
-            if (get_armour_ego_type(*boots) == SPARM_STEALTH)
-                stealth += 50;
+        if (!you.suppressed() && get_armour_ego_type(*boots) == SPARM_STEALTH)
+            stealth += 50;
 
-            if (get_equip_race(*boots) == ISFLAG_ELVEN)
-                stealth += 20;
-        }
+        // Not exactly magical, so not suppressed.
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
+            stealth += 20;
     }
 
     else if (player_mutation_level(MUT_HOOVES) > 0)
