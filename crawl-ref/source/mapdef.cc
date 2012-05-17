@@ -3744,18 +3744,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
-        std::string serpent_of_hell_flavour =
-            strip_tag_prefix(mon_str, "serpent_of_hell_flavour:");
-        if (serpent_of_hell_flavour.empty())
-            serpent_of_hell_flavour = strip_tag_prefix(mon_str, "soh_flavour:");
-        if (!serpent_of_hell_flavour.empty())
-        {
-            serpent_of_hell_flavour =
-                uppercase_first(lowercase(serpent_of_hell_flavour)).substr(0, 3);
-            mspec.props["serpent_of_hell_flavour"].get_int() =
-                str_to_branch(serpent_of_hell_flavour, BRANCH_GEHENNA);
-        }
-
         std::string ench_str;
         while (!(ench_str = strip_tag_prefix(mon_str, "ench:")).empty())
         {

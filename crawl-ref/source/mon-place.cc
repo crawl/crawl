@@ -1337,9 +1337,21 @@ static monster* _place_monster_aux(const mgen_data &mg,
         return 0;
     }
 
-    if (mg.props.exists("serpent_of_hell_flavour"))
-        mon->props["serpent_of_hell_flavour"] =
-            mg.props["serpent_of_hell_flavour"].get_int();
+    // Pick the correct Serpent of Hell.
+    if (mon->type == MONS_SERPENT_OF_HELL)
+        switch (you.where_are_you)
+        {
+        case BRANCH_COCYTUS:
+            mon->type = MONS_SERPENT_OF_HELL_COCYTUS;
+            break;
+        case BRANCH_DIS:
+            mon->type = MONS_SERPENT_OF_HELL_DIS;
+            break;
+        case BRANCH_TARTARUS:
+            mon->type = MONS_SERPENT_OF_HELL_TARTARUS;
+            break;
+        default: ; // if it spawns out of Hell (sprint, wizmode), use Gehenna
+        }
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))

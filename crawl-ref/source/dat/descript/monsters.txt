@@ -489,6 +489,22 @@ battle with an adventurer hundreds of years ago. Most of its reasons to live
 were reduced only to that of setting aflame whatever is roaming these halls
 with a burning passion.
 %%%%
+the Serpent of Hell gehenna
+
+A huge red glowing dragon, burning with hellfire.
+%%%%
+the Serpent of Hell cocytus
+
+A huge gleaming white dragon, covered in shards of ice.
+%%%%
+the Serpent of Hell dis
+
+A huge metallic dragon, glowing with power.
+%%%%
+the Serpent of Hell tartarus
+
+A huge and dark dragon, wreathed in terrifying shadows.
+%%%%
 # Non-unique monsters
 acid blob
 

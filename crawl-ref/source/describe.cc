@@ -3248,6 +3248,21 @@ static std::string _monster_stat_description(const monster_info& mi)
     return (result.str());
 }
 
+static std::string _serpent_of_hell_flavour(monster_type m)
+{
+    switch (m)
+    {
+    case MONS_SERPENT_OF_HELL_COCYTUS:
+        return "cocytus";
+    case MONS_SERPENT_OF_HELL_DIS:
+        return "dis";
+    case MONS_SERPENT_OF_HELL_TARTARUS:
+        return "tartarus";
+    default:
+        return "gehenna";
+    }
+}
+
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
@@ -3261,6 +3276,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         db_name = mi.db_name();
     else
         db_name = mi.full_name(DESC_PLAIN, true);
+
+    if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
+        db_name += " " + _serpent_of_hell_flavour(mi.type);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -3349,33 +3367,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
-        break;
-
-    case MONS_SERPENT_OF_HELL:
-        if (!mi.props.exists("serpent_of_hell_flavour"))
-        {
-            inf.body << "Well now, isn't this buggy?\n";
-            break;
-        }
-        switch (mi.props["serpent_of_hell_flavour"].get_int())
-        {
-        default:
-            // SoH spawned outside the hells counts as one of Gehenna.
-            inf.body << "A huge red glowing dragon, burning with hellfire.\n";
-            break;
-
-        case BRANCH_COCYTUS:
-            inf.body << "A huge gleaming white dragon, covered in shards of ice.\n";
-            break;
-
-        case BRANCH_DIS:
-            inf.body << "A huge metallic dragon, glowing with power.\n";
-            break;
-
-        case BRANCH_TARTARUS:
-            inf.body << "A huge and dark dragon, wreathed in terrifying shadows.\n";
-            break;
-        }
         break;
 
     case MONS_PROGRAM_BUG:

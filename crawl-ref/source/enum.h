@@ -2444,6 +2444,9 @@ enum monster_type                      // menv[].type
     MONS_TEST_SPAWNER,
 
     // Add new monsters here:
+    MONS_SERPENT_OF_HELL_COCYTUS,
+    MONS_SERPENT_OF_HELL_DIS,
+    MONS_SERPENT_OF_HELL_TARTARUS,
 
     NUM_MONSTERS,                      // used for polymorph
 
