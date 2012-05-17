@@ -490,7 +490,7 @@ void canned_msg(canned_message_type which_message)
         mpr("The deck of cards disappears in a puff of smoke.");
         break;
     case MSG_EVOCATION_SUPPRESSED:
-        mpr("You may not evoke equipped items while suppressed!");
+        mpr("You may not evoke while suppressed!");
         break;
     }
 }
