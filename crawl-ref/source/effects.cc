@@ -631,7 +631,7 @@ void direct_effect(monster* source, spell_type spell,
         {
             // lose_stat() must come last {dlb}
             if (one_chance_in(3)
-                && lose_stat(STAT_INT, 1, source))
+                && lose_stat(STAT_INT, 1 + random2(3), source))
             {
                 mpr("Something feeds on your intellect!");
                 xom_is_stimulated(50);
