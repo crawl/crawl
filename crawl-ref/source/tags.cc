@@ -293,8 +293,11 @@ static ghost_demon unmarshallGhost(reader &th);
 static void marshallResists(writer &th, const mon_resist_def &res);
 static void unmarshallResists(reader &th, mon_resist_def &res);
 
-static void marshallSpells(writer &, const monster_spells &);
-static void unmarshallSpells(reader &, monster_spells &);
+static void marshallSpellList(writer &, const monster_spells &);
+static void unmarshallSpellList(reader &, monster_spells &);
+
+static void marshallSpell(writer &, const monster_spell &);
+monster_spell unmarshallSpell(reader &);
 
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
@@ -2736,7 +2739,7 @@ void marshallMonster(writer &th, const monster& m)
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         marshallShort(th, m.inv[j]);
 
-    marshallSpells(th, m.spells);
+    marshallSpellList(th, m.spells);
     marshallByte(th, m.god);
     marshallByte(th, m.attitude);
     marshallShort(th, m.foe);
@@ -3164,7 +3167,7 @@ void unmarshallMonster(reader &th, monster& m)
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         m.inv[j] = unmarshallShort(th);
 
-    unmarshallSpells(th, m.spells);
+    unmarshallSpellList(th, m.spells);
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
@@ -3460,16 +3463,37 @@ static void unmarshallResists(reader &th, mon_resist_def &res)
     res.rotting      = unmarshallByte(th);
 }
 
-static void marshallSpells(writer &th, const monster_spells &spells)
+static void marshallSpellList(writer &th, const monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        marshallShort(th, spells[j]);
+        marshallSpell(th, spells[j]);
 }
 
-static void unmarshallSpells(reader &th, monster_spells &spells)
+static void unmarshallSpellList(reader &th, monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        spells[j] = static_cast<spell_type>(unmarshallShort(th));
+        spells[j] = static_cast<monster_spell>(unmarshallSpell(th));
+}
+
+static void marshallSpell(writer &th, const monster_spell &spell)
+{
+    marshallShort(th, spell.type);
+    marshallShort(th, spell.source);
+}
+
+monster_spell unmarshallSpell(reader &th)
+{
+    monster_spell spell;
+    spell.type = static_cast<spell_type>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_SPELL_SOURCE)
+#endif
+        spell.source = static_cast<spell_source>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 33
+    else
+        spell.source = SOURCE_DEFAULT;
+#endif
+    return spell;
 }
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
@@ -3499,7 +3523,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallByte(th, ghost.colour);
     marshallShort(th, ghost.fly);
 
-    marshallSpells(th, ghost.spells);
+    marshallSpellList(th, ghost.spells);
 }
 
 static ghost_demon unmarshallGhost(reader &th)
@@ -3531,7 +3555,7 @@ static ghost_demon unmarshallGhost(reader &th)
 
     ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
 
-    unmarshallSpells(th, ghost.spells);
+    unmarshallSpellList(th, ghost.spells);
 
     return (ghost);
 }
