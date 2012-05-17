@@ -1266,10 +1266,10 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     // If the emergency spell appears early, it's probably not a dedicated
     // escape spell.
     for (int i = 0; i < 5; ++i)
-        if (msp[i] == spell)
+        if (msp[i].type == spell)
             return (false);
 
-    return (msp[5] == spell);
+    return (msp[5].type == spell);
 }
 
 // Function should return false if friendlies shouldn't animate any dead.
@@ -1432,10 +1432,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 int foundcount = 0;
                 for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                 {
-                    if (ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
+                    if (ms_useful_fleeing_out_of_sight(mons, hspell_pass[i].type)
                         && one_chance_in(++foundcount))
                     {
-                        spell_cast = hspell_pass[i];
+                        spell_cast = hspell_pass[i].type;
                         finalAnswer = true;
                     }
                 }
@@ -1451,9 +1451,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                if (ms_quick_get_away(mons, hspell_pass[i]))
+                if (ms_quick_get_away(mons, hspell_pass[i].type))
                 {
-                    spell_cast = hspell_pass[i];
+                    spell_cast = hspell_pass[i].type;
                     finalAnswer = true;
                     break;
                 }
@@ -1471,9 +1471,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
             if ((mons_is_fleeing(mons) || mons->pacified())
-                && ms_low_hitpoint_cast(mons, hspell_pass[5]))
+                && ms_low_hitpoint_cast(mons, hspell_pass[5].type))
             {
-                spell_cast = hspell_pass[5];
+                spell_cast = hspell_pass[5].type;
                 finalAnswer = true;
             }
 
@@ -1482,10 +1482,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 int found_spell = 0;
                 for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
                 {
-                    if (ms_low_hitpoint_cast(mons, hspell_pass[i])
+                    if (ms_low_hitpoint_cast(mons, hspell_pass[i].type)
                         && one_chance_in(++found_spell))
                     {
-                        spell_cast  = hspell_pass[i];
+                        spell_cast  = hspell_pass[i].type;
                         finalAnswer = true;
                     }
                 }
@@ -1507,14 +1507,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                if (hspell_pass[i] == SPELL_NO_SPELL)
+                if (hspell_pass[i].type == SPELL_NO_SPELL)
                     num_no_spell++;
-                else if (ms_waste_of_time(mons, hspell_pass[i])
-                         || hspell_pass[i] == SPELL_DIG)
+                else if (ms_waste_of_time(mons, hspell_pass[i].type)
+                         || hspell_pass[i].type == SPELL_DIG)
                 {
                     // Should monster not have selected dig by now,
                     // it never will.
-                    hspell_pass[i] = SPELL_NO_SPELL;
+                    hspell_pass[i].type = SPELL_NO_SPELL;
                     num_no_spell++;
                 }
             }
@@ -1540,7 +1540,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (mons_is_fleeing(mons) || mons->pacified())
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
-                                                   : hspell_pass[5]);
+                                                   : hspell_pass[5].type);
 
                     if (crawl_state.game_is_zotdef()
                         && mons->type == MONS_ICE_STATUE)
@@ -1561,7 +1561,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 else
                 {
                     // Randomly picking one of the non-emergency spells:
-                    spell_cast = hspell_pass[random2(5)];
+                    spell_cast = hspell_pass[random2(5)].type;
                 }
 
                 // XXX: Resurrect is a do-nothing spell. Remove it!
@@ -1688,7 +1688,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // If not okay, then maybe we'll cast a defensive spell.
                 if (!spellOK)
                 {
-                    spell_cast = (coinflip() ? hspell_pass[2]
+                    spell_cast = (coinflip() ? hspell_pass[2].type
                                              : SPELL_NO_SPELL);
 
                     // don't cast a targetted spell at the player if the

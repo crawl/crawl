@@ -647,7 +647,7 @@ void debug_stethoscope(int mon)
     bool found_spell = false;
     for (int k = 0; k < NUM_MONSTER_SPELL_SLOTS; ++k)
     {
-        if (hspell_pass[k] != SPELL_NO_SPELL)
+        if (hspell_pass[k].type != SPELL_NO_SPELL)
         {
             if (found_spell)
                 spl << ", ";
@@ -656,12 +656,13 @@ void debug_stethoscope(int mon)
 
             spl << k << ": ";
 
-            if (hspell_pass[k] >= NUM_SPELLS)
+            if (hspell_pass[k].type >= NUM_SPELLS)
                 spl << "buggy spell";
             else
-                spl << spell_title(hspell_pass[k]);
+                spl << spell_title(hspell_pass[k].type);
 
-            spl << " (" << static_cast<int>(hspell_pass[k]) << ")";
+            spl << " (" << static_cast<int>(hspell_pass[k].type) << ", "
+            << hspell_pass[k].source << ")";
         }
     }
     if (found_spell)

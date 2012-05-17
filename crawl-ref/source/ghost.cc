@@ -242,7 +242,7 @@ void ghost_demon::init_random_demon()
 
     colour = random_colour();
 
-    spells.init(SPELL_NO_SPELL);
+    spells.init(monster_spell());
 
     // This bit uses the list of player spells to find appropriate
     // spells for the demon, then converts those spells to the monster
@@ -250,89 +250,89 @@ void ghost_demon::init_random_demon()
     if (spellcaster)
     {
         if (coinflip())
-            spells[0] = RANDOM_ELEMENT(search_order_conj);
+            spells[0].type = RANDOM_ELEMENT(search_order_conj);
 
         // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-            spells[1] = RANDOM_ELEMENT(search_order_conj);
+            spells[1].type = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-            spells[2] = RANDOM_ELEMENT(search_order_third);
+            spells[2].type = RANDOM_ELEMENT(search_order_third);
 
         if (coinflip())
         {
-            spells[3] = RANDOM_ELEMENT(search_order_misc);
-            if (spells[3] == SPELL_DIG)
-                spells[3] = SPELL_NO_SPELL;
+            spells[3].type = RANDOM_ELEMENT(search_order_misc);
+            if (spells[3].type == SPELL_DIG)
+                spells[3].type = SPELL_NO_SPELL;
         }
 
         if (coinflip())
-            spells[4] = RANDOM_ELEMENT(search_order_misc);
+            spells[4].type = RANDOM_ELEMENT(search_order_misc);
 
         if (coinflip())
-            spells[5] = SPELL_BLINK;
+            spells[5].type = SPELL_BLINK;
         if (coinflip())
-            spells[5] = SPELL_TELEPORT_SELF;
+            spells[5].type = SPELL_TELEPORT_SELF;
 
         // Convert the player spell indices to monster spell ones.
         // Pan lords also get their Agony upgraded to Torment.
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            spells[i] = translate_spell(spells[i]);
-            if (spells[i] == SPELL_AGONY)
-                spells[i] = SPELL_SYMBOL_OF_TORMENT;
+            spells[i].type = translate_spell(spells[i].type);
+            if (spells[i].type == SPELL_AGONY)
+                spells[i].type = SPELL_SYMBOL_OF_TORMENT;
         }
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
         if (one_chance_in(25))
-            spells[0] = SPELL_HELLFIRE_BURST;
+            spells[0].type = SPELL_HELLFIRE_BURST;
         if (one_chance_in(25))
-            spells[0] = SPELL_FIRE_STORM;
+            spells[0].type = SPELL_FIRE_STORM;
         if (one_chance_in(25))
-            spells[0] = SPELL_ICE_STORM;
+            spells[0].type = SPELL_ICE_STORM;
         if (one_chance_in(25))
-            spells[0] = SPELL_METAL_SPLINTERS;
+            spells[0].type = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
-            spells[0] = SPELL_ENERGY_BOLT;  // eye of devastation
+            spells[0].type = SPELL_ENERGY_BOLT;  // eye of devastation
 
         if (one_chance_in(25))
-            spells[1] = SPELL_STEAM_BALL;
+            spells[1].type = SPELL_STEAM_BALL;
         if (one_chance_in(25))
-            spells[1] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+            spells[1].type = SPELL_ISKENDERUNS_MYSTIC_BLAST;
         if (one_chance_in(25))
-            spells[1] = SPELL_HELLFIRE;
+            spells[1].type = SPELL_HELLFIRE;
         if (one_chance_in(25))
-            spells[1] = SPELL_IOOD;
+            spells[1].type = SPELL_IOOD;
 
         if (one_chance_in(25))
-            spells[2] = SPELL_SMITING;
+            spells[2].type = SPELL_SMITING;
         if (one_chance_in(25))
-            spells[2] = SPELL_HELLFIRE_BURST;
+            spells[2].type = SPELL_HELLFIRE_BURST;
         if (one_chance_in(22))
-            spells[2] = SPELL_SUMMON_HYDRA;
+            spells[2].type = SPELL_SUMMON_HYDRA;
         if (one_chance_in(20))
-            spells[2] = SPELL_SUMMON_DRAGON;
+            spells[2].type = SPELL_SUMMON_DRAGON;
         if (one_chance_in(12))
-            spells[2] = SPELL_SUMMON_GREATER_DEMON;
+            spells[2].type = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
-            spells[2] = SPELL_SUMMON_DEMON;
+            spells[2].type = SPELL_SUMMON_DEMON;
         if (one_chance_in(10))
-            spells[2] = SPELL_SUMMON_EYEBALLS;
+            spells[2].type = SPELL_SUMMON_EYEBALLS;
 
         if (one_chance_in(20))
-            spells[3] = SPELL_SUMMON_GREATER_DEMON;
+            spells[3].type = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
-            spells[3] = SPELL_SUMMON_DEMON;
+            spells[3].type = SPELL_SUMMON_DEMON;
         if (one_chance_in(20))
-            spells[3] = SPELL_MALIGN_GATEWAY;
+            spells[3].type = SPELL_MALIGN_GATEWAY;
 
         // At least they can summon demons.
-        if (spells[3] == SPELL_NO_SPELL)
-            spells[3] = SPELL_SUMMON_DEMON;
+        if (spells[3].type == SPELL_NO_SPELL)
+            spells[3].type = SPELL_SUMMON_DEMON;
 
         if (one_chance_in(15))
-            spells[4] = SPELL_DIG;
+            spells[4].type = SPELL_DIG;
     }
 }
 
@@ -780,36 +780,36 @@ static spell_type search_third_list(int ignore_spell)
 // remember a few spells.
 void ghost_demon::add_spells()
 {
-    spells.init(SPELL_NO_SPELL);
+    spells.init(monster_spell());
 
-    spells[0] = search_first_list(SPELL_NO_SPELL);
-    spells[1] = search_first_list(spells[0]);
-    spells[2] = search_second_list(SPELL_NO_SPELL);
-    spells[3] = search_third_list(SPELL_DIG);
+    spells[0].type = search_first_list(SPELL_NO_SPELL);
+    spells[1].type = search_first_list(spells[0].type);
+    spells[2].type = search_second_list(SPELL_NO_SPELL);
+    spells[3].type = search_third_list(SPELL_DIG);
 
-    if (spells[3] == SPELL_NO_SPELL)
-        spells[3] = search_first_list(SPELL_NO_SPELL);
+    if (spells[3].type == SPELL_NO_SPELL)
+        spells[3].type = search_first_list(SPELL_NO_SPELL);
 
-    spells[4] = search_third_list(spells[3]);
+    spells[4].type = search_third_list(spells[3].type);
 
-    if (spells[4] == SPELL_NO_SPELL)
-        spells[4] = search_first_list(spells[3]);
+    if (spells[4].type == SPELL_NO_SPELL)
+        spells[4].type = search_first_list(spells[3].type);
 
     if (_know_spell(SPELL_DIG))
-        spells[4] = SPELL_DIG;
+        spells[4].type = SPELL_DIG;
 
     // Look for Blink or Teleport Self for the emergency slot.
     if (_know_spell(SPELL_CONTROLLED_BLINK)
         || _know_spell(SPELL_BLINK))
     {
-        spells[5] = SPELL_CONTROLLED_BLINK;
+        spells[5].type = SPELL_CONTROLLED_BLINK;
     }
 
     if (_know_spell(SPELL_TELEPORT_SELF))
-        spells[5] = SPELL_TELEPORT_SELF;
+        spells[5].type = SPELL_TELEPORT_SELF;
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        spells[i] = translate_spell(spells[i]);
+        spells[i].type = translate_spell(spells[i].type);
 
     spellcaster = has_spells();
 }
@@ -817,7 +817,7 @@ void ghost_demon::add_spells()
 bool ghost_demon::has_spells() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL)
+        if (spells[i].type != SPELL_NO_SPELL)
             return true;
     return false;
 }
@@ -987,7 +987,7 @@ bool debug_check_ghosts()
 
         // Check for non-existing spells.
         for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
-            if (ghost.spells[sp] < 0 || ghost.spells[sp] >= NUM_SPELLS)
+            if (ghost.spells[sp].type < 0 || ghost.spells[sp].type >= NUM_SPELLS)
                 return (false);
     }
     return (true);
@@ -1090,7 +1090,7 @@ void ghost_demon::init_labrat (colour_t force_colour)
     if (colour == BLACK)
         colour = _labrat_random_colour();
 
-    spells.init(SPELL_NO_SPELL);
+    spells.init(monster_spell());
 
     resists.elec = 0;
     resists.poison = 0;
@@ -1114,13 +1114,13 @@ void ghost_demon::init_labrat (colour_t force_colour)
         break;
     case RED: // fiery
         att_flav = AF_FIRE;
-        spells[0] = SPELL_FIRE_BREATH;
+        spells[0].type = SPELL_FIRE_BREATH;
         spellcaster = true;
         resists.fire = 3;
         resists.sticky_flame = true;
         break;
     case LIGHTCYAN: // gaseous
-        spells[0] = SPELL_MEPHITIC_CLOUD;
+        spells[0].type = SPELL_MEPHITIC_CLOUD;
         spellcaster = true;
         resists.poison = 1; // otherwise it'll confuse itself
         break;
@@ -1129,7 +1129,7 @@ void ghost_demon::init_labrat (colour_t force_colour)
         break;
     case LIGHTBLUE: // floating
         fly = FL_LEVITATE;
-        spells[0] = SPELL_SHOCK;
+        spells[0].type = SPELL_SHOCK;
         spellcaster = true;
         resists.elec = 1;
         speed = 15;
@@ -1144,8 +1144,8 @@ void ghost_demon::init_labrat (colour_t force_colour)
         break;
     }
     case MAGENTA:
-        spells[0] = spells[1] = spells[2] = spells[3] =
-            spells[4] = spells[5] = SPELL_BLINK;
+        spells[0].type = spells[1].type = spells[2].type = spells[3].type =
+            spells[4].type = spells[5].type = SPELL_BLINK;
         spellcaster = true;
         break;
     case GREEN:

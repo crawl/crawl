@@ -1667,7 +1667,7 @@ int exper_value(const monster* mon, bool real)
 
         for (int i = 0; i < 6; ++i)
         {
-            switch (hspell_pass[i])
+            switch (hspell_pass[i].type)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
@@ -1876,7 +1876,7 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
-    mon->spells.init(SPELL_NO_SPELL);
+    mon->spells.init(monster_spell());
     if (book == MST_NO_SPELLS)
         return;
 
@@ -1888,7 +1888,7 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
         if (mspell_list[i].type == book)
         {
             for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-                mon->spells[j] = mspell_list[i].spells[j];
+                mon->spells[j].type = mspell_list[i].spells[j];
             break;
         }
     }
@@ -1911,7 +1911,7 @@ static void _get_spells(mon_spellbook_type book, monster* mon)
 
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
-        mon->spells[0] = SPELL_HASTE_OTHER;
+        mon->spells[0].type = SPELL_HASTE_OTHER;
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
@@ -2932,7 +2932,7 @@ bool mons_has_los_attack(const monster* mon)
     if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_los_spell(mon->spells[i]))
+            if (_ms_los_spell(mon->spells[i].type))
                 return (true);
     }
 
@@ -2949,7 +2949,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
+            if (_ms_ranged_spell(mon->spells[i].type, attack_only, ench_too))
                 return (true);
     }
 
@@ -3114,12 +3114,12 @@ static bool _mons_has_smite_attack(const monster* mons)
 {
     const monster_spells &hspell_pass = mons->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
-        if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
-            || hspell_pass[i] == SPELL_SMITING
-            || hspell_pass[i] == SPELL_HELLFIRE_BURST
-            || hspell_pass[i] == SPELL_FIRE_STORM
-            || hspell_pass[i] == SPELL_AIRSTRIKE
-            || hspell_pass[i] == SPELL_MISLEAD)
+        if (hspell_pass[i].type == SPELL_SYMBOL_OF_TORMENT
+            || hspell_pass[i].type == SPELL_SMITING
+            || hspell_pass[i].type == SPELL_HELLFIRE_BURST
+            || hspell_pass[i].type == SPELL_FIRE_STORM
+            || hspell_pass[i].type == SPELL_AIRSTRIKE
+            || hspell_pass[i].type == SPELL_MISLEAD)
         {
             return (true);
         }

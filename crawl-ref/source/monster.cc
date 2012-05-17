@@ -757,10 +757,10 @@ bool monster::has_spell_of_type(unsigned disciplines) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        if (spells[i] == SPELL_NO_SPELL)
+        if (spells[i].type == SPELL_NO_SPELL)
             continue;
 
-        if (spell_typematch(spells[i], disciplines))
+        if (spell_typematch(spells[i].type, disciplines))
             return (true);
     }
     return (false);
@@ -2858,7 +2858,7 @@ void monster::banish(actor *agent, const std::string &)
 bool monster::has_spells() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL)
+        if (spells[i].type != SPELL_NO_SPELL)
             return (true);
 
     return (false);
@@ -2867,7 +2867,7 @@ bool monster::has_spells() const
 bool monster::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] == spell)
+        if (spells[i].type == spell)
             return (true);
 
     return (false);
@@ -2876,7 +2876,7 @@ bool monster::has_spell(spell_type spell) const
 bool monster::has_unholy_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unholy_spell(spells[i]))
+        if (is_unholy_spell(spells[i].type))
             return (true);
 
     return (false);
@@ -2885,7 +2885,7 @@ bool monster::has_unholy_spell() const
 bool monster::has_evil_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_evil_spell(spells[i]))
+        if (is_evil_spell(spells[i].type))
             return (true);
 
     return (false);
@@ -2894,7 +2894,7 @@ bool monster::has_evil_spell() const
 bool monster::has_unclean_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_unclean_spell(spells[i]))
+        if (is_unclean_spell(spells[i].type))
             return (true);
 
     return (false);
@@ -2903,7 +2903,7 @@ bool monster::has_unclean_spell() const
 bool monster::has_chaotic_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (is_chaotic_spell(spells[i]))
+        if (is_chaotic_spell(spells[i].type))
             return (true);
 
     return (false);
@@ -4190,7 +4190,7 @@ void monster::load_ghost_spells()
 {
     if (!ghost.get())
     {
-        spells.init(SPELL_NO_SPELL);
+        spells.init(monster_spell());
         return;
     }
 
@@ -4257,10 +4257,10 @@ void monster::forget_random_spell()
     int which_spell = -1;
     int count = 0;
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] != SPELL_NO_SPELL && one_chance_in(++count))
+        if (spells[i].type != SPELL_NO_SPELL && one_chance_in(++count))
             which_spell = i;
     if (which_spell != -1)
-        spells[which_spell] = SPELL_NO_SPELL;
+        spells[which_spell].type = SPELL_NO_SPELL;
 }
 
 void monster::scale_hp(int num, int den)
@@ -4445,7 +4445,7 @@ bool monster::needs_berserk(bool check_spells) const
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            const int spell = spells[i];
+            const int spell = spells[i].type;
             if (spell != SPELL_NO_SPELL && spell != SPELL_BERSERKER_RAGE)
                 return (false);
         }
