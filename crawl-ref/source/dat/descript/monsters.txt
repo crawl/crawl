@@ -491,19 +491,26 @@ with a burning passion.
 %%%%
 the Serpent of Hell gehenna
 
-A huge red glowing dragon, burning with hellfire.
+A huge red glowing dragon, burning with hellfire. It seems to be possessed by
+the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
 
-A huge gleaming white dragon, covered in shards of ice.
+You can barely move through the hellish cold that's freezing your soul. It
+emanates from this massive white dragon. Your eyes hurt from the temperature,
+and from the gleam of shards of ice covering the demonic beast.
 %%%%
 the Serpent of Hell dis
 
-A huge metallic dragon, glowing with power.
+A towering beast with an army's worth of swords for teeth. Each scale is a
+shield with a razored edge. It watches you through a pair of featureless chrome
+spheres.
 %%%%
 the Serpent of Hell tartarus
 
-A huge and dark dragon, wreathed in terrifying shadows.
+A pair of lurid magenta eyes hang in the darkness before you. You can just
+barely trace the outline of a vast, sinuous dragon. Its malice for you is
+palpable.
 %%%%
 # Non-unique monsters
 acid blob
