@@ -68,7 +68,7 @@ static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 struct mon_spellbook
 {
     mon_spellbook_type type;
-    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
+    monster_spell spells[NUM_MONSTER_SPELL_SLOTS];
 };
 
 static mon_spellbook mspell_list[] =
@@ -1888,7 +1888,7 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
         if (mspell_list[i].type == book)
         {
             for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-                mon->spells[j].type = mspell_list[i].spells[j];
+                mon->spells[j] = mspell_list[i].spells[j];
             break;
         }
     }

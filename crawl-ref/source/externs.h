@@ -635,6 +635,8 @@ public:
     spell_type type;
     spell_source source;
     monster_spell() : type(SPELL_NO_SPELL), source(SOURCE_SPELL) { }
+    monster_spell(spell_type t, spell_source s) : type(t), source(s) { }
+    monster_spell(spell_type t) : type(t), source(SOURCE_SPELL) { }
 };
 
 class monster_spells : public FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS>
