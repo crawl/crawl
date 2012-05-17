@@ -2965,6 +2965,26 @@ enum species_type
     SP_VIABLE   = 102,
 };
 
+enum spell_source
+{
+    // Magical
+    SOURCE_SPELL,      // Actually casting a spell
+    SOURCE_INNATE,     // Magical, but innate Like Kenku flight
+    SOURCE_EVOCATIONS, // Evoked items
+    // Divine
+    SOURCE_GOD,        // From their god
+    // Natural
+    SOURCE_NATURAL,    // Wings, web, acid spit, etc.
+    SOURCE_BREATH,     // Attacks requiring breath
+    SOURCE_GAZE,       // Attacks requiring eyes
+    // Weird stuff
+    SOURCE_MUTATION,   // The ability is a non-racial mutation
+    SOURCE_PSYCHIC,    // Non-magical mental attacks
+    NUM_SOURCES,
+    SOURCE_NONE,       // Shouldn't actually be needed. Check whether
+                       // it's actually a SPELL_NO_SPELL.
+};
+
 enum spell_type
 {
     SPELL_NO_SPELL,
