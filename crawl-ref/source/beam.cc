@@ -3413,8 +3413,7 @@ void bolt::affect_player_enchantment()
             mpr("You feel trapped.");
             break;
         }
-        you.banished        = true;
-        you.banished_by     = zapper();
+        you.banish(agent(), zapper());
         obvious_effect = true;
         break;
 
