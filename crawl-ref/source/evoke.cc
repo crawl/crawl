@@ -690,7 +690,13 @@ bool evoke_item(int slot)
     if (entry && entry->evoke_func)
     {
         ASSERT(item_is_equipped(item));
-        if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
+
+        if (you.suppressed())
+        {
+            canned_msg(MSG_EVOCATION_SUPPRESSED);
+            return false;
+        }
+        else if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
         {
             if (!unevokable)
                 count_action(CACT_EVOKE, EVOC_MISC);
