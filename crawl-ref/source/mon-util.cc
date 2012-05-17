@@ -180,7 +180,9 @@ void init_mon_name_cache()
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE)
+            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
+                || mon != MONS_SERPENT_OF_HELL
+                   && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
                 // Keep previous entry.
                 continue;
@@ -318,30 +320,6 @@ const mon_resist_def &get_mons_class_resists(monster_type mc)
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
-static mon_resist_def _serpent_of_hell_resists(int flavour)
-{
-    mon_resist_def res;
-
-    switch (flavour)
-    {
-    case BRANCH_GEHENNA:
-        res.hellfire = 1;
-        break;
-
-    case BRANCH_COCYTUS:
-        res.cold = 3;
-        break;
-    }
-
-    return res;
-}
-
-static mon_resist_def _serpent_of_hell_resists(const monster* mon)
-{
-    int flavour = mon->props["serpent_of_hell_flavour"].get_int();
-    return _serpent_of_hell_resists(flavour);
-}
-
 mon_resist_def get_mons_resists(const monster* mon)
 {
     _get_kraken_head(mon);
@@ -363,9 +341,6 @@ mon_resist_def get_mons_resists(const monster* mon)
         if (draco_species != mon->type)
             resists |= get_mons_class_resists(draco_species);
     }
-
-    if (mon->type == MONS_SERPENT_OF_HELL)
-        resists |= _serpent_of_hell_resists(mon);
 
     // Undead get an additional level of poison resistance, in case
     // they're undead due to the MF_FAKE_UNDEAD flag.
@@ -1888,27 +1863,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
-    case MONS_SERPENT_OF_HELL:
-        switch (mon->props["serpent_of_hell_flavour"].get_int())
-        {
-        case BRANCH_GEHENNA:
-            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
-            break;
-        case BRANCH_COCYTUS:
-            book[0] = MST_SERPENT_OF_HELL_COCYTUS;
-            break;
-        case BRANCH_DIS:
-            book[0] = MST_SERPENT_OF_HELL_DIS;
-            break;
-        case BRANCH_TARTARUS:
-            book[0] = MST_SERPENT_OF_HELL_TARTARUS;
-            break;
-        default:
-            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
-            break;
-        }
-        break;
-
     default:
         retval = false;
         break;
@@ -2009,23 +1963,6 @@ static colour_t _random_small_abomination_colour()
     while (col == MAGENTA || col == BROWN || col == LIGHTCYAN);
 
     return (col);
-}
-
-static int _serpent_of_hell_colour(const monster* mon)
-{
-    switch (mon->props["serpent_of_hell_flavour"].get_int())
-    {
-    case BRANCH_GEHENNA:
-        return ETC_FIRE;
-    case BRANCH_COCYTUS:
-        return ETC_ICE;
-    case BRANCH_DIS:
-        return ETC_IRON;
-    case BRANCH_TARTARUS:
-        return ETC_DEATH;
-    default:
-        return ETC_FIRE;
-    }
 }
 
 bool init_abomination(monster* mon, int hd)
@@ -2175,15 +2112,6 @@ void define_monster(monster* mons)
         ac += random2(5) - 2;
         ev += random2(5) - 2;
         break;
-
-    case MONS_SERPENT_OF_HELL:
-    {
-        int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
-        if (!flavour)
-            flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
-        col = _serpent_of_hell_colour(mons);
-        break;
-    }
 
     default:
         break;

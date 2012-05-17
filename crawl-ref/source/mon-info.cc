@@ -173,8 +173,7 @@ static bool _is_public_key(std::string key)
      || key == "glyph"
      || key == "monster_tile"
      || key == "tile_num"
-     || key == "tile_idx"
-     || key == "serpent_of_hell_flavour")
+     || key == "tile_idx")
     {
         return true;
     }
