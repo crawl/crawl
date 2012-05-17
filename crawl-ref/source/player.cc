@@ -2201,11 +2201,14 @@ int player_movement_speed(bool ignore_burden)
         mv += 3;
 
     // armour
-    if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
-        mv -= 2;
+    if (!you.suppressed())
+    {
+        if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+            mv -= 2;
 
-    // ponderous brand and artefact property
-    mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
+        // ponderous brand and artefact property
+        mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
+    }
 
     // Cheibriados
     if (you.religion == GOD_CHEIBRIADOS)
