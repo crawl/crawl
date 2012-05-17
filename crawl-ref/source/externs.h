@@ -629,13 +629,21 @@ private:
 
 typedef std::vector<delay_queue_item> delay_queue_type;
 
-class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
+class monster_spell
+{
+public:
+    spell_type type;
+    spell_source source;
+    monster_spell() : type(SPELL_NO_SPELL), source(SOURCE_SPELL) { }
+};
+
+class monster_spells : public FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS>
 {
 public:
     monster_spells()
-        : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
+        : FixedVector<monster_spell, NUM_MONSTER_SPELL_SLOTS>(monster_spell())//(SPELL_NO_SPELL)//(monster_spell)
     { }
-    void clear() { init(SPELL_NO_SPELL); }
+    void clear() { init(monster_spell()); }
 };
 
 class reader;
