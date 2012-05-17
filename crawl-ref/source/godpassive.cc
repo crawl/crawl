@@ -129,7 +129,8 @@ void jiyva_slurp_bonus(int item_value, int *js)
 
     if (you.piety >= piety_breakpoint(4)
         && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.hp < you.hp_max)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR])
     {
          inc_hp(std::max(random2(item_value), 1));
          *js |= JS_HP;
