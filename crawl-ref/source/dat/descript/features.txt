@@ -318,7 +318,7 @@ A staircase leading out of the dungeon
 This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that
 kind of stuff. Also taxes and whatever else you ran from.
 
-Climbing these stairs will end your quest, whatever you'll carry the Orb with
+Climbing these stairs will end your quest, whether you carry the Orb with
 you or not.
 %%%%
 A staircase to the Crypt
