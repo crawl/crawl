@@ -424,7 +424,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 static void _TROG_melee_effect(item_def* weapon, actor* attacker,
                                actor* defender, bool mondied, int dam)
 {
-    if (coinflip())
+    if (coinflip() && !attacker->suppressed())
         attacker->go_berserk(false);
 }
 

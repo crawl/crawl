@@ -2448,6 +2448,8 @@ enum monster_type                      // menv[].type
     MONS_SERPENT_OF_HELL_DIS,
     MONS_SERPENT_OF_HELL_TARTARUS,
 
+    MONS_PUNCHING_BAG,
+
     NUM_MONSTERS,                      // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
