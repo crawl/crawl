@@ -2967,6 +2967,7 @@ enum species_type
 
 enum spell_source
 {
+    SOURCE_DEFAULT,    // Default based on monster flags.
     // Magical
     SOURCE_SPELL,      // Actually casting a spell
     SOURCE_INNATE,     // Magical, but innate Like Kenku flight
