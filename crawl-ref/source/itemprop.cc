@@ -583,7 +583,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
             // Redraw the weapon.
             you.wield_change = true;
         }
-        item.flags |= ISFLAG_KNOW_CURSE;
+        set_ident_flags(item, ISFLAG_KNOW_CURSE);
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
