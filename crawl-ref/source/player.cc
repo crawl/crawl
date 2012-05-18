@@ -4230,11 +4230,11 @@ int player_effect_mutagenic()
     }
 }
 
-int player_res_mutation_from_item()
+int player_res_mutation_from_item(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-        return wearing_amulet(AMU_RESIST_MUTATION);
+        return wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
     else
     {
         return 0;

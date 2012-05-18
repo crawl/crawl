@@ -1710,7 +1710,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = (player_res_mutation_from_item()
+    const int rmuta = (player_res_mutation_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
     const int rrott = you.res_rotting();
