@@ -607,7 +607,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
+    if (beheld() && !player_equip_unrand_effect(UNRAND_DEMON_AXE))
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");

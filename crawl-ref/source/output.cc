@@ -1699,7 +1699,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
-    bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
+    bool dragonskin = player_equip_unrand_effect(UNRAND_DRAGONSKIN);
     bool cloak_was_melded = you.melded[EQ_CLOAK];
     if (dragonskin)
         you.melded[EQ_CLOAK] = true; // hack!
