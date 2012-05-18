@@ -31,6 +31,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-place.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -1228,7 +1229,10 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
                     && !one_chance_in(3)))
             {
                 if (failMsg)
+                {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
+                    maybe_id_resist(BEAM_POLYMORPH);
+                }
                 return (false);
             }
         }

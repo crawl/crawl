@@ -2656,6 +2656,12 @@ void maybe_id_resist(beam_type flavour)
         _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
         break;
 
+    case BEAM_POLYMORPH:
+        if (player_mutation_level(MUT_MUTATION_RESISTANCE))
+            return;
+        _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_MUTATION);
+        break;
+
     default: ;
     }
 }
