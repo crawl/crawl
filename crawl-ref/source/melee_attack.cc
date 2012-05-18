@@ -1050,7 +1050,8 @@ void melee_attack::check_autoberserk()
 {
     if (weapon
         && art_props[ARTP_ANGRY] >= 1
-        && !one_chance_in(1 + art_props[ARTP_ANGRY]))
+        && !one_chance_in(1 + art_props[ARTP_ANGRY])
+        && !attacker->suppressed())
     {
         attacker->go_berserk(false);
     }
