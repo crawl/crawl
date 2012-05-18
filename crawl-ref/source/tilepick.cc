@@ -1278,10 +1278,13 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_BONE_DRAGON:
         return TILEP_MONS_BONE_DRAGON;
     case MONS_SERPENT_OF_HELL:
+        return TILEP_MONS_SERPENT_OF_HELL_GEHENNOM;
     case MONS_SERPENT_OF_HELL_COCYTUS:
+        return TILEP_MONS_SERPENT_OF_HELL_COCYTUS;
     case MONS_SERPENT_OF_HELL_DIS:
+        return TILEP_MONS_SERPENT_OF_HELL_DIS;
     case MONS_SERPENT_OF_HELL_TARTARUS:
-        return TILEP_MONS_SERPENT_OF_HELL;
+        return TILEP_MONS_SERPENT_OF_HELL_TARTARUS;
     case MONS_PEARL_DRAGON:
         return TILEP_MONS_PEARL_DRAGON;
 
