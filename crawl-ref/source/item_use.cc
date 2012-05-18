@@ -48,6 +48,7 @@
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "stuff.h"
 #include "throw.h"
@@ -215,6 +216,16 @@ static bool _valid_weapon_swap(const item_def &item)
     {
         return (true);
     }
+
+    if (item.base_type == OBJ_MISSILES
+        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+    {
+        return you.has_spell(SPELL_SANDBLAST);
+    }
+
+    // Snakable missiles; weapons were already handled above.
+    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
+        return (true);
 
     // Sublimation of Blood.
     if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
