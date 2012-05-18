@@ -273,5 +273,5 @@ bool player::possible_beholder(const monster* mon) const
              && !mon->asleep() && !mon->cannot_move()
              && !mon->berserk() && !mons_is_fleeing(mon)
              && !is_sanctuary(you.pos())
-           || player_equip_unrand(UNRAND_DEMON_AXE)));
+           || player_equip_unrand_effect(UNRAND_DEMON_AXE)));
 }

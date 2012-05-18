@@ -1093,6 +1093,14 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
     return (ret);
 }
 
+bool player_equip_unrand_effect(int unrand_index) {
+    if (you.suppressed()) {
+        return false;
+    }
+    else {
+        return player_equip_unrand(unrand_index);
+    }
+}
 // Return's true if the indicated unrandart is equipped
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
@@ -1508,7 +1516,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf += scan_artefacts(ARTP_FIRE, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
                 rf++;
         }
     }
@@ -1575,7 +1583,7 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
             res += 2;
 
         // dragonskin cloak: 0.5 to draconic resistances
-        if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+        if (items && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
             res++;
 
         res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
@@ -1661,7 +1669,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc += scan_artefacts(ARTP_COLD, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
                 rc++;
         }
     }
@@ -1735,7 +1743,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
                 re++;
         }
     }
@@ -1817,7 +1825,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp += scan_artefacts(ARTP_POISON, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
                 rp++;
 
         }
@@ -1900,7 +1908,7 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
             rsf++;
 
         // dragonskin cloak: 0.5 to draconic resistances
-        if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+        if (items && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
             rsf++;
     }
 
@@ -2061,7 +2069,7 @@ int player_spec_poison()
         // Staves
         sp += player_equip(EQ_STAFF, STAFF_POISON);
 
-        if (player_equip_unrand(UNRAND_OLGREB))
+        if (player_equip_unrand_effect(UNRAND_OLGREB))
             sp++;
     }
 
@@ -2159,7 +2167,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
             // dragonskin cloak: 0.5 to draconic resistances
             // this one is dubious (no pearl draconians)
-            if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
                 pl++;
 
             pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
@@ -4341,7 +4349,7 @@ int player_effect_angry()
     if (!you.suppressed())
     {
         return (scan_artefacts(ARTP_ANGRY)
-                || player_equip_unrand(UNRAND_TROG));
+                || player_equip_unrand_effect(UNRAND_TROG));
     }
     else
     {
