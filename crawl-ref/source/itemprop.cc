@@ -590,7 +590,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     if (inscribe && Options.autoinscribe_cursed
         && item.inscription.find("was cursed") == std::string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
-        && !item_ident(item, ISFLAG_IDENT_MASK))
+        && !fully_identified(item))
     {
         add_inscription(item, "was cursed");
     }
