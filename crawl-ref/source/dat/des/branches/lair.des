@@ -1322,6 +1322,20 @@ tt0Wttt0.tt
 ENDMAP
 
 ###############################################################################
+# A polar bear lost in the jungle, how odd
+NAME:  roderic_lost_polar_bear
+TAGS:  no_monster_gen mini_float
+DEPTH: Lair:3-7
+MONS:  plant, polar_bear, bush
+SUBST: ? = 1t
+SUBST: ' = .:80 1 3:3
+MAP
+??'.
+.'2'
+'??.
+ENDMAP
+
+###############################################################################
 # Lair endings
 ###############################################################################
 
