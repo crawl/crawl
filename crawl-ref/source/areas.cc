@@ -110,7 +110,7 @@ static void _update_agrid()
 
         if ((r = ai->silence_radius2()) >= 0)
         {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+            _agrid_centres.push_back(area_centre(AREA_SILENCE, ai->pos(), r));
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
@@ -120,7 +120,7 @@ static void _update_agrid()
         // Just like silence, suppression goes through walls
         if ((r = ai->suppression_radius2()) >= 0)
         {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+            _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, ai->pos(), r));
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SUPPRESSION);
