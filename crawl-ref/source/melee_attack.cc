@@ -2201,7 +2201,7 @@ bool melee_attack::distortion_affects_defender()
         return (false);
     }
 
-    if (player_in_branch(BRANCH_ABYSS) && coinflip())
+    if (!player_in_branch(BRANCH_ABYSS) && coinflip())
     {
         if (defender->is_player() && attacker_visible
             && weapon != NULL && !is_unrandom_artefact(*weapon)
