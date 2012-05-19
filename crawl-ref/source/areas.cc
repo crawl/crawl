@@ -545,7 +545,9 @@ int player::halo_radius2() const
         size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
-    if (player_equip_unrand_effect(UNRAND_BRILLIANCE))
+    // Can't check suppression because this function is called from
+    // _update_agrid()---we'd get an infinite recursion.
+    if (player_equip_unrand(UNRAND_BRILLIANCE))
         size = std::max(size, 9);
 
     return (size);
