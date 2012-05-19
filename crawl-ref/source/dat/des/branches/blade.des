@@ -13,7 +13,7 @@ function hall_of_blades_weapon(e)
   local ego = util.random_from({"vorpal", "flaming", "freezing",
               "electrocution", "vampiricism", "draining", "venom"})
 
-  e.mons("dancing weapon; good_item " .. weapon .. " ego:" .. ego .. "")
+  e.mons("dancing weapon; good_item " .. weapon .. " ego:" .. ego)
 end
 
 }}
