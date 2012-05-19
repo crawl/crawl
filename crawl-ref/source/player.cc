@@ -1093,14 +1093,14 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
     return (ret);
 }
 
-bool player_equip_unrand_effect(int unrand_index) {
-    if (you.suppressed()) {
+bool player_equip_unrand_effect(int unrand_index)
+{
+    if (you.suppressed())
         return false;
-    }
-    else {
+    else
         return player_equip_unrand(unrand_index);
-    }
 }
+
 // Return's true if the indicated unrandart is equipped
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.

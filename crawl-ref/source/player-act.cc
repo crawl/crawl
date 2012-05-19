@@ -534,9 +534,8 @@ bool player::cannot_fight() const
 // The probabilities for actually going berserk are cumulative!
 static bool _equipment_make_berserk()
 {
-    if (you.suppressed()) {
+    if (you.suppressed())
         return (false);
-    }
 
     for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
     {
