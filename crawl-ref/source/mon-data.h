@@ -6439,8 +6439,8 @@ static monsterentry mondata[] = {
 {
     MONS_PUNCHING_BAG, 'X', WHITE, "punching bag",
     M_STATIONARY | M_NO_POLY_TO,
-    mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE 
-        | MR_RES_COLD | MR_RES_ACID | MR_RES_STICKY_FLAME | MR_RES_STEAM, 2),
+    mrd(MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD | MR_RES_ACID
+        | MR_RES_STICKY_FLAME, 1),
     0, 0, MONS_PUNCHING_BAG, MONS_PUNCHING_BAG, MH_NONLIVING, -5,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1000, 1000, 0, 0 },
