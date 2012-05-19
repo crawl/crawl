@@ -1845,7 +1845,7 @@ void melee_attack::set_attack_verb()
                 && defender_visible
                 && defender_genus == MONS_HOG)
             {
-                attack_verb = "split";
+                attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
             else
