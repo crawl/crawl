@@ -2914,7 +2914,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                                      int force_type, int item_level,
                                      int agent)
 {
-    if (allow_uniques
+    if (allow_uniques && item_level != ISPEC_RANDART
         && _try_make_jewellery_unrandart(item, force_type, item_level))
     {
         return;
@@ -2972,8 +2972,9 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 
     // All jewellery base types should now work. - bwr
-    if (allow_uniques && item_level > 2
-        && x_chance_in_y(101 + item_level * 3, 4000))
+    if (item_level == ISPEC_RANDART
+        || allow_uniques && item_level > 2
+           && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
     }
