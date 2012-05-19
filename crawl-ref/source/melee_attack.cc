@@ -1059,9 +1059,8 @@ void melee_attack::check_autoberserk()
 
 bool melee_attack::check_unrand_effects()
 {
-    if (attacker->suppressed()) {
+    if (attacker->suppressed())
         return (false);
-    }
 
     // If bashing the defender with a wielded unrandart launcher, don't use
     // unrand_entry->fight_func, since that's the function used for
