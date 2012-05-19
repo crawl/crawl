@@ -909,8 +909,9 @@ mermaid
 %%%%
 moth of suppression
 
-“Help! Help! I'm being repressed!”
-    -Dennis, _Monty Python and the Holy Grail_
+“Everybody knows there is no fineness or accuracy of suppression; if you hold
+down one thing, you hold down the adjoining.”
+    -Saul Bellow, _The Adventures of Augie March_
 %%%%
 mummy
 
