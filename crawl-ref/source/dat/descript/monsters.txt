@@ -2678,6 +2678,50 @@ ynoxinul
 A winged demon covered in shiny metallic scales. It has a legion of imp minions
 under its command.
 %%%%
+# Specials
+test spawner
+
+(If you see this outside wizmode or the arena, this is a bug.)
+
+Whatever it is, it is capable of spawning countless monsters by casting
+Shadow Creatures, and is virtually undestructible itself.
+
+To destroy it, lower the central elevator pillar, then pump rockets into
+the hole in its exposed brain when the pillar rises to an appropriate
+height. You can add another rocket while jumping down.
+
+Oh wait, wrong game.
+%%%%
+sensed monster
+
+Thanks to your antennae, you know there is some creature there, although you
+know nothing about its identity.
+%%%%
+trivial sensed monster
+
+By the power of Ashenzari, you know there is some creature there, and that
+it shouldn't give you the slightest concern.
+%%%%
+easy sensed monster
+
+By the power of Ashenzari, you know there is some creature there, and that
+you should be able to defeat it without much risk.
+%%%%
+tough sensed monster
+
+By the power of Ashenzari, you know there is some creature there, and that
+it is somewhat dangerous.
+%%%%
+nasty sensed monster
+
+By the power of Ashenzari, you know there is some creature there, and that
+you should be afraid. Very afraid.
+%%%%
+friendly sensed monster
+
+By the power of Ashenzari, you know there is some creature there, and that
+it is one of your allies.
+%%%%
 # Vault-defined monsters
 air elemental statue
 

@@ -90,7 +90,8 @@ delete $keys{'a very buggy card'};
 err "$file: Unused description for card '$_'\n" for sort keys %keys;
 
 read_file("descript/monsters");
-$entries{'the Serpent of Hell'} = 1;
+$entries{$_} = 1 for ('the Serpent of Hell', 'player', 'player illusion',
+                      'merged slime creature');
 for (`util/gather_mons`)
 {
     chomp;
