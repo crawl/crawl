@@ -623,7 +623,7 @@ _singing_no-low_tension_
 
 In a hysterical voice, @the_weapon@ strikes up a march.
 
-@The_weapon@ @sings_hums_whistles@ a @_what_kind_@ @_tune_or_melody_@.
+@The_weapon@ @_sings_hums_whistles_@ a @_what_kind_@ @_tune_or_melody_@.
 
 @The_weapon@ @_sings_or_hums_@ an eerie @_tune_or_melody_@.
 
