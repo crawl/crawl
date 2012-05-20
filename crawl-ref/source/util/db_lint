@@ -19,6 +19,7 @@ sub read_file($)
     $line = 0;
     open F, "<dat/$file.txt" or die "Can't read dat/$file.txt\n";
     ($key, $value) = ();
+    local $_;
     
     sub add_key()
     {
@@ -107,3 +108,19 @@ for (sort keys %keys)
     next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
     err "$file: Unused description for monster '$_'\n";
 }
+
+
+__________________________________________________________________________();
+read_file("descript/$_") for qw(species backgrounds);
+__________________________________________________________________________();
+read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
+__________________________________________________________________________();
+read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
+__________________________________________________________________________();
+read_file("database/$_") for qw(shout insult);
+__________________________________________________________________________();
+read_file("descript/quotes");
+__________________________________________________________________________();
+read_file("database/help");
+__________________________________________________________________________();
+read_file("database/FAQ");
