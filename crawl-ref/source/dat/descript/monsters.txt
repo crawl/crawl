@@ -1086,6 +1086,10 @@ eye of draining
 
 A hovering horror that waxes strong on mana.
 %%%%
+feature mimic
+
+A vicious beast masquerading as an ordinary dungeon feature.
+%%%%
 felid
 
 A feline creature that has been granted sentience by magical means. It uses the
@@ -1510,6 +1514,15 @@ iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
 %%%%
+inept feature mimic
+
+A predator masquerading as an ordinary dungeon feature. This one is less
+dangerous than most mimics, but can still devour the likes of you.
+%%%%
+inept item mimic
+
+An apparently abandoned item, actually a small beast in disguise.
+%%%%
 insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
@@ -1549,6 +1562,10 @@ iron troll
 
 A great troll, mighty of limb and plated with thick scales that resemble
 lightly rusted iron, especially in their hardness.
+%%%%
+item mimic
+
+An apparently abandoned item, actually a vicious little beast in disguise.
 %%%%
 jackal
 
@@ -1734,10 +1751,6 @@ midge
 A bothersome little demon that cackles maddeningly as it phases in and out of
 existence.
 %%%%
-mimic
-
-An apparently abandoned item, actually a vicious little beast in disguise.
-%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -1747,6 +1760,13 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with fearsome claws and flames
 licking out from its toothy maw.
+%%%%
+# Orb of Zot special
+monstrous item mimic
+
+This mimic chose nothing else to masquerade as but the fabled Orb of Zot.
+Since it was able to successfully assume its appearance and stay here,
+saying it might be deadly dangerous is an understatement.
 %%%%
 moth
 
@@ -1963,11 +1983,6 @@ phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
 %%%%
-pile of gold coins
-
-This apparently harmless pile of gold coins hides a nasty venomous
-shapechanging predator.
-%%%%
 pillar of salt
 
 A large pillar of salt that is quickly crumbling away.
@@ -2058,6 +2073,18 @@ raven
 An opportunistic scavenger bird that is quite proactive in the production of
 carrion. It has a particularly unhealthy fascination with eyeballs and things
 resembling eyeballs, such as pickled onions, walnuts and olives.
+%%%%
+ravenous feature mimic
+
+A deadly venomous tentacled predator with an ability to shapeshift and
+masquerade as an ordinary-looking dungeon feature, in order to catch foolish
+passers-by, crushing them in its deadly grasp.
+%%%%
+ravenous item mimic
+
+A deadly venomous tentacled predator with an ability to shapeshift into
+a small item. While not of a formidable size, it is not a living creature
+and its tentacles are harder than steel.
 %%%%
 reaper
 
