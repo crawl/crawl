@@ -1,8 +1,4 @@
 %%%%
-Buggy
-
-Buggy (It's a bug if you ever see this.)
-%%%%
 Fighting
 
 Fighting skill increases your accuracy and damage in hand-to-hand combat, and
