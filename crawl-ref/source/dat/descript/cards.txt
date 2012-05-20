@@ -145,20 +145,10 @@ Vitrification card
 This card turns walls translucent. It is usually found in decks of changes and
 dungeons.
 %%%%
-the Map card
-
-This card reveals your surroundings. It is usually found in decks of changes
-and dungeons.
-%%%%
 Dowsing card
 
 This card lets you detect secret doors, traps, creatures or some combination
 thereof. It is usually found in decks of changes and dungeons.
-%%%%
-the Spade card
-
-This card digs a tunnel through unworked rock. It is usually found in decks of
-changes and dungeons.
 %%%%
 the Trowel card
 
@@ -302,11 +292,6 @@ the Stairs card
 
 This card makes staircases slide towards or away from you. (It is a bug if you
 ever encounter this card.)
-%%%%
-Summoning card
-
-This card summons random creatures. (It is a bug if you ever encounter this
-card.)
 %%%%
 # buggy cards
 a buggy card

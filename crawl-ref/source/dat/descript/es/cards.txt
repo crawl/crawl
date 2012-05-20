@@ -140,19 +140,10 @@ Vitrification card
 Esta carta vuelve translúcidos a los muros. Se encuentra en mazos de cambios y
 de calabozos.
 %%%%
-the Map card
-
-Esta carta revela tu entorno. Se encuentra en mazos de cambios y de calabozos.
-%%%%
 Dowsing card
 
 Esta carta te permite detectar puertas secretas, trampas, criaturas o alguna
 combinación de ellas. Se suele hallar en los mazos de cambios y de calabozos.
-%%%%
-the Spade card
-
-Esta carta excava un túnel a través de roca no excavada. Se encuentra en mazos
-de cambios y de calabozos.
 %%%%
 the Trowel card
 
@@ -293,11 +284,6 @@ the Stairs card
 
 Esta carta hace que las escaleras se desplazen hacia o lejos de ti. (Es un bug
 si alguna vez te encuentras esta carta).
-%%%%
-Summoning card
-
-Esta carta convoca a criaturas al azar (Es un bug si alguna vez te encuentras
-esta carta).
 %%%%
 a buggy card
 
