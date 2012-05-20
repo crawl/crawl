@@ -1766,7 +1766,7 @@ monstrous item mimic
 
 This mimic chose nothing else to masquerade as but the fabled Orb of Zot.
 Since it was able to successfully assume its appearance and stay here,
-saying it might be deadly dangerous is an understatement.
+saying it might be deadly is an understatement.
 %%%%
 moth
 
@@ -2078,7 +2078,7 @@ ravenous feature mimic
 
 A deadly venomous tentacled predator with an ability to shapeshift and
 masquerade as an ordinary-looking dungeon feature, in order to catch foolish
-passers-by, crushing them in its deadly grasp.
+passers-by and crush them in its deadly grasp.
 %%%%
 ravenous item mimic
 
