@@ -14,6 +14,7 @@ sub __________________________________________________________________________
 
 sub read_file($)
 {
+    %keys = ();
     $file = $_[0];
     $line = 0;
     open F, "<dat/$file.txt" or die "Can't read dat/$file.txt\n";
@@ -66,13 +67,26 @@ sub read_file($)
 }
 
 __________________________________________________________________________();
+read_file("descript/features");
+read_file("descript/items");
+read_file("descript/unident");
+read_file("descript/unrand");
+read_file("descript/spells");
+read_file("descript/gods");
+read_file("descript/branches");
+read_file("descript/skills");
+read_file("descript/ability");
+read_file("descript/cards");
+read_file("descript/commands");
+
 read_file("descript/monsters");
 
 $keys{'the Serpent of Hell'} = 1;
 for (`util/gather_mons`)
 {
     chomp;
-    err "$file: No description for '$_'\n" unless $keys{$_};
+    # using a desc from another file is ok, it's the same db
+    err "$file: No description for '$_'\n" unless $entries{$_};
     delete $keys{$_}
 }
 
