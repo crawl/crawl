@@ -532,11 +532,6 @@ air elemental
 A spirit drawn from the elemental plane of air. It exists in this world as a
 swirling vortex of air, often dissipating and reforming.
 %%%%
-air elemental statue
-
-A delicate statue of a tengu gliding through the air. It looks quite
-insubstantial.
-%%%%
 alligator
 
 A sneaky crocodilian that hides in water and waits patiently for its prey to
@@ -1023,10 +1018,6 @@ earth elemental
 A spirit drawn from the elemental plane of earth, which exists in this world by
 inhabiting a lump of earth and rocks.
 %%%%
-earth elemental statue
-
-A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
-%%%%
 efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
@@ -1286,12 +1277,6 @@ the slightest disturbance.
 giga bat
 
 A huge, bloated bat.
-%%%%
-glowing angel
-
-A divine agent of Zin, it is a towering winged figure with an aura of brilliant
-white light. This angel's face, though, is marked by a scowl, as if its zeal
-against any real or perceived vice overshadows its goodness.
 %%%%
 glowing shapeshifter
 
