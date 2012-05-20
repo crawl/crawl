@@ -1,0 +1,85 @@
+#!/usr/bin/perl -w
+
+sub err($)
+{
+    print STDERR $_[0];
+}
+
+sub __________________________________________________________________________
+{
+    %entries = (); # per-db
+    %source = (); # file:line
+    %keys = (); # per-file
+}
+
+sub read_file($)
+{
+    $file = $_[0];
+    $line = 0;
+    open F, "<dat/$file.txt" or die "Can't read dat/$file.txt\n";
+    ($key, $value) = ();
+    
+    sub add_key()
+    {
+        err "Duplicate entry: '$key' at $source{$key} and $file:$line\n"
+            if $source{$key};
+        $source{$key} = "$file:$line";
+        $entries{$key} = $value;
+        $keys{$key} = 1;
+
+        undef $key;
+        undef $value;
+    }
+    
+    while (<F>)
+    {
+        next if /^#/;
+        s/\s+$//;
+
+        if (/^%%%%/)
+        {
+            add_key() if defined $key;
+            next;
+        }
+
+        unless (defined $key)
+        {
+            next if /^$/;
+            $key = $_;
+            $line = $.; # report the start not end of a desc
+        }
+        else
+        {
+            next if /^$/ && !defined $value;
+            $value .= $_;
+        }
+    }
+
+    if (defined $key)
+    {
+        defined($value)
+        ? add_key()
+        : err("Incomplete entry '$key' at the end of '$file'\n");
+    }
+
+    close F;
+}
+
+__________________________________________________________________________();
+read_file("descript/monsters");
+
+$keys{'the Serpent of Hell'} = 1;
+for (`util/gather_mons`)
+{
+    chomp;
+    err "$file: No description for '$_'\n" unless $keys{$_};
+    delete $keys{$_}
+}
+
+delete $keys{'__(_suffix_examine'};
+for (sort keys %keys)
+{
+    next if /^__cap-[A-Z]_suffix$/;
+    next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
+    err "$file: Unused description for '$_'\n";
+}
