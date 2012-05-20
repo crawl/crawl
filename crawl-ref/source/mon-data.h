@@ -2073,8 +2073,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ALLIGATOR_SNAPPING_TURTLE, 't', LIGHTGREEN,
-        "alligator snapping turtle",
+    MONS_ALLIGATOR_SNAPPING_TURTLE, 't', LIGHTGREEN, "alligator snapping turtle",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     1100, 10, MONS_SNAPPING_TURTLE, MONS_ALLIGATOR_SNAPPING_TURTLE,

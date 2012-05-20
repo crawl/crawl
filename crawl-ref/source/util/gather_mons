@@ -3,7 +3,7 @@
 open IN, "<mon-data.h" or die "Can't read mon-data.h\n";
 while (<IN>)
 {
-    $mons{$1}=1 if /^\ +MONS_[A-Z0-9_]+, +'.', +[A-Z0-9_]+, +"([^"]+)",$/; #"
+    $mons{$1}=1 if /^\ +MONS_[A-Z0-9_]+, +'.', +[A-Z0-9_]+, +"([^"]+)",/; #"
 }
 close IN;
 
