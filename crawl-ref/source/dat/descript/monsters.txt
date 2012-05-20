@@ -247,10 +247,10 @@ Looks like a mercenary.
 Josephine
 
 A hideous crone, her face covered in warts, moles and the occasional patch of
-hair, Josephine's appearance may fool one to think she is some weak old woman,
+hair, Josephine's appearance may fool one into thinking she is some weak old woman,
 but she is truly a formidable necromancer. The use of black magic has taken a
-physical toll and has prematurely aged Josephine, turning a once beautiful lady
-into the ugly hag she now is.
+physical toll on and prematurely aged Josephine, turning the once beautiful lady
+into an ugly hag.
 %%%%
 Jozef
 
@@ -310,7 +310,7 @@ about Maud, forgot everything else.
 %%%%
 Maurice
 
-A sly, conniving thief. In his field of profession, Maurice is considered a
+A sly, conniving thief. In his profession, Maurice is considered a
 legend - at least according to himself. He is skilled, nonetheless, and among
 all the thieves and rogues lured by the Orb, Maurice is undoubtedly the most
 crafty.
@@ -353,7 +353,7 @@ A withered sorceress, exceptionally ugly even by orc standards.
 %%%%
 Nessos
 
-A black centaur warrior with a malicious look in the eyes.
+A black centaur warrior with a malicious look in his eyes.
 %%%%
 Nikola
 
@@ -376,7 +376,7 @@ cower with every crack of his whip.
 %%%%
 Polyphemus
 
-A cyclops shepherd, he is very protective of his charges whom he watches with
+A cyclops shepherd, he is very protective of his charges, whom he watches with
 an undying fervor through his single massive eye.
 %%%%
 Prince Ribbit
@@ -384,8 +384,8 @@ Prince Ribbit
 A handsome prince before he was cursed, he now adventures for a cure. Moving
 through the halls with great speed, he often disappears only to pop out of thin
 air somewhere else, usually to an adventurer's misfortune and dismay. On the
-top of his head he wears a crown tilted jauntily to one side. How it still
-holds in place on his head even after the transformation is a mystery.
+top of his head, he wears a crown tilted jauntily to one side. How it still
+stays in place even after his transformation is a mystery.
 %%%%
 Psyche
 
@@ -419,24 +419,24 @@ Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
-that is, easy meals - it attracts.
+that is, easy meals - he attracts.
 %%%%
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
-daring leaps! But watch out for her knives, it seems like the space round the
-edge of her weapon waved slightly for a split second... or did it?
+daring leaps! But watch out for her knives! The space around the
+edge of her weapon seems to waver slightly for a split second... or does it?
 
 Her bleak canine body, hidden kindly underneath the flowing green attire, is in
-contrast with a pair of determined eyes surveying the surrounding from beneath
-the shadow casting upper edge of the beryl coloured cape. The nostrils on the
+contrast with a pair of determined eyes, surveying her surroundings from beneath
+the shadow cast by the upper edge of her beryl-coloured cape. The nostrils on the
 exposed tip of her snout throb with excitement.
 %%%%
 Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
-forced into hiding after a botched job, and can't really afford to risk anyone
-who has seen him to leave the dungeon alive - there is a prize on his head,
+forced into hiding after a botched job, and can't really afford to risk letting anyone
+who has seen him leave the dungeon alive - there is a price on his head,
 after all.
 %%%%
 Tiamat
@@ -446,9 +446,9 @@ colour as you watch.
 %%%%
 Urug
 
-A coarse and lanky orc. Urug lost his eye in a fight with a harpy and has sworn
+A coarse and lanky orc. Urug lost his eye in a fight with a harpy, and has sworn
 to slay every last one of them. Unfortunately, the vision in his remaining eye
-is not very good and he has mistaken you for one.
+is not very good, and he has mistaken you for one.
 {{
     if you.can_smell() then
         return "He smells terrible."
@@ -467,12 +467,12 @@ A fat dwarf wearing a stupid-looking hat. {{
     end
 }}There is something odd to his unsteady walk, as if this unprobable rotund
 person was accustomed to motion more swift than that of a drunken dwarf. His
-right hand is badly burned; judging from the extent of the injury it must've
+right hand is badly burned; judging from the extent of the injury, it must've
 been something big that caused it.
 
 He sports an undersized linen shirt, which seems overly long for his stout
-silhouette. There is “Wiglaf” embroidered on the backside. It seems like the
-letters were patched over and changed.
+silhouette. “Wiglaf” is embroidered on the backside. It seems as though the
+letters have been patched over and changed.
 %%%%
 Xtahua
 
