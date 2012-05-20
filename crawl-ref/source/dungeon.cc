@@ -89,7 +89,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type);
 static bool _valid_dungeon_level();
 
-static bool _builder_by_type();
+static void _builder_by_type();
 static void _builder_normal();
 static void _builder_items();
 static void _builder_monsters();
@@ -1253,8 +1253,7 @@ void dgn_reset_level(bool enable_random_maps)
 
 static void _build_layout_skeleton()
 {
-    if (_builder_by_type())
-        _builder_normal();
+    _builder_by_type();
 
     if (player_in_branch(BRANCH_SLIME_PITS))
         _slime_connectivity_fixup();
@@ -2459,9 +2458,7 @@ static void _pan_level()
     }
 }
 
-// Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
-// further generation, and true otherwise.
-static bool _builder_by_type()
+static void _builder_by_type()
 {
     if (player_in_branch(BRANCH_LABYRINTH))
         dgn_build_labyrinth_level();
@@ -2475,9 +2472,7 @@ static bool _builder_by_type()
         _pan_level();
     }
     else
-        return true;
-
-    return false;
+        _builder_normal();
 }
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
