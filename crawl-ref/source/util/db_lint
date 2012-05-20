@@ -76,17 +76,26 @@ read_file("descript/gods");
 read_file("descript/branches");
 read_file("descript/skills");
 read_file("descript/ability");
-read_file("descript/cards");
 read_file("descript/commands");
 
-read_file("descript/monsters");
+read_file("descript/cards");
+for (`util/gather_cards`)
+{
+    chomp;
+    err "$file: No description for card '$_'\n" unless $entries{"$_ card"};
+    delete $keys{"$_ card"};
+}
+delete $keys{'a buggy card'};
+delete $keys{'a very buggy card'};
+err "$file: Unused description for card '$_'\n" for sort keys %keys;
 
+read_file("descript/monsters");
 $keys{'the Serpent of Hell'} = 1;
 for (`util/gather_mons`)
 {
     chomp;
     # using a desc from another file is ok, it's the same db
-    err "$file: No description for '$_'\n" unless $entries{$_};
+    err "$file: No description for monster '$_'\n" unless $entries{$_};
     delete $keys{$_}
 }
 
@@ -95,5 +104,5 @@ for (sort keys %keys)
 {
     next if /^__cap-[A-Z]_suffix$/;
     next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
-    err "$file: Unused description for '$_'\n";
+    err "$file: Unused description for monster '$_'\n";
 }
