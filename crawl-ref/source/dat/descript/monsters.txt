@@ -63,7 +63,7 @@ Azrael
 
 A powerful, belligerent Efreet. (Is there any other kind?)
 %%%%
-Blork the Orc
+Blork the orc
 
 A particularly fat and ugly orc. He seems to have scavenged a pair of
 rainbow-coloured suspenders from somewhere. They're not helping.
@@ -1531,7 +1531,7 @@ iron elemental
 A rare and powerful spirit from the elemental plane of earth, it exists in this
 world by inhabiting a hulking mass of iron.
 %%%%
-The iron giant
+the iron giant
 
 Huge, lumbering, and particularly dull, this rusting monolith packs quite the
 punch. It is quite possibly the largest giant you have ever seen.

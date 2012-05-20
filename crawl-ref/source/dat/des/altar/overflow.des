@@ -743,7 +743,7 @@ DEPTH:      D:3-18, Elf
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
-MONS:       orc wizard w:15 / Jessica / Blork the Orc
+MONS:       orc wizard w:15 / Jessica / Blork the orc
 NSUBST:     M = 1:1 / *:"
 SUBST:      ' : "'., ' = ''.
 COLOUR:     . = blue
