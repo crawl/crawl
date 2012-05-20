@@ -15,9 +15,9 @@ sub __________________________________________________________________________
 sub read_file($)
 {
     %keys = ();
-    $file = $_[0];
+    $file = "dat/$_[0].txt";
     $line = 0;
-    open F, "<dat/$file.txt" or die "Can't read dat/$file.txt\n";
+    open F, "<", $file or die "Can't read $file\n";
     ($key, $value) = ();
     local $_;
     
