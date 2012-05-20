@@ -6,7 +6,7 @@ zepsucie.
 %%%%
 Air Elementalist
 
-Magowie Powietrza znają czar “Iskra”.  Później, Księga Powietrza zapewnia im
+Magowie Powietrza znają czar “Iskra”. Później, Księga Powietrza zapewnia im
 elastyczność.
 %%%%
 Arcane Marksman
@@ -21,7 +21,7 @@ także dmuchawki z igłami nasączonymi kurarą.
 %%%%
 Berserker
 
-Berserkerzy wyznają Troga, nienawidzącego magii boga gniewu.  Nie tak wiele
+Berserkerzy wyznają Troga, nienawidzącego magii boga gniewu. Nie tak wiele
 potrafi zatrzymać berserkera w bitewnym szale.
 %%%%
 Chaos Knight
@@ -74,7 +74,7 @@ księgi Pieśni Wojennych.
 %%%%
 Venom Mage
 
-Magowie Jadu zaczynają z Poradnikiem Małego Truciciela w zanadrzu.  Jest to
+Magowie Jadu zaczynają z Poradnikiem Małego Truciciela w zanadrzu. Jest to
 bardzo pożyteczna książka we wczesnych etapach.
 %%%%
 Wanderer
