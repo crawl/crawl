@@ -3480,7 +3480,7 @@ VISUAL:@The_monster@ generates a fountain of clear water, and laughs cruelly.
 
 @The_monster@ laughs at you. "Don't get delusional, you can't win!"
 %%%%
-_Dowan_Duvessa_dies_
+Dowan_Duvessa_dies
 
 @The_monster@ screams, "No! No!"
 
@@ -3490,25 +3490,25 @@ VISUAL:@The_monster@ seems overcome with grief, but rights @reflexive@ reflexive
 
 @The_monster@'s eyes darken. "You have made a black mistake."
 %%%%
-_Dowan_Duvessa_dies_invisible_
+Dowan_Duvessa_dies_invisible
 
 @The_monster@ screams, "No! No! NO!"
 %%%%
-_Dowan_Duvessa_dies_distance_
+Dowan_Duvessa_dies_distance
 
 You hear a distant wail of despair.
 %%%%
-_Dowan_Duvessa_dies_bytwin_
+Dowan_Duvessa_dies_bytwin
 
 @The_monster@ screams in horror.
 %%%%
-_Dowan_Duvessa_dies_invisible_bytwin_
+Dowan_Duvessa_dies_invisible_bytwin
 
-@_Dowan_Duvessa_dies_bytwin_@
+@Dowan_Duvessa_dies_bytwin@
 %%%%
-_Dowan_Duvessa_dies_distance_bytwin_
+Dowan_Duvessa_dies_distance_bytwin
 
-@_Dowan_Duvessa_dies_distance_@
+@Dowan_Duvessa_dies_distance@
 %%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
 twin_died Duvessa
@@ -3586,7 +3586,7 @@ _Duvessa_rare_
 
 @The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
 %%%%
-_Duvessa_Dowan_dies_
+Duvessa_Dowan_dies
 
 @The_monster@ screams in rage.
 
@@ -3594,7 +3594,7 @@ _Duvessa_Dowan_dies_
 
 VISUAL:@The_monster@ weeps, then rights @reflexive@ and shakes @possessive@ weapon.
 %%%%
-_Duvessa_Dowan_dies_invisible_
+Duvessa_Dowan_dies_invisible
 
 @The_monster@ screams in rage.
 
@@ -3602,24 +3602,24 @@ _Duvessa_Dowan_dies_invisible_
 
 @The_monster@ shouts wrathfully, "No!"
 %%%%
-_Duvessa_Dowan_dies_distance_
+Duvessa_Dowan_dies_distance
 
 You hear a distant scream of rage.
 %%%%
-_Duvessa_Dowan_dies_bytwin_
+Duvessa_Dowan_dies_bytwin
 
 @The_monster@ screams in horror.
 
 w:1
 @The_monster@ screams, "NO! What have I done?"
 %%%%
-_Duvessa_Dowan_dies_invisible_bytwin_
+Duvessa_Dowan_dies_invisible_bytwin
 
-@_Duvessa_Dowan_dies_bytwin_@
+@Duvessa_Dowan_dies_bytwin@
 %%%%
-_Duvessa_Dowan_dies_distance_bytwin_
+Duvessa_Dowan_dies_distance_bytwin
 
-@_Duvessa_Dowan_dies_distance_@
+@Duvessa_Dowan_dies_distance@
 %%%%
 ############ EDMUND ### One of Sigmund's nine brothers, no magic
 Edmund
