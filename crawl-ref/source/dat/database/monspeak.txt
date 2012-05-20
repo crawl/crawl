@@ -322,42 +322,6 @@ SPELL:@The_monster@ says @to_foe@, "Dogrw nutew berg."
 SPELL:@The_monster@ shouts @at_foe@, "Entram moth deg ulag!"
 ## END _wizard_ ##
 %%%%
-_hostile_adventurer_
-
-@_hostile_adventurer_common_@
-
-w:5
-@_hostile_adventurer_rare_@
-%%%%
-_hostile_adventurer_common_
-
-VISUAL:@The_monster@ frowns.
-
-@The_monster@ screams, "I was here first!" @player_only@
-
-@The_monster@ screams, "The Orb is mine!" @player_only@
-
-@The_monster@ screams @at_foe@, "Go away or die!"
-
-@The_monster@ screams @at_foe@, "Die!"
-%%%%
-_hostile_adventurer_rare_
-
-VISUAL:@The_monster@ looks very upset.
-
-@The_monster@ screams @at_foe@, "Return home!"
-
-@The_monster@ screams @at_foe@, "Give me all your treasure!"
-
-@The_monster@ screams, "You will never get the Orb!" @player_only@
-
-@The_monster@ screams @at_foe@, "First you have to pass me!"
-
-@The_monster@ screams @at_foe@, "I hate you!"
-
-@The_monster@ laughs @at_foe@, "I am free! Free to kill you!"
-## END _hostile_adventurer_ ##
-%%%%
 _friendly_imp_
 
 @_friendly_imp_common_@
