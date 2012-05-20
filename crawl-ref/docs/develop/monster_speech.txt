@@ -535,11 +535,10 @@ the possessive variants, so they will be replaced with the appropriate
 definite article ones.
 
 Examples of pre-defined variables in the database include
-_high_priest_, _mercenary_guard_, _wizard_, _hostile_adventurer_,
-_friendly_imp_, _hostile_imp_, and _tormentor_, but more get added all
-the time. There are also a few synonyms defined at the beginning of
-monspeak.txt such as for @ATTACK@, @pointless@, @shouts@, @wails@, and
-others.
+_high_priest_, _mercenary_guard_, _wizard_, _friendly_imp_,
+_hostile_imp_, and _tormentor_, but more get added all the time.
+There are also a few synonyms defined at the beginning of monspeak.txt
+such as for @ATTACK@, @pointless@, @shouts@, @wails@, and others.
 
 Weapon noises also use a number of synonyms which are defined at the
 end of wpnnoise.txt.
