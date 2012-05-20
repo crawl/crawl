@@ -635,10 +635,6 @@ Slow
 
 This spell slows the actions of a creature.
 %%%%
-Smiting
-
-This spell smites one creature of the caster's choice.
-%%%%
 Spider Form
 
 This spell temporarily transforms the caster into a swift, venomous (but
