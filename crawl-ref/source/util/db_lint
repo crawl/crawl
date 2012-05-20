@@ -67,6 +67,19 @@ sub read_file($)
     close F;
 }
 
+sub check_db_locals()
+{
+    my (%locals, %keys);
+    $keys{$_}=1 for keys %entries;
+    $locals{$_}=1 for map /@(_[^@\n]+_)@/g, values %entries;
+    for (sort keys %locals)
+    {
+        err("Undefined local entry '$_'\n") unless $entries{$_};
+        delete $keys{$_};
+    }
+    err("Unused local entry '$_' at $source{$_}\n") for grep /^_.*_$/, keys %keys;
+}
+
 __________________________________________________________________________();
 read_file("descript/features");
 read_file("descript/items");
@@ -114,10 +127,13 @@ __________________________________________________________________________();
 read_file("descript/$_") for qw(species backgrounds);
 __________________________________________________________________________();
 read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
+check_db_locals();
 __________________________________________________________________________();
 read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
+check_db_locals();
 __________________________________________________________________________();
 read_file("database/$_") for qw(shout insult);
+check_db_locals();
 __________________________________________________________________________();
 read_file("descript/quotes");
 __________________________________________________________________________();
