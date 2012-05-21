@@ -263,7 +263,7 @@ namespace arena
 #endif
 
         ASSERT(map);
-        bool success = dgn_place_map(map, true, true);
+        bool success = dgn_place_map(map, false, true);
         if (!success)
             throw make_stringf("Failed to create arena named \"%s\"",
                                arena_type.c_str());

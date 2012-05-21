@@ -253,7 +253,7 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
 
 static bool _abyss_place_map(const map_def *mdef)
 {
-    const bool did_place = dgn_safe_place_map(mdef, false, false, INVALID_COORD);
+    const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
 

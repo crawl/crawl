@@ -631,7 +631,7 @@ static void debug_load_map_by_name(std::string name, bool primary)
         unwind_var<string_set> umt(you.uniq_map_tags, string_set());
         unwind_var<string_set> lum(env.level_uniq_maps, string_set());
         unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
-        if (dgn_place_map(toplace, true, false, where))
+        if (dgn_place_map(toplace, false, false, where))
         {
             mprf("Successfully placed %s.", toplace->name.c_str());
             // Fix up doors from vaults and any changes to the default walls

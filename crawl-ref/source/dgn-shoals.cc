@@ -293,7 +293,7 @@ static void _shoals_furniture(int margin)
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p), false);
+        dgn_ensure_vault_placed(dgn_place_map(vault, true, false, p), false);
 
         const int nhuts = std::min(8, int(_shoals_islands.islands.size()));
         for (int i = 2; i < nhuts; ++i)
@@ -306,7 +306,7 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, false, _pick_shoals_island());
+                dgn_place_map(vault, true, false, _pick_shoals_island());
         }
 
         // Fixup pass to connect vaults.

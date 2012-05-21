@@ -1559,7 +1559,7 @@ LUAFN(dgn_map_by_place)
 LUAFN(_dgn_place_map)
 {
     MAP(ls, 1, map);
-    const bool clobber = _lua_boolean(ls, 2, false);
+    const bool check_collision = _lua_boolean(ls, 2, true);
     const bool no_exits = _lua_boolean(ls, 3, false);
     coord_def where(-1, -1);
     if (lua_isnumber(ls, 4) && lua_isnumber(ls, 5))
@@ -1567,7 +1567,7 @@ LUAFN(_dgn_place_map)
         COORDS(c, 4, 5);
         where = c;
     }
-    if (dgn_place_map(map, clobber, no_exits, where)
+    if (dgn_place_map(map, check_collision, no_exits, where)
         && !env.level_vaults.empty())
     {
         lua_pushlightuserdata(ls,
