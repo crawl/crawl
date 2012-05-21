@@ -2722,6 +2722,16 @@ By the power of Ashenzari, you know there is some creature there, and that it
 is one of your allies.
 %%%%
 # Vault-defined monsters
+Cloud Mage
+
+This strange wizard has attained mastery over clouds, and his mystic gestures
+are as deft as they are foreboding.
+%%%%
+Hellbinder
+
+A mighty spellcaster, wreathed in arcane energies, and muttering the most
+profane incantations you might ever have heard.
+%%%%
 air elemental statue
 
 A delicate statue of a tengu gliding through the air. It looks quite

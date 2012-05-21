@@ -1562,6 +1562,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_NECROMANCER;
     case MONS_WIZARD:
         return TILEP_MONS_WIZARD;
+    case MONS_HELLBINDER:
+        return TILEP_MONS_HELLBINDER;
+    case MONS_CLOUD_MAGE:
+        return TILEP_MONS_CLOUD_MAGE;
     case MONS_VAULT_GUARD:
         return TILEP_MONS_VAULT_GUARD;
     case MONS_SHAPESHIFTER:

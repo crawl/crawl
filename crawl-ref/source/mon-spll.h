@@ -1759,6 +1759,28 @@
       }
     },
 
+    {  MST_HELLBINDER,
+      {
+       SPELL_CALL_IMP,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE,
+       SPELL_HELLFIRE,
+       SPELL_BLINK_AWAY,
+       SPELL_THROW_FLAME
+      }
+    },
+
+    {  MST_CLOUD_MAGE,
+      {
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_FREEZING_CLOUD,
+       SPELL_POISONOUS_CLOUD,
+       SPELL_AIRSTRIKE,
+       SPELL_BLINK_RANGE,
+       SPELL_BLINK_RANGE
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
