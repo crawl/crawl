@@ -100,9 +100,6 @@ LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
 LUARET1(you_xl, number, you.experience_level)
 LUARET1(you_xl_progress, number, get_exp_progress())
-LUARET1(you_skill, number,
-        lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
-                            : 0)
 LUARET1(you_skill_progress, number,
         lua_isstring(ls, 1)
             ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
@@ -309,6 +306,13 @@ LUAFN(you_is_level_on_stack)
     }
 
     PLUARET(boolean, is_level_on_stack(lev));
+}
+
+LUAFN(you_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+
+    PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
 LUAFN(you_train_skill)
