@@ -11,7 +11,9 @@ ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
 	DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) noopt
   endif
 endif
-CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) $(shell dpkg-buildflags --get LDFLAGS)
+CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
+             $(shell dpkg-buildflags --get LDFLAGS) \
+             $(shell dpkg-buildflags --get CPPFLAGS)
 
 tree-stamp:
 	dh_testdir
