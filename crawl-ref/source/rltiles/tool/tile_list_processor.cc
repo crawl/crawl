@@ -10,6 +10,26 @@
 
 using namespace std;
 
+#if defined(_WIN32) || defined(_WIN64)
+/*
+ * Replacement for MSVCRT's broken implementation of tmpfile(): it
+ * attempts to place the files in the root directory, which obviously
+ * doesn't work for non-admin users...
+ */
+FILE *tmpfile(void)
+{
+    char *fn = tempnam(NULL, "tileg");
+
+    // T: short-lived
+    // D: delete-on-close
+    FILE *fp = fopen(fn, "w+TD");
+
+    free(fn);
+
+    return fp;
+}
+#endif
+
 tile_list_processor::tile_list_processor() :
     m_last_enum(0),
     m_rim(false),
