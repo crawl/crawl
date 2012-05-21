@@ -1061,27 +1061,27 @@ ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly n_adj n_spe tile:mons_deformed_human / \
-            human name:monstrous n_adj n_spe tile:mons_deformed_human  / \
-            human name:deformed n_adj n_spe tile:mons_deformed_human   / \
-            human name:twisted n_adj n_spe tile:mons_deformed_human    / \
-            human name:grotesque n_adj n_spe tile:mons_deformed_human  / \
-            human name:hideous n_adj n_spe tile:mons_deformed_human    / \
-            human name:febrile n_adj n_noc tile:mons_deformed_human
-KMONS:      b = elf name:sickly n_adj n_spe tile:mons_deformed_elf     / \
-            elf name:monstrous n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:deformed n_adj n_spe tile:mons_deformed_elf       / \
-            elf name:twisted n_adj n_spe tile:mons_deformed_elf        / \
-            elf name:grotesque n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:hideous n_adj n_spe tile:mons_deformed_elf        / \
-            elf name:febrile n_adj n_spe n_noc tile:mons_deformed_elf
-KMONS:      d = orc name:sickly n_adj n_spe tile:mons_deformed_orc     / \
-            orc name:monstrous n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:deformed n_adj n_spe tile:mons_deformed_orc       / \
-            orc name:twisted n_adj n_spe tile:mons_deformed_orc        / \
-            orc name:grotesque n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:hideous n_adj n_spe tile:mons_deformed_orc        / \
-            orc name:febrile n_adj n_noc tile:mons_deformed_orc
+KMONS:      a = human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human / \
+            human name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
+            human name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human   / \
+            human name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
+            human name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
+            human name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
+            human name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_human
+KMONS:      b = elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf     / \
+            elf name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf       / \
+            elf name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:febrile dbname:deformed_humanoid n_adj n_spe n_noc tile:mons_deformed_elf
+KMONS:      d = orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc     / \
+            orc name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc       / \
+            orc name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
 KMONS:      U = very ugly thing
 KMONS:      J = pulsating lump
@@ -1093,10 +1093,6 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
-:           local sickdesc = "This poor creature looks hideously deformed.\n"
-MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
-MARKER:     b = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
-MARKER:     d = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 15, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 20, \

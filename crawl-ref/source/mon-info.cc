@@ -171,6 +171,7 @@ static bool _is_public_key(std::string key)
      || key == "wand_known"
      || key == "feat_type"
      || key == "glyph"
+     || key == "dbname"
      || key == "monster_tile"
      || key == "tile_num"
      || key == "tile_idx")

@@ -3681,6 +3681,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.props["monster_tile"] = short(index);
         }
 
+        std::string dbname = strip_tag_prefix(mon_str, "dbname:");
+        if (!dbname.empty())
+        {
+            dbname = replace_all_of(dbname, "_", " ");
+            mspec.props["dbname"].get_string() = dbname;
+        }
+
         std::string name = strip_tag_prefix(mon_str, "name:");
         if (!name.empty())
         {

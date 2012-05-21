@@ -6737,7 +6737,7 @@ cherub
 #################################
 # Monsters who worship Zin
 #################################
-zin_priest
+glowing angel
 
 w:40
 @The_monster@ recites @_axioms_of_law_@
@@ -6901,7 +6901,7 @@ Lugonu
 # Speech keys used *specifically* in (portal) vaults.
 #
 ###############################################################################
-Cigotuvi_creatures
+deformed humanoid
 
 VISUAL:@The_monster@ howls in pain.
 

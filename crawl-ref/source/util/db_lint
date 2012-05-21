@@ -111,7 +111,7 @@ $entries{$_} = 1 for (
     'player', 'player illusion', 'merged slime creature',
     # genus-only monsters
     'ghost', 'giant', 'golem', 'hell lord');
-for (`util/gather_mons`)
+for (`util/gather_mons -d`)
 {
     chomp;
     # using a desc from another file is ok, it's the same db

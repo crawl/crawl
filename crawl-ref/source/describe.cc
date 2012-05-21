@@ -3274,6 +3274,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.mname.empty())
         db_name = mi.db_name();
+    else if (mi.props.exists("dbname"))
+        db_name = mi.props["dbname"].get_string();
     else
         db_name = mi.full_name(DESC_PLAIN, true);
 

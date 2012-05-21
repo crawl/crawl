@@ -896,6 +896,10 @@ MONS:     (list of monsters)
 
           Monster names should be used very sparingly.
 
+          Every renamed monster needs a description as well (place it in
+          dat/descript/monsters.txt). If you want to have multiple monsters
+          share descriptions and speech, you can do it with "dbname:".
+
           Overriding Monster Stats:
           -------------------------
 
@@ -1400,7 +1404,7 @@ KPROP:    x = bloody
             SUBST: ' = '.
             KPROP: ' = bloody
           causes ' to produce either a bloody wall or a bloodless floor.
-          
+
           Unlike KFEAT, KITEM, and KMONS, KPROP: does not override the normal
           meaning of the glyph.
 
