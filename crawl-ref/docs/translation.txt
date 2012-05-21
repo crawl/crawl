@@ -42,6 +42,12 @@ Don't translate quotes, instead, submit quotes in their original language. It's
 allowed to submit translated text, especially for things like biblical
 references, but don't forget to include information about translator.
 
+Aliases
+=======
+
+If you want to use the same text for several keys, you can use <key_name> to
+avoid duplicating the string.
+
 Translating online
 ==================
 
@@ -108,3 +114,12 @@ make tx-push: push all the translations and the source strings to transifex.
 
 make tx-sync: run all the previous targets in that order. It will prompt for
 review and commit when new stuff is pulled or when formatting fix is needed.
+
+Resolving conflicts
+===================
+
+When changes are done to trunk, it is likely that the next tx-sync will
+overwrite those changes. However, it is still recommended to try it to see
+if pushing the git changes to transifex would overwrite anything.
+After any eventual conflict is resolved, just run make tx-push (or use
+tx-push.pl to push a single language) to update transifex, then sync.
