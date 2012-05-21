@@ -585,42 +585,6 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (mons->props.exists("speech_func"))
-        {
-#ifdef DEBUG_MONSPEAK
-            mpr("Trying Lua function for monster speech", MSGCH_DIAGNOSTICS);
-#endif
-            lua_stack_cleaner clean(dlua);
-
-            dlua_chunk &chunk = mons->props["speech_func"];
-
-            if (!chunk.load(dlua))
-            {
-                push_monster(dlua, mons);
-                dlua.callfn(NULL, 1, 1);
-                dlua.fnreturns(">s", &msg);
-
-                // __NONE means to be silent, and __NEXT means to try the next
-                // method of getting a speech message.
-                if (msg == "__NONE")
-                {
-#ifdef DEBUG_MONSPEAK
-                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
-#endif
-                    return (false);
-                }
-                if (msg == "__NEXT")
-                    msg.clear();
-            }
-            else
-            {
-                mprf(MSGCH_ERROR,
-                     "Lua speech function for monster '%s' didn't load: %s",
-                     mons->full_name(DESC_PLAIN).c_str(),
-                     dlua.error.c_str());
-            }
-        }
-
         if (msg.empty() && mons->props.exists("speech_key"))
         {
             msg = _get_speak_string(prefixes,
