@@ -383,7 +383,7 @@ ORIENT: encompass
   if crawl.game_started() then
     local map = dgn.map_by_tag(btype)
     assert(map, "Couldn't find a map for " .. btype)
-    dgn.place_map(map, true, false)
+    dgn.place_map(map, false, false)
   end
 }}
 MAP

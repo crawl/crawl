@@ -119,7 +119,7 @@ static object_class_type _item_in_shop(shop_type shop_type);
 
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(const map_def *vault,
-                                   bool clobber = false,
+                                   bool check_collisions = true,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
 
@@ -3608,14 +3608,14 @@ static void _fixup_after_vault()
 //
 // NOTE: encompass maps will destroy the existing level!
 //
-// clobber: If true, assumes the newly placed vault can clobber existing
-//          items and monsters (items may be destroyed, monsters may be
-//          teleported).
+// check_collision: If true, the newly placed vault cannot clobber existing
+//          items and monsters (otherwise, items may be destroyed, monsters may
+//          be teleported).
 //
 // Non-dungeon code should generally use dgn_safe_place_map instead of
 // this function to recover from map_load_exceptions.
 bool dgn_place_map(const map_def *mdef,
-                   bool clobber,
+                   bool check_collision,
                    bool make_no_exits,
                    const coord_def &where)
 {
@@ -3627,28 +3627,26 @@ bool dgn_place_map(const map_def *mdef,
     bool did_map = false;
     if (mdef->orient == MAP_ENCOMPASS && !Generating_Level)
     {
-        if (clobber)
-        {
-            // For encompass maps, clear the entire level.
-            unwind_bool levgen(Generating_Level, true);
-            dgn_reset_level();
-            dungeon_events.clear();
-            const bool res = dgn_place_map(mdef, clobber, make_no_exits, where);
-            _fixup_after_vault();
-            return (res);
-        }
-        else
+        if (check_collision)
         {
             mprf(MSGCH_DIAGNOSTICS,
-                 "Cannot generate encompass map '%s' without clobber=true",
+                 "Cannot generate encompass map '%s' with check_collision=true",
                  mdef->name.c_str());
 
             return (false);
         }
+
+        // For encompass maps, clear the entire level.
+        unwind_bool levgen(Generating_Level, true);
+        dgn_reset_level();
+        dungeon_events.clear();
+        const bool res = dgn_place_map(mdef, check_collision, make_no_exits, where);
+        _fixup_after_vault();
+        return (res);
     }
 
     const int map_index = env.level_vaults.size();
-    did_map = _build_secondary_vault(mdef, clobber,
+    did_map = _build_secondary_vault(mdef, check_collision,
                                      make_no_exits, where);
 
     // Activate any markers within the map.
@@ -3680,7 +3678,7 @@ bool dgn_place_map(const map_def *mdef,
 // This is usually the same as the map passed in, unless map load
 // failed and maps had to be reloaded.
 const map_def *dgn_safe_place_map(const map_def *mdef,
-                                  bool clobber,
+                                  bool check_collision,
                                   bool make_no_exits,
                                   const coord_def &where)
 {
@@ -3691,7 +3689,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
         try
         {
             const bool placed =
-                dgn_place_map(mdef, clobber, make_no_exits, where);
+                dgn_place_map(mdef, check_collision, make_no_exits, where);
             return (placed? mdef : NULL);
         }
         catch (map_load_exception &mload)
@@ -3753,10 +3751,10 @@ static void _ruin_vault(const vault_placement &vp)
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
 static bool _build_secondary_vault(const map_def *vault,
-                                   bool clobber, bool no_exits,
+                                   bool check_collision, bool no_exits,
                                    const coord_def &where)
 {
-    return _build_vault_impl(vault, true, !clobber, no_exits, where);
+    return _build_vault_impl(vault, true, check_collision, no_exits, where);
 }
 
 // Builds a primary vault - i.e. a vault that is built before anything

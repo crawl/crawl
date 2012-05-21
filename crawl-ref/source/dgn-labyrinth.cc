@@ -244,7 +244,7 @@ static void _place_extra_lab_minivaults()
             break;
 
         vaults_used.insert(vault);
-        if (!dgn_safe_place_map(vault, false, false))
+        if (!dgn_safe_place_map(vault, true, false))
             break;
     }
 }
@@ -510,7 +510,7 @@ void dgn_build_labyrinth_level()
     coord_def end;
     _labyrinth_build_maze(end, lab);
 
-    if (!vault || !dgn_safe_place_map(vault, false, false))
+    if (!vault || !dgn_safe_place_map(vault, true, false))
     {
         vault = NULL;
         _labyrinth_place_exit(end);
