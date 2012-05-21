@@ -1351,6 +1351,7 @@ TX-LANG = $(filter-out en, $(notdir $(wildcard $(TX-DIR)/??)))
 # Text source files under git versioning
 TX-TSOURCES = $(wildcard $(TX-DIR)/*.txt)
 TX-TTRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.txt))
+TX-TXT = $(TX-TSOURCES) $(TX-TTRANS)
 
 # Files generated from the source. To be pushed to transifex
 TX-SOURCES = $(TX-TSOURCES:.txt=.ini)
@@ -1368,13 +1369,15 @@ TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-
 TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
 TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
 
 TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
 
 .PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
 
 tx-clean:
-	$(RM) $(TX-INI) $(TX-QUOTES-ALL)
+	@echo "Removing transifex temporary files"
+	@$(RM) $(TX-INI) $(TX-QUOTES-ALL) $(TX-NEW)
 
 $(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
 	util/tx-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
@@ -1393,18 +1396,6 @@ tx-txt:
 	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
 		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
 	fi
-	@git add $(TX-TSOURCES) $(TX-DIR)/??/*.txt
-	@git diff --quiet HEAD && exit 0;\
-	read -p "New translations. Review? (Y/n) " RESP;\
-	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
-		exit 1;\
-	fi;\
-	git diff HEAD;\
-	read -p "Commit? (Y/n) " RESP;\
-	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
-		exit 1;\
-	fi;\
-	git commit -a -s -m "Transifex sync." --author=$(TX-COMMIT-AUTHOR)
 
 tx-init:
 	$(RM) $(TX-CONFIG)
@@ -1432,26 +1423,38 @@ tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
 	done
 
 tx-check: $(TX-INI)
-	@git diff --quiet HEAD || (echo "You have uncommited changes in your working tree. Commit or stash them before continuing."; exit 1)
 	@if $(TX-MKTXT) -mtw $(TX-SOURCES) && $(TX-MKTXT) -tw $(TX-TRANS); then\
 		exit 0;\
 	fi;\
 	echo "Changes detected when converting to transifex format.";\
+	git diff --quiet HEAD -- $(TX-TXT) || echo "Warning: some of the text files have uncommited changes!";\
 	read -p "Attempt automatic fix? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
 	fi;\
 	$(TX-MKTXT) -mw $(TX-SOURCES);\
 	$(TX-MKTXT) -w $(TX-TRANS);\
-	git diff;\
+
+tx-commit:
+	@if git diff --quiet $(TX-TXT); then\
+		exit 0;\
+	fi;\
+	git diff $(TX-TXT);\
 	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
 	fi;\
-	git commit -a -s -m "Transifex format fix." --author=$(TX-COMMIT-AUTHOR)
+	if [ -z "$(TX-COMMIT-MSG)" ]; then\
+		MSG="Transifex.";\
+	else\
+		MSG="$(TX-COMMIT-MSG)";\
+	fi;\
+	git add $(TX-TXT);\
+	git commit -e -s -m "$$MSG" --author=$(TX-COMMIT-AUTHOR)
 
 tx-pull:
-	$(RM) $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
+	@echo "Cleaning up downloaded translations.";\
+	$(RM) $(TX-NEW)
 	tx pull -a --minimum-perc=1 --mode=reviewed
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
@@ -1461,9 +1464,10 @@ tx-push: $(TX-INI) $(TX-QUOTES-ALL)
 
 tx-sync:
 	$(MAKE) tx-check
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex format fix."
 	$(MAKE) tx-pull
 	$(MAKE) tx-txt
-	$(MAKE) tx-check
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex sync."
 	$(MAKE) tx-push
 
 #############################################################################
