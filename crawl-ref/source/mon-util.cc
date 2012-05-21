@@ -3042,8 +3042,12 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     }
     // Mara's fakes aren't a unique, but should still be classified
     // as male.
-    else if (mon_type == MONS_MARA_FAKE)
+    else if (mon_type == MONS_MARA_FAKE
+             || mon_type == MONS_HELLBINDER
+             || mon_type == MONS_CLOUD_MAGE)
+    {
         gender = GENDER_MALE;
+    }
     else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
     {
         switch (mon_type)
