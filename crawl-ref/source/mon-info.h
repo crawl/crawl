@@ -81,6 +81,7 @@ enum monster_info_flags
     MB_NO_REGEN,
     MB_SUPPRESSED,
     MB_ROLLING,
+    MB_RANGED_ATTACK,
     NUM_MB_FLAGS
 };
 
