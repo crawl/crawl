@@ -1285,6 +1285,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_HELLBINDER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_DEMON_BLADE;
+        break;
+
     default:
         break;
     }
@@ -1883,6 +1889,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_DEEP_DWARF_NECROMANCER:
     case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_HELLBINDER:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
