@@ -585,10 +585,10 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (msg.empty() && mons->props.exists("speech_key"))
+        if (msg.empty() && mons->props.exists("dbname"))
         {
             msg = _get_speak_string(prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
 
@@ -599,7 +599,7 @@ bool mons_speaks(monster* mons)
                 // the key with prefixes.
                 std::vector<std::string> faux_prefixes;
                 msg = _get_speak_string(faux_prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
             }

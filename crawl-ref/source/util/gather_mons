@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+# Run gather_mons -d if you want dbname: to be heeded (descs, etc).
+my $db = grep /^-d$/, @ARGV;
+
 open IN, "<mon-data.h" or die "Can't read mon-data.h\n";
 while (<IN>)
 {
@@ -29,6 +32,7 @@ sub vault_mon()
     $_="$tags{'name'} $_" if $flags{'adj'} || $flags{'adjective'};
     $_.=" $tags{'name'}" if $flags{'suf'} || $flags{'suffix'};
     $_=$tags{'name'} if $flags{'rpl'} || $flags{'replace'};
+    $_=$tags{'dbname'} if $db && $tags{'dbname'};
     s/_/ /g;
 
     $mons{$_} = 1;

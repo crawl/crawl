@@ -2741,6 +2741,10 @@ Cigotuvi's Monster
 This terrifying creation looks to have been constructed from the body parts of
 every monstrous creature imaginable.
 %%%%
+deformed humanoid
+
+This poor creature looks hideously deformed.
+%%%%
 earth elemental statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.

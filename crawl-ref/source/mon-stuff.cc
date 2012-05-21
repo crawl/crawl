@@ -2810,6 +2810,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props["original_name"] = name;
     mons->props["original_was_unique"] = old_mon_unique;
     mons->god   = god;
+    mons->props.erase("dbname");
 
     mons->flags = flags;
     // Line above might clear melee and/or spell flags; restore.
@@ -2817,7 +2818,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
-    mons->props.erase("speech_key");
     mons->props.erase("speech_prefix");
 
     // Keep spells for named monsters, but don't override innate ones

@@ -4421,6 +4421,9 @@ monster* dgn_place_monster(mons_spec &mspec,
     if (mspec.props.exists("always_corpse"))
         mons->props["always_corpse"] = true;
 
+    if (mspec.props.exists("dbname"))
+        mons->props["dbname"].get_string() = mspec.props["dbname"].get_string();
+
     // These are applied earlier to prevent issues with renamed monsters
     // and "<monster> comes into view" (see delay.cc:_monster_warning).
     //mons->flags |= mspec.extra_monster_flags;
