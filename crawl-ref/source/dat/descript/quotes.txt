@@ -1625,9 +1625,9 @@ ring of regeneration
 %%%%
 ring of see invisible
 
-“Voici mon secret. Il est très simple: on ne voit bien qu'avec le coeur.
-L'essentiel est invisible pour les yeux.”
-    - Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
+“Here is my secret. It is very simple: It is only with the heart that one can
+see rightly; what is essential is invisible to the eye.”
+    -Antoine de Saint Exupéry, _The Little Prince_. 1943.
 %%%%
 ring of slaying
 
