@@ -2819,8 +2819,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Forget various speech/shout Lua functions.
     mons->props.erase("speech_key");
     mons->props.erase("speech_prefix");
-    mons->props.erase("speech_func");
-    mons->props.erase("shout_func");
 
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
