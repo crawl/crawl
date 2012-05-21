@@ -247,10 +247,10 @@ Looks like a mercenary.
 Josephine
 
 A hideous crone, her face covered in warts, moles and the occasional patch of
-hair, Josephine's appearance may fool one into thinking she is some weak old woman,
-but she is truly a formidable necromancer. The use of black magic has taken a
-physical toll on and prematurely aged Josephine, turning the once beautiful lady
-into an ugly hag.
+hair, Josephine's appearance may fool one into thinking she is some weak old
+woman, but she is truly a formidable necromancer. The use of black magic has
+taken a physical toll on and prematurely aged Josephine, turning the once
+beautiful lady into an ugly hag.
 %%%%
 Jozef
 
@@ -310,10 +310,9 @@ about Maud, forgot everything else.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a
-legend - at least according to himself. He is skilled, nonetheless, and among
-all the thieves and rogues lured by the Orb, Maurice is undoubtedly the most
-crafty.
+A sly, conniving thief. In his profession, Maurice is considered a legend - at
+least according to himself. He is skilled, nonetheless, and among all the
+thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
 %%%%
 Mennas
 
@@ -424,19 +423,19 @@ that is, easy meals - he attracts.
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
-daring leaps! But watch out for her knives! The space around the
-edge of her weapon seems to waver slightly for a split second... or does it?
+daring leaps! But watch out for her knives! The space around the edge of her
+weapon seems to waver slightly for a split second... or does it?
 
 Her bleak canine body, hidden kindly underneath the flowing green attire, is in
-contrast with a pair of determined eyes, surveying her surroundings from beneath
-the shadow cast by the upper edge of her beryl-coloured cape. The nostrils on the
-exposed tip of her snout throb with excitement.
+contrast with a pair of determined eyes, surveying her surroundings from
+beneath the shadow cast by the upper edge of her beryl-coloured cape. The
+nostrils on the exposed tip of her snout throb with excitement.
 %%%%
 Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
-forced into hiding after a botched job, and can't really afford to risk letting anyone
-who has seen him leave the dungeon alive - there is a price on his head,
+forced into hiding after a botched job, and can't really afford to risk letting
+anyone who has seen him leave the dungeon alive - there is a price on his head,
 after all.
 %%%%
 Tiamat
@@ -446,9 +445,9 @@ colour as you watch.
 %%%%
 Urug
 
-A coarse and lanky orc. Urug lost his eye in a fight with a harpy, and has sworn
-to slay every last one of them. Unfortunately, the vision in his remaining eye
-is not very good, and he has mistaken you for one.
+A coarse and lanky orc. Urug lost his eye in a fight with a harpy, and has
+sworn to slay every last one of them. Unfortunately, the vision in his
+remaining eye is not very good, and he has mistaken you for one.
 {{
     if you.can_smell() then
         return "He smells terrible."
@@ -478,11 +477,11 @@ Xtahua
 
 An ancient and mighty dragon, his scorched body covered with crags of hardened
 lava, towers above the dungeon floor, leaving a pungent smell of sulphur in hos
-rumbling wake. Humongous sets of claws protrude from the ends of his arms,
-and their edges, jagged through years of use, look strong enough to tear a man
-apart without a thought. The warmth emanating from his sole
-presence makes the air uncomfortably hot, bending the dungeon features slightly,
-not unlike the sun on a summer day.
+rumbling wake. Humongous sets of claws protrude from the ends of his arms, and
+their edges, jagged through years of use, look strong enough to tear a man
+apart without a thought. The warmth emanating from his sole presence makes the
+air uncomfortably hot, bending the dungeon features slightly, not unlike the
+sun on a summer day.
 
 Xtahua grew bitter after he found himself trapped in a dungeon after a weary
 battle with an adventurer hundreds of years ago. Most of his reasons to live
@@ -1764,9 +1763,9 @@ licking out from its toothy maw.
 # Orb of Zot special
 monstrous item mimic
 
-This mimic chose nothing else to masquerade as but the fabled Orb of Zot.
-Since it was able to successfully assume its appearance and stay here,
-saying it might be deadly is an understatement.
+This mimic chose nothing else to masquerade as but the fabled Orb of Zot. Since
+it was able to successfully assume its appearance and stay here, saying it
+might be deadly is an understatement.
 %%%%
 moth
 
@@ -2082,9 +2081,9 @@ passers-by and crush them in its deadly grasp.
 %%%%
 ravenous item mimic
 
-A deadly venomous tentacled predator with an ability to shapeshift into
-a small item. While not of a formidable size, it is not a living creature
-and its tentacles are harder than steel.
+A deadly venomous tentacled predator with an ability to shapeshift into a small
+item. While not of a formidable size, it is not a living creature and its
+tentacles are harder than steel.
 %%%%
 reaper
 
@@ -2683,12 +2682,12 @@ test spawner
 
 (If you see this outside wizmode or the arena, this is a bug.)
 
-Whatever it is, it is capable of spawning countless monsters by casting
-Shadow Creatures, and is virtually undestructible itself.
+Whatever it is, it is capable of spawning countless monsters by casting Shadow
+Creatures, and is virtually undestructible itself.
 
-To destroy it, lower the central elevator pillar, then pump rockets into
-the hole in its exposed brain when the pillar rises to an appropriate
-height. You can add another rocket while jumping down.
+To destroy it, lower the central elevator pillar, then pump rockets into the
+hole in its exposed brain when the pillar rises to an appropriate height. You
+can add another rocket while jumping down.
 
 Oh wait, wrong game.
 %%%%
@@ -2699,28 +2698,28 @@ know nothing about its identity.
 %%%%
 trivial sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that
-it shouldn't give you the slightest concern.
+By the power of Ashenzari, you know there is some creature there, and that it
+shouldn't give you the slightest concern.
 %%%%
 easy sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that
-you should be able to defeat it without much risk.
+By the power of Ashenzari, you know there is some creature there, and that you
+should be able to defeat it without much risk.
 %%%%
 tough sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that
-it is somewhat dangerous.
+By the power of Ashenzari, you know there is some creature there, and that it
+is somewhat dangerous.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that
-you should be afraid. Very afraid.
+By the power of Ashenzari, you know there is some creature there, and that you
+should be afraid. Very afraid.
 %%%%
 friendly sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that
-it is one of your allies.
+By the power of Ashenzari, you know there is some creature there, and that it
+is one of your allies.
 %%%%
 # Vault-defined monsters
 air elemental statue
