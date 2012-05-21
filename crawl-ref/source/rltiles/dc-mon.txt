@@ -548,7 +548,7 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
-serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNOM
+serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
 serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
 serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
