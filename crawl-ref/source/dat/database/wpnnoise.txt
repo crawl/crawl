@@ -484,6 +484,9 @@ w:3
 w:7
 @real_song_high_tension@
 
+w:150
+@speaking_high_tension@
+
 w:200
 @instrumental_noises@
 
