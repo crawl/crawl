@@ -2406,6 +2406,13 @@ spriggan warper
 To confuse those accustomed to the normal world's geometry, some spriggans love
 to turn space into a pretzel.
 %%%%
+statue
+
+On the first glance, this piece of sculpted granite appears inert. The red glow
+from its eyes, though, suggests it is no mere stone. Judging from its base, you
+are sure it is incapable of movement, although what parts can move, you do not
+know.
+%%%%
 steam dragon
 
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
