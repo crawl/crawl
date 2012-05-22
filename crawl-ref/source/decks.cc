@@ -2971,7 +2971,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         if (you.is_undead == US_UNDEAD)
             mpr("You feel rather smug.");
         else
-            set_hunger(std::min(you.hunger, 500), true);
+            set_hunger(std::min(you.hunger, HUNGER_STARVING / 2), true);
         break;
 
     case CARD_FEAST:
