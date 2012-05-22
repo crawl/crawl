@@ -443,15 +443,19 @@ resistance, although tougher monsters will not be slowed for as long as others.
 %%%%
 Necromutation
 
-This spell first transforms the caster into a semi-corporeal apparition
-receptive to negative energy, then infuses that form with the powers of Death.
-The caster becomes more resistant to cold and hostile enchantments and
-completely immune to poison, rotting, and negative energy, and requires no food
-at all for the duration of the spell.
+This spell first transforms the caster into a lich — a powerful skeletal
+figure. The caster gains some powers of death, and becomes more resistant
+to cold and hostile enchantments and completely immune to poison, rotting,
+and negative energy, and requires no food at all for the duration of the
+spell.
 
 The caster also gains some of the more dubious benefits of having an undead
 body, such as a vulnerability to holy weapons and an inability to consume
 potions.
+
+Contrary to what one would expect, this spell works on octopodes, although
+what foul necromantic tissue serves as an analogue for bones remains a
+mystery.
 %%%%
 Olgreb's Toxic Radiance
 
