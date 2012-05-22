@@ -2451,7 +2451,7 @@ enum monster_type                      // menv[].type
     MONS_HELLBINDER,
     MONS_CLOUD_MAGE,
 
-    NUM_MONSTERS,                      // used for polymorph
+    NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
     // when NUM_MONSTERS increases.
