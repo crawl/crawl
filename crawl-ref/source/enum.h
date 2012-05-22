@@ -2448,8 +2448,6 @@ enum monster_type                      // menv[].type
     MONS_SERPENT_OF_HELL_DIS,
     MONS_SERPENT_OF_HELL_TARTARUS,
 
-    MONS_PUNCHING_BAG, // ... pointless?
-
     MONS_HELLBINDER,
     MONS_CLOUD_MAGE,
 

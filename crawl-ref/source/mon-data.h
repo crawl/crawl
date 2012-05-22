@@ -6458,20 +6458,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// Same stats as a test spawner, but without spells, and with lower defenses.
-{
-    MONS_PUNCHING_BAG, 'X', WHITE, "punching bag",
-    M_STATIONARY | M_NO_POLY_TO,
-    mrd(MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD | MR_RES_ACID
-        | MR_RES_STICKY_FLAME, 1),
-    0, 0, MONS_PUNCHING_BAG, MONS_PUNCHING_BAG, MH_NONLIVING, -5,
-    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1000, 1000, 0, 0 },
-    20, 20, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
-},
-
 // an unspecified monster
 {
     MONS_SENSED, '{', LIGHTRED, "sensed monster",
