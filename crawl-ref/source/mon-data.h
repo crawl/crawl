@@ -5373,7 +5373,7 @@ static monsterentry mondata[] = {
     MONS_GIANT_SPORE, '*', GREEN, "giant spore",
     M_NO_FLAGS,
     MR_RES_POISON,
-    0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
+    0, 10, MONS_FUNGUS, MONS_GIANT_SPORE, MH_PLANT, -3,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 0, 0, 1 },
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
