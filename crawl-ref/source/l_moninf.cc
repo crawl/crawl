@@ -49,10 +49,39 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(number, colour, colour)
 
+// const char* here would save a tiny bit of memory, but every std::map
+// for an unique pair of types costs 35KB of code.  We have
+// std::map<std::string, int> elsewhere.
+static std::map<std::string, int> mi_flags;
+static void _init_mi_flags()
+{
+    int f = 0;
+#define MI_FLAG(x) mi_flags[x] = f++;
+#include "mi-enum.h"
+#undef MI_FLAG
+}
+
 LUAFN(moninf_get_is)
 {
     MONINF(ls, 1, mi);
-    int num = luaL_checknumber(ls, 2);
+    int num = -1;
+    if (lua_isnumber(ls, 2)) // legacy scripts
+        num = lua_tonumber(ls, 2);
+    else
+    {
+        if (mi_flags.empty())
+            _init_mi_flags();
+        std::string flag = luaL_checkstring(ls, 2);
+        const std::map<std::string, int>::const_iterator f =
+            mi_flags.find(lowercase(flag));
+        if (f == mi_flags.end())
+        {
+            luaL_argerror(ls, 2, (std::string("no such moninf flag: '")
+                                  + flag + "'").c_str());
+            return 0;
+        }
+        num = f->second;
+    }
     if (num < 0 || num >= NUM_MB_FLAGS)
     {
         luaL_argerror(ls, 2, "mb:is() out of bounds");
