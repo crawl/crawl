@@ -950,7 +950,7 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h #the rest are private
-GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
                    $(INI_OBJECTS)
 
@@ -1330,11 +1330,15 @@ mon-mst.h: mon-spll.h util/gen-mst.pl
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
 
+mi-enum.h: mon-info.h util/gen-mi-enum.sed
+	$(QUIET_GEN)sed -f util/gen-mi-enum.sed <$< >$@
+
 $(RLTILES)/dc-unrand.txt: art-data.h
 
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
+l_moninf.o: mi-enum.h
 
 #############################################################################
 # Translation files
