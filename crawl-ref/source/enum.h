@@ -2452,6 +2452,7 @@ enum monster_type                      // menv[].type
     MONS_CLOUD_MAGE,
 
     MONS_BEAR,                  // genus
+    MONS_ELEMENTAL,             // genus
 
     NUM_MONSTERS,               // used for polymorph
 
