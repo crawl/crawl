@@ -311,7 +311,7 @@ void wizard_set_hunger_state()
     case 'h': you.hunger = 2400;  break;
     case 's': you.hunger = 5000;  break;
     case 'f': you.hunger = 8000;  break;
-    case 'e': you.hunger = 12000; break;
+    case 'e': you.hunger = HUNGER_MAXIMUM; break;
     default:  canned_msg(MSG_OK); break;
     }
 

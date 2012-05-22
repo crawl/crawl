@@ -113,8 +113,8 @@ void lessen_hunger(int satiated_amount, bool suppress_msg)
 
     you.hunger += satiated_amount;
 
-    if (you.hunger > 12000)
-        you.hunger = 12000;
+    if (you.hunger > HUNGER_MAXIMUM)
+        you.hunger = HUNGER_MAXIMUM;
 
     // So we don't get two messages, ever.
     bool state_message = food_change();
@@ -1880,7 +1880,7 @@ static void _eating(item_def& food)
     lessen_hunger(food_value, true);
 
     if (player_mutation_level(MUT_FOOD_JELLY)
-        && x_chance_in_y(food_value, 12000))
+        && x_chance_in_y(food_value, HUNGER_MAXIMUM))
     {
         mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
                      you.pos(), MHITNOT, 0, you.religion);
