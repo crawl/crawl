@@ -2978,7 +2978,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         if (you.is_undead == US_UNDEAD)
             mpr("You feel a horrible emptiness.");
         else
-            set_hunger(12000, true);
+            set_hunger(HUNGER_MAXIMUM, true);
         break;
 
     case CARD_SWINE:
