@@ -1159,7 +1159,7 @@ A lumpy grey fungus, growing well in the dank underground dungeon.
 %%%%
 gargoyle
 
-A granite statue of a hideous winged and clawed monster, somehow come horribly
+A granite statue of a hideous winged and clawed monster, somehow brought horribly
 to life.
 %%%%
 ghost moth
@@ -2408,10 +2408,9 @@ to turn space into a pretzel.
 %%%%
 statue
 
-On the first glance, this piece of sculpted granite appears inert. The red glow
-from its eyes, though, suggests it is no mere stone. Judging from its base, you
-are sure it is incapable of movement, although what parts can move, you do not
-know.
+At first glance, this piece of sculpted granite appears inert. The red glow
+from its eyes, however, suggests it is no mere stone. Although it is rooted to its base, you
+are certain that it can still move parts of itself.
 %%%%
 steam dragon
 
@@ -2425,7 +2424,7 @@ boulders, and is perfectly capable of flinging them a great distance.
 %%%%
 stone golem
 
-A huge magically-animated statue made of incredibly hard basalt.
+A huge, magically animated statue made of incredibly hard basalt.
 %%%%
 storm dragon
 
