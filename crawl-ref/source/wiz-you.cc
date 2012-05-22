@@ -306,7 +306,7 @@ void wizard_set_hunger_state()
     // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = 500;   break;
+    case 't': you.hunger = HUNGER_STARVING / 2;   break;
     case 'n': you.hunger = 1200;  break;
     case 'h': you.hunger = 2400;  break;
     case 's': you.hunger = 5000;  break;
