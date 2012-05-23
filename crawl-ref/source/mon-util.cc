@@ -4069,9 +4069,6 @@ std::string get_mon_shape_str(const mon_body_shape shape)
 {
     ASSERT(shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_MISC);
 
-    if (shape < MON_SHAPE_HUMANOID || shape > MON_SHAPE_MISC)
-        return "buggy shape";
-
     static const char *shape_names[] =
     {
         "humanoid", "winged humanoid", "tailed humanoid",
@@ -4082,6 +4079,7 @@ std::string get_mon_shape_str(const mon_body_shape shape)
         "blob", "misc"
     };
 
+    COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
     return (shape_names[shape]);
 }
 
