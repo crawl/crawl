@@ -4,7 +4,6 @@
 
 #include "cio.h"
 #include "menu.h"
-#include "options.h"
 #include "tilefont.h"
 #include "tilereg-crt.h"
 #include "viewgeom.h"

@@ -31,7 +31,6 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "map_knowledge.h"
-#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -44,7 +43,6 @@
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "mutation.h"
 #include "notes.h"
 #include "player.h"
 #include "random.h"
@@ -60,7 +58,6 @@
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
-#include "viewchar.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);

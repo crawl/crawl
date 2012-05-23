@@ -4,7 +4,6 @@
 
 #include "coord.h"
 #include "coordit.h"
-#include "fixedarray.h"
 #include "libutil.h"
 #include "los_def.h"
 

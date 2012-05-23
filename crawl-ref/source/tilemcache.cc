@@ -4,9 +4,7 @@
 #include "tilemcache.h"
 
 #include "env.h"
-#include "ghost.h"
 #include "mon-util.h"
-#include "tags.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tilepick-p.h"

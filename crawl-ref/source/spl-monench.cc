@@ -13,7 +13,6 @@
 #include "coord.h"
 #include "env.h"
 #include "message.h"
-#include "mon-place.h"
 #include "mon-stuff.h"
 #include "random.h"
 #include "shout.h"

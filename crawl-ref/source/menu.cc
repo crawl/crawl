@@ -18,7 +18,6 @@
 #include "options.h"
 #include "player.h"
 #include "hints.h"
-#include "religion.h"
 #include "colour.h"
 
 #ifdef USE_TILE_LOCAL

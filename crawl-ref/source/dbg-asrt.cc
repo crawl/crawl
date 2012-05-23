@@ -18,7 +18,6 @@
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
-#include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -34,6 +33,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "travel.h"
 #include "hiscores.h"
 #include "view.h"
@@ -77,7 +77,6 @@
 #endif
 #endif
 
-#include "threads.h"
 
 static std::string _assert_msg;
 

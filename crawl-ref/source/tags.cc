@@ -47,7 +47,6 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "mutation.h"
 #include "place.h"
 #include "quiver.h"
 #include "religion.h"
@@ -60,12 +59,9 @@
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tileview.h"
-#include "tutorial.h"
 #ifdef USE_TILE
- #include "options.h"
  #include "tilemcache.h"
  #include "tilepick.h"
- #include "showsymb.h"
 #endif
 #include "travel.h"
 

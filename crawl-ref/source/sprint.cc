@@ -4,7 +4,6 @@
 #include "maps.h"
 #include "mon-util.h"
 #include "mpr.h"
-#include "ng-setup.h"
 #include "player.h"
 #include "random.h"
 

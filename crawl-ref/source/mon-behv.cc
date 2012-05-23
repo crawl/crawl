@@ -16,7 +16,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
-#include "items.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"

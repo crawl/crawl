@@ -3,7 +3,6 @@
 #include "godconduct.h"
 
 #include "fight.h"
-#include "godpassive.h"
 #include "godwrath.h"
 #include "libutil.h"
 #include "monster.h"

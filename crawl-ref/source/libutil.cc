@@ -10,7 +10,6 @@
 #include "libutil.h"
 #include "externs.h"
 #include "files.h"
-#include "macro.h"
 #include "message.h"
 #include "unicode.h"
 #include "viewgeom.h"

@@ -13,7 +13,6 @@
 #include "format.h"
 #include "initfile.h"
 #include "libutil.h"
-#include "macro.h"
 #include "menu.h"
 #include "mon-stuff.h"
 #include "notes.h"

@@ -14,7 +14,6 @@
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
-#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
@@ -28,7 +27,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
 #include "place.h"
@@ -44,7 +42,6 @@
 #include "travel.h"
 #include "hints.h"
 #include "unicode.h"
-#include "viewgeom.h"
 #include "viewmap.h"
 
 #include <cctype>

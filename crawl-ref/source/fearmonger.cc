@@ -13,7 +13,6 @@
 #include "fprop.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "random.h"
 #include "state.h"
 #include "areas.h"
 

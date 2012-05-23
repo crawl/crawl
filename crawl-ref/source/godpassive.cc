@@ -20,12 +20,9 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-stuff.h"
-#include "options.h"
 #include "player.h"
-#include "player-stats.h"
 #include "religion.h"
 #include "skills2.h"
-#include "spl-book.h"
 #include "state.h"
 
 int che_stat_boost(int piety)

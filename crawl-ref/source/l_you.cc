@@ -18,7 +18,6 @@
 #include "libutil.h"
 #include "newgame.h"
 #include "ng-setup.h"
-#include "mapmark.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"

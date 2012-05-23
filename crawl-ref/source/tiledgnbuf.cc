@@ -2,12 +2,8 @@
 
 #include "tiledgnbuf.h"
 
-#include "cloud.h"
-#include "coord.h"
-#include "coordit.h"
 #include "env.h"
 #include "player.h"
-#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"

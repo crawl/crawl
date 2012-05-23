@@ -11,7 +11,6 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
-#include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"

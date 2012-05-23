@@ -30,7 +30,6 @@
  #include "tileweb.h"
 #endif
 #include "invent.h"
-#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"

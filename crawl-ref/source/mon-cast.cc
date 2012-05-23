@@ -40,7 +40,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-book.h"
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"

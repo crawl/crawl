@@ -35,7 +35,6 @@
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "ouch.h"
-#include "place.h"
 #include "player.h"
 #include "skills.h"
 #include "spl-miscast.h"

@@ -9,7 +9,6 @@
 
 #include "areas.h"
 #include "artefact.h"
-#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -25,7 +24,6 @@
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -41,7 +39,6 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"

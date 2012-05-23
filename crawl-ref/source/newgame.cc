@@ -25,10 +25,8 @@
 #include "options.h"
 #include "random.h"
 #include "species.h"
-#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
-#include "tutorial.h"
 
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"

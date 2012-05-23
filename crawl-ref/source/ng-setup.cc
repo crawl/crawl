@@ -18,13 +18,11 @@
 #include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
-#include "options.h"
 #include "player.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "sprint.h"
 #include "state.h"
 #include "tutorial.h"
 

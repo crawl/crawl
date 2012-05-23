@@ -17,7 +17,6 @@
 #include "externs.h"
 #include "tilereg-text.h"
 #include "message.h"
-#include "stash.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-main.h"

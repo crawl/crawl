@@ -27,7 +27,6 @@
 
 #include "cio.h"
 #include "crash.h"
-#include "delay.h"
 #include "enum.h"
 #include "externs.h"
 #include "libutil.h"

@@ -12,7 +12,6 @@
 #include "externs.h"
 
 #include "areas.h"
-#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -26,7 +25,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "monster.h"
-#include "mapmark.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"

@@ -9,7 +9,6 @@
 
 #include "enum.h"
 #include "externs.h"
-#include "options.h"
 #include "makeitem.h"
 #include "message.h"
 
@@ -24,9 +23,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "libutil.h"
 #include "misc.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"

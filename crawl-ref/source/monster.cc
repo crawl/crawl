@@ -14,7 +14,6 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
-#include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -34,7 +33,6 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
-#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
@@ -51,7 +49,6 @@
 #include "tileview.h"
 #endif
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"

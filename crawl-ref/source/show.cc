@@ -20,7 +20,6 @@
 #include "fprop.h"
 #include "itemprop.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -35,7 +34,6 @@
 #include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
-#include "viewgeom.h"
 #include "viewmap.h"
 
 show_type::show_type()

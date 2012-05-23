@@ -19,12 +19,9 @@
 #include "artefact.h"
 #include "describe.h"
 #include "externs.h"
-#include "fight.h"
 #include "godabil.h"
-#include "itemprop.h"
 #include "player.h"
 #include "species.h"
-#include "skill_menu.h"
 #include "skills.h"
 
 typedef std::string (*string_fn)();

@@ -63,7 +63,6 @@
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
-#include "message.h"
 #include "options.h"
 #include "state.h"
 #include "unicode.h"

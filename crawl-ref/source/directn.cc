@@ -28,7 +28,6 @@
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "invent.h"
@@ -45,7 +44,6 @@
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "output.h"
-#include "place.h"
 #include "player.h"
 #include "shopping.h"
 #include "show.h"
@@ -56,7 +54,6 @@
 #include "stash.h"
 #ifdef USE_TILE
  #include "tileview.h"
- #include "tilereg.h"
 #endif
 #include "terrain.h"
 #include "traps.h"

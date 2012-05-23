@@ -26,7 +26,6 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
-#include "macro.h"
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"

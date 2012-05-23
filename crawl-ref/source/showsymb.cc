@@ -20,8 +20,6 @@
 #include "state.h"
 #include "terrain.h"
 #include "viewchar.h"
-#include "viewgeom.h"
-#include "coord.h"
 
 static
 unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
