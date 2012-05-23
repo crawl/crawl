@@ -1,0 +1,842 @@
+%%%%
+Abjuration
+
+Ten czar próbuje odesłać wskazane przyzwane stworzenie tam skąd przybyło, a
+nawet jeśli się to nie uda, skraca pozostały czas przyzwania.
+%%%%
+Agony
+
+Ten czar połowi siły życiowe wskazanego stworzenia (jeśli nie zostanie
+odparty), nigdy jednak nie jest bezpośrednią przyczyną śmierci. Nie działa na
+istoty nie potrafiące czuć bólu, jak i na te nie posiadające normalnych sił
+życiowych.
+%%%%
+Airstrike
+
+Ten czar powoduje małe lecz bardzo gwałtowne zawirowanie powietrza, zadając
+spore obrażenia wskazanemu stworzeniu. Zawsze trafia. Latające istoty są
+szczególnie wrażliwe na ten czar.
+%%%%
+Alistair's Intoxication
+
+Ten czar zmienia małą część komórek mózgu w alkohol, powodując efekty podobne
+do upicia we wszystkich inteligentnych stworzeniach w zasięgu wzroku
+(jakkolwiek nie działa na istoty odporne na trucizny). Rzucający ten czar jest
+najmocniej objęty jego działaniem, i odporność na trucizny nie zapobiega temu
+efektowi.
+
+Jak można zgadnąć, czar ten jest często nadużywany na imprezach czarodziei.
+%%%%
+Animate Dead
+
+Ten czar zmusza martwych do powstania i służenia rzucającemu, każde zwłoki
+zdolne do powstania są nim objęte. Za pomocą tego czaru można stworzyć ogromną
+armię, jednak utworzeni nieumarli nie są zdolni ani do regeneracji, ani do
+żadnych skomplikowanych akcji, ani nawet do chodzenia po schodach.
+%%%%
+Animate Skeleton
+
+Ten czar zmusza martwy szkielet do powstania, nawet jeśli ten szkielet jest
+ciągle jeszcze ubrany w mięso (które zostanie zrzucone). Szkielety są
+prymitywnymi nieumarłymi, niezdolnymi do regeneracji ani chodzenia po schodach.
+%%%%
+Apportation
+
+Ten czar pozwala przyciągnąć jakiś przedmiot, lub czasem nawet grupę
+przedmiotów, rzucając go pod nogi rzucającego. Cięższe przedmioty zostaną
+przesunięte tylko częściowo — lub nawet, przy małej mocy i dużym ciężarze,
+nawet w ogóle nie.
+%%%%
+Beastly Appendage
+
+Ten czar pozwala ci tymczasowo zmienić którąś z kończyn w jej zwierzęcy
+wariant, taki jak np. szpony, bycze rogi. Daje to dodatkowy atak wręcz. Ten
+czar nie działa na części ciała pokryte zbroją lub ubraniem.
+%%%%
+Blade Hands
+
+Ten czar tymczasowo zmienia twe ręce (macki, łapy, ...) w długie ostrza jak u
+kosy. To utrudnia czarowanie, ale pozwala na, powiedzmy, dość niedelikatny
+masaż.
+%%%%
+Blink
+
+Ten czar przemieszcza rzucającego na krótki dystans, w niekontrolowany sposób.
+%%%%
+Bolt of Cold
+
+Ten czar emituje wielką wiązkę przejmującego zimna.
+%%%%
+Bolt of Draining
+
+Ten czar emituje wielką wiązkę nekromantycznej energii, wysysając życie z
+wszelkich trafionych żywych istot. Demony, nieumarli i animowane przedmioty nie
+ucierpią w żaden sposób.
+%%%%
+Bolt of Fire
+
+Ten czar emituje wielką wiązkę płomieni.
+%%%%
+Bolt of Inaccuracy
+
+Ten czar strzela magicznym pociskiem który zadaje ogromne obrażenia — o ile
+cokolwiek trafi. Celowanie nim jest niewiarygodnie trudne.
+%%%%
+Iron Shot
+
+Ten czar tworzy spory i ciężki metalowy pocisk, po czym ciska nim.
+%%%%
+Bolt of Magma
+
+Ten czar ciska pocisk z gorącej roztopionej skały, zadając spore obrażenia
+nawet istotom odpornym na ogień.
+%%%%
+Borgnjor's Revivification
+
+Ten czar natychmiast leczy wszelkie rany odniesione przez rzucającego, ale
+kosztem nieodwracalnej utraty małej części zdrowia — tym większej, im mniejsze
+są umiejętności.
+
+Czar ten ma wystarczającą moc aby dosłownie wydrzeć kogoś z Bram Śmierci, ale
+szok tym wywołany powoduje chwilowy paraliż.
+%%%%
+Call Canine Familiar
+
+Ten czar przyzywa jakąś odmianę psa.
+%%%%
+Call Imp
+
+Ten czar przyzywa pomniejszego demona z piekielnych czeluści.
+%%%%
+Cause Fear
+
+Ten czar sieje przerażenie wśród istot w najbliższym pobliżu.
+%%%%
+Chain Lightning
+
+Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
+celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
+tego pójdzie w ziemię.
+%%%%
+Cigotuvi's Degeneration
+
+Ten czar, jeśli nie zostanie odparty, zmienia ofiarę w bezkształtną bryłę mięsa
+— która jednak wciąż jest żywa i wrogo nastawiona.
+%%%%
+Condensation Shield
+
+Ten czar tworzy lodowy dysk z wilgoci zawartej w powietrzu, który unosi się
+przez okres działania czaru, sterowany umysłem czarującego. Działa jak zwykła
+tarcza, jednak nie wymaga wolnej ręki a więc nie koliduje z oburęcznymi brońmi.
+Grubość, rozmiar i wytrzymałość tego dysku zależy od umiejętności z dziedziny
+Magii Lodu.
+%%%%
+Confuse
+
+Ten czar, jeśli nie zostanie odparty, powoduje tymczasowe zaćmienie umysłu u
+ofiary.
+%%%%
+Confusing Touch
+
+Ten czar rzuca urok na dłonie rzucającego. Po dotknięciu kogoś taką dłonią,
+jeśli czar nie zostanie odparty, powoduje on zmieszanie umysłu.
+%%%%
+Conjure Ball Lightning
+
+Ten czar tworzy pioruny kuliste, które poruszają się bez jakiejkolwiek
+kontroli, po czym wybuchają w sporym wyładowaniu.
+%%%%
+Conjure Flame
+
+Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
+tymczasową zaporę przeciw wrogom którzy boją się poparzeń — i zadaje spore
+obrażenia tym którzy w nią wejdą.
+%%%%
+Control Teleport
+
+Ten czar pozwala przez krótki okres kontrolować czary przemieszczeń.
+
+Uwaga: kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
+%%%%
+Control Undead
+
+Ten czar próbuje zniewolić nieumarłych na których zostanie rzucony.
+%%%%
+Controlled Blink
+
+Ten czar pozwala na przemieszczenie się na krótki dystans, z pełną precyzją.
+ Jest na tyle potężny że nawet w miejscach gdzie magiczna aura uniemożliwia
+jakakolwiek inną kontrolę teleportów, precyzja jest tylko zmniejszona.
+
+Kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
+%%%%
+Corona
+
+Ten czar tworzy poświatę wokół ofiary, czyniąc ją bardziej widoczną. W
+warunkach słabego światła, takich jak te lochy, bardzo ułatwia to obserwację
+tej istoty a więc także i celowanie. Ponadto, blokuje to wszelką
+niewidzialność.
+%%%%
+Corpse Rot
+
+Ten czar gwałtownie przyśpiesza rozkład zwłok w pobliżu rzucającego,
+wydzielając chmury nekromanckiej miazmy, wysoce niezdrowej dla wszelkich istot
+żywych.
+%%%%
+Cure Poison
+
+Ten czar leczy truciznę z ciała rzucającego.
+%%%%
+Darkness
+
+Ten czar przyciemnia światło, zmniejszając zasięg wzroku. Brzegi tego efektu są
+bardzo stopniowe, tak więc nie wzbudza to alarmu u niezbyt uważnych
+przeciwników.
+%%%%
+Death Channel
+
+Ten czar zniewala dusze żywych istot zabitych przez zarówno rzucającego jak i
+sprzymierzeńców, tworząc z nich upiory.
+%%%%
+Death's Door
+
+Ten czar jest wyjątkowo potężny, ale niesie ze sobą spore ryzyko. Stawia on
+rzucającego w stan pomiędzy życiem a śmiercią — daje zupełną odporność na
+jakiekolwiek obrażenia, ale także na wszelkie lecznicze efekty. Kiedy czar ten
+mija, pozostawia rzucającego niemal martwym.
+
+Umiejętności w dziedzinie Nekromacji, jak i łaska Kikubaaqudghy, pozwalają
+zachować nieco więcej zdrowia.
+%%%%
+Debugging Ray
+
+Czar który powoduje 1500 obrażeń i zawsze trafia. I nie jest dostępny w
+normalnej grze.
+%%%%
+Deflect Missiles
+
+Ten czar chroni rzucającego przed wszelkimi typami pocisków, tak zwykłych jak i
+magicznych. Uniknięcie ich nadal wymaga przytomnej decyzji (robisz to odruchowo
+według wskaźnika EV), ale niemal zawsze jest śmiesznie łatwe.
+%%%%
+Delayed Fireball
+
+Rzucenie tego czaru nie ma natychmiastowego efektu. Zgromadzoną w nim energię
+magiczną możesz w każdej chwili uwolnić w postaci ognistej kuli; wypuszczenie
+tej kuli nie zabiera ani chwili czasu. Jakkolwiek można w ten sposób
+przygotować tylko jedną kulę naraz, można ją trzymać bez limitu czasu.
+
+Znajomość tego czasu pozwala nauczyć się zwykłej Ognistej Kuli bez zajmowania
+miejsca w pamięci.
+%%%%
+Demonic Horde
+
+Ten czar przyzywa grupę pomniejszych demonów na usługi rzucającego, jakkolwiek
+niektóre z nich mogą być niesforne.
+%%%%
+Dig
+
+Ten czar pozwala drążyć tunele w niewzmocnionej skale. Nadaje on skale
+półpłynną postać która spływa w dół, nie powodując wiele hałasu.
+%%%%
+Dispel Undead
+
+Ten czar częściowo animuje wskazaną nieumarłą istotę, w sposób sprzeczny z
+czarami za pomocą których się ona porusza. Powoduje to ogromne obrażenia.
+%%%%
+Dispersal
+
+Ten czar próbuje przeteleportować wszystkich znajdujących się bezpośrednio obok
+rzucającego.
+%%%%
+Dragon Form
+
+Ten czar tymczasowo nadaje rzucającemu postać wielkiego ognistego smoka, dając
+kły, pazury, nieludzko twardą skórę jak i zdolność ziania ogniem. Jeśli
+rzucający jest smokowcem, smok zamiast tego zachowa kolor jak i typ oddechu
+(np. biali smokowcy zmieniają się w lodowe smoki i zioną chłodem).
+%%%%
+Enslavement
+
+Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
+istotą.
+%%%%
+Ensorcelled Hibernation
+
+Ten czar próbuje oziębić metabolizm wybranej istoty, co zwykle skutkuje
+zapadnięciem w stan przypominający sen. Zimnokrwiste stworzenia mogą ponieść
+dodatkowe konsekwencje.
+%%%%
+Evaporate
+
+Ten czar podgrzewa eliksir trzymany w ręku, powodując gwałtowny wybuch.
+Naturalnie, rozsądny czarodziej zadba o to aby w tym momencie eliksiru w ręce
+już nie było — rzut butelką jest elementem rzucania tego czaru.  Zazwyczaj
+opary eliksiru tworzą zabójczą chmurę utrzymującą się w powietrzu przez dłuższą
+chwilę.
+%%%%
+Excruciating Wounds
+
+Ten czar tymczasowo nadaje trzymanej broni magiczną markę cierpienia. Nie
+zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
+
+Nie jest możliwe utrwalenie tej marki za pomocą zwojów worpalizacji.
+%%%%
+Fire Brand
+
+Ten czar tymczasowo nadaje trzymanej broni magiczną markę płomieni. Nie
+zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
+%%%%
+Fire Storm
+
+Ten czar przywołuje potężną burzę płomieni we wskazanym miejscu. Obiekty lub
+istoty znajdujące się po drodze nie stanowią problemu. Efekt kominowy powoduje
+powstanie wielu krótkotrwałych wirów ognia.
+%%%%
+Fireball
+
+Ten czar ciska kulę ognia która leci we wskazanie miejsce po czym wybucha.
+%%%%
+Flame Tongue
+
+Ten czar wyzwala parometrowy płomień. Jego długość zależy od mocy czaru, i dla
+początkujących czarodziei może dosięgnąć co najwyżej na długość ręki.
+%%%%
+Flight
+
+Ten czar daje rzucającemu zdolność lotu.
+%%%%
+Freeze
+
+Ten czar zmraża jakąś istotę stojącą w zasięgu ręki rzucającego (zawsze
+trafia). To powoduje obrażenia, i może nieść dodatkowe konsekwencje dla
+zimnokrwistych stworzeń.
+%%%%
+Freezing Aura
+
+Ten czar tymczasowo nadaje trzymanej broni (ręcznej lub miotającej) magiczną
+markę lodu. Nie zadziała to na bronie już posiadające jakąś markę oraz na
+artefakty.
+%%%%
+Freezing Cloud
+
+Ten czar przyzywa duży obłok śmiertelnie zimnej pary.
+%%%%
+Fulsome Distillation
+
+Ten czar wyciąga najgorsze esencje ze zwłok. Picie rezultatu jest wysoce
+niewskazane — służy on jako komponent niektórych czarów. Typ utworzonego w ten
+sposób eliksiru jest zwykle podobny do efektów spożycia mięsa z tych zwłok.
+%%%%
+Haste
+
+Ten czar znacznie przyspiesza wszystkie ruchy jakiegoś stworzenia. Zwykle rzuca
+się ten czar na siebie samego, jednak nadużywanie grozi skażeniem magią.
+%%%%
+Haunt
+
+Ten czar przyzywa duchy i upiory wokół wskazanej istoty. Użycie tego czaru
+często powoduje że rzucającemu robi się niedobrze.
+%%%%
+Throw Icicle
+
+Ten czar tworzy i ciska ostry sopel lodu. Jakkolwiek ten czar jest szczególnie
+skuteczny wobec istot wrażliwych na zimno, większość obrażeń jest zadawanych
+wskutek uderzenia i ostrych krawędzi, tak więc odporność na zimno nie za wiele
+pomaga.
+%%%%
+Ice Form
+
+Ten czar tymczasowo zmienia rzucającego w lodową bestię — mniej więcej w
+kształcie niedźwiedzia, jednak zrobioną całkowicie z lodu. Jak wiadomo, lód
+może pływać po wodzie.
+%%%%
+Ice Storm
+
+Ten czar ciska groźną burzę lodu, gradu i mroźnego powietrza we wskazanym
+kierunku. Zadaje to to ogromne obrażenia, tak od zimna jak i od uderzeń lodu,
+na sporym obszarze.
+%%%%
+Ignite Poison
+
+Ten czar zamienia wszelką truciznę w pobliżu w ogień, paląc od środka istoty
+które uległy zatruciu, mają trującą krew lub gruczoły lub zęby jadowe.
+
+Rzucający ten czar i jego wyposażenie nie podlegają temu efektowi.
+%%%%
+Inner Flame
+
+Ten czar, jeśli nie zostanie odparty, wypełnia ofiarę wewnętrznym ogniem. Nie
+daje to żadnego efektu póki ofiara w jakikolwiek sposób jeszcze żyje (łącznie z
+fałszywym życiem nieumarłych), jednak w momencie śmierci powoduje gwałtowną
+ognistą eksplozję. Rozmiar tego wybuchu zależy od rozmiaru ofiary.
+%%%%
+Insulation
+
+Ten czar chroni rzucającego przed porażeniem prądem.
+%%%%
+Invisibility
+
+Ten czar ukrywa jakąś istotę (zwykle siebie samego) przed wzrokiem innych.
+Dłuższa niewidzialność z czasem powoduje magiczne skażenie, które w większych
+dawkach, oprócz innych nieprzyjemnych rezultatów, jest widoczne jako poświata,
+co czyni niewidzialność bezużyteczną.
+%%%%
+Iskenderun's Mystic Blast
+
+Ten czar ciska niestabilną kulę czystej magicznej energii. Ta kula często
+oprócz bezpośrednich obrażeń wybucha na boki w momencie uderzenia, zwłaszcza
+jeśli została użyta na krótki dystans.
+%%%%
+Leda's Liquefaction
+
+Ten czar czyni grunt wokół i pod rzucającym półpłynnym, wielce utrudniając
+chodzenie. Rzucający w niewielkim stopniu kontroluje ten czar, pozwalając
+wykonywać czynności inne niż chodzenie bez większego spowolnienia — wszyscy
+wokół nie mają tak dobrze.
+%%%%
+Lee's Rapid Deconstruction
+
+Ten czar rozwala na kawałki część ściany lub niektórych kruchych istot,
+zasypując wszystkich wokół odłamkami. Można ten czar użyć na istoty zrobione z
+lodu, odkrytej kości, metalu lub kamienia — łącznie z ofiarami petryfikacji.
+
+Cele zrobione ze skały, kamienia, lodu lub kości rozsiewają odłamki na krótki
+lub średni dystans. Cele z metalu dają krótki zasięg ale większe obrażenia, zaś
+te z kryształu zadają ogromne obrażenia na duży dystans.
+%%%%
+Lehudib's Crystal Spear
+
+Ten czar ciska długi i skrajnie ostry pocisk z kryształu.
+%%%%
+Lethal Infusion
+
+Ten czar tymczasowo nadaje trzymanej broni magiczną markę wyssania. Nie
+zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
+%%%%
+Lightning Bolt
+
+Ten czar ciska potężny grom. Jakkolwiek ten czar zadaje trochę mniejsze
+obrażenia niż podobne czary Magii Ognia i Lodu, odbija się on od większości
+ścian, pozwalając uderzyć kogoś dwukrotnie.
+%%%%
+Magic Dart
+
+Ten czar ciska mały pocisk czystej magicznej energii. Zawsze trafia.
+%%%%
+Malign Gateway
+
+Ten czar wyrywa dziurę w przestrzeni, tworząc krótkotrwały portal do innego
+świata, pełnego potwornych istot z wielkimi mackami. Zwykle po krótkim czasie
+któraś z tych istot wsadza mackę w portal, próbując wybadać co jest po naszej
+stronie. Nie jest dobrze być wówczas z pobliżu.
+
+Ten portal jest jednostronny.
+%%%%
+Mass Abjuration
+
+Ten czar próbuje odesłać wszystkie wrogie przyzwane istoty w zasięgu wzroku — a
+nawet jeśli zostanie odparty, mocno skraca pozostały czas przyzwania.
+%%%%
+Mass Confusion
+
+Ten czar powoduje zaćmienie umysłu we wszystkich w zasięgu wzroku którzy nie
+odeprą tego czaru.
+%%%%
+Mephitic Cloud
+
+Ten czar tworzy sporą lecz krótkotrwałą chmurę obrzydliwych oparów.
+%%%%
+Metabolic Englaciation
+
+Ten czar powoduje wychłodzenie metabolizmu wszystkich pobliskich istot,
+spowalniając wszystkie które nie są odporne na zimno. Nie można tego czaru w
+inny sposób odeprzeć, jednak mocniejsze stworzenia zwykle szybciej wracają do
+normy.
+%%%%
+Necromutation
+
+Ten czar tymczasowo zmienia rzucającego w licza — potężny magiczny szkielet.
+Daje to moce śmierci (nekromancki dotyk, wzmocnienie czarów nekromancji),
+zapewnia zwiększoną odporność na zimno i wrogie uroki, i czyni rzucającego
+całkowicie odpornym na truciznę, zgniliznę i nekromancję działającą na istoty
+żywe, a także eliminuje wszelką potrzebę jedzenia przez okres trwania czaru.
+
+Są także i negatywne skutki, takie jak wraźliwość na poświęconą broń i
+niemożność picia eliksirów.
+
+Z niezrozumiałych powodów ten czar może być użyty przez czarodziejów będących
+mięczakami, jednak jaka tkanka pełni wówczas rolę kości pozostaje tajemnicą.
+%%%%
+Olgreb's Toxic Radiance
+
+Ten czar spowija wszystko w zasięgu wzroku w niezdrowym zielonym świetle,
+powodując zatrucie u wszystkich obecnych (łącznie z rzucającym). Zwykłe szkło
+zatrzymuje te promienie, a niewidzialność zapewnia całkowitą ochronę.
+%%%%
+Orb of Destruction
+
+Ten czar tworzy kulę czystej niszczącej magii, ciskając ją w wybranym kierunku.
+Te kule poruszają się znacznie wolniej niż większość pocisków. Same
+naprowadzają się na cel, jednakże ze względu na dużą bezwładność, czasem można
+je wyminąć biegnąc w bok (jednak krótkie uskoki, takie jak zdolność uników, nic
+nie dają). Po rzuceniu czaru, kule te potrzebują trochę czasu żeby się uzbroić,
+i na krótki dystans taka niegotowa kula zadaje tylko część obrażeń.
+
+Powszechnie dostępne wersje tego czaru tracą moc po wyjściu poza zasięg wzroku
+rzucającego, jednak według pogłosek jest to skutek błędu kopisty, i czarownicy
+którzy żyli setki lat temu znali pełną wersję. Być może, dzięki nekromancji,
+niektórzy z nich jeszcze nie-żyją do dziś dnia.
+%%%%
+Ozocubu's Armour
+
+Ten czar pokrywa ciało rzucającego ochronną warstwą lodu, której moc zależy od
+umiejętności ze szkoły Magii Lodu. Rzucający i jego wyposażenie nie czują zimna
+tej warstwy, jednakże każda dodatkowa utrata ciepła powoduje normalne efekty.
+Ten czar koliduje z noszeniem sztywnej zbroi (czyli takiej dającej co najmniej
+-2 do uników).
+
+Efekty tego czaru są silniejsze jeśli rzucający jest zamieniony w lodową
+bestię.
+%%%%
+Ozocubu's Refrigeration
+
+Ten czar wysysa ciepło z całej okolicy, zadając obrażenia od zimna wszystkim w
+zasięgu wzroku, łącznie z rzucającym.
+%%%%
+Pain
+
+Ten czar wywołuje małą ale wyjątkowo bolesną ranę we wskazanej żyjącej istocie.
+Rzucający sam otrzymuje pomniejsze obrażenia jako efekt uboczny.
+%%%%
+Passage of Golubria
+
+Ten czar otwiera dwa portale, z tego jeden zawsze blisko rzucającego, które
+pozwalają na natychmiastowy transport pomiędzy nimi. Jeśli więcej takich
+portali jest otwartych jednocześnie, nie ma możliwości wyboru do którego się
+trafi. Portale te są jednorazowe, i rozwiewają się po upływie czasu działania
+czaru.
+%%%%
+Passwall
+
+Ten czar, po krótkiej medytacji nad strukturą skały, pozwala przeniknąć na jej
+drugą stronę, o ile odległość jest wystarczająco krótka.
+%%%%
+Petrify
+
+Ten czar, jeśli nie zostanie odparty, obraca wskazaną istotę w kamień na krótki
+czas. Trwa to chwilę: początkowo ofiara jest tylko spowolniona, aż w końcu
+stopniowo zmieni się całkowicie w kamień. Oczywiście, łupanie kamienia jest
+trudniejsze niż żywego ciała, jednak ofiara, mimo że twarda, jest bezbronna.
+%%%%
+Phase Shift
+
+Ten czar pozwala rzucającemu „migotać” pomiędzy światem rzeczywistym a
+urojonym, co czasem pozwala całkowicie uniknąć pocisków i ciosów, jeśli w
+momencie ich zadania akurat będzie się „migniętym” poza świat.
+%%%%
+Poison Arrow
+
+Ten czar ciska magiczną strzałę zatrutą skrajnie zjadliwą toksyną, przed którą
+żadna żywa istota nie jest zupełnie odporna. A i sama strzała zadaje pewne
+obrażenia, tak więc i nieumarli nie są bezpieczni.
+%%%%
+Poison Weapon
+
+Ten czar tymczasowo pokrywa trzymaną w dłoni broń trucizną. To zadziała tylko
+na bronie nie posiadające jeszcze żadnej magicznej marki.
+%%%%
+Poisonous Cloud
+
+Ten czar tworzy wielki obłok trujących gazów.
+%%%%
+Polymorph Other
+
+Ten czar, jeśli nie zostanie odparty, zmienia jakąś istotę w jakieś inne,
+przypadkowe, stworzenie. Działa na wszelkie formy życia łącznie z demonami i
+aniołami.
+
+Zmiennokształtne istoty nie mają możliwości odparcia tego czaru.
+%%%%
+Portal Projectile
+
+Ten czar przemieszcza wystrzelony lub rzucony pocisk wprost z twego łuki/ręki
+na piędź przed cel, wielce poprawiając celność. Nie ma to jednak wpływu na
+zadane obrażenia.
+%%%%
+Projected Noise
+
+Ten czar wywołuje dźwięk we wskazanym odległym miejscu.
+%%%%
+Recall
+
+Ten czar przemieszcza wszelkie przyjazne istoty w dużym zasięgu wprost koło
+rzucającego.
+%%%%
+Regeneration
+
+Ten czar używa nekromancji aby animować świeżo martwe tkanki na brzegach ran
+rzucającego. Pozwala to zasklepić rany, wielce wzmagając naturalne leczenie.
+Ten czar także znacznie zwiększa zużycie pokarmu przez czas działania.
+%%%%
+Repel Missiles
+
+Ten czar znacznie ułatwia uskakiwanie przed pociskami, tak zwykłymi jak i
+magicznymi.
+%%%%
+Ring of Flames
+
+Ten czar otacza rzucającego ruchomym pierścieniem płomieni, co także powoduje
+odrzucenie wszelkiego innego ognia. Oprócz palenia kogokolwiek w pobliżu,
+zapewnia to dużą odporność na ogień jak i wzmocnienie Magii Ognia, lecz
+niestety także daje wrażliwość na zimno i zmniejsza moc rzucanych czarów Magii
+Lodu.
+%%%%
+Sandblast
+
+Ten czar ciska strumień ziaren żwiru. Dla dobrego efektu potrzebne jest jakieś
+źródło (np. kamień trzymany w dłoni), jednak wszędzie obecny piasek i brud też
+dają pewien rezultat.
+%%%%
+See Invisible
+
+Ten czar pozwala rzucającemu widzieć rzeczy ukryte przed zwykłym wzrokiem.
+%%%%
+Shadow Creatures
+
+Ten czar tka i ożywia stworzenia ze strzępów cienia. Będą to zawsze istoty
+podobne do tych jakie zwykle żyją w danej okolicy, jednak nie ma możliwości
+wyboru co konkretnie utkać. Ten czar nawet utworzy odpowiednie wyposażenie,
+które, razem z istotami, rozwieje się po krótkim czasie.
+%%%%
+Shatter
+
+Ten czar powoduje trzęsienie ziemi wokół rzucającego, co zadaje ogromne
+obrażenia niemal wszystkim istotom. Tylko duchy są całkowicie niewrażliwe.
+
+Najbardziej ucierpią stworzenia zrobione z kamienia, metalu lub kryształu,
+trochę mniej te z lodu lub kości. Zaś galarety i ci zdolni do lotu doznają
+tylko nieznacznych obrażeń.
+%%%%
+Shock
+
+Ten czar ciska małą dawkę elektryczności, zdolną do odbijania się od ścian.
+%%%%
+Shroud of Golubria
+
+Ten czar zakrzywia przestrzeń, tworząc osłonę wokół ciała rzucającego,
+zatrzymując ciosy. Nie daje to żadnej ochrony przed pociskami, jako że
+poruszają się one zbyt szybko aby ten czar mógł je odchylić. Ta osłona jest
+bardzo niestabilna, i ma tendencję do zawodzenia, zwłaszcza wobec mocniejszych
+ataków.
+%%%%
+Silence
+
+Ten czar całkowicie eliminuje wszelkie dźwięki w pobliżu czytającego. Póki ten
+efekt trwa, nikt, łącznie z rzucającym, nie może czytać zwojów, rzucać czarów,
+modlić się, rozmawiać ani krzyczeć. Zakres tej magicznej ciszy jest kulą w
+pewnym promieniu wokół czytającego, która powoli kurczy się po czym znika. Taka
+nienaturalna cisza jest tak alarmująca jak krzyk, większość istot będzie w
+stanie zauważyć że coś jest nie tak. Demony, jak i magiczne istoty (w
+przeciwieństwie do tych tylko posługujących się magią) nie potrzebują dźwięku
+do rzucania czarów.
+%%%%
+Simulacrum
+
+Ten czar zmienia kawałek mięsa w ręku rzucającego do stworzenia lodowej
+podobizny stworzenia z którego powstało to mięso. Magia ta jest niestabilna,
+tak więc lód ten wkrótce zmienia się w obłok mroźnych oparów.
+
+Simulacra nie są zdolne do żadnych czynności bardziej skomplikowanych niż
+poruszanie się i prosta walka wręcz — nie mogą więc strzelać, rzucać czarów ani
+nawet chodzić po schodach.
+%%%%
+Slow
+
+Ten czar, jeśli nie zostanie odparty, spowalnia wszelkie czynności jakiejś
+istoty.
+%%%%
+Spider Form
+
+Ten czar tymczasowo zmienia rzucającego w szybkiego, jadowitego wielkiego
+pająka. Czarowanie w tej postaci jest możliwe, lecz lekko utrudnione. Pająk ten
+może chodzić po ścianach, lecz jest wrażliwy na trucizny.
+%%%%
+Static Discharge
+
+Ten czar wyzwala ładunek elektryczności, porażając stworzenia w bezpośrednim
+sąsiedztwie rzucającego. Jeśli te stworzenia przewodzą prąd, porażeniu mogą
+ulec też istoty stojące dalej w nieprzerwanym łańcuchu.
+
+Stworzenia nie dotykające podłoża są całkowicie niewrażliwe.
+%%%%
+Statue Form
+
+Ten czar tymczasowo zmienia czarującego w powolną lecz bardzo wytrzymałą
+kamienną statuę. Ciosy zadawane w tej postaci, tak bronią jak i gołymi
+kamiennymi pięściami, zadają ogromne obrażenia. Ponadto, forma ta zapewnia
+odporność na elektryczność, trucizny, zgniliznę jak i nekromancję.
+%%%%
+Sticks to Snakes
+
+Ten czar zmienia drewniane przedmioty w dłoni rzucającego w węże. Artefakty nie
+mogą zostać w ten sposób przemienione.
+%%%%
+Sticky Flame
+
+Ten czar tworzy grudę lepkiego płynnego ognia, która opryskuje i przylepia się
+do pobliskiego stworzenia.
+%%%%
+Sting
+
+Ten czar ciska magiczną zatrutą strzałką.
+%%%%
+Stone Arrow
+
+Ten czar ciska ostrym odłamem kamienia.
+%%%%
+Stoneskin
+
+Ten czar zmienia skórę rzucającego w kamień, o twardości zależnej od
+umiejętności w Magii Ziemi. Działa to tylko na mniej więcej normalne żywe
+ciało, i koliduje z większością przemian. Z jednym wyjątkiem: w formie statuy,
+ten czar jest bardziej efektywny.
+%%%%
+Sublimation of Blood
+
+Ten czar zmienia świeże mięso lub krew w magiczną moc. Można tego czaru użyć na
+sobie samym, kosztem własnego zdrowia (co może być niebezpieczne lecz nigdy nie
+bezpośrednio zabójcze), lub na trzymanym w dłoni kawałku świeżego mięsa.
+%%%%
+Summon Butterflies
+
+Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
+%%%%
+Summon Demon
+
+Ten czar przyzywa jakiegoś mieszkańca Pandemonium, i próbuje nakłonić do
+służby. Przyzwanie jest gwarantowane, służba nie.
+%%%%
+Summon Dragon
+
+Ten czar przyzywa potężnego przyjaznego smoka.
+%%%%
+Summon Elemental
+
+Ten czar przyzywa ducha żywiołu, dając mu we władanie odpowiedni materiał,
+którego spora ilość musi być dostępna. To rzadko jest problemem w przypadku
+ziemi (skała) i powietrza, lecz może być dla ognia lub wody. To czy przyzwany
+żywiołak będzie przyjazny zależy od umiejętności z danej szkoły magii.
+%%%%
+Summon Greater Demon
+
+Ten czar przyzywa któregoś z większych demonów z Pandemonium, nakładając na
+niego urok zmuszający do posłuszeństwa. Demony te zwykle są wystarczająco
+potężne aby dość szybko przełamać ten urok, często nawet zanim upłynie czas
+przywołania.
+%%%%
+Summon Horrible Things
+
+Ten czar otwiera portal do Otchłani, przyzywając jedno lub więcej z
+obrzydliwości zamieszkującej tą przeklętą krainę. Kontakt umysłu z Otchłanią
+często ma negatywny wpływ na zdrowie psychiczne rzucającego.
+%%%%
+Summon Hydra
+
+Ten czar przyzywa wielogłową hydrę, niestety na krótki czas.
+%%%%
+Summon Ice Beast
+
+Ten czar przyzywa lodową bestię.
+%%%%
+Summon Scorpions
+
+Ten czar przyzywa jednego lub kilka skorpionów. Niektóre z nich mogą być wrogo
+nastawione.
+%%%%
+Summon Small Mammals
+
+Ten czar przyzywa jedno lub parę małych stworzeń.
+%%%%
+Summon Swarm
+
+Ten czar przyzywa rój wściekle jadowitych owadów.
+%%%%
+Summon Ugly Thing
+
+Ten czar przyzywa zmutowaną kreaturę na służbę rzucającemu.
+%%%%
+Sure Blade
+
+Ten czar tworzy więź pomiędzy rzucającym a krótkim ostrzem trzymanym w dłoni,
+czyniąc to ostrze znacznie łatwiejszym w obsłudze. Wzmaga to celność lecz nie
+zadawane obrażenia.
+%%%%
+Swiftness
+
+Czy kiedyś zdawało ci się że wiatr ci zawsze w oczy wieje? Ten czar zapewnia
+wiatr w plecy, znacznie zwiększając szybkość poruszania się (lecz nie inne
+czynności). Niestety, wiatr w środku lochów zdecydowanie nie pomaga w skradaniu
+się, ponadto będąc pchanym wiatrem trudno uważać na pułapki.
+
+Za to, ten czar (poprawnie rzucony) nie powoduje skażenia magią, i może być
+używany łącznie z czarem Przyśpieszenie, dając w sumie ogromną prędkość.
+%%%%
+Teleport Other
+
+Ten czar przemieszcza inną istotę w przypadkowe, zwykle odległe, miejsce. Nie
+działa na siebie samego.
+%%%%
+Throw Flame
+
+Ten czar ciska małą porcją płomienia.
+%%%%
+Throw Frost
+
+ten czar ciska małą porcją szronu.
+%%%%
+Tornado
+
+Ten czar tworzy ogromny wir powietrza wokół rzucającego, zadając wielkie
+obrażenia wszystkim wokół. Tylko oko tego cyklonu jest bezpieczne, a przenosi
+się ono wraz z czarodziejem w jego środku. Wszystko inne co nie jest trwale
+przytwierdzone do ziemi zostanie uniesione wiatrem i zwyobracane.
+
+Efektywność tego czaru gwałtownie spada w zamkniętych pomieszczeniach.
+%%%%
+Tukima's Dance
+
+Ten czar animuje broń trzymaną w dłoni rzucającego, i pozwala jej tańczyć w
+powietrzu i uderzać wrogów. Solidna dawka obrażeń zakończy ten urok, jednak bez
+czynienia zauważalnej krzywdy tej broni.
+
+Ten czar nie zadziała na niektóre artefakty obdarzone własną wolą, broń pod
+wpływem tego uroku nie posiada też żadnych umiejętności i zdolności, choć
+walczy całkiem nieźle.
+%%%%
+Twisted Resurrection
+
+Ten czar pozwala pobliskim zwłokom pełzać o własnych siłach, łącząc się w
+potworne sterty ciała i kończyn. Więcej i większe zwłoki pozwalają utworzyć
+potężniejsze stwory.
+%%%%
+Vampiric Draining
+
+Ten czar kradnie życie dotkniętej żywej istoty i daje je rzucającemu. Nie
+zabierze to więcej życia niż rzucający jest w stanie przyswoić.
+
+Użycie tego czaru na demony i nieumarłych jest wysoce niewskazane.
+%%%%
+Venom Bolt
+
+Ten czar ciska pocisk zrobiony z jadu.
+%%%%
+Warp Weapon
+
+Ten czar tymczasowo nadaje trzymanej broni magiczną markę zniekształcenia. Nie
+zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
+
+Nie jest możliwe utrwalenie tej marki za pomocą zwojów worpalizacji.
+Wypuszczenie tej broni z rąk kończy działanie czaru, bez zwykłych konsekwencji
+związanych ze zniekształceniem.
+%%%%
