@@ -1553,7 +1553,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         skill_type sk = SK_THROWING;
         if (projected == LRET_LAUNCHED)
             sk = range_skill(*you.weapon());
-        ammoHitBonus = ammoDamBonus = std::min(3, you.skill_rdiv(sk));
+        ammoHitBonus = ammoDamBonus = std::min(3, you.skill_rdiv(sk) / 3);
     }
 
     int bow_brand = SPWPN_NORMAL;
@@ -2145,7 +2145,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
         ammoDamBonus = item.plus2;
     }
     else if (wepClass == OBJ_MISSILES)
-        ammoHitBonus = ammoDamBonus = std::min(3, mons->hit_dice);
+        ammoHitBonus = ammoDamBonus = std::min(3, mons->hit_dice / 3);
 
     // Archers get a boost from their melee attack.
     if (mons->is_archer())
