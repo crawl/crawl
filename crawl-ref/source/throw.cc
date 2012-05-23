@@ -2346,7 +2346,10 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
     msg += ".";
 
     if (mons->observable())
+    {
+        mons->flags |= MF_SEEN_RANGED;
         mpr(msg.c_str());
+    }
 
     _throw_noise(mons, beam, item);
 
