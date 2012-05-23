@@ -3005,6 +3005,42 @@ bool mons_has_ranged_attack(const monster* mon)
            || mons_has_ranged_weapon(mon);
 }
 
+bool _mons_starts_with_ranged_weapon(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_JOSEPH:
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+    case MONS_CENTAUR:
+    case MONS_CENTAUR_WARRIOR:
+    case MONS_NESSOS:
+    case MONS_YAKTAUR:
+    case MONS_YAKTAUR_CAPTAIN:
+    case MONS_CHERUB:
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_SONJA:
+    case MONS_HAROLD:
+    case MONS_JOZEF:
+    case MONS_POLYPHEMUS:
+    case MONS_CYCLOPS:
+    case MONS_STONE_GIANT:
+    case MONS_CHUCK:
+    case MONS_MERFOLK_JAVELINEER:
+    case MONS_URUG:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool mons_has_known_ranged_attack(const monster* mon)
+{
+    return mons_has_ranged_ability(mon)
+        || mon->flags & MF_SEEN_RANGED
+        || _mons_starts_with_ranged_weapon(mon->type)
+            && !(mon->flags & MF_KNOWN_SHIFTER);
+}
+
 bool mons_can_attack(const monster* mon)
 {
     const actor* foe = mon->get_foe();

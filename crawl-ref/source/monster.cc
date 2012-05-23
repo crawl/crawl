@@ -790,6 +790,9 @@ void monster::bind_spell_flags()
         flags |= MF_ACTUAL_SPELLS;
     if (mons_class_flag(type, M_PRIEST))
         flags |= MF_PRIEST;
+
+    if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(this))
+        flags |= MF_SEEN_RANGED;
 }
 
 static bool _needs_ranged_attack(const monster* mon)
@@ -1102,6 +1105,13 @@ void monster::pickup_message(const item_def &item, int near)
 {
     if (need_message(near))
     {
+        if (is_range_weapon(item)
+            || is_throwable(this, item)
+            || item.base_type == OBJ_MISSILES)
+        {
+            flags |= MF_SEEN_RANGED;
+        }
+
         mprf("%s picks up %s.",
              name(DESC_THE).c_str(),
              item.base_type == OBJ_GOLD ? "some gold"

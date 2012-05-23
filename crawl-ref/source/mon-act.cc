@@ -221,6 +221,12 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     {
         if (handle_mon_spell(mons, beem))
         {
+            // If a Pan lord/pghost is known to be a spellcaster, it's safer
+            // to assume it has ranged spells too.  For others, it'd just
+            // lead to unnecessary false positives.
+            if (mons_is_ghost_demon(mons->type))
+                mons->flags |= MF_SEEN_RANGED;
+
             mmov.reset();
             return (true);
         }
@@ -1348,6 +1354,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
             // Increment zap count.
             if (wand.plus2 >= 0)
                 wand.plus2++;
+
+            mons->flags |= MF_SEEN_RANGED;
         }
 
         mons->lose_energy(EUT_ITEM);
