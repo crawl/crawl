@@ -170,7 +170,10 @@ blowgun of the Assassin
 
 It is designed for easy concealment, but still packs a nasty punch.
 %%%%
-#lance "Wyrmbane"
+lance "Wyrmbane"
+
+An enchanted lance which grows more and more powerful every time it inflicts a
+killing blow on a dragon.
 %%%%
 Spriggan's Knife
 
