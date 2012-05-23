@@ -3,6 +3,7 @@
 open IN, "<mon-info.h" or die "Can't read mon-info.h\n";
 undef $/;
 $_=<IN>;
+s/\r//g;
 
 s/^enum monster_info_flags\n{\n//m && s/^\s*NUM_MB_FLAGS.*//ms
     or die "Can't find monster_info_flags in mon-info.h\n";
