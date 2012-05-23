@@ -21,6 +21,7 @@
 #include "travel.h"
 #include "view.h"
 
+#ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
 {
     "holy beings go hostile",
@@ -45,6 +46,7 @@ static const char *daction_names[] =
     "corpses rot",
     "Tomb loses -cTele",
 };
+#endif
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
 {
@@ -105,7 +107,9 @@ void update_da_counters(LevelInfo *lev)
 
 void add_daction(daction_type act)
 {
+#ifdef DEBUG_DIAGNOSTICS
     COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS);
+#endif
 
     dprf("scheduling delayed action: %s", daction_names[act]);
     you.dactions.push_back(act);
