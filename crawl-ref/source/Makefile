@@ -1330,8 +1330,8 @@ mon-mst.h: mon-spll.h util/gen-mst.pl
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
 
-mi-enum.h: mon-info.h util/gen-mi-enum.sed
-	$(QUIET_GEN)sed -f util/gen-mi-enum.sed <$< >$@
+mi-enum.h: mon-info.h util/gen-mi-enum
+	$(QUIET_GEN)util/gen-mi-enum
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
