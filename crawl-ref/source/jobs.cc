@@ -3,7 +3,6 @@
 #include "jobs.h"
 
 #include "libutil.h"
-#include "options.h"
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr",

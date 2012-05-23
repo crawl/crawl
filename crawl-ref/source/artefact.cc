@@ -14,7 +14,6 @@
 #include <algorithm>
 
 #include "externs.h"
-#include "options.h"
 
 #include "areas.h"
 #include "branch.h"
@@ -34,7 +33,6 @@
 #include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
-#include "view.h" // Elemental colours for unrandarts
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)

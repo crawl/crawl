@@ -10,7 +10,6 @@
 #include "database.h"
 #include "effects.h"
 #include "env.h"
-#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"

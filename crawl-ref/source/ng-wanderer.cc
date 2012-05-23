@@ -4,7 +4,6 @@
 
 #include "itemname.h"
 #include "itemprop.h"
-#include "newgame.h"
 #include "ng-setup.h"
 #include "player.h"
 #include "random.h"

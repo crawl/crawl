@@ -9,7 +9,6 @@
 
 #include "mon-util.h"
 
-#include "act-iter.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -30,11 +29,9 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
-#include "mislead.h"
 #include "mgen_data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
-#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -54,7 +51,6 @@
 #include "traps.h"
 #include "unicode.h"
 #include "view.h"
-#include "viewchar.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 

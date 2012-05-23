@@ -6,7 +6,6 @@
 #include "delay.h"
 #include "godpassive.h"
 #include "files.h"
-#include "itemname.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"

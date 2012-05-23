@@ -4,7 +4,6 @@
 
 #include <sstream>
 
-#include "abyss.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"

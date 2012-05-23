@@ -15,8 +15,6 @@
 #include "random.h"
 #include "skills.h"
 #include "spl-util.h"
-#include "sprint.h"
-#include "state.h"
 
 skill_type abil_skill(ability_type abil)
 {

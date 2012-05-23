@@ -50,7 +50,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -65,7 +64,6 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
-#include "syscalls.h"
 #include "xom.h"
 
 static void _end_game(scorefile_entry &se);

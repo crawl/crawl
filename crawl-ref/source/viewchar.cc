@@ -4,7 +4,6 @@
 
 #include "feature.h"
 #include "options.h"
-#include "state.h"
 #include "unicode.h"
 
 // For order and meaning of symbols, see dungeon_char_type in enum.h.

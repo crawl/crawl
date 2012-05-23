@@ -16,7 +16,6 @@
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
-#include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"

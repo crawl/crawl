@@ -11,12 +11,10 @@
 #include "chardump.h"
 #include "dungeon.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
-#include "place.h"
 #include "player.h"
 #include "view.h"
 

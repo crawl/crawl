@@ -5,7 +5,6 @@
 
 #include "delay.h"
 #include "dlua.h"
-#include "initfile.h"
 #include "libutil.h"
 #include "mon-act.h"
 #include "mon-behv.h"

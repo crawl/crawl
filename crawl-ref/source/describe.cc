@@ -26,7 +26,6 @@
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
-#include "fight.h"
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"

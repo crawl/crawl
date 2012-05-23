@@ -41,7 +41,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
-#include "showsymb.h"
 #include "sprint.h"
 #include "stash.h"
 #include "state.h"
@@ -53,9 +52,6 @@
 #include "view.h"
 #include "viewgeom.h"
 #include "xom.h"
-#ifdef WIZARD
- #include "wiz-dgn.h"
-#endif
 
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 

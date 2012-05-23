@@ -32,7 +32,6 @@
 #include "enum.h"
 #include "map_knowledge.h"
 #include "flood_find.h"
-#include "food.h"
 #include "fprop.h"
 #include "externs.h"
 #include "dbg-maps.h"
@@ -64,7 +63,6 @@
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "sprint.h"
 #include "state.h"
 #include "tags.h"
 #include "terrain.h"
@@ -72,7 +70,6 @@
 #include "tileview.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
 #include "zotdef.h"
 #include "hints.h"
 

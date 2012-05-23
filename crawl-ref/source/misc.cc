@@ -19,7 +19,6 @@
 #include <cmath>
 
 #include "externs.h"
-#include "options.h"
 #include "misc.h"
 
 #include "abyss.h"
@@ -35,6 +34,7 @@
 #include "directn.h"
 #include "env.h"
 #include "exercise.h"
+#include "feature.h"
 #include "fight.h"
 #include "files.h"
 #include "fprop.h"
@@ -42,13 +42,11 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "godpassive.h"
-#include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
-#include "macro.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
@@ -71,7 +69,6 @@
 #include "skills.h"
 #include "skills2.h"
 #include "spl-clouds.h"
-#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -80,7 +77,6 @@
 #include "travel.h"
 #include "hints.h"
 #include "view.h"
-#include "viewgeom.h"
 #include "shout.h"
 #include "xom.h"
 

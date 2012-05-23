@@ -3,13 +3,11 @@
 #ifdef USE_TILE_WEB
 
 #include "artefact.h"
-#include "cio.h"
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
 #include "libutil.h"
-#include "macro.h"
 #include "map_knowledge.h"
 #include "menu.h"
 #include "message.h"

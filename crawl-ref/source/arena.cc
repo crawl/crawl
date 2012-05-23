@@ -13,7 +13,6 @@
 #include "dungeon.h"
 #include "env.h"
 #include "externs.h"
-#include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
 #include "l_defs.h"
@@ -30,7 +29,6 @@
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "ng-init.h"
-#include "ng-setup.h"
 #include "options.h"
 #include "spl-miscast.h"
 #include "spl-util.h"

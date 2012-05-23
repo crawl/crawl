@@ -139,9 +139,6 @@
  #include "tiledef-dngn.h"
  #include "tilepick.h"
 #endif
-#ifdef USE_TILE_LOCAL
- #include "tilereg.h"
-#endif
 
 #ifdef DGL_SIMPLE_MESSAGING
 #include "dgl-message.h"

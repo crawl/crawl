@@ -20,7 +20,6 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
-#include "target.h"
 #include "hints.h"
 
 game_state::game_state()

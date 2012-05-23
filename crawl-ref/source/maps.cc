@@ -22,7 +22,6 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
-#include "initfile.h"
 #include "libutil.h"
 #include "message.h"
 #include "mapdef.h"
@@ -34,7 +33,6 @@
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"
-#include "tutorial.h"
 
 static map_section_type write_vault(map_def &mdef,
                                     vault_placement &,

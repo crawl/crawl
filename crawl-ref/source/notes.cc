@@ -12,8 +12,6 @@
 #include "notes.h"
 
 #include "branch.h"
-#include "cio.h"
-#include "describe.h"
 #include "files.h"
 #include "kills.h"
 #include "hiscores.h"

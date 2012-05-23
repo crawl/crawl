@@ -40,7 +40,6 @@
 #include "viewgeom.h"
 
 #ifdef USE_TILE
-#include "tilereg.h"
 #endif
 
 #ifndef USE_TILE_LOCAL

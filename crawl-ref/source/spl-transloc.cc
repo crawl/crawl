@@ -10,7 +10,6 @@
 
 #include "abyss.h"
 #include "areas.h"
-#include "branch.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -33,7 +32,6 @@
 #include "player.h"
 #include "random.h"
 #include "shout.h"
-#include "spl-other.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"

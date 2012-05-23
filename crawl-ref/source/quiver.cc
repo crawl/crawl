@@ -13,7 +13,6 @@
 
 #include "env.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "options.h"

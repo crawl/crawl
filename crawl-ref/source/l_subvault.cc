@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "coord.h"
 #include "cluautil.h"
 #include "l_libs.h"
 #include "mapdef.h"
