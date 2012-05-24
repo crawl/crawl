@@ -69,7 +69,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_lair_rare, mons_lair_level,
       'L', false, 4 },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 2, 5, 5, 13,
+    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 14,
       BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
