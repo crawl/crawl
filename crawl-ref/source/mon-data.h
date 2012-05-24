@@ -5832,7 +5832,7 @@ static monsterentry mondata[] = {
 {
     MONS_KHUFU, 'M', LIGHTRED, "Khufu",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS | M_UNIQUE,
-    MR_RES_COLD | mrd(MR_RES_ELEC, 2),
+    MR_RES_COLD | MR_RES_ELEC,
     0, 20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 18, 0, 0, 240 },
