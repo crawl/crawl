@@ -4817,8 +4817,8 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     }
 
     std::string tile_string = make_stringf(
-        "%cFG: %4d | 0x%8x (%s)\n"
-        "%cBG: %4d | 0x%8x (%s)\n",
+        "%cFG: %4lu | 0x%8lx (%s)\n"
+        "%cBG: %4lu | 0x%8lx (%s)\n",
         prefix,
         fg_idx,
         fg & ~TILE_FLAG_MASK,
