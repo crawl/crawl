@@ -84,13 +84,23 @@ __________________________________________________________________________();
 read_file("descript/features");
 read_file("descript/items");
 read_file("descript/unident");
-read_file("descript/unrand");
 read_file("descript/spells");
 read_file("descript/gods");
 read_file("descript/branches");
 read_file("descript/skills");
 read_file("descript/ability");
 read_file("descript/commands");
+
+read_file("descript/unrand");
+for (`grep ^NAME: art-data.txt`)
+{
+    chomp;
+    s/^NAME:\s+//;
+    next if /^DUMMY/;
+    err "$file: No description for unrand '$_'\n" unless $entries{$_};
+    delete $keys{$_};
+}
+err "$file: Unused description for unrand '$_'\n" for sort keys %keys;
 
 read_file("descript/cards");
 for (`util/gather_cards`)
