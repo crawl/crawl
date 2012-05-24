@@ -120,7 +120,7 @@ $entries{$_} = 1 for (
     # overridden descriptions
     'player', 'player illusion', 'merged slime creature',
     # genus-only monsters
-    'ghost', 'giant', 'golem', 'hell lord');
+    'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
 for (`util/gather_mons -d`)
 {
     chomp;
