@@ -1,7 +1,8 @@
 %%%%
 amulet
 
-Un bijou.
+Un talisman à porter autour du cou comme un bijou, chargé de pouvoirs obscurs
+d'origine inconnue.
 %%%%
 book
 
@@ -19,11 +20,14 @@ Une petite bouteille pleine de liquide.
 %%%%
 ring
 
-Un bijou.
+Un talisman chargé de forces obscures d'origine inconnue, à porter au doigt
+comme un bijou.
 %%%%
 rod
 
-Un bâtonnet doté de propriétés magiques.
+Un bâtonnet qui peut être tenu en main et évoqué pour jeter un sort parmi
+plusieurs, tirant son pouvoir d'une réserve qui se régénère. Il est
+suffisamment solide pour être utilisé comme une simple arme contondante.
 %%%%
 scroll
 
@@ -31,7 +35,7 @@ un parchemin de papier couvert d'inscriptions magiques.
 %%%%
 magical staff
 
-Un bâton doté de propriétés magiques.
+Un bâton de combat amélioré avec des pouvoirs obscurs d'origine inconnue.
 %%%%
 wand
 

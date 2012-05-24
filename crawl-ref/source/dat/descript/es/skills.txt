@@ -1,0 +1,334 @@
+%%%%
+Fighting
+
+La capacidad en Combate incrementa tu precisión y daño en combate cuerpo a
+cuerpo, y también incrementa tu máximo de puntos de vida.
+%%%%
+Short Blades
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+Las Hojas Cortas tienen una reputación de causar más bien poco daño en el final
+del juego, pero, por otra parte, son los mejores instrumentos para apuñalar.
+
+Entrenarse con Hojas Cortas le hace a uno más capaz con Hojas Largas, y
+viceversa.
+%%%%
+Long Blades
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+Entrenarse con Hojas Largas le hace a uno más capaz con Hojas Cortas, y
+viceversa.
+%%%%
+Axes
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+En las hachas se encuentran algunas de las más poderosas armas a dos manos,
+aunque requieren un montón de capacidad para ser usadas eficazmente.
+
+Entrenarse en Hachas le hace a uno más capaz con Mazas y Flagelos o con Armas
+de Asta, y viceversa.
+%%%%
+Maces & Flails
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+Entrenarse con Mazas y Flagelos le hace a uno más capaz con Hachas o con
+Bastones, y viceversa.
+%%%%
+Polearms
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+Las Armas de Asta pueden ser evocadas con 'v' para atacar enemigos a dos
+espacios de distancia.
+
+Entrenarse con Armas de Asta le hace a uno más capaz con Hachas o con Bastones,
+y viceversa.
+%%%%
+Staves
+
+Estar entrenado en un tipo particular de arma le permite a uno atacar más
+rápidamente con todas las armas de dicho tipo, así como incrementar su
+precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
+en uno o dos tipos para volverse más fuerte en ellos.
+
+Los Bastones requieren relativamente poca capacidad para ser usados
+eficientemente, aunque carecen de un potencial para causar grandes heridas como
+pasa con otras clases de armas.
+
+Entrenarse en Bastones le hace a uno más capaz con Mazas y Flagelos o con Armas
+de Asta, y viceversa.
+%%%%
+Slings
+
+Estar entrenado en un tipo particular de ataque a distancia le permite a uno
+impartir más daño cuando se usa el tipo de arma y munición adecuados.
+
+Entrenarse con Hondas le hace a uno más capaz en Lanzar y viceversa.
+%%%%
+Bows
+
+Estar entrenado en un tipo particular de ataque a distancia le permite a uno
+impartir más daño cuando se usa el tipo de arma y munición adecuados.
+%%%%
+Crossbows
+
+Estar entrenado en un tipo particular de ataque a distancia le permite a uno
+impartir más daño cuando se usa el tipo de arma y munición adecuados.
+%%%%
+Darts
+
+Estar entrenado en un tipo particular de ataque a distancia le permite a uno
+impartir más daño cuando se usa el tipo de arma y munición adecuados.
+%%%%
+Throwing
+
+Entrenar Lanzar hará que las armas arrojadizas (como javalinas) y cerbatanas
+sean más efectivas. En particular, hace que las armas de retorno sean más
+proclives a regresar a su lanzador, y hace que ciertos dardos mágicos tengan un
+efecto más probable cuando se lanzan con la cerbatana.
+
+Entrenarse en Lanzar le hace a uno más capaz con Hondas, y viceversa.
+%%%%
+Armour
+
+La capacidad en Armaduras incrementa el AC obtenido al llevar puestas
+armaduras, y también ayuda a mitigar el lastre provocado por las armaduras
+pesadas a la hora de combatir cuerpo a cuerpo o pronunciar hechizos.
+%%%%
+Dodging
+
+La capacidad de Esquivar afectará a tus oportunidades de esquivar un ataque,
+bien en cuerpo a cuerpo, a distancia o mágico. Ciertos tipos de ataque no
+pueden esquivarse, como los encantamientos (que deben ser resistidos) o las
+explosiones.
+%%%%
+Stealth
+
+Entrenando Sigilo, uno puede hacer que sea menos probable que los monstruos se
+den cuenta de tu presencia si están dormidos o distraídos, e incrementar tus
+oportunidades de que los monstruos pierdan tu rastro una vez te pierdan de
+vista. Date cuenta de que los monstruos se vuelven más suspicaces y
+observadores a medida que desciendes.
+%%%%
+Stabbing
+
+Apuñalar es la capacidad que gobierna la facilidad de inflingir una gran
+cantidad de daño cuando se ataca a una criatura indefensa o distraída
+(usualmente con una hoja corta), así como la cantidad adicional de daño
+causada. Algunos dioses pueden desaprobar esta conducta.
+%%%%
+Shields
+
+Un nivel alto de Escudos ayuda a detener ataques cuerpo a cuerpo o con
+proyectiles (mágicos y no mágicos) con el escudo que lleves (que también puede
+ser mágico o divino). Algunos ataques, como los virotes de penetración, no
+pueden ser bloqueados de ningún modo.
+%%%%
+Traps & Doors
+
+Un carácter entrenado en Trampas y Puertas será más observador de su entorno y
+más rápido en descubrir trampas y puertas secretas.
+%%%%
+Unarmed Combat
+
+Estar entrenado en Combate sin Armas incrementa la precisión, el daño y la
+velocidad de ataque en el combate cuerpo a cuerpo cuando no se usen armas.
+También permite golpear ocasionalmente con tu mano libre de forma adicional en
+caso de poderse hacer.
+%%%%
+Spellcasting
+
+Entrenarse en Pronunciar Hechizos le hace a uno más fácil aprender y lanzar
+hechizos, además de incrementar sus reservas mágicas. Ganar un nivel en
+Pronunciar Hechizos aporta más espacio en tu memoria para aprender nuevos
+hechizos. Tu capacidad pronunciando hechizos y tu inteligencia son los únicos
+factores que contrarrestan el hambre causada por los hechizos.
+%%%%
+Conjurations
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Los Conjuros son hechizos concebidos para la batalla, que a menudo consisten en
+conjurar un pedazo de materia de escasa duración y lanzarla hacia la víctima
+para lograr un daño directo. Entrenar Conjuros usualmente incrementa su daño, y
+a veces afecta su distancia efectiva o el tamaño del área afectada.
+%%%%
+Hexes
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Los Embrujos intentan poner una serie de encantamientos en cosas cercanas.
+Mientras ninguno causa daño directo, estar embrujado puede dejar fuera de
+combate a un adversario, aunque a menudo se requiere que se supere la
+resistencia del oponente a encantamientos hostiles para que tengan efecto.
+Entrenar Embrujos ayudará a superar esa resistencia.
+%%%%
+Charms
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Los Encantos te proporcionan un cierto número de auras de mejora propia.
+Entrenar Encantos a menudo aumenta la duración o eficacia de dichas auras.
+%%%%
+Summonings
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Convocaciones se encarga de convocar a criaturas desde otro plano de la
+realidad para unirse a tu ejército o para distraer a tus enemigos. Aumentar tu
+nivel en Convocaciones puede tener varios efectos en función del hechizo, como
+prolongar su presencia, aliados más poderosos, o menor probabilidad de convocar
+criaturas hostiles. Date cuenta de que las criaturas convocadas no dejan
+cadáveres y no dan experiencia cuando mueren, y que su equipación es tan
+efímera como ellos.
+%%%%
+Necromancy
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Nigromancia es el arte de absorber y ganar vida, aunque a menudo se ve
+asociada con zombis y otros no-muertos. Así pues, los hechizos de Nigromancia
+tienen una amplia gama de efectos, desde hechizos que crean o controlan a los
+no-muertos hasta hechizos que aportan una curación impía de varias maneras.
+%%%%
+Translocations
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Las Translocaciones se enfocan en el desplazamiento espacial de seres u
+objetos, incluyendo hechizos útiles para transportarse a uno mismo a cortas
+distancias rápidamente o para transportar a tus enemigos lejos de ti.
+%%%%
+Transmutations
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+Las Transmutaciones se encargan de los cambios de forma. Muchas Transmutaciones
+implican cambiar la propia forma, pero la escuela también contiene hechizos que
+cambian la forma de los enemigos, o que transforman objetos cercanos.
+%%%%
+Fire Magic
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Magia del Fuego se enfoca principalmente en inflingir daño con fuego a
+largas distancias, con muchos conjuros eficientes.
+
+Entrenarse en la Magia del Fuego hace que la Magia del Hielo sea más difícil de
+aprender, y viceversa.
+%%%%
+Ice Magic
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Magia del Hielo contiene un abanico de hechizos de daño directo, así como
+algunos efectos defensivos tales como crear temporalmente escudos o armaduras
+de hielo.
+
+Entrenarse en la Magia del Hielo hace que la Magia del Fuego sea más difícil de
+aprender, y viceversa.
+%%%%
+Air Magic
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Magia del Aire proporciona hechizos para manejar directamente el viento, así
+como conjurar relámpagos, ruidosos pero poderosos. También proporciona algunos
+hechizos de utilidad, como encantos para reclamar que el viento asista a tus
+movimientos o te proteja contra proyectiles.
+
+Entrenarse en la Magia del Aire hace que la Magia de la Tierra sea más difícil
+de aprender, y viceversa.
+%%%%
+Earth Magic
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Magia de la Tierra contiene hechizos capaces de inflingir grandes cantidades
+de daño físico, que no puede ser resistido como pasa con el fuego, el frío o el
+relámpago. Está asociada en cierto grado con las Transmutaciones, con hechizos
+para licuar la tierra a tu alrededor o convertir a tus enemigos en piedra.
+
+Entrenarse en la Magia del Aire hace que la Magia de la Tierra sea más difícil
+de aprender, y viceversa.
+%%%%
+Poison Magic
+
+Estar entrenado en una escuela de magia le hace a uno más fácil aprender y
+pronunciar hechizos de dicha escuela. Muchos hechizos pertenecen a una
+combinación de varias escuelas, y en tal caso el éxito del hechizo y su poder
+dependerán de la capacidad promedio en dichas escuelas.
+
+La Magia del Veneno es más útil al principio, ya que muchos monstruos son
+resistentes al veneno más adelante en el juego. Hay hechizos de veneno de gran
+utilidad durante el juego, no obstante.
+%%%%
+Invocations
+
+Tu nivel en Invocaciones influye en cómo de probable será que tengas éxito
+cuando uses una habilidad divina, y a menudo la potencia de tales habilidades.
+El nivel de Invocaciones afecta a tu reserva de magia, pero en menor grado que
+Pronunciar Hechizos, y solamente la mayor contribución es la que cuenta.
+%%%%
+Evocations
+
+Evocaciones es todo aquello relacionado con usar objetos mágicos como varas,
+mazos u otros objetos poco comunes. Mientras más alto tu nivel, es más probable
+que haya un efecto positivo cuando se evoquen objetos. Un nivel alto puede
+permitirte determinar el número de cargas que quedan en una vara que se haya
+usado. La capacidad en Evocaciones también afecta a tus reservas de magia, pero
+en menor grado que Pronunciar Hechizos, y solamente la mayor contribución es la
+que cuenta.
+%%%%
