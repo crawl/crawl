@@ -1,0 +1,166 @@
+%%%%
+CMD_REST
+
+Guérison et un peu de recherche
+%%%%
+CMD_REST verbose
+
+Passe 100 tours à restaurer la vie et la magie, et/ou à chercher. Le repos est
+interrompu des que vous apercevez un monstre hostile.
+%%%%
+CMD_EXPLORE
+
+Auto-exploration du niveau en cours
+%%%%
+CMD_EXPLORE verbose
+
+Permet à votre personnage de voyager en pilotage automatique vers les zones
+inexplorées du niveau en cours et de prendre au passage les objets sujets au
+ramassage automatique. L'exploration s'arrête dès que vous apercevez un monstre
+hostile et aussi pour annoncer les objets et les points d'intérêt.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Voyage vers d'autres niveaux.
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Déplacement automatique vers d'autres niveaux du Donjon. Le déplacement est
+interrompu si vous apercevez des monstres.
+%%%%
+CMD_USE_ABILITY
+
+Utiliser des pouvoirs divins ou naturels.
+%%%%
+CMD_PRAY
+
+Prie votre dieu
+%%%%
+CMD_PRAY verbose
+
+Si votre dieu apprécie les sacrifices, vous pourrez lui offrir un cadavre ou
+d'autres objets. De plus si vous vous trouvez sur un autel, vous pourrez vous
+convertir à la religion du dieu correspondant. Pour certain dieux, prier
+déclenche aussi d'autres effets particuliers.
+%%%%
+CMD_SEARCH_STASHES
+
+Recherche d'objets ou de points d'intérêt.
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Recherche des objets ou des points d'intérêt vu ailleurs, et voyage jusque là
+bas.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Relire les messages récents.
+%%%%
+CMD_RESISTS_SCREEN
+
+Affiche une vue d'ensemble du personnage.
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Affiche des informations sur le personnage : résistances connues, pouvoirs,
+équipements, caractéristiques, etc.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Affiche le plan général du donjon
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Affiche la position des entrées de branche du Donjon, les magasins, et autre
+points d'intérêt que vous avez découvert jusqu'ici.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Affiche le statut religieux
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Affiche les préférences de votre dieu, la conduite, votre rang religieux et vos
+pouvoirs divins.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Affiche les mutations
+%%%%
+CMD_DISPLAY_SKILLS
+
+Gestion des compétences
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Affiche le statut du personnage
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Affiche les enchantements actifs et quelques autres choses.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Liste des types d'objets identifiés
+%%%%
+CMD_SAVE_GAME_NOW
+
+Sauvegarde et quitte.
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Sauvegarde la partie pour plus tard, et quitte le jeu. Une fois que vous aurez
+repris le jeu, le fichier de sauvegarde sera détruit.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Modifie le graphisme du personnage
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Modifie les graphismes de l'équipement et de la race utilisés pour afficher le
+personnage.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Aide de jeu
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Liste des commandes, options,etc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Génère un état d'avancement du personnage
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Génère un fichier 'nomdupersonnage.txt' dans le dossier morgue. Vous y
+trouverez une énorme quantité d'information (caractéristiques, inventaire,
+compétences, notes, etc...) et vous pourrez les consulter à loisir.
+%%%%
+CMD_AUTOFIGHT
+
+Attaque le monstre le plus proche
+%%%%
+CMD_AUTOFIGHT verbose
+
+Avance en direction du monstre hostile le plus proche et l'attaque avec l'arme
+tenue en main.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Attaque un monstre adjacent
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Attaque un monstre à coté de vous avec l'arme tenue en main.
+%%%%
+CMD_SEARCH
+
+Attend un tour
+%%%%
+CMD_SEARCH verbose
+
+Passe un unique tour à attendre, se reposer, et chercher.
+%%%%

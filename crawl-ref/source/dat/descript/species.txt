@@ -39,7 +39,7 @@ eat, hacking away with their claws.
 %%%%
 Halfling
 
-Small but hardy, they excel with slings. They have a limited resistance to
+Small but hardy, they excel with slings. They have an increased resistance to
 mutagenic effects.
 %%%%
 High Elf
