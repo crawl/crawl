@@ -1,0 +1,148 @@
+%%%%
+Singing Sword
+
+Ten cudowny miecz niczego nie kocha bardziej niż śpiewać swemu właścicielowi —
+czy tego chce czy też nie.
+%%%%
+Wrath of Trog
+
+To była niegdyś ulubiona broń Troga, zanim ją utracił pewnego dnia. Wzbudza
+krwawy berserkerski szał gdy ktokolwiek użyje jej aby uderzyć bliźniego.
+%%%%
+Mace of Variability
+
+Jest raczej niezbyt niezawodna.
+%%%%
+Glaive of Prune
+
+Jest to dzieło jakiegoś szalonego boga, i niesie klątwę która zmienia
+posiadacza tej broni w śliwę. Na szczęście, klątwa ta działa bardzo powoli, i
+można używać tej glewii przez krótki czas bez konsekwencji gorszych niż lekko
+fioletowa skóra i parę zmarszczek.
+%%%%
+Sword of Power
+
+Nagradza silnych siłą, a słabych słabością.
+%%%%
+Staff of Olgreb
+
+To była broń potężnego czarodzieja Olgreba zanim dosięgła go zguba gdzieś w
+tych lochach. Jak każdy kij trucizn, wzmaga zdolności swego posiadacza w tej
+dziedzinie magii, lecz także posiada inne moce które można użyć. Ponadto,
+Olgreb prowadził badania nad rzadkimi jadami które działają na stworzenia
+zwykle odporne na wszelkie powszechnie znane trucizny.
+%%%%
+Staff of Wucad Mu
+
+Jego wartość bojowa zmienia się proporcjonalnie do inteligenci swego
+posiadacza. Można go użyć aby odzyskać spore ilości magicznej mocy, ryzykując
+tymczasowe porażenie umysłu.
+%%%%
+Vampire's Tooth
+
+Ten sztylet wygląda jakby naprawdę mógł zostać zrobiony z kła jakiegoś
+wielkiego drapieżnika — lecz oczywiście nie mógł być to zwykły kriopijca
+rozmiaru człowieka.
+%%%%
+Scythe of Curses
+
+Ta broń niesie w sobie straszną i irytującą klątwę.
+%%%%
+Sceptre of Torment
+
+Jest to prawdziwie przeklęte narzędzie piekieł.
+%%%%
+Sword of Zonguldrok
+
+Tą przerażającą broń używasz na własne ryzyko.
+%%%%
+Sword of Cerebov
+
+Przedziwne płomienie tańczą wokół jego pokręconego ostrza.
+%%%%
+Staff of Dispater
+
+Ten legendarny przedmiot może rozpętać szał piekieł.
+%%%%
+Sceptre of Asmodeus
+
+Niesie część mocy arcy-diabła Asmodeusza.
+%%%%
+faerie dragon armour
+
+Wróżkowe smoki były kiedyś rasą tego samego gatunku co nakrapiane. Na swe
+nieszczęście, ich źywe kolory stały się ich zgubą, alarmując potencjalną
+zdobycz. Dziś już zupełnie wyginęły, a ten cenny relikt jest jednym z ostatnich
+dowodów że kiedykolwiek istniały.
+%%%%
+demon blade "Bloodbane"
+
+Ta broń jest skażona krwią nieludzkiego szaleńca.
+%%%%
+scimitar of Flaming Death
+
+Gorące ostrze!
+%%%%
+mace of Brilliance
+
+Z tą buławą w ręku możesz nieść światło w te lochy, co też zapewnia że twoje
+przybycie będzie dobrze widoczne. Nieumarli bardzo tego nie lubią, podobnie jak
+ci którzy ukrywają swe niecne sprawki za zasłoną niewidzialności.
+%%%%
+demon blade "Leech"
+
+Ta broń wywołuje nieodparte pragnienie nasycenia się cudzą siłą życiową.
+%%%%
+dagger of Chilly Death
+
+Sztylet zrobiony z jednego wielkiego odłamka szafiru.
+%%%%
+dagger "Morg"
+
+Brzydki, stary zardzewiały sztylet.
+
+Przed wielu laty był własnością potężnego maga o imieniu Borys. Ostatnie co o
+nim wiadomo, to że wyruszył w te lochy poszukując Kuli Zot.
+%%%%
+scythe "Finisher"
+
+Długa ostra kosa osadzona na sztorc.
+%%%%
+sling "Punk"
+
+Proca zrobiona z kawałka dziwnej niebieskiej skóry.
+%%%%
+bow of Krishna "Sharnga"
+
+Cudowny złoty łuk.
+
+Podobno należał kiedyś do zamorskiego boga. Najlepiej pasują do niego specjalne
+strzały, lecz o nie tutaj raczej trudno.
+%%%%
+giant club "Skullcrusher"
+
+Ta śliczna pałeczka może sprawić radość każdego ogra — czy to w rozróbie w
+barze, czy masowym morderstwie — albo nawet w jednym i drugim naraz.
+%%%%
+glaive of the Guard
+
+Ta broń kiedyś należała do Gar Dogha, strażnika królewskich skarbów. Podobno
+stracił ją podczas wyprawy w te lochy.
+%%%%
+sword of Jihad
+
+Długi miecz zrobiony z jednego kawałka kryształu. Legendy mówią że był on darem
+Świetlistego dla jednego z wyznawców.
+%%%%
+crossbow "Hellfire"
+
+Płonąca kusza, wykuta w ogniach piekieł.
+%%%%
+sword of the Doom Knight
+
+Wielki miecz z czarnym diamentem w rękojeści.
+%%%%
+morningstar "Eos"
+
+Różanopalca jutrzenka.
+%%%%
