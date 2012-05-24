@@ -5806,7 +5806,7 @@ static monsterentry mondata[] = {
     // May be re-spawned after his death.
     MONS_BORIS, 'L', RED, "Boris",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_COLD | mrd(MR_RES_ELEC, 2),
+    mrd(MR_RES_COLD, 2) | MR_RES_ELEC,
     0, 15, MONS_LICH, MONS_LICH, MH_UNDEAD, -11,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_DRAIN_XP, 15}, AT_NO_ATK,
        AT_NO_ATK },
