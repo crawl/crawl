@@ -1159,8 +1159,8 @@ A lumpy grey fungus, growing well in the dank underground dungeon.
 %%%%
 gargoyle
 
-A granite statue of a hideous winged and clawed monster, somehow brought horribly
-to life.
+A granite statue of a hideous winged and clawed monster, somehow brought
+horribly to life.
 %%%%
 ghost moth
 
@@ -2409,8 +2409,8 @@ to turn space into a pretzel.
 statue
 
 At first glance, this piece of sculpted granite appears inert. The red glow
-from its eyes, however, suggests it is no mere stone. Although it is rooted to its base, you
-are certain that it can still move parts of itself.
+from its eyes, however, suggests it is no mere stone. Although it is rooted to
+its base, you are certain that it can still move parts of itself.
 %%%%
 steam dragon
 
