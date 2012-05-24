@@ -77,9 +77,13 @@ Faerie dragons used to be a race of the same species as mottled ones. Too bad,
 their vivid colours became their bane, as they alerted potential prey. They are
 now extinct, and this prized relic is one of the last proofs they ever existed.
 %%%%
-#demon blade "Bloodbane"
+demon blade "Bloodbane"
+
+It carries the bloody taint of an inhuman madman.
 %%%%
-#scimitar of Flaming Death
+scimitar of Flaming Death
+
+Smokin'!
 %%%%
 mace of Brilliance
 
@@ -87,7 +91,10 @@ This mace will let you shine some light into the dungeon, and also will make
 sure enemies are well-warned of your presence. Its light is hated by the
 undead, and can reveal any machinations of those who try to stay invisible.
 %%%%
-#demon blade "Leech"
+demon blade "Leech"
+
+It drives its owner's mind into a narrow purpose: gorging on drained life
+force.
 %%%%
 dagger of Chilly Death
 
@@ -138,7 +145,9 @@ sword of the Doom Knight
 
 An adamantine great sword.
 %%%%
-#morningstar "Eos"
+morningstar "Eos"
+
+The rosy fingers of the Dawn...
 %%%%
 spear of the Botono
 
@@ -230,7 +239,9 @@ cloak of the Thief
 
 It allows its wearer to excel in the arts of thievery.
 %%%%
-#shield "Bullseye"
+shield "Bullseye"
+
+Just in case you had trouble getting hit.
 %%%%
 crown of Dyrovepreva
 
@@ -265,7 +276,10 @@ salamander hide armour
 
 A leather armour made of a salamander's skin.
 %%%%
-#gauntlets of War
+gauntlets of War
+
+These thick steel gauntlets were Okawaru's reward for a mighty warlord. Do you
+deserve to own them?
 %%%%
 shield of Resistance
 
