@@ -92,92 +92,97 @@ define(function () {
         return tileidx;
     }
 
+    /* Hex literals are signed, so values with the highest bit set
+       would have to be written in 2-complement; this way is easier to
+       read */
+    var highbit = 1 << 31;
+
     // Foreground flags
 
     // 3 mutually exclusive flags for attitude.
     var fg_flags = { flags: {}, exclusive_flags: [] };
     fg_flags.exclusive_flags.push({
-        mask       : 0x00001800,
-        PET        : 0x00000800,
-        GD_NEUTRAL : 0x00001000,
-        NEUTRAL    : 0x00001800,
+        mask       : 0x00030000,
+        PET        : 0x00010000,
+        GD_NEUTRAL : 0x00020000,
+        NEUTRAL    : 0x00030000,
     });
 
-    fg_flags.flags.S_UNDER = 0x00002000;
-    fg_flags.flags.FLYING  = 0x00004000;
+    fg_flags.flags.S_UNDER = 0x00040000;
+    fg_flags.flags.FLYING  = 0x00080000;
 
     // 3 mutually exclusive flags for behaviour.
     fg_flags.exclusive_flags.push({
-        mask       : 0x00018000,
-        STAB       : 0x00008000,
-        MAY_STAB   : 0x00010000,
-        FLEEING    : 0x00018000,
+        mask       : 0x00300000,
+        STAB       : 0x00100000,
+        MAY_STAB   : 0x00200000,
+        FLEEING    : 0x00300000,
     });
 
-    fg_flags.flags.NET          = 0x00020000;
-    fg_flags.flags.POISON       = 0x00040000;
-    fg_flags.flags.ANIM_WEP     = 0x00080000;
-    fg_flags.flags.MIMIC        = 0x00100000;
-    fg_flags.flags.STICKY_FLAME = 0x00200000;
-    fg_flags.flags.BERSERK      = 0x00400000;
-    fg_flags.flags.INNER_FLAME  = 0x40000000;
-    fg_flags.flags.CONSTRICTED  = 0x80000000;
+    fg_flags.flags.NET          = 0x00400000;
+    fg_flags.flags.POISON       = 0x00800000;
+    fg_flags.flags.ANIM_WEP     = 0x01000000;
+    fg_flags.flags.MIMIC        = 0x02000000;
+    fg_flags.flags.STICKY_FLAME = 0x04000000;
+    fg_flags.flags.BERSERK      = 0x08000000;
+    fg_flags.flags.INNER_FLAME  = 0x10000000;
+    fg_flags.flags.CONSTRICTED  = 0x20000000;
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
-        mask       : 0x03800000,
-        MDAM_LIGHT : 0x00800000,
-        MDAM_MOD   : 0x01000000,
-        MDAM_HEAVY : 0x01800000,
-        MDAM_SEV   : 0x02000000,
-        MDAM_ADEAD : 0x02800000,
+        mask       : [0x40000000 | highbit, 0x01],
+        MDAM_LIGHT : [0x40000000, 0x00],
+        MDAM_MOD   : [highbit, 0x00],
+        MDAM_HEAVY : [0x40000000 | highbit, 0x00],
+        MDAM_SEV   : [0x00000000, 0x01],
+        MDAM_ADEAD : [0x40000000 | highbit, 0x01],
     });
 
     // Demon difficulty has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
-        mask       : 0x34000000,
-        DEMON_5    : 0x04000000,
-        DEMON_4    : 0x10000000,
-        DEMON_3    : 0x14000000,
-        DEMON_2    : 0x20000000,
-        DEMON_1    : 0x24000000,
+        mask       : [0, 0x0E],
+        DEMON_5    : [0, 0x02],
+        DEMON_4    : [0, 0x04],
+        DEMON_3    : [0, 0x06],
+        DEMON_2    : [0, 0x08],
+        DEMON_1    : [0, 0x0E],
     });
 
-    fg_flags.mask             = 0x000007FF;
+    fg_flags.mask             = 0x0000FFFF;
 
     // Background flags
     var bg_flags = { flags: {}, exclusive_flags: [] };
-    bg_flags.flags.RAY        = 0x00000800;
-    bg_flags.flags.MM_UNSEEN  = 0x00001000;
-    bg_flags.flags.UNSEEN     = 0x00002000;
+    bg_flags.flags.RAY        = 0x00010000;
+    bg_flags.flags.MM_UNSEEN  = 0x00020000;
+    bg_flags.flags.UNSEEN     = 0x00040000;
     bg_flags.exclusive_flags.push({
-        mask       : 0x0000C000,
-        CURSOR1    : 0x00004000,
-        CURSOR2    : 0x00008000,
-        CURSOR3    : 0x0000C000,
+        mask       : 0x00180000,
+        CURSOR1    : 0x00080000,
+        CURSOR2    : 0x00100000,
+        CURSOR3    : 0x00180000,
     });
-    bg_flags.flags.TUT_CURSOR = 0x00010000;
-    bg_flags.flags.TRAV_EXCL  = 0x00020000;
-    bg_flags.flags.EXCL_CTR   = 0x00040000;
-    bg_flags.flags.RAY_OOR    = 0x00080000;
-    bg_flags.flags.OOR        = 0x00100000;
-    bg_flags.flags.WATER      = 0x00200000;
-    bg_flags.flags.NEW_STAIR  = 0x00400000;
-    bg_flags.flags.WAS_SECRET = 0x00800000;
+    bg_flags.flags.TUT_CURSOR = 0x00200000;
+    bg_flags.flags.TRAV_EXCL  = 0x00400000;
+    bg_flags.flags.EXCL_CTR   = 0x00800000;
+    bg_flags.flags.RAY_OOR    = 0x01000000;
+    bg_flags.flags.OOR        = 0x02000000;
+    bg_flags.flags.WATER      = 0x04000000;
+    bg_flags.flags.NEW_STAIR  = 0x08000000;
+    bg_flags.flags.WAS_SECRET = 0x10000000;
 
     // Kraken tentacle overlays.
-    bg_flags.flags.KRAKEN_NW  = 0x01000000;
-    bg_flags.flags.KRAKEN_NE  = 0x02000000;
-    bg_flags.flags.KRAKEN_SE  = 0x04000000;
-    bg_flags.flags.KRAKEN_SW  = 0x08000000;
+    bg_flags.flags.KRAKEN_NW  = 0x20000000;
+    bg_flags.flags.KRAKEN_NE  = 0x40000000;
+    bg_flags.flags.KRAKEN_SE  = highbit;
+    bg_flags.flags.KRAKEN_SW  = [0, 0x01];
 
     // Eldritch tentacle overlays.
-    bg_flags.flags.ELDRITCH_NW = 0x10000000;
-    bg_flags.flags.ELDRITCH_NE = 0x20000000;
-    bg_flags.flags.ELDRITCH_SE = 0x40000000;
-    bg_flags.flags.ELDRITCH_SW = 0x80000000;
+    bg_flags.flags.ELDRITCH_NW = [0, 0x02];
+    bg_flags.flags.ELDRITCH_NE = [0, 0x04];
+    bg_flags.flags.ELDRITCH_SE = [0, 0x08];
+    bg_flags.flags.ELDRITCH_SW = [0, 0x10];
 
-    bg_flags.mask              = 0x000007FF;
+    bg_flags.mask              = 0x0000FFFF;
 
     exports.prepare_fg_flags = function (tileidx)
     {
