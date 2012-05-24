@@ -2804,6 +2804,10 @@ human monk
 It seems a flimsy representation of a monk; nothing more than a half-formed
 memory.
 %%%%
+hungry kobold
+
+This kobold seems to be angry about having his meal interrupted.
+%%%%
 iron troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
@@ -2846,6 +2850,12 @@ water elemental statue
 A smooth, charming statue of a beautiful mermaid bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
 light, as if sprinkled in actual water.
+%%%%
+young halfling
+
+This lad has been caught by kobolds, and was meant to be roasted and eaten
+before you unceremoniously interrupted. Don't you have any manners? Didn't
+mommy tell you to not disrupt people from having a meal?
 %%%%
 zot statue
 
