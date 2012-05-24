@@ -385,7 +385,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
-            prompt += "being unarmed?";
+            prompt += "unarmed?";
         else
             prompt += "wielding " + weapon->name(DESC_YOUR) + "? ";
 
