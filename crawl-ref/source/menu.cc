@@ -2961,7 +2961,7 @@ void SaveMenuItem::_pack_doll()
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
         const int p   = p_order[i];
-        const int idx = m_save_doll.parts[p];
+        const tileidx_t idx = m_save_doll.parts[p];
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 

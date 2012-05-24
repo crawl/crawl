@@ -544,7 +544,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
             ymax = 18;
         }
 
-        tiles.write_message("[%d,%d],", doll.parts[p], ymax);
+        tiles.write_message("[%u,%d],", (unsigned int) doll.parts[p], ymax);
     }
 
     tiles.write_message("],");
@@ -567,7 +567,8 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
-        tiles.write_message("[%d,%d,%d],", dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
+        tiles.write_message("[%u,%d,%d],", (unsigned int) dinfo[i].idx,
+                            dinfo[i].ofs_x, dinfo[i].ofs_y);
 
     tiles.write_message("],");
 }
@@ -599,6 +600,17 @@ inline unsigned _get_brand(int col)
            (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
            (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
                                             : CHATTR_NORMAL;
+}
+
+inline void _write_tileidx(tileidx_t t)
+{
+    // JS can only handle signed ints
+    const int lo = t & 0xFFFFFFFF;
+    const int hi = t >> 32;
+    if (hi == 0)
+        tiles.write_message("%d", lo);
+    else
+        tiles.write_message("[%d,%d]", lo, hi);
 }
 
 void TilesFramework::_send_cell(const coord_def &gc,
@@ -659,14 +671,20 @@ void TilesFramework::_send_cell(const coord_def &gc,
         {
             fg_changed = true;
 
-            write_message("fg:%u,", next_pc.fg);
+            write_message("fg:");
+            _write_tileidx(next_pc.fg);
+            write_message(",");
             if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-                write_message("base:%d,", tileidx_known_base_item(fg_idx));
+                write_message("base:%u,", (unsigned int) tileidx_known_base_item(fg_idx));
         }
 
         if ((force_full && next_pc.bg != TILE_FLAG_UNSEEN)
             || next_pc.bg != current_pc.bg)
-            write_message("bg:%u,", next_pc.bg);
+        {
+            write_message("bg:");
+            _write_tileidx(next_pc.bg);
+            write_message(",");
+        }
 
         if ((force_full && next_pc.is_bloody)
             || next_pc.is_bloody != current_pc.is_bloody)
@@ -752,7 +770,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         {
             if (fg_changed)
             {
-                write_message("doll:[[%d,%d]],", fg_idx, TILE_Y);
+                write_message("doll:[[%u,%d]],", (unsigned int) fg_idx, TILE_Y);
                 // TODO: _transform_add_weapon
             }
         }
@@ -1261,7 +1279,7 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 
     m_has_overlays = true;
 
-    send_message("{msg:'overlay',idx:%d,x:%d,y:%d}", idx,
+    send_message("{msg:'overlay',idx:%u,x:%d,y:%d}", (unsigned int) idx,
             gc.x - m_origin.x, gc.y - m_origin.y);
 }
 

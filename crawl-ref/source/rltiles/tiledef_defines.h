@@ -3,8 +3,9 @@
 
 #include <cassert>
 #include <vector>
+#include <stdint.h>
 
-typedef unsigned int tileidx_t;
+typedef uint64_t tileidx_t;
 
 class tile_info
 {

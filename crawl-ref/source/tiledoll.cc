@@ -23,18 +23,18 @@
 dolls_data::dolls_data()
 {
     parts = new tileidx_t[TILEP_PART_MAX];
-    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
+    memset(parts, 0, TILEP_PART_MAX * sizeof(tileidx_t));
 }
 
 dolls_data::dolls_data(const dolls_data& _orig)
 {
     parts = new tileidx_t[TILEP_PART_MAX];
-    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(tileidx_t));
 }
 
 const dolls_data& dolls_data::operator=(const dolls_data& other)
 {
-    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
+    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(tileidx_t));
     return (*this);
 }
 
