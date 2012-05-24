@@ -204,7 +204,7 @@ static void _mark_expiring(status_info* inf, bool expiring)
     if (expiring)
     {
         if (!inf->short_text.empty())
-            inf->short_text += " (expires)";
+            inf->short_text += " (expiring)";
         if (!inf->long_text.empty())
             inf->long_text = "Expiring: " + inf->long_text;
     }
