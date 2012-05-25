@@ -3020,7 +3020,6 @@ bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_DEEP_DWARF_ARTIFICER:
     case MONS_SONJA:
     case MONS_HAROLD:
-    case MONS_JOZEF:
     case MONS_POLYPHEMUS:
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:

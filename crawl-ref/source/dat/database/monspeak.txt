@@ -4405,49 +4405,6 @@ VISUAL:@The_monster@ grinds @possessive@ teeth.
 @The_monster@ screams @at_foe@, "I'll use your head as a decoration in my hut!"
 ## END Josephine ##
 %%%%
-############ JOZEF ### A bounty hunter
-Jozef
-
-@_Jozef_common_@
-
-w:5
-@_Jozef_rare_@
-%%%%
-_Jozef_common_
-
-VISUAL:@The_monster@ looks satisfied.
-
-@The_monster@ asks @foe,@ "You are @foe_name@, aren't you?"
-
-@The_monster@ says @to_foe@, "You don't look worth it for that money."
-
-@The_monster@ says @to_foe@, "Really sorry, but I've got to feed my family."
-
-@The_monster@ says @to_foe@, "It's nothing personal. I'm paid for it!"
-
-@The_monster@ shouts @at_foe@, "I'll get 500 gold for your head!"
-
-@The_monster@ shouts @at_foe@, "Your time has come!"
-
-@The_monster@ screams @at_foe@, "Die!"
-
-@The_monster@ screams @at_foe@, "At last I found you!"
-%%%%
-_Jozef_rare_
-
-@The_monster@ says @to_foe@, "I suppose that you are @foe_name@. Sorry if I'm wrong."
-
-@The_monster@ asks @foe,@ "Did you write a testament? You should."
-
-@The_monster@ says @to_foe@, "One dead @foe_name@, 500 gold pieces. It's in my contract."
-
-@The_monster@ says @to_foe@, "My job is sometimes very exciting. Sometimes..."
-
-@The_monster@ says @to_foe@, "I think I deserve my money."
-
-@The_monster@ screams @at_foe@, "Die! I've got more contracts today."
-## END Jozef ##
-%%%%
 ############ KHUFU ### mummy emperor with delusions of godhood
 Khufu
 
