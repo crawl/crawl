@@ -22,7 +22,7 @@ A burning altar of Makhleb
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
 visible in the flames.
 %%%%
-A closed detected secret door
+A detected secret door
 
 A wooden door, cunningly hidden. It used to be a secret door but at least for
 you it's not a secret anymore.
