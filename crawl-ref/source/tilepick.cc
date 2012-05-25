@@ -573,13 +573,16 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_NAGA:
         return TILEP_MONS_SPECTRAL_NAGA;
     case TILEP_MONS_ZOMBIE_SNAKE:
-        return TILEP_MONS_SPECTRAL_SNAKE;
     case TILEP_MONS_ZOMBIE_WORM:
-        return TILEP_MONS_SPECTRAL_WORM;
+        return TILEP_MONS_SPECTRAL_SNAKE;
+    case TILEP_MONS_ZOMBIE_LIZARD:
+        return TILEP_MONS_SPECTRAL_LIZARD;
     case TILEP_MONS_ZOMBIE_SPIDER:
         return TILEP_MONS_SPECTRAL_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
         return TILEP_MONS_SPECTRAL_DRAGON;
+    case TILEP_MONS_ZOMBIE_KRAKEN:
+        return TILEP_MONS_SPECTRAL_KRAKEN;
     default:
         if (z_tile >= TILEP_MONS_ZOMBIE_HYDRA
             && z_tile <= TILEP_MONS_SKELETON_SMALL)
