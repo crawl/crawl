@@ -73,12 +73,11 @@ simulacrum_hydra2
 simulacrum_hydra3
 simulacrum_hydra4
 simulacrum_hydra5
-%rim 1
 
 ## Spectral things
 %sdir dc-mon/undead/spectrals
-spectral_thing MONS_SPECTRAL_SMALL
-spectral_thing MONS_SPECTRAL_LARGE
+spectral_small MONS_SPECTRAL_SMALL
+spectral_large MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
 spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
 spectral_toad MONS_SPECTRAL_TOAD
@@ -89,11 +88,13 @@ spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
 spectral_snake MONS_SPECTRAL_SNAKE
-spectral_worm MONS_SPECTRAL_WORM
+spectral_lizard MONS_SPECTRAL_LIZARD
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
+spectral_kraken MONS_SPECTRAL_KRAKEN
 spectral_hydra1 MONS_SPECTRAL_HYDRA
 spectral_hydra2
 spectral_hydra3
 spectral_hydra4
 spectral_hydra5
+%rim 1
