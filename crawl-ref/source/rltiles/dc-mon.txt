@@ -279,7 +279,12 @@ sun_demon MONS_SUN_DEMON
 
 # type '3' demons
 blue_devil MONS_BLUE_DEVIL
-chaos_spawn MONS_CHAOS_SPAWN
+chaos_spawn1 MONS_CHAOS_SPAWN
+chaos_spawn2
+chaos_spawn3
+chaos_spawn4
+chaos_spawn5
+chaos_spawn6
 hellion MONS_HELLION
 iron_devil MONS_IRON_DEVIL
 neqoxec MONS_NEQOXEC
