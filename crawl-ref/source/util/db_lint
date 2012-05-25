@@ -1,5 +1,33 @@
 #!/usr/bin/perl -w
 
+my $lang;
+my @files;
+
+for (@ARGV)
+{
+    if (/^-v$/)
+    {
+        $verbose = 1;
+    }
+    # Hack: no two-letter names are allowed, as these are assumed to be lang.
+    elsif (/^([a-z][a-z])$/)
+    {
+        die "One language at a time, please.\n" if $lang;
+        $lang = $1;
+    }
+    else
+    {
+        s/\.txt$//;
+        die "Arg not a lang nor a filename: '$_'.\n" unless m{^([/a-z0-9_-]+)$}i; #/
+        push @files, $1;
+    }
+}
+
+sub good_file()
+{
+    return grep { $file =~ m{\b$_\b} } @files;
+}
+
 sub err($)
 {
     print $_[0];
@@ -14,12 +42,21 @@ sub __________________________________________________________________________
 
 sub read_file($)
 {
+    my $skip = !!@files;
+    ($file) = @_;
+    $skip = 0 if good_file();
+    $file =~ s|/|/$lang/| if $lang;
+    $skip = 0 if good_file();
+    return if $skip;
+    $file = "dat/$file.txt";
+
     %keys = ();
-    $file = "dat/$_[0].txt";
     $line = 0;
-    open F, "<", $file or die "Can't read $file\n";
+    return $lang ? 0 : die "Can't read $file\n" unless open F, "<", $file;
     ($key, $value) = ();
     local $_;
+
+    print "Checking $file\n" if $verbose;
     
     sub add_key()
     {
@@ -65,6 +102,7 @@ sub read_file($)
     }
 
     close F;
+    return 1;
 }
 
 sub check_db_locals()
@@ -90,61 +128,69 @@ read_file("descript/skills");
 read_file("descript/ability");
 read_file("descript/commands");
 
-read_file("descript/features");
-$entries{"A gate leading to a distant place"} = 1;
-for (`util/gather_features -a`)
+if (read_file("descript/features"))
 {
-    chomp;
-    next if /explore horizon$/;
-    err "$file: No description for feature '$_'\n" unless $entries{$_};
-    delete $keys{$_};
-}
-err "$file: Unused description for feature '$_'\n" for sort keys %keys;
-
-read_file("descript/unrand");
-for (`grep ^NAME: art-data.txt`)
-{
-    chomp;
-    s/^NAME:\s+//;
-    next if /^DUMMY/;
-    err "$file: No description for unrand '$_'\n" unless $entries{$_};
-    delete $keys{$_};
-}
-err "$file: Unused description for unrand '$_'\n" for sort keys %keys;
-
-read_file("descript/cards");
-for (`util/gather_cards`)
-{
-    chomp;
-    err "$file: No description for card '$_'\n" unless $entries{"$_ card"};
-    delete $keys{"$_ card"};
-}
-delete $keys{'a buggy card'};
-delete $keys{'a very buggy card'};
-err "$file: Unused description for card '$_'\n" for sort keys %keys;
-
-read_file("descript/monsters");
-$entries{$_} = 1 for (
-    # described with a suffix
-    'the Serpent of Hell',
-    # overridden descriptions
-    'player', 'player illusion', 'merged slime creature',
-    # genus-only monsters
-    'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
-for (`util/gather_mons -d`)
-{
-    chomp;
-    # using a desc from another file is ok, it's the same db
-    err "$file: No description for monster '$_'\n" unless $entries{$_};
-    delete $keys{$_}
+    $entries{"A gate leading to a distant place"} = 1;
+    for (`util/gather_features -a`)
+    {
+        chomp;
+        next if /explore horizon$/;
+        err "$file: No description for feature '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused description for feature '$_'\n" for sort keys %keys;
 }
 
-delete $keys{'__(_suffix_examine'};
-for (sort keys %keys)
+if (read_file("descript/unrand"))
 {
-    next if /^__cap-[A-Z]_suffix$/;
-    next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
-    err "$file: Unused description for monster '$_'\n";
+    for (`grep ^NAME: art-data.txt`)
+    {
+        chomp;
+        s/^NAME:\s+//;
+        next if /^DUMMY/;
+        err "$file: No description for unrand '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused description for unrand '$_'\n" for sort keys %keys;
+}
+
+if (read_file("descript/cards"))
+{
+    for (`util/gather_cards`)
+    {
+        chomp;
+        err "$file: No description for card '$_'\n" unless $entries{"$_ card"};
+        delete $keys{"$_ card"};
+    }
+    delete $keys{'a buggy card'};
+    delete $keys{'a very buggy card'};
+    err "$file: Unused description for card '$_'\n" for sort keys %keys;
+}
+
+if (read_file("descript/monsters"))
+{
+    $entries{$_} = 1 for (
+        # described with a suffix
+        'the Serpent of Hell',
+        # overridden descriptions
+        'player', 'player illusion', 'merged slime creature',
+        # genus-only monsters
+        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
+    for (`util/gather_mons -d`)
+    {
+        chomp;
+        # using a desc from another file is ok, it's the same db
+        err "$file: No description for monster '$_'\n" unless $entries{$_};
+        delete $keys{$_}
+    }
+
+    delete $keys{'__(_suffix_examine'};
+    for (sort keys %keys)
+    {
+        next if /^__cap-[A-Z]_suffix$/;
+        next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
+        err "$file: Unused description for monster '$_'\n";
+    }
 }
 
 
