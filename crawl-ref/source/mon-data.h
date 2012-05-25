@@ -4980,7 +4980,7 @@ static monsterentry mondata[] = {
 {
     MONS_CACODEMON, '2', YELLOW, "cacodemon",
     M_SPELLCASTER | M_SEE_INVIS,
-    mrd(MR_RES_POISON | MR_RES_ELEC, 3),
+    MR_RES_POISON | MR_RES_ELEC,
     0, 14, MONS_CACODEMON, MONS_CACODEMON, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 22}, {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK },
     { 13, 5, 5, 0 },
