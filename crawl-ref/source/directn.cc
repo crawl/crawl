@@ -3230,9 +3230,8 @@ void set_feature_desc_short(const std::string &base_name,
     }
     else
     {
-        std::string desc = replace_all(_desc, "$BASE", base_name);
-        base_desc_to_short[base_name] = desc;
-        desc_table[base_name]         = desc;
+        base_desc_to_short[base_name] = _desc;
+        desc_table[base_name]         = _desc;
     }
 }
 
