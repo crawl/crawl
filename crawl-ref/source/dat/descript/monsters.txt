@@ -2734,7 +2734,7 @@ Hellbinder
 A mighty spellcaster, wreathed in arcane energies, and muttering the most
 profane incantations you might ever have heard.
 %%%%
-air elemental statue
+air elementalist statue
 
 A delicate statue of a tengu gliding through the air. It looks quite
 insubstantial.
@@ -2757,11 +2757,11 @@ deformed humanoid
 
 This poor creature looks hideously deformed.
 %%%%
-earth elemental statue
+earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
 %%%%
-fire elemental statue
+fire elementalist statue
 
 An ornately worked statue of an orc holding a torch aloft, hewn from black
 basalt. The air around it seems to shimmer.
@@ -2846,7 +2846,7 @@ strange machine
 
 A glistening silver machine.
 %%%%
-water elemental statue
+water elementalist statue
 
 A smooth, charming statue of a beautiful mermaid bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
