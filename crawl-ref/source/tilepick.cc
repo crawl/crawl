@@ -591,21 +591,57 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     return TILEP_MONS_SPECTRAL_SMALL;
 }
 
+static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
+{
+    switch (z_tile)
+    {
+    case TILEP_MONS_ZOMBIE_SMALL:
+        return TILEP_MONS_SIMULACRUM_SMALL;
+    case TILEP_MONS_ZOMBIE_LARGE:
+        return TILEP_MONS_SIMULACRUM_LARGE;
+    case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
+        return TILEP_MONS_SIMULACRUM_QUADRUPED_SMALL;
+    case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
+    case TILEP_MONS_ZOMBIE_TOAD:
+        return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_BAT:
+        return TILEP_MONS_SIMULACRUM_BAT;
+    case TILEP_MONS_ZOMBIE_BEE:
+        return TILEP_MONS_SIMULACRUM_BEE;
+    case TILEP_MONS_ZOMBIE_BEETLE:
+        return TILEP_MONS_SIMULACRUM_BEETLE;
+    case TILEP_MONS_ZOMBIE_FISH:
+        return TILEP_MONS_SIMULACRUM_FISH;
+    case TILEP_MONS_ZOMBIE_CENTAUR:
+        return TILEP_MONS_SIMULACRUM_CENTAUR;
+    case TILEP_MONS_ZOMBIE_NAGA:
+        return TILEP_MONS_SIMULACRUM_NAGA;
+    case TILEP_MONS_ZOMBIE_SNAKE:
+    case TILEP_MONS_ZOMBIE_WORM:
+        return TILEP_MONS_SIMULACRUM_SNAKE;
+    case TILEP_MONS_ZOMBIE_LIZARD:
+        return TILEP_MONS_SIMULACRUM_LIZARD;
+    case TILEP_MONS_ZOMBIE_SPIDER:
+        return TILEP_MONS_SIMULACRUM_SPIDER;
+    case TILEP_MONS_ZOMBIE_DRAGON:
+        return TILEP_MONS_SIMULACRUM_DRAGON;
+    case TILEP_MONS_ZOMBIE_KRAKEN:
+        return TILEP_MONS_SIMULACRUM_KRAKEN;
+    default:
+        if (z_tile >= TILEP_MONS_ZOMBIE_HYDRA
+            && z_tile <= TILEP_MONS_SKELETON_SMALL)
+        {
+            return TILEP_MONS_SIMULACRUM_HYDRA
+                   + (z_tile - TILEP_MONS_ZOMBIE_HYDRA);
+        }
+    }
+    return TILEP_MONS_SIMULACRUM_SMALL;
+}
+
 static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 {
     const int z_type = mon.type;
     const monster_type subtype = mon.base_type;
-
-    // TODO: Add tiles and code for these as well.
-    switch (z_type)
-    {
-    case MONS_SIMULACRUM_SMALL:
-        if (subtype == MONS_BAT)
-            return TILEP_MONS_ICE_BAT;
-        return TILEP_MONS_SIMULACRUM_SMALL;
-    case MONS_SIMULACRUM_LARGE:
-        return TILEP_MONS_SIMULACRUM_LARGE;
-    }
 
     if (subtype == MONS_KRAKEN)
         return TILEP_MONS_ZOMBIE_KRAKEN;
@@ -677,17 +713,20 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
                      + std::min((int)mon.number, 5) - 1;
             break;
         }
+        else if ((mons_genus(subtype) == MONS_GIANT_NEWT
+                  || mons_genus(subtype) == MONS_CROCODILE)
+                 && !_is_skeleton(z_type))
+        {
+            z_tile = TILEP_MONS_ZOMBIE_LIZARD;
+
+            break;
+        }
         else if (_is_zombie(z_type))
         {
             if (mons_genus(subtype) == MONS_RAT)
                 return TILEP_MONS_ZOMBIE_RAT;
             else if (mons_genus(subtype) == MONS_HOUND)
                 return TILEP_MONS_ZOMBIE_HOUND;
-            else if (mons_genus(subtype) == MONS_GIANT_NEWT
-                     || mons_genus(subtype) == MONS_CROCODILE)
-            {
-                return TILEP_MONS_ZOMBIE_LIZARD;
-            }
         }
         // else fall-through
     case MON_SHAPE_QUADRUPED_TAILLESS:
@@ -747,6 +786,10 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 
     if (z_type == MONS_SPECTRAL_THING)
         z_tile = _zombie_tile_to_spectral(z_tile);
+
+    if (z_type == MONS_SIMULACRUM_SMALL
+        || z_type == MONS_SIMULACRUM_LARGE)
+        z_tile = _zombie_tile_to_simulacrum(z_tile);
 
     return (z_tile);
 }
