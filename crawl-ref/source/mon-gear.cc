@@ -675,7 +675,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through
 
-    case MONS_JOZEF:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_DRACONIAN_KNIGHT:
@@ -1506,8 +1505,7 @@ static void _give_ammo(monster* mon, int level,
                 break;
             // deliberate fall-through
 
-        case MONS_HAROLD: // bounty hunters
-        case MONS_JOZEF:  // up to 5 nets
+        case MONS_HAROLD: // bounty hunter, up to 5 nets
             if (mons_summoned)
                 break;
 
@@ -1516,7 +1514,7 @@ static void _give_ammo(monster* mon, int level,
             qty        = 1;
             if (one_chance_in(3))
                 qty++;
-            if (mon->type == MONS_HAROLD || mon->type == MONS_JOZEF)
+            if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
             break;
@@ -1798,7 +1796,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_JOSEPH:
-    case MONS_JOZEF:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL,
