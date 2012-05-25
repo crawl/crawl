@@ -13,6 +13,7 @@
 #include "libutil.h"
 #include "mon-info.h"
 #include "player.h"
+#include "transform.h"
 
 #define MONINF_METATABLE "monster.info"
 
@@ -164,6 +165,28 @@ LUAFN(moninf_get_is_constricting_you)
     return (1);
 }
 
+LUAFN(moninf_get_can_be_constricted)
+{
+    MONINF(ls, 1, mi);
+    if (!mi->constrictor_name.empty()
+        || !form_keeps_mutations()
+        || (you.species != SP_NAGA
+            || you.experience_level <= 12
+            || you.is_constricting())
+         && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
+    {
+        lua_pushboolean(ls, false);
+    }
+    else
+    {
+        monster dummy;
+        dummy.type = mi->type;
+        dummy.base_monster = mi->base_type;
+        lua_pushboolean(ls, dummy.res_constrict() < 3);
+    }
+    return (1);
+}
+
 LUAFN(moninf_get_is_unique)
 {
     MONINF(ls, 1, mi);
@@ -219,6 +242,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricted),
     MIREG(is_constricting),
     MIREG(is_constricting_you),
+    MIREG(can_be_constricted),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
