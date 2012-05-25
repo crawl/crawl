@@ -39,15 +39,14 @@ function bazaar_portal(timed)
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
   if timed then
-    local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
                   disappear='The gate to the bazaar disappears!',
-                  desc = pdesc, desc_long = desc_long, dst = 'Bazaar',
+                  desc = "flickering gateway to a bazaar", dst = 'Bazaar',
                   floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
               }
   else
-    return one_way_stair { desc = 'gateway to a bazaar',
+    return one_way_stair { desc = "gateway to a bazaar",
                            dst = 'Bazaar', floor = 'stone_arch' }
   end
 end

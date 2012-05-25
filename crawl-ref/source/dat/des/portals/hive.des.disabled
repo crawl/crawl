@@ -19,7 +19,7 @@ function place_hive_portal(e, perm)
 end
 
 function hive_portal()
-  return one_way_stair { desc = 'gateway to a hive',
+  return one_way_stair { desc = "gateway to a hive",
                            dst = 'Hive', floor = 'stone_arch',
                            feat_tile = 'dngn_portal_hive_gone' }
 end

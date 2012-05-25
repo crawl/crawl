@@ -81,7 +81,6 @@ sub check_db_locals()
 }
 
 __________________________________________________________________________();
-read_file("descript/features");
 read_file("descript/items");
 read_file("descript/unident");
 read_file("descript/spells");
@@ -90,6 +89,17 @@ read_file("descript/branches");
 read_file("descript/skills");
 read_file("descript/ability");
 read_file("descript/commands");
+
+read_file("descript/features");
+$entries{"A gate leading to a distant place"} = 1;
+for (`util/gather_features -a`)
+{
+    chomp;
+    next if /explore horizon$/;
+    err "$file: No description for feature '$_'\n" unless $entries{$_};
+    delete $keys{$_};
+}
+err "$file: Unused description for feature '$_'\n" for sort keys %keys;
 
 read_file("descript/unrand");
 for (`grep ^NAME: art-data.txt`)
