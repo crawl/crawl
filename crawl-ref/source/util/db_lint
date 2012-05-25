@@ -105,6 +105,18 @@ sub read_file($)
     return 1;
 }
 
+sub check_desc_needed($@)
+{
+    my ($kind, @needed) = @_;
+    for (@needed)
+    {
+        chomp;
+        err "$file: No description for $kind '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
+}
+
 sub check_db_locals()
 {
     my (%locals, %keys);
@@ -129,52 +141,26 @@ read_file("descript/commands");
 
 if (read_file("descript/branches"))
 {
-    for (`util/gather_branches`)
-    {
-        chomp;
-        err "$file: No description for branch '$_'\n" unless $entries{$_};
-        delete $keys{$_};
-    }
-    err "$file: Unused description for branch '$_'\n" for sort keys %keys;
+    check_desc_needed("branch", `util/gather_branches`);
 }
 
 if (read_file("descript/features"))
 {
     $entries{"A gate leading to a distant place"} = 1;
-    for (`util/gather_features -a`)
-    {
-        chomp;
-        next if /explore horizon$/;
-        err "$file: No description for feature '$_'\n" unless $entries{$_};
-        delete $keys{$_};
-    }
-    err "$file: Unused description for feature '$_'\n" for sort keys %keys;
+    check_desc_needed("feature", grep {!/explore horizon$/} `util/gather_features -a`);
 }
 
 if (read_file("descript/unrand"))
 {
-    for (`grep ^NAME: art-data.txt`)
-    {
-        chomp;
-        s/^NAME:\s+//;
-        next if /^DUMMY/;
-        err "$file: No description for unrand '$_'\n" unless $entries{$_};
-        delete $keys{$_};
-    }
-    err "$file: Unused description for unrand '$_'\n" for sort keys %keys;
+    check_desc_needed("unrand", grep {!/^DUMMY/} map {s/^NAME:\s+// && $_}
+        `grep ^NAME: art-data.txt`)
 }
 
 if (read_file("descript/cards"))
 {
-    for (`util/gather_cards`)
-    {
-        chomp;
-        err "$file: No description for card '$_'\n" unless $entries{"$_ card"};
-        delete $keys{"$_ card"};
-    }
     delete $keys{'a buggy card'};
     delete $keys{'a very buggy card'};
-    err "$file: Unused description for card '$_'\n" for sort keys %keys;
+    check_desc_needed("card", map {s/$/ card/ && $_} `util/gather_cards`);
 }
 
 if (read_file("descript/monsters"))
@@ -186,21 +172,10 @@ if (read_file("descript/monsters"))
         'player', 'player illusion', 'merged slime creature',
         # genus-only monsters
         'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
-    for (`util/gather_mons -d`)
-    {
-        chomp;
-        # using a desc from another file is ok, it's the same db
-        err "$file: No description for monster '$_'\n" unless $entries{$_};
-        delete $keys{$_}
-    }
-
     delete $keys{'__(_suffix_examine'};
-    for (sort keys %keys)
-    {
-        next if /^__cap-[A-Z]_suffix$/;
-        next if /^the Serpent of Hell (?:gehenna|cocytus|dis|tartarus)$/;
-        err "$file: Unused description for monster '$_'\n";
-    }
+    delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);
+    delete $keys{"__cap-${_}_suffix"} for 'A'..'Z';
+    check_desc_needed("monster", `util/gather_mons -d`);
 }
 
 
