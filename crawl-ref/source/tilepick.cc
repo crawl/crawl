@@ -1641,7 +1641,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SHADOW_DEMON:
         return TILEP_MONS_SHADOW_DEMON;
     case MONS_CHAOS_SPAWN:
-        return TILEP_MONS_CHAOS_SPAWN;
+        return _mon_mod(TILEP_MONS_CHAOS_SPAWN, tile_num_prop);
 
     // '2' demon
     case MONS_HELL_BEAST:
@@ -4841,7 +4841,8 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 void tile_init_props(monster* mon)
 {
     // Only those use tile_num.
-    if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE)
+    if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
+        && mon->type != MONS_CHAOS_SPAWN)
         return;
 
     // Already overridden or set.
