@@ -3323,9 +3323,12 @@ std::string feature_description(const coord_def& where, bool covering,
 
         if (door_desc_veto.empty() || door_desc_veto != "veto")
         {
-            desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
             if (grid == DNGN_DETECTED_SECRET_DOOR)
                 desc += "detected secret ";
+            else if (grid == DNGN_OPEN_DOOR)
+                desc += "open ";
+            else
+                desc += "closed ";
         }
 
         desc += door_desc_prefix;
