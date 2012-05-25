@@ -445,6 +445,15 @@ centaur_barding_red
 buckler1 ARM_BUCKLER
 buckler2
 buckler3
+
+dwarven_buckler1 ARM_BUCKLER_DWARVEN
+dwarven_buckler2
+
+elven_buckler1 ARM_BUCKLER_ELVEN
+elven_buckler2
+
+orcish_buckler1 ARM_BUCKLER_ORCISH
+orcish_buckler2
 %rim 1
 
 shield1_elven ARM_SHIELD
