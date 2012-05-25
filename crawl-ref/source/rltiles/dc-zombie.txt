@@ -51,9 +51,29 @@ skeleton_hydra4
 skeleton_hydra5
 
 ## Simulacra
-%sdir dc-mon/undead
+%sdir dc-mon/undead/simulacra
+%rim 0
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
+simulacrum_quadruped_small MONS_SIMULACRUM_QUADRUPED_SMALL
+simulacrum_quadruped_large MONS_SIMULACRUM_QUADRUPED_LARGE
+simulacrum_bat MONS_SIMULACRUM_BAT
+simulacrum_bee MONS_SIMULACRUM_BEE
+simulacrum_ant MONS_SIMULACRUM_BEETLE
+simulacrum_fish MONS_SIMULACRUM_FISH
+simulacrum_centaur MONS_SIMULACRUM_CENTAUR
+simulacrum_naga MONS_SIMULACRUM_NAGA
+simulacrum_snake MONS_SIMULACRUM_SNAKE
+simulacrum_lizard MONS_SIMULACRUM_LIZARD
+simulacrum_spider MONS_SIMULACRUM_SPIDER
+simulacrum_dragon MONS_SIMULACRUM_DRAGON
+simulacrum_kraken MONS_SIMULACRUM_KRAKEN
+simulacrum_hydra1 MONS_SIMULACRUM_HYDRA
+simulacrum_hydra2
+simulacrum_hydra3
+simulacrum_hydra4
+simulacrum_hydra5
+%rim 1
 
 ## Spectral things
 %sdir dc-mon/undead/spectrals
