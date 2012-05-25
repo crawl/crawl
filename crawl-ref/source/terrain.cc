@@ -1185,8 +1185,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const unsigned short col1 = env.grid_colours(pos1);
     const unsigned short col2 = env.grid_colours(pos2);
 
-    const unsigned long prop1 = env.pgrid(pos1);
-    const unsigned long prop2 = env.pgrid(pos2);
+    const terrain_property_t prop1 = env.pgrid(pos1);
+    const terrain_property_t prop2 = env.pgrid(pos2);
 
     trap_def* trap1 = find_trap(pos1);
     trap_def* trap2 = find_trap(pos2);

@@ -1585,7 +1585,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // Alligators shouldn't spam swiftness.
                 if (spell_cast == SPELL_SWIFTNESS
                     && mons->type == MONS_ALLIGATOR
-                    && ((long) mons->number + random2avg(170, 5) >=
+                    && ((int) mons->number + random2avg(170, 5) >=
                         you.num_turns))
                 {
                     spell_cast = SPELL_NO_SPELL;

@@ -134,7 +134,7 @@ class monster;
 struct MonsterWrap
 {
     monster* mons;
-    long      turn;
+    int      turn;
 };
 
 // XXX: These are currently defined outside cluautil.cc.

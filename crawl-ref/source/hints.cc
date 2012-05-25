@@ -82,7 +82,7 @@ void save_hints(writer& outf)
 {
     marshallInt(outf, HINT_EVENTS_NUM);
     marshallShort(outf, Hints.hints_type);
-    for (long i = 0; i < HINT_EVENTS_NUM; ++i)
+    for (int i = 0; i < HINT_EVENTS_NUM; ++i)
         marshallBoolean(outf, Hints.hints_events[i]);
 }
 
@@ -94,7 +94,7 @@ void load_hints(reader& inf)
         return;
 
     Hints.hints_type = unmarshallShort(inf);
-    for (long i = 0; i < HINT_EVENTS_NUM; ++i)
+    for (int i = 0; i < HINT_EVENTS_NUM; ++i)
         Hints.hints_events[i] = unmarshallBoolean(inf);
 }
 

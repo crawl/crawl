@@ -1525,7 +1525,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (is_blood_potion(item) && thrown.quantity > 1)
     {
         // Initialise thrown potion with oldest potion in stack.
-        long val = remove_oldest_blood_potion(thrown);
+        int val = remove_oldest_blood_potion(thrown);
         val -= you.num_turns;
         item.props.clear();
         init_stack_blood_potions(item, val);

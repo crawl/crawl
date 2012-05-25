@@ -581,8 +581,8 @@ int str_to_trap(const std::string &s)
 //---------------------------------------------------------------
 static std::string _describe_demon(const std::string& name, flight_type fly)
 {
-    const long seed =
-        std::accumulate(name.begin(), name.end(), 0L) *
+    const uint32_t seed =
+        std::accumulate(name.begin(), name.end(), 0) *
         name.length();
 
     rng_save_excursion exc;

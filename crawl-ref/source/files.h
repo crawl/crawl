@@ -26,7 +26,7 @@ bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
-unsigned long file_size(FILE *handle);
+off_t file_size(FILE *handle);
 
 std::vector<std::string> get_dir_files(const std::string &dir);
 std::vector<std::string> get_dir_files_ext(const std::string &dir,

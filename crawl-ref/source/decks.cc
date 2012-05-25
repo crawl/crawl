@@ -247,7 +247,7 @@ static void _shuffle_deck(item_def &deck)
     // Don't use std::shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
     std::vector<vec_size> pos;
-    for (unsigned long i = 0; i < cards.size(); ++i)
+    for (size_t i = 0; i < cards.size(); ++i)
         pos.push_back(random2(cards.size()));
 
     for (vec_size i = 0; i < pos.size(); ++i)
@@ -697,7 +697,7 @@ static bool _check_buggy_deck(item_def& deck)
 
     if (deck.plus2 >= 0)
     {
-        if (deck.plus != (deck.plus2 + static_cast<long>(num_cards)))
+        if (deck.plus != (deck.plus2 + num_cards))
         {
 #ifdef WIZARD
             strm << "Have you used " << deck.plus2 << " cards, or "
@@ -712,7 +712,7 @@ static bool _check_buggy_deck(item_def& deck)
     }
     else
     {
-        if (-deck.plus2 != static_cast<long>(num_cards))
+        if (-deck.plus2 != num_cards)
         {
 #ifdef WIZARD
             strm << "There are " << num_cards << " cards left, not "

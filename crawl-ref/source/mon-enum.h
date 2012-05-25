@@ -169,7 +169,7 @@ enum mon_itemeat_type
     NUM_MONEAT
 };
 
-// now saved in an unsigned long.
+// passed as a bizarre structure, needs sanitizing
 enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,

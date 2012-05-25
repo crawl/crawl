@@ -867,7 +867,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 if (thing_done == DID_CAUSE_GLOWING)
                 {
-                    static long last_glowing_lecture = -1L;
+                    static int last_glowing_lecture = -1;
                     if (!level)
                     {
                         simple_god_message(" is not enthusiastic about the "
