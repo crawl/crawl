@@ -2514,8 +2514,8 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
 
 void dock_piety(int piety_loss, int penance)
 {
-    static long last_piety_lecture   = -1L;
-    static long last_penance_lecture = -1L;
+    static int last_piety_lecture   = -1;
+    static int last_penance_lecture = -1;
 
     if (piety_loss <= 0 && penance <= 0)
         return;

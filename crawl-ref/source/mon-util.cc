@@ -1596,7 +1596,7 @@ int mons_avg_hp(monster_type mc)
 
 int exper_value(const monster* mon, bool real)
 {
-    long x_val = 0;
+    int x_val = 0;
 
     // These four are the original arguments.
     const monster_type mc = mon->type;

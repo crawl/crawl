@@ -61,7 +61,7 @@ struct message_item
     int                 param;          // param for channel (god, enchantment)
     std::string         text;           // text of message (tagged string...)
     int                 repeats;
-    long                turn;
+    int                 turn;
     bool                join;           // may this message be joined with
                                         // others?
 
@@ -1063,7 +1063,7 @@ void msgwin_clear_temporary()
     msgwin.roll_back();
 }
 
-static long _last_msg_turn = -1; // Turn of last message.
+static int _last_msg_turn = -1; // Turn of last message.
 
 void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, bool cap)
 {

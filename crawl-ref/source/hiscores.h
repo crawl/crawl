@@ -43,7 +43,6 @@ public:
 
     std::string str_field(const std::string &) const;
     int int_field(const std::string &) const;
-    long long_field(const std::string &) const;
 
 private:
     void map_fields() const;

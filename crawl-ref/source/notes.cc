@@ -512,7 +512,7 @@ void load_notes(reader& inf)
         return;
 
     const int num_notes = unmarshallInt(inf);
-    for (long i = 0; i < num_notes; ++i)
+    for (int i = 0; i < num_notes; ++i)
     {
         Note new_note;
         new_note.load(inf);

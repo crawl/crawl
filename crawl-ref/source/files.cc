@@ -1681,7 +1681,7 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-    unsigned long unplaced_ghosts = ghosts.size();
+    unsigned int  unplaced_ghosts = ghosts.size();
     bool          ghost_errors    = false;
 #endif
 
@@ -2240,7 +2240,7 @@ FILE *fopen_replace(const char *name)
 }
 
 // Returns the size of the opened file with the give FILE* handle.
-unsigned long file_size(FILE *handle)
+off_t file_size(FILE *handle)
 {
     struct stat fs;
     const int err = fstat(fileno(handle), &fs);

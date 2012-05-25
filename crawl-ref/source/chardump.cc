@@ -1625,8 +1625,8 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
 // Record timestamps every so many turns:
 const int TIMESTAMP_TURN_INTERVAL = 100;
 // Stop recording timestamps after this turncount.
-const long TIMESTAMP_TURN_MAX = 500000L;
-void dgl_record_timestamp(long turn)
+const int TIMESTAMP_TURN_MAX = 500000;
+void dgl_record_timestamp(int turn)
 {
     if (turn && turn < TIMESTAMP_TURN_MAX && !(turn % TIMESTAMP_TURN_INTERVAL))
     {

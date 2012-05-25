@@ -241,7 +241,7 @@ bool TextDB::_needs_update() const
     {
         std::string full_input_path = _directory + _input_files[i];
         full_input_path = datafile_path(full_input_path, !_parent);
-        long mtime = file_modtime(full_input_path);
+        time_t mtime = file_modtime(full_input_path);
         if (mtime)
             no_files = false;
         char buf[20];
@@ -295,7 +295,7 @@ void TextDB::_regenerate_db()
         std::string full_input_path = _directory + _input_files[i];
         full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
-        long mtime = file_modtime(full_input_path);
+        time_t mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%ld", mtime);
         ts += buf;
         if (mtime || !_parent) // english is mandatory

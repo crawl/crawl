@@ -876,7 +876,7 @@ void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
     tiles   = fields->int_field("tiles");
-    points  = fields->long_field("sc");
+    points  = fields->int_field("sc");
 
     name    = fields->str_field("name");
     race    = str_to_species(fields->str_field("race"));
@@ -921,13 +921,13 @@ void scorefile_entry::init_with_fields()
 
     birth_time = _parse_time(fields->str_field("start"));
     death_time = _parse_time(fields->str_field("end"));
-    real_time  = fields->long_field("dur");
-    num_turns  = fields->long_field("turn");
+    real_time  = fields->int_field("dur");
+    num_turns  = fields->int_field("turn");
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
 
-    kills = fields->long_field("kills");
+    kills = fields->int_field("kills");
     maxed_skills = fields->str_field("maxskills");
     fifteen_skills = fields->str_field("fifteenskills");
     status_effects = fields->str_field("status");
@@ -2534,12 +2534,6 @@ int xlog_fields::int_field(const std::string &s) const
 {
     std::string field = str_field(s);
     return atoi(field.c_str());
-}
-
-long xlog_fields::long_field(const std::string &s) const
-{
-    std::string field = str_field(s);
-    return atol(field.c_str());
 }
 
 void xlog_fields::map_fields() const
