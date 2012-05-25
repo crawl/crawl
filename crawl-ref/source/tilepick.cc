@@ -3014,6 +3014,12 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_ARM_BOOTS;
 
     case ARM_BUCKLER:
+        if (race == ISFLAG_DWARVEN)
+            return TILE_ARM_BUCKLER_DWARVEN;
+        else if (race == ISFLAG_ELVEN)
+            return TILE_ARM_BUCKLER_ELVEN;
+        else if (race == ISFLAG_ORCISH)
+            return TILE_ARM_BUCKLER_ORCISH;
         return TILE_ARM_BUCKLER;
 
     case ARM_LARGE_SHIELD:
