@@ -123,10 +123,20 @@ read_file("descript/items");
 read_file("descript/unident");
 read_file("descript/spells");
 read_file("descript/gods");
-read_file("descript/branches");
 read_file("descript/skills");
 read_file("descript/ability");
 read_file("descript/commands");
+
+if (read_file("descript/branches"))
+{
+    for (`util/gather_branches`)
+    {
+        chomp;
+        err "$file: No description for branch '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused description for branch '$_'\n" for sort keys %keys;
+}
 
 if (read_file("descript/features"))
 {
