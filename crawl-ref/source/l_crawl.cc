@@ -884,10 +884,6 @@ static const struct luaL_reg crawl_clib[] =
     { "call_dlua",      crawl_call_dlua },
 #endif
 
-    { "tutorial_hunger", crawl_tutorial_hunger },
-    { "tutorial_skill",  crawl_tutorial_skill },
-    { "tutorial_hint",   crawl_tutorial_hint },
-
     { NULL, NULL },
 };
 
@@ -1029,6 +1025,10 @@ static const struct luaL_reg crawl_dlib[] =
 #endif
 { "make_name", crawl_make_name },
 { "set_max_runes", _crawl_set_max_runes },
+{ "tutorial_hunger", crawl_tutorial_hunger },
+{ "tutorial_skill",  crawl_tutorial_skill },
+{ "tutorial_hint",   crawl_tutorial_hint },
+
 { NULL, NULL }
 };
 
