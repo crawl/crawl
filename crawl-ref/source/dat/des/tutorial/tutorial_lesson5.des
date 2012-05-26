@@ -172,8 +172,8 @@ function tutorial_msg5.exit ()
     return crawl.endgame(text)
 end
 
-function tutorial_msg5.win ()
-    dgn.mark_game_won()
+function tutorial_msg5.win()
+    crawl.mark_game_won()
     return tutorial_msg5.exit()
 end
 }}
