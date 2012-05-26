@@ -1013,6 +1013,8 @@ LUAFN(_crawl_set_max_runes)
     return (0);
 }
 
+LUAWRAP(_crawl_mark_game_won, crawl_state.mark_last_game_won())
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1028,6 +1030,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "tutorial_hunger", crawl_tutorial_hunger },
 { "tutorial_skill",  crawl_tutorial_skill },
 { "tutorial_hint",   crawl_tutorial_hint },
+{ "mark_game_won", _crawl_mark_game_won },
 
 { NULL, NULL }
 };
