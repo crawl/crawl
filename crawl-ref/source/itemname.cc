@@ -2654,7 +2654,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_POISON:
         case POT_STRONG_POISON:
             // Poison is not that bad if you're poison resistant.
-            return (!player_res_poison(false) > 0
+            return (player_res_poison(false) <= 0
                     || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
             return (you.is_undead
