@@ -1248,11 +1248,14 @@ static std::string _describe_ammo(const item_def &item)
 
 void append_armour_stats(std::string &description, const item_def &item)
 {
-    description += "\nArmour rating: ";
+    description += "\nBase armour rating: ";
     _append_value(description, property(item, PARM_AC), false);
     description += "       ";
 
-    description += "Evasion modifier: ";
+    if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+        description += "Base evasion modifier: ";
+    else
+        description += "Evasion modifier: ";
     _append_value(description, property(item, PARM_EVASION), true);
 }
 
