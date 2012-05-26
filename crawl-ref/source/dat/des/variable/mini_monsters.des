@@ -3032,9 +3032,9 @@ SUBST: k = ABCDE
 : elseif you.absdepth() < 16 then
 SUBST: k = CDEFG
 : elseif you.absdepth() < 19 then
-SUBST: k = FGHIJ
+SUBST: k = FGIJ
 : elseif you.absdepth() < 22 then
-SUBST: k = HIJKL
+SUBST: k = IJKL
 : else
 SUBST: k = KLMNO
 : end
@@ -3045,7 +3045,7 @@ KMONS: D = Joseph / elf; long sword | scimitar . chain mail . shield
 KMONS: E = Erica / orc knight
 KMONS: F = Harold / orc knight
 KMONS: G = Donald / hell knight
-KMONS: H = Jozef / hell knight
+#KMONS: H = Jozef / hell knight
 KMONS: I = Louise / wizard; long sword . robe | leather armour . shield
 KMONS: J = Maud / necromancer; great sword . robe | leather armour
 KMONS: K = Frances / deep elf knight
