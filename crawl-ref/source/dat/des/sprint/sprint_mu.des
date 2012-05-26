@@ -299,7 +299,7 @@ ENDMAP
 # D1_1, horror grid
 NAME: sprint_mu_d1_horrors
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
-MONS: Erica / Harold / Snorg
+MONS: Erica / Josephine / Snorg
 MONS: centaur
 MONS: centaur warrior
 MONS: unseen horror
@@ -819,7 +819,7 @@ KMONS: a = patrolling Dowan hd:15 hp:100 \
 KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
  . blowgun . needle ego:curare q:7
 : elseif d2rnd == 2 then
-KMONS: a = patrolling Jozef hd:15 hp:100 \
+KMONS: a = patrolling Harold hd:15 hp:100 \
  spells:poison_arrow;teleport_other;.;minor_healing;slow \
  ; dire flail ego:distortion
 KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
