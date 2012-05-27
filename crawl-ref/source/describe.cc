@@ -23,6 +23,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "clua.h"
+#include "command.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -96,6 +97,21 @@ int count_desc_lines(const std::string &_desc, const int width)
     }
 
     return count;
+}
+
+void _adjust_item(item_def &item)
+{
+    _safe_newline();
+    std::string prompt = "<cyan>Adjust to what? </cyan>";
+    formatted_string::parse_string(prompt).display();
+    int keyin = getch_ck();
+
+    if (isalpha(keyin))
+    {
+        int a = letter_to_index(item.slot);
+        int b = letter_to_index(keyin);
+        swap_inv_slots(a,b,true);
+    }
 }
 
 //---------------------------------------------------------------
@@ -2395,6 +2411,7 @@ static command_type _get_action(int key, std::vector<command_type> actions)
         act_key[CMD_DROP]               = 'd';
         act_key[CMD_INSCRIBE_ITEM]      = 'i';
         act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+        act_key[CMD_ADJUST_INVENTORY]   = '=';
         act_key_init = false;
     }
 
@@ -2433,6 +2450,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     std::string prompt = "You can ";
     int keyin;
     std::vector<command_type> actions;
+    actions.push_back(CMD_ADJUST_INVENTORY);
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2513,6 +2531,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         act_str[CMD_DROP]               = "(d)rop";
         act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
         act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+        act_str[CMD_ADJUST_INVENTORY]   = "(=)adjust";
         act_str_init = false;
     }
 
@@ -2595,6 +2614,9 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     case CMD_MAKE_NOTE:
         add_autoinscription(item);
         break;
+    case CMD_ADJUST_INVENTORY:
+        _adjust_item(item);
+        return false;
     case CMD_NO_CMD:
     default:
         return true;
