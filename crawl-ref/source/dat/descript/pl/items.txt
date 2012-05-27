@@ -1177,15 +1177,15 @@ Jak każdy kontrolowany teleport, powoduje to magiczne skażenie.
 %%%%
 scroll of curse armour
 
-Ten zwój przeklina jakąś część uzbrojenia.
+Ten zwój przeklina jakąś ubraną część uzbrojenia.
 %%%%
 scroll of curse jewellery
 
-Ten zwój przeklina jakiś amulet lub pierścień.
+Ten zwój przeklina jakiś założony amulet lub pierścień.
 %%%%
 scroll of curse weapon
 
-Ten zwój przeklina jakąś broń.
+Ten zwój przeklina trzymaną w dłoni broń.
 %%%%
 scroll of detect curse
 
@@ -1201,25 +1201,24 @@ ze skóry niektórych stworzeń — zwykle trolli i smoków.
 %%%%
 scroll of enchant weapon i
 
-Ten zwój pozwala na poprawienie jakości broni lub garści pocisków trzymanych w
-dłoni w czwili odczytania zwoju. Zwiększa on celność. Broń która już jest
-wysokiej jakości może nie poddać się działaniu tego zwoju — szansa porażki jest
-coraz większa. Bezwzględny limit to +9.
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+odczytania zwoju. Zwiększa on celność. Broń która już jest wysokiej jakości
+może nie poddać się działaniu tego zwoju — szansa porażki jest coraz większa.
+Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon ii
 
-Ten zwój pozwala na poprawienie jakości broni lub garści pocisków trzymanych w
-dłoni w czwili odczytania zwoju. Zwiększa on zadawane obrażenia. Broń która już
-jest wysokiej jakości może nie poddać się działaniu tego zwoju — szansa porażki
-jest coraz większa. Bezwzględny limit to +9.
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+odczytania zwoju. Zwiększa on zadawane obrażenia. Broń która już jest wysokiej
+jakości może nie poddać się działaniu tego zwoju — szansa porażki jest coraz
+większa. Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon iii
 
-Ten zwój pozwala na znaczne poprawienie jakości broni lub garści pocisków
-trzymanych w dłoni w czwili odczytania zwoju. Zwiększa on zarówno celność jak i
-zadawane obrażenia. Broń która już jest wysokiej jakości może nie poddać się
-działaniu tego zwoju — szansa porażki jest coraz większa. Bezwzględny limit to
-+9.
+Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w
+czwili odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia.
+Broń która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
+szansa porażki jest coraz większa. Bezwzględny limit to +9.
 %%%%
 scroll of fear
 
@@ -1238,8 +1237,8 @@ przeklętym stworzeniom — łącznie z czytającym jeśli jego to dotyczy!
 %%%%
 scroll of identify
 
-Ten zwój pozwala odkryć własności jakiegoś przedmiotu. Użyty na talii kart,
-zwój ten także podejrzy górną kartę bez aktywowania jej działania.
+Ten zwój pozwala odkryć własności od jednego do trzech przedmiotów. Użyty na
+talii kart, zwój ten także podejrzy górną kartę bez aktywowania jej działania.
 %%%%
 scroll of immolation
 
