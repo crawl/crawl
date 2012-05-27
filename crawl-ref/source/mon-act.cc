@@ -2418,7 +2418,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
-            int base_max = mons_avg_hp(mons->type);
+            const int base_max = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
             mons->hit_points = std::min(MAX_MONSTER_HP,
                                std::min(base_max * 2, mons->hit_points));
@@ -2446,10 +2446,10 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
-    monster_type mt = item.mon_type;
+    const monster_type mt = item.mon_type;
     if (do_heal)
     {
-        int base_max = mons_avg_hp(mons->type);
+        const int base_max = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
         mons->hit_points = std::min(MAX_MONSTER_HP,
                            std::min(base_max * 2, mons->hit_points));
