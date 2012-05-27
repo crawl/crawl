@@ -1660,7 +1660,7 @@ void handle_monster_move(monster* mons)
 {
     mons->has_constricted_this_turn = false;
     mons->hit_points = std::min(mons->max_hit_points,
-                                   mons->hit_points);
+                                mons->hit_points);
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
@@ -2351,9 +2351,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                    || get_ammo_brand(*si) == SPMSL_SILVER));
         death_ooze_ate_corpse = (mons->type == MONS_DEATH_OOZE
                                  && ((si->base_type == OBJ_CORPSES
-                                      && si->sub_type == CORPSE_BODY)
-                                    || si->base_type == OBJ_FOOD
-                                      && si->sub_type == FOOD_CHUNK));
+                                     && si->sub_type == CORPSE_BODY)
+                                 || si->base_type == OBJ_FOOD
+                                     && si->sub_type == FOOD_CHUNK));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -2423,7 +2423,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             mons->hit_points = std::min(MAX_MONSTER_HP,
                                std::min(base_max * 2, mons->hit_points));
             mons->max_hit_points = std::max(mons->hit_points,
-                                               mons->max_hit_points);
+                                            mons->max_hit_points);
         }
 
         if (death_ooze_ate_corpse)
@@ -2454,7 +2454,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
         mons->hit_points = std::min(MAX_MONSTER_HP,
                            std::min(base_max * 2, mons->hit_points));
         mons->max_hit_points = std::max(mons->hit_points,
-                                           mons->max_hit_points);
+                                        mons->max_hit_points);
     }
 
     if (nearby)
