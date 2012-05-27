@@ -99,20 +99,7 @@ int count_desc_lines(const std::string &_desc, const int width)
     return count;
 }
 
-void _adjust_item(item_def &item)
-{
-    _safe_newline();
-    std::string prompt = "<cyan>Adjust to what? </cyan>";
-    formatted_string::parse_string(prompt).display();
-    int keyin = getch_ck();
-
-    if (isalpha(keyin))
-    {
-        int a = letter_to_index(item.slot);
-        int b = letter_to_index(keyin);
-        swap_inv_slots(a,b,true);
-    }
-}
+void _adjust_item(item_def &item);
 
 //---------------------------------------------------------------
 //
@@ -2805,6 +2792,21 @@ void inscribe_item(item_def &item, bool msgwin)
         mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
         you.wield_change  = true;
         you.redraw_quiver = true;
+    }
+}
+
+void _adjust_item(item_def &item)
+{
+    _safe_newline();
+    std::string prompt = "<cyan>Adjust to what? </cyan>";
+    formatted_string::parse_string(prompt).display();
+    int keyin = getch_ck();
+
+    if (isalpha(keyin))
+    {
+        int a = letter_to_index(item.slot);
+        int b = letter_to_index(keyin);
+        swap_inv_slots(a,b,true);
     }
 }
 
