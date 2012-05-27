@@ -2798,7 +2798,7 @@ void inscribe_item(item_def &item, bool msgwin)
 void _adjust_item(item_def &item)
 {
     _safe_newline();
-    std::string prompt = "<cyan>Adjust to what? </cyan>";
+    std::string prompt = "<cyan>Adjust to which letter? </cyan>";
     formatted_string::parse_string(prompt).display();
     int keyin = getch_ck();
 
