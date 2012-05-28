@@ -199,8 +199,15 @@ well.
 %%%%
 great mace "Undeadhunter"
 
-This weapon is imbued with magic that can counter and disrupt the magic holding
-undead together, inflicting great damage.
+Legends say that a long time ago, a lich lord experimented with creating
+sentient servants instead of mindless automatons. Due to expected loyalty
+problems, he made a number of weapons imbued with magic that can counter and
+disrupt the magic holding undead together, inflicting great damage. How the
+lich met his destiny, doesn't need to be explained.
+
+Such weapons, dubbed "of disruption", used to be popular, but thanks to efforts
+of TSO's agents who say one should not fight necromancy with necromancy, this
+mace might be the last.
 %%%%
 whip "Snakebite"
 
