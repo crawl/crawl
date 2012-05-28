@@ -2688,6 +2688,7 @@ bool maybe_id_weapon(item_def &item, const char *msg)
     if ((item.flags | id) != item.flags)
     {
         set_ident_flags(item, id);
+        add_autoinscription(item);
         if (msg)
             mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
         you.wield_change = true;
