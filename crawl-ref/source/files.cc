@@ -1686,34 +1686,33 @@ bool load_ghost(bool creating_level)
 #endif
 
     // Translate ghost to monster and place.
-    for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); ++imn)
+    monster* mons;
+    while (!ghosts.empty() && (mons = get_free_monster()))
     {
-        if (menv[imn].alive())
-            continue;
-
-        menv[imn].set_ghost(ghosts[0]);
-        menv[imn].ghost_init();
-        menv[imn].bind_melee_flags();
-        if (menv[imn].has_spells())
-            menv[imn].bind_spell_flags();
-        if (menv[imn].ghost->species == SP_DEEP_DWARF)
-            menv[imn].flags |= MF_NO_REGEN;
+        mons->set_new_monster_id();
+        mons->set_ghost(ghosts[0]);
+        mons->ghost_init();
+        mons->bind_melee_flags();
+        if (mons->has_spells())
+            mons->bind_spell_flags();
+        if (mons->ghost->species == SP_DEEP_DWARF)
+            mons->flags |= MF_NO_REGEN;
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             unplaced_ghosts--;
-            if (!menv[imn].alive())
+            if (!mons->alive())
             {
                 mpr("Placed ghost is not alive.", MSGCH_DIAGNOSTICS);
                 ghost_errors = true;
             }
-            else if (menv[imn].type != MONS_PLAYER_GHOST)
+            else if (mons->type != MONS_PLAYER_GHOST)
             {
                 mprf(MSGCH_DIAGNOSTICS,
                      "Placed ghost is not MONS_PLAYER_GHOST, but %s",
-                     menv[imn].name(DESC_PLAIN, true).c_str());
+                     mons->name(DESC_PLAIN, true).c_str());
                 ghost_errors = true;
             }
         }

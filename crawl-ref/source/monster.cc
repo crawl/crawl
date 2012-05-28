@@ -4008,7 +4008,6 @@ void monster::ghost_init(bool need_pos)
 {
     ghost_demon_init();
 
-    set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
