@@ -847,10 +847,6 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
 {
     std::vector<ghost_demon> gs;
 
-    // No ghosts in the Temple.
-    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-        return (gs);
-
     if (!you.is_undead)
     {
         ghost_demon player;
