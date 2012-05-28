@@ -1840,63 +1840,103 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 // reforming the original monster out of ice anyway.
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
-    int count = 0;
+    const item_def* flesh = you.weapon();
 
-    const item_def* weapon = you.weapon();
-
-    if (weapon
-        && weapon->base_type == OBJ_FOOD && weapon->sub_type == FOOD_CHUNK)
-    {
-        const monster_type sim_type = weapon->mon_type;
-
-        if (!mons_class_can_be_zombified(sim_type))
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
-            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-
-        // Can't create more than the available chunks.
-        int how_many = std::min(8, 4 + random2(pow) / 20);
-        how_many = std::min<int>(how_many, weapon->quantity);
-
-        const int monnum = weapon->orig_monnum - 1;
-
-        for (int i = 0; i < how_many; ++i)
-        {
-            // Use the original monster type as the zombified type here,
-            // to get the proper stats from it.
-            if (monster *sim = create_monster(
-                    mgen_data(mon, BEH_FRIENDLY, &you,
-                              0, SPELL_SIMULACRUM,
-                              you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god,
-                              static_cast<monster_type>(monnum))))
-            {
-                count++;
-
-                dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-                player_angers_monster(sim);
-                sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-            }
-        }
-
-        if (!count)
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return SPRET_SUCCESS;
-    }
-    else
+    if (!flesh || flesh->base_type != OBJ_FOOD
+        || flesh->sub_type != FOOD_CHUNK
+           && flesh->sub_type != FOOD_BEEF_JERKY
+           && flesh->sub_type != FOOD_MEAT_RATION
+           && flesh->sub_type != FOOD_SAUSAGE)
     {
         mpr("You need to wield a piece of raw flesh for this spell to be "
             "effective!");
         return SPRET_ABORT;
     }
+
+    monster_type sim_type = MONS_PROGRAM_BUG;
+    std::string name;
+
+    switch (flesh->sub_type)
+    {
+    case FOOD_CHUNK:
+        sim_type = flesh->mon_type;
+        break;
+    case FOOD_BEEF_JERKY:
+        sim_type = MONS_YAK;
+        name = coinflip() ? "cow" : "bull";
+        break;
+    case FOOD_SAUSAGE:
+        sim_type = MONS_HOG;
+        break;
+    default:
+        // usual suspects for mystery meat's identity
+        switch (random2(4))
+        {
+        case 0:
+            sim_type = MONS_HOUND; name = "dog";
+            break;
+        case 1:
+            sim_type = MONS_FELID; name = "cat";
+            break;
+        case 2:
+            sim_type = MONS_RAT;
+            break;
+        default:
+            sim_type = MONS_YAK; // 25% chance for "real" meat
+        }
+    }
+
+    if (!mons_class_can_be_zombified(sim_type))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
+        MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
+
+    mgen_data mg(mon, BEH_FRIENDLY, &you,
+                 0, SPELL_SIMULACRUM,
+                 you.pos(), MHITYOU,
+                 MG_FORCE_BEH, god,
+                 flesh->sub_type == FOOD_CHUNK ?
+                     static_cast<monster_type>(flesh->orig_monnum - 1) :
+                     sim_type);
+
+    // Can't create more than the available chunks.
+    int how_many = std::min(8, 4 + random2(pow) / 20);
+    how_many = std::min<int>(how_many, flesh->quantity);
+
+    int count = 0;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        // Use the original monster type as the zombified type here,
+        // to get the proper stats from it.
+        if (monster *sim = create_monster(mg))
+        {
+            if (!name.empty())
+            {
+                sim->mname = name;
+                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                sim->props["dbname"].get_string() = mons_class_name(mon);
+            }
+
+            count++;
+
+            dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+            player_angers_monster(sim);
+            sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        }
+    }
+
+    if (!count)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
 }
 
 static void _apport_and_butcher(monster *caster, item_def &item)
