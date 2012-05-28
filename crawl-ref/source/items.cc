@@ -1734,8 +1734,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 if (!quiet)
                 {
-                    mpr_nocap(get_menu_colour_prefix_tags(you.inv[m],
-                                                          DESC_INVENTORY).c_str());
+                    mprf_nocap("%s (gained %d)",
+                               get_menu_colour_prefix_tags(you.inv[m],
+                                   DESC_INVENTORY).c_str(),
+                               quant_got);
                 }
                 you.turn_is_over = true;
 
