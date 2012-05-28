@@ -99,15 +99,15 @@ ENDMAP
 ################################################################################
 
 NAME:   uniq_agnes
-DEPTH:  D:14-22, Elf:3, Dwarf, Swamp, Snake, Shoals, Spider, Vaults:1-6, Crypt:1-3, Blade, Tomb:1
+DEPTH:  D:14-22, Elf, Dwarf, Swamp, Snake, Shoals, Spider, Vaults:1-6, Crypt:1-3, Blade, Tomb:1
 : place_unique(_G, "Agnes")
 
 NAME:   uniq_aizul
-DEPTH:  D:14-20, Elf:3, Dwarf, Swamp, Snake, Shoals, Spider, Vaults:1-4, Crypt:1
+DEPTH:  D:14-20, Elf, Dwarf, Swamp, Snake, Shoals, Spider, Vaults:1-4, Crypt:1
 : place_unique(_G, "Aizul")
 
 NAME:   uniq_azrael
-DEPTH:  D:14-19, Elf:3, Dwarf, Snake:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Snake:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Azrael band")
 
 NAME:   uniq_blork_the_orc
@@ -126,7 +126,7 @@ DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:4-, Crypt, Blade, 
 NAME:   uniq_donald
 # XXX: add Vaults:1-4 when finished re-do of vaults.
 TAGS:   lab
-DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Crypt:1-4, Blade, Elf:1-4, Orc:3-4, Lab
+DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Crypt:1-4, Blade, Elf, Dwarf, Orc:3-4, Lab
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duvessa
@@ -138,11 +138,11 @@ DEPTH:  D:4-9, Orc:1
 : place_unique(_G, "Edmund")
 
 NAME:   uniq_erica
-DEPTH:  D:10-16, Orc:2-, Elf, Dwarf, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-16, Orc:2-, Elf:1, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Erica")
 
 NAME:   uniq_erolcha
-DEPTH:  D:8-13, Orc, Elf:1-2
+DEPTH:  D:8-13, Orc
 : place_unique(_G, "Erolcha")
 
 NAME:   uniq_eustachio
@@ -150,7 +150,7 @@ DEPTH:  D:4-10, Orc:1-2
 : place_unique(_G, "Eustachio")
 
 NAME:   uniq_frances
-DEPTH:  D:17-27, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
+DEPTH:  D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
 : place_unique(_G, "Frances")
 
 NAME:   uniq_frederick
@@ -158,7 +158,7 @@ DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:4-, Crypt, Blade, 
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_gastronok_1
-DEPTH:  D:8-13, Orc, Elf:1-2
+DEPTH:  D:8-13, Orc
 TAGS:   uniq_gastronok
 WEIGHT: 5
 : place_unique(_G, "Gastronok")
@@ -170,7 +170,7 @@ WEIGHT: 15
 : place_unique(_G, "Gastronok")
 
 NAME:   uniq_grum
-DEPTH:  D:8-13, Orc, Elf:1-2
+DEPTH:  D:8-13, Orc
 : place_unique(_G, "Grum band")
 
 NAME:   uniq_grinder
@@ -178,7 +178,7 @@ DEPTH:  D:3-6
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold
-DEPTH:  D:10-16, Orc:2-, Elf, Dwarf, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-16, Orc:2-, Elf:1, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Harold")
 
 NAME:   uniq_iyjb
@@ -190,19 +190,19 @@ DEPTH:  D:2-3
 : place_unique(_G, "Jessica")
 
 NAME:   uniq_joseph
-DEPTH:  D:7-12, Orc, Elf:1, Lair:1
+DEPTH:  D:7-12, Orc, Lair:1
 : place_unique(_G, "Joseph")
 
 NAME:   uniq_josephine
-DEPTH:  D:10-16, Orc:2-, Elf, Dwarf, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-16, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Josephine band")
 
 NAME:   uniq_kirke
-DEPTH:  D:14-19, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Kirke band")
 
 NAME:   uniq_louise
-DEPTH:  D:14-19, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Louise")
 
 NAME:   uniq_margery
@@ -210,15 +210,15 @@ DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:4-, Crypt, Blade, 
 : place_unique(_G, "Margery band")
 
 NAME:   uniq_maud
-DEPTH:  D:14-16, Lair:3-5, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:3, Dwarf
+DEPTH:  D:14-16, Lair:3-5, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:1
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
-DEPTH:  D:18-25, Swamp:3-5, Snake:3-5, Shoals:3-5, Spider:3-5, Vaults:2-, Crypt, Blade, Tomb
+DEPTH:  D:18-25, Elf:3-, Dwarf, Swamp:3-5, Snake:3-5, Shoals:3-5, Spider:3-5, Vaults:2-, Crypt, Blade, Tomb
 : place_unique(_G, "Mara")
 
 NAME:   uniq_maurice
-DEPTH:  D:8-13, Orc, Elf:1-2
+DEPTH:  D:8-13, Orc
 : place_unique(_G, "Maurice")
 
 NAME:   uniq_menkaure
@@ -226,19 +226,19 @@ DEPTH:  D:4-7
 : place_unique(_G, "Menkaure")
 
 NAME:   uniq_nergalle
-DEPTH:  D:14-19, Orc:3-4, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Orc:3-4, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  D:11-17, Orc:3-, Elf, Dwarf, Swamp:1-2, Snake:1-2, Shoals:1-2, Spider:1-2, Vaults:1
+DEPTH:  D:11-17, Orc:3-, Elf:1-2, Swamp:1-2, Snake:1-2, Shoals:1-2, Spider:1-2, Vaults:1
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_nikola
-DEPTH:  D:14-19, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Nikola")
 
 NAME:   uniq_norris
-DEPTH:  D:17-19, Swamp:2-4, Snake:2-4, Shoals:2-4, Spider:2-4, Vaults:1-3
+DEPTH:  D:17-19, Elf:2-, Dwarf, Swamp:2-4, Snake:2-4, Shoals:2-4, Spider:2-4, Vaults:1-3
 : place_unique(_G, "Norris")
 
 NAME:   uniq_pikel
@@ -261,7 +261,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_psyche
-DEPTH:  D:8-13, Orc, Elf:1-2
+DEPTH:  D:8-13, Orc
 : place_unique(_G, "Psyche")
 
 NAME:   uniq_purgy
@@ -270,7 +270,7 @@ WEIGHT: 1
 : place_unique(_G, "Purgy")
 
 NAME:   uniq_roxanne
-DEPTH:  D:14-19, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 TAGS:   place_unique transparent
 MONS:   Roxanne
 MAP
@@ -280,11 +280,11 @@ MAP
 ENDMAP
 
 NAME:   uniq_rupert
-DEPTH:  D:14-19, Lair:3-, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3, Slime:1-2
+DEPTH:  D:14-19, Lair:3-, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3, Slime:1-2
 : place_unique(_G, "Rupert")
 
 NAME:   uniq_saint_roka
-DEPTH:  Orc:4, D:17-27, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
+DEPTH:  Orc:4, D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sigmund
@@ -292,11 +292,11 @@ DEPTH:  D:2-7
 : place_unique(_G, "Sigmund")
 
 NAME:   uniq_snorg
-DEPTH:  D:14-19, Elf:3, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
+DEPTH:  D:14-19, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Snorg")
 
 NAME:   uniq_sonja
-DEPTH:  D:10-16, Orc:2-, Elf, Dwarf, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-16, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Sonja")
 
 NAME:   uniq_terence
@@ -304,11 +304,11 @@ DEPTH:  D:2-3
 : place_unique(_G, "Terence")
 
 NAME:   uniq_urug
-DEPTH:  D:10-16, Orc:2-, Elf, Dwarf, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-16, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Urug")
 
 NAME:   uniq_wiglaf
-DEPTH:  D:17-27, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
+DEPTH:  D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
 : place_unique(_G, "Wiglaf")
 
 NAME:   uniq_xtahua
