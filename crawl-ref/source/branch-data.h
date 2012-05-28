@@ -69,7 +69,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_lair_rare, mons_lair_level,
       'L', false, 4 },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 14,
+    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
@@ -78,7 +78,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_swamp_rare, mons_swamp_level,
       'S', true, 0 },
 
-    { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 14,
+    { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoals",
@@ -87,7 +87,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_shoals_rare, mons_shoals_level,
       'A', true, 3 },
 
-    { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 14,
+    { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
       DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -96,7 +96,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_pitsnake_rare, mons_pitsnake_level,
       'P', true, 0 },
 
-    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 14,
+    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
       DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
       "Spider Nest", "the Spider Nest", "Spider",
