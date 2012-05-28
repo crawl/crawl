@@ -12,7 +12,7 @@
 #include "externs.h"
 #include "files.h"
 #include "godprayer.h"
-#include "items.h" // for find_floor_item
+#include "items.h"
 #include "itemname.h" // for make_name
 #include "makeitem.h"
 #include "message.h"
