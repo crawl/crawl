@@ -57,8 +57,8 @@ local function have_ranged()
   return wp and wp.is_ranged and not wp.is_melded
 end
 
-local function have_throwing()
-  return AUTOFIGHT_THROW and items.fired_item() ~= nil
+local function have_throwing(no_move)
+  return (AUTOFIGHT_THROW or no_move) and items.fired_item() ~= nil
 end
 
 local function try_move(dx, dy)
@@ -111,7 +111,7 @@ local function move_towards(dx, dy)
   end
 end
 
-local function get_monster_info(dx,dy)
+local function get_monster_info(dx,dy,no_move)
   m = monster.get_monster_at(dx,dy)
   name = m:name()
   if not m then
@@ -132,7 +132,7 @@ local function get_monster_info(dx,dy)
       info.attack_type = view.can_reach(dx, dy) and 1 or 0
     end
   end
-  if info.attack_type == 0 and have_throwing() and you.see_cell_no_trans(dx, dy) then
+  if info.attack_type == 0 and have_throwing(no_move) and you.see_cell_no_trans(dx, dy) then
     -- Melee is better than throwing.
     info.attack_type = 3
   end
@@ -179,7 +179,7 @@ local function is_candidate_for_attack(x,y)
   return true
 end
 
-local function get_target()
+local function get_target(no_move)
   local x, y, bestx, besty, best_info, new_info
   bestx = 0
   besty = 0
@@ -187,7 +187,7 @@ local function get_target()
   for x = -8,8 do
     for y = -8,8 do
       if is_candidate_for_attack(x, y) then
-        new_info = get_monster_info(x, y)
+        new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then
           bestx = x
           besty = y
@@ -228,7 +228,7 @@ local function hp_is_low()
 end
 
 function attack(allow_movement)
-  local x, y, info = get_target()
+  local x, y, info = get_target(not allow_movement)
   local caught = you.caught()
   if you.confused() then
     crawl.mpr("You are too confused!")
