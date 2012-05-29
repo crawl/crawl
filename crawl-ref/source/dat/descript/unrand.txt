@@ -200,14 +200,13 @@ well.
 great mace "Undeadhunter"
 
 Legends say that a long time ago, a lich lord experimented with creating
-sentient servants instead of mindless automatons. Due to expected loyalty
-problems, he made a number of weapons imbued with magic that can counter and
-disrupt the magic holding undead together, inflicting great damage. How the
-lich met his destiny, doesn't need to be explained.
+sentient servants instead of mindless automatons. To ensure their loyalty,
+he made a number of weapons imbued with magic that could counteract
+the magic holding undead together, inflicting great damage.
 
-Such weapons, spreading disruption among the undead, are told to have been
+Although the lich met his end long ago, his weapons, spreading disruption among the undead, are said to have been
 popular. At least, old tales are full of them. However, this mace might be the
-only one to last — perhaps due to efforts of the agents of The Shining One who
+only one to last — perhaps due to efforts of the agents of the Shining One, who
 say that one should not fight necromancy with necromancy.
 %%%%
 whip "Snakebite"
