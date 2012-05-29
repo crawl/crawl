@@ -4713,13 +4713,16 @@ bool melee_attack::do_knockback(bool trample)
                  defender->conj_verb("stumble").c_str());
         }
 
+        // Schedule following _before_ actually trampling -- if the defender
+        // is a player, a shaft trap will unload the level.  If trampling will
+        // somehow fail, move attempt will be ignored.
+        if (trample)
+            add_final_effect(FINEFF_TRAMPLE_FOLLOW, attacker, 0, old_pos);
+
         if (defender->as_player())
             move_player_to_grid(new_pos, false, true);
         else
             defender->move_to_pos(new_pos);
-
-        if (trample && attacker->is_habitable(old_pos))
-            attacker->move_to_pos(old_pos);
 
         // Interrupt stair travel and passwall.
         if (defender == &you)

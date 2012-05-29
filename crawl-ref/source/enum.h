@@ -3546,6 +3546,7 @@ enum final_effect_flavour
 {
     FINEFF_LIGHTNING_DISCHARGE,
     FINEFF_MIRROR_DAMAGE,
+    FINEFF_TRAMPLE_FOLLOW,
 };
 
 enum disable_type
