@@ -1299,14 +1299,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         else
             _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
 
-        // Don't return the player into deep water.
-        if (is_feat_dangerous(grd(you.pos()), true))
-            for (distance_iterator di(you.pos()); di; ++di)
-                if (!is_feat_dangerous(grd(*di), true))
-                {
+        // Don't return the player into deep water or a trap.
+        for (distance_iterator di(you.pos(), true, false); di; ++di)
+            if (!is_feat_dangerous(grd(*di), true) && !feat_is_trap(grd(*di), true))
+            {
+                if (you.pos() != *di)
                     you.moveto(*di);
-                    break;
-                }
+                break;
+            }
 
         // This should fix the "monster occurring under the player" bug.
         if (monster* mon = monster_at(you.pos()))
