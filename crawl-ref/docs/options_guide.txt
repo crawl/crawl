@@ -380,13 +380,16 @@ The available stock Lua scripts are
                    Stops if HP <= (autofight_stop)% * MHP, where
                    autofight_stop = 30 by default but can be set by the player.
                    Never moves if hit_adjacent is used instead of hit_closest.
-                   Will use thrown weapons only if autofight_throw is true
-                   (off by default).
+                   hit_closest Will use thrown weapons only if autofight_throw
+                   is true (off by default), hit_adjacent will do so if
+                   either autofight_throw or autofight_throw_nomove is true
+                   (and it is enabled by default).
                    Tab is automatically bound to hit_closest and shift-tab to
                    hit_adjacent.
                    Requires non-rebound vi keys.
                    New macroable functions: hit_closest, hit_adjacent
-                   New options: autofight_stop, autofight_throw
+                   New options: autofight_stop, autofight_throw,
+                   autofight_throw_nomove
 
 
 The above mentioned Lua functions can be macroed in-game by setting the

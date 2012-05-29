@@ -14,6 +14,7 @@ local ATT_NEUTRAL = 1
 
 AUTOFIGHT_STOP = 30
 AUTOFIGHT_THROW = false
+AUTOFIGHT_THROW_NOMOVE = true
 
 local function delta_to_vi(dx, dy)
   local d2v = {
@@ -58,7 +59,7 @@ local function have_ranged()
 end
 
 local function have_throwing(no_move)
-  return (AUTOFIGHT_THROW or no_move) and items.fired_item() ~= nil
+  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and items.fired_item() ~= nil
 end
 
 local function try_move(dx, dy)
@@ -222,6 +223,10 @@ local function set_af_throw(key, value)
   AUTOFIGHT_THROW = string.lower(value) ~= "false"
 end
 
+local function set_af_throw_nomove(key, value)
+  AUTOFIGHT_THROW_NOMOVE = string.lower(value) ~= "false"
+end
+
 local function hp_is_low()
   local hp, mhp = you.hp()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
@@ -266,3 +271,4 @@ end
 
 chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_throw = set_af_throw
+chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
