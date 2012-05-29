@@ -12,39 +12,35 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "externs.h"
-
 #include "cloud.h"
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "mgen_data.h"
 #include "mon-behv.h"
-// These all might not be necessary? added on merge
 #include "mon-cast.h"
 #include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
 #include "random-var.h"
 #include "shopping.h"
 #include "spl-miscast.h"
-// End list
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "travel.h"
-#include "hints.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     #define NOTE_DEBUG_CHAOS_EFFECTS
 #endif
 
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
-#include "notes.h"
+    #include "notes.h"
 #endif
 
 /* Handles melee combat between attacker and defender
