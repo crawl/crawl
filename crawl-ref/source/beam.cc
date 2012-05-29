@@ -2517,25 +2517,8 @@ void bolt::drop_object()
 
         copy_item_to_grid(*item, pos(), 1);
     }
-    else if (item->sub_type == MI_LARGE_ROCK)
-    {
-        // Large rocks mulch to stone.
-        bool in_view = you.see_cell(pos());
-        if (in_view)
-            mprf("%s shatters into pieces!", item->name(DESC_THE).c_str());
-        noisy(12, pos(), in_view ? NULL : "You hear a cracking sound!");
-
-        item->sub_type = MI_STONE;
-        item->quantity = 10 + random2(41);
-        // Remove thrown flag: we might not want to pick up the stones.
-        item->flags &= ~ISFLAG_THROWN;
-
-        copy_item_to_grid(*item, pos(), item->quantity);
-    }
     else
-    {
         item_was_destroyed(*item, NON_MONSTER);
-    }
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
