@@ -465,7 +465,7 @@ void game_state::dump()
                   "arena_suspended: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended);
     if (last_winch)
-        fprintf(stderr, "Last resize was %"PRId64" seconds ago.\n",
+        fprintf(stderr, "Last resize was %" PRId64" seconds ago.\n",
                 (int64_t)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
