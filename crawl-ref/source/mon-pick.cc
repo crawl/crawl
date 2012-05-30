@@ -392,7 +392,7 @@ int mons_pan_rare(monster_type mcls)
 }
 
 // The Main Dungeon
-int mons_standard_level(monster_type mcls)
+int mons_dungeon_level(monster_type mcls)
 {
     switch (mcls)
     {
@@ -630,7 +630,7 @@ int mons_standard_level(monster_type mcls)
     }
 }
 
-int mons_standard_rare(monster_type mcls)
+int mons_dungeon_rare(monster_type mcls)
 {
     switch (mcls)
     {
@@ -1817,7 +1817,7 @@ int mons_hive_rare(monster_type mcls)
 // The Vaults
 int mons_vaults_level(monster_type mcls)
 {
-    int lev = mons_standard_level(mcls);
+    int lev = mons_dungeon_level(mcls);
     if (lev == DEPTH_NOWHERE)
         return lev;
     return lev - absdungeon_depth(BRANCH_VAULTS, 1)
@@ -1826,7 +1826,7 @@ int mons_vaults_level(monster_type mcls)
 
 int mons_vaults_rare(monster_type mcls)
 {
-    return mons_standard_rare(mcls);
+    return mons_dungeon_rare(mcls);
 }
 
 // The Hall of Blades

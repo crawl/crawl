@@ -21,7 +21,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Dungeon", "the Dungeon", "D",
       NULL,
       true, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level,
+      mons_dungeon_rare, mons_dungeon_level,
       'D', false, 0 },
 
     { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 4, 7, 1, 5,
