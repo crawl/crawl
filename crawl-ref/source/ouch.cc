@@ -327,14 +327,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     }
 
     case BEAM_LIGHT:
-        if (you.invisible())
-            hurted = 0;
-        else if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE)
             hurted += hurted / 2;
 
-        if (original && !hurted && doEffects)
-            mpr("The beam of light passes harmlessly through you.");
-        else if (hurted > original && doEffects)
+        if (hurted > original && doEffects)
         {
             mpr("The light scorches you terribly!");
             xom_is_stimulated(200);
