@@ -250,7 +250,7 @@ bool TextDB::_needs_update() const
         if (mtime)
             no_files = false;
         char buf[20];
-        snprintf(buf, sizeof(buf), ":%"PRId64, (int64_t)mtime);
+        snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
         ts += buf;
     }
 
@@ -301,7 +301,7 @@ void TextDB::_regenerate_db()
         full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
         time_t mtime = file_modtime(full_input_path);
-        snprintf(buf, sizeof(buf), ":%"PRId64, (int64_t)mtime);
+        snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
         ts += buf;
         if (mtime || !_parent) // english is mandatory
             _store_text_db(full_input_path, _db);

@@ -129,7 +129,7 @@ static void _debug_mid_name(mid_t mid)
         if (mons)
             fprintf(stderr, "%s", debug_mon_str(mons).c_str());
         else
-            fprintf(stderr, "bad monster[%"PRImidt"]", mid);
+            fprintf(stderr, "bad monster[%" PRImidt"]", mid);
     }
 }
 
@@ -312,7 +312,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "\n");
     }
 
-    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%"PRIx64"\n",
+    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%" PRIx64"\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags);
 
     fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "

@@ -494,9 +494,9 @@ void wizard_tweak_object(void)
         }
 
         if (keyin != 'e')
-            mprf("Old value: %"PRId64" (0x%04"PRIx64")", old_val, old_val);
+            mprf("Old value: %" PRId64" (0x%04" PRIx64")", old_val, old_val);
         else
-            mprf("Old value: 0x%08"PRIx64, old_val);
+            mprf("Old value: 0x%08" PRIx64, old_val);
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')

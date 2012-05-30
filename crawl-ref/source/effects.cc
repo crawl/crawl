@@ -2330,7 +2330,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     // probably too annoying even for DEBUG_DIAGNOSTICS
     dprf("mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
+         "pos (%d,%d); targ %d(%d,%d); flags %" PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags);
 
