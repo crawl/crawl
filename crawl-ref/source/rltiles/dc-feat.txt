@@ -93,7 +93,12 @@ dngn_statue_elephant
 dngn_statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 # damaged statues
-dngn_crumbled_column DNGN_CRUMBLED_COLUMN
+dngn_crumbled_column_1 DNGN_CRUMBLED_COLUMN
+dngn_crumbled_column_2
+dngn_crumbled_column_3
+dngn_crumbled_column_4
+dngn_crumbled_column_5
+dngn_crumbled_column_6
 dngn_granite_stump DNGN_GRANITE_STUMP
 
 ## Features only used in certain minivaults
