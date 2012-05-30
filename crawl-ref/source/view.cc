@@ -308,7 +308,8 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        std::string warning_msg = "Ashenzari warns you: ";
+        std::string warning_msg = "Ashenzari warns you:";
+        warning_msg += " ";
         for (unsigned int i = 0; i < size; ++i)
         {
             const monster* mon = monsters[i];
