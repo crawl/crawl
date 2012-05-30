@@ -2901,7 +2901,6 @@ int mons_volcano_rare(monster_type mcls)
     case MONS_FLAYED_GHOST:
     case MONS_TOENAIL_GOLEM:
     case MONS_EFREET:
-    case MONS_VAMPIRE:
         return 50;
 
     default:
