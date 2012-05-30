@@ -322,14 +322,16 @@ void update_monsters_in_view()
             else
                 warning = true;
 
+            std::string monname;
             if (size == 1)
-                warning_msg += mon->pronoun(PRONOUN_SUBJECTIVE);
+                monname = mon->pronoun(PRONOUN_SUBJECTIVE);
             else if (mon->type == MONS_DANCING_WEAPON)
-                warning_msg += "There";
+                monname = "There";
             else if (types[mon->type] == 1)
-                warning_msg += mon->full_name(DESC_THE);
+                monname = mon->full_name(DESC_THE);
             else
-                warning_msg += mon->full_name(DESC_A);
+                monname = mon->full_name(DESC_A);
+            warning_msg += uppercase_first(monname);
 
             warning_msg += " is";
             warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
