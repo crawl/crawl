@@ -1,0 +1,1081 @@
+# column_ruins.des
+#
+# These are a series of vaults with columns and floor tiles.
+#  They are supposed to look kind of like a ruined Roman-ish
+#  city.  In my mind, at least, this was built by the
+#  civilization that Jivya's followers destroyed in what is now
+#  the Slime Pits.
+#
+# This serial vault is intended for open levels.  To match the
+#  sense of these levels, this serial vaults is intended to not
+#  provide a lot of cover for players.  The vaults do not appear
+#  individually.  Sometimes this serial vault contains a simple
+#  temple with a random alter.  There is also a chance of a
+#  portal to Hell, Pan, or the Abyss on deep (D:21-27) levels.
+#
+# There is a small chance (3.3% per selection = 0.1% total) that
+#  this serial vault will change the floor and rock wall tiles.
+#  If so, it will scatter pillars around the map instead of
+#  placing its normal flavour vaults (there is still a chance of
+#  a portal).
+#
+# The following standard substitutions are used:
+#  -> _JKLMN: probablities of floor tiles
+#  -> Ipqrs: probablities of pillars
+#  -> ?-OP: Hell/Pan/Abyss-themed pillar/floor/portal/portal
+#
+
+{{
+function init_column_ruins(e)
+  e.subst('J = _____.')
+  e.subst('K = ____..')
+  e.subst('L = ___...')
+  e.subst('M = __....')
+  e.subst('N = _.....')
+  e.subst('p = GGGG_')
+  e.subst('q = GGG__')
+  e.subst('r = GG__.')
+  e.subst('s = G_...')
+  e.subst('_ = _:24 ~:1')
+  e.ftile('_~$%*90GTUVB = floor_rough_brown')
+  e.colour('_~$%*90TUVB = brown')
+  e.tile('G = dngn_crumbled_column')
+  e.colour('G = lightgrey')
+  e.subst('_ = .')
+end
+
+function init_column_ruins_hut(e)
+  e.ftile('x = floor_rough_brown')
+  e.rtile('x = wall_stone_brick')
+  e.kmask('x = no_wall_fixup')
+  e.ftile('+ = floor_rough_brown')
+  e.rtile('+ = wall_stone_brick')
+  e.kmask('+ = no_wall_fixup')
+  e.kmask('+ = no_secret_doors')
+end
+
+function init_column_ruins_portal(e)
+  e.subst('? = ???-')
+  if crawl.one_chance_in(3) then
+    e.kfeat('O = enter_abyss')
+    e.kfeat('P = enter_abyss')
+    e.ftile('- = floor_nerves')
+    e.ftile('? = floor_nerves')
+    e.ftile('O = floor_nerves')
+  elseif crawl.one_chance_in(2) then
+    e.kfeat('O = enter_hell')
+    e.kfeat('P = enter_hell')
+    e.ftile('- = floor_infernal')
+    e.ftile('? = floor_infernal')
+    e.ftile('O = floor_infernal')
+  else
+    e.kfeat('O = enter_pandemonium')
+    e.kfeat('P = enter_pandemonium')
+    e.ftile('- = floor_demonic')
+    e.ftile('? = floor_demonic')
+    e.ftile('O = floor_demonic')
+  end
+  e.ftile('P = floor_rough_brown')
+  e.tile('? = dngn_crumbled_column')
+  e.kprop('- = no_rtele_into')
+  e.kprop('? = no_rtele_into')
+  e.kprop('O = no_rtele_into')
+  e.subst('- = .')
+end
+}}
+
+# The vaults do not generate randomly.
+default-depth:
+
+# This is a higher-than-average chance, but it does not appear
+#  on all layouts.  Specifically, it only appears on the
+#  mostly-open ones.
+#
+# These are the layouts it is supposed to generate with.  For
+#  whatever reason, this does not work.  I have replaced it with
+#  the layout tags from gnoll_camp.des (plus layout_city), and
+#  this appears to work.  I don't know why.
+#
+#TAGS:   layout_forbidden_donut layout_cross layout_big_octagon
+#TAGS:   layout_city layout_spotty layout_bigger_room layout_chaotic_city
+#
+
+NAME:   serial_column_ruins
+TAGS:   allow_dup extra luniq_serial
+TAGS:   layout_open layout_cross layout_caves layout_city
+DEPTH:  D
+CHANCE: 3%
+{{
+  local p = 0
+  if you.absdepth() >= 19 and crawl.one_chance_in(2) then
+    p = 1
+  end
+  local f = crawl.random2(3)
+  local s = 3 + crawl.random2(3) + crawl.random2(3)
+  local a = 10 + crawl.random2(11)
+  if crawl.one_chance_in(33) then
+    lfloortile('floor_rough_brown')
+    lrocktile('wall_stone_brick')
+    hook("post_place", function()
+      dgn.place_maps{tag="serial_column_ruins_pillar", count=a}
+      dgn.place_maps{tag="serial_column_ruins_portal", count=p}
+    end)
+  else
+    hook("post_place", function()
+      dgn.place_maps{tag="serial_column_ruins_portal", count=p}
+      dgn.place_maps{tag="serial_column_ruins_fancy",  count=f}
+      dgn.place_maps{tag="serial_column_ruins_simple", count=s}
+    end)
+  end
+  dgn.set_feature_desc_short("granite statue", "broken pillar")
+}}
+
+
+#
+# These are special vaults just containing pillars.  They are
+#  for the full-level variant of the serial vault.
+#
+
+NAME:    column_ruins_pillar_1
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  10
+: init_column_ruins(_G)
+MAP
+G
+ENDMAP
+
+NAME:    column_ruins_pillar_2
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  8
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_3
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  6
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_4
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  4
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_5
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  2
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G.G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_6
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  5
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G
+...
+G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_7
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  3
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G
+.....
+G.G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_8
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  1
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G.G
+.......
+G.G.G.G
+ENDMAP
+
+NAME:    column_ruins_pillar_9
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  3
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G
+.
+G
+ENDMAP
+
+NAME:    column_ruins_pillar_10
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  1
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G
+  .
+  G
+ENDMAP
+
+NAME:    column_ruins_pillar_11
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  1
+KPROP:   . = no_rtele_into
+: init_column_ruins(_G)
+MAP
+  G
+  .
+G.G.G
+  .
+  G
+ENDMAP
+
+NAME:    column_ruins_pillar_12
+TAGS:    serial_column_ruins_pillar allow_dup overwritable
+WEIGHT:  1
+SUBST:   T : TGG___
+SUBST:   T = TTUVVV
+KPROP:   .TUV = no_rtele_into
+: init_column_ruins(_G)
+MAP
+G.G.G
+.....
+G.T.G
+.....
+G.G.G
+ENDMAP
+
+# These are vaults containing portals to Hell, Pandemonium, or
+#  the Abyss.  They only appear on deep maps, and then only
+#  sometimes.  They appear in addition to any other portals.
+#
+# (4 vaults)
+
+NAME:    column_ruins_portal_island
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+WEIGHT:  1
+SHUFFLE: ?!
+SUBST:   ! : -
+: init_column_ruins_portal(_G)
+: init_column_ruins(_G)
+# This command must be after init_column_ruins() or the floor
+#  tiles on ? change to floor_rough_brown.
+SUBST:   ? = G
+MAP
+    NNNMNNN
+  NNMMLLLMMNN
+ NMMLlllllLMMN
+ NMlllllllllMN
+NMLlll!?!lllLMN
+NMlll?---?lllMN
+NLll!-----!llLN
+MLll?--O--?llLM
+NLll!-----!llLN
+NMlll?---?lllMN
+NMLlll!?!lllLMN
+ NMlllllllllMN
+ NMMLlllllLMMN
+  NNMMLLLMMNN
+    NNNMNNN
+ENDMAP
+
+# Although it is hard to tell from the map, this enterance can
+#  have a moat of lava around it too.
+NAME:    column_ruins_portal_squares
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+WEIGHT:  4
+:  if crawl.one_chance_in(2) then
+SUBST:   JKL : l
+SUBST:   p = ?
+SUBST:   _ : -
+SUBST:   P : O
+:  end
+: init_column_ruins_portal(_G)
+: init_column_ruins(_G)
+# This command must be after init_column_ruins() or the floor
+#  tiles on ? change to floor_rough_brown.
+SUBST:   ? = G
+MAP
+.N.MNMNM.N.
+NrNqMqMqNrN
+.NLLLKLLLN.
+MqLKJJJKLqM
+NMLJp_pJLMN
+MqKJ_P_JKqM
+NMLJp_pJLMN
+MqLKJJJKLqM
+.NLLLKLLLN.
+NrNqMqMqNrN
+.N.MNMNM.N.
+ENDMAP
+
+NAME:    column_ruins_portal_astroid
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal
+WEIGHT:  3
+:  if crawl.one_chance_in(3) then
+SUBST:   l : _
+SUBST:   O : P
+SUBST:   p : ppT
+SUBST:   T = TTUVVV
+:  end
+: init_column_ruins_portal(_G)
+: init_column_ruins(_G)
+MAP
+          @
+          N
+         NsN
+         NMN
+         MrM
+        NMLMN
+        NLqLN
+       LKKJKKL
+     NNKp_G_pKNN
+  NNMMLK_lll_KLMMNN
+@NsMrLqJGlOlGJqLrMsN@
+  NNMMLK_lll_KLMMNN
+     NNKp_G_pKNN
+       LKKJKKL
+        NLqLN
+        NMLMN
+         MrM
+         NMN
+         NsN
+          N
+          @
+ENDMAP
+
+NAME:    column_ruins_portal_hut
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+WEIGHT:  2
+: init_column_ruins_hut(_G)
+: init_column_ruins_portal(_G)
+: init_column_ruins(_G)
+MAP
+..NNMNN..
+.MLKKKLM.
+NLxxxxxLN
+NKx---xKN
+MJx-O-xJM
+MKx---xKM
+NLxx+xxLN
+NLKJ_JKLN
+.NMLLLMN.
+...NNN...
+ENDMAP
+
+# Some fancy vaults.
+#   -> temples with altars (3 vaults)
+#   -> courtyards (9 vaults)
+#   -> huts (4 vaults)
+
+NAME:    column_ruins_temple_circle
+TAGS:    serial_column_ruins_fancy luniq_column_ruins_temple
+TAGS:    mini_float transparent
+WEIGHT:  5
+SHUFFLE: GI
+SUBST:   G = p
+SUBST:   I = L
+: init_column_ruins(_G)
+MAP
+  NNMNN
+ NMIGIMN
+NMGKKKGMN
+NIKJ_JKIN
+MGK_B_KGM
+NIKJ_JKIN
+NMGKKKGMN
+ NMIGIMN
+  NNMNN
+ENDMAP
+
+NAME:    column_ruins_temple_hall
+TAGS:    serial_column_ruins_fancy luniq_column_ruins_temple
+WEIGHT:  3
+: init_column_ruins(_G)
+MAP
+G_p_G
+_JJJ_
+pJBJp
+JJKJJ
+qKKKq
+KKLKK
+rLLLr
+LLMLL
+sMMMs
+MMNMM
+NNNNN
+@@@@@
+ENDMAP
+
+NAME:    column_ruins_temple_hut
+TAGS:    serial_column_ruins_fancy luniq_column_ruins_temple
+TAGS:    mini_float transparent
+WEIGHT:  2
+: init_column_ruins_hut(_G)
+: init_column_ruins(_G)
+MAP
+..NNMNN..
+.MLKKKLM.
+NLxxxxxLN
+NKx___xKN
+MJx_B_xJM
+MKx___xKM
+NLxx+xxLN
+NLKJ_JKLN
+.NMLLLMN.
+...NNN...
+ENDMAP
+
+NAME:    column_ruins_square_huge
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  2
+SUBST:   Z : KKT
+SUBST:   T : TTGG_
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+pKqLrMrLqKp
+KLLMMNMMLLK
+qLKKLLLKKLq
+LMKJJZJJKML
+rMLJ___JLMr
+MNLZ_T_ZLNM
+rMLJ___JLMr
+LMKJJZJJLML
+qLKKLLLKKLq
+KLLMMNMMLLK
+pKqLrMrLqKp
+ENDMAP
+
+NAME:    column_ruins_square_large
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  5
+SUBST:   Z : LLLT
+SUBST:   T : TG_
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+pKqLrLqKp
+KMLMLMLMK
+qLKKZKKLq
+LMKJ_JKML
+rLZ_T_ZLr
+LMKJ_JKML
+qLKKZKKLq
+KMLMLMLMK
+pKqLrLqKp
+ENDMAP
+
+NAME:    column_ruins_square_medium
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  8
+SUBST:   T : TG__
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+pKrMrKp
+KMLNLMK
+rLJKJLr
+MNKTKMM
+rLJKJLr
+KMLNLMK
+pKrMrKp
+ENDMAP
+
+NAME:    column_ruins_square_small
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  5
+SUBST:   T : TG____
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+qLrLq
+LMJML
+rJTJr
+LMJML
+qLrLq
+ENDMAP
+
+NAME:    column_ruins_circle_large
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  2
+SUBST:   Z : JJT
+SUBST:   T : TG_
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+   qKrKq
+ rLMLLLMLr
+ LMLKKKLML
+qMLKJZJKLMq
+KLKJ___JKLK
+rLKZ_T_ZKLr
+KLKJ___JKLK
+qMLKJZJKLMq
+ LMLKKKLML
+ rLMLLLMLr
+   qKrKq
+ENDMAP
+
+NAME:    column_ruins_circle_medium
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  5
+SUBST:   Z : KKKT
+SUBST:   T : TG__
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+   qKq
+ rKLMLKr
+ KMLZLMK
+qLLJ_JLLq
+KMZ_T_ZMK
+qLLJ_JLLq
+ KMLZLMK
+ rKLMLKr
+   qKq
+ENDMAP
+
+NAME:    column_ruins_circle_small
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  3
+SUBST:   T : TG____
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+  qLq
+ KLKLK
+qLJ_JLq
+LK_T_KL
+qLJ_JLq
+ KLKLK
+  qLq
+ENDMAP
+
+NAME:    column_ruins_courtyard_long
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float
+WEIGHT:  5
+: init_column_ruins(_G)
+MAP
+pKqLrLqKp
+KLLMLMLLK
+qKMMMMMKq
+KLLMLMLLK
+pKqLrLqKp
+ENDMAP
+
+NAME:    column_ruins_courtyard_long_water
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float
+WEIGHT:  1
+:  if you.absdepth() >= 21 then
+SUBST:   w : wl
+:  end
+: init_column_ruins(_G)
+MAP
+pKrwsLqKp
+KLwwwLLLK
+qKwwwwMKq
+KLwwwwLLK
+pKrwwwrKp
+   wwww
+    ww
+ENDMAP
+
+NAME:    column_ruins_hut
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  40
+SUBST:   0 = 0:40 9:10 $:15 %:5 *:1 T:9 _:120
+SUBST:   T = TTUVVV
+: init_column_ruins_hut(_G)
+: init_column_ruins(_G)
+MAP
+..NNMNN..
+.MLKKKLM.
+NLxxxxxLN
+NKx___xKN
+MJx_0_xJM
+MKx___xKM
+NLxx+xxLN
+NLKJ_JKLN
+.NMLLLMN.
+...NNN...
+ENDMAP
+
+NAME:    column_ruins_hut_ruined
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  15
+NSUBST:  x = 6:x / 2:_ / *=xx_
+: init_column_ruins_hut(_G)
+: init_column_ruins(_G)
+MAP
+..NNMNN..
+.MLKKKLM.
+NLxxxxxLN
+NKxJJJxKN
+MJxJJJxJM
+MKxJJJxKM
+NLxx_xxLN
+NLKKJKKLN
+.NMLLLMN.
+...NNN...
+ENDMAP
+
+NAME:    column_ruins_hut_water
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  5
+SUBST:   z = ww_
+SUBST:   y = W__
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+: init_column_ruins_hut(_G)
+: init_column_ruins(_G)
+MAP
+..NNMNN..
+.MLKKKLM.
+NLxxxxxLN
+NKxwwwxKN
+MJxwwwxJM
+MKxzyzxKM
+NLxx+xxLN
+NLKJ_JKLN
+.NMLLLMN.
+...NNN...
+ENDMAP
+
+NAME:    column_ruins_hut_pillars
+TAGS:    serial_column_ruins_fancy luniq
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  10
+SUBST:   0 = 0:40 9:10 $:15 %:5 *:1 T:9 _:20
+SUBST:   T = TTUVVV
+SUBST:   ~ = ~__
+: init_column_ruins_hut(_G)
+: init_column_ruins(_G)
+MAP
+.NMMLLLMMN.
+NLKKJJJKKLN
+MLKxxxxxKLM
+MKJx___xJKM
+LJ_x_0_x_JL
+MJ_x___x_JM
+MKJxx+xxJKM
+rLp_G~G_pLr
+MLKJ___JKLM
+sMrKqJqKrMs
+NMMMLLLMMMN
+..NNsMsNN..
+ENDMAP
+
+# Some simple vaults.
+#  -> areas of floor (7 vaults)
+#  -> lines of columns (5 vaults)
+#  -> corridors lined by columns (5 vaults)
+#  -> grids of columns (5 vaults)
+
+NAME:    column_ruins_open_tiny
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  25
+: init_column_ruins(_G)
+MAP
+MLM
+L_L
+MLM
+ENDMAP
+
+NAME:    column_ruins_open_small
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  20
+SUBST:   T : TG____
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+ NMN
+NKJKN
+MJTJM
+NKJKN
+ NMN
+ENDMAP
+
+NAME:    column_ruins_open_medium
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  10
+SUBST:   T : TG__
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+ NMMMN
+NLLKLLN
+MLJJJLM
+MKJTJKM
+MLJJJLM
+NLLKLLN
+ NMMMN
+ENDMAP
+
+NAME:    column_ruins_open_large
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  5
+SUBST:   T : TG_
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+  NNMNN
+ NMLKLMN
+NMKJJJKMN
+NLJ___JLN
+MKJ_T_JKM
+NLJ___JLN
+NMKJJJKMN
+ NMLKLMN
+  NNMNN
+ENDMAP
+
+NAME:    column_ruins_open_tiny_water
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  2
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+: init_column_ruins(_G)
+MAP
+ ww
+Mwww
+L_www
+MLMww
+   ww
+    w
+ENDMAP
+
+NAME:    column_ruins_open_small_water
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  3
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+SUBST:   T : TG____
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+ NMN
+NKJKN
+MwTJM
+Nwwww
+ Nwwww
+   www
+ENDMAP
+
+NAME:    column_ruins_open_medium_water
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float transparent
+WEIGHT:  1
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+SUBST:   T : TG__
+SUBST:   T = TTUVVV
+: init_column_ruins(_G)
+MAP
+ NMMMN
+NLwwwLN
+MwwwJLM
+wwwTJKM
+wwwJJLM
+wwwKLLN
+wwwMMN
+ ww
+ENDMAP
+
+NAME:    column_ruins_columns_dead_end
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  5
+: init_column_ruins(_G)
+MAP
+.NMMLKKK
+NMrLpJGK
+.NMMLKKK
+ENDMAP
+
+NAME:    column_ruins_columns_straight
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  20
+: init_column_ruins(_G)
+MAP
+.NMMLKKKLMMN.
+NMrLpJGJpLrMN
+.NMMLKKKLMMN.
+ENDMAP
+
+NAME:    column_ruins_columns_corner
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  10
+: init_column_ruins(_G)
+MAP
+KKKLMMN.
+KGJpLrMN
+KJ_KLMN.
+LpK
+MLL
+MrM
+NMN
+.N.
+ENDMAP
+
+NAME:    column_ruins_columns_T
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  3
+: init_column_ruins(_G)
+MAP
+.NMMLKKKLMMN.
+NMrLpJGJpLrMN
+.NMMLKJKLMMN.
+     LpL
+     MLM
+     MrM
+     NMN
+     .N.
+ENDMAP
+
+NAME:    column_ruins_columns_plus
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  2
+: init_column_ruins(_G)
+MAP
+     .N.
+     NMN
+     MrM
+     MLM
+     LpL
+.NMMLKJKLMMN.
+NMrLpJGJpLrMN
+.NMMLKJKLMMN.
+     LpL
+     MLM
+     MrM
+     NMN
+     .N.
+ENDMAP
+
+NAME:    column_ruins_columns_water
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup mini_float
+WEIGHT:  2
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+: init_column_ruins(_G)
+MAP
+  w
+ www
+ wwww
+.NwwwKKKLMMN.
+NMrwwwGJpLrMN
+.NMMwwwwLMMN.
+      www
+ENDMAP
+
+NAME:    column_ruins_corridor_dead_end
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  3
+: init_column_ruins(_G)
+MAP
+MNrKqJp
+@NMLKKJ
+MNrKqJp
+ENDMAP
+
+NAME:    column_ruins_corridor_straight
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  10
+: init_column_ruins(_G)
+MAP
+MNrKpJpKrNM
+@NMLKKKLMN@
+MNrKpJpKrNM
+ENDMAP
+
+NAME:    column_ruins_corridor_corner
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  5
+: init_column_ruins(_G)
+MAP
+M@M
+NNN
+rMr
+KLK
+pKGKrNM
+JKKLMN@
+qJpKrNM
+ENDMAP
+
+NAME:    column_ruins_corridor_T
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  2
+: init_column_ruins(_G)
+MAP
+    M@M
+    NNN
+    rMr
+    KLK
+MNrKpKpKrNM
+@NMLKKKLMN@
+MNrKqJqKrNM
+ENDMAP
+
+NAME:    column_ruins_corridor_plus
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  1
+: init_column_ruins(_G)
+MAP
+    M@M
+    NNN
+    rMr
+    KLK
+MNrKpKpKrNM
+@NMLKKKLMN@
+MNrKpKpKrNM
+    KLK
+    rMr
+    NNN
+    M@M
+ENDMAP
+
+NAME:    column_ruins_corridor_water
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent
+WEIGHT:  1
+:  if you.absdepth() >= 21 then
+SUBST:   w : l
+:  end
+: init_column_ruins(_G)
+MAP
+    w
+   ww
+  www
+  ww
+MNwwpJpKrNM
+@NwwKKKLMN@
+MNrwpJpKrNM
+ENDMAP
+
+# This one is more common because it might be any single pillar
+NAME:    column_ruins_grid_1
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent mini_float
+WEIGHT:  25
+: init_column_ruins(_G)
+MAP
+NLN
+LGL
+NLN
+ENDMAP
+
+NAME:    column_ruins_grid_2
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent mini_float
+WEIGHT:  5
+: init_column_ruins(_G)
+MAP
+.MNM.
+MqKqM
+NKJKN
+MqKqM
+.MNM.
+ENDMAP
+
+NAME:    column_ruins_grid_3
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent mini_float
+WEIGHT:  10
+: init_column_ruins(_G)
+MAP
+.NNNNN.
+NrMqMrN
+NMLKLMN
+NqKpKqN
+NMLKLMN
+NrMqMrN
+.NNNNN.
+ENDMAP
+
+NAME:    column_ruins_grid_4
+TAGS:    serial_column_ruins_simple
+TAGS:    allow_dup transparent mini_float
+WEIGHT:  5
+: init_column_ruins(_G)
+MAP
+.N.NNN.N.
+NrMqMqMrN
+.MLKLKLM.
+NqKpJpKqN
+NMLJJJLMN
+NqKpJpKqN
+.MLKLKLM.
+NrMqMqMrN
+.N.NNN.N.
+ENDMAP
+
+NAME:    column_ruins_grid_5
+TAGS:    serial_column_ruins_fancy
+TAGS:    allow_dup transparent mini_float
+WEIGHT:  2
+: init_column_ruins(_G)
+MAP
+.N.NNMNN.N.
+NsNrMqMrNsN
+.NMLLKLLMN.
+NrLqJpJqLrN
+NMLJKJKJLMN
+MqKpJGJpKqM
+NMLJKJKJLMN
+NrLqJpJqLrN
+.NMLLKLLMN.
+NsNrMqMrNsN
+.N.NNMNN.N.
+ENDMAP

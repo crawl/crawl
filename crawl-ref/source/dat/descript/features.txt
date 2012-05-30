@@ -17,6 +17,11 @@ A blossoming altar of Fedhas
 
 An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 %%%%
+A broken pillar
+
+This makers of this pillar were overrun long ago. The reason it was built died
+with them.
+%%%%
 A burning altar of Makhleb
 
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
