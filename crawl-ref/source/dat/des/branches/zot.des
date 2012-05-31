@@ -1166,6 +1166,39 @@ ccX.1...!!!1Xcc
    XXXXXXXXX
 ENDMAP
 
+NAME:   orb_nicolae_fourfold
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: c = magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   XXXXXXXXX
+  XX...X...XX
+cXX..1...1..XXc
+cX1..XX.XX..1Xc
+ XX..X...X..XX
+  X..X.1.X..X
+  X..X...X..X
+ XX..XX.XX..XX
+ ...XX.1.XX...
+ .1.X.!!!.X.1.
+ XXXX.!Z!.XXXX
+ .1.X.!!!.X.1.
+ ...XX.1.XX...
+ XX..XX.XX..XX
+  X..X...X..X
+  X..X.1.X..X
+ XX..X...X..XX
+cX1..XX.XX..1Xc
+cXX..1...1..XXc
+  XX...X...XX
+   XXXXXXXXX
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
