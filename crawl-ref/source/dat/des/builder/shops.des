@@ -194,3 +194,32 @@ W?v?W
 W???W
 .WWW.
 ENDMAP
+
+#####################################################
+# Off-brand ammo
+NAME:  nicolae_offbrand_ammo
+DEPTH:  D:5-, Orc
+WEIGHT: 1
+TAGS:  no_hmirror no_vmirror mini_float
+KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
+       large rock ego:returning q:3 | large rock ego:exploding q:3 | \
+       large rock ego:chaos q:3 | large rock ego:poisoned q:3 | \
+       large rock ego:dispersal q:3 | large rock ego:flame q:3 | \
+       large rock ego:ice q:3 | stone ego:flame | stone ego:returning | \
+       stone ego:exploding | stone ego:dispersal | stone ego:poisoned | \
+       stone ego:chaos | stone ego:ice | javelin ego:dispersal | \
+       javelin ego:exploding | javelin ego:chaos | arrow ego:silver | \
+       arrow ego:steel | arrow ego:exploding | arrow ego:returning | \
+       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
+       bolt ego:returning | bolt ego:dispersal | bolt ego:chaos | \
+       sling bullet ego:dispersal | sling bullet ego:chaos | \
+       sling bullet ego:returning
+MAP
+.......
+.lllll.
+.lG.Gl.
+.l.S.l.
+.lG.Gl.
+.ll.ll.
+.......
+ENDMAP
