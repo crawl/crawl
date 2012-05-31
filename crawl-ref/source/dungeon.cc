@@ -136,6 +136,10 @@ static void _vault_grid(vault_placement &,
                         int vgrid,
                         const coord_def& where,
                         keyed_mapspec *mapsp);
+static void _vault_grid_mons(vault_placement &,
+                        int vgrid,
+                        const coord_def& where,
+                        keyed_mapspec *mapsp);
 static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
                               int vgrid);
 static void _vault_grid_mapspec(vault_placement &place, const coord_def& where,
@@ -4655,8 +4659,24 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         int slot = map_def::item_array_glyph_to_slot(vgrid);
         _dgn_place_item_explicit(slot, where, place, place.level_number);
     }
+}
 
-    // Finally, handle grids that place monsters {dlb}:
+static void _vault_grid(vault_placement &place,
+                        int vgrid,
+                        const coord_def& where,
+                        keyed_mapspec *mapsp)
+{
+    if (mapsp && mapsp->replaces_glyph())
+        _vault_grid_mapspec(place, where, *mapsp);
+    else
+        _vault_grid_glyph(place, where, vgrid);
+}
+
+static void _vault_grid_glyph_mons(vault_placement &place,
+                                   const coord_def &where,
+                                   int vgrid)
+{
+    // Handle grids that place monsters {dlb}:
     if (map_def::valid_monster_glyph(vgrid))
     {
         int monster_level;
@@ -4697,15 +4717,23 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     }
 }
 
-static void _vault_grid(vault_placement &place,
+static void _vault_grid_mapspec_mons(vault_placement &place,
+                                     const coord_def &where,
+                                     keyed_mapspec& mapsp)
+{
+    mons_list &mons = mapsp.get_monsters();
+    _dgn_place_one_monster(place, mons, place.level_number, where);
+}
+
+static void _vault_grid_mons(vault_placement &place,
                         int vgrid,
                         const coord_def& where,
                         keyed_mapspec *mapsp)
 {
     if (mapsp && mapsp->replaces_glyph())
-        _vault_grid_mapspec(place, where, *mapsp);
+        _vault_grid_mapspec_mons(place, where, *mapsp);
     else
-        _vault_grid_glyph(place, where, vgrid);
+        _vault_grid_glyph_mons(place, where, vgrid);
 }
 
 // Currently only used for Slime: branch end
@@ -6193,6 +6221,18 @@ void vault_placement::apply_grid()
                 dungeon_terrain_changed(*ri, newgrid, true, true);
                 remove_markers_and_listeners_at(*ri);
             }
+        }
+
+        // Place monsters in a second pass.  Otherwise band followers
+        // could be overwritten with subsequent walls.
+        for (rectangle_iterator ri(pos, pos + size - 1); ri; ++ri)
+        {
+            const coord_def dp = *ri - pos;
+
+            const int feat = map.map.glyph(dp);
+            keyed_mapspec *mapsp = map.mapspec_at(dp);
+
+            _vault_grid_mons(*this, feat, *ri, mapsp);
         }
 
         map.map.apply_overlays(pos);
