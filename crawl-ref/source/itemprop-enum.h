@@ -411,7 +411,8 @@ enum stave_type
     STAFF_DEMONOLOGY,
     STAFF_STRIKING,
     STAFF_VENOM,
-    NUM_STAVES
+    NUM_STAVES,
+    STAFF_RANDOM_ROD // Hack for item generation.
 };
 
 enum weapon_type
