@@ -2837,9 +2837,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
 
 static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
-    if (force_type != OBJ_RANDOM)
-        item.sub_type = force_type;
-    else
+    if (force_type == OBJ_RANDOM)
     {
         item.sub_type = random2(STAFF_FIRST_ROD);
 
@@ -2856,6 +2854,10 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
             item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
         }
     }
+    else if (force_type == STAFF_RANDOM_ROD)
+        item.sub_type = get_random_rod_type();
+    else
+        item.sub_type = force_type;
 
     if (item_is_rod(item))
         init_rod_mp(item, -1, item_level);
@@ -3106,7 +3108,8 @@ int items(bool allow_uniques,
     }
 
     ASSERT(force_type == OBJ_RANDOM
-           || force_type < get_max_subtype(item.base_type));
+           || force_type < get_max_subtype(item.base_type)
+           || force_class == OBJ_STAVES && force_type == STAFF_RANDOM_ROD);
 
     item.quantity = 1;          // generally the case
 
