@@ -758,28 +758,6 @@ MAP
        .....
 ENDMAP
 
-NAME: nicolae_orb_outpost
-DEPTH: Spider:2-5
-WEIGHT: 3
-TAGS: no_pool_fixup no_monster_gen mini_float
-MONS: generate_awake orb spider
-KPROP: 1' = no_rtele_into
-MAP
-    .....
-  .........
- ...........
- ...........
-....wwwww....
-....w1'1w....
-....w'''w....
-....w1'1w....
-....wwwww....
- ...........
- ...........
-  .........
-    .....
-ENDMAP
-
 NAME:   nicolae_orb_stairs
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  Spider:2-5
@@ -896,6 +874,79 @@ MAP
     ..cc5'''5cc.1
         cc'cc
          .1.
+ENDMAP
+
+NAME:   nicolae_orb_stairs_large
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  Spider:2-4
+ORIENT: float
+WEIGHT: 3
+MONS:   orb spider / spider
+SUBST:  s = x.
+SUBST:  . = ...^
+KFEAT:  ^ = web
+SHUFFLE: [{(<
+MAP
+     xxx@@@xxx
+    xxsx^^^xsxx
+   xxsss...sssxx
+  xxss...1...ssxx
+ xxs1.........1sxx
+xxss...wwwww...ssxx
+xss...^.www.^...ssx
+xxs..w.......w..sxx
+@^...ww...(.ww...^@
+@^.1.ww.[...ww.1.^@
+@^...ww...{.ww...^@
+xxs..w.......w..sxx
+xss...^.www.^...ssx
+xxss...wwwww...ssxx
+ xxs1.........1sxx
+  xxss...1...ssxx
+   xxsss...sssxx
+    xxsx^^^xsxx
+     xxx@@@xxx
+ENDMAP
+
+NAME:   nicolae_spider_corner
+DEPTH:  Spider:1-4
+ORIENT: southwest
+MONS:   orb spider
+SHUFFLE: ABC, DEF, GH, IJ, abcdefghi
+SUBST:  AEFGI = x, BCDHJ = .
+NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
+KMONS:  bcdefghi = tarantella / redback / wolf spider / \
+        jumping spider / orb spider / demonic crawler / \
+        scorpion / emperor scorpion / \
+        trapdoor spider / spiny worm / yellow wasp / \
+        red wasp / giant mite / nothing w:100
+SUBST: X = xxxx^....0
+KFEAT: ^ = web / floor w:20
+MAP
+xxxxxxxxX...
+xxaaaa.xGG....XXX
+xxa.0^^^xGX......X
+xxxxHHxxxxxXX..0..X
+xxc...xCCCxxxX.....X
+xx0cc.CCCCCCxxXX^^..X
+xxx..cxxxCCbbxxX..^..@@@@
+xxAAAxxxx0.bbxxX...^...0.@
+xxAAxxxx...bbxxX^^X.^^....
+x.0^.BBB..xxxxX...X^^xXX...
+x.^^.BBB.^.0.....^^..xxX...
+xddXXxxxx^.......X....XxX..
+xddXxxxxxxxxx^^^XXx....xx^^
+xxxxxXXxDDD...0.xxxxx..xx..
+xxeeee.DDDDD....xXXx^..xI..
+xxX....DDDxEE...xX...^xxIIx
+xx..0.xxxxEEEFFFxx.0.xxxIIx
+xx..xxxEEEEEFFFFxx..Xx.^.xx
+xx^^^EEEExxFFFFxx...Xxiiiix
+xxx...EExx....xxx^^^xx.^.xx
+xxff..^xx^^.ggxxh...XxxJJJx
+xxff.^.0...xggxxhh...0^...x
+xxxxx^....xxxxxxxxh...^..xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
