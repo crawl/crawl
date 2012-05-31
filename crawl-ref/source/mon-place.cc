@@ -83,7 +83,7 @@ static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool& natural_leader);
 
-static monster* _place_monster_aux(const mgen_data &mg, bool first_band_member,
+static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
@@ -1097,7 +1097,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    monster* mon = _place_monster_aux(mg, true, force_pos, dont_place);
+    monster* mon = _place_monster_aux(mg, 0, force_pos, dont_place);
 
     // Bail out now if we failed.
     if (!mon)
@@ -1193,7 +1193,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        monster *member = _place_monster_aux(band_template, false);
+        monster *member = _place_monster_aux(band_template, mon);
         if (member)
         {
             member->flags |= MF_BAND_MEMBER;
@@ -1259,9 +1259,8 @@ static void _place_twister_clouds(monster *mon)
     tornado_damage(mon, -10);
 }
 
-static monster* _place_monster_aux(const mgen_data &mg,
-                                   bool first_band_member, bool force_pos,
-                                   bool dont_place)
+static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
+                                   bool force_pos, bool dont_place)
 {
     coord_def fpos;
 
@@ -1288,7 +1287,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (dont_place)
         fpos.reset();
-    else if (first_band_member && in_bounds(mg.pos)
+    else if (leader == 0 && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
             || mons_is_mimic(montype))
         && !monster_at(mg.pos)
@@ -1306,8 +1305,13 @@ static monster* _place_monster_aux(const mgen_data &mg,
             fpos = mg.pos + coord_def(random_range(-3, 3),
                                       random_range(-3, 3));
 
-            if (_valid_monster_generation_location(mg, fpos))
+            // Place members within LOS_SOLID of their leader.
+            // TODO nfm - allow placing around corners but not across walls.
+            if ((leader == 0 || cell_see_cell(fpos, leader->pos(), LOS_SOLID))
+                && _valid_monster_generation_location(mg, fpos))
+            {
                 break;
+            }
         }
 
         // Did we really try 1000 times?
@@ -1318,7 +1322,7 @@ static monster* _place_monster_aux(const mgen_data &mg,
     ASSERT(!monster_at(fpos));
 
     if (crawl_state.game_is_arena()
-        && arena_veto_place_monster(mg, first_band_member, fpos))
+        && arena_veto_place_monster(mg, leader == 0, fpos))
     {
         return 0;
     }
