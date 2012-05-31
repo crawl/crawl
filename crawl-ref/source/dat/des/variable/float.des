@@ -2620,3 +2620,62 @@ xxxxxxx....xxxxxxx
 xxxxxxxx||xxxxxxxx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   nicolae_whirlpool
+TAGS:   patrolling no_pool_fixup no_rotate
+ORIENT: float
+MONS:   centaur, centaur warrior
+DEPTH:  D:6-20
+: if you.absdepth() < 13 then
+SUBST:  1 = ..1
+SUBST:  2 = 1
+: end
+KMONS:  ' = plant / nothing w:100
+SUBST:  ' = W
+KFEAT:  @ = W
+MAP
+@ww@wwwwwwww@
+ww'ww''''''ww
+w'ww'wwwwww'w
+w'w'ww''''ww@
+w'w'w'wwww'ww
+w'w'w1.1'ww'w
+w'w'w.2.w'w'w
+w'ww'1.1w'w'w
+ww'wwww'w'w'w
+@ww''''ww'w'w
+w'wwwwww'ww'w
+ww''''''ww'ww
+@wwwwwwww@ww@
+ENDMAP
+
+NAME:   nicolae_oklob_transplants
+TAGS:   no_hmirror
+DEPTH:  D:13-24, Lair:5-7
+WEIGHT: 3
+SHUFFLE: ]})
+ORIENT: float
+SUBST:  s = x.
+KMONS:  ]}) = oklob plant spells:.;blink_close;blink_away;.;.;blink \
+              name:unstable n_adj / nothing
+KFEAT:  } = stone_stairs_down_i
+KFEAT:  ] = stone_stairs_down_ii
+KFEAT:  ) = stone_stairs_down_iii
+MARKER: G = lua:props_marker { stop_explore = "a heavily-corroded statue."\
+        , feature_description = "heavily-corroded statue" }
+MAP
+     xxxxxxx
+  xxxxsssssxxxx
+ xxssss...ssssxx
+xxss....G....ssxx
+xs.............sx
+x....xx...xx....x
+@..sxx.....xxs..@
+@.xxx.......xxx.@
+xxxs.........sxxx
+ xss.........ssx
+ xs...........sx
+ xsss.......sssx
+  xxsss]})sssxx
+   xxxxxxxxxxx
+ENDMAP
