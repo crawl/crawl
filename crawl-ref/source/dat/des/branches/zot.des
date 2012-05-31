@@ -1132,6 +1132,39 @@ cccXXGXGXGXXccc
    ccccccccc
 ENDMAP
 
+NAME:   orb_nicolae_swirls
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: cn = magenta
+TILE:   n = dngn_transparent_wall_magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   XXXXXXXXX
+  XX...1...XX
+ccX1!!!...1.Xcc
+ccX.!Z!.....Xcc
+ cXX!!!X..1.Xc
+  cXXXXX....X
+  cXXXXX...XX
+ XXXXXX...XXXX
+ XXXXX.1.nnn..
+ XXX........1.
+ .....nnn.....
+ .1........XXX
+ ..nnn.1.XXXXX
+ XXXX...XXXXXX
+  XX....XXXXc
+  X....XXXXXc
+ cX.1..X!!!XXc
+ccX.....!Z!.Xcc
+ccX.1...!!!1Xcc
+  XX...1...XX
+   XXXXXXXXX
+ENDMAP
 
 ##############################################################################
 ##############################################################################
