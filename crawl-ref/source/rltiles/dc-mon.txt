@@ -607,6 +607,8 @@ sphinx MONS_SPHINX
 tengu MONS_TENGU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
+%sdir dc-mon/vault
+tengu_conjurer MONS_TENGU_CONJURER
 
 ## Various beasts ('I')
 %sdir dc-mon/animals
