@@ -1147,6 +1147,19 @@ static void output_with_sign(std::ostream& os, int val)
     os << val;
 }
 
+// nets can go +0 .. -7 (-8 always destroys them)
+static const char* _torn_net(int plus)
+{
+    if (plus >= 0)
+        return "";
+    else if (plus >= -2)
+        return " [frayed]";
+    else if (plus >= -5)
+        return " [torn]";
+    else
+        return " [falling apart]";
+}
+
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 std::string item_def::name_aux(description_level_type desc,
@@ -1294,14 +1307,6 @@ std::string item_def::name_aux(description_level_type desc,
         if (!terse && _missile_brand_is_prefix(brand))
             buff << _missile_brand_name(brand, MBN_NAME) << ' ';
 
-        if (item_typ == MI_THROWING_NET && !basename && !qualname && !dbname)
-        {
-            // How torn the net is?
-            // TODO: show it in a better way.
-            output_with_sign(buff, it_plus);
-            buff << ' ';
-        }
-
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
         if (brand != SPMSL_NORMAL && !basename && !qualname && !dbname)
@@ -1311,6 +1316,9 @@ std::string item_def::name_aux(description_level_type desc,
             else if (_missile_brand_is_postfix(brand))
                 buff << " of " << _missile_brand_name(brand, MBN_NAME);
         }
+
+        if (item_typ == MI_THROWING_NET && !basename && !qualname && !dbname)
+            buff << _torn_net(it_plus);
         break;
     }
     case OBJ_ARMOUR:
