@@ -113,6 +113,7 @@ static spell_type search_order_misc[] = {
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
     SPELL_DISPEL_UNDEAD,
+    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
@@ -281,6 +282,8 @@ void ghost_demon::init_random_demon()
             spells[i] = translate_spell(spells[i]);
             if (spells[i] == SPELL_AGONY)
                 spells[i] = SPELL_SYMBOL_OF_TORMENT;
+            if (spells[i] == SPELL_CONJURE_BALL_LIGHTNING)
+                spells[i] = SPELL_NO_SPELL;
         }
 
         // Give demon a chance for some monster-only spells.
