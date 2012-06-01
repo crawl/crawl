@@ -4718,6 +4718,9 @@ static void _vault_grid_mapspec_mons(vault_placement &place,
                                      const coord_def &where,
                                      keyed_mapspec& mapsp)
 {
+    const feature_spec f = mapsp.get_feat();
+    if (f.glyph >= 0)
+        _vault_grid_glyph_mons(place, where, f.glyph);
     mons_list &mons = mapsp.get_monsters();
     _dgn_place_one_monster(place, mons, place.level_number, where);
 }
