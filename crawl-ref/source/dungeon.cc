@@ -4582,9 +4582,6 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.no_mimic)
         env.level_map_mask(where) |= MMT_NO_MIMIC;
 
-    mons_list &mons = mapsp.get_monsters();
-    _dgn_place_one_monster(place, mons, place.level_number, where);
-
     item_list &items = mapsp.get_items();
     dgn_place_multiple_items(items, where, place.level_number);
 }
