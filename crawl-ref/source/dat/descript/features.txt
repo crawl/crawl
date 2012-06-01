@@ -471,6 +471,22 @@ If you ever wanted to escape out of the pan into the fire, this is your chance.
 This gateway allows you to return from this place via a nice scenic path
 through infinite madness.
 %%%%
+# shown if the player is a Hill Orc
+An idol of Beogh
+
+{{
+if you.god() == "Beogh"
+  then
+    return "This crude but majestic statue represents Beogh in his glory. "
+        .. "May foul non-orcs all be smitten!";
+  else
+    return "This crude statue depicts Beogh, the god of primitive orcs "
+        .. "living here. Their religion calls for murdering all non-believers. "
+        .. "It would be a pleasure to destroy this idol, but beware, Beogh "
+        .. "is known to be vengeful.";
+end
+}}
+%%%%
 An iron altar of Okawaru
 
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
