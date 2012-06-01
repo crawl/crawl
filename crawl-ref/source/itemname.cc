@@ -1138,15 +1138,6 @@ std::string ego_type_string (const item_def &item)
     }
 }
 
-// gcc (and maybe the C standard) says that if you output
-// 0, even with showpos set, you get 0, not +0. This is a workaround.
-static void output_with_sign(std::ostream& os, int val)
-{
-    if (val >= 0)
-        os << '+';
-    os << val;
-}
-
 // nets can go +0 .. -7 (-8 always destroys them)
 static const char* _torn_net(int plus)
 {
@@ -1233,14 +1224,9 @@ std::string item_def::name_aux(description_level_type desc,
         if (know_pluses)
         {
             if ((terse && it_plus == item_plus2) || sub_type == WPN_BLOWGUN)
-                output_with_sign(buff, it_plus);
+                buff << make_stringf("%+d ", it_plus);
             else
-            {
-                output_with_sign(buff, it_plus);
-                buff << ',';
-                output_with_sign(buff, item_plus2);
-            }
-            buff << " ";
+                buff << make_stringf("%+d,%+d ", it_plus, item_plus2);
         }
 
         if (is_artefact(*this) && !dbname)
@@ -1331,10 +1317,7 @@ std::string item_def::name_aux(description_level_type desc,
         }
 
         if (know_pluses)
-        {
-            output_with_sign(buff, it_plus);
-            buff << ' ';
-        }
+            buff << make_stringf("%+d ", it_plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
@@ -1607,14 +1590,10 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (know_pluses && ring_has_pluses(*this))
             {
-                output_with_sign(buff, it_plus);
-
                 if (ring_has_pluses(*this) == 2)
-                {
-                    buff << ',';
-                    output_with_sign(buff, item_plus2);
-                }
-                buff << ' ';
+                    buff << make_stringf("%+d,%+d ", it_plus, item_plus2);
+                else
+                    buff << make_stringf("%+d ", it_plus);
             }
 
             buff << jewellery_type_name(item_typ);
@@ -1756,8 +1735,7 @@ std::string item_def::name_aux(description_level_type desc,
                 if (props.exists("rod_enchantment"))
                     rmod = props["rod_enchantment"];
 
-                output_with_sign(buff, rmod);
-                buff << " ";
+                buff << make_stringf("%+d ", rmod);
             }
 
             buff << (item_is_rod(*this) ? "rod" : "staff")
