@@ -1699,6 +1699,12 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
+mad wizard
+
+Raving about how enhanced rats are going to take over the world is not the
+best sign of mental sanity. You'd better step back. Plus, it's squirrels who
+are going to win, I tell you!
+%%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great
@@ -2471,6 +2477,11 @@ creature.
 tentacled monstrosity
 
 A writhing mass of tentacles, all covered in putrid mucus.
+%%%%
+terrified wizard
+
+This guy has been caught by magic-haters, and is going to be sacrificed on
+the altar of Trog.
 %%%%
 titan
 
