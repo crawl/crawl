@@ -1453,9 +1453,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         else if (wepType == MI_THROWING_NET)
             max_range = range = 2 + you.body_size(PSIZE_BODY);
         else
-        {
-            max_range = range = LOS_RADIUS;
-        }
+            max_range = range = you.current_vision;
     }
     else
     {
@@ -1463,8 +1461,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         max_range = range = std::max(you.strength()-item_mass(thrown)/10 + 3, 1);
     }
 
-    range = std::min(range, LOS_RADIUS);
-    max_range = std::min(max_range, LOS_RADIUS);
+    range = std::min(range, (int)you.current_vision);
+    max_range = std::min(max_range, (int)you.current_vision);
 
     // For the tracer, use max_range. For the actual shot, use range.
     pbolt.range = max_range;
@@ -2071,7 +2069,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 void setup_monster_throw_beam(monster* mons, struct bolt &beam)
 {
     // FIXME we should use a sensible range here
-    beam.range = LOS_RADIUS;
+    beam.range = you.current_vision;
     beam.beam_source = mons->mindex();
 
     beam.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -2119,7 +2117,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
     // FIXME we should actually determine a sensible range here
-    beam.range         = LOS_RADIUS;
+    beam.range         = you.current_vision;
 
     if (setup_missile_beam(mons, beam, item, ammo_name, returning))
         return (false);
