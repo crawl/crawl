@@ -100,7 +100,7 @@ enum LOSSelect
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m);
 #endif
-static void _describe_feature(const coord_def& where, bool oos);
+static void _describe_oos_feature(const coord_def& where);
 static void _describe_cell(const coord_def& where, bool in_range = true);
 static bool _print_cloud_desc(const coord_def where);
 static bool _print_item_desc(const coord_def where);
@@ -2295,7 +2295,7 @@ static void _describe_oos_square(const coord_def& where)
     }
 
     describe_stash(where);
-    _describe_feature(where, true);
+    _describe_oos_feature(where);
 #ifdef DEBUG_DIAGNOSTICS
     _debug_describe_feature_at(where);
 #endif
@@ -2788,29 +2788,20 @@ static bool _find_square_wrapper(coord_def& mfp, int direction,
     return r;
 }
 
-static void _describe_feature(const coord_def& where, bool oos)
+static void _describe_oos_feature(const coord_def& where)
 {
-    if (oos && !env.map_knowledge(where).seen())
+    if (!env.map_knowledge(where).seen())
         return;
 
-    dungeon_feature_type grid = grd(where);
-    if (grid == DNGN_SECRET_DOOR)
-        grid = grid_secret_door_appearance(where);
+    dungeon_feature_type feat = env.map_knowledge(where).feat();
+    if (feat == DNGN_SECRET_DOOR)
+        feat = grid_secret_door_appearance(where);
 
     std::string desc;
-    desc = feature_description(grid);
+    desc = feature_description(feat, env.map_knowledge(where).trap());
 
     if (!desc.empty())
-    {
-        if (oos)
-            desc = "[" + desc + "]";
-
-        msg_channel_type channel = MSGCH_EXAMINE;
-        if (oos || grid == DNGN_FLOOR)
-            channel = MSGCH_EXAMINE_FILTER;
-
-        mpr(desc.c_str(), channel);
-    }
+        mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
 }
 
 // Returns a vector of features matching the given pattern.
