@@ -72,7 +72,8 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             if (mons_class_holiness(you.inv[wielded].mon_type) == MH_HOLY)
                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         }
-        else if (is_blood_potion(you.inv[wielded]))
+        else if (is_blood_potion(you.inv[wielded])
+                 && item_type_known(you.inv[wielded]))
         {
             fail_check();
             success = true;
