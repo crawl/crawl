@@ -856,7 +856,7 @@ static std::string _how_hungry()
     return ("hungry");
 }
 
-static const int hunger_threshold[HS_ENGORGED + 1] =
+static constexpr int hunger_threshold[HS_ENGORGED + 1] =
     { 1000, 1533, 2055, 2600, 7000, 9000, 11000, 40000 };
 
 bool food_change(bool suppress_message)
