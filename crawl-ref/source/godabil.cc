@@ -1405,9 +1405,9 @@ bool elyvilon_divine_vigour()
                          40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
 
         calc_hp();
-        inc_hp(you.hp_max - old_hp_max);
+        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
         calc_mp();
-        inc_mp(you.max_magic_points - old_mp_max);
+        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)/old_mp_max - you.magic_points);
 
         success = true;
     }
