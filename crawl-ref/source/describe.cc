@@ -99,7 +99,7 @@ int count_desc_lines(const std::string &_desc, const int width)
     return count;
 }
 
-void _adjust_item(item_def &item);
+static void _adjust_item(item_def &item);
 
 //---------------------------------------------------------------
 //
@@ -2795,7 +2795,7 @@ void inscribe_item(item_def &item, bool msgwin)
     }
 }
 
-void _adjust_item(item_def &item)
+static void _adjust_item(item_def &item)
 {
     _safe_newline();
     std::string prompt = "<cyan>Adjust to which letter? </cyan>";

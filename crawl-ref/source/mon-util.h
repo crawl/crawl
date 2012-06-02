@@ -293,11 +293,8 @@ void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 bool mons_should_fire(struct bolt &beam);
 
 bool mons_has_los_ability(monster_type mon_type);
-bool mons_has_los_attack(const monster* mon);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
                            bool ench_too = true);
-bool mons_has_ranged_weapon(const monster* mon);
-bool mons_has_ranged_ability(const monster* mon);
 bool mons_has_ranged_attack(const monster* mon);
 bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);

@@ -68,16 +68,6 @@
 static bool _wounded_damaged(mon_holy_type holi);
 static int _calc_player_experience(const monster* mons);
 
-const item_def* get_mimic_item(const monster* mimic)
-{
-    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
-
-    if (mimic->inv[MSLOT_MISCELLANY] != NON_ITEM)
-        return &mitm[mimic->inv[MSLOT_MISCELLANY]];
-    else
-        return NULL;
-}
-
 dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
     if (mimic->props.exists("feat_type"))
@@ -3211,34 +3201,6 @@ void corrode_monster(monster* mons, const actor* evildoer)
     }
 }
 
-// This doesn't really swap places, it just sets the monster's
-// position equal to the player (the player has to be moved afterwards).
-// It also has a slight problem with the fact that if the player is
-// levitating over an inhospitable habitat for the monster the monster
-// will be put in a place it normally couldn't go (this could be a
-// feature because it prevents insta-killing).  In order to prevent
-// that little problem, we go looking for a square for the monster
-// to "scatter" to instead... and if we can't find one the monster
-// just refuses to be swapped (not a bug, this is intentionally
-// avoiding the insta-kill).  Another option is to look a bit
-// wider for a vaild square (either by a last attempt blink, or
-// by looking at a wider radius)...  insta-killing should be a
-// last resort in this function (especially since Tome, Dig, and
-// Summoning can be used to set up death traps).  If worse comes
-// to worse, at least consider making the Swap spell not work
-// when the player is over lava or water (if the player wants to
-// swap pets to their death, we can let that go). - bwr
-bool swap_places(monster* mons)
-{
-    coord_def loc;
-    if (swap_check(mons, loc))
-    {
-        swap_places(mons, loc);
-        return true;
-    }
-    return false;
-}
-
 // Swap monster to this location.  Player is swapped elsewhere.
 bool swap_places(monster* mons, const coord_def &loc)
 {
@@ -3621,8 +3583,8 @@ bool simple_monster_message(const monster* mons, const char *event,
     return (false);
 }
 
-bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
-                       bool placement)
+static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
+                               bool placement)
 {
     bool extra_careful = placement;
     cloud_type cl_type = cloud.type;
@@ -3790,7 +3752,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
     const cloud_struct &cloud = env.cloud[cloud_num];
 
     // Is the target cloud okay?
-    if (!mons_avoids_cloud(mons, cloud, placement))
+    if (!_mons_avoids_cloud(mons, cloud, placement))
         return (false);
 
     // If we're already in a cloud that we'd want to avoid then moving
@@ -3805,7 +3767,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 
     const cloud_struct &our_cloud = env.cloud[our_cloud_num];
 
-    return (!mons_avoids_cloud(mons, our_cloud, true));
+    return (!_mons_avoids_cloud(mons, our_cloud, true));
 }
 
 // Returns a rough estimate of damage from throwing the wielded weapon.

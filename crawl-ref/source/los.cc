@@ -849,23 +849,6 @@ static void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy
     }
 }
 
-void losight(los_grid& sh, const los_param& dat)
-{
-    sh.init(false);
-
-    // Do precomputations if necessary.
-    raycast();
-
-    const int quadrant_x[4] = {  1, -1, -1,  1 };
-    const int quadrant_y[4] = {  1,  1, -1, -1 };
-    for (int q = 0; q < 4; ++q)
-        _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
-
-    // Center is always visible.
-    const coord_def o = coord_def(0,0);
-    sh(o) = true;
-}
-
 struct los_param_funcs : public los_param
 {
     coord_def center;
@@ -892,7 +875,21 @@ struct los_param_funcs : public los_param
 void losight(los_grid& sh, const coord_def& center,
              const opacity_func& opc, const circle_def& bounds)
 {
-    losight(sh, los_param_funcs(center, opc, bounds));
+    const los_param& dat = los_param_funcs(center, opc, bounds);
+
+    sh.init(false);
+
+    // Do precomputations if necessary.
+    raycast();
+
+    const int quadrant_x[4] = {  1, -1, -1,  1 };
+    const int quadrant_y[4] = {  1,  1, -1, -1 };
+    for (int q = 0; q < 4; ++q)
+        _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
+
+    // Center is always visible.
+    const coord_def o = coord_def(0,0);
+    sh(o) = true;
 }
 
 opacity_type mons_opacity(const monster* mon, los_type how)
@@ -953,13 +950,6 @@ void los_monster_died(const monster* mon)
 
 // Might want to pass new/old terrain.
 void los_terrain_changed(const coord_def& p)
-{
-    invalidate_los_around(p);
-    _handle_los_change();
-}
-
-// Might want to pass new/old cloud type.
-void los_cloud_changed(const coord_def& p)
 {
     invalidate_los_around(p);
     _handle_los_change();
