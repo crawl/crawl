@@ -1701,8 +1701,8 @@ their toll on this one's feeble mind.
 %%%%
 mad wizard
 
-Raving about how enhanced rats are going to take over the world is not the
-best sign of mental sanity. You'd better step back. Plus, it's squirrels who
+Raving about how enhanced rats are going to take over the world is not a
+sign of sanity. You'd better step back. Plus, it's squirrels who
 are going to win, I tell you!
 %%%%
 manticore
@@ -2761,12 +2761,12 @@ A lich who has grown expensive over countless years.
 %%%%
 black sheep
 
-On the first glance, this sheep has merely a different pigmentation, but you
-are not so easily swayed by looks: with our luck, there's a sheep in a
+On first glance, this sheep has merely a different pigmentation, but you
+are not so easily swayed by looks. With your luck, there's a sheep in a
 wolf's hide hiding inside, _then_ covered by another layer of sheep skin to
-deceive you better.
+better deceive you.
 
-Or maybe, it's just a sheep after all.
+Or, maybe, it's just a sheep after all.
 %%%%
 Cigotuvi's Monster
 
