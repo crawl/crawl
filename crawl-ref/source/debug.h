@@ -27,9 +27,22 @@
 
 
 #ifndef _lint
-#define COMPILE_CHECK(expr) typedef char compile_check_ ## __LINE__[(expr) ? 1 : -1]
+# if defined(__cplusplus) && __cplusplus >= 201103
+// We'd need to enable C++11 mode for nice messages.
+#  define COMPILE_CHECK(expr) static_assert((expr), #expr)
+# elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112
+// ... or C11 mode (with a different keyword).
+#  define COMPILE_CHECK(expr) _Static_assert((expr), #expr)
+# elif defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+// Otherwise, use a hack.
+#  define COMPILE_CHECK(expr) ((void)sizeof(char[1 - 2*!(expr)]))
+# else
+// Or one with a slightly better message, except that GCC-4.8 notices it's
+// nonsense and spams warnings on non-failures.
+#  define COMPILE_CHECK(expr) typedef char compile_check_ ## __LINE__[(expr) ? 1 : -1]
+# endif
 #else
-#define COMPILE_CHECK(expr)
+# define COMPILE_CHECK(expr)
 #endif
 
 #if defined(DEBUG) && !defined(ASSERTS)
