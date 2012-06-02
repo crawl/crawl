@@ -2919,22 +2919,6 @@ bool mons_has_los_ability(monster_type mon_type)
     return (false);
 }
 
-bool mons_has_los_attack(const monster* mon)
-{
-    // Monsters may have spell like abilities.
-    if (mons_has_los_ability(mon->type))
-        return (true);
-
-    if (mon->can_use_spells())
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_los_spell(mon->spells[i]))
-                return (true);
-    }
-
-    return (false);
-}
-
 bool mons_has_ranged_spell(const monster* mon, bool attack_only,
                            bool ench_too)
 {
@@ -2952,7 +2936,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     return (false);
 }
 
-bool mons_has_ranged_ability(const monster* mon)
+static bool _mons_has_ranged_ability(const monster* mon)
 {
     // [ds] FIXME: Get rid of special abilities and remove this.
     switch (mon->type)
@@ -2979,7 +2963,7 @@ bool mons_has_ranged_ability(const monster* mon)
     }
 }
 
-bool mons_has_ranged_weapon(const monster* mon)
+static bool _mons_has_ranged_weapon(const monster* mon)
 {
     // Ugh.
     monster* mnc = const_cast<monster* >(mon);
@@ -3001,11 +2985,11 @@ bool mons_has_ranged_weapon(const monster* mon)
 
 bool mons_has_ranged_attack(const monster* mon)
 {
-    return mons_has_ranged_spell(mon, true) || mons_has_ranged_ability(mon)
-           || mons_has_ranged_weapon(mon);
+    return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
+           || _mons_has_ranged_weapon(mon);
 }
 
-bool _mons_starts_with_ranged_weapon(monster_type mc)
+static bool _mons_starts_with_ranged_weapon(monster_type mc)
 {
     switch (mc)
     {
@@ -3034,7 +3018,7 @@ bool _mons_starts_with_ranged_weapon(monster_type mc)
 
 bool mons_has_known_ranged_attack(const monster* mon)
 {
-    return mons_has_ranged_ability(mon)
+    return _mons_has_ranged_ability(mon)
         || mon->flags & MF_SEEN_RANGED
         || _mons_starts_with_ranged_weapon(mon->type)
             && !(mon->flags & MF_KNOWN_SHIFTER);

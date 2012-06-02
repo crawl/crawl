@@ -359,31 +359,23 @@ void autoid_unrand(item_def &item)
     add_autoinscription(item);
 }
 
-unique_item_status_type get_unique_item_status(const item_def& item)
-{
-    if (item.flags & ISFLAG_UNRANDART)
-        return get_unique_item_status(item.special);
-
-    return (UNIQ_NOT_EXISTS);
-}
-
 unique_item_status_type get_unique_item_status(int art)
 {
     ASSERT(art > UNRAND_START && art < UNRAND_LAST);
     return (you.unique_items[art - UNRAND_START]);
 }
 
+static void _set_unique_item_status(int art, unique_item_status_type status)
+{
+    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    you.unique_items[art - UNRAND_START] = status;
+}
+
 void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        set_unique_item_status(item.special, status);
-}
-
-void set_unique_item_status(int art, unique_item_status_type status)
-{
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
-    you.unique_items[art - UNRAND_START] = status;
+        _set_unique_item_status(item.special, status);
 }
 
 void reveal_randapp_artefact(item_def &item)
@@ -2000,7 +1992,7 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 255)
-        set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
@@ -2038,7 +2030,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item_colour(item);
     }
 
-    set_unique_item_status(unrand_index, UNIQ_EXISTS);
+    _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
     if (unrand_index == UNRAND_VARIABILITY)
     {

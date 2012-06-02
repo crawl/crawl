@@ -649,12 +649,6 @@ bool item_ident(const item_def &item, iflags_t flags)
     return ((item.flags & flags) == flags);
 }
 
-int missile_id(const item_def &item)
-{
-    // 8 lowest bits are free.
-    return item.plus << 24 | item.sub_type << 16 | item.special << 8;
-}
-
 void set_ident_flags(item_def &item, iflags_t flags)
 {
     preserve_quiver_slots p;

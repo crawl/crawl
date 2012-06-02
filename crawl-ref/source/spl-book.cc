@@ -360,11 +360,6 @@ bool is_valid_spell_in_book(const item_def &book, int spell)
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
 }
 
-bool is_valid_spell_in_book(int splbook, int spell)
-{
-    return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
-}
-
 // Returns false if the player cannot memorise from the book,
 // and true otherwise. -- bwr
 bool player_can_memorise_from_spellbook(const item_def &book)

@@ -1305,6 +1305,398 @@ static bool _is_physiological_spell(spell_type spell)
         || spell == SPELL_FIRE_BREATH;
 }
 
+// Returns true if the spell is something you wouldn't want done if
+// you had a friendly target...  only returns a meaningful value for
+// non-beam spells.
+static bool _ms_direct_nasty(spell_type monspell)
+{
+    return (spell_needs_foe(monspell)
+            && !spell_typematch(monspell, SPTYP_SUMMONING));
+}
+
+// Checks if the foe *appears* to be immune to negative energy.  We
+// can't just use foe->res_negative_energy(), because that'll mean
+// monsters will just "know" whether a player is fully life-protected.
+static bool _foe_should_res_negative_energy(const actor* foe)
+{
+    const mon_holy_type holiness = foe->holiness();
+
+    if (foe->is_player())
+    {
+        // Non-bloodless vampires do not appear immune.
+        if (holiness == MH_UNDEAD
+            && you.is_undead == US_SEMI_UNDEAD
+            && you.hunger_state > HS_STARVING)
+        {
+            return (false);
+        }
+
+        // Demonspawn do not appear immune.
+        if (holiness == MH_DEMONIC)
+            return (false);
+
+        // Nor do statues (they only have partial resistance).
+        if (you.form == TRAN_STATUE)
+            return (false);
+    }
+
+    return (holiness != MH_NATURAL);
+}
+
+// Checks to see if a particular spell is worth casting in the first place.
+static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
+{
+    bool ret = false;
+    actor *foe = mon->get_foe();
+
+    // Keep friendly summoners from spamming summons constantly.
+    if (mon->friendly()
+        && (!foe || foe->is_player())
+        && spell_typematch(monspell, SPTYP_SUMMONING))
+    {
+        return (true);
+    }
+
+    if (!mon->wont_attack())
+    {
+        if (spell_harms_area(monspell) && env.sanctuary_time > 0)
+            return (true);
+
+        if (spell_harms_target(monspell) && is_sanctuary(mon->target))
+            return (true);
+    }
+
+    if (mons_genus(mon->type) == MONS_DRAGON && mon->has_ench(ENCH_BREATH_WEAPON))
+        return (true);
+
+    // Eventually, we'll probably want to be able to have monsters
+    // learn which of their elemental bolts were resisted and have those
+    // handled here as well. - bwr
+    switch (monspell)
+    {
+    case SPELL_CALL_TIDE:
+        return (!player_in_branch(BRANCH_SHOALS)
+                || mon->has_ench(ENCH_TIDE)
+                || !foe
+                || (grd(mon->pos()) == DNGN_DEEP_WATER
+                    && grd(foe->pos()) == DNGN_DEEP_WATER));
+
+    case SPELL_BRAIN_FEED:
+        ret = (!foe || !foe->is_player());
+        break;
+
+    case SPELL_VAMPIRIC_DRAINING:
+        if (mon->hit_points + 1 >= mon->max_hit_points
+            || grid_distance(mon->pos(), foe->pos()) > 1)
+        {
+            ret = true;
+        }
+    // fall through
+    case SPELL_BOLT_OF_DRAINING:
+    case SPELL_AGONY:
+    case SPELL_SYMBOL_OF_TORMENT:
+        if (!foe || _foe_should_res_negative_energy(foe))
+            ret = true;
+        break;
+    case SPELL_MIASMA:
+        ret = (!foe || foe->res_rotting());
+        break;
+
+    case SPELL_DISPEL_UNDEAD:
+        // [ds] How is dispel undead intended to interact with vampires?
+        ret = (!foe || foe->holiness() != MH_UNDEAD);
+        break;
+
+    case SPELL_CORONA:
+        ret = (!foe || foe->backlit() || foe->glows_naturally());
+        break;
+
+    case SPELL_BERSERKER_RAGE:
+        if (!mon->needs_berserk(false))
+            ret = true;
+        break;
+
+    case SPELL_HASTE:
+        if (mon->has_ench(ENCH_HASTE))
+            ret = true;
+        break;
+
+    case SPELL_MIGHT:
+        if (mon->has_ench(ENCH_MIGHT))
+            ret = true;
+        break;
+
+    case SPELL_SWIFTNESS:
+        if (mon->has_ench(ENCH_SWIFT))
+            ret = true;
+        break;
+
+    case SPELL_REGENERATION:
+        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR)
+            || mon->holiness() == MH_UNDEAD)
+        {
+            ret = true;
+        }
+        break;
+
+    case SPELL_MIRROR_DAMAGE:
+        if (mon->has_ench(ENCH_MIRROR_DAMAGE))
+            ret = true;
+        break;
+
+    case SPELL_STONESKIN:
+        if (mon->has_ench(ENCH_STONESKIN))
+            ret = true;
+        break;
+
+    case SPELL_INVISIBILITY:
+        if (mon->has_ench(ENCH_INVIS)
+            || mon->glows_naturally()
+            || mon->friendly() && !you.can_see_invisible(false))
+        {
+            ret = true;
+        }
+        break;
+
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
+        if (mon->hit_points > mon->max_hit_points / 2)
+            ret = true;
+        break;
+
+    case SPELL_TELEPORT_SELF:
+        // Monsters aren't smart enough to know when to cancel teleport.
+        if (mon->has_ench(ENCH_TP))
+            ret = true;
+        break;
+
+    case SPELL_TELEPORT_OTHER:
+        // Monsters aren't smart enough to know when to cancel teleport.
+        if (mon->foe == MHITYOU)
+        {
+            ret = you.duration[DUR_TELEPORT];
+            break;
+        }
+        else if (mon->foe != MHITNOT)
+        {
+            ret = (menv[mon->foe].has_ench(ENCH_TP));
+            break;
+        }
+        // intentional fall-through
+
+    case SPELL_SLOW:
+    case SPELL_CONFUSE:
+    case SPELL_PAIN:
+    case SPELL_BANISHMENT:
+    case SPELL_DISINTEGRATE:
+    case SPELL_PARALYSE:
+    case SPELL_SLEEP:
+    case SPELL_HIBERNATION:
+    {
+        if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
+        {
+            ret = true;
+            break;
+        }
+
+        // Occasionally we don't estimate... just fire and see.
+        if (one_chance_in(5))
+        {
+            ret = false;
+            break;
+        }
+
+        // Only intelligent monsters estimate.
+        int intel = mons_intel(mon);
+        if (intel < I_NORMAL)
+        {
+            ret = false;
+            break;
+        }
+
+        // We'll estimate the target's resistance to magic, by first getting
+        // the actual value and then randomising it.
+        int est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
+
+        if (mon->foe != MHITNOT)
+        {
+            if (mon->foe == MHITYOU)
+                est_magic_resist = you.res_magic();
+            else
+                est_magic_resist = menv[mon->foe].res_magic();
+
+            // now randomise (normal intels less accurate than high):
+            if (intel == I_NORMAL)
+                est_magic_resist += random2(80) - 40;
+            else
+                est_magic_resist += random2(30) - 15;
+        }
+
+        int power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
+        power = stepdown_value(power, 30, 40, 100, 120);
+
+        // Determine the amount of chance allowed by the benefit from
+        // the spell.  The estimated difficulty is the probability
+        // of rolling over 100 + diff on 2d100. -- bwr
+        int diff = (monspell == SPELL_PAIN
+                    || monspell == SPELL_SLOW
+                    || monspell == SPELL_CONFUSE) ? 0 : 50;
+
+        if (est_magic_resist - power > diff)
+            ret = true;
+        break;
+    }
+
+    case SPELL_MISLEAD:
+        if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
+            ret = true;
+
+        break;
+
+    case SPELL_SUMMON_ILLUSION:
+        if (!foe || !actor_is_illusion_cloneable(foe))
+            ret = true;
+        break;
+
+    case SPELL_FAKE_MARA_SUMMON:
+        if (count_mara_fakes() == 2)
+            ret = true;
+
+        break;
+
+    case SPELL_AWAKEN_FOREST:
+        if (mon->has_ench(ENCH_AWAKEN_FOREST)
+            || env.forest_awoken_until > you.elapsed_time
+            || !forest_near_enemy(mon))
+        {
+            ret = true;
+        }
+        break;
+
+    case SPELL_DEATHS_DOOR:
+        // The caster may be an (undead) enslaved soul.
+        if (mon->holiness() == MH_UNDEAD || mon->has_ench(ENCH_DEATHS_DOOR))
+            ret = true;
+        break;
+
+    case SPELL_NO_SPELL:
+        ret = true;
+        break;
+
+    default:
+        break;
+    }
+
+    return (ret);
+}
+
+// Spells a monster may want to cast if fleeing from the player, and
+// the player is not in sight.
+static bool _ms_useful_fleeing_out_of_sight(const monster* mon,
+                                            spell_type monspell)
+{
+    if (monspell == SPELL_NO_SPELL || _ms_waste_of_time(mon, monspell))
+        return (false);
+
+    switch (monspell)
+    {
+    case SPELL_HASTE:
+    case SPELL_SWIFTNESS:
+    case SPELL_INVISIBILITY:
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_TWISTED_RESURRECTION:
+        return (true);
+
+    default:
+        if (spell_typematch(monspell, SPTYP_SUMMONING) && one_chance_in(4))
+            return (true);
+        break;
+    }
+
+    return (false);
+}
+
+static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
+{
+    if (_ms_waste_of_time(mon, monspell))
+        return (false);
+
+    bool targ_adj      = false;
+    bool targ_sanct    = false;
+    bool targ_friendly = false;
+    bool targ_undead   = false;
+
+    if (mon->foe == MHITYOU || mon->foe == MHITNOT)
+    {
+        if (adjacent(you.pos(), mon->pos()))
+            targ_adj = true;
+        if (is_sanctuary(you.pos()))
+            targ_sanct = true;
+        if (you.undead_or_demonic())
+            targ_undead = true;
+    }
+    else
+    {
+        if (adjacent(menv[mon->foe].pos(), mon->pos()))
+            targ_adj = true;
+        if (is_sanctuary(menv[mon->foe].pos()))
+            targ_sanct = true;
+        if (menv[mon->foe].undead_or_demonic())
+            targ_undead = true;
+    }
+
+    targ_friendly = (mon->foe == MHITYOU
+                     ? mon->wont_attack()
+                     : mons_aligned(mon, mon->get_foe()));
+
+    switch (monspell)
+    {
+    case SPELL_TELEPORT_OTHER:
+        return !targ_sanct && !targ_friendly;
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
+        return true;
+    case SPELL_VAMPIRIC_DRAINING:
+        return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
+    case SPELL_BLINK_AWAY:
+    case SPELL_BLINK_RANGE:
+        return !targ_friendly;
+    case SPELL_BLINK_OTHER:
+        return !targ_sanct && targ_adj && !targ_friendly;
+    case SPELL_BLINK:
+        return targ_adj;
+    case SPELL_TOMB_OF_DOROKLOHE:
+        return true;
+    case SPELL_NO_SPELL:
+        return false;
+    case SPELL_INK_CLOUD:
+        if (mon->type == MONS_KRAKEN)
+            return true;
+    default:
+        return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
+    }
+}
+
+// Spells for a quick get-away.
+// Currently only used to get out of a net.
+static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
+{
+    switch (monspell)
+    {
+    case SPELL_TELEPORT_SELF:
+        // Don't cast again if already about to teleport.
+        if (mon->has_ench(ENCH_TP))
+            return (false);
+        // intentional fall-through
+    case SPELL_BLINK:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
                                         bool& wizard, god_type& god)
 {
@@ -1431,7 +1823,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 int foundcount = 0;
                 for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                 {
-                    if (ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
+                    if (_ms_useful_fleeing_out_of_sight(mons, hspell_pass[i])
                         && one_chance_in(++foundcount))
                     {
                         spell_cast = hspell_pass[i];
@@ -1450,7 +1842,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                if (ms_quick_get_away(mons, hspell_pass[i]))
+                if (_ms_quick_get_away(mons, hspell_pass[i]))
                 {
                     spell_cast = hspell_pass[i];
                     finalAnswer = true;
@@ -1470,7 +1862,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
             if ((mons_is_fleeing(mons) || mons->pacified())
-                && ms_low_hitpoint_cast(mons, hspell_pass[5]))
+                && _ms_low_hitpoint_cast(mons, hspell_pass[5]))
             {
                 spell_cast = hspell_pass[5];
                 finalAnswer = true;
@@ -1481,7 +1873,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 int found_spell = 0;
                 for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
                 {
-                    if (ms_low_hitpoint_cast(mons, hspell_pass[i])
+                    if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
                         && one_chance_in(++found_spell))
                     {
                         spell_cast  = hspell_pass[i];
@@ -1508,7 +1900,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 if (hspell_pass[i] == SPELL_NO_SPELL)
                     num_no_spell++;
-                else if (ms_waste_of_time(mons, hspell_pass[i])
+                else if (_ms_waste_of_time(mons, hspell_pass[i])
                          || hspell_pass[i] == SPELL_DIG)
                 {
                     // Should monster not have selected dig by now,
@@ -1648,7 +2040,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     // All direct-effect/summoning/self-enchantments/etc.
                     spellOK = true;
 
-                    if (ms_direct_nasty(spell_cast)
+                    if (_ms_direct_nasty(spell_cast)
                         && mons_aligned(mons, (mons->foe == MHITYOU) ?
                            &you : foe)) // foe=get_foe() is NULL for friendlies
                     {                   // targetting you, which is bad here.
@@ -4108,395 +4500,4 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
     }
-}
-
-// Returns true if the spell is something you wouldn't want done if
-// you had a friendly target...  only returns a meaningful value for
-// non-beam spells.
-bool ms_direct_nasty(spell_type monspell)
-{
-    return (spell_needs_foe(monspell)
-            && !spell_typematch(monspell, SPTYP_SUMMONING));
-}
-
-// Spells a monster may want to cast if fleeing from the player, and
-// the player is not in sight.
-bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell)
-{
-    if (monspell == SPELL_NO_SPELL || ms_waste_of_time(mon, monspell))
-        return (false);
-
-    switch (monspell)
-    {
-    case SPELL_HASTE:
-    case SPELL_SWIFTNESS:
-    case SPELL_INVISIBILITY:
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_TWISTED_RESURRECTION:
-        return (true);
-
-    default:
-        if (spell_typematch(monspell, SPTYP_SUMMONING) && one_chance_in(4))
-            return (true);
-        break;
-    }
-
-    return (false);
-}
-
-bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
-{
-    if (ms_waste_of_time(mon, monspell))
-        return (false);
-
-    bool targ_adj      = false;
-    bool targ_sanct    = false;
-    bool targ_friendly = false;
-    bool targ_undead   = false;
-
-    if (mon->foe == MHITYOU || mon->foe == MHITNOT)
-    {
-        if (adjacent(you.pos(), mon->pos()))
-            targ_adj = true;
-        if (is_sanctuary(you.pos()))
-            targ_sanct = true;
-        if (you.undead_or_demonic())
-            targ_undead = true;
-    }
-    else
-    {
-        if (adjacent(menv[mon->foe].pos(), mon->pos()))
-            targ_adj = true;
-        if (is_sanctuary(menv[mon->foe].pos()))
-            targ_sanct = true;
-        if (menv[mon->foe].undead_or_demonic())
-            targ_undead = true;
-    }
-
-    targ_friendly = (mon->foe == MHITYOU
-                     ? mon->wont_attack()
-                     : mons_aligned(mon, mon->get_foe()));
-
-    switch (monspell)
-    {
-    case SPELL_TELEPORT_OTHER:
-        return !targ_sanct && !targ_friendly;
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-        return true;
-    case SPELL_VAMPIRIC_DRAINING:
-        return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
-    case SPELL_BLINK_AWAY:
-    case SPELL_BLINK_RANGE:
-        return !targ_friendly;
-    case SPELL_BLINK_OTHER:
-        return !targ_sanct && targ_adj && !targ_friendly;
-    case SPELL_BLINK:
-        return targ_adj;
-    case SPELL_TOMB_OF_DOROKLOHE:
-        return true;
-    case SPELL_NO_SPELL:
-        return false;
-    case SPELL_INK_CLOUD:
-        if (mon->type == MONS_KRAKEN)
-            return true;
-    default:
-        return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
-    }
-}
-
-// Spells for a quick get-away.
-// Currently only used to get out of a net.
-bool ms_quick_get_away(const monster* mon /*unused*/, spell_type monspell)
-{
-    switch (monspell)
-    {
-    case SPELL_TELEPORT_SELF:
-        // Don't cast again if already about to teleport.
-        if (mon->has_ench(ENCH_TP))
-            return (false);
-        // intentional fall-through
-    case SPELL_BLINK:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
-// Checks if the foe *appears* to be immune to negative energy.  We
-// can't just use foe->res_negative_energy(), because that'll mean
-// monsters will just "know" whether a player is fully life-protected.
-static bool _foe_should_res_negative_energy(const actor* foe)
-{
-    const mon_holy_type holiness = foe->holiness();
-
-    if (foe->is_player())
-    {
-        // Non-bloodless vampires do not appear immune.
-        if (holiness == MH_UNDEAD
-            && you.is_undead == US_SEMI_UNDEAD
-            && you.hunger_state > HS_STARVING)
-        {
-            return (false);
-        }
-
-        // Demonspawn do not appear immune.
-        if (holiness == MH_DEMONIC)
-            return (false);
-
-        // Nor do statues (they only have partial resistance).
-        if (you.form == TRAN_STATUE)
-            return (false);
-    }
-
-    return (holiness != MH_NATURAL);
-}
-
-// Checks to see if a particular spell is worth casting in the first place.
-bool ms_waste_of_time(const monster* mon, spell_type monspell)
-{
-    bool ret = false;
-    actor *foe = mon->get_foe();
-
-    // Keep friendly summoners from spamming summons constantly.
-    if (mon->friendly()
-        && (!foe || foe->is_player())
-        && spell_typematch(monspell, SPTYP_SUMMONING))
-    {
-        return (true);
-    }
-
-    if (!mon->wont_attack())
-    {
-        if (spell_harms_area(monspell) && env.sanctuary_time > 0)
-            return (true);
-
-        if (spell_harms_target(monspell) && is_sanctuary(mon->target))
-            return (true);
-    }
-
-    if (mons_genus(mon->type) == MONS_DRAGON && mon->has_ench(ENCH_BREATH_WEAPON))
-        return (true);
-
-    // Eventually, we'll probably want to be able to have monsters
-    // learn which of their elemental bolts were resisted and have those
-    // handled here as well. - bwr
-    switch (monspell)
-    {
-    case SPELL_CALL_TIDE:
-        return (!player_in_branch(BRANCH_SHOALS)
-                || mon->has_ench(ENCH_TIDE)
-                || !foe
-                || (grd(mon->pos()) == DNGN_DEEP_WATER
-                    && grd(foe->pos()) == DNGN_DEEP_WATER));
-
-    case SPELL_BRAIN_FEED:
-        ret = (!foe || !foe->is_player());
-        break;
-
-    case SPELL_VAMPIRIC_DRAINING:
-        if (mon->hit_points + 1 >= mon->max_hit_points
-            || grid_distance(mon->pos(), foe->pos()) > 1)
-        {
-            ret = true;
-        }
-    // fall through
-    case SPELL_BOLT_OF_DRAINING:
-    case SPELL_AGONY:
-    case SPELL_SYMBOL_OF_TORMENT:
-        if (!foe || _foe_should_res_negative_energy(foe))
-            ret = true;
-        break;
-    case SPELL_MIASMA:
-        ret = (!foe || foe->res_rotting());
-        break;
-
-    case SPELL_DISPEL_UNDEAD:
-        // [ds] How is dispel undead intended to interact with vampires?
-        ret = (!foe || foe->holiness() != MH_UNDEAD);
-        break;
-
-    case SPELL_CORONA:
-        ret = (!foe || foe->backlit() || foe->glows_naturally());
-        break;
-
-    case SPELL_BERSERKER_RAGE:
-        if (!mon->needs_berserk(false))
-            ret = true;
-        break;
-
-    case SPELL_HASTE:
-        if (mon->has_ench(ENCH_HASTE))
-            ret = true;
-        break;
-
-    case SPELL_MIGHT:
-        if (mon->has_ench(ENCH_MIGHT))
-            ret = true;
-        break;
-
-    case SPELL_SWIFTNESS:
-        if (mon->has_ench(ENCH_SWIFT))
-            ret = true;
-        break;
-
-    case SPELL_REGENERATION:
-        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR)
-            || mon->holiness() == MH_UNDEAD)
-        {
-            ret = true;
-        }
-        break;
-
-    case SPELL_MIRROR_DAMAGE:
-        if (mon->has_ench(ENCH_MIRROR_DAMAGE))
-            ret = true;
-        break;
-
-    case SPELL_STONESKIN:
-        if (mon->has_ench(ENCH_STONESKIN))
-            ret = true;
-        break;
-
-    case SPELL_INVISIBILITY:
-        if (mon->has_ench(ENCH_INVIS)
-            || mon->glows_naturally()
-            || mon->friendly() && !you.can_see_invisible(false))
-        {
-            ret = true;
-        }
-        break;
-
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-        if (mon->hit_points > mon->max_hit_points / 2)
-            ret = true;
-        break;
-
-    case SPELL_TELEPORT_SELF:
-        // Monsters aren't smart enough to know when to cancel teleport.
-        if (mon->has_ench(ENCH_TP))
-            ret = true;
-        break;
-
-    case SPELL_TELEPORT_OTHER:
-        // Monsters aren't smart enough to know when to cancel teleport.
-        if (mon->foe == MHITYOU)
-        {
-            ret = you.duration[DUR_TELEPORT];
-            break;
-        }
-        else if (mon->foe != MHITNOT)
-        {
-            ret = (menv[mon->foe].has_ench(ENCH_TP));
-            break;
-        }
-        // intentional fall-through
-
-    case SPELL_SLOW:
-    case SPELL_CONFUSE:
-    case SPELL_PAIN:
-    case SPELL_BANISHMENT:
-    case SPELL_DISINTEGRATE:
-    case SPELL_PARALYSE:
-    case SPELL_SLEEP:
-    case SPELL_HIBERNATION:
-    {
-        if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
-        {
-            ret = true;
-            break;
-        }
-
-        // Occasionally we don't estimate... just fire and see.
-        if (one_chance_in(5))
-        {
-            ret = false;
-            break;
-        }
-
-        // Only intelligent monsters estimate.
-        int intel = mons_intel(mon);
-        if (intel < I_NORMAL)
-        {
-            ret = false;
-            break;
-        }
-
-        // We'll estimate the target's resistance to magic, by first getting
-        // the actual value and then randomising it.
-        int est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
-
-        if (mon->foe != MHITNOT)
-        {
-            if (mon->foe == MHITYOU)
-                est_magic_resist = you.res_magic();
-            else
-                est_magic_resist = menv[mon->foe].res_magic();
-
-            // now randomise (normal intels less accurate than high):
-            if (intel == I_NORMAL)
-                est_magic_resist += random2(80) - 40;
-            else
-                est_magic_resist += random2(30) - 15;
-        }
-
-        int power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
-        power = stepdown_value(power, 30, 40, 100, 120);
-
-        // Determine the amount of chance allowed by the benefit from
-        // the spell.  The estimated difficulty is the probability
-        // of rolling over 100 + diff on 2d100. -- bwr
-        int diff = (monspell == SPELL_PAIN
-                    || monspell == SPELL_SLOW
-                    || monspell == SPELL_CONFUSE) ? 0 : 50;
-
-        if (est_magic_resist - power > diff)
-            ret = true;
-        break;
-    }
-
-    case SPELL_MISLEAD:
-        if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
-            ret = true;
-
-        break;
-
-    case SPELL_SUMMON_ILLUSION:
-        if (!foe || !actor_is_illusion_cloneable(foe))
-            ret = true;
-        break;
-
-    case SPELL_FAKE_MARA_SUMMON:
-        if (count_mara_fakes() == 2)
-            ret = true;
-
-        break;
-
-    case SPELL_AWAKEN_FOREST:
-        if (mon->has_ench(ENCH_AWAKEN_FOREST)
-            || env.forest_awoken_until > you.elapsed_time
-            || !forest_near_enemy(mon))
-        {
-            ret = true;
-        }
-        break;
-
-    case SPELL_DEATHS_DOOR:
-        // The caster may be an (undead) enslaved soul.
-        if (mon->holiness() == MH_UNDEAD || mon->has_ench(ENCH_DEATHS_DOOR))
-            ret = true;
-        break;
-
-    case SPELL_NO_SPELL:
-        ret = true;
-        break;
-
-    default:
-        break;
-    }
-
-    return (ret);
 }

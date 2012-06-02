@@ -506,7 +506,7 @@ static int _base_cost(skill_type sk)
     }
 }
 
-unsigned int skill_exp_needed(int lev)
+unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
     const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
                           1050, 1400, 1800, 2250, 2800,      // 6-10
@@ -516,13 +516,8 @@ unsigned int skill_exp_needed(int lev)
                           27000, 29750 };
     ASSERT(lev >= 0);
     ASSERT(lev <= 27);
-    return exp[lev];
-}
 
-unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
-{
-    return skill_exp_needed(lev) * species_apt_factor(sk, sp)
-           * _base_cost(sk) / 100;
+    return exp[lev] * species_apt_factor(sk, sp) * _base_cost(sk) / 100;
 }
 
 int species_apt(skill_type skill, species_type species)
