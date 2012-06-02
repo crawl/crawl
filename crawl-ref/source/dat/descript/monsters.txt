@@ -2759,6 +2759,15 @@ antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
+black sheep
+
+On the first glance, this sheep has merely a different pigmentation, but you
+are not so easily swayed by looks: with our luck, there's a sheep in a
+wolf's hide hiding inside, _then_ covered by another layer of sheep skin to
+deceive you better.
+
+Or maybe, it's just a sheep after all.
+%%%%
 Cigotuvi's Monster
 
 This terrifying creation looks to have been constructed from the body parts of
