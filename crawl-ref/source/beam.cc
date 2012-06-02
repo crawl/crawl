@@ -662,7 +662,7 @@ void bolt::initialise_fire()
                           "setting to LOS_RADIUS",
              name.c_str(), dbg_source_name.c_str(), item_name.c_str());
 #endif
-        range = LOS_RADIUS;
+        range = you.current_vision;
     }
 
     ASSERT(in_bounds(source));
@@ -2298,8 +2298,11 @@ static void _imb_explosion(actor *agent,
             if (dist > 1 && (*prior_path)[dist - 2] == center + coord_def(x, y))
                 continue;
             // Don't go far away from the caster (not enough momentum).
-            if (distance(origin, center + coord_def(2 * x, 2 * y)) > LOS_RADIUS_SQ)
+            if (distance(origin, center + coord_def(2 * x, 2 * y)) >
+                sqr(you.current_vision) + 1)
+            {
                 continue;
+            }
             if (x_chance_in_y(3, 4))
             {
                 if (first)

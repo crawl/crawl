@@ -553,7 +553,7 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), you.current_vision); ri; ++ri)
         if (you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
@@ -773,7 +773,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       targetter *hitfunc, desc_filter get_desc_func)
 {
     if (range < 1)
-        range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
+        range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
 
     direction_chooser_args args;
     args.restricts = restrict;
@@ -981,23 +981,20 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
-        if (maxrange < LOS_RADIUS)
-            maxrange++;
-
-        if (minrange < LOS_RADIUS)
-            minrange++;
+        maxrange++;
+        minrange++;
     }
 
     if (minrange == maxrange)
-        return minrange;
+        return std::min(minrange, (int)you.current_vision);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return std::min(maxrange, LOS_RADIUS);
+        return std::min(maxrange, (int)you.current_vision);
 
     // Round appropriately.
-    return std::min(LOS_RADIUS,
+    return std::min((int)you.current_vision,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
