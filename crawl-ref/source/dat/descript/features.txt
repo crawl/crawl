@@ -1,11 +1,11 @@
 %%%%
 A Zot trap
 
-This trap bears a powerful enchantment that causes a dangerous unpredictable
-mishap to happen to anyone unlucky to trigger it. It's often worse than mere
+This trap bears a powerful enchantment that inflicts dangerously unpredictable
+magical effects on those unlucky enough to trigger it. It's often worse than mere
 damage — you may find yourself thrown into the Abyss, contaminated with
-enormous amounts of wild magic, have mighty fiends summoned against you, and
-so on — it is something to avoid at all costs.
+enormous amounts of wild magic, have mighty fiends summoned against you, or
+the like — it is something to avoid at all costs.
 %%%%
 A basalt altar of Yredelemnul
 
@@ -684,7 +684,7 @@ remains forever damp.
 %%%%
 A wall of white crystal
 
-This is a lower grade crystal, it is hardly translucent at all, and crooked
+This is lower-grade crystal. It is hardly translucent at all, and its crooked
 faces make things worse. The opalescent gleam still looks pretty nice,
 though.
 %%%%
