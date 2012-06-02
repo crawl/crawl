@@ -1,4 +1,12 @@
 %%%%
+A Zot trap
+
+This trap bears a powerful enchantment that causes a dangerous unpredictable
+mishap to happen to anyone unlucky to trigger it. It's often worse than mere
+damage — you may find yourself thrown into the Abyss, contaminated with
+enormous amounts of wild magic, have mighty fiends summoned against you, and
+so on — it is something to avoid at all costs.
+%%%%
 A basalt altar of Yredelemnul
 
 An altar to Yredelemnul the Dark, worked from columnar basalt.
