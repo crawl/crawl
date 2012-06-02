@@ -7,7 +7,7 @@ sub articled($)
 {
     local $_ = $_[0];
     return $_ unless $art;
-    return $_ if /^[A-Z]/;
+    return $_ if /^[A-Z]/ && !/ trap$/;
     return "\u$_" if /^(?:the |an |a |some )/i;
     return "A $_" if /^one-/i;
     return /^[aeiou]/i ? "An $_" : "A $_";
