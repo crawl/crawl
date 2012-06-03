@@ -2769,6 +2769,16 @@ antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
+archer statue
+
+The likeness of a beatiful elven archer, sculpted in finest marble. It holds
+a bow aloft, and appears to be magically animated, letting it use the bow to
+riddle you with arrows.
+
+Being a statue, it doesn't appear to have a means of salvaging shot arrows
+or fletching new one, but you guess the statue's creators gave it enough of
+a supply to kill you before someone comes to replenish the quiver.
+%%%%
 black sheep
 
 On first glance, this sheep has merely a different pigmentation, but you
@@ -2777,6 +2787,13 @@ wolf's hide hiding inside, _then_ covered by another layer of sheep skin to
 better deceive you.
 
 Or, maybe, it's just a sheep after all.
+%%%%
+charred statue
+
+It looks like this statue has been imbued with fire magic, letting it use
+fire-based conjurations against you. Fortunately, it looks pretty ineptly
+made, and the charring marks show it has trouble controlling its magic as
+well.
 %%%%
 Cigotuvi's Monster
 
@@ -2805,6 +2822,11 @@ eyes.
 flesh golem
 
 An animated mound of misshapen flesh.
+%%%%
+frost-covered statue
+
+An ineptly made statue of a mage. Its magic keeps leaking, letting you know
+what kind of spells you can expect: something cold-based.
 %%%%
 glowing angel
 
@@ -2903,6 +2925,20 @@ young halfling
 This lad has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
 mommy tell you to not disrupt people from having a meal?
+%%%%
+warrior statue
+
+This statue depics a gruff warrior, wielding a mean two-handed weapon. Since
+it appears to be capable of moving its arms, keeping distance seems to be
+quite vital for keeping your vital organs undamaged.
+%%%%
+wizard statue
+
+In this land of magic, it'd be foolish to assume a statue of a wizard is
+always an inert piece of rock. This statue's hands and staff have very
+little dust compared to the base, suggesting it is capable of making magical
+gestures. So this trap was too obvious. Dealing with it might be not too
+obvious, though.
 %%%%
 zot statue
 
