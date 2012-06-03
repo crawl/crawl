@@ -479,6 +479,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NAME_THE);
     if (m->flags & MF_NAME_ZOMBIE)
         mb.set(MB_NAME_ZOMBIE);
+    if (m->flags & MF_NAME_SPECIES)
+        mb.set(MB_NO_NAME_TAG);
 
     if (milev <= MILEV_NAME)
     {
