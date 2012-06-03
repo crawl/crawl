@@ -269,17 +269,16 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_TRANSIT_PANDEMONIUM:
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
     case DNGN_ENTER_DWARVEN_HALL:
-    case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_VAULTS:
-    case DNGN_ENTER_CRYPT:
     case DNGN_ENTER_HALL_OF_BLADES:
     case DNGN_ENTER_TEMPLE:
     case DNGN_ENTER_ELVEN_HALLS:
-    case DNGN_ENTER_TOMB:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
 
+    case DNGN_ENTER_ORCISH_MINES:
+        return TILE_DNGN_ENTER_ORCISH_MINES;
+    case DNGN_ENTER_LAIR:
+        return TILE_DNGN_ENTER_LAIR;
     case DNGN_ENTER_SNAKE_PIT:
         return TILE_DNGN_ENTER_SNAKE_PIT;
     case DNGN_ENTER_SWAMP:
@@ -290,6 +289,12 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_SHOALS;
     case DNGN_ENTER_SLIME_PITS:
         return TILE_DNGN_ENTER_SLIME_PITS;
+    case DNGN_ENTER_VAULTS:
+        return TILE_DNGN_ENTER_VAULTS;
+    case DNGN_ENTER_CRYPT:
+        return TILE_DNGN_ENTER_CRYPT;
+    case DNGN_ENTER_TOMB:
+        return TILE_DNGN_ENTER_TOMB;
 
     case DNGN_ENTER_ZOT:
         if (you.opened_zot)
