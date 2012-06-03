@@ -400,10 +400,6 @@ A translucent unnaturally hard rock wall
 This wall is imbued with magic that not only makes it indestructible but also
 makes it translucent like glass.
 %%%%
-A trap
-
-It's a trap!
-%%%%
 A tree
 
 While the dungeon is filled with dim magic light, in most places it is not
