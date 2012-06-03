@@ -37,7 +37,7 @@ KFEAT:  O = enter_zot
 {{
   hook("post_place", function()
     dgn.place_maps { tag = "zot_entry_secondary", count = 2 }
-    if crawl.one_chance_in(6) then
+    if crawl.one_chance_in(100) then
       dgn.place_maps { tag = "zot_entry_secondary_mimic", count = 1 }
     end
   end)
