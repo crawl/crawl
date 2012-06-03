@@ -1,0 +1,1543 @@
+# aquarium.des
+#
+# by infiniplex
+#
+# These vaults have windows (glass walls) to inaccessible areas
+#  of deep water 1-3 squares across.
+#
+# Strictly speaking, these are not always aquariums.  They
+#  actually contain a variety of biomes depending on depth and
+#  branch.  The contents are as follows:
+#   -> D:1-3   grass, bushes, butterfly
+#   -> D:4-6   some shallow water, fungus, bat
+#   -> D:7-9   deep water, giant goldfish, big fish, jellyfish
+#   -> D:10-12 deep water, giant goldfish, big fish, jellyfish
+#   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
+#   -> D:16-18 ice, polar bear, yak, death yak, wolf
+#   -> D:19-21 ice, ice beast, ice bat, simulacrum, freezing clouds
+#   -> D:22-24 lava, fire vortex, lava fish, lava snake, salamander
+#   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
+#   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
+#
+# Yes, I "borrowed" the ice bat from the goddamned_bats minivault.
+#
+# Most of these vaults come in three sizes/shapes depending on
+#  which characters of w, D and E turn into water.
+#   1. A line of water one tile wide (w)
+#   2. A curved water area about two wide (wD)
+#   3. A box of water two or three wide (wDE)
+#
+# There are a number of subtypes and different number of each
+#  subtype are generated.
+#   -> bridges - a corridor with water on both sides
+#   -> windows - water on the side of a room or corridor
+#   -> views - water with multiple uncconected windows
+#   -> balconies - a room with water on 3 sides
+#   -> pools - water in the middle of a room
+#
+# Warning: I previously gave many of these vaults (the hallway
+#  ones) the transparent tag.  This made the level generator
+#  never choose this serial vault (even with PLACE) on early
+#  levels (I did not test deeper levels).  I believe this is
+#  because they were detected to have unreachable floor cells
+#  and thus failed an implicit accesibility validation of some
+#  sort.  Taking out transparent solved the problem.
+#
+
+
+# These vaults do not generate randomly.  They are too weird.
+default-depth:
+
+#
+# A general initalization function called for everything.  The
+#  size/shape and creature style cannot be set randomly here
+#  because this is run seperately for each subvault.
+#
+
+{{
+function init_aquarium(e)
+  local nothing_weight = 0;
+
+  e.tags('allow_dup')
+  e.tags('no_pool_fixup')
+  e.tags('no_monster_gen')
+  e.tags('no_item_gen')
+  e.tags('no_trap_gen')
+  if dgn.persist.aquarium_serial_pool_size == 0 then
+    e.subst('D : x')
+    e.subst('E : x')
+    nothing_weight = 100
+  elseif dgn.persist.aquarium_serial_pool_size == 1 then
+    e.subst('D : w')
+    e.subst('E : x')
+    nothing_weight = 150
+  else
+    e.subst('D : w')
+    e.subst('E : w')
+    nothing_weight = 200
+  end
+  e.kprop('w = no_tele_into')
+  e.kprop('w = no_jiyva')
+  e.kprop('_ = no_tele_into')
+  e.kprop('_ = no_jiyva')
+  e.kprop('W = no_tele_into')
+  e.kprop('W = no_jiyva')
+  e.kprop('l = no_tele_into')
+  e.kprop('l = no_jiyva')
+  e.kprop('! = no_tele_into')
+  e.kprop('! = no_jiyva')
+
+  if you.branch() == "Elf" then
+    -- if we get a diamond obelisk, the winds will kill
+    --  everything else except the air elementals
+    e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')
+    e.kfeat('w = w')
+    e.kmons('w = w:' .. nothing_weight .. [[ nothing /
+                 w:50 generate_awake insubstantial wisp /
+                 w:5  generate_awake water elemental /
+                 w:4  generate_awake air elemental]] )
+    -- I tried ussing [[ ]] here, but Crawl could not find the
+    --  mons_diamond_obelisk tile then.  The problem went away
+    --  when I put it back to single quotes
+    e.kmons('_ = generate_awake statue n_rpl n_des ' ..
+                'name:diamond_obelisk hp:10000 ' ..
+                'col:white tile:mons_diamond_obelisk ' ..
+                'perm_ench:tornado')
+  elseif you.absdepth() <= 3 then
+    e.subst('w = _')
+    e.ftile('_ = floor_grass')
+    e.colour('_ = green')
+    e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
+                 w:50 bush /
+                 w:8  generate_awake butterfly]] )
+  elseif you.absdepth() <= 6 then
+    e.subst('w = W_')
+    e.kfeat('W = W')
+    e.kmons('W = w:' .. nothing_weight .. [[ nothing /
+                 w:10 generate_awake bat /
+                 w:5  generate_awake giant newt]] )
+    e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
+                 w:50 fungus /
+                 w:10 generate_awake bat /
+                 w:5  generate_awake giant newt]] )
+  elseif you.absdepth() <= 9 then
+    e.kfeat('w = w')
+    e.kmons('w = w:' .. nothing_weight .. [[ nothing /
+                 w:6  generate_awake giant goldfish /
+                 w:6  generate_awake jellyfish /
+                 w:3  generate_awake electric eel]] )
+  elseif you.absdepth() <= 12 then
+    e.kfeat('w = w')
+    e.kmons('w = w:' .. nothing_weight .. [[ nothing /
+                 w:6  generate_awake big fish /
+                 w:4  generate_awake shark /
+                 w:1  generate_awake sea snake /
+                 w:4  generate_awake snapping turtle]] )
+  elseif you.absdepth() <= 15 then
+    e.kfeat('w = w')
+    e.kmons('w = w:' .. nothing_weight .. [[ nothing /
+                 w:11 generate_awake slime creature /
+                 w:3  generate_awake large slime creature /
+                 w:1  generate_awake very large slime creature]] )
+  elseif you.absdepth() <= 18 then
+    e.subst('w = _')
+    e.ftile('_ = floor_ice')
+    e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
+                 w:3  generate_awake polar bear /
+                 w:8  generate_awake yak /
+                 w:4  generate_awake wolf]] )
+  elseif you.absdepth() <= 21 then
+    -- to show off ontoclasm's new (May 2012) simulacrum tiles
+    e.subst('w = _:20 !:1')
+    e.ftile('_ = floor_frozen')
+    e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
+                 w:4  generate_awake ice beast /
+                 w:1  generate_awake bat simulacrum
+                      name:ice_bat n_rpl n_des n_spe n_zom /
+                 w:1  generate_awake red wasp simulacrum /
+                 w:1  generate_awake orc simulacrum /
+                 w:1  generate_awake yaktaur simulacrum /
+                 w:1  generate_awake rock troll simulacrum /
+                 w:1  generate_awake wolf spider simulacrum /
+                 w:1  generate_awake wolf simulacrum /
+                 w:1  generate_awake polar bear simulacrum /
+                 w:1  generate_awake boulder beetle simulacrum /
+                 w:1  generate_awake dragon simulacrum /
+                 w:1  generate_awake hydra simulacrum]] )
+    e.ftile('! = floor_frozen')
+    e.lua_marker("!", fog_machine { walk_dist = 8,
+                                    pow_min = 5, pow_max = 20,
+                                    cloud_type = "freezing vapour",
+                                    delay_min = 10, delay_max = 30,
+                                    size = 1,
+                                    start_clouds = 1,
+                                    excl_rad = -1 } )
+  elseif you.absdepth() <= 24 then
+    e.subst('w = l')
+    e.kfeat('l = l')
+    e.kprop('l = no_cloud_gen')
+    e.kmons('l = w:' .. nothing_weight .. [[ nothing /
+                 w:20 generate_awake fire vortex /
+                 w:8  generate_awake fire bat /
+                 w:5  generate_awake lava fish /
+                 w:3  generate_awake lava snake]] )
+  else
+    e.subst('w = l:25 !:1')
+    e.kfeat('l = l')
+    e.kprop('l = no_cloud_gen')
+    e.kmons('l = w:' .. nothing_weight .. [[ nothing /
+                 w:30 generate_awake fire vortex /
+                 w:8  generate_awake lava worm /
+                 w:2  generate_awake salamander /
+                 w:5  generate_awake fire elemental]] )
+    e.kfeat('! = l')
+    e.kprop('! = no_cloud_gen')
+    e.lua_marker("!", fog_machine { walk_dist = 8,
+                                    pow_min = 1, pow_max = 20,
+                                    cloud_type = "flame",
+                                    delay_min = 5, delay_max = 25,
+                                    size = 1,
+                                    start_clouds = 2,
+                                    excl_rad = -1 } )
+  end
+end
+}}
+
+#
+# This function replaces the specified glyphs with a random
+#  non-bridge subvault.  Using this functions guarentees that
+#  the weights remain consistant.
+#
+
+{{
+function aquarium_random_non_bridge_subvault(e, glyph_to_replace)
+  e.subvault(glyph_to_replace .. [[: aquarium_subvault_wall:3 /
+                                     aquarium_subvault_window:2 /
+                                     aquarium_subvault_balcony:1]] )
+end
+}}
+
+#
+# This function is used to initialize the bridges in the
+#  aquarium_bridge_island_??? vaults.  There is a longer
+#  explanation under "bridges" below".
+#
+{{
+function aquarium_setup_subvaults_island(e)
+  local forced_bridge = math.floor(crawl.random2(4))
+
+  if forced_bridge == 0 or crawl.random2(8) < 2 then
+    e.subvault('p : aquarium_subvault_bridge')
+    e.subst('J = c')
+  else
+    aquarium_random_non_bridge_subvault(e, 'p')
+    e.subst('J = m')
+  end
+
+  if forced_bridge == 1 or crawl.random2(8) < 2 then
+    e.subvault('q : aquarium_subvault_bridge')
+    e.subst('K = c')
+  else
+    aquarium_random_non_bridge_subvault(e, 'q')
+    e.subst('K = m')
+  end
+
+  if forced_bridge == 2 or crawl.random2(8) < 2 then
+    e.subvault('r : aquarium_subvault_bridge')
+    e.subst('L = c')
+  else
+    aquarium_random_non_bridge_subvault(e, 'r')
+    e.subst('L = m')
+  end
+
+  if forced_bridge == 3 or crawl.random2(8) < 2 then
+    e.subvault('s : aquarium_subvault_bridge')
+    e.subst('M = c')
+  else
+    aquarium_random_non_bridge_subvault(e, 's')
+    e.subst('M = m')
+  end
+end
+}}
+
+#
+# The actual serial vault function.
+#
+# I left the chance low because, despite being on only a few
+#  layouts, these vaults are kind of weird.
+#
+
+NAME:    serial_aquarium
+TAGS:    allow_dup extra luniq_serial
+TAGS:    layout_rooms layout_misc
+DEPTH:   D, Elf
+CHANCE:  1%
+{{
+  if crawl.random2(6) < 2 then
+    dgn.persist.aquarium_serial_pool_size = 0
+  elseif crawl.random2(4) < 3 then
+    dgn.persist.aquarium_serial_pool_size = 1
+  else
+    dgn.persist.aquarium_serial_pool_size = 2
+  end
+
+  local bridges   = 1 + crawl.random2(2)
+  local windows   = 2 + crawl.random2(3)
+  local views     = 1 + crawl.random2(2)
+  local balconies =     crawl.random2(2)
+  local pools     =     crawl.random2(2)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_aquarium_bridge",  count=bridges}
+    dgn.place_maps{tag="serial_aquarium_window",  count=windows}
+    dgn.place_maps{tag="serial_aquarium_view",    count=views}
+    dgn.place_maps{tag="serial_aquarium_balcony", count=balconies}
+    dgn.place_maps{tag="serial_aquarium_pool",    count=pools}
+  end)
+}}
+
+#
+# bridges (6 vaults using 11 subvaults, total weight 100)
+#
+# These have water on both sides of a passage with glass walls.
+#  Subvaults are used to allow there to always be at least one
+#  path to the middle spot(s), with the rest of the paths chosen
+#  randomly one of the following:
+#  -> a solid wall
+#  -> a window
+#  -> a balcony
+#  -> a bridge to the center
+#
+#  Afterwards, fixups are performed at the corners so that the
+#  glass walls have 'c' characters as corners.  In contrast, the
+#  glass wall should be unbroken 'm' characters in places where
+#  wall is straight.  The possible corner cells are marked with
+#  'J' to 'P' in the maps.  The test used is that the 'c' glyph
+#  should be used if both sides have a bridge or if neither
+#  does.  Otherwise, when there is exactly one bridge, the 'm'
+#  glyph is used.  A position that depends only on one bridge is
+#  set with that bridge.  The tests required for this are just
+#  differant enough to make collecting them into a function
+#  impractical.  The aquarium_bridge_island_??? vaults are
+#  similar enough and simple enough that they were collected
+#  into a function (above).
+#
+
+# subvaults for possible bridge side pieces
+
+NAME:    aquarium_subvault_wall
+TAGS:    aquarium_subvault_wall
+KPROP:   . = no_rtele_into
+: init_aquarium(_G)
+MAP
+ xDD
+ xDDw
+.xDDwm
+ xDDw
+ xDD
+ENDMAP
+
+NAME:    aquarium_subvault_window
+TAGS:    aquarium_subvault_window
+: init_aquarium(_G)
+MAP
+ xDD
+ cwDw
+@mwDwm
+ cwDw
+ xDD
+ENDMAP
+
+NAME:    aquarium_subvault_balcony
+TAGS:    aquarium_subvault_balcony
+: init_aquarium(_G)
+MAP
+ xww
+ cmcw
+@..mwm
+ cmcw
+ xww
+ENDMAP
+
+NAME:    aquarium_subvault_bridge
+TAGS:    aquarium_subvault_bridge
+: init_aquarium(_G)
+MAP
+ xww
+ cmmm
+@.....
+ cmmm
+ xww
+ENDMAP
+
+# subvaults for small islands
+
+NAME:    aquarium_subvault_small_water
+TAGS:    aquarium_subvault_small_water
+: init_aquarium(_G)
+MAP
+cmc
+mwm
+cmc
+ENDMAP
+
+NAME:    aquarium_subvault_small_open
+TAGS:    aquarium_subvault_small_open
+SUBST:   Z : .:35 0:10 9:1 $:3 %:1
+: init_aquarium(_G)
+MAP
+...
+.Z.
+...
+ENDMAP
+
+# subvaults for large islands
+
+NAME:    aquarium_subvault_large_water
+TAGS:    aquarium_subvault_large_water
+: init_aquarium(_G)
+MAP
+cmmmmmc
+mwwwwwm
+mwDDDwm
+mwDDDwm
+mwDDDwm
+mwwwwwm
+cmmmmmc
+ENDMAP
+
+NAME:    aquarium_subvault_large_open
+TAGS:    aquarium_subvault_large_open
+SUBST:   S : .:89 0:10 9:1
+SUBST:   Z : .:35 0:10 9:1 $:3 %:1
+: init_aquarium(_G)
+MAP
+.......
+.Z...Z.
+.......
+...S...
+.......
+.Z...Z.
+.......
+ENDMAP
+
+NAME:    aquarium_subvault_large_1_pool
+TAGS:    aquarium_subvault_large_1_pool
+SUBST:   S : .:89 0:10 9:1
+: init_aquarium(_G)
+MAP
+.......
+.S...S.
+..cmc..
+..mwm..
+..cmc..
+.S...S.
+.......
+ENDMAP
+
+NAME:    aquarium_subvault_large_4_pools
+TAGS:    aquarium_subvault_large_4_pools
+SUBST:   Z : .:35 0:10 9:1 $:3 %:1
+: init_aquarium(_G)
+MAP
+cmc.cmc
+mwm.mwm
+cmc.cmc
+...Z...
+cmc.cmc
+mwm.mwm
+cmc.cmc
+ENDMAP
+
+NAME:    aquarium_bridge_square
+WEIGHT:  40
+TAGS:    serial_aquarium_bridge
+# One of 4 paths is guarenteed to be a bridge.
+: local forced_bridge = math.floor(crawl.random2(4))
+: local bridge_p = false
+: local bridge_q = false
+: local bridge_r = false
+: local bridge_s = false
+:
+: if forced_bridge == 0 or crawl.random2(8) < 2 then
+:   subvault('p : aquarium_subvault_bridge')
+:   bridge_p = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'p')
+: end
+:
+: if forced_bridge == 1 or crawl.random2(8) < 2 then
+:   subvault('q : aquarium_subvault_bridge')
+:   bridge_q = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'q')
+: end
+:
+: if forced_bridge == 2 or crawl.random2(8) < 2 then
+:   subvault('r : aquarium_subvault_bridge')
+:   bridge_r = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'r')
+: end
+:
+: if forced_bridge == 3 or crawl.random2(8) < 2 then
+:   subvault('s : aquarium_subvault_bridge')
+:   bridge_s = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 's')
+: end
+:
+# Assign the appropriate glyphs at the corner cells.
+: -- top left (J)
+: if bridge_p == bridge_q then
+:   subst('J = c')
+: else
+:   subst('J = m')
+: end
+:
+: -- bottom left (K)
+: if bridge_q == bridge_r then
+:   subst('K = c')
+: else
+:   subst('K = m')
+: end
+:
+: -- bottom right (L)
+: if bridge_r == bridge_s then
+:   subst('L = c')
+: else
+:   subst('L = m')
+: end
+:
+: -- top right (M)
+: if bridge_s == bridge_p then
+:   subst('M = c')
+: else
+:   subst('M = m')
+: end
+:
+# basic setup
+: init_aquarium(_G)
+MAP
+      p
+ xxxpppppxxx
+ xEEpppppEEx
+ xEDpppppDEx
+ qqqwpppwsss
+ qqqqJpMssss
+qqqqqq.ssssss
+ qqqqKrLssss
+ qqqwrrrwsss
+ xEDrrrrrDEx
+ xEErrrrrEEx
+ xxxrrrrrxxx
+      r
+ENDMAP
+
+# This one is like the above vault, but it always makes a
+#  straight hallway.  This means it needs no fancy calculations
+#  for the glass because the tricky spots are always 'm's.
+NAME:    aquarium_bridge_straight
+WEIGHT:  20
+TAGS:    serial_aquarium_bridge
+SUBVAULT: p : aquarium_subvault_bridge
+: aquarium_random_non_bridge_subvault(_G, 'q')
+SUBVAULT: r : aquarium_subvault_bridge
+: aquarium_random_non_bridge_subvault(_G, 's')
+: init_aquarium(_G)
+MAP
+      p
+ xxxpppppxxx
+ xEEpppppEEx
+ xEDpppppDEx
+ qqqwpppwsss
+ qqqqmpmssss
+qqqqqq.ssssss
+ qqqqmrmssss
+ qqqwrrrwsss
+ xEDrrrrrDEx
+ xEErrrrrEEx
+ xxxrrrrrxxx
+      r
+ENDMAP
+
+NAME:    aquarium_bridge_long_joined
+WEIGHT:  10
+TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_long
+# One of 6 paths is guarenteed to be a bridge.
+: local forced_bridge = math.floor(crawl.random2(6))
+: local bridge_p = false
+: local bridge_q = false
+: local bridge_r = false
+: local bridge_s = false
+: local bridge_y = false
+: local bridge_z = false
+:
+: if forced_bridge == 0 or crawl.random2(8) < 2 then
+:   subvault('p : aquarium_subvault_bridge')
+:   subst('N = c')
+:   bridge_p = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'p')
+:   subst('N = m')
+: end
+:
+: if forced_bridge == 1 or crawl.random2(8) < 2 then
+:   subvault('q : aquarium_subvault_bridge')
+:   bridge_q = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'q')
+: end
+:
+: if forced_bridge == 2 or crawl.random2(8) < 2 then
+:   subvault('r : aquarium_subvault_bridge')
+:   subst('O = c')
+:   bridge_r = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'r')
+:   subst('O = m')
+: end
+:
+: if forced_bridge == 3 or crawl.random2(8) < 2 then
+:   subvault('s : aquarium_subvault_bridge')
+:   subst('P = c')
+:   bridge_s = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 's')
+:   subst('P = m')
+: end
+:
+: if forced_bridge == 4 or crawl.random2(8) < 2 then
+:   subvault('y : aquarium_subvault_bridge')
+:   bridge_y = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'y')
+: end
+:
+: if forced_bridge == 5 or crawl.random2(8) < 2 then
+:   subvault('z : aquarium_subvault_bridge')
+:   subst('Q = c')
+:   bridge_z = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'z')
+:   subst('Q = m')
+: end
+:
+# Assign the appropriate glyphs at the corner cells.
+: -- top left (J)
+: if bridge_p == bridge_q then
+:   subst('J = c')
+: else
+:   subst('J = m')
+: end
+:
+: -- bottom left (K)
+: if bridge_q == bridge_r then
+:   subst('K = c')
+: else
+:   subst('K = m')
+: end
+:
+: -- bottom right (L)
+: if bridge_s == bridge_y then
+:   subst('L = c')
+: else
+:   subst('L = m')
+: end
+:
+: -- top right (M)
+: if bridge_y == bridge_z then
+:   subst('M = c')
+: else
+:   subst('M = m')
+: end
+:
+# basic setup
+: init_aquarium(_G)
+MAP
+      p     s
+ xxxpppppxsssssxxx
+ xEEpppppEsssssEEx
+ xEDpppppDsssssDEx
+ qqqwpppwwwssswyyy
+ qqqqJpNmmmPsLyyyy
+qqqqqq.....u.yyyyyy
+ qqqqKrOmmmQzMyyyy
+ qqqwrrrwwwzzzwyyy
+ xEDrrrrrDzzzzzDEx
+ xEErrrrrEzzzzzEEx
+ xxxrrrrrxzzzzzxxx
+      r     z
+ENDMAP
+
+
+NAME:    aquarium_bridge_long_seperate
+WEIGHT:  10
+TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_long
+# One of path on each side is guarenteed to be a bridge.
+: local forced_bridge_1 = math.floor(crawl.random2(3))
+: local forced_bridge_2 = math.floor(crawl.random2(3))
+: local bridge_p = false
+: local bridge_q = false
+: local bridge_r = false
+: local bridge_s = false
+: local bridge_y = false
+: local bridge_z = false
+:
+# Note: the subst() calls in the first set of ifs are reversed
+#  compared to the vault above
+: if forced_bridge_1 == 0 or crawl.random2(8) < 2 then
+:   subvault('p : aquarium_subvault_bridge')
+:   subst('N = m')
+:   bridge_p = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'p')
+:   subst('N = c')
+: end
+:
+: if forced_bridge_1 == 1 or crawl.random2(8) < 2 then
+:   subvault('q : aquarium_subvault_bridge')
+:   bridge_q = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'q')
+: end
+:
+: if forced_bridge_1 == 2 or crawl.random2(8) < 2 then
+:   subvault('r : aquarium_subvault_bridge')
+:   subst('O = m')
+:   bridge_r = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'r')
+:   subst('O = c')
+: end
+:
+: if forced_bridge_2 == 0 or crawl.random2(8) < 2 then
+:   subvault('s : aquarium_subvault_bridge')
+:   subst('P = m')
+:   bridge_s = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 's')
+:   subst('P = c')
+: end
+:
+: if forced_bridge_2 == 1 or crawl.random2(8) < 2 then
+:   subvault('y : aquarium_subvault_bridge')
+:   bridge_y = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'y')
+: end
+:
+: if forced_bridge_2 == 2 or crawl.random2(8) < 2 then
+:   subvault('z : aquarium_subvault_bridge')
+:   subst('Q = m')
+:   bridge_z = true
+: else
+:   aquarium_random_non_bridge_subvault(_G, 'z')
+:   subst('Q = c')
+: end
+:
+# Assign the appropriate glyphs at the corner cells.
+: -- top left (J)
+: if bridge_p == bridge_q then
+:   subst('J = c')
+: else
+:   subst('J = m')
+: end
+:
+: -- bottom left (K)
+: if bridge_q == bridge_r then
+:   subst('K = c')
+: else
+:   subst('K = m')
+: end
+:
+: -- bottom right (L)
+: if bridge_s == bridge_y then
+:   subst('L = c')
+: else
+:   subst('L = m')
+: end
+:
+: -- top right (M)
+: if bridge_y == bridge_z then
+:   subst('M = c')
+: else
+:   subst('M = m')
+: end
+:
+# basic setup
+: init_aquarium(_G)
+MAP
+      p     s
+ xxxpppppxsssssxxx
+ xEEpppppEsssssEEx
+ xEDpppppDsssssDEx
+ qqqwpppwDwssswyyy
+ qqqqJpNwDwPsLyyyy
+qqqqqq.mwDwm.yyyyyy
+ qqqqKrOwDwQzMyyyy
+ qqqwrrrwDwzzzwyyy
+ xEDrrrrrDzzzzzDEx
+ xEErrrrrEzzzzzEEx
+ xxxrrrrrxzzzzzxxx
+      r     z
+ENDMAP
+
+NAME:    aquarium_bridge_island_small
+WEIGHT:  10
+TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_island
+SUBVAULT: u : aquarium_subvault_small_open:5 / aquarium_subvault_small_water:3
+: aquarium_setup_subvaults_island(_G)
+: init_aquarium(_G)
+MAP
+        p
+ xxxxxpppppxxxxx
+ xEEEEpppppEEEEx
+ xEEDDpppppDDEEx
+ xEDwwwpppwwwDEx
+ xEDwcmJpJmcwDEx
+ qqqwm.....mwsss
+ qqqqK.uuu.Mssss
+qqqqqq.uuu.ssssss
+ qqqqK.uuu.Mssss
+ qqqwm.....mwsss
+ xEDwcmLrLmcwDEx
+ xEDwwwrrrwwwDEx
+ xEEDDrrrrrDDEEx
+ xEEEErrrrrEEEEx
+ xxxxxrrrrrxxxxx
+        r
+ENDMAP
+
+NAME:    aquarium_bridge_island_large
+WEIGHT:  2
+TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_island
+SUBVAULT: u : aquarium_subvault_large_water:4   /\
+              aquarium_subvault_large_open:3    /\
+              aquarium_subvault_large_1_pool:1  /\
+              aquarium_subvault_large_4_pools:2
+: aquarium_setup_subvaults_island(_G)
+: init_aquarium(_G)
+MAP
+          p
+ xxxxxxxpppppxxxxxxx
+ xEEEEEEpppppEEEEEEx
+ xEEEEDDpppppDDEEEEx
+ xEEwwwwwpppwwwwwEEx
+ xEEwcmmmJpJmmmcwEEx
+ xEDwm.........mwDEx
+ xEDwm.uuuuuuu.mwDEx
+ qqqwm.uuuuuuu.mwsss
+ qqqqK.uuuuuuu.Mssss
+qqqqqq.uuuuuuu.ssssss
+ qqqqK.uuuuuuu.Mssss
+ qqqwm.uuuuuuu.mwsss
+ xEDwm.uuuuuuu.mwDEx
+ xEDwm.........mwDEx
+ xEEwcmmmLrLmmmcwEEx
+ xEEwwwwwrrrwwwwwEEx
+ xEEEEDDrrrrrDDEEEEx
+ xEEEEEErrrrrEEEEEEx
+ xxxxxxxrrrrrxxxxxxx
+          r
+ENDMAP
+
+
+#
+# windows (9 vaults, total weight 100)
+#
+# These have water on one side of a passage.
+#
+
+# This looks exactly like a "closed" window to a bridge vault
+NAME:    aquarium_window_fake
+WEIGHT:  30
+TAGS:    serial_aquarium_window
+: init_aquarium(_G)
+MAP
+ xxxxxx
+ xxxxxx
+ cwxxxx
+@mwxxxx
+ cwxxxx
+ xxxxxx
+ xxxxxx
+ENDMAP
+
+NAME:    aquarium_window_1
+WEIGHT:  25
+TAGS:    serial_aquarium_window
+: init_aquarium(_G)
+MAP
+@xxxx
+.xEEx
+.xDEx
+.cwDx
+.mwDx
+.cwDx
+.xDEx
+.xEEx
+@xxxx
+ENDMAP
+
+NAME:    aquarium_window_2
+WEIGHT:  15
+TAGS:    serial_aquarium_window
+SHUFFLE: pq/yz
+SUBST:   p = c
+SUBST:   q = x
+SUBST:   y = m
+SUBST:   z = m
+: init_aquarium(_G)
+MAP
+@xxxx
+.xEEx
+.cDEx
+.mwDx
+.pwDx
+.qwDx
+.pwDx
+.mwDx
+.cDEx
+.xEEx
+@xxxx
+ENDMAP
+
+NAME:    aquarium_window_3
+WEIGHT:  5
+TAGS:    serial_aquarium_window luniq_aquarium_window_big
+# Window
+SHUFFLE: pqrs / uyuz / HHHH / JJKL
+# Case 1 - 2 windows of 1
+SUBST:   p = c
+SUBST:   q = x
+SUBST:   r = x
+SUBST:   s = x
+# Case 2 - 3 windows of 1
+SUBST:   u = c
+SUBST:   y = x
+SUBST:   z = m
+# Case 3 - long window
+SUBST:   H = m
+# Case 4 - 2 windows of 3
+SUBST:   J = m
+SUBST:   K = c
+SUBST:   L = x
+: init_aquarium(_G)
+MAP
+@...............@
+xxxcmpqrsrqpmcxxx
+xEDwwwwwwwwwwwDEx
+xEEDDDDDDDDDDDEEx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_window_corner
+WEIGHT:  10
+TAGS:    serial_aquarium_window
+SHUFFLE: pqr/yzu
+SUBST:   p = c
+SUBST:   q = x
+SUBST:   r = x
+SUBST:   y = m
+SUBST:   z = m
+SUBST:   u = c
+: init_aquarium(_G)
+MAP
+@xxxxxxx
+.cwDEEx
+.mwDDEx
+.pwDDDx
+.qwwwwx
+.rqpmcx
+.......@
+ENDMAP
+
+NAME:    aquarium_window_double
+WEIGHT:  2
+TAGS:    serial_aquarium_window
+# Room entries
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+# Window 1: pqr
+SHUFFLE: pqr/&"'
+SUBST:   & = c
+SUBST:   " = x
+SUBST:   ' = x
+SUBST:   p = m
+SUBST:   q = m
+SUBST:   r = c
+# Window 2: uyz
+SHUFFLE: uyz/&"'
+SUBST:   & = c
+SUBST:   " = x
+SUBST:   ' = x
+SUBST:   u = m
+SUBST:   y = m
+SUBST:   z = c
+# Window 3: JKL
+SHUFFLE: JKL/&"'
+SUBST:   & = c
+SUBST:   " = x
+SUBST:   ' = x
+SUBST:   J = m
+SUBST:   K = m
+SUBST:   L = c
+# Window 4: QSZ
+SHUFFLE: QSZ/&"'
+SUBST:   & = c
+SUBST:   " = x
+SUBST:   ' = x
+SUBST:   Q = m
+SUBST:   S = m
+SUBST:   Z = c
+: init_aquarium(_G)
+MAP
+@.......@
+xzyumpqrx
+xDwwwwwDx
+xEDDDDDEx
+xDwwwwwDx
+xZSQmJKLx
+@.......@
+ENDMAP
+
+NAME:    aquarium_window_corridor_1
+WEIGHT:  5
+TAGS:    serial_aquarium_window luniq_aquarium_window_big
+: init_aquarium(_G)
+MAP
+xxxxxxxxxxxxxxx
+xxxEEDDDEDDDEEx
+xxxEDwwwDwwwDEx
+xxxxxcmcxcmcxxx
+@.............@
+xxxcmcxcmcxxxxx
+xEDwwwDwwwDExxx
+xEEDDDEDDDEExxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_window_corridor_2
+WEIGHT:  3
+TAGS:    serial_aquarium_window luniq_aquarium_window_big
+: init_aquarium(_G)
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxEEDDDEDDDEDDDEEx
+xxxEDwwwDwwwDwwwDEx
+xxxxxcmcxcmcxcmcxxx
+@.................@
+xxxcmcxcmcxcmcxxxxx
+xEDwwwDwwwDwwwDExxx
+xEEDDDEDDDEDDDEExxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_window_corridor_3
+WEIGHT:  5
+TAGS:    serial_aquarium_window luniq_aquarium_window_big
+# Window
+SHUFFLE: pqrs / uyuz / HHHH / JJKL
+# Case 1 - 2 windows of 1
+SUBST:   p = c
+SUBST:   q = x
+SUBST:   r = x
+SUBST:   s = x
+# Case 2 - 3 windows of 1
+SUBST:   u = c
+SUBST:   y = x
+SUBST:   z = m
+# Case 3 - long window
+SUBST:   H = m
+# Case 4 - 2 windows of 3
+SUBST:   J = m
+SUBST:   K = c
+SUBST:   L = x
+: init_aquarium(_G)
+MAP
+xxxxxxxxxxxxxxxxx
+xEEDDDDDDDDDDDEEx
+xEDwwwwwwwwwwwDEx
+xxxcmpqrsrqpmcxxx
+@...............@
+xxxcmpqrsrqpmcxxx
+xEDwwwwwwwwwwwDEx
+xEEDDDDDDDDDDDEEx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#
+# views (8 vaults, total weight 100)
+#
+# These have water with 2 or more windows to (theoretically)
+#  seperate rooms.  Crawl likes making passages around the edge
+#  of vaults, so they be directly connected in practice.
+#
+
+NAME:    aquarium_view_2a
+WEIGHT:  10
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2b
+WEIGHT:  15
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2c
+WEIGHT:  20
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xDwDx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2d
+WEIGHT:  20
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xDwDx
+xDwDx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2e
+WEIGHT:  15
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xDwDx
+xDwDx
+xDwDx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2f
+WEIGHT:  10
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xDwDx
+xDwDx
+xDwDx
+xDwDx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_2g
+WEIGHT:  5
+TAGS:    serial_aquarium_view
+: init_aquarium(_G)
+MAP
+@...@
+xcmcx
+xEwEx
+xDwDx
+xDwDx
+xDwDx
+xDwDx
+xDwDx
+xEwEx
+xcmcx
+@...@
+ENDMAP
+
+NAME:    aquarium_view_4
+WEIGHT:  5
+TAGS:    serial_aquarium_view luniq
+: init_aquarium(_G)
+MAP
+    @
+ xxcmcxx
+ xEDwDEx
+ cDDwDDc
+@mwwwwwm@
+ cDDwDDc
+ xEDwDEx
+ xxcmcxx
+    @
+ENDMAP
+
+
+#
+# balconies (10 vaults. total weight 75)
+#
+# These are basically rooms with water on 3 sides.
+#
+
+NAME:    aquarium_balcony_1a
+WEIGHT:  5
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@cxxx
+xDwm.mwDx
+xDwcmcwDx
+xEwwwwwEx
+xEEDDDEEx
+xxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_1b
+WEIGHT:  10
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@cxxx
+xEwm.mwEx
+xDwm.mwDx
+xDwm.mwDx
+xDwcmcwDx
+xEwwwwwEx
+xEEDDDEEx
+xxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_3a
+WEIGHT:  15
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@@@cxxx
+xDwm...mwDx
+xDwcmmmcwDx
+xDwwwwwwwDx
+xEDDDDDDDEx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_3b
+WEIGHT:  15
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@@@cxxx
+xEwm...mwEx
+xDwm...mwDx
+xDwm...mwDx
+xDwcmmmcwDx
+xEwwwwwwwEx
+xEEDDDDDEEx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_5a
+WEIGHT:  5
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@@@@@cxxx
+xDwm.....mwDx
+xDwcmmmmmcwDx
+xEwwwwwwwwwEx
+xEEDDDDDDDEEx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_5b
+WEIGHT:  10
+TAGS:    serial_aquarium_balcony
+: init_aquarium(_G)
+MAP
+xxxc@@@@@cxxx
+xEwm.....mwEx
+xDwm.....mwDx
+xDwm.....mwDx
+xDwcmmmmmcwDx
+xEwwwwwwwwwEx
+xEEDDDDDDDEEx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_double_1
+WEIGHT:  5
+TAGS:    serial_aquarium_balcony luniq_aquarium_balcony_double
+: init_aquarium(_G)
+MAP
+xxxc@cxxxc@cxxx
+xDwm.mwDwm.mwDx
+xDwcmcwDwcmcwDx
+xEwwwwwEwwwwwEx
+xEEDDDEEEDDDEEx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_double_2
+WEIGHT:  2
+TAGS:    serial_aquarium_balcony luniq_aquarium_balcony_double
+: init_aquarium(_G)
+MAP
+xxxc@cxxxc@cxxx
+xEwm.mwEwm.mwEx
+xDwm.mwDwm.mwDx
+xDwm.mwDwm.mwDx
+xDwcmcwDwcmcwDx
+xEwwwwwEwwwwwEx
+xEEDDDEEEDDDEEx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    aquarium_balcony_double_3
+WEIGHT:  3
+TAGS:    serial_aquarium_balcony luniq_aquarium_balcony_double
+: init_aquarium(_G)
+MAP
+xxxc@cxxxxxxxxx
+xEwm.mwEEDDDEEx
+xDwm.mwDwwwwwEx
+xDwm.mwDwcmcwDx
+xDwcmcwDwm.mwDx
+xEwwwwwDwm.mwDx
+xEEDDDEEwm.mwEx
+xxxxxxxxxc@cxxx
+ENDMAP
+
+NAME:    aquarium_balcony_double_4
+WEIGHT:  5
+TAGS:    serial_aquarium_balcony luniq_aquarium_balcony_double
+: init_aquarium(_G)
+MAP
+xxxc@@@cxxxxxxxxxxx
+xEwm...mwEEDDDDDEEx
+xDwm...mwDwwwwwwwEx
+xDwm...mwDwcmmmcwDx
+xDwcmmmcwDwm...mwDx
+xEwwwwwwwDwm...mwDx
+xEEDDDDDEEwm...mwEx
+xxxxxxxxxxxc@@@cxxx
+ENDMAP
+
+
+#
+# pools (9 vaults, total weight 75)
+#
+# These are rooms with a pool of deep water in the middle of the
+#  room surrounded by glass walls.
+#
+
+NAME:    aquarium_pool_1
+WEIGHT:  10
+TAGS:    serial_aquarium_pool minifloat
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @....
+: init_aquarium(_G)
+MAP
+.......
+.cmmmc.
+.mwwwm.
+.mwwwm.
+.mwwwm.
+.cmmmc.
+.......
+ENDMAP
+
+NAME:    aquarium_pool_2
+WEIGHT:  20
+TAGS:    serial_aquarium_pool minifloat
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @....
+: init_aquarium(_G)
+MAP
+.........
+.........
+..cmmmc..
+..mwwwm..
+..mwwwm..
+..mwwwm..
+..cmmmc..
+.........
+.........
+ENDMAP
+
+NAME:    aquarium_pool_side
+WEIGHT:  10
+TAGS:    serial_aquarium_pool
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +xxxx
+: init_aquarium(_G)
+MAP
+xx!xx!xxx
+xx......x
+xx......x
+xx......!
+xcmmc...x
+xxwwm...x
+xxwwm...!
+xxwwm...x
+xcmmc...x
+xx......!
+xx......x
+xx......x
+xx!xx!xxx
+ENDMAP
+
+NAME:    aquarium_pool_corner
+WEIGHT:  10
+TAGS:    serial_aquarium_pool
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +xxxx
+: init_aquarium(_G)
+MAP
+xxxxxxxx
+xxxxcxxx
+xxwwm..!
+xxwwm..x
+xcmmc..x
+xx.....!
+xx.....x
+xx!Xx!xx
+ENDMAP
+
+NAME:    aquarium_pool_double
+WEIGHT:  5
+TAGS:    serial_aquarium_pool
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +xxxx
+: init_aquarium(_G)
+MAP
+xx!xx!!!xx!xx
+xx.........xx
+xcmmc...cmmcx
+xxwwm...mwwxx
+xxwwm...mwwxx
+xxwwm...mwwxx
+xcmmc...cmmcx
+xx.........xx
+xx!xx!!!xx!xx
+ENDMAP
+
+NAME:    aquarium_pool_S
+WEIGHT:  5
+TAGS:    serial_aquarium_pool luniq_aquarium_pool_big
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +xxxx
+NSUBST:  ? = 1:+ / *:?
+SUBST:   ? = +xxxx
+: init_aquarium(_G)
+MAP
+xx!x!x!x!xx
+xx.......xx
+xx.......xx
+xx.......xx
+xcmmmc...xx
+xxwwwm...xx
+xxwwwm...xx
+xxwwwm...xx
+xcmmmc...xx
+xx.......xx
+xx.......xx
+xx.......xx
+xx...cmmmcx
+xx...mwwwxx
+xx...mwwwxx
+xx...mwwwxx
+xx...cmmmcx
+xx.......xx
+xx.......xx
+xx.......xx
+xx?x?x?x?xx
+ENDMAP
+
+NAME:    aquarium_pool_four
+WEIGHT:  5
+TAGS:    serial_aquarium_pool luniq_aquarium_pool_big
+: init_aquarium(_G)
+MAP
+xxxxxxx@xxxxxxx
+xxxxxcx+xcxxxxx
+xxwwwm...mwwwxx
+xxwwwm...mwwwxx
+xxwwwm...mwwwxx
+xcmmmc...cmmccx
+xx...........xx
+@+...........+@
+xx...........xx
+xcmmmc...cmmmcx
+xxwwwm...mwwwxx
+xxwwwm...mwwwxx
+xxwwwm...mwwwxx
+xxxxxcx+xcxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:    aquarium_pool_five
+WEIGHT:  5
+TAGS:    serial_aquarium_pool luniq_aquarium_pool_big
+: init_aquarium(_G)
+MAP
+xxxx@xxxxxxx@xxxx
+xxxx+xcxxxcx+xxxx
+xx....mwwwm....xx
+xx....cmmmc....xx
+@+.............+@
+xx.............xx
+xcmc..cmmmc..cmcx
+xxwm..mwwwm..mwxx
+xxwm..mwwwm..mwxx
+xxwm..mwwwm..mwxx
+xcmc..cmmmc..cmcx
+xx.............xx
+@+.............+@
+xx....cmmmc....xx
+xx....mwwwm....xx
+xxxx+xcxxxcx+xxxx
+xxxx@xxxxxxx@xxxx
+ENDMAP
+
+NAME:    aquarium_pool_split
+WEIGHT:  5
+TAGS:    serial_aquarium_pool luniq
+NSUBST:  ! = 1:@ / *:@.....
+NSUBST:  ? = 1:@ / *:@.....
+: init_aquarium(_G)
+MAP
+     x
+     x
+....!x?....
+...cmcmc...
+...mwwwm...
+!..mwwwm..?
+...mwwwm...
+...cmcmc...
+....!x?....
+     x
+     x
+ENDMAP
