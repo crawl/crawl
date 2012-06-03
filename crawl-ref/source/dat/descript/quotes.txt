@@ -989,6 +989,20 @@ Prince Ribbit
  Open the door for me!”
     -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
 %%%%
+profane servitor
+
+“A spell was cast an the sky turned red
+ The angel's heart froze to ice
+ In the gloomy sky black clouds were gathering
+ The silence was broken by cries
+ A spell was cast an the sky turned red
+ The angel's heart froze to ice
+ In the gloomy sky - The silence where dead angels lie
+
+ Touch the snow...Caress the lifeless sculptures
+ Die!!!”
+    -Dissection, “Where Dead Angels Lie”
+%%%%
 program bug
 
 “If builders built buildings the way programmers wrote programs, then the first
