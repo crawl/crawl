@@ -2872,6 +2872,18 @@ sickly siren
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+spriggan necromancer
+
+Raising the dead then running behind them... these tricks start getting
+annoying.
+%%%%
+spriggan shepherd
+
+Being unable to digest meat, spriggans here need quite a lot of milk to
+maintain a healthy diet. This guy guards the animals from predators and
+vandals like you, brandishing a crooked cane that looks like a fine tool for
+teaching you some respect.
+%%%%
 strange machine
 
 A glistening silver machine.
