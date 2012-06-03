@@ -279,6 +279,15 @@ potion
  Being the time the potion’s force should cease.”
     -William Shakespeare, _Romeo and Juliet_
 %%%%
+potion of poison
+
+“‘poison’ is a harsh word. I prefer ‘potion of shut the hell up’”
+    -Oglaf, bowdlerized
+%%%%
+potion of strong poison
+
+<potion of poison>
+%%%%
 rambutan
 
 “The rambutan (_nephelium lappaceum_) is a beautiful fruit to which I have
