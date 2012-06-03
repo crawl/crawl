@@ -1626,8 +1626,12 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 
     if (!quiet)
     {
-        mprf("You now have %d gold piece%s.",
-             you.gold, you.gold != 1 ? "s" : "");
+        const std::string gain = quant != you.gold
+                                 ? make_stringf(" (gained %d)", quant)
+                                 : "";
+
+        mprf("You now have %d gold piece%s%s.",
+             you.gold, you.gold != 1 ? "s" : "", gain.c_str());
         learned_something_new(HINT_SEEN_GOLD);
     }
 }
