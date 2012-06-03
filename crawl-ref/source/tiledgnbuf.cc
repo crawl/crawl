@@ -320,8 +320,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
-    if (fg & TILE_FLAG_MIMIC)
+    switch (fg & TILE_FLAG_MIMIC_MASK)
+    {
+    case TILE_FLAG_MIMIC_INEPT:
+        m_buf_icons.add(TILEI_INEPT_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC:
         m_buf_icons.add(TILEI_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC_RAVEN:
+        m_buf_icons.add(TILEI_RAVENOUS_MIMIC, x, y);
+        break;
+    default: ;
+    }
 
     if (fg & TILE_FLAG_BERSERK)
     {
