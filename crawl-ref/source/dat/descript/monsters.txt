@@ -887,8 +887,8 @@ This deep elf is skilled in the summoning of small demons and creatures.
 deep elf watchman
 
 A battle-scarred deep elf soldier. It eyes you warily, as though determined to
-keep you from gaining entry to the place it has been tasked with guarding, and
-looks well prepared to back up that threat with strong weapons and battle
+keep you from gaining entry to the place it guards, and
+it looks well prepared to do so with strong weapons and
 magic.
 %%%%
 deep dwarf
@@ -1488,7 +1488,7 @@ claws may be enough to rip hydra heads.
 hyperactive ballistomycete
 
 This ballistomycete is in a state of all-out reproduction. It is constantly
-ravaged by explosions of spores, damaging everything around, and ultimately
+ravaged by explosions of spores, damaging everything around, and it is ultimately
 going to die to its own spores.
 
 Be sure to keep your distance!
@@ -2776,7 +2776,7 @@ a bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 
 Being a statue, it doesn't appear to have a means of salvaging shot arrows
-or fletching new one, but you guess the statue's creators gave it enough of
+or fletching new ones, but you guess the statue's creators gave it enough of
 a supply to kill you before someone comes to replenish the quiver.
 %%%%
 black sheep
@@ -2792,7 +2792,7 @@ charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
 fire-based conjurations against you. Fortunately, it looks pretty ineptly
-made, and the charring marks show it has trouble controlling its magic as
+made, and its charring shows that it has trouble controlling its magic as
 well.
 %%%%
 Cigotuvi's Monster
@@ -2826,7 +2826,7 @@ An animated mound of misshapen flesh.
 frost-covered statue
 
 An ineptly made statue of a mage. Its magic keeps leaking, letting you know
-what kind of spells you can expect: something cold-based.
+what kind of spells you can expect: cold-based ones.
 %%%%
 glowing angel
 
@@ -2896,14 +2896,14 @@ still capable of bespelling her audience.
 %%%%
 skeletal archer
 
-Since when having flesh is a requirement to be a master archer? These
+Since when is having flesh a requirement to be a master archer? These
 skeletal fellows can turn you into a bloody hedgehog with ease. Meatlings
-like you are no good for anything than maybe a supply of sinew for
+like you are only good for a supply of sinew for
 bowstrings anyway.
 %%%%
 spriggan necromancer
 
-Raising the dead then running behind them... these tricks start getting
+Raising the dead, and then running behind them... these tricks start getting
 annoying.
 %%%%
 spriggan shepherd
@@ -2935,17 +2935,16 @@ mommy tell you to not disrupt people from having a meal?
 %%%%
 warrior statue
 
-This statue depics a gruff warrior, wielding a mean two-handed weapon. Since
-it appears to be capable of moving its arms, keeping distance seems to be
-quite vital for keeping your vital organs undamaged.
+This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
+it appears to be capable of moving its arms, keeping your distance seems to be
+the only way to keep your vital organs undamaged.
 %%%%
 wizard statue
 
-In this land of magic, it'd be foolish to assume a statue of a wizard is
+In this land of magic, it'd be foolish to assume that a statue of a wizard is
 always an inert piece of rock. This statue's hands and staff have very
 little dust compared to the base, suggesting it is capable of making magical
-gestures. So this trap was too obvious. Dealing with it might be not too
-obvious, though.
+gestures. The trap is too obvious, but dealing with it might not be.
 %%%%
 zot statue
 
