@@ -2894,6 +2894,13 @@ sickly siren
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+skeletal archer
+
+Since when having flesh is a requirement to be a master archer? These
+skeletal fellows can turn you into a bloody hedgehog with ease. Meatlings
+like you are no good for anything than maybe a supply of sinew for
+bowstrings anyway.
+%%%%
 spriggan necromancer
 
 Raising the dead then running behind them... these tricks start getting
