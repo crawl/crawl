@@ -2410,11 +2410,6 @@ spriggan rider
 Mounted on giant fireflies, these riders make sure no one who dares to intrude
 on the spriggan forests and cairns will be able to just walk away.
 %%%%
-spriggan warper
-
-To confuse those accustomed to the normal world's geometry, some spriggans love
-to turn space into a pretzel.
-%%%%
 statue
 
 At first glance, this piece of sculpted granite appears inert. The red glow
