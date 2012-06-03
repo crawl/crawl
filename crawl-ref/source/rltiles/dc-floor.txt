@@ -2,8 +2,8 @@
 %prefix TILE
 
 %sdir dc-dngn
-dngn_unseen DNGN_UNSEEN
-%back dngn_unseen
+unseen DNGN_UNSEEN
+%back unseen
 dc-misc/error DNGN_ERROR
 %back none
 

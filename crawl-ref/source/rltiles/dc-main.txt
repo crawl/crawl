@@ -2,7 +2,7 @@
 %name main
 
 # idx == 0 must be invalid.
-dc-dngn/dngn_unseen
+dc-dngn/unseen
 
 ## Set black rim
 ## Items

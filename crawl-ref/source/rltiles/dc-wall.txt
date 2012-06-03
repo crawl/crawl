@@ -706,10 +706,10 @@ stone2_brown3
 %repeat DNGN_STONE_WALL DNGN_STONE_WALL_WHITE
 %resetcol
 
-dngn_wax_wall DNGN_WAX_WALL
+wax_wall DNGN_WAX_WALL
 
 # Coloured glass walls
-dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
+transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
 %variation DNGN_TRANSPARENT_WALL blue
 %hue 180 240
@@ -755,9 +755,9 @@ dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
 
 # Coloured metal walls
-dngn_mirrored_wall DNGN_MIRROR_WALL
+mirrored_wall DNGN_MIRROR_WALL
 
-dngn_metal_wall DNGN_METAL_WALL
+metal_wall DNGN_METAL_WALL
 
 %variation DNGN_METAL_WALL blue
 %hue 26 240
@@ -768,7 +768,7 @@ dngn_metal_wall DNGN_METAL_WALL
 %hue 31 240
 %hue 32 240
 %hue 33 240
-dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
+metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL green
@@ -811,7 +811,7 @@ dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
 %repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
 %resetcol
 
-dngn_metal_wall_cracked DNGN_METAL_WALL_CRACKED
+metal_wall_cracked DNGN_METAL_WALL_CRACKED
 
 iron0-0 DNGN_METAL_IRON
 iron2-0
@@ -838,7 +838,7 @@ iron2-4
 dc-dngn/grate DNGN_GRATE
 
 %hue 150 120
-dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 %resetcol
 
 %variation DNGN_CRYSTAL blue
