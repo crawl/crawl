@@ -2504,17 +2504,22 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
                     : TILEP_MONS_BOULDER_BEETLE);
 
+        case MONS_INEPT_ITEM_MIMIC:
+            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_INEPT;
         case MONS_ITEM_MIMIC:
-        {
-            tileidx_t t = tileidx_item(*mon.get_mimic_item());
-            if (mons_is_mimic(mon.type))
-                t |= TILE_FLAG_MIMIC;
-            return t;
-        }
+            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC;
+        case MONS_RAVENOUS_ITEM_MIMIC:
+        case MONS_MONSTROUS_ITEM_MIMIC:
+            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_RAVEN;
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
+        case MONS_INEPT_FEATURE_MIMIC:
+            return TILE_FLAG_MIMIC_INEPT;
         case MONS_FEATURE_MIMIC:
             return TILE_FLAG_MIMIC;
+        case MONS_RAVENOUS_FEATURE_MIMIC:
+        case MONS_MONSTROUS_FEATURE_MIMIC: // unused
+            return TILE_FLAG_MIMIC_RAVEN;
 
         case MONS_DANCING_WEAPON:
         {
