@@ -205,8 +205,6 @@ const uint64_t MF_NAME_DESCRIPTOR    = BIT(27); // mname should be treated with 
 const uint64_t MF_NAME_DEFINITE      = BIT(28); // give this monster the definite "the"
                                      // article, instead of the indefinite "a"
                                      // article.
-//const uint64_t MF_INTERLEVEL_FOLLOWER = BIT(29); // will travel with the player regardless
-                                     // of where the monster is at on the level
 const uint64_t MF_DEMONIC_GUARDIAN   = BIT(30); // is a demonic_guardian
 const uint64_t MF_NAME_SPECIES       = BIT(31); // mname should be used for corpses as well,
 const uint64_t MF_NAME_ZOMBIE        = BIT(32); // mname replaces zombies/skeletons, use
