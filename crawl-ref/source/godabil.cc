@@ -2960,7 +2960,9 @@ bool fedhas_evolve_flora()
 
     if (!_possible_evolution(target, upgrade))
     {
-        if (mons_is_plant(target))
+        if (target->type == MONS_GIANT_SPORE)
+            mpr("You can evolve only complete plants, not seeds.");
+        else  if (mons_is_plant(target))
             simple_monster_message(target, " has already reached "
                                    "the pinnacle of evolution.");
         else
