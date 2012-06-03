@@ -336,11 +336,16 @@ enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 return_zot DNGN_RETURN_ZOT
+enter_orc DNGN_ENTER_ORCISH_MINES
+enter_lair DNGN_ENTER_LAIR
 enter_snake DNGN_ENTER_SNAKE_PIT
 enter_swamp DNGN_ENTER_SWAMP
 enter_spider DNGN_ENTER_SPIDER_NEST
 enter_shoals DNGN_ENTER_SHOALS
 enter_slime DNGN_ENTER_SLIME_PITS
+enter_vaults DNGN_ENTER_VAULTS
+enter_crypt DNGN_ENTER_CRYPT
+enter_tomb DNGN_ENTER_TOMB
 enter_dis DNGN_ENTER_DIS
 enter_gehenna DNGN_ENTER_GEHENNA
 enter_cocytus DNGN_ENTER_COCYTUS
