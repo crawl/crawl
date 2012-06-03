@@ -1838,6 +1838,23 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
 // reforming the original monster out of ice anyway.
+
+static struct { monster_type mons; const char* name; } mystery_meats[] =
+{
+    { MONS_HOUND, "dog" },
+    { MONS_FELID, "cat" },
+    { MONS_RAVEN, "crow" },
+    { MONS_WORM, "" },
+    { MONS_RAT, "" },
+    { MONS_YAK, "" },
+    { MONS_HOG, "" },
+    { MONS_SHEEP, "" },
+    { MONS_ELEPHANT, "" },
+    { MONS_WARG, "chupacabra" },
+    { MONS_QUOKKA, "wallaby" },
+    { MONS_DEATH_YAK, "mad cow" },
+};
+
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
     const item_def* flesh = you.weapon();
@@ -1870,19 +1887,10 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         break;
     default:
         // usual suspects for mystery meat's identity
-        switch (random2(4))
         {
-        case 0:
-            sim_type = MONS_HOUND; name = "dog";
-            break;
-        case 1:
-            sim_type = MONS_FELID; name = "cat";
-            break;
-        case 2:
-            sim_type = MONS_RAT;
-            break;
-        default:
-            sim_type = MONS_YAK; // 25% chance for "real" meat
+            int which = random2(ARRAYSZ(mystery_meats));
+            sim_type = mystery_meats[which].mons;
+            name = mystery_meats[which].name;
         }
     }
 
