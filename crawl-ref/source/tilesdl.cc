@@ -1227,7 +1227,8 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
     if (genus == MONS_PANDEMONIUM_LORD
         || genus == MONS_HELL_LORD
         || mon.type == MONS_ANTAEUS
-        || mon.type == MONS_LERNAEAN_HYDRA)
+        || mon.type == MONS_LERNAEAN_HYDRA
+        || mon.mb[MB_NO_NAME_TAG])
     {
         return;
     }
