@@ -260,6 +260,34 @@ v%6...v``v...8|v
 vvvvvvv@@vvvvvvv
 ENDMAP
 
+############################################################
+# Tiered entry
+#
+NAME:   grunt_vault_entry_tiered
+TAGS:   vault_entry no_monster_gen no_rtele_into transparent
+MONS:   w:5 nothing / human
+MONS:   human / w:5 necromancer / w:5 wizard
+MONS:   human / w:5 vault guard
+SUBST:  ' : cxv
+KFEAT:  O = enter_vaults
+MAP
+...............
+.'''''''''''''.
+.'%%...'...%%'.
+.'%212.+.323%'.
+.'.1T1.+..O2.'.
+.'.1.1.+.323%'.
+.'.....'...%%'.
+.''+++''''''''.
+.'.....'...%%'.
+.'.111.+....%'.
+.'.2T..+.1T1.'.
+.'%111.+.1.1.'.
+.'%%...'.....'.
+.''''''''+++''.
+.........@@@...
+ENDMAP
+
 ###############################################################################
 # Vaults specific vaults
 ###############################################################################
