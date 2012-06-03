@@ -1485,6 +1485,14 @@ lopping a head off, which, considering hydra's unique biology, is not what you
 want unless the blade is hot enough to cauterize the wound. Even a troll's
 claws may be enough to rip hydra heads.
 %%%%
+hyperactive ballistomycete
+
+This ballistomycete is in a state of all-out reproduction. It is constantly
+ravaged by explosions of spores, damaging everything around, and ultimately
+going to die to its own spores.
+
+Be sure to keep your distance!
+%%%%
 ice bat
 
 An undead creature in the shape of a bat, made of ice.
