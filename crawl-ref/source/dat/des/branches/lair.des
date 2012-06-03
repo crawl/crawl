@@ -337,6 +337,46 @@ MAP
 ENDMAP
 
 ################################################################################
+# A guard hut placed over the entrance of the lair,
+# and a guard to watch over it.
+NAME:   grunt_lair_entry_elf_guard_hut
+ORIENT: float
+TAGS:   lair_entry transparent
+MONS:   plant / fungus / nothing
+MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
+KMONS:  A = patrolling deep elf soldier name:deep_elf_watchman \
+            name_replace name_descriptor name_nocorpse
+KFEAT:  O = enter_lair
+SUBST:  D = 1:5 2:2 .
+SUBST:  . = 1:2 2:2 .
+SUBST:  . = G:10 B:5 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+SUBST:  G = .
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  B = .
+SUBST:  C = .
+KFEAT:  O = enter_lair
+validate {{ return has_exit_from_glyph('O') }}
+MAP
+    ...@..
+  ..D.1.1...
+ ..D.1D1D1...
+ .D.1D221D1..
+.D.1D1D1D1D1..
+..1D1ccccD1D1.
+@1D2DcOAc121..
+..121c%CcD2D1@
+.1D1Dcc+c1D1..
+..1D1D1C1D1.D.
+ ..1D122D1.D.
+ ...1D1D1.D..
+  ...1.1.D..
+    ..@...
+ENDMAP
+
+################################################################################
 # Lair-specific non-entry/ending vaults
 ################################################################################
 
