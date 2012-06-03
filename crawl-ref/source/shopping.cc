@@ -779,7 +779,7 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
 
     const int quant = item.quantity;
     // Note that item will be invalidated if num == item.quantity.
-    const int num = move_item_to_player(item_got, item.quantity, true);
+    const int num = move_item_to_player(item_got, item.quantity, false);
 
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
