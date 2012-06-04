@@ -2394,7 +2394,7 @@ of a candle.”
 %%%%
 microbat
 
-<regular bat>
+<bat>
 %%%%
 midge
 
@@ -2481,7 +2481,7 @@ the needed supplies of it.”
 %%%%
 oklob sapling
 
-<oklob>
+<oklob plant>
 %%%%
 ooze
 
