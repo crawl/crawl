@@ -975,7 +975,8 @@ void draw_border(void)
     {
         int yhack = crawl_state.game_is_zotdef();
         cgotoxy(1, 9 + yhack, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 9 + yhack, GOTO_STAT); cprintf("Turn:");
+        cgotoxy(19, 9 + yhack, GOTO_STAT);
+        cprintf(Options.show_game_turns ? "Time:" : "Turn:");
     }
     // Line 8 is exp pool, Level
 }
