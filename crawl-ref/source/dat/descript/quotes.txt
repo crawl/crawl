@@ -453,7 +453,7 @@ cookery book, the inventor of festivals, of dancing, music, plays, and of the
 newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks.”
     -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
 %%%%
-Cacodemon
+cacodemon
 
 “We’ll call him Cacodemon, with his black Gib there, his Succuba, his Devil’s
 Seed, his Spawn of Phlegethon, that o’ my Consience was bred o’ the Spume of
@@ -842,7 +842,7 @@ human
  I only know his price.”
     -Bertolt Brecht, “The Measures Taken”. 1930.
 %%%%
-imp
+crimson imp
 
 “The Devil, too, sometimes steals human children; it is not infrequent for him
 to carry away infants within the first six weeks after birth, and to substitute
