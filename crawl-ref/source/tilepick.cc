@@ -1463,7 +1463,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // plants ('P')
     case MONS_PLANT:
-        return TILEP_MONS_PLANT;
+        return _mon_mod(TILEP_MONS_PLANT, tile_num_prop);
     case MONS_BUSH:
         return TILEP_MONS_BUSH;
     case MONS_BURNING_BUSH:
@@ -4896,8 +4896,10 @@ void tile_init_props(monster* mon)
 {
     // Only those use tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_CHAOS_SPAWN)
+        && mon->type != MONS_CHAOS_SPAWN && mon->type != MONS_PLANT)
+    {
         return;
+    }
 
     // Already overridden or set.
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))

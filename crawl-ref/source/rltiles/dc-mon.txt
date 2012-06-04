@@ -685,7 +685,17 @@ ogre_mage MONS_OGRE_MAGE
 
 ## Plants ('P')
 %sdir dc-mon/fungi_plants
-plant MONS_PLANT
+plant_01 MONS_PLANT
+plant_02
+plant_03
+plant_04
+plant_05
+plant_06
+plant_07
+plant_08
+plant_09
+plant_10
+plant_11
 plant_crypt MONS_WITHERED_PLANT
 %rim 1
 bush MONS_BUSH
