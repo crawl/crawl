@@ -2811,15 +2811,15 @@ citrus tree
 
 <apple tree>
 %%%%
-# In first umpteen pages of googling, the only use of "Iskenderun" for a
-# living being is the first Turkish Van cat brought to Britain.  With
+# In the first umpteen pages of googling, the only use of "Iskenderun" for a
+# living being is the first Turkish Van cat brought to Britain. With
 # Crawl's felids being sentient, it'd be hard to not make a connection with
 # the wizard.
 conjurer statue
 
 This statue seems to harness the mightiest pure conjurations ever devised by
-Iskenderun. It is not shaped itself as a likeness of her, as legends
-describe her as a female felid, yet if I were you, I'd put more heed to orbs
+Iskenderun. It is not made in her likeness, as legends
+describe her as a female felid, but, if I were you, I'd pay more heed to the orbs
 of magic flying your way than the statue's appearance.
 %%%%
 deformed humanoid
@@ -2892,7 +2892,7 @@ memory.
 %%%%
 lasher statue
 
-This statue depicts a savage-looking slavedriver with a vicious barbed whip.
+This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
 malarious mermaid
@@ -2910,8 +2910,8 @@ imported from foreign shores.
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
 
-It would seem inconceivable that a mere plant would reach sentience and be
-able to use magic, but that's what you see here. What sorcery is it?
+It would seem inconceivable that a mere plant could attain sentience and the
+use of magic, but that's what you see here. What sorcery is it?
 %%%%
 oklob plant conjurer
 
@@ -2944,7 +2944,7 @@ oklob sapling wizard
 petrified plant
 
 Something has turned these ordinary plants into stone. Better not tarry
-here, if whatever petrified these plants gets you as well, we'll be stuck
+here. If whatever petrified these plants gets you as well, we'll be stuck
 with a statue as ugly as you standing here for ages.
 %%%%
 pristine statue
@@ -2984,7 +2984,7 @@ soapberry tree
 %%%%
 spooky statue
 
-You sense a ghostly presence around this statue, and it's not the slightly
+You sense a ghostly presence around this statue, and it's not the slightest
 bit friendly.
 %%%%
 spriggan necromancer
@@ -3022,8 +3022,8 @@ mommy tell you to not disrupt people from having a meal?
 vine covered stone golem
 
 While made of ordinary old weathered stone, covered with moss and vines,
-this golem still needs to be respected. After all, it is hard as, well,
-stone, and its mere weight spells massive damage if it connects a blow.
+this golem still needs to be respected. It is still hard as
+stone, after all, and its weight spells massive damage if it connects a blow.
 %%%%
 warrior statue
 
@@ -3033,8 +3033,8 @@ the only way to keep your vital organs undamaged.
 %%%%
 withered plant
 
-This plant has lost the war against life-draining influences, yet its
-physical form is intact. Its dead body stays here uneaten, as any small
+This plant lost the war against life-draining influences, and yet its
+physical form is intact. Its dead body stays here uneaten, as the small
 creatures that would naturally decompose it prefer to stay away. And it
 looks like this plant died many {{ if you.branch() == "Crypt" or
 you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
