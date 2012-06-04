@@ -4,9 +4,14 @@ Abyssal Knight
 Les Chevaliers des Abysses servent Lugonu, et sont envoyés depuis les Abysses
 vers le Donjon pour propager la corruption et le chaos.
 %%%%
+Air Elementalist
+
+Les Élementalistes de l'Air ont appris le sort Choc. Plus tard, le livre de
+l'Air leur fournira la flexibilité nécessaire à leur survie.
+%%%%
 Artificer
 
-Les Artificiers entrent dans le donjon avec quelques dispositifs magiques et
+Les Artificiers entrent dans le Donjon avec quelques dispositifs magiques et
 les connaissances nécessaires pour les utiliser.
 %%%%
 Assassin
@@ -52,7 +57,7 @@ Les Chasseurs peuvent attaquer à distance sans recourir à la magie.
 %%%%
 Monk
 
-Les moines sont prêts à affronter tout ce qu'il vont trouver dans le Donjon
+Les Moines sont prêts à affronter tout ce qu'il vont trouver dans le Donjon
 avec juste une robe et la maîtrise de leur corps.
 %%%%
 Priest

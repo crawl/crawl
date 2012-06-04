@@ -1,0 +1,98 @@
+%%%%
+Singing Sword
+
+Tämä siunattu ase rakastaa kaikista eniten omistajalleen laulamista, halusi hän
+sitä tai ei.
+%%%%
+Mace of Variability
+
+Se on varsin epäluotettava.
+%%%%
+Sword of Power
+
+Se palkitsee voimakkaat voimalla ja nöyrät heikkoudella.
+%%%%
+Scythe of Curses
+
+Tässä aseessa on karmea ja hyvin ärsyttävä kirous.
+%%%%
+Sword of Cerebov
+
+Oudot liekit peittävät sen kieron terän.
+%%%%
+Staff of Dispater
+
+Tämä legendaarinen esine voi vapauttaa Helvetin voimat.
+%%%%
+Sceptre of Asmodeus
+
+Siinä on joitakin arkkipiru Asmodeuksen voimia.
+%%%%
+dagger of Chilly Death
+
+Yhdestä valtavasta safiirin palasta tehty tikari.
+%%%%
+crossbow "Hellfire"
+
+Helvettien tulissa taottu liekehtivä varsijousi.
+%%%%
+mithril axe "Arga"
+
+Kaunis mithrilkirves, varmaan jäänyt jälkeen joltakin kääpiösankarilta.
+%%%%
+Elemental Staff
+
+Tämä voimakas sauva kuului ennen Viiden elementin killan johtajalle.
+%%%%
+crossbow "Sniper"
+
+Jostakin mustasta materiaalista tehty varsijousi.
+%%%%
+longbow "Piercer"
+
+Erikoisen suuri metallinen pitkäjousi.
+%%%%
+blowgun of the Assassin
+
+Se on suunniteltu helposti kätkettäväksi, mutta silti tinttaa ilkeästi.
+%%%%
+knife of Accuracy
+
+Se on melkein erehtymättömän tarkka.
+%%%%
+crown of Dyrovepreva
+
+Häikäisevällä timanttirivistöllä varusteltu suuri pronssikruunu.
+%%%%
+cloak of Flash
+
+Värisevä viitta.
+%%%%
+boots of the Assassin
+
+Pehmeät, Salamurhaajien killan suunnittelemat kengät.
+%%%%
+Lear's chain mail
+
+Ketjupanssari, mutta puhdasta kultaa!
+%%%%
+mask of the Dragon
+
+Sininen naamio.
+%%%%
+fencer's gloves
+
+Valkoisesta silkistä tehdyt hanskat.
+%%%%
+cloak of Starlight
+
+Aitojen valosäteiden punoma viitta.
+%%%%
+brooch of Shielding
+
+Vanhoina hyvinä aikoina jokaisella seikkailijalla oli yksi tämmöinen. Ja poni.
+%%%%
+autumn katana
+
+Tämä eksoottinen miekka sopii aidosti valaistuneille taistelijoille.
+%%%%

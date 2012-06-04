@@ -3,13 +3,29 @@ CMD_REST
 
 Paranna ja etsi hieman
 %%%%
+CMD_REST verbose
+
+Käytä korkeintaan 100 vuoroa terveyden ja taikavoiman lataamiseen ja/tai
+etsimiseen. Lepääminen keskeytyy, jos näkyviin tulee hirviö.
+%%%%
 CMD_EXPLORE
 
 Tutki nykyinen taso automaattisesti.
 %%%%
+CMD_EXPLORE verbose
+
+Laittaa hahmosi matkaamaan automaattisesti kohti tutkimattomia alueita
+nykyisessä kerroksessa, keräten samalla autopickup-säädetyt tavarat.
+Liikkuminen loppuu hirviön tullessa näkökenttään, ja myös ilmoittaakseen
+löydettyjä esineitä ja erikoisuuksia.
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Matkusta kaukaisiin tasoihin
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Matkusta kaukaisiin kerroksiin. Hirviöt pysäyttävät matkanteon.
 %%%%
 CMD_USE_ABILITY
 
@@ -19,9 +35,19 @@ CMD_PRAY
 
 Rukoile jumalaasi
 %%%%
+CMD_PRAY verbose
+
+Jos jumalasi pitää uhrauksista, tämä uhraa ruumiin tai jonkin esineen.
+Seistessäsi alttarilla voit myös liittyä tällä vastaavaan uskoon. Joillekin
+jumalille rukoilulla on muitakin vaikutuksia.
+%%%%
 CMD_SEARCH_STASHES
 
 Etsi esineitä/erikoisuuksia
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Etsi esineitä ja erikoisuuksia joita näit muualla, ja matkusta sinne.
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -30,6 +56,10 @@ Uudelleenlue viimeaikaiset viestit
 CMD_RESISTS_SCREEN
 
 Näytä hahmon kokonaiskatsaus
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Näyttää tietoa tunnetuista vastustuskyvyistä, taidoista, varusteista jne.
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -72,6 +102,11 @@ Näytä tunnetut esinetyypit
 CMD_SAVE_GAME_NOW
 
 Tallenna ja poistu
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Tallentaa pelin myöhempää jatkoa varten ja poistuu. Kun jatkat peliä, tallennus
+poistuu.
 %%%%
 CMD_EDIT_PLAYER_TILE
 
@@ -119,4 +154,8 @@ Hyökkää viereistä hirviötä kädessäsi olevalla aseella.
 CMD_SEARCH
 
 Odota yksi vuoro
+%%%%
+CMD_SEARCH verbose
+
+Käytä yksi vuoro odottamiseen, lepäämiseen ja etsimiseen.
 %%%%
