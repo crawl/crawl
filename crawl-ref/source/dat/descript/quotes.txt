@@ -2118,10 +2118,6 @@ blue devil
  Salmon I will eat no more.”
     -J.T.S, “The Blue Imp”, _Melbourne Punch_. Sept. 4, 1856.
 %%%%
-bone dragon
-
-<fire dragon>
-%%%%
 electric golem
 
 “I sing the Body electric”
@@ -2217,10 +2213,6 @@ ice bat
 
 <bat>
 %%%%
-ice dragon
-
-<fire dragon>
-%%%%
 iguana
 
 “Once on a time when Brahmadatta was reigning in Benares, the Bodhisatta was
@@ -2234,10 +2226,6 @@ whole of the tribe of iguanas. And he enjoined his son to have no more to do
 with the chameleon. But the son continued in his intimacy.”
     -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
      trans. Robert Chalmers, 1895.
-%%%%
-iron dragon
-
-<fire dragon>
 %%%%
 jackal
 
@@ -2299,10 +2287,6 @@ piece of lava. This fish is also noteworthy for having envenomed spines in the
 fin on its back.”
     -Jordan, Kellogg and Heath, _Animal Studies: A Text-book of Elementary
      Zoology_. 1903.
-%%%%
-lava snake
-
-<snake>
 %%%%
 lava worm
 
@@ -2420,10 +2404,6 @@ nothing but a club, which carried with it death and destruction.”
     -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
      Customs of the Ancestors of the English Speaking Nations_. 1889
 %%%%
-mottled dragon
-
-<fire dragon>
-%%%%
 naga
 
 “Amongst the deities and Asuras and celestial Rishis, O amiable lady, the Nagas
@@ -2526,10 +2506,6 @@ pandemonium lord
  Of Satan and his Peers...”
     -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
 %%%%
-pearl dragon
-
-<fire dragon>
-%%%%
 phase bat
 
 <bat>
@@ -2581,10 +2557,6 @@ dexterity.”
     -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
      trans. Anna Swanwick, 1914.
 %%%%
-quicksilver dragon
-
-<fire dragon>
-%%%%
 rotten bat
 
 <bat>
@@ -2621,10 +2593,6 @@ shadow demon
 “As we grow old, we become aware that death is drawing near; his shadow falls
 across our path...”
     -Stefan Zweig, _Twenty-Four Hours in the Life of a Woman_, 1927.
-%%%%
-shadow dragon
-
-<fire dragon>
 %%%%
 shadow wraith
 
@@ -2824,10 +2792,6 @@ spirit
  Thy fluttering heart with hope and terror moved.”
     -Robert Louis Stevenson, “Et Tu In Arcadia Vixisti”, _Underwoods _. 1887.
 %%%%
-steam dragon
-
-<fire dragon>
-%%%%
 stone giant
 
 “I really believe what you say, answered the knight; for, I have been engaged
@@ -2846,19 +2810,11 @@ stone golem
  In each hand, like an old-stone savage armed.”
     -Robert Frost, “Mending Wall”, _North of Boston_. 1914.
 %%%%
-storm dragon
-
-<fire dragon>
-%%%%
 sun demon
 
 “Behold him setting in his western skies,
  The shadows lengthening as the vapours rise.”
     -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
-%%%%
-swamp dragon
-
-<fire dragon>
 %%%%
 swamp drake
 
@@ -2978,10 +2934,6 @@ wraith
  Although we grope with little faith,
  Give me the heart to fight—and lose.”
     -Louis Untermeyer, “Prayer”. 1919.
-%%%%
-wyvern
-
-<fire dragon>
 %%%%
 ynoxinul
 
