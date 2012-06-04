@@ -1173,7 +1173,7 @@ MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie 
 MONS:   generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling phantasmal warrior
-MONS:   ghost moth name:greater col:lightmagenta n_adj n_spe hd:15
+MONS:   ghost moth hd:15
 MONS:   eidolon / shadow wraith
 MONS:   freezing wraith / phantasmal warrior
 MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \
