@@ -887,9 +887,8 @@ This deep elf is skilled in the summoning of small demons and creatures.
 deep elf watchman
 
 A battle-scarred deep elf soldier. It eyes you warily, as though determined to
-keep you from gaining entry to the place it guards, and
-it looks well prepared to do so with strong weapons and
-magic.
+keep you from gaining entry to the place it guards, and it looks well prepared
+to do so with strong weapons and magic.
 %%%%
 deep dwarf
 
@@ -1488,8 +1487,8 @@ claws may be enough to rip hydra heads.
 hyperactive ballistomycete
 
 This ballistomycete is in a state of all-out reproduction. It is constantly
-ravaged by explosions of spores, damaging everything around, and it is ultimately
-going to die to its own spores.
+ravaged by explosions of spores, damaging everything around, and it is
+ultimately going to die to its own spores.
 
 Be sure to keep your distance!
 %%%%
@@ -1716,9 +1715,9 @@ their toll on this one's feeble mind.
 %%%%
 mad wizard
 
-Raving about how enhanced rats are going to take over the world is not a
-sign of sanity. You'd better step back. Plus, it's squirrels who
-are going to win, I tell you!
+Raving about how enhanced rats are going to take over the world is not a sign
+of sanity. You'd better step back. Plus, it's squirrels who are going to win, I
+tell you!
 %%%%
 manticore
 
@@ -2490,8 +2489,8 @@ A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
 terrified wizard
 
-This guy has been caught by magic-haters, and is going to be sacrificed on
-the altar of Trog.
+This guy has been caught by magic-haters, and is going to be sacrificed on the
+altar of Trog.
 %%%%
 titan
 
@@ -2771,29 +2770,28 @@ A lich who has grown expensive over countless years.
 %%%%
 archer statue
 
-The likeness of a beatiful elven archer, sculpted in finest marble. It holds
-a bow aloft, and appears to be magically animated, letting it use the bow to
+The likeness of a beatiful elven archer, sculpted in finest marble. It holds a
+bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 
-Being a statue, it doesn't appear to have a means of salvaging shot arrows
-or fletching new ones, but you guess the statue's creators gave it enough of
-a supply to kill you before someone comes to replenish the quiver.
+Being a statue, it doesn't appear to have a means of salvaging shot arrows or
+fletching new ones, but you guess the statue's creators gave it enough of a
+supply to kill you before someone comes to replenish the quiver.
 %%%%
 black sheep
 
-On first glance, this sheep has merely a different pigmentation, but you
-are not so easily swayed by looks. With your luck, there's a sheep in a
-wolf's hide hiding inside, _then_ covered by another layer of sheep skin to
-better deceive you.
+On first glance, this sheep has merely a different pigmentation, but you are
+not so easily swayed by looks. With your luck, there's a sheep in a wolf's hide
+hiding inside, _then_ covered by another layer of sheep skin to better deceive
+you.
 
 Or, maybe, it's just a sheep after all.
 %%%%
 charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
-fire-based conjurations against you. Fortunately, it looks pretty ineptly
-made, and its charring shows that it has trouble controlling its magic as
-well.
+fire-based conjurations against you. Fortunately, it looks pretty ineptly made,
+and its charring shows that it has trouble controlling its magic as well.
 %%%%
 Cigotuvi's Monster
 
@@ -2896,10 +2894,9 @@ still capable of bespelling her audience.
 %%%%
 skeletal archer
 
-Since when is having flesh a requirement to be a master archer? These
-skeletal fellows can turn you into a bloody hedgehog with ease. Meatlings
-like you are only good for a supply of sinew for
-bowstrings anyway.
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
 %%%%
 spriggan necromancer
 
@@ -2909,9 +2906,9 @@ annoying.
 spriggan shepherd
 
 Being unable to digest meat, spriggans here need quite a lot of milk to
-maintain a healthy diet. This guy guards the animals from predators and
-vandals like you, brandishing a crooked cane that looks like a fine tool for
-teaching you some respect.
+maintain a healthy diet. This guy guards the animals from predators and vandals
+like you, brandishing a crooked cane that looks like a fine tool for teaching
+you some respect.
 %%%%
 strange machine
 
@@ -2942,9 +2939,9 @@ the only way to keep your vital organs undamaged.
 wizard statue
 
 In this land of magic, it'd be foolish to assume that a statue of a wizard is
-always an inert piece of rock. This statue's hands and staff have very
-little dust compared to the base, suggesting it is capable of making magical
-gestures. The trap is too obvious, but dealing with it might not be.
+always an inert piece of rock. This statue's hands and staff have very little
+dust compared to the base, suggesting it is capable of making magical gestures.
+The trap is too obvious, but dealing with it might not be.
 %%%%
 zot statue
 
