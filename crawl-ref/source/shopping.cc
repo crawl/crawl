@@ -606,6 +606,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                                                          : "part of them");
                     }
                     bought_something = true;
+
+                    mprf("You now have %d gold piece%s (spent %d).",
+                         you.gold, you.gold != 1 ? "s" : "", total_purchase);
                 }
             }
             //_shop_more();
