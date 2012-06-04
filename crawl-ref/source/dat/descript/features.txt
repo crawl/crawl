@@ -117,6 +117,11 @@ a fearsome and questionable reputation, but one piece of information seems to
 be for certain: The monsters inhabiting this area and protecting the Orb are
 strong and strange - some of them nowhere encountered but here.
 %%%%
+A gateway back into the Dungeon
+
+This gate allows for a feat popularily though to be impossible: escaping
+Hell alive.
+%%%%
 A gateway leading out of the Abyss
 
 A gateway out of this accursed place, shimmering and shifting in the
@@ -556,10 +561,16 @@ lost beyond all hope in short order - better not risk it.
 ########################
 ### Vault redefinitions
 ########################
-# wizlabs: all but Eringya
+# wizlabs
 An empty arch of stone
 
 This is the portal you came through; it looks bereft of magic now.
+%%%%
+A portal leading out of here
+
+This shimmering magical gate will lead you out of the wizard's dwelling,
+back to the place you came from. You doubt you will ever be able to come
+here again, though, so be sure to do all your pillaging first.
 %%%%
 # wizlab: Wucad Mu
 An autumnal tree
