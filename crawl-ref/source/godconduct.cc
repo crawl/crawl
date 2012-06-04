@@ -1004,9 +1004,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
              || thing_done == DID_KILL_HOLY)
             && ! god_hates_attacking_friend(you.religion, victim))
         {
-            int gain = get_fuzzied_monster_difficulty(victim);
-            dprf("fuzzied monster difficulty: %4.2f", gain*0.01);
-            gain_piety(gain, 700);
+            piety_change = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
             piety_denom = 700;
             if (piety_change > 3200)
                 simple_god_message(" appreciates your kill.");
