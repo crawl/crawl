@@ -1384,9 +1384,9 @@ It can also be used to enchant the hides of certain exotic creatures.
 scroll of enchant weapon i
 
 This scroll places an enchantment on the wielded weapon, making it more
-accurate in combat. It becomes increasingly less likely to succeed when used
-on highly enchanted weapons, and can only ever enchant them up to +9.
-Magical artefacts cannot be enchanted at all.
+accurate in combat. It becomes increasingly less likely to succeed when used on
+highly enchanted weapons, and can only ever enchant them up to +9. Magical
+artefacts cannot be enchanted at all.
 %%%%
 scroll of enchant weapon ii
 
