@@ -188,6 +188,7 @@ if (read_file("descript/monsters"))
 }
 
 check_desc_links();
+$described{$_} = 1 for keys %entries;
 __________________________________________________________________________();
 read_file("descript/$_") for qw(species backgrounds);
 __________________________________________________________________________();
@@ -202,6 +203,14 @@ check_db_locals();
 __________________________________________________________________________();
 read_file("descript/quotes");
 check_desc_links();
+if (%described) # can't check unless descs are loaded
+{
+    for (keys %entries)
+    {
+        next if /^__(?:cap-[A-Z]|[a-z])_suffix$/;
+        err "$file: quote for undescribed '$_'\n" unless $described{$_};
+    }
+}
 __________________________________________________________________________();
 read_file("database/help");
 __________________________________________________________________________();
