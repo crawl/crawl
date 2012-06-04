@@ -2798,6 +2798,17 @@ Cigotuvi's Monster
 This terrifying creation looks to have been constructed from the body parts of
 every monstrous creature imaginable.
 %%%%
+# In first umpteen pages of googling, the only use of "Iskenderun" for a
+# living being is the first Turkish Van cat brought to Britain.  With
+# Crawl's felids being sentient, it'd be hard to not make a connection with
+# the wizard.
+conjurer statue
+
+This statue seems to harness the mightiest pure conjurations ever devised by
+Iskenderun. It is not shaped itself as a likeness of her, as legends
+describe her as a female felid, yet if I were you, I'd put more heed to orbs
+of magic flying your way than the statue's appearance.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
@@ -2858,6 +2869,11 @@ iron troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
 memory.
+%%%%
+lasher statue
+
+This statue depicts a savage-looking slavedriver with a vicious barbed whip.
+It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
 malarious mermaid
 
@@ -2931,6 +2947,11 @@ skeletal archer
 Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
+%%%%
+spooky statue
+
+You sense a ghostly presence around this statue, and it's not the slightly
+bit friendly.
 %%%%
 spriggan necromancer
 
