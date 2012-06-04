@@ -2985,6 +2985,12 @@ This lad has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
 mommy tell you to not disrupt people from having a meal?
 %%%%
+vine covered stone golem
+
+While made of ordinary old weathered stone, covered with moss and vines,
+this golem still needs to be respected. After all, it is hard as, well,
+stone, and its mere weight spells massive damage if it connects a blow.
+%%%%
 warrior statue
 
 This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
