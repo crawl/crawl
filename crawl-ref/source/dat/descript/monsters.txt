@@ -2871,6 +2871,40 @@ years of war with the taller but otherwise quite similar hill orcs, the
 mountain dwarves were conquered and driven from these lands. This one has been
 imported from foreign shores.
 %%%%
+# Sprint only, too unhinged for regular games...
+oklob plant annihilator
+
+It would seem inconceivable that a mere plant would reach sentience and be
+able to use magic, but that's what you see here. What sorcery is it?
+%%%%
+oklob plant conjurer
+
+<oklob plant annihilator>
+%%%%
+oklob plant demonologist
+
+<oklob plant annihilator>
+%%%%
+oklob plant meteorologist
+
+<oklob plant annihilator>
+%%%%
+oklob plant shifter
+
+<oklob plant annihilator>
+%%%%
+oklob plant summoner
+
+<oklob plant annihilator>
+%%%%
+oklob sapling priest
+
+This immature oklob plant seems to be mumbling some orisons... er, what?!?
+%%%%
+oklob sapling wizard
+
+<oklob plant annihilator>
+%%%%
 pristine statue
 
 An immaculately sculpted porphyry statue of an archer poised to release an
