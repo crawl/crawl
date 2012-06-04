@@ -1,0 +1,76 @@
+%%%%
+Swap card
+
+Tämä kortti vaihtaa paikkaasi läheisen olennon kanssa. Se löytyy yleensä
+pakenemisen ja sodan pakoista.
+%%%%
+Flight card
+
+Tämä kortti auttaa sinua pakoon juoksemisessa muuttamalla sinut, nopeuttamalla
+sinua tai luomalla muita pakoreittejä. Se löytyy yleensä puolustuksen,
+pakenemisen ja sodan pakoista.
+%%%%
+Battlelust card
+
+Tämä kortti tekee sinusta vahvemman lähitaistelussa. Se löytyy yleensä
+muutosten, puolustuksen ja sodan pakoista.
+%%%%
+Metamorphosis card
+
+Tämä kortti muuttaa muotoasi hetkellisesti. Se löytyy yleensä muutosten,
+puolustuksen ja sodan pakoista.
+%%%%
+Focus card
+
+Tämä kortti parantaa parasta ominaisuuttasi huonoimman kustannuksella. Se
+löytyy yleensä muutosten ja ihmeiden pakoista.
+%%%%
+Shuffle card
+
+Tämä kortti vaihtaa kolmea ominaisuuttasi keskenään. Käytä varoen! Se löytyy
+yleensä muutosten ja ihmeiden pakoista.
+%%%%
+Experience card
+
+Tämä kortti tekee sinusta kokeneemman. Se löytyy yleensä muutosten ja ihmeiden
+pakoista.
+%%%%
+Dowsing card
+
+Tämä kortti saa sinut havaitsemaan salaisia ovia, ansoja, olentoja tai jotain
+vastaavia. Se löytyy yleensä muutosten ja luolastojen pakoista.
+%%%%
+Foxfire card
+
+Tämä kortti kutsuu lentäviä olentoja. Se löytyy yleensä kutsumisten ja sodan
+pakoista.
+%%%%
+Repulsiveness card
+
+Tämä kortti kutsuu ruman tai todella ruman asian. Se löytyy yleensä kutsumisten
+ja sodan pakoista.
+%%%%
+Flame card
+
+Tämä kortti laukaisee tulisen hyökkäysloitsun. Se löytyy yleensä tuhon ja sodan
+pakoista.
+%%%%
+Frost card
+
+Tämä kortti laukaisee jäisen hyökkäysloitsun. Se löytyy yleensä tuhon ja sodan
+pakoista.
+%%%%
+Pain card
+
+Tämä kortti laukaisee kuolomagia-hyökkäysloitsun, joka saattaa vaikuttaa myös
+sinuun. Se löytyy yleensä tuhon ja sodan pakoista.
+%%%%
+Famine card
+
+Tämä kortti saa sinut nälkiintymään. Se löytyy yleensä Nemelex Xobehin
+rangaistuksen pakasta.
+%%%%
+the Feast card
+
+Tämä kortti ruokkii sinua. Se ei ole normaalisti missään pakassa.
+%%%%
