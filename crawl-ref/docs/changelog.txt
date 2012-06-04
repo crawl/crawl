@@ -4,11 +4,14 @@ Stone Soup 0.11 (up to 0.11-a0-1660-g8ce0e0f)
 Highlights
 ----------
 * A new branch: the Spider Nest.
+* Missile enchantments are no more.
 
 Branches, environment
 ---------------------
 * New wizlab: Roulette of Golubria.
 * You don't lose portal vaults after being banished from one.
+* Escaping the Abyss places you where you came from, but grants short-term
+  immunity to most forms of banishment.
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
 * Gas traps get their separate type.
@@ -21,6 +24,7 @@ Character
 * Tengu can fly when transformed.
 * Grey Draconians are better at Earth and worse at Air, get more AC, and
   no longer fumble in water.
+* Felids are better at combat and Evocations, worse at Summonings.
 * The Evocations skill increases max MP.
 * Forms without some sort of hands can't use wands/etc.
 
@@ -39,9 +43,11 @@ Monsters
 * Margery gets dragon armour.
 * Monsters with arcane spells won't switch to heavy armour.
 * Donald can spawn in Labyrinths.
+* Urug is drastically stronger.
 * Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
   a progression of strength and abilities.
 * New: orb spiders, moths of suppression.
+* Removed: Jozef.
 * Porcupines get spines.
 * Hell Sentinels replace Pit Fiends.
 * Boulder beetles can roll as a boulder.
@@ -53,6 +59,8 @@ Spells
 ------
 * LRD works in Slime now.
 * Iskenderun's Mystic Blast often explodes.
+* Death Channel is level 6.
+* Simulacrum works on beef jerkies, sausages and meat rations.
 
 Items
 -----
@@ -67,6 +75,10 @@ Items
 * Ankuses are no more.
 * Rods of striking are better.
 * Staves of energy merely halve spell hunger instead of eliminating it.
+* All missile brands start visible.
+* Visored helmets don't stop bite attacks.
+* Identifying weapons by use works instantly but requires a random (per
+  item) level of skill.
 
 Cards
 -----
@@ -82,6 +94,7 @@ Gods
 ----
 * Trog accepts kills of holies.
 * Abandoning Kikubaaqudgha rots all currently existing corpses.
+* Kikubaaqudgha no longer guarantees getting all necromancy spells.
 * Banishing monsters grants some XP and Lugonu piety.
 * New Xom effect: inner flame.
 * Nemelex gives far less decks of summoning.
@@ -92,6 +105,8 @@ Gods
 * Xom grants far less item gifts.
 * Xom acts drastically more often when you're in a tough fight.
 * Elyvilon doesn't take piety when life-saving allies.
+* Okawaru gives almost no heed to kills of easy monsters, rewards toughest
+  fights more.
 * Concurrent god wraths don't dilute each other anymore.
 
 Interface
@@ -100,10 +115,11 @@ Interface
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells
 * New options: auto_drop_chunks, autofight_throw.
-* Fake translations: dwarven, jägerkin, kraut, wide.
+* Fake translations: dwarven, jägerkin, kraut, wide, cyrillic.
 * Loads of new tiles.
 * Fixed Pan/Hell lords get special tall tiles.
 * An in-game high scores browser.
+* Picking up stackable items shows how many did you pick up.
 
 Wizmode
 -------
