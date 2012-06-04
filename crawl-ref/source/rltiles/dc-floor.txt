@@ -733,3 +733,13 @@ green_bones09
 green_bones10
 green_bones11
 green_bones12
+
+woodground01 FLOOR_WOODGROUND
+woodground02
+woodground03
+woodground04
+woodground05
+woodground06
+woodground07
+woodground08
+woodground09

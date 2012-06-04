@@ -147,7 +147,6 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_LAIR:
-    case BRANCH_FOREST:
         flv.wall  = TILE_WALL_LAIR;
         flv.floor = TILE_FLOOR_LAIR;
         return;
@@ -180,6 +179,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     case BRANCH_HALL_OF_ZOT:
         flv.wall  = TILE_WALL_ZOT_YELLOW;
         flv.floor = TILE_FLOOR_TOMB;
+        return;
+
+    case BRANCH_FOREST:
+        flv.wall  = TILE_WALL_LAIR;
+        flv.floor = TILE_FLOOR_WOODGROUND;
         return;
 
     case BRANCH_ABYSS:
