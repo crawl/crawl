@@ -1085,6 +1085,8 @@ std::string sub_type_string(const item_def &item, bool known)
     {
         if (sub_type == BOOK_MANUAL)
         {
+            if (!known)
+                return "manual";
             std::string bookname = "manual of ";
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
@@ -1098,7 +1100,7 @@ std::string sub_type_string(const item_def &item, bool known)
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
 
-        return _book_type_name(sub_type);
+        return std::string("book of ") + _book_type_name(sub_type);
     }
     case OBJ_STAVES: return staff_type_name(sub_type);
     case OBJ_MISCELLANY:
@@ -1684,23 +1686,8 @@ std::string item_def::name_aux(description_level_type desc,
                  << book_primary_string(this->special % NDSC_BOOK_PRI)
                  << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
-        else if (item_typ == BOOK_MANUAL)
-        {
-            if (dbname)
-                buff << "manual";
-            else
-                buff << "manual of " << skill_name((skill_type)it_plus);
-        }
-        else if (item_typ == BOOK_NECRONOMICON)
-            buff << "Necronomicon";
-        else if (item_typ == BOOK_GRAND_GRIMOIRE)
-            buff << "Grand Grimoire";
-        else if (item_typ == BOOK_DESTRUCTION)
-            buff << "tome of Destruction";
-        else if (item_typ == BOOK_YOUNG_POISONERS)
-            buff << "Young Poisoner's Handbook";
         else
-            buff << "book of " << _book_type_name(item_typ);
+            buff << sub_type_string(*this, !dbname);
         break;
 
     case OBJ_STAVES:
