@@ -117,6 +117,15 @@ sub check_desc_needed($@)
     err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
 }
 
+sub check_desc_links()
+{
+    for (keys %entries)
+    {
+        next unless $entries{$_} =~ /^<(.*)>$/;
+        err "$source{$_}: Dangling link to '$1'\n" unless $entries{$1};
+    }
+}
+
 sub check_db_locals()
 {
     my (%locals, %keys);
@@ -178,7 +187,7 @@ if (read_file("descript/monsters"))
     check_desc_needed("monster", `util/gather_mons -d`);
 }
 
-
+check_desc_links();
 __________________________________________________________________________();
 read_file("descript/$_") for qw(species backgrounds);
 __________________________________________________________________________();
@@ -192,6 +201,7 @@ read_file("database/$_") for qw(shout insult);
 check_db_locals();
 __________________________________________________________________________();
 read_file("descript/quotes");
+check_desc_links();
 __________________________________________________________________________();
 read_file("database/help");
 __________________________________________________________________________();
