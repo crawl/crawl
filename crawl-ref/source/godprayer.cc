@@ -581,7 +581,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
 static piety_gain_t _sac_corpse(const item_def& item)
 {
-#ifdef NEW_OKAWARU_PIETY
     if (you.religion == GOD_OKAWARU)
     {
         monster dummy;
@@ -598,7 +597,6 @@ static piety_gain_t _sac_corpse(const item_def& item)
         gain = div_rand_round(gain, 700);
         return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
     }
-#endif
 
     gain_piety(13, 19);
 
