@@ -119,7 +119,7 @@ Interface
 * Loads of new tiles.
 * Fixed Pan/Hell lords get special tall tiles.
 * An in-game high scores browser.
-* Picking up stackable items shows how many did you pick up.
+* Picking up stackable items shows how many you picked up.
 
 Wizmode
 -------
