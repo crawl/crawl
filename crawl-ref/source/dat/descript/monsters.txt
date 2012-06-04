@@ -2813,6 +2813,13 @@ deformed humanoid
 
 This poor creature looks hideously deformed.
 %%%%
+demonic plant
+
+Just as demons are shaped in a mockery of living beings, this... thing...
+here is a mockery of a plant. The colours don't match, and normal plants
+don't have mysterious appendages and tentacles writhing around. Fortunately,
+this one appears to be harmless, but with demons, you can never be sure.
+%%%%
 earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
@@ -2921,6 +2928,12 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
+petrified plant
+
+Something has turned these ordinary plants into stone. Better not tarry
+here, if whatever petrified these plants gets you as well, we'll be stuck
+with a statue as ugly as you standing here for ages.
+%%%%
 pristine statue
 
 An immaculately sculpted porphyry statue of an archer poised to release an
@@ -2996,6 +3009,15 @@ warrior statue
 This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
 it appears to be capable of moving its arms, keeping your distance seems to be
 the only way to keep your vital organs undamaged.
+%%%%
+withered plant
+
+This plant has lost the war against life-draining influences, yet its
+physical form is intact. Its dead body stays here uneaten, as any small
+creatures that would naturally decompose it prefer to stay away. And it
+looks like this plant died many {{ if you.branch() == "Crypt" or
+you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
+ago.
 %%%%
 wizard statue
 
