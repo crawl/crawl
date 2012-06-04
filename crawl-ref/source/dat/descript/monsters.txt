@@ -2768,6 +2768,15 @@ antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
+apple tree
+
+This tree bears fruit that can feed a hungry tiger. And that's not an error
+— you will serve as the middle step in the food chain.
+%%%%
+apricot tree
+
+<apple tree>
+%%%%
 archer statue
 
 The likeness of a beatiful elven archer, sculpted in finest marble. It holds a
@@ -2797,6 +2806,10 @@ Cigotuvi's Monster
 
 This terrifying creation looks to have been constructed from the body parts of
 every monstrous creature imaginable.
+%%%%
+citrus tree
+
+<apple tree>
 %%%%
 # In first umpteen pages of googling, the only use of "Iskenderun" for a
 # living being is the first Turkish Van cat brought to Britain.  With
@@ -2940,6 +2953,10 @@ An immaculately sculpted porphyry statue of an archer poised to release an
 arrow, with a full quiver at the hip. The individually sculpted arrows look
 almost as if they could be removed one by one and used in a real bow.
 %%%%
+pyrus tree
+
+<apple tree>
+%%%%
 rock troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
@@ -2960,6 +2977,10 @@ skeletal archer
 Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
+%%%%
+soapberry tree
+
+<apple tree>
 %%%%
 spooky statue
 
