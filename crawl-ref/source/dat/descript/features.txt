@@ -556,6 +556,11 @@ lost beyond all hope in short order - better not risk it.
 ########################
 ### Vault redefinitions
 ########################
+# wizlabs: all but Eringya
+An empty arch of stone
+
+This is the portal you came through; it looks bereft of magic now.
+%%%%
 # wizlab: Wucad Mu
 An autumnal tree
 
