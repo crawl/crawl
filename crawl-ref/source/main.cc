@@ -2841,6 +2841,9 @@ static void _decrement_durations()
                           "Your shroud unravels.",
                           0,
                           "Your shroud begins to fray at the edges.");
+
+    if (!env.sunlight.empty())
+        process_sunlights();
 }
 
 static void _check_banished()

@@ -185,6 +185,13 @@ static void _update_agrid()
         no_areas = false;
     }
 
+    if (!env.sunlight.empty())
+    {
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            _set_agrid_flag(env.sunlight[i].first, APROP_HALO);
+        no_areas = false;
+    }
+
     // TODO: update sanctuary here.
 
     _agrid_valid = true;
