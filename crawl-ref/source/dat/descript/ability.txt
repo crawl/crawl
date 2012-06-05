@@ -464,7 +464,8 @@ proportional to your invocations skill.
 Rain
 
 Cause rain to fall around yourself, turning the dungeon floor into shallow
-water and shallow water into deep water.
+water and shallow water into deep water. This is likely to allow plants and
+mushrooms to grow in areas not directly drenched.
 %%%%
 Reproduction
 
