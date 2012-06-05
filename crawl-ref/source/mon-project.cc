@@ -90,7 +90,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     mon->flags &= ~MF_JUST_SUMMONED;
     mon->props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
-        : "";
+        : (caster->is_player()) ? "you" : "";
     mon->props["iood_mid"].get_int() = caster->mid;
 
     // Move away from the caster's square.
