@@ -105,6 +105,7 @@ struct crawl_environment
     int forest_awoken_until;
     int density;
     int absdepth0;
+    std::vector<std::pair<coord_def, int> > sunlight;
 
     // Volatile level flags, not saved.
     uint32_t level_state;

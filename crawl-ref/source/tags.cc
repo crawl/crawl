@@ -2423,6 +2423,13 @@ static void tag_construct_level(writer &th)
     marshallInt(th, env.forest_awoken_until);
     marshall_level_vault_data(th);
     marshallInt(th, env.density);
+
+    marshallShort(th, env.sunlight.size());
+    for (size_t i = 0; i < env.sunlight.size(); ++i)
+    {
+        marshallCoord(th, env.sunlight[i].first);
+        marshallInt(th, env.sunlight[i].second);
+    }
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -3061,6 +3068,21 @@ static void tag_read_level(reader &th)
     env.forest_awoken_until = unmarshallInt(th);
     unmarshall_level_vault_data(th);
     env.density = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_SUNLIGHT)
+    {
+#endif
+    int num_lights = unmarshallShort(th);
+    env.sunlight.clear();
+    while (num_lights-- > 0)
+    {
+        coord_def c = unmarshallCoord(th);
+        env.sunlight.push_back(std::pair<coord_def, int>(c, unmarshallInt(th)));
+    }
+#if TAG_MAJOR_VERSION == 33
+    }
+#endif
 }
 
 static void tag_read_level_items(reader &th)

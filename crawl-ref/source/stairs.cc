@@ -14,6 +14,7 @@
 #include "env.h"
 #include "files.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -284,6 +285,8 @@ static void _clear_golubria_traps()
 
 static void _leaving_level_now(dungeon_feature_type stair_used)
 {
+    process_sunlights(true);
+
     if (player_in_branch(BRANCH_ZIGGURAT)
         && stair_used == DNGN_EXIT_PORTAL_VAULT)
     {

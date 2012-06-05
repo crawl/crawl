@@ -39,6 +39,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "place.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -2134,12 +2135,10 @@ static bool _create_plant(coord_def & target, int hp_adjust = 0)
     return false;
 }
 
+#define SUNLIGHT_DURATION 80
+
 bool fedhas_sunlight()
 {
-    const int c_size = 5;
-    const int x_offset[] = {-1, 0, 0, 0, 1};
-    const int y_offset[] = { 0,-1, 0, 1, 0};
-
     dist spelld;
 
     bolt temp_bolt;
@@ -2159,33 +2158,106 @@ bool fedhas_sunlight()
 
     const coord_def base = spelld.target;
 
-    int evap_count  = 0;
-    int plant_count = 0;
-    int processed_count = 0;
+    int revealed_count = 0;
 
-    // This is dealt with outside of the main loop.
-    int cloud_count = 0;
-
-    // FIXME: Uncomfortable level of code duplication here but the explosion
-    // code in bolt subjects the input radius to r*(r+1) for the threshold and
-    // since r is an integer we can never get just the 4-connected neighbours.
-    // Anyway the bolt code doesn't seem to be well set up to handle the
-    // 'occasional plant' gimmick.
-    for (int i = 0; i < c_size; ++i)
+    for (adjacent_iterator ai(base, false); ai; ++ai)
     {
-        coord_def target = base;
-        target.x += x_offset[i];
-        target.y += y_offset[i];
-
-        if (!in_bounds(target) || feat_is_solid(grd(target)))
+        if (!in_bounds(*ai) || feat_is_solid(grd(*ai)))
             continue;
 
-        temp_bolt.explosion_draw_cell(target);
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            if (env.sunlight[i].first == *ai)
+            {
+                erase_any(env.sunlight, i);
+                break;
+            }
+        env.sunlight.push_back(std::pair<coord_def, int>(*ai,
+            you.elapsed_time + (distance(*ai, base) <= 1 ? SUNLIGHT_DURATION
+                                : SUNLIGHT_DURATION / 2)));
 
-        actor *victim = actor_at(target);
+        temp_bolt.explosion_draw_cell(*ai);
+
+        monster *victim = monster_at(*ai);
+        if (victim && you.see_cell(*ai) && !victim->visible_to(&you))
+        {
+            // Like entering/exiting angel halos, flipping autopickup would
+            // be probably too much hassle.
+            revealed_count++;
+        }
+
+        if (victim)
+            behaviour_event(victim, ME_ALERT, &you);
+    }
+
+    {
+        // Remove gloom.
+        unwind_var<int> no_time(you.time_taken, 0);
+        process_sunlights(false);
+    }
+
+#ifndef USE_TILE_LOCAL
+    // Move the cursor out of the way (it looks weird).
+    coord_def temp = grid2view(base);
+    cgotoxy(temp.x, temp.y, GOTO_DNGN);
+#endif
+    delay(200);
+
+    if (revealed_count)
+    {
+        mprf("In the bright light, you notice %s.", revealed_count == 1 ?
+             "an invisible shape" : "some invisible shapes");
+    }
+
+    return (true);
+}
+
+void process_sunlights(bool future)
+{
+    int time_cap = future ? INT_MAX - SUNLIGHT_DURATION : you.elapsed_time;
+
+    int evap_count = 0;
+    int cloud_count = 0;
+
+    for (int i = env.sunlight.size() - 1; i >= 0; --i)
+    {
+        coord_def c = env.sunlight[i].first;
+        int until = env.sunlight[i].second;
+
+        if (until <= time_cap)
+            erase_any(env.sunlight, i);
+
+        // Remove gloom, even far away from the spot.
+        for (radius_iterator ai(c, 6); ai; ++ai)
+        {
+            if (env.cgrid(*ai) != EMPTY_CLOUD)
+            {
+                const int cloudidx = env.cgrid(*ai);
+                if (env.cloud[cloudidx].type == CLOUD_GLOOM)
+                {
+                    cloud_count++;
+                    delete_cloud(cloudidx);
+                }
+            }
+        }
+
+        until = std::min(until, time_cap);
+        int from = you.elapsed_time - you.time_taken;
+
+        // Deterministic roll, to guarantee evaporation when shined long enough.
+        struct { short place; coord_def coord; int64_t game_start; } to_hash;
+        to_hash.place = get_packed_place();
+        to_hash.coord = c;
+        to_hash.game_start = you.birth_time;
+        int h = hash(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;
+
+        if ((from + h) / SUNLIGHT_DURATION == (until + h) / SUNLIGHT_DURATION)
+            continue;
+
+        // Anything further on goes only on a successful evaporation roll, at
+        // most once peer coord per invocation.
 
         // If this is a water square we will evaporate it.
-        dungeon_feature_type ftype = grd(target);
+        dungeon_feature_type ftype = grd(c);
         dungeon_feature_type orig_type = ftype;
 
         switch (ftype)
@@ -2204,9 +2276,9 @@ bool fedhas_sunlight()
 
         if (orig_type != ftype)
         {
-            dungeon_terrain_changed(target, ftype);
+            dungeon_terrain_changed(c, ftype);
 
-            if (you.see_cell(target))
+            if (you.see_cell(c))
                 evap_count++;
 
             // This is a little awkward but if we evaporated all the way to
@@ -2215,7 +2287,7 @@ bool fedhas_sunlight()
             // credit if the monster dies. The enchantment is inflicted via
             // the dungeon_terrain_changed call chain and that doesn't keep
             // track of what caused the terrain change. -cao
-            monster* mons = monster_at(target);
+            monster* mons = monster_at(c);
             if (mons && ftype == DNGN_FLOOR
                 && mons->has_ench(ENCH_AQUATIC_LAND))
             {
@@ -2224,73 +2296,7 @@ bool fedhas_sunlight()
                 temp.source = MID_PLAYER;
                 mons->add_ench(temp);
             }
-
-            processed_count++;
         }
-
-        monster* mons = monster_at(target);
-
-        if (victim)
-        {
-            if (!mons)
-                you.backlight();
-            else
-            {
-                backlight_monsters(target, 1, 0);
-                behaviour_event(mons, ME_ALERT, &you);
-            }
-
-            processed_count++;
-        }
-        else if (one_chance_in(100)
-                 && ftype == DNGN_FLOOR
-                 && orig_type == DNGN_SHALLOW_WATER)
-        {
-            // Create a plant.
-            if (create_monster(mgen_data(MONS_PLANT,
-                                         BEH_HOSTILE,
-                                         &you,
-                                         0,
-                                         0,
-                                         target,
-                                         MHITNOT,
-                                         MG_FORCE_PLACE,
-                                         GOD_FEDHAS))
-                && you.see_cell(target))
-            {
-                plant_count++;
-            }
-
-            processed_count++;
-        }
-    }
-
-    // We damage clouds for a large radius, though.
-    for (radius_iterator ai(base, 7); ai; ++ai)
-    {
-        if (env.cgrid(*ai) != EMPTY_CLOUD)
-        {
-            const int cloudidx = env.cgrid(*ai);
-            if (env.cloud[cloudidx].type == CLOUD_GLOOM)
-            {
-                cloud_count++;
-                delete_cloud(cloudidx);
-            }
-        }
-    }
-
-#ifndef USE_TILE_LOCAL
-    // Move the cursor out of the way (it looks weird).
-    coord_def temp = grid2view(base);
-    cgotoxy(temp.x, temp.y, GOTO_DNGN);
-#endif
-    delay(200);
-
-    if (plant_count)
-    {
-        mprf("%s grow%s in the sunlight.",
-             (plant_count > 1 ? "Some plants": "A plant"),
-             (plant_count > 1 ? "": "s"));
     }
 
     if (evap_count)
@@ -2299,7 +2305,7 @@ bool fedhas_sunlight()
     if (cloud_count)
         mpr("Sunlight penetrates the thick gloom.");
 
-    return (true);
+    invalidate_agrid(true);
 }
 
 template<typename T>
