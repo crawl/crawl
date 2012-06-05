@@ -3204,6 +3204,8 @@ bool bolt::misses_player()
     bool miss = true;
 
     int defl = you.missile_deflection();
+    // rmsl/dmsl works on missiles and bolts, but not light -- otherwise
+    // we'd need to deflect Olgreb's Toxic Radiance, halos, etc.
     if (flavour == BEAM_LIGHT)
         defl = 0;
 
