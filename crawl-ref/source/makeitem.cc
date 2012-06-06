@@ -3326,11 +3326,8 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return (false);
 
-    if ((item.plus || item.plus2)
-        && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
-    {
+    if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return (true);
-    }
 
     return (false);
 }
@@ -3349,7 +3346,7 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return (false);
 
-    if (item.plus && !one_chance_in(3))
+    if (item.flags & ISFLAG_CURSED && !one_chance_in(3))
         return (true);
 
     return (false);
