@@ -503,11 +503,13 @@ snake8
 %weight 10
 snake9
 
+%weight 10
 spider00 WALL_SPIDER
 spider01
 spider02
 spider03
 spider04
+%weight 3
 spider05
 spider06
 spider07
@@ -519,6 +521,7 @@ spider12
 spider13
 spider14
 spider15
+%weight 10
 
 stone_gray0 WALL_STONE_GRAY
 stone_gray1
