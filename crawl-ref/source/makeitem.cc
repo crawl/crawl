@@ -614,6 +614,10 @@ void item_colour(item_def &item)
                 item.colour = ETC_BONE;
                 break;
 
+            case RUNE_FOREST:                   // mossy
+                item.colour = ETC_TREE;
+                break;
+
             case RUNE_SLIME_PITS:               // slimy
                 item.colour = ETC_SLIME;
                 break;

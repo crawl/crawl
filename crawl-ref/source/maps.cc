@@ -342,6 +342,10 @@ static bool _may_overwrite_feature(const coord_def p,
     if (grid == DNGN_DEEP_WATER)
         return water_ok;
 
+    // For the Forest, trees are fair game.
+    if (grid == DNGN_TREE && player_in_branch(BRANCH_FOREST))
+        return true;
+
     // Handle all other non-LOS blocking grids here.
     if (!feat_is_opaque(grid)
         && grid != DNGN_FLOOR

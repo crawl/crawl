@@ -23,6 +23,7 @@
 #include "coordit.h"
 #include "defines.h"
 #include "dgn-delve.h"
+#include "dgn-forest.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-labyrinth.h"
@@ -3833,7 +3834,8 @@ static bool _build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
-                            || player_in_branch(BRANCH_SLIME_PITS);
+                            || player_in_branch(BRANCH_SLIME_PITS)
+                            || player_in_branch(BRANCH_FOREST);
         place.connect(spotty);
     }
 
@@ -3854,6 +3856,8 @@ static void _build_postvault_level(vault_placement &place)
     // kind of wallification it wants.
     if (place.map.has_tag("dis"))
         dgn_build_chaotic_city_level(DNGN_METAL_WALL);
+    else if (player_in_branch(BRANCH_FOREST))
+        dgn_build_forest_level();
     else if (player_in_branch(BRANCH_SWAMP))
         dgn_build_swamp_level();
     else if (player_in_branch(BRANCH_SPIDER_NEST))
@@ -5316,7 +5320,9 @@ static bool _connect_spotty(const coord_def& from)
             if (grd(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if ((grd(*ai) != DNGN_ROCK_WALL && grd(*ai) != DNGN_SLIMY_WALL)
+            if ((grd(*ai) != DNGN_ROCK_WALL && grd(*ai) != DNGN_SLIMY_WALL
+                 && ((grd(*ai) != DNGN_TREE) || 
+                     (!player_in_branch(BRANCH_FOREST))))
                 || flatten.find(*ai) != flatten.end())
             {
                 continue;

@@ -9,6 +9,7 @@
 
 #include "dungeon.h"
 #include "dgn-delve.h"
+#include "dgn-forest.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-layouts.h"
@@ -998,6 +999,12 @@ LUAFN(dgn_layout_chaotic_city)
     return 0;
 }
 
+LUAFN(dgn_layout_forest)
+{
+    dgn_build_forest_level();
+    return 0;
+}
+
 LUAFN(dgn_layout_shoals)
 {
     dgn_build_shoals_level();
@@ -1045,6 +1052,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "layout_basic", &dgn_layout_basic },
     { "layout_bigger_room", &dgn_layout_bigger_room },
     { "layout_chaotic_city", &dgn_layout_chaotic_city },
+    { "layout_forest", &dgn_layout_forest },
     { "layout_shoals", &dgn_layout_shoals },
     { "layout_swamp", &dgn_layout_swamp },
 

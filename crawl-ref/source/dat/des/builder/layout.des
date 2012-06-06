@@ -1047,6 +1047,17 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+NAME: layout_forest
+DEPTH: Forest
+CHANCE: 100%
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    if not is_validating() then dgn.layout_forest() end
+}}
+MAP
+ENDMAP
+
 NAME: layout_shoals
 DEPTH: Shoals
 CHANCE: 100%

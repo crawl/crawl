@@ -2033,21 +2033,32 @@ int mons_forest_level(monster_type mcls)
 {
     switch (mcls)
     {
-    case MONS_SPRIGGAN:
-    case MONS_SPRIGGAN_DRUID:
     case MONS_GRIZZLY_BEAR:
     case MONS_BLACK_BEAR:
+    case MONS_YAK:
     case MONS_WOLF:
+            return 1;
+
+    case MONS_CENTAUR:
+    case MONS_OKLOB_PLANT:
+    case MONS_SPRIGGAN:
         return 2;
 
     case MONS_SPRIGGAN_RIDER:
+    case MONS_CENTAUR_WARRIOR:
         return 3;
 
     case MONS_SPRIGGAN_AIR_MAGE:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_YAKTAUR:
         return 4;
 
+    case MONS_SPRIGGAN_DRUID:
+    case MONS_DEATH_YAK:
+            return 5;
+
     case MONS_SPRIGGAN_DEFENDER:
+    case MONS_YAKTAUR_CAPTAIN:
         return 6;
 
     default:
@@ -2060,22 +2071,29 @@ int mons_forest_rare(monster_type mcls)
     switch (mcls)
     {
     case MONS_SPRIGGAN:
+    case MONS_CENTAUR:
         return 99;
 
-    case MONS_SPRIGGAN_DRUID:
     case MONS_SPRIGGAN_RIDER:
+    case MONS_CENTAUR_WARRIOR:
     case MONS_GRIZZLY_BEAR:
     case MONS_WOLF:
         return 60;
 
     case MONS_SPRIGGAN_AIR_MAGE:
     case MONS_BLACK_BEAR:
+    case MONS_YAK:
+    case MONS_YAKTAUR:
         return 40;
 
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_SPRIGGAN_DRUID:
+    case MONS_YAKTAUR_CAPTAIN:
         return 25;
 
     case MONS_SPRIGGAN_DEFENDER:
+    case MONS_DEATH_YAK:
+    case MONS_OKLOB_PLANT:
         return 20;
 
     default:
