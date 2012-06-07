@@ -189,8 +189,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 if ((fg_idx >= player.MCACHE_START) && cell.mcache)
                 {
                     $.each(cell.mcache, function (i, mcache_part) {
-                        renderer.draw_player(mcache_part[0],
-                                             x, y, mcache_part[1], mcache_part[2]);
+                        if (mcache_part) {
+                            renderer.draw_player(mcache_part[0],
+                                                 x, y, mcache_part[1], mcache_part[2]);
+                        }
                     });
                 }
             }
@@ -453,7 +455,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                     var renderer = this;
                     $.each(cell.ov, function (i, overlay)
                            {
-                               renderer.draw_dngn(overlay, x, y);
+                               if (overlay)
+                                   renderer.draw_dngn(overlay, x, y);
                            });
                 }
 

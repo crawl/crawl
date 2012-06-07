@@ -116,6 +116,8 @@ define(["jquery", "./enums"], function ($, enums) {
 
     function merge(val)
     {
+        if (val === undefined) return;
+
         var x, y;
         if (val.x === undefined)
             x = merge_last_x + 1;
