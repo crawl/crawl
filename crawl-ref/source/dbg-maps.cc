@@ -408,6 +408,8 @@ void generate_map_stats()
     // Warn assertions about possible oddities like the artefact list being
     // cleared.
     you.wizard = true;
+    // Let "acquire foo" have skill aptitudes to work with.
+    you.species = SP_HUMAN;
 
     initialise_branch_depths();
     // We have to run map preludes ourselves.
