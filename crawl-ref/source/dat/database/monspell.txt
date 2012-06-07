@@ -169,14 +169,6 @@ unseen Summon Holies cast
 
 Holy kin are called forth!
 %%%%
-Summon Greater Holy cast
-
-@The_monster@ summons a powerful ally!
-%%%%
-unseen Summon Greater Holy cast
-
-A powerful holy being is summoned!
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
