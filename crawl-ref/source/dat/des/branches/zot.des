@@ -848,6 +848,80 @@ xx...xx.....>.....xx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+################################################################################
+# Xom's getting in the "make people in Zot scream" bracket, with tricks
+# resembling his overflow altars and effects. Extremely nasty and annoying.
+NAME:    hangedman_xom_zot_hilarity
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup patrolling transparent
+DEPTH:   Zot:1-4
+WEIGHT:  3
+KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
+        randart great mace ego:chaos | randart battleaxe ego:chaos| \
+        randart great sword ego:chaos | randart glaive ego:chaos | \
+        randart scythe ego:chaos | any weapon randart ego:chaos w:4 | \
+        randart dire flail w:5 | randart great mace w:5 | randart battleaxe w:5 | \
+        randart great sword w:5 | randart glaive w:5 | randart scythe w:5 | \
+        any weapon randart w:2 | dire flail ego:chaos w:5 | great mace ego:chaos w:5 | \
+        great sword ego:chaos w:5 | battleaxe ego:chaos w:5 | glaive ego:chaos w:5 | \
+        scythe ego:chaos w:5 | any weapon ego:chaos w:2 | dire flail w:30 | \
+        great mace w:30 | battleaxe w:30 | great sword w:30 | \
+        scythe w:30 | glaive w:30 | any weapon w:12 . \
+        randart sling ego:chaos | randart bow ego:chaos | \
+        randart crossbow ego:chaos | sling | bow | crossbow | \
+        nothing w:15 . sling bullet | arrow | bolt . \
+        rod of smiting w:6 | rod of demonology w:4 | rod of summoning w:4 | \
+        rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
+        wand of confusion | wand of random effects w:6 | \
+        wand of polymorph other w:6 | any wand w:28 | any rod w:2 | \
+        nothing w:45 . randart ring mail | randart chain mail | \
+        randart scale mail | randart splint mail | ring mail | \
+        chain mail | scale mail | splint mail | nothing w:20
+KMONS:   2468 = killer klown
+KMONS:   _ = ghost moth
+KMONS:   90 = moth of wrath / butterfly w:30
+KFEAT:   0 = known zot trap
+KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
+KFEAT:   _ = altar_xom
+KFEAT:   > = } mimic
+KPROP:   ^~> = no_rtele_into
+MARKER:  - = lua:restrict_door()
+COLOUR:  ^~ = warp
+FTILE:   ^ = floor_rough_magenta
+FTILE:   ~ = floor_rough_lightmagenta
+NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
+SUBST:   d = tGmcc, c = cccccbbvva, M = m`, ` = `:195 ':3 ":2
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SHUFFLE: 56, 78, ^~, cm / xn
+MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
+             delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
+MARKER:  " = lua:fog_machine { cloud_type = "noxious fumes", pow_max = 17, \
+             delay_min = 350, delay_max = 400, size_min = 2, size_max = 3}
+MAP
+        mmmmmmm
+    @mmmm2.1.2mmmm@
+  @.cmMMmm+m+mmMMmc.@
+  ...clMMl```lMMlc...
+ @c.c.```````````.c.c@
+ mmc.l````.c.````l.cmm
+ mMl``c..`.>.`..c``lMm
+ mMM``.>.`d..`d>.``MMm
+mmmM``.d.^~~^`...``Mmmm
+m3ml`````m--mm^````lm6m
+m.+``...^m999-~d..``+.m
+m4m``c>.~-9_9-~.>c``m5m
+m.+``..d~-999m^...``+.m
+m3ml````^mm--m`````lm6m
+mmmM``...`^~~^.d.``Mmmm
+ mMM``.>d`..d`.>.``MMm
+ mMl``c..`.>.`..c``lMm
+ mmc.l````.c.````l.cmm
+ @c.c.```````````.c.c@
+  ...clMMl```lMMlc...
+  @.cmMMmm+m+mmMMmmc.@
+    @mmmm8.7.8mmmm@
+        mmmmmmm
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
