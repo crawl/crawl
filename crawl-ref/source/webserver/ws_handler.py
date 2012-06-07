@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, xhtml_escape, to_unicode
+from tornado.escape import json_encode, json_decode, to_unicode
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -371,8 +371,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                               content = 'You need to log in to send messages!')
             return
 
-        chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
-                    (self.username, xhtml_escape(text)))
         receiver = None
         if self.process:
             receiver = self.process
@@ -380,7 +378,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
-            receiver.send_to_all("chat", content = chat_msg)
+            receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
         error = register_user(username, password, email)

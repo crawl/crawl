@@ -5,7 +5,7 @@ import hashlib
 
 import config
 
-from tornado.escape import json_decode, json_encode
+from tornado.escape import json_decode, json_encode, xhtml_escape
 from tornado.ioloop import PeriodicCallback
 
 from terminal import TerminalRecorder
@@ -72,6 +72,11 @@ class CrawlProcessHandlerBase(object):
     def send_to_all(self, msg, **data):
         for receiver in self._receivers:
             receiver.send_message(msg, **data)
+
+    def handle_chat_message(self, username, text):
+        chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
+                    (username, xhtml_escape(text)))
+        self.send_to_all("chat", content = chat_msg)
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -462,6 +467,14 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         elif self.conn:
             self.conn.send_message(msg.encode("utf8"))
+
+    def handle_chat_message(self, username, text):
+        super(CrawlProcessHandler, self).handle_chat_message(username, text)
+
+        self.conn.send_message(json_encode({
+                    "msg": "note",
+                    "content": "%s: %s" % (username, text)
+                    }))
 
     def _on_process_output(self, line):
         self.check_where()
