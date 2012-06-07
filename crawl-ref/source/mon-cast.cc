@@ -1127,7 +1127,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_CANIFORMS:
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SUMMON_HOLIES:
-    case SPELL_SUMMON_GREATER_HOLY:
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
     case SPELL_LEDAS_LIQUEFACTION:
@@ -3672,24 +3671,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
-        return;
-
-    case SPELL_SUMMON_GREATER_HOLY: // Holy monsters.
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
-        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 4 + 1);
-
-        duration  = std::min(2 + mons->hit_dice / 5, 6);
-        create_monster(
-            mgen_data(random_choose_weighted(
-                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
-                        10, MONS_APIS,        5,  MONS_DAEVA,
-                        2,  MONS_PEARL_DRAGON,
-                      0), SAME_ATTITUDE(mons),
-                      mons, duration, spell_cast, mons->pos(),
-                      mons->foe, 0, god));
-
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of
