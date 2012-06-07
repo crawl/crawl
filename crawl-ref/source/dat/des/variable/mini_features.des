@@ -1609,7 +1609,7 @@ xx..m..mm.....mm..m..xx
 ENDMAP
 
 NAME:   wad_floor_pattern_1
-TAGS:   mini_float
+TAGS:   mini_float extra
 WEIGHT: 2
 FTILE:  ' = floor_volcanic
 COLOUR: ' = red
@@ -1642,7 +1642,7 @@ MAP
 ENDMAP
 
 NAME:   wad_floor_pattern_2
-TAGS:   mini_float
+TAGS:   mini_float extra
 WEIGHT: 2
 FTILE:  ' = floor_black_cobalt
 COLOUR: ' = green
@@ -1675,7 +1675,7 @@ MAP
 ENDMAP
 
 NAME: wad_floor_pattern_trapped
-TAGS: mini_float
+TAGS: mini_float extra
 WEIGHT: 4
 FTILE:  GT = floor_iron
 FTILE:  ;" = floor_pebble
