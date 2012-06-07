@@ -559,7 +559,10 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_STAVES:
-        item.colour  = BROWN;
+        if (item_is_rod(item))
+            item.colour = YELLOW;
+        else
+            item.colour  = BROWN;
         item.special = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 
