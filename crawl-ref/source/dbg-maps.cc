@@ -15,6 +15,7 @@
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
+#include "ng-init.h"
 #include "player.h"
 #include "view.h"
 
@@ -404,6 +405,7 @@ static void _write_mapgen_stats()
 
 void generate_map_stats()
 {
+    initialise_branch_depths();
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();
