@@ -2537,6 +2537,8 @@ xxxx@xx.xxxxxxxxx.xxxxxxx
       xxxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+
 NAME:   nooodl_glass_maze
 ORIENT: float
 SUBST:  M = cm..
@@ -2561,6 +2563,8 @@ c.cc.cc.cc.cc.cc.c
 c..M....M.....0.*c
 c@cccccccccccccccc
 ENDMAP
+
+##############################################################################
 
 NAME:    hangedman_screamer
 ORIENT:  float
@@ -2603,6 +2607,8 @@ xbbxx22x4x22xxddx
     xxxxxxxxx
 ENDMAP
 
+##############################################################################
+
 NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
@@ -2620,6 +2626,8 @@ xxxxxxx....xxxxxxx
 xxxxxxxx||xxxxxxxx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
 
 NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate
@@ -2648,6 +2656,8 @@ w'wwwwww'ww'w
 ww''''''ww'ww
 @wwwwwwww@ww@
 ENDMAP
+
+##############################################################################
 
 NAME:   nicolae_oklob_transplants
 TAGS:   no_hmirror
@@ -2679,6 +2689,8 @@ xxxs.........sxxx
   xxsss]})sssxx
    xxxxxxxxxxx
 ENDMAP
+
+##############################################################################
 
 NAME:   grunt_hell_entry_demonic_statue
 TAGS:   no_monster_gen no_rtele_into
@@ -2727,4 +2739,381 @@ xxbbbbGbbbbbGdbbbxx
     xxxv===vxxx
     xxxH...Ixxx
     xx@@@@@@@xx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_pebble_path
+DEPTH:  D:2-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+c..............@..............c
+.x.............'.............x.
+x.x........I..'''..I........x.x
+cx.x.........'''''.........x.xc
+ccx.x.....I.'''''''.I.....x.xcc
+cccx.x.......'''''.......x.xccc
+ccccx.x....I..'''..I....x.xcccc
+cccccx.x...x..c'c..x...x.xccccc
+......x.xcxxxc.'.cxxxcx.x......
+cccccx.x...x..c'c..x...x.xccccc
+ccccx.x.......'''.......x.xcccc
+cccx.x........'''........x.xccc
+ccx.x.........'''.........x.xcc
+cx.x..........'''..........x.xc
+x.x.......c.cc'''cc.c.......x.x
+.x.......c.c.cc'cc.c.c.......x.
+c........cccccc+cccccc........c
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_lake_hut
+DEPTH:  D:2-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+FTILE: "1 = floor_dirt
+COLOUR: "1 = brown
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx1"1"WxxxxxxxxxxWWWwwwWWWWxx
+xxx""""WWWWxccccxWWWWWWwwwWWWWx
+xx"1""WWWWx.cccc.xWWWWWWwwWWWxx
+x11""Wxxxxcc.''.ccxxxxWWwwWxxxx
+x""""WWwwxcc''''ccxxWWWwwwWWWWx
+x""""Wwwwxcc''''ccxWWWwwwWWWWWx
+x"11Wwxxxxcc.''.ccxWwwwwxxxxxxx
+x1"WWwwwWWxcc++ccxWwwwWW"11""1x
+x"""WWwwwWWxc..cxWWWwwwWW""xx=x
+xx"1"WWwwxxxxx=xxxxWWwwwWW"x''x
+xx""1WWwxxWW.....xxxWWwwWWWx''x
+x1"""Wxxx"W..''..WWxxWwwWWWx''x
+x""Wxxx""WW.''''..WWxxWwwW"x''x
+xWxxx""1WWx''''''x.W"xxww"1xxxx
+xxx""""WWxxx.''.xxxWx"xxwww""1x
+x""xx1WWwwx..''..xwwW""xxwww""x
+x""1"WWWww..''''..ww"xx"xxww1"x
+x1"""1WWwwx''''''xwwW"xx"xxww1x
+x"xx""WW.xxx.''.xxx.WW1"""xxwwx
+xx""""1Wwwx..''..xwwWW"""xxxxxx
+xxx"1""Www..''''..wwWW""""1"xxx
+xx"xx"WWwwx''''''xwwWW"x""xx"xx
+xx""1"WW.xxx.''.xxx.WW""x"1"1xx
+x"xx""WWwwx..''..xwwWW"""""1xxx
+xx"1""1Www..''''..wwWW"""xx11xx
+xxx"xx"1wwx''''''xwwWW"xx.11xxx
+xxxx"1""Wxxx.''.xxx.WW".xx.xxxx
+xxxxxx""""x..''..x..WWxx1xxxxxx
+xxxxxxxxxxx.''@'.xxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_guarded_room
+DEPTH:  D:6-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+xx....xxxxxxxxxxxxxxxxxxxx
+x.........+.xxxxxxxxxxxxxx
+...xx...xxx..............x
+...xxx....x..xx..xx0.xx..x
+..xxx.....x..xx0.xx..xx..x
+...xx...xxxxx..xx..xx..xxx
+x......x.xxxx.0xx..xx.0xxx
+xx....xxx..xxxx0.xx..xx..x
+xx....xxx..xxxx..xx0.xx..x
+x......x.xxxx..xx..xx.0xxx
+...xx...xxxxx..xx..xx..xxx
+...xxx..xxxxxxx0.xx..xx.0x
+..xxx...xxxxxxx..xx..xx..x
+...xx...xxxxx..xx.0xx..xxx
+x......xxxxxx..xx..xx0.xxx
+xx....xxxx.............xxx
+xx....xxxx.xcccccc=ccccccx
+x......xxx.xc..xxx.xxx..cx
+...xx...xx.xcxxxx...xxxxcx
+...xxx..+..xcxxxx0'0xxxxcx
+..xxx...xxxxcxxx9.'.9xxxcx
+...xx...xxxxcxxxxx'xxxxxcx
+x......xxxxxcxx..0'0..xxcx
+xx....xxxxxxcxx.T.'.T.xxcx
+xx....xxxxxxcxx..'''..xxcx
+x......xxxxxcxx..'''..xxcx
+...xx...xxxxcxx.T.'.T.xxcx
+...xxx..xxxxcx%%%xxx%%%xcx
+..xxx...xxxxc**xxxxxxx**cx
+...xx...+..xcnncccccccnncx
+x......xxx...............@
+xx....xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_statue_garden
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+FTILE: 12"t> = floor_grass
+COLOUR: 12" = green
+FTILE: ; = floor_dirt
+COLOUR: ; = brown
+MONS:   plant, bush
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x""""""1;;;;;;;xxxxxxxxxxxxxxxcxxxxxxxxxxxxxxxx.+.9xx
+x""""""";"t"t";xxxxxGxcxGxcxGxcxGxcxGxcxGxxxxxx.xxxxx
+x""""""1;;;;;;;+.....+.................+.....+;;x'%'x
+x""""""";;"";;xxxx.xGxcxGxcxGc=cGxcxGxcxGx.xxx.;x.'0x
+x""""""1;2222;"t"c+ccccccccccc'ccccccccccc+c...;x'0'x
+x"""""1";2tt2;t"tc.cn%xxx'.'.'''.'0'xxx%nc.c...;xxx+x
+x1"1"1"1;2222;"t"c.nc%+...'0'.'9'.'...+%cn.c...;;;;;x
+x""WWWWW;;"";;cccc.cn*xxG'.'.'''.'.'Gxx*nc.cccc;xxx+x
+x"WWwwwWW;;;;;c'.'.cn%+...'.'.'.'0'...+%nc.'.'c;x'.'x
+x""WWWWW;;"";;c.G..nc*x..'.'.'U'.'.'..x%cn..G.c;x*'9x
+x1"1"1"1;2222;c'.'.cn%+...'0'.'.'.'...+*nc.'.'c;x'.'x
+x"""""1";2tt2;cccc.cn%xxG'.'.'''.'.'Gxx%nc.cccc;xxx+x
+x""""""1;2tt2;t11c.nc*+..0'.'.'.'.'...+*cn.c...;;;;;x
+x""""""";2tt2;t>1c.cn%xxx'.'8'''.'0'xxx%nc.cxx.;xxx+x
+x""""""1;2tt2;t"1c+ccccccccccccccccccccccc+cxx.;x'.'x
+x""""""";2222;t"tx.xxx.x.x.x.x.x.x.x.x.xxx.xx..;x0'%x
+x1"1"1"1;;"";;;.xx.xx...................xx.xx..;x'0'x
+xxxxxxxx;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;xxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_bat_island
+DEPTH:  D:8-16
+ORIENT: float
+WEIGHT: 4
+FTILE: >.12t = floor_grass
+COLOUR: .12 = green
+FTILE: ; = floor_grass_dirt_mix
+COLOUR: ; = brown
+MONS:   plant, bat, shark
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx>xxxxxwwwwwwxxxwxwxxxxxxxwxxwxxxwwwxxxxxx
+xxxx1;WWxwwwwwwwwwwwwwxxxxxwwwwwwwwwwwwxxxxx
+xxxxx;1Wxxxxwwwwwwwwwwwwwwxxwwwwxwwwwwwwwwxx
+xxx21;WWwwxxxwwwwwwwwwwwwwwwwwwxxxwwwwwwwwwx
+xxxt;WWwwwwwwwwwwWWWWWwww3wwwwwwxwwwwwwwwwwx
+xx1;WWwwwww3xwwwWW;;;WWwwwwWWwwwwwwwwwwwwwxx
+xx;WWwwwwxwwwwwWW;2.t;WWwwWwwWwwwwwWWWWwwxxx
+xxWWwwwwxxwwwwWW;.12.2;WWWwwwwWWWwWxxxxWwwxx
+xxxwWWWxxxwwwwWW;t..1t;WWwwwwwwwwWxxxwwwWwwx
+xxxwwwwWWxwwwwWW;2tt2.;WWwwww3wwwwwwwwwwWwwx
+xxwwwwwwwWxWWWwWW;.1t;WWwwwwwwwwwwwwwwwxWwwx
+xwwww3wwwwWwwwwwWW;;;WWwwwwwwxxwwwwwwwxWwxwx
+xxwwwwwwwwwwxwwwwWWWWWwwwwwxxxxwwwwwwwWwwwxx
+xxwwwwxxwwwxxxwwwwwwwwwwwwwwwwwwwwwwwwWwwwwx
+xxwwwxxxwwwwxwwwwwwwwWWWWwwwwwwwwwWWwWWwwwxx
+xxwwxxxwwwwwwxxwwwwWWxxxxWWWwwwWWWwwWxwwwxxx
+xxxxxxwwwwwxxxwxwwWxxxwxwwwwWWWwxxxxxwwxxxxx
+xxxxxxxwxxxxxwxxx@xxxxxwxxxxxxwxwxwxxxxwwxxx
+ENDMAP
+
+##############################################################################
+
+NAME: wad_mega_maze
+ORIENT: float
+WEIGHT: 4
+NSUBST: ? = 1:n / 1:= / *:X
+SUBST:  X : cccvvb
+MAP
+X@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X....XXXXXXXX0X.X.............^...........X....X
+XXXX.XX.......X.X.XXX.XXXXXXXX.XXXXXXXX.X.X.XX.X
+X....XX.XXXXXXX.X...X.XG.....X.XXXXXXXX.X...XX.X
+X.XXXXX.X.......XXX.X.XXXXXX.X.X.....XX.XXXXXX.X
+X.XXXXX.X.XXXXX...X.X.X....X.X.X.XXX.XX.X......X
+X....XX.X.XXXXXXXXX.X.X.XX.X.X.X.XXX.X%9X.XXXXXX
+XXXX.XX.X...........X.X.XXXX.X.X.XXX.XXXX.XG...X
+X.....X.XXXXXXX.XXXXX.X....X.X.X.XXX......XXXX.X
+X.XX.XX..X....X.....X.X.XX.X.X.X.?X?XXXXXXXXXX.X
+X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.?|?...XX....X.X
+X......X.X.XXXXXXXXXXXXXXXXXXXXX.?|?.X.XX.XX.X.X
+XXXXXX.X.X..........^............?|?.X....XX.X.X
+X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.???XXXXXXXX.X.X
+X.XXXX.X.X.X.XX...X.X.XXXXX....X.XX..........X.X
+X......X...X....XXX.X.X...X.XX.X.XX.XXX.XXXXXX.X
+XXXXXX.XXXXXXX.XXXX.X.XXX.X.XX.X....XXX........X
+X....X.XXXXX.....X..X.XXX.X.XX.XXXXXXXXXXXXXXXXX
+X.XX.X.XXXXXXX.X.X.XX.XX..X.XX...X......XXX....X
+X.XX...XXX.XXX.X.X.XX.XX.XX.XXXX.X.XXXX.....XX.X
+X.XXXXXXXX.X...X...XX.XX.....9*X.X....XXX.XXXX.X
+X.XXXXXXXX.XXXXXXXXXX.XXXXXXXXXX.X.XXXX0X.X.GX.X
+X.XXXXXXXX............^..........X.XXX..X.X.XX.X
+X.X...XXXX.XXXXXXXXXX.XXXXXXXXXX.X.....XX.X.XX.X
+X.X.X.XXXX.X........X.XX.......X.XXXXXXXX.X.XX.X
+X...X........XXXXXX0X....XXXXX............X....X
+XXXXXXXXXXXXXXXXXXXXX@XXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+##############################################################################
+
+NAME: wad_river_or_something
+ORIENT: float
+DEPTH:  D:2-16
+WEIGHT: 4
+MAP
+xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx..0....0....0....+........x
+xxG%xxxG%xxxG%xxxG%x........x
+xxxxxxxxxxxxxxxxxxxx+xxxxxxxx
+xx0........0.......^.......xx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xx.........................xx
+xxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxx^.xxxxxxxxx..xxxxxG.xx
+xx.xx0.xx.xxxxxxx.xx.xxxxxx.x
+x.xxxxxxxx.xxx...xxxx..xxxx^x
+x.x...xxx.x.x.xxx.xxxxx.xx.xx
+xx.xxx...xxx.xxxxx.xx%0x..xxx
+xxxxxxxxxxxxxxxxxxx.xxxxxxxxx
+.x.0..x.x..0.x....x.x....x...
+..x..x...x..x.....^.......x..
+..................x.x........
+...................@.........
+ENDMAP
+
+##############################################################################
+
+NAME: wad_crossroads
+DEPTH:  D:2-15
+ORIENT: float
+WEIGHT: 4
+FTILE: 'G = floor_pebble
+SUBST:  X : cccvvb
+MAP
+Xxxxxxxxxxxxx..@..xxxxxxxxxxxxX
+xxx.xxxxx'...xx'xx...'xxxxx.xxx
+x0x...xx'.xxxx'''xxxx.'xx...x0x
+Xx.xx......'.''x''.'......xx.xX
+XXx%x...xxxx''xxx''xxxx...x.xXX
+XXXx.xx....'.''x''.'....xx.xXXX
+XXXXx.x...xxxx'''xxxx...x.xXXXX
+XXXXXx.xx..xGxX'XxGx..xx.xXXXXX
+@.....x.xXxxxX.'.XxxxXx.x.....@
+XXXXXxxxxxxx.xX'Xx.xxxxxxxXXXXX
+XXXXx.x.x..x..'''..x..x.x.xXXXX
+XXXxxx.x....x.'G'.x....x.xxxXXX
+XXx.x.....x..x'''x..x.....x.xXX
+Xxxx.......x..'G'..x.......xxxX
+x0x.....xxX.XX'''XX.Xxx.....x0x
+xx....xxxX.X.XX'XX.X.Xxxx..%.xx
+XxxxxxxxxXXXXXX@XXXXXXxxxxxxxxX
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_arrow_thing
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE:  ' = floor_pebble
+SUBST:  X : cccvvb
+MAP
+XXXXXXXXXXXXXXXXXXXXXXX
+X..%X.............X%..X
+X0G.X.GXGXG.GXGXG.X.G0X
+X.0.X.X.........X.X.0.X
+X+XXX.X.XXXXXXX.X.XXX+X
+X.......^.............X
+XXXXX+XXXXXXXXXXX+XXXXX
+XXXX...X.X.X.X.X...XXXX
+XXX.....'..X..'.9...XXX
+@.....%'''.+^'''......@
+XXX..0..'..X..'.....XXX
+XXXX...X.X.X.X9X...XXXX
+XXXXX+XXXXnXnXXXX+XXXXX
+XXXXX.XXX..*..XXX.XXXXX
+XXXXXX.XXX..0XXX.XXXXXX
+XXXXXXX.XXX9XXX.XXXXXXX
+XXXXXXXX.XX=XX.XXXXXXXX
+XXXXXXXXX.X.X.XXXXXXXXX
+XXXXXXXGXX.X.XXGXXXXXXX
+X0......XXX.XXX.^...0%X
+XXXXXXX.+..X..+.XXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_cavern_with_rooms
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxx@xxxxxxxxxx
+xxxxxx...xxxxxxx..xxxxxxxxxx
+xxxxxx..%xxxxxxx...xxxxxxxxx
+x%..xx.x^xxxxxxx....xxxxxxxx
+x...+.x.xxxxxxx..'..xxxxxxxx
+x...xxxx.xxx....'.'..xxxxxxx
+xxxxxxxxx......'.'.'^..xxxxx
+xxxx1.WWW..xxx..'.'.xx+xxxxx
+xx...WW....+0x^..'..x....xxx
+x1.........xxx......x...0xxx
+xxx.xxxx...'........xxxxxxxx
+xxxxx0.+..'.'...^.xxxxxxxxxx
+xxxxxxxx.'.'.'.xx+x%..x9..xx
+xxxxxxxxx.'.'xxxx.x...+...xx
+xxxxxxxxxx.'xxxxx....0x...xx
+xxxxxxxxxxx@xxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_courtyard
+DEPTH:  D:12-26
+ORIENT: float
+WEIGHT: 4
+FTILE:  "+ = floor_pebble
+FTILE:  ; = floor_limestone
+COLOUR: ; = white
+SUBST:  X : cccvvb
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.%9x0x0x.x%xXXXXXXXXXXXx.x0x%x0x9%.x
+x...x...x...xX8..***..8Xx...x...x...x
+x...x...x...xX.;;;;;;;.Xx...x...x...x
+x...........xX.........Xx...........x
+x...........xXXX+XXX+XXXx...........x
+x........xxxxxxx"xxx"xxxxxxx........x
+xWWWWWWxxx0....+".x."+....0xxxWWWWWWx
+xwwwwwwx%+.;;;.x".x."x.;;;.+9xwwwwwwx
+xwWWWWWxxx0....x+xxx+x....0xxxWWWWWwx
+xwW......xxxxxxx.".".xxxxxxx......Wwx
+xwW............xxx+xxx............Wwx
+xwW............xG.".Gx............Wwx
+xwW......xxx...xxx+xxx...xxx......Wwx
+xwW...xxxxXx......"......xXxxxx...Wwx
+xwW...x..xxx...W.."..W...xxx..x...Wwx
+xwW........0..WWW.".WWW..0........Wwx
+xwW...........WWW.".WWW...........Wwx
+xwW.......xxx..W.."..W..xxx.......Wwx
+xwW....xxxxxx..T.."..T..xXxxxx....Wwx
+xwW....x..xxx..W.."..W..xxx..x....Wwx
+xwW.......0...WWW.".WWW...0.......Wwx
+xwW...........WWW.".WWW...........Wwx
+xwW........xxx.W.."..W.xxx........Wwx
+xwW.....xxxxXx...."....xXxxxx.....Wwx
+xwW.....x..xxx...."....xxx..x.....Wwx
+xwW.............x.".x.............Wwx
+xwWWWWWWWWWWWWWxxx.xxxWWWWWWWWWWWWWwx
+xwwwwwwwwwwwwwwwx...xwwwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 ENDMAP
