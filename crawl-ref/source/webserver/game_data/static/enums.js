@@ -122,7 +122,7 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     fg_flags.flags.POISON       = 0x00800000;
     fg_flags.flags.ANIM_WEP     = 0x01000000;
-    fg_flags.flags.MIMIC        = 0x02000000;
+    fg_flags.flags.UNUSED       = 0x02000000;
     fg_flags.flags.STICKY_FLAME = 0x04000000;
     fg_flags.flags.BERSERK      = 0x08000000;
     fg_flags.flags.INNER_FLAME  = 0x10000000;
@@ -165,9 +165,9 @@ define(function () {
     bg_flags.flags.UNSEEN     = 0x00040000;
     bg_flags.exclusive_flags.push({
         mask       : 0x00180000,
-        CURSOR1    : 0x00080000,
-        CURSOR2    : 0x00100000,
-        CURSOR3    : 0x00180000,
+        CURSOR1    : 0x00180000,
+        CURSOR2    : 0x00080000,
+        CURSOR3    : 0x00100000,
     });
     bg_flags.flags.TUT_CURSOR = 0x00200000;
     bg_flags.flags.TRAV_EXCL  = 0x00400000;
