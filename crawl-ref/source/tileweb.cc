@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "options.h"
 #include "player.h"
 #include "state.h"
@@ -321,6 +322,13 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
             m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
                                                                    (int) end->number_);
         }
+    }
+    else if (msgtype == "note")
+    {
+        JsonWrapper content = json_find_member(obj.node, "content");
+        content.check(JSON_STRING);
+
+        take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
     }
 
     return c;
