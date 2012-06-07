@@ -3320,3 +3320,93 @@ xxxxxxxxxxxxx'G'xxxxxxxxxxxxx'G'xx"xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_opposites_gauntlet
+TAGS:    no_monster_gen patrolling
+ORIENT:  float
+DEPTH:   D:14-26, Vaults:1-6
+MONS:    spriggan rider ; wand of frost . crossbow ego:flame . bolt q:25 / \
+         spriggan rider ; wand of flame . crossbow ego:frost . bolt q:25
+MONS:    two-headed ogre ; giant club ego:holy_wrath . \
+         great mace ego:draining . wand of confusion | wand of slowing
+MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic . \
+         dart ego:exploding q:25 / mermaid ; splint mail . javelin ego:poisoned q:6
+MONS:    fire giant ; battleaxe ego:freezing
+MONS:    frost giant ; great sword ego:flaming
+MONS:    ettin ; giant club ego:holy_wrath . great mace ego:draining . \
+         wand of confusion | wand of slowing / golden dragon
+MONS:    vampire knight ; wand of lightning | wand of draining / \
+         greater naga ; splint mail . halberd ego:anti-magic | glaive ego:anti-magic
+KMONS:   A = fire drake / flaming corpse / fire elemental
+KMONS:   B = lindwurm / mottled dragon / efreet w:5
+KMONS:   C = fire crab / hell knight
+KMONS:   D = small simulacrum w:5 / polar bear
+KMONS:   E = harpy simulacrum w:5 / snapping turtle simulacrum w:5 / ice dragon
+KMONS:   F = hydra simulacrum w:5 / golden dragon simulacrum w:5 / azure jelly
+KMONS:   G = insubstantial wisp / air elemental w:5
+KMONS:   H = air elemental / sixfirhy / vapour w:5
+KMONS:   I = spriggan air mage / storm dragon
+KMONS:   J = stone golem w:5 / earth elemental w:5 / basilisk
+KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
+KMONS:   L = iron dragon / crystal golem
+KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
+             merfolk ; trident ego:holy_wrath
+KMONS:   N = paladin / apis / phoenix w:5
+KMONS:   O = angel / cherub
+KMONS:   P = hellwing / red devil / hell hound
+KMONS:   Q = hell beast / smoke demon / ynoxinul
+KMONS:   R = shadow demon / reaper / cacodemon w:5
+KMONS:   S = eidolon / skeletal warrior / large zombie w:5
+KMONS:   T = flayed ghost / guardian mummy / rotting hulk
+KMONS:   U = death ooze / bone dragon / profane servitor w:5
+KMONS:   V = elephant / very ugly thing / wolf spider
+KMONS:   W = dire elephant / alligator / emperor scorpion
+KMONS:   Y = anaconda / alligator snapping turtle
+KMONS:   X = rock troll / orc knight / hill giant
+KMONS:   Z = iron troll / naga warrior / minotaur
+KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
+KMONS:   d = deep elf mage / wizard / boggart
+KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
+KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
+KMONS:   g = centaur / yaktaur / deep dwarf artificer w:5
+KMONS:   h = centaur warrior / yaktaur captain / cyclops
+KMONS:   i = stone giant / merfolk javelineer w:5
+KFEAT:   ! = granite_statue
+KFEAT:   u = fountain_sparkling
+KMASK:   @' = !no_monster_gen
+KITEM:   | = superb_item, star_item / any w:20
+: if you.absdepth() < 20 then
+SHUFFLE: ABDE / GHJK / MNPQ / VWde, PQ / ST, VW / XZ, de / gh
+: else
+SUBST: B = C, A = B, E = F, D = E, H = I, G = H, K = L, J = K
+SUBST: N = O, M = N, Q = R, P = Q, 2 = 6, 3 = 7
+SHUFFLE: BCEF / HIKL / NOQR / WYef, QR / TU, WY / Za, ef / hi
+NSUBST:  1 = 1:4 / 1:5
+: end
+MAP
+      vvvcbbb
+    vvv..2..bbb
+   vv1...u...1bb
+  vv...b...v...bb
+ vv...bb+c+vv...bb
+vv...bb.....vv...bb
+v|3bbb.......vvv3|b
+v|bbM.........Pvv|b
+bbbNMvvv...bbbPQvvv
+vvvvvvvv+c+bbbbbbbb
+bbbHGvvv...bbbJKvvv
+b*bbG.........Jvv*v
+b*Abbb.......vvvD*v
+bBA..bb.....vv..DEv
+vvv...bb+c+vv...bbb
+b$vv...b...v...bb$v
+b$$vv.........bb$$v
+bb$.vvv.....bbb.$vv
+ bb..!v++c++b!..vv
+  bb...........vv
+   bbb.u.}.u.vvv
+     bnbbnvvnv
+     '@'''''@'
+ENDMAP
