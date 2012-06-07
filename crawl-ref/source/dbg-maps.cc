@@ -405,6 +405,10 @@ static void _write_mapgen_stats()
 
 void generate_map_stats()
 {
+    // Warn assertions about possible oddities like the artefact list being
+    // cleared.
+    you.wizard = true;
+
     initialise_branch_depths();
     // We have to run map preludes ourselves.
     run_map_global_preludes();
