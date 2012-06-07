@@ -1359,6 +1359,28 @@ MAP
 .......
 ENDMAP
 
+NAME: wad_orctagon
+DEPTH:  D:2-4
+WEIGHT: 4
+MONS:   orc
+MAP
+......xxxxxxxxxxxxxx......
+.....xxxxxxxx.1.1xxxx.....
+....xx.xxxxx.G..G.xxxx....
+...xx...xxxx......xxxxx...
+..xxxx.xxxxxx....xxxxxxx..
+.xxxxx=xxxxxx.mm.xxxxxxxx.
+.xxIx.I.xIx.xx++xx.xxx...x
+@+...m.m...x......x.+.mmm@
+.xxIx.I.xIx.xx++xx.xxx...x
+.xxxxxxxxxxxx.mm.xxxxxxxx.
+..xxxxxxxxxxx....xxxxxxx..
+...xxxxxxxxx......xxxxx...
+....xxxxxxxx.G..G.xxxx....
+.....xxxxxxxx.1.1xxxx.....
+......xxxxxxxxxxxxxx......
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -2755,6 +2777,108 @@ MAP
   xxRRRRRRRxx
  xxRRRRRRRRRxx
 xxxxxxx+xxxxxxx
+ENDMAP
+
+NAME:   wad_scary_box
+DEPTH:  D:9-26
+WEIGHT: 4
+FTILE:  ' = floor_pebble
+COLOUR: ' = white
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...............x
+x.x.+.......xx..xx.......xx..x
+x..xcccccccc.xxxxxxxx..G.xx.Gxxx
+xxx.0098+*|n.+.'.'.'..xx.......+
+xxx.0098+**n.+.'.'.'..xx.......+
+x..xcccccccc.xxxxxxxx..G.xx.Gxxx
+x.x.+.......xx..xx.......xx..x
+xxxxxxxxxxxxxx...............x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_mini_maze
+DEPTH:  D:7-26
+WEIGHT: 4
+NSUBST: ? = 1:n / 1:= / *:X
+SUBST:  X : cccvvb
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx@xx
+xXXXXXXXXXXXXXXXXXXXXXXXXX.Xx
+xX9%......X.......X...X....Xx
+xXXXXXX.X.XXXXX.X.XXX.X.XX.Xx
+xX......X.......X.....X..X.Xx
+xX.???XXX.XXXXXXXXXXX.XX.X.Xx
+xX.?**?.......X.X...X.X..X.Xx
+xX.?**?.XXXXX.X.X.X.X.XXXX.Xx
+xX.?**?.....X.X.X.X.X.X....Xx
+xX.X??XXX.X.XXX.X.X.X.X.XXXXx
+xX.X9%..X.X.....X.X.X.X....Xx
+xX.XXXX.X.X.XXX.X.X%X.XXXX.Xx
+xX......X.X...X...X9X......Xx
+xXXXXXXXX.XXXXXXXXXXXXXXXXXXx
+xxxxxxxxx@xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_hexagon
+WEIGHT: 4
+DEPTH:  D:8-26
+KFEAT:  t = tree
+FTILE:  ' = floor_pebble
+COLOUR: ' = white
+MAP
+xxx...xxxxxxxxxxxxxx...xxx
+xx...xxxxxx........xx...xx
+x...xxxxx..xxxxxxxx.xx...x
+...xxxxx...xxxxxxxxx.xx...
+..xxxxx...xxcccccccnx.xx..
+.xxxxx..xxxxc'0...'cxx.xx.
+.xxxx.xxx*.9v.'..'.cxxx.xx
+@....xx**8..=.V''V....+..@
+.xxxx.xxx*.9v.'..'.cxxx.xx
+.xxxxx..xxxxc'...0'cxx.xx.
+..xxxxx...xxcccccccnx.xx..
+...xxxxx...xxxxxxxxx.xx...
+x...xxxxx..xxxxxxxx.xx...x
+xx...xxxxxx........xx...xx
+xxx...xxxxxxxxxxxxxx...xxx
+ENDMAP
+
+NAME:   wad_rectangle_vault
+DEPTH:  D:3-26
+WEIGHT: 4
+FTILE:  ; = floor_pebble
+FTILE: "0^U = floor_pebble_brown
+COLOUR: "0 = brown
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..xxx;;;;;.;;;;;.;;;;;xxx..x
+x..xxxx;";...;";...;";xxxx..x
+xx.x.x;""";.;"0";.;""";x.x.xx
+@.x.x;""^0";""U0";""^"0;x.x.@
+xx.x.x;""";.;""";.;0"";x.x.xx
+x..xxxx;";...;";...;0;xxxx..x
+x..xxx;;;;;.;;;;;.;;;;;xxx..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_dig_loot
+DEPTH:  D:8-26
+WEIGHT: 4
+FTILE:  " = floor_pebble_brown
+COLOUR: " = brown
+MONS:   plant
+MAP
+@....vvvvv..G.@
+.""".vvvvv1....
+.."..vvvvv.."0.
+.....vvvvv.""".
+.^G..vvvvv.^...
+vvvvv.....vvvvv
+vvvvv."...xx*xv
+vvvvv."".G.x%8v
+vvvvv."...xx*xv
+vvvvv0....vvvvv
 ENDMAP
 
 ################################################################
