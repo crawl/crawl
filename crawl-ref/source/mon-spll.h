@@ -581,6 +581,17 @@
       }
     },
 
+    {  MST_LESHY,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING,
+       SPELL_MESMERISE,
+       SPELL_SUMMON_CANIFORMS,
+       SPELL_MINOR_HEALING
+      }
+    },
+
     {  MST_TITAN,
       {
        SPELL_LIGHTNING_BOLT,
@@ -1076,6 +1087,17 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_BERSERKER_RAGE
+      }
+    },
+
+    {  MST_DRYAD,
+      {
+       SPELL_NO_SPELL,
+       SPELL_AWAKEN_FOREST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
       }
     },
 

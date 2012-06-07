@@ -763,6 +763,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
+    case MONS_LESHY:
+            item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = (coinflip() ?
+                                      (one_chance_in(3) ? WPN_DEMON_WHIP
+                                                        : WPN_WHIP)
+                                    : (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
+                                                        : WPN_GIANT_CLUB));
+        break;
+
     case MONS_ILSUIW:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;

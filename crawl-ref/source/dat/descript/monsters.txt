@@ -1026,6 +1026,11 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 green scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
+dryad
+
+A spirit of nature, bound to the forest in which it resides. It is capable
+of calling upon the trees to defend against incursions.
+%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep
@@ -1704,6 +1709,12 @@ lemure
 
 A vaguely humanoid blob of putrid white flesh. It gargles horribly as pus flows
 from its orifices.
+%%%%
+leshy
+
+A guardian spirit of the forest. The club or whip it carries symbolises its
+mastery of its domain, and it can call forth the forest's animals for defense,
+or lure hapless travellers back to its lair to meet a horrible fate.
 %%%%
 lich
 

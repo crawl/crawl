@@ -2403,6 +2403,11 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         }
         break;
 
+    case MONS_LESHY:
+        band = BAND_LESHY;
+        band_size = 6 + random2(3);
+        break;
+
     case MONS_ALLIGATOR:
         // Alligators with kids!
         if (one_chance_in(5))
@@ -2927,6 +2932,13 @@ static monster_type _band_member(band_type band, int power)
                                            8, MONS_REDBACK,
                                           10, MONS_SPIDER,
                                            2, MONS_DEMONIC_CRAWLER,
+                                           0);
+        break;
+
+    case BAND_LESHY:
+        mon_type = random_choose_weighted(10, MONS_WOLF,
+                                           5, MONS_BLACK_BEAR,
+                                           2, MONS_GRIZZLY_BEAR,
                                            0);
         break;
 

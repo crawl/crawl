@@ -2042,6 +2042,7 @@ int mons_forest_level(monster_type mcls)
     case MONS_CENTAUR:
     case MONS_OKLOB_PLANT:
     case MONS_SPRIGGAN:
+    case MONS_DRYAD:
         return 2;
 
     case MONS_SPRIGGAN_RIDER:
@@ -2058,6 +2059,7 @@ int mons_forest_level(monster_type mcls)
             return 5;
 
     case MONS_SPRIGGAN_DEFENDER:
+    case MONS_LESHY:
     case MONS_YAKTAUR_CAPTAIN:
         return 6;
 
@@ -2089,10 +2091,12 @@ int mons_forest_rare(monster_type mcls)
     case MONS_SPRIGGAN_BERSERKER:
     case MONS_SPRIGGAN_DRUID:
     case MONS_YAKTAUR_CAPTAIN:
+    case MONS_DRYAD:
         return 25;
 
     case MONS_SPRIGGAN_DEFENDER:
     case MONS_DEATH_YAK:
+    case MONS_LESHY:
     case MONS_OKLOB_PLANT:
         return 20;
 
