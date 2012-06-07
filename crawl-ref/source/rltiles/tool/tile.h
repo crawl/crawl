@@ -4,6 +4,9 @@
 #include "tile_colour.h"
 #include <string>
 #include <vector>
+#include <stdio.h>
+
+extern FILE* logfile;
 
 class tile
 {
