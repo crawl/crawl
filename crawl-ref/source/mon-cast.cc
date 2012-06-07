@@ -3633,18 +3633,21 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 4 + 1);
+        summon_type = random_choose_weighted(
+                            10, MONS_WOLF,
+                             3, MONS_GRIZZLY_BEAR,
+                             6, MONS_BLACK_BEAR,
+                             0); // no polar bears
+
+        if (summon_type == MONS_WOLF)
+            sumcount2 = 1 + random2(mons->hit_dice / 4 + 1);
+        else
+            sumcount2 = 1 + random2(2);
 
         duration  = std::min(2 + mons->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
-            create_monster(
-                mgen_data(random_choose_weighted(
-                            10, MONS_WOLF,
-                             3, MONS_GRIZZLY_BEAR,
-                             6, MONS_BLACK_BEAR,
-                             // no polar bears
-                          0), SAME_ATTITUDE(mons),
+            create_monster(mgen_data(summon_type, SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
