@@ -3117,3 +3117,206 @@ xwWWWWWWWWWWWWWxxx.xxxWWWWWWWWWWWWWwx
 xwwwwwwwwwwwwwwwx...xwwwwwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_surveillance_ring
+TAGS:    no_monster_gen no_item_gen transparent patrolling
+ORIENT:  float
+DEPTH:   D:16-25, Vaults:2-6
+WEIGHT:  3
+MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
+MONS:    generate_awake golden eye, slime creature, brown ooze
+KFEAT:   > = known shaft trap
+KMASK:   ' = !no_monster_gen
+KMASK:   ' = !no_item_gen
+SHUFFLE: {[(<
+SUBST:   ( = (:70 <, [ = [:50 <
+MAP
+  '''''''''''''''''
+  ''''''cnnnc''''''
+''''ccccc.}.ccccc''''
+'''cc%.c..4..c.%cc'''
+''cc%..+.cnc.+..%cc''
+''c%.3%cnc6cnc%3.%c''
+''c..%cc.....cc%..c''
+''cc+cc.......cc+cc''
+'cc..n.........n..cc'
+'n..cc....{....cc..n'
+'n.1n2...[>(...2n1.n'
+'n..cc....<....cc..n'
+'cc..n.........n..cc'
+''cc+cc.......cc+cc''
+''c..*cc.....cc*..c''
+''c*55*ccc.ccc*55*c''
+''cc*54n.+++.n45*cc''
+'''cc*.n..2..n.*cc'''
+''''ccccc...ccccc''''
+  ''''..c+++c..''''
+  ''''.........''''
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_cross_stitches
+ORIENT:  float
+TAGS:    transparent no_monster_gen
+DEPTH:   D:5-, Vaults, Elf, Snake
+WEIGHT:  5 (Elf, Snake), 10
+KMONS:   " = 0
+KMONS:   ` = 9
+KITEM:   "` = % / $ w:5
+KMASK:   , = !no_monster_gen
+SHUFFLE: XzZ / '"`
+SUBST:   XzZ = x, ' = ., x : x:90 c
+MAP
+           ,,,,,,,,,,,,,,,,,,,,,
+          ,,,,,,,,,,,,,,,,,,,,,,,
+         ,,.X..'..X..'..X..'..X.,,
+        ,,.'x'XxX'x'XxX'x'XxX'x',,
+       ,,.,,X..'..X..'..X..'..X.,,
+      ,,.X,,'..z..`..z..'..X...,,
+     ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
+    ,,..,X..'..z..`..z..'..X.,,
+   ,,.X,,'..z..`..z..'..X...,,
+  ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
+ ,,...X..'..z..`..z..'..X.,,
+,,.X..'..X..'..X..'..X...,,
+,,'x'XxX'x'XxX'x'XxX'x'.,,
+,,.X..'..X..'..X..'..X.,,
+ ,,,,,,,,,,,,,,,,,,,,,,,
+  ,,,,,,,,,,,,,,,,,,,,,
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_cross_veins
+ORIENT:  float
+TAGS:    transparent no_monster_gen no_pool_fixup abyss
+DEPTH:   D:8-, Elf, Snake
+WEIGHT:  5 (Elf, Snake), 10
+KMONS:   12 = 0
+KMONS:   34 = 9
+KMONS:   5 = 9 / 8
+KITEM:   1 = $ / % w:5
+KITEM:   23 = % / $ w:5
+KITEM:   45 = * / % w:5
+: if you.branch() == "Abyss" then
+SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
+: elseif you.absdepth() > 20 then
+SUBST:   x : x m:5, X : xxxcccbv, ' : .:70 w:20 l
+: elseif you.absdepth() > 13 then
+SUBST:   x : x m:3, X : xcc, ' : .:80 wW
+: else
+SUBST:   x : x m:2, ' : .:90 W
+: end
+MAP
+  xxxxxxxx
+ xxXXXXXxxx
+xxxX1'1Xxxxx
+xXXXX.XXXXxx
+xX.XX.XX1Xxx
++.'..'..'Xxxxxx
+xX.XX.XX1Xxxxxxx
+xXXXX.XXXXXXXXxxx
+xxxX.'.XX5.'4Xxxxx
+xXXXX.XXXXX.XXXXxx
+xX2XX.XX.XX.XX4Xxx
+xX'..'..'..'..'Xxxxxx
+xX3XX.XX.XX.XX.Xxxxxxx
+xXXXX.XXXXX.XX5XXXXXxxx
+xxxX3'3XxX.'.XXX1'1Xxxx
+xxxXXXXXXXX.XXXXX.XXXXx
+ xxxxxxX3XX.XX.XX.XX1Xx
+  xxxxxX'..'..'..'..'Xx
+     xxX3XX.XX.XX.XX1Xx
+     xxXXXX.XXXXX.XXXXx
+     xxxxX3'2XxX.'.Xxxx
+      xxxXXXXXxXX.XXxx
+       xxxxxxxxxx+xxx
+ENDMAP
+
+###############################################################################
+
+NAME:   hangedman_cross_cluster
+TAGS:   patrolling transparent no_monster_gen
+DEPTH:  D:8-, Vaults
+ORIENT: float
+MONS:   place:D:3 w:98 / lesser demon w:1 / place:D:3 zombie w:1
+SUBST:  C = CTUV, y : xc, z : ccvb
+KMASK:  ' = !no_monster_gen
+MAP
+              '''''''''
+             '''.xxx.'''
+            '''...x...'''
+           ''''x.1x1.x''''
+        '''''''xxxyxxx'''''''
+       ''''''''x.0x0.x''''''''
+       ''.xxx.....x.....xxx.'''
+     '''...x.....xxx.....x...'''
+ '''''''x.1x$.x'''''''x.$x1.x'''''''
+''''''''xxxyxxx'''''''xxxyxxx''''''''
+'''xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
+''..x......x......c......x......x...'
+'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
+'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
+'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'...x.....ccc.....c.....ccc.....x...'
+''.xxx.....c.....ccc.....c.....xxx.''
+'''''...c.%c9.c.......c.9c%.c...'''''
+ '''''..ccczccc..|C|..ccczccc..'''''
+'''''...c.%c9.c.......c.9c%.c...'''''
+''.xxx.....c.....ccc.....c.....xxx.''
+'...x.....ccc.....c.....ccc.....x...'
+'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
+'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
+'...x......x......c......x......x...'
+''.xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
+''''''''xxxyxxx'''''''xxxyxxx''''''''
+ '''''''x.1x$.x'''''''x.$x1.x'''''''
+     '''...x.....xxx.....x...'''
+       ''.xxx.....x.....xxx.''
+       ''''''''x.0x0.x''''''''
+         ''''''xxxyxxx''''''
+          '''''x.1x1.x'''''
+            '''...x...'''
+             '''.xxx.'''
+              '''''''''
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_stitches_corridor
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:14-
+ORIENT:  float
+KFEAT:   ~ : needle trap / dart trap / . w:80
+KFEAT:   " : shallow_water / . w:90
+KFEAT:   ^ : alarm trap / . w:190
+KMASK:   '~ = !no_monster_gen
+SUBST:   1 = 0.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx"x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x@
+x"""''''''''''''''''''''''''''''''''@
+xx"xx'G'xxxxxxxxxxxxx'G'xxxxxxxxxxxxx
+x~'xcccccx"x.x.x.x"xcccccx"x~x~x~x"xx
+xx''c$0.c"""....."""c%0%c"""'''''"""x
+x~'xc0%1+x"xx.G.xx"x+0%9cx"xx'G'xx"xx
+xx''ccccc..xcccccx..ccccc..xcccccx'~x
+x~'mmmmmmm..c*9$c..xxxxxxx..c.0$c''xx
+xx''ccccc..xc9*$+x^.ccccc..x+1%0cx'~x
+x~'xc0%1+x..ccccc.^x+$*9cx..ccccc''xx
+xx''c$0.c..xxxxxxx..c$9*c..mmmmmmm'~x
+x~'xcccccx..ccccc..xcccccx..ccccc''xx
+xx"xx'G'xx"xc9%0+x"xx'G'xx"x+1%0cx'~x
+x"""'''''"""c%0%c"""....."""c.0$c''xx
+xx"x~x~x~x"xcccccx"x.x.x.x"xcccccx'~x
+xxxxxxxxxxxxx'G'xxxxxxxxxxxxx'G'xx"xx
+@''''''''''''''''''''''''''''''''"""x
+@x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x"xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
