@@ -912,7 +912,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_ARM]   = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAND1] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAND2] = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_HELM]  = TILEP_FLAG_HIDE;
+        if (!is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT))
+            flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
@@ -925,12 +926,27 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_ARM]   = TILEP_FLAG_HIDE;
+        if (doll.parts[TILEP_PART_ARM] != TILEP_ARM_OCTOPODE_SPIKE)
+            flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
+    }
+
+    if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
+        && !is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+    {
+        flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
+    }
+    if (is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT)
+        && (!is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+            // Every felid tile has its own horns.
+            || doll.parts[TILEP_PART_BASE] - TILEP_BASE_FELID
+               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT))
+    {
+        flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }
 }
 

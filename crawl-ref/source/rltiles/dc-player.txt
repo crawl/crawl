@@ -437,6 +437,7 @@ glove_short_blue GLOVE_SHORT_BLUE
 glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
 ## mutations
 claws CLAWS
+player/mutations/octopode1 OCTOPODE_SPIKE
 %end_ctg
 
 # Hand 1
@@ -892,6 +893,18 @@ turban_purple TURBAN_PURPLE WHAT_LAST_NORM
 horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
+%sdir player/mutations
+cat1 HORNS_CAT
+cat2
+cat3
+cat4
+cat5
+cat6
+cat7
+cat8
+cat9
+cat10
+%sdir player/head
 
 ## Doll editor tiles, but not randomly picked
 cone_red CONE_RED
