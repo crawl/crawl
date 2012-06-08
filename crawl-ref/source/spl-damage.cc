@@ -1475,7 +1475,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
                                     "static discharge");
         if (you.airborne())
             damage /= 2;
-        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
+        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "static electricity");
     }
     else if (mons == NULL)
         return (0);
