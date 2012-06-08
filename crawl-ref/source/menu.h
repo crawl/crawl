@@ -269,6 +269,7 @@ enum MenuFlag
     MF_EASY_EXIT        = 0x1000,
     MF_START_AT_END     = 0x2000,
     MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
+    MF_NO_MARK_SELECTED = 0x8000,   /// Wont show a box around selected items (tiles only)
 };
 
 class MenuDisplay
