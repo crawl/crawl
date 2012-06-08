@@ -195,7 +195,7 @@ gnoll CORPSE_GNOLL
 dc-mon/spriggan/spriggan CORPSE_SPRIGGAN
 
 ## Merfolk ('m')
-merfolk_plain_water CORPSE_MERFOLK
+merfolk_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
