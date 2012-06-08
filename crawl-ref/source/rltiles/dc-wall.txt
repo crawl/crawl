@@ -172,12 +172,6 @@ relief3
 %repeat WALL_HALL WALL_HALL_DARKGRAY
 %resetcol
 
-# Maybe move these down to the "pebble" section?
-#hive0 WALL_HIVE_OLD
-#hive1
-#hive2
-#hive3
-
 beehives0 WALL_HIVE
 beehives1
 beehives2
