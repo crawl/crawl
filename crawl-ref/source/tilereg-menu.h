@@ -19,7 +19,7 @@ public:
     virtual void clear();
 
     int maxpagesize() const;
-    void set_entry(int index, const std::string &s, int colour, const MenuEntry *me);
+    void set_entry(int index, const std::string &s, int colour, const MenuEntry *me, bool mark_selected = true);
     void set_offset(int lines);
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);

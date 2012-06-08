@@ -5706,6 +5706,7 @@ void player::init()
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
     unique_creatures.init(false);
+    force_autopickup_table.init(0);
 
     if (kills)
         delete kills;

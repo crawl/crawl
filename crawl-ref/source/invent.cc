@@ -803,14 +803,13 @@ void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
     std::sort(invitems.begin(), invitems.end(), menu_entry_comparator(cond));
 }
 
-void InvMenu::load_items(const std::vector<const item_def*> &mitems,
-                         MenuEntry *(*procfn)(MenuEntry *me))
+menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
+                         MenuEntry *(*procfn)(MenuEntry *me), menu_letter ckey)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
         inv_class[ mitems[i]->base_type ]++;
 
-    menu_letter ckey;
     std::vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = find_menu_sort_condition();
 
@@ -873,6 +872,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
     // Don't make a menu so tall that we recycle hotkeys on the same page.
     if (mitems.size() > 52 && (max_pagesize > 52 || max_pagesize == 0))
         set_maxpagesize(52);
+
+    return ckey;
 }
 
 void InvMenu::do_preselect(InvEntry *ie)
@@ -912,6 +913,21 @@ bool InvMenu::process_key(int key)
         return (true);
     }
 
+    if (type == MT_KNOW)
+    {
+		switch (key)
+		{
+			case '\\':
+			case CK_ENTER:
+			CASE_ESCAPE
+			{
+				lastch = key;
+				return (false);
+				break;
+			}
+		}
+	}
+
     if (items.size()
         && type == MT_DROP
         && (key == CONTROL('D') || key == '@'))
@@ -933,6 +949,9 @@ bool InvMenu::process_key(int key)
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
+    if (type == MT_KNOW && ( mkey == 0 || mkey == CK_ENTER ))
+		return mkey;
+
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
     {

@@ -83,6 +83,8 @@ public:
   FixedVector<bool, NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
+  FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup_table;
+
   // PC's symbol (usually @) and colour.
   monster_type symbol;
   transformation_type form;

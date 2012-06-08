@@ -1985,25 +1985,57 @@ item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
     return you.type_ids[basetype][subtype];
 }
 
-class DiscEntry : public InvEntry
+class KnownEntry : public InvEntry
 {
 public:
-    DiscEntry(InvEntry* inv) : InvEntry(*inv->item)
+    KnownEntry(InvEntry* inv) : InvEntry(*inv->item)
+    {
+        hotkeys[0] = inv->hotkeys[0];
+        selected_qty = inv->selected_qty;
+    }
+
+    virtual std::string get_text(const bool = false) const
+    {
+        int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+
+        std::string s;
+        s += hotkeys[0];
+        s += selected_qty ? " + " : " - ";
+
+        return std::string(" ") + s + pluralise(item->name(DESC_PLAIN,
+                                        false, true, false, false, flags));
+    }
+};
+
+class UnknownEntry : public InvEntry
+{
+public:
+    UnknownEntry(InvEntry* inv) : InvEntry(*inv->item)
     {
     }
 
     virtual std::string get_text(const bool = false) const
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+
         return std::string(" ") + item->name(DESC_PLAIN, false, true,
                                              false, false, flags);
     }
 };
 
-static MenuEntry *discoveries_item_mangle(MenuEntry *me)
+static MenuEntry *known_item_mangle(MenuEntry *me)
 {
     InvEntry *ie = dynamic_cast<InvEntry*>(me);
-    DiscEntry *newme = new DiscEntry(ie);
+    KnownEntry *newme = new KnownEntry(ie);
+    delete me;
+
+    return (newme);
+}
+
+static MenuEntry *unknown_item_mangle(MenuEntry *me)
+{
+    InvEntry *ie = dynamic_cast<InvEntry*>(me);
+    UnknownEntry *newme = new UnknownEntry(ie);
     delete me;
 
     return (newme);
@@ -2020,8 +2052,10 @@ static bool _identified_item_names(const item_def *it1,
 void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
+    std::vector<const item_def*> items2; //List of missles should go after evrything
+    std::vector<SelItem> selected_items;
 
-    bool needs_inversion = false;
+    bool all_items_known = true;
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
@@ -2054,15 +2088,23 @@ void check_item_knowledge(bool unknown_items)
                     if (i == OBJ_WANDS)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
+
+                    if (you.force_autopickup_table[i][j] == 1
+                            || (you.force_autopickup_table[i][j] == 0
+                            && (Options.autopickups & (1L << i))))
+                        selected_items.push_back(SelItem(0,1,ptmp));
                 }
             }
             else
-                needs_inversion = true;
+                all_items_known = false;
         }
     }
 
-    // runes are shown only if known
-    if (!unknown_items)
+    if (unknown_items)
+        all_items_known = false;
+
+    else
+    {// runes are shown only if known
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
             if (you.runes[i])
             {
@@ -2077,40 +2119,81 @@ void check_item_knowledge(bool unknown_items)
                     items.push_back(ptmp);
                 }
             }
+        for (int i = 0; i < NUM_MISSILES; i++)
+        {
+            item_def* ptmp = new item_def;
+            if (ptmp != 0)
+            {
+                ptmp->base_type = OBJ_MISSILES;
+                ptmp->sub_type  = i;
+                ptmp->colour    = 1;
+                ptmp->quantity  = 1;
+                items2.push_back(ptmp);
 
-    if (!unknown_items && items.empty())
-    {
-        // Directly skip ahead to unknown items.
-        check_item_knowledge(true);
-        return;
+                if (you.force_autopickup_table[OBJ_MISSILES][i] == 1
+                        || (you.force_autopickup_table[OBJ_MISSILES][i] == 0
+                        && (Options.autopickups & (1L << OBJ_MISSILES))))
+                    selected_items.push_back(SelItem(0,1,ptmp));
+            }
+        }
     }
 
     std::sort(items.begin(), items.end(), _identified_item_names);
+    std::sort(items2.begin(), items2.end(), _identified_item_names);
     InvMenu menu;
 
+    std::string stitle;
+
     if (unknown_items)
-    {
-        menu.set_title(make_stringf("Items not yet recognised: %s",
-                                    needs_inversion ? "(toggle with -)"
-                                                    : ""));
-    }
-    else if (needs_inversion)
-        menu.set_title("You recognise: (toggle with -)");
+        stitle = "Items not yet recognised: (toggle with \\)";
+    else if (!all_items_known)
+        stitle = "Recognised items. (\\ to show unrecognised items) (Select to toggle autopickup)";
     else
-        menu.set_title("You recognise all items:");
+        stitle = "You recognise all items. (Select to toggle autopickup)";
 
-    menu.set_flags(MF_NOSELECT);
+
+    std::string prompt = "(_ for help)";
+    //TODO: when the menu is opened, the text is not justified properly.
+    stitle = stitle + std::string(std::max(0, get_number_of_cols()
+                                                  - strwidth(stitle)
+                                                  - strwidth(prompt)),
+                                      ' ') + prompt;
+
+    menu.set_title(stitle);
+    menu.set_preselect(&selected_items);
+    menu.set_flags( MF_NO_MARK_SELECTED | MF_ALLOW_FORMATTING
+                    | ((unknown_items) ? MF_NOSELECT : MF_MULTISELECT));
     menu.set_type(MT_KNOW);
-    menu.load_items(items, discoveries_item_mangle);
-    menu.show(true);
-    char last_char = menu.getkey();
+    menu_letter ml = menu.load_items(items,
+                unknown_items ? unknown_item_mangle : known_item_mangle);
 
+    menu.load_items(items2, known_item_mangle, ml);
+
+    menu.show(true);
+
+    char last_char = menu.getkey();
+    std::vector<SelItem> returned_selection;
+    returned_selection = menu.get_selitems();
+
+    if (!unknown_items)
+    {
+        //mark all previously selected items as "never-pickup"
+        for (std::vector<SelItem>::iterator iter = selected_items.begin();
+                iter != selected_items.end(); ++iter)
+            you.force_autopickup_table[iter->item->base_type][iter->item->sub_type] = -1;
+
+        //mark all currently selected items as "always-pickup"
+        for (std::vector<SelItem>::iterator iter = returned_selection.begin();
+                iter != returned_selection.end(); ++iter)
+            you.force_autopickup_table[iter->item->base_type][iter->item->sub_type] = 1;
+    }
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
     {
          delete *iter;
     }
-    if (last_char == '-' && needs_inversion)
+
+    if (!all_items_known && last_char == '\\')
         check_item_knowledge(!unknown_items);
 }
 
@@ -2147,7 +2230,7 @@ void display_runes()
                                 you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
-    menu.load_items(items, discoveries_item_mangle);
+    menu.load_items(items, unknown_item_mangle);
     menu.show();
     menu.getkey();
     redraw_screen();

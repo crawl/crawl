@@ -142,8 +142,8 @@ public:
     // Loads items into the menu. If "procfn" is provided, it'll be called
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
-    void load_items(const std::vector<const item_def*> &items,
-                    MenuEntry *(*procfn)(MenuEntry *me) = NULL);
+    menu_letter load_items(const std::vector<const item_def*> &items,
+                    MenuEntry *(*procfn)(MenuEntry *me) = NULL, menu_letter ckey = 'a');
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for

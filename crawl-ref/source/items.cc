@@ -76,10 +76,19 @@ static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(std::vector<SelItem> tmp_items);
 
-static inline std::string _autopickup_item_name(const item_def &item);
+
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
+
+//static inline std::string _autopickup_item_name(const item_def &item);
+
+static inline std::string _autopickup_item_name(const item_def &item)
+{
+    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
+           + menu_colour_item_prefix(item, false) + " "
+           + item.name(DESC_PLAIN);
+}
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -2514,21 +2523,25 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
-static inline std::string _autopickup_item_name(const item_def &item)
-{
-    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-           + menu_colour_item_prefix(item, false) + " "
-           + item.name(DESC_PLAIN);
-}
+
 
 static bool _is_option_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    for (unsigned i = 0, size = Options.force_autopickup.size(); i < size; ++i)
+	int i = you.force_autopickup_table[item.base_type][item.sub_type];
+	if (i != 0)
+		return (i == 1);
+
+    //Check for inital settings
+    for (i = 0; i < (int)Options.force_autopickup.size(); ++i)
         if (Options.force_autopickup[i].first.matches(iname))
-            return Options.force_autopickup[i].second;
+        {
+            bool r = Options.force_autopickup[i].second;
+            you.force_autopickup_table[item.base_type][item.sub_type] = (r)? 1 : -1;
+            return r;
+        }
 
 #ifdef CLUA_BINDINGS
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
