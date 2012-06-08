@@ -2980,7 +2980,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_JEWELLERY,
         NUM_POTIONS,
         NUM_BOOKS,
-        NUM_STAVES,
+        NUM_RODS,
         1,              // Orbs         -- only one
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
@@ -3776,6 +3776,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_WANDS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_WANDS;
         ii.special = item.special; // appearance
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus; // charges
@@ -3784,6 +3786,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_POTIONS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_POTIONS;
         ii.plus = item.plus; // appearance
         break;
     case OBJ_FOOD:
@@ -3802,6 +3806,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_SCROLLS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_SCROLLS;
         ii.special = item.special; // name seed, part 1
         ii.plus = item.plus;  // name seed, part 2
         break;
@@ -3810,7 +3816,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            ii.sub_type = jewellery_is_amulet(item) ? AMU_FIRST_AMULET : RING_FIRST_RING;
+            ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
             if (item_ident(ii, ISFLAG_KNOW_PLUSES))
                 ii.plus = item.plus; // str/dex/int/ac/ev ring plus
         }
@@ -3834,7 +3840,7 @@ item_info get_item_info(const item_def& item)
             }
         }
         else
-            ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;
+            ii.sub_type = item_is_rod(item) ? NUM_RODS : NUM_STAVES;
         ii.special = item.special; // appearance
         break;
     case OBJ_MISCELLANY:
