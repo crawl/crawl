@@ -53,8 +53,8 @@ public:
     virtual unsigned int char_width() const = 0;
     virtual unsigned int char_height() const = 0;
 
-    virtual unsigned int string_width(const char *text) const = 0;
-    virtual unsigned int string_width(const formatted_string &str) const = 0;
+    virtual unsigned int string_width(const char *text)  = 0;
+    virtual unsigned int string_width(const formatted_string &str)  = 0;
     virtual unsigned int string_height(const char *text) const = 0;
     virtual unsigned int string_height(const formatted_string &str) const = 0;
 

@@ -6,6 +6,11 @@
 
 #include "tilefont.h"
 
+#include <map>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 // TODO enne - Fonts could be made better by:
 //
 // * handling kerning
@@ -52,8 +57,8 @@ public:
     virtual unsigned int char_width() const;
     virtual unsigned int char_height() const;
 
-    virtual unsigned int string_width(const char *text) const;
-    virtual unsigned int string_width(const formatted_string &str) const;
+    virtual unsigned int string_width(const char *text) ;
+    virtual unsigned int string_width(const formatted_string &str) ;
     virtual unsigned int string_height(const char *text) const;
     virtual unsigned int string_height(const formatted_string &str) const;
 
@@ -72,6 +77,10 @@ protected:
 
     int find_index_before_width(const char *str, int max_width);
 
+    ucs_t map_unicode(ucs_t uchar, bool update);
+    ucs_t map_unicode(ucs_t uchar);
+    void update_font_tex();
+
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
@@ -86,6 +95,8 @@ protected:
         bool renderable;
     };
     GlyphInfo *m_glyphs;
+    std::map<ucs_t,ucs_t> m_glyphmap;
+    ucs_t m_glyphmap_top;
 
     // cached value of the maximum advance from m_advance
     coord_def m_max_advance;
@@ -93,8 +104,20 @@ protected:
     // minimum offset (likely negative)
     int m_min_offset;
 
+    // size of ascender
+    int ascender;
+
+    // other font metrics
+    coord_def charsz;
+    unsigned int m_ft_width;
+    unsigned int m_ft_height;
+
     GenericTexture m_tex;
     GLShapeBuffer *m_buf;
+
+    FT_Face face;
+    bool    outl;
+    unsigned char *pixels;
 };
 
 #endif // USE_FT
