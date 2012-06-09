@@ -2949,11 +2949,6 @@ void read_scroll(int slot)
             cancel_scroll = !remove_curse(true, &pre_succ_msg);
         break;
 
-    case SCR_DETECT_CURSE:
-        if (!detect_curse(item_slot, false))
-            id_the_scroll = false;
-        break;
-
     case SCR_ACQUIREMENT:
         mpr("This is a scroll of acquirement!");
         more();

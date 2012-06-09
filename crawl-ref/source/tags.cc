@@ -2110,6 +2110,14 @@ static void tag_read_you_items(reader &th)
     for (i = 0; i < count; ++i)
         for (j = 0; j < count2; ++j)
             you.item_description[i][j] = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
+        for (j = SCR_REMOVE_CURSE + 1; j + 1 < count2; ++j)
+        {
+            you.item_description[IDESC_SCROLLS][j] = you.item_description[IDESC_SCROLLS][j+1];
+            you.item_description[IDESC_SCROLLS_II][j] = you.item_description[IDESC_SCROLLS_II][j+1];
+        }
+#endif
 
     // Identification status.
     for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
@@ -2123,6 +2131,11 @@ static void tag_read_you_items(reader &th)
             you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
         }
     }
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
+        for (j = SCR_REMOVE_CURSE + 1; j + 1 < MAX_SUBTYPES; ++j)
+            you.type_ids[OBJ_SCROLLS][j] = you.type_ids[OBJ_SCROLLS][j+1];
+#endif
 
     // Additional identification info
     you.type_id_props.read(th);
@@ -2196,6 +2209,11 @@ static void tag_read_you_items(reader &th)
         for (i = 0; i < NUM_OBJECT_CLASSES; i++)
             for (j = 0; j < MAX_SUBTYPES; j++)
                 you.force_autopickup[i][j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
+        for (j = SCR_REMOVE_CURSE + 1; j + 1 < MAX_SUBTYPES; ++j)
+            you.force_autopickup[OBJ_SCROLLS][j] = you.force_autopickup[OBJ_SCROLLS][j+1];
+#endif
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)
@@ -2482,6 +2500,13 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
     item.sub_type    = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL
+        && item.base_type == OBJ_SCROLLS && item.sub_type > SCR_REMOVE_CURSE)
+    {
+        --item.sub_type;
+    }
+#endif
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);

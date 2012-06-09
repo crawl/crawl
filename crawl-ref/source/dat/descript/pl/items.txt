@@ -1187,11 +1187,6 @@ scroll of curse weapon
 
 Ten zwój przeklina trzymaną w dłoni broń.
 %%%%
-scroll of detect curse
-
-Ten zwój pozwala na odkrycie przekleństw rzuconych na przedmioty które
-posiadasz.
-%%%%
 scroll of enchant armour
 
 Ten zwój pozwala na poprawienie jakości zbroi. Większość części zbroi można

@@ -13,7 +13,6 @@ int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 bool remove_curse(bool alreadyknown = true, std::string *pre_msg = NULL);
 bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg = NULL);
-bool detect_curse(int scroll, bool suppress_msg);
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);

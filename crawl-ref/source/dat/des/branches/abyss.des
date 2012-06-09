@@ -571,7 +571,7 @@ KMONS:   12 = great orb of eyes perm_ench:shapeshifter
 KMONS:   34 = guardian serpent perm_ench:shapeshifter
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
-KITEM:   24d = scroll of detect curse w:5 q:1 / scroll of curse weapon w:5 q:1 / \
+KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          scroll of random uselessness q:1 / sultana q:1 w:5 / \
          potion of water w:5 q:1 / club w:5 / staff w:5 / stone q:1 / \
          mundane dart q:1 / needle q:1 ego:sickness / mundane animal skin / \

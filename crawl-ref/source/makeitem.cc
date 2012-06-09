@@ -723,7 +723,6 @@ static bool _is_boring_item(int type, int sub_type)
         // These scrolls increase knowledge and thus reduce risk.
         switch (sub_type)
         {
-        case SCR_DETECT_CURSE:
         case SCR_REMOVE_CURSE:
         case SCR_IDENTIFY:
         case SCR_MAGIC_MAPPING:
@@ -2683,11 +2682,15 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight: 10000
+            // total weight: 8303 if depth_mod < 4,
+            //               9334 if 4 <= depth_mod < 7,
+            //               9754 if depth_mod >= 7,
+            //               and -1133 in sprint
             item.sub_type = random_choose_weighted(
                 1800, SCR_IDENTIFY,
-                1115, SCR_REMOVE_CURSE,
-                 381, SCR_DETECT_CURSE,
+                1250, SCR_REMOVE_CURSE,
+                 // [Cha] don't generate teleportation scrolls if in sprint
+                 802, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
@@ -2698,40 +2701,32 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  331, SCR_ENCHANT_WEAPON_I,
                  331, SCR_ENCHANT_WEAPON_II,
                  331, SCR_AMNESIA,
+                 // [Cha] don't generate noise scrolls if in sprint
+                 331, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
 
                  // Don't create ?oImmolation at low levels (encourage read-ID).
-                 331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
+                 331, (item_level < 4 ? NUM_SCROLLS : SCR_IMMOLATION),
 
                  270, SCR_CURSE_WEAPON,
                  270, SCR_CURSE_ARMOUR,
                  270, SCR_CURSE_JEWELLERY,
 
                  // Medium-level scrolls.
-                 140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
-                 140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
-                 140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_UNHOLY_CREATION),
-                 140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SILENCE),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_UNHOLY_CREATION),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
 
                  // High-level scrolls.
-                 140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
-                 140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
-                 140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-
-                // [ds] Zero-weights should always be at the end,
-                // since random_choose_weighted stops at the first
-                // zero weight.
-
-                (depth_mod < 4 ? 0 : 140), SCR_VULNERABILITY,
-
-                // [Cha] don't generate teleportation scrolls if in sprint
-                (crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
-
-                // [Cha] don't generate noise scrolls if in sprint
-                (crawl_state.game_is_sprint() ? 0 : 331), SCR_NOISE,
+                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_VORPALISE_WEAPON),
+                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_TORMENT),
+                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_HOLY_WORD),
 
                  0);
         }
-        while (agent == GOD_XOM
+        while (item.sub_type == NUM_SCROLLS
+               || agent == GOD_XOM
                && _is_boring_item(OBJ_SCROLLS, item.sub_type)
                && --tries > 0);
     }

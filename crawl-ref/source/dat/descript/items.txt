@@ -1367,11 +1367,6 @@ scroll of curse weapon
 
 This scroll places a curse on a wielded weapon.
 %%%%
-scroll of detect curse
-
-This scroll allows you to detect the presence of cursed items among your
-possessions.
-%%%%
 scroll of enchant armour
 
 This scroll places an enchantment on a piece of armour. Most armour can only be
