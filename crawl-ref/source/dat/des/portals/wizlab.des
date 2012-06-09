@@ -1733,9 +1733,8 @@ KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
 KITEM:      ? = randbook disc:air
 KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
             gold / scroll of silence / ring of teleport control / \
-            amulet of controlled flight / quick blade / ring of evasion /\
-            ring of see invisible / book of clouds / any book w:15 /\
-            any good_item / any w:20
+            quick blade / ring of evasion / ring of see invisible / \
+            book of clouds / any book w:15 / any good_item / any w:20
 KFEAT:      # = deep_water
 NSUBST:     $ = 2:? / *:$
 SUBST:      $ = $%
