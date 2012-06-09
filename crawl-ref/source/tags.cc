@@ -1369,7 +1369,7 @@ static void tag_construct_you_items(writer &th)
 
     for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (j = 0; j < MAX_SUBTYPES; j++)
-            marshallInt(th, you.force_autopickup_table[i][j]);
+            marshallInt(th, you.force_autopickup[i][j]);
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
@@ -2194,7 +2194,7 @@ static void tag_read_you_items(reader &th)
     if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE){
         for (i = 0; i < NUM_OBJECT_CLASSES; i++)
             for (j = 0; j < MAX_SUBTYPES; j++)
-                you.force_autopickup_table[i][j] = unmarshallInt(th);
+                you.force_autopickup[i][j] = unmarshallInt(th);
     }
 #endif
 }

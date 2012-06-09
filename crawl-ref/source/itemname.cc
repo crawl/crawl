@@ -2089,8 +2089,8 @@ void check_item_knowledge(bool unknown_items)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
 
-                    if (you.force_autopickup_table[i][j] == 1
-                            || (you.force_autopickup_table[i][j] == 0
+                    if (you.force_autopickup[i][j] == 1
+                            || (you.force_autopickup[i][j] == 0
                             && (Options.autopickups & (1L << i))))
                         selected_items.push_back(SelItem(0,1,ptmp));
                 }
@@ -2130,8 +2130,8 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->quantity  = 1;
                 items2.push_back(ptmp);
 
-                if (you.force_autopickup_table[OBJ_MISSILES][i] == 1
-                        || (you.force_autopickup_table[OBJ_MISSILES][i] == 0
+                if (you.force_autopickup[OBJ_MISSILES][i] == 1
+                        || (you.force_autopickup[OBJ_MISSILES][i] == 0
                         && (Options.autopickups & (1L << OBJ_MISSILES))))
                     selected_items.push_back(SelItem(0,1,ptmp));
             }
@@ -2180,12 +2180,12 @@ void check_item_knowledge(bool unknown_items)
         //mark all previously selected items as "never-pickup"
         for (std::vector<SelItem>::iterator iter = selected_items.begin();
                 iter != selected_items.end(); ++iter)
-            you.force_autopickup_table[iter->item->base_type][iter->item->sub_type] = -1;
+            you.force_autopickup[iter->item->base_type][iter->item->sub_type] = -1;
 
         //mark all currently selected items as "always-pickup"
         for (std::vector<SelItem>::iterator iter = returned_selection.begin();
                 iter != returned_selection.end(); ++iter)
-            you.force_autopickup_table[iter->item->base_type][iter->item->sub_type] = 1;
+            you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 1;
     }
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
