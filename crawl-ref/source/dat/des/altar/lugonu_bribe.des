@@ -23,8 +23,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
   local item = {["No God"]="amulet of Faith",
-         Ashenzari="scroll of detect curse q:5-10 / amulet of clarity /\
-              ring of see invisible",
+         Ashenzari="amulet of clarity / ring of see invisible",
          Beogh="good_item battleaxe ego:orc_slaying / disc of storms /\
               good_item broad axe ego:orc_slaying w:5 /\
               scroll of immolation q:3-6 / scroll of fear q:3-6",

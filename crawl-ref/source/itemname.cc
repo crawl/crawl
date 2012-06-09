@@ -633,7 +633,6 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_FEAR:               return "fear";
     case SCR_NOISE:              return "noise";
     case SCR_REMOVE_CURSE:       return "remove curse";
-    case SCR_DETECT_CURSE:       return "detect curse";
     case SCR_UNHOLY_CREATION:    return "unholy creation";
     case SCR_ENCHANT_WEAPON_I:   return "enchant weapon I";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
@@ -2889,8 +2888,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_ARMOUR:
         case SCR_VORPALISE_WEAPON:
             return (you.species == SP_FELID);
-        case SCR_DETECT_CURSE:
-            return (you.religion == GOD_ASHENZARI);
         default:
             return (false);
         }

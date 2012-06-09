@@ -616,7 +616,6 @@ i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 i-noise SCR_NOISE
 i-remove_curse SCR_REMOVE_CURSE
-i-detect_curse SCR_DETECT_CURSE
 i-unholy_creation SCR_UNHOLY_CREATION
 i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
 i-enchant_armour SCR_ENCHANT_ARMOUR
