@@ -3357,8 +3357,14 @@ static bool _armour_is_visibly_special(const item_def &item)
 
 jewellery_type get_random_amulet_type()
 {
-    return (jewellery_type)
-                (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+    int res;
+    do
+    {
+        res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+    }
+    // Do not generate cFly (now used for amulet of the Air only)
+    while (res == AMU_CONTROLLED_FLIGHT);
+    return jewellery_type(res);
 }
 
 static jewellery_type _get_raw_random_ring_type()
