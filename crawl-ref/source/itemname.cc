@@ -2089,12 +2089,9 @@ void check_item_knowledge(bool unknown_items)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
 
-                    if (you.force_autopickup[i][j] == 1
-                        || you.force_autopickup[i][j] == 0
-                            && Options.autopickups & (1L << i))
-                    {
+                    std::string pname;
+                    if (item_needs_autopickup(*ptmp))
                         selected_items.push_back(SelItem(0,1,ptmp));
-                    }
                 }
             }
             else
