@@ -2002,8 +2002,8 @@ public:
         s += hotkeys[0];
         s += selected_qty ? " + " : " - ";
 
-        return std::string(" ") + s + pluralise(item->name(DESC_PLAIN,
-                                        false, true, false, false, flags));
+        return std::string(" ") + s + pluralise(item->name(DESC_PLAIN, false,
+                                                   true, false, false, flags));
     }
 };
 
@@ -2052,7 +2052,7 @@ static bool _identified_item_names(const item_def *it1,
 void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
-    std::vector<const item_def*> items2; //List of missles should go after evrything
+    std::vector<const item_def*> items2; //List of missiles should go after everything
     std::vector<SelItem> selected_items;
 
     bool all_items_known = true;
@@ -2090,9 +2090,11 @@ void check_item_knowledge(bool unknown_items)
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1
-                            || (you.force_autopickup[i][j] == 0
-                            && (Options.autopickups & (1L << i))))
+                        || you.force_autopickup[i][j] == 0
+                            && Options.autopickups & (1L << i))
+                    {
                         selected_items.push_back(SelItem(0,1,ptmp));
+                    }
                 }
             }
             else
@@ -2131,9 +2133,11 @@ void check_item_knowledge(bool unknown_items)
                 items2.push_back(ptmp);
 
                 if (you.force_autopickup[OBJ_MISSILES][i] == 1
-                        || (you.force_autopickup[OBJ_MISSILES][i] == 0
-                        && (Options.autopickups & (1L << OBJ_MISSILES))))
+                    || you.force_autopickup[OBJ_MISSILES][i] == 0
+                       && Options.autopickups & (1L << OBJ_MISSILES))
+                {
                     selected_items.push_back(SelItem(0,1,ptmp));
+                }
             }
         }
     }
@@ -2164,8 +2168,8 @@ void check_item_knowledge(bool unknown_items)
     menu.set_flags( MF_NO_MARK_SELECTED | MF_ALLOW_FORMATTING
                     | ((unknown_items) ? MF_NOSELECT : MF_MULTISELECT));
     menu.set_type(MT_KNOW);
-    menu_letter ml = menu.load_items(items,
-                unknown_items ? unknown_item_mangle : known_item_mangle);
+    menu_letter ml = menu.load_items(items, unknown_items ? unknown_item_mangle
+                                                          : known_item_mangle);
 
     menu.load_items(items2, known_item_mangle, ml);
 
@@ -2179,13 +2183,17 @@ void check_item_knowledge(bool unknown_items)
     {
         //mark all previously selected items as "never-pickup"
         for (std::vector<SelItem>::iterator iter = selected_items.begin();
-                iter != selected_items.end(); ++iter)
+             iter != selected_items.end(); ++iter)
+        {
             you.force_autopickup[iter->item->base_type][iter->item->sub_type] = -1;
+        }
 
         //mark all currently selected items as "always-pickup"
         for (std::vector<SelItem>::iterator iter = returned_selection.begin();
-                iter != returned_selection.end(); ++iter)
+             iter != returned_selection.end(); ++iter)
+        {
             you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 1;
+        }
     }
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
