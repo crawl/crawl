@@ -2151,7 +2151,7 @@ void check_item_knowledge(bool unknown_items)
     if (unknown_items)
         stitle = "Items not yet recognised: (toggle with \\)";
     else if (!all_items_known)
-        stitle = "Recognised items. (\\ to show unrecognised items) (Select to toggle autopickup)";
+        stitle = "Recognised items. (\\ for unrecognised, select to toggle autopickup)";
     else
         stitle = "You recognise all items. (Select to toggle autopickup)";
 
