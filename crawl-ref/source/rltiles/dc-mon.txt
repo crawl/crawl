@@ -757,6 +757,7 @@ yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 %sdir dc-mon/unique
 dowan MONS_DOWAN
 duvessa MONS_DUVESSA
+fannar MONS_FANNAR
 %sdir dc-mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER

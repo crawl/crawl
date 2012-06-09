@@ -63,6 +63,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
+static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 
 void init_mons_spells()
 {
@@ -1134,6 +1135,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
     case SPELL_DEATHS_DOOR:
+    case SPELL_OZOCUBUS_ARMOUR:
+    case SPELL_OZOCUBUS_REFRIGERATION:
         return (true);
     default:
         if (check_validity)
@@ -1575,6 +1578,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_DEATHS_DOOR:
         // The caster may be an (undead) enslaved soul.
         if (mon->holiness() == MH_UNDEAD || mon->has_ench(ENCH_DEATHS_DOOR))
+            ret = true;
+        break;
+
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (mon->has_ench(ENCH_OZOCUBUS_ARMOUR))
             ret = true;
         break;
 
@@ -2184,6 +2192,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_mons_drain_life(mons, false))
                 return (false);
         }
+    // Try to use Ozocubu's Refrigeration; if nothing happened,
+    // pretend we didn't cast it.
+    else if (spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
+    {
+        if (!_mons_ozocubus_refrigeration(mons, false))
+            return false;
+    }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2855,6 +2870,78 @@ static bool _mons_drain_life(monster* mons, bool actual)
     {
         if (actual && mons->heal(hp_gain))
             simple_monster_message(mons, " is healed.");
+    }
+
+    return (success);
+}
+
+static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        if (you.can_see(mons))
+        {
+            simple_monster_message(mons,
+                                   " drains the heat from the surrounding"
+                                   " environment!");
+        }
+        else
+            mpr("The ambient heat is drained!");
+
+        flash_view_delay(LIGHTCYAN, 300);
+    }
+
+    bool success = false;
+
+    const int pow = mons->hit_dice;
+    const dice_def dam_dice(3, 5 + pow / 2);
+
+    bolt beam;
+    beam.flavour = BEAM_COLD;
+    beam.thrower = KILL_MON;
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->is_player())
+        {
+            const int hurted = check_your_resists(dam_dice.roll(), BEAM_COLD,
+                                                  "refrigeration");
+            if (actual)
+            {
+                mpr("You feel very cold.");
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM,
+                     "by Ozocubu's Refrigeration", true,
+                     mons->name(DESC_A).c_str());
+                expose_player_to_element(BEAM_COLD, 5);
+            }
+
+            success = true;
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m->res_cold() >= 3)
+                continue;
+
+            const int hurted = mons_adjust_flavoured(m, beam, dam_dice.roll());
+
+            if (actual)
+            {
+                m->hurt(mons, hurted);
+
+                if (m->alive())
+                {
+                    print_wounds(m);
+                    if (mons_class_flag(m->type, M_COLD_BLOOD) && coinflip())
+                    {
+                        m->add_ench(ENCH_SLOW);
+                    }
+                }
+            }
+
+            success = true;
+        }
     }
 
     return (success);
@@ -3560,6 +3647,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _mons_drain_life(mons);
         return;
 
+    case SPELL_OZOCUBUS_REFRIGERATION:
+        _mons_ozocubus_refrigeration(mons);
+        return;
+
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING))
         {
@@ -4012,6 +4103,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const int dur = BASELINE_DELAY
             * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
+        return;
+    }
+
+    case SPELL_OZOCUBUS_ARMOUR:
+    {
+        mprf("A film of ice covers %s body!",
+        apostrophise(mons->name(DESC_THE)).c_str());
+        const int power = (mons->hit_dice * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 0, mons,
+                                   BASELINE_DELAY *
+                                   (20 + random2(power) + random2(power))));
+
         return;
     }
     }

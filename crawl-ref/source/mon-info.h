@@ -83,6 +83,7 @@ enum monster_info_flags
     MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
+    MB_OZOCUBUS_ARMOUR,
     NUM_MB_FLAGS
 };
 

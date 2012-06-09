@@ -1504,6 +1504,7 @@ enum enchant_type
     ENCH_BREATH_WEAPON, // just a simple timer for dragon breathweapon spam
     ENCH_DEATHS_DOOR,
     ENCH_ROLLING,       // Boulder Beetle in ball form
+    ENCH_OZOCUBUS_ARMOUR,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2455,6 +2456,8 @@ enum monster_type                      // menv[].type
 
     MONS_BEAR,                  // genus
     MONS_ELEMENTAL,             // genus
+
+    MONS_FANNAR,
 
     NUM_MONSTERS,               // used for polymorph
 

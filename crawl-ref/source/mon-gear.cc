@@ -1097,6 +1097,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_DAGGER;
         break;
 
+    case MONS_FANNAR:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_STAVES;
+        item.sub_type = STAFF_COLD;
+        break;
+
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
@@ -2008,6 +2014,17 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;
+
+    case MONS_FANNAR:
+    {
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        item.plus = 1 + coinflip();
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
+        set_equip_race(item, ISFLAG_ELVEN);
+        break;
+    }
 
     case MONS_DOWAN:
         item_race = MAKE_ITEM_ELVEN;
