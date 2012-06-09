@@ -2191,12 +2191,11 @@ static void tag_read_you_items(reader &th)
     unmarshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
 
 #if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE){
+    if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE)
+#endif
         for (i = 0; i < NUM_OBJECT_CLASSES; i++)
             for (j = 0; j < MAX_SUBTYPES; j++)
                 you.force_autopickup[i][j] = unmarshallInt(th);
-    }
-#endif
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

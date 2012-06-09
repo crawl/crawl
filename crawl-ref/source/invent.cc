@@ -804,7 +804,7 @@ void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
 }
 
 menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
-                         MenuEntry *(*procfn)(MenuEntry *me), menu_letter ckey)
+                                MenuEntry *(*procfn)(MenuEntry *me), menu_letter ckey)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
@@ -914,19 +914,17 @@ bool InvMenu::process_key(int key)
     }
 
     if (type == MT_KNOW)
-    {
-		switch (key)
-		{
-			case '\\':
-			case CK_ENTER:
-			CASE_ESCAPE
-			{
-				lastch = key;
-				return (false);
-				break;
-			}
-		}
-	}
+        switch (key)
+        {
+            case '\\':
+            case CK_ENTER:
+            CASE_ESCAPE
+            {
+                lastch = key;
+                return (false);
+                break;
+            }
+        }
 
     if (items.size()
         && type == MT_DROP
@@ -950,7 +948,7 @@ unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
     if (type == MT_KNOW && ( mkey == 0 || mkey == CK_ENTER ))
-		return mkey;
+        return mkey;
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')

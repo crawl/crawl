@@ -18,7 +18,7 @@ enum tag_minor_version
     TAG_MINOR_NO_MISSILE_PLUSES,   // ... or not
     TAG_MINOR_ONE_TIME_ABILITIES,  // Split one time abilities away from other gifts
     TAG_MINOR_SUNLIGHT,            // Sunlight lasts some time
-    TAG_MINOR_AUTOPICKUP_TABLE,
+    TAG_MINOR_AUTOPICKUP_TABLE,    // Toggle autopickup from the known item menu
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

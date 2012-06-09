@@ -76,12 +76,8 @@ static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(std::vector<SelItem> tmp_items);
 
-
-
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
-
-//static inline std::string _autopickup_item_name(const item_def &item);
 
 static inline std::string _autopickup_item_name(const item_def &item)
 {
@@ -2530,11 +2526,11 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-	int i = you.force_autopickup[item.base_type][item.sub_type];
-	if (i != 0)
-		return (i == 1);
+    int i = you.force_autopickup[item.base_type][item.sub_type];
+    if (i != 0)
+        return (i == 1);
 
-    //Check for inital settings
+    //Check for initial settings
     for (i = 0; i < (int)Options.force_autopickup.size(); ++i)
         if (Options.force_autopickup[i].first.matches(iname))
         {
