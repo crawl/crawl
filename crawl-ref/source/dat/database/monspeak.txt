@@ -3899,6 +3899,36 @@ VISUAL:@The_monster@ sighs.
 
 @The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
+############ FANNAR ### A cold-hearted elven sorcerer
+Fannar
+
+@_Fannar_common_@
+
+w:5
+@_Fannar_rare_@
+%%%%
+_Fannar_common_
+
+VISUAL:@The_monster@ glares icily @at_foe@.
+
+VISUAL:Some snowflakes condense on @the_monster@.
+
+VISUAL:@The_monster@ brushes some snowflakes from @possessive@ robe.
+
+@The_monster@ murmurs some mystic words to @reflexive@.
+%%%%
+_Fannar_rare_
+
+@The_monster@ says @to_foe@, "Freeze!"
+
+@The_monster@ says @to_foe@, "I shall freeze you to your soul!"
+
+@The_monster@ says @to_foe@, "An icy embrace awaits you..."
+
+@The_monster@ says @to_foe@, "You will make a fine ice sculpture."
+
+@The_monster@ says @to_foe@, "Does this not give you the chills?"
+%%%%
 ############ Gastronok ### A rather hungry wizard-slug
 # Cantrip messages:
 gastronok_self_buff

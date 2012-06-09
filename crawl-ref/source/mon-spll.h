@@ -1229,6 +1229,17 @@
       }
     },
 
+    {  MST_FANNAR,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_NO_SPELL,
+       SPELL_OZOCUBUS_ARMOUR,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_OZOCUBUS_REFRIGERATION,
+       SPELL_BLINK,
+      }
+    },
+
     {  MST_GASTRONOK,
       {
        SPELL_AIRSTRIKE,

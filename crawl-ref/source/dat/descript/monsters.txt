@@ -176,6 +176,25 @@ Frederick
 A svelte fighter-mage who wears a gold-rimmed monocle and seeks a suitable and
 worthy opponent. You likely do not fit the bill.
 %%%%
+Fannar
+
+A cold-hearted elven sorcerer, draped in robes of high office. He whispers
+grimly to himself as he stalks the dungeon, trailing ice crystals through the
+air behind him.
+
+In ages long past, Fannar's wisdom and precocious talent with frost magic won
+him the coveted position of magistrate, placing him in charge of enforcing the
+law throughout the Elven Halls. By all accounts, he was once well known for
+being benevolent, just, and passionate in keeping the elves free from corruption
+and crime, even as those around him began to dabble in necromancy and demonic
+magic.
+
+Over the long centuries of his tenure, Fannar's devotion to justice has warped
+into paranoia and despotism. Even his closest supporters now whisper that his
+magical power has begun to border on the self-destructive. Fannar still tries
+to keep the elves from falling to evil, unwilling or unable to notice that he
+failed long ago.
+%%%%
 Gastronok
 
 A voracious and surprisingly intelligent slug, devoted to eating everything and

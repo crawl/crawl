@@ -1828,6 +1828,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_DOWAN;
     case MONS_DUVESSA:
         return TILEP_MONS_DUVESSA;
+    case MONS_FANNAR:
+        return TILEP_MONS_FANNAR;
 
     // goblins and gnolls ('g')
     case MONS_IJYB:
