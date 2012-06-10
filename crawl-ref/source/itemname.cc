@@ -2161,7 +2161,7 @@ void check_item_knowledge(bool unknown_items)
 
     menu.set_title(stitle);
     menu.set_preselect(&selected_items);
-    menu.set_flags( MF_NO_MARK_SELECTED | MF_ALLOW_FORMATTING
+    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING
                     | ((unknown_items) ? MF_NOSELECT : MF_MULTISELECT));
     menu.set_type(MT_KNOW);
     menu_letter ml = menu.load_items(items, unknown_items ? unknown_item_mangle
