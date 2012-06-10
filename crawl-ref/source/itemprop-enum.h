@@ -398,7 +398,6 @@ enum stave_type
     STAFF_AIR,
     STAFF_EARTH,
     STAFF_CHANNELING,
-    NUM_STAVES,
     // rods
     STAFF_FIRST_ROD,
     STAFF_SMITING = STAFF_FIRST_ROD,
@@ -411,7 +410,7 @@ enum stave_type
     STAFF_DEMONOLOGY,
     STAFF_STRIKING,
     STAFF_VENOM,
-    NUM_RODS,
+    NUM_STAVES,
     STAFF_RANDOM_ROD // Hack for item generation.
 };
 
