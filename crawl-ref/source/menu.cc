@@ -90,7 +90,7 @@ void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
     std::string text = me->get_text(needs_cursor);
-    tiles.get_menu()->set_entry(index, text, colour, me, !m_menu->is_set(MF_NO_MARK_SELECTED));
+    tiles.get_menu()->set_entry(index, text, colour, me, !m_menu->is_set(MF_QUIET_SELECT));
 }
 
 void MenuDisplayTile::set_offset(int lines)
@@ -675,7 +675,7 @@ std::string Menu::get_select_count_string(int count) const
 
 void Menu::draw_select_count(int count, bool force)
 {
-    if (!force && !is_set(MF_MULTISELECT))
+    if (is_set(MF_QUIET_SELECT) || !force && !is_set(MF_MULTISELECT))
         return;
 
     draw_title_suffix(get_select_count_string(count));
