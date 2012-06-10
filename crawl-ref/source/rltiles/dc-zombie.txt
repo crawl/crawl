@@ -1,5 +1,5 @@
 ## Zombies
-%sdir dc-mon/undead/zombies
+%sdir mon/undead/zombies
 zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
@@ -31,7 +31,7 @@ zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
 
-%sdir dc-mon/undead/skeletons
+%sdir mon/undead/skeletons
 ## Skeletons
 skeleton_humanoid_small MONS_SKELETON_SMALL
 skeleton_humanoid_large MONS_SKELETON_LARGE
@@ -51,7 +51,7 @@ skeleton_hydra4
 skeleton_hydra5
 
 ## Simulacra
-%sdir dc-mon/undead/simulacra
+%sdir mon/undead/simulacra
 %rim 0
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
@@ -75,7 +75,7 @@ simulacrum_hydra4
 simulacrum_hydra5
 
 ## Spectral things
-%sdir dc-mon/undead/spectrals
+%sdir mon/undead/spectrals
 spectral_small MONS_SPECTRAL_SMALL
 spectral_large MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL

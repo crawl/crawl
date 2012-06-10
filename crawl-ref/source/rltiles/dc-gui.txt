@@ -6,7 +6,7 @@
 %rim 0
 
 # idx == 0 must be invalid
-dc-dngn/unseen
+dngn/unseen
 
 %sdir gui/startup
 stonesoup STARTUP_STONESOUP
@@ -25,8 +25,8 @@ high_scores STARTUP_HIGH_SCORES
 
 %include dc-commands.txt
 
-dc-misc/todo TODO
-dc-misc/error ERROR
+misc/todo TODO
+misc/error ERROR
 
 %rim 0
 %sdir gui
