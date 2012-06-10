@@ -2,7 +2,7 @@
 %prefix TILE
 %startvalue TILE_FLOOR_MAX floor
 
-%sdir dc-dngn/wall
+%sdir dngn/wall
 
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
@@ -832,7 +832,7 @@ iron0-4
 iron1-4
 iron2-4
 
-dc-dngn/grate DNGN_GRATE
+dngn/grate DNGN_GRATE
 
 %hue 150 120
 green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
@@ -914,7 +914,7 @@ green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 %repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
 %resetcol
 
-%sdir dc-dngn/wall
+%sdir dngn/wall
 emerald1 WALL_EMERALD
 emerald2
 emerald3
@@ -978,5 +978,5 @@ shadow_n DNGN_WALL_SHADOW_N
 shadow_ne DNGN_WALL_SHADOW_NE
 shadow_e DNGN_WALL_SHADOW_E
 
-%sdir dc-dngn/vaults
+%sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK

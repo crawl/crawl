@@ -6,7 +6,7 @@
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
-dc-misc/cursor CURSOR
+misc/cursor CURSOR
 
 ###BASE
 %parts_ctg BASE
