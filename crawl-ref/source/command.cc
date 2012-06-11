@@ -1128,9 +1128,9 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
                 books.push_back(item.name(DESC_PLAIN));
             }
 
-    item.base_type = OBJ_STAVES;
+    item.base_type = OBJ_RODS;
     int book;
-    for (int i = STAFF_FIRST_ROD; i < NUM_STAVES; i++)
+    for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
         book = item.book_number();
@@ -1242,7 +1242,7 @@ static int _do_description(std::string key, std::string type,
                 }
                 else if (type == "spell"
                          || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
+                         || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
                     {

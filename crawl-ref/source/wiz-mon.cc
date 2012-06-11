@@ -146,7 +146,11 @@ static int _make_mimic_item(object_class_type type)
         break;
 
     case OBJ_STAVES:
-        item.sub_type = random2(STAFF_FIRST_ROD - 1);
+        item.sub_type = random2(NUM_STAVES);
+        break;
+
+    case OBJ_RODS:
+        item.sub_type = random2(NUM_RODS);
         break;
 
     case OBJ_GOLD:
@@ -834,6 +838,7 @@ void wizard_give_monster_item(monster* mon)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
         if (item.inscription.find("first") != std::string::npos

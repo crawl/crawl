@@ -1697,7 +1697,7 @@ void append_spells(std::string &desc, const item_def &item)
         desc += chop_string(name, 35);
 
         std::string schools;
-        if (item.base_type == OBJ_STAVES)
+        if (item.base_type == OBJ_RODS)
             schools = "Evocations";
         else
             schools = spell_schools_string(stype);
@@ -2006,70 +2006,72 @@ std::string get_item_description(const item_def &item, bool verbose,
         }
         break;
 
+    case OBJ_RODS:
+        if (verbose)
+        {
+            description <<
+                "\nIt uses its own mana reservoir for casting spells, and "
+                "recharges automatically according to the recharging "
+                "rate.";
+
+            const int max_charges = MAX_ROD_CHARGE;
+            const int max_recharge_rate = MAX_WPN_ENCHANT;
+            if (item_ident(item, ISFLAG_KNOW_PLUSES))
+            {
+                const int num_charges = item.plus2 / ROD_CHARGE_MULT;
+                if (max_charges > num_charges)
+                {
+                    description << "\nIt can currently hold " << num_charges
+                                << " charges. It can be magically "
+                                << "recharged to contain up to "
+                                << max_charges << " charges.";
+                }
+                else
+                    description << "\nIts capacity can be increased no further.";
+
+                const int recharge_rate = item.special;
+                if (recharge_rate < max_recharge_rate)
+                {
+                    description << "\nIts current recharge rate is "
+                                << (recharge_rate >= 0 ? "+" : "")
+                                << recharge_rate << ". It can be magically "
+                                << "recharged up to +" << max_recharge_rate
+                                << ".";
+                }
+                else
+                    description << "\nIts recharge rate is at maximum.";
+            }
+            else
+            {
+                description << "\nIt can have at most " << max_charges
+                            << " charges and +" << max_recharge_rate
+                            << " recharge rate.";
+            }
+        }
+        else if (Options.dump_book_spells)
+        {
+            append_spells(desc, item);
+            if (desc.empty())
+                need_extra_line = false;
+            else
+                description << desc;
+        }
+
+        {
+            std::string stats = "\n";
+            append_weapon_stats(stats, item);
+            description << stats;
+        }
+        description << "\n\nIt falls into the 'Maces & Flails' category.";
+        break;
+
     case OBJ_STAVES:
-        if (item_is_rod(item))
-        {
-            if (verbose)
-            {
-                description <<
-                    "\nIt uses its own mana reservoir for casting spells, and "
-                    "recharges automatically according to the recharging "
-                    "rate.";
-
-                const int max_charges = MAX_ROD_CHARGE;
-                const int max_recharge_rate = MAX_WPN_ENCHANT;
-                if (item_ident(item, ISFLAG_KNOW_PLUSES))
-                {
-                    const int num_charges = item.plus2 / ROD_CHARGE_MULT;
-                    if (max_charges > num_charges)
-                    {
-                        description << "\nIt can currently hold " << num_charges
-                                    << " charges. It can be magically "
-                                    << "recharged to contain up to "
-                                    << max_charges << " charges.";
-                    }
-                    else
-                        description << "\nIts capacity can be increased no further.";
-
-                    const int recharge_rate = short(item.props["rod_enchantment"]);
-                    if (recharge_rate < max_recharge_rate)
-                    {
-                        description << "\nIts current recharge rate is "
-                                    << (recharge_rate >= 0 ? "+" : "")
-                                    << recharge_rate << ". It can be magically "
-                                    << "recharged up to +" << max_recharge_rate
-                                    << ".";
-                    }
-                    else
-                        description << "\nIts recharge rate is at maximum.";
-                }
-                else
-                {
-                    description << "\nIt can have at most " << max_charges
-                                << " charges and +" << max_recharge_rate
-                                << " recharge rate.";
-                }
-            }
-            else if (Options.dump_book_spells)
-            {
-                append_spells(desc, item);
-                if (desc.empty())
-                    need_extra_line = false;
-                else
-                    description << desc;
-            }
-            std::string stats = "\n";
-            append_weapon_stats(stats, item);
-            description << stats;
-            description << "\n\nIt falls into the 'Maces & Flails' category.";
-        }
-        else
         {
             std::string stats = "\n";
             append_weapon_stats(stats, item);
             description << stats;
-            description << "\n\nIt falls into the 'Staves' category.";
         }
+        description << "\n\nIt falls into the 'Staves' category.";
         break;
 
     case OBJ_MISCELLANY:
@@ -2280,7 +2282,7 @@ static void _show_spells(const item_def &item)
     formatted_string fs;
     item_def dup = item;
     spellbook_contents(dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
-                                                        : RBOOK_USE_STAFF,
+                                                        : RBOOK_USE_ROD,
                        &fs);
     fs.display(2, -2);
 }
@@ -2442,6 +2444,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
     case OBJ_MISCELLANY:
         if (item_is_equipped(item))
             actions.push_back(CMD_UNWIELD_WEAPON);
@@ -2891,7 +2894,7 @@ static int _get_spell_description(const spell_type spell,
     if (crawl_state.player_is_dead())
         return (BOOK_NEITHER);
 
-    bool rod = item && item->base_type == OBJ_STAVES;
+    bool rod = item && item->base_type == OBJ_RODS;
     _append_spell_stats(spell, description, rod);
 
     bool undead = false;

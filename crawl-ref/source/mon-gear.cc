@@ -1073,10 +1073,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (one_chance_in(25))
         {
             dprf("generating a rare rod");
-            const int rand_staff = random2(NUM_STAVES - STAFF_FIRST_ROD)
-                                   + STAFF_FIRST_ROD;
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = rand_staff;
+            item.base_type = OBJ_RODS;
+            item.sub_type  = random2(NUM_RODS);
         }
         else
         {

@@ -781,7 +781,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
             continue;
         }
 
-        if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
+        if (wand.base_type != OBJ_WANDS && wand.base_type != OBJ_RODS)
             return (0);
 
         if (wand.base_type == OBJ_WANDS)
@@ -844,13 +844,11 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                 work = true;
             }
 
-            if (short(wand.props["rod_enchantment"]) < MAX_WPN_ENCHANT)
+            if (wand.special < MAX_WPN_ENCHANT)
             {
-                static_cast<short&>(wand.props["rod_enchantment"])
-                    += random_range(1,2);
-
-                if (short(wand.props["rod_enchantment"]) > MAX_WPN_ENCHANT)
-                    wand.props["rod_enchantment"] = short(MAX_WPN_ENCHANT);
+                wand.special += random_range(1, 2);
+                if (wand.special > MAX_WPN_ENCHANT)
+                    wand.special = MAX_WPN_ENCHANT;
 
                 work = true;
             }
@@ -3111,7 +3109,7 @@ static void _update_corpses(int elapsedTime)
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
-    if (!item_is_rod(rod) || rod.plus >= rod.plus2)
+    if (rod.base_type != OBJ_RODS || rod.plus >= rod.plus2)
         return;
 
     // Skill calculations with a massive scale would overflow, cap it.
@@ -3119,7 +3117,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     // -4 rods don't recharge at all.
     aut = std::min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
 
-    int rate = 4 + short(rod.props["rod_enchantment"]);
+    int rate = 4 + rod.special;
 
     rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
     rate = div_rand_round(rate, 100);

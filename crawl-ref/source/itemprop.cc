@@ -480,8 +480,8 @@ void do_curse_item(item_def &item, bool quiet)
     if (item.flags & ISFLAG_CURSED)
         return;
 
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_STAVES)
+    if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY)
     {
         return;
     }
@@ -730,12 +730,11 @@ iflags_t full_ident_mask(const item_def& item)
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
         break;
+    case OBJ_RODS:
+        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE;
+        break;
     case OBJ_STAVES:
-        if (item_is_rod(item))
-            flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES;
-        else
-            flagset = ISFLAG_KNOW_TYPE;
-        flagset |= ISFLAG_KNOW_CURSE;
+        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
@@ -1201,7 +1200,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         }
         return (true);
     }
-    else if (item_is_rod(it))
+    else if (it.base_type == OBJ_RODS)
     {
         if (!hide_charged)
             return (true);
@@ -1210,8 +1209,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         {
             return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
                     || it.plus < it.plus2
-                    || !it.props.exists("rod_enchantment")
-                    || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
+                    || it.special < MAX_WPN_ENCHANT);
         }
         return (true);
     }
@@ -1415,7 +1413,7 @@ int get_damage_type(const item_def &item)
 {
     int ret = DAM_BASH;
 
-    if (item_is_rod(item))
+    if (item.base_type == OBJ_RODS)
         ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
@@ -1472,7 +1470,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         // Merging staff with magical staves for consistency... doing
         // as a special case because we want to be very flexible with
         // these useful objects (we want spriggans and ogres to be
-        // able to use them).
+        // able to use them).  Rods are always 1-handed.
         if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         {
             if (size < SIZE_SMALL)
@@ -1516,6 +1514,9 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
             else if (size > SIZE_MEDIUM && fit < 0)
                 ret += (fit + doub);
         }
+        break;
+
+    case OBJ_RODS:
         break;
 
     case OBJ_CORPSES:   // unwieldy
@@ -1736,10 +1737,13 @@ bool convert2bad(item_def &item)
 
 int weapon_str_weight(const item_def &wpn)
 {
-    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
+    ASSERT(is_weapon(wpn));
 
     if (wpn.base_type == OBJ_STAVES)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
+
+    if (wpn.base_type == OBJ_RODS)
+        return (Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight);
 
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
 }
@@ -1749,7 +1753,7 @@ skill_type weapon_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
-    else if (item_is_rod(item))
+    else if (item.base_type == OBJ_RODS)
         return (SK_MACES_FLAILS); // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
@@ -1898,7 +1902,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     if (sk != SK_THROWING)
         skills.insert(sk);
 
-    if (item_is_rod(item) && item_type_known(item))
+    if (item.base_type == OBJ_RODS && item_type_known(item))
     {
         int sp = 0;
         while (sp < SPELLBOOK_SIZE && is_valid_spell_in_book(item, sp))
@@ -1928,22 +1932,12 @@ void maybe_change_train(const item_def& item, bool start)
         }
 }
 
-static size_type weapon_size(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
-
-    if (item.base_type == OBJ_STAVES)
-        return (Weapon_prop[ Weapon_index[WPN_STAFF] ].fit_size);
-
-    return (Weapon_prop[ Weapon_index[item.sub_type] ].fit_size);
-}
-
 // Returns number of sizes off.
 int cmp_weapon_size(const item_def &item, size_type size)
 {
-    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+    ASSERT(item.base_type == OBJ_WEAPONS);
 
-    return (weapon_size(item) - size);
+    return (Weapon_prop[ Weapon_index[item.sub_type] ].fit_size - size);
 }
 
 // Returns number of sizes away from being a usable weapon.
@@ -1958,11 +1952,14 @@ static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
 // Returns true if weapon is usable as a weapon.
 bool check_weapon_wieldable_size(const item_def &item, size_type size)
 {
-    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+    ASSERT(is_weapon(item));
 
-    // Staves are currently wieldable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
+    // Staves and rods are currently wieldable for everyone just to be nice.
+    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
+        || weapon_skill(item) == SK_STAVES)
+    {
         return (true);
+    }
 
     int fit = _fit_weapon_wieldable_size(item, size);
 
@@ -2098,14 +2095,9 @@ int reach_range(reach_type rt)
 //
 // Staff/rod functions:
 //
-bool item_is_rod(const item_def &item)
-{
-    return (item.base_type == OBJ_STAVES && item.sub_type >= STAFF_FIRST_ROD);
-}
-
 bool item_is_staff(const item_def &item)
 {
-    return (item.base_type == OBJ_STAVES && !item_is_rod(item));
+    return (item.base_type == OBJ_STAVES);
 }
 
 //
@@ -2516,7 +2508,8 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
-        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_STAFF;
+    case OBJ_RODS:
+        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
@@ -2708,6 +2701,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_STAVES:
+    case OBJ_RODS:
         unit_mass = 130;
         break;
 
@@ -2761,6 +2755,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
     case OBJ_MISCELLANY:
         return (EQ_WEAPON);
 
@@ -2792,9 +2787,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
         return (false);
 
     hands_reqd_type hand = hands_reqd(weapon, you.body_size());
-    return (hand == HANDS_TWO
-            && !item_is_rod(weapon)
-            && !is_range_weapon(weapon));
+    return (hand == HANDS_TWO && !is_range_weapon(weapon));
 }
 
 bool shield_reflects(const item_def &shield)

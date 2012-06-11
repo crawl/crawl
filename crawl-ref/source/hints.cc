@@ -816,6 +816,9 @@ void taken_new_item(object_class_type item_type)
       case OBJ_STAVES:
           learned_something_new(HINT_SEEN_STAFF);
           break;
+      case OBJ_RODS:
+          learned_something_new(HINT_SEEN_ROD);
+          break;
       case OBJ_GOLD:
           learned_something_new(HINT_SEEN_GOLD);
           break;
@@ -1716,20 +1719,44 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
-    case HINT_SEEN_STAFF:
-        text << "You have picked up a magic staff or a rod"
+    case HINT_SEEN_ROD:
+        text << "You have picked up a magical rod"
 #ifndef USE_TILE
-                ", both of which are represented by '<w>";
+                " ('<w>";
 
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
-             << "</w>'"
+             << "</w>', like staves)"
 #endif
-                ". Both must be <w>%</w>ielded to be of use. "
-                "Magicians use staves to increase their power in certain "
-                "spell schools. By contrast, a rod allows the casting of "
+                ". It must be <w>%</w>ielded to be of use. "
+                "A rod allows the casting of "
                 "certain spells even without magic knowledge simply by "
-                "e<w>%</w>oking it. For the latter the power depends on "
-                "your Evocations skill.";
+                "e<w>%</w>oking it. The power depends on "
+                "your Evocations skill. It can also be used as a cudgel, "
+                "with its combat value increasing with its recharge rate.";
+        cmd.push_back(CMD_WIELD_WEAPON);
+        cmd.push_back(CMD_EVOKE_WIELDED);
+
+#ifdef USE_TILE
+        text << " Both wielding and evoking a wielded item can be achieved "
+                "by clicking on it with your <w>left mouse button</w>.";
+#endif
+        text << "\nIn hint mode you can reread this information at "
+                "any time by selecting the item in question in your "
+                "<w>%</w>nventory.";
+        cmd.push_back(CMD_DISPLAY_INVENTORY);
+        break;
+
+    case HINT_SEEN_STAFF:
+        text << "You have picked up a magic staff"
+#ifndef USE_TILE
+                " ('<w>";
+
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
+             << "</w>', like rods)"
+#endif
+                ". It must be <w>%</w>ielded to be of use. "
+                "Magicians use staves to increase their power in certain "
+                "spell schools. It can also be used as a weapon.";
         cmd.push_back(CMD_WIELD_WEAPON);
         cmd.push_back(CMD_EVOKE_WIELDED);
 
@@ -4095,63 +4122,58 @@ void hints_describe_item(const item_def &item)
             cmd.push_back(CMD_BUTCHER);
             break;
 
-       case OBJ_STAVES:
-            if (item_is_rod(item))
+       case OBJ_RODS:
+            if (!item_ident(item, ISFLAG_KNOW_TYPE))
             {
-                if (!item_ident(item, ISFLAG_KNOW_TYPE))
-                {
-                    ostr << "\n\nTo find out what this rod might do, you have "
-                            "to <w>%</w>ield it to see if you can use the "
-                            "spells hidden within, then e<w>%</w>oke it to "
-                            "actually do so"
+                ostr << "\n\nTo find out what this rod might do, you have "
+                        "to <w>%</w>ield it to see if you can use the "
+                        "spells hidden within, then e<w>%</w>oke it to "
+                        "actually do so"
 #ifdef USE_TILE
-                            ", both of which can be done by clicking on it"
+                        ", both of which can be done by clicking on it"
 #endif
-                            ".";
-                }
-                else
-                {
-                    ostr << "\n\nYou can use this rod's magic by "
-                            "<w>%</w>ielding and e<w>%</w>oking it"
-#ifdef USE_TILE
-                            ", both of which can be achieved by clicking on it"
-#endif
-                            ".";
-                }
-                cmd.push_back(CMD_WIELD_WEAPON);
-                cmd.push_back(CMD_EVOKE_WIELDED);
+                        ".";
             }
             else
             {
-                ostr << "This staff can enhance your spellcasting, possibly "
-                        "making a certain spell school more powerful, or "
-                        "making difficult magic easier to cast. ";
-
-                bool gives_resist = false;
-                if (gives_resistance(item))
-                {
-                    ostr << "It also offers its wielder protection from "
-                            "certain sources. For an overview of your "
-                            "resistances (among other things) type <w>%</w>"
+                ostr << "\n\nYou can use this rod's magic by "
+                        "<w>%</w>ielding and e<w>%</w>oking it"
 #ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
-                            "button</w>"
+                        ", both of which can be achieved by clicking on it"
 #endif
-                            ".";
+                        ".";
+            }
+            cmd.push_back(CMD_WIELD_WEAPON);
+            cmd.push_back(CMD_EVOKE_WIELDED);
+            Hints.hints_events[HINT_SEEN_ROD] = false;
+            break;
 
-                    cmd.push_back(CMD_RESISTS_SCREEN);
-                    gives_resist = true;
-                }
+       case OBJ_STAVES:
+            ostr << "This staff can enhance your spellcasting, possibly "
+                    "making a certain spell school more powerful, or "
+                    "making difficult magic easier to cast. ";
 
-                if (!gives_resist && you.religion == GOD_TROG)
-                {
-                    ostr << "\n\nSeeing how "
-                         << god_name(GOD_TROG, false)
-                         << " frowns upon the use of magic, this staff will be "
-                            "of little use to you and you might just as well "
-                            "<w>%</w>rop it now.";
-                    cmd.push_back(CMD_DROP);
-                }
+            if (gives_resistance(item))
+            {
+                ostr << "It also offers its wielder protection from "
+                        "certain sources. For an overview of your "
+                        "resistances (among other things) type <w>%</w>"
+#ifdef USE_TILE
+                        " or click on your avatar with the <w>right mouse "
+                        "button</w>"
+#endif
+                        ".";
+
+                cmd.push_back(CMD_RESISTS_SCREEN);
+            }
+            else if (you.religion == GOD_TROG)
+            {
+                ostr << "\n\nSeeing how "
+                     << god_name(GOD_TROG, false)
+                     << " frowns upon the use of magic, this staff will be "
+                        "of little use to you and you might just as well "
+                        "<w>%</w>rop it now.";
+                cmd.push_back(CMD_DROP);
             }
             Hints.hints_events[HINT_SEEN_STAFF] = false;
             break;

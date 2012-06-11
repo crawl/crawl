@@ -132,10 +132,6 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 reach_type weapon_reach(const item_def &item);
 int reach_range(reach_type rt);
 
-// staff/rod functions:
-bool item_is_rod(const item_def &item);
-bool item_is_staff(const item_def &item);
-
 // Macguffins
 bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
@@ -184,4 +180,11 @@ std::string food_type_name (int sub_type);
 const char* weapon_base_name(uint8_t subtype);
 
 void seen_item(const item_def &item);
+
+static inline bool is_weapon(const item_def &item)
+{
+    return item.base_type == OBJ_WEAPONS
+           || item.base_type == OBJ_STAVES
+           || item.base_type == OBJ_RODS;
+}
 #endif

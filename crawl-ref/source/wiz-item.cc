@@ -128,7 +128,7 @@ void wizard_create_spec_object()
         else if (keyin == ':' || keyin == '+')
             class_wanted = OBJ_BOOKS;
         else if (keyin == '|')
-            class_wanted = OBJ_STAVES;
+            class_wanted = OBJ_STAVES; // TODO: rods
         else if (keyin == '0' || keyin == 'O')
             class_wanted = OBJ_ORBS;
         else if (keyin == '}' || keyin == '{')
@@ -749,7 +749,7 @@ void wizard_make_object_randart()
 static bool _item_type_can_be_cursed(int type)
 {
     return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-            || type == OBJ_STAVES);
+            || type == OBJ_STAVES || type == OBJ_RODS);
 }
 
 void wizard_uncurse_item()

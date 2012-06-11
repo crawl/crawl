@@ -1968,18 +1968,20 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_STAVES:
+        valued = item_type_known(item) ? 250 : 120;
+        break;
+
+    case OBJ_RODS:
         if (!item_type_known(item))
             valued = 120;
-        else if (item.sub_type == STAFF_SMITING
-                || item.sub_type == STAFF_STRIKING
-                || item.sub_type == STAFF_WARDING)
+        else if (item.sub_type == ROD_STRIKING
+                 || item.sub_type == ROD_WARDING)
         {
             valued = 150;
         }
         else
             valued = 250;
-
-        if (item_is_rod(item) && item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
             valued += 50 * (item.plus2 / ROD_CHARGE_MULT);
         break;
 

@@ -1333,6 +1333,7 @@ static void tag_construct_you_items(writer &th)
         for (j = 0; j < MAX_SUBTYPES; ++j)
             marshallByte(th, you.item_description[i][j]);
 
+    marshallUByte(th, NUM_OBJECT_CLASSES);
     for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (!item_type_has_ids((object_class_type)i))
@@ -1910,9 +1911,11 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 
     count = unmarshallByte(th);
-    ASSERT(count == NUM_OBJECT_CLASSES);
+    ASSERT(count <= NUM_OBJECT_CLASSES);
     for (j = 0; j < count; ++j)
         you.sacrifice_value[j] = unmarshallInt(th);
+    for (j = count; j < NUM_OBJECT_CLASSES; ++j)
+        you.sacrifice_value[j] = 0;
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
@@ -2117,10 +2120,17 @@ static void tag_read_you_items(reader &th)
             you.item_description[IDESC_SCROLLS][j] = you.item_description[IDESC_SCROLLS][j+1];
             you.item_description[IDESC_SCROLLS_II][j] = you.item_description[IDESC_SCROLLS_II][j+1];
         }
+
+    int iclasses = th.getMinorVersion() < TAG_MINOR_OBJ_RODS
+        ? 14
+        : unmarshallUByte(th);
+#else
+    int iclasses = unmarshallUByte(th);
 #endif
+    ASSERT(iclasses <= NUM_OBJECT_CLASSES);
 
     // Identification status.
-    for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    for (i = 0; i < iclasses; ++i)
     {
         if (!item_type_has_ids((object_class_type)i))
             continue;
@@ -2206,7 +2216,7 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE)
 #endif
-        for (i = 0; i < NUM_OBJECT_CLASSES; i++)
+        for (i = 0; i < iclasses; i++)
             for (j = 0; j < MAX_SUBTYPES; j++)
                 you.force_autopickup[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 33
@@ -2533,6 +2543,30 @@ void unmarshallItem(reader &th, item_def &item)
 #if TAG_MAJOR_VERSION == 33
     if (item.base_type == OBJ_MISSILES && item.sub_type != MI_THROWING_NET)
         item.plus = 0; // allow stacking
+
+    if (th.getMinorVersion() < TAG_MINOR_OBJ_RODS && item.base_type == OBJ_STAVES)
+    {
+        const int STAFF_FIRST_ROD = 13;
+        const int STAFF_SMITING = 13;
+        const int OLD_NUM_STAVES = 23;
+        if (item.sub_type >= STAFF_FIRST_ROD && item.sub_type < OLD_NUM_STAVES)
+        {
+            item.base_type = OBJ_RODS;
+            if (item.sub_type == STAFF_SMITING)
+                item.sub_type = ROD_STRIKING;
+            else
+                item.sub_type -= STAFF_FIRST_ROD;
+            if (item.props.exists("rod_enchantment"))
+            {
+                item.special = item.props["rod_enchantment"].get_short();
+                item.props.erase("rod_enchantment");
+            }
+            else
+                item.special = 0; // paranoia
+        }
+        else if (item.sub_type >= OLD_NUM_STAVES) // recover from recent bugs
+            item.sub_type = random2(NUM_STAVES);
+    }
 #endif
 
     // Fixup artefact props to handle reloading items when the new version

@@ -25,7 +25,7 @@
 static bool _is_bookrod_type(const item_def& item,
                              bool (*suitable)(spell_type spell))
 {
-    if (!item_is_spellbook(item) && !item_is_rod(item))
+    if (!item_is_spellbook(item) && item.base_type != OBJ_RODS)
         return false;
 
     int total       = 0;
@@ -101,7 +101,7 @@ bool is_unholy_item(const item_def& item)
         retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-    case OBJ_STAVES:
+    case OBJ_RODS:
         retval = _is_bookrod_type(item, is_unholy_spell);
         break;
     case OBJ_MISCELLANY:
@@ -168,7 +168,7 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-    case OBJ_STAVES:
+    case OBJ_RODS:
         retval = _is_bookrod_type(item, is_corpse_violating_spell);
         break;
     default:
@@ -180,8 +180,6 @@ bool is_corpse_violating_item(const item_def& item)
 
 bool is_evil_item(const item_def& item)
 {
-    bool retval = false;
-
     if (is_unrandom_artefact(item))
     {
         unrandart_entry* entry = get_unrand_entry(item.special);
@@ -195,41 +193,31 @@ bool is_evil_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_DRAINING
-                  || item_brand == SPWPN_PAIN
-                  || item_brand == SPWPN_VAMPIRICISM
-                  || item_brand == SPWPN_REAPING);
+        return (item_brand == SPWPN_DRAINING
+                || item_brand == SPWPN_PAIN
+                || item_brand == SPWPN_VAMPIRICISM
+                || item_brand == SPWPN_REAPING);
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_DRAINING);
-        break;
+        return (item.sub_type == WAND_DRAINING);
     case OBJ_POTIONS:
-        retval = is_blood_potion(item);
-        break;
+        return is_blood_potion(item);
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_TORMENT);
-        break;
+        return (item.sub_type == SCR_TORMENT);
     case OBJ_STAVES:
-        if (item.sub_type == STAFF_DEATH)
-            return true;
+        return (item.sub_type == STAFF_DEATH);
     case OBJ_BOOKS:
-        retval = _is_bookrod_type(item, is_evil_spell);
-        break;
+        return _is_bookrod_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
-        break;
+        return (item.sub_type == MISC_LANTERN_OF_SHADOWS);
     default:
-        break;
+        return false;
     }
-
-    return (retval);
 }
 
 bool is_unclean_item(const item_def& item)
 {
-    bool retval = false;
-
     if (is_unrandom_artefact(item))
     {
         unrandart_entry* entry = get_unrand_entry(item.special);
@@ -238,17 +226,10 @@ bool is_unclean_item(const item_def& item)
             return (true);
     }
 
-    switch (item.base_type)
-    {
-    case OBJ_BOOKS:
-    case OBJ_STAVES:
-        retval = _is_bookrod_type(item, is_unclean_spell);
-        break;
-    default:
-        break;
-    }
+    if (item.has_spells())
+        return _is_bookrod_type(item, is_unclean_spell);
 
-    return (retval);
+    return false;
 }
 
 bool is_chaotic_item(const item_def& item)
@@ -287,7 +268,7 @@ bool is_chaotic_item(const item_def& item)
         retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-    case OBJ_STAVES:
+    case OBJ_RODS:
         retval = _is_bookrod_type(item, is_chaotic_spell);
         break;
     default:
@@ -364,7 +345,7 @@ bool is_hasty_item(const item_def& item)
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_BOOKS:
-    case OBJ_STAVES:
+    case OBJ_RODS:
         retval = _is_bookrod_type(item, is_hasty_spell);
         break;
     default:
@@ -508,7 +489,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         if (item_is_spellbook(item))
             return (DID_SPELL_MEMORISE);
         // Only Trog cares about spellsbooks vs rods.
-        if (item_is_rod(item))
+        if (item.base_type == OBJ_RODS)
             return (DID_NOTHING);
         break;
 

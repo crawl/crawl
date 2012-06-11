@@ -289,6 +289,7 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
 
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         if (removed)
             verb = "unwielding";
         else
@@ -548,6 +549,7 @@ bool lose_stat(stat_type which_stat, int stat_loss,
 
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         if (removed)
             verb = "unwielding";
         else

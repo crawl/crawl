@@ -21,19 +21,23 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return (first + mod % (last - first + 1));
 }
 
+static tileidx_t _mon_mod(tileidx_t tile, int offset)
+{
+    int count = tile_player_count(tile);
+    return (tile + offset % count);
+}
+
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
-        // Can't just use item.special here as STAFF_POWER abuses
-        // item.special for storing the MP in case of quick re-wield.
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        if (item_is_rod(item))
-            return TILEP_HAND1_ROD_BROWN + desc;
-        else
-            return TILEP_HAND1_STAFF_LARGE + desc;
+        return TILEP_HAND1_STAFF_LARGE + desc;
     }
+
+    if (item.base_type == OBJ_STAVES)
+        return _mon_mod(TILEP_HAND1_ROD_BROWN, item.rnd);
 
     if (item.base_type == OBJ_MISCELLANY)
     {

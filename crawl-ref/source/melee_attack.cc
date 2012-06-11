@@ -256,11 +256,10 @@ bool melee_attack::handle_phase_attempted()
         {
             if (weapon->base_type == OBJ_WEAPONS)
                 count_action(CACT_MELEE, weapon->sub_type);
+            else if (weapon->base_type == OBJ_RODS)
+                count_action(CACT_MELEE, WPN_CLUB);
             else if (weapon->base_type == OBJ_STAVES)
-            {
-                count_action(CACT_MELEE, item_is_rod(*weapon) ?
-                                          WPN_CLUB : WPN_STAFF);
-            }
+                count_action(CACT_MELEE, WPN_STAFF);
         }
         else
             count_action(CACT_MELEE, -1);
@@ -1553,9 +1552,7 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
 
 int melee_attack::player_apply_weapon_skill(int damage)
 {
-    if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   && !is_range_weapon(*weapon)
-                   || weapon->base_type == OBJ_STAVES))
+    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
     {
         damage *= 2500 + (random2(you.skill(wpn_skill, 100) + 1));
         damage /= 2500;
@@ -1592,14 +1589,12 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
-    if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   && !is_range_weapon(*weapon)
-                   || weapon->base_type == OBJ_STAVES))
+    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
     {
         int wpn_damage_plus = weapon->plus2;
 
-        if (item_is_rod(*weapon))
-            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
+        if (weapon->base_type == OBJ_RODS)
+            wpn_damage_plus = weapon->special;
 
         wpn_damage_plus += slaying_bonus(PWPN_DAMAGE);
 
@@ -1723,9 +1718,9 @@ void melee_attack::set_attack_verb()
 
     if (!weapon)
         weap_type = WPN_UNARMED;
-    else if (item_is_staff(*weapon))
+    else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
-    else if (item_is_rod(*weapon))
+    else if (weapon->base_type == OBJ_RODS)
         weap_type = WPN_CLUB;
     else if (weapon->base_type == OBJ_WEAPONS
              && !is_range_weapon(*weapon))
@@ -1964,12 +1959,8 @@ void melee_attack::player_exercise_combat_skills()
         return;
 
     int damage = 10; // Default for unarmed.
-    if (weapon && (weapon->base_type == OBJ_WEAPONS
-                      && !is_range_weapon(*weapon)
-                   || weapon->base_type == OBJ_STAVES))
-    {
+    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
         damage = property(*weapon, PWPN_DAMAGE);
-    }
 
     // Slow down the practice of low-damage weapons.
     if (x_chance_in_y(damage, 20))
@@ -3313,7 +3304,7 @@ void melee_attack::apply_staff_damage()
 {
     special_damage = 0;
 
-    if (!weapon || !item_is_staff(*weapon))
+    if (!weapon || weapon->base_type != OBJ_STAVES)
         return;
 
     switch (weapon->sub_type)
@@ -3522,12 +3513,11 @@ int melee_attack::calc_to_hit(bool random)
 
             }
             else if (weapon->base_type == OBJ_STAVES)
-            {
-                // magical staff
                 mhit += property(*weapon, PWPN_HIT);
-
-                if (item_is_rod(*weapon))
-                    mhit += (short)weapon->props["rod_enchantment"];
+            else if (weapon->base_type == OBJ_RODS)
+            {
+                mhit += property(*weapon, PWPN_HIT);
+                mhit += weapon->special;
             }
         }
 
@@ -3599,16 +3589,11 @@ int melee_attack::calc_to_hit(bool random)
     }
     else    // Monster to-hit.
     {
-        if (weapon
-            && (weapon->base_type == OBJ_WEAPONS
-                && !is_range_weapon(*weapon)
-                || weapon->base_type == OBJ_STAVES))
-        {
+        if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
-        }
 
-        if (weapon && item_is_rod(*weapon))
-            mhit += (short)weapon->props["rod_enchantment"];
+        if (weapon && weapon->base_type == OBJ_RODS)
+            mhit += weapon->special;
     }
 
     // Penalties for both players and monsters:
@@ -3784,9 +3769,7 @@ random_var melee_attack::player_weapon_speed()
 {
     random_var attack_delay = constant(15);
 
-    if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   && !is_range_weapon(*weapon)
-                   || weapon->base_type == OBJ_STAVES))
+    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
         attack_delay -= div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
@@ -4933,15 +4916,13 @@ int melee_attack::calc_base_weapon_damage()
 
     if (attacker->is_player())
     {
-        if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
-            || weapon->base_type == OBJ_STAVES)
-        {
+        if (is_weapon(*weapon) && !is_range_weapon(*weapon))
             damage = property(*weapon, PWPN_DAMAGE);
-        }
 
         // Even large staves can be wielded with a worn shield, but they
         // are much less effective
-        if (shield && weapon_skill(*weapon) == SK_STAVES
+        if (shield && weapon->base_type == OBJ_WEAPONS
+            && weapon_skill(*weapon) == SK_STAVES
             && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
         {
             damage /= 2;
@@ -5025,7 +5006,7 @@ int melee_attack::calc_damage()
         if (weapon
             && (weapon->base_type == OBJ_WEAPONS
                 && !is_range_weapon(*weapon)
-                || item_is_rod(*weapon)))
+                || weapon->base_type == OBJ_RODS))
         {
             damage_max = property(*weapon, PWPN_DAMAGE);
             damage += random2(damage_max);
@@ -5038,8 +5019,8 @@ int melee_attack::calc_damage()
             }
 
             int wpn_damage_plus = weapon->plus2;
-            if (item_is_rod(*weapon))
-                wpn_damage_plus = (short)weapon->props["rod_enchantment"];
+            if (weapon->base_type == OBJ_RODS)
+                wpn_damage_plus = weapon->special;
 
             if (wpn_damage_plus >= 0)
                 damage += random2(wpn_damage_plus);

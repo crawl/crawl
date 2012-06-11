@@ -339,7 +339,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
 bool is_melee_weapon(const item_def *weapon)
 {
-    if (weapon->base_type == OBJ_STAVES)
+    if (weapon->base_type == OBJ_STAVES || weapon->base_type == OBJ_RODS)
         return (true);
 
     if (weapon->base_type != OBJ_WEAPONS)

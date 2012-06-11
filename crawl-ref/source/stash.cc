@@ -80,7 +80,7 @@ std::string stash_annotate_item(const char *s,
         formatted_string fs;
         item_def dup = *item;
         spellbook_contents(dup, item->base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
-                                                             : RBOOK_USE_STAFF,
+                                                             : RBOOK_USE_ROD,
                            &fs);
         text += "\n";
         text += fs.tostring(2, -2);

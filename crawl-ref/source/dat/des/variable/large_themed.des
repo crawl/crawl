@@ -731,9 +731,10 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
 DEPTH:  D:16-
 MONS:   crystal golem, orange crystal statue
-ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
-        potion of magic / potion of brilliance / air elemental fan w:1 / \
-        lamp of fire w:1 / stone of earth elementals w:1 / gold w:30
+ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
+        any scroll w:20 / potion of magic / potion of brilliance / \
+        air elemental fan w:1 / lamp of fire w:1 / \
+        stone of earth elementals w:1 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb
@@ -1137,7 +1138,7 @@ MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
 MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 : end
 ITEM:   any book / w:20 any randbook
-ITEM:   w:20 any magical staff / any jewellery
+ITEM:   w:18 any magical staff / any rod w:5 / any jewellery
 ITEM:   any randbook / gold
 SUBST:  '" = .
 MAP

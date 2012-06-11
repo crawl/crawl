@@ -172,7 +172,7 @@ static bool _snakable_missile(const item_def& item)
 
 static bool _snakable_weapon(const item_def& item)
 {
-    if (item.base_type == OBJ_STAVES)
+    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
         return true;
 
     return (item.base_type == OBJ_WEAPONS
@@ -910,7 +910,7 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
 
     // See if the wielded item is appropriate.
     if (!wpn
-        || (wpn->base_type != OBJ_WEAPONS && wpn->base_type != OBJ_STAVES)
+        || !is_weapon(*wpn)
         || is_range_weapon(*wpn)
         || is_special_unrandom_artefact(*wpn))
     {
@@ -1441,6 +1441,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
         {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
+        case OBJ_RODS:
         {
             const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
             const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;

@@ -307,8 +307,7 @@ static int _fire_prompt_for_item()
 static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
-        && (you.inv[slot].base_type == OBJ_WEAPONS
-            || you.inv[slot].base_type == OBJ_STAVES)
+        && is_weapon(you.inv[slot])
         && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your " + you.hand_name(false) + "!";
@@ -983,6 +982,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
     case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
     case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
+    case OBJ_RODS:
     case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
     default: break;
     }
