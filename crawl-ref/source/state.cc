@@ -20,11 +20,10 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
-#include "target.h"
 #include "hints.h"
 
 game_state::game_state()
-    : game_crashed(false), game_wants_emergency_save(false),
+    : game_crashed(false),
       mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
       need_save(false),
@@ -466,8 +465,8 @@ void game_state::dump()
                   "arena_suspended: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended);
     if (last_winch)
-        fprintf(stderr, "Last resize was %ld seconds ago.\n",
-                (long int)(time(0) - last_winch));
+        fprintf(stderr, "Last resize was %"PRId64" seconds ago.\n",
+                (int64_t)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
 

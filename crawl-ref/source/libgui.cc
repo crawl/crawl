@@ -17,7 +17,6 @@
 #include "externs.h"
 #include "tilereg-text.h"
 #include "message.h"
-#include "stash.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-main.h"
@@ -141,6 +140,11 @@ int get_number_of_lines()
 int get_number_of_cols()
 {
     return tiles.get_number_of_cols();
+}
+
+int num_to_lines(int num)
+{
+    return tiles.to_lines(num);
 }
 
 int getch_ck()

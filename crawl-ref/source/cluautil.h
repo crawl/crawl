@@ -24,8 +24,10 @@ extern "C" {
         return (0); \
     }
 #define PLUARET(type, val) \
+    { \
         lua_push##type(ls, val); \
-        return (1);
+        return (1); \
+    }
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
@@ -132,16 +134,17 @@ class monster;
 struct MonsterWrap
 {
     monster* mons;
-    long      turn;
+    int      turn;
 };
 
 // XXX: These are currently defined outside cluautil.cc.
 void push_monster(lua_State *ls, monster* mons);
 void clua_push_item(lua_State *ls, item_def *item);
+void clua_push_item_temp(lua_State *ls, const item_def &item);
 item_def *clua_get_item(lua_State *ls, int ndx);
 void lua_push_floor_items(lua_State *ls, int link);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
-unsigned int get_tile_idx(lua_State *ls, int arg);
+tileidx_t get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
 void push_item(lua_State *ls, item_def *item);
 
@@ -166,15 +169,11 @@ void push_item(lua_State *ls, item_def *item);
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
 
-#define LEVEL(lev, br, pos)                                             \
-const char *level_name = luaL_checkstring(ls, pos);                 \
-level_area_type lev = str_to_level_area_type(level_name);           \
-if (lev == NUM_LEVEL_AREA_TYPES)                                    \
-luaL_error(ls, "Expected level name");                          \
-const char *branch_name = luaL_checkstring(ls, pos);                \
-branch_type br = str_to_branch(branch_name);                        \
-if (lev == LEVEL_DUNGEON && br == NUM_BRANCHES)                     \
-luaL_error(ls, "Expected branch name");
+#define LEVEL(br, pos)                                              \
+    const char *branch_name = luaL_checkstring(ls, pos);            \
+    branch_type br = str_to_branch(branch_name);                    \
+    if (br == NUM_BRANCHES)                                         \
+        luaL_error(ls, "Expected branch name");
 
 #define MAP(ls, n, var) \
 map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)

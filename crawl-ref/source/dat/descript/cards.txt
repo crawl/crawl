@@ -2,223 +2,229 @@
 # decks of transport -> escape
 the Portal card
 
-This card teleports you to a random location, allowing control of the translocation at high power.
-It is usually found in decks of escape and war, or in Nemelex Xobeh's deck of punishment.
+This card teleports you to a random location, allowing control of the
+translocation at high power. It is usually found in decks of escape and war, or
+in Nemelex Xobeh's deck of punishment.
 %%%%
 the Warp card
 
-This card translocates you a short distance, either randomly or with increasing levels of control at higher power levels.
-It is usually found in decks of escape and war.
+This card translocates you a short distance, either randomly or with increasing
+levels of control at higher power levels. It is usually found in decks of
+escape and war.
 %%%%
 Swap card
 
-This card swaps your position with that of a nearby creature.
-It is usually found in decks of escape and war.
+This card swaps your position with that of a nearby creature. It is usually
+found in decks of escape and war.
 %%%%
 Velocity card
 
-This card makes you move or even act faster.
-It is usually found in decks of escape and war.
+This card makes you move or even act faster. It is usually found in decks of
+escape and war.
 %%%%
 # decks of emergency -> escape
 the Tomb card
 
-This card entombs the player in protective walls of solid rock. At lower power levels, the tomb may be imperfect. Use with caution!
-It is usually found in decks of defence, escape and war, or in Nemelex Xobeh's deck of punishment.
+This card entombs the player in protective walls of solid rock. At lower power
+levels, the tomb may be imperfect. Use with caution! It is usually found in
+decks of defence, escape and war, or in Nemelex Xobeh's deck of punishment.
 %%%%
 the Banshee card
 
-The wail of the Banshee instils fear in nearby creatures.
-It is usually found in decks of defence, escape and war.
+The wail of the Banshee instils fear in nearby creatures. It is usually found
+in decks of defence, escape and war.
 %%%%
 Damnation card
 
-This card banishes one or more nearby creatures to the Abyss, possibly including you.
-It is usually found in decks of defence, escape and war, or in Nemelex Xobeh's deck of punishment.
+This card banishes one or more nearby creatures to the Abyss, possibly
+including you. It is usually found in decks of defence, escape and war, or in
+Nemelex Xobeh's deck of punishment.
 %%%%
 Solitude card
 
-This card randomly teleports creatures that are adjacent to you.
-It is usually found in decks of defence, escape and war.
+This card randomly teleports creatures that are adjacent to you. It is usually
+found in decks of defence, escape and war.
 %%%%
 Warpwright card
 
-This card may create teleporters.
-It is usually found in decks of defence, escape and war.
+This card may create teleporters. It is usually found in decks of defence,
+escape and war.
 %%%%
 Flight card
 
-This card helps you run away by transforming you, speeding you up or creating other avenues of escape.
-It is usually found in decks of defence, escape and war.
+This card helps you run away by transforming you, speeding you up or creating
+other avenues of escape. It is usually found in decks of defence, escape and
+war.
 %%%%
 # deck of battle -> changes, defence, war
 the Elixir card
 
-This card heals you and may also drain or restore your magical energy in the process.
-It is usually found in decks of changes, defence and war.
+This card heals you and may also drain or restore your magical energy in the
+process. It is usually found in decks of changes, defence and war.
 %%%%
 Battlelust card
 
-This card makes you more powerful in physical combat.
-It is usually found in decks of changes, defence and war.
+This card makes you more powerful in physical combat. It is usually found in
+decks of changes, defence and war.
 %%%%
 Metamorphosis card
 
-This card temporarily transforms you.
-It is usually found in decks of changes, defence and war.
+This card temporarily transforms you. It is usually found in decks of changes,
+defence and war.
 %%%%
 the Helm card
 
-This card increases your defences.
-It is usually found in decks of changes, defence and war.
+This card increases your defences. It is usually found in decks of changes,
+defence and war.
 %%%%
 the Blade card
 
-This card temporarily enchants or even animates your weapon.
-It is usually found in decks of changes, defence and war.
+This card temporarily enchants or even animates your weapon. It is usually
+found in decks of changes, defence and war.
 %%%%
 the Shadow card
 
-This card lets you blend into the shadows, making you less perceptible.
-It is usually found in decks of changes, defence and war.
+This card lets you blend into the shadows, making you less perceptible. It is
+usually found in decks of changes, defence and war.
+%%%%
+the Mercenary card
+
+This card summons mercenaries to fight by your side... for a price. It is
+usually found in decks of changes, defence and war.
 %%%%
 # deck of wonders -> also changes
 the Potion card
 
-This card has the same effect, positive or negative, as drinking a random magical potion.
-It is usually found in decks of changes and wonders.
+This card has the same effect, positive or negative, as drinking a random
+magical potion. It is usually found in decks of changes and wonders.
 %%%%
 Focus card
 
-This card further boosts your strongest attribute at the cost of your worst.
-It is usually found in decks of changes and wonders.
+This card further boosts your strongest attribute at the cost of your worst. It
+is usually found in decks of changes and wonders.
 %%%%
 Shuffle card
 
-This card interchanges your three attributes. Use with caution!
-It is usually found in decks of changes and wonders.
+This card interchanges your three attributes. Use with caution! It is usually
+found in decks of changes and wonders.
 %%%%
 Experience card
 
-This card makes you more experienced.
-It is usually found in decks of changes and wonders.
+This card makes you more experienced. It is usually found in decks of changes
+and wonders.
 %%%%
 Wild Magic card
 
-This card causes wild magic, as if from miscasting a spell, to act upon you.
-It is usually found in decks of changes and wonders.
+This card causes wild magic, as if from miscasting a spell, to act upon you. It
+is usually found in decks of changes and wonders.
 %%%%
 the Helix card
 
-This card changes your mutations. Higher power levels make the change more likely to be beneficial.
-It is usually found in decks of changes and wonders.
+This card changes your mutations. Higher power levels make the change more
+likely to be beneficial. It is usually found in decks of changes and wonders.
 %%%%
 the Sage card
 
-This card will funnel some of your earned experience towards training a specific skill and train it faster than it normally would.
-It is usually found in decks of changes and wonders.
+This card will funnel some of your earned experience towards training a
+specific skill and train it faster than it normally would. It is usually found
+in decks of changes and wonders.
+%%%%
+the Alchemist card
+
+This card transmutes some of your gold into health and magical energy. It is
+usually found in decks of changes and wonders.
 %%%%
 # deck of dungeons -> also changes
 Water card
 
-This card changes the floor around you into water.
-It is usually found in decks of changes and dungeons.
+This card changes the floor around you into water. It is usually found in decks
+of changes and dungeons.
 %%%%
 Vitrification card
 
-This card turns walls translucent.
-It is usually found in decks of changes and dungeons.
-%%%%
-the Map card
-
-This card reveals your surroundings.
-It is usually found in decks of changes and dungeons.
+This card turns walls translucent. It is usually found in decks of changes and
+dungeons.
 %%%%
 Dowsing card
 
-This card lets you detect secret doors, traps, creatures or some combination thereof.
-It is usually found in decks of changes and dungeons.
-%%%%
-the Spade card
-
-This card digs a tunnel through unworked rock.
-It is usually found in decks of changes and dungeons.
+This card lets you detect secret doors, traps, creatures or some combination
+thereof. It is usually found in decks of changes and dungeons.
 %%%%
 the Trowel card
 
-This card may create an altar, a statue, a golem or even a portal, but works best only in the main dungeon and its branches.
-It is usually found in decks of changes and dungeons.
+This card may create an altar, a statue, a golem or even a portal, but works
+best only in the main dungeon and its branches. It is usually found in decks of
+changes and dungeons.
 %%%%
 the Minefield card
 
-This card makes your immediate surroundings more dangerous.
-It is usually found in decks of changes and dungeons, or in Nemelex Xobeh's deck of punishment.
+This card makes your immediate surroundings more dangerous. It is usually found
+in decks of changes and dungeons, or in Nemelex Xobeh's deck of punishment.
 %%%%
 # deck of summonings
 the Crusade card
 
-This card tries to convert nearby creatures to your cause.
-It is usually found in decks of summonings and war.
+This card tries to convert nearby creatures to your cause. It is usually found
+in decks of summonings and war.
 %%%%
 the Herd card
 
-This card summons animals.
-It is usually found in decks of summonings and war.
+This card summons animals. It is usually found in decks of summonings and war.
 %%%%
 the Pentagram card
 
-This card summons a demon to your aid.
-It is usually found in decks of summonings and war.
+This card summons a demon to your aid. It is usually found in decks of
+summonings and war.
 %%%%
 the Dance card
 
-This card summons a dancing weapon.
-It is usually found in decks of summonings and war.
+This card summons a dancing weapon. It is usually found in decks of summonings
+and war.
 %%%%
 Foxfire card
 
-This card summons flying creatures.
-It is usually found in decks of summonings and war.
+This card summons flying creatures. It is usually found in decks of summonings
+and war.
 %%%%
 the Bones card
 
-This card summons a skeletal creature.
-It is usually found in decks of summonings and war.
+This card summons a skeletal creature. It is usually found in decks of
+summonings and war.
 %%%%
 Repulsiveness card
 
-This card summons an ugly or very ugly thing.
-It is usually found in decks of summonings and war.
+This card summons an ugly or very ugly thing. It is usually found in decks of
+summonings and war.
 %%%%
 Vitriol card
 
-This card unleashes a corrosive or degenerating attack spell.
-It is usually found in decks of destruction and war.
+This card unleashes a corrosive or degenerating attack spell. It is usually
+found in decks of destruction and war.
 %%%%
 Flame card
 
-This card unleashes a fiery attack spell.
-It is usually found in decks of destruction and war.
+This card unleashes a fiery attack spell. It is usually found in decks of
+destruction and war.
 %%%%
 Frost card
 
-This card unleashes an icy attack spell.
-It is usually found in decks of destruction and war.
+This card unleashes an icy attack spell. It is usually found in decks of
+destruction and war.
 %%%%
 Venom card
 
-This card unleashes a poisonous attack spell, which may affect you as well.
-It is usually found in decks of destruction and war.
+This card unleashes a poisonous attack spell, which may affect you as well. It
+is usually found in decks of destruction and war.
 %%%%
 the Spark card
 
-This card unleashes an electrical attack spell.
-It is usually found in decks of destruction and war.
+This card unleashes an electrical attack spell. It is usually found in decks of
+destruction and war.
 %%%%
 the Hammer card
 
-This card unleashes a physical attack spell.
-It is usually found in decks of destruction and war.
+This card unleashes a physical attack spell. It is usually found in decks of
+destruction and war.
 %%%%
 Pain card
 
@@ -227,85 +233,72 @@ It is usually found in decks of destruction and war.
 %%%%
 Torment card
 
-This card calls on the powers of darkness to cause agonising injury to any nearby living creature.
-It is usually found in decks of destruction and war.
+This card calls on the powers of darkness to cause agonising injury to any
+nearby living creature. It is usually found in decks of destruction and war.
 %%%%
 the Orb card
 
-This card unleashes a destructive orb of pure magic, sometimes even multiple ones.
-It is usually found in decks of destruction and war.
+This card unleashes a destructive orb of pure magic, sometimes even multiple
+ones. It is usually found in decks of destruction and war.
 %%%%
 # deck of punishment (along with a few others)
 Wrath card
 
-This card draws a god's wrath against you.
-It is usually only found in Nemelex Xobeh's deck of punishment.
+This card draws a god's wrath against you. It is usually only found in Nemelex
+Xobeh's deck of punishment.
 %%%%
 the Wraith card
 
-This card will drain you.
-It is usually only found in Nemelex Xobeh's deck of punishment.
+This card will drain you. It is usually only found in Nemelex Xobeh's deck of
+punishment.
 %%%%
 the Curse card
 
-This card places curses on your possessions.
-It is usually only found in Nemelex Xobeh's deck of punishment.
+This card places curses on your possessions. It is usually only found in
+Nemelex Xobeh's deck of punishment.
 %%%%
 Xom card
 
-This card draws the attention of Xom on yourself.
-It is usually only found in Nemelex Xobeh's deck of punishment.
+This card draws the attention of Xom on yourself. It is usually only found in
+Nemelex Xobeh's deck of punishment.
 %%%%
 Famine card
 
-This card starves you.
-It is usually only found in Nemelex Xobeh's deck of punishment.
+This card starves you. It is usually only found in Nemelex Xobeh's deck of
+punishment.
 %%%%
 the Swine card
 
-This card will make you turn pink and root for truffles.
-It is usually only found in Nemelex Xobeh's deck of punishment.
-%%%%
-the Alchemist card
-
-This card transmutes some of your gold into health and magical energy.
-It is usually found in decks of changes and wonders.
+This card will make you turn pink and root for truffles. It is usually only
+found in Nemelex Xobeh's deck of punishment.
 %%%%
 # deck of oddities (random card, along with a few others)
 the Bargain card
 
-This card grants you a temporary discount in shops.
-It is not normally part of any deck.
+This card grants you a temporary discount in shops. It is not normally part of
+any deck.
 %%%%
 the Genie card
 
-The Genie may grant you an acquirement or punish you for trying.
-It is not normally part of any deck.
+The Genie may grant you an acquirement or punish you for trying. It is not
+normally part of any deck.
 %%%%
 the Feast card
 
-This card feeds you.
-It is not normally part of any deck.
+This card feeds you. It is not normally part of any deck.
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card
 
-This card makes staircases slide towards or away from you.
-(It is a bug if you ever encounter this card.)
-%%%%
-Summoning card
-
-This card summons random creatures.
-(It is a bug if you ever encounter this card.)
+This card makes staircases slide towards or away from you. (It is a bug if you
+ever encounter this card.)
 %%%%
 # buggy cards
 a buggy card
 
-Buggy
-(It's a bug if you ever see this.)
+Buggy (It's a bug if you ever see this.)
 %%%%
 a very buggy card
 
-Buggy
-(It's a bug if you ever see this.)
+Buggy (It's a bug if you ever see this.)
 %%%%

@@ -328,9 +328,7 @@ int Kills::get_kills(std::vector<kill_exp> &all_kills) const
 
     ghost_vec::const_iterator gi = ghosts.begin();
     for (; gi != ghosts.end(); ++gi)
-    {
         all_kills.push_back(kill_exp(*gi));
-    }
     count += ghosts.size();
 
     std::sort(all_kills.begin(), all_kills.end());
@@ -478,9 +476,7 @@ static std::string kill_times(int kills)
 void kill_def::merge(const kill_def &k, bool uniq)
 {
     if (!kills)
-    {
         *this = k;
-    }
     else
     {
         kills += k.kills;
@@ -716,9 +712,6 @@ void kill_monster_desc::load(reader& inf)
 {
     monnum = static_cast<monster_type>(unmarshallShort(inf));
     modifier = (name_modifier) unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 32
-    ASSERT(monnum != -1);
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////

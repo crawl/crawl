@@ -54,6 +54,7 @@ bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt & beam, const monster* victim);
 int fedhas_fungal_bloom();
 bool fedhas_sunlight();
+void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def &target,
                          std::vector<coord_def> &candidates);
 bool fedhas_plant_ring_from_fruit();

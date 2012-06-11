@@ -16,7 +16,6 @@
 
 #include "luaterp.h"
 
-#include "cio.h"
 #include "clua.h"
 #include "dlua.h"
 #include "message.h"

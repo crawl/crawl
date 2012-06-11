@@ -56,11 +56,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
 bool downgrade_zombie_to_skeleton(monster* mon);
 
-// Converts a monster_type involving RANDOM_MONSTER and similar into an
-// explicit monster type usable on the current level.
-monster_type resolve_monster_type(monster_type mon_type,
-                                  dungeon_feature_type feat);
-
 // Picks a monster eligible for random generation at the given place,
 // optionally picking monsters that can be zombified into the target zombie,
 // and optionally increasing monster level by the provided OOD factors.

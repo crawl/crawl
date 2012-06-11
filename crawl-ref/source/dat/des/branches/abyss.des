@@ -12,7 +12,11 @@ NAME: abyss_entry
 TAGS: extra allow_dup can_overwrite
 DEPTH: D:21-27
 CHANCE: 100% (D:25), 3333
+: if you.where() == 'D:25' then
+KFEAT: O = enter_abyss no_mimic
+: else
 KFEAT: O = enter_abyss
+: end
 MAP
 O
 ENDMAP
@@ -558,6 +562,43 @@ cc.4nnn.....nnn4.cc
     .c 44444 c.
      ccc 6 ccc
       .ccccc.
+ENDMAP
+
+NAME:    hangedman_abyss_rune_treasure_dump
+TAGS:    abyss_rune no_monster_gen no_item_gen mini_float
+WEIGHT:  2
+KMONS:   12 = great orb of eyes perm_ench:shapeshifter
+KMONS:   34 = guardian serpent perm_ench:shapeshifter
+# Note: if anything in these two item sets becomes useful for more then a tiny
+# fraction of characters finding the abyssal rune, remove or replace them.
+KITEM:   24d = scroll of curse weapon w:5 q:1 / \
+         scroll of random uselessness q:1 / sultana q:1 w:5 / \
+         potion of water w:5 q:1 / club w:5 / staff w:5 / stone q:1 / \
+         mundane dart q:1 / needle q:1 ego:sickness / mundane animal skin / \
+         empty ebony casket w:5 / gold q:1
+KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
+         wand of flame w:5 / wand of frost w:5 / lamp of fire w:2 / \
+         plain deck w:2 / amulet of controlled flight w:5 / \
+         whip not_cursed ego:reaching w:2 / cap not_cursed mundane race:none w:5
+KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
+KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot
+SHUFFLE: 14 / 23
+NSUBST:  f = 1:g / *:f, d = 2:e / 1:de / 1:de / *:d
+SUBST:   x = xxxxc, c = cccvb
+MAP
+  ... x ...
+ x .xxxxx. x
+. .cdcdcdc. .
+..cdddddddc..
+.xddfd1dfddx.
+ xcdddddddcx
+xxdd4ded4ddxx
+ xcdddddddcx
+.xdd1dfd1ddx.
+..cdddddddc..
+. .cdcdcdc. .
+ x .xxxxx. x
+  ... x ...
 ENDMAP
 
 ###############################################################################

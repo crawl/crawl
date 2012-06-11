@@ -144,9 +144,7 @@ static int _etc_rock(int, const coord_def& loc)
 static int _etc_elven_brick(int, const coord_def& loc)
 {
     if ((loc.x + loc.y) % 2)
-    {
         return LIGHTGREY;
-    }
     else
     {
         if ((loc.x / 2 + loc.y / 2) % 2)
@@ -405,14 +403,6 @@ void init_element_colours()
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
-#if TAG_MAJOR_VERSION == 32
-    // necromancer
-    add_element_colour(_create_random_element_colour_calc(
-                            ETC_NECRO, "necro",
-                            80,  DARKGREY,
-                            40,  MAGENTA,
-                        0));
-#endif
     // ie demonology
     add_element_colour(_create_random_element_colour_calc(
                             ETC_UNHOLY, "unholy",
@@ -515,12 +505,6 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_ROCK, "rock", _etc_rock
                        ));
-#if TAG_MAJOR_VERSION == 32
-    add_element_colour(_create_random_element_colour_calc(
-                            ETC_STONE, "stone",
-                            1,  LIGHTGREY,
-                        0));
-#endif
     add_element_colour(_create_random_element_colour_calc(
                             ETC_MIST, "mist",
                             100, CYAN,
@@ -558,16 +542,6 @@ void init_element_colours()
                             90,  WHITE,
                             30,  LIGHTGREY,
                         0));
-#if TAG_MAJOR_VERSION == 32
-    add_element_colour(_create_random_element_colour_calc(
-                            ETC_SUBTRACTOR, "subtractor",
-                            24,  CYAN,
-                            24,  MAGENTA,
-                            24,  LIGHTBLUE,
-                            24,  LIGHTRED,
-                            24,  YELLOW,
-                        0));
-#endif
     add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, "elven_brick", _etc_elven_brick
                        ));
@@ -783,8 +757,7 @@ static unsigned short _dos_hilite_brand(unsigned short colour,
     return (colour);
 }
 
-unsigned short dos_brand(unsigned short colour,
-                         unsigned brand)
+static unsigned short _dos_brand(unsigned short colour, unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);
@@ -838,7 +811,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);
-        raw_colour = dos_brand(raw_colour & 0xFF, brand);
+        raw_colour = _dos_brand(raw_colour & 0xFF, brand);
     }
 #endif
 

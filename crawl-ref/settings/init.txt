@@ -164,7 +164,7 @@ drop_filter = useless_item
 # travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
+auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -241,7 +241,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
-# auto_drop_chunks           = (never|rotten|light|many)
+# auto_drop_chunks           = (never | rotten | yes)
 # msg_condense_repeats   = false
 # msg_condense_short     = false
 # show_no_ctele          = false
@@ -317,6 +317,11 @@ force_more_message = Careful!
 force_more_message = interdimensional caravan
 force_more_message = distant snort
 
+# Abyss exits and rune
+force_more_message = Found a gateway leading out of the Abyss
+force_more_message = Found .* abyssal rune of Zot
+
+
 ##### 4-k       Firing Commands #######################
 #
 # fire_items_start = a
@@ -366,16 +371,12 @@ include = tiles_options.txt
 ##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
-ood_interesting = 8
 note_hp_percent = 5
 note_skill_levels = 1,5,10,15,27
 #note_all_skill_levels = true
 #note_skill_max  = false
-#note_all_spells = false
 #note_xom_effects = false
 note_items    = rod of, acquirement, preservation, running, of Zot
-note_messages = You pass through the gate
-note_messages = cast .* Abyss
 note_messages = Your scales start
 note_messages = protects you from harm
 note_messages = You fall through a shaft
@@ -390,11 +391,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
+# language = polski
+#
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
-# pizza            = Sausage
 # show_player_species = true
 
 # See options_guide.txt for the options

@@ -1,27 +1,44 @@
 %%%%
+A Zot trap
+
+This trap bears a powerful enchantment that inflicts dangerously unpredictable
+magical effects on those unlucky enough to trigger it. It's often worse than
+mere damage — you may find yourself thrown into the Abyss, contaminated with
+enormous amounts of wild magic, have mighty fiends summoned against you, or the
+like — it is something to avoid at all costs.
+%%%%
 A basalt altar of Yredelemnul
 
 An altar to Yredelemnul the Dark, worked from columnar basalt.
 %%%%
 A blade trap
 
-You can see the edge of a massive scythe-like blade hidden in a slit; it probably has a counterweight that acts as a pendulum.
+You can see the edge of a massive scythe-like blade hidden in a slit; it
+probably has a counterweight that acts as a pendulum.
 %%%%
 A bloodstained altar of Trog
 
-An altar to Trog the Wrathful, crudely made by what seem to be the hands of giants and covered with bloodstains.
+An altar to Trog the Wrathful, crudely made by what seem to be the hands of
+giants and covered with bloodstains.
 %%%%
 A blossoming altar of Fedhas
 
 An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 %%%%
+A broken pillar
+
+The makers of this pillar were overrun long ago. No one alive remembers why
+they built it.
+%%%%
 A burning altar of Makhleb
 
-An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are visible in the flames.
+An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
+visible in the flames.
 %%%%
-A closed detected secret door
+A detected secret door
 
-A wooden door, cunningly hidden. It used to be a secret door but at least for you it's not a secret anymore.
+A wooden door, cunningly hidden. It used to be a secret door but at least for
+you it's not a secret anymore.
 
 To open it, try simply walking into it, or press 'O'.
 %%%%
@@ -31,7 +48,8 @@ A wooden door. To open it, try simply walking into it, or press 'O'.
 %%%%
 A corrupted altar of Lugonu
 
-An altar to Lugonu the Unformed, possibly dedicated to some other power before it was irrevocably corrupted.
+An altar to Lugonu the Unformed, possibly dedicated to some other power before
+it was irrevocably corrupted.
 %%%%
 A crawl-hole back to the Lair
 
@@ -39,19 +57,17 @@ You can climb it to get back to less cramped spaces with less cobwebs.
 %%%%
 A deep blue altar of Sif Muna
 
-An altar of the deepest blue, covered in intricate patterns and writings in long forgotten scripts, devoted to Sif Muna the Loreminder.
+An altar of the deepest blue, covered in intricate patterns and writings in
+long forgotten scripts, devoted to Sif Muna the Loreminder.
 %%%%
 A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
-A flagged portal
-
-Whoever built that castle on the other side, they wanted to sort their treasure undisturbed.
-%%%%
 A fountain of clear blue water
 
-Press 'q' to drink from this fountain. Not that it would have any effect, though...
+Press 'q' to drink from this fountain. Not that it would have any effect,
+though...
 %%%%
 A fountain of blood
 
@@ -59,11 +75,16 @@ Press 'q' to drink from this fountain, if you absolutely wish to.
 %%%%
 A fountain of sparkling water
 
-Press 'q' to drink from this magic fountain. Expect magical effects, as long as it's still magic.
+Press 'q' to drink from this magic fountain. Expect magical effects, as long as
+it's still magic.
+%%%%
+A gate leading back out of here
+
+This gate seems to let you return whence you came.
 %%%%
 A gate leading back out of this place
 
-This gate leads back to the dungeon. Just don't forget your runes if you intend to return.
+This gate leads back to the dungeon.
 %%%%
 A gate leading out of Pandemonium
 
@@ -75,32 +96,48 @@ This gate leads to yet another region of Pandemonium. There'll always be more.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-This gate leads to the endless halls of Pandemonium. Tales about successful lootings of these netherworlds are rare. Even the strongest and most experienced characters can die there. On the other hand, these halls contain several runes and lots of valuable items. It is much easier to get in than to get out.
+This gate leads to the endless halls of Pandemonium. Tales about successful
+lootings of these netherworlds are rare. Even the strongest and most
+experienced characters can die there. On the other hand, these halls contain
+several runes and lots of valuable items. It is much easier to get in than to
+get out.
 %%%%
 A gas trap
 
-You're lucky to have noticed this trap, for it would have released a cloud
-of deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps
-it is plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or
-perhaps something yet nastier.
+You're lucky to have noticed this trap, for it would have released a cloud of
+deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps it is
+plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or perhaps
+something yet nastier.
 %%%%
 A gate to the Realm of Zot
 
-This gate leads to the Realm of Zot, the final stage of your quest as its deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have a fearsome and questionable reputation, but one piece of information seems to be for certain: The monsters inhabiting this area and protecting the Orb are strong and strange - some of them nowhere encountered but here.
+This gate leads to the Realm of Zot, the final stage of your quest as its
+deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have
+a fearsome and questionable reputation, but one piece of information seems to
+be for certain: The monsters inhabiting this area and protecting the Orb are
+strong and strange - some of them nowhere encountered but here.
 %%%%
-A gateway to a bazaar
+A gateway back into the Dungeon
 
-Aside from the vendors who've set up their stores at various places in the dungeon, there are others trying to make a living by travelling from place to place. Bazaars feature a number of different shops and often have better stock than the sedentary ones, sometimes even at a bargain. Once you hear the clinking of coins, be sure to hurry up and find the impromptu marketplace before the caravan moves on!
-
-Also be warned that their nomadic lifestyle has taught these sellers to appropriate any items an adventurer might leave behind, and then leave quickly, probably to sell them elsewhere.
+This gate allows a feat popularly thought to be impossible: escaping Hell
+alive.
 %%%%
 A gateway leading out of the Abyss
 
-A gateway out of this accursed place, shimmering and shifting in the impermanent landscape.
+A gateway out of this accursed place, shimmering and shifting in the
+impermanent landscape.
+%%%%
+A gateway to a ziggurat
+
+This portal leads to an ancient ziggurat, a place of untold challenges and
+untold riches.
+
+The portal is usable just once, and there's a large monetary fee to be paid.
 %%%%
 A gateway to the ashen valley of Gehenna
 
-You can feel the heat. Gehenna seems to be made out of nothing but flames, lava and hellfire.
+You can feel the heat. Gehenna seems to be made out of nothing but flames, lava
+and hellfire.
 %%%%
 A gateway to Hell
 
@@ -118,29 +155,31 @@ A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
 %%%%
-A glowing drain
-
-Every settlement brings forth the unpleasant sewers and drains, ignored by most but hideaways for others. Old tales speak of dangerous creatures, bathing in disgustingly smelling green water, preying on each other without mercy. The tales also allude to valuable items left by daring and unfortunate visitors, left to grow mildew in the damp caverns.
-%%%%
 A glowing golden altar of the Shining One
 
-An altar to the Shining One, made from the purest gold and almost blinding in its radiance.
+An altar to the Shining One, made from the purest gold and almost blinding in
+its radiance.
 %%%%
 A glowing silver altar of Zin
 
-An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers are expected to be, and glowing gently.
+An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
+are expected to be, and glowing gently.
 %%%%
 A granite statue
 
-Despite the hardness of the stone, this statue's features have long withered away.
+Despite the hardness of the stone, this statue's features have long withered
+away.
 %%%%
 A hole to the Spider Nest
 
-This is more of a natural sloped shaft than a stairway, but it will do. If you want to die from most potent venoms of this world, that is.
+This is more of a natural sloped shaft than a stairway, but it will do. If you
+want to die from most potent venoms of this world, that is.
 %%%%
 A labyrinth entrance
 
-A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster. Many a hapless adventurer has lost his way in the twisted, shifting passages, and starved to death.
+A gateway to an intricate maze designed by subtle and malicious minds, its exit
+guarded by a fearsome monster. Many a hapless adventurer has lost his way in
+the twisted, shifting passages, and starved to death.
 %%%%
 A magical trap
 
@@ -148,7 +187,8 @@ A magical device designed to harm trespassers that can't be deactivated.
 %%%%
 A mechanical trap
 
-A mechanical contraption designed to harm trespassers. A skilled adventurer can try to disarm it, though.
+A mechanical contraption designed to harm trespassers. A skilled adventurer can
+try to disarm it, though.
 %%%%
 A natural trap
 
@@ -156,7 +196,8 @@ A natural hazard, although it looks almost as if designed to harm trespassers.
 %%%%
 A metal wall
 
-A wall of bluish-grey metal. As every dungeon electrician knows, this stuff will ground.
+A wall of bluish-grey metal. As every dungeon electrician knows, this stuff
+will ground.
 %%%%
 A needle trap
 
@@ -164,31 +205,41 @@ It is damn sure the needles from this trap are doused in something nasty.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
+A one-way gate to a demon-haunted realm, riven by chaos, its very substance
+impermanent and whimsical, filled with creatures out of nightmare.
 %%%%
 A passage of Golubria
 
-This unstable gateway allows instantaneous travel to another nearby passage of Golubria, and will close behind anything passing through it.
+This unstable gateway allows instantaneous travel to another nearby passage of
+Golubria, and will close behind anything passing through it.
 %%%%
 A portal to somewhere
 
-A gash-like tear in reality that looks into some terrifying, starry otherworld. Thankfully, the magic that opened this portal prevents its vacuum from consuming and swallowing everything in sight.
+A gash-like tear in reality that looks into some terrifying, starry otherworld.
+Thankfully, the magic that opened this portal prevents its vacuum from
+consuming and swallowing everything in sight.
 %%%%
 A radiant altar of Vehumet
 
-An altar, ablaze in the lights of Iskenderun and promising great destructive powers to those who would follow Vehumet.
+An altar, ablaze in the lights of Iskenderun and promising great destructive
+powers to those who would follow Vehumet.
 %%%%
 A rock wall
 
 This wall consists of simple rock.
 %%%%
+A rock-blocked tunnel
+
+The way you came in doesn't seem to be passable anymore.
+%%%%
+A rocky tunnel leading out of this place
+
+An unstable passage in the volcanic rock, admitting a draft of cool air from
+beyond.
+%%%%
 A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
-%%%%
-A sand-covered staircase
-
-You can make out a staircase leading downwards into a small tomb. Sand surrounds the staircase and is continuously pouring onto it. Before long the staircase will be gone. They say that some distant relatives of the pharaohs were entombed here.
 %%%%
 A shaft
 
@@ -196,15 +247,23 @@ A deep hole. Who knows where you might end up if you were to fall through it?
 %%%%
 A shattered altar of Ashenzari
 
-This crystal altar shattered to pieces when Ashenzari was cursed. But still, there is power here: a dark aura holds the shards in mid-explosion, suspended in time and space much like the god they herald.
+This crystal altar shattered to pieces when Ashenzari was cursed. But still,
+there is power here: a dark aura holds the shards in mid-explosion, suspended
+in time and space much like the god they herald.
 %%%%
 A shimmering altar of Xom
 
-This altar constantly shimmers in all visible colours and probably some invisible ones, too, matching the whims of Xom the Unpredictable, to whom it is dedicated.
+This altar constantly shimmers in all visible colours and probably some
+invisible ones, too, matching the whims of Xom the Unpredictable, to whom it is
+dedicated.
 %%%%
 A shop
 
-A shop in the dungeon, beyond sight of the world above, manned by a secretive and reclusive shopkeeper who cannot be bargained with, grants no refunds, and is interested in nothing you may have to sell. Some shops hawk antiques of unknown provenance, and offer little hint as to the quality or nature of their goods.
+A shop in the dungeon, beyond sight of the world above, manned by a secretive
+and reclusive shopkeeper who cannot be bargained with, grants no refunds, and
+is interested in nothing you may have to sell. Some shops hawk antiques of
+unknown provenance, and offer little hint as to the quality or nature of their
+goods.
 %%%%
 A slime covered rock wall
 
@@ -216,7 +275,8 @@ This altar somehow seems more stationary than the others.
 %%%%
 A sparkling altar of Nemelex Xobeh
 
-This altar sparkles with a lightshow brighter than any gambling den's to attract followers for Nemelex Xobeh.
+This altar sparkles with a lightshow brighter than any gambling den's to
+attract followers for Nemelex Xobeh.
 %%%%
 A staircase back to the Crypt
 
@@ -238,25 +298,33 @@ A staircase back to the Vaults
 
 These stairs lead back to the mighty Vaults.
 %%%%
+A staircase leading out of the dungeon
+
+This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that
+kind of stuff. Also taxes and whatever else you ran from.
+
+Climbing these stairs will end your quest, whether you carry the Orb with you
+or not.
+%%%%
 A staircase to the Crypt
 
-These stairs lead to an ancient crypt. Unfortunately, not everything that was buried there had the decency to stay dead.
+These stairs lead to an ancient crypt. Unfortunately, not everything that was
+buried there had the decency to stay dead.
 %%%%
 A staircase to the Ecumenical Temple
 
-An entrance to a temple of Gods, a place of peace and refuge from the insanity of the dungeon.
+An entrance to a temple of Gods, a place of peace and refuge from the insanity
+of the dungeon.
 %%%%
 A staircase to the Elven Halls
 
-A wide stair down to the murky depths of the halls of the deep elves, skilled warriors with blades and bows, and fearsome sorcerers and magicians.
+A wide stair down to the murky depths of the halls of the deep elves, skilled
+warriors with blades and bows, and fearsome sorcerers and magicians.
 %%%%
 A staircase to the Hall of Blades
 
-These stairs lead to the Hall of Blades. The steps seem to have been beaten and chipped by assaults from the animated weapons therein.
-%%%%
-A staircase to the Hive
-
-You hear an angry and manifold buzzing.
+These stairs lead to the Hall of Blades. The steps seem to have been beaten and
+chipped by assaults from the animated weapons therein.
 %%%%
 A staircase to the Lair
 
@@ -264,19 +332,23 @@ These stairs lead down to the Lair of Beasts, for a change of climate.
 %%%%
 A staircase to the Orcish Mines
 
-An entrance to the mines of the orcs, filled with their gold, but treacherous and easy to get trapped in.
+An entrance to the mines of the orcs, filled with their gold, but treacherous
+and easy to get trapped in.
 %%%%
 A staircase to the Dwarven Hall
 
-An entrance to the well-worked hall of the dwarves. You think you can smell ale.
+An entrance to the well-worked hall of the dwarves. You think you can smell
+ale.
 %%%%
 A staircase to the Enchanted Forest
 
-An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they won't wait until you do that.
+An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they
+won't wait until you do that.
 %%%%
 A staircase to the Shoals
 
-Here be the Shoals: exotic underground beaches, salty spray and creatures that bite, stab and maul.
+Here be the Shoals: exotic underground beaches, salty spray and creatures that
+bite, stab and maul.
 %%%%
 A staircase to the Slime Pits
 
@@ -288,15 +360,18 @@ Here is the way to the home of the serpent, the lair of the naga.
 %%%%
 A staircase to the Swamp
 
-A stair to a swampy wasteland, complete with ooze, muck, flies and large slavering carnivorous monsters.
+A stair to a swampy wasteland, complete with ooze, muck, flies and large
+slavering carnivorous monsters.
 %%%%
 A staircase to the Tomb
 
-A way to the Tomb of the Ancients, a place of damnation, of horrors animated by the vilest necromancy.
+A way to the Tomb of the Ancients, a place of damnation, of horrors animated by
+the vilest necromancy.
 %%%%
 A staircase to the Vaults
 
-These stairs lead down into the Vaults, said to be home to great treasures. They are sprinkled with spots of blood.
+These stairs lead down into the Vaults, said to be home to great treasures.
+They are sprinkled with spots of blood.
 %%%%
 A stone staircase leading down
 
@@ -308,51 +383,66 @@ These stairs lead back up.
 %%%%
 A stone wall
 
-A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls.
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone
+walls.
+%%%%
+A teleporter
+
+Stepping on this teleporter will send you to another room.
 %%%%
 A translucent rock wall
 
-The mineral this rock consists of is as translucent as good quality glass. Whether it is natural or magical, you can't tell.
+The mineral this rock consists of is as translucent as good quality glass.
+Whether it is natural or magical, you can't tell.
 %%%%
 A translucent stone wall
 
-A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls. It has been imbued with arcane magics which render it translucent.
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone
+walls. It has been imbued with arcane magics which render it translucent.
 %%%%
 A translucent unnaturally hard rock wall
 
-This wall is imbued with magic that not only makes it indestructible but also makes it translucent like glass.
-%%%%
-A trap
-
-It's a trap!
+This wall is imbued with magic that not only makes it indestructible but also
+makes it translucent like glass.
 %%%%
 A tree
 
-While the dungeon is filled with dim magic light, in most places it is not bright enough to sustain any larger plants. It is uneven, though, and there are spots where, with the grace of Fedhas, trees as big as those on the surface can grow underground.
+While the dungeon is filled with dim magic light, in most places it is not
+bright enough to sustain any larger plants. It is uneven, though, and there are
+spots where, with the grace of Fedhas, trees as big as those on the surface can
+grow underground.
 %%%%
 A viscous altar of Jiyva
 
-A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and you don't really want to know.
+A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
+you don't really want to know.
 %%%%
 A wall of green crystal
 
-For some reason, some dungeon walls, like this one, have been made of this polished crystal, imbued with arcane magics. They prevent its easy destruction, and make it reflect heat and cold.
+For some reason, some dungeon walls, like this one, have been made of this
+polished crystal, imbued with arcane magics. They prevent its easy destruction,
+and make it reflect heat and cold.
 %%%%
 A wall of solid wax
 
-These walls are built by bees. Occasionally a dungeon architect will manipulate bees into building wax walls for aesthetic reasons. (Theirs, not the bees'.) They are susceptible to fire and will melt and burn, given sufficient heat.
+These walls are built by bees. Occasionally a dungeon architect will manipulate
+bees into building wax walls for aesthetic reasons. (Theirs, not the bees'.)
+They are susceptible to fire and will melt and burn, given sufficient heat.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
 
-This wall is made from the weird stuff which makes up Pandemonium, but seems to be like rock in most other aspects.
+This wall is made from the weird stuff which makes up Pandemonium, but seems to
+be like rock in most other aspects.
 %%%%
 A white marble altar of Elyvilon
 
-An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
+An altar to Elyvilon the Healer, made from purest white marble and topped by a
+sculpture of the Chalice of Purification.
 %%%%
 A web
 
-The spider who left this web must have been huge, as it seems to be made for trapping {{ return you.genus(true) }} rather than flies.
+The spider who left this web must have been huge, as it seems to be made for
+trapping {{ return you.genus(true) }} rather than flies.
 %%%%
 An abandoned shop
 
@@ -360,17 +450,19 @@ This shop has been abandoned.
 %%%%
 An alarm trap
 
-While this trap does no damage by itself, its loud sound may bring someone
-to do damage to you. Of course, you have the option to do damage to those
-someones yourself.
+While this trap does no damage by itself, its loud sound may bring someone to
+do damage to you. Of course, you have the option to do damage to those someones
+yourself.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 
-Ancient bones were piled here to form an altar to the terrible Demon-God Kikubaaqudgha.
+Ancient bones were piled here to form an altar to the terrible Demon-God
+Kikubaaqudgha.
 %%%%
 An empty arch of ancient stone
 
-A stone archway that seems to have stood here forever and doesn't seem to lead anywhere in particular.
+A stone archway that seems to have stood here forever and doesn't seem to lead
+anywhere in particular.
 %%%%
 An escape hatch in the ceiling
 
@@ -378,24 +470,51 @@ A spring-loaded one-way escape hatch set in the ceiling.
 %%%%
 An escape hatch in the floor
 
-A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adventurer beset by adversaries to exchange the perils of this level for the perils of the next.
+A spring-loaded one-way escape hatch set in the dungeon floor, allowing the
+adventurer beset by adversaries to exchange the perils of this level for the
+perils of the next.
+%%%%
+An exit through the horrors of the Abyss
+
+If you ever wanted to escape out of the pan into the fire, this is your chance.
+This gateway allows you to return from this place via a nice scenic path
+through infinite madness.
+%%%%
+# shown if the player is a Hill Orc
+An idol of Beogh
+
+{{
+  if you.god() == "Beogh"
+    then
+      return "This crude but majestic statue represents Beogh in his glory. "
+          .. "May foul non-orcs all be smitten!";
+    else
+      return "This crude statue depicts Beogh, the god of primitive orcs "
+          .. "living here. Their religion calls for murdering all "
+          .. "non-believers. It would be a pleasure to destroy this idol, but "
+          .. "beware, Beogh is known to be vengeful.";
+  end
+}}
 %%%%
 An iron altar of Okawaru
 
-An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are surprisingly sharp.
+An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
+surprisingly sharp.
 %%%%
 An iron grate
 
-This iron grate looks rusted, as if it could be disrupted with a spell or a wand quite easily. It's too strong to be breakable by hand, though.
+This iron grate looks rusted, as if it could be disrupted with a spell or a
+wand quite easily. It's too strong to be breakable by hand, though.
 %%%%
 An open door
 
 A wooden door. You can close it by standing next to it and {{
-if crawl.is_tiles() then
-    return "either doing Ctrl-L-Click on the door or pressing 'C'."
-else
-    return "pressing 'C'."
-end}}
+    if crawl.is_tiles() then
+        return "either doing Ctrl-L-Click on the door or pressing 'C'."
+    else
+        return "pressing 'C'."
+    end
+}}
 %%%%
 An orcish idol
 
@@ -405,15 +524,14 @@ An unnaturally hard rock wall
 
 You cannot affect this wall by any means.
 %%%%
-An unnaturally hard stone wall
-
-This stone wall is harder than... stone. In fact, there's exactly nothing you can do about it.
-%%%%
 The endless lava
 
-A sea of fire and brimstone that goes as far as you can see. Which is not far because of thick smoke.
+A sea of fire and brimstone that goes as far as you can see. Which is not far
+because of thick smoke.
 
-Unlike small pools of lava where flight or levitation may allow short trips, floating above this inferno would cook you in no time thanks to runaway convection.
+Unlike small pools of lava where flight or levitation may allow short trips,
+floating above this inferno would cook you in no time thanks to runaway
+convection.
 %%%%
 A floor
 
@@ -421,7 +539,10 @@ Dungeon floor.
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. No sane traveller would try to set foot into it, apart from those who fly or swim. Let it be a warning for you: many confused adventurers found their death at the depths, and an untimely end of levitation drowned even more hopeful trespassers.
+This water is as deep as it is dangerous. No sane traveller would try to set
+foot into it, apart from those who fly or swim. Let it be a warning for you:
+many confused adventurers found their death at the depths, and an untimely end
+of levitation drowned even more hopeful trespassers.
 %%%%
 Some lava
 
@@ -429,40 +550,52 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 %%%%
 Some shallow water
 
-This waist-deep, misty water makes movement and combat cumbersome for landlubbers - sometimes dangerous, but never directly fatal.
+This waist-deep, misty water makes movement and combat cumbersome for
+landlubbers - sometimes dangerous, but never directly fatal.
 %%%%
 The open sea
 
-Nothing but endless wind and waves, and not a lighthouse in sight. You'd be lost beyond all hope in short order - better not risk it.
+Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
+lost beyond all hope in short order - better not risk it.
 %%%%
 ########################
 ### Vault redefinitions
 ########################
+# wizlabs
+An empty arch of stone
+
+This is the portal you came through; it looks bereft of magic now.
+%%%%
+A portal leading out of here
+
+This shimmering magical gate will lead you out of the wizard's dwelling, back
+to the place you came from. You doubt you will ever be able to come here again,
+though, so be sure to do all your pillaging first.
+%%%%
 # wizlab: Wucad Mu
 An autumnal tree
 
-These trees, large as they are, appear to be
-permanently locked in an autumnal moment: leaves, coloured red and gold,
-fall from branches and float gracefully to the floor. Before they even
-reach the ground, however, a shadow passes, and when the shimmer is gone,
-the leaves are once more on the branch, ready to fall again.
+These trees, large as they are, appear to be permanently locked in an autumnal
+moment: leaves, coloured red and gold, fall from branches and float gracefully
+to the floor. Before they even reach the ground, however, a shadow passes, and
+when the shimmer is gone, the leaves are once more on the branch, ready to fall
+again.
 %%%%
 A crumbled stone wall
 
-These walls, though they have fallen
-into disrepair, appear as locked in time as the trees, ready to collapse,
-but utterly unable to.
+These walls, though they have fallen into disrepair, appear as locked in time
+as the trees, ready to collapse, but utterly unable to.
 %%%%
 A strange statue
 
-The features of this statue are strange
-and alien. Is it because the statue is worn and tarnished that it has become
-so unrecognisable? Or is it that the subject was something demonic and evil?
+The features of this statue are strange and alien. Is it because the statue is
+worn and tarnished that it has become so unrecognisable? Or is it that the
+subject was something demonic and evil?
 %%%%
 A timeless floor
 
-Though a thousand feet may have trod these floors,
-they appear timeless and indestructible.
+Though a thousand feet may have trod these floors, they appear timeless and
+indestructible.
 %%%%
 # wizlab: Tukima
 A crystal clear mirror
@@ -483,8 +616,8 @@ The marble glistens and shines. It certainly is beautiful!
 %%%%
 A marble floor
 
-Where the walls are black marble, the floor is
-a white and silver, with shades of pink here and there.
+Where the walls are black marble, the floor is a white and silver, with shades
+of pink here and there.
 %%%%
 # wizlab: Eringya
 A rose-covered archway
@@ -501,8 +634,8 @@ It looks ancient.
 %%%%
 The grass-covered ground
 
-Strewn with leaves and twigs that
-crunch loudly underfoot, the grass is crisp and fresh.
+Strewn with leaves and twigs that crunch loudly underfoot, the grass is crisp
+and fresh.
 %%%%
 # wizlab: Doroklohe
 A strange rock wall
@@ -520,7 +653,8 @@ It is rough and uneven in places.
 # wizlab: Cigotuvi
 Viscous fluid
 
-This sticky fluid seems to be secreted by the nearby walls. It looks disgusting.
+This sticky fluid seems to be secreted by the nearby walls. It looks
+disgusting.
 %%%%
 A sinewy wall
 
@@ -548,25 +682,42 @@ The ground
 
 No life grows here. It is completely dead.
 %%%%
+# wizlab: Golubria
+The dimension's edge
+
+On the edge of this tiny, isolated plane, space itself dissolves into oblivion.
+Entering or affecting this black void is impossible.
+%%%%
+A wall of crystal
+
+<A wall of green crystal>
+%%%%
 # wizlab: Cloud Mage
 A damp floor
 
-Perhaps it is the humidity, or the constant flow of clouds, but the floor
-here remains forever damp.
+Perhaps it is the humidity, or the constant flow of clouds, but the floor here
+remains forever damp.
 %%%%
-#A wall of white crystal
+A wall of white crystal
+
+This is lower-grade crystal. It is hardly translucent at all, and its crooked
+faces make things worse. The opalescent gleam still looks pretty nice, though.
 %%%%
-#A wall of transparent white crystal
+A wall of transparent white crystal
+
+This crystal seems flawless and imperishable. It might be diamond or something
+of this kind — whatever it is, it is beyond your means of breaching it.
 %%%%
 # wizlab: Hellbinder
 A hot floor
 
-Deep below the floor burns a fire hotter than any other fire: the fire of
-hell. The floor is hot to the touch.
+Deep below the floor burns a fire hotter than any other fire: the fire of hell.
+The floor is hot to the touch.
 %%%%
 A black wall
 
-Perhaps stone, or solid charcoal, or a substance found only in the deepest hells.
+Perhaps stone, or solid charcoal, or a substance found only in the deepest
+hells.
 %%%%
 A carved rock wall
 
@@ -580,7 +731,7 @@ This tree is as dead as everything else here.
 # Dis:7
 An iron statue
 
-A heavy-looking iron statue. You can't help but feel like it's watching you.
+The statue has no mouth. Creepy!
 %%%%
 # Geh:7
 Ashen ground
@@ -607,8 +758,8 @@ Frost-covered floor. It crunches satisfyingly underfoot.
 # Pan: Cerebov
 A cracked metal wall
 
-This metal wall has suffered some damage. Alas, the hole is not big enough
-to crawl through.
+This metal wall has suffered some damage. Alas, the hole is not big enough to
+crawl through.
 %%%%
 # Pan: the holy level
 A golden statue
@@ -622,27 +773,26 @@ This wall is made of pure silver.
 # Slime:7
 A rune carved stone wall
 
-This strangely slime-free stone wall is carved all over with countless
-mystical runes. One often repeated set of runes seems to refer to
-'the royal jelly.'
+This strangely slime-free stone wall is carved all over with countless mystical
+runes. One often repeated set of runes seems to refer to 'the royal jelly.'
 %%%%
 # Tomb:1
 A sarcophagus
 
 An ancient sarcophagus. It appears to be empty.
 %%%%
-# Vault:8
+# Vaults:8
 A heavily etched metal wall
 
-This metal wall is etched with murals depicting, in great and gruesome
-detail, exactly what will be done to anyone caught stealing from the Vaults.
-It makes you feel queasy.
+This metal wall is etched with murals depicting, in great and gruesome detail,
+exactly what will be done to anyone caught stealing from the Vaults. It makes
+you feel queasy.
 %%%%
 A heavily etched wall of green crystal
 
 This wall of green crystal is etched with murals depicting, in great and
-gruesome detail, exactly what will be done to anyone caught stealing from
-the Vaults. It makes you feel queasy.
+gruesome detail, exactly what will be done to anyone caught stealing from the
+Vaults. It makes you feel queasy.
 %%%%
 # moated_graveyard_entry (D:1)
 An adventurer's gravestone
@@ -662,17 +812,12 @@ It looks freezing!
 # sewer_minmay_treatment (Sewer)
 A large window
 
-A window embedded in the side of an enormous metal pipe, allowing
-observation of the water flowing inside.
+A window embedded in the side of an enormous metal pipe, allowing observation
+of the water flowing inside.
 %%%%
 A glass window
 
 A pockmarked, ultra-hard glass window.
-%%%%
-# due_tower_of_silence
-An iron statue
-
-The statue has no mouth. Creepy!
 %%%%
 # Dwarf
 A granite statue of a fallen hero
@@ -705,36 +850,35 @@ This ancient sarcophagus is sealed shut.
 ###########################
 A flagged portal
 
-This portal leads to a forbidden dungeon of the mad chevalier. You know
-this because of the black pennant bearing weapons in saltire. It seems as
-if you had better enter the portal before the standard is lowered to the
-ground.
+This portal leads to a forbidden dungeon of the mad chevalier. You know this
+because of the black pennant bearing weapons in saltire. It seems as if you had
+better enter the portal before the standard is lowered to the ground.
 %%%%
 # timed bazaar
 A flickering gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have
-better stock than the sedentary ones, sometimes even at a bargain.
-Once you hear the clinking of coins, be sure to hurry up and find the
-impromptu marketplace before the caravan moves on!
+dungeon, there are others trying to make a living by traveling from place to
+place. Bazaars feature a number of different shops and often have better stock
+than the sedentary ones, sometimes even at a bargain. Once you hear the
+clinking of coins, be sure to hurry up and find the impromptu marketplace
+before the caravan moves on!
 
 Also be warned that their nomadic lifestyle has taught these sellers to
-appropriate any items an adventurer might leave behind, and then leave
-quickly, probably to sell them elsewhere.
+appropriate any items an adventurer might leave behind, and then leave quickly,
+probably to sell them elsewhere.
 %%%%
 # permanent bazaar
 A gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have
-better stock than the sedentary ones, sometimes even at a bargain.
+dungeon, there are others trying to make a living by traveling from place to
+place. Bazaars feature a number of different shops and often have better stock
+than the sedentary ones, sometimes even at a bargain.
 
 Also be warned that their nomadic lifestyle has taught these sellers to
-appropriate any items an adventurer might leave behind, and then leave
-quickly, probably to sell them elsewhere.
+appropriate any items an adventurer might leave behind, and then leave quickly,
+probably to sell them elsewhere.
 %%%%
 A gateway to a hive
 
@@ -757,38 +901,38 @@ were entombed here.
 %%%%
 A glowing drain
 
-Every settlement brings forth the unpleasant sewers and drains, ignored by
-most but hideaways for others. Old tales speak of dangerous creatures,
-bathing in disgustingly green water, preying on each other without mercy.
-The tales also tell of the valuable items left by daring and unfortunate
-visitors, left to collect dust in the damp caverns. You have an uncanny
-feeling that the drain will fall apart rather soon.
+Every settlement brings forth the unpleasant sewers and drains, ignored by most
+but hideaways for others. Old tales speak of dangerous creatures, bathing in
+disgustingly green water, preying on each other without mercy. The tales also
+tell of the valuable items left by daring and unfortunate visitors, left to
+collect dust in the damp caverns. You have an uncanny feeling that the drain
+will fall apart rather soon.
 %%%%
 A portal to a secret trove of treasure
 
-Once upon a time, an enterprising thief and wizard, terrified of being
-caught committing an act of burglary, created a system of portals leading
-into the secret treasure troves and chambers of the rich. Too scared to
-loot them himself, he instead charged an extortionate fee for entry to
-anyone who wanted to rifle through them.
+Once upon a time, an enterprising thief and wizard, terrified of being caught
+committing an act of burglary, created a system of portals leading into the
+secret treasure troves and chambers of the rich. Too scared to loot them
+himself, he instead charged an extortionate fee for entry to anyone who wanted
+to rifle through them.
 
-The secrets of the gateways died with him when his fellow thieves, disgusted
-by his betrayal of their 'ideals', had him murdered. With his death, the
-now-uncontrolled portals began moving rapidly from one dimension to the
-next, stopping only long enough to absorb magical energy.
+The secrets of the gateways died with him when his fellow thieves, disgusted by
+his betrayal of their 'ideals', had him murdered. With his death, the
+now-uncontrolled portals began moving rapidly from one dimension to the next,
+stopping only long enough to absorb magical energy.
 %%%%
 A dark tunnel
 
-Leading directly into the rock is a dark and forbidding tunnel. Every so
-often, air hot enough to singe your face blasts from within, and, as though
-triggered by the air, rocks fall from the roof and sides of the tunnel,
-slowly filling the entry.
+Leading directly into the rock is a dark and forbidding tunnel. Every so often,
+air hot enough to singe your face blasts from within, and, as though triggered
+by the air, rocks fall from the roof and sides of the tunnel, slowly filling
+the entry.
 %%%%
 A magical portal
 
-This portal has been left open by a careless wizard. It might lead to a
-secret laboratory, but beware! Surely it will be guarded by magical traps and
-terrible monsters. It seems to be slowly fading away.
+This portal has been left open by a careless wizard. It might lead to a secret
+laboratory, but beware! Surely it will be guarded by magical traps and terrible
+monsters. It seems to be slowly fading away.
 %%%%
 ###########
 ### Sprint
@@ -802,6 +946,3 @@ room, is a vast and terrible sea of impossible size.
 
 Either that, or it's a blue wall.
 %%%%
-A teleporter
-
-Stepping on this teleporter will send you to another room.

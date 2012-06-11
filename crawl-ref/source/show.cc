@@ -20,7 +20,6 @@
 #include "fprop.h"
 #include "itemprop.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -35,7 +34,6 @@
 #include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
-#include "viewgeom.h"
 #include "viewmap.h"
 
 show_type::show_type()
@@ -392,8 +390,11 @@ static void _update_monster(monster* mons)
             you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
         }
 
+        bool show_location = (mons->friendly()
+                              || (mons->constricted_by == MHITYOU));
+
         // maybe show unstealthy invis monsters
-        if (mons->friendly()
+        if (show_location
             || _hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
         {
             // We cannot use regular randomness here, otherwise redrawing the
@@ -401,13 +402,12 @@ static void _update_monster(monster* mons)
             // seed too -- but it needs to be regenerated every turn.
 
             // Maybe mark their square.
-            if (mons->friendly()
+            if (show_location
                 || mons->stealth() <= -2
                 || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
             {
                 env.map_knowledge(gp).set_invisible_monster();
-                // Just display the actual position for friendlies.
-                if (mons->friendly())
+                if (show_location) // Don't add extra fake trails.
                     return;
             }
 

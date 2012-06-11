@@ -1,7 +1,7 @@
 #ifndef DGN_SHOALS_H
 #define DGN_SHOALS_H
 
-void dgn_build_shoals_level(int level_number);
+void dgn_build_shoals_level();
 void dgn_shoals_generate_flora();
 void shoals_postprocess_level();
 void shoals_apply_tides(int turns_elapsed, bool force,

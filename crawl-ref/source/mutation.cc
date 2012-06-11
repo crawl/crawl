@@ -23,14 +23,13 @@
 #include "dactions.h"
 #include "effects.h"
 #include "env.h"
-#include "format.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "itemprop.h"
 #include "items.h"
-#include "macro.h"
 #include "menu.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-place.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -63,7 +62,6 @@ static const body_facet_def _body_facets[] =
     { EQ_HELMET, MUT_ANTENNAE, 1 },
     //{ EQ_HELMET, MUT_BEAK, 1 },
     { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_GLOVES, MUT_TENTACLES, 3 },
     { EQ_BOOTS, MUT_HOOVES, 3 },
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
@@ -77,7 +75,6 @@ equipment_type beastly_slot(int mut)
     case MUT_BEAK:
         return EQ_HELMET;
     case MUT_CLAWS:
-    case MUT_TENTACLES:
         return EQ_GLOVES;
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -222,7 +219,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_RUGGED_BROWN_SCALES:
             return (MUTACT_PARTIAL);
         case MUT_YELLOW_SCALES:
-            return (you.mutation[mut] > 1 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
         case MUT_ICY_BLUE_SCALES:
         case MUT_MOLTEN_SCALES:
         case MUT_SLIMY_GREEN_SCALES:
@@ -403,9 +399,9 @@ std::string describe_mutations()
             std::string msg = "You can fly";
             if (you.experience_level > 14)
                 msg += " continuously";
-            msg += ".";
+            msg += ".\n";
 
-            result += _annotate_form_based(msg, player_is_shapechanged());
+            result += msg;
             have_any = true;
         }
         break;
@@ -435,7 +431,7 @@ std::string describe_mutations()
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
-        scale_type = "dull grey";
+        scale_type = "dull iron-grey";
         break;
 
     case SP_RED_DRACONIAN:
@@ -527,8 +523,10 @@ std::string describe_mutations()
 
     case SP_OCTOPODE:
         result += "You cannot wear most types of armour.\n";
-        result += "You can wear up to eight rings at the same time.\n";
         result += "You are amphibious.\n";
+        result += _annotate_form_based(
+            "You can wear up to eight rings at the same time.",
+            !form_keeps_mutations() && you.form != TRAN_SPIDER);
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
             !form_keeps_mutations());
@@ -564,10 +562,12 @@ std::string describe_mutations()
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
         std::ostringstream num;
-        num << 4 + you.experience_level / 3;
+        num << 4 + you.experience_level / 3
+                 + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const std::string msg = "Your " + scale_type + " scales are hard"
-                                " (AC +" + num.str() + ").";
+        const std::string msg = "Your " + scale_type + " scales are "
+              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
+              + " (AC +" + num.str() + ").";
 
         result += _annotate_form_based(msg,
                       player_is_shapechanged() && you.form != TRAN_DRAGON);
@@ -812,7 +812,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
     case MUT_CLAWS:
-    case MUT_TENTACLES:
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -974,8 +973,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_REGENERATION,     MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,     MUT_BLURRY_VISION,    0},
         { MUT_FAST,             MUT_SLOW,             0},
-        { MUT_CLAWS,            MUT_TENTACLES,       -1},
         { MUT_FANGS,            MUT_BEAK,            -1},
+        { MUT_ANTENNAE,         MUT_HORNS,           -1},
         { MUT_HOOVES,           MUT_TALONS,          -1},
         { MUT_TRANSLUCENT_SKIN, MUT_CAMOUFLAGE,      -1},
         { MUT_STRONG,           MUT_WEAK,             1},
@@ -1076,38 +1075,42 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return (true);
 
     // Only Nagas and Draconians can get this one.
-    if (mutat == MUT_STINGER
-        && you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN))
+    if (you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN)
+        && mutat == MUT_STINGER)
     {
         return (true);
     }
 
     // Need tentacles to grow something on them.
-    if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
+    if (you.species != SP_OCTOPODE && mutat == MUT_TENTACLE_SPIKE)
         return (true);
 
     // No bones.
-    if (mutat == MUT_THIN_SKELETAL_STRUCTURE && you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && mutat == MUT_THIN_SKELETAL_STRUCTURE)
         return (true);
 
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
+    // No feet.
+    if (!player_has_feet(false)
+        && (mutat == MUT_HOOVES || mutat == MUT_TALONS))
+    {
         return (true);
+    }
 
     // Only Nagas can get this upgrade.
-    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
+    if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
         return (true);
 
     // Red Draconians can already breathe flames.
-    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
+    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
         return (true);
 
     // Green Draconians can breathe mephitic, poison is not really redundant
     // but its name might confuse players a bit ("noxious" vs "poison").
-    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
+    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return (true);
 
     // Only Draconians can get wings.
-    if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
+    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
         return (true);
 
     // Vampires' healing and thirst rates depend on their blood level.
@@ -1120,18 +1123,17 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them. Felids cannot get tentacles, since they have
-    // no fingers, hands or arms to mutate into tentacles.
-    if ((mutat == MUT_CLAWS || mutat == MUT_TENTACLES)
-        && you.species == SP_FELID)
-    {
+    // increases for them.
+    if (you.species == SP_FELID && mutat == MUT_CLAWS)
         return (true);
-    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
-    if (you.species == SP_MERFOLK && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    if (you.species == SP_MERFOLK
+        && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
+    {
         return (true);
+    }
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1218,14 +1220,17 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         // resistance mutation.
         if (!god_gift)
         {
-            if ((wearing_amulet(AMU_RESIST_MUTATION)
-                    && !one_chance_in(10) && !stat_gain_potion)
+            if ((player_res_mutation_from_item()
+                 && !one_chance_in(10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(3)))
             {
                 if (failMsg)
+                {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
+                    maybe_id_resist(BEAM_POLYMORPH);
+                }
                 return (false);
             }
         }
@@ -1396,10 +1401,10 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
     case MUT_LARGE_BONE_PLATES:
         {
             const char *arms;
-            if (you.mutation[MUT_TENTACLES] >= 3)
-                arms = "tentacles";
-            else if (you.species == SP_FELID)
+            if (you.species == SP_FELID)
                 arms = "legs";
+            else if (you.species == SP_OCTOPODE)
+                arms = "tentacles";
             else
                 break;
             mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
@@ -1446,8 +1451,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
         break;
 
     case MUT_CLAWS:
-    case MUT_TENTACLES:
-        // Gloves aren't prevented until level 3 of claws or tentacles.
+        // Claws force gloves off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
@@ -1787,95 +1791,85 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-// The tiers of each mutation within a facet should never exceed the overall
-// tier of the entire facet, lest ordering / scheduling issues arise.
+// The "when" numbers indicate the range of times in which the mutation tries
+// to place itself; it will be approximately placed between when% and
+// (when + 100)% of the way through the mutations. For example, you should
+// usually get all your body slot mutations in the first 2/3 of your
+// mutations and you should usually only start your tier 3 facet in the second
+// half of your mutations. See _order_ds_mutations() for details.
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
-    { 2,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
-      { 2, 2, 2 } },
-    { 2, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
-      { 2, 2, 2 } },
-    { 2, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
-      { 2, 2, 2 } },
-    { 2, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
-      { 2, 2, 2 } },
-    { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
-      { 2, 2, 2 } },
-    // Tier 3 facets
-    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 3, 3, 3 } },
-    { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
-      { 3, 3, 3 } },
-    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
-      { 3, 3, 3 } },
-    { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_NEGATIVE_ENERGY_RESISTANCE },
-      { 3, 3, 3 } },
-    { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
-          MUT_STOCHASTIC_TORMENT_RESISTANCE },
-      { 3, 3, 3 } },
-    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
-      { 3, 3, 3 } },
-    // Tier 2 facets
-    { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
-      { 2, 2, 2 } },
-    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-      { 2, 2, 2 } },
-    { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
-      { 2, 2, 2 } },
-    { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
-      { 2, 2, 2 } },
-    { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
-      { 2, 2, 2 } },
-    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
-      { 2, 2, 2 } },
-    { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
-      { 2, 2, 2 } },
-    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
-      { 2, 2, 2 } },
-    { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
-      { 2, 2, 2 } },
+    { 0,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+      { -33, -33, -33 } },
+    { 0, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
+      { -33, -33, -33 } },
+    { 0, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
+      { -33, -33, -33 } },
+    { 0, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
+      { -33, -33, -33 } },
+    { 0, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+      { -33, -33, -33 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
         MUT_RUGGED_BROWN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
         MUT_THIN_METALLIC_SCALES },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
         MUT_THIN_SKELETAL_STRUCTURE },
-      { 1, 1, 1 } },
+      { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
-      { 1, 1, 1 } }
+      { -33, -33, 0 } },
+    // Tier 2 facets
+    { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
+      { -33, 0, 0 } },
+    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+      { -33, 0, 0 } },
+    { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
+      { -33, 0, 0 } },
+    { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
+      { -33, 33, 66 } },
+    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
+      { -33, 0, 0 } },
+    { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
+      { -33, 0, 0 } },
+    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
+      { -33, 0, 0 } },
+    { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+      { -33, 0, 0 } },
+    // Tier 3 facets
+    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+      { 50, 50, 50 } },
+    { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
+      { 50, 50, 50 } },
+    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
+      { 50, 50, 50 } },
+    { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
+          MUT_STOCHASTIC_TORMENT_RESISTANCE },
+      { 50, 50, 50 } },
+    { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
+      { 50, 50, 50 } },
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)
 {
     return facet.tier == tier;
-}
-
-static int _rank_for_tier(const facet_def& facet, int tier)
-{
-    int k;
-
-    for (k = 0; k < 3 && facet.tiers[k] <= tier; ++k);
-
-    return (k);
 }
 
 #define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
@@ -1919,14 +1913,12 @@ static bool _slot_is_unique(const mutation_type mut[MUTS_IN_SLOT],
 
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
-    int NUM_BODY_SLOTS = 1;
-    int ct_of_tier[] = { 0, 1, 3, 1 };
+    int ct_of_tier[] = { 1, 1, 2, 1 };
     // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
     {
-        NUM_BODY_SLOTS = 3;
+        ct_of_tier[0] = 3;
         ct_of_tier[1] = 0;
-        ct_of_tier[2] = 5;
     }
 
 try_again:
@@ -1935,9 +1927,9 @@ try_again:
     ret.clear();
     int absfacet = 0;
     int scales = 0;
-    int slots_lost = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
+    int cloud_producing = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -1957,11 +1949,11 @@ try_again:
 
             facets_used.insert(next_facet);
 
-            for (int i = 0; i < _rank_for_tier(*next_facet, tier); ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 mutation_type m = next_facet->muts[i];
 
-                ret.push_back(demon_mutation_info(m, next_facet->tiers[i],
+                ret.push_back(demon_mutation_info(m, next_facet->when[i],
                                                   absfacet));
 
                 if (_is_covering(m))
@@ -1973,16 +1965,8 @@ try_again:
                 if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
-                if (m == MUT_CLAWS && i == 2
-                    || m == MUT_TENTACLES && i == 2
-                    || m == MUT_HORNS && i == 0
-                    || m == MUT_BEAK && i == 0
-                    || m == MUT_ANTENNAE && i == 0
-                    || m == MUT_HOOVES && i == 2
-                    || m == MUT_TALONS && i == 2)
-                {
-                    ++slots_lost;
-                }
+                if (m == MUT_SAPROVOROUS || m == MUT_IGNITE_BLOOD)
+                    cloud_producing++;
             }
 
             ++absfacet;
@@ -1992,10 +1976,10 @@ try_again:
     if (scales > 3)
         goto try_again;
 
-    if (slots_lost != NUM_BODY_SLOTS)
+    if (ice_elemental + fire_elemental > 1)
         goto try_again;
 
-    if (ice_elemental + fire_elemental > 1)
+    if (cloud_producing > 1)
         goto try_again;
 
     return ret;
@@ -2005,36 +1989,42 @@ static std::vector<mutation_type>
 _order_ds_mutations(std::vector<demon_mutation_info> muts)
 {
     std::vector<mutation_type> out;
-
-    while (!muts.empty())
+    std::vector<int> times;
+    FixedVector<int, 1000> time_slots;
+    time_slots.init(-1);
+    for (unsigned int i = 0; i < muts.size(); i++)
     {
-        int first_tier = 99;
-
-        for (unsigned i = 0; i < muts.size(); ++i)
-            first_tier = std::min(first_tier, muts[i].tier);
-
-        int ix;
-
+        int first = std::max(0, muts[i].when);
+        int last = std::min(100, muts[i].when + 100);
+        int k;
         do
         {
-            ix = random2(muts.size());
+            k = 10 * first + random2(10 * (last - first));
         }
-        // Don't consider mutations from more than two tiers at a time
-        while (muts[ix].tier >= first_tier + 2);
+        while (time_slots[k] >= 0);
+        time_slots[k] = i;
+        times.push_back(k);
 
-        // Don't reorder mutations within a facet
-        for (int j = 0; j < ix; ++j)
+        // Don't reorder mutations within a facet.
+        for (unsigned int j = i; j > 0; j--)
         {
-            if (muts[j].facet == muts[ix].facet)
+            if (muts[j].facet == muts[j-1].facet && times[j] < times[j-1])
             {
-                ix = j;
-                break;
+                int earlier = times[j];
+                int later = times[j-1];
+                time_slots[earlier] = j-1;
+                time_slots[later] = j;
+                times[j-1] = earlier;
+                times[j] = later;
             }
+            else
+                break;
         }
-
-        out.push_back(muts[ix].mut);
-        muts.erase(muts.begin() + ix);
     }
+
+    for (int time = 0; time < 1000; time++)
+        if (time_slots[time] >= 0)
+            out.push_back(muts[time_slots[time]].mut);
 
     return out;
 }

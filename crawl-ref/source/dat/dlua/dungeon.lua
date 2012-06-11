@@ -634,14 +634,13 @@ dgn.good_scrolls = [[
     w:80  scroll of teleportation / scroll of teleportation q:2 w:30 /
                                   / scroll of teleportation q:3 w:10 /
     w:80  scroll of fog / scroll of fog q:2 w:30 / scroll of fog q:3 w:10 /
-    w:50  scroll of remove curse / scroll of remove curse q:2 w:20 /
+    w:80  scroll of remove curse / scroll of remove curse q:2 w:30 /
     w:50  scroll of enchant weapon I / scroll of enchant weapon I q:2 w:20 /
     w:50  scroll of enchant weapon II / scroll of enchant weapon II q:2 w:20 /
     w:50  scroll of blinking / scroll of blinking q:2 w:20 /
     w:50  scroll of enchant armour / scroll of enchant armour q:2 w:20 /
     w:50  scroll of recharging / scroll of recharging q:2 w:20 /
     w:30  scroll of magic mapping / scroll of magic mapping q:2 w:10 /
-    w:30  scroll of detect curse / scroll of detect curse q:2 w:10 /
     w:30  scroll of holy word / scroll of holy word q:2 w:10 /
     w:30  scroll of enchant weapon III / scroll of enchant weapon III q:2 w:10 /
     w:10  scroll of acquirement / scroll of acquirement q:2 w:4 /

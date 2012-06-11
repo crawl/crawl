@@ -4,9 +4,7 @@
 #include "tilemcache.h"
 
 #include "env.h"
-#include "ghost.h"
 #include "mon-util.h"
-#include "tags.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
@@ -234,8 +232,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MAUD:
     case TILEP_MONS_FRANCES:
     case TILEP_MONS_HAROLD:
+    case TILEP_MONS_JOSEPHINE:
     case TILEP_MONS_JOSEPH:
-    case TILEP_MONS_JOZEF:
     case TILEP_MONS_TERENCE:
     case TILEP_MONS_WIGLAF:
     case TILEP_MONS_FREDERICK:
@@ -248,12 +246,12 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_SPRIGGAN:
-    case TILEP_MONS_TENGU:
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
+    case TILEP_MONS_NIKOLA:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -287,6 +285,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ANCIENT_CHAMPION:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
+    case TILEP_MONS_TENGU:
+    case TILEP_MONS_TENGU_CONJURER:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -385,9 +385,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -1;
         break;
+    case TILEP_MONS_FANNAR:
+        *ofs_x = -2;
+        *ofs_y = -4;
+        break;
     // Shift upwards and to the right.
     case TILEP_MONS_NECROMANCER:
     case TILEP_MONS_WIZARD:
+    case TILEP_MONS_CLOUD_MAGE:
+    case TILEP_MONS_MASTER_ELEMENTALIST:
         *ofs_x = 1;
         *ofs_y = -1;
         break;
@@ -399,8 +405,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 1;
         *ofs_y = -4;
         break;
-    case TILEP_MONS_CLOUD_MAGE:
-    case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_HELL_WIZARD:
     case TILEP_MONS_HELL_WIZARD + 1:
     case TILEP_MONS_HELL_WIZARD + 2:
@@ -408,6 +412,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -2;
         break;
     case TILEP_MONS_RED_DEVIL:
+        *ofs_x = 0;
+        *ofs_y = -3;
+        break;
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_ELF:
         *ofs_x = 2;

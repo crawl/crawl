@@ -23,28 +23,28 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
+#include "env.h"
+#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
-#include "item_use.h"
 #include "lang-fake.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
 #include "player.h"
-#include "place.h"
 #include "religion.h"
 #include "skills2.h"
 #include "status.h"
 #include "stuff.h"
 #include "tagstring.h"
+#include "throw.h"
 #include "transform.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -414,13 +414,12 @@ static void _print_stats_wp(int y)
         col = LIGHTGREY;
         text = "Nothing wielded"; // Default
 
-        if (you.has_usable_claws(true))
-            text = "Claws";
-        if (you.has_usable_tentacles(true))
-            text = "Tentacles";
-
         if (you.species == SP_FELID)
             text = "Teeth and claws";
+        else if (you.has_usable_claws(true))
+            text = "Claws";
+        else if (you.has_usable_tentacles(true))
+            text = "Tentacles";
 
         switch (you.form)
         {
@@ -660,7 +659,13 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT_SAVE(wherex() == crawl_view.hudp.x);
+#ifdef ASSERTS
+    if (wherex() != crawl_view.hudp.x)
+    {
+        save_game(false); // should be safe
+        die("misaligned HUD (is %d, should be %d)", wherex(), crawl_view.hudp.x);
+    }
+#endif
 
     size_t i_light = 0;
     while (true)
@@ -824,12 +829,6 @@ void print_stats(void)
     {
         cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-#ifdef DEBUG_DIAGNOSTICS
-        cprintf("XP: ");
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%d/%d (%d) ",
-                you.experience_level, you.skill_cost_level, you.exp_available);
-#else
         cprintf("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%2d ", you.experience_level);
@@ -840,7 +839,6 @@ void print_stats(void)
             textcolor(HUD_VALUE_COLOUR);
             cprintf("%2d%% ", get_exp_progress());
         }
-#endif
         if (crawl_state.game_is_zotdef())
         {
             cgotoxy(1, 9, GOTO_STAT);
@@ -909,33 +907,16 @@ void print_stats(void)
 static std::string _level_description_string_hud()
 {
     const PlaceInfo& place = you.get_place_info();
-    std::string short_name = place.short_name();
+    std::string short_name = branches[place.branch].shortname;
 
-    if (place.level_type == LEVEL_DUNGEON
-        && branches[place.branch].depth > 1)
-    {
-        short_name += make_stringf(":%d", player_branch_depth());
-    }
-    // Indefinite articles
-    else if (place.level_type == LEVEL_PORTAL_VAULT
-             || place.level_type == LEVEL_LABYRINTH)
-    {
-        if (!you.level_type_name.empty())
-        {
-            // If the level name is faking a dungeon depth
-            // (i.e., "Ziggurat:3") then don't add an article
-            if (you.level_type_name.find(":") != std::string::npos)
-                short_name = you.level_type_name;
-            else
-                short_name = article_a(uppercase_first(you.level_type_name),
-                                       false);
-        }
-        else
-            short_name.insert(0, "A ");
-    }
+    if (brdepth[place.branch] > 1)
+        short_name += make_stringf(":%d", you.depth);
     // Definite articles
-    else if (place.level_type == LEVEL_ABYSS)
+    else if (place.branch == BRANCH_ABYSS)
         short_name.insert(0, "The ");
+    // Indefinite articles
+    else if (place.branch != BRANCH_PANDEMONIUM && !is_connected_branch(place.branch))
+        short_name = article_a(short_name);
     return short_name;
 }
 
@@ -947,7 +928,7 @@ void print_stats_level()
 
     textcolor(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("(%d) ", you.absdepth0 + 1);
+    cprintf("(%d) ", env.absdepth0 + 1);
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
@@ -974,7 +955,8 @@ void draw_border(void)
     {
         int yhack = crawl_state.game_is_zotdef();
         cgotoxy(1, 9 + yhack, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 9 + yhack, GOTO_STAT); cprintf("Turn:");
+        cgotoxy(19, 9 + yhack, GOTO_STAT);
+        cprintf(Options.show_game_turns ? "Time:" : "Turn:");
     }
     // Line 8 is exp pool, Level
 }
@@ -1132,10 +1114,10 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 
         if (printed < crawl_view.mlistsz.x)
         {
-            int desc_color;
+            int desc_colour;
             std::string desc;
-            mons[start].to_string(count, desc, desc_color, zombified);
-            textcolor(desc_color);
+            mons[start].to_string(count, desc, desc_colour, zombified);
+            textcolor(desc_colour);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
             cprintf("%s", desc.c_str());
         }
@@ -1710,12 +1692,12 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 39
-    column_composer cols(3, 21, 39);
+    // 3 columns, splits at columns 21, 38
+    column_composer cols(3, 21, 38);
 
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
-    bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
+    bool dragonskin = player_equip_unrand_effect(UNRAND_DRAGONSKIN);
     bool cloak_was_melded = you.melded[EQ_CLOAK];
     if (dragonskin)
         you.melded[EQ_CLOAK] = true; // hack!
@@ -1723,21 +1705,18 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
-    const int racid = player_res_acid(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
+    const int rmuta = (player_res_mutation_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
-    const int rrott = (you.res_rotting()
-                       || you.religion == GOD_ZIN && you.piety >= 150);
+    const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
-             "%sRes.Acid. : %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
              "%sSust.Abil.: %s\n"
@@ -1746,7 +1725,6 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rfire, 3), _itosym3(rfire),
              _determine_colour_string(rcold, 3), _itosym3(rcold),
              _determine_colour_string(rlife, 3), _itosym3(rlife),
-             _determine_colour_string(racid, 3), _itosym3(racid),
              _determine_colour_string(rpois, 1), _itosym1(rpois),
              _determine_colour_string(relec, 1), _itosym1(relec),
              _determine_colour_string(rsust, 2), _itosym2(rsust),
@@ -1758,7 +1736,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const char* pregourmand;
     const char* postgourmand;
 
-    if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
+    if (player_effect_gourmand())
     {
         pregourmand = "Gourmand  : ";
         postgourmand = _itosym1(1);
@@ -1789,24 +1767,24 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 2), _itosym2(rward),
+             _determine_colour_string(rward, 1), _itosym1(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
              _determine_colour_string(rclar, 1), _itosym1(rclar),
              _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
-    const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
-    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
-                       || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
+    const int stasis = player_effect_stasis(calc_unid);
+    const int notele = player_effect_notele(calc_unid)
+                       || crawl_state.game_is_zotdef()
+                          && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
-    else
-    if (rrtel && !stasis)
+    else if (rrtel && !stasis)
     {
         snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
@@ -1821,7 +1799,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     int rctel = player_control_teleport(calc_unid);
     rctel = allow_control_teleport(true) ? rctel : -1;
     const int rlevi = you.airborne();
-    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    const int rcfli = player_effect_cfly(calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
@@ -2132,8 +2110,7 @@ static std::string _status_mut_abilities(int sw)
               std::string help = "able to fly";
               if (you.experience_level > 14)
                   help += " continuously";
-              mutations.push_back(_annotate_form_based(help,
-                                                       player_is_shapechanged()));
+              mutations.push_back(help);
           }
           break;
 
@@ -2229,6 +2206,9 @@ static std::string _status_mut_abilities(int sw)
         mutations.push_back("almost no armour");
         mutations.push_back("amphibious");
         mutations.push_back(_annotate_form_based(
+            "8 rings",
+            !form_keeps_mutations() && you.form != TRAN_SPIDER));
+        mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
             !form_keeps_mutations()));
     }
@@ -2311,10 +2291,6 @@ static std::string _status_mut_abilities(int sw)
                 break;
             case MUT_HIGH_MAGIC:
                 snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
-                current = info;
-                break;
-            case MUT_STOCHASTIC_TORMENT_RESISTANCE:
-                snprintf(info, INFO_SIZE, "%d%% torment resistance", level*20);
                 current = info;
                 break;
             case MUT_ICEMAIL:

@@ -72,7 +72,8 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             if (mons_class_holiness(you.inv[wielded].mon_type) == MH_HOLY)
                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         }
-        else if (is_blood_potion(you.inv[wielded]))
+        else if (is_blood_potion(you.inv[wielded])
+                 && item_type_known(you.inv[wielded]))
         {
             fail_check();
             success = true;
@@ -439,13 +440,10 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
         pot_type = POT_POISON;
         break;
 
-    case CE_MUTAGEN_RANDOM:
-    case CE_MUTAGEN_GOOD:   // unused
-    case CE_RANDOM:         // unused
+    case CE_MUTAGEN:
         pot_type = POT_MUTATION;
         break;
 
-    case CE_MUTAGEN_BAD:    // unused
     case CE_ROTTEN:         // actually this only occurs via mangling
     case CE_ROT:            // necrophage
         pot_type = POT_DECAY;

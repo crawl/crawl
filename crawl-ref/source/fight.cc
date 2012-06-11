@@ -12,50 +12,35 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "externs.h"
-
 #include "cloud.h"
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
-#include "mon-behv.h"
-// These all might not be necessary? added on merge
-#include "mon-cast.h"
-#include "mon-clone.h"
-#include "mon-place.h"
-#include "terrain.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
+#include "mon-behv.h"
+#include "mon-cast.h"
+#include "mon-place.h"
 #include "mon-util.h"
-#include "mutation.h"
 #include "ouch.h"
-#include "options.h"
 #include "player.h"
 #include "random-var.h"
-#include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
-#include "skills.h"
-#include "species.h"
-#include "spl-clouds.h"
 #include "spl-miscast.h"
-#include "spl-summoning.h"
-#include "spl-util.h"
-// End list
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "travel.h"
-#include "hints.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     #define NOTE_DEBUG_CHAOS_EFFECTS
 #endif
 
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
-#include "notes.h"
+    #include "notes.h"
 #endif
 
 /* Handles melee combat between attacker and defender
@@ -65,7 +50,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
     if (defender->is_player())
     {
@@ -85,7 +70,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
 
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
-        behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
+        behaviour_event(attacker->as_monster(), ME_ALERT, defender);
     }
     else if (attacker->is_player())
     {
@@ -98,6 +83,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         }
 
         melee_attack attk(&you, defender);
+
+        if (simu)
+            attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
@@ -187,10 +175,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit)
         melee_attack melee_attk(attacker, defender, attack_number,
                           effective_attack_number);
 
+        if (simu)
+            melee_attk.simu = true;
+
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters
         if (!melee_attk.attack())
             effective_attack_number = melee_attk.effective_attack_number;
+        else if (did_hit and not *did_hit)
+            *did_hit = melee_attk.did_hit;
     }
 
     return (true);
@@ -388,7 +381,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
-            prompt += "being unarmed?";
+            prompt += "unarmed?";
         else
             prompt += "wielding " + weapon->name(DESC_YOUR) + "? ";
 

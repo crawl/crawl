@@ -1,3 +1,4 @@
+# vim:set ts=8 sw=4 noexpandtab:
 #
 # Dungeon Crawl Stone Soup
 # GNU Makefile
@@ -148,6 +149,8 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
+TX-MKINI = util/tx-mkini.pl
+TX-MKTXT = util/tx-mktxt.pl
 
 export AR
 export RANLIB
@@ -947,8 +950,9 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h #the rest are private
-GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
-                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
+                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
+                   $(INI_OBJECTS)
 
 GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
@@ -1217,7 +1221,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver
+clean: clean-rltiles clean-webserver tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1291,6 +1295,9 @@ ifdef NO_INLINE_DEPGEN
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+ifndef NO_INLINE_DEPGEN
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+endif
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
@@ -1323,11 +1330,149 @@ mon-mst.h: mon-spll.h util/gen-mst.pl
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
 
+mi-enum.h: mon-info.h util/gen-mi-enum
+	$(QUIET_GEN)util/gen-mi-enum
+
 $(RLTILES)/dc-unrand.txt: art-data.h
 
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
+l_moninf.o: mi-enum.h
+
+#############################################################################
+# Translation files
+#
+# Only support a single dir for now
+TX = tx
+TX-CONFIG = .tx/config
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-DIR = dat/descript
+
+# List of languages
+TX-LANG = $(filter-out en, $(notdir $(wildcard $(TX-DIR)/??)))
+
+# Text source files under git versioning
+TX-TSOURCES = $(wildcard $(TX-DIR)/*.txt)
+TX-TTRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.txt))
+TX-TXT = $(TX-TSOURCES) $(TX-TTRANS)
+
+# Files generated from the source. To be pushed to transifex
+TX-SOURCES = $(TX-TSOURCES:.txt=.ini)
+TX-TRANS = $(TX-TTRANS:.txt=.ini)
+TX-INI = $(TX-SOURCES) $(TX-TRANS)
+
+# What file to used to generate the quote files to push to transifex
+# We add placeholder entries in it to allow users to submit new quotes
+TX-QUOTES = $(TX-DIR)/quotes.ini
+TX-QUOTES-ALL = $(TX-DIR)/quotes-all.ini
+TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-DIR)/$(name).ini)
+
+# Files pulled from transifex. It is different than TX-TRANS, because it can
+# contain new files for which we have no .txt yet
+TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
+TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
+TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
+
+TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
+
+.PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
+
+tx-clean:
+	@echo "Removing transifex temporary files"
+	@$(RM) $(TX-INI) $(TX-QUOTES-ALL) $(TX-NEW)
+
+$(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
+	util/tx-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
+
+# XXX for database file, we'll need a conditional to remove the -u option.
+%.ini: %.txt
+	$(TX-MKINI) -u $*.txt
+
+tx-txt:
+	-if [ "$(TX-NEW-TRANS)" != "" ]; then\
+		$(TX-MKTXT) -w $(TX-NEW-TRANS);\
+	fi
+	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
+		$(TX-MKTXT) -mw -d $(TX-DIR) $(TX-NEW-TEXT);\
+	fi
+	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
+		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
+	fi
+
+tx-init:
+	$(RM) $(TX-CONFIG)
+	if [ -d .tx ]; then\
+		rmdir --ignore-fail-on-non-empty .tx;\
+	fi
+	$(MAKE) tx-setup
+
+tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
+	if [ ! -e $(TX-CONFIG) ]; then\
+		$(TX) init;\
+	fi
+	for FILE in $(TX-SOURCES); do\
+		DIR=$$(dirname $$FILE);\
+		RES=$$(basename $$FILE .ini);\
+		grep -q dcss.$$RES .tx/config;\
+		if [ $$? -ne 0 ]; then\
+			if [ $$RES = quotes ]; then\
+				SRC=$$DIR/quotes-all.ini;\
+			else\
+				SRC=$$DIR/$$RES.ini;\
+			fi;\
+			$(TX-SET) -r dcss.$$RES --source-file $$SRC "$$DIR/<lang>/$$RES.ini";\
+		fi;\
+	done
+
+tx-check: $(TX-INI)
+	@if $(TX-MKTXT) -mtw $(TX-SOURCES) && $(TX-MKTXT) -tw $(TX-TRANS); then\
+		exit 0;\
+	fi;\
+	echo "Changes detected when converting to transifex format.";\
+	git diff --quiet HEAD -- $(TX-TXT) || echo "Warning: some of the text files have uncommited changes!";\
+	read -p "Attempt automatic fix? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi;\
+	$(TX-MKTXT) -mw $(TX-SOURCES);\
+	$(TX-MKTXT) -w $(TX-TRANS);\
+
+tx-commit:
+	@if git diff --quiet $(TX-TXT); then\
+		exit 0;\
+	fi;\
+	git diff $(TX-TXT);\
+	read -p "Commit? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi;\
+	if [ -z "$(TX-COMMIT-MSG)" ]; then\
+		MSG="Transifex.";\
+	else\
+		MSG="$(TX-COMMIT-MSG)";\
+	fi;\
+	git add $(TX-TXT);\
+	git commit -e -s -m "$$MSG" --author=$(TX-COMMIT-AUTHOR)
+
+tx-pull:
+	@echo "Cleaning up downloaded translations.";\
+	$(RM) $(TX-NEW)
+	tx pull -a --minimum-perc=1 --mode=reviewed
+
+tx-push: $(TX-INI) $(TX-QUOTES-ALL)
+	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
+	tx push -s
+	tx push -t --skip
+
+tx-sync:
+	$(MAKE) tx-check
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex format fix."
+	$(MAKE) tx-pull
+	$(MAKE) tx-txt
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex sync."
+	$(MAKE) tx-push
 
 #############################################################################
 # RLTiles

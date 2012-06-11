@@ -13,14 +13,11 @@
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
-#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
-#include "potion.h"
-#include "religion.h"
 #include "spl-cast.h"
-#include "spl-other.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "transform.h"
@@ -219,6 +216,7 @@ spret_type cast_fly(int power, bool fail)
 
     you.increase_duration(DUR_LEVITATION, dur_change, 100);
     you.increase_duration(DUR_CONTROLLED_FLIGHT, dur_change, 100);
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
 
     burden_change();
 
@@ -240,8 +238,12 @@ spret_type cast_insulation(int power, bool fail)
 spret_type cast_teleport_control(int power, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
-                          "You feel in control.");
+    if (allow_control_teleport(true))
+        mpr("You feel in control.");
+    else
+        mpr("You feel your control is inadequate.");
+
+    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50);
     return SPRET_SUCCESS;
 }
 
@@ -327,10 +329,7 @@ spret_type cast_see_invisible(int pow, bool fail)
 spret_type cast_silence(int pow, bool fail)
 {
     fail_check();
-    if (!you.attribute[ATTR_WAS_SILENCED])
-        mpr("A profound silence engulfs you.");
-
-    you.attribute[ATTR_WAS_SILENCED] = 1;
+    mpr("A profound silence engulfs you.");
 
     you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
     invalidate_agrid(true);

@@ -46,7 +46,13 @@ Obroń Kulę Zot, nie zawiedź!
 %%%%
 hell_effect
 
-Opary siarki unoszą się wokół.
+{{
+if you.can_smell() then
+    return "Czujesz woń siarki."
+else
+    return "Opary siarki unoszą się wokół."
+end
+}}
 
 Czujesz się zagubiony, i bardzo, bardzo daleko od domu...
 
@@ -81,4 +87,80 @@ SOUND:Rozlega się skręcający trzewia krzyk!
 SOUND:Słyszysz słowa mówione w jakimś dziwnym i strasznym języku...
 
 SOUND:Rozlega się diaboliczny śmiech!
+%%%%
+eating_cheese
+
+# No dot at the end, so we can exclaim after bryndza.
+Mniam, @_cheese_kind_@
+%%%%
+_cheese_kind_
+
+gołda.
+
+edamski.
+
+camembert.
+
+mozzarella
+
+oscypek.
+
+bryndza!
+
+ser z jaka.
+
+kozi ser.
+%%%%
+eating_pizza
+
+@_carni_mmm_@ hawajska.
+
+@_carni_mmm_@ familijna.
+
+# Papryczki nie kiełbasa — nie jesteśmy, panocku, w niedouczonej Chameryce.
+@_herbi_mmm_@ pepperoni.
+
+Z sardelą, paskudztwo!
+
+# Very rare in RL, fortunately.
+w:2
+{{
+if you.mutation("carnivorous") == 3 then
+    return "Kaszana."
+else
+    return "Błee... tfu... z kaszanką."
+end
+}}
+
+@_carni_mmm_@ kurczak z kukurydzą.
+
+Mmm... To słynna Pandemonium Pizza!
+
+Mmm... serowa.
+
+@_herbi_mmm_@ wegetariańska.
+
+@_herbi_mmm_@ z papryką.
+
+@_herbi_mmm_@ z grzybami.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivorous") > 0 then
+    return "Błee..."
+else
+    return "Mniam,"
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivorous") > 0 then
+    return "Błee..."
+else
+    return "Mniam,"
+end
+}}
 %%%%

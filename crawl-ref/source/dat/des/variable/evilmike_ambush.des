@@ -10,7 +10,7 @@
 # post-lair.
 
 NAME:     evilmike_ambush
-DEPTH:    D:14-26, Vault:1-7, Elf:1-4, Snake:1-4, Dis:1-6, Geh:1-6, Tar:1-6, \
+DEPTH:    D:14-26, Vaults:1-7, Elf:1-4, Snake:1-4, Dis:1-6, Geh:1-6, Tar:1-6, \
           Coc:1-6, Zot:1-4, Crypt:1-4
 TAGS:     allow_dup
 SUBVAULT: = : evilmike_ambush_outer
@@ -127,14 +127,14 @@ ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_1
 TAGS:    evilmike_ambush_inner allow_dup
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: AB / {(
 SUBST:   AB = .
 SHUFFLE: yxX / "">
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
-SUBST:   > = [[}>
+SUBST:   > = }>
 MAP
  .....
 ...y...
@@ -147,14 +147,14 @@ ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_2
 TAGS:    evilmike_ambush_inner allow_dup
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: AB / {(
 SUBST:   AB = .
-SHUFFLE: yxX / """
+SHUFFLE: yxX / ""<
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
-SUBST:   > = [[}>
+SUBST:   > = }>
 MAP
  .....
 ..y.y..

@@ -5,12 +5,10 @@
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
-#include "directn.h"
 #include "env.h"
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
-#include "macro.h"
 #include "map_knowledge.h"
 #include "message.h"
 #include "mon-util.h"
@@ -26,7 +24,6 @@
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
 #include "tilereg-doll.h"
-#include "tilereg-grid.h"
 #include "tilereg-inv.h"
 #include "tilereg-map.h"
 #include "tilereg-mem.h"
@@ -796,9 +793,7 @@ void TilesFramework::do_layout()
     // Calculate message_y_divider. First off, if we have already decided to
     // use the overlay, we can place the divider to the bottom of the screen.
     if (message_overlay)
-    {
         message_y_divider = m_windowsz.y;
-    }
 
     // Then, the optimal situation without the overlay - we can fit both
     // Options.view_max_height and at least Options.msg_min_height in the space.
@@ -1232,7 +1227,8 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
     if (genus == MONS_PANDEMONIUM_LORD
         || genus == MONS_HELL_LORD
         || mon.type == MONS_ANTAEUS
-        || mon.type == MONS_LERNAEAN_HYDRA)
+        || mon.type == MONS_LERNAEAN_HYDRA
+        || mon.mb[MB_NO_NAME_TAG])
     {
         return;
     }

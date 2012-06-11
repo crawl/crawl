@@ -87,10 +87,6 @@ static duration_def duration_data[] =
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,
       0, "", "sleeping", "You are sleeping." },
-#if TAG_MAJOR_VERSION == 32
-    { DUR_STONEMAIL, true,
-      0, "", "stone mail", "You are covered in scales of stone."},
-#endif
     { DUR_STONESKIN, false,
       0, "", "stone skin", "Your skin is tough as stone." },
     { DUR_SWIFTNESS, true,
@@ -184,9 +180,7 @@ static int _bad_ench_colour(int lvl, int orange, int red)
 static int _dur_colour(int exp_colour, bool expiring)
 {
     if (expiring)
-    {
         return (exp_colour);
-    }
     else
     {
         switch (exp_colour)
@@ -210,7 +204,7 @@ static void _mark_expiring(status_info* inf, bool expiring)
     if (expiring)
     {
         if (!inf->short_text.empty())
-            inf->short_text += " (expires)";
+            inf->short_text += " (expiring)";
         if (!inf->long_text.empty())
             inf->long_text = "Expiring: " + inf->long_text;
     }
@@ -645,9 +639,7 @@ static void _describe_regen(status_info* inf)
     }
 
     if ((you.disease && !regen) || no_heal)
-    {
        inf->short_text = "non-regenerating";
-    }
     else if (regen)
     {
         if (you.disease)
@@ -738,7 +730,7 @@ static void _describe_sage(status_info* inf)
     inf->light_text   = "Sage";
     inf->short_text   = "sage [" + comma_separated_line(sages.begin(),
                         sages.end(), ", ") + "]";
-    inf->long_text    = "You are studious about " + comma_separated_line(
+    inf->long_text    = "You feel studious about " + comma_separated_line(
                         sages.begin(), sages.end()) + ".";
 }
 
@@ -751,7 +743,7 @@ static void _describe_airborne(status_info* inf)
     const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
     const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
 
-    if (wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (player_effect_cfly())
     {
         inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
         inf->light_text   = "Fly";

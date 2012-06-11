@@ -71,9 +71,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
                 result = ARM_LARGE_SHIELD; // prefer big shields for giant races
         }
         else if (arm == NUM_ARMOURS)
-        {
             result = ARM_ROBE;  // no heavy armour, see below
-        }
         break;
 
     case SP_RED_DRACONIAN:
@@ -455,14 +453,10 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
     quantity = 3 + random2(5);
 
     if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE)
-    {
         quantity = 8 + random2avg(15, 2);
-    }
     // giving more of the lower food value items
     else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
-    {
         quantity += random2avg(10, 2);
-    }
     else if (type_wanted == POT_BLOOD)
     {
     // this was above in the vampire block, but gets overwritten by line 1371
@@ -1046,14 +1040,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 weights[bk] = 0;
                 continue;
             }
-#if TAG_MAJOR_VERSION == 32
-            if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III
-                || bk == BOOK_CONJURATIONS_I)
-            {
-                weights[bk] = 0;
-                continue;
-            }
-#endif
+
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
@@ -1352,37 +1339,6 @@ int acquirement_create_item(object_class_type class_wanted,
                 || is_unrandom_artefact(doodad)
                    && (doodad.special == UNRAND_TROG
                        || doodad.special == UNRAND_WUCAD_MU))
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                continue;
-            }
-        }
-
-        // Weapons of distortion or vamp are no good if you need to eat.
-        if (agent != GOD_XOM
-            && doodad.base_type == OBJ_WEAPONS
-            && !is_unrandom_artefact(doodad)
-            && (get_weapon_brand(doodad) == SPWPN_DISTORTION
-               || get_weapon_brand(doodad) == SPWPN_VAMPIRICISM
-                  && !crawl_state.game_is_zotdef())
-            && !can_cut_meat(doodad)
-            // being gloved or transformed is ok here
-            && !you.has_claws(false)
-            && !you.has_fangs(false)
-            && !(you.has_talons(false) && you.mutation[MUT_BEAK])
-            && you.mutation[MUT_HERBIVOROUS] < 3
-            && !you.is_undead)
-        {
-            int runes = 0;
-            if (get_weapon_brand(doodad) == SPWPN_DISTORTION)
-            {
-                // blunt distortion is ok in non-living branches
-                for (int i = 0; i < NUM_RUNE_TYPES; i++)
-                    if (you.runes[i])
-                        runes++;
-            }
-            if (runes < 3)
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;

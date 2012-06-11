@@ -7,6 +7,8 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
+#include "menu.h"
+
 class scorefile_entry;
 
 void hiscores_new_entry(const scorefile_entry &se);
@@ -15,6 +17,7 @@ void logfile_new_entry(const scorefile_entry &se);
 
 void hiscores_print_list(int display_count = -1, int format = SCORE_TERSE);
 void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
+void show_hiscore_table();
 
 std::string hiscores_format_single(const scorefile_entry &se);
 std::string hiscores_format_single_long(const scorefile_entry &se,
@@ -40,7 +43,6 @@ public:
 
     std::string str_field(const std::string &) const;
     int int_field(const std::string &) const;
-    long long_field(const std::string &) const;
 
 private:
     void map_fields() const;
@@ -76,7 +78,6 @@ private:
     std::string killerpath;         // colon-separated intermediate killers
     uint8_t     dlvl;               // dungeon level (relative)
     short       absdepth;           // 1-based absolute depth
-    level_area_type level_type;     // what kind of level died on..
     branch_type branch;             // dungeon branch
     std::string map;                // the vault (if any) the player is in
     std::string mapdesc;            // DESC: of the vault the player is in.
@@ -151,6 +152,7 @@ public:
     std::string death_place(death_desc_verbosity) const;
     std::string game_time(death_desc_verbosity) const;
 
+    std::string get_name() const  { return name; }
     int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
     time_t get_death_time() const { return death_time; }

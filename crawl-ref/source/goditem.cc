@@ -22,6 +22,31 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 
+static bool _is_bookrod_type(const item_def& item,
+                             bool (*suitable)(spell_type spell))
+{
+    if (!item_is_spellbook(item) && !item_is_rod(item))
+        return false;
+
+    int total       = 0;
+    int total_liked = 0;
+
+    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
+    {
+        spell_type spell = which_spell_in_book(item, i);
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        total++;
+        if (suitable(spell))
+            total_liked++;
+    }
+
+    // If at least half of the available spells are suitable, the whole
+    // spellbook or rod is, too.
+    return (total_liked >= (total / 2) + 1);
+}
+
 bool is_holy_item(const item_def& item)
 {
     bool retval = false;
@@ -73,13 +98,11 @@ bool is_unholy_item(const item_def& item)
         retval = is_demonic(item);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-        retval = is_unholy_spellbook(item);
-        break;
     case OBJ_STAVES:
-        retval = is_unholy_rod(item);
+        retval = _is_bookrod_type(item, is_unholy_spell);
         break;
     case OBJ_MISCELLANY:
         retval = (item.sub_type == MISC_BOTTLED_EFREET);
@@ -142,13 +165,11 @@ bool is_corpse_violating_item(const item_def& item)
         break;
     }
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-        retval = (is_corpse_violating_spellbook(item));
-        break;
     case OBJ_STAVES:
-        retval = (is_corpse_violating_rod(item));
+        retval = _is_bookrod_type(item, is_corpse_violating_spell);
         break;
     default:
         break;
@@ -189,11 +210,11 @@ bool is_evil_item(const item_def& item)
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_TORMENT);
         break;
-    case OBJ_BOOKS:
-        retval = is_evil_spellbook(item);
-        break;
     case OBJ_STAVES:
-        retval = (item.sub_type == STAFF_DEATH || is_evil_rod(item));
+        if (item.sub_type == STAFF_DEATH)
+            return true;
+    case OBJ_BOOKS:
+        retval = _is_bookrod_type(item, is_evil_spell);
         break;
     case OBJ_MISCELLANY:
         retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
@@ -220,10 +241,8 @@ bool is_unclean_item(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_BOOKS:
-        retval = is_unclean_spellbook(item);
-        break;
     case OBJ_STAVES:
-        retval = is_unclean_rod(item);
+        retval = _is_bookrod_type(item, is_unclean_spell);
         break;
     default:
         break;
@@ -265,13 +284,11 @@ bool is_chaotic_item(const item_def& item)
         retval = (item.sub_type == POT_MUTATION);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
+        retval = (item.sub_type == SCR_UNHOLY_CREATION);
         break;
     case OBJ_BOOKS:
-        retval = is_chaotic_spellbook(item);
-        break;
     case OBJ_STAVES:
-        retval = is_chaotic_rod(item);
+        retval = _is_bookrod_type(item, is_chaotic_spell);
         break;
     default:
         break;
@@ -286,7 +303,7 @@ bool is_chaotic_item(const item_def& item)
     return (retval);
 }
 
-bool is_potentially_hasty_item(const item_def& item)
+static bool _is_potentially_hasty_item(const item_def& item)
 {
     switch (item.base_type)
     {
@@ -347,10 +364,8 @@ bool is_hasty_item(const item_def& item)
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_BOOKS:
-        retval = is_hasty_spellbook(item);
-        break;
     case OBJ_STAVES:
-        retval = is_hasty_rod(item);
+        retval = _is_bookrod_type(item, is_hasty_spell);
         break;
     default:
         break;
@@ -395,175 +410,51 @@ bool is_poisoned_item(const item_def& item)
     return (false);
 }
 
-bool is_evil_discipline(int discipline)
+bool is_unholy_spell(spell_type spell)
 {
-    return (discipline & SPTYP_NECROMANCY);
-}
-
-bool is_unholy_spell(spell_type spell, god_type god)
-{
-    UNUSED(god);
-
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_UNHOLY);
 }
 
-bool is_corpse_violating_spell(spell_type spell, god_type god)
+bool is_corpse_violating_spell(spell_type spell)
 {
-    UNUSED(god);
-
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_CORPSE_VIOLATING);
 }
 
-bool is_evil_spell(spell_type spell, god_type god)
+bool is_evil_spell(spell_type spell)
 {
-    UNUSED(god);
-
     unsigned int disciplines = get_spell_disciplines(spell);
 
-    return (is_evil_discipline(disciplines));
+    return (disciplines & SPTYP_NECROMANCY);
 }
 
-bool is_unclean_spell(spell_type spell, god_type god)
+bool is_unclean_spell(spell_type spell)
 {
-    UNUSED(god);
-
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_UNCLEAN);
 }
 
-bool is_chaotic_spell(spell_type spell, god_type god)
+bool is_chaotic_spell(spell_type spell)
 {
-    UNUSED(god);
-
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_CHAOTIC);
 }
 
-bool is_hasty_spell(spell_type spell, god_type god)
+bool is_hasty_spell(spell_type spell)
 {
-    UNUSED(god);
-
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_HASTY);
 }
 
-// The default suitable() function for is_spellbook_type().
-bool is_any_spell(spell_type spell, god_type god)
+static bool _your_god_hates_spell(spell_type spell)
 {
-    UNUSED(god);
-
-    return (true);
-}
-
-// If book_or_rod is false, only look at actual spellbooks.  Otherwise,
-// only look at rods.
-bool is_spellbook_type(const item_def& item, bool book_or_rod,
-                       bool (*suitable)(spell_type spell, god_type god),
-                       god_type god)
-{
-    const bool is_spellbook = item_is_spellbook(item);
-    const bool is_rod = item_is_rod(item);
-
-    if (!is_spellbook && !is_rod)
-        return (false);
-
-    if (!book_or_rod && is_rod)
-        return (false);
-
-    int total       = 0;
-    int total_liked = 0;
-
-    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
-    {
-        spell_type spell = which_spell_in_book(item, i);
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
-        total++;
-        if (suitable(spell, god))
-            total_liked++;
-    }
-
-    // If at least half of the available spells are suitable, the whole
-    // spellbook or rod is, too.
-    return (total_liked >= (total / 2) + 1);
-}
-
-bool is_unholy_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_unholy_spell));
-}
-
-bool is_evil_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_evil_spell));
-}
-
-bool is_unclean_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_unclean_spell));
-}
-
-bool is_chaotic_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_chaotic_spell));
-}
-
-bool is_hasty_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, is_hasty_spell));
-}
-
-bool is_corpse_violating_spellbook(const item_def & item)
-{
-    return (is_spellbook_type(item, false, is_corpse_violating_spell));
-}
-
-static bool _god_hates_spellbook(const item_def& item)
-{
-    return (is_spellbook_type(item, false, god_hates_spell));
-}
-
-bool is_unholy_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_unholy_spell));
-}
-
-bool is_evil_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_evil_spell));
-}
-
-bool is_unclean_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_unclean_spell));
-}
-
-bool is_chaotic_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_chaotic_spell));
-}
-
-bool is_hasty_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, is_hasty_spell));
-}
-
-bool is_corpse_violating_rod(const item_def & item)
-{
-    return (is_spellbook_type(item, true, is_corpse_violating_spell));
-}
-
-static bool _god_hates_rod(const item_def& item)
-{
-    return (is_spellbook_type(item, true, god_hates_spell));
+    return god_hates_spell(spell, you.religion);
 }
 
 conduct_type good_god_hates_item_handling(const item_def &item)
@@ -616,6 +507,9 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_TROG:
         if (item_is_spellbook(item))
             return (DID_SPELL_MEMORISE);
+        // Only Trog cares about spellsbooks vs rods.
+        if (item_is_rod(item))
+            return (DID_NOTHING);
         break;
 
     case GOD_FEDHAS:
@@ -625,7 +519,7 @@ conduct_type god_hates_item_handling(const item_def &item)
 
     case GOD_CHEIBRIADOS:
         if (item_type_known(item)
-            && (is_potentially_hasty_item(item) || is_hasty_item(item)))
+            && (_is_potentially_hasty_item(item) || is_hasty_item(item)))
         {
             return (DID_HASTY);
         }
@@ -647,8 +541,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         return (DID_NECROMANCY);
     }
 
-    if (item_type_known(item)
-        && (_god_hates_spellbook(item) || _god_hates_rod(item)))
+    if (item_type_known(item) && _is_bookrod_type(item, _your_god_hates_spell))
     {
         return (NUM_CONDUCTS); // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.
@@ -716,7 +609,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 {
     ASSERT(discipline < (1 << (SPTYP_LAST_EXPONENT + 1)));
 
-    if (is_good_god(god) && is_evil_discipline(discipline))
+    if (is_good_god(god) && (discipline & SPTYP_NECROMANCY))
         return (true);
 
     switch (god)

@@ -13,7 +13,6 @@
 #include "dungeon.h"
 #include "env.h"
 #include "externs.h"
-#include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
 #include "l_defs.h"
@@ -197,7 +196,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon = dgn_place_monster(spec, you.absdepth0,
+                const monster* mon = dgn_place_monster(spec, -1,
                                                        loc, false, true, false);
                 if (!mon)
                 {
@@ -234,9 +233,8 @@ namespace arena
 
         if (place.is_valid())
         {
-            you.level_type    = place.level_type;
             you.where_are_you = place.branch;
-            you.absdepth0     = place.absdepth();
+            you.depth         = place.depth;
         }
 
         dgn_reset_level();
@@ -265,7 +263,7 @@ namespace arena
 #endif
 
         ASSERT(map);
-        bool success = dgn_place_map(map, true, true);
+        bool success = dgn_place_map(map, false, true);
         if (!success)
             throw make_stringf("Failed to create arena named \"%s\"",
                                arena_type.c_str());
@@ -362,17 +360,6 @@ namespace arena
                 throw make_stringf("Bad place '%s': %s",
                                    arena_place.c_str(),
                                    err.c_str());
-            }
-
-            if (place.level_type == LEVEL_LABYRINTH)
-            {
-                throw (std::string("Can't set arena place to the "
-                                   "labyrinth."));
-            }
-            else if (place.level_type == LEVEL_PORTAL_VAULT)
-            {
-                throw (std::string("Can't set arena place to a portal "
-                                   "vault."));
             }
         }
 
@@ -619,7 +606,7 @@ namespace arena
     void fixup_foes()
     {
         for (monster_iterator mons; mons; ++mons)
-            behaviour_event(*mons, ME_DISTURB, MHITNOT, mons->pos());
+            behaviour_event(*mons, ME_DISTURB, 0, mons->pos());
     }
 
     void dump_messages()
@@ -770,8 +757,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            monster *mon = dgn_place_monster(spec, you.absdepth0, pos,
-                                             false, true);
+            monster *mon = dgn_place_monster(spec, -1, pos, false, true);
 
             if (!mon && fac.active_members == 0 && monster_at(pos))
             {
@@ -800,8 +786,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                mon = dgn_place_monster(spec, you.absdepth0, pos, false,
-                                        true);
+                mon = dgn_place_monster(spec, -1, pos, false, true);
             }
 
             if (mon)
@@ -1436,6 +1421,7 @@ int arena_cull_items()
 
 static void _init_arena()
 {
+    initialise_branch_depths();
     run_map_global_preludes();
     run_map_local_preludes();
     initialise_item_descriptions();
@@ -1448,7 +1434,7 @@ NORETURN void run_arena(const std::string& teams)
     ASSERT(!crawl_state.arena_suspended);
 
 #ifdef WIZARD
-    // The playe has wizard powers for the duration of the arena.
+    // The player has wizard powers for the duration of the arena.
     unwind_bool wiz(you.wizard, true);
 #endif
 

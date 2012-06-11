@@ -37,7 +37,6 @@
 #include "enum.h"
 #include "exercise.h"
 #include "files.h"
-#include "food.h"
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
@@ -49,7 +48,6 @@
 #include "item_use.h"
 #include "items.h"
 #include "libutil.h"
-#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -61,9 +59,7 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
 #include "ouch.h"
-#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "shopping.h"
@@ -72,7 +68,6 @@
 #include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "sprint.h"
-#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -235,7 +230,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "Kikubaaqudgha is protecting you from some side-effects of death magic.",
+      "Kikubaaqudgha is protecting you from miscast death magic.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by sacrificing a corpse" },
@@ -352,7 +347,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "Kikubaaqudgha is no longer shielding you from miscast death magic.",
+      "Kikubaaqudgha is no longer protecting you from miscast death magic.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by sacrificing a corpse" },
@@ -368,7 +363,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "gain magical power from killing",
       "Vehumet will no longer aid your destructive magics.",
       "Vehumet will no longer extend the range of your destructive magics.",
-      "Vehumet will no longer reduce the cost of your destructive magics.",
+      "Vehumet will no longer reduce the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "gain great but temporary skills",
@@ -501,13 +496,13 @@ bool is_unavailable_god(god_type god)
     return (false);
 }
 
-god_type random_god(bool disallow_no_god)
+god_type random_god(bool available)
 {
     god_type god;
 
     do
-        god = static_cast<god_type>(random2(NUM_GODS - 1));
-    while (disallow_no_god && god == GOD_NO_GOD);
+        god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+    while (available && is_unavailable_god(god));
 
     return (god);
 }
@@ -596,6 +591,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
                                   "they need to be eradicated");
         likes.push_back(info);
+        break;
+
+    case GOD_LUGONU:
+        likes.push_back("you banish creatures to the Abyss");
         break;
 
     default:
@@ -1392,7 +1391,7 @@ static bool _give_nemelex_gift(bool forced = false)
             item_def &deck(mitm[thing_created]);
 
             deck.special = rarity;
-            deck.colour  = deck_rarity_to_color(rarity);
+            deck.colour  = deck_rarity_to_colour(rarity);
             deck.inscription = "god gift";
 
             simple_god_message(" grants you a gift!");
@@ -2310,7 +2309,8 @@ bool do_god_gift(bool forced)
                 if (_jiyva_mutate())
                 {
                     _inc_gift_timeout(15 + roll_dice(2, 4));
-                    //num_total_gifts is used for tracking the Slime:6 walls
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
@@ -2331,19 +2331,14 @@ bool do_god_gift(bool forced)
             if (you.religion == GOD_KIKUBAAQUDGHA)
             {
                 if (you.piety >= piety_breakpoint(0)
-                    && !you.had_book[BOOK_NECROMANCY])
+                    && you.num_total_gifts[you.religion] == 0)
                 {
                     gift = BOOK_NECROMANCY;
                 }
                 else if (you.piety >= piety_breakpoint(2)
-                         && !you.had_book[BOOK_DEATH])
+                         && you.num_total_gifts[you.religion] == 1)
                 {
                     gift = BOOK_DEATH;
-                }
-                else if (you.piety >= piety_breakpoint(3)
-                         && !you.had_book[BOOK_UNLIFE])
-                {
-                    gift = BOOK_UNLIFE;
                 }
             }
             else if (forced || you.piety > 160 && random2(you.piety) > 100)
@@ -2365,6 +2360,12 @@ bool do_god_gift(bool forced)
                     int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
                                               MAKE_ITEM_RANDOM_RACE,
                                               0, 0, you.religion);
+                    // Replace a Kiku gift by a custom-random book.
+                    if (you.religion == GOD_KIKUBAAQUDGHA)
+                    {
+                        make_book_Kiku_gift(mitm[thing_created],
+                                            gift == BOOK_NECROMANCY);
+                    }
                     if (thing_created == NON_ITEM)
                         return (false);
 
@@ -2387,15 +2388,12 @@ bool do_god_gift(bool forced)
                     simple_god_message(" grants you a gift!");
                     more();
 
-                    // HACK: you.num_total_gifts keeps track of
-                    // Necronomicon and weapon blessing for Kiku, so
-                    // don't increase it.  Also, timeouts are
-                    // meaningless for Kiku. evk
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
+                    // Timeouts are meaningless for Kiku.
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
                         _inc_gift_timeout(40 + random2avg(19, 2));
-                        you.num_current_gifts[you.religion]++;
-                        you.num_total_gifts[you.religion]++;
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
@@ -2454,7 +2452,7 @@ std::string god_name(god_type which_god, bool long_name)
     {
         const std::string shortname = god_name(which_god, false);
         const std::string longname =
-            getWeightedRandomisedDescription(shortname + " lastname");
+            getMiscString(shortname + " lastname");
         return (longname.empty()? shortname : longname);
     }
 
@@ -2657,8 +2655,8 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
 
 void dock_piety(int piety_loss, int penance)
 {
-    static long last_piety_lecture   = -1L;
-    static long last_penance_lecture = -1L;
+    static int last_piety_lecture   = -1;
+    static int last_penance_lecture = -1;
 
     if (piety_loss <= 0 && penance <= 0)
         return;
@@ -2702,7 +2700,7 @@ int piety_scale(int piety)
     if (piety < 0)
         return (-piety_scale(-piety));
 
-    if (wearing_amulet(AMU_FAITH))
+    if (player_effect_faith())
         return (piety + div_rand_round(piety, 3));
 
     return (piety);
@@ -2714,7 +2712,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     if (original_gain <= 0)
         return;
 
-    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS && !force)
+    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS) && !force)
         return;
 
     // Xom uses piety differently...
@@ -2829,7 +2827,7 @@ static void _gain_piety_point()
                     you.duration[DUR_CONF] = 0;
                 }
 
-                god_id_inventory();
+                auto_id_inventory();
             }
 
             // When you gain a piety level, you get another chance to
@@ -2865,7 +2863,7 @@ static void _gain_piety_point()
         // In case the best skill is Invocations, redraw the god title.
         you.redraw_title = true;
 
-        if (!you.num_total_gifts[you.religion])
+        if (!you.one_time_ability_used[you.religion])
         {
             switch (you.religion)
             {
@@ -2889,8 +2887,7 @@ static void _gain_piety_point()
                    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
                        dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
-                   you.num_current_gifts[you.religion]++;
-                   you.num_total_gifts[you.religion]++;
+                   you.one_time_ability_used[you.religion] = true;
                    break;
                 default:
                     break;
@@ -2936,7 +2933,7 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && !you.num_total_gifts[you.religion])
+            && !you.one_time_ability_used[you.religion])
         {
             // In case the best skill is Invocations, redraw the god
             // title.
@@ -3494,24 +3491,23 @@ static void _god_welcome_identify_gear()
 
     if (you.religion == GOD_ASHENZARI)
     {
-        // Seemingly redundant with god_id_inventory(), but we don't want to
+        // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (int i = 0; i < ENDOFPACK; i++)
             if (you.inv[i].defined())
                 you.inv[i].flags |= ISFLAG_KNOW_CURSE;
 
-        set_ident_type(OBJ_SCROLLS, SCR_DETECT_CURSE, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_WEAPON, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
-        god_id_inventory();
+        auto_id_inventory();
         ash_detect_portals(true);
     }
 
     // detect evil weapons
     if (you.religion == GOD_ELYVILON)
-        god_id_inventory();
+        auto_id_inventory();
 }
 
 void god_pitch(god_type which_god)
@@ -3780,7 +3776,7 @@ void god_pitch(god_type which_god)
 int had_gods()
 {
     int count = 0;
-    for (int i = 0; i < MAX_NUM_GODS; i++)
+    for (int i = 0; i < NUM_GODS; i++)
         count += you.worshipped[i];
     return count;
 }
@@ -4204,10 +4200,20 @@ colour_t god_message_altar_colour(god_type god)
 
 int piety_rank(int piety)
 {
-    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
-    const int numbreakpoints = ARRAYSZ(breakpoints);
     if (piety < 0)
         piety = you.piety;
+
+    if (you.religion == GOD_XOM)
+    {
+        const int breakpoints[] = { 20, 50, 80, 120, 180, INT_MAX };
+        for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
+            if (piety <= breakpoints[i])
+                return i + 1;
+        die("INT_MAX is no good");
+    }
+
+    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
+    const int numbreakpoints = ARRAYSZ(breakpoints);
 
     for (int i = 0; i < numbreakpoints; ++i)
     {
@@ -4367,7 +4373,7 @@ int get_tension(god_type god)
 
     tension /= div;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         if (tension < 2)
             tension = 2;

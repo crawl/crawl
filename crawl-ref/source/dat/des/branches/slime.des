@@ -238,7 +238,7 @@ ENDMAP
 # Slime Pit
 ################################################################################
 NAME:    slime_pit
-PLACE:   Slime:6
+PLACE:   Slime:$
 ORIENT:  encompass
 TAGS:    no_rotate no_dump
 MONS:    the royal jelly

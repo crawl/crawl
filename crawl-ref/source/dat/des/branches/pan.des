@@ -160,7 +160,33 @@ NAME: pan_entry
 TAGS: extra allow_dup can_overwrite
 DEPTH: D:21-27
 CHANCE: 100% (D:24), 25%
+: if you.where() == 'D:24' then
+KFEAT: O = enter_pandemonium no_mimic
+: else
 KFEAT: O = enter_pandemonium
+: end
+MAP
+O
+ENDMAP
+
+
+##############################################################################
+# Random unguarded exits
+##############################################################################
+NAME:   pan_exit
+TAGS:   extra allow_dup
+DEPTH:  Pan
+CHANCE: 5%
+KFEAT:  O = exit_pandemonium
+MAP
+O
+ENDMAP
+
+NAME:   pan_to_abyss
+TAGS:   extra allow_dup
+DEPTH:  Pan
+CHANCE: 25%
+KFEAT:  O = exit_through_abyss
 MAP
 O
 ENDMAP

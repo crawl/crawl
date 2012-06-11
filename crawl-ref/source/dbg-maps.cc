@@ -11,12 +11,11 @@
 #include "chardump.h"
 #include "dungeon.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
-#include "place.h"
+#include "ng-init.h"
 #include "player.h"
 #include "view.h"
 
@@ -52,7 +51,7 @@ void mapgen_report_map_veto()
 static bool _mg_is_disconnected_level()
 {
     // Don't care about non-Dungeon levels.
-    if (you.level_type != LEVEL_DUNGEON
+    if (!player_in_connected_branch()
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
         return (false);
 
@@ -83,7 +82,7 @@ static bool mg_do_build_level(int niters)
         }
 
         ++mg_levels_tried;
-        if (!builder(you.absdepth0, you.level_type))
+        if (!builder())
         {
             ++mg_levels_failed;
             continue;
@@ -145,19 +144,13 @@ static std::vector<level_id> mg_dungeon_places()
 
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
-        if (branches[br].depth == -1)
+        if (brdepth[br] == -1)
             continue;
 
         const branch_type branch = static_cast<branch_type>(br);
-        for (int depth = 1; depth <= branches[br].depth; ++depth)
+        for (int depth = 1; depth <= brdepth[br]; ++depth)
             places.push_back(level_id(branch, depth));
     }
-
-    places.push_back(LEVEL_ABYSS);
-    places.push_back(LEVEL_LABYRINTH);
-    places.push_back(LEVEL_PANDEMONIUM);
-    places.push_back(LEVEL_PORTAL_VAULT);
-
     return (places);
 }
 
@@ -168,11 +161,8 @@ static bool mg_build_dungeon()
     for (int i = 0, size = places.size(); i < size; ++i)
     {
         const level_id &lid = places[i];
-        you.absdepth0 = absdungeon_depth(lid.branch, lid.depth);
         you.where_are_you = lid.branch;
-        you.level_type = lid.level_type;
-        if (you.level_type == LEVEL_PORTAL_VAULT)
-            you.level_type_tag = you.level_type_name = "bazaar";
+        you.depth = lid.depth;
         if (!mg_do_build_level(1))
             return (false);
     }
@@ -273,21 +263,16 @@ static void _write_mapgen_stats()
     std::vector<level_id> mapless;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].depth == -1)
+        if (brdepth[i] == -1)
             continue;
 
         const branch_type br = static_cast<branch_type>(i);
-        for (int dep = 1; dep <= branches[i].depth; ++dep)
+        for (int dep = 1; dep <= brdepth[i]; ++dep)
         {
             const level_id lid(br, dep);
             _check_mapless(lid, mapless);
         }
     }
-
-    _check_mapless(level_id(LEVEL_ABYSS), mapless);
-    _check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
-    _check_mapless(level_id(LEVEL_LABYRINTH), mapless);
-    _check_mapless(level_id(LEVEL_PORTAL_VAULT), mapless);
 
     if (!mapless.empty())
     {
@@ -420,6 +405,13 @@ static void _write_mapgen_stats()
 
 void generate_map_stats()
 {
+    // Warn assertions about possible oddities like the artefact list being
+    // cleared.
+    you.wizard = true;
+    // Let "acquire foo" have skill aptitudes to work with.
+    you.species = SP_HUMAN;
+
+    initialise_branch_depths();
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();

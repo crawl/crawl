@@ -32,8 +32,18 @@ You can also read these documents while playing Crawl by hitting '?' at the help
 menu. A list of frequently asked questions about gameplay and design can be
 accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can play with others
-over a server.  The relevant webpage, telnet and ssh addresses are:
+While Dungeon Crawl is strictly a single player game, you can interact with
+others over a server. Connecting to a server opens several interesting options.
+
+You can:
+  * watch other players and even communicate with them
+  * view your past games or those of others
+  * battle ghosts of other players
+  * compete using a common score list
+  * take part in the annual tournament
+  * play the most recent development version
+
+The relevant webpage, telnet and ssh addresses are:
 
 akrasiac.org (located in North America)
   :http: ``http://crawl.akrasiac.org``
@@ -42,19 +52,11 @@ akrasiac.org (located in North America)
 
 develz.org (located in Europe)
   :http: ``http://crawl.develz.org``
+  :tiles: ``https://tiles.crawl.develz.org/``
   :telnet: ``crawl.develz.org:345``
   :ssh: ``crawl@crawl.develz.org (ssh key required)``
-  :tiles: ``https://tiles.crawl.develz.org/``
 
 ssh key can be obtained at https://crawl.akrasiac.org/cao_key
-
-Connecting to a server opens several interesting options. You can:
-  * watch other players and even communicate with them
-  * view your past games or those of others
-  * battle ghosts of other players
-  * compete using a common score list
-  * take part in the annual tournament
-  * play the most recent development version on crawl.develz.org
 
 The servers carry no guarantees, though they are generally always running and
 no one has lost their save file yet. :) More information is available at the
@@ -68,17 +70,47 @@ give hints if you happen to play on a server.
 B. Starting screen
 ****************************************
 
-After starting Crawl, you'll be asked to type in a name. Press Enter if you wish
-to choose a name after deciding on the species and background of your new
-character. The full list of saved games is also displayed, which you can
-navigate with the cursor Up and Down keys, and entering a name that is already
-attached to a save game will continue that game. Otherwise, enter a new name,
-and you will proceed to choose a species and background for a new character.
+At the Crawl start screen, you will be presented with various game modes, a list
+of saved games (if any), and will be prompted to type a name for your character.
+You can navigate the game modes and saved games with the cursor 'up' and 'down'
+arrow keys.
 
-You can make these two choices in either order, and you can randomise your
-choice of background, species, or both if you would rather have the game decide
-for you. If both are randomised, you will be prompted with the chosen
-combination before the game starts.
+Pressing 'enter' immediately after typing your name will select standard Dungeon
+Crawl mode, and you will be prompted to select a species and background. Names
+are unique; entering a name from the saved game list will continue that game,
+rather than start a new game. If you select a mode instead of entering a name,
+you will eventually be prompted to enter a name.
+
+Game modes are:
+
+Dungeon Crawl
+  Start a standard game of Crawl.
+
+Tutorial for Dungeon Crawl
+  Start one of several specialized tutorials to learn how to play.
+
+Hints mode for Dungeon Crawl
+  Start a standard game of Crawl, modified to provide help as you play.
+
+Dungeon Sprint
+  Start one of several single-map challenge mode games of Crawl.
+
+Zot Defence
+  Start one of several "tower defence"-style games of Crawl.
+
+Instructions
+  View the instructional help text you are currently reading.
+
+The Arena
+  Initiate a automated fight mode between two specified combatant groups.
+
+High Scores
+  View scores for prior games played, sorted by decreasing score.
+
+You can choose species and background in either order or randomise any
+combination if you would rather have the game decide for you. If both are
+random, you will be prompted to confirm the chosen combination before the game
+starts.
 
 The choice of species affects several important characteristics, in particular
 the speed at which you learn different skills. This is very important, and helps
@@ -130,7 +162,7 @@ A
   shows any peculiarities like unusual speed or eating behaviours
 
 m
-  shows your skills and lets you disable training for (or focus it on) some if wanted
+  shows your skills and lets you disable (or focus) training as desired
 
 i
   the equipment
@@ -702,9 +734,8 @@ If you would rather pick off monsters from a safe distance, you will need
 missiles for your sling, bow or other appropriate launcher. Several kinds of
 missiles, such as javelins, are effective when simply thrown; other kinds
 require you to wield an appropriate device to inflict worthwhile damage.
-Missiles have only one "plus" value, which affects both accuracy and damage.
 Upon impact, missiles may become destroyed. The chance for this to occur depends
-on the type of missile. A higher "plus" value also helps.
+on the type of missile.
 
 The 'f' command fires or throws a missile, typically chosen from lots suitable
 for your weapon. The default lot (your "quiver") is displayed on the main screen
@@ -1004,9 +1035,9 @@ experience levels or advance the Spellcasting skill, your maximum increases; you
 will need to save up for several levels to memorise the more powerful spells.
 When casting a spell, you temporarily expend some of your magical energy and
 become hungrier (although high intelligence and Spellcasting help against hunger
-from spells). Pressing 'II' (or 'I!') displays the hunger costs of your spells
-in terms of food, on a scale of none, sultana, strawberry, choko, honeycomb and
-ration. Casting the spell five times will cost at most the displayed food item.
+from spells). Pressing 'II' (or 'I!') displays the relative hunger costs of your
+spells. The hunger cost is approximately proportional to the square of the
+number of # marks in this display.
 
 You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to display a
 list of all memorised spells without actually casting one. The spells available
@@ -1555,8 +1586,8 @@ Nagas
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Their
   body shape also prevents them from gaining full protection from most armour. A
-  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. They
-  can also use their tails to constrict their foes.
+  Naga's biggest forte is stealth: Nagas are very good at moving unnoticed. Their
+  tails eventually grow strong enough to constrict their foes in combat.
 
   Every now and then, a Naga can spit poison; the range, accuracy and damage of
   this poison increases with the Naga's experience level.
@@ -1693,8 +1724,7 @@ Felids
   Their agility and stealth are legendary, as is their ability to get to hard
   to reach places. They move faster than most races, but don't run as fast as
   horses or Spriggans. Felids advance in levels very slowly, and are not very
-  gifted in directly damaging magic, but make good summoners, enchanters or
-  transmuters.
+  gifted in directly damaging magic, but make good enchanters or transmuters.
 
   The tale of a Felid who had nine lives isn't far from truth, as well.
 
@@ -1835,7 +1865,8 @@ Grey Draconians
 
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
-  good at air magic but feel cumbersome with earth magic.
+  good at air magic but feel cumbersome with earth magic. Their wings will
+  eventually grow larger, allowing them to fly temporarily.
 
 Mottled Draconians
   are somewhat in touch with fire, yet are not weak with ice. They can spit
@@ -2104,8 +2135,8 @@ There are a number of individual weapon skills for missile weapons:
 Throwing is the skill for all things hurled without a launcher: axes, spears,
 stones, nets, etc. The other skills refer to various types of missiles shot with
 a launcher. An exception to this are needles: these are launched using blowguns,
-an action which uses the Throwing skill. Since stones can be thrown
-without launchers to good effect, these skills crosstrain:
+an action which uses the Throwing skill. Since stones can be thrown without
+launchers to good effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2161,9 +2192,9 @@ Dodging
 
 Stealth
   Helps you avoid being noticed, and makes monsters more likely to lose track of
-  you when you leave their line of sight. Try not to wear heavy armour or be
-  encumbered if you want to be stealthy. Large creatures (like Trolls) are bad
-  at stealth. The big exception are Nagas, which are unusually stealthy.
+  you when you leave their line of sight. Wearing heavy armour or being
+  encumbered penalises stealth attempts. Large creatures (like Trolls) are bad
+  at stealth, except for Nagas, which are unusually stealthy.
 
 Stabbing
   Lets you make a very powerful first strike against a sleeping/resting monster
@@ -2197,10 +2228,10 @@ Evocations
   have certain powers (like crystal balls) work better for characters trained in
   this skill. Like Invocations, Evocations is easier to learn than other skills.
 
-  Invocations and Evocations also both affect your maximum magical reserves,
+  Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
-  bonuses are not cumulative - the highest contribution from Spellcasting,
-  Invocations and Evocations is used.
+  bonuses are not cumulative; the highest contribution from Spellcasting,
+  Invocations or Evocations is used.
 
 ****************************************
 4. List of keys and commands
@@ -3053,10 +3084,16 @@ commands:
   automatically be marked.
 
 =f
-  item is excluded when cycling ammunition and from automatic quivering
+  item is excluded from automatic quivering
 
 \+f
-  item is included when cycling ammunition and in automatic quivering
+  item is included in automatic quivering
+
+=F
+  item is excluded when cycling ammunition
+
+\+F
+  item is included when cycling ammunition
 
 !D
   prompt before performing an action that might destroy this item. If you're

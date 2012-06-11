@@ -55,9 +55,8 @@ struct level_exit
 
 
 const item_def *give_mimic_item(monster* mimic);
-const item_def* get_mimic_item(const monster* mimic);
-dungeon_feature_type get_mimic_feat (const monster* mimic);
-bool feature_mimic_at (const coord_def &c);
+dungeon_feature_type get_mimic_feat(const monster* mimic);
+bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
@@ -143,10 +142,8 @@ monster *choose_random_monster_on_level(
     bool in_sight = true, bool near_by = false,
     bool prefer_named = false, bool prefer_priest = false);
 
-bool swap_places(monster* mons);
 bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
-
 
 void print_wounds(const monster* mons);
 bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor);
@@ -183,10 +180,6 @@ bool is_item_jelly_edible(const item_def &item);
 
 bool monster_space_valid(const monster* mons, coord_def target,
                          bool forbid_sanctuary);
-bool monster_random_space(const monster* mons, coord_def& target,
-                          bool forbid_sanctuary = false);
-bool monster_random_space(monster_type mon, coord_def& target,
-                          bool forbid_sanctuary = false);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
@@ -198,11 +191,6 @@ struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
 
-bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
-                       bool placement = false);
-
-// Like the above, but allow a monster to move from one damaging cloud
-// to another.
 bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);
 

@@ -14,11 +14,6 @@
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (speci == SP_MOUNTAIN_DWARF)
-        return CC_BANNED;
-#endif
-
     switch (job)
     {
     case JOB_FIGHTER:
@@ -142,7 +137,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
-        case SP_HALFLING:
         case SP_KOBOLD:
         case SP_OGRE:
         case SP_TROLL:
@@ -157,6 +151,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         default:
             return (CC_UNRESTRICTED);
         }
+
     case JOB_PRIEST:
         switch (speci)
         {

@@ -14,9 +14,10 @@ Caveats/issues:
 * A commit() will break readers who read a chunk that was deleted or
   overwritten.  Not that it's a sane thing to do...  Writers don't have
   any such limitations, an uncompleted write will be not committed yet
-  but won't be corrupted.
+  but won't be corrupted.  [Currently not allowed]
 * Readers ignore uncompleted writes; completed but not committed ones will
-  be available immediately -- yet a crash will lose them.
+  be available immediately -- yet a crash will lose them.  Ie, this is known
+  as READ_UNCOMMITTED.
 */
 
 #include "AppHdr.h"
@@ -205,6 +206,12 @@ void package::commit()
         return;
     ASSERT(!aborted);
 
+    // Not a hard requirement, we'd have to pin chunks that are being read so
+    // the commit won't free them.
+    // If you want this, please refcount chunks (by their initial block), and
+    // make free_block_chain() to add busy chunks to unlinked_blocks instead.
+    ASSERT(!n_users);
+
 #ifdef COSTLY_ASSERTS
     fsck();
 #endif
@@ -227,6 +234,7 @@ void package::commit()
         sysfail("flush error while saving");
 #endif
 
+    new_chunks.clear();
     collect_blocks();
     dirty = false;
 
@@ -330,6 +338,7 @@ void package::finish_chunk(const std::string name, len_t at)
 {
     free_chunk(name);
     directory[name] = at;
+    new_chunks.insert(at);
     dirty = true;
 }
 
@@ -340,7 +349,10 @@ void package::free_chunk(const std::string name)
         return;
 
     dprintf("freeing chunk(%s)\n", name.c_str());
-    unlinked_blocks.push(ci->second);
+    if (new_chunks.count(ci->second))
+        free_block_chain(ci->second);
+    else // can't free committed blocks yet
+        unlinked_blocks.push(ci->second);
 
     dirty = true;
 }
@@ -382,16 +394,21 @@ void package::collect_blocks()
     {
         len_t at = unlinked_blocks.top();
         unlinked_blocks.pop();
-        dprintf("freeing an unlinked chain at %d\n", at);
-        while (at)
-        {
-            bm_t::iterator bl = block_map.find(at);
-            ASSERT(bl != block_map.end());
-            dprintf("+- at %d size=%d+header\n", at, bl->second.first);
-            free_block(at, bl->second.first + sizeof(block_header));
-            at = bl->second.second;
-            block_map.erase(bl);
-        }
+        free_block_chain(at);
+    }
+}
+
+void package::free_block_chain(len_t at)
+{
+    dprintf("freeing an unlinked chain at %d\n", at);
+    while (at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        dprintf("+- at %d size=%d+header\n", at, bl->second.first);
+        free_block(at, bl->second.first + sizeof(block_header));
+        at = bl->second.second;
+        block_map.erase(bl);
     }
 }
 

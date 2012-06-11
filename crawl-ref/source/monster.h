@@ -217,6 +217,7 @@ public:
     int         total_weight() const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
+    int         has_claws(bool allow_tran = true) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false);
     item_def *mslot_item(mon_inv_type sl) const;
@@ -294,7 +295,7 @@ public:
     bool can_safely_mutate() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const std::string &reason);
-    void banish(const std::string &who = "");
+    void banish(actor *agent, const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
     monster_type mons_species(bool zombie_base = false) const;

@@ -20,9 +20,6 @@ class reader;
 class writer;
 class StashMenu;
 
-// Stash definitions
-void stash_init_new_level();
-
 enum STASH_TRACK_MODES
 {
     STM_NONE,             // Stashes are not tracked
@@ -37,6 +34,7 @@ class Stash
 {
 public:
     Stash(int xp = -1, int yp = -1);
+    Stash(const Stash &other) { *this = other; };
 
     static bool is_boring_feature(dungeon_feature_type feat);
 
@@ -264,6 +262,7 @@ public:
     void  no_stash(int x = -1, int y = -1);
 
     void  kill_stash(const Stash &s);
+    void  move_stash(const coord_def& from, const coord_def& to);
 
     void  save(writer&) const;
     void  load(reader&);
@@ -300,11 +299,6 @@ public:
 class StashTracker
 {
 public:
-    static bool is_level_untrackable()
-    {
-        return !is_map_persistent();
-    }
-
     StashTracker() : levels(), last_corpse_update(0)
     {
     }
@@ -339,6 +333,7 @@ public:
     // location if no parameters are supplied, return true if a stash was
     // updated.
     bool update_stash(const coord_def& c);
+    void  move_stash(const coord_def& from, const coord_def& to);
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied.

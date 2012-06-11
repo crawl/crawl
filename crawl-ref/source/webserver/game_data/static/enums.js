@@ -19,79 +19,187 @@ define(function () {
     exports.HALO_MONSTER = 2;
     exports.HALO_UMBRA = 3;
 
+    // Tile flags.
+    // Mostly this complicated because they need more than 32 bits.
+
+    function array_and(arr1, arr2)
+    {
+        var result = [];
+        for (var i = 0; i < arr1.length && i < arr2.length; ++i)
+        {
+            result.push(arr1[i] & arr2[i]);
+        }
+        return result;
+    }
+
+    function array_equal(arr1, arr2)
+    {
+        // return (arr1 <= arr2) && (arr1 >= arr2);
+        for (var i = 0; i < arr1.length || i < arr2.length; ++i)
+        {
+            if ((arr1[i] || 0) != (arr2[i] || 0))
+                return false;
+        }
+        return true;
+    }
+
+    function array_nonzero(arr)
+    {
+        for (var i = 0; i < arr.length; ++i)
+        {
+            if (arr[i] != 0) return true;
+        }
+        return false;
+    }
+
+    function prepare_flags(tileidx, flagdata)
+    {
+        if (!isNaN(tileidx))
+            tileidx = [tileidx];
+        else if (tileidx.value !== undefined)
+            return tileidx;
+        while (tileidx.length < 2) tileidx.push(0);
+
+        for (var flagname in flagdata.flags)
+        {
+            var flagmask = flagdata.flags[flagname];
+            if (isNaN(flagmask))
+                tileidx[flagname] = array_nonzero(array_and(tileidx, flagmask));
+            else
+                tileidx[flagname] = (tileidx[0] & flagmask) != 0;
+        }
+
+        for (var i = 0; i < flagdata.exclusive_flags.length; ++i)
+        {
+            var excl = flagdata.exclusive_flags[i];
+            var val;
+            if (isNaN(excl.mask))
+                val = array_and(tileidx, excl.mask);
+            else
+                val = [tileidx[0] & excl.mask];
+
+            for (var flagname in excl)
+            {
+                if (flagname === "mask") continue;
+                if (isNaN(excl[flagname]))
+                    tileidx[flagname] = array_equal(val, excl[flagname]);
+                else
+                    tileidx[flagname] = (val[0] == excl[flagname]);
+            }
+        }
+
+        tileidx.value = tileidx[0] & flagdata.mask;
+        return tileidx;
+    }
+
+    /* Hex literals are signed, so values with the highest bit set
+       would have to be written in 2-complement; this way is easier to
+       read */
+    var highbit = 1 << 31;
+
     // Foreground flags
 
     // 3 mutually exclusive flags for attitude.
-    exports.TILE_FLAG_ATT_MASK   = 0x00001800;
-    exports.TILE_FLAG_PET        = 0x00000800;
-    exports.TILE_FLAG_GD_NEUTRAL = 0x00001000;
-    exports.TILE_FLAG_NEUTRAL    = 0x00001800;
+    var fg_flags = { flags: {}, exclusive_flags: [] };
+    fg_flags.exclusive_flags.push({
+        mask       : 0x00030000,
+        PET        : 0x00010000,
+        GD_NEUTRAL : 0x00020000,
+        NEUTRAL    : 0x00030000,
+    });
 
-    exports.TILE_FLAG_S_UNDER    = 0x00002000;
-    exports.TILE_FLAG_FLYING     = 0x00004000;
+    fg_flags.flags.S_UNDER = 0x00040000;
+    fg_flags.flags.FLYING  = 0x00080000;
 
     // 3 mutually exclusive flags for behaviour.
-    exports.TILE_FLAG_BEH_MASK   = 0x00018000;
-    exports.TILE_FLAG_STAB       = 0x00008000;
-    exports.TILE_FLAG_MAY_STAB   = 0x00010000;
-    exports.TILE_FLAG_FLEEING    = 0x00018000;
+    fg_flags.exclusive_flags.push({
+        mask       : 0x00300000,
+        STAB       : 0x00100000,
+        MAY_STAB   : 0x00200000,
+        FLEEING    : 0x00300000,
+    });
 
-    exports.TILE_FLAG_NET        = 0x00020000;
-    exports.TILE_FLAG_POISON     = 0x00040000;
-    exports.TILE_FLAG_ANIM_WEP   = 0x00080000;
-    exports.TILE_FLAG_MIMIC      = 0x00100000;
-    exports.TILE_FLAG_STICKY_FLAME = 0x00200000;
-    exports.TILE_FLAG_BERSERK    = 0x00400000;
-    exports.TILE_FLAG_INNER_FLAME  = 0x40000000;
-    exports.TILE_FLAG_CONSTRICTED  = 0x80000000;
+    fg_flags.flags.NET          = 0x00400000;
+    fg_flags.flags.POISON       = 0x00800000;
+    fg_flags.flags.ANIM_WEP     = 0x01000000;
+    fg_flags.flags.UNUSED       = 0x02000000;
+    fg_flags.flags.STICKY_FLAME = 0x04000000;
+    fg_flags.flags.BERSERK      = 0x08000000;
+    fg_flags.flags.INNER_FLAME  = 0x10000000;
+    fg_flags.flags.CONSTRICTED  = 0x20000000;
 
-    // MDAM has 5 possibilities; so uses 3 bits.
-    exports.TILE_FLAG_MDAM_MASK  = 0x03800000;
-    exports.TILE_FLAG_MDAM_LIGHT = 0x00800000;
-    exports.TILE_FLAG_MDAM_MOD   = 0x01000000;
-    exports.TILE_FLAG_MDAM_HEAVY = 0x01800000;
-    exports.TILE_FLAG_MDAM_SEV   = 0x02000000;
-    exports.TILE_FLAG_MDAM_ADEAD = 0x02800000;
+    // MDAM has 5 possibilities, so uses 3 bits.
+    fg_flags.exclusive_flags.push({
+        mask       : [0x40000000 | highbit, 0x01],
+        MDAM_LIGHT : [0x40000000, 0x00],
+        MDAM_MOD   : [highbit, 0x00],
+        MDAM_HEAVY : [0x40000000 | highbit, 0x00],
+        MDAM_SEV   : [0x00000000, 0x01],
+        MDAM_ADEAD : [0x40000000 | highbit, 0x01],
+    });
 
-    // Demon difficulty has 5 possibilities; so uses 3 bits.
-    exports.TILE_FLAG_DEMON      = 0x34000000;
-    exports.TILE_FLAG_DEMON_5    = 0x04000000;
-    exports.TILE_FLAG_DEMON_4    = 0x10000000;
-    exports.TILE_FLAG_DEMON_3    = 0x14000000;
-    exports.TILE_FLAG_DEMON_2    = 0x20000000;
-    exports.TILE_FLAG_DEMON_1    = 0x24000000;
+    // Demon difficulty has 5 possibilities, so uses 3 bits.
+    fg_flags.exclusive_flags.push({
+        mask       : [0, 0x0E],
+        DEMON_5    : [0, 0x02],
+        DEMON_4    : [0, 0x04],
+        DEMON_3    : [0, 0x06],
+        DEMON_2    : [0, 0x08],
+        DEMON_1    : [0, 0x0E],
+    });
+
+    // Mimics, 2 bits.
+    fg_flags.exclusive_flags.push({
+        mask        : [0, 0x60],
+        MIMIC_INEPT : [0, 0x20],
+        MIMIC       : [0, 0x40],
+        MIMIC_RAVEN : [0, 0x60],
+    });
+
+    fg_flags.mask             = 0x0000FFFF;
 
     // Background flags
-    exports.TILE_FLAG_RAY        = 0x00000800;
-    exports.TILE_FLAG_MM_UNSEEN  = 0x00001000;
-    exports.TILE_FLAG_UNSEEN     = 0x00002000;
-    exports.TILE_FLAG_CURSOR1    = 0x00004000;
-    exports.TILE_FLAG_CURSOR2    = 0x00008000;
-    exports.TILE_FLAG_CURSOR3    = 0x0000C000;
-    exports.TILE_FLAG_CURSOR     = 0x0000C000;
-    exports.TILE_FLAG_TUT_CURSOR = 0x00010000;
-    exports.TILE_FLAG_TRAV_EXCL  = 0x00020000;
-    exports.TILE_FLAG_EXCL_CTR   = 0x00040000;
-    exports.TILE_FLAG_RAY_OOR    = 0x00080000;
-    exports.TILE_FLAG_OOR        = 0x00100000;
-    exports.TILE_FLAG_WATER      = 0x00200000;
-    exports.TILE_FLAG_NEW_STAIR  = 0x00400000;
-    exports.TILE_FLAG_WAS_SECRET = 0x00800000;
+    var bg_flags = { flags: {}, exclusive_flags: [] };
+    bg_flags.flags.RAY        = 0x00010000;
+    bg_flags.flags.MM_UNSEEN  = 0x00020000;
+    bg_flags.flags.UNSEEN     = 0x00040000;
+    bg_flags.exclusive_flags.push({
+        mask       : 0x00180000,
+        CURSOR1    : 0x00180000,
+        CURSOR2    : 0x00080000,
+        CURSOR3    : 0x00100000,
+    });
+    bg_flags.flags.TUT_CURSOR = 0x00200000;
+    bg_flags.flags.TRAV_EXCL  = 0x00400000;
+    bg_flags.flags.EXCL_CTR   = 0x00800000;
+    bg_flags.flags.RAY_OOR    = 0x01000000;
+    bg_flags.flags.OOR        = 0x02000000;
+    bg_flags.flags.WATER      = 0x04000000;
+    bg_flags.flags.NEW_STAIR  = 0x08000000;
+    bg_flags.flags.WAS_SECRET = 0x10000000;
 
     // Kraken tentacle overlays.
-    exports.TILE_FLAG_KRAKEN_NW  = 0x01000000;
-    exports.TILE_FLAG_KRAKEN_NE  = 0x02000000;
-    exports.TILE_FLAG_KRAKEN_SE  = 0x04000000;
-    exports.TILE_FLAG_KRAKEN_SW  = 0x08000000;
+    bg_flags.flags.KRAKEN_NW  = 0x20000000;
+    bg_flags.flags.KRAKEN_NE  = 0x40000000;
+    bg_flags.flags.KRAKEN_SE  = highbit;
+    bg_flags.flags.KRAKEN_SW  = [0, 0x01];
 
     // Eldritch tentacle overlays.
-    exports.TILE_FLAG_ELDRITCH_NW = 0x10000000;
-    exports.TILE_FLAG_ELDRITCH_NE = 0x20000000;
-    exports.TILE_FLAG_ELDRITCH_SE = 0x40000000;
-    exports.TILE_FLAG_ELDRITCH_SW = 0x80000000;
+    bg_flags.flags.ELDRITCH_NW = [0, 0x02];
+    bg_flags.flags.ELDRITCH_NE = [0, 0x04];
+    bg_flags.flags.ELDRITCH_SE = [0, 0x08];
+    bg_flags.flags.ELDRITCH_SW = [0, 0x10];
 
-    // General
-    exports.TILE_FLAG_MASK       = 0x000007FF;
+    bg_flags.mask              = 0x0000FFFF;
+
+    exports.prepare_fg_flags = function (tileidx)
+    {
+        return prepare_flags(tileidx, fg_flags);
+    }
+    exports.prepare_bg_flags = function (tileidx)
+    {
+        return prepare_flags(tileidx, bg_flags);
+    }
 
     function rgb(r, g, b)
     {

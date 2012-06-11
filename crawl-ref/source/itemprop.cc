@@ -15,8 +15,6 @@
 #include "externs.h"
 
 #include "artefact.h"
-#include "coord.h"
-#include "coordit.h"
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
@@ -24,6 +22,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -70,10 +69,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_CHAIN_MAIL,           "chain mail",             7, -4,  400,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-#if TAG_MAJOR_VERSION == 32
-    { ARM_BANDED_MAIL,          "banded mail",            8, -5,  500,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
-#endif
     { ARM_SPLINT_MAIL,          "splint mail",            8, -5,  550,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -6,  650,
@@ -193,11 +188,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
-#if TAG_MAJOR_VERSION == 32
-    { WPN_ANKUS,             "ankus",               9,  2, 14, 120,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_CRUSHING | DAM_PIERCE,  1 },
-#endif
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
@@ -227,11 +217,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
-#if TAG_MAJOR_VERSION == 32
-    { WPN_KNIFE,             "knife",               3,  5, 10,  10,  1,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
-        DAMV_STABBING | DAM_SLICE, 0 },
-#endif
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_STABBING | DAM_SLICE, 10 },
@@ -264,14 +249,6 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-#if TAG_MAJOR_VERSION == 32
-    { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
-        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 0 },
-    { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
-        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 0 },
-#endif
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
@@ -326,7 +303,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
@@ -358,7 +335,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_THROWING,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
+        SK_THROWING,     HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
@@ -424,30 +401,30 @@ static int Food_index[NUM_FOODS];
 static food_def Food_prop[NUM_FOODS] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
-    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1, FFL_NONE },
+    { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
     { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3, FFL_NONE },
-    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
+    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
 
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_FRUIT},
-    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
-    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1, FFL_FRUIT},
-    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1, FFL_FRUIT},
-    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1, FFL_FRUIT},
-    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1, FFL_FRUIT},
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1, FFL_FRUIT},
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1, FFL_FRUIT},
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1, FFL_FRUIT},
-    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1, FFL_FRUIT},
-    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1, FFL_FRUIT},
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 2, FFL_FRUIT},
+    { FOOD_ORANGE,       "orange",       1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_BANANA,       "banana",       1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_LEMON,        "lemon",        1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_PEAR,         "pear",          700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APPLE,        "apple",         700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APRICOT,      "apricot",       700,  -200,   200,  15, 2, FFL_FRUIT},
+    { FOOD_CHOKO,        "choko",         600,  -200,   200,  30, 2, FFL_FRUIT},
+    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_LYCHEE,       "lychee",        600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_STRAWBERRY,   "strawberry",    200,   -50,    50,   5, 2, FFL_FRUIT},
+    { FOOD_GRAPE,        "grape",         100,   -20,    20,   2, 1, FFL_FRUIT},
+    { FOOD_SULTANA,      "sultana",        70,   -20,    20,   1, 1, FFL_FRUIT},
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1, FFL_NONE },
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
-    { FOOD_PIZZA,        "pizza",        1500,  -100,     0,  40, 1, FFL_NONE },
-    { FOOD_CHEESE,       "cheese",       1200,   100,     0,  40, 1, FFL_NONE },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  5000,     0,     0,  55, 2, FFL_NONE },
+    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
     { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE },
 };
 
@@ -534,6 +511,10 @@ void do_curse_item(item_def &item, bool quiet)
     // This might prevent a carried item from allowing training.
     maybe_change_train(item, false);
 
+    // If the item isn't equipped, you might not be able to use it for training.
+    if (!item_is_equipped(item))
+        item_skills(item, you.stop_train);
+
     item.flags |= ISFLAG_CURSED;
 
     // Xom is amused by the player's items being cursed, especially if
@@ -561,7 +542,7 @@ void do_curse_item(item_def &item, bool quiet)
             }
 
             ash_check_bondage();
-            god_id_inventory();
+            auto_id_inventory();
         }
 
         xom_is_stimulated(amusement);
@@ -588,7 +569,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     if (inscribe && Options.autoinscribe_cursed
         && item.inscription.find("was cursed") == std::string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
-        && !item_ident(item, ISFLAG_IDENT_MASK))
+        && !fully_identified(item))
     {
         add_inscription(item, "was cursed");
     }
@@ -632,6 +613,12 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
+static bool _in_shop(const item_def &item)
+{
+    // yay the shop hack...
+    return (item.pos.x == 0 && item.pos.y >= 5);
+}
+
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -643,7 +630,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (in_shop(item))
+    if (_in_shop(item))
         return (int)item_value(item) < you.gold;
 
     // Explicitly marked by a vault.
@@ -733,9 +720,8 @@ iflags_t full_ident_mask(const item_def& item)
     {
     case OBJ_FOOD:
     case OBJ_CORPSES:
-        flagset = 0;
-        break;
     case OBJ_MISCELLANY:
+    case OBJ_MISSILES:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -758,11 +744,6 @@ iflags_t full_ident_mask(const item_def& item)
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
         if (ring_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
-        break;
-    case OBJ_MISSILES:
-        flagset = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            flagset &= ~ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
@@ -848,9 +829,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             break;
         case OBJ_ARMOUR:
             if (item.sub_type == ARM_SPLINT_MAIL
-#if TAG_MAJOR_VERSION == 32
-                || item.sub_type == ARM_BANDED_MAIL
-#endif
                 || item.sub_type == ARM_PLATE_ARMOUR
                 || is_hard_helmet(item))
             {
@@ -960,16 +938,6 @@ short get_helmet_desc(const item_def &item)
     return item.plus2;
 }
 
-void set_helmet_desc(item_def &item, helmet_desc_type type)
-{
-    ASSERT(is_helmet(item));
-
-    if (!is_hard_helmet(item) && type > THELM_DESC_MAX_SOFT)
-        type = THELM_DESC_PLAIN;
-
-    item.plus2 = type;
-}
-
 bool is_helmet(const item_def& item)
 {
     return (item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET);
@@ -1035,18 +1003,6 @@ brand_type get_weapon_brand(const item_def &item)
         return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
 
     return static_cast<brand_type>(item.special);
-}
-
-bool missile_brand_obvious(special_missile_type brand)
-{
-    // Missiles that are poisoned or made of obvious materials (steel,
-    // silver) are always identified.
-    // Same for needle brands.
-    return (brand == SPMSL_POISONED
-            || brand == SPMSL_CURARE
-            || (brand >= SPMSL_PARALYSIS && brand <= SPMSL_RAGE)
-            || brand == SPMSL_STEEL
-            || brand == SPMSL_SILVER);
 }
 
 special_missile_type get_ammo_brand(const item_def &item)
@@ -1238,9 +1194,8 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
             return (true);
 
         // Don't offer wands already maximally charged.
-        if (it.plus2 == ZAPCOUNT_MAX_CHARGED
-            || item_ident(it, ISFLAG_KNOW_PLUSES)
-               && it.plus >= wand_max_charges(it.sub_type))
+        if (item_ident(it, ISFLAG_KNOW_PLUSES)
+            && it.plus >= wand_max_charges(it.sub_type))
         {
             return (false);
         }
@@ -1408,7 +1363,6 @@ int weapon_rarity(int w_type)
     case WPN_GREAT_MACE:
         return (3);
 
-    case WPN_ANKUS:
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:
@@ -1420,10 +1374,6 @@ int weapon_rarity(int w_type)
     case WPN_BARDICHE:
         return (1);
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:
-    case WPN_BLESSED_KATANA:
-#endif
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
     case WPN_EXECUTIONERS_AXE:
@@ -1634,9 +1584,6 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_FALCHION:
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
-#if TAG_MAJOR_VERSION == 32
-        case WPN_BLESSED_KATANA:
-#endif
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
@@ -1697,14 +1644,6 @@ bool convert2good(item_def &item, bool allow_blessed)
         else
             item.sub_type = WPN_EUDEMON_BLADE;
         break;
-
-#if TAG_MAJOR_VERSION == 32
-    case WPN_KATANA:
-        if (!allow_blessed)
-            return (false);
-        item.sub_type = WPN_BLESSED_KATANA;
-        break;
-#endif
 
     case WPN_DOUBLE_SWORD:
         if (!allow_blessed)
@@ -1771,12 +1710,6 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_DEMON_BLADE;
         break;
 
-#if TAG_MAJOR_VERSION == 32
-    case WPN_BLESSED_KATANA:
-        item.sub_type = WPN_KATANA;
-        break;
-#endif
-
     case WPN_BLESSED_DOUBLE_SWORD:
         item.sub_type = WPN_DOUBLE_SWORD;
         break;
@@ -1809,11 +1742,6 @@ int weapon_str_weight(const item_def &wpn)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
 
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
-}
-
-int weapon_dex_weight(const item_def &wpn)
-{
-    return (10 - weapon_str_weight(wpn));
 }
 
 // Returns melee skill of item.
@@ -1998,49 +1926,6 @@ void maybe_change_train(const item_def& item, bool start)
                 item_skills(you.inv[i], start ? you.start_train : you.stop_train);
             }
         }
-}
-
-// Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
-// to protect a body of size "body".
-int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
-                     bool hide_hidden)
-{
-    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
-
-    int ret = 0;
-
-    // Note: ret currently measured in halves (see skill factor).
-    if (is_whip_type(wpn.sub_type) || weapon_skill(wpn) == SK_POLEARMS)
-        ret = 3 + (dex / 5);
-
-    // Weapons of reaching are naturally a bit longer/flexier.
-    if (!hide_hidden || item_type_known(wpn))
-    {
-        if (get_weapon_brand(wpn) == SPWPN_REACHING)
-            ret += 1;
-    }
-
-    // Only consider additional modifications if we have a positive base:
-    if (ret > 0)
-    {
-        // Size factors:
-        // - large characters can't cover their flanks as well
-        // - note that not all weapons are available to small characters
-        if (body > SIZE_LARGE)
-            ret -= (4 * (body - SIZE_LARGE) - 2);
-        else if (body < SIZE_MEDIUM)
-            ret += 1;
-
-        // apply skill (and dividing by 2)
-        ret = (ret * (skill + 10)) / 20;
-
-        // Make sure things can't get too insane.
-        if (ret > 8)
-            ret = 8 + (ret - 8) / 2;
-    }
-
-    // Note: this is always a bonus.
-    return ((ret > 0) ? ret : 0);
 }
 
 static size_type weapon_size(const item_def &item)
@@ -2328,18 +2213,6 @@ bool ring_has_stackable_effect(const item_def &item)
 //
 // Food functions:
 //
-bool food_is_meat(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
-}
-
-bool food_is_veg(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
-}
-
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
@@ -2357,24 +2230,21 @@ bool is_fizzing_potion (const item_def &item)
     return (item.sub_type == POT_FIZZING);
 }
 
-// Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
-
-    // XXX: This needs to be better merged with the mutation system.
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
     int ret = food.value;
 
-    ret += (carn * food.carn_mod);
-    ret += (herb * food.herb_mod);
+    ret += carn * food.carn_mod;
+    ret += herb * food.herb_mod;
 
-    return ((ret > 0) ? div_rand_round(ret, food.turns) : 0);
+    return ret;
 }
 
 int food_turns(const item_def &item)
@@ -2880,73 +2750,6 @@ int item_mass(const item_def &item)
     return ((unit_mass > 0) ? unit_mass : 0);
 }
 
-// Note that this function, and item sizes in general aren't quite on the
-// same scale as PCs and monsters.
-size_type item_size(const item_def &item)
-{
-    int size = SIZE_TINY;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-        size = Weapon_prop[ Weapon_index[item.sub_type] ].fit_size - 1;
-        break;
-
-    case OBJ_ARMOUR:
-        size = SIZE_MEDIUM;
-
-        switch (item.sub_type)
-        {
-        case ARM_GLOVES:
-        case ARM_HELMET:
-        case ARM_CAP:
-        case ARM_WIZARD_HAT:
-        case ARM_BOOTS:
-        case ARM_BUCKLER:
-            // tiny armour
-            size = SIZE_TINY;
-            break;
-
-        case ARM_SHIELD:
-            size = SIZE_LITTLE;
-            break;
-
-        case ARM_LARGE_SHIELD:
-            size = SIZE_SMALL;
-            break;
-
-        default:        // Body armours and bardings.
-            size = SIZE_MEDIUM;
-            break;
-        }
-        break;
-
-    case OBJ_MISSILES:
-        if (item.sub_type == MI_LARGE_ROCK)
-            size = SIZE_SMALL;
-        break;
-
-    case OBJ_MISCELLANY:
-        break;
-
-    case OBJ_CORPSES:
-        // FIXME: This should depend on the original monster's size!
-        size = SIZE_SMALL;
-        break;
-
-    default:            // sundry tiny items
-        break;
-    }
-
-    if (size < SIZE_TINY)
-        size = SIZE_TINY;
-    else if (size > SIZE_HUGE)
-        size = SIZE_HUGE;
-
-    return (static_cast<size_type>(size));
-}
-
 equipment_type get_item_slot(const item_def& item)
 {
     return get_item_slot(item.base_type, item.sub_type);
@@ -3044,12 +2847,6 @@ std::string food_type_name (int sub_type)
 const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
-}
-
-bool in_shop(const item_def &item)
-{
-    // yay the shop hack...
-    return (item.pos.x == 0 && item.pos.y >= 5);
 }
 
 void seen_item(const item_def &item)

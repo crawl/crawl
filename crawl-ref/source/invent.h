@@ -142,8 +142,9 @@ public:
     // Loads items into the menu. If "procfn" is provided, it'll be called
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
-    void load_items(const std::vector<const item_def*> &items,
-                    MenuEntry *(*procfn)(MenuEntry *me) = NULL);
+    menu_letter load_items(const std::vector<const item_def*> &items,
+                           MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                           menu_letter ckey = 'a');
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
@@ -205,21 +206,6 @@ std::vector<SelItem> prompt_invent_items(
                         std::vector<text_pattern> *filter = NULL,
                         Menu::selitem_tfn fn = NULL,
                         const std::vector<SelItem> *pre_select = NULL);
-
-
-unsigned char invent_select(
-                   // Use NULL for stock Inventory title
-                   const char *title = NULL,
-                   // MT_DROP allows the multidrop toggle
-                   menu_type type = MT_INVLIST,
-                   int item_selector = OSEL_ANY,
-                   int excluded_slot = -1,
-                   int menu_select_flags = MF_NOSELECT,
-                   invtitle_annotator titlefn = NULL,
-                   std::vector<SelItem> *sels = NULL,
-                   std::vector<text_pattern> *filter = NULL,
-                   Menu::selitem_tfn fn = NULL,
-                   const std::vector<SelItem> *pre_select = NULL);
 
 void browse_inventory();
 unsigned char get_invent(int invent_type);

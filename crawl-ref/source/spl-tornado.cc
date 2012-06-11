@@ -11,7 +11,6 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
-#include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"
@@ -326,7 +325,7 @@ void tornado_damage(actor *caster, int dur)
                             else
                                 mon->add_ench(ench);
                         }
-                        behaviour_event(mon, ME_ANNOY, caster->mindex());
+                        behaviour_event(mon, ME_ANNOY, caster);
                     }
                     else if (!leda)
                     {

@@ -1,0 +1,549 @@
+%%%%
+air elemental fan
+
+Maaginen väline ilmaelementaalien kutsumiseen. Se on melko epäluotettava, ja
+useimmiten tarvitsee usean yrityksen toimiakseen kunnolla. Sen käyttämisessä on
+riskinsä, joka tosin vähenee jos käyttäjä on taitava sopivassa
+elementtimagiassa.
+%%%%
+amulet of clarity
+
+Tämä amuletti suojaa käyttäjäänsä joiltakin mielen sekaannuksen muodoilta,
+mukaan lukien vastoin tahtoa raivostumiselta.
+%%%%
+amulet of conservation
+
+Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
+mutta ei pettämättömästi.
+%%%%
+amulet of controlled flight
+
+Jos tämän amuletin käyttäjä nostetaan taikuudella ilmaan, hän saa jonkin verran
+kontrollia omiin liikkeisiinsä. Tämä sallii esimerkiksi portaiden käyttämisen
+ja maassa olevien tavaroiden keräämisen, mutta ei vie pois leijumisen hyötyjä.
+%%%%
+amulet of guardian spirit
+
+Tämä amuletti vähentää käyttäjänsä herkkyyttä ulkoiselle vahingolle, kuluttaen
+taikavoimia elämän sijasta. Jos taikavarannot ehtyvät, amuletin henki ei
+suojele ennen kuin enemmän voimia on saatavilla.
+%%%%
+amulet of inaccuracy
+
+Tämä amuletti laskee kantajansa tarkkuutta lähi- ja kaukotaistelussa sekä
+loitsiessa.
+%%%%
+amulet of rage
+
+Tämä amuletti antaa haltijalleen kyvyn siirtyä berserkkiraivon tilaan.
+%%%%
+amulet of resist corrosion
+
+Tämä amuletti suojaa kantajaansa ja heidän varusteitaan happojen aiheuttamalta
+syöpymiseltä, mutta ei pettämättömästi.
+%%%%
+amulet of resist mutation
+
+Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.
+%%%%
+amulet of the gourmand
+
+Tämä amuletti suojaa käyttäjäänsä raa'an lihan aiheuttamilta sairauksilta ja
+tekee heistä kykeneväisiä syömään sitä myös, kun he eivät ole nälkäisiä. Nämä
+vaikutukset käyttäjän ruoansulatukseen ovat kasaantuvia ja ovat alkuaankin
+pieniä.
+%%%%
+amulet of warding
+
+Tämä amuletti torjuu taikuudella kutsuttujen olentojen hyökkäyksiä, ja tekee
+käyttäjästään myös puolustuskykyisemmän elinvoimaa imeville hyökkäyksille.
+%%%%
+amulet of faith
+
+Tämä talismaani on luotu kutsumaan jumalten huomiota. Tämä pyhä huomio
+helpottaa jumalten miellyttämistä, mutta jumalasi on myös vähemmän
+anteeksiantava syntejäsi kohtaan, ja amuletin poisottaminen aiheuttaa myös
+suosion laskua.
+%%%%
+amulet of stasis
+
+Huolellisesti taikasuojauksilla varusteltu amuletti, luotu torjumaan fyysisiä
+efektejä, jotka muuten teleporttaisivat, hidastaisivat, nopeuttaisivat tai
+halvaannuttaisivat sen käyttäjän.
+
+Vaikka amuletti on tehokas useimpia teleportaatiotaikoja vastaan, se ei pysty
+torjumaan ulottuvuudenvaihdoksia, kuten karkoitusta.
+%%%%
+animal skin
+
+Suuri kappale tanakkaa, turkin peittämää ihoa. Leikattu eläimen ruumiista ja
+käytetään alkukantaisena vaatekappaleena. Se tarjoaa alkeellista puolustusta,
+mutta koska sitä ei ole parkittu, siinä on lievä mätänevän lihan löyhkä.
+%%%%
+apple
+
+Herkullinen ja hapan jämäkkä punainen hedelmä.
+%%%%
+apricot
+
+Mehukas keltaoranssi hedelmä, prunus armeniaca.
+%%%%
+arrow
+
+Pitkä, varrekas, jousipyssyllä ammuttava ammus, tasapainotettuna sulilla ja
+terävällä kärjellä.
+%%%%
+banana
+
+Maukas keltainen hedelmä, todennäköisesti jonkun moraalittoman monikansallisen
+kasvattama ja maahantuoma korruptoituneen kauppasopimuksen seurauksena.
+%%%%
+bardiche
+
+Pitkä paalu, jonka toisessa päässä on valtava, halkova terä.
+%%%%
+battleaxe
+
+Suuri kahden käden sotakirves mahtavalla kaksipuolisella terällä. Suunniteltu
+taitavien taistelijoiden aseeksi.
+%%%%
+beef jerky
+
+Suikale säilöttyä lehmää tai sonnia.
+%%%%
+blessed double sword
+
+Maaginen ase kahdella veitsenterävällä terällä. Se on Hohtavan vahvistama.
+%%%%
+blessed falchion
+
+Leveäteräinen miekka. Se on Hohtavan vahvistama.
+%%%%
+blessed great sword
+
+Miekka, jossa on erittäin pitkä ja raskas terä sekä sekä suuri kahva. Se on
+Hohtavan vahvistama.
+%%%%
+blessed long sword
+
+Pitkäteräinen miekka. Se on Hohtavan vahvistama.
+%%%%
+blessed scimitar
+
+Kaartuvateräinen, pitkä miekka. Se on Hohtavan vahvistama.
+%%%%
+blessed triple sword
+
+Maaginen ase kolmella suurella terällä. Se on Hohtavan vahvistama.
+%%%%
+blowgun
+
+Pitkä, molemmista päistä aukinainen kevyt putki, jonka läpi voi ampua
+erityyppisiä neuloja voimakkailla puhalluksilla. Se on erittäin hiljainen.
+%%%%
+bolt
+
+Nuolta lyhyempi metallinen ammus, jonka voi ampua varsijousella.
+%%%%
+book of air
+
+Alkeiskirja Ilman elementaalimagiaan. Sivut usein käänytvät itsestään, kuin
+kovan tuulen puhaltaminen. Joskus ne ovat staattisen sähkön jumittamia, ja
+kipinöivät erotettaessa toisistaan.
+%%%%
+book of alchemy
+
+Monien muinaisten alkemistien viisaudet kokoava kirja, joka keskittyy
+alkemiaprosession käyttöön taikuudessa. Kun kirja aukaistaan, teksti muodostuu
+musteen tiivistyessä sivuille ilmasta.
+%%%%
+book of annihilations
+
+Veri valuu tämän kirjan repaleisilta sivuilta, ja jopa lukutaidoton tuntee sen
+sisältämän mystisen raivon vaikutuksen. Velhot tavoittelevat sitä ankarasti,
+sillä se antaa lahjakkaiden ja neuvokkaiden ohjata tuhoa erittäin helposti.
+Heikot maagit kuitenkin saattavat kohdata tuomionsa tästä teoksesta.
+
+VAROITUS: Jos epäonnistut opetellessasi loitsua tästä kirjasta, kirja hyökkää
+päällesi.
+%%%%
+book of beasts
+
+Petoeläinten luomiseen keskittyvä loitsukirja. Sen sivut on tehty eläinten
+nahoista ja kannet on reunustettu hampailla. Se lemuaa eläintarhalta, ja
+silloin tällöin näykkäisee varomattomien lukijoiden sormia.
+%%%%
+book of burglary
+
+Monipuolisia varkauteen, hajottamiseen, murtautumiseen ja muuhun rötöstelyyn
+sopivia taikoja sisältävä kirja. Velhot, jotka antavat keskittymisensä kaikota
+tätä nidettä lukiessaan, saattavat huomata joidenkin pienten asioiden kadonneen
+taskuistaan, ja siirtyneen sivujen väliin.
+%%%%
+book of callings
+
+Alustava johdanto petojen ja toismaailmallisten olentojen maagiseen
+Kutsumiseen. Pieniä kärpäsiä ja sääskiä ilmestyy tyhjästä kirjan avautuessa, ja
+sitten katoavat, kun kirja suljetaan.
+%%%%
+book of cantrips
+
+Pienen määrän aloittelijatason magiikkaa sisältävä kirja. Se on suunniteltu
+aloittelijoille, jotka haluavat oppia jonkin mukana olevan taikuuskoulukunnan
+alkeet. Siitä huolimatta jopa kokeneet maagit saattavat keksiä sen sisältä
+löytyville loitsuille käyttöä.
+%%%%
+book of changes
+
+Oppilaan alkeiskirja Muodonmuutosten taikuustaiteeseen. Siinä on paljon
+ylellistä kuvitusta koulukunnan aikaiselta, kokeelliselta historialta:
+Puoli-velho-puoli-hämähäkkejä, miekkanenäisiä velhoja, tai nokallisia
+lonkeroita jalkojen paikalla. Teksti on täynnä vakuuttelua, että tällaista ei
+enää tapahdu, mutta silti jotkut mahdolliset Muodonmuuttajat opiskelevat
+mieluummin Lumouksia.
+%%%%
+book of card effects
+
+Taikoja sisältävä kirja.
+%%%%
+book of charms
+
+Taikoja sisältävä kirja.
+%%%%
+book of clouds
+
+Loitsukirja erilaisten pilvien luomiseen, verhottuna kauniiseen sumuun jonka
+takia sanat ovat joskus hieman sumeita. Syvällinen kirja, joskin välillä
+kirjoittaja ajautuu sivupoluille tylsiin keskusteluihin siitä, miltä esineiltä
+pilvien kaaviot näyttävät.
+%%%%
+book of conjurations
+
+Oppikirja tuhovoimaiseen taikuuteen, Konjuraatioihin. Se vavisee juuri ja juuri
+sisällä pysyvästä voimasta avautuessaan. Erittäin suosittu kirja, sitä
+jatkuvasti muutetaan ja päivitetään: tämän vuoden painos keskittyy Jään ja
+Ilman elementteihin.
+%%%%
+book of control
+
+Tämän kirjan loitsuilla voi kontrolloida mieliä, kehoja ja jopa avaruutta.
+Kirjan nähdessään velhot saattavat tuntea pakon selailla sen sivuja, ja niin
+tekevillä on joskus ongelmia saada sen sisältämät riimut ja symbolit
+mielestään.
+%%%%
+book of death
+
+Aavemainen käsikirjoitus, joka sisältää synkkiä Nekromantia-taikoja. Se on
+kirjoitettu ruumiista tislatuilla musteilla. Jokainen sivu on täytetty
+groteskilla taiteella, kuvaten iljettävän mädäntymisen ja karmean kuoleman
+kohtauksia. Suuri osa tekstistä on osana kuvia, sisälmysten vyyhteinä tai
+luumuodostelmina.
+%%%%
+book of debilitation
+
+Hyödyllisiä manipulaatiotaikoja, etenkin Mystiselle Tarkka-ampujalle, sisältävä
+kirja. Monet sivuista ovat täynnä reikiä, aivan kuin niitä olisi käytetty
+jousiammunnan maalitauluina ennen kirjoitusta ja sidontaa. Tämän okkultisen
+tekniikan pitäisi antaa loitsuille lisävoimaa pitkän matkan aseiden kanssa
+käytettynä, mutta käytännössä ne eivät eroa mitenkään vähemmän reikiintyneiden
+tekstien variaatioista.
+%%%%
+book of dreams
+
+Kokoelma unissapuhuvan mystikon virkkomisia, joka kuvailee mystikon unitilaa
+heijastavia loitsuja. Teoksen kriitikot väittävät, että kirjan loitsut eivät
+käytännössä eroa mitenkään jo aiemmin tunnetuista loitsuista, mutta kirja on
+edelleen suosiossa sen ainutlaatuisen eriskummallisen kuvaston ja kryptisten
+poikkeamien takia.
+%%%%
+book of enchantments
+
+Tämä kirja sisältää valikoiman Manipulaatioita ja Lumouksia, ja sen sivut
+kimaltelevat ja hohtavat käännettäessä. Epätavallisen aikaan sopimaton otsikko
+kuvastaa aikaisempaa, epätäydellisempää ymmärrystä näistä kahdesta magian
+koulukunnasta.
+%%%%
+book of envenomations
+
+Heikolla vihreällä valolla hehkuva taikakirja. Kirja oli alunperin Olgrebin,
+pahamaineisen Myrkkyvelhon, kirjoittama. Hän murhasi monet kilpailijansa
+lähettämällä heille vahvasti myrkytetyn kirjan lahjana. Nykyiset painokset ovat
+turvallisia, vaikka sivujen välistä löytyykin usein kuolleita kirja- ja
+sokeritoukkia.
+%%%%
+book of fixed level
+
+Taikoja sisältävä kirja.
+%%%%
+book of fixed theme
+
+Taikoja sisältävä kirja.
+%%%%
+book of fire
+
+Edistyneitä Tulitaikoja sisältävä kirja. Monet Tulielementalistit ovat
+polttaneet kulmakarvansa ja partansa hetkellisen tulen takia, joka syntyy, kun
+kirja avataan ensimmäistä kertaa. Jotkut ovat jopa huomanneet kovemman kautta,
+että kun kirja jätetään huomiotta kuukausiksi, se voi yhtäkkiä syttyä tuleen,
+toisinaan polttaen maan tasalle kokonaisia kirjastoja kamalissa suurpaloissa.
+%%%%
+book of flames
+
+Perusteksti Tulimagian akatemia-opiskelijoille. Se on melko lämmin
+kosketukselle ja sen reunat ovat korventuneet. Sivut on merkitty
+tulisymboleilla, jotka hohtavat välkehtivää valoa lukemisen helpottamiseksi.
+%%%%
+book of frost
+
+Loitsukirja, jota usein käytetään aloittelijan oppaana Jäämagiaan. Sen kansi on
+kylmä, ja sen mystiset riimut on kirjoitettu sujuvalla, rosoisella tyylillä,
+muistuttaen ikkunaa peittävää huurretta.
+%%%%
+book of geomancy
+
+Maa-elementtiin liittyviä perusloitsuja sisältävä kirja. Se tuntuu varsin
+tiiviiltä, vaikka se ei ole muita kirjoja raskaampi. Luettaessa siitä roiskuu
+pienenpieniä kiviä. Kirjan sivut on valmistettu ohuista kiillelevyistä.
+%%%%
+book of hinderance
+
+Mystinen käsikirja, joka omistautuu vihollisten mielien ja kehojen hidastamisen
+taiteeseen. Se on kirjoitettu kramppaavalla, lähes lukukelvottomalla
+käsialalla, todella kankeille sivuille. Jotkut velhot sanovat sormiensa
+jäykistyvän lukemisen aikana, mutta se loppuu kirjan sulkeuduttua.
+%%%%
+book of ice
+
+Kehittyneiden Jäätaikojen kirja. Se on jäätävän kylmä, ja sen sivut ovat
+murenevan kuuran peitossa. Vaikka he käyttävät lämmintä vaatetusta, tästä
+kirjasta kopioita kirjoittavat kirjurit usein kärsivät paleltumista ja
+hypotermiasta.
+%%%%
+book of maledictions
+
+Tämä kirja opettaa Lumoojia heikentämään ja sekoittamaan vihollisensa
+Manipulaatioilla ennen viimeistelyä. Etusivulla on kuva pahasta silmästä,
+muinaisesta kirotusta symbolista. Tästä on syntynyt lukuisia tarinoista
+seikkailijoista jotka ovat kohdanneet huonon lopun kannettuaan tämän kirjan
+Luolastoon. Toisaalta, kuten skeptikot sanovat, melkein jokainen Luolastoon
+astuva kohtaa huonon lopun.
+%%%%
+book of minor magic
+
+Monia yksinkertaisia mutta hyödyllisiä maagisia taikoja sisältävä kirja. Monet
+merkittävät velhot ovat aloittaneet magian opiskelunsa tällä kirjalla.
+Ensimmäistä kertaa se julkaistiin kolme vuosisataa sitten, ja se on yksi
+tunnetuimmista loitsukirjoista maailmassa. Kädessäsi pitämä kirja on sen
+kahdeksaskymmeneskahdeksas painos.
+%%%%
+book of morphology
+
+Muodonmuutoksia sisältävä kirja. Sen teksti muuttuu ja siirtyilee jatkuvasti,
+eli sisällysluettelo ja kirjanmerkit eivät ole sen kanssa kovin hyödyllisiä.
+Silti useimmat taikojat löytävät siitä mitä etsivät.
+%%%%
+book of necromancy
+
+Makaaberi opus, joka on aloittelevien Nekromantikoiden ensimmäinen kirja hyvin
+usein. Ottaen huomioon Nekromantian vaarat, se on joskus myös viimeinen.
+%%%%
+book of party tricks
+
+Tässä kirjassa on monta hauskaa loitsua, jotka takuuvarmasti elävöittävät minkä
+tahansa velhojen juhlan. Lisäksi siinä on myös maljapuheita, vitsejä ja
+seurapelejä, kaikki kirjoitettuna kirkkailla väreillä ja hauskoilla
+käsialoilla. Kirjan loitsuja on muuteltu hieman, jotta niitä voi laulaa
+tunnettujen ryyppylaulujen tahdissa.
+%%%%
+book of power
+
+Voimakkaan taikuuden kirja, joka on kunnianhimoisten, kilpailijoihiinsa nähden
+valta-aseman haluavien velhojen himoitsema. Se rasahtelee ja värisee juuri ja
+juuri hallinnassa pysyvistä energioista.
+%%%%
+book of spatial translocations
+
+Teleportaatiokirjallisuuden klassikko. Kirjoittaja oli arkkimaagi ja menestynyt
+Varppaaja Golubria, kahden vuosisadan takaa. Kirjaa voi edelleen löytää
+taikuuden kirjastoista ympäri maailmaa, vaikka se ei aina ole siinä hyllyssä
+mihin kirjastonhoitaja jätti sen.
+%%%%
+book of stalking
+
+Hyödyllinen opas muodonmuutoksia käyttävän Stalkkauksen saloihin. Tällä
+mitättömän näköisellä kirjalla on tapana sekoittua taustaansa, ja monet velhot
+eivät katso siihen kahta kertaa.
+%%%%
+book of summonings
+
+Edistynyt tutkielma Kutsumistaioista, joka kuvailee tapoja kutsua ja sitoa
+olentoja kaikenlaisilta kamalilta alueilta. Siinä on julmia varoituksia, kuvien
+kera, tällaisten hirviöiden kutsumisen vaaroista, sillä kaikki ne eivät ole
+ystävällisiä.
+%%%%
+book of the dragon
+
+Tämän kirjan loitsuilla voi yrittää hallita lohikäärmeitä ja niiden
+ominaisuuksia. Se on lämmin, sidottuna suomuiseen nahkaan, ja jokainen sivu on
+ylellinen piirros jonkin sortin lohikäärmeestä, joko oikeasta tai kuvitellusta.
+%%%%
+book of the earth
+
+Tekstikirja kokeneille Maaelementalisteille. Sillä on mahtava tiheyden aura, ja
+sitä katsoessa tuntuu kuin seisoisi satojen kivitonnien alla, vaikka oikeasti
+olisikin taivasalla.
+%%%%
+book of the sky
+
+Taikakirja, jossa on voimakkaita Ilmaloitsuja. Tätä kirjaa kopioivat kirjurit
+on eristetty korkeisiin torneihin tasangoille, jotta he paremmin sopeutuvat
+Ilman voimiin. Kirkkaat riimut on kirjoitettu välkehtivässä salamoinnissa.
+%%%%
+book of the tempests
+
+Tämä kirja sisältää luonnon tuhovoimaisimpia voimia hallitsevia loitsuja.
+Avauksen yhteydessä salamat iskevät sivujen välissä, tuulenpuuskat osuvat
+lukijan kasvoihin ja koko kirja tärisee intensiivisessä värähtelyssä.
+%%%%
+book of the warp
+
+Kirja kokeneille Varppaajille. Sen hohtavat sivut ovat olemassa useissa
+ulottuvuuksissa yhtä aikaa, mitkä eivät kaikki tottele geometrian yleisiä
+sääntöjä. Jotkin sivut katoavat kääntäessä, kun taas osa ilmestyy tyhjästä ja
+toiset menevät toisten sivujen tai itsensä läpi. Joillakin sivuilla on kolme
+puolta, tai pelkästään yksi, tai epänormaali määrä kulmia. Tämä saattaa olla
+hämmentävää.
+%%%%
+book of transfigurations
+
+Edistynyt Muodonmuutoksien kirja, kirjoitettuna jatkuvasti muuttuvalle
+materiaalille. Velhon lukiessa kirjaa sivut saattavat olla paperia, silkkiä,
+kiveä, pergamenttia, etsattua lasia, villaa, metallifoliota, käärmeennahkaa,
+samettia tai tuhatta muuta asiaa.
+%%%%
+book of unlife
+
+Tämä epäpyhä kirja kertoo maagisista keinoista epäkuolleiden palvelijoiden
+luomiseen ja käskemiseen. Kauheassa kirjassa säteilee pahansuopa aura, ja sen
+pergamenttisivut joskus sätkivät ja värisevät itsestään.
+%%%%
+book of war chants
+
+Soturille hyödyllisiä loitsuja sisältävä kirja. Kirjan loitsuilla on
+musikaalinen muoto, seuraten skaldien perinteitä. Niillä on kuitenkin sama
+vaikutus kuin puhutuilla taioilla.
+%%%%
+book of wizardry
+
+Tämän kirjan loitsut sopivat kenelle tahansa pätevälle loitsijalle. Oppineet
+maagit pitävät tämän kirjaan tekstiin osallistumista ylpeyden asiana, vaikka
+monet heistä ovat tulleet kateellisten kilpailijoiden murhaamiksi heidän omilla
+loitsuillaan.
+%%%%
+bottled efreet
+
+Mahtava efreet, jonka joku velho on kaapannut ja sulkenut pronssiseen pulloon.
+Pullon sinetin rikkominen vapauttaa sen vahingontekoon - mahdollisesti sinun
+päällesi.
+%%%%
+bow
+
+Kaartuva kappale puuta ja jännettä nuolten ampumiseen. Se tekee paljon vahinkoa
+taistelussa, ja taitavan käyttäjän käsissä se on erittäin tehokas.
+%%%%
+box of beasts
+
+Maaginen laatikko, joka sisältää monta villipetoa. Ne voi päästää pakoon
+avaamalla laatikon kannen.
+%%%%
+bread ration
+
+Täyttävä ateria väljähtänyttä, mutta runsasta leipää.
+%%%%
+broad axe
+
+Sotakirves paranneltuna metalliliuskoilla, piikeillä, isommalla kahvalla ja
+yksipuolisella puolikuu-terällä. Se voi aiheuttaa julmia haavoja, mutta sitä on
+kömpelö käyttää yhdellä kädellä sen painon ja pituuden johdosta.
+%%%%
+buckler
+
+Pieni kappale puuta ja metallia, jonka voi kiinnittää käteen hihnalla
+puolustukseksi. Se on hieman vaivalloinen käyttää, ja ilman harjoitusta
+hidastaa soturin hyökkäysnopeutta.
+%%%%
+cap
+
+Kangas- tai nahkalakki.
+%%%%
+centaur barding
+
+Kentaureille tehty panssari, puettavaksi hevososansa ylle.
+%%%%
+chain mail
+
+Täysin pienistä metallirinkuloista tehty haarniska. Se tarjoaa hyvää suojaa
+aseita, kynsiä ja torahampaita vastaan, mutta haittaa nopeaa ja hiljaista
+liikettä.
+%%%%
+cheese
+
+Juustomöhkäle.
+%%%%
+choko
+
+Köynnöksessä kasvava, lähes mauton vihreä kasvis.
+%%%%
+chunk of flesh
+
+Luolastosta löydetty lihanpalanen.
+%%%%
+cloak
+
+Kangasviitta.
+%%%%
+club
+
+Raskas puukappale, jonka toisessa päässä on paikka kiinniottamiselle ja painot
+toisessa päässä. Se on sopiva heilutus- tai heittoaseena. Vaikka nuijat ovat
+melko alkukantaisia aseita, pääkallon mäjäyttäminen sellaisella on edelleen
+hyvin suosittu ja tehokas riidanratkaisukeino.
+%%%%
+corpse
+
+Ruumis. Voit teurastaa sen tuottaaksesi syömäkelpoisia lihakimpaleita.
+%%%%
+crossbow
+
+Laite vasamien ampumiseen. Sen lataaminen ja ampuminen kestää hetken, mutta se
+tekee erittäin paljon vahinkoa taistelussa.
+%%%%
+crystal ball of energy
+
+Maaginen väline, jota voi käyttää taikaenergiavarastojen palauttamiseen, mutta
+jonka käytössä on varastojen tyhjenemisen riski. Riski on kääntäen
+verrannollinen siihen osaan, mikä käyttäjällä on maksimienergiastaan; lähellä
+maksimipotentiaalia esine on hyödyllisin.
+%%%%
+crystal plate armour
+
+Uskomattoman raskas mutta äärimmäisen tehokas kristallipanssari.
+%%%%
+dagger
+
+Kaksiteräinen taisteluveitsi terävällä kärjellä, jonka voi heittää kaukaa.
+Joidenkin mielestä se on heikko ase, viimeinen oljenkorsi; jotkut arvostavat
+sitä täydellisenä työkaluna salamurhiin.
+%%%%
+dart
+
+Pieni, tasapainotettu, teräväkärkinen ammus, suunniteltu kädellä heitettäväksi.
+%%%%
+gold piece
+
+Kasa kiiltäviä kultakolikoita.
+%%%%
+grape
+
+Pieni hedelmä.
+%%%%

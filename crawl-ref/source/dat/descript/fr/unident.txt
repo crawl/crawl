@@ -1,0 +1,43 @@
+%%%%
+amulet
+
+Un talisman à porter autour du cou comme un bijou, chargé de pouvoirs obscurs
+d'origine inconnue.
+%%%%
+book
+
+Un livre de sorts. Attention, car certains des plus puissants grimoires doivent
+être manipulés avec précautions.
+%%%%
+deck of cards
+
+Un jeu de puissantes cartes magiques peintes avec l'ichor des démons. Elles
+peuvent provoquer de précieux ou dangereux effets quand elles sont tirées.
+%%%%
+potion
+
+Une petite bouteille pleine de liquide.
+%%%%
+ring
+
+Un talisman chargé de forces obscures d'origine inconnue, à porter au doigt
+comme un bijou.
+%%%%
+rod
+
+Un bâtonnet qui peut être tenu en main et évoqué pour jeter un sort parmi
+plusieurs, tirant son pouvoir d'une réserve qui se régénère. Il est
+suffisamment solide pour être utilisé comme une simple arme contondante.
+%%%%
+scroll
+
+un parchemin de papier couvert d'inscriptions magiques.
+%%%%
+magical staff
+
+Un bâton de combat amélioré avec des pouvoirs obscurs d'origine inconnue.
+%%%%
+wand
+
+Une baguette. Peut-être est-elle magique.
+%%%%

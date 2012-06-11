@@ -627,7 +627,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     {
         set_attack_conducts(conducts, mons);
 
-        behaviour_event(mons, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(mons, ME_WHACK, &you, you.pos());
     }
 
     enable_attack_conducts(conducts);
@@ -682,7 +682,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
 
     hp_gain /= 2;
 
-    if (hp_gain && !mons_was_summoned)
+    if (hp_gain && !mons_was_summoned && !you.duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel life coursing into your body.");
         inc_hp(hp_gain);
@@ -715,7 +715,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 
         mprf("You freeze %s.", mons->name(DESC_THE).c_str());
 
-        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        behaviour_event(mons, ME_ANNOY, &you);
     }
 
     enable_attack_conducts(conducts);
@@ -795,7 +795,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
          mons->name(DESC_THE).c_str());
     noisy(4, beam.target);
 
-    behaviour_event(mons, ME_ANNOY, MHITYOU);
+    behaviour_event(mons, ME_ANNOY, &you);
 
     enable_attack_conducts(conducts);
 
@@ -830,7 +830,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         if (m.alive())
         {
             print_wounds(&m);
-            behaviour_event(&m, ME_WHACK, MHITYOU);
+            behaviour_event(&m, ME_WHACK, &you);
         }
         else
         {
@@ -1259,9 +1259,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
     int strength = 0;
 
     for (stack_iterator si(where); si; ++si)
-    {
         strength += _ignite_poison_affect_item(*si, false);
-    }
 
     if (strength > 0)
     {
@@ -1280,7 +1278,7 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
     if (i != EMPTY_CLOUD)
     {
         cloud_struct& cloud = env.cloud[i];
-        if (cloud.type == CLOUD_STINK)
+        if (cloud.type == CLOUD_MEPHITIC)
         {
             cloud.decay /= 2;
 
@@ -1343,7 +1341,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 
         if (mon->alive())
         {
-            behaviour_event(mon, ME_WHACK, actor->mindex());
+            behaviour_event(mon, ME_WHACK, actor);
 
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
@@ -1477,7 +1475,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
                                     "static discharge");
         if (you.airborne())
             damage /= 2;
-        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
+        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "static electricity");
     }
     else if (mons == NULL)
         return (0);

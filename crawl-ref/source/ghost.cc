@@ -113,6 +113,7 @@ static spell_type search_order_misc[] = {
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
     SPELL_DISPEL_UNDEAD,
+    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
@@ -281,6 +282,8 @@ void ghost_demon::init_random_demon()
             spells[i] = translate_spell(spells[i]);
             if (spells[i] == SPELL_AGONY)
                 spells[i] = SPELL_SYMBOL_OF_TORMENT;
+            if (spells[i] == SPELL_CONJURE_BALL_LIGHTNING)
+                spells[i] = SPELL_NO_SPELL;
         }
 
         // Give demon a chance for some monster-only spells.
@@ -847,10 +850,6 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
 {
     std::vector<ghost_demon> gs;
 
-    // No ghosts in the Temple.
-    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-        return (gs);
-
     if (!you.is_undead)
     {
         ghost_demon player;
@@ -920,19 +919,8 @@ void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    if (you.level_type != LEVEL_ABYSS
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
-        const int subdepth  = level_id::current().depth;
-        // Single ghosts-only: D:1-8, Lair:1, Orc:1, and non-dungeon
-        // areas at this depth, such as portal vaults.
-        if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
-            || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-            || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
-        {
-            return (0);
-        }
-    }
+    if (env.absdepth0 < 10)
+        return (0);
 
     return (MAX_GHOSTS - 1);
 }

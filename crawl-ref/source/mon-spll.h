@@ -1229,6 +1229,17 @@
       }
     },
 
+    {  MST_FANNAR,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_NO_SPELL,
+       SPELL_OZOCUBUS_ARMOUR,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_OZOCUBUS_REFRIGERATION,
+       SPELL_BLINK,
+      }
+    },
+
     {  MST_GASTRONOK,
       {
        SPELL_AIRSTRIKE,
@@ -1756,6 +1767,28 @@
        SPELL_ENSNARE,
        SPELL_VENOM_BOLT,
        SPELL_ENSNARE
+      }
+    },
+
+    {  MST_HELLBINDER,
+      {
+       SPELL_CALL_IMP,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE,
+       SPELL_HELLFIRE,
+       SPELL_BLINK_AWAY,
+       SPELL_THROW_FLAME
+      }
+    },
+
+    {  MST_CLOUD_MAGE,
+      {
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_FREEZING_CLOUD,
+       SPELL_POISONOUS_CLOUD,
+       SPELL_AIRSTRIKE,
+       SPELL_BLINK_RANGE,
+       SPELL_BLINK_RANGE
       }
     },
 

@@ -22,7 +22,6 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -36,6 +35,23 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg);
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
                             bool msg);
+
+void calc_hp_artefact()
+{
+    // Rounding must be down or Deep Dwarves would abuse certain values.
+    // We can reduce errors by a factor of 100 by using partial hp we have.
+    int old_max = you.hp_max;
+    int hp = you.hp * 100 + you.hit_points_regeneration;
+    calc_hp();
+    int new_max = you.hp_max;
+    hp = hp * new_max / old_max;
+    if (hp < 100)
+        hp = 100;
+    you.hp = std::min(hp / 100, you.hp_max);
+    you.hit_points_regeneration = hp % 100;
+    if (you.hp_max <= 0) // Borgnjor's abusers...
+        ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
+}
 
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
@@ -52,7 +68,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        god_id_inventory();
+        auto_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
@@ -161,27 +177,8 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg, meld);
 
-    if (slot == EQ_BODY_ARMOUR && !meld)
-        you.stop_train.insert(SK_ARMOUR);
-    else if (slot == EQ_SHIELD && !meld)
+    if (slot == EQ_SHIELD && !meld)
         you.stop_train.insert(SK_SHIELDS);
-}
-
-static void _hp_artefact()
-{
-    // Rounding must be down or Deep Dwarves would abuse certain values.
-    // We can reduce errors by a factor of 100 by using partial hp we have.
-    int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    you.hp = std::min(hp / 100, you.hp_max);
-    you.hit_points_regeneration = hp % 100;
-    if (you.hp_max <= 0) // Borgnjor's abusers...
-        ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
 }
 
 ///////////////////////////////////////////////////////////
@@ -325,7 +322,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     }
 
     if (proprt[ARTP_HP])
-        _hp_artefact();
+        calc_hp_artefact();
 
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
@@ -364,7 +361,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_HP])
-        _hp_artefact();
+        calc_hp_artefact();
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
@@ -383,10 +380,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES] = 0;
 
-    if (proprt[ARTP_LEVITATE] != 0
-        && you.duration[DUR_LEVITATION]
-        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && !you.permanent_levitation()
+    if (proprt[ARTP_LEVITATE] != 0 && you.cancellable_levitation()
         && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 0;
@@ -709,6 +703,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
+        maybe_id_weapon(item);
         break;
     }
     default:
@@ -1040,14 +1035,22 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.attribute[ATTR_PERM_LEVITATION] == 0)
-            break;
-        else if (you.species != SP_TENGU || you.experience_level < 15)
+        if (you.attribute[ATTR_PERM_LEVITATION]
+            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
+            && (you.species != SP_TENGU || you.experience_level < 15))
         {
-            if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
                 you.attribute[ATTR_PERM_LEVITATION] = 0;
+                if (player_evokable_levitation())
+                    levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
         }
-        land_player();
+
+        //since a permlev item can keep templev evocations going
+        // we should check templev here too
+        if (you.cancellable_levitation() && !player_evokable_levitation())
+        {
+            you.duration[DUR_LEVITATION] = 0;
+            land_player();
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1493,9 +1496,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         break;
 
     case RING_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-            && !player_evokable_levitation())
+        if (you.cancellable_levitation() && !player_evokable_levitation())
         {
             you.duration[DUR_LEVITATION] = 0;
             land_player();

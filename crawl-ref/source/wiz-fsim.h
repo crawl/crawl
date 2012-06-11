@@ -1,11 +1,21 @@
 /**
  * @file
- * @brief Fight simualtion wizard functions.
+ * @brief Fight simulation wizard functions.
 **/
 
 #ifndef WIZFSIM_H
 #define WIZFSIM_H
 
-void debug_fight_statistics(bool use_init_defaults, bool defence = false);
+struct fight_data {
+double av_hit_dam;
+int max_dam;
+int accuracy;
+double av_dam;
+double av_time;
+double av_eff_dam;
+};
+
+void wizard_quick_fsim();
+void wizard_fight_sim(bool double_scale);
 
 #endif

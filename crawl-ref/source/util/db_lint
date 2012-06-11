@@ -1,0 +1,217 @@
+#!/usr/bin/perl -w
+
+my $lang;
+my @files;
+
+for (@ARGV)
+{
+    if (/^-v$/)
+    {
+        $verbose = 1;
+    }
+    # Hack: no two-letter names are allowed, as these are assumed to be lang.
+    elsif (/^([a-z][a-z])$/)
+    {
+        die "One language at a time, please.\n" if $lang;
+        $lang = $1;
+    }
+    else
+    {
+        s/\.txt$//;
+        die "Arg not a lang nor a filename: '$_'.\n" unless m{^([/a-z0-9_-]+)$}i; #/
+        push @files, $1;
+    }
+}
+
+sub good_file()
+{
+    return grep { $file =~ m{\b$_\b} } @files;
+}
+
+sub err($)
+{
+    print $_[0];
+}
+
+sub __________________________________________________________________________
+{
+    %entries = (); # per-db
+    %source = (); # file:line
+    %keys = (); # per-file
+}
+
+sub read_file($)
+{
+    my $skip = !!@files;
+    ($file) = @_;
+    $skip = 0 if good_file();
+    $file =~ s|/|/$lang/| if $lang;
+    $skip = 0 if good_file();
+    return if $skip;
+    $file = "dat/$file.txt";
+
+    %keys = ();
+    $line = 0;
+    return $lang ? 0 : die "Can't read $file\n" unless open F, "<", $file;
+    ($key, $value) = ();
+    local $_;
+
+    print "Checking $file\n" if $verbose;
+    
+    sub add_key()
+    {
+        err "Duplicate entry: '$key' at $source{$key} and $file:$line\n"
+            if $source{$key};
+        $source{$key} = "$file:$line";
+        $entries{$key} = $value;
+        $keys{$key} = 1;
+
+        undef $key;
+        undef $value;
+    }
+    
+    while (<F>)
+    {
+        next if /^#/;
+        s/\s+$//;
+
+        if (/^%%%%/)
+        {
+            add_key() if defined $key;
+            next;
+        }
+
+        unless (defined $key)
+        {
+            next if /^$/;
+            $key = $_;
+            $line = $.; # report the start not end of a desc
+        }
+        else
+        {
+            next if /^$/ && !defined $value;
+            $value .= $_;
+        }
+    }
+
+    if (defined $key)
+    {
+        defined($value)
+        ? add_key()
+        : err("Incomplete entry '$key' at the end of '$file'\n");
+    }
+
+    close F;
+    return 1;
+}
+
+sub check_desc_needed($@)
+{
+    my ($kind, @needed) = @_;
+    for (@needed)
+    {
+        chomp;
+        err "$file: No description for $kind '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
+}
+
+sub check_desc_links()
+{
+    for (keys %entries)
+    {
+        next unless $entries{$_} =~ /^<(.*)>$/;
+        err "$source{$_}: Dangling link '$_' -> '$1'\n" unless $entries{$1};
+    }
+}
+
+sub check_db_locals()
+{
+    my (%locals, %keys);
+    $keys{$_}=1 for keys %entries;
+    $locals{$_}=1 for map /@(_[^@\n]+_)@/g, values %entries;
+    for (sort keys %locals)
+    {
+        err("Undefined local entry '$_'\n") unless $entries{$_};
+        delete $keys{$_};
+    }
+    err("Unused local entry '$_' at $source{$_}\n") for grep /^_.*_$/, keys %keys;
+}
+
+__________________________________________________________________________();
+read_file("descript/items");
+read_file("descript/unident");
+read_file("descript/spells");
+read_file("descript/gods");
+read_file("descript/skills");
+read_file("descript/ability");
+read_file("descript/commands");
+
+if (read_file("descript/branches"))
+{
+    check_desc_needed("branch", `util/gather_branches`);
+}
+
+if (read_file("descript/features"))
+{
+    $entries{"A gate leading to a distant place"} = 1;
+    check_desc_needed("feature", grep {!/explore horizon$/} `util/gather_features -a`);
+}
+
+if (read_file("descript/unrand"))
+{
+    check_desc_needed("unrand", grep {!/^DUMMY/} map {s/^NAME:\s+// && $_}
+        `grep ^NAME: art-data.txt`)
+}
+
+if (read_file("descript/cards"))
+{
+    delete $keys{'a buggy card'};
+    delete $keys{'a very buggy card'};
+    check_desc_needed("card", map {s/$/ card/ && $_} `util/gather_cards`);
+}
+
+if (read_file("descript/monsters"))
+{
+    $entries{$_} = 1 for (
+        # described with a suffix
+        'the Serpent of Hell',
+        # overridden descriptions
+        'player', 'player illusion', 'merged slime creature',
+        # genus-only monsters
+        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
+    delete $keys{'__(_suffix_examine'};
+    delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);
+    delete $keys{"__cap-${_}_suffix"} for 'A'..'Z';
+    check_desc_needed("monster", `util/gather_mons -d`);
+}
+
+check_desc_links();
+$described{$_} = 1 for keys %entries;
+__________________________________________________________________________();
+read_file("descript/$_") for qw(species backgrounds);
+__________________________________________________________________________();
+read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
+check_db_locals();
+__________________________________________________________________________();
+read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
+check_db_locals();
+__________________________________________________________________________();
+read_file("database/$_") for qw(shout insult);
+check_db_locals();
+__________________________________________________________________________();
+read_file("descript/quotes");
+check_desc_links();
+if (%described) # can't check unless descs are loaded
+{
+    for (keys %entries)
+    {
+        next if /^__(?:cap-[A-Z]|[a-z])_suffix$/;
+        err "$file: quote for undescribed '$_'\n" unless $described{$_};
+    }
+}
+__________________________________________________________________________();
+read_file("database/help");
+__________________________________________________________________________();
+read_file("database/FAQ");

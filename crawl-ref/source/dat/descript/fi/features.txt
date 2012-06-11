@@ -1,0 +1,66 @@
+%%%%
+A fountain of clear blue water
+
+Paina 'q' juodaksesi tästä lähteestä. Ei sillä, että se vaikuttaisi sinuun
+mitenkään...
+%%%%
+A fountain of blood
+
+Paina 'q' juodaksesi tästä lähteestä, jos aivan välttämättä haluat.
+%%%%
+A fountain of sparkling water
+
+Paina 'q' juodaksesi tästä taikalähteestä. Valmistaudu maagisiin seurauksiin.
+%%%%
+A gate leading back out of here
+
+Tämä portti näyttää antavan sinun palata sinne mistä tulit.
+%%%%
+A gate leading back out of this place
+
+Tämä portti johtaa takaisin luolastoon.
+%%%%
+A gate leading out of Pandemonium
+
+Vihdoinkin, portti takaisin luolastoon.
+%%%%
+A gateway to Hell
+
+Tämä portti vie Helvetin eteiseen. Harvat menisivät sinne vapaaehtoisesti.
+%%%%
+A gateway to the Iron City of Dis
+
+Kuka kestää raudan testin?
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Tämä paikka tuntuu säteilevän negatiivista energiaa.
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+Palelluttavilta mailta tuleva kylmyys koskettaa sieluasi.
+%%%%
+A floor
+
+Luolaston lattiaa.
+%%%%
+A glistening fountain
+
+Ainoa asia mikä siitä puuttuu on vesi.
+%%%%
+A crumbling stone wall
+
+Se näyttää muinaiselta.
+%%%%
+A dead tree
+
+Tämä puu on yhtä kuollut kuin kaikki muukin täällä.
+%%%%
+A golden statue
+
+Sulaa kultaa oleva patsas pyhimyksestä.
+%%%%
+A glass window
+
+Ultravahva lasi-ikkuna, jossa on rokonarpi.
+%%%%

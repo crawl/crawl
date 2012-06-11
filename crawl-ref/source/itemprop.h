@@ -39,7 +39,6 @@ iflags_t get_equip_desc(const item_def &item);
 iflags_t get_species_race(species_type sp);
 
 // helmet functions:
-void  set_helmet_desc(item_def &item, short flags);
 void  set_helmet_random_desc(item_def &item);
 short get_helmet_desc(const item_def &item);
 
@@ -53,7 +52,6 @@ void  set_gloves_random_desc(item_def &item);
 bool set_item_ego_type(item_def &item, int item_type, int ego_type);
 brand_type get_weapon_brand(const item_def &item);
 special_armour_type get_armour_ego_type(const item_def &item);
-bool missile_brand_obvious(special_missile_type brand);
 special_missile_type get_ammo_brand(const item_def &item);
 
 // armour functions:
@@ -92,9 +90,6 @@ int weapon_rarity(int w_type);
 int   cmp_weapon_size(const item_def &item, size_type size);
 bool  check_weapon_wieldable_size(const item_def &item, size_type size);
 
-int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
-                     bool hide_hidden = false);
-
 hands_reqd_type hands_reqd(const item_def &item, size_type size);
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
@@ -113,7 +108,6 @@ int get_damage_type(const item_def &item);
 int single_damage_type(const item_def &item);
 
 int weapon_str_weight(const item_def &wpn);
-int weapon_dex_weight(const item_def &wpn);
 
 skill_type weapon_skill(const item_def &item);
 skill_type weapon_skill(object_class_type wclass, int wtype);
@@ -157,8 +151,6 @@ int  ring_has_pluses(const item_def &item);
 bool ring_has_stackable_effect(const item_def &item);
 
 // food functions:
-bool food_is_meat(const item_def &item);
-bool food_is_veg(const item_def &item);
 bool is_blood_potion(const item_def &item);
 bool is_fizzing_potion (const item_def &item);
 int food_value(const item_def &item);
@@ -182,10 +174,8 @@ int property(const item_def &item, int prop_type);
 bool gives_ability(const item_def &item);
 bool gives_resistance(const item_def &item);
 int item_mass(const item_def &item);
-size_type item_size(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
-bool in_shop(const item_def &item);
 
 std::string item_base_name(const item_def &item);
 std::string item_base_name (object_class_type type, int sub_type);

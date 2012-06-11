@@ -65,6 +65,7 @@
 #include "spl-summoning.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "state.h"
 #include "areas.h"
 #include "transform.h"
@@ -175,7 +176,7 @@ static monster_type _monster_for_ability (const ability_def& abil);
  *
  * @note Declaring this const messes up externs later, so don't do it!
  */
-ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -447,9 +448,9 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, 60, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, 200, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, 250, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, 2000, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, 2000, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, 3000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
+    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 0, 0, 3000, ABFLAG_ZOTDEF},
     { ABIL_MAKE_CURSE_SKULL, "Make curse skull",
       0, 0, 600, 0, 10000, ABFLAG_ZOTDEF|ABFLAG_NECRO_MISCAST_MINOR},
     { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
@@ -474,9 +475,9 @@ static const ability_def Ability_List[] =
       0, 30, 0, 0, 100, ABFLAG_ZOTDEF|ABFLAG_PERMANENT_HP},
     { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, 50, ABFLAG_ZOTDEF},
     { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0, 0, ABFLAG_ZOTDEF|ABFLAG_INSTANT},
+    { ABIL_MAKE_SAGE, "Sage", 0, 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
     { ABIL_REMOVE_CURSE, "Remove Curse",
-      0, 0, 300, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
+      0, 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, 0, ABFLAG_NONE},
 };
@@ -1495,7 +1496,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (true);
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        if (you.level_type != LEVEL_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You aren't in the Abyss!");
             return (false);
@@ -1506,7 +1507,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (!is_level_incorruptible());
 
     case ABIL_LUGONU_ABYSS_ENTER:
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You're already here!");
             return (false);
@@ -1847,10 +1848,8 @@ static bool _do_ability(const ability_def& abil)
 
         // Generate a portal to something.
         const map_def *mapidx = random_map_for_tag("zotdef_bazaar", false);
-        if (mapidx && dgn_safe_place_map(mapidx, true, true, you.pos()))
-        {
+        if (mapidx && dgn_safe_place_map(mapidx, false, true, you.pos()))
             mpr("A mystic portal forms.");
-        }
         else
         {
             mpr("A buggy portal flickers into view, then vanishes.");
@@ -1887,11 +1886,12 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_REMOVE_CURSE:
         remove_curse();
-        lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)), false, "zot ability");
+        lose_stat(STAT_RANDOM, 1, false, "zot ability");
         break;
 
     case ABIL_MAKE_SAGE:
         sage_card(20, DECK_RARITY_RARE);
+        lose_stat(STAT_RANDOM, 1 + random2(3), false, "zot ability");
         break;
 
     case ABIL_MUMMY_RESTORATION:
@@ -2483,7 +2483,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        banished(DNGN_EXIT_ABYSS);
+        down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
@@ -2537,7 +2537,7 @@ static bool _do_ability(const ability_def& abil)
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
-        banished(DNGN_ENTER_ABYSS);
+        banished();
         activate_notes(note_status);
         break;
     }
@@ -3090,8 +3090,7 @@ std::vector<talent> your_talents(bool check_confused)
     if (you.species == SP_TENGU
         && !you.attribute[ATTR_PERM_LEVITATION]
         && you.experience_level >= 5
-        && (you.experience_level >= 15 || !you.airborne())
-        && (!form_changed_physiology() || you.form == TRAN_LICH))
+        && (you.experience_level >= 15 || !you.airborne()))
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -3107,7 +3106,6 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     if (you.attribute[ATTR_PERM_LEVITATION]
-        && (!form_changed_physiology() || you.form == TRAN_LICH)
         && you.species == SP_TENGU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3150,46 +3148,48 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
     // Evocations from items.
-    if (scan_artefacts(ARTP_BLINK))
-        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+    if (!you.suppressed()) {
+        if (scan_artefacts(ARTP_BLINK))
+            _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
-    if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
-        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
+        if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
+            _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
-        // Now you can only turn invisibility off if you have an
-        // activatable item.  Wands and potions will have to time
-        // out. -- bwr
-        if (you.duration[DUR_INVIS])
-            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
-        else
-            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
-    }
-
-    if (player_evokable_levitation())
-    {
-        // Has no effect on permanently flying Tengu.
-        if (!you.permanent_flight())
+        if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
         {
-            // You can still evoke perm levitation if you have temporary one.
-            if (!you.is_levitating()
-                || !you.attribute[ATTR_PERM_LEVITATION]
-                   && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
-            {
-                _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
-            }
-            // Now you can only turn levitation off if you have an
-            // activatable item.  Potions and miscast effects will
-            // have to time out (this makes the miscast effect actually
-            // a bit annoying). -- bwr
-            if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
-                _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+            // Now you can only turn invisibility off if you have an
+            // activatable item.  Wands and potions will have to time
+            // out. -- bwr
+            if (you.duration[DUR_INVIS])
+                _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
+            else
+                _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
         }
-    }
 
-    if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
-        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+        if (player_evokable_levitation())
+        {
+            // Has no effect on permanently flying Tengu.
+            if (!you.permanent_flight())
+            {
+                // You can still evoke perm levitation if you have temporary one.
+                if (!you.is_levitating()
+                    || !you.attribute[ATTR_PERM_LEVITATION]
+                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+                {
+                    _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+                }
+                // Now you can only turn levitation off if you have an
+                // activatable item.  Potions and miscast effects will
+                // have to time out (this makes the miscast effect actually
+                // a bit annoying). -- bwr
+                if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+                    _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+            }
+        }
+
+        if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
+            _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
@@ -3258,7 +3258,7 @@ static int _is_god_ability(ability_type abil)
     if (abil == ABIL_NON_ABILITY)
         return (GOD_NO_GOD);
 
-    for (int i = 0; i < MAX_NUM_GODS; ++i)
+    for (int i = 0; i < NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
         {
             if (god_abilities[i][j] == abil)
@@ -3411,7 +3411,7 @@ std::vector<ability_type> get_god_abilities(bool include_unusable)
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
     }
 
-    if (you.religion == GOD_ZIN && !you.num_total_gifts[GOD_ZIN] && you.piety > 160)
+    if (you.religion == GOD_ZIN && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
 
     return abilities;

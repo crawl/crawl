@@ -130,7 +130,6 @@ olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
 poison_brand POISON_BRAND
 poisonous_cloud POISONOUS_CLOUD
-resist_poison RESIST_POISON
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
@@ -159,7 +158,6 @@ summon_ugly_thing SUMMON_UGLY_THING
 
 %sdir gui/spells/translocation
 apportation APPORTATION
-banishment BANISHMENT
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
@@ -167,13 +165,11 @@ dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 phase_shift PHASE_SHIFT
 portal_projectile PORTAL_PROJECTILE
-teleport TELEPORT
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
-alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
 homunculus HOMUNCULUS

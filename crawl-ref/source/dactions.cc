@@ -10,6 +10,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mon-behv.h"
@@ -20,6 +21,7 @@
 #include "travel.h"
 #include "view.h"
 
+#ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
 {
     "holy beings go hostile",
@@ -42,7 +44,9 @@ static const char *daction_names[] =
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
     "corpses rot",
+    "Tomb loses -cTele",
 };
+#endif
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
 {
@@ -103,7 +107,9 @@ void update_da_counters(LevelInfo *lev)
 
 void add_daction(daction_type act)
 {
+#ifdef DEBUG_DIAGNOSTICS
     COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS);
+#endif
 
     dprf("scheduling delayed action: %s", daction_names[act]);
     you.dactions.push_back(act);
@@ -139,7 +145,7 @@ static void _apply_daction(daction_type act)
                 dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
                 mi->attitude = ATT_HOSTILE;
                 mi->del_ench(ENCH_CHARM, true);
-                behaviour_event(*mi, ME_ALERT, MHITYOU);
+                behaviour_event(*mi, ME_ALERT, &you);
                 // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
                 mons_att_changed(*mi);
 
@@ -205,6 +211,10 @@ static void _apply_daction(daction_type act)
         for (int i = 0; i < MAX_ITEMS; i++)
             if (mitm[i].base_type == OBJ_CORPSES && mitm[i].sub_type == CORPSE_BODY)
                 mitm[i].special = 1; // thoroughly rotten
+        break;
+    case DACT_TOMB_CTELE:
+        if (player_in_branch(BRANCH_TOMB))
+            unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
         break;
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:

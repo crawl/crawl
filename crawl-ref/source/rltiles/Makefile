@@ -84,11 +84,6 @@ endif
 
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
 
-# MSVCRT's tmpfile() is broken, so use our own version instead.
-ifneq (,$(findstring MINGW,$(uname_S)))
-BASE_OBJECTS += tmpfile.o
-endif
-
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(JAVASCRIPT)
@@ -129,7 +124,7 @@ clean:
 distclean: clean
 
 %.o: %.cc .cflags
-	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)

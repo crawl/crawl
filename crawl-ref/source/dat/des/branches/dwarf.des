@@ -8,49 +8,44 @@
 ################################################
 
 {{
-local_util = {}
-local_util.x_chance_in_y = function(x, y)
-    return (crawl.random2(y) < x)
-end
-local_util.statues_idx = 0
-local_util.monster_from_statue = function(monster)
-    local_util.statues_idx = local_util.statues_idx + 1
+dhfh = {}
+dhfh.statues_idx = 0
+dhfh.monster_from_statue = function(monster)
+    dhfh.statues_idx = dhfh.statues_idx + 1
     local mod = MonsterOnTrigger:new {
         target="auto",
         new_monster="generate_awake " .. monster,
         message_seen="The granite statue comes to life!",
         message_unseen="You hear a distant wail.",
-        master_name="statue" .. local_util.statues_idx
+        master_name="statue" .. dhfh.statues_idx
     }
     return mod
 end
-local_util.new_trigger = function(_type)
+dhfh.new_trigger = function(_type)
     return DgnTriggerer:new {
                         type   = _type,
                         target = "auto"
                       }
 end
 
-dhfh = {}
-
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
-        mod = local_util.monster_from_statue("eidolon")
-        mod:add_triggerer( local_util.new_trigger("item_pickup") )
+        mod = dhfh.monster_from_statue("eidolon")
+        mod:add_triggerer( dhfh.new_trigger("item_pickup") )
     else
         local new_monster
-        if (local_util.x_chance_in_y(1, 3)) then
+        if (crawl.x_chance_in_y(1, 3)) then
             new_monster="eidolon"
         else
             new_monster="freezing wraith"
         end
 
-        mod = local_util.monster_from_statue(new_monster)
-        mod:add_triggerer( local_util.new_trigger("item_pickup") )
+        mod = dhfh.monster_from_statue(new_monster)
+        mod:add_triggerer( dhfh.new_trigger("item_pickup") )
     end
     e.lua_marker("G", portal_desc { desc="granite statue of a fallen hero",
-            slaved_to="statue" .. local_util.statues_idx})
+            slaved_to="statue" .. dhfh.statues_idx})
     e.lua_marker(glyph, mod)
 end
 }}
@@ -169,21 +164,20 @@ c1.....1c
 cccc@cccc
 ENDMAP
 
+default-depth:
+
 ## Arrival maps
 ################################################
 
 # Dummy arrival
 NAME:   dhfh_arrival_dummy
-TAGS:   extra dummy
-PLACE:  Dwarf:1
+TAGS:   extra dummy dhfh_arrival
 MAP
 {
 ENDMAP
 
 NAME:   dhfh_arrival_the_gate
-TAGS:   extra patrolling no_wall_fixup
-PLACE:  Dwarf:1
-WEIGHT: 10
+TAGS:   extra patrolling no_wall_fixup dhfh_arrival
 ORIENT: float
 MONS:   nothing w:20 / deep dwarf / elf w:5
 MONS:   wight / troll w:5 / deep dwarf necromancer w:2 / deep dwarf artificer w:1
@@ -204,9 +198,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   dhfh_arrival_statues
-TAGS:   extra patrolling
-PLACE:  Dwarf:1
-WEIGHT: 10
+TAGS:   extra patrolling dhfh_arrival
 ORIENT: float
 KMONS:  1 = nothing w:30 / deep dwarf w:5 / wight w:2 / troll w:1
 MAP
@@ -225,10 +217,7 @@ ccG.....Gcc
 ENDMAP
 
 NAME:   dhfh_arrival_fountains
-TAGS:   extra
-PLACE:  Dwarf:1
-WEIGHT: 10
-TAGS:   no_rotate no_wall_fixup
+TAGS:   no_rotate no_wall_fixup dhfh_arrival
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
 KMONS:  1 = nothing w:50 / deep dwarf w:5 / wight w:2 / troll w:1
@@ -245,10 +234,7 @@ xxxx..@..xxxx
 ENDMAP
 
 NAME:   dhfh_arrival_gauntlet
-TAGS:   extra
-PLACE:  Dwarf:1
-WEIGHT: 10
-TAGS:   no_rotate no_wall_fixup
+TAGS:   no_rotate no_wall_fixup dhfh_arrival
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
 KMONS:  1 = nothing / deep dwarf w:5 / wight w:2 / troll w:1
@@ -269,9 +255,8 @@ xx....1....xx
      xxx
 ENDMAP
 
-NAME: dhfh_arrival_vestibule
-TAGS: extra no_wall_fixup
-PLACE:  Dwarf:1
+NAME:   dhfh_arrival_vestibule
+TAGS:   no_wall_fixup dhfh_arrival
 ORIENT: float
 WEIGHT: 5
 SUBST:  f = T:40 V:40 U:20
@@ -301,8 +286,7 @@ ccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   dhfh_arrival_flooded
-TAGS:   extra no_wall_fixup no_pool_fixup
-PLACE:  Dwarf:1
+TAGS:   no_wall_fixup no_pool_fixup dhfh_arrival
 WEIGHT: 5
 ORIENT: float
 SUBST:  W = W .:2
@@ -330,8 +314,7 @@ ENDMAP
 ## Treasure maps
 ################################################
 NAME:    dhfh_treasure_sunken_tomb
-TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
-PLACE:   Dwarf:1
+TAGS:    dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
 WEIGHT:  40
 ORIENT:  float
 MONS:    deep dwarf w:30 / elf w:3
@@ -385,9 +368,8 @@ xxx+xxxx....xxxC7.xc+cG4$ccx
                xx.@..x
 ENDMAP
 
-NAME:    dhfh_treasure_vault
-TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-PLACE:   Dwarf:1
+NAME:   dhfh_treasure_vault
+TAGS:   dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
 ORIENT: float
 WEIGHT: 15
 MONS:   deep dwarf
@@ -409,9 +391,8 @@ c$X...x........$$x.....x$$........x...X$c
 cccccccccccccccccccc@cccccccccccccccccccc
 ENDMAP
 
-NAME:    dhfh_treasure_sunken_vault
-TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-PLACE:   Dwarf:1
+NAME:   dhfh_treasure_sunken_vault
+TAGS:   dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
 ORIENT: float
 WEIGHT: 5
 MONS:   wight
@@ -542,9 +523,9 @@ MAP
 ENDMAP
 
 NAME:     dhfh_hall
-TAGS:     extra no_monster_gen no_item_gen no_wall_fixup
-ORIENT:   float
-PLACE:    Dwarf:1
+TAGS:     no_monster_gen no_item_gen no_wall_fixup
+ORIENT:   northwest
+PLACE:    Dwarf
 NSUBST:   s = 1:= / *:c
 MARKER:   = = lua:restrict_door()
 SUBST:    ? = w * |:3
@@ -563,6 +544,12 @@ KMONS:    1 = patrolling unborn deep dwarf w:5 / \
 KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
               patrolling unborn deep dwarf w:1
+{{
+  hook("post_place", function()
+    dgn.place_maps{tag="dhfh_arrival"}
+    dgn.place_maps{tag="dhfh_treasure"}
+  end)
+}}
 MAP
  ccccccccccc
  c....O....c

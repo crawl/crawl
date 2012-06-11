@@ -18,9 +18,7 @@
 #include "mutation.h"
 #include "newgame.h"
 #include "ng-setup.h"
-#include "output.h"
 #include "player.h"
-#include "random.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -306,12 +304,12 @@ void wizard_set_hunger_state()
     // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = 500;   break;
+    case 't': you.hunger = HUNGER_STARVING / 2;   break;
     case 'n': you.hunger = 1200;  break;
     case 'h': you.hunger = 2400;  break;
     case 's': you.hunger = 5000;  break;
     case 'f': you.hunger = 8000;  break;
-    case 'e': you.hunger = 12000; break;
+    case 'e': you.hunger = HUNGER_MAXIMUM; break;
     default:  canned_msg(MSG_OK); break;
     }
 
@@ -726,9 +724,6 @@ static const char* dur_names[] =
     "divine shield",
     "regeneration",
     "swiftness",
-#if TAG_MAJOR_VERSION == 32
-    "stonemail",
-#endif
     "controlled flight",
     "teleport",
     "control teleport",
@@ -748,17 +743,10 @@ static const char* dur_names[] =
     "bargain",
     "insulation",
     "resistance",
-#if TAG_MAJOR_VERSION == 32
-    "resist fire",
-    "resist cold",
-#endif
     "slaying",
     "stealth",
     "magic shield",
     "sleep",
-#if TAG_MAJOR_VERSION == 32
-    "sage",
-#endif
     "telepathy",
     "petrified",
     "lowered mr",
@@ -951,8 +939,11 @@ void wizard_set_xl()
         return;
     }
 
-    const bool train = yesno("Train skills?", true, 'n');
+    set_xl(newxl, yesno("Train skills?", true, 'n'));
+}
 
+void set_xl(const int newxl, const bool train)
+{
     no_messages mx;
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
@@ -1048,7 +1039,7 @@ static void _wizard_modify_character(std::string inputdata)
 {
     std::vector<std::string>  tokens = split_string(" ", inputdata);
     int size = tokens.size();
-    if(size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
+    if (size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
     {
         skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
         double amount = atof(tokens[2].c_str());
@@ -1065,11 +1056,11 @@ static void _wizard_modify_character(std::string inputdata)
         return;
     }
 
-    if(size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
+    if (size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Str")
+            if (tokens[k] == "Str")
             {
                 you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);
@@ -1079,11 +1070,11 @@ static void _wizard_modify_character(std::string inputdata)
         }
     }
 
-    if(size > 5 && tokens[0] == "MP")
+    if (size > 5 && tokens[0] == "MP")
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Int")
+            if (tokens[k] == "Int")
             {
                 you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);
@@ -1092,11 +1083,11 @@ static void _wizard_modify_character(std::string inputdata)
             }
         }
     }
-    if(size > 5 && tokens[0] == "Gold")
+    if (size > 5 && tokens[0] == "Gold")
     {
-        for(int k = 1; k < size; k++)
+        for (int k = 1; k < size; k++)
         {
-            if(tokens[k] == "Dex")
+            if (tokens[k] == "Dex")
             {
                 you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
                 you.redraw_stats.init(true);

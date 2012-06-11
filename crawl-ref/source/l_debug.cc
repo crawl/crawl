@@ -34,7 +34,7 @@
 //
 // Usage: goto_place("placename", <bind_entrance>)
 // "placename" is the name of the place as used in maps, such as "Lair:2",
-// "Vault:$", etc.
+// "Vaults:$", etc.
 //
 // If <bind_entrance> is specified, the entrance point of
 // the branch specified in place_name is bound to the given level in the
@@ -49,8 +49,8 @@ LUAFN(debug_goto_place)
         const int bind_entrance =
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
         you.goto_place(id);
-        if (id.level_type == LEVEL_DUNGEON && bind_entrance != -1)
-            branches[you.where_are_you].startdepth = bind_entrance;
+        if (bind_entrance != -1)
+            startdepth[you.where_are_you] = bind_entrance;
     }
     catch (const std::string &err)
     {
@@ -63,9 +63,8 @@ LUAFN(debug_enter_dungeon)
 {
     init_level_connectivity();
 
-    you.absdepth0 = 0;
     you.where_are_you = BRANCH_MAIN_DUNGEON;
-    you.level_type = LEVEL_DUNGEON;
+    you.depth = 1;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
     return (0);
@@ -89,8 +88,15 @@ LUAFN(debug_generate_level)
     tile_init_default_flavour();
     tile_clear_flavour();
     tile_new_level(true);
-    builder(you.absdepth0, you.level_type,
-            lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
+    builder(lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
+    return (0);
+}
+
+LUAFN(debug_reveal_mimics)
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (mimic_at(*ri))
+            discover_mimic(*ri, false);
     return (0);
 }
 
@@ -358,6 +364,7 @@ const struct luaL_reg debug_dlib[] =
 { "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
 { "generate_level", debug_generate_level },
+{ "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },

@@ -32,7 +32,6 @@
 #include "externs.h"
 
 #include "abyss.h"
-#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
@@ -60,14 +59,12 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -236,17 +233,13 @@ std::string get_cache_name(const std::string &filename)
 {
     std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
     while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
         pos = filename.rfind(FILE_SEPARATOR, pos - 1);
-    }
     if (pos != std::string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
     while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
         pos = filename.rfind(ALT_FILE_SEPARATOR, pos - 1);
-    }
     if (pos != std::string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #endif
@@ -808,22 +801,15 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-static int _get_dest_stair_type(level_area_type old_level_type,
-                                branch_type old_branch,
+static int _get_dest_stair_type(branch_type old_branch,
                                 dungeon_feature_type stair_taken,
                                 bool &find_first)
 {
     // Order is important here.
-    if (stair_taken == DNGN_EXIT_PANDEMONIUM)
-    {
-        find_first = false;
-        return DNGN_ENTER_PANDEMONIUM;
-    }
-
     if (stair_taken == DNGN_EXIT_ABYSS)
     {
         find_first = false;
-        return DNGN_ENTER_ABYSS;
+        return DNGN_EXIT_DUNGEON;
     }
 
     if (stair_taken == DNGN_EXIT_HELL)
@@ -831,14 +817,6 @@ static int _get_dest_stair_type(level_area_type old_level_type,
 
     if (stair_taken == DNGN_ENTER_HELL)
         return DNGN_EXIT_HELL;
-
-    if (stair_taken == DNGN_EXIT_PORTAL_VAULT
-        || (old_level_type == LEVEL_LABYRINTH
-            || old_level_type == LEVEL_PORTAL_VAULT)
-           && feat_is_escape_hatch(stair_taken))
-    {
-        return DNGN_EXIT_PORTAL_VAULT;
-    }
 
     if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
                          && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
@@ -865,7 +843,7 @@ static int _get_dest_stair_type(level_area_type old_level_type,
         return stair_taken;
 
     if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-        && stair_taken < 150) // 20 slots reserved
+        && stair_taken <= DNGN_RETURN_FROM_LAST_BRANCH)
     {
         // Find entry point to subdungeon when leaving.
         return stair_taken + DNGN_ENTER_FIRST_BRANCH
@@ -898,14 +876,13 @@ static int _get_dest_stair_type(level_area_type old_level_type,
     return DNGN_FLOOR;
 }
 
-static void _place_player_on_stair(level_area_type old_level_type,
-                                   branch_type old_branch,
+static void _place_player_on_stair(branch_type old_branch,
                                    int stair_taken, const coord_def& dest_pos)
 
 {
     bool find_first = true;
     dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            _get_dest_stair_type(old_level_type, old_branch,
+            _get_dest_stair_type(old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
@@ -928,14 +905,19 @@ static void _close_level_gates()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (you.char_direction == GDT_ASCENDING
-            && you.level_type != LEVEL_PANDEMONIUM)
+        switch (grd(*ri))
         {
-            if (feat_sealable_portal(grd(*ri)))
-            {
-                remove_markers_and_listeners_at(*ri);
-                grd(*ri) = DNGN_STONE_ARCH;
-            }
+        case DNGN_ENTER_ABYSS:
+        case DNGN_ENTER_COCYTUS:
+        case DNGN_ENTER_DIS:
+        case DNGN_ENTER_GEHENNA:
+        case DNGN_ENTER_TARTARUS:
+        case DNGN_ENTER_PANDEMONIUM:
+        case DNGN_ENTER_LABYRINTH:
+        case DNGN_ENTER_PORTAL_VAULT:
+            remove_markers_and_listeners_at(*ri);
+            grd(*ri) = DNGN_STONE_ARCH;
+        default: ;
         }
     }
 }
@@ -974,8 +956,6 @@ static bool _grab_follower_at(const coord_def &pos)
         return (true);
 
     level_id dest = level_id::current();
-    if (you.char_direction == GDT_GAME_START)
-        dest.depth = 1;
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
@@ -990,7 +970,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
 static void _grab_followers()
 {
-    const bool can_follow = level_type_allows_followers(you.level_type);
+    const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
     monster* dowan = NULL;
@@ -1090,11 +1070,10 @@ static void _do_lost_monsters()
 {
     // Uniques can be considered wandering Pan just like you, so they're not
     // gone forever.  The likes of Cerebov won't be generated elsewhere, but
-    // there's no need to special-case that, and if in the future we'll want
-    // to know whether they're alive, the data will be accurate.
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    // there's no need to special-case that.
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
-            if (mons_is_unique(mi->type))
+            if (mons_is_unique(mi->type) && !(mi->flags & MF_TAKING_STAIRS))
                 you.unique_creatures[mi->type] = false;
 }
 
@@ -1120,14 +1099,62 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
+    // Did we get here by popping the level stack?
+    bool popped = false;
+
+    coord_def return_pos;
+    if (load_mode != LOAD_VISITOR)
+    {
+        if (!you.level_stack.empty()
+            && you.level_stack.back().id == level_id::current())
+        {
+            return_pos = you.level_stack.back().pos;
+            you.level_stack.pop_back();
+            env.level_state |= LSTATE_DELETED;
+            popped = true;
+        }
+        else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
+              || stair_taken == DNGN_EXIT_THROUGH_ABYSS
+              || stair_taken == DNGN_STONE_STAIRS_DOWN_I
+                 && old_level.branch == BRANCH_ZIGGURAT
+              || old_level.branch == BRANCH_ABYSS)
+        {
+            env.level_state |= LSTATE_DELETED;
+        }
+
+        if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
+        {
+            std::vector<std::string> stack;
+            for (unsigned int i = 0; i < you.level_stack.size(); i++)
+                stack.push_back(you.level_stack[i].id.describe());
+            if (you.wizard)
+            {
+                // warn about breakage so testers know it's an abnormal situation.
+                mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+                        "the same level (%s) twice! It will be trampled upon return.\n"
+                        "The stack has: %s.",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
+            else
+            {
+                die("Attempt to enter a portal (%s) twice; stack: %s",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
+        }
+    }
+
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
 
     unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
-                            you.level_type, you.where_are_you, you.absdepth0);
+    mprf(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
+                            you.where_are_you, you.depth);
 #endif
 
     // Save position for hatches to place a marker on the destination level.
@@ -1144,20 +1171,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     std::string level_name = level_id::current().describe();
 
-    if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
-        || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
-    {
-        const level_id current(level_id::current());
-        if (Generated_Levels.find(current) == Generated_Levels.end())
-        {
-            // Make sure the old file is gone.
-            you.save->delete_chunk(level_name);
-
-            // Save the information for later deletion -- DML 6/11/99
-            Generated_Levels.insert(current);
-        }
-    }
-
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
 
@@ -1172,20 +1185,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        dprf("stair_taken = %s", dungeon_feature_name(stair_taken));
         ASSERT(old_level.depth != -1); // what's this for?
 
         _grab_followers();
 
-        if (old_level.level_type == LEVEL_DUNGEON
-            || old_level.level_type != you.level_type)
-        {
-            _save_level(old_level);
-        }
+        if (env.level_state & LSTATE_DELETED)
+            delete_level(old_level), dprf("<lightmagenta>Deleting level.");
         else
-        {
-            _do_lost_monsters();
-            _do_lost_items();
-        }
+            _save_level(old_level);
 
         // The player is now between levels.
         you.position.reset();
@@ -1208,15 +1216,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
-            && you.level_type == LEVEL_DUNGEON)
+            && player_in_branch(BRANCH_MAIN_DUNGEON))
         {
             // If we're leaving the Abyss for the first time as a Chaos
-            // Knight of Lugonu (who start out there), force a return
-            // into the first dungeon level and enable normal monster
+            // Knight of Lugonu (who start out there), enable normal monster
             // generation.
-            you.absdepth0 = 0;
             you.char_direction = GDT_DESCENDING;
-            Generated_Levels.insert(level_id::current());
         }
 
         tile_init_default_flavour();
@@ -1226,16 +1231,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // XXX: This is ugly.
         bool dummy;
         dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            _get_dest_stair_type(old_level.level_type, old_level.branch,
+            _get_dest_stair_type(old_level.branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  dummy));
 
         _clear_env_map();
-        builder(you.absdepth0, you.level_type, true, stair_type);
+        builder(true, stair_type);
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()
-            && (you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
+            && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -1264,11 +1269,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Closes all the gates if you're on the way out.
     // Before marker activation since it removes some.
-    if (make_changes && you.char_direction == GDT_ASCENDING
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
+    if (make_changes && you.char_direction == GDT_ASCENDING)
         _close_level_gates();
-    }
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or
@@ -1289,23 +1291,37 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         _clear_clouds();
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken, dest_pos);
-        }
-        else
+
+        if (player_in_branch(BRANCH_ABYSS))
             you.moveto(ABYSS_CENTRE);
+        else if (!return_pos.origin())
+            you.moveto(return_pos);
+        else
+            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
+
+        // Don't return the player into deep water or a trap.
+        for (distance_iterator di(you.pos(), true, false); di; ++di)
+            if (!is_feat_dangerous(grd(*di), true) && !feat_is_trap(grd(*di), true))
+            {
+                if (you.pos() != *di)
+                    you.moveto(*di);
+                break;
+            }
 
         // This should fix the "monster occurring under the player" bug.
         if (monster* mon = monster_at(you.pos()))
-            monster_teleport(mon, true, true);
+            for (distance_iterator di(you.pos()); di; ++di)
+                if (!monster_at(*di) && mon->is_habitable(*di))
+                {
+                    mon->move_to_pos(*di);
+                    break;
+                }
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
-    if (level_type_allows_followers(you.level_type)
+    if (branch_allows_followers(you.where_are_you)
         && load_mode == LOAD_ENTER_LEVEL)
     {
         place_followers();
@@ -1382,8 +1398,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (load_mode == LOAD_START_GAME
             || (load_mode == LOAD_ENTER_LEVEL
-                && (old_level.branch != you.where_are_you
-                    || old_level.level_type != you.level_type)))
+                && old_level.branch != you.where_are_you
+                && !popped))
         {
             delta.num_visits++;
         }
@@ -1463,6 +1479,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Initialize halos, etc.
     invalidate_agrid(true);
 
+    // Maybe make a note if we reached a new level.
+    // Don't do so if we are just moving around inside Pan, though.
+    if (just_created_level && stair_taken != DNGN_TRANSIT_PANDEMONIUM)
+        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+
     return just_created_level;
 }
 
@@ -1528,7 +1549,6 @@ static void _save_game_exit()
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
-        && !crawl_state.game_wants_emergency_save
         && yesno("Save macros?", true, 'n'))
     {
         macro_save();
@@ -1567,13 +1587,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    // Exit unless this is an emergency save, in which case let the
-    // crash handler re-raise the crashy signal.
-    if (!crawl_state.game_wants_emergency_save)
-    {
-        end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-            farewellmsg? farewellmsg : you.your_name.c_str());
-    }
+    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+        farewellmsg? farewellmsg : you.your_name.c_str());
 }
 
 // Saves the game without exiting.
@@ -1584,19 +1599,10 @@ void save_game_state()
         save_game(true);
 }
 
-static std::string _make_portal_vault_ghost_suffix()
-{
-    return you.level_type_ext.empty()? "ptl" : you.level_type_ext;
-}
-
 static std::string _make_ghost_filename()
 {
-    std::string suffix;
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        suffix = _make_portal_vault_ghost_suffix();
-    else
-        suffix = replace_all(level_id::current().describe(), ":", "-");
-    return _get_bonefile_directory() + "bones." + suffix;
+    return _get_bonefile_directory() + "bones."
+           + replace_all(level_id::current().describe(), ":", "-");
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -1675,39 +1681,38 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-    unsigned long unplaced_ghosts = ghosts.size();
+    unsigned int  unplaced_ghosts = ghosts.size();
     bool          ghost_errors    = false;
 #endif
 
     // Translate ghost to monster and place.
-    for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); ++imn)
+    monster* mons;
+    while (!ghosts.empty() && (mons = get_free_monster()))
     {
-        if (menv[imn].alive())
-            continue;
-
-        menv[imn].set_ghost(ghosts[0]);
-        menv[imn].ghost_init();
-        menv[imn].bind_melee_flags();
-        if (menv[imn].has_spells())
-            menv[imn].bind_spell_flags();
-        if (menv[imn].ghost->species == SP_DEEP_DWARF)
-            menv[imn].flags |= MF_NO_REGEN;
+        mons->set_new_monster_id();
+        mons->set_ghost(ghosts[0]);
+        mons->ghost_init();
+        mons->bind_melee_flags();
+        if (mons->has_spells())
+            mons->bind_spell_flags();
+        if (mons->ghost->species == SP_DEEP_DWARF)
+            mons->flags |= MF_NO_REGEN;
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             unplaced_ghosts--;
-            if (!menv[imn].alive())
+            if (!mons->alive())
             {
                 mpr("Placed ghost is not alive.", MSGCH_DIAGNOSTICS);
                 ghost_errors = true;
             }
-            else if (menv[imn].type != MONS_PLAYER_GHOST)
+            else if (mons->type != MONS_PLAYER_GHOST)
             {
                 mprf(MSGCH_DIAGNOSTICS,
                      "Placed ghost is not MONS_PLAYER_GHOST, but %s",
-                     menv[imn].name(DESC_PLAIN, true).c_str());
+                     mons->name(DESC_PLAIN, true).c_str());
                 ghost_errors = true;
             }
         }
@@ -1825,11 +1830,6 @@ static bool _restore_game(const std::string& filename)
 // returns false if a new game should start instead
 bool restore_game(const std::string& filename)
 {
-    // [ds] Set up branch depths for the current game type before
-    // trying to load the game. This is important for Sprint because
-    // it reduces the dungeon to 1 level, making D:1's place name "D"
-    // in save chunks.
-    initialise_branches_for_game_type();
     try
     {
         return _restore_game(filename);
@@ -1855,8 +1855,7 @@ static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
-    you.absdepth0 = level.dungeon_absdepth();
-    you.level_type = level.level_type;
+    you.depth =         level.depth;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
@@ -1865,7 +1864,22 @@ static void _load_level(const level_id &level)
 // in this game.
 bool is_existing_level(const level_id &level)
 {
-    return (Generated_Levels.find(level) != Generated_Levels.end());
+    return you.save && you.save->has_chunk(level.describe());
+}
+
+void delete_level(const level_id &level)
+{
+    travel_cache.erase_level_info(level);
+    StashTrack.remove_level(level);
+    clear_level_exclusion_annotation(level);
+    clear_level_annotations(level);
+
+    if (you.save)
+        you.save->delete_chunk(level.describe());
+    if (level.branch == BRANCH_ABYSS)
+        save_abyss_uniques();
+    _do_lost_monsters();
+    _do_lost_items();
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility
@@ -1889,9 +1903,6 @@ void level_excursion::go_to(const level_id& next)
     }
 
     you.on_current_level = (level_id::current() == original);
-
-    // Don't let uncommitted writes accumulate.
-    you.save->commit();
 }
 
 level_excursion::~level_excursion()
@@ -2034,9 +2045,7 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
             return false;
         }
         else
-        {
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
-        }
     }
 
     crawl_state.minorVersion = inf.getMinorVersion();
@@ -2102,9 +2111,9 @@ void save_ghost(bool force)
 
 #endif // BONES_DIAGNOSTICS
 
-    // No ghosts on levels 1, 2, or the ET.
-    if (!force && (you.absdepth0 < 2
-                   || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
+    // No ghosts on D:1, D:2, or the Temple.
+    if (!force && (you.depth < 3 && player_in_branch(BRANCH_MAIN_DUNGEON)
+                   || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)))
     {
         return;
     }
@@ -2227,7 +2236,7 @@ FILE *fopen_replace(const char *name)
 }
 
 // Returns the size of the opened file with the give FILE* handle.
-unsigned long file_size(FILE *handle)
+off_t file_size(FILE *handle)
 {
     struct stat fs;
     const int err = fstat(fileno(handle), &fs);

@@ -87,7 +87,7 @@ struct mgen_data
 
     // What place we're in, or pretending to be in, usually the place
     // the player is actually in.
-    level_area_type level_type;
+    level_id        place;
 
     // Some predefined vaults (aka maps) include flags to suppress random
     // generation of monsters. When generating monsters, this is a mask of
@@ -129,9 +129,9 @@ struct mgen_data
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
-              int monpower = you.absdepth0,
+              int monpower = -1,
               proximity_type prox = PROX_ANYWHERE,
-              level_area_type ltype = you.level_type,
+              level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
               uint64_t extflags = 0,
               std::string monname = "",
@@ -142,7 +142,7 @@ struct mgen_data
           abjuration_duration(abj), summon_type(st), pos(p),
           preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(genflags),
           god(which_god), number(monnumber), colour(moncolour),
-          power(monpower), proximity(prox), level_type(ltype), map_mask(0),
+          power(monpower), proximity(prox), place(_place), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
           non_actor_summoner(nas), initial_shifter(is), props()
     {
@@ -183,8 +183,8 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, BLACK, you.absdepth0,
-                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner,
+                         genflags, ngod, base, 0, BLACK, -1,
+                         PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
                          RANDOM_MONSTER);
     }
 };

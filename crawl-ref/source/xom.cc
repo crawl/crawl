@@ -342,7 +342,7 @@ void xom_tick()
         }
     }
 
-    if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
+    if (player_effect_faith() ? coinflip() : one_chance_in(3))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :
@@ -553,7 +553,6 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
         spellenum = std::min(nxomspells, spellenum);
         spell     = _xom_nontension_spells[random2(spellenum)];
-
     }
 
     // Don't attempt to cast spells the undead cannot memorise.
@@ -795,7 +794,7 @@ static int _xom_give_item(int power, bool debug = false)
     // better than random object), and it is sometimes tuned to the
     // player's skills and nature.  Being tuned to the player's skills
     // and nature is not very Xomlike...
-    if (x_chance_in_y(power, 256))
+    if (x_chance_in_y(power, 201))
     {
         if (debug)
             return (XOM_GOOD_ACQUIREMENT);
@@ -1133,7 +1132,7 @@ static int _xom_do_potion(bool debug = false)
     }
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
 
-    potion_effect(pot, 150);
+    potion_effect(pot, 150, false, false, false);
     level_change(); // potion_effect() doesn't do this anymore
 
     return (XOM_GOOD_POTION);
@@ -1275,7 +1274,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                 {
                     summons[i]->attitude = ATT_HOSTILE;
                     // XXX need to reset summon quota here?
-                    behaviour_event(summons[i], ME_ALERT, MHITYOU);
+                    behaviour_event(summons[i], ME_ALERT, &you);
                 }
             }
 
@@ -1968,9 +1967,7 @@ static int _xom_change_scenery(bool debug = false)
 
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
-        {
             candidates.push_back(*ri);
-        }
         else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR)
         {
             // Check whether this door is already included in a gate.
@@ -2075,6 +2072,8 @@ static int _xom_change_scenery(bool debug = false)
 
         if (success)
         {
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                           "scenery: create altars"), true);
             god_speaks(GOD_XOM, speech.c_str());
             return (XOM_GOOD_SCENERY);
         }
@@ -2140,7 +2139,7 @@ static int _xom_change_scenery(bool debug = false)
 
     god_speaks(GOD_XOM, speech.c_str());
 
-    std::vector<std::string> effects;
+    std::vector<std::string> effects, terse;
     if (fountains_flow > 0)
     {
         snprintf(info, INFO_SIZE,
@@ -2149,6 +2148,7 @@ static int _xom_change_scenery(bool debug = false)
                  fountains_flow == 1 ? ""  : "s",
                  fountains_flow == 1 ? "s" : "");
         effects.push_back(info);
+        terse.push_back(make_stringf("%d fountains restart", fountains_flow));
     }
     if (fountains_blood > 0)
     {
@@ -2165,6 +2165,7 @@ static int _xom_change_scenery(bool debug = false)
         if (effects.empty())
             fountains = uppercase_first(fountains);
         effects.push_back(fountains);
+        terse.push_back(make_stringf("%d fountains blood", fountains_blood));
     }
     if (!effects.empty())
     {
@@ -2183,6 +2184,7 @@ static int _xom_change_scenery(bool debug = false)
                  doors_open == 1 ? ""  : "s",
                  doors_open == 1 ? "s" : "");
         effects.push_back(info);
+        terse.push_back(make_stringf("%d doors open", doors_open));
     }
     if (doors_close > 0)
     {
@@ -2198,9 +2200,13 @@ static int _xom_change_scenery(bool debug = false)
         if (effects.empty())
             closed = uppercase_first(closed);
         effects.push_back(closed);
+        terse.push_back(make_stringf("%d doors close", doors_close));
     }
     if (!effects.empty())
     {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ("scenery: "
+            + comma_separated_line(terse.begin(), terse.end(), ", ", ", ")).c_str()),
+            true);
         mprf("%s!",
              comma_separated_line(effects.begin(), effects.end(),
                                   ", and ").c_str());
@@ -2294,7 +2300,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_rearrange_pieces(sever, debug);
     else if (random2(tension) < 15 && x_chance_in_y(14, sever))
         done = _xom_give_item(sever, debug);
-    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(15, sever))
+    else if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(15, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2716,21 +2722,24 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
         hand_vec.push_back("mandible");
         plural_vec.push_back(true);
     }
-    else if (you.species != SP_MUMMY && !player_mutation_level(MUT_BEAK)
-             || form_changed_physiology())
+    else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
+             && !player_mutation_level(MUT_BEAK)
+          || form_changed_physiology())
     {
         hand_vec.push_back("nose");
         plural_vec.push_back(false);
     }
 
     if (you.form == TRAN_BAT
-        || you.species != SP_MUMMY && !form_changed_physiology())
+        || you.species != SP_MUMMY && you.species != SP_OCTOPODE
+           && !form_changed_physiology())
     {
         hand_vec.push_back("ear");
         plural_vec.push_back(true);
     }
 
-    if (!form_changed_physiology())
+    if (!form_changed_physiology()
+        && you.species != SP_FELID && you.species != SP_OCTOPODE)
     {
         hand_vec.push_back("elbow");
         plural_vec.push_back(true);
@@ -2891,7 +2900,7 @@ static int _xom_chaos_upgrade_nearby_monster(bool debug = false)
     ASSERT(rc);
 
     // Wake the monster up.
-    behaviour_event(mon, ME_ALERT, MHITYOU);
+    behaviour_event(mon, ME_ALERT, &you);
 
     if (rc)
     {
@@ -3212,6 +3221,8 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
     you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
 
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "colour smoke trail"), true);
+
     const std::string speech = _get_xom_speech("colour smoke trail");
     god_speaks(GOD_XOM, speech.c_str());
 
@@ -3428,7 +3439,7 @@ static int _xom_do_banishment(bool debug = false)
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
     // Handles note taking.
-    banished(DNGN_ENTER_ABYSS, "Xom");
+    banished("Xom");
     const int result = _xom_maybe_reverts_banishment(debug);
 
     return (result);
@@ -3479,7 +3490,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_chaos_upgrade_nearby_monster(debug);
             badness = 2 + coinflip();
         }
-        else if (x_chance_in_y(10, sever) && you.level_type != LEVEL_ABYSS)
+        else if (x_chance_in_y(10, sever) && !player_in_branch(BRANCH_ABYSS))
         {
             // Try something else if teleportation is impossible.
             if (!_teleportation_check())
@@ -3561,7 +3572,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
         }
-        else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
+        else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
             done    = _xom_do_banishment(debug);
             badness = (done == XOM_BAD_BANISHMENT ? 5 : 1);
@@ -3742,8 +3753,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     ASSERT(!_player_is_dead());
 #endif
 
-    entry_cause_type old_entry_cause = you.entry_cause;
-
     sever = std::max(1, sever);
 
     god_type which_god = GOD_XOM;
@@ -3846,17 +3855,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 
     _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
-
-    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM)
-    {
-        if (old_entry_cause != you.entry_cause
-            && you.entry_cause_god == GOD_XOM)
-        {
-            you.entry_cause_god = crawl_state.which_god_acting();
-        }
-    }
 
     if (you.religion == GOD_XOM && one_chance_in(5))
     {
@@ -4051,14 +4049,6 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     const std::string key = _get_death_type_keyword(death_type);
     std::string speech = _get_xom_speech("life saving " + key);
-    if (speech.find("@xom_plaything@") != std::string::npos)
-    {
-        std::string toy_name = (you.piety > 180) ? "teddy bear" :
-                               (you.piety >  80) ? "toy"
-                                                 : "plaything";
-
-        speech = replace_all(speech, "@xom_plaything@", toy_name);
-    }
     god_speaks(GOD_XOM, speech.c_str());
 
     // Give back some hp.

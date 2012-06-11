@@ -1357,7 +1357,7 @@ void CrawlHashTable::assert_validity() const
 
     hash_map_type::const_iterator i = hash_map->begin();
 
-    unsigned long actual_size = 0;
+    size_t actual_size = 0;
 
     for (; i != hash_map->end(); ++i)
     {

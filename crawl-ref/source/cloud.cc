@@ -12,7 +12,6 @@
 #include "externs.h"
 
 #include "areas.h"
-#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -26,7 +25,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "monster.h"
-#include "mapmark.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
@@ -71,8 +69,8 @@ cloud_type beam2cloud(beam_type flavour)
     case BEAM_FIRE:
     case BEAM_POTION_FIRE:
         return CLOUD_FIRE;
-    case BEAM_POTION_STINKING_CLOUD:
-        return CLOUD_STINK;
+    case BEAM_POTION_MEPHITIC:
+        return CLOUD_MEPHITIC;
     case BEAM_COLD:
     case BEAM_POTION_COLD:
         return CLOUD_COLD;
@@ -120,7 +118,7 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_NONE:         return BEAM_NONE;
     case CLOUD_FIRE:         return BEAM_FIRE;
     case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
-    case CLOUD_STINK:        return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_MEPHITIC:     return BEAM_POTION_MEPHITIC;
     case CLOUD_COLD:         return BEAM_COLD;
     case CLOUD_POISON:       return BEAM_POISON;
     case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
@@ -559,7 +557,7 @@ static bool cloud_is_stronger(cloud_type ct, int cl)
     if (_is_weak_cloud(cl))
         return true;
     cloud_struct& cloud = env.cloud[cl];
-    if (ct == CLOUD_POISON && cloud.type == CLOUD_STINK)
+    if (ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC)
         return true; // allow upgrading meph
     if (ct == CLOUD_TORNADO)
         return true; // visual/AI only
@@ -653,10 +651,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
 static bool _is_opaque_cloud(cloud_type ctype)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (ctype == CLOUD_PETRIFY)
-        return true;
-#endif
     return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
 }
 
@@ -713,7 +707,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
 {
     switch (cloud)
     {
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
     case CLOUD_CHAOS:
@@ -757,7 +751,7 @@ static int _cloud_base_damage(const actor *act,
         else
             return _cloud_damage_calc(16, 3, 6, maximum_damage);
 
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
         return _cloud_damage_calc(3, 1, 0, maximum_damage);
     case CLOUD_POISON:
         return _cloud_damage_calc(10, 1, 0, maximum_damage);
@@ -806,7 +800,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_COLD:
         return act->is_icy()
                || (player && you.mutation[MUT_ICEMAIL]);
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:
         return act->res_poison() > 0;
@@ -899,7 +893,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         }
         break;
 
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
     {
         if (player)
         {
@@ -1119,7 +1113,7 @@ int actor_apply_cloud(actor *act)
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
 
     if (!player && (side_effects || final_damage > 0))
-        behaviour_event(mons, ME_DISTURB, MHITNOT, act->pos());
+        behaviour_event(mons, ME_DISTURB, 0, act->pos());
 
     if (final_damage)
     {
@@ -1218,16 +1212,6 @@ bool in_what_cloud(cloud_type type)
     return (false);
 }
 
-cloud_type in_what_cloud()
-{
-    int cl = env.cgrid(you.pos());
-
-    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
-        return (CLOUD_NONE);
-
-    return (env.cloud[cl].type);
-}
-
 std::string cloud_name_at_index(int cloudno)
 {
     if (!env.cloud[cloudno].name.empty())
@@ -1246,15 +1230,10 @@ static const char *_terse_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink",
-#if TAG_MAJOR_VERSION > 32
     "calcifying dust",
-#endif
     "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
-#if TAG_MAJOR_VERSION == 32
-    "calcifying dust",
-#endif
     "sparse dust",
 };
 
@@ -1265,14 +1244,9 @@ static const char *_verbose_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "thick gloom", "ink",
-#if TAG_MAJOR_VERSION > 32
     "calcifying dust",
-#endif
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
-#if TAG_MAJOR_VERSION == 32
-    "calcifying dust",
-#endif
     "sparse dust",
 };
 
@@ -1409,7 +1383,7 @@ int get_cloud_colour(int cloudno)
             which_colour = YELLOW;
         break;
 
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
         which_colour = GREEN;
         break;
 

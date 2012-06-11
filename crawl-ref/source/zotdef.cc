@@ -12,8 +12,7 @@
 #include "externs.h"
 #include "files.h"
 #include "godprayer.h"
-#include "ghost.h"
-#include "items.h" // for find_floor_item
+#include "items.h"
 #include "itemname.h" // for make_name
 #include "makeitem.h"
 #include "message.h"
@@ -22,6 +21,7 @@
 #include "mon-place.h"
 #include "mon-pick.h"
 #include "mon-util.h"
+#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -339,7 +339,7 @@ static void _human_wave(int power)
             MONS_WIZARD, MONS_VAULT_GUARD, MONS_KILLER_KLOWN, END};
     monster_type boss[] = {MONS_HELL_KNIGHT, MONS_KILLER_KLOWN,
             MONS_VAULT_GUARD, MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE,
-            MONS_HAROLD,  MONS_JOZEF, MONS_AGNES,
+            MONS_HAROLD, MONS_AGNES,
             MONS_MAUD, MONS_LOUISE,  MONS_FRANCES,
             MONS_RUPERT, MONS_KIRKE,
             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY, MONS_EUSTACHIO,
@@ -594,13 +594,12 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
                        ? ((strength * 3) / 2)
-                       : mons_level(mon_type, place);
+                       : mons_level(mon_type, place)
+                         + absdungeon_depth(place.branch, 0);
 
         // if >50, bail out - these are special flags
         if (lev_mons >= 50)
             continue;
-
-        //int orig_lev_mons = lev_mons;
 
         // adjust level based on strength, as weak monsters with high
         // level pop up on some branches and we want to allow them
@@ -875,14 +874,14 @@ static monster_type _choose_unique_by_depth(int step)
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
                             MONS_EUSTACHIO, MONS_SONJA, MONS_GRUM, MONS_NIKOLA,
-                            MONS_ERICA, MONS_JOSEPHINE, MONS_JOZEF,
+                            MONS_ERICA, MONS_JOSEPHINE,
                             MONS_HAROLD, MONS_GASTRONOK, MONS_ILSUIW,
                             MONS_MAURICE, -1);
         break;
     case 4: // depth <= 16
         ret = random_choose(MONS_URUG, MONS_EUSTACHIO, MONS_SONJA,
                             MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
-                            MONS_ROXANNE, MONS_RUPERT,  MONS_JOZEF, MONS_NIKOLA,
+                            MONS_ROXANNE, MONS_RUPERT, MONS_NIKOLA,
                             MONS_AZRAEL, MONS_NESSOS, MONS_AGNES, MONS_AIZUL,
                             MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
         break;

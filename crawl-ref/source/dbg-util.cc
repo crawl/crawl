@@ -14,7 +14,6 @@
 #include "env.h"
 #include "libutil.h"
 #include "message.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "shopping.h"
@@ -78,8 +77,8 @@ void debug_dump_levgen()
             type = props[LAYOUT_TYPE_KEY].get_string();
     }
 
-    mprf("level build method = %s", method.c_str());
-    mprf("level layout type  = %s", type.c_str());
+    mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
+         method.c_str(), type.c_str(), env.absdepth0);
 
     if (props.exists(LEVEL_EXTRAS_KEY))
     {

@@ -2,12 +2,8 @@
 
 #include "tiledgnbuf.h"
 
-#include "cloud.h"
-#include "coord.h"
-#include "coordit.h"
 #include "env.h"
 #include "player.h"
-#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
@@ -70,9 +66,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
     }
     else if (fg_idx == TILEP_PLAYER)
-    {
         pack_player(x, y, in_water);
-    }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
@@ -326,8 +320,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
-    if (fg & TILE_FLAG_MIMIC)
+    switch (fg & TILE_FLAG_MIMIC_MASK)
+    {
+    case TILE_FLAG_MIMIC_INEPT:
+        m_buf_icons.add(TILEI_INEPT_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC:
         m_buf_icons.add(TILEI_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC_RAVEN:
+        m_buf_icons.add(TILEI_RAVENOUS_MIMIC, x, y);
+        break;
+    default: ;
+    }
 
     if (fg & TILE_FLAG_BERSERK)
     {
@@ -421,9 +426,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
-    {
         m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
-    }
     else if (bg & TILE_FLAG_CURSOR)
     {
         int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?

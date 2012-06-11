@@ -20,12 +20,9 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-stuff.h"
-#include "options.h"
 #include "player.h"
-#include "player-stats.h"
 #include "religion.h"
 #include "skills2.h"
-#include "spl-book.h"
 #include "state.h"
 
 int che_stat_boost(int piety)
@@ -59,8 +56,8 @@ void jiyva_eat_offlevel_items()
 
         // Choose level based on main dungeon depth so that levels short branches
         // aren't picked more often.
-        ASSERT(branches[branch].depth <= branches[BRANCH_MAIN_DUNGEON].depth);
-        const int level  = random2(branches[BRANCH_MAIN_DUNGEON].depth) + 1;
+        ASSERT(brdepth[branch] <= MAX_BRANCH_DEPTH);
+        const int level  = random2(MAX_BRANCH_DEPTH) + 1;
 
         const level_id lid(static_cast<branch_type>(branch), level);
 
@@ -129,7 +126,8 @@ void jiyva_slurp_bonus(int item_value, int *js)
 
     if (you.piety >= piety_breakpoint(4)
         && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.hp < you.hp_max)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR])
     {
          inc_hp(std::max(random2(item_value), 1));
          *js |= JS_HP;
@@ -422,9 +420,7 @@ bool god_id_item(item_def& item, bool silent)
         }
 
         if (_jewel_auto_id(item))
-        {
             ided |= ISFLAG_EQ_JEWELLERY_MASK;
-        }
 
         if (item.base_type == OBJ_ARMOUR
             && you.piety >= piety_breakpoint(0)
@@ -508,19 +504,6 @@ bool god_id_item(item_def& item, bool silent)
     return false;
 }
 
-void god_id_inventory()
-{
-    if (you.religion != GOD_ASHENZARI && you.religion != GOD_ELYVILON)
-        return;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-            god_id_item(item, false);
-    }
-}
-
 void ash_id_monster_equipment(monster* mon)
 {
     if (you.religion != GOD_ASHENZARI)
@@ -564,7 +547,8 @@ static bool is_ash_portal(dungeon_feature_type feat)
     {
     case DNGN_ENTER_HELL:
     case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_ABYSS: // for completeness/Pan
+    case DNGN_ENTER_ABYSS: // for completeness
+    case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:

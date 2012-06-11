@@ -110,7 +110,7 @@ static void _update_agrid()
 
         if ((r = ai->silence_radius2()) >= 0)
         {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+            _agrid_centres.push_back(area_centre(AREA_SILENCE, ai->pos(), r));
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
@@ -120,7 +120,7 @@ static void _update_agrid()
         // Just like silence, suppression goes through walls
         if ((r = ai->suppression_radius2()) >= 0)
         {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+            _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, ai->pos(), r));
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SUPPRESSION);
@@ -182,6 +182,13 @@ static void _update_agrid()
         {
             _set_agrid_flag(*ri, APROP_ORB);
         }
+        no_areas = false;
+    }
+
+    if (!env.sunlight.empty())
+    {
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            _set_agrid_flag(env.sunlight[i].first, APROP_HALO);
         no_areas = false;
     }
 
@@ -417,7 +424,7 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->foe       = MHITYOU;
                 mon->target    = center;
                 mon->behaviour = BEH_SEEK;
-                behaviour_event(mon, ME_EVAL, MHITYOU);
+                behaviour_event(mon, ME_EVAL, &you);
             }
             else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {
@@ -545,6 +552,8 @@ int player::halo_radius2() const
         size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
+    // Can't check suppression because this function is called from
+    // _update_agrid()---we'd get an infinite recursion.
     if (player_equip_unrand(UNRAND_BRILLIANCE))
         size = std::max(size, 9);
 

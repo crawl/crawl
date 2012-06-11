@@ -31,7 +31,6 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "map_knowledge.h"
-#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -44,7 +43,6 @@
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "mutation.h"
 #include "notes.h"
 #include "player.h"
 #include "random.h"
@@ -55,11 +53,11 @@
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #include "traps.h"
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
-#include "viewchar.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
@@ -223,6 +221,12 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     {
         if (handle_mon_spell(mons, beem))
         {
+            // If a Pan lord/pghost is known to be a spellcaster, it's safer
+            // to assume it has ranged spells too.  For others, it'd just
+            // lead to unnecessary false positives.
+            if (mons_is_ghost_demon(mons->type))
+                mons->flags |= MF_SEEN_RANGED;
+
             mmov.reset();
             return (true);
         }
@@ -352,10 +356,6 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
         return (mons_is_native_in_branch(mon, BRANCH_DWARVEN_HALL));
-
-    // Killer bees always return to their hive.
-    case DNGN_ENTER_HIVE:
-        return (mons_is_native_in_branch(mon, BRANCH_HIVE));
 
     // Spiders...
     case DNGN_ENTER_SPIDER_NEST:
@@ -803,7 +803,8 @@ static bool _handle_reaching(monster* mons)
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
     const int grid_distance(delta.rdist());
-    const coord_def middle(mons->pos() + delta / 2);
+    const coord_def first_middle(mons->pos() + delta / 2);
+    const coord_def second_middle(foepos - delta / 2);
 
     if (grid_distance == 2
         // The monster has to be attacking the correct position.
@@ -811,9 +812,9 @@ static bool _handle_reaching(monster* mons)
         // With a reaching attack with a large enough range:
         && delta.abs() <= reach_range(range)
         // And with no dungeon furniture in the way of the reaching
-        // attack; if the middle square is empty, skip the LOS check.
-        && (grd(middle) > DNGN_MAX_NONREACH
-            || mons->see_cell_no_trans(foepos))
+        // attack;
+        && (feat_is_reachable_past(grd(first_middle))
+            || feat_is_reachable_past(grd(second_middle)))
         // The foe should be on the map (not stepped from time).
         && in_bounds(foepos))
     {
@@ -906,7 +907,7 @@ static bool _handle_scroll(monster* mons)
         }
         break;
 
-    case SCR_SUMMONING:
+    case SCR_UNHOLY_CREATION:
         if (mons_near(mons))
         {
             simple_monster_message(mons, " reads a scroll.");
@@ -1353,6 +1354,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
             // Increment zap count.
             if (wand.plus2 >= 0)
                 wand.plus2++;
+
+            mons->flags |= MF_SEEN_RANGED;
         }
 
         mons->lose_energy(EUT_ITEM);
@@ -1361,415 +1364,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
     }
 
     return (false);
-}
-
-static void _setup_generic_throw(monster* mons, struct bolt &pbolt)
-{
-    // FIXME we should use a sensible range here
-    pbolt.range = LOS_RADIUS;
-    pbolt.beam_source = mons->mindex();
-
-    pbolt.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
-    pbolt.flavour = BEAM_MISSILE;
-    pbolt.thrower = KILL_MON_MISSILE;
-    pbolt.aux_source.clear();
-    pbolt.is_beam = false;
-}
-
-// msl is the item index of the thrown missile (or weapon).
-static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
-{
-    std::string ammo_name;
-
-    bool returning = false;
-    bool speed_brand = false;
-
-    int baseHit = 0, baseDam = 0;       // from thrown or ammo
-    int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
-    int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
-    int exHitBonus   = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
-    int lnchBaseDam  = 0;
-
-    int hitMult = 0;
-    int damMult  = 0;
-    int diceMult = 100;
-
-    // Some initial convenience & initializations.
-    const int wepClass  = mitm[msl].base_type;
-    const int wepType   = mitm[msl].sub_type;
-
-    const int weapon    = mons->inv[MSLOT_WEAPON];
-    const int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
-
-    mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
-    ASSERT(slot != NUM_MONSTER_SLOTS);
-
-    mons->lose_energy(EUT_MISSILE);
-    const int throw_energy = mons->action_energy(EUT_MISSILE);
-
-    // Dropping item copy, since the launched item might be different.
-    item_def item = mitm[msl];
-    item.quantity = 1;
-    if (mons->friendly())
-        item.flags |= ISFLAG_DROPPED_BY_ALLY;
-
-    // FIXME we should actually determine a sensible range here
-    pbolt.range         = LOS_RADIUS;
-
-    if (setup_missile_beam(mons, pbolt, item, ammo_name, returning))
-        return (false);
-
-    pbolt.aimed_at_spot = returning;
-
-    const launch_retval projected =
-        is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
-                    mitm[msl]);
-
-    // extract launcher bonuses due to magic
-    if (projected == LRET_LAUNCHED)
-    {
-        lnchHitBonus = mitm[weapon].plus;
-        lnchDamBonus = mitm[weapon].plus2;
-        lnchBaseDam  = property(mitm[weapon], PWPN_DAMAGE);
-    }
-
-    // extract weapon/ammo bonuses due to magic
-    ammoHitBonus = item.plus;
-    ammoDamBonus = item.plus2;
-
-    // Archers get a boost from their melee attack.
-    if (mons->is_archer())
-    {
-        const mon_attack_def attk = mons_attack_spec(mons, 0);
-        if (attk.type == AT_SHOOT)
-        {
-            if (projected == LRET_THROWN && wepClass == OBJ_MISSILES)
-                ammoHitBonus += random2avg(attk.damage, 2);
-            else
-                ammoDamBonus += random2avg(attk.damage, 2);
-        }
-    }
-
-    if (projected == LRET_THROWN)
-    {
-        // Darts are easy.
-        if (wepClass == OBJ_MISSILES && wepType == MI_DART)
-        {
-            baseHit = 11;
-            hitMult = 40;
-            damMult = 25;
-        }
-        else
-        {
-            baseHit = 6;
-            hitMult = 30;
-            damMult = 25;
-        }
-
-        baseDam = property(item, PWPN_DAMAGE);
-
-        if (wepClass == OBJ_MISSILES)   // throw missile
-        {
-            // ammo damage needs adjusting here - OBJ_MISSILES
-            // don't get separate tohit/damage bonuses!
-            ammoDamBonus = ammoHitBonus;
-
-            // [dshaligram] Thrown stones/darts do only half the damage of
-            // launched stones/darts. This matches 4.0 behaviour.
-            if (wepType == MI_DART || wepType == MI_STONE
-                || wepType == MI_SLING_BULLET)
-            {
-                baseDam = div_rand_round(baseDam, 2);
-            }
-        }
-
-        // give monster "skill" bonuses based on HD
-        exHitBonus = (hitMult * mons->hit_dice) / 10 + 1;
-        exDamBonus = (damMult * mons->hit_dice) / 10 + 1;
-    }
-
-    // Monsters no longer gain unfair advantages with weapons of
-    // fire/ice and incorrect ammo.  They now have the same restrictions
-    // as players.
-
-    const int  ammo_brand = get_ammo_brand(item);
-
-    if (projected == LRET_LAUNCHED)
-    {
-        int bow_brand = get_weapon_brand(mitm[weapon]);
-
-        switch (lnchType)
-        {
-        case WPN_BLOWGUN:
-            baseHit = 12;
-            hitMult = 60;
-            damMult = 0;
-            lnchDamBonus = 0;
-            break;
-        case WPN_BOW:
-        case WPN_LONGBOW:
-            baseHit = 0;
-            hitMult = 60;
-            damMult = 35;
-            // monsters get half the launcher damage bonus,
-            // which is about as fair as I can figure it.
-            lnchDamBonus = (lnchDamBonus + 1) / 2;
-            break;
-        case WPN_CROSSBOW:
-            baseHit = 4;
-            hitMult = 70;
-            damMult = 30;
-            break;
-        case WPN_SLING:
-            baseHit = 10;
-            hitMult = 40;
-            damMult = 20;
-            // monsters get half the launcher damage bonus,
-            // which is about as fair as I can figure it.
-            lnchDamBonus /= 2;
-            break;
-        }
-
-        // Launcher is now more important than ammo for base damage.
-        baseDam = property(item, PWPN_DAMAGE);
-        if (lnchBaseDam)
-            baseDam = lnchBaseDam + random2(1 + baseDam);
-
-        // missiles don't have pluses2;  use hit bonus
-        ammoDamBonus = ammoHitBonus;
-
-        exHitBonus = (hitMult * mons->hit_dice) / 10 + 1;
-        exDamBonus = (damMult * mons->hit_dice) / 10 + 1;
-
-        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
-            baseDam = 4;
-
-        // [dshaligram] This is a horrible hack - we force beam.cc to
-        // consider this beam "needle-like".
-        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
-            pbolt.ench_power = AUTOMATIC_HIT;
-
-        // elven bow w/ elven arrow, also orcish
-        if (get_equip_race(mitm[weapon])
-                == get_equip_race(mitm[msl]))
-        {
-            baseHit++;
-            baseDam++;
-
-            if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN)
-                pbolt.hit++;
-        }
-
-        // Vorpal brand increases damage dice size.
-        if (bow_brand == SPWPN_VORPAL)
-            diceMult = diceMult * 120 / 100;
-
-        // As do steel ammo.
-        if (ammo_brand == SPMSL_STEEL)
-            diceMult = diceMult * 130 / 100;
-
-        // Note: we already have throw_energy taken off.  -- bwr
-        int speed_delta = 0;
-        if (lnchType == WPN_CROSSBOW)
-        {
-            if (bow_brand == SPWPN_SPEED)
-            {
-                // Speed crossbows take 50% less time to use than
-                // ordinary crossbows.
-                speed_delta = div_rand_round(throw_energy * 2, 5);
-                speed_brand = true;
-            }
-            else
-            {
-                // Ordinary crossbows take 20% more time to use
-                // than ordinary bows.
-                speed_delta = -div_rand_round(throw_energy, 5);
-            }
-        }
-        else if (bow_brand == SPWPN_SPEED)
-        {
-            // Speed bows take 50% less time to use than
-            // ordinary bows.
-            speed_delta = div_rand_round(throw_energy, 2);
-            speed_brand = true;
-        }
-
-        mons->speed_increment += speed_delta;
-    }
-
-    // Chaos, flame, and frost.
-    if (pbolt.flavour != BEAM_MISSILE)
-    {
-        baseHit    += 2;
-        exDamBonus += 6;
-    }
-
-    // monster intelligence bonus
-    if (mons_intel(mons) == I_HIGH)
-        exHitBonus += 10;
-
-    // Identify before throwing, so we don't get different
-    // messages for first and subsequent missiles.
-    if (mons->observable())
-    {
-        if (projected == LRET_LAUNCHED
-               && item_type_known(mitm[weapon])
-            || projected == LRET_THROWN
-               && mitm[msl].base_type == OBJ_MISSILES)
-        {
-            set_ident_flags(mitm[msl], ISFLAG_KNOW_TYPE);
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-        }
-    }
-
-    // Now, if a monster is, for some reason, throwing something really
-    // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    std::string msg = mons->name(DESC_THE);
-    msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
-
-    if (!pbolt.name.empty() && projected == LRET_LAUNCHED)
-        msg += article_a(pbolt.name);
-    else
-    {
-        // build shoot message
-        msg += item.name(DESC_A, false, false, false);
-
-        // build beam name
-        pbolt.name = item.name(DESC_PLAIN, false, false, false);
-    }
-    msg += ".";
-
-    if (mons->observable())
-        mpr(msg.c_str());
-
-    throw_noise(mons, pbolt, item);
-
-    // Store misled values here, as the setting up of the aux source
-    // will use the wrong monster name.
-    int misled = you.duration[DUR_MISLED];
-    you.duration[DUR_MISLED] = 0;
-
-    // [dshaligram] When changing bolt names here, you must edit
-    // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    if (projected == LRET_LAUNCHED)
-    {
-        pbolt.aux_source = make_stringf("Shot with a%s %s by %s",
-                 (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_A).c_str());
-    }
-    else
-    {
-        pbolt.aux_source = make_stringf("Hit by a%s %s thrown by %s",
-                 (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_A).c_str());
-    }
-
-    // And restore it here.
-    you.duration[DUR_MISLED] = misled;
-
-    // Add everything up.
-    pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
-    pbolt.damage =
-        dice_def(1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus);
-
-    if (projected == LRET_LAUNCHED)
-    {
-        pbolt.damage.size += lnchDamBonus;
-        pbolt.hit += lnchHitBonus;
-    }
-    pbolt.damage.size = diceMult * pbolt.damage.size / 100;
-
-    int frenzy_degree = -1;
-
-    if (mons->has_ench(ENCH_BATTLE_FRENZY))
-    {
-        frenzy_degree = mons->get_ench(ENCH_BATTLE_FRENZY).degree;
-    }
-    else if (mons->has_ench(ENCH_ROUSED))
-    {
-        frenzy_degree = mons->get_ench(ENCH_ROUSED).degree;
-    }
-
-    if (frenzy_degree != -1)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        const dice_def orig_damage = pbolt.damage;
-#endif
-
-        pbolt.damage.size = pbolt.damage.size * (115 + frenzy_degree * 15) / 100;
-
-        dprf("%s frenzy damage: %dd%d -> %dd%d",
-             mons->name(DESC_PLAIN).c_str(),
-             orig_damage.num, orig_damage.size,
-             pbolt.damage.num, pbolt.damage.size);
-    }
-
-    // Skilled fighters get better to-hit and damage.
-    if (mons->is_fighter())
-    {
-        pbolt.hit         = pbolt.hit * 120 / 100;
-        pbolt.damage.size = pbolt.damage.size * 120 / 100;
-    }
-
-    if (speed_brand)
-        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
-
-    scale_dice(pbolt.damage);
-
-    // decrease inventory
-    bool really_returns;
-    if (returning && !one_chance_in(mons_power(mons->type) + 3))
-        really_returns = true;
-    else
-        really_returns = false;
-
-    pbolt.drop_item = !really_returns;
-
-    // Redraw the screen before firing, in case the monster just
-    // came into view and the screen hasn't been updated yet.
-    viewwindow();
-    pbolt.fire();
-
-    // The item can be destroyed before returning.
-    if (really_returns && thrown_object_destroyed(&item, pbolt.target))
-    {
-        really_returns = false;
-    }
-
-    if (really_returns)
-    {
-        // Fire beam in reverse.
-        pbolt.setup_retrace();
-        viewwindow();
-        pbolt.fire();
-
-        // Only print a message if you can see the target or the thrower.
-        // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(pbolt.target) || you.can_see(mons))
-        {
-            msg::stream << "The weapon returns "
-                        << (you.can_see(mons)?
-                              ("to " + mons->name(DESC_THE))
-                            : "from whence it came")
-                        << "!" << std::endl;
-        }
-
-        // Player saw the item return.
-        if (!is_artefact(item))
-        {
-            // Since this only happens for non-artefacts, also mark properties
-            // as known.
-            set_ident_flags(mitm[msl],
-                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-        }
-    }
-    else if (dec_mitm_item_quantity(msl, 1))
-        mons->inv[slot] = NON_ITEM;
-
-    if (pbolt.special_explosion != NULL)
-        delete pbolt.special_explosion;
-
-    return (true);
 }
 
 static bool _mons_has_launcher(const monster* mons)
@@ -1875,7 +1469,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
     }
 
     // Ok, we'll try it.
-    _setup_generic_throw(mons, beem);
+    setup_monster_throw_beam(mons, beem);
 
     // Set fake damage for the tracer.
     beem.damage = dice_def(10, 10);
@@ -1899,7 +1493,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
             mons->swap_weapons();
 
         beem.name.clear();
-        return (_mons_throw(mons, beem, mon_item));
+        return (mons_throw(mons, beem, mon_item));
     }
 
     return (false);
@@ -1958,18 +1552,18 @@ void handle_noattack_constrictions(actor *attacker)
                 damage = roll_dice(2, div_rand_round(you.strength(), 5));
             else
                 damage = (attacker->as_monster()->hit_dice + 1) / 2;
-            DIAG_ONLY(int basedam = damage);
+            DIAG_ONLY(const int basedam = damage);
             damage += div_rand_round(attacker->dur_has_constricted[i], BASELINE_DELAY);
             if (attacker->is_player())
                 damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-            DIAG_ONLY(int durdam = damage);
+            DIAG_ONLY(const int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
-            DIAG_ONLY(int acdam = damage);
+            DIAG_ONLY(const int acdam = damage);
             damage = timescale_damage(attacker, damage);
-            DIAG_ONLY(int timescale_dam = damage);
+            DIAG_ONLY(const int timescale_dam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-            DIAG_ONLY(int infdam = damage);
+            DIAG_ONLY(const int infdam = damage);
 
             std::string exclams;
             if (damage <= 0 && attacker->is_player()
@@ -2028,11 +1622,45 @@ void handle_noattack_constrictions(actor *attacker)
     }
 }
 
+static void _confused_move_dir(monster *mons)
+{
+    mmov.reset();
+    int pfound = 0;
+    for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+        if (mons->can_pass_through(*ai))
+        {
+            // Highly intelligent monsters don't move if they might drown.
+            if (mons_intel(mons) == I_HIGH
+                && !mons->is_habitable(*ai))
+            {
+                // Players without a spoiler sheet have no way to know which
+                // monsters are I_HIGH, and this behaviour is obscure.
+                // Thus, give a message.
+                const std::string where = make_stringf("%s@%d,%d",
+                    level_id::current().describe().c_str(),
+                    mons->pos().x, mons->pos().y);
+                if (!mons->props.exists("no_conf_move")
+                    || mons->props["no_conf_move"].get_string() != where)
+                {
+                    // But don't spam.
+                    mons->props["no_conf_move"] = where;
+                    simple_monster_message(mons,
+                        make_stringf(" stays still, afraid of the %s.",
+                        feat_type_name(grd(*ai))).c_str());
+                }
+                mmov.reset();
+                break;
+            }
+            else if (one_chance_in(++pfound))
+                mmov = *ai - mons->pos();
+        }
+}
+
 void handle_monster_move(monster* mons)
 {
     mons->has_constricted_this_turn = false;
     mons->hit_points = std::min(mons->max_hit_points,
-                                   mons->hit_points);
+                                mons->hit_points);
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
@@ -2354,21 +1982,7 @@ void handle_monster_move(monster* mons)
                 || mons->type == MONS_AIR_ELEMENTAL
                    && mons->submerged())
             {
-                mmov.reset();
-                int pfound = 0;
-                for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-                    if (mons->can_pass_through(*ai))
-                    {
-                        // Intelligent monsters don't move if they might drown.
-                        if (mons_intel(mons) == I_HIGH
-                            && !mons->is_habitable(*ai))
-                        {
-                            mmov.reset();
-                            break;
-                        }
-                        else if (one_chance_in(++pfound))
-                            mmov = *ai - mons->pos();
-                    }
+                _confused_move_dir(mons);
 
                 // OK, mmov determined.
                 const coord_def newcell = mmov + mons->pos();
@@ -2388,10 +2002,7 @@ void handle_monster_move(monster* mons)
                         // FIXME: None of these work!
                         // Instead run away!
                         if (mons->add_ench(mon_enchant(ENCH_FEAR)))
-                        {
-                            behaviour_event(mons, ME_SCARE,
-                                            MHITNOT, newcell);
-                        }
+                            behaviour_event(mons, ME_SCARE, 0, newcell);
                         break;
                     }
                 }
@@ -2506,9 +2117,7 @@ void handle_monster_move(monster* mons)
                 bool basis = targ->props.exists("outwards");
                 int out_idx = basis ? targ->props["outwards"].get_int() : -1;
                 if (out_idx != -1)
-                {
                     menv[out_idx].props["inwards"].get_int() = mons->mindex();
-                }
 
                 monster_die(targ,
                             KILL_MISC, NON_MONSTER, true);
@@ -2573,9 +2182,7 @@ void handle_monster_move(monster* mons)
     if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (mons->pos() != kraken_last_update)
-        {
             move_kraken_tentacles(mons);
-        }
         move_kraken_tentacles(mons);
     }
 
@@ -2744,9 +2351,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                    || get_ammo_brand(*si) == SPMSL_SILVER));
         death_ooze_ate_corpse = (mons->type == MONS_DEATH_OOZE
                                  && ((si->base_type == OBJ_CORPSES
-                                      && si->sub_type == CORPSE_BODY)
-                                    || si->base_type == OBJ_FOOD
-                                      && si->sub_type == FOOD_CHUNK));
+                                     && si->sub_type == CORPSE_BODY)
+                                 || si->base_type == OBJ_FOOD
+                                     && si->sub_type == FOOD_CHUNK));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -2811,12 +2418,12 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
-            int base_max = mons_avg_hp(mons->type);
+            const int base_max = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
             mons->hit_points = std::min(MAX_MONSTER_HP,
                                std::min(base_max * 2, mons->hit_points));
             mons->max_hit_points = std::max(mons->hit_points,
-                                               mons->max_hit_points);
+                                            mons->max_hit_points);
         }
 
         if (death_ooze_ate_corpse)
@@ -2839,15 +2446,15 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
-    monster_type mt = item.mon_type;
+    const monster_type mt = item.mon_type;
     if (do_heal)
     {
-        int base_max = mons_avg_hp(mons->type);
+        const int base_max = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
         mons->hit_points = std::min(MAX_MONSTER_HP,
                            std::min(base_max * 2, mons->hit_points));
         mons->max_hit_points = std::max(mons->hit_points,
-                                           mons->max_hit_points);
+                                        mons->max_hit_points);
     }
 
     if (nearby)
@@ -3629,7 +3236,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         {
             dprf("Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
-            behaviour_event(m2, ME_ALERT, MHITNOT);
+            behaviour_event(m2, ME_ALERT);
         }
         return (false);
     }

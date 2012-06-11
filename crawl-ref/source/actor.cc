@@ -4,7 +4,6 @@
 #include "areas.h"
 #include "artefact.h"
 #include "coord.h"
-#include "coordit.h"
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"

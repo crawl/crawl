@@ -1,0 +1,81 @@
+%%%%
+Blink ability
+
+Siirry satunnaisesti lyhyt matka.
+%%%%
+Breathe Frost
+
+Henkäise pakkasta tähtäämääsi hirviöön.
+%%%%
+Breathe Poison Gas
+
+Henkäise myrkkykaasua tähtäämääsi hirviöön.
+%%%%
+Breathe Steam
+
+Henkäise kaasusuihku tähtäämääsi hirviöön.
+%%%%
+Breathe Noxious Fumes
+
+Henkäise myrkyllisiä höyryjä tähtäämääsi hirviöön.
+%%%%
+Fly
+
+Aloita lentäminen.
+%%%%
+Device Recharging
+
+Yhden taikapisteen menetyksen hinnalla saat ladata sauvan tai kepin.
+%%%%
+Evoke Teleportation
+
+Teleporttaa itsesi satunnaiseen paikkaan kerrosta.
+%%%%
+Evoke Blink
+
+Siirry satunnaisesti lyhyen matkaa.
+%%%%
+End Transformation
+
+Palaa takaisin perusmuotoosi pienellä viiveellä.
+%%%%
+Cure All Mutations
+
+Paranna kaikki mutaatiosi - mutta vain kerran.
+%%%%
+Drain Life
+
+Paranna terveyttäsi imemällä ympäröivien hirviöiden elinvoimaa.
+%%%%
+Brothers in Arms
+
+Kutsu valtavia, vihaisia apulaisia aiheuttamaan sekasortoa.
+%%%%
+Depart the Abyss
+
+Jätä Syvänne taaksesi ja palaa sinne mistä tulit.
+%%%%
+Banish
+
+Yritä karkottaa hirviö Syvänteeseen.
+%%%%
+Draw One
+
+Valitse jokin pakka inventaariossasi ja nosta siitä kortti.
+%%%%
+Cure Bad Mutation
+
+Poista satunnainen huono mutaatio.
+%%%%
+End Transfer Knowledge
+
+Hylkää käynnissäoleva taidonsiirto.
+%%%%
+Acquire gold
+
+Saa suuri määrä kultaa.
+%%%%
+Acquirement
+
+Saa valituntyyppinen esine.
+%%%%

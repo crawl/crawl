@@ -50,7 +50,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -65,7 +64,6 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
-#include "syscalls.h"
 #include "xom.h"
 
 static void _end_game(scorefile_entry &se);
@@ -317,7 +315,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!player_res_mutation_from_item()
+                    || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give
                 // aux as well
@@ -328,14 +327,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     }
 
     case BEAM_LIGHT:
-        if (you.invisible())
-            hurted = 0;
-        else if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE)
             hurted += hurted / 2;
 
-        if (original && !hurted && doEffects)
-            mpr("The beam of light passes harmlessly through you.");
-        else if (hurted > original && doEffects)
+        if (hurted > original && doEffects)
         {
             mpr("The light scorches you terribly!");
             xom_is_stimulated(200);
@@ -438,7 +433,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
+    if (player_res_corr() && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;
@@ -659,24 +654,23 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
-                     break;
+                    break;
 
                 case OBJ_FOOD:
-                    // Message handled elsewhere.
-                    if (flavour == BEAM_DEVOUR_FOOD)
-                        break;
-                    mprf("%s %s %s covered with spores!",
+                    mprf("%s %s %s %s!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                     break;
+                         (num_dest == 1) ? "is" : "are",
+                         (flavour == BEAM_DEVOUR_FOOD) ?
+                             "devoured" : "covered with spores");
+                    break;
 
                 default:
                     mprf("%s %s %s destroyed!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
-                     break;
+                    break;
                 }
 
                 total_dest += num_dest;
@@ -1106,6 +1100,8 @@ static void _place_player_corpse(bool explode)
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
+    if (you.hp_max <= 0)
+        unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
@@ -1228,9 +1224,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             // for note taking
             std::string damage_desc;
             if (!see_source)
-            {
                 damage_desc = make_stringf("something (%d)", dam);
-            }
             else
             {
                 damage_desc = scorefile_entry(dam, death_source,
@@ -1385,9 +1379,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     _end_game(se);
 }
 
-static std::string _morgue_name(time_t when_crawl_got_even)
+std::string morgue_name(std::string char_name, time_t when_crawl_got_even)
 {
-    std::string name = "morgue-" + you.your_name;
+    std::string name = "morgue-" + char_name;
 
     std::string time = make_file_time(when_crawl_got_even);
     if (!time.empty())
@@ -1498,7 +1492,7 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(_morgue_name(se.get_death_time()), true, &se))
+    if (!dump_char(morgue_name(you.your_name, se.get_death_time()), true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1516,7 +1510,8 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory();
+    if (!crawl_state.disables[DIS_CONFIRMATIONS])
+        browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
@@ -1545,7 +1540,7 @@ void _end_game(scorefile_entry &se)
 #endif
 
     // just to pause, actual value returned does not matter {dlb}
-    if (!crawl_state.seen_hups)
+    if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         get_ch();
 
     if (se.get_death_type() == KILLED_BY_WINNING)

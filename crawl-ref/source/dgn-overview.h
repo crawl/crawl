@@ -40,6 +40,7 @@ bool level_annotation_has(std::string str,
 
 void annotate_level();
 void do_annotate(level_id& li);
+void clear_level_annotations(level_id li);
 
 class writer;
 class reader;

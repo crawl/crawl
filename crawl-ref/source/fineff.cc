@@ -5,6 +5,7 @@
 **/
 
 #include "AppHdr.h"
+#include "coord.h"
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
@@ -100,6 +101,16 @@ void fire_final_effects()
                                        " suffers a backlash!");
                 attacker->hurt(defender, fe.x);
             }
+            break;
+        case FINEFF_TRAMPLE_FOLLOW:
+            if (!attacker
+                || attacker->pos() == fe.pos
+                || !adjacent(attacker->pos(), fe.pos)
+                || !attacker->is_habitable(fe.pos))
+            {
+                continue;
+            }
+            attacker->move_to_pos(fe.pos);
             break;
         }
     }

@@ -19,15 +19,16 @@
 #include "arena.h"
 #include "artefact.h"
 #include "beam.h"
-#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "dbg-util.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "evoke.h"
@@ -44,8 +45,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-stuff.h"
-#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -56,11 +55,9 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
-#include "shout.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stairs.h"
 #include "stuff.h"
 #include "areas.h"
 #include "stash.h"
@@ -68,9 +65,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
 #include "viewchar.h"
-#include "viewgeom.h"
 #include "xom.h"
 
 #define PORTAL_VAULT_ORIGIN_KEY "portal_vault_origin"
@@ -81,10 +76,15 @@ static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(std::vector<SelItem> tmp_items);
 
-static inline std::string _autopickup_item_name(const item_def &item);
-
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
+
+static inline std::string _autopickup_item_name(const item_def &item)
+{
+    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
+           + menu_colour_item_prefix(item, false) + " "
+           + item.name(DESC_PLAIN);
+}
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -588,8 +588,8 @@ void destroy_item(int dest, bool never_created)
 
 static void _handle_gone_item(const item_def &item)
 {
-    if (you.level_type == LEVEL_ABYSS
-        && place_type(item.orig_place) == LEVEL_ABYSS
+    if (player_in_branch(BRANCH_ABYSS)
+        && place_branch(item.orig_place) == BRANCH_ABYSS
         && !(item.flags & ISFLAG_BEEN_IN_INV))
     {
         if (is_unrandom_artefact(item))
@@ -973,14 +973,6 @@ void origin_set_startequip(item_def &item)
     }
 }
 
-static void _origin_set_portal_vault(item_def &item)
-{
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-        return;
-
-    item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
-}
-
 void origin_set_monster(item_def &item, const monster* mons)
 {
     if (!origin_known(item))
@@ -988,7 +980,6 @@ void origin_set_monster(item_def &item, const monster* mons)
         if (!item.orig_monnum)
             item.orig_monnum = mons->type + 1;
         item.orig_place = get_packed_place();
-        _origin_set_portal_vault(item);
     }
 }
 
@@ -996,7 +987,6 @@ void origin_purchased(item_def &item)
 {
     // We don't need to check origin_known if it's a shop purchase
     item.orig_place  = get_packed_place();
-    _origin_set_portal_vault(item);
     item.orig_monnum = -IT_SRC_SHOP;
 }
 
@@ -1004,7 +994,6 @@ void origin_acquired(item_def &item, int agent)
 {
     // We don't need to check origin_known if it's a divine gift
     item.orig_place  = get_packed_place();
-    _origin_set_portal_vault(item);
     item.orig_monnum = -agent;
 }
 
@@ -1072,7 +1061,6 @@ void origin_set(const coord_def& where)
         if (!si->orig_monnum)
             si->orig_monnum = static_cast<short>(monnum);
         si->orig_place  = pplace;
-        _origin_set_portal_vault(*si);
     }
 }
 
@@ -1084,7 +1072,6 @@ static void _origin_freeze(item_def &item, const coord_def& where)
             item.orig_monnum = _first_corpse_monnum(where);
 
         item.orig_place = get_packed_place();
-        _origin_set_portal_vault(item);
         _check_note_item(item);
     }
 }
@@ -1101,11 +1088,8 @@ static std::string _origin_monster_name(const item_def &item)
 
 static std::string _origin_place_desc(const item_def &item)
 {
-    if (place_type(item.orig_place) == LEVEL_PORTAL_VAULT
-        && item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
-    {
+    if (item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
         return item.props[PORTAL_VAULT_ORIGIN_KEY].get_string();
-    }
 
     return prep_branch_level_name(item.orig_place);
 }
@@ -1311,13 +1295,9 @@ void pickup(bool partial_quantity)
     you.last_pickup.clear();
 
     if (o == NON_ITEM)
-    {
         mpr("There are no items here.");
-    }
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
-    {
         mpr("You can't reach the bottom while floating on water.");
-    }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
         // Deliberately allowing the player to pick up
@@ -1419,18 +1399,7 @@ bool is_stackable_item(const item_def &item)
     return (false);
 }
 
-iflags_t ident_flags(const item_def &item)
-{
-    const iflags_t identmask = full_ident_mask(item);
-    iflags_t flags = item.flags & identmask;
-
-    if ((identmask & ISFLAG_KNOW_TYPE) && item_type_known(item))
-        flags |= ISFLAG_KNOW_TYPE;
-
-    return (flags);
-}
-
-bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ident)
+bool items_similar(const item_def &item1, const item_def &item2)
 {
     // Base and sub-types must always be the same to stack.
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
@@ -1456,18 +1425,8 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
         }
     }
 
-    // Check the ID flags.
-    if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
-        return (false);
-
-    // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
-    // and note flags. Also, whether item was in inventory before.
-#define NON_IDENT_FLAGS ~(ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK | \
-                          ISFLAG_DROPPED | ISFLAG_THROWN | \
-                          ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
-                          ISFLAG_BEEN_IN_INV | ISFLAG_DROPPED_BY_ALLY)
-
-    if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
+#define NO_MERGE_FLAGS (ISFLAG_MIMIC | ISFLAG_SUMMONED)
+    if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
         return (false);
 
     // The inscriptions can differ if one of them is blank, but if they
@@ -1482,16 +1441,19 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
 }
 
 bool items_stack(const item_def &item1, const item_def &item2,
-                  bool force_merge, bool ignore_ident)
+                 bool force_merge)
 {
     // Both items must be stackable.
     if (!force_merge
-        && (!is_stackable_item(item1) || !is_stackable_item(item2)))
+        && (!is_stackable_item(item1) || !is_stackable_item(item2))
+        || static_cast<int>(item1.quantity) + item2.quantity > 32767)
     {
+        COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
+
         return (false);
     }
 
-    return items_similar(item1, item2, ignore_ident);
+    return items_similar(item1, item2);
 }
 
 void merge_item_stacks(item_def &source, item_def &dest, int quant)
@@ -1610,8 +1572,12 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 
     if (!quiet)
     {
-        mprf("You now have %d gold piece%s.",
-             you.gold, you.gold != 1 ? "s" : "");
+        const std::string gain = quant != you.gold
+                                 ? make_stringf(" (gained %d)", quant)
+                                 : "";
+
+        mprf("You now have %d gold piece%s%s.",
+             you.gold, you.gold != 1 ? "s" : "", gain.c_str());
         learned_something_new(HINT_SEEN_GOLD);
     }
 }
@@ -1683,6 +1649,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             mpr("Press } to see all the runes you have collected.");
         }
 
+        if (mitm[obj].plus == RUNE_TOMB)
+            add_daction(DACT_TOMB_CTELE);
+
+        if (mitm[obj].plus >= RUNE_DIS && mitm[obj].plus <= RUNE_TARTARUS)
+            unset_level_flags(LFLAG_NO_TELE_CONTROL);
+
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
 
@@ -1731,7 +1703,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack(you.inv[m], mitm[obj], false, true))
+            if (items_stack(you.inv[m], mitm[obj]))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
@@ -1758,24 +1730,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 if (floor_god_gift && !inv_god_gift
                     || inv_god_gift && !floor_god_gift)
                 {
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift, ", "");
-                    you.inv[m].inscription
-                        = replace_all(you.inv[m].inscription,
-                                      "god gift", "");
-                }
-
-                // If only one of the stacks is identified,
-                // identify the other to a similar extent.
-                if (ident_flags(mitm[obj]) != ident_flags(you.inv[m]))
-                {
-                    if (!quiet)
-                        mpr("These items seem quite similar.");
-                    mitm[obj].flags |=
-                        ident_flags(you.inv[m]) & you.inv[m].flags;
-                    you.inv[m].flags |=
-                        ident_flags(mitm[obj]) & mitm[obj].flags;
+                    trim_god_gift_inscrip(you.inv[m]);
                 }
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);
@@ -1788,8 +1743,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 if (!quiet)
                 {
-                    mpr_nocap(get_menu_colour_prefix_tags(you.inv[m],
-                                                          DESC_INVENTORY).c_str());
+                    mprf_nocap("%s (gained %d)",
+                               get_menu_colour_prefix_tags(you.inv[m],
+                                   DESC_INVENTORY).c_str(),
+                               quant_got);
                 }
                 you.turn_is_over = true;
 
@@ -1858,6 +1815,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         item.slot = index_to_letter(item.link);
 
     god_id_item(item);
+    maybe_id_weapon(item);
 
     note_inscribe_item(item);
 
@@ -1889,9 +1847,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
             learned_something_new(HINT_SEEN_RANDART);
     }
-
-    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
-        unset_branch_flags(BFLAG_HAS_ORB);
 
     _got_item(item, item.quantity);
 
@@ -2564,21 +2519,25 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
-static inline std::string _autopickup_item_name(const item_def &item)
-{
-    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-           + menu_colour_item_prefix(item, false) + " "
-           + item.name(DESC_PLAIN);
-}
+
 
 static bool _is_option_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    for (unsigned i = 0, size = Options.force_autopickup.size(); i < size; ++i)
+    int i = you.force_autopickup[item.base_type][item.sub_type];
+    if (i != 0)
+        return (i == 1);
+
+    //Check for initial settings
+    for (i = 0; i < (int)Options.force_autopickup.size(); ++i)
         if (Options.force_autopickup[i].first.matches(iname))
-            return Options.force_autopickup[i].second;
+        {
+            bool r = Options.force_autopickup[i].second;
+            you.force_autopickup[item.base_type][item.sub_type] = (r)? 1 : -1;
+            return r;
+        }
 
 #ifdef CLUA_BINDINGS
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
@@ -3013,24 +2972,15 @@ int get_max_subtype(object_class_type base_type)
         NUM_ARMOURS,
         NUM_WANDS,
         NUM_FOODS,
-#if TAG_MAJOR_VERSION == 32
-        0,              // unknown I
-#endif
         NUM_SCROLLS,
         NUM_JEWELLERY,
         NUM_POTIONS,
-#if TAG_MAJOR_VERSION == 32
-        0,              // unknown II
-#endif
         NUM_BOOKS,
         NUM_STAVES,
         1,              // Orbs         -- only one
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
-#if TAG_MAJOR_VERSION == 32
-        0,              // "gemstones"  -- no items of type
-#endif
     };
     COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES);
 

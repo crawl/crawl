@@ -19,7 +19,7 @@ public:
                       bool clear_aliases = true);
 
     void include(const std::string &file, bool resolve, bool runscript);
-    void report_error(const std::string &error);
+    void report_error(PRINTF(1, ));
 
     std::string resolve_include(const std::string &file,
                                 const char *type = "");
@@ -126,12 +126,9 @@ public:
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;   // take note when skills reach new max
-    bool        note_all_spells;  // take note when learning any spell
     std::string user_note_prefix; // Prefix for user notes
     int         note_hp_percent;  // percentage hp for notetaking
     bool        note_xom_effects; // take note of all Xom effects
-    int         ood_interesting;  // how many levels OOD is noteworthy?
-    int         rare_interesting; // what monster rarity is noteworthy?
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
@@ -163,8 +160,6 @@ public:
     FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
-
-    std::string pizza;
 
 #ifdef WIZARD
     int                      wiz_mode;   // no, never, start in wiz mode
@@ -314,14 +309,15 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
-    const char* lang;           // Translation to use.
+    lang_t      lang;                // Translation to use.
+    const char* lang_name;           // Database name of the language.
 
 #ifdef WIZARD
     // Parameters for fight simulations.
+    std::string fsim_mode;
     int         fsim_rounds;
-    int         fsim_str, fsim_int, fsim_dex;
-    int         fsim_xl;
     std::string fsim_mons;
+    std::vector<std::string> fsim_scale;
     std::vector<std::string> fsim_kit;
 #endif  // WIZARD
 

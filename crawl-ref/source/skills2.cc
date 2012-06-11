@@ -19,12 +19,9 @@
 #include "artefact.h"
 #include "describe.h"
 #include "externs.h"
-#include "fight.h"
 #include "godabil.h"
-#include "itemprop.h"
 #include "player.h"
 #include "species.h"
-#include "skill_menu.h"
 #include "skills.h"
 
 typedef std::string (*string_fn)();
@@ -146,7 +143,9 @@ int get_skill_progress(skill_type sk, int level, int points, int scale)
 
     const int needed = skill_exp_needed(level + 1, sk);
     const int prev_needed = skill_exp_needed(level, sk);
-    const int amt_done = points - prev_needed;
+    // A scale as small as 92 would overflow with 31 bits if skill_rdiv()
+    // is involved: needed can be 91985, skill_rdiv() multiplies by 256.
+    const int64_t amt_done = points - prev_needed;
     int prog = (amt_done * scale) / (needed - prev_needed);
 
     ASSERT(prog >= 0);
@@ -202,10 +201,10 @@ static std::string _stk_genus_short_cap()
 
 static std::string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_TENGU   ? "Glider" :
+    return (Skill_Species == SP_NAGA     ? "Slider" :
+            Skill_Species == SP_TENGU    ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
-                                        : "Walker");
+                                         : "Walker");
 }
 
 static std::string _stk_weight()
@@ -507,7 +506,7 @@ static int _base_cost(skill_type sk)
     }
 }
 
-unsigned int skill_exp_needed(int lev)
+unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
     const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
                           1050, 1400, 1800, 2250, 2800,      // 6-10
@@ -517,13 +516,8 @@ unsigned int skill_exp_needed(int lev)
                           27000, 29750 };
     ASSERT(lev >= 0);
     ASSERT(lev <= 27);
-    return exp[lev];
-}
 
-unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
-{
-    return skill_exp_needed(lev) * species_apt_factor(sk, sp)
-           * _base_cost(sk) / 100;
+    return exp[lev] * species_apt_factor(sk, sp) * _base_cost(sk) / 100;
 }
 
 int species_apt(skill_type skill, species_type species)

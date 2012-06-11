@@ -21,10 +21,10 @@
 #include "godpassive.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
+#include "misc.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -91,7 +91,7 @@ void wizard_create_spec_object_by_name()
 void wizard_create_spec_object()
 {
     char           specs[80];
-    char           keyin;
+    int            keyin;
     monster_type   mon;
 
     object_class_type class_wanted   = OBJ_UNASSIGNED;
@@ -401,7 +401,7 @@ static void _tweak_randart(item_def &item)
 
     mpr("Change which field? ", MSGCH_PROMPT);
 
-    char     keyin = tolower(get_ch());
+    int keyin = tolower(get_ch());
     unsigned int  choice;
 
     if (isaalpha(keyin))
@@ -455,7 +455,7 @@ static void _tweak_randart(item_def &item)
 void wizard_tweak_object(void)
 {
     char specs[50];
-    char keyin;
+    int keyin;
 
     int item = prompt_invent_item("Tweak which item? ", MT_INVLIST, -1);
     if (item == PROMPT_ABORT)
@@ -558,7 +558,7 @@ void wizard_tweak_object(void)
 
         // cursedness might have changed
         ash_check_bondage();
-        god_id_inventory();
+        auto_id_inventory();
     }
 }
 
@@ -571,7 +571,7 @@ static bool _item_type_can_be_artefact(int type)
 
 static bool _make_book_randart(item_def &book)
 {
-    char type;
+    int type;
 
     do
     {

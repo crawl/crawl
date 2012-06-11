@@ -1,0 +1,113 @@
+%%%%
+Centaur
+
+Veloces, fuertes y corpulentos, necesitan más comida que otras especies.
+%%%%
+Deep Dwarf
+
+Viven en las profundidades de la tierra y no pueden regenerar su salud de forma
+natural, pero son resistentes y tienen herramientas para curarse.
+%%%%
+Deep Elf
+
+Los elfos más afines a la magia, pero también los más frágiles.
+%%%%
+Demigod
+
+Nunca siguen a un dios, pero los semidioses lo compensan con atributos divinos
+y vitalidad.
+%%%%
+Demonspawn
+
+Los semidemonios son medio humano, medio demonio. Adquieren poderosas
+mutaciones demoníacas a medida que se desarrollan.
+%%%%
+Draconian
+
+Los draconianos son híbridos versátiles. Alcanzan la madurez en el nivel 7 y
+desarrollan un color.
+%%%%
+Ghoul
+
+Un no-muerto, condenado a pudrirse eternamente. Están continuamente buscando
+comida podrida de la que alimentarse, despedazándola con sus garras.
+%%%%
+Halfling
+
+Pequeños pero duros, son excelentes con la honda. Tienen una cierta resistencia
+a los efectos mutagénicos.
+%%%%
+High Elf
+
+Elfos orgullosos, que pueden lanzar hechizos así como luchar con la espada.
+%%%%
+Hill Orc
+
+Los orcos tienen talento en el combate cuerpo a cuerpo, y a menudo tantean algo
+con la magia de ataque. Odiados por la mayoría, los orcos son muy orgullosos y
+muchos se sienten superiores.
+%%%%
+Human
+
+Mundanos y en la media.
+%%%%
+Tengu
+
+Gente-pájaro con gusto por el combate, tanto con armas como con hechizos.
+Inicialmente son algo frágiles, pero más tarde aprenden a volar.
+%%%%
+Kobold
+
+Pequeños, traviesos y algo delicados, pero polifacéticos. Pueden comer, y de
+hecho lo harán, todo tipo de carne.
+%%%%
+Merfolk
+
+Medio pez, medio humanos, los tritones y sirenas son ciudadanos tanto del agua
+como de la tierra.
+%%%%
+Minotaur
+
+Un humanoide grande y musculoso con la cabeza de un toro. Son excelentes en
+cualquier forma de combate, tanto cuerpo a cuerpo como a distancia.
+%%%%
+Mummy
+
+Una figura no-muerta cubierta en vendas y fluidos de embalsamado, obligada a
+caminar por una antigua maldición.
+%%%%
+Naga
+
+Un híbrido; humanos de pecho hacia arriba, con un tronco escamoso y muscular
+como el de una serpiente.
+%%%%
+Octopode
+
+Una especie de cefalópodo anfibio. Pueden llevar puesto ocho anillos, pero
+prácticamente no hay armadura que les sirva.
+%%%%
+Ogre
+
+Grandes y fuertes, la mayoría son vistos como brutos. Los ogros, sin embargo,
+se sienten cómodos con los rudimentos de la magia.
+%%%%
+Sludge Elf
+
+Un tipo depravado de elfo que prefiere la astucia a luchar limpiamente, y la
+magia oscura antes que otro tipo de magia.
+%%%%
+Spriggan
+
+Muy pequeños, muy delicados y muy rápidos. Los spriggans son muy competentes
+apuñalando y lanzando hechizos.
+%%%%
+Troll
+
+Grandes brutos, listos para descuartizar cualquier cosa con sus garras, nunca
+pensándoselo dos veces. Siempre están hambrientos.
+%%%%
+Vampire
+
+Moviéndose entre los estados de vida y no-muerte, son expertos apuñalando y con
+los hechizos.
+%%%%

@@ -16,14 +16,13 @@
 #include "evoke.h"
 #include "exercise.h"
 #include "externs.h"
-#include "godabil.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "message.h"
+#include "misc.h"
 #include "notes.h"
-#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
@@ -142,9 +141,7 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
-    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
-    }
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
@@ -180,7 +177,6 @@ static void _change_skill_level(skill_type exsk, int n)
     // right if you.skills[] hasn't been updated yet.
     if (exsk == SK_FIGHTING)
         calc_hp();
-    // TODO: also identify rings of wizardry.
 }
 
 // Called whenever a skill is trained.
@@ -219,6 +215,10 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
         // The player symbol depends on best skill title.
         update_player_symbol();
     }
+
+    // Identify weapon pluses.
+    if (exsk <= SK_THROWING)
+        auto_id_inventory();
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
@@ -298,12 +298,7 @@ static void _check_inventory_skills()
 
 static void _check_equipment_skills()
 {
-    skill_set_iter it = you.stop_train.find(SK_ARMOUR);
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, true);
-    if (it != you.stop_train.end() && armour && property(*armour, PARM_EVASION))
-        you.stop_train.erase(it);
-
-    it = you.stop_train.find(SK_SHIELDS);
+    skill_set_iter it = you.stop_train.find(SK_SHIELDS);
     if (it != you.stop_train.end() && you.slot_item(EQ_SHIELD, true))
         you.stop_train.erase(it);
 }
@@ -417,7 +412,10 @@ static void _check_stop_train()
     }
 
     if (!skills.empty())
+    {
         mpr("You stop training " + _skill_names(skills));
+        check_selected_skills();
+    }
 
     reset_training();
     you.stop_train.clear();
@@ -430,8 +428,6 @@ void update_can_train()
 
     if (!you.start_train.empty())
         _check_start_train();
-
-    check_selected_skills();
 }
 
 bool training_restricted(skill_type sk)
@@ -441,6 +437,7 @@ bool training_restricted(skill_type sk)
     case SK_FIGHTING:
     // Requiring missiles would mean disabling the skill when you run out.
     case SK_THROWING:
+    case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
     case SK_STABBING:
@@ -562,13 +559,13 @@ void init_training()
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (skill_trained(i))
-            skills[i] = you.skill_points[i];
+            skills[i] = pow(you.skill_points[i], 2);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        skills[i] = you.skill_points[i];
+        skills[i] = pow(you.skill_points[i], 2);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises_all, skills);
@@ -1058,6 +1055,7 @@ void set_skill_level(skill_type skill, double amount)
         // Maximum number of skill points to transfer in one go.
         // It's max_xp*10/cost rounded up.
         int max_skp = (max_xp * 10 + cost - 1) / cost;
+        max_skp = std::max(max_skp, 1);
         int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
                                       max_skp);
         int delta_xp = (delta_skp * cost + 9) / 10;

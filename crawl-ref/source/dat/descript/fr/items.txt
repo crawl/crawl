@@ -1,0 +1,410 @@
+%%%%
+air elemental fan
+
+Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas très
+fiable, et requiert habituellement plusieurs essais avant de fonctionner
+correctement. L'utiliser suscite un risque qui est réduit selon l'affinité de
+l'usager pour l'élément approprié.
+%%%%
+amulet of clarity
+
+Cette amulette protège le porteur contre certaines formes de confusion mentale,
+dont celle d'être enragé contre sa volonté.
+%%%%
+amulet of conservation
+
+Cette amulette protège de la destruction certaines possessions, mais pas de
+manière infaillible.
+%%%%
+amulet of controlled flight
+
+Si le porteur de cette amulette venait à léviter par un moyen magique, il ou
+elle serait capable d'exercer un certain contrôle sur ses mouvements. Ceci
+autorise par exemple la descente d'escaliers et l'accès aux objets situés au
+sol, sans toutefois priver le porteur des bénéfices de la lévitation.
+%%%%
+amulet of guardian spirit
+
+Cette amulette rend son porteur moins susceptible aux blessures physiques,
+drainant sa puissance magique à la place. Si les réserves magiques viennent à
+être vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que davantage
+de pouvoir soit disponible.
+%%%%
+amulet of inaccuracy
+
+Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
+lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
+%%%%
+amulet of rage
+
+Cette amulette permet au porteur de  tenter d'entrer dans un état de folie
+furieuse.
+%%%%
+amulet of resist corrosion
+
+Cette amulette protège le porteur et son équipement des effets de la corrosion
+causée par des acides, mais pas de manière infaillible.
+%%%%
+amulet of resist mutation
+
+Cette amulette protège son porteur des mutations, mais pas de manière
+infaillible.
+%%%%
+amulet of the gourmand
+
+Cette amulette protège son porteur des malaises causés par l'ingestion de
+viande fraîche et permet de les digérer même s'il n'a pas faim. Mais ces effets
+sur la digestion du porteur s'accumulent avec le temps et sont initialement
+faibles.
+%%%%
+amulet of warding
+
+Cette amulette repousse une partie des attaques des créatures qui ont été
+convoquées par magie, et rend également le porteur plus résistant aux attaques
+qui drainent la force vitale.
+%%%%
+amulet of faith
+
+C'est un talisman façonné pour attirer l'attention des dieux sur son porteur.
+Cette attention divine facilite le contentement de votre dieu, mais celui-ci
+sera aussi moins amène à tolérer vos transgressions, et l'amulette drainera une
+part de vos faveurs divines lorsqu'elle sera retirée.
+%%%%
+amulet of stasis
+
+Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
+magiques et physiologiques qui pourraient autrement téléporter, ralentir,
+accélérer ou paralyser son porteur. Bien que l'amulette soit efficace contre la
+plupart des magies translocatives, les changements de plan tels que le
+bannissement sont au delà des ses capacités bloquantes.
+%%%%
+animal skin
+
+La peau d'un animal.
+%%%%
+apple
+
+Un fruit rouge, ferme et délicieux, acide en bouche.
+%%%%
+apricot
+
+Un succulent fruit jaune-orange, prunus armeniaca.
+%%%%
+arrow
+
+Une flèche, pour le tir à l'arc.
+%%%%
+banana
+
+Un délicieux fruit jaune, sans doute cultivé et importé par une multi-nationale
+corrompue suite à un accord commercial verreux.
+%%%%
+bardiche
+
+Une longue perche avec une énorme lame tranchante au bout.
+%%%%
+battleaxe
+
+Une large hache munie d'un double tranchant.
+%%%%
+beef jerky
+
+Une tranche séchée de vache ou de bœuf mort.
+%%%%
+blessed double sword
+
+Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
+améliorée par Le Lumineux.
+%%%%
+bolt
+
+Un carreau d'arbalète.
+%%%%
+book of beasts
+
+Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
+%%%%
+book of callings
+
+Un livre de sortilèges magiques.
+%%%%
+book of cantrips
+
+Un livre de sortilèges magiques.
+%%%%
+book of changes
+
+Un livre de sortilèges magiques.
+%%%%
+book of card effects
+
+Un livre de sortilèges magiques.
+%%%%
+book of charms
+
+Un livre de sortilèges magiques.
+%%%%
+book of clouds
+
+Un livre de sortilèges magiques.
+%%%%
+book of conjurations
+
+Un livre de sortilèges magiques.
+%%%%
+book of control
+
+Un livre de sortilèges magiques.
+%%%%
+book of debilitation
+
+Un livre de sortilèges magiques.
+%%%%
+book of enchantments
+
+Un livre de sortilèges magiques.
+%%%%
+book of envenomations
+
+Un livre de sortilèges magiques.
+%%%%
+book of fixed level
+
+Un livre de sortilèges magiques.
+%%%%
+book of fixed theme
+
+Un livre de sortilèges magiques.
+%%%%
+book of frost
+
+Un livre de sortilèges magiques, froid au toucher.
+%%%%
+book of geomancy
+
+Un livre de sortilèges magiques.
+%%%%
+book of hinderance
+
+Un livre de sortilèges magiques.
+%%%%
+book of maledictions
+
+Un livre de sortilèges magiques.
+%%%%
+book of minor magic
+
+Un livre de sortilèges magiques.
+%%%%
+book of morphology
+
+Un livre de sortilèges magiques.
+%%%%
+book of party tricks
+
+Un livre de sortilèges magiques.
+%%%%
+book of power
+
+Un livre de sortilèges magiques.
+%%%%
+book of spatial translocations
+
+Un livre de sortilèges magiques.
+%%%%
+book of stalking
+
+Un livre de sortilèges magiques.
+%%%%
+book of summonings
+
+Un livre de sortilèges magiques.
+%%%%
+book of the dragon
+
+Un livre de sortilèges magiques, il est chaud au toucher.
+%%%%
+book of the earth
+
+Un livre de sortilèges magiques.
+%%%%
+book of the sky
+
+Un livre de sortilèges magiques. Des étincelles s'échappent des pages.
+%%%%
+book of the tempests
+
+Un livre de sortilèges magiques.
+%%%%
+book of the warp
+
+Un livre de sortilèges magiques.
+%%%%
+book of transfigurations
+
+Un livre de sortilèges magiques.
+%%%%
+book of wizardry
+
+Un livre de sortilèges magiques.
+%%%%
+broad axe
+
+Une hache dotée d'un large tranchant.
+%%%%
+buckler
+
+Un petit bouclier.
+%%%%
+chunk of flesh
+
+Un morceau de viande trouvé dans le donjon.
+%%%%
+cloak
+
+Une cape en tissu.
+%%%%
+corpse
+
+Un cadavre. Vous pouvez le découper pour produire des morceaux de viande
+comestibles.
+%%%%
+dart
+
+Une petite arme de jet.
+%%%%
+demon blade
+
+Une arme terrible, forgée dans les flammes de l'Enfer.
+%%%%
+eveningstar
+
+L'opposé d'une étoile du matin.
+%%%%
+gold piece
+
+Un tas de pièces d'or scintillantes.
+%%%%
+grape
+
+Un petit fruit.
+%%%%
+lemon
+
+Un fruit jaune.
+%%%%
+lychee
+
+Un fruit tropical.
+%%%%
+manual
+
+Un livre précieux qui permet d'apprendre une certaine compétence de manière
+plus efficace.
+%%%%
+morningstar
+
+Une masse couverte de pointes.
+%%%%
+naga barding
+
+Une armure spécialement conçue pour les Nagas, à porter sur leur queue.
+%%%%
+orange
+
+Un délicieux et juteux fruit orange.
+%%%%
+orb of zot
+
+Une fois que vous vous êtes échappé à la surface avec cet inestimable artefact,
+votre quête est accomplie.
+%%%%
+pair of boots
+
+Une paire de bottes.
+%%%%
+pair of gauntlets
+
+Une paire de gantelets.
+%%%%
+pair of gloves
+
+Une paire de gants
+%%%%
+pear
+
+Un délicieux fruit juteux.
+%%%%
+potion of experience
+
+Une potion aussi rare que merveilleuse.
+%%%%
+potion of gain dexterity
+
+Une potion de mutation bénéfique.
+%%%%
+potion of gain intelligence
+
+Une potion de mutation bénéfique.
+%%%%
+potion of gain strength
+
+Une potion de mutation bénéfique.
+%%%%
+potion of poison
+
+Un atroce poison liquide.
+%%%%
+potion of slowing
+
+Une potion qui ralentit vos actions.
+%%%%
+potion of strong poison
+
+Une épouvantable potion empoisonnée.
+%%%%
+ring of magical power
+
+Cet anneau augmente les réserves de pouvoir magique de son porteur.
+%%%%
+ring of protection from cold
+
+Cet anneau apporte une protection contre le froid.
+%%%%
+ring of protection from fire
+
+Cet anneau apporte une protection contre la chaleur et le feu.
+%%%%
+scroll of teleportation
+
+Lire les mots inscrits sur ce parchemin vous translocalise dans un lieu
+aléatoire.
+%%%%
+stone
+
+Une pierre. Elle peut être jetée à la main ou lancée avec une fronde.
+%%%%
+strawberry
+
+Un délicieux petit fruit rouge.
+%%%%
+wand of paralysis
+
+Un outil magique qui peut immobiliser une créature.
+%%%%
+war axe
+
+Une hache prévue pour le combat au corps à corps.
+%%%%
+whip
+
+Un fouet.
+%%%%
+wizard hat
+
+Un chapeau pointu.
+%%%%
+young poisoner's handbook
+
+Un livre de sortilèges magiques.
+%%%%

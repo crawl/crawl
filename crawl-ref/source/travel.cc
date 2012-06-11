@@ -20,15 +20,12 @@
 #include "cloud.h"
 #include "clua.h"
 #include "delay.h"
-#include "describe.h"
 #include "dactions.h"
 #include "dgn-overview.h"
-#include "dgnevent.h"
 #include "directn.h"
 #include "exclude.h"
 #include "fight.h"
 #include "godabil.h"
-#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -38,10 +35,10 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "stairs.h"
 #include "stash.h"
 #include "stuff.h"
 #include "env.h"
@@ -124,8 +121,6 @@ static bool ignore_player_traversability = false;
 
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
-
-static std::set<std::string> portal_names;
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -219,29 +214,12 @@ static inline int _feature_traverse_cost(dungeon_feature_type feature)
     return 1;
 }
 
-bool is_altar(const coord_def &c)
-{
-    return feat_is_altar(env.map_knowledge(c).feat());
-}
-
-inline bool is_player_altar(const coord_def &c)
-{
-    return feat_is_player_altar(env.map_knowledge(c).feat());
-}
-
 bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
 
-    // While the stairs out of the dungeon are not precisely known
-    // to the travel cache, the player does know where they lead.
-    if (player_branch_depth() == 1
-        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
-    {
-        return (false);
-    }
-
-    return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
+    return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p)
+            && feat != DNGN_EXIT_DUNGEON);
 }
 
 // Returns true if the character can cross this dungeon feature, and
@@ -277,14 +255,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
 // Ignores swimming, flying, and travel_avoid_terrain.
 bool feat_is_traversable(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION == 32
-    if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
-        || feat == DNGN_TRAP_WEB)
-#else
     if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
-#endif
         return false;
-    else if (feat >= DNGN_MOVEMENT_MIN || feat == DNGN_DETECTED_SECRET_DOOR
+    else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
+        return false;
+    else if (feat >= DNGN_MINWALK || feat == DNGN_DETECTED_SECRET_DOOR
              || feat == DNGN_CLOSED_DOOR)
     {
         return true;
@@ -547,7 +522,7 @@ void prevent_travel_to(const std::string &feature)
         forbidden_terrain[feature_type] = 1;
 }
 
-bool is_branch_stair(const coord_def& pos)
+static bool _is_branch_stair(const coord_def& pos)
 {
     const level_id curr = level_id::current();
     const level_id next = level_id::get_next_level_id(pos);
@@ -1813,8 +1788,9 @@ static void _find_parent_branch(branch_type br, int depth,
 static void _trackback(std::vector<level_id> &vec,
                        branch_type branch, int subdepth)
 {
-    if (subdepth < 1 || subdepth > MAX_LEVELS)
+    if (subdepth < 1)
         return;
+    ASSERT(subdepth <= 27);
 
     level_id lid(branch, subdepth);
     vec.push_back(lid);
@@ -1856,12 +1832,8 @@ static void _track_intersect(std::vector<level_id> &cur,
 // 'first' and 'second', returns -1. If first == second, returns 0.
 int level_distance(level_id first, level_id second)
 {
-    if (first == second
-        || (first.level_type != LEVEL_DUNGEON
-            && first.level_type == second.level_type))
-    {
+    if (first == second)
         return 0;
-    }
 
     std::vector<level_id> fv, sv;
 
@@ -1924,7 +1896,7 @@ static std::string _get_trans_travel_dest(const travel_target &target,
 
     if (!skip_branch)
         dest << branch;
-    if (branches[branch_id].depth != 1)
+    if (brdepth[branch_id] != 1)
     {
         if (!skip_branch)
             dest << ":";
@@ -1953,7 +1925,8 @@ static int _get_nearest_level_depth(uint8_t branch)
             || player_in_branch(BRANCH_DIS)
             || player_in_branch(BRANCH_GEHENNA)))
     {
-        return you.hell_exit + 1;
+        // BUG: hell gates in the Lair
+        return you.hell_exit;
     }
 
     level_id id = level_id::current();
@@ -1976,8 +1949,8 @@ static int _get_nearest_level_depth(uint8_t branch)
 // branch (which would make the branch a valid target for interlevel travel).
 static bool _is_known_branch_id(int branch)
 {
-    // The main dungeon is always known.
-    if (branch == BRANCH_MAIN_DUNGEON)
+    // The main dungeon is always known
+    if (branch == root_branch)
         return (true);
 
     // If we're in the branch, it darn well is known.
@@ -2014,7 +1987,12 @@ static std::vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return (br.shortname != NULL && br.depth != -1);
+    return (br.shortname != NULL && brdepth[br.id] != -1);
+}
+
+static bool _is_disconnected_branch(const Branch &br)
+{
+    return !is_connected_branch(br.id);
 }
 
 static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
@@ -2022,7 +2000,8 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     int branch = BRANCH_MAIN_DUNGEON;     // Default
     std::vector<branch_type> br =
         _get_branches(
-            (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch
+            (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch :
+            (prompt_flags & TPF_SHOW_PORTALS_ONLY) ? _is_disconnected_branch
                                                    : _is_known_branch);
 
     // Don't kill the prompt even if the only branch we know is the main dungeon
@@ -2129,10 +2108,10 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                 if (toupper(keyin) == branches[br[i]].travel_shortcut)
                 {
 #ifdef WIZARD
-                    Branch     &target = branches[br[i]];
+                    const Branch &target = branches[br[i]];
                     std::string msg;
 
-                    if (target.startdepth == -1
+                    if (startdepth[br[i]] == -1
                         && is_random_lair_subbranch((branch_type)i)
                         && you.wizard) // don't leak mimics
                     {
@@ -2165,16 +2144,11 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     }
 }
 
-static bool _is_easy_exiting_branch(int branch)
-{
-    return branches[branch].any_upstair_exits;
-}
-
 level_id find_up_level(level_id curr, bool up_branch)
 {
     --curr.depth;
 
-    if (up_branch || _is_easy_exiting_branch(curr.branch))
+    if (up_branch)
         curr.depth = 0;
 
     if (curr.depth < 1)
@@ -2188,7 +2162,7 @@ level_id find_up_level(level_id curr, bool up_branch)
                 return (parent);
             else if (curr.branch == BRANCH_VESTIBULE_OF_HELL)
             {
-                parent = branch_entry_level(curr.branch);
+                parent = level_id(you.hell_branch, you.hell_exit);
                 return (parent);
             }
         }
@@ -2205,17 +2179,16 @@ static level_id _find_up_level()
 
 level_id find_down_level(level_id curr)
 {
-    if (curr.depth < branches[curr.branch].depth)
+    if (curr.depth < brdepth[curr.branch])
         ++curr.depth;
     return (curr);
 }
 
 level_id find_deepest_explored(level_id curr)
 {
-    ASSERT(curr.branch != NUM_BRANCHES
-           && curr.level_type == LEVEL_DUNGEON);
+    ASSERT(curr.branch != NUM_BRANCHES);
 
-    for (int i = branches[curr.branch].depth; i > 0; --i)
+    for (int i = brdepth[curr.branch]; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
         LevelInfo *linf = travel_cache.find_level_info(lid);
@@ -2226,11 +2199,8 @@ level_id find_deepest_explored(level_id curr)
     // If the player's currently in the same place, report their current
     // level_id if the travel cache hasn't been updated.
     const level_id player_level = level_id::current();
-    if (player_level.level_type == curr.level_type
-        && player_level.branch == curr.branch)
-    {
+    if (player_level == curr.branch)
         return (player_level);
-    }
 
     return (curr);
 }
@@ -2360,14 +2330,20 @@ bool travel_kill_monster(monster_type mons)
         return (false);
 
     // Don't auto-kill things with berserkitis or *rage.
-    if ((player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY)
-         || player_equip_unrand(UNRAND_TROG))
-        && !wearing_amulet(AMU_STASIS, false)
-        && !player_mental_clarity(false)
-        && you.is_undead != US_UNDEAD
-        && you.is_undead != US_HUNGRY_DEAD)
+    if (player_mutation_level(MUT_BERSERK)
+        || player_effect_angry())
     {
-        return (false);
+        if (player_effect_stasis(false)
+            || player_mental_clarity(false)
+            || you.is_undead == US_UNDEAD
+            || you.is_undead == US_HUNGRY_DEAD)
+        {
+            return (true);
+        }
+        else
+        {
+            return (false);
+        }
     }
 
     return (true);
@@ -2418,7 +2394,7 @@ travel_target prompt_translevel_target(int prompt_flags,
     target = _prompt_travel_depth(target.p.id, to_entrance);
 
     if (target.p.id.depth < 1
-        || target.p.id.depth > branches[target.p.id.branch].depth)
+        || target.p.id.depth > brdepth[target.p.id.branch])
     {
         target.p.id.depth = -1;
     }
@@ -2933,39 +2909,10 @@ void do_explore_cmd()
         mpr("You need to eat something NOW!");
     else if (you.berserk())
         mpr("Calm down first, please.");
-    else if (you.level_type == LEVEL_LABYRINTH)
+    else if (player_in_branch(BRANCH_LABYRINTH))
         mpr("No exploration algorithm can help you here.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);
-}
-
-// Given a feature vector, arranges the features in the order that the player
-// is most likely to be interested in. Currently, the only thing it does is to
-// put altars of the player's religion at the front of the list.
-void arrange_features(std::vector<coord_def> &features)
-{
-    for (int i = 0, count = features.size(); i < count; ++i)
-    {
-        if (is_player_altar(features[i]))
-        {
-            int place = i;
-            // Shuffle this altar as far up the list as possible.
-            for (int j = place - 1; j >= 0; --j)
-            {
-                if (is_altar(features[j]))
-                {
-                    if (is_player_altar(features[j]))
-                        break;
-
-                    coord_def temp = features[j];
-                    features[j] = features[place];
-                    features[place] = temp;
-
-                    place = j;
-                }
-            }
-        }
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2973,32 +2920,13 @@ void arrange_features(std::vector<coord_def> &features)
 
 level_id level_id::current()
 {
-    const level_id id(you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.absdepth0),
-                      you.level_type);
+    const level_id id(you.where_are_you, you.depth);
     return id;
-}
-
-int level_id::dungeon_absdepth() const
-{
-    ASSERT(branch != NUM_BRANCHES && depth != -1);
-    return absdungeon_depth(branch, depth);
 }
 
 int level_id::absdepth() const
 {
-    switch (level_type)
-    {
-    case LEVEL_DUNGEON:
-        return absdungeon_depth(branch, depth);
-    case LEVEL_PANDEMONIUM:
-        return DEPTH_PAN;
-    case LEVEL_ABYSS:
-        return DEPTH_ABYSS;
-    default:
-        // No true notion of depth here.
-        return you.absdepth0;
-    }
+    return absdungeon_depth(branch, depth);
 }
 
 level_id level_id::get_next_level_id(const coord_def &pos)
@@ -3006,18 +2934,15 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     int gridc = grd(pos);
     level_id id = current();
 
+    if (gridc == branches[id.branch].exit_stairs)
+        return upstairs_destination();
+
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (gridc == branches[i].entry_stairs)
         {
             id.branch = static_cast<branch_type>(i);
             id.depth = 1;
-            break;
-        }
-        if (gridc == branches[i].exit_stairs)
-        {
-            id.branch = branches[i].parent_branch;
-            id.depth = branches[i].startdepth;
             break;
         }
     }
@@ -3040,56 +2965,35 @@ level_id level_id::get_next_level_id(const coord_def &pos)
 
 unsigned short level_id::packed_place() const
 {
-    return get_packed_place(branch, depth, level_type);
+    return get_packed_place(branch, depth);
 }
 
 std::string level_id::describe(bool long_name, bool with_number) const
 {
-    std::string description = place_name(this->packed_place(),
-                                         long_name, with_number);
-    if (level_type == LEVEL_PORTAL_VAULT)
-    {
-        std::string::size_type cpos = description.find(':');
-        const std::string brname = (cpos != std::string::npos ?
-                                    description.substr(0, cpos) : description);
-        portal_names.insert(brname);
-    }
-    return description;
+    return place_name(this->packed_place(), long_name, with_number);
 }
 
 level_id level_id::parse_level_id(const std::string &s) throw (std::string)
 {
     std::string::size_type cpos = s.find(':');
     std::string brname  = (cpos != std::string::npos? s.substr(0, cpos)  : s);
-    std::string brdepth = (cpos != std::string::npos? s.substr(cpos + 1) : "");
+    std::string brlev   = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
-    if (brname == "Abyss")
-        return (level_id(LEVEL_ABYSS));
-    else if (brname == "Pan")
-        return (level_id(LEVEL_PANDEMONIUM));
-    else if (brname == "Lab")
-        return (level_id(LEVEL_LABYRINTH));
-    else if (brname == "Port" ||
-             portal_names.find(brname) != portal_names.end())
-        return (level_id(LEVEL_PORTAL_VAULT));
-    // Ziggurat levels are "Port", "ziggurat" or "Zig:23", with no extra
-    // information available.  All we can do is return "Port" and hope this
-    // is enough.
-    if (brname == "Zig" || brname == "ziggurat")
-        return (level_id(LEVEL_PORTAL_VAULT));
+    branch_type br = str_to_branch(brname);
 
-    const branch_type br = str_to_branch(brname);
     if (br == NUM_BRANCHES)
     {
         throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
                            brname.c_str(), s.c_str());
     }
 
-    const int dep = (brdepth.empty() ? 1 :
-                     brdepth == "$"  ? branches[br].depth
-                                     : atoi(brdepth.c_str()));
+    // Branch:$ uses static data -- it never comes from the current game.
+    const int dep = (brlev.empty() ? 1 :
+                     brlev == "$"  ? branches[br].numlevels
+                                   : atoi(brlev.c_str()));
 
-    if (dep < 0 || dep > branches[br].depth)
+    // The branch might have been longer when the save has been created.
+    if (dep < 0 || dep > brdepth[br] && dep > branches[br].numlevels)
     {
         throw make_stringf("Invalid depth for %s in spec \"%s\"",
                            brname.c_str(), s.c_str());
@@ -3098,30 +3002,24 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     return level_id(br, dep);
 }
 
-level_id level_id::from_packed_place(const unsigned short place)
+level_id level_id::from_packed_place(unsigned short place)
 {
     level_id id;
 
     id.branch     = (branch_type) place_branch(place);
     id.depth      = place_depth(place);
-    id.level_type = (level_area_type) place_type(place);
 
     return (id);
 }
 
-// NOTE: see also marshall_level_id
 void level_id::save(writer& outf) const
 {
-    marshallShort(outf, branch);
-    marshallShort(outf, depth);
-    marshallShort(outf, level_type);
+    marshall_level_id(outf, *this);
 }
 
 void level_id::load(reader& inf)
 {
-    branch     = static_cast<branch_type>(unmarshallShort(inf));
-    depth      = unmarshallShort(inf);
-    level_type = static_cast<level_area_type>(unmarshallShort(inf));
+    (*this) = unmarshall_level_id(inf);
 }
 
 level_pos level_pos::current()
@@ -3491,7 +3389,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
 
         if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
-            && (env.map_knowledge(*ri).seen() || !is_branch_stair(*ri)))
+            && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri)))
         {
             st.push_back(*ri);
         }
@@ -3829,11 +3727,6 @@ void TravelCache::load(reader& inf, int minorVersion)
         linfo.id = id;
         linfo.load(inf, minorVersion);
 
-        // Non-dungeon levels aren't persistent, but we do
-        // save the current level.
-        if (id.level_type != LEVEL_DUNGEON && id != level_id::current())
-            continue;
-
         levels[id] = linfo;
     }
 
@@ -3904,14 +3797,13 @@ std::vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel()
-            // FIXME: check depth too once level_type is gone
-         || id.level_type == you.level_type);
+    return (is_connected_branch(id) && can_travel_interlevel()
+            || id == level_id::current());
 }
 
 bool can_travel_interlevel()
 {
-    return (you.level_type == LEVEL_DUNGEON);
+    return player_in_connected_branch();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4504,33 +4396,4 @@ void clear_level_target()
 {
     level_target.clear();
     trans_travel_dest.clear();
-}
-
-level_id_iterator::level_id_iterator()
-{
-    cur = level_id(BRANCH_MAIN_DUNGEON, 1);
-}
-
-level_id_iterator::operator bool() const
-{
-    return cur.level_type < NUM_LEVEL_AREA_TYPES;
-}
-
-level_id level_id_iterator::operator*() const
-{
-    return cur;
-}
-
-void level_id_iterator::operator++()
-{
-    if (cur.level_type == LEVEL_DUNGEON)
-    {
-        if (branches[cur.branch].depth < ++cur.depth)
-            cur.branch = static_cast<branch_type>(cur.branch + 1), cur.depth = 1;
-        if (cur.branch < NUM_BRANCHES)
-            return;
-        cur.depth = -1;
-    }
-    cur.level_type = static_cast<level_area_type>(cur.level_type + 1);
-    return;
 }

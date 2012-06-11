@@ -28,7 +28,7 @@ bool is_chaotic_god(god_type god);
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
 
-god_type random_god(bool disallow_no_god = false);
+god_type random_god(bool available = true);
 
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);

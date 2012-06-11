@@ -216,6 +216,7 @@ tagstring.o \
 target.o \
 teleport.o \
 terrain.o \
+throw.o \
 transform.o \
 traps.o \
 travel.o \
@@ -280,6 +281,23 @@ json.o
 YACC_OBJECTS = \
 util/levcomp.tab.o \
 util/levcomp.lex.o
+
+INI_OBJECTS = \
+dat/descript/ability.ini \
+dat/descript/backgrounds.ini \
+dat/descript/branches.ini \
+dat/descript/cards.ini \
+dat/descript/commands.ini \
+dat/descript/features.ini \
+dat/descript/gods.ini \
+dat/descript/items.ini \
+dat/descript/monsters.ini \
+dat/descript/quotes.ini \
+dat/descript/skills.ini \
+dat/descript/species.ini \
+dat/descript/spells.ini \
+dat/descript/unident.ini \
+dat/descript/unrand.ini
 
 ALL_OBJECTS = $(OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
 $(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) \

@@ -90,7 +90,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     mon->flags &= ~MF_JUST_SUMMONED;
     mon->props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
-        : "";
+        : (caster->is_player()) ? "you" : "";
     mon->props["iood_mid"].get_int() = caster->mid;
 
     // Move away from the caster's square.
@@ -165,7 +165,7 @@ static void _fuzz_direction(monster& mon, int pow)
     const float off = (coinflip() ? -1 : 1) * 0.25;
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
-    if (wearing_amulet(AMU_INACCURACY))
+    if (player_effect_inaccuracy())
         tan *= 2;
 
     // Cast either from left or right hand.
@@ -385,9 +385,7 @@ move_again:
             if (!shield_reflects(*shield))
             {
                 if (victim->is_player())
-                {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-                }
                 else
                 {
                     simple_monster_message(mons, (" blocks "
@@ -609,9 +607,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     beam.hit = AUTOMATIC_HIT;
     beam.source_name = mon.name(DESC_PLAIN, true);
 
-    int pow = mon.hit_dice * 6;
-    pow = stepdown_value(pow, 30, 30, 200, -1);
-    beam.damage = dice_def(4, pow / 4);
+    beam.damage = dice_def(3, 20);
 
     beam.ex_size = 1;
     beam.loudness = 5;
@@ -771,9 +767,7 @@ move_again:
             if (!shield_reflects(*shield))
             {
                 if (victim->atype() == ACT_PLAYER)
-                {
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-                }
                 else
                 {
                     simple_monster_message(mons, (" blocks "

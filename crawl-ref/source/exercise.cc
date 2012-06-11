@@ -15,8 +15,6 @@
 #include "random.h"
 #include "skills.h"
 #include "spl-util.h"
-#include "sprint.h"
-#include "state.h"
 
 skill_type abil_skill(ability_type abil)
 {
@@ -254,10 +252,6 @@ static bool _check_train_armour(int amount)
 {
     if (const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false))
     {
-        // Don't train armour if we have no EVP.
-        if (!property(*armour, PARM_EVASION))
-            return (false);
-
         // XXX: animal skin; should be a better way to get at that.
         const int mass_base = 100;
         const int mass = std::max(item_mass(*armour) - mass_base, 0);
@@ -380,7 +374,6 @@ void practise(exer_type ex, int param1)
         break;
 
     case EX_WILL_THROW_WEAPON:
-    case EX_WILL_THROW_POTION:
         if (coinflip())
             exercise(SK_THROWING, 1);
         break;

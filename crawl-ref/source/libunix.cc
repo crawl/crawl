@@ -27,7 +27,6 @@
 
 #include "cio.h"
 #include "crash.h"
-#include "delay.h"
 #include "enum.h"
 #include "externs.h"
 #include "libutil.h"
@@ -273,8 +272,12 @@ int m_getch()
             c = proc_mouse_event(c, &me);
         }
 #endif
-    } while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-             && !crawl_state.mouse_enabled);
+    } while (
+#ifdef KEY_RESIZE
+             c == -KEY_RESIZE ||
+#endif
+             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+                 && !crawl_state.mouse_enabled));
 
     return (c);
 }
@@ -400,7 +403,7 @@ void console_startup(void)
     // only spams when not relevant, but cannot even be selectively hushed
     // by (void) casts like all other such warnings.
     // "if ();" is an unsightly hack...
-    if (write(1, KPADAPP, strlen(KPADAPP)));
+    if (write(1, KPADAPP, strlen(KPADAPP))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -432,6 +435,8 @@ void console_startup(void)
 
     scrollok(stdscr, FALSE);
 
+    // Must call refresh() for ncurses to update COLS and LINES.
+    refresh();
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
@@ -449,7 +454,7 @@ void console_shutdown()
     tcsetattr(0, TCSAFLUSH, &def_term);
 #ifdef CURSES_USE_KEYPAD
     // "if ();" to avoid undisableable spurious warning.
-    if (write(1, KPADCUR, strlen(KPADCUR)));
+    if (write(1, KPADCUR, strlen(KPADCUR))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -541,6 +546,11 @@ int get_number_of_lines(void)
 int get_number_of_cols(void)
 {
     return (COLS);
+}
+
+int num_to_lines(int num)
+{
+    return num;
 }
 
 void clrscr()
@@ -724,26 +734,30 @@ void gotoxy_sys(int x, int y)
 }
 
 typedef cchar_t char_info;
-inline bool operator == (const cchar_t &a, const cchar_t &b)
+static inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
     return (a.attr == b.attr && *a.chars == *b.chars);
 }
-inline char_info character_at(int y, int x)
+
+static inline char_info character_at(int y, int x)
 {
     cchar_t c;
     // (void) is to hush an incorrect clang warning.
     (void)mvin_wch(y, x, &c);
     return (c);
 }
-inline bool valid_char(const cchar_t &c)
+
+static inline bool valid_char(const cchar_t &c)
 {
     return *c.chars;
 }
-inline void write_char_at(int y, int x, const cchar_t &ch)
+
+static inline void write_char_at(int y, int x, const cchar_t &ch)
 {
     move(y, x);
     add_wchnstr(&ch, 1);
 }
+
 static void flip_colour(cchar_t &ch)
 {
     const unsigned colour = (ch.attr & A_COLOR);

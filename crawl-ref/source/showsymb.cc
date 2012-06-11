@@ -20,8 +20,6 @@
 #include "state.h"
 #include "terrain.h"
 #include "viewchar.h"
-#include "viewgeom.h"
-#include "coord.h"
 
 static
 unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
@@ -145,13 +143,9 @@ static int _get_mons_colour(const monster_info& mi)
         col = ETC_FIRE;
 
     if (mi.attitude == ATT_FRIENDLY)
-    {
         col |= COLFLAG_FRIENDLY_MONSTER;
-    }
     else if (mi.attitude != ATT_HOSTILE)
-    {
         col |= COLFLAG_NEUTRAL_MONSTER;
-    }
     else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {

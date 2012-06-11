@@ -64,6 +64,15 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_BABY_ALLIGATOR, MONS_ALLIGATOR),
 
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
+
+    monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
+    monster_level_up(MONS_MERMAID, MONS_SIREN),
+
+    // Spriggan -> rider is no good (no mount), -> defender would be an insane
+    // power jump, -> druid or -> air mage would require magic training,
+    // -> berserker an altar.
+
+    monster_level_up(MONS_DEEP_DWARF, MONS_DEEP_DWARF_SCION),
 };
 
 mons_experience_levels::mons_experience_levels()

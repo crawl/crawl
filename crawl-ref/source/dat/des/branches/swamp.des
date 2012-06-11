@@ -328,7 +328,7 @@ ENDMAP
 # Swamp:5 standard
 #
 NAME:    swamp
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  4
 ORIENT:  float
 TAGS:    no_rotate
@@ -366,7 +366,7 @@ ENDMAP
 # Swamp:5 alternative (dp)
 #
 NAME:    swamp_alternative
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  4
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
@@ -402,7 +402,7 @@ ENDMAP
 # "Old school" swamp end, by Jude
 #
 NAME:    swamp_old_school
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  4
 TAGS:    no_pool_fixup
 ORIENT:  southeast
@@ -448,7 +448,7 @@ ENDMAP
 ###############################################################################
 # Swamp:5 alternative (due)
 NAME:    swamp_fiery
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
@@ -488,7 +488,7 @@ ENDMAP
 # The way to icy death!
 #
 NAME:    swamp_icy
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  southeast
@@ -541,7 +541,7 @@ ENDMAP
 # Alternative swamp end, by Lemuel
 #
 NAME:    swamp_pestilence
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  3
 TAGS:    no_pool_fixup
 ORIENT:  southeast
@@ -600,7 +600,7 @@ ENDMAP
 # HangedMan's hellswamp: an abandoned, overgrown, flooded temple,
 # occupied by demons, beasts, messes of flesh, and other vile tricks.
 NAME:    swamp_vile
-PLACE:   Swamp:5
+PLACE:   Swamp:$
 WEIGHT:  3
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  southwest

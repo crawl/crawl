@@ -43,9 +43,7 @@ void player::add_beholder(const monster* mon, bool axe)
         else
         {
             if (you.can_see(mon))
-            {
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
-            }
             else
             {
                 mpr("Your mesmeriser suddenly seems less interesting!");
@@ -169,9 +167,7 @@ static void _removed_beholder_msg(const monster* mon)
         else
         {
             if (you.can_see(mon))
-            {
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
-            }
             else
             {
                 mpr("Your mesmeriser suddenly seems less interesting!");
@@ -277,5 +273,5 @@ bool player::possible_beholder(const monster* mon) const
              && !mon->asleep() && !mon->cannot_move()
              && !mon->berserk() && !mons_is_fleeing(mon)
              && !is_sanctuary(you.pos())
-           || player_equip_unrand(UNRAND_DEMON_AXE)));
+           || player_equip_unrand_effect(UNRAND_DEMON_AXE)));
 }

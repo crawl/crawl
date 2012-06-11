@@ -615,11 +615,10 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    if (you.level_type == LEVEL_ABYSS
-        || source == HELL_EFFECT_MISCAST)
+    if (player_in_branch(BRANCH_ABYSS) || source == HELL_EFFECT_MISCAST)
         return (_malign_gateway()); // attempt to degrade to malign gateway
 
-    target->banish(cause);
+    target->banish(act_source, cause);
     return (true);
 }
 
@@ -2629,7 +2628,7 @@ void MiscastEffect::_air(int severity)
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses appear from out of thin air!";
 
-            _big_cloud(CLOUD_STINK, 20, 9 + random2(4));
+            _big_cloud(CLOUD_MEPHITIC, 20, 9 + random2(4));
             break;
         case 2:
             you_msg        = "You are under the weather.";
@@ -2768,7 +2767,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
-            place_cloud(CLOUD_STINK, target->pos(), 2 + random2(4), guilty);
+            place_cloud(CLOUD_MEPHITIC, target->pos(), 2 + random2(4), guilty);
             break;
         }
         break;
@@ -2793,7 +2792,7 @@ void MiscastEffect::_poison(int severity)
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
 
-            _big_cloud(CLOUD_STINK, 20, 8 + random2(5));
+            _big_cloud(CLOUD_MEPHITIC, 20, 8 + random2(5));
             break;
 
         case 2:

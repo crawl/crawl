@@ -34,7 +34,9 @@ public:
         ASSERT(this);
         if (atype() == ACT_PLAYER)
         {
+#ifndef DEBUG_GLOBALS
             ASSERT(this == (actor*)&you); // there can be only one
+#endif
             return true;
         }
         return false;
@@ -106,6 +108,7 @@ public:
     {
         return const_cast<actor*>(this)->weapon(0);
     }
+    virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq,
                                 bool include_melded=false) = 0;
@@ -203,7 +206,7 @@ public:
                       beam_type flavour = BEAM_MISSILE,
                       bool cleanup_dead = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(const std::string &who = "") = 0;
+    virtual void banish(actor *agent, const std::string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
@@ -347,6 +350,7 @@ public:
             || petrifying();
     }
 
+    virtual bool wont_attack() const = 0;
     virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;

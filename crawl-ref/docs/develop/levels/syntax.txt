@@ -65,7 +65,7 @@ Features
  ^ - random trap.
  ~ - random trap suitable for the branch and depth the map is being used.
 
- A - Vestibule gateway (opened by Horn).
+ A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
  C - Random Altar.
@@ -896,6 +896,10 @@ MONS:     (list of monsters)
 
           Monster names should be used very sparingly.
 
+          Every renamed monster needs a description as well (place it in
+          dat/descript/monsters.txt). If you want to have multiple monsters
+          share descriptions and speech, you can do it with "dbname:".
+
           Overriding Monster Stats:
           -------------------------
 
@@ -1254,6 +1258,14 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           operations for the placeholder are performed. Also, all Kxxx
           lines accept weights as for MONS or ITEM.
 
+          KFEAT overrides the normal meaning of the glyph: In the absence
+          of further declarations,
+            KFEAT: 1 = shallow_water
+          will result in 1 producing shallow water with no monster.
+
+          KFEAT applies to cells that have the specified glyph after applying
+          all shuffles and substitutions.
+
           Shop definitions
           ----------------
 
@@ -1323,6 +1335,14 @@ KMONS:    ? = orc priest / w:3 deep elf priest
           Or if you want to pick randomly:
             KMONS: n = Terence / Michael / Erica, human
 
+          KMONS overrides the normal meaning of the glyph: In the absence
+          of further declarations,
+            KMONS: W = rat
+          will result in W producing a rat on a floor tile, not shallow water.
+
+          Like KFEAT, KMONS applies to cells that have the specified glyph
+          after applying all shuffles and substitutions.
+
 KMASK:    Z = no_monster_gen
 
           KMASK allows you set or unset various masks for particular
@@ -1361,10 +1381,32 @@ KMASK:    Z = no_monster_gen
           would make it so that monsters are only randomly generated on shallow
           water squares.
 
+          Unlike KFEAT, KITEM, and KMONS, KMASK does not override the normal
+          meaning of the glyph.
+
+          Like KFEAT, KMASK applies to cells that have the specified glyph
+          after applying all shuffles and substitutions.
+
 KPROP:    x = bloody
           KPROP: allows you to assign a specific property to a feature. Like
           KFEAT: and KMONS:, it can be combined with these for the same place-
           holder.
+
+          Unlike KFEAT etc., KPROP is applied to the cells of the map that
+          currently have that glyph, applying only the shuffles and
+          substitutions before the KPROP declaration.  That is:
+            KFEAT: ' = rock_wall
+            KPROP: ' = bloody
+            SUBST: ' = '.
+          causes ' to produce a bloody wall or a bloody floor at random,
+          while:
+            KFEAT: ' = rock_wall
+            SUBST: ' = '.
+            KPROP: ' = bloody
+          causes ' to produce either a bloody wall or a bloodless floor.
+
+          Unlike KFEAT, KITEM, and KMONS, KPROP: does not override the normal
+          meaning of the glyph.
 
           Available properties are:
 
@@ -1402,6 +1444,15 @@ KITEM:    ? = potion of healing / potion of restore abilities
 
           KITEM: allows you to place multiple items on the same square:
             KITEM: ? = bread ration, potion of water, potion of porridge
+
+          KITEM overrides the normal meaning of the glyph: In the absence
+          of further declarations,
+            KITEM: W = any weapon
+          will result in W producing a weapon on a floor tile, not shallow
+          water.
+
+          Like KFEAT, KITEM applies to cells that have the specified glyph
+          after applying all shuffles and substitutions.
 
 MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 

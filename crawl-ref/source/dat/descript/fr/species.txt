@@ -1,0 +1,120 @@
+%%%%
+Centaur
+
+Rapides, forts et corpulents, ils ont des besoin en nourriture plus importants
+que les autres espèces.
+%%%%
+Deep Dwarf
+
+Ils vivent dans de profonds souterrains ne peuvent pas se régénérer
+naturellement, mais ils sont résistants et ont des outils de guérison.
+%%%%
+Deep Elf
+
+L'elfe le plus doué pour la magie, mais aussi le plus fragile.
+%%%%
+Demigod
+
+Ils ne serviront jamais un dieu, mais les Demi-Dieux compensent avec une santé
+et des caractéristiques divines.
+%%%%
+Demonspawn
+
+Les tieffelins sont moitié humain, moitié démon. Ils développent de puissantes
+mutations démoniaques à mesure qu'ils grandissent.
+%%%%
+Draconian
+
+Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau
+7 et prennent une couleur.
+%%%%
+Felid
+
+Ces chats sont dotés de conscience, mais sont incapables de manipuler des
+objets complexes, ou d'utiliser des armes ou des armures.
+%%%%
+Ghoul
+
+Un mort-vivant, condamné à pourrir pour l'éternité. Ils sont toujours à la
+recherche de nourriture avariée à manger, taillant leur chemin avec leurs
+griffes.
+%%%%
+Halfling
+
+Petit mais robuste, ils sont excellents avec une fronde. Ils ont une résistance
+supplémentaire aux effets mutagènes.
+%%%%
+High Elf
+
+Elfes hautains qui peuvent aussi bien lancer des sorts que se battre à l'épée.
+%%%%
+Hill Orc
+
+Les Orcs sont doué en combat rapproché et s'essaient souvent à la magie
+offensive. Haïs de tous, les Orcs sont très fiers et la plupart d'entre eux se
+sentent supérieurs aux autres.
+%%%%
+Human
+
+Ordinaire et moyen.
+%%%%
+Tengu
+
+Homme-oiseaux qui aiment combattre, autant avec des armes qu'avec des sorts.
+Ils sont assez fragiles mais finissent par apprendre à voler.
+%%%%
+Kobold
+
+Petits, malicieux et un peu fragiles, mais aux multiples talents. Ils peuvent
+manger n'importe quelle viande et ne s'en privent pas.
+%%%%
+Merfolk
+
+Moitié poisson, moitié humain, les ondins habitent à la fois sur terre et dans
+l'eau.
+%%%%
+Minotaur
+
+Un homme grand et musclé avec une tête de taureau. Ils excellent dans toutes
+les formes de combat rapproché et à distance.
+%%%%
+Mummy
+
+Une personne mort-vivante couverte de bandages et de fluides d'embaumement,
+condamnés à la non-vie par une ancienne malédiction.
+%%%%
+Naga
+
+Un hybride; humain jusqu'à la poitrine, le torse se prolonge par une longue
+queue écailleuse et musclée, comme celle d'un serpent.
+%%%%
+Octopode
+
+Une espèce de céphalopodes amphibies. Ils peuvent porter huit anneaux, mais
+pratiquement aucune armure ne leur va.
+%%%%
+Ogre
+
+Grand et fort, ils sont vu la plupart du temps comme des brutes. Néanmoins, les
+Ogres sont très à l'aise avec les bases de la magie.
+%%%%
+Sludge Elf
+
+Un elfe de type dépravé, qui préfère la ruse au combat loyal, et la magie noire
+à toute autre forme de sorcellerie.
+%%%%
+Spriggan
+
+Très petits, très frêles et très rapides. Les Spriggans sont très forts pour
+prendre leurs ennemis par surprise et comme jeteurs de sorts.
+%%%%
+Troll
+
+Grandes brutes prêtes à estropier n'importe quoi avec leurs griffes, sans
+jamais y réfléchir à deux fois. Ils ont toujours faim.
+%%%%
+Vampire
+
+Naviguant entre la vie et la non-vie, les vampires sont des mages accomplis, et
+maîtres dans l'art d'attaquer leurs ennemis par surprise.
+%%%%

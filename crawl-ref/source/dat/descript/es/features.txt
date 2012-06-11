@@ -1,0 +1,254 @@
+%%%%
+A basalt altar of Yredelemnul
+
+Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
+%%%%
+A blade trap
+
+Puedes ver el filo de una enorme hoja en forma de guadaña en una ranura;
+probablemente tiene un contrapeso que actúa como péndulo.
+%%%%
+A bloodstained altar of Trog
+
+Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
+gigantes y cubierto con marcas de sangre.
+%%%%
+A blossoming altar of Fedhas
+
+Un altar a Fedhas Madash, cubierto con vibrante y colorida vida vegetal.
+%%%%
+A burning altar of Makhleb
+
+Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
+formas se pueden ver en las llamas.
+%%%%
+A closed door
+
+Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
+%%%%
+A corrupted altar of Lugonu
+
+Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que fuera
+corrompido irrevocablemente.
+%%%%
+A crawl-hole back to the Lair
+
+Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
+%%%%
+A deep blue altar of Sif Muna
+
+Un altar del azul más oscuro, cubierto de intrincadas formas y escrituras en
+alfabetos ya olvidados hace mucho, dedicado a Sif Muna.
+%%%%
+A detected secret door
+
+Una puerta de madera, astutamente oculta. Solía ser una puerta secreta, pero al
+menos para tí ya no es secreta.
+
+Para abrirla, simplemente camina hacia ella, o usa 'O'
+%%%%
+A dry fountain
+
+Una fuente reseca que ha visto días mejores.
+%%%%
+A fountain of clear blue water
+
+Pulsa 'q' para beber de esta fuente. Sin embargo, no esperes que vaya a tener
+efecto alguno...
+%%%%
+A fountain of blood
+
+Usa 'q' para beber de esta fuente, si deseas tal cosa realmente.
+%%%%
+A fountain of sparkling water
+
+Usa 'q' para beber de esta fuente mágica. Espera efectos mágicos mientras
+todavía sea mágica.
+%%%%
+A gate leading back out of here
+
+Esta puerta parece que te permite regresar de donde viniste.
+%%%%
+A gate leading back out of this place
+
+Esta puerta te conduce de vuelta al calabozo.
+%%%%
+A gate leading out of Pandemonium
+
+Finalmente, una puerta que te conduce de vuelta al calabozo.
+%%%%
+A gate leading to another region of Pandemonium
+
+Esta puerta te lleva a otra región más del Pandemonio. Siempre habrán más.
+%%%%
+A gas trap
+
+Eres afortunado por haber detectado esta trampa, porque podría haber soltado
+una nube de gas mortal hacia ti. No puedes decir exactamente qué gas contiene -
+quizás es simplemente veneno, quizás humos mutagénicos, quizás vapor
+inflamable, o quizás algo aún peor.
+%%%%
+A gate to the Realm of Zot
+
+Esta puerta lleva al Reino de Zot, la etapa final de tu aventura ya que en su
+nivel más profundo se halla el infame Orbe de Zot. Tanto el Orbe como este
+Reino tienen una temible y cuestionable reputación, pero algo parece ser
+cierto: los monstruos que habitan este área y protegen al Orbe son poderosos y
+extraños - algunos de ellos no se encuentran más que aquí.
+%%%%
+A gateway to a ziggurat
+
+Este portal conduce a un antiguo zigurat, un lugar de retos y riquezas por
+contar.
+
+Este portal solamente se puede usar una vez, y se cobra una enorme factura para
+entrar.
+
+%%%%
+A gateway to the ashen valley of Gehenna
+
+Puedes notar el calor. Gehena parece que solamente esté hecho de llamas, lava y
+fuego infernal.
+%%%%
+A gateway to Hell
+
+Este portal lleva al Vestíbulo del Infierno. Pocos irían allí voluntariamente.
+%%%%
+A gateway to the Iron City of Dis
+
+¿Quién pasará la prueba del hierro?
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Este lugar parede que radíe energía negativa.
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+Proveniente de las tierras azotadas por el frío, un escalofrío cruza tu alma.
+%%%%
+A glowing golden altar of the Shining One
+
+Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
+casi ciega.
+%%%%
+A glowing silver altar of Zin
+
+Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
+espera que sean los seguidores de Zin, y brillando gentilmente.
+%%%%
+A granite statue
+
+A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
+hace tiempo.
+%%%%
+A floor
+
+Suelo de calabozo.
+%%%%
+A crumbled stone wall
+
+Estos muros, aunque están faltos de reparación, parecen como congelados en el
+tiempo, y al igual que los árboles, a punto de colapsar, pero absolutamente
+incapaces de ello.
+%%%%
+A crystal clear mirror
+
+Un espejo reluciente, que refleja todo a su alrededor.
+%%%%
+A glistening fountain
+
+Lo único que le falta es agua.
+%%%%
+A black marble wall
+
+El mármol reluce y brilla. ¡En verdad es precioso!
+%%%%
+A crumbling stone wall
+
+Parece antiguo.
+%%%%
+A highly decorated stone wall
+
+Está recubierto con imágenes horribles y perturbadoras.
+%%%%
+A gravestone
+
+Una lápida anónima. La cuestión es, ¿es la lápida la que no tiene nombre o lo
+es la persona que yace en la tumba ?
+%%%%
+A damp floor
+
+Quizás sea la humedad o el constante flujo de nubes, pero el suelo de este
+lugar siempre está mojado.
+%%%%
+A black wall
+
+Quizás piedra, o carbón, o una sustancia que se encuentra solamente en los
+infiernos más profundos.
+%%%%
+A carved rock wall
+
+Está decorado con imágenes de muerte y destrucción.
+%%%%
+A dead tree
+
+Este árbol está tan muerto como todo lo demás aquí.
+%%%%
+A cracked metal wall
+
+Este muro de metal ha sufrido algo de daño. Desafortunadamente el agujero no es
+tan grande como para pasar a través.
+%%%%
+A golden statue
+
+Una estatua de oro macizo de un santo.
+%%%%
+A flickering gateway to a bazaar
+
+Además de los vendedores que han instalado sus tiendas en diversos lugares del
+calabozo, hay otros que intentan salir adelante viajando de un sitio a otro. En
+los bazares  podrás encontrar un tiendas muy variadas que a menudo tienen mejor
+mercancía que las sedentarias, y a veces a precio de ganga. Cuando oigas el
+tintineo de las monedas, ¡apurate e intenta encontrar el improvisado mercado
+antes de que la caravana se marche!
+
+Debes estar advertido de que el estilo de vida nómada de estos comerciantes,
+les ha enseñado a apropiarse de cualquier objeto de dejes atrás y después
+marcharse rápidamente a otro sitio para venderlos.
+%%%%
+A gateway to a bazaar
+
+Además de los vendedores que han instalado sus tiendas en diversos lugares del
+calabozo, hay otros que intentan salir adelante viajando de un sitio a otro. En
+los bazares  podrás encontrar un tiendas muy variadas que a menudo tienen mejor
+mercancía que las sedentarias, y a veces a precio de ganga.
+
+Debes estar advertido de que el estilo de vida nómada de estos comerciantes,
+les ha enseñado a apropiarse de cualquier objeto de dejes atrás y después
+marcharse rápidamente a otro sitio para venderlos.
+%%%%
+A gateway to a hive
+
+Escuchas una multitud de zumbidos. Las paredes de cera de este lugar están
+goteando miel, pero las larvas están hambrientas y la abeja reina no tolerará
+intrusos.
+%%%%
+A frozen archway
+
+Un frente permanentemente frío parece que rodea a este portal. Lo que quiera
+que viva al otro lado estará lleno de crueldad y furia ártica. Te percatas que
+el arco se está derritiendo.
+%%%%
+A dark tunnel
+
+Conduciendo directamente al interior de la roca hay un túnel oscuro y
+amenazador. Demasiado a menudo de su interior salen oleadas de aire tan
+caliente como para chamuscar tu cara y, como activadas por el aire, rocas caen
+del techo y de los lados del túnel, tapando lentamente la entrada.
+%%%%
+A magical portal
+
+Este portal lo ha dejado abierto un mago despistado. Puede conducir a un
+laboratorio secreto, ¡pero cuidado! Seguramente estará protegido por trampas
+mágicas y terribles monstruos. Parece que está apagándose lentamente.
+%%%%

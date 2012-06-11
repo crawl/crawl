@@ -12,6 +12,7 @@
 #include "viewgeom.h"
 #include "map_knowledge.h"
 #include <map>
+#include <bitset>
 #include <sys/un.h>
 
 class Menu;
@@ -80,9 +81,11 @@ public:
     void pop_menu();
     void close_all_menus();
 
-    void write_message(const char *format, ...);
+    void write_message();
+    void write_message(PRINTF(1, ));
     void finish_message();
-    void send_message(const char *format = "", ...);
+    void send_message();
+    void send_message(PRINTF(1, ));
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }
@@ -178,6 +181,11 @@ protected:
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
 
+    std::bitset<GXM * GYM> m_dirty_cells;
+    void mark_dirty(const coord_def& gc) { m_dirty_cells[gc.y * GXM + gc.x] = true; }
+    void mark_clean(const coord_def& gc) { m_dirty_cells[gc.y * GXM + gc.x] = false; }
+    bool is_dirty(const coord_def& gc) { return m_dirty_cells[gc.y * GXM + gc.x]; }
+
     int m_current_flash_colour;
     int m_next_flash_colour;
 
@@ -236,9 +244,7 @@ public:
     {
         tiles.m_crt_mode = mode;
         if (mode == CRT_MENU)
-        {
             tiles.push_crt_menu(tag);
-        }
     }
 
     ~tiles_crt_control()

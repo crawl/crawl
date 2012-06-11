@@ -137,7 +137,7 @@ trick
 
 gambit
 
-strategy
+trap
 %%%%
 _smoke_or_steam_
 
@@ -321,42 +321,6 @@ SPELL:@The_monster@ says @to_foe@, "Dogrw nutew berg."
 
 SPELL:@The_monster@ shouts @at_foe@, "Entram moth deg ulag!"
 ## END _wizard_ ##
-%%%%
-_hostile_adventurer_
-
-@_hostile_adventurer_common_@
-
-w:5
-@_hostile_adventurer_rare_@
-%%%%
-_hostile_adventurer_common_
-
-VISUAL:@The_monster@ frowns.
-
-@The_monster@ screams, "I was here first!" @player_only@
-
-@The_monster@ screams, "The Orb is mine!" @player_only@
-
-@The_monster@ screams @at_foe@, "Go away or die!"
-
-@The_monster@ screams @at_foe@, "Die!"
-%%%%
-_hostile_adventurer_rare_
-
-VISUAL:@The_monster@ looks very upset.
-
-@The_monster@ screams @at_foe@, "Return home!"
-
-@The_monster@ screams @at_foe@, "Give me all your treasure!"
-
-@The_monster@ screams, "You will never get the Orb!" @player_only@
-
-@The_monster@ screams @at_foe@, "First you have to pass me!"
-
-@The_monster@ screams @at_foe@, "I hate you!"
-
-@The_monster@ laughs @at_foe@, "I am free! Free to kill you!"
-## END _hostile_adventurer_ ##
 %%%%
 _friendly_imp_
 
@@ -2703,7 +2667,7 @@ w:50
 
 @The_monster@ says, "Did all the warriors here go to shield school or something?"
 
-@The_monster@ says, "So, are the fast ones nagas, or not?"
+@The_monster@ says, "So, why is that serpent talking?"
 
 @The_monster@ says, "What sort of name is 'naga' anyway? They're not even good at nagging."
 
@@ -2713,7 +2677,7 @@ w:50
 
 @The_monster@ says, "I'm sick of this place. Or maybe that's poison..."
 
-@The_monster@ says, "At least the fast ones don't have weapons."
+@The_monster@ says, "I hate mutated serpents."
 
 @The_monster@ says, "So, nagas are stealthy? Don't make me laugh."
 
@@ -2842,6 +2806,29 @@ w:50
 
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
 %%%%
+Lab Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Spare a ration?"
+
+@The_monster@ says, "I'm as lost as you are, buddy."
+
+@The_monster@ says, "I hate being hungry."
+
+@The_monster@ says, "I had breadcrumbs, but I ate them."
+
+@The_monster@ says, "I tried to follow the left wall; it didn't work."
+
+@The_monster@ says, "What do you think the minotaur eats?"
+
+@The_monster@ says, "So who maintains these gears?"
+
+@The_monster@ says, "What a crowded place."
+
+@The_monster@ says, "Mazes, puzzles. I hate puzzles."
+%%%%
 ######################################################################## GODS #
 Zin Donald
 
@@ -2953,6 +2940,10 @@ w:2
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
+
+@The_monster@ says, "Angels painted black are so last century."
+
+@The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
 %%%%
 Okawaru Donald
 
@@ -3489,7 +3480,7 @@ VISUAL:@The_monster@ generates a fountain of clear water, and laughs cruelly.
 
 @The_monster@ laughs at you. "Don't get delusional, you can't win!"
 %%%%
-_Dowan_Duvessa_dies_
+Dowan_Duvessa_dies
 
 @The_monster@ screams, "No! No!"
 
@@ -3499,25 +3490,25 @@ VISUAL:@The_monster@ seems overcome with grief, but rights @reflexive@ reflexive
 
 @The_monster@'s eyes darken. "You have made a black mistake."
 %%%%
-_Dowan_Duvessa_dies_invisible_
+Dowan_Duvessa_dies_invisible
 
 @The_monster@ screams, "No! No! NO!"
 %%%%
-_Dowan_Duvessa_dies_distance_
+Dowan_Duvessa_dies_distance
 
 You hear a distant wail of despair.
 %%%%
-_Dowan_Duvessa_dies_bytwin_
+Dowan_Duvessa_dies_bytwin
 
 @The_monster@ screams in horror.
 %%%%
-_Dowan_Duvessa_dies_invisible_bytwin_
+Dowan_Duvessa_dies_invisible_bytwin
 
-@_Dowan_Duvessa_dies_bytwin_@
+@Dowan_Duvessa_dies_bytwin@
 %%%%
-_Dowan_Duvessa_dies_distance_bytwin_
+Dowan_Duvessa_dies_distance_bytwin
 
-@_Dowan_Duvessa_dies_distance_@
+@Dowan_Duvessa_dies_distance@
 %%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
 twin_died Duvessa
@@ -3595,7 +3586,7 @@ _Duvessa_rare_
 
 @The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
 %%%%
-_Duvessa_Dowan_dies_
+Duvessa_Dowan_dies
 
 @The_monster@ screams in rage.
 
@@ -3603,7 +3594,7 @@ _Duvessa_Dowan_dies_
 
 VISUAL:@The_monster@ weeps, then rights @reflexive@ and shakes @possessive@ weapon.
 %%%%
-_Duvessa_Dowan_dies_invisible_
+Duvessa_Dowan_dies_invisible
 
 @The_monster@ screams in rage.
 
@@ -3611,24 +3602,24 @@ _Duvessa_Dowan_dies_invisible_
 
 @The_monster@ shouts wrathfully, "No!"
 %%%%
-_Duvessa_Dowan_dies_distance_
+Duvessa_Dowan_dies_distance
 
 You hear a distant scream of rage.
 %%%%
-_Duvessa_Dowan_dies_bytwin_
+Duvessa_Dowan_dies_bytwin
 
 @The_monster@ screams in horror.
 
 w:1
 @The_monster@ screams, "NO! What have I done?"
 %%%%
-_Duvessa_Dowan_dies_invisible_bytwin_
+Duvessa_Dowan_dies_invisible_bytwin
 
-@_Duvessa_Dowan_dies_bytwin_@
+@Duvessa_Dowan_dies_bytwin@
 %%%%
-_Duvessa_Dowan_dies_distance_bytwin_
+Duvessa_Dowan_dies_distance_bytwin
 
-@_Duvessa_Dowan_dies_distance_@
+@Duvessa_Dowan_dies_distance@
 %%%%
 ############ EDMUND ### One of Sigmund's nine brothers, no magic
 Edmund
@@ -3908,6 +3899,36 @@ VISUAL:@The_monster@ sighs.
 
 @The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
+############ FANNAR ### A cold-hearted elven sorcerer
+Fannar
+
+@_Fannar_common_@
+
+w:5
+@_Fannar_rare_@
+%%%%
+_Fannar_common_
+
+VISUAL:@The_monster@ glares icily @at_foe@.
+
+VISUAL:Some snowflakes condense on @the_monster@.
+
+VISUAL:@The_monster@ brushes some snowflakes from @possessive@ robe.
+
+@The_monster@ murmurs some mystic words to @reflexive@.
+%%%%
+_Fannar_rare_
+
+@The_monster@ says @to_foe@, "Freeze!"
+
+@The_monster@ says @to_foe@, "I shall freeze you to your soul!"
+
+@The_monster@ says @to_foe@, "An icy embrace awaits you..."
+
+@The_monster@ says @to_foe@, "You will make a fine ice sculpture."
+
+@The_monster@ says @to_foe@, "Does this not give you the chills?"
+%%%%
 ############ Gastronok ### A rather hungry wizard-slug
 # Cantrip messages:
 gastronok_self_buff
@@ -4180,6 +4201,22 @@ _Ijyb_rare_
 @The_monster@ screams @at_foe@, "No! No, no, no, no!"
 
 @The_monster@ screams @at_foe@, "I no like you!"
+%%%%
+confused Ijyb
+
+@The_monster@ cowers and screams, "My head! Aaaah! Get out now!"
+
+@The_monster@ screams @at_foe@, "Me give you whole level! Then you leave me be!"
+
+@The_monster@ screams @at_foe@, "Me still stronger! You very nasty!"
+
+@The_monster@ screams @at_foe@, "Me deserve better than this!"
+
+@The_monster@ screams @at_foe@, "Me be nice to you! Me promise!"
+
+@The_monster@ screams @at_foe@, "Me back to killing you soon!"
+
+VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a pretty merfolk witch
@@ -4397,49 +4434,6 @@ VISUAL:@The_monster@ grinds @possessive@ teeth.
 
 @The_monster@ screams @at_foe@, "I'll use your head as a decoration in my hut!"
 ## END Josephine ##
-%%%%
-############ JOZEF ### A bounty hunter
-Jozef
-
-@_Jozef_common_@
-
-w:5
-@_Jozef_rare_@
-%%%%
-_Jozef_common_
-
-VISUAL:@The_monster@ looks satisfied.
-
-@The_monster@ asks @foe,@ "You are @foe_name@, aren't you?"
-
-@The_monster@ says @to_foe@, "You don't look worth it for that money."
-
-@The_monster@ says @to_foe@, "Really sorry, but I've got to feed my family."
-
-@The_monster@ says @to_foe@, "It's nothing personal. I'm paid for it!"
-
-@The_monster@ shouts @at_foe@, "I'll get 500 gold for your head!"
-
-@The_monster@ shouts @at_foe@, "Your time has come!"
-
-@The_monster@ screams @at_foe@, "Die!"
-
-@The_monster@ screams @at_foe@, "At last I found you!"
-%%%%
-_Jozef_rare_
-
-@The_monster@ says @to_foe@, "I suppose that you are @foe_name@. Sorry if I'm wrong."
-
-@The_monster@ asks @foe,@ "Did you write a testament? You should."
-
-@The_monster@ says @to_foe@, "One dead @foe_name@, 500 gold pieces. It's in my contract."
-
-@The_monster@ says @to_foe@, "My job is sometimes very exciting. Sometimes..."
-
-@The_monster@ says @to_foe@, "I think I deserve my money."
-
-@The_monster@ screams @at_foe@, "Die! I've got more contracts today."
-## END Jozef ##
 %%%%
 ############ KHUFU ### mummy emperor with delusions of godhood
 Khufu
@@ -4669,6 +4663,20 @@ _Maud_rare_
 @The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
 
 @The_monster@ asks @foe,@ "Will you think of me as you die?"
+%%%%
+confused Maud
+
+@The_monster@ thinks out loud, "I seem to be forgetting something..."
+
+@The_monster@ asks @foe,@ "What was I looking for, again?"
+
+@The_monster@ thinks out loud, "Enter... Enterror?"
+
+@The_monster@ wonders, "Who am I anyway?"
+
+VISUAL:@The_monster@'s expression loosens as @possessive@ mind turns inward.
+
+VISUAL:@The_monster@ slowly smiles as @possessive@ mind releases itself from mundane concerns.
 ## END Maud ##
 %%%%
 ############ MAURICE ### A thief.
@@ -5625,8 +5633,6 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ says @to_foe@, "Don't bother to defend, it's @_pointless_@."
 
-@The_monster@ says @to_foe@, "I'll show you a few @_ploy_@s."
-
 @The_monster@ shouts @at_foe@, "Now you die!"
 
 @The_monster@ shouts @at_foe@, "@_ATTACK_@!!!"
@@ -6007,6 +6013,12 @@ VISUAL:@The_monster@ skips for a moment.
 
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
+%%%%
+################## Moth of suppression######################
+moth of suppression
+
+w:1
+VISUAL:@The_monster@ undresses you with its eyes!
 %%%%
 ################## Moth of wrath ###########################
 moth of wrath
@@ -6712,7 +6724,7 @@ cherub
 #################################
 # Monsters who worship Zin
 #################################
-zin_priest
+glowing angel
 
 w:40
 @The_monster@ recites @_axioms_of_law_@
@@ -6876,7 +6888,7 @@ Lugonu
 # Speech keys used *specifically* in (portal) vaults.
 #
 ###############################################################################
-Cigotuvi_creatures
+deformed humanoid
 
 VISUAL:@The_monster@ howls in pain.
 

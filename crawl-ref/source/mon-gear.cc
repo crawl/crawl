@@ -675,7 +675,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through
 
-    case MONS_JOZEF:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_DRACONIAN_KNIGHT:
@@ -1098,6 +1097,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_DAGGER;
         break;
 
+    case MONS_FANNAR:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_STAVES;
+        item.sub_type = STAFF_COLD;
+        break;
+
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
@@ -1285,6 +1290,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_HELLBINDER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_DEMON_BLADE;
+        break;
+
     default:
         break;
     }
@@ -1433,7 +1444,7 @@ static void _give_ammo(monster* mon, int level,
 
         case MONS_ORC_WARRIOR:
             if (one_chance_in(
-                    you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
+                    player_in_branch(BRANCH_ORCISH_MINES)? 9 : 20))
             {
                 weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
                 qty       = random_range(4, 8);
@@ -1500,8 +1511,7 @@ static void _give_ammo(monster* mon, int level,
                 break;
             // deliberate fall-through
 
-        case MONS_HAROLD: // bounty hunters
-        case MONS_JOZEF:  // up to 5 nets
+        case MONS_HAROLD: // bounty hunter, up to 5 nets
             if (mons_summoned)
                 break;
 
@@ -1510,7 +1520,7 @@ static void _give_ammo(monster* mon, int level,
             qty        = 1;
             if (one_chance_in(3))
                 qty++;
-            if (mon->type == MONS_HAROLD || mon->type == MONS_JOZEF)
+            if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
             break;
@@ -1563,7 +1573,7 @@ static bool make_item_for_monster(
     return (true);
 }
 
-void give_shield(monster* mon, int level)
+static void _give_shield(monster* mon, int level)
 {
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
@@ -1703,7 +1713,7 @@ void give_shield(monster* mon, int level)
     }
 }
 
-void give_armour(monster* mon, int level, bool spectral_orcs)
+static void _give_armour(monster* mon, int level, bool spectral_orcs)
 {
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -1792,7 +1802,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_JOSEPH:
-    case MONS_JOZEF:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL,
@@ -1883,6 +1892,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_DEEP_DWARF_NECROMANCER:
     case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_HELLBINDER:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
@@ -2004,6 +2014,17 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;
+
+    case MONS_FANNAR:
+    {
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        item.plus = 1 + coinflip();
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
+        set_equip_race(item, ISFLAG_ELVEN);
+        break;
+    }
 
     case MONS_DOWAN:
         item_race = MAKE_ITEM_ELVEN;
@@ -2159,6 +2180,8 @@ void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spect
 
 void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
+    ASSERT(level_number > -1); // debugging absdepth0 changes
+
     if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
         _give_gold(mons, level_number);
 
@@ -2170,6 +2193,6 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
 
     _give_ammo(mons, level_number, item_race, mons_summoned);
 
-    give_armour(mons, 1 + level_number / 2, spectral_orcs);
-    give_shield(mons, 1 + level_number / 2);
+    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
+    _give_shield(mons, 1 + level_number / 2);
 }

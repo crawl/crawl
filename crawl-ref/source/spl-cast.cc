@@ -17,7 +17,6 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
@@ -31,11 +30,8 @@
 #include "hints.h"
 #include "invent.h"
 #include "item_use.h"
-#include "itemname.h"
-#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
-#include "map_knowledge.h"
 #include "menu.h"
 #include "misc.h"
 #include "message.h"
@@ -373,7 +369,7 @@ int spell_fail(spell_type spell)
         }
     }
 
-    chance2 += 10 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
 
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
@@ -494,7 +490,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
+    if (player_effect_archmagi())
         enhanced++;
 
     enhanced += augmentation_amount();
@@ -536,7 +532,7 @@ static bool _can_cast()
     }
 
     // Randart weapons.
-    if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
+    if (player_effect_nocast())
     {
         mpr("Something interferes with your magic!");
         return false;
@@ -652,9 +648,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
         else if (keyin == '.' || keyin == CK_ENTER)
-        {
             spell = you.last_cast_spell;
-        }
         else if (!isaalpha(keyin))
         {
             mpr("You don't know that spell.");
@@ -914,9 +908,7 @@ static int _setup_evaporate_cast()
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
 
     if (prompt_failed(rc))
-    {
         rc = -1;
-    }
     else if (you.inv[rc].base_type != OBJ_POTIONS)
     {
         mpr("This spell works only on potions!");
@@ -1331,13 +1323,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_LEDAS_LIQUEFACTION:
         return cast_liquefaction(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_SYMBOL_OF_TORMENT:
-    case SPELL_TUKIMAS_BALL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_OZOCUBUS_REFRIGERATION:
         return cast_refrigeration(powc, false, true, fail);
 
@@ -1473,12 +1458,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_INSULATION:
         return cast_insulation(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_RESIST_POISON:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_SEE_INVISIBLE:
         return cast_see_invisible(powc, fail);
 
@@ -1498,12 +1477,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FREEZING_AURA:
         return brand_weapon(SPWPN_FREEZING, powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_MAXWELLS_SILVER_HAMMER:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_POISON_WEAPON:
         return brand_weapon(SPWPN_VENOM, powc, fail);
@@ -1539,12 +1512,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_NECROMUTATION:
         return cast_transform(powc, TRAN_LICH, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_ALTER_SELF:
-        mpr("You feel quite happy just as you are, actually.");
-        return SPRET_ABORT;
-#endif
-
     // General enhancement.
     case SPELL_REGENERATION:
         return cast_regen(powc, false, fail);
@@ -1558,20 +1525,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_LEVITATION:
-#endif
     case SPELL_FLY:
         return cast_fly(powc, fail);
 
     case SPELL_STONESKIN:
         return cast_stoneskin(powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_STONEMAIL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_CONDENSATION_SHIELD:
         return cast_condensation_shield(powc, fail);
@@ -1586,12 +1544,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_silence(powc, fail);
 
     // other
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_EXTENSION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_BORGNJORS_REVIVIFICATION:
         return cast_revivification(powc, fail);
 
@@ -1613,14 +1565,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
-
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_DETECT_SECRET_DOORS:
-    case SPELL_DETECT_ITEMS:
-    case SPELL_DETECT_CREATURES:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_PROJECTED_NOISE:
         return project_noise(fail);
@@ -1682,9 +1626,7 @@ static double _get_true_fail_rate(int raw_fail)
     int target = raw_fail * 3;
 
     if (target <= 100)
-    {
         return (double) _tetrahedral_number(target)/1020100;
-    }
     if (target <= 200)
     {
         //PIE: the negative term takes the maximum of 100 (or 99) into
@@ -1749,7 +1691,7 @@ char* failure_rate_to_string(int fail)
     return buffer;
 }
 
-const char* spell_hunger_string(spell_type spell, bool rod)
+std::string spell_hunger_string(spell_type spell, bool rod)
 {
     return hunger_cost_string(spell_hunger(spell, rod));
 }

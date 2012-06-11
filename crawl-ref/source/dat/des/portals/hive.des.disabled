@@ -19,47 +19,9 @@ function place_hive_portal(e, perm)
 end
 
 function hive_portal()
-  return one_way_stair { desc = 'gateway to a hive',
-                           dst = 'hive', floor = 'stone_arch',
+  return one_way_stair { desc = "gateway to a hive",
+                           dst = 'Hive', floor = 'stone_arch',
                            feat_tile = 'dngn_portal_hive_gone' }
-end
-
-function hive_message(e)
-  crawl.mpr("You enter a furiously buzzing hive!")
-end
-
-function hive_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Hive.", true)
-end
-
-function random_hive_colour()
-  local colours = {"blue", "red", "lightblue", "magenta", "green"}
-  return colours[crawl.random2(#colours) + 1]
-end
-
-function fixup_hive()
-  dgn.fixup_stairs("stone_arch", "exit_portal_vault")
-
-  if (dgn.get_floor_colour() == "black") then
-    dgn.change_floor_colour(random_hive_colour())
-  end
-
-  if (dgn.get_rock_colour() == "black") then
-    dgn.change_rock_colour("yellow")
-  end
-
-  dgn.change_floor_tile("floor_hive")
-  dgn.change_rock_tile("wall_hive")
-end
-
-dgn.set_lt_callback("hive", "fixup_hive")
-
-function hive_epilogue(e)
-  e.hook("epilogue",
-         function ()
-           hive_message(_G)
-           hive_milestone(_G)
-         end)
 end
 
 }}
@@ -328,12 +290,15 @@ ENDMAP
 # Hive portal vaults
 ###############################################################################
 
+default-depth: Hive
+
 ########################################################
 # Combs of tragedy (mumra)
 # Hive portal map
 NAME:     hive_mumra_combs
-TAGS:     hive
 ORIENT:   encompass
+KFEAT:    < = stone_arch
+KFEAT:    > = exit_portal_vault
 # Guarantee a certain amount of combs and larva to demonstrate
 # NSUBST:   % : %:5 / . # FIXME: syntax error
 # NSUBST:   ! : !:4 / .
@@ -375,7 +340,6 @@ NSUBST: o = 1:. / *:aa.
 NSUBST: p = 1:. / *:aa.
 # At least 1 of q
 NSUBST: q = 1:. / *:aa.
-: hive_epilogue(_G)
 MAP
              aaaaa     aaaaa
             aa.<>aa   aa...aa

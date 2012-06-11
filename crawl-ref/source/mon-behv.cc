@@ -16,7 +16,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
-#include "items.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"
@@ -880,14 +879,13 @@ static void _set_nearest_monster_foe(monster* mon)
 // 2. Call handle_behaviour to re-evaluate AI state and target x, y
 //
 //-----------------------------------------------------------------
-void behaviour_event(monster* mon, mon_event_type event, int src,
+void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                      coord_def src_pos, bool allow_shout)
 {
     if (!mon->alive())
         return;
 
-    ASSERT(src >= 0 && src <= MHITYOU);
-    ASSERT(!crawl_state.game_is_arena() || src != MHITYOU);
+    ASSERT(!crawl_state.game_is_arena() || src != &you);
     ASSERT(in_bounds(src_pos) || src_pos.origin());
     if (mons_is_projectile(mon->type))
         return; // projectiles have no AI
@@ -904,11 +902,10 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
     std::string msg;
+    int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
-    if (src == MHITYOU)
-        sourceWontAttack = true;
-    else if (src != MHITNOT)
-        sourceWontAttack = menv[src].wont_attack();
+    if (src)
+        sourceWontAttack = src->wont_attack();
 
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
@@ -972,7 +969,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
                 return;
             }
 
-            mon->foe = src;
+            mon->foe = src_idx;
 
             if (mon->asleep() && mons_near(mon))
                 remove_auto_exclude(mon, true);
@@ -990,7 +987,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == MHITYOU)
+            if (src == &you)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1047,10 +1044,10 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         }
 
         if (mon->foe == MHITNOT)
-            mon->foe = src;
+            mon->foe = src_idx;
 
         if (!src_pos.origin()
-            && (mon->foe == MHITNOT || mon->foe == src
+            && (mon->foe == MHITNOT || src && mon->foe == src->mindex()
                 || mons_is_wandering(mon)))
         {
             if (mon->is_patrolling())
@@ -1059,7 +1056,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             mon->target = src_pos;
 
             // XXX: Should this be done in _handle_behaviour()?
-            if (src == MHITYOU && src_pos == you.pos()
+            if (src == &you && src_pos == you.pos()
                 && !you.see_cell(mon->pos()))
             {
                 try_pathfind(mon);
@@ -1089,9 +1086,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // Assume monsters know where to run from, even if player is
         // invisible.
         mon->behaviour = BEH_FLEE;
-        mon->foe       = src;
+        mon->foe       = src_idx;
         mon->target    = src_pos;
-        if (src == MHITYOU)
+        if (src == &you)
         {
             // Friendly monsters don't become hostile if you read a
             // scroll of fear, but enslaved ones will.
@@ -1171,16 +1168,15 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         break;
     }
 
-    if (setTarget)
+    if (setTarget && src)
     {
-        if (src == MHITYOU)
+        mon->target = src_pos;
+        if (src->is_player())
         {
-            mon->target = you.pos();
+            // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
             mons_att_changed(mon);
         }
-        else if (src != MHITNOT)
-            mon->target = src_pos;
     }
 
     // Now, break charms if appropriate.

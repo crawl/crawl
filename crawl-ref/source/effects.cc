@@ -34,13 +34,11 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "fprop.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -60,7 +58,6 @@
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
-#include "place.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "player.h"
@@ -79,6 +76,8 @@
 #include "travel.h"
 #include "viewchar.h"
 #include "xom.h"
+
+static void _update_corpses(int elapsedTime);
 
 static void _holy_word_player(int pow, int caster, actor *attacker)
 {
@@ -166,7 +165,7 @@ void holy_word_monsters(coord_def where, int pow, int caster,
         // because it can kill them, and because hostile
         // monsters don't use it.
         if (attacker != NULL)
-            behaviour_event(mons, ME_ANNOY, attacker->mindex());
+            behaviour_event(mons, ME_ANNOY, attacker);
 
         if (mons->speed_increment >= 25)
             mons->speed_increment -= 20;
@@ -316,8 +315,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
-        behaviour_event(mons, ME_ALERT,
-                        attacker ? attacker->mindex() : MHITNOT);
+        behaviour_event(mons, ME_ALERT, attacker);
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
@@ -351,22 +349,21 @@ void immolation(int pow, int caster, coord_def where, bool known,
 
     bolt beam;
 
-    if (caster < 0)
+    switch (caster)
     {
-        switch (caster)
-        {
-        case IMMOLATION_SCROLL:
-            aux = "scroll of immolation";
-            break;
+    case IMMOLATION_SCROLL:
+        aux = "scroll of immolation";
+        break;
 
-        case IMMOLATION_SPELL:
-            aux = "a fiery explosion";
-            break;
+    case IMMOLATION_AFFIX:
+        aux = "a fiery explosion";
+        break;
 
-        case IMMOLATION_TOME:
-            aux = "an exploding Tome of Destruction";
-            break;
-        }
+    case IMMOLATION_TOME:
+        aux = "an exploding Tome of Destruction";
+        break;
+
+    default:;
     }
 
     beam.flavour       = BEAM_FIRE;
@@ -379,7 +376,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = known;
-    beam.affects_items = (caster != IMMOLATION_SCROLL);
+    beam.affects_items = caster != IMMOLATION_SCROLL
+                         && caster != IMMOLATION_AFFIX;
 
     if (caster == IMMOLATION_GENERIC)
     {
@@ -454,7 +452,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source = attacker->mindex();
+        beam.beam_source = attacker ? attacker->mindex() : MHITNOT;
     }
 
     beam.explode(false, true);
@@ -517,159 +515,28 @@ static std::string _who_banished(const std::string &who)
     return (who.empty() ? who : " (" + who + ")");
 }
 
-void banished(dungeon_feature_type gate_type, const std::string &who)
+void banished(const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (crawl_state.game_is_zotdef())
         return;
 
-    if (gate_type == DNGN_ENTER_ABYSS)
+    mark_milestone("abyss.enter",
+                   "is cast into the Abyss!" + _who_banished(who));
+
+    if (player_in_branch(BRANCH_ABYSS))
     {
-        mark_milestone("abyss.enter",
-                       "is cast into the Abyss!" + _who_banished(who));
-    }
-    else if (gate_type == DNGN_EXIT_ABYSS)
-    {
-        mark_milestone("abyss.exit",
-                       "escaped from the Abyss!" + _who_banished(who));
-    }
-
-    std::string cast_into;
-
-    switch (gate_type)
-    {
-    case DNGN_ENTER_ABYSS:
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "the Abyss";
-
-        // Too problematic with level_type hackery.
-        if (you.level_type == LEVEL_PORTAL_VAULT)
-            break;
-        you.props["abyss_return_name"] = you.level_type_name;
-        you.props["abyss_return_abbrev"] = you.level_type_name_abbrev;
-        you.props["abyss_return_origin"] = you.level_type_origin;
-        you.props["abyss_return_tag"] = you.level_type_tag;
-        you.props["abyss_return_ext"] = you.level_type_ext;
-        you.props["abyss_return_desc"] = level_id::current().describe();
-        break;
-
-    case DNGN_EXIT_ABYSS:
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_PANDEMONIUM:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "Pandemonium";
-        break;
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            banished(DNGN_ENTER_PANDEMONIUM, who);
-            return;
-        }
-        break;
-
-    case DNGN_EXIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_LABYRINTH:
-        if (you.level_type == LEVEL_LABYRINTH)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "a Labyrinth";
-        break;
-
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-        if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        cast_into = "Hell";
-        break;
-
-    default:
-        die("Invalid banished() gateway %d", static_cast<int>(gate_type));
+        // Can't happen outside wizmode.
+        mpr("You feel trapped.");
+        return;
     }
 
-    // Now figure out how we got here.
-    if (crawl_state.is_god_acting())
-    {
-        // down_stairs() will take care of setting things.
-        you.entry_cause = EC_UNKNOWN;
-    }
-    else if (who.find("self") != std::string::npos || who == you.your_name
-             || who == "you" || who == "You")
-    {
-        you.entry_cause = EC_SELF_EXPLICIT;
-    }
-    else if (who.find("distortion") != std::string::npos)
-    {
-        if (who.find("wield") != std::string::npos)
-        {
-            if (who.find("unknowing") != std::string::npos)
-                you.entry_cause = EC_SELF_ACCIDENT;
-            else
-                you.entry_cause = EC_SELF_RISKY;
-        }
-        else if (who.find("affixation") != std::string::npos)
-            you.entry_cause = EC_SELF_ACCIDENT;
-        else if (who.find("branding")  != std::string::npos)
-            you.entry_cause = EC_SELF_RISKY;
-        else
-            you.entry_cause = EC_MONSTER;
-    }
-    else if (who == "drawing a card")
-        you.entry_cause = EC_SELF_RISKY;
-    else if (who.find("you miscast") != std::string::npos)
-        you.entry_cause = EC_MISCAST;
-    else if (who == "wizard command")
-        you.entry_cause = EC_SELF_EXPLICIT;
-    else if (who.find("effects of Hell") != std::string::npos)
-        you.entry_cause = EC_ENVIRONMENT;
-    else if (who.find("Zot") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else if (who.find("trap") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else
-        you.entry_cause = EC_MONSTER;
-
-    if (!crawl_state.is_god_acting())
-        you.entry_cause_god = GOD_NO_GOD;
-
-    if (!cast_into.empty() && you.entry_cause != EC_SELF_EXPLICIT)
-    {
-        const std::string what = "Cast into " + cast_into + _who_banished(who);
-        take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
-    }
+    const std::string what = "Cast into the Abyss" + _who_banished(who);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
     push_features_to_abyss();
-    down_stairs(gate_type, you.entry_cause);  // heh heh
+    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 }
 
 bool forget_spell(void)
@@ -711,7 +578,7 @@ void direct_effect(monster* source, spell_type spell,
     if (def)
     {
         // annoy the target
-        behaviour_event(def, ME_ANNOY, source->mindex());
+        behaviour_event(def, ME_ANNOY, source);
     }
 
     int damage_taken = 0;
@@ -761,7 +628,7 @@ void direct_effect(monster* source, spell_type spell,
         {
             // lose_stat() must come last {dlb}
             if (one_chance_in(3)
-                && lose_stat(STAT_INT, 1, source))
+                && lose_stat(STAT_INT, 1 + random2(3), source))
             {
                 mpr("Something feeds on your intellect!");
                 xom_is_stimulated(50);
@@ -947,9 +814,15 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
+            if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
+            {
+                mprf("It has %d charges and is fully charged.", new_charges);
+                set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+            }
+
             // Reinitialise zap counts.
             wand.plus  = new_charges;
-            wand.plus2 = (charged ? ZAPCOUNT_RECHARGED : ZAPCOUNT_MAX_CHARGED);
+            wand.plus2 = ZAPCOUNT_RECHARGED;
         }
         else // It's a rod.
         {
@@ -1118,7 +991,7 @@ void yell(bool force)
     mprf(" Anything else - Stay silent%s.",
          one_chance_in(20) ? " (and be thought a fool)" : "");
 
-    unsigned char keyn = get_ch();
+    int keyn = get_ch();
     mesclr();
 
     switch (keyn)
@@ -2139,8 +2012,8 @@ void handle_time()
     }
 
     // Labyrinth and Abyss maprot.
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        forget_map(0);
+    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
+        forget_map(true);
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))
@@ -2150,7 +2023,7 @@ void handle_time()
 
     // Update all of the corpses, food chunks, and potions of blood on
     // the floor.
-    update_corpses(time_delta);
+    _update_corpses(time_delta);
 
     if (crawl_state.game_is_arena())
         return;
@@ -2225,7 +2098,8 @@ void handle_time()
         added_contamination++;
 
     bool mutagenic_randart = false;
-    if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
+    const int artefact_glow = player_effect_mutagenic();
+    if (artefact_glow)
     {
         // Reduced randart glow. Note that one randart will contribute
         // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
@@ -2323,10 +2197,10 @@ void handle_time()
     practise(EX_WAIT);
 
     // From time to time change a section of the labyrinth.
-    if (you.level_type == LEVEL_LABYRINTH && one_chance_in(10))
+    if (player_in_branch(BRANCH_LABYRINTH) && one_chance_in(10))
         change_labyrinth();
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
@@ -2402,7 +2276,8 @@ void handle_time()
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!player_res_mutation_from_item()
+                    || one_chance_in(10)))
             {
                 evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
             }
@@ -2412,7 +2287,7 @@ void handle_time()
         }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(20 / (6 - player_branch_depth())), true);
+        place_webs(random2(20 / (6 - you.depth)), true);
 }
 
 // Move monsters around to fake them walking around while player was
@@ -2616,7 +2491,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    update_corpses(elapsedTime);
+    _update_corpses(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
@@ -3173,7 +3048,7 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 // Update all of the corpses and food chunks on the floor.
 //
 //---------------------------------------------------------------
-void update_corpses(int elapsedTime)
+static void _update_corpses(int elapsedTime)
 {
     if (elapsedTime <= 0)
         return;
@@ -3239,6 +3114,11 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
+    // Skill calculations with a massive scale would overflow, cap it.
+    // The worst case, a -3 rod, takes 17000 aut to fully charge.
+    // -4 rods don't recharge at all.
+    aut = std::min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
+
     int rate = 4 + short(rod.props["rod_enchantment"]);
 
     rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
@@ -3284,9 +3164,7 @@ void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    const int depth = player_in_branch(BRANCH_SLIME_PITS)
-                      ? player_branch_depth()
-                      : 1;
+    const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
 
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)
