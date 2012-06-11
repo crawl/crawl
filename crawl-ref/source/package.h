@@ -6,7 +6,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <stack>
 
 #ifdef USE_ZLIB
 #include <zlib.h>
@@ -45,7 +44,7 @@ private:
     chunk_reader(package *parent, len_t start);
     void init(len_t start);
     package *pkg;
-    len_t next_block;
+    len_t first_block, next_block;
     len_t off, block_left;
 #ifdef USE_ZLIB
     bool eof;
@@ -90,9 +89,10 @@ private:
     bool aborted;
     std::map<std::string, len_t> directory;
     std::map<len_t, len_t> free_blocks;
-    std::stack<len_t> unlinked_blocks;
+    std::vector<len_t> unlinked_blocks;
     std::map<len_t, std::pair<len_t, len_t> > block_map;
     std::set<len_t> new_chunks;
+    std::map<len_t, uint32_t> reader_count;
     len_t extend_block(len_t at, len_t size, len_t by);
     len_t alloc_block(len_t &size);
     void finish_chunk(const std::string name, len_t at);
