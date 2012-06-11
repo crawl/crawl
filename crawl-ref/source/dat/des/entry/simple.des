@@ -1380,7 +1380,7 @@ SHUFFLE: 123t
 SUBST:   W : wW
 SUBST:   R : RWW, R = W.
 SUBST:   T : t
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
 xxxxxx@xxxxxx
 xWWWWTRTWWWWx
@@ -1402,7 +1402,7 @@ ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
 SUBST:   T : W.
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
   xxx xxx
  xxWx@xWxx
@@ -1421,14 +1421,14 @@ TAGS:    entry no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
   W       W
  W1W     W2W
 W1T1WWWWW2T2W
- W1...(...2W
-  W...{...W
- W3...[...tW
+.W1...(...2W.
+@.W...{...W.@
+.W3...[...tW.
 W3T3WWWWWtTtW
  W3W     WtW
   W       W
