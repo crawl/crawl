@@ -733,7 +733,8 @@ static std::string _query_database(TextDB &db, std::string key,
 
     // <foo> is an alias to key foo
     if (str[0] == '<' and str[str.size() - 2] == '>'
-        && str.find("\n") == str.size() - 1)
+        && str.find('<', 1) == str.npos
+        && str.find('\n') == str.size() - 1)
     {
         return _query_database(db, str.substr(1, str.size() - 3),
                                canonicalise_key, run_lua, untranslated);
