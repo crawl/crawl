@@ -2402,9 +2402,9 @@ bool do_god_gift(bool forced)
 
         case GOD_VEHUMET:
             if (forced || !vehumet_is_currently_gifting()
-                && you.piety >= piety_breakpoint(0)
-                // TODO: This chance is probably totally off
-                && one_chance_in(you.piety / 4))
+                          && you.piety >= piety_breakpoint(0)
+                          // TODO: This chance is probably totally off
+                          && one_chance_in(you.piety / 4))
             {
                 spell_type spell = _vehumet_find_spell_gift();
                 if (spell != SPELL_NO_SPELL)
