@@ -15,22 +15,17 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
-#include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
-#include "itemprop.h"
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
-#include "player-equip.h"
 #include "player-stats.h"
 #include "skill_menu.h"
-#include "skills.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
@@ -241,7 +236,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     case POT_POISON:
     case POT_STRONG_POISON:
-        if (player_res_poison())
+        if (player_res_poison() > 0)
         {
             mprf("You feel %s nauseous.",
                  (pot_eff == POT_POISON) ? "slightly" : "quite");

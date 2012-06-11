@@ -1,5 +1,5 @@
 %rim 0
-%sdir dc-mon/panlord
+%sdir mon/panlord
 
 demon_body_armor DEMON_BODY
 demon_body_crouch

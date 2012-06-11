@@ -23,7 +23,8 @@ void wizard_list_levels();
 void wizard_recreate_level();
 void debug_make_trap(void);
 bool debug_make_shop(const coord_def& pos = you.pos());
-void debug_place_map();
+void debug_place_map(bool primary);
+void wizard_primary_vault();
 void debug_test_explore();
 void wizard_abyss_speed();
 

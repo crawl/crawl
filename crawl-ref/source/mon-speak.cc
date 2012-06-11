@@ -296,7 +296,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
     int duration = 1;
     if (mons->hit_points <= 0)
         key += " killed";
-    else if ((mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS)
+    else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
         key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)
         key += " unsummoned";
@@ -397,7 +397,7 @@ bool mons_speaks(monster* mons)
     // Monsters always talk on death, even if invisible/silenced/etc.
     int duration = 1;
     const bool force_speak = !mons->alive()
-        || (mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS
+        || (mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS)
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
@@ -585,46 +585,10 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (mons->props.exists("speech_func"))
-        {
-#ifdef DEBUG_MONSPEAK
-            mpr("Trying Lua function for monster speech", MSGCH_DIAGNOSTICS);
-#endif
-            lua_stack_cleaner clean(dlua);
-
-            dlua_chunk &chunk = mons->props["speech_func"];
-
-            if (!chunk.load(dlua))
-            {
-                push_monster(dlua, mons);
-                dlua.callfn(NULL, 1, 1);
-                dlua.fnreturns(">s", &msg);
-
-                // __NONE means to be silent, and __NEXT means to try the next
-                // method of getting a speech message.
-                if (msg == "__NONE")
-                {
-#ifdef DEBUG_MONSPEAK
-                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
-#endif
-                    return (false);
-                }
-                if (msg == "__NEXT")
-                    msg.clear();
-            }
-            else
-            {
-                mprf(MSGCH_ERROR,
-                     "Lua speech function for monster '%s' didn't load: %s",
-                     mons->full_name(DESC_PLAIN).c_str(),
-                     dlua.error.c_str());
-            }
-        }
-
-        if (msg.empty() && mons->props.exists("speech_key"))
+        if (msg.empty() && mons->props.exists("dbname"))
         {
             msg = _get_speak_string(prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
 
@@ -635,7 +599,7 @@ bool mons_speaks(monster* mons)
                 // the key with prefixes.
                 std::vector<std::string> faux_prefixes;
                 msg = _get_speak_string(faux_prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
             }
@@ -874,7 +838,8 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
         // Except for VISUAL, none of the above influence these.
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
-        else if (line == "__MORE" && !silence)
+
+        if (line == "__MORE" && !silence)
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
             noticed = old_noticed;

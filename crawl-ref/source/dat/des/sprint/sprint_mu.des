@@ -299,7 +299,7 @@ ENDMAP
 # D1_1, horror grid
 NAME: sprint_mu_d1_horrors
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
-MONS: Erica / Harold / Snorg
+MONS: Erica / Josephine / Snorg
 MONS: centaur
 MONS: centaur warrior
 MONS: unseen horror
@@ -819,7 +819,7 @@ KMONS: a = patrolling Dowan hd:15 hp:100 \
 KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
  . blowgun . needle ego:curare q:7
 : elseif d2rnd == 2 then
-KMONS: a = patrolling Jozef hd:15 hp:100 \
+KMONS: a = patrolling Harold hd:15 hp:100 \
  spells:poison_arrow;teleport_other;.;minor_healing;slow \
  ; dire flail ego:distortion
 KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
@@ -1134,13 +1134,13 @@ ENDMAP
 # D3_1, branching
 NAME:  sprint_mu_d3_branching
 TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror no_dup
-KMONS: a = col:red generate_awake statue name:fire_elemental name_adjective hp:50 \
+KMONS: a = col:red generate_awake statue name:fire_elementalist name_adjective hp:50 \
  spells:summon_fire_elementals;cantrip
-KMONS: H = col:blue generate_awake statue name:water_elemental name_adjective hp:50 \
+KMONS: H = col:blue generate_awake statue name:water_elementalist name_adjective hp:50 \
  spells:summon_water_elementals;cantrip
-KMONS: O = col:brown generate_awake statue name:earth_elemental name_adjective hp:70 \
+KMONS: O = col:brown generate_awake statue name:earth_elementalist name_adjective hp:70 \
  spells:summon_earth_elementals;cantrip
-KMONS: d = col:lightgrey generate_awake statue name:air_elemental name_adjective hp:25 \
+KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adjective hp:25 \
  spells:summon_air_elementals;cantrip
 KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \

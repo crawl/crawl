@@ -15,16 +15,13 @@
 #include "externs.h"
 
 #include "branch.h"
-#include "cio.h"
 #include "colour.h"
 #include "coord.h"
-#include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "feature.h"
 #include "files.h"
-#include "map_knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "religion.h"
@@ -88,7 +85,7 @@ void overview_clear()
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
     // Don't record in temporary terrain
-    if (you.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch())
         return;
 
     const god_type god = feat_altar_god(which_thing);
@@ -341,7 +338,10 @@ std::string overview_description_string(bool display)
 // iterate through every dungeon branch, listing the ones which have been found
 static std::string _get_seen_branches(bool display)
 {
-    int num_printed_branches = 1;
+    // Each branch entry takes up 26 spaces + 38 for tags.
+    const int width = 64;
+
+    int num_printed_branches = 0;
     char buffer[100];
     std::string disp;
 
@@ -353,33 +353,12 @@ static std::string _get_seen_branches(bool display)
     }
     disp += "\n";
 
-    level_id dungeon_lid(branches[0].id, 0);
-    dungeon_lid = find_deepest_explored(dungeon_lid);
-    if (crawl_state.game_is_sprint())
-    {
-        snprintf(buffer, sizeof(buffer),
-                        "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
-    }
-    else if (crawl_state.game_is_zotdef())
-    {
-        snprintf(buffer, sizeof(buffer),
-                        "<yellow>Zot</yellow>     <darkgrey>(1/1)</darkgrey>");
-    }
-    else
-    {
-        snprintf(buffer, sizeof(buffer),
-                dungeon_lid.depth < 10 ?
-                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
-                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>           ",
-                dungeon_lid.depth);
-    }
-    disp += buffer;
-
-    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    for (int i = 0; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
-        if (stair_level.find(branch) != stair_level.end())
+        if (branch == root_branch
+            || stair_level.find(branch) != stair_level.end())
         {
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
@@ -391,20 +370,22 @@ static std::string _get_seen_branches(bool display)
                 entry_desc += " " + it->describe(false, true);
             }
 
+            // "D" is a little too short here.
+            const char *brname = (branch == BRANCH_MAIN_DUNGEON
+                                  ? branches[branch].shortname
+                                  : branches[branch].abbrevname);
+
             snprintf(buffer, sizeof buffer,
-                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
-                     branches[branch].abbrevname,
-                     lid.depth,
-                     branches[branch].depth,
-                     entry_desc.c_str());
+                "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                branch == root_branch ? -7 : 7,
+                brname, lid.depth, brdepth[branch], entry_desc.c_str());
 
             disp += buffer;
             num_printed_branches++;
 
             disp += (num_printed_branches % 3) == 0
                     ? "\n"
-                    // Each branch entry takes up 26 spaces + 38 for tags.
-                    : std::string(std::max<int>(64 - strlen(buffer), 0), ' ');
+                    : std::string(std::max<int>(width - strlen(buffer), 0), ' ');
         }
     }
 
@@ -439,7 +420,7 @@ static std::string _get_unseen_branches()
         if (seen_lair_branches >= 2 && is_random_lair_subbranch(branch))
             continue;
 
-        if (i == BRANCH_VESTIBULE_OF_HELL)
+        if (i == BRANCH_VESTIBULE_OF_HELL || !is_connected_branch(branch))
             continue;
 
         if (branch_is_unfinished(branch))
@@ -491,7 +472,7 @@ static std::string _get_branches(bool display)
     return _get_seen_branches(display) + _get_unseen_branches();
 }
 
-// iterate through every god and display their altar's discovery state by color
+// iterate through every god and display their altar's discovery state by colour
 static std::string _get_altars(bool display)
 {
     // Just wastes space for demigods.
@@ -513,7 +494,7 @@ static std::string _get_altars(bool display)
     return disp;
 }
 
-// Loops through gods, printing their altar status by color.
+// Loops through gods, printing their altar status by colour.
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display)
 {
@@ -671,9 +652,13 @@ static std::string _get_notes()
 {
     std::string disp;
 
-    for (level_id_iterator i; i; ++i)
-        if (!get_level_annotation(*i).empty())
-            disp += _get_coloured_level_annotation(*i) + "\n";
+    for (int br = 0 ; br < NUM_BRANCHES; ++br)
+        for (int d = 1; d <= brdepth[br]; ++d)
+        {
+            level_id i(static_cast<branch_type>(br), d);
+            if (!get_level_annotation(i).empty())
+                disp += _get_coloured_level_annotation(i) + "\n";
+        }
 
     if (disp.empty())
         return disp;
@@ -774,7 +759,7 @@ static void _seen_staircase(const coord_def& pos)
 static void _seen_altar(god_type god, const coord_def& pos)
 {
     // Can't record in Abyss or Pan.
-    if (you.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch())
         return;
 
     level_pos where(level_id::current(), pos);
@@ -904,9 +889,6 @@ static std::string unique_name(monster* mons)
 
 void set_unique_annotation(monster* mons, const level_id level)
 {
-    // Abyss persists its denizens.
-    if (level.level_type != LEVEL_DUNGEON && level.level_type != LEVEL_ABYSS)
-        return;
     if (!mons_is_unique(mons->type)
         && !(mons->props.exists("original_was_unique")
             && mons->props["original_was_unique"].get_bool())
@@ -936,9 +918,12 @@ void remove_unique_annotation(monster* mons)
         else
             ++i;
     }
+
     for (std::set<level_id>::iterator i = affected_levels.begin();
          i != affected_levels.end(); ++i)
+    {
         _update_unique_annotation(*i);
+    }
 }
 
 void set_level_exclusion_annotation(std::string str, level_id li)
@@ -1017,19 +1002,11 @@ void annotate_level()
     {
         li2 = level_id::get_next_level_id(you.pos());
 
-        if (li2.level_type != LEVEL_DUNGEON || li2.depth <= 0)
+        if (li2.depth <= 0)
             li2 = level_id::current();
     }
 
-    if (you.level_type != LEVEL_DUNGEON && li2.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't annotate this level.");
-        return;
-    }
-
-    if (you.level_type != LEVEL_DUNGEON)
-        li = li2;
-    else if (li2 != level_id::current())
+    if (li2 != level_id::current())
     {
         if (yesno("Annotate level on other end of current stairs?", true, 'n'))
             li = li2;
@@ -1047,8 +1024,8 @@ void do_annotate(level_id& li)
             MSGCH_PROMPT);
     }
 
-    const std::string prompt = "New level annotation "
-                               "(include '!' for warning): ";
+    const std::string prompt = "New annotation for " + li.describe()
+                               + " (include '!' for warning): ";
 
     char buf[77];
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
@@ -1063,6 +1040,26 @@ void do_annotate(level_id& li)
         mpr("Cleared.");
         level_annotations.erase(li);
     }
+}
+
+void clear_level_annotations(level_id li)
+{
+    level_annotations.erase(li);
+
+    // Abyss persists its denizens.
+    if (li == BRANCH_ABYSS)
+        return;
+
+    std::set<monster_annotation>::iterator next;
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); i = next)
+    {
+        next = i;
+        ++next;
+        if (i->second == li)
+            auto_unique_annotations.erase(i);
+    }
+    level_uniques.erase(li);
 }
 
 void marshallUniqueAnnotations(writer& outf)

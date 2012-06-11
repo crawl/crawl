@@ -309,9 +309,7 @@ void crawl_view_geometry::shift_player_to(const coord_def &c)
 void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 {
     if (centre)
-    {
         vgrdc = c;
-    }
     else
     {
         const coord_def oldc = vgrdc;

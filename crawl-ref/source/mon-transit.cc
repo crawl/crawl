@@ -115,7 +115,8 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
 
-    dprf("Monster in transit: %s", m.name(DESC_PLAIN).c_str());
+    dprf("Monster in transit to %s: %s", lid.describe().c_str(),
+         m.name(DESC_PLAIN, true).c_str());
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
@@ -146,7 +147,7 @@ void place_followers()
 
 static bool place_lost_monster(follower &f)
 {
-    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN).c_str());
+    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
     return (f.place(false));
 }
 
@@ -159,7 +160,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
-        if (you.level_type == LEVEL_ABYSS && coinflip())
+        if (player_in_branch(BRANCH_ABYSS) && coinflip())
             continue;
 
         if (place_lost_monster(*mon))
@@ -247,35 +248,16 @@ bool follower::place(bool near_player)
     // Copy the saved data.
     *m = mons;
 
-    bool placed = false;
+    // Shafts no longer retain the position, if anything else would
+    // want to request a specific one, it should do so here if !near_player
 
-    // In certain instances (currently, falling through a shaft)
-    // try to place monster as close as possible to its previous
-    // <x,y> coordinates.
-    if (!near_player && you.level_type == LEVEL_DUNGEON
-        && in_bounds(m->pos()))
+    if (m->find_place_to_live(near_player))
     {
-        const coord_def where_to_go =
-            dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
-                                  m->pos(), true);
-
-        if (where_to_go == you.pos())
-            near_player = true;
-        else if (m->find_home_near_place(where_to_go))
-            placed = true;
-    }
-
-    if (!placed)
-        placed = m->find_place_to_live(near_player);
-
-    if (placed)
-    {
-        dprf("Placed follower: %s", m->name(DESC_PLAIN).c_str());
+        dprf("Placed follower: %s", m->name(DESC_PLAIN, true).c_str());
         m->target.reset();
 
-        m->flags &= ~MF_TAKING_STAIRS;
+        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
         m->flags |= MF_JUST_SUMMONED;
-
         restore_mons_items(*m);
         env.mid_cache[m->mid] = m->mindex();
         return (true);

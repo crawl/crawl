@@ -102,7 +102,6 @@ int travel_direction(uint8_t branch, int subdungeondepth);
 void prevent_travel_to(const std::string &dungeon_feature_name);
 
 // Sort dungeon features as appropriate.
-void arrange_features(std::vector<coord_def> &features);
 int level_distance(level_id first, level_id second);
 level_id find_deepest_explored(level_id curr);
 bool branch_entered(branch_type branch);
@@ -120,6 +119,7 @@ enum translevel_prompt_flags
     TPF_ALLOW_UPDOWN      = 0x2,
     TPF_REMEMBER_TARGET   = 0x4,
     TPF_SHOW_ALL_BRANCHES = 0x8,
+    TPF_SHOW_PORTALS_ONLY = 0x10,
 
     TPF_DEFAULT_OPTIONS   = TPF_ALLOW_WAYPOINTS | TPF_ALLOW_UPDOWN
                                                 | TPF_REMEMBER_TARGET,
@@ -622,14 +622,4 @@ int click_travel(const coord_def &gc, bool force);
 bool check_for_interesting_features();
 void clear_level_target();
 
-class level_id_iterator : public std::iterator<std::forward_iterator_tag, level_id>
-{
-public:
-    level_id_iterator();
-    operator bool() const;
-    level_id operator *() const;
-    void operator++();
-private:
-    level_id cur;
-};
 #endif // TRAVEL_H

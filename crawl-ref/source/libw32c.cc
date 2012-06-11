@@ -63,7 +63,6 @@
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
-#include "message.h"
 #include "options.h"
 #include "state.h"
 #include "unicode.h"
@@ -888,6 +887,11 @@ int get_number_of_lines()
 int get_number_of_cols()
 {
     return (screensize.X);
+}
+
+int num_to_lines(int num)
+{
+    return num;
 }
 
 #endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL) */

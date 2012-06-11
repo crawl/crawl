@@ -183,6 +183,17 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         }
         break;
 
+    case ENCH_OZOCUBUS_ARMOUR:
+        {
+            // player gets 4+ice/3
+            const int ac_bonus = 4 + hit_dice / 3;
+
+            ac += ac_bonus;
+            // the monster may get drained or level up, we need to store the bonus
+            props["ozocubus_ac"].get_byte() = ac_bonus;
+        }
+        break;
+
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
 
@@ -432,6 +443,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_STONESKIN:
         if (props.exists("stoneskin_ac"))
             ac -= props["stoneskin_ac"].get_byte();
+        break;
+
+    case ENCH_OZOCUBUS_ARMOUR:
+        if (props.exists("ozocubus_ac"))
+            ac -= props["ozocubus_ac"].get_byte();
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s icy armour evaporates.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
         break;
 
     case ENCH_PARALYSIS:
@@ -849,6 +870,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
+        case ENCH_OZOCUBUS_ARMOUR:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1055,6 +1077,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
+    case ENCH_OZOCUBUS_ARMOUR:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1341,7 +1364,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                   me.agent()));
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
-                        behaviour_event(mon, ME_SCARE, me.who);
+                        behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
                 }
@@ -1471,9 +1494,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // env.mons means we can appear to be alive, but in fact be
             // an entirely different monster.
             if (alive() && type == mtype)
-            {
                 add_ench(ENCH_EXPLODING);
-            }
         }
 
     }
@@ -1486,21 +1507,17 @@ void monster::apply_enchantment(const mon_enchant &me)
             coord_def base_position = this->props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
-            {
                 mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
-            }
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
-            {
                 env.grid(base_position) = DNGN_FLOOR;
-            }
 
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
             this->attitude = ATT_NEUTRAL;
-            behaviour_event(this, ME_ALERT, MHITNOT);
+            behaviour_event(this, ME_ALERT);
         }
     }
     break;
@@ -1524,7 +1541,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             }
 
             this->attitude = ATT_HOSTILE;
-            behaviour_event(this, ME_ALERT, MHITYOU);
+            behaviour_event(this, ME_ALERT, &you);
         }
     }
     break;
@@ -1755,12 +1772,10 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation",
-#if TAG_MAJOR_VERSION == 32
-    "helpless",
-#endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner_flame", "roused", "breath timer", "deaths_door", "rolling", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
+    "ozocubus_armour", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1901,6 +1916,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
     case ENCH_STONESKIN:
+    case ENCH_OZOCUBUS_ARMOUR:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:

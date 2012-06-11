@@ -15,9 +15,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
-#include "exercise.h"
 #include "fprop.h"
-#include "godconduct.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -138,7 +136,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.damage      = dice_def(1, 0);
     beem.hit         = 20;
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_POTION_STINKING_CLOUD;
+    beem.flavour     = BEAM_POTION_MEPHITIC;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
@@ -328,7 +326,7 @@ static std::vector<int> _get_evaporate_result(int potion)
     case POT_PARALYSIS:
     case POT_CONFUSION:
     case POT_SLOWING:
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        beams.push_back(BEAM_POTION_MEPHITIC);
         break;
 
     case POT_WATER:
@@ -338,7 +336,7 @@ static std::vector<int> _get_evaporate_result(int potion)
 
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        beams.push_back(BEAM_POTION_MEPHITIC);
         // deliberate fall through
     case POT_BERSERK_RAGE:
         beams.push_back(BEAM_POTION_FIRE);
@@ -362,7 +360,7 @@ static std::vector<int> _get_evaporate_result(int potion)
 
     default:
         beams.push_back(BEAM_POTION_FIRE);
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        beams.push_back(BEAM_POTION_MEPHITIC);
         beams.push_back(BEAM_POTION_COLD);
         beams.push_back(BEAM_POTION_POISON);
         beams.push_back(BEAM_POTION_BLUE_SMOKE);
@@ -379,7 +377,7 @@ static std::vector<int> _get_evaporate_result(int potion)
     {
         // handled in beam.cc
         clouds.push_back(CLOUD_FIRE);
-        clouds.push_back(CLOUD_STINK);
+        clouds.push_back(CLOUD_MEPHITIC);
         clouds.push_back(CLOUD_COLD);
         clouds.push_back(CLOUD_POISON);
         clouds.push_back(CLOUD_BLUE_SMOKE);
@@ -438,7 +436,7 @@ spret_type cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
 
-    beem.flavour    = BEAM_POTION_STINKING_CLOUD;
+    beem.flavour    = BEAM_POTION_MEPHITIC;
     beam_type tracer_flavour = BEAM_MMISSILE;
 
     switch (potion.sub_type)
@@ -469,7 +467,7 @@ spret_type cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
         // fall through
     case POT_CONFUSION:
     case POT_SLOWING:
-        tracer_flavour = beem.flavour = BEAM_POTION_STINKING_CLOUD;
+        tracer_flavour = beem.flavour = BEAM_POTION_MEPHITIC;
         break;
 
     case POT_WATER:
@@ -523,7 +521,7 @@ spret_type cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
         switch (random2(12))
         {
         case 0:   beem.flavour = BEAM_POTION_FIRE;            break;
-        case 1:   beem.flavour = BEAM_POTION_STINKING_CLOUD;  break;
+        case 1:   beem.flavour = BEAM_POTION_MEPHITIC;        break;
         case 2:   beem.flavour = BEAM_POTION_COLD;            break;
         case 3:   beem.flavour = BEAM_POTION_POISON;          break;
         case 4:   beem.flavour = BEAM_POTION_RANDOM;          break;

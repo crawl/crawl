@@ -1,0 +1,141 @@
+%%%%
+Abyssal Knight
+
+Los Caballeros del Abismo adoran a Lugonu, y son enviados desde el Abismo al
+Calabozo para extender la corrupción y el caos.
+%%%%
+Air Elementalist
+
+Los Elementalistas del Aire han aprendido el hechizo de la Descarga. Más
+adelante, su Libro del Aire les provee de flexibilidad para sobrevivir.
+%%%%
+Arcane Marksman
+
+Los Tiradores Arcanos llevan armas de alcance y usan la magia para que sus
+enemigos se vuelvan más vulnerables a sus ataques a distancia.
+%%%%
+Artificer
+
+Los Artificieros comienzan con unos pocos instrumentos mágicos y son
+competentes usando dichas herramientas.
+%%%%
+Assassin
+
+Los Asesinos conocen todo acerca del sigilo, listos para apuñalar a oponentes
+distraídos. No son solamente daga y capa, también poseen agujas de curare para
+su cerbatana.
+%%%%
+Berserker
+
+Los Berserkers creen en Trog, el dios del delirio y enemigo de la magia. No hay
+mucho que pueda detener a un berserk furioso al principio, salvo el
+sobreestimar sus capacidades.
+%%%%
+Chaos Knight
+
+Los Caballeros Caóticos son juguetes del impredecible Xom, y están sujetos a
+los constantes cambios de humor del dios.
+%%%%
+Conjurer
+
+Los Conjuradores afrontan los problemas con hechizos destructivos de su Libro
+de los Conjuros
+%%%%
+Death Knight
+
+Los Caballeros de la Muerte son combatientes cuerpo a cuerpo que mandan a los
+no-muertos en el nombre de Yredelemnul el Oscuro.
+%%%%
+Earth Elementalist
+
+Los Elementalistas de la Tierra conocen el hechizo del Golpe de Arena, y tienen
+piedras para incrementar el poder del hechizo. Más hechizos de tierra están en
+su Libro de Geomancia.
+%%%%
+Enchanter
+
+Los Encantadores usan hechizos para potenciarse en batalla o bien para
+incapacitar a otros. También comienzan con buenos dardos.
+%%%%
+Fighter
+
+Los Guerreros comienzan con armadura y escudo, además de un arma de su
+elección. Tienen más salud que cualquier otro rol.
+%%%%
+Fire Elementalist
+
+Los Elementalistas de Fuego comienzan con el Libro de las Llamas y conocen el
+hechizo Lengua de Fuego. Los otros hechizos en su libro se enfocan en
+destrucción también.
+%%%%
+Gladiator
+
+Los Gladiadores salen listos para la arena con una armadura ligera, escudo,
+redes y un arma de su elección.
+%%%%
+Healer
+
+Los Sanadores son seguidores de Elyvilon, preparados para sanarse a sí mismos y
+a los demás. Tal sanación probablemente pacificará a bestias y a brutos,
+aportando experiencia.
+%%%%
+Hunter
+
+Los Cazadores son capaces de atacar a distancia, sin usar la dichosa magia. El
+arma del cazador depende de su especie.
+%%%%
+Ice Elementalist
+
+Los Elementalistas del Hielo empiezan con el Libro de la Escarcha y el hechizo
+Helar. El resto de hechizos son bastante versátiles.
+%%%%
+Monk
+
+Los Monjes están preparados para enfrentarse a lo que sea en el Calabozo
+simplemente con una túnica y usando su cuerpo.
+%%%%
+Necromancer
+
+Los Nigromantes son magos especializados en la práctica de la magia de la
+muerte. Empiezan con el hechizo del Dolor.
+%%%%
+Priest
+
+Los Sacerdotes son seguidores de Zin, divulgando la palabra del dios a los
+habitantes del Calabozo. Los Orcos de las colinas siguen al dios orco Beogh, no
+obstante.
+%%%%
+Skald
+
+Los Escaldos son guerreros que pueden potenciarse en batalla con hechizos de su
+Libro de Cánticos de Guerra.
+%%%%
+Stalker
+
+Los Asaltadores usan el sigilo y la magia transformativa para aproximarse y
+derrotar a sus victimas.
+%%%%
+Summoner
+
+Los Convocadores comienzan con el Libro de las Llamadas y son capaces de
+Convocar a Pequeños Mamíferos desde el inicio.
+%%%%
+Transmuter
+
+Los Transmutadores cambian su forma para luchar con una forma de bestia. Pueden
+convertir palos en serpientes además.
+%%%%
+Venom Mage
+
+Los Magos del Veneno comienzan con el Manual del Joven Envenenador y el hechizo
+Aguijón. Al comienzo no tienen demasiados problemas.
+%%%%
+Wanderer
+
+Los Viajeros comienzan con capacidades y una equipación al azar.
+%%%%
+Wizard
+
+Los magos comienzan con un Libro de Magia Menor, conteniendo una amplia gama de
+hechizos. Tienen más reservas mágicas que cualquier otro rol.
+%%%%

@@ -9,7 +9,6 @@
 
 #include "areas.h"
 #include "artefact.h"
-#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -25,7 +24,6 @@
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -41,7 +39,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
+#include "place.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -499,11 +497,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     // Being naturally mutagenic isn't good either.
     corpse_effect_type ce = mons_corpse_effect(mon->type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
-         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !mon->is_chaotic())
-    {
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !mon->is_chaotic())
         eligibility[RECITE_IMPURE]++;
-    }
 
     // Death drakes and rotting devils get a bump to uncleanliness.
     if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)
@@ -1030,7 +1025,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 simple_monster_message(mon, " tries to escape the wrath of Zin.");
             else
                 simple_monster_message(mon, " flees in terror at the wrath of Zin!");
-            behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
+            behaviour_event(mon, ME_SCARE, 0, you.pos());
             affected = true;
         }
         break;
@@ -1167,7 +1162,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                                     : "'s chaotic flesh runs like molten wax.");
 
                     print_wounds(mon);
-                    behaviour_event(mon, ME_WHACK, MHITYOU);
+                    behaviour_event(mon, ME_WHACK, &you);
                     affected = true;
                 }
                 else
@@ -1300,8 +1295,7 @@ bool zin_remove_all_mutations()
         return (false);
     }
 
-    you.num_current_gifts[GOD_ZIN]++;
-    you.num_total_gifts[GOD_ZIN]++;
+    you.one_time_ability_used[GOD_ZIN] = true;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");
@@ -1412,9 +1406,9 @@ bool elyvilon_divine_vigour()
                          40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
 
         calc_hp();
-        inc_hp(you.hp_max - old_hp_max);
+        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
         calc_mp();
-        inc_mp(you.max_magic_points - old_mp_max);
+        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)/old_mp_max - you.magic_points);
 
         success = true;
     }
@@ -1690,7 +1684,7 @@ void yred_drain_life()
         mprf("You draw life from %s.",
              mi->name(DESC_THE).c_str());
 
-        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(*mi, ME_WHACK, &you, you.pos());
 
         mi->hurt(&you, hurted);
 
@@ -1768,7 +1762,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
-    behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
+    behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
     mon->stop_constricting_all(false);
     mon->stop_being_constricted();
@@ -1988,7 +1982,7 @@ int fedhas_fungal_bloom()
 
                     downgrade_zombie_to_skeleton(target);
 
-                    behaviour_event(target, ME_ALERT, MHITYOU);
+                    behaviour_event(target, ME_ALERT, &you);
 
                     if (piety)
                         processed_count++;
@@ -2141,12 +2135,10 @@ static bool _create_plant(coord_def & target, int hp_adjust = 0)
     return false;
 }
 
+#define SUNLIGHT_DURATION 80
+
 bool fedhas_sunlight()
 {
-    const int c_size = 5;
-    const int x_offset[] = {-1, 0, 0, 0, 1};
-    const int y_offset[] = { 0,-1, 0, 1, 0};
-
     dist spelld;
 
     bolt temp_bolt;
@@ -2166,33 +2158,106 @@ bool fedhas_sunlight()
 
     const coord_def base = spelld.target;
 
-    int evap_count  = 0;
-    int plant_count = 0;
-    int processed_count = 0;
+    int revealed_count = 0;
 
-    // This is dealt with outside of the main loop.
-    int cloud_count = 0;
-
-    // FIXME: Uncomfortable level of code duplication here but the explosion
-    // code in bolt subjects the input radius to r*(r+1) for the threshold and
-    // since r is an integer we can never get just the 4-connected neighbours.
-    // Anyway the bolt code doesn't seem to be well set up to handle the
-    // 'occasional plant' gimmick.
-    for (int i = 0; i < c_size; ++i)
+    for (adjacent_iterator ai(base, false); ai; ++ai)
     {
-        coord_def target = base;
-        target.x += x_offset[i];
-        target.y += y_offset[i];
-
-        if (!in_bounds(target) || feat_is_solid(grd(target)))
+        if (!in_bounds(*ai) || feat_is_solid(grd(*ai)))
             continue;
 
-        temp_bolt.explosion_draw_cell(target);
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            if (env.sunlight[i].first == *ai)
+            {
+                erase_any(env.sunlight, i);
+                break;
+            }
+        env.sunlight.push_back(std::pair<coord_def, int>(*ai,
+            you.elapsed_time + (distance(*ai, base) <= 1 ? SUNLIGHT_DURATION
+                                : SUNLIGHT_DURATION / 2)));
 
-        actor *victim = actor_at(target);
+        temp_bolt.explosion_draw_cell(*ai);
+
+        monster *victim = monster_at(*ai);
+        if (victim && you.see_cell(*ai) && !victim->visible_to(&you))
+        {
+            // Like entering/exiting angel halos, flipping autopickup would
+            // be probably too much hassle.
+            revealed_count++;
+        }
+
+        if (victim)
+            behaviour_event(victim, ME_ALERT, &you);
+    }
+
+    {
+        // Remove gloom.
+        unwind_var<int> no_time(you.time_taken, 0);
+        process_sunlights(false);
+    }
+
+#ifndef USE_TILE_LOCAL
+    // Move the cursor out of the way (it looks weird).
+    coord_def temp = grid2view(base);
+    cgotoxy(temp.x, temp.y, GOTO_DNGN);
+#endif
+    delay(200);
+
+    if (revealed_count)
+    {
+        mprf("In the bright light, you notice %s.", revealed_count == 1 ?
+             "an invisible shape" : "some invisible shapes");
+    }
+
+    return (true);
+}
+
+void process_sunlights(bool future)
+{
+    int time_cap = future ? INT_MAX - SUNLIGHT_DURATION : you.elapsed_time;
+
+    int evap_count = 0;
+    int cloud_count = 0;
+
+    for (int i = env.sunlight.size() - 1; i >= 0; --i)
+    {
+        coord_def c = env.sunlight[i].first;
+        int until = env.sunlight[i].second;
+
+        if (until <= time_cap)
+            erase_any(env.sunlight, i);
+
+        // Remove gloom, even far away from the spot.
+        for (radius_iterator ai(c, 6); ai; ++ai)
+        {
+            if (env.cgrid(*ai) != EMPTY_CLOUD)
+            {
+                const int cloudidx = env.cgrid(*ai);
+                if (env.cloud[cloudidx].type == CLOUD_GLOOM)
+                {
+                    cloud_count++;
+                    delete_cloud(cloudidx);
+                }
+            }
+        }
+
+        until = std::min(until, time_cap);
+        int from = you.elapsed_time - you.time_taken;
+
+        // Deterministic roll, to guarantee evaporation when shined long enough.
+        struct { short place; coord_def coord; int64_t game_start; } to_hash;
+        to_hash.place = get_packed_place();
+        to_hash.coord = c;
+        to_hash.game_start = you.birth_time;
+        int h = hash(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;
+
+        if ((from + h) / SUNLIGHT_DURATION == (until + h) / SUNLIGHT_DURATION)
+            continue;
+
+        // Anything further on goes only on a successful evaporation roll, at
+        // most once peer coord per invocation.
 
         // If this is a water square we will evaporate it.
-        dungeon_feature_type ftype = grd(target);
+        dungeon_feature_type ftype = grd(c);
         dungeon_feature_type orig_type = ftype;
 
         switch (ftype)
@@ -2211,9 +2276,9 @@ bool fedhas_sunlight()
 
         if (orig_type != ftype)
         {
-            dungeon_terrain_changed(target, ftype);
+            dungeon_terrain_changed(c, ftype);
 
-            if (you.see_cell(target))
+            if (you.see_cell(c))
                 evap_count++;
 
             // This is a little awkward but if we evaporated all the way to
@@ -2222,7 +2287,7 @@ bool fedhas_sunlight()
             // credit if the monster dies. The enchantment is inflicted via
             // the dungeon_terrain_changed call chain and that doesn't keep
             // track of what caused the terrain change. -cao
-            monster* mons = monster_at(target);
+            monster* mons = monster_at(c);
             if (mons && ftype == DNGN_FLOOR
                 && mons->has_ench(ENCH_AQUATIC_LAND))
             {
@@ -2231,73 +2296,7 @@ bool fedhas_sunlight()
                 temp.source = MID_PLAYER;
                 mons->add_ench(temp);
             }
-
-            processed_count++;
         }
-
-        monster* mons = monster_at(target);
-
-        if (victim)
-        {
-            if (!mons)
-                you.backlight();
-            else
-            {
-                backlight_monsters(target, 1, 0);
-                behaviour_event(mons, ME_ALERT, MHITYOU);
-            }
-
-            processed_count++;
-        }
-        else if (one_chance_in(100)
-                 && ftype == DNGN_FLOOR
-                 && orig_type == DNGN_SHALLOW_WATER)
-        {
-            // Create a plant.
-            if (create_monster(mgen_data(MONS_PLANT,
-                                         BEH_HOSTILE,
-                                         &you,
-                                         0,
-                                         0,
-                                         target,
-                                         MHITNOT,
-                                         MG_FORCE_PLACE,
-                                         GOD_FEDHAS))
-                && you.see_cell(target))
-            {
-                plant_count++;
-            }
-
-            processed_count++;
-        }
-    }
-
-    // We damage clouds for a large radius, though.
-    for (radius_iterator ai(base, 7); ai; ++ai)
-    {
-        if (env.cgrid(*ai) != EMPTY_CLOUD)
-        {
-            const int cloudidx = env.cgrid(*ai);
-            if (env.cloud[cloudidx].type == CLOUD_GLOOM)
-            {
-                cloud_count++;
-                delete_cloud(cloudidx);
-            }
-        }
-    }
-
-#ifndef USE_TILE_LOCAL
-    // Move the cursor out of the way (it looks weird).
-    coord_def temp = grid2view(base);
-    cgotoxy(temp.x, temp.y, GOTO_DNGN);
-#endif
-    delay(200);
-
-    if (plant_count)
-    {
-        mprf("%s grow%s in the sunlight.",
-             (plant_count > 1 ? "Some plants": "A plant"),
-             (plant_count > 1 ? "": "s"));
     }
 
     if (evap_count)
@@ -2306,7 +2305,7 @@ bool fedhas_sunlight()
     if (cloud_count)
         mpr("Sunlight penetrates the thick gloom.");
 
-    return (true);
+    invalidate_agrid(true);
 }
 
 template<typename T>
@@ -2456,7 +2455,7 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
         msg::streams(MSGCH_PROMPT) << prompt << " (" << max << " max) "
                                    << std::endl;
 
-        const unsigned char keyin = get_ch();
+        const int keyin = get_ch();
 
         // Cancel
         if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')
@@ -2847,6 +2846,11 @@ static bool _possible_evolution(const monster* input,
         possible_monster.fruit_cost = 1;
         break;
 
+    case MONS_OKLOB_SAPLING:
+        possible_monster.new_type = MONS_OKLOB_PLANT;
+        possible_monster.piety_cost = 4;
+        break;
+
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
@@ -2962,7 +2966,9 @@ bool fedhas_evolve_flora()
 
     if (!_possible_evolution(target, upgrade))
     {
-        if (mons_is_plant(target))
+        if (target->type == MONS_GIANT_SPORE)
+            mpr("You can evolve only complete plants, not seeds.");
+        else  if (mons_is_plant(target))
             simple_monster_message(target, " has already reached "
                                    "the pinnacle of evolution.");
         else
@@ -3009,6 +3015,10 @@ bool fedhas_evolve_flora()
         simple_monster_message(target, evolve_desc.c_str());
         break;
     }
+
+    case MONS_OKLOB_SAPLING:
+        simple_monster_message(target, " appears stronger.");
+        break;
 
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
@@ -3062,7 +3072,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
         return (0);
 
     if (!mon->friendly())
-        behaviour_event(mon, ME_ANNOY, MHITYOU);
+        behaviour_event(mon, ME_ANNOY, &you);
 
     int res_margin = mon->check_res_magic(pow * 2);
     if (res_margin > 0)

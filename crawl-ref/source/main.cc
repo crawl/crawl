@@ -90,6 +90,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
@@ -115,6 +116,7 @@
 #include "startup.h"
 #include "tags.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -136,9 +138,6 @@
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
  #include "tilepick.h"
-#endif
-#ifdef USE_TILE_LOCAL
- #include "tilereg.h"
 #endif
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -372,6 +371,13 @@ static void _launch_game()
 
     if (!game_start && you.prev_save_version != Version::Long())
     {
+#if TAG_MAJOR_VERSION == 33
+        if (numcmp(you.prev_save_version.c_str(), "0.11-a0-1711") == -1)
+        {
+            dprf("Will allow level_stack underflows.");
+            you.props["ticket_to_D:1"] = true;
+        }
+#endif
         snprintf(info, INFO_SIZE, "Upgraded the game from %s to %s",
                                   you.prev_save_version.c_str(),
                                   Version::Long().c_str());
@@ -606,7 +612,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
-    case CONTROL('F'): debug_fight_statistics(false, true); break;
+    case CONTROL('F'): wizard_fight_sim(true); break;
 #ifdef DEBUG_BONES
     case CONTROL('G'): debug_ghosts(); break;
 #endif
@@ -642,16 +648,17 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 't': wizard_tweak_object();                 break;
     case 'T': debug_make_trap();                     break;
     case '\\': debug_make_shop();                    break;
-    case 'f': debug_fight_statistics(false);         break;
-    case 'F': debug_fight_statistics(true);          break;
+    case 'f': wizard_quick_fsim();                   break;
+    case 'F': wizard_fight_sim(false);               break;
     case 'm': wizard_create_spec_monster();          break;
     case 'M': wizard_create_spec_monster_name();     break;
     case 'R': wizard_spawn_control();                break;
     case 'r': wizard_change_species();               break;
     case '>': wizard_place_stairs(true);             break;
     case '<': wizard_place_stairs(false);            break;
-    case 'P': wizard_create_portal();                break;
-    case 'L': debug_place_map();                     break;
+    case 'p': wizard_create_portal();                break;
+    case 'L': debug_place_map(false);                break;
+    case 'P': debug_place_map(true);                 break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
     case 'z': wizard_cast_spec_spell();              break;
@@ -697,14 +704,14 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'B':
-        if (you.level_type != LEVEL_ABYSS)
-            banished(DNGN_ENTER_ABYSS, "wizard command");
+        if (!player_in_branch(BRANCH_ABYSS))
+            banished("wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case CONTROL('A'):
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
             abyss_teleport(true);
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
@@ -735,16 +742,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         while (result == 0);
         break;
     }
-    case 'p':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
-        break;
-
-    case 'l':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_LABYRINTH, false);
-        break;
 
     case 'k':
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
@@ -1229,12 +1229,16 @@ static void _input()
     {
         clear_macro_process_key_delay();
 
+        // At this point we are guaranteed to not be in any recursion, so the
+        // Lua stack must be empty.  Unless there's a leak.
+        ASSERT(lua_gettop(clua.state()) == 0);
+
         if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else
-                clua.callfn("ready", 0);
+                clua.callfn("ready", 0, 0);
         }
 
         // We're not in an infinite loop, reset the timer.
@@ -1394,17 +1398,9 @@ static void _go_upstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         if (ygrd == DNGN_STONE_ARCH)
@@ -1436,8 +1432,7 @@ static void _go_upstairs()
         return;
     }
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -1447,8 +1442,9 @@ static void _go_upstairs()
         return;
 
     const bool leaving_dungeon =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
-        && !feat_is_gate(ygrd);
+        ygrd == DNGN_EXIT_DUNGEON
+        || level_id::current() == level_id(root_branch, 1)
+           && !feat_is_gate(ygrd);
 
     if (leaving_dungeon)
     {
@@ -1508,17 +1504,9 @@ static void _go_downstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
-    {
         ;
-    }
     else if (feat_stair_direction(ygrd) != CMD_GO_DOWNSTAIRS
              && !shaft)
     {
@@ -1551,8 +1539,7 @@ static void _go_downstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -1569,9 +1556,7 @@ static void _go_downstairs()
     you.stop_being_constricted();
 
     if (shaft)
-    {
         start_delay(DELAY_DESCENDING_STAIRS, 0);
-    }
     else
     {
         if (_marker_vetoes_stair())
@@ -1617,8 +1602,8 @@ static void _experience_check()
              / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
         mprf(you.lives < 2 ?
-             "You'll get an extra life in %d.%02d levels worth of XP." :
-             "If you died right now, you'd get an extra life in %d.%02d levels worth of XP.",
+             "You'll get an extra life in %d.%02d levels' worth of XP." :
+             "If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
              perc / 100, perc % 100);
     }
 
@@ -1689,7 +1674,7 @@ static void _do_remove_armour()
         return;
     }
 
-    if (!player_can_handle_equipment())
+    if (!form_can_wear())
     {
         mpr("You can't wear or remove anything in your present form.");
         return;
@@ -1805,9 +1790,7 @@ static void _do_cycle_quiver(int dir)
             mpr("No other missiles available. Use F to throw any item.");
     }
     else if (cur == -1)
-    {
         mpr("No missiles available. Use F to throw any item.");
-    }
 }
 
 static void _do_list_gold()
@@ -1861,10 +1844,12 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        clua.callfn("hit_closest", 0, 0);
+        if (!clua.callfn("hit_closest", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
     case CMD_AUTOFIGHT_NOMOVE:
-        clua.callfn("hit_adjacent", 0, 0);
+        if (!clua.callfn("hit_adjacent", 0, 0))
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
 #endif
     case CMD_REST:            _do_rest(); break;
@@ -2290,7 +2275,7 @@ static void _decrement_durations()
 {
     int delay = you.time_taken;
 
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    if (player_effect_gourmand())
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -2341,8 +2326,7 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
-        you.attribute[ATTR_WAS_SILENCED] = 0;
+    _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
     _decrement_a_duration(DUR_REPEL_MISSILES, delay,
                           "You feel less protected from missiles.",
@@ -2863,6 +2847,9 @@ static void _decrement_durations()
                           "Your shroud unravels.",
                           0,
                           "Your shroud begins to fray at the edges.");
+
+    if (!env.sunlight.empty())
+        process_sunlights();
 }
 
 static void _check_banished()
@@ -2870,11 +2857,11 @@ static void _check_banished()
     if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
-        if (you.level_type != LEVEL_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
-            banished(DNGN_ENTER_ABYSS, you.banished_by);
+            banished(you.banished_by);
         }
         you.banished_by.clear();
     }
@@ -2912,7 +2899,7 @@ static void _regenerate_hp_and_mp(int delay)
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = you.hit_points_regeneration;
 
-    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
+    if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
@@ -2927,7 +2914,8 @@ static void _regenerate_hp_and_mp(int delay)
     ASSERT(tmp >= 0 && tmp < 100);
     you.hit_points_regeneration = tmp;
 
-    // XXX: Don't let DD use guardian spirit for free HP. (due, dpeg)
+    // XXX: Don't let DD use guardian spirit for free HP, since their
+    // damage shaving is enough. (due, dpeg)
     if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
 
@@ -3036,11 +3024,16 @@ static void _player_reacts()
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(80))
+        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
             you_teleport_now(false, true); // to new area of the Abyss
+
+            // It's effectively a new level, make a checkpoint save so eventual
+            // crashes lose less of the player's progress (and fresh new bad
+            // mutations).
+            save_game(false);
         }
     }
 
@@ -3146,6 +3139,33 @@ static void _player_reacts_to_monsters()
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
 
+    // Entering/leaving a suppression aura needs to redraw player stats
+    // and generally recalculate some things that aren't generally recalc'd
+    // with every step. This is how we detect crossing the threshold.
+    if (you.props.exists("exists_if_suppressed") != you.suppressed())
+    {
+        // HP and MP generally aren't recalculated each step, so we do it now
+        calc_hp_artefact();  // different from calc_hp()
+        calc_mp();
+
+        // Redraw everything that suppression might affect
+        you.redraw_hit_points = true;
+        you.redraw_magic_points = true;
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        you.redraw_stats[STAT_STR] = true;
+        you.redraw_stats[STAT_DEX] = true;
+        you.redraw_stats[STAT_INT] = true;
+
+        if(you.suppressed())
+        {
+            you.props["exists_if_suppressed"] = true;
+        }
+        else
+        {
+           you.props.erase("exists_if_suppressed");
+        }
+    }
 }
 
 static void _update_golubria_traps()
@@ -3176,7 +3196,7 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
-    if(crawl_state.viewport_monster_hp)
+    if (crawl_state.viewport_monster_hp)
     {
         crawl_state.viewport_monster_hp = false;
         viewwindow();
@@ -3247,8 +3267,7 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && you.level_type == LEVEL_DUNGEON
-        && you.where_are_you == BRANCH_MAIN_DUNGEON
+        && player_in_branch(root_branch)
         && you.num_turns > 100)
     {
         zotdef_bosses_check();
@@ -3283,15 +3302,11 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < INT_MAX)
+        // Zotdef: Time only passes in the hall of zot
+        if ((!crawl_state.game_is_zotdef() || player_in_branch(root_branch))
+            && you.num_turns < INT_MAX)
         {
-            if (!crawl_state.game_is_zotdef()
-                || you.where_are_you == BRANCH_MAIN_DUNGEON
-                   && you.level_type == LEVEL_DUNGEON)
-            {
-                you.num_turns++;
-            }
+            you.num_turns++;
         }
 
         if (env.turns_on_level < INT_MAX)
@@ -3432,8 +3447,8 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mon->friendly()
-            && player_can_open_doors() && !you.confused())
+        if (mon->caught() && mon->friendly() && form_can_wield()
+            && !you.confused())
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
@@ -3459,7 +3474,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     {
         if (!you.confused())
         {
-            if (!player_can_open_doors())
+            if (!form_can_wield())
             {
                 mpr("You can't disarm traps in your present form.");
                 return (true);
@@ -4116,23 +4131,49 @@ static void _move_player(coord_def move)
     if (you.confused())
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
+        monster *bad_mons = 0;
+        std::string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
             if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
+                break;
+            }
+            else
+            {
+                std::string suffix, adj;
+                monster *mons = monster_at(*ai);
+                if (mons && bad_attack(mons, adj, suffix))
+                {
+                    bad_mons = mons;
+                    bad_suff = suffix;
+                    bad_adj = adj;
+                    break;
+                }
             }
         }
-        if (dangerous != DNGN_FLOOR)
+        if (dangerous != DNGN_FLOOR || bad_mons)
         {
             std::string prompt = "Are you sure you want to move while confused "
                                  "and next to ";
-                        prompt += (dangerous == DNGN_LAVA ? "lava"
-                                                          : "deep water");
-                        prompt += "?";
 
-            if (!yesno(prompt.c_str(), false, 'n'))
+            if (dangerous != DNGN_FLOOR)
+                prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
+            else
+            {
+                std::string name = bad_mons->name(DESC_PLAIN);
+                if (name.find("the ") == 0)
+                    name.erase(0, 4);
+                if (bad_adj.find("your") != 0)
+                    bad_adj = "the " + bad_adj;
+                prompt += bad_adj + name + bad_suff;
+            }
+            prompt += "?";
+
+            if (!crawl_state.disables[DIS_CONFIRMATIONS]
+                && !yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
@@ -4181,9 +4222,7 @@ static void _move_player(coord_def move)
         {
             // Probably need better messages. -cao
             if (mons_genus(targ_monst->type) == MONS_FUNGUS)
-            {
                 mprf("You walk carefully through the fungus.");
-            }
             else
                 mprf("You walk carefully through the plants.");
         }
@@ -4379,13 +4418,13 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;
 
     if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
-        && player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+        && player_effect_running())
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
@@ -4659,15 +4698,17 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t));
     // Travel cache, traversable_terrain.
     COMPILE_CHECK(NUM_FEATURES <= 256);
-    COMPILE_CHECK(NUM_GODS <= MAX_NUM_GODS);
+    COMPILE_CHECK(NUM_GODS <= NUM_GODS);
     COMPILE_CHECK(TAG_CHR_FORMAT < 256);
     COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
     COMPILE_CHECK(NUM_TAG_MINORS < 256);
     COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
                                          // with untested signedness
+    COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
-        ASSERT(branches[i].id == i);
+        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
 }

@@ -350,8 +350,8 @@ function tutorial_msg3.exit ()
     return crawl.endgame(text)
 end
 
-function tutorial_msg3.win ()
-    dgn.mark_game_won()
+function tutorial_msg3.win()
+    crawl.mark_game_won()
     return tutorial_msg3.exit()
 end
 }}
@@ -359,7 +359,6 @@ end
 NAME:    tutorial_lesson3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 3: Items and Inventory"
-BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   AC = .
 KFEAT:   B = +
@@ -422,7 +421,6 @@ ENDMAP
 NAME:    tutorial_lesson3_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
 PLACE:   D:2
-BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
 KFEAT:   ABCD = .
@@ -491,7 +489,6 @@ ENDMAP
 NAME:    tutorial_lesson3_level3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
 PLACE:   D:3
-BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABC = .
 COLOUR:  ABCdefgh = lightblue

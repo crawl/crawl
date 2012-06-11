@@ -67,6 +67,8 @@ void weapon_acid(int acid_strength);
 class actor;
 int actor_to_death_source(const actor* agent);
 
+std::string morgue_name(std::string char_name, time_t when_crawl_got_even);
+
 void reset_damage_counters();
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux = NULL, bool see_source = true,

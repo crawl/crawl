@@ -43,6 +43,7 @@ end
 local function count_monsters_at(place, set)
   debug.goto_place(place)
   test.regenerate_level(nil, use_random_maps)
+  debug.reveal_mimics()
 
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do

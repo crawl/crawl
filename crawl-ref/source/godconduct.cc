@@ -3,7 +3,6 @@
 #include "godconduct.h"
 
 #include "fight.h"
-#include "godpassive.h"
 #include "godwrath.h"
 #include "libutil.h"
 #include "monster.h"
@@ -325,6 +324,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_BANISH:
+            if (you.religion != GOD_LUGONU)
+                break;
         case DID_KILL_LIVING:
             switch (you.religion)
             {
@@ -342,9 +344,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
-#ifndef NEW_OKAWARU_PIETY
-            case GOD_OKAWARU:
-#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -353,7 +352,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
-                simple_god_message(" accepts your kill.");
+                if (thing_done == DID_BANISH)
+                    simple_god_message(" claims a new guest.");
+                else
+                    simple_god_message(" accepts your kill.");
                 retval = true;
                 piety_denom = level + 18 - you.experience_level / 2;
                 piety_change = piety_denom - 6;
@@ -370,9 +372,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-#ifndef NEW_OKAWARU_PIETY
-            case GOD_OKAWARU:
-#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -399,9 +398,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-#ifndef NEW_OKAWARU_PIETY
-            case GOD_OKAWARU:
-#endif
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
@@ -536,9 +532,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
-#ifndef NEW_OKAWARU_PIETY
-            case GOD_OKAWARU:
-#endif
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -862,7 +855,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 if (thing_done == DID_CAUSE_GLOWING)
                 {
-                    static long last_glowing_lecture = -1L;
+                    static int last_glowing_lecture = -1;
                     if (!level)
                     {
                         simple_god_message(" is not enthusiastic about the "
@@ -1003,7 +996,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
         }
 
-#ifdef NEW_OKAWARU_PIETY
         if (you.religion == GOD_OKAWARU
             // currently no constructs and plants
             && (thing_done == DID_KILL_LIVING
@@ -1012,9 +1004,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
              || thing_done == DID_KILL_HOLY)
             && ! god_hates_attacking_friend(you.religion, victim))
         {
-            int gain = get_fuzzied_monster_difficulty(victim);
-            dprf("fuzzied monster difficulty: %4.2f", gain*0.01);
-            gain_piety(gain, 700);
+            piety_change = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
             piety_denom = 700;
             if (piety_change > 3200)
                 simple_god_message(" appreciates your kill.");
@@ -1022,7 +1013,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your kill.");
             retval = true;
         }
-#endif
 
 #ifdef DEBUG_DIAGNOSTICS
         int old_piety = you.piety;
@@ -1050,7 +1040,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Undead", "Undead Slave Kill Demon",
                 "Servant Kill Demon", "Servant Kill Natural Unholy",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
-                "Servant Kill Holy", "Spell Memorise", "Spell Cast",
+                "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Cards",
                 "Drink Blood", "Cannibalism","Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
@@ -1116,9 +1106,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
         }
     }
     else if (mon->neutral())
-    {
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
-    }
 
     if (is_unchivalric_attack(&you, mon)
         && (_first_attack_conduct[midx]

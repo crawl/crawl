@@ -5,7 +5,7 @@
 #                   define a set of monsters. Use large_abstract.des for vaults
 #                   which don't have a special theme.
 #
-# Note that all maps for the Vault branch system (including Vault:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:8) reside in
 # vaults.des.
 ###############################################################################
 
@@ -931,7 +931,7 @@ ENDMAP
 NAME:    statue_cache
 ORIENT:  north
 TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vault
+DEPTH:   D:12-20, Elf, Vaults
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
@@ -973,7 +973,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Vault:3-7, Crypt:1-4
+DEPTH:  D:17-27, Vaults:3-7, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -1002,7 +1002,7 @@ MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
-MONS:   human name:innocent n_adj n_noc att:neutral
+MONS:   human name:sacrificial n_adj n_noc att:neutral
 NSUBST: 4 = 1:7 / *:4
 ITEM:   acquire any
 SUBST:  - = .
@@ -1179,7 +1179,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27, Vault:1-7
+DEPTH:  D:11-27, Vaults:1-7
 KFEAT:  _ = altar_okawaru
 SUBST:  = = =v
 FTILE:  '+Gvc12345_defghijk = floor_hall

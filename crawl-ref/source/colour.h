@@ -1,9 +1,6 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
-// Please remove after changing TAG_MAJOR_VERSION
-#include "tag-version.h"
-
 #include "mon-info.h"
 
 // various elemental colour schemes... used for abstracting random
@@ -26,9 +23,6 @@ enum element_type
     ETC_HOLY,           // general "good" god effects
     ETC_DARK,           // darkness
     ETC_DEATH,          // assassin/necromancy stuff
-#if TAG_MAJOR_VERSION == 32
-    ETC_NECRO,          // necromancy stuff
-#endif
     ETC_UNHOLY,         // demonology stuff
     ETC_VEHUMET,        // vehumet's oddball colours
     ETC_BEOGH,          // Beogh altar colours
@@ -44,9 +38,6 @@ enum element_type
     ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
-#if TAG_MAJOR_VERSION == 32
-    ETC_STONE,          // colour of the area's stone
-#endif
     ETC_MIST,           // colour of mist
     ETC_SHIMMER_BLUE,   // shimmering colours of blue
     ETC_DECAY,          // colour of decay/swamp
@@ -62,9 +53,6 @@ enum element_type
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_SWAMP_TREE,     // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
-#if TAG_MAJOR_VERSION == 32
-    ETC_SUBTRACTOR,     // subtractor snakes
-#endif
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -113,11 +101,6 @@ int  element_colour(int element, bool no_random = false,
 bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);
-
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
-unsigned short dos_brand(unsigned short colour,
-                         unsigned brand = CHATTR_REVERSE);
-#endif
 
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());

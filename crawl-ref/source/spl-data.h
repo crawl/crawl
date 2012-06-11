@@ -481,21 +481,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_LEVITATION, "Levitation",
-     SPTYP_CHARMS | SPTYP_AIR,
-     SPFLAG_NONE,
-     3,
-     150,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
@@ -732,21 +717,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_EXTENSION, "Extension",
-     SPTYP_CHARMS,
-     SPFLAG_NONE,
-     5,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
      SPTYP_NECROMANCY,
@@ -799,21 +769,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_DETECT_ITEMS, "Detect Items",
-     0,
-     SPFLAG_MAPPING,
-     2,
-     50,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
      SPTYP_NECROMANCY,
@@ -862,7 +817,7 @@ struct spell_desc
      -1, -1,
      0,
      NULL,
-     true,
+     false,
      false
 },
 
@@ -1076,21 +1031,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_TUKIMAS_BALL, "Tukima's Ball",
-     SPTYP_HEXES,
-     SPFLAG_NONE,
-     9,
-     200,
-     -1,-1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,
@@ -1208,21 +1148,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_STONEMAIL, "Stonemail",
-     SPTYP_CHARMS | SPTYP_EARTH,
-     SPFLAG_NONE,
-     6,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_SHOCK, "Shock",
      SPTYP_CONJURATION | SPTYP_AIR,
@@ -1275,21 +1200,6 @@ struct spell_desc
      true
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_DETECT_CREATURES, "Detect Creatures",
-     0,
-     SPFLAG_MAPPING,
-     2,
-     60,                        // not 50, note the fuzz
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
-
 {
     SPELL_CURE_POISON, "Cure Poison",
      SPTYP_POISON,
@@ -1329,21 +1239,6 @@ struct spell_desc
      true
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_RESIST_POISON, "Resist Poison",
-     SPTYP_CHARMS | SPTYP_POISON,
-     SPFLAG_HELPFUL,
-     4,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_PROJECTED_NOISE, "Projected Noise",
      SPTYP_HEXES,
@@ -1356,21 +1251,6 @@ struct spell_desc
      false,
      false
 },
-
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_ALTER_SELF, "Alter Self",
-     SPTYP_TRANSMUTATION,
-     SPFLAG_CHAOTIC,
-     7,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
 
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
@@ -1506,7 +1386,7 @@ struct spell_desc
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,
-     7,
+     6,
      200,
      -1, -1,
      0,
@@ -1892,21 +1772,6 @@ struct spell_desc
      true,
      false
 },
-
-#if TAG_MAJOR_VERSION == 32
-{
-    SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
-     SPTYP_CHARMS | SPTYP_EARTH,
-     SPFLAG_HELPFUL | SPFLAG_BATTLE,
-     2,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
@@ -2770,6 +2635,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 33
 {
     SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
      SPTYP_SUMMONING,
@@ -2782,6 +2648,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_HOLY_WORD, "Holy Word",

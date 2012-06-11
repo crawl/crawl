@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 
 #include "misc.h"
-#include "notes.h"
 
 #include <string.h>
 #include <algorithm>
@@ -20,7 +19,6 @@
 #include <cmath>
 
 #include "externs.h"
-#include "options.h"
 #include "misc.h"
 
 #include "abyss.h"
@@ -36,19 +34,19 @@
 #include "directn.h"
 #include "env.h"
 #include "exercise.h"
+#include "feature.h"
 #include "fight.h"
 #include "files.h"
 #include "fprop.h"
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
-#include "hiscores.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
-#include "macro.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
@@ -60,6 +58,7 @@
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
@@ -70,7 +69,6 @@
 #include "skills.h"
 #include "skills2.h"
 #include "spl-clouds.h"
-#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -79,7 +77,6 @@
 #include "travel.h"
 #include "hints.h"
 #include "view.h"
-#include "viewgeom.h"
 #include "shout.h"
 #include "xom.h"
 
@@ -1379,8 +1376,6 @@ void merfolk_stop_swimming()
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
-    if (transit)
-        stash_init_new_level();
 }
 
 std::string weird_glowing_colour()
@@ -1547,8 +1542,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
-        && (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT
-            || mons_has_ranged_attack(mon)))
+        && mons_has_known_ranged_attack(mon))
     {
         return (true);
     }
@@ -2020,7 +2014,7 @@ void timeout_tombs(int duration)
 
 void bring_to_safety()
 {
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         return abyss_teleport(true);
 
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
@@ -2095,7 +2089,6 @@ void revive()
     restore_stat(STAT_ALL, 0, true);
     you.rotting = 0;
 
-    you.attribute[ATTR_WAS_SILENCED] = 0;
     you.attribute[ATTR_DIVINE_REGENERATION] = 0;
     you.attribute[ATTR_DELAYED_FIREBALL] = 0;
     clear_trapping_net();
@@ -2166,7 +2159,7 @@ void setup_environment_effects()
             const int grid = grd[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
-                        && you.where_are_you == BRANCH_SWAMP))
+                        && player_in_branch(BRANCH_SWAMP)))
             {
                 const coord_def c(x, y);
                 sfx_seeds.push_back(c);
@@ -2287,10 +2280,9 @@ void reveal_secret_door(const coord_def& p)
 bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());
-    if (you.confused() || !you.can_see(mon))
+    if (!you.can_see(mon))
         return (false);
 
-    bool retval = false;
     adj.clear();
     suffix.clear();
 
@@ -2318,9 +2310,9 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
         adj += "non-hostile ";
 
     if (you.religion == GOD_JIYVA && mons_is_slime(mon))
-        retval = true;
+        return true;
 
-    return retval || !adj.empty() || !suffix.empty();
+    return !adj.empty() || !suffix.empty();
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
@@ -2610,6 +2602,11 @@ void maybe_id_ring_TC()
     _maybe_id_jewel(RING_TELEPORT_CONTROL);
 }
 
+void maybe_id_ring_hunger()
+{
+    _maybe_id_jewel(RING_HUNGER, NUM_JEWELLERY, ARTP_METABOLISM);
+}
+
 void maybe_id_resist(beam_type flavour)
 {
     switch (flavour)
@@ -2654,7 +2651,63 @@ void maybe_id_resist(beam_type flavour)
         _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
         break;
 
+    case BEAM_POLYMORPH:
+        if (player_mutation_level(MUT_MUTATION_RESISTANCE))
+            return;
+        _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_MUTATION);
+        break;
+
     default: ;
+    }
+}
+
+bool maybe_id_weapon(item_def &item, const char *msg)
+{
+    iflags_t id = 0;
+
+    // Weapons you have wielded or know enough about.
+    if (item.base_type == OBJ_WEAPONS
+        && !(item.flags & ISFLAG_KNOW_PLUSES))
+    {
+        int min_skill20 = ((int)item.rnd) * 2 / 3;
+
+        if (item.flags & ISFLAG_KNOW_CURSE
+            && item.flags & ISFLAG_KNOW_TYPE
+            && you.skill(is_range_weapon(item) ? range_skill(item)
+                         : weapon_skill(item), 20) > min_skill20)
+        {
+            id = ISFLAG_KNOW_PLUSES;
+        }
+        else if (is_throwable(&you, item)
+                 && you.skill(SK_THROWING, 20) > min_skill20)
+        {
+            id = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
+        }
+    }
+
+    if ((item.flags | id) != item.flags)
+    {
+        set_ident_flags(item, id);
+        add_autoinscription(item);
+        if (msg)
+            mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
+        you.wield_change = true;
+        return true;
+    }
+
+    return false;
+}
+
+void auto_id_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined())
+        {
+            maybe_id_weapon(item, "You determine that: ");
+            god_id_item(item, false);
+        }
     }
 }
 

@@ -33,10 +33,6 @@ struct game_state
     bool game_crashed;      // The game crashed and is now in the process of
                             // dumping crash info.
 
-    // An assert was triggered, but an emergency save here should be possible
-    // without corruption.
-    bool game_wants_emergency_save;
-
     bool mouse_enabled;     // True if mouse input is currently relevant.
 
     bool waiting_for_command; // True when the game is waiting for a command.

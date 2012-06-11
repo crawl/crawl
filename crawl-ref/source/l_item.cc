@@ -11,7 +11,9 @@
 #include "l_libs.h"
 
 #include "artefact.h"
+#include "cluautil.h"
 #include "colour.h"
+#include "coord.h"
 #include "command.h"
 #include "env.h"
 #include "enum.h"
@@ -20,11 +22,14 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "l_defs.h"
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
 #include "spl-summoning.h"
+#include "stash.h"
 #include "stuff.h"
+#include "throw.h"
 
 /////////////////////////////////////////////////////////////////////
 // Item handling
@@ -32,6 +37,7 @@
 struct item_wrapper
 {
     item_def *item;
+    bool temp; // Does item need to be freed when the wrapper is GCed?
     int turn;
 
     bool valid() const { return turn == you.num_turns; }
@@ -41,6 +47,17 @@ void clua_push_item(lua_State *ls, item_def *item)
 {
     item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
     iw->item = item;
+    iw->temp = false;
+    iw->turn = you.num_turns;
+}
+
+// Push a (wrapped) temporary item_def.  A copy of the item will be allocated,
+// then deleted when the wrapper is GCed.
+void clua_push_item_temp(lua_State *ls, const item_def &item)
+{
+    item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
+    iw->item = new item_def(item);
+    iw->temp = true;
     iw->turn = you.num_turns;
 }
 
@@ -64,7 +81,7 @@ void lua_push_floor_items(lua_State *ls, int link)
     }
 }
 
-void lua_push_inv_items(lua_State *ls = NULL)
+static void _lua_push_inv_items(lua_State *ls = NULL)
 {
     if (!ls)
         ls = clua.state();
@@ -337,13 +354,11 @@ static int l_item_do_subtype (lua_State *ls)
         else
             lua_pushnil(ls);
 
-        lua_pushnumber(ls, item->sub_type);
-        return (2);
+        return (1);
     }
 
     lua_pushnil(ls);
-    lua_pushnil(ls);
-    return (2);
+    return (1);
 }
 
 IDEFN(subtype, do_subtype);
@@ -697,7 +712,7 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-iflags_t str_to_item_status_flags (std::string flag)
+static iflags_t _str_to_item_status_flags (std::string flag)
 {
     iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
@@ -736,7 +751,7 @@ static int l_item_do_identified (lua_State *ls)
         else
         {
             const bool check_type = strip_tag(flags, "type");
-            iflags_t item_flags = str_to_item_status_flags(flags);
+            iflags_t item_flags = _str_to_item_status_flags(flags);
             known_status = ((item_flags || check_type)
                             && (!item_flags || item_ident(*item, item_flags))
                             && (!check_type || item_type_known(*item)));
@@ -807,7 +822,7 @@ IDEF(is_cursed)
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
-    lua_push_inv_items(ls);
+    _lua_push_inv_items(ls);
     return (1);
 }
 
@@ -871,9 +886,7 @@ static int dmx_get_qty(lua_State *ls, int ndx, int subndx)
         lua_pop(ls, 1);
     }
     else if (lua_isnumber(ls, ndx))
-    {
         qty = luaL_checkint(ls, ndx);
-    }
     return (qty);
 }
 
@@ -984,6 +997,33 @@ static int l_item_inslot(lua_State *ls)
     return (1);
 }
 
+static int l_item_get_items_at(lua_State *ls)
+{
+    coord_def s;
+    s.x = luaL_checkint(ls, 1);
+    s.y = luaL_checkint(ls, 2);
+    coord_def p = player2grid(s);
+    if (!map_bounds(p))
+        return 0;
+
+    item_def* top = env.map_knowledge(p).item();
+    if (!top || !top->defined())
+        return 0;
+
+    lua_newtable(ls);
+
+    const std::vector<item_def> items = item_list_in_stash(p);
+    int index = 0;
+    for (std::vector<item_def>::const_iterator i = items.begin();
+         i != items.end(); ++i)
+    {
+        clua_push_item_temp(ls, *i);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return (1);
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1060,14 +1100,27 @@ static const struct luaL_reg item_lib[] =
     { "equipped_at",       l_item_equipped_at },
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
+    { "get_items_at",      l_item_get_items_at },
     { NULL, NULL },
 };
+
+static int _delete_wrapped_item(lua_State *ls)
+{
+    item_wrapper *iw = static_cast<item_wrapper*>(lua_touserdata(ls, 1));
+    if (iw && iw->temp)
+        delete iw->item;
+    return (0);
+}
 
 void cluaopen_item(lua_State *ls)
 {
     luaL_newmetatable(ls, ITEM_METATABLE);
     lua_pushstring(ls, "__index");
     lua_pushcfunction(ls, item_get);
+    lua_settable(ls, -3);
+
+    lua_pushstring(ls, "__gc");
+    lua_pushcfunction(ls, _delete_wrapped_item);
     lua_settable(ls, -3);
 
     // Pop the metatable off the stack.

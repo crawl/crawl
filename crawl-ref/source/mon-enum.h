@@ -15,17 +15,14 @@
 
 enum corpse_effect_type
 {
-    CE_NOCORPSE,        //    0
-    CE_CLEAN,           //    1
-    CE_CONTAMINATED,    //    2
-    CE_POISONOUS,       //    3
-    CE_POISON_CONTAM,   //    4
-    CE_ROT,             //    5
-    CE_MUTAGEN_RANDOM,  //    6
-    CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
-    CE_RANDOM,          //    9 - not used, but may be worth implementing {dlb}
-    CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
+    CE_NOCORPSE,
+    CE_CLEAN,
+    CE_CONTAMINATED,
+    CE_POISONOUS,
+    CE_POISON_CONTAM,
+    CE_ROT,
+    CE_MUTAGEN,
+    CE_ROTTEN,
 };
 
 enum gender_type
@@ -108,9 +105,6 @@ enum attack_flavour
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
-#if TAG_MAJOR_VERSION == 32
-    AF_SUBTRACTOR,
-#endif
     AF_ENSNARE,
 };
 
@@ -169,18 +163,13 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
-#if TAG_MAJOR_VERSION == 32
-    MONEAT_FOOD,
-    MONEAT_HONEY,
-#else
     MONEAT_HONEY,
     MONEAT_FOOD,
-#endif
 
     NUM_MONEAT
 };
 
-// now saved in an unsigned long.
+// passed as a bizarre structure, needs sanitizing
 enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,

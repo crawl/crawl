@@ -92,12 +92,14 @@ private:
     std::map<len_t, len_t> free_blocks;
     std::stack<len_t> unlinked_blocks;
     std::map<len_t, std::pair<len_t, len_t> > block_map;
+    std::set<len_t> new_chunks;
     len_t extend_block(len_t at, len_t size, len_t by);
     len_t alloc_block(len_t &size);
     void finish_chunk(const std::string name, len_t at);
     void free_chunk(const std::string name);
     len_t write_directory();
     void collect_blocks();
+    void free_block_chain(len_t at);
     void free_block(len_t at, len_t size);
     void seek(len_t to);
     void fsck();

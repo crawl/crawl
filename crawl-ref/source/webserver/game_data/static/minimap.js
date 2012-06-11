@@ -82,7 +82,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     {
         var cell = map_cell.t;
 
-        if (cell && (cell.fg & enums.TILE_FLAG_MASK) == player.PLAYER)
+        if (cell) cell.fg = enums.prepare_fg_flags(cell.fg || 0);
+
+        if (cell && cell.fg.value == player.PLAYER)
             return enums.MF_PLAYER;
         else
             return map_cell.mf || enums.MF_UNSEEN;

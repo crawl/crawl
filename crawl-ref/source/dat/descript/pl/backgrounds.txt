@@ -1,0 +1,83 @@
+%%%%
+Abyssal Knight
+
+Rycerze Otchłani wielbią Lugonu, i są wysyłani z Otchłani aby siać chaos i
+zepsucie.
+%%%%
+Air Elementalist
+
+Magowie Powietrza znają czar “Iskra”. Później, Księga Powietrza zapewnia im
+elastyczność.
+%%%%
+Arcane Marksman
+
+Magiczni Strzelcy noszą broń miotającą, i używają magii aby uczynić wrogów
+bardziej narażonymi na ataki z dystansu.
+%%%%
+Assassin
+
+Zabójcy poruszają się ukradkiem, wbijając sztylet nieuważnym wrogom. Używają
+także dmuchawki z igłami nasączonymi kurarą.
+%%%%
+Berserker
+
+Berserkerzy wyznają Troga, nienawidzącego magii boga gniewu. Nie tak wiele
+potrafi zatrzymać berserkera w bitewnym szale.
+%%%%
+Chaos Knight
+
+Rycerze Chaosu są rozrywką nieprzewidywalnego Xoma, i są poddani zmiennym
+nastrojom tego boga.
+%%%%
+Death Knight
+
+Rycerze Śmierci walczą i prowadzą armie nieumarłych w imię swego mrocznego
+boga, Yredelemnula.
+%%%%
+Fighter
+
+Wojownicy są wyposażeni w zbroję i tarczę, jak i oczywiście swą wybraną broń.
+Są najodporniejsi ze wszystkich postaci.
+%%%%
+Gladiator
+
+Gladiatorzy są wyposażeni w lekką zbroję, tarczę, sieć i broń wedle upodobania.
+%%%%
+Healer
+
+Medycy oddają cześć Elyvilon, i potrafią leczyć zarówno siebie samych jak i
+innych. To pomaga nieść pokój w ten świat wiecznej wojny.
+%%%%
+Hunter
+
+Myśliwi potrafią walczyć na dystans, bez potrzeby uciekania się do magii.
+%%%%
+Monk
+
+Mnisi są gotowi podjąć walkę z kimkolwiek nie uzbojeni w nic prócz szaty i
+własnego ciała.
+%%%%
+Necromancer
+
+Nekromanci są czarodziejami specjalizującymi się w czarnej magii. Zaczynają
+znając czar „Ból”.
+%%%%
+Priest
+
+Kapłani Zina głoszą prawa swego boga mieszkańcom świata. Kapłani orków zamiast
+tego wyznają boga swej rasy, Beogha.
+%%%%
+Skald
+
+Skaldowie są wojownikami którzy dodają sobie sił magicznymi przyśpiewkami z
+księgi Pieśni Wojennych.
+%%%%
+Venom Mage
+
+Magowie Jadu zaczynają z Poradnikiem Małego Truciciela w zanadrzu. Jest to
+bardzo pożyteczna książka we wczesnych etapach.
+%%%%
+Wanderer
+
+Włóczykije zaczynają z przypadkowo zebranym sprzętem i umiejętnościami.
+%%%%

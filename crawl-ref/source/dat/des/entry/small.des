@@ -2648,13 +2648,13 @@ NAME:    onia_entry_zoo_common
 TAGS:    entry
 ORIENT:  float
 : if crawl.one_chance_in(10) then
-SHUFFLE: 12
+SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
-MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 MONS:    rat / green rat / orange rat / quokka
-MONS:    worker ant / soldier ant
-MONS:    spiny worm / ant larva / worm
-MONS:    lindwurm / crocodile / komodo dragon
+MONS:    worker ant / soldier ant / queen ant / ant larva
+MONS:    spiny worm / brain worm / worm / giant leech
+MONS:    lindwurm / death drake / komodo dragon / basilisk / swamp drake
+MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
 MONS:    giant gecko / iguana / giant newt / crocodile / komodo dragon

@@ -529,6 +529,25 @@ x.........xxx...xxx.........x
 xxxxxxxxxxxxx.@.xxxxxxxxxxxxx
 ENDMAP
 
+NAME:  kb_skeletal_archery
+DEPTH: Crypt, Tar
+KMONS: 1 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
+           spells:. ; longbow . arrow q:30
+KMONS: 2 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
+           spells:. ; bow . arrow q:30
+KITEM: 2 = |
+MAP
+xxxxxxxxxxxxxxx
+x............1x
+x............1x
+x............1x
++............2x
+x............1x
+x............1x
+x............1x
+xxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################
@@ -539,7 +558,7 @@ ENDMAP
 NAME:   church_of_pain_bobbens
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 # MONSTER LAYOUT
 # boss (1)
 # boss guard (2)
@@ -652,7 +671,7 @@ ENDMAP
 NAME:   cryptofortress_bobbens
 ORIENT: encompass
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 KFEAT:  A = w
 KMONS:  A = flying skull
 KFEAT:  B = .
@@ -765,7 +784,7 @@ ENDMAP
 NAME:   david_glass_crypt
 ORIENT: float
 TAGS:   no_item_gen no_rotate
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 MARKER: m = lua:portal_desc {wall_phase = 1}
 KFEAT:  m = iron_grate
 MONS:   patrolling lich / patrolling ancient lich
@@ -809,7 +828,7 @@ ENDMAP
 NAME:   quadcrypt_mu
 ORIENT: encompass
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 ####### chapel garden
 SUBST:  F = f ?
 SUBST:  f = p:1 .:1
@@ -967,7 +986,7 @@ ENDMAP
 #
 NAME:   evilmike_haunted_forest
 ORIENT: encompass
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
 SUBST:  T = t., w = Wwww
 SUBST:  v = cccc.-
@@ -1115,7 +1134,7 @@ ENDMAP
 #  around 30k per map, regardless of monster set
 #  roughly similar loot to evilmike's haunted forest
 NAME:   due_elkab
-PLACE:  Crypt:5
+PLACE:  Crypt:$
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
 NSUBST: A = 1:= / *:c
@@ -1154,7 +1173,7 @@ MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie 
 MONS:   generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling phantasmal warrior
-MONS:   ghost moth name:greater col:lightmagenta n_adj n_spe hd:15
+MONS:   ghost moth hd:15
 MONS:   eidolon / shadow wraith
 MONS:   freezing wraith / phantasmal warrior
 MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \

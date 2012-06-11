@@ -159,7 +159,7 @@ aff_type targetter_reach::is_affected(coord_def loc)
         return AFF_YES;
 
     if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
-        && grd(loc) > DNGN_MAX_NONREACH)
+        && feat_is_reachable_past(grd(loc)))
     {
         return AFF_TRACER;
     }

@@ -230,18 +230,4 @@ int wcwidth(ucs_t ucs)
              (ucs >= 0x20000 && ucs <= 0x2fffd) ||
              (ucs >= 0x30000 && ucs <= 0x3fffd)));
 }
-
-
-int wcswidth(const ucs_t *pwcs, size_t n)
-{
-    int w, width = 0;
-
-    for (; *pwcs && n-- > 0; pwcs++)
-        if ((w = wcwidth(*pwcs)) < 0)
-            return -1;
-        else
-            width += w;
-
-    return width;
-}
 #endif

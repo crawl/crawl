@@ -1,0 +1,125 @@
+Guide to translating and improving Crawl's text
+===============================================
+
+First, you need to create an account on Transifex: https://www.transifex.net.
+Then go to the DCSS project: https://www.transifex.net/projects/p/dcss/, select
+your language, and click "Join the team". If your language isn't present, you
+can request its addition by clicking the "Request language" button. Both of
+those actions will require a maintainer or a coordinator to approve it, so it
+may take some time.
+
+Text Improvement
+================
+
+If you want to submit changes to the English text, you need to join the English
+team. "English (Australian)" is for the source strings, they are not editable.
+Once submitted text has been reviewed and approved, the source text will be
+updated, so English will have entries with identical text to the source strings.
+This is useful to differentiate text which has already been improved. It is
+possible to change it again and improve it further.
+
+Review
+======
+
+Each translating team has one or more coordinators. Their task is to review
+translators' contribution and approve them by checking the "reviewed" checkbox
+in the translating interface. Only reviewed text is included in the game, so
+it's important that coordinators check the reviewed checkbox when they approve a
+contribution.
+
+Formatting
+==========
+
+Line breaks are automatically removed when the text is imported, except for
+lines starting with empty spaces and empty lines. There's also an exception for
+lines starting with {{ or }} (to include lua code). Quotes use smart quote
+unicode characters (U+8220 and U+8221).
+
+Quotes
+======
+
+Don't translate quotes; instead, submit quotes in their original language. It's
+allowed to submit translated text, especially for things like biblical
+references, but don't forget to include information about the translator.
+
+Aliases
+=======
+
+If you want to use the same text for several keys, you can use <key_name> to
+avoid duplicating the string.
+
+Translating online
+==================
+
+Transifex has a web based interface to submit translations. Simply click on a
+language, then on a resource and click "Translate Now". Note that doing so locks
+the resource to let others know that you're working on it. If you leave the page
+by a means other than clicking "Save and Exit", make sure that you haven't left
+the resource locked.
+By default, key names aren't displayed; you need to activate "verbose editing"
+to see them. You can find the option in the "General settings" thing hiding in
+the lower right corner.
+Below the source strings are 3 buttons. Details can be used to post comments. If
+you're unsure of a translation, you can send it as a suggestion. History shows
+the previous versions of the translation when it has been edited.
+There's also a global glossary which can be used to have consistent translations
+of game terms.
+
+Translating offline
+===================
+
+If you're more comfortable with your text editor than with a web interface, it's
+possible to edit text locally and then push it to transifex using their command
+line client. When working offline, it's not possible to set translations to the
+reviewed state, and you won't have access to comments, suggestions, history and
+glossary features.
+First, you need to get the source of the game; instructions on how to get it
+can be found in README.txt. You also need to install the transifex client
+(http://help.transifex.com/features/client/index.html#getting-the-client).
+Then, run make tx-setup to generate the config file (at the time of this
+writing, it doesn't work with the stable version and requires the development
+version of the transifex client).
+Since it's easier to overwrite other people's contributions when working
+offline, it might be safer to lock the resource from the web interface before
+you do anything else.
+When doing English text improvement, it is important to pull the files from
+transifex first. The upload script needs them to know which text you have
+changed. You can get them by typing this command:
+
+tx pull -a -l en --mode=reviewed
+
+Now, edit the text files in dat/descript for English and dat/descript/xx (xx
+being the language code) for translations. When you're finished, run the
+following script to upload your translations:
+
+util/tx-push.pl xx
+
+Developers
+==========
+
+There are a few makefile targets which can be used to maintain the workflow.
+
+make tx-check: convert all the txt files into the transifex format, and then
+back, then check if any have changed. If so, it will offer to correct and
+commit them.
+
+make tx-pull: pull all the translations.
+
+make tx-txt: incorporate the changes pulled from transifex into the .txt files.
+The perl text wrapping module it uses supports unicode text but doesn't work
+on Windows, so this command is Unix-only. It will preserve the comments and
+ordering of the source files, but will overwrite the translated files.
+
+make tx-push: push all the translations and the source strings to transifex.
+
+make tx-sync: run all the previous targets in that order. It will prompt for
+review and commit when new stuff is pulled or when formatting fixes are needed.
+
+Resolving conflicts
+===================
+
+When changes are made to trunk, it is likely that the next tx-sync will
+overwrite those changes. However, it is still recommended to try it to see
+if pushing the git changes to transifex would overwrite anything.
+After any eventual conflict is resolved, just run make tx-push (or use
+tx-push.pl to push a single language) to update transifex, then sync.

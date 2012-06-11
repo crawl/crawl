@@ -30,17 +30,17 @@ struct facet_def
 {
     int tier;
     mutation_type muts[3];
-    int tiers[3];
+    int when[3];
 };
 
 struct demon_mutation_info
 {
     mutation_type mut;
-    int tier;
+    int when;
     int facet;
 
-    demon_mutation_info(mutation_type m, int t, int f)
-        : mut(m), tier(t), facet(f) { }
+    demon_mutation_info(mutation_type m, int w, int f)
+        : mut(m), when(w), facet(f) { }
 };
 
 struct mutation_def

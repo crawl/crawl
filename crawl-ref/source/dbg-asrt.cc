@@ -18,7 +18,6 @@
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
-#include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -34,6 +33,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "travel.h"
 #include "hiscores.h"
 #include "view.h"
@@ -51,7 +51,7 @@
 #define NOLSTRING         /* lstr* string management routines */
 #define NODBCS            /* Double-byte character set routines */
 #define NOKEYBOARDINFO    /* Keyboard driver routines */
-#define NOCOLOR           /* COLOR_* color values */
+#define NOCOLOR           /* COLOR_* colour values */
 #define NODRAWTEXT        /* DrawText() and related definitions */
 #define NOSCALABLEFONT    /* Truetype scalable font support */
 #define NOMETAFILE        /* Metafile support */
@@ -77,7 +77,6 @@
 #endif
 #endif
 
-#include "threads.h"
 
 static std::string _assert_msg;
 
@@ -95,27 +94,14 @@ static void _dump_compilation_info(FILE* file)
 
 static void _dump_level_info(FILE* file)
 {
-    CrawlHashTable &props = env.properties;
-
     fprintf(file, "Place info:\n");
 
-    fprintf(file, "absdepth0 = %d, branch = %d, level_type = %d, "
-                  "type_name = %s\n\n",
-            you.absdepth0, (int) you.where_are_you, (int) you.level_type,
-            you.level_type_name.c_str());
+    fprintf(file, "branch = %d, depth = %d\n\n",
+            (int)you.where_are_you, you.depth);
 
     std::string place = level_id::current().describe();
-    std::string orig_place;
-
-    if (!props.exists(LEVEL_ID_KEY))
-        orig_place = "ABSENT";
-    else
-        orig_place = props[LEVEL_ID_KEY].get_string();
 
     fprintf(file, "Level id: %s\n", place.c_str());
-    if (place != orig_place)
-        fprintf(file, "Level id when level was generated: %s\n",
-                orig_place.c_str());
 
     debug_dump_levgen();
 }
@@ -777,12 +763,9 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 // AssertFailed
 //
 //---------------------------------------------------------------
-NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+NORETURN void AssertFailed(const char *expr, const char *file, int line)
 {
     char mesg[512];
-
-    if (save_game)
-        crawl_state.game_wants_emergency_save = true;
 
     const char *fileName = file + strlen(file); // strip off path
 

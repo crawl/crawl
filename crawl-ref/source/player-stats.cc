@@ -6,7 +6,6 @@
 #include "delay.h"
 #include "godpassive.h"
 #include "files.h"
-#include "itemname.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -324,14 +323,17 @@ static int _strength_modifier()
 
     result += che_stat_boost();
 
-    // ego items of strength
-    result += 3 * count_worn_ego(SPARM_STRENGTH);
+    if (!you.suppressed())
+    {
+        // ego items of strength
+        result += 3 * count_worn_ego(SPARM_STRENGTH);
 
-    // rings of strength
-    result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
+        // rings of strength
+        result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
 
-    // randarts of strength
-    result += scan_artefacts(ARTP_STRENGTH);
+        // randarts of strength
+        result += scan_artefacts(ARTP_STRENGTH);
+    }
 
     // mutations
     result += player_mutation_level(MUT_STRONG)
@@ -365,14 +367,17 @@ static int _int_modifier()
 
     result += che_stat_boost();
 
-    // ego items of intelligence
-    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+    if (!you.suppressed())
+    {
+        // ego items of intelligence
+        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
-    // rings of intelligence
-    result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        // rings of intelligence
+        result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
-    // randarts of intelligence
-    result += scan_artefacts(ARTP_INTELLIGENCE);
+        // randarts of intelligence
+        result += scan_artefacts(ARTP_INTELLIGENCE);
+    }
 
     // mutations
     result += player_mutation_level(MUT_CLEVER)
@@ -393,14 +398,17 @@ static int _dex_modifier()
 
     result += che_stat_boost();
 
-    // ego items of dexterity
-    result += 3 * count_worn_ego(SPARM_DEXTERITY);
+    if (!you.suppressed())
+    {
+        // ego items of dexterity
+        result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
-    // rings of dexterity
-    result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
+        // rings of dexterity
+        result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
 
-    // randarts of dexterity
-    result += scan_artefacts(ARTP_DEXTERITY);
+        // randarts of dexterity
+        result += scan_artefacts(ARTP_DEXTERITY);
+    }
 
     // mutations
     result += player_mutation_level(MUT_AGILE)
@@ -436,6 +444,21 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
+static std::string _stat_name(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return ("strength");
+    case STAT_INT:
+        return ("intelligence");
+    case STAT_DEX:
+        return ("dexterity");
+    default:
+        die("invalid stat");
+    }
+}
+
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const char *cause, bool see_source)
 {
@@ -446,6 +469,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
+        if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mprf("Your divine stamina protects you from %s loss.",
+                 _stat_name(which_stat).c_str());
+            return (false);
+        }
+
         int sust = player_sust_abil();
         stat_loss >>= sust;
 
@@ -532,21 +562,6 @@ bool lose_stat(stat_type which_stat, int stat_loss,
     }
 
     return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
-}
-
-static std::string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return ("strength");
-    case STAT_INT:
-        return ("intelligence");
-    case STAT_DEX:
-        return ("dexterity");
-    default:
-        die("invalid stat");
-    }
 }
 
 static stat_type _random_lost_stat()

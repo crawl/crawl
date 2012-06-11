@@ -293,7 +293,7 @@ static void _shoals_furniture(int margin)
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p), false);
+        dgn_ensure_vault_placed(dgn_place_map(vault, true, false, p), false);
 
         const int nhuts = std::min(8, int(_shoals_islands.islands.size()));
         for (int i = 2; i < nhuts; ++i)
@@ -306,7 +306,7 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, false, _pick_shoals_island());
+                dgn_place_map(vault, true, false, _pick_shoals_island());
         }
 
         // Fixup pass to connect vaults.
@@ -684,14 +684,13 @@ void dgn_shoals_generate_flora()
     }
 }
 
-void dgn_build_shoals_level(int level_number)
+void dgn_build_shoals_level()
 {
-    env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
+    env.level_build_method += make_stringf(" shoals+ [%d]", you.depth);
     env.level_layout_types.insert("shoals");
 
-    const int shoals_depth = level_id::current().depth - 1;
-    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)
-        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    const int shoals_depth = you.depth - 1;
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
     _shoals_init_heights();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();
@@ -1064,9 +1063,7 @@ static void _shoals_init_tide()
         props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int() = 0;
     }
     if (!env.properties.exists(PROPS_SHOALS_TIDE_KEY))
-    {
         env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = 0;
-    }
 }
 
 static monster* _shoals_find_tide_caller()

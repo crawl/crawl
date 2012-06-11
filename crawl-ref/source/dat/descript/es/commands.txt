@@ -1,0 +1,167 @@
+%%%%
+CMD_REST
+
+Descansas un poco y buscas cosas que estén ocultas
+%%%%
+CMD_REST verbose
+
+Pasas hasta 100 turnos para recuperar salud, recargar magia y/o buscar. El
+descanso se interrumpe tan pronto como un monstruo hostil aparezca.
+%%%%
+CMD_EXPLORE
+
+Autoexploración del nivel actual
+%%%%
+CMD_EXPLORE verbose
+
+Este comando te permite viajar en modo piloto automático hacia regiones
+inexploradas del nivel actual, y tomar del suelo aquellos objetos que hayas
+especificado para ser recogidos automáticamente. El viaje se detiene tan pronto
+como un monstruo hostil aparezca, o cuando descubras objetos o estructuras
+novedosas.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Viajar entre niveles distantes
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Viajas automáticamente entre niveles distantes. El viaje es interrumpido cuando
+aparecen monstruos.
+%%%%
+CMD_USE_ABILITY
+
+Usar habilidades divinas o innatas
+%%%%
+CMD_PRAY
+
+Rezar a tu dios
+%%%%
+CMD_PRAY verbose
+
+Si a tu dios le gustan los sacrificios, este comando te permitirá  ofrecerle un
+cadáver u otro objeto. Si estás en un altar, te permitirá seguir al dios
+correspondiente. En el caso de algunos dioses, rezar también puede ocasionar
+otros efectos especiales.
+%%%%
+CMD_SEARCH_STASHES
+
+Buscar objetos/estructuras
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Buscas objetos o estructuras que hayan aparecido en otra parte y viajas hasta
+allí.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Releer mensajes recientes
+%%%%
+CMD_RESISTS_SCREEN
+
+Muestra un resumen del personaje
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Muestra información sobre resistencias conocidas, habilidades, estadísticas del
+equipo, etc.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Mostrar el mapa del calabozo
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Muestra la localización de las entradas a las ramas del calabozo, tiendas y
+otras estructuras que hayas encontrado.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Mostrar tu situación religiosa
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Muestra lo que gusta y disgusta a tu dios, la conducta a seguir y tu actual
+nivel de religiosidad y habilidades divinas.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Mostrar las mutaciones
+%%%%
+CMD_DISPLAY_SKILLS
+
+Administrar capacidades
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Mostrar el estado del personaje
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Muestra los encantamientos activos y algunas cosas más.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Lista de objetos descubiertos
+%%%%
+CMD_SAVE_GAME_NOW
+
+Guardar la partida y salir
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Guarda el juego para más tarde y sale. Una vez reanudes el juego, el archivo
+del juego guardado se vuelve a borrar.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Modificar el aspecto del jugador
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Modificas el aspecto del equipo y la especie mostrada en el jugador.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Ayuda del juego
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista de comandos y opciones, etc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Crear un listado con información sobre el personaje en curso
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Guarda una amplia cantidad de información sobre tu personaje en un archivo
+llamado 'nombredeljugador.txt' en la carpeta morgue, para leerla con
+detenimiento cuando quieras. Esto incluye las principales estadísticas, equipo,
+hechizos, capacidades, notas, etc.
+%%%%
+CMD_AUTOFIGHT
+
+Atacar al monstruo más cercano
+%%%%
+CMD_AUTOFIGHT verbose
+
+Te mueves hacia el monstruo hostil más cercano y lo atacas con el arma que
+empuñes.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Pegarle a un monstruo adyacente
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Atacas a un monstruo adyacente a ti con el arma que empuñes.
+%%%%
+CMD_SEARCH
+
+Esperar un turno
+%%%%
+CMD_SEARCH verbose
+
+Pasas un turno esperando, descansando y buscando.
+%%%%

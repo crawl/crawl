@@ -23,12 +23,10 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
-#include "godabil.h"
 #include "initfile.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
-#include "macro.h"
 #include "message.h"
 #include "player.h"
 #include "shopping.h"
@@ -37,6 +35,7 @@
 #include "menu.h"
 #include "mon-util.h"
 #include "state.h"
+#include "throw.h"
 
 #ifdef USE_TILE
  #include "tiledef-icons.h"
@@ -119,7 +118,6 @@ bool InvEntry::is_item_glowing() const
             && (get_equip_desc(*item)
                 || (is_artefact(*item)
                     && (item->base_type == OBJ_WEAPONS
-                        || item->base_type == OBJ_MISSILES
                         || item->base_type == OBJ_ARMOUR
                         || item->base_type == OBJ_BOOKS))));
 }
@@ -805,14 +803,13 @@ void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
     std::sort(invitems.begin(), invitems.end(), menu_entry_comparator(cond));
 }
 
-void InvMenu::load_items(const std::vector<const item_def*> &mitems,
-                         MenuEntry *(*procfn)(MenuEntry *me))
+menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
+                                MenuEntry *(*procfn)(MenuEntry *me), menu_letter ckey)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
         inv_class[ mitems[i]->base_type ]++;
 
-    menu_letter ckey;
     std::vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = find_menu_sort_condition();
 
@@ -875,6 +872,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
     // Don't make a menu so tall that we recycle hotkeys on the same page.
     if (mitems.size() > 52 && (max_pagesize > 52 || max_pagesize == 0))
         set_maxpagesize(52);
+
+    return ckey;
 }
 
 void InvMenu::do_preselect(InvEntry *ie)
@@ -914,6 +913,20 @@ bool InvMenu::process_key(int key)
         return (true);
     }
 
+    if (type == MT_KNOW)
+        switch (key)
+        {
+            case '-':
+            case '\\':
+            case CK_ENTER:
+            CASE_ESCAPE
+            {
+                lastch = key;
+                return (false);
+                break;
+            }
+        }
+
     if (items.size()
         && type == MT_DROP
         && (key == CONTROL('D') || key == '@'))
@@ -935,6 +948,9 @@ bool InvMenu::process_key(int key)
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
+    if (type == MT_KNOW && ( mkey == 0 || mkey == CK_ENTER ))
+        return mkey;
+
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
     {
@@ -948,36 +964,6 @@ unsigned char InvMenu::getkey() const
 bool in_inventory(const item_def &i)
 {
     return i.pos.x == -1 && i.pos.y == -1;
-}
-
-unsigned char get_invent(int invent_type)
-{
-    unsigned char select;
-    int flags = MF_SINGLESELECT;
-    if (you.dead || crawl_state.updating_scores)
-        flags |= MF_EASY_EXIT;
-
-    while (true)
-    {
-        select = invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
-
-        if (isaalpha(select))
-        {
-            const int invidx = letter_to_index(select);
-            if (you.inv[invidx].defined())
-            {
-                if (!describe_item(you.inv[invidx], true))
-                    break;
-            }
-        }
-        else
-            break;
-    }
-
-    if (!crawl_state.doing_prev_cmd_again)
-        redraw_screen();
-
-    return select;
 }
 
 std::string item_class_name(int type, bool terse)
@@ -1225,16 +1211,18 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
     return (false);
 }
 
-unsigned char invent_select(const char *title,
-                             menu_type type,
-                             int item_selector,
-                             int excluded_slot,
-                             int flags,
-                             invtitle_annotator titlefn,
-                             std::vector<SelItem> *items,
-                             std::vector<text_pattern> *filter,
-                             Menu::selitem_tfn selitemfn,
-                             const std::vector<SelItem> *pre_select)
+// Use title = NULL for stock Inventory title
+// type = MT_DROP allows the multidrop toggle
+static unsigned char _invent_select(const char *title = NULL,
+                                    menu_type type = MT_INVLIST,
+                                    int item_selector = OSEL_ANY,
+                                    int excluded_slot = -1,
+                                    int flags = MF_NOSELECT,
+                                    invtitle_annotator titlefn = NULL,
+                                    std::vector<SelItem> *items = NULL,
+                                    std::vector<text_pattern> *filter = NULL,
+                                    Menu::selitem_tfn selitemfn = NULL,
+                                    const std::vector<SelItem> *pre_select = NULL)
 {
     InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
@@ -1256,6 +1244,36 @@ unsigned char invent_select(const char *title,
         *items = menu.get_selitems();
 
     return (menu.getkey());
+}
+
+unsigned char get_invent(int invent_type)
+{
+    unsigned char select;
+    int flags = MF_SINGLESELECT;
+    if (you.dead || crawl_state.updating_scores)
+        flags |= MF_EASY_EXIT;
+
+    while (true)
+    {
+        select = _invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
+
+        if (isaalpha(select))
+        {
+            const int invidx = letter_to_index(select);
+            if (you.inv[invidx].defined())
+            {
+                if (!describe_item(you.inv[invidx], true))
+                    break;
+            }
+        }
+        else
+            break;
+    }
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    return select;
 }
 
 void browse_inventory()
@@ -1363,7 +1381,7 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 
             // The "view inventory listing" mode.
-            const int ch = invent_select(prompt,
+            const int ch = _invent_select(prompt,
                                           mtype,
                                           keyin == '*' ? OSEL_ANY : type_expect,
                                           -1,
@@ -1808,7 +1826,7 @@ int prompt_invent_item(const char *prompt,
         {
             // The "view inventory listing" mode.
             std::vector< SelItem > items;
-            keyin = invent_select(
+            keyin = _invent_select(
                         prompt,
                         mtype,
                         keyin == '*' ? OSEL_ANY : type_expect,

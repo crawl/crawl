@@ -18,12 +18,12 @@
 #include "libutil.h"
 #include "newgame.h"
 #include "ng-setup.h"
-#include "mapmark.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "place.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -99,13 +99,13 @@ LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
 LUARET1(you_xl, number, you.experience_level)
 LUARET1(you_xl_progress, number, get_exp_progress())
-LUARET1(you_skill, number,
-        lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
-                            : 0)
 LUARET1(you_skill_progress, number,
         lua_isstring(ls, 1)
             ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
             : 0)
+LUARET1(you_can_train_skill, boolean,
+        lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
+                            : false)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -126,7 +126,6 @@ LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
 LUARET1(you_swift, boolean, you.duration[DUR_SWIFTNESS])
 LUARET1(you_paralysed, boolean, you.paralysed())
-LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -146,11 +145,12 @@ LUARET1(you_lives, number, you.lives)
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
-LUARET1(you_subdepth, number, level_id::current().depth)
+LUARET1(you_depth, number, you.depth)
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
-LUARET1(you_absdepth, number, you.absdepth0 + 1)
+// [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
+LUARET1(you_absdepth, number, env.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
@@ -159,7 +159,6 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
-LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
 
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
@@ -168,6 +167,8 @@ LUARET1(you_see_cell_no_trans_rel, boolean,
 LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 LUARET1(you_max_burden, number, carrying_capacity(BS_UNENCUMBERED))
 LUARET1(you_burden, number, you.burden)
+LUARET1(you_constricted, boolean, you.is_constricted())
+LUARET1(you_constricting, boolean, you.is_constricting())
 
 static int l_you_genus(lua_State *ls)
 {
@@ -180,7 +181,6 @@ static int l_you_genus(lua_State *ls)
     return (1);
 }
 
-void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
 {
     lua_push_floor_items(ls, env.igrid(you.pos()));
@@ -263,6 +263,16 @@ static int you_can_consume_corpses(lua_State *ls)
     return (1);
 }
 
+LUAFN(you_caught)
+{
+    if (you.caught())
+        lua_pushstring(ls, held_status(&you));
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
 LUAFN(you_mutation)
 {
     std::string mutname = luaL_checkstring(ls, 1);
@@ -274,14 +284,48 @@ LUAFN(you_mutation)
 
         const mutation_def& mdef = get_mutation_def(mut);
         if (!strcmp(mutname.c_str(), mdef.wizname))
-        {
             PLUARET(integer, you.mutation[mut]);
-        }
     }
 
     std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return (luaL_argerror(ls, 1, err.c_str()));
 }
+
+LUAFN(you_is_level_on_stack)
+{
+    std::string levname = luaL_checkstring(ls, 1);
+    level_id lev;
+    try
+    {
+        lev = level_id::parse_level_id(levname);
+    }
+    catch (const std::string &err)
+    {
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+
+    PLUARET(boolean, is_level_on_stack(lev));
+}
+
+LUAFN(you_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+
+    PLUARET(number, you.skill(sk, 10) * 0.1);
+}
+
+LUAFN(you_train_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    if (lua_gettop(ls) >= 2 && you.can_train[sk])
+    {
+        you.train[sk] = std::min(std::max(luaL_checkint(ls, 2), 0), 2);
+        reset_training();
+    }
+
+    PLUARET(number, you.train[sk]);
+}
+
 
 static const struct luaL_reg you_clib[] =
 {
@@ -308,6 +352,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
+    { "can_train_skill", you_can_train_skill },
+    { "train_skill", you_train_skill },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
@@ -350,6 +396,8 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "max_burden",   you_max_burden },
     { "burden",       you_burden },
+    { "constricted",  you_constricted },
+    { "constricting", you_constricting },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
@@ -361,13 +409,12 @@ static const struct luaL_reg you_clib[] =
 
     { "where",        you_where },
     { "branch",       you_branch },
-    { "subdepth",     you_subdepth },
+    { "depth",        you_depth },
     { "absdepth",     you_absdepth },
+    { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
-
-    { "level_type_tag",    you_level_type_tag },
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },

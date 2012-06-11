@@ -6,7 +6,7 @@
 #include "player.h"
 
 PlaceInfo::PlaceInfo()
-    : level_type(-2), branch(-2), num_visits(0),
+    : branch((branch_type)-2), num_visits(0),
       levels_seen(0), mon_kill_exp(0), turns_total(0), turns_explore(0),
       turns_travel(0), turns_interlevel(0), turns_resting(0),
       turns_other(0), elapsed_total(0), elapsed_explore(0),
@@ -19,40 +19,24 @@ PlaceInfo::PlaceInfo()
 
 bool PlaceInfo::is_global() const
 {
-    return (level_type == -1 && branch == -1);
+    return (branch == -1);
 }
 
 void PlaceInfo::make_global()
 {
-    level_type = -1;
-    branch     = -1;
+    branch     = (branch_type)-1;
 }
 
 void PlaceInfo::assert_validity() const
 {
-    // Check that level_type and branch match up.
-    ASSERT(is_global()
-           || level_type == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON
-              && branch < NUM_BRANCHES
-           || level_type > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES
-              && branch == -1);
-
     // Can't have visited a place without seeing any of its levels, and
     // vice versa.
     ASSERT(num_visits == 0 && levels_seen == 0
            || num_visits > 0 && levels_seen > 0);
 
-    if (level_type == LEVEL_LABYRINTH || level_type == LEVEL_ABYSS)
-        ASSERT(num_visits == levels_seen);
-    else if (level_type == LEVEL_PANDEMONIUM)
-        // Ziggurats can allow a player to return to the same
-        // Pandemonium level.
-        // ASSERT(num_visits <= levels_seen);
-        ;
-    // Commented out to allow games with broken place_info to continue.
-    // Please uncomment at a later point in 0.8 development. (jpeg)
-    else if (level_type == LEVEL_DUNGEON && branches[branch].depth > 0)
-        ASSERT(levels_seen <= (unsigned long) branches[branch].depth);
+    if (branch >= 0) // global data is -1
+        if (brdepth[branch] != -1 && is_connected_branch(branch))
+            ASSERT((int)levels_seen <= brdepth[branch]);
 
     ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel
                            + turns_resting + turns_other));
@@ -64,28 +48,7 @@ void PlaceInfo::assert_validity() const
 
 const std::string PlaceInfo::short_name() const
 {
-    if (level_type == LEVEL_DUNGEON)
-        return branches[branch].shortname;
-    else
-    {
-        switch (level_type)
-        {
-        case LEVEL_ABYSS:
-            return "Abyss";
-
-        case LEVEL_PANDEMONIUM:
-            return "Pandemonium";
-
-        case LEVEL_LABYRINTH:
-            return "Labyrinth";
-
-        case LEVEL_PORTAL_VAULT:
-            return "Portal Chamber";
-
-        default:
-            return "Bug";
-        }
-    }
+    return branches[branch].shortname;
 }
 
 const PlaceInfo &PlaceInfo::operator += (const PlaceInfo &other)
@@ -158,30 +121,13 @@ PlaceInfo PlaceInfo::operator - (const PlaceInfo &other) const
 
 PlaceInfo& player::get_place_info() const
 {
-    return get_place_info(where_are_you, level_type);
+    return get_place_info(where_are_you);
 }
 
 PlaceInfo& player::get_place_info(branch_type branch) const
 {
-    return get_place_info(branch, LEVEL_DUNGEON);
-}
-
-PlaceInfo& player::get_place_info(level_area_type level_type2) const
-{
-    return get_place_info(NUM_BRANCHES, level_type2);
-}
-
-PlaceInfo& player::get_place_info(branch_type branch,
-                                  level_area_type level_type2) const
-{
-    ASSERT(level_type2 == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON
-                && branch < NUM_BRANCHES
-           || level_type2 > LEVEL_DUNGEON && level_type < NUM_LEVEL_AREA_TYPES);
-
-    if (level_type2 == LEVEL_DUNGEON)
-        return (PlaceInfo&) branch_info[branch];
-    else
-        return (PlaceInfo&) non_branch_info[level_type2 - 1];
+    ASSERT(branch < NUM_BRANCHES);
+    return (PlaceInfo&) branch_info[branch];
 }
 
 void player::clear_place_info()
@@ -189,6 +135,4 @@ void player::clear_place_info()
     you.global_info = PlaceInfo();
     for (unsigned int i = 0; i < NUM_BRANCHES; ++i)
         branch_info[i] = PlaceInfo();
-    for (unsigned int i = 0; i < NUM_LEVEL_AREA_TYPES - 1; ++i)
-        non_branch_info[i] = PlaceInfo();
 }

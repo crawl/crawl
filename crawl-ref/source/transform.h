@@ -13,6 +13,7 @@
 #include "player.h"
 
 bool form_can_wield(transformation_type form = you.form);
+bool form_can_wear(transformation_type form = you.form);
 bool form_can_fly(transformation_type form = you.form);
 bool form_can_swim(transformation_type form = you.form);
 bool form_likes_water(transformation_type form = you.form);

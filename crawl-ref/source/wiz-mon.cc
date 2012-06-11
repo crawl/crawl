@@ -18,12 +18,10 @@
 #include "env.h"
 #include "files.h"
 #include "ghost.h"
-#include "goditem.h"
 #include "invent.h"
 #include "items.h"
 #include "jobs.h"
 #include "macro.h"
-#include "map_knowledge.h"
 #include "mapdef.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -252,7 +250,7 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures[type] = false;
 
-    if (!dgn_place_monster(mspec, you.absdepth0, place, true, false))
+    if (!dgn_place_monster(mspec, -1, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -367,9 +365,7 @@ static bool _sort_monster_list(int a, int b)
     const unsigned glyph1 = mons_char(m1->type);
     const unsigned glyph2 = mons_char(m2->type);
     if (glyph1 != glyph2)
-    {
         return (glyph1 < glyph2);
-    }
 
     return (m1->type < m2->type);
 }
@@ -1036,7 +1032,7 @@ static void _move_player(const coord_def& where)
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true);
     // If necessary, update the Abyss.
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 }
 

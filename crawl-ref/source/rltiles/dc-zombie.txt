@@ -1,5 +1,5 @@
 ## Zombies
-%sdir dc-mon/undead/zombies
+%sdir mon/undead/zombies
 zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
@@ -31,7 +31,7 @@ zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
 
-%sdir dc-mon/undead/skeletons
+%sdir mon/undead/skeletons
 ## Skeletons
 skeleton_humanoid_small MONS_SKELETON_SMALL
 skeleton_humanoid_large MONS_SKELETON_LARGE
@@ -51,14 +51,33 @@ skeleton_hydra4
 skeleton_hydra5
 
 ## Simulacra
-%sdir dc-mon/undead
+%sdir mon/undead/simulacra
+%rim 0
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
+simulacrum_quadruped_small MONS_SIMULACRUM_QUADRUPED_SMALL
+simulacrum_quadruped_large MONS_SIMULACRUM_QUADRUPED_LARGE
+simulacrum_bat MONS_SIMULACRUM_BAT
+simulacrum_bee MONS_SIMULACRUM_BEE
+simulacrum_ant MONS_SIMULACRUM_BEETLE
+simulacrum_fish MONS_SIMULACRUM_FISH
+simulacrum_centaur MONS_SIMULACRUM_CENTAUR
+simulacrum_naga MONS_SIMULACRUM_NAGA
+simulacrum_snake MONS_SIMULACRUM_SNAKE
+simulacrum_lizard MONS_SIMULACRUM_LIZARD
+simulacrum_spider MONS_SIMULACRUM_SPIDER
+simulacrum_dragon MONS_SIMULACRUM_DRAGON
+simulacrum_kraken MONS_SIMULACRUM_KRAKEN
+simulacrum_hydra1 MONS_SIMULACRUM_HYDRA
+simulacrum_hydra2
+simulacrum_hydra3
+simulacrum_hydra4
+simulacrum_hydra5
 
 ## Spectral things
-%sdir dc-mon/undead/spectrals
-spectral_thing MONS_SPECTRAL_SMALL
-spectral_thing MONS_SPECTRAL_LARGE
+%sdir mon/undead/spectrals
+spectral_small MONS_SPECTRAL_SMALL
+spectral_large MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
 spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
 spectral_toad MONS_SPECTRAL_TOAD
@@ -69,11 +88,13 @@ spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
 spectral_snake MONS_SPECTRAL_SNAKE
-spectral_worm MONS_SPECTRAL_WORM
+spectral_lizard MONS_SPECTRAL_LIZARD
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
+spectral_kraken MONS_SPECTRAL_KRAKEN
 spectral_hydra1 MONS_SPECTRAL_HYDRA
 spectral_hydra2
 spectral_hydra3
 spectral_hydra4
 spectral_hydra5
+%rim 1

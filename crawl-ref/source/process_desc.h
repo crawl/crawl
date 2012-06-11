@@ -136,9 +136,7 @@ inline void process_quote(T &proc, const describe_info &inf)
         const int newlines = bottom_line - num_lines;
 
         if (newlines >= 0)
-        {
             desc.append(newlines, '\n');
-        }
     }
 
     while (!desc.empty())

@@ -55,10 +55,8 @@
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
-#include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "tagstring.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -69,16 +67,6 @@
 
 static bool _wounded_damaged(mon_holy_type holi);
 static int _calc_player_experience(const monster* mons);
-
-const item_def* get_mimic_item(const monster* mimic)
-{
-    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
-
-    if (mimic->inv[MSLOT_MISCELLANY] != NON_ITEM)
-        return &mitm[mimic->inv[MSLOT_MISCELLANY]];
-    else
-        return NULL;
-}
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
@@ -254,28 +242,6 @@ monster_type fill_out_corpse(const monster* mons,
                 corpse_class = draco_subspecies(mons);
         }
 
-        if (mons && mons->type == MONS_SERPENT_OF_HELL)
-        {
-            switch (mons->props["serpent_of_hell_flavour"].get_int())
-            {
-            case BRANCH_GEHENNA:
-                corpse_class = MONS_DRAGON;
-                break;
-            case BRANCH_COCYTUS:
-                corpse_class = MONS_ICE_DRAGON;
-                break;
-            case BRANCH_DIS:
-                corpse_class = MONS_IRON_DRAGON;
-                break;
-            case BRANCH_TARTARUS:
-                corpse_class = MONS_SHADOW_DRAGON;
-                break;
-            default:
-                corpse_class = MONS_DRAGON;
-                break;
-            }
-        }
-
         if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_SHAPESHIFTER))
@@ -310,9 +276,7 @@ monster_type fill_out_corpse(const monster* mons,
     if (corpse.colour == BLACK)
     {
         if (mons)
-        {
             corpse.colour = mons->colour;
-        }
         else
         {
             // [ds] Ick: no easy way to get a monster's colour
@@ -442,7 +406,7 @@ int place_monster_corpse(const monster* mons, bool silent,
 
     if (corpse_class == MONS_NO_MONSTER
         || (!force && !vault_forced && coinflip())
-        || (mons_corpse_effect(corpse_class) == CE_MUTAGEN_RANDOM
+        || (mons_corpse_effect(corpse_class) == CE_MUTAGEN
            && !one_chance_in(3)))
     {
         return (-1);
@@ -562,13 +526,11 @@ void record_monster_defeat(monster* mons, killer_type killer)
 #if TAG_MAJOR_VERSION <= 33
 void note_montiers()
 {
-#if 0
     char buf[128];
     snprintf(buf, sizeof(buf), "Killed monsters: %d trivial, %d easy, "
         "%d tough, %d nasty; %d corpses", you.montiers[0], you.montiers[1],
         you.montiers[2], you.montiers[3], you.montiers[4]);
     take_note(Note(NOTE_MESSAGE, 0, 0, buf));
-#endif
     for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
         you.montiers[i] = 0;
 }
@@ -1164,7 +1126,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
 
     if (YOU_KILL(killer) && beam.aux_source.empty())
-        beam.aux_source = "set off by themselves";
+        beam.aux_source = "set off by themself";
     else if (pet_kill)
         beam.aux_source = "set off by their pet";
 
@@ -1289,9 +1251,7 @@ void mons_relocated(monster* mons)
         int base_id = mons->mindex();
 
         if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-        {
             base_id = mons->number;
-        }
 
         for (monster_iterator connect; connect; ++connect)
         {
@@ -1516,7 +1476,7 @@ int monster_die(monster* mons, killer_type killer,
 
     // If a monster was banished to the Abyss and then killed there,
     // then its death wasn't a banishment.
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         mons->flags &= ~MF_BANISHED;
 
     if (!silent && !fake
@@ -1627,7 +1587,9 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
-        else if (wearing_amulet(AMU_RAGE) && one_chance_in(30))
+        else if (!you.suppressed()
+                 && wearing_amulet(AMU_RAGE)
+                 && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;
 
@@ -2263,16 +2225,18 @@ int monster_die(monster* mons, killer_type killer,
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
                 if (!mons->is_summoned())
-                {
                     drop_items = false;
-                }
                 break;
             }
 
             // Monster goes to the Abyss.
             mons->flags |= MF_BANISHED;
-            mons->set_transit(level_id(LEVEL_ABYSS));
-            set_unique_annotation(mons, LEVEL_ABYSS);
+            {
+                unwind_var<int> dt(mons->damage_total, 0);
+                unwind_var<int> df(mons->damage_friendly, 0);
+                mons->set_transit(level_id(BRANCH_ABYSS));
+            }
+            set_unique_annotation(mons, BRANCH_ABYSS);
             in_transit = true;
             drop_items = false;
             mons->firing_pos.reset();
@@ -2337,9 +2301,7 @@ int monster_die(monster* mons, killer_type killer,
         you.uniq_map_names.erase("uniq_boris");
     }
     if (mons->type == MONS_JORY && !in_transit)
-    {
         blood_spray(mons->pos(), MONS_JORY, 50);
-    }
     else if (mons_is_kirke(mons)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))
@@ -2353,9 +2315,7 @@ int monster_die(monster* mons, killer_type killer,
         pikel_band_neutralise();
     }
     else if (mons->is_named() && created_friendly)
-    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
-    }
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(mons) && !in_transit)
@@ -2397,9 +2357,7 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
     else if (mons_is_elven_twin(mons) && mons_near(mons))
-    {
         elven_twin_died(mons, in_transit, killer, killer_index);
-    }
     else if (mons_is_shedu(mons))
     {
         if (was_banished) // Don't try resurrecting them.
@@ -2453,7 +2411,7 @@ int monster_die(monster* mons, killer_type killer,
          || killer == KILL_YOU_MISSILE
          || killer == KILL_YOU_CONF
          || pet_kill)
-             && corpse > 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
+             && corpse >= 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
@@ -2608,7 +2566,7 @@ void alert_nearby_monsters(void)
     // calling noisy() before calling this function. - bwr
     for (monster_iterator mi(you.get_los()); mi; ++mi)
         if (!mi->asleep())
-             behaviour_event(*mi, ME_ALERT, MHITYOU);
+             behaviour_event(*mi, ME_ALERT, &you);
 }
 
 static bool _valid_morph(monster* mons, monster_type new_mclass)
@@ -2747,7 +2705,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
     {
-        if ((flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        if (flags & MF_NAME_MASK)
         {
             // Remove the replacement name from the new monster
             flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
@@ -2840,6 +2798,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props["original_name"] = name;
     mons->props["original_was_unique"] = old_mon_unique;
     mons->god   = god;
+    mons->props.erase("dbname");
 
     mons->flags = flags;
     // Line above might clear melee and/or spell flags; restore.
@@ -2847,10 +2806,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
-    mons->props.erase("speech_key");
     mons->props.erase("speech_prefix");
-    mons->props.erase("speech_func");
-    mons->props.erase("shout_func");
 
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
@@ -2937,7 +2893,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
         return (false);
-    ASSERT(!(mons->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
+    ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
     int source_power, target_power, relax;
     int source_tier, target_tier;
@@ -3243,34 +3199,6 @@ void corrode_monster(monster* mons, const actor* evildoer)
                  mons->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
     }
-}
-
-// This doesn't really swap places, it just sets the monster's
-// position equal to the player (the player has to be moved afterwards).
-// It also has a slight problem with the fact that if the player is
-// levitating over an inhospitable habitat for the monster the monster
-// will be put in a place it normally couldn't go (this could be a
-// feature because it prevents insta-killing).  In order to prevent
-// that little problem, we go looking for a square for the monster
-// to "scatter" to instead... and if we can't find one the monster
-// just refuses to be swapped (not a bug, this is intentionally
-// avoiding the insta-kill).  Another option is to look a bit
-// wider for a vaild square (either by a last attempt blink, or
-// by looking at a wider radius)...  insta-killing should be a
-// last resort in this function (especially since Tome, Dig, and
-// Summoning can be used to set up death traps).  If worse comes
-// to worse, at least consider making the Swap spell not work
-// when the player is over lava or water (if the player wants to
-// swap pets to their death, we can let that go). - bwr
-bool swap_places(monster* mons)
-{
-    coord_def loc;
-    if (swap_check(mons, loc))
-    {
-        swap_places(mons, loc);
-        return true;
-    }
-    return false;
 }
 
 // Swap monster to this location.  Player is swapped elsewhere.
@@ -3655,8 +3583,8 @@ bool simple_monster_message(const monster* mons, const char *event,
     return (false);
 }
 
-bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
-                       bool placement)
+static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
+                               bool placement)
 {
     bool extra_careful = placement;
     cloud_type cl_type = cloud.type;
@@ -3697,7 +3625,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return (false);
         break;
 
-    case CLOUD_STINK:
+    case CLOUD_MEPHITIC:
         if (mons->res_poison() > 0)
             return (false);
 
@@ -3824,7 +3752,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
     const cloud_struct &cloud = env.cloud[cloud_num];
 
     // Is the target cloud okay?
-    if (!mons_avoids_cloud(mons, cloud, placement))
+    if (!_mons_avoids_cloud(mons, cloud, placement))
         return (false);
 
     // If we're already in a cloud that we'd want to avoid then moving
@@ -3839,7 +3767,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 
     const cloud_struct &our_cloud = env.cloud[our_cloud_num];
 
-    return (!mons_avoids_cloud(mons, our_cloud, true));
+    return (!_mons_avoids_cloud(mons, our_cloud, true));
 }
 
 // Returns a rough estimate of damage from throwing the wielded weapon.
@@ -4099,6 +4027,10 @@ void seen_monster(monster* mons)
     set_auto_exclude(mons);
     set_unique_annotation(mons);
 
+    item_def* weapon = mons->weapon();
+    if (weapon && is_range_weapon(*weapon))
+        mons->flags |= MF_SEEN_RANGED;
+
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
 
@@ -4313,8 +4245,8 @@ bool monster_space_valid(const monster* mons, coord_def target,
     return monster_habitable_grid(mons, grd(target));
 }
 
-bool monster_random_space(const monster* mons, coord_def& target,
-                          bool forbid_sanctuary)
+static bool _monster_random_space(const monster* mons, coord_def& target,
+                                  bool forbid_sanctuary)
 {
     int tries = 0;
     while (tries++ < 1000)
@@ -4325,15 +4257,6 @@ bool monster_random_space(const monster* mons, coord_def& target,
     }
 
     return (false);
-}
-
-bool monster_random_space(monster_type mon, coord_def& target,
-                          bool forbid_sanctuary)
-{
-    monster dummy;
-    dummy.type = mon;
-
-    return (monster_random_space(&dummy, target, forbid_sanctuary));
 }
 
 void monster_teleport(monster* mons, bool instan, bool silent)
@@ -4387,7 +4310,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     }
 
     if (newpos.origin())
-        monster_random_space(mons, newpos, !mons->wont_attack());
+        _monster_random_space(mons, newpos, !mons->wont_attack());
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)
@@ -4664,11 +4587,15 @@ void debuff_monster(monster* mon)
     // Dispel all magical enchantments...
     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
     {
-        // ...except for natural invisibility.
-        if (lost_enchantments[i] == ENCH_INVIS
-            && mons_class_flag(mon->type, M_INVIS))
+        if (lost_enchantments[i] == ENCH_INVIS)
         {
-            continue;
+            // ...except for natural invisibility.
+            if (mons_class_flag(mon->type, M_INVIS))
+                continue;
+
+            // For non-natural invisibility, turn autopickup back on manually,
+            // since dispelling invisibility quietly won't do so.
+            autotoggle_autopickup(false);
         }
 
         mon->del_ench(lost_enchantments[i], true, true);

@@ -22,18 +22,11 @@ enum load_mode_type
     LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 
-// referenced in files - newgame - ouch - dgn-overview:
-#define MAX_LEVELS 50
-
-// referenced in files - newgame - ouch:
-typedef std::set<level_id> level_id_set;
-extern level_id_set Generated_Levels;
-
 bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
-unsigned long file_size(FILE *handle);
+off_t file_size(FILE *handle);
 
 std::vector<std::string> get_dir_files(const std::string &dir);
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
@@ -80,6 +73,7 @@ class level_id;
 
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
+void delete_level(const level_id &level);
 
 void save_game(bool leave_game, const char *bye = NULL);
 

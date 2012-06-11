@@ -146,6 +146,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_DEATHS_DOOR;
     case ENCH_ROLLING:
         return MB_ROLLING;
+    case ENCH_OZOCUBUS_ARMOUR:
+        return MB_OZOCUBUS_ARMOUR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -171,10 +173,10 @@ static bool _is_public_key(std::string key)
      || key == "wand_known"
      || key == "feat_type"
      || key == "glyph"
+     || key == "dbname"
      || key == "monster_tile"
      || key == "tile_num"
-     || key == "tile_idx"
-     || key == "serpent_of_hell_flavour")
+     || key == "tile_idx")
     {
         return true;
     }
@@ -481,6 +483,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NAME_THE);
     if (m->flags & MF_NAME_ZOMBIE)
         mb.set(MB_NAME_ZOMBIE);
+    if (m->flags & MF_NAME_SPECIES)
+        mb.set(MB_NO_NAME_TAG);
 
     if (milev <= MILEV_NAME)
     {
@@ -574,9 +578,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(m))
-        {
             mb.set(MB_FLEEING);
-        }
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
             if (mons_is_stationary(m))
@@ -713,6 +715,9 @@ monster_info::monster_info(const monster* m, int milev)
         if (constrictee)
             constricting_name[idx] = constrictee->name(DESC_PLAIN, true);
     }
+
+    if (mons_has_known_ranged_attack(m))
+        mb.set(MB_RANGED_ATTACK);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
@@ -868,8 +873,7 @@ std::string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (number ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA
-            || mons_genus(base_type) == MONS_HYDRA)
+    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
         && number > 0)
     {
         if (number < 11)
@@ -953,19 +957,28 @@ const item_def* monster_info::get_mimic_item() const
 std::string monster_info::mimic_name() const
 {
     std::string s;
+    if (type == MONS_INEPT_ITEM_MIMIC || type == MONS_INEPT_FEATURE_MIMIC)
+        s = "inept ";
+    if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
+        s = "ravenous ";
+    if (type == MONS_MONSTROUS_ITEM_MIMIC || type == MONS_MONSTROUS_FEATURE_MIMIC)
+        s = "monstrous ";
+
     if (props.exists("feat_type"))
-        s = feat_type_name(get_mimic_feature());
+        s += feat_type_name(get_mimic_feature());
     else if (item_def* item = inv[MSLOT_MISCELLANY].get())
     {
         if (item->base_type == OBJ_GOLD)
-            s = "pile of gold";
+            s += "pile of gold";
         else if (item->base_type == OBJ_MISCELLANY
                  && item->sub_type == MISC_RUNE_OF_ZOT)
         {
-            s = "rune";
+            s += "rune";
         }
+        else if (item->base_type == OBJ_ORBS)
+            s += "orb";
         else
-            s = item->name(DESC_BASENAME);
+            s += item->name(DESC_BASENAME);
     }
 
     if (!s.empty())
@@ -1172,19 +1185,13 @@ std::string monster_info::pluralised_name(bool fullname) const
     // arena.  This prevens "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
-    {
         return common_name();
-    }
     // Specialcase mimics, so they don't get described as piles of gold
     // when that would be inappropriate. (HACK)
     else if (mons_is_mimic(type))
-    {
         return "mimics";
-    }
     else if (mons_genus(type) == MONS_DRACONIAN)
-    {
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    }
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
              || !fullname)
@@ -1198,7 +1205,7 @@ std::string monster_info::pluralised_name(bool fullname) const
 }
 
 void monster_info::to_string(int count, std::string& desc,
-                                  int& desc_color, bool fullname) const
+                                  int& desc_colour, bool fullname) const
 {
     std::ostringstream out;
 
@@ -1223,32 +1230,32 @@ void monster_info::to_string(int count, std::string& desc,
     {
     case ATT_FRIENDLY:
         //out << " (friendly)";
-        desc_color = GREEN;
+        desc_colour = GREEN;
         break;
     case ATT_GOOD_NEUTRAL:
     case ATT_NEUTRAL:
         //out << " (neutral)";
-        desc_color = BROWN;
+        desc_colour = BROWN;
         break;
     case ATT_STRICT_NEUTRAL:
          out << " (fellow slime)";
-         desc_color = BROWN;
+         desc_colour = BROWN;
          break;
     case ATT_HOSTILE:
         // out << " (hostile)";
         switch (threat)
         {
-        case MTHRT_TRIVIAL: desc_color = DARKGREY;  break;
-        case MTHRT_EASY:    desc_color = LIGHTGREY; break;
-        case MTHRT_TOUGH:   desc_color = YELLOW;    break;
-        case MTHRT_NASTY:   desc_color = LIGHTRED;  break;
+        case MTHRT_TRIVIAL: desc_colour = DARKGREY;  break;
+        case MTHRT_EASY:    desc_colour = LIGHTGREY; break;
+        case MTHRT_TOUGH:   desc_colour = YELLOW;    break;
+        case MTHRT_NASTY:   desc_colour = LIGHTRED;  break;
         default:;
         }
         break;
     }
 
     if (count == 1 && is(MB_EVIL_ATTACK))
-        desc_color = Options.evil_colour;
+        desc_colour = Options.evil_colour;
 
     desc = out.str();
 }
@@ -1343,6 +1350,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("regenerating");
     if (is(MB_ROLLING))
         v.push_back("rolling");
+    if (is(MB_OZOCUBUS_ARMOUR))
+        v.push_back("covered in an icy film");
     return v;
 }
 
@@ -1494,8 +1503,10 @@ size_type monster_info::body_size() const
             ret = SIZE_TINY;
         else if (mass < 100)
             ret = SIZE_LITTLE;
-        else
+        else if (mass < 200)
             ret = SIZE_SMALL;
+        else
+            ret = SIZE_MEDIUM;
     }
 
     return (ret);

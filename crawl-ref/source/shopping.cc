@@ -13,8 +13,8 @@
 #include <string.h>
 
 #include "externs.h"
-#include "options.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cio.h"
 #include "describe.h"
 #include "decks.h"
@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
+#include "options.h"
 #include "place.h"
 #include "player.h"
 #include "spl-book.h"
@@ -118,6 +119,12 @@ static std::string _purchase_keys(const std::string &s)
     return (list);
 }
 
+static bool _can_shoplist(level_id lev = level_id::current())
+{
+    // TODO: temporary shoplists
+    return is_connected_branch(lev.branch);
+}
+
 static void _list_shop_keys(const std::string &purchasable, bool viewing,
                             int total_stock, int num_selected,
                             int num_in_list)
@@ -128,7 +135,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     formatted_string fs;
 
     std::string shop_list = "";
-    if (!viewing && you.level_type == LEVEL_DUNGEON)
+    if (!viewing && _can_shoplist())
     {
         shop_list = "[<w>$</w>] ";
         if (num_selected > 0)
@@ -614,7 +621,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         else if (key == '$')
         {
             if (viewing || (num_selected == 0 && num_in_list == 0)
-                || you.level_type != LEVEL_DUNGEON)
+                || !_can_shoplist())
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -787,7 +794,7 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
 
     const int quant = item.quantity;
     // Note that item will be invalidated if num == item.quantity.
-    const int num = move_item_to_player(item_got, item.quantity, true);
+    const int num = move_item_to_player(item_got, item.quantity, false);
 
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
@@ -964,9 +971,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 35;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case WPN_ANKUS:
-#endif
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
         case WPN_SABRE:
@@ -1035,10 +1039,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case WPN_KATANA:
-        case WPN_BLESSED_KATANA:
-#endif
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
         case WPN_EUDEMON_BLADE:
@@ -1335,9 +1335,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
 
-#if TAG_MAJOR_VERSION == 32
-        case ARM_BANDED_MAIL:
-#endif
         case ARM_CENTAUR_BARDING:
         case ARM_NAGA_BARDING:
             valued += 150;
@@ -1497,9 +1494,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 50;
         }
         else if (item_type_known(item) && get_equip_desc(item) != 0)
-        {
             valued += 20;
-        }
 
         if (item_known_cursed(item))
         {
@@ -1719,7 +1714,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 200;
                 break;
 
-            case SCR_SUMMONING:
+            case SCR_UNHOLY_CREATION:
                 valued += 95;
                 break;
 
@@ -1750,7 +1745,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_FOG:
-            case SCR_DETECT_CURSE:
             case SCR_IDENTIFY:
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
@@ -2000,9 +1994,9 @@ unsigned int item_value(item_def item, bool ident)
     if (valued < 1)
         valued = 1;
 
-    valued *= item.quantity;
+    valued = stepdown_value(valued, 1000, 1000, 10000, 10000);
 
-    return stepdown_value(valued, 1000, 1000, 10000, 10000);
+    return (item.quantity * valued);
 }
 
 bool is_worthless_consumable(const item_def &item)
@@ -2095,20 +2089,15 @@ void shop()
         mpr("You can access your shopping list by pressing '$'.");
 }
 
-void destroy_shop(shop_struct *shop)
+void destroy_shop_at(coord_def p)
 {
-    if (shop)
+    if (shop_struct *shop = get_shop(p))
     {
         unnotice_feature(level_pos(level_id::current(), shop->pos));
 
         shop->pos  = coord_def(0, 0);
         shop->type = SHOP_UNASSIGNED;
     }
-}
-
-void destroy_shop_at(coord_def p)
-{
-    destroy_shop(get_shop(p));
 }
 
 shop_struct *get_shop(const coord_def& where)
@@ -2131,7 +2120,7 @@ std::string shop_name(const coord_def& where, bool add_stop)
     return (name);
 }
 
-std::string shop_type_name (shop_type type)
+static std::string _shop_type_name(shop_type type)
 {
     switch (type)
     {
@@ -2197,9 +2186,7 @@ std::string shop_name(const coord_def& where)
     std::string sh_name = "";
 
     if (!cshop->shop_name.empty())
-    {
         sh_name += apostrophise(cshop->shop_name) + " ";
-    }
     else
     {
         uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
@@ -2212,12 +2199,10 @@ std::string shop_name(const coord_def& where)
     if (!cshop->shop_type_name.empty())
         sh_name += cshop->shop_type_name;
     else
-        sh_name += shop_type_name(type);
+        sh_name += _shop_type_name(type);
 
     if (!cshop->shop_suffix_name.empty())
-    {
         sh_name += " " + cshop->shop_suffix_name;
-    }
     else
     {
         std::string sh_suffix = _shop_type_suffix(type, where);
@@ -2273,7 +2258,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (pos.id.level_type != LEVEL_DUNGEON)
+    if (!_can_shoplist(pos.id.branch))
     {
         mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
@@ -2304,7 +2289,7 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
     SETUP_POS();
 
-    if (pos.id.level_type != LEVEL_DUNGEON)
+    if (!_can_shoplist(pos.id.branch))
     {
         mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
@@ -2408,7 +2393,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transferring shopping list items to Bazaar shops.
-    if (cost != -1 && you.level_type != LEVEL_DUNGEON)
+    if (cost != -1 && !_can_shoplist())
         return (0);
 
     switch (item.base_type)

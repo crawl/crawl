@@ -14,9 +14,9 @@
 #include <algorithm>
 
 #include "externs.h"
-#include "options.h"
 
 #include "areas.h"
+#include "branch.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
@@ -26,7 +26,6 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -34,7 +33,6 @@
 #include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
-#include "view.h" // Elemental colours for unrandarts
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -95,7 +93,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_CHEIBRIADOS:
-        // Slow god: no quick blades, no berserking, no resist slowing.
+        // Slow god: no quick blades, no berserking.
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
             type_bad = true;
 
@@ -266,39 +264,7 @@ std::string replace_name_parts(const std::string &name_in, const item_def& item)
 
     if (name.find("@branch_name@", 0) != std::string::npos)
     {
-        std::string place;
-        if (one_chance_in(5))
-        {
-            switch (random2(8))
-            {
-            case 0:
-            case 1:
-            default:
-               place = "the Abyss";
-               break;
-            case 2:
-            case 3:
-               place = "Pandemonium";
-               break;
-            case 4:
-            case 5:
-               place = "the Realm of Zot";
-               break;
-            case 6:
-               place = "the Labyrinth";
-               break;
-            case 7:
-               place = "the Portal Chambers";
-               break;
-            }
-        }
-        else
-        {
-            const branch_type branch =
-                     static_cast<branch_type>(random2(BRANCH_TARTARUS));
-            place = place_name(get_packed_place(branch, 1, LEVEL_DUNGEON),
-                                true, false);
-        }
+        std::string place = branches[random2(NUM_BRANCHES)].longname;
         if (!place.empty())
             name = replace_all(name, "@branch_name@", place);
     }
@@ -316,7 +282,7 @@ std::string replace_name_parts(const std::string &name_in, const item_def& item)
         else
         {
             do
-                which_god = random_god(true);
+                which_god = random_god(false); // Fedhas in ZotDef only
             while (!_god_fits_artefact(which_god, item, true));
         }
 
@@ -389,16 +355,8 @@ void autoid_unrand(item_def &item)
     if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
         return;
 
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
     add_autoinscription(item);
-}
-
-unique_item_status_type get_unique_item_status(const item_def& item)
-{
-    if (item.flags & ISFLAG_UNRANDART)
-        return get_unique_item_status(item.special);
-
-    return (UNIQ_NOT_EXISTS);
 }
 
 unique_item_status_type get_unique_item_status(int art)
@@ -407,17 +365,17 @@ unique_item_status_type get_unique_item_status(int art)
     return (you.unique_items[art - UNRAND_START]);
 }
 
+static void _set_unique_item_status(int art, unique_item_status_type status)
+{
+    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    you.unique_items[art - UNRAND_START] = status;
+}
+
 void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        set_unique_item_status(item.special, status);
-}
-
-void set_unique_item_status(int art, unique_item_status_type status)
-{
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
-    you.unique_items[art - UNRAND_START] = status;
+        _set_unique_item_status(item.special, status);
 }
 
 void reveal_randapp_artefact(item_def &item)
@@ -2034,7 +1992,7 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 255)
-        set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
@@ -2072,7 +2030,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item_colour(item);
     }
 
-    set_unique_item_status(unrand_index, UNIQ_EXISTS);
+    _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
     if (unrand_index == UNRAND_VARIABILITY)
     {
@@ -2088,7 +2046,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         && !(unrand->flags & UNRAND_FLAG_UNIDED)
         && !strcmp(unrand->name, unrand->unid_name))
     {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
         add_autoinscription(item);
     }
 

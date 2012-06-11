@@ -232,7 +232,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_MALEDICT:
         return 2;
 
-    case BOOK_CONJURATIONS_II:
+    case BOOK_CONJURATIONS:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
     case BOOK_WIZARDRY:
@@ -298,13 +298,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
-#if TAG_MAJOR_VERSION == 32
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
-    case BOOK_CONJURATIONS_I:
-#endif
-       return 100;
-
     default:
         return 1;
     }
@@ -367,11 +360,6 @@ bool is_valid_spell_in_book(const item_def &book, int spell)
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
 }
 
-bool is_valid_spell_in_book(int splbook, int spell)
-{
-    return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
-}
-
 // Returns false if the player cannot memorise from the book,
 // and true otherwise. -- bwr
 bool player_can_memorise_from_spellbook(const item_def &book)
@@ -418,22 +406,7 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-    {
-        const int level = book.plus;
-#if TAG_MAJOR_VERSION == 32
-        god_type god;
-        if (level > 0 && level <= 9)
-        {
-            if (origin_is_acquirement(book)
-                || origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
-            {
-                you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
-            }
-        }
-#else
-        ASSERT(level > 0 && level <= 9);
-#endif
-    }
+        ASSERT(book.plus > 0 && book.plus <= 9); // book's level
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
@@ -2493,6 +2466,88 @@ void make_book_Roxanne_special(item_def *book)
     int disc =  coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
     make_book_theme_randart(*book, disc, 0, 5, 19,
                             SPELL_STATUE_FORM, "Roxanne");
+}
+
+void make_book_Kiku_gift(item_def &book, bool first)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spell_type chosen_spells[SPELLBOOK_SIZE];
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
+
+    if (first)
+    {
+        chosen_spells[0] = coinflip() ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
+        if (you.species == SP_FELID || one_chance_in(3))
+        {
+            chosen_spells[1] = SPELL_CORPSE_ROT;
+            chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
+        }
+        else
+        {
+            chosen_spells[1] = coinflip() ? SPELL_CORPSE_ROT : SPELL_SUBLIMATION_OF_BLOOD;
+            chosen_spells[2] = SPELL_LETHAL_INFUSION;
+        }
+        chosen_spells[3] = (you.species == SP_DEEP_DWARF
+                            || you.species == SP_MUMMY
+                            || coinflip())
+                           ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
+        chosen_spells[4] = SPELL_CONTROL_UNDEAD;
+    }
+    else
+    {
+        chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_TWISTED_RESURRECTION;
+        chosen_spells[1] = (you.species == SP_FELID || coinflip())
+                           ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
+        chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                         SPELL_SIMULACRUM,
+                                         SPELL_DEATH_CHANNEL,
+                                         -1);
+        spell_type extra_spell;
+        do
+        {
+            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
+                                        SPELL_TWISTED_RESURRECTION,
+                                        SPELL_AGONY,
+                                        SPELL_EXCRUCIATING_WOUNDS,
+                                        SPELL_BOLT_OF_DRAINING,
+                                        SPELL_SIMULACRUM,
+                                        SPELL_DEATH_CHANNEL,
+                                        -1);
+            if (you.species == SP_FELID && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+                extra_spell = SPELL_NO_SPELL;
+            for (int i = 0; i < 3; i++)
+                if (extra_spell == chosen_spells[i])
+                    extra_spell = SPELL_NO_SPELL;
+        }
+        while (extra_spell == SPELL_NO_SPELL);
+        chosen_spells[3] = extra_spell;
+        chosen_spells[4] = SPELL_DISPEL_UNDEAD;
+    }
+
+    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(SPELLBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(SPELLBOOK_SIZE);
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
+
+    std::string name = "Kikubaaqudgha's ";
+    book.props["is_named"].get_bool() = true;
+    name += getRandNameString("book_name") + " ";
+    std::string type_name = getRandNameString("Necromancy");
+    if (type_name.empty())
+        name += "Necromancy";
+    else
+        name += type_name;
+    set_artefact_name(book, name);
 }
 
 bool book_has_title(const item_def &book)

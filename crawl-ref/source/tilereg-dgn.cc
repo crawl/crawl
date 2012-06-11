@@ -791,9 +791,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR)
     {
         if (event.event == MouseEvent::MOVE)
-        {
             return CK_MOUSE_MOVE;
-        }
         else if (event.event == MouseEvent::PRESS
                  && event.button == MouseEvent::LEFT && on_screen(gc))
         {
@@ -1201,9 +1199,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
 
     describe_info inf;
     if (you.see_cell(gc))
-    {
         get_square_desc(gc, inf, true, false);
-    }
     else if (grid_appearance(gc) != DNGN_FLOOR
              && !feat_is_wall(grid_appearance(gc))
              && !feat_is_tree(grid_appearance(gc)))

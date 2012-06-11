@@ -57,6 +57,31 @@ struct menu_letter
     }
 };
 
+// XXX Use inheritence instead of duplicate code
+struct menu_letter2
+{
+    char letter;
+
+    menu_letter2() : letter('a') { }
+    menu_letter2(char c) : letter(c) { }
+
+    operator char () const { return letter; }
+    const menu_letter2 &operator ++ ()
+    {
+        letter = letter == 'z'? '0' :
+                 letter == '9'? 'a' :
+                                letter + 1;
+        return *this;
+    }
+
+    menu_letter2 operator ++ (int)
+    {
+        menu_letter2 copy = *this;
+        this->operator++();
+        return copy;
+    }
+};
+
 struct item_def;
 class Menu;
 
@@ -244,6 +269,7 @@ enum MenuFlag
     MF_EASY_EXIT        = 0x1000,
     MF_START_AT_END     = 0x2000,
     MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
+    MF_QUIET_SELECT     = 0x8000,   /// No selection box and no count.
 };
 
 class MenuDisplay
@@ -804,7 +830,7 @@ protected:
     coord_def m_max_coord;
     std::string m_object_name;
     // by default, entries are held in a vector
-    // if you need a different behaviour, pleare override the
+    // if you need a different behaviour, please override the
     // affected methods
     std::vector<MenuItem*> m_entries;
 #ifdef USE_TILE_LOCAL
@@ -1082,6 +1108,7 @@ public:
     virtual MenuObject* get_object_by_name(const std::string& search);
     virtual MenuItem* get_active_item();
     virtual void set_active_object(MenuObject* object);
+    virtual void clear_selections();
 protected:
     // These correspond to the Arrow keys when used for browsing the menus
     enum Direction
@@ -1091,7 +1118,6 @@ protected:
         LEFT,
         RIGHT,
     };
-    void _clear_selections();
     MenuObject* _find_object_by_direction(const MenuObject* start, Direction dir);
 
     std::vector<MenuObject*> m_attached_objects;
@@ -1100,7 +1126,7 @@ protected:
     SelectType m_select_type;
 };
 
-int linebreak_string(std::string& s, int maxcol);
+int linebreak_string(std::string& s, int maxcol, bool indent = false);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif

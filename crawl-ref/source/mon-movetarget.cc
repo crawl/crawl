@@ -2,6 +2,7 @@
 
 #include "mon-movetarget.h"
 
+#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -84,7 +85,7 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON
+    if (crawl_state.game_is_zotdef() && player_in_branch(root_branch)
         && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
     {
         if (you.wizard)
@@ -101,7 +102,7 @@ static void _set_no_path_found(monster* mon)
             // effortless win with all the opposition doing nothing.
 
             // This is only appropriate in the zotdef map itself, though,
-            // which is why we check for LEVEL_DUNGEON above.
+            // which is why we check for BRANCH_MAIN_DUNGEON above.
             // (This kind of thing is totally normal in, say, a Bazaar.)
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
                 mon->name(DESC_PLAIN).c_str(),
@@ -893,9 +894,7 @@ static bool _band_wander_target(monster * mon)
 
         int dist = grid_distance(*r_it, band_leader->pos());
         if (dist < HERD_COMFORT_RANGE)
-        {
             positions.push_back(*r_it);
-        }
     }
 
     if (positions.empty())
@@ -978,9 +977,7 @@ static bool _herd_ok(monster * mon)
                 break;
             }
             else if (g_dist < intermediate_thresh)
-            {
                 intermediate_range = true;
-            }
         }
     }
 

@@ -18,7 +18,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
         hotkeys.push_back('1');
     else
     {
-        //hotkeys.push_back(txt.at(0));
+        hotkeys.push_back(text.at(0));
         hotkeys.push_back(tolower(text.at(0)));
     }
     int c = god_message_altar_colour(god);

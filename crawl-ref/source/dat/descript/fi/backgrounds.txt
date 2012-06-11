@@ -1,0 +1,135 @@
+%%%%
+Abyssal Knight
+
+Syvänneritarit palvovat Lugonua, ja heidät lähetetään Syvänteestä Luolastoon
+levittämään korruptiota ja kaaosta.
+%%%%
+Air Elementalist
+
+Ilmaelementalistit ovat oppineet Sähköisku-taian. Myöhemmässä vaiheessa Ilman
+kirja antaa heille joustavuutta selviytymiseen.
+%%%%
+Arcane Marksman
+
+Taika-ampujat kantavat pitkän matkan aseita ja käyttävät taikuutta tehdäkseen
+vastustajistaan heikompia kaukohyökkäyksille.
+%%%%
+Artificer
+
+Esinesoturit aloittavat muutamalla maagisella esineellä, joiden käytössä he
+ovat taitavia.
+%%%%
+Assassin
+
+Salamurhaajat luottavat hiiviskelyyn, ollen valmiina puukottamaan varomattomia
+vastustajia. Tikarin ja kaavun lisäksi he kantavat ilkeitä myrkkyneuloja
+puhallusputkeensa.
+%%%%
+Berserker
+
+Berserkit uskovat Trogiin, taikaa vihaavaan vimmajumalaan. Moni asia ei voi
+pysäyttää berserkkiä aikaisessa vaiheessa, paitsi ylimielisyys.
+%%%%
+Chaos Knight
+
+Kaaosritarit ovat arvaamattoman Xomin leikkikaluja ja joutuvat jumalansa
+jatkuvasti vaihtuvan mielialan koetukselle.
+%%%%
+Conjurer
+
+Taistelumaagit kohtaavat ongelmansa Konjuraatioiden kirjan vahingoittavilla
+taioilla.
+%%%%
+Death Knight
+
+Kuolonritarit ovat lähitaistelijoita, jotka komentavat epäkuolleita
+Yredelemnulin nimessä.
+%%%%
+Earth Elementalist
+
+Maaelementalistit osaavat Hiekkatykki-taian ja kantavat mukanaan kiviä
+lisätäkseen loistun voimaa. Lisää maanläheisiä taikoja he oppivat Geomagiikan
+kirjasta.
+%%%%
+Enchanter
+
+Vahventajat käyttävät loitsuja itsensä tehostamiseksi taistelussa, tai tekevät
+muut toimintakyvyttömiksi. He myös aloittavat hyvillä tikoilla.
+%%%%
+Fighter
+
+Taistelijoilla on panssari ja kilpi, sekä valitsemansa ase. He kestävät enemmän
+kuritusta kuin mikään muu hahmoluokka.
+%%%%
+Fire Elementalist
+
+Tulielementalistit aloittavat Liekkien kirjalla ja osaavat Liekkikieli-taian.
+Kirjan muutkin taiat keskittyvät tuhoamiseen.
+%%%%
+Gladiator
+
+Gladiaattorit ovat valmiita areenakoitoksiin kevyellä panssarilla, kilvellä,
+heittoverkoilla ja valitsemallaan aseella.
+%%%%
+Hunter
+
+Metsästäjät osaavat hyökätä kaukaa, tukeutumatta ärsyttävään taikuuteen.
+%%%%
+Ice Elementalist
+
+Jääelementalistit aloittavat Pakkasen kirjalla ja osaavat Jäädytys-loitsun.
+Kirjan muut loitsut sopivat moneen tilanteeseen.
+%%%%
+Monk
+
+Munkit ovat valmiina kohtaamaan Luolaston yllään vain kaapu. He luottavat
+kehoonsa.
+%%%%
+Necromancer
+
+Nekromantikot ovat kuolotaikuuden spesialisteja. He aloittavat Kipu-loitsulla.
+%%%%
+Priest
+
+Papit ovat Zinin kannattajia, levittäen jumalansa sanaa Luolaston asukeille.
+Kukkulaörkit seuraavat örkkijumala Beoghia.
+%%%%
+Skald
+
+Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien
+kirjan taioilla.
+%%%%
+Stalker
+
+Stalkkerit käyttävät hiiviskelyä ja muodonmuutostaikuutta lähestyäkseen
+uhrejaan ja kukistaakseen heidät.
+%%%%
+Summoner
+
+Kutsujat aloittavat Kutsumusten kirjalla ja osaavat aluksi kutsua pieniä
+nisäkkäitä.
+%%%%
+Transmuter
+
+Muodonmuuttajat muuttavat kehoaan petomaisemmaksi taistelua varten. Kepitkin
+muuttuvat kätevästi käärmeiksi.
+%%%%
+Venom Mage
+
+Myrkkymaagit aloittavat Nuoren myrkyttäjän käsikirjalla ja Pisto-taialla.
+Heillä on helppoa aluksi.
+%%%%
+Wanderer
+
+Vaeltajat aloittavat satunnaisella varustuksella ja taidoilla.
+%%%%
+Warper
+
+Varppaajat aloittavat haluamallaan aseella ja Välähdys-kääröllä. He voivat
+oppia taikoja Spatiaalisten translokaatioiden kirjasta.
+%%%%
+Wizard
+
+Velhot aloittavat Vähäisen taikuuden kirjalla, jossa on vino pino taikoja.
+Heillä on suuremmat taikuusvarastot kuin muilla hahmoluokilla.
+%%%%

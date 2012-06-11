@@ -2,7 +2,7 @@
 # elf.des: Special maps for the Elven Halls.
 # Content: arrival vaults for Elf:1
 #          (mini)vaults particular to the Elven Halls.
-#          Elf:5 branch end vaults
+#          Elf branch end vaults
 ##############################################################################
 
 #############################################################
@@ -22,7 +22,7 @@ function elf_loot_randomisation(e)
   e.subst("* = * |:3")
 end
 
--- The standard Elf:5 monster set
+-- The standard Elf:$ monster set
 function elf_monsters(e)
   e.mons("deep elf high priest")
   e.mons("deep elf demonologist")
@@ -456,7 +456,7 @@ bb...bb1.U.1bb...bb
 ENDMAP
 
 NAME:   minmay_elf_crystal_heptagon
-DEPTH:  Elf:3-
+DEPTH:  Elf:2-
 ORIENT: float
 WEIGHT: 4
 MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
@@ -482,7 +482,7 @@ bb..1.....11b..bb
 ENDMAP
 
 NAME:   minmay_elf_crystal_octagon
-DEPTH:  Elf:3-
+DEPTH:  Elf:2-
 ORIENT: float
 WEIGHT: 2
 MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
@@ -552,7 +552,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_elf_annihilation
-DEPTH: Elf:3-
+DEPTH: Elf:2-
 MONS:  deep elf conjurer / nothing
 KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
 KITEM: 2 = randbook disc:conjuration slevels:16
@@ -580,7 +580,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_elf_demonology
-DEPTH: Elf:3-
+DEPTH: Elf:2-
 MONS:  deep elf summoner / nothing
 KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
 KITEM: 2 = randbook disc:summoning slevels:16
@@ -610,7 +610,7 @@ ENDMAP
 
 # Dummies give 2 XP and halt autotravel for adjacent players, used for flavour
 NAME:   minmay_elf_archery
-DEPTH:  Elf:3-
+DEPTH:  Elf:2-
 ORIENT: float
 MONS:   deep elf soldier; bow | longbow . arrow / \
         deep elf fighter; bow | longbow . arrow / nothing
@@ -629,7 +629,7 @@ x+xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minmay_elf_blademastery
-DEPTH:   Elf:4-
+DEPTH:   Elf:3-
 ORIENT:  float
 MONS:    deep elf soldier; falchion | long sword | scimitar | sabre / \
          deep elf fighter; falchion | long sword | scimitar | sabre / nothing
@@ -696,7 +696,7 @@ ENDMAP
 
 # A high-level negotiation between orc and deep elf leaders (Shiori)
 NAME:     elf_orc_summit_meeting
-DEPTH:    Elf:4-5
+DEPTH:    Elf:$
 SHUFFLE: 12 , 45
 NSUBST:  7= 1=7 / *= 7:1 .
 NSUBST:  6= 1=6 D:1 / *= 6 .:1
@@ -716,7 +716,7 @@ MONS:    great orb of eyes / sphinx
 # The orcs might have a unique with them. He or she will likely be outclassed
 # by the others in attendance, but perhaps has some special testimony to
 # present. None of the uniques really fits in with the deep elves...
-KMONS:   D = Ijyb / Blork the Orc / Urug / Erolcha / Snorg
+KMONS:   D = Ijyb / Blork the orc / Urug / Erolcha / Snorg
 MAP
      xxxx
     xxGGxx
@@ -732,6 +732,106 @@ MAP
      xxxx
 ENDMAP
 
+NAME:  guppyfry_elf_castle
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf soldier / deep elf mage / deep elf knight
+MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
+MONS:  plant
+SUBST: - = .%*3$
+SUBST: ? = .12$
+MAP
+..............
+.xxmxx..xxmxx.
+.x1-1x..x1*1x.
+.x.?.x..x.2.x.
+.xx.xx..xx.xx.
+.x...x..x...x.
+.x...x..x...x.
+.xxx+x++x+xxx.
+.x.2......?.x.
+.x.*1....1-.x.
+.xxmxx++xxmxx.
+..............
+ENDMAP
+
+NAME:  guppyfry_elf_garden
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf soldier / deep elf mage / deep elf priest
+MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
+MONS:  plant
+SUBST: - = wwWW333ttt..%
+MAP
+................
+................
+..mmmmT..Tmmmm..
+..m----..----m..
+..m----..----m..
+..m----..----m..
+..3---t..t---3..
+.......21.......
+.......11.......
+..3---t..t---3..
+..m----..----m..
+..m----..----m..
+..m----..----m..
+..mmmmT..Tmmmm..
+................
+................
+ENDMAP
+
+NAME:  guppyfry_elf_altar
+DEPTH: Elf:2-4
+MONS:  deep elf knight / deep elf priest
+MONS:  deep elf high priest
+SUBST: F = G:6 F:1
+KMONS: F = orange crystal statue / silver statue / ice statue
+SUBST: ? = .1$%*
+MAP
+xxxxxxxxxxx
+xC?1.m....+
+x??1Fm....+
+x112.m....x
+x.F..F..xxx
+x.........x
+x..F..F...x
+x.........x
+x...F..F..x
+x.........x
+x...T..T..x
+xxxxx++xxxx
+ENDMAP
+
+NAME:  guppyfry_elf_lava
+DEPTH: Elf:2-4
+TAGS:  mini_float
+MONS:  deep elf conjurer / deep elf mage / deep elf summoner
+MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
+KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
+       w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
+       w:4 any weapon ego:flaming | w:4 bow ego:flame | w:12 arrow ego:flame | \
+       w:7 wand of flame | w:5 wand of fire | w:3 wand of fireball | \
+       w:4 bottled efreet | w:4 staff of fire | w:17 randbook disc:fire | \
+       w:6 robe ego:fire_resistance | w:9 any armour ego:fire_resistance
+SUBST: ? = .l1
+SUBST: - = .l
+MAP
+.............
+.xxxx-..-xxxx.
+.xllll-.llllx.
+.xllll.-llllx.
+.xllll-.llllx.
+.-lll?..vlll-.
+...-..12...-..
+..-.-.11..-.-.
+.-lll?..?lll-.
+.xllll.-llllx.
+.xllll-.llllx.
+.xllll.-llllx.
+.xxxx...-xxxx.
+..............
+ENDMAP
 
 ##############################################################################
 ##############################################################################
@@ -747,7 +847,7 @@ ENDMAP
 ## Classical elf_hall
 ##
 NAME:    elf_hall
-PLACE:   Elf:5
+PLACE:   Elf:$
 WEIGHT:  30
 ORIENT:  northwest
 : elf_setup(_G)
@@ -798,7 +898,7 @@ ENDMAP
 ## A wide and narrow one, with total weight 20.
 ##
 NAME:    elf_hall_gauntlet_wide
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
 : elf_setup(_G)
@@ -844,7 +944,7 @@ xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
 : elf_setup(_G)
@@ -900,7 +1000,7 @@ ENDMAP
 ## minmay's Elf hall
 ##
 NAME:    minmay_elf_hall
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  southwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -950,7 +1050,7 @@ ENDMAP
 ## minmay's more circular hall
 ##
 NAME:    minmay_elf_hall_circle
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  float
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -998,7 +1098,7 @@ ENDMAP
 # Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
 #
 NAME:    minmay_elf_hall_hex
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1055,7 +1155,7 @@ ENDMAP
 
 # Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
 NAME:    minmay_elf_hall_dome
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1092,7 +1192,7 @@ ENDMAP
 
 # Before transforms: 32x$, 27x*, 27x|, 4x1, 8x2, 9x3, 2x4, 10x5, 2x6, 2x7
 NAME:    minmay_elf_hall_spiked
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1134,7 +1234,7 @@ ENDMAP
 
 # Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
 NAME:    minmay_elf_hall_quartered_circle
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1180,7 +1280,7 @@ ENDMAP
 # The elves have created golems to guard their treasure.
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1223,7 +1323,7 @@ ENDMAP
 
 # Before transforms: 28x$, 27x*, 29x|, 4x1, 9x2, 8x3, 6x4, 8x5, 2x6, 2x7
 NAME:    minmay_elf_hall_x
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
@@ -1266,7 +1366,7 @@ ENDMAP
 
 # Before transforms: 18x$, 23x*, 31x|, 6x1, 8x2, 7x3, 10x4, 11x5, 2x6, 4x7
 NAME:    minmay_elf_hall_four_x
-PLACE:   Elf:5
+PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)

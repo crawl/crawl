@@ -10,7 +10,6 @@
 #include "database.h"
 #include "effects.h"
 #include "env.h"
-#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -142,8 +141,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     }
 
     you.wield_change = true;
-    you.num_current_gifts[god]++;
-    you.num_total_gifts[god]++;
+    you.one_time_ability_used[god] = true;
     std::string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
@@ -209,7 +207,7 @@ static bool _altar_prayer()
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
     if (you.religion == GOD_SHINING_ONE
-        && !you.num_total_gifts[GOD_SHINING_ONE]
+        && !you.one_time_ability_used[GOD_SHINING_ONE]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -226,7 +224,7 @@ static bool _altar_prayer()
 
     // Lugonu blesses weapons with distortion.
     if (you.religion == GOD_LUGONU
-        && !you.num_total_gifts[GOD_LUGONU]
+        && !you.one_time_ability_used[GOD_LUGONU]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -238,7 +236,7 @@ static bool _altar_prayer()
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
     if (you.religion == GOD_KIKUBAAQUDGHA
-        && !you.num_total_gifts[GOD_KIKUBAAQUDGHA]
+        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -279,8 +277,7 @@ static bool _altar_prayer()
                 simple_god_message(" grants you a gift!");
                 more();
 
-                you.num_current_gifts[you.religion]++;
-                you.num_total_gifts[you.religion]++;
+                you.one_time_ability_used[you.religion] = true;
                 did_bless = true;
                 take_note(Note(NOTE_GOD_GIFT, you.religion));
                 mitm[thing_created].inscription = "god gift";
@@ -435,7 +432,7 @@ int zin_tithe(item_def& item, int quant, bool quiet)
             }
             // Avg gold pile value: 10 + depth/2.
             tithe *= 47;
-            denom *= 20 + you.absdepth0;
+            denom *= 20 + env.absdepth0;
         }
         gain_piety(tithe * 3, denom);
     }
@@ -584,7 +581,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
 static piety_gain_t _sac_corpse(const item_def& item)
 {
-#ifdef NEW_OKAWARU_PIETY
     if (you.religion == GOD_OKAWARU)
     {
         monster dummy;
@@ -601,7 +597,6 @@ static piety_gain_t _sac_corpse(const item_def& item)
         gain = div_rand_round(gain, 700);
         return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
     }
-#endif
 
     gain_piety(13, 19);
 
@@ -624,8 +619,10 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
-    const int value = (item.base_type == OBJ_CORPSES ? 50 :
-                       (is_worthless_consumable(item) ? 1 : shop_value));
+    const int value = (item.base_type == OBJ_CORPSES ?
+                          50 * stepdown_value(std::max(1,
+                          get_max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
+                      (is_worthless_consumable(item) ? 1 : shop_value));
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);

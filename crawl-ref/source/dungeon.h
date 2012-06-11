@@ -22,9 +22,6 @@
 #define LAYOUT_TYPE_KEY  "layout_type_key"
 #define LEVEL_VAULTS_KEY "level_vaults_key"
 #define LEVEL_EXTRAS_KEY "level_extras_key"
-#define LEVEL_ID_KEY     "level_id_key"
-
-#define YOU_PORTAL_VAULT_NAMES_KEY  "you_portal_vault_names_key"
 
 // See _build_overflow_temples() in dungeon.cc for details on overflow
 // temples.
@@ -197,8 +194,7 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number, level_area_type level_type,
-             bool enable_random_maps = true,
+bool builder(bool enable_random_maps = true,
              dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
@@ -221,12 +217,12 @@ void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(const map_def *map,
-                   bool clobber,
+                   bool check_collision,
                    bool make_no_exits,
                    const coord_def &pos = INVALID_COORD);
 
 const map_def *dgn_safe_place_map(const map_def *map,
-                                  bool clobber,
+                                  bool check_collision,
                                   bool make_no_exits,
                                   const coord_def &pos = INVALID_COORD);
 
@@ -239,9 +235,9 @@ bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charge
 bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges = 0);
 
 struct shop_spec;
-void place_spec_shop(int level_number, const coord_def& where,
+void place_spec_shop(const coord_def& where,
                      shop_spec* spec, bool representative = false);
-void place_spec_shop(int level_number, const coord_def& where,
+void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
@@ -266,8 +262,7 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_lt_callback(std::string level_type_name,
-                         std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, std::string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 

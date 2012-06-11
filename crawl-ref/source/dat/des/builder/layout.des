@@ -69,7 +69,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Vault
+DEPTH:  4-22, Pan, !Vaults
 WEIGHT: 1 (Pan), 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand
@@ -141,7 +141,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Vault
+DEPTH:   Pan, 4-22, !Vaults
 WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -210,7 +210,7 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
-DEPTH:   4-22, !Vault
+DEPTH:   4-22, !Vaults
 WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -363,13 +363,13 @@ TAGS:    overwritable layout allow_dup unrand
         end
     end
 
-    if (you.in_branch("D") and you.subdepth() > 21 or you.where() == "Pan")
+    if (you.in_branch("D") and you.depth() > 21 or you.where() == "Pan")
       and crawl.coinflip()
     then
         mapgrd[40][36] = 'O'
         mapgrd[41][36] = 'O'
         nsubst('O = 1:O / *:.')
-        kfeat('O = enter_abyss')
+        kfeat('O = exit_through_abyss')
     end
 
     random_wall_material(_G)
@@ -383,7 +383,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 4-22, !Vault
+DEPTH: Pan, 4-22, !Vaults
 WEIGHT: 6 (Pan), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -466,8 +466,8 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
-DEPTH: Dis, Vault, 15-
-WEIGHT: 1 (Vault), 10
+DEPTH: Dis, Vaults, 15-, !Pan
+WEIGHT: 1 (Vaults), 10
 CHANCE: 100% (Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -581,7 +581,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 4-22, !Vault
+DEPTH: Pan, 4-22, !Vaults
 WEIGHT: 1 (Pan), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -618,7 +618,7 @@ MAP
 ENDMAP
 
 NAME: layout_caves
-DEPTH: Hive, Orc, Slime, !Vault
+DEPTH: Hive, Orc, Slime
 CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -645,7 +645,7 @@ MAP
 ENDMAP
 
 NAME: layout_spotty
-DEPTH: 9-22, !Vault
+DEPTH: 9-22, !Vaults
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -669,7 +669,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-27
+DEPTH: D:5-27, !Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -692,7 +692,7 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Vault
+DEPTH: 1-, !Vaults, !Pan
 WEIGHT: 40
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -871,7 +871,7 @@ TAGS: overwritable layout allow_dup unrand
 
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Vault
+DEPTH: 1-, !Vaults, !Pan
 WEIGHT: 90
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -882,7 +882,7 @@ MAP
 ENDMAP
 
 NAME: layout_bigger_room
-DEPTH: 9-22, !Vault, !Crypt
+DEPTH: 9-22, !Vaults, !Crypt, !Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -893,8 +893,8 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Vault, Pan, 4-
-WEIGHT: 1 (Pan), 2 (Vault), 10
+DEPTH: Vaults, Pan, 4-
+WEIGHT: 1 (Pan), 2 (Vaults), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

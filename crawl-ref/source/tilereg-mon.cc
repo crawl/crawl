@@ -7,7 +7,6 @@
 #include "process_desc.h"
 
 #include "cio.h"
-#include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "libutil.h"

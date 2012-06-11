@@ -32,6 +32,8 @@ extern const char *traversable_glyphs;
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
+static const int BRANCH_END = 100;
+
 // Exception thrown when a map cannot be loaded from its .dsc file
 // because the .dsc file has changed under it.
 class map_load_exception : public std::exception
@@ -79,7 +81,6 @@ struct raw_range
 struct level_range
 {
 public:
-    level_area_type level_type;
     branch_type branch;
     int shallowest, deepest;
     bool deny;
@@ -99,7 +100,6 @@ public:
     void read(reader&);
 
     bool valid() const;
-    int span() const;
 
     static level_range parse(std::string lr) throw (std::string);
 
@@ -883,6 +883,9 @@ public:
     item_list   &get_items();
     map_flags   &get_mask();
 
+    // Does this mapspec specify a feature, item, or monster?  If so, the
+    // glyph should be ignored.
+    bool replaces_glyph();
 private:
     std::string err;
 
@@ -1088,7 +1091,7 @@ public:
     // Description for the map that can be shown to players.
     std::string     description;
     std::string     tags;
-    level_id        place;
+    depth_ranges    place;
 
     depth_ranges     depths;
     map_section_type orient;
@@ -1281,8 +1284,6 @@ public:
     };
 
 private:
-    void write_depth_ranges(writer&) const;
-    void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     std::string apply_subvault(string_spec &);

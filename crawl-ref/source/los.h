@@ -48,12 +48,10 @@ void clear_rays_on_exit();
 void losight(los_grid& sh, const coord_def& center,
              const opacity_func &opc = opc_default,
              const circle_def &bds = BDS_DEFAULT);
-void losight(los_grid& sh, const los_param& param);
 
 void los_actor_moved(const actor* act, const coord_def& oldpos);
 void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
-void los_cloud_changed(const coord_def& p);
 void los_changed();
 opacity_type mons_opacity(const monster* mon, los_type how);
 #endif

@@ -16,7 +16,6 @@
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
-#include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
@@ -476,9 +475,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
             return;
     }
     else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
-    {
         return;
-    }
 
     if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
     {
@@ -1115,7 +1112,7 @@ static void _finish_delay(const delay_queue_item &delay)
             switch (grd(pass))
             {
             default:
-                if (!you.can_pass_through_feat(grd(pass)))
+                if (!you.is_habitable(pass))
                 {
                     mpr("...yet there is something new on the other side. "
                         "You quickly turn back.");
@@ -1148,7 +1145,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 // Wake the monster if it's asleep.
                 if (m)
-                    behaviour_event(m, ME_ALERT, MHITYOU);
+                    behaviour_event(m, ME_ALERT, &you);
             }
             else
                 move_player_to_grid(pass, false, true);
@@ -1336,8 +1333,6 @@ static void _armour_wear_effects(const int item_slot)
         {
             remove_ice_armour();
         }
-        if (property(arm, PARM_EVASION))
-            you.start_train.insert(SK_ARMOUR);
     }
     else if (eq_slot == EQ_SHIELD)
     {
@@ -1406,6 +1401,13 @@ static void _handle_run_delays(const delay_queue_item &delay)
         stop_running();
     else
     {
+        if (Options.auto_eat_chunks)
+        {
+            const interrupt_block block_interrupts;
+            if (prompt_eat_chunks(true) == 1)
+                return;
+        }
+
         switch (delay.type)
         {
         case DELAY_REST:

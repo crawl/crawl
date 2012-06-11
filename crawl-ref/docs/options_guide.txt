@@ -60,7 +60,8 @@ The contents of this text are:
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
                 easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus, spell_slot, autofight_stop
+                easy_exit_menu, sort_menus, spell_slot, autofight_stop,
+                autofight_throw
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -112,13 +113,13 @@ The contents of this text are:
 5-b     Notes.
                 user_note_prefix, note_items, note_monsters,
                 ood_interesting, note_hp_percent, note_skill_levels,
-                note_all_skill_levels, note_skill_max, note_all_spells,
-                note_xom_effects, note_messages
+                note_all_skill_levels, note_skill_max, note_xom_effects,
+                note_messages
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, cset, feature, mon_glyph, pizza,
-                use_fake_player_cursor, show_player_species
+                colour, cset, feature, mon_glyph, use_fake_player_cursor,
+                show_player_species
 
 6-b     DOS and Windows.
                 dos_use_background_intensity
@@ -379,11 +380,16 @@ The available stock Lua scripts are
                    Stops if HP <= (autofight_stop)% * MHP, where
                    autofight_stop = 30 by default but can be set by the player.
                    Never moves if hit_adjacent is used instead of hit_closest.
+                   hit_closest Will use thrown weapons only if autofight_throw
+                   is true (off by default), hit_adjacent will do so if
+                   either autofight_throw or autofight_throw_nomove is true
+                   (and it is enabled by default).
                    Tab is automatically bound to hit_closest and shift-tab to
                    hit_adjacent.
                    Requires non-rebound vi keys.
                    New macroable functions: hit_closest, hit_adjacent
-                   New options: autofight_stop
+                   New options: autofight_stop, autofight_throw,
+                   autofight_throw_nomove
 
 
 The above mentioned Lua functions can be macroed in-game by setting the
@@ -1984,22 +1990,6 @@ note_monsters = <regex list>
         lines. E.g.
              note_monsters = Klown,orb of fire
 
-ood_interesting = 8
-        Monsters which are out of depth (OOD for short) for their
-        current level, e.g. a dragon on level 2, will be noted if they
-        are out of depth by at least ood_interesting levels. To disable
-        OOD monster noting, set ood_interesting to 500.
-        Unique monsters are always noted, regardless of this setting.
-        OOD monsters are only noted in the main dungeon.
-
-rare_interesting = 9
-        Monsters which are rare for the location they're in will be
-        noted. Increasing the number causes more common monsters to
-        be noted, while decreasing it causes only the most rare of
-        monsters to be noted; setting it to 0 will turn noting of rare
-        monsters off. Really wimpy monsters (such as rats or butterflies)
-        won't ever be noted.
-
 note_hp_percent = 5
         If your HP falls below a certain note_hp_percentage of your max
         hit points, a note will be taken. There is some code to avoid
@@ -2019,9 +2009,6 @@ note_skill_max = true
         skill levels is reached. If note_skill_max is true and
         note_skill_levels is nonempty, notes will be taken whenever
         either of the criteria are met.
-
-note_all_spells = true
-        Will add a note for each spell memorised.
 
 note_xom_effects = true
         This will add a note whenever Xom does something.
@@ -2222,9 +2209,6 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              demonspawn
              demigod
              halfling
-
-pizza = <topping name>
-        The player's choice of pizza topping.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

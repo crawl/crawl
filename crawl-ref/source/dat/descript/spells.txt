@@ -1,41 +1,61 @@
 %%%%
 Abjuration
 
-This spell attempts to send the targeted hostile summoned creature to the place whence it came, or at least shorten its stay in the caster's locality.
+This spell attempts to send the targeted hostile summoned creature to the place
+whence it came, or at least shorten its stay in the caster's locality.
 %%%%
 Agony
 
-This spell cuts the resilience of a target creature in half, although it will never cause death directly.
+This spell cuts the resilience of a target creature in half, although it will
+never cause death directly.
 %%%%
 Airstrike
 
-This spell causes the air around a creature to twist itself into a whirling vortex of meteorological fury. This spell is especially effective against flying enemies.
+This spell causes the air around a creature to twist itself into a whirling
+vortex of meteorological fury. This spell is especially effective against
+flying enemies.
 %%%%
 Alistair's Intoxication
 
-This spell works by converting a small portion of brain matter into alcohol, confusing all intelligent humanoids within the caster's view (although poison-resistant creatures will suffer no negative effects). It is strongly focused on the caster, however, and so poison resistance will not protect them. It is frequently used as an icebreaker at wizard parties.
+This spell works by converting a small portion of brain matter into alcohol,
+confusing all intelligent humanoids within the caster's view (although
+poison-resistant creatures will suffer no negative effects). It is strongly
+focused on the caster, however, and so poison resistance will not protect them.
+It is frequently used as an icebreaker at wizard parties.
 %%%%
 Animate Dead
 
-This spell causes the dead to rise up and serve the caster; every corpse within sight of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
+This spell causes the dead to rise up and serve the caster; every corpse within
+sight of the caster is affected. By means of this spell, powerful casters could
+press into service an army of the mindless undead. Note that zombies are
+incapable of leaving the level they were created on.
 %%%%
 Animate Skeleton
 
-This spell raises an inert skeleton to a state of unlife, even if that skeleton is still encased in flesh! Note that skeletons are incapable of leaving the level they were created on.
+This spell raises an inert skeleton to a state of unlife, even if that skeleton
+is still encased in flesh! Note that skeletons are incapable of leaving the
+level they were created on.
 %%%%
 Apportation
 
-This spell allows the caster to pull the top item or group of similar items from a distant pile to the floor near the caster. The mass of the target item(s) will make the task more difficult, with some items too massive to ever be moved by this spell.
+This spell allows the caster to pull the top item or group of similar items
+from a distant pile to the floor near the caster. The mass of the target
+item(s) will make the task more difficult, with some items too massive to ever
+be moved by this spell.
 
-Extremely powerful magical items, such as the Orb of Zot, may actively resist the pull of this spell.
+Extremely powerful magical items, such as the Orb of Zot, may actively resist
+the pull of this spell.
 %%%%
 Beastly Appendage
 
-This spell makes you temporarily replace one or a pair of appendages with an animal counterpart, giving you an extra attack. It is not powerful enough to meld armour.
+This spell makes you temporarily replace one or a pair of appendages with an
+animal counterpart, giving you an extra attack. It is not powerful enough to
+meld armour.
 %%%%
 Blade Hands
 
-This spell causes long, scythe-shaped blades to grow from the caster's hands. It makes spellcasting somewhat difficult.
+This spell causes long, scythe-shaped blades to grow from the caster's hands.
+It makes spellcasting somewhat difficult.
 %%%%
 Blink
 
@@ -47,7 +67,8 @@ This spell hurls a great bolt of ice and frost.
 %%%%
 Bolt of Draining
 
-This spell hurls a deadly bolt of negative energy, which drains the life from any living creature it strikes.
+This spell hurls a deadly bolt of negative energy, which drains the life from
+any living creature it strikes.
 %%%%
 Bolt of Fire
 
@@ -55,7 +76,9 @@ This spell hurls a great bolt of flames.
 %%%%
 Bolt of Inaccuracy
 
-This spell inflicts enormous damage upon any creature struck by the bolt of incandescent energy conjured into existence. Unfortunately, it is very difficult to aim and very rarely hits anything. Pity, that.
+This spell inflicts enormous damage upon any creature struck by the bolt of
+incandescent energy conjured into existence. Unfortunately, it is very
+difficult to aim and very rarely hits anything. Pity, that.
 %%%%
 Iron Shot
 
@@ -63,13 +86,17 @@ This spell hurls a large and heavy metal bolt at the caster's foe.
 %%%%
 Bolt of Magma
 
-This spell hurls a sizzling bolt of molten rock, capable of dealing some physical damage even to highly fire-resistant enemies.
+This spell hurls a sizzling bolt of molten rock, capable of dealing some
+physical damage even to highly fire-resistant enemies.
 %%%%
 Borgnjor's Revivification
 
-This spell instantly heals any and all wounds suffered by the caster, but also permanently lessens his or her resilience to injury - to a degree dependent on (and inversely related to) magical skill.
+This spell instantly heals any and all wounds suffered by the caster, but also
+permanently lessens his or her resilience to injury - to a degree dependent on
+(and inversely related to) magical skill.
 
-The spell is powerful enough to literally pull someone out of Death's Door, although the shock will render the caster incapable of action for a while.
+The spell is powerful enough to literally pull someone out of Death's Door,
+although the shock will render the caster incapable of action for a while.
 %%%%
 Call Canine Familiar
 
@@ -85,7 +112,9 @@ This spell causes fear in those near to the caster.
 %%%%
 Chain Lightning
 
-This spell releases a massive electrical discharge that arcs from target to target until it grounds out. It may ground out harmlessly if there are no targets sufficiently close to the caster, however.
+This spell releases a massive electrical discharge that arcs from target to
+target until it grounds out. It may ground out harmlessly if there are no
+targets sufficiently close to the caster, however.
 %%%%
 Cigotuvi's Degeneration
 
@@ -93,7 +122,11 @@ This spell transforms one creature into a pulsating mass of flesh.
 %%%%
 Condensation Shield
 
-This spell causes a disc of dense vapour to condense out of the air surrounding the caster. It acts like a normal shield, but its density (and therefore stopping power) depends upon the caster's skill with Ice Magic. The disc is controlled by the caster's mind and thus will not conflict with the wielding of a two-handed weapon.
+This spell causes a disc of dense vapour to condense out of the air surrounding
+the caster. It acts like a normal shield, but its density (and therefore
+stopping power) depends upon the caster's skill with Ice Magic. The disc is
+controlled by the caster's mind and thus will not conflict with the wielding of
+a two-handed weapon.
 %%%%
 Confuse
 
@@ -101,11 +134,14 @@ This spell induces a state of bewilderment and confusion in a creature's mind.
 %%%%
 Confusing Touch
 
-This spell enchants the caster's hands with magical energy. This energy is released when the caster touches a monster with their bare hands, and may induce a state of confusion in the monster.
+This spell enchants the caster's hands with magical energy. This energy is
+released when the caster touches a monster with their bare hands, and may
+induce a state of confusion in the monster.
 %%%%
 Conjure Ball Lightning
 
-This spell allows the conjurer to create ball lightning. Using the spell is not without risk - ball lightning can be difficult to control.
+This spell allows the conjurer to create ball lightning. Using the spell is not
+without risk - ball lightning can be difficult to control.
 %%%%
 Conjure Flame
 
@@ -113,7 +149,8 @@ This spell creates a column of roaring flame.
 %%%%
 Control Teleport
 
-This spell allows the caster to control translocations. Be wary that controlled teleports will cause the subject to become contaminated with magical energy.
+This spell allows the caster to control translocations. Be wary that controlled
+teleports will cause the subject to become contaminated with magical energy.
 %%%%
 Control Undead
 
@@ -121,15 +158,21 @@ This spell attempts to enslave any undead in the vicinity of the caster.
 %%%%
 Controlled Blink
 
-This spell allows short-range translocation, with precise control. Be wary that controlled teleports will cause the subject to become contaminated with magical energy.
+This spell allows short-range translocation, with precise control. Be wary that
+controlled teleports will cause the subject to become contaminated with magical
+energy.
 %%%%
 Corona
 
-This spell causes a halo of glowing light to surround and effectively outline a creature. This glow offsets the dark, musty atmosphere of the dungeon, and thereby makes the affected creature appreciably easier to hit.
+This spell causes a halo of glowing light to surround and effectively outline a
+creature. This glow offsets the dark, musty atmosphere of the dungeon, and
+thereby makes the affected creature appreciably easier to hit.
 %%%%
 Corpse Rot
 
-This spell rapidly accelerates the decomposition of any corpses lying around the caster, emitting in the process a foul miasmic vapour, which eats away at the life force of any creature it envelops.
+This spell rapidly accelerates the decomposition of any corpses lying around
+the caster, emitting in the process a foul miasmic vapour, which eats away at
+the life force of any creature it envelops.
 %%%%
 Cure Poison
 
@@ -137,18 +180,25 @@ This spell removes poison from the caster's system.
 %%%%
 Darkness
 
-This spell dims the light of the dungeon, reducing the range of vision. The area affected is quite large and it doesn't have sharp edges, thus the effect is unlikely to alert anyone not very close to the caster.
+This spell dims the light of the dungeon, reducing the range of vision. The
+area affected is quite large and it doesn't have sharp edges, thus the effect
+is unlikely to alert anyone not very close to the caster.
 %%%%
 Death Channel
 
-This spell raises living creatures slain by the caster and his or her allies into a state of unliving slavery as spectral things.
+This spell raises living creatures slain by the caster and his or her allies
+into a state of unliving slavery as spectral things.
 %%%%
 Death's Door
 
-This spell is extremely powerful, but carries a degree of risk. It renders living casters nigh invulnerable to harm for a brief period, but
-can bring them dangerously close to death. So close in fact, that the body believes itself to be dead - healing effects will do nothing.
+This spell is extremely powerful, but carries a degree of risk. It renders
+living casters nigh invulnerable to harm for a brief period, but can bring them
+dangerously close to death. So close in fact, that the body believes itself to
+be dead - healing effects will do nothing.
 
-The caster will receive one warning shortly before the spell expires. Being more skilled at Necromancy leaves the caster more resilient. Undead cannot use this spell.
+The caster will receive one warning shortly before the spell expires. Being
+more skilled at Necromancy leaves the caster more resilient. Undead cannot use
+this spell.
 %%%%
 Debugging Ray
 
@@ -156,31 +206,23 @@ A ray which does massive damage (1500 hp) and always hits.
 %%%%
 Deflect Missiles
 
-This spell protects the caster from any kind of projectile attack, although particularly powerful attacks (lightning bolts, etc.) are deflected to a lesser extent than lighter missiles.
+This spell protects the caster from all kinds of projectile attacks, by slowing
+them and somewhat diverting their path. Successfully deflecting an incoming
+projectile still requires a reflexive action (your ability to do so is measured
+by the Evasion stat), but unlike lesser spells like Repel Missiles, Deflect
+Missiles typically makes this so easy that even a drunk plate-clad orc can do
+it.
 %%%%
 Delayed Fireball
 
-Successfully casting this spell gives the caster the ability to instantaneously release a fireball at a later time. Knowing this spell allows the learner to memorise Fireball for no additional spell levels.
+Successfully casting this spell gives the caster the ability to instantaneously
+release a fireball at a later time. Knowing this spell allows the learner to
+memorise Fireball for no additional spell levels.
 %%%%
 Demonic Horde
 
-This spell calls forth a small swarm of small demons to do battle with the caster's foes (and sometimes with each other!).
-%%%%
-Detect Creatures
-
-This spell allows the caster to detect any creatures within a certain radius.
-%%%%
-Detect Items
-
-This spell detects any items lying about the caster's general vicinity.
-%%%%
-Detect Secret Doors
-
-This spell is beloved by lazy dungeoneers everywhere, for it can greatly reduce time-consuming searches.
-%%%%
-Detect Traps
-
-This spell reveals traps in the caster's vicinity.
+This spell calls forth a small swarm of small demons to do battle with the
+caster's foes (and sometimes with each other!).
 %%%%
 Dig
 
@@ -188,7 +230,8 @@ This spell forms tunnels through unworked rock by liquefying it.
 %%%%
 Dispel Undead
 
-This spell uses the very forces that bind an undead creature together to inflict a great deal of damage on it.
+This spell uses the very forces that bind an undead creature together to
+inflict a great deal of damage on it.
 %%%%
 Dispersal
 
@@ -196,35 +239,49 @@ This spell tries to teleport away any monsters directly beside the caster.
 %%%%
 Dragon Form
 
-This spell temporarily transforms the caster into a great, fire-breathing dragon. Draconian casters will instead retain their innate colour and breath weapon once transformed.
+This spell temporarily transforms the caster into a great, fire-breathing
+dragon. Draconian casters will instead retain their innate colour and breath
+weapon once transformed.
 %%%%
 Enslavement
 
-This spell causes an otherwise hostile creature to fight on your side for a while.
+This spell causes an otherwise hostile creature to fight on your side for a
+while.
 %%%%
 Ensorcelled Hibernation
 
-This spell tries to lower its target's metabolic rate, inducing hypothermic hibernation. It may have side effects on cold-blooded creatures.
+This spell tries to lower its target's metabolic rate, inducing hypothermic
+hibernation. It may have side effects on cold-blooded creatures.
 %%%%
 Evaporate
 
-This spell heats a potion to the point that it explodes when thrown. The resultant steam is then transmuted into a large cloud, the type of which varies from potion to potion. Of course, the volatile potion must be thrown immediately for the spell to work.
+This spell heats a potion to the point that it explodes when thrown. The
+resultant steam is then transmuted into a large cloud, the type of which varies
+from potion to potion. Of course, the volatile potion must be thrown
+immediately for the spell to work.
 %%%%
 Excruciating Wounds
 
-This spell temporarily infuses the weapon held by the caster with the essence of pain itself. It will not affect weapons which are otherwise subject to special enchantments. Note that unlike other brands, pain can not be made permanent by reading a scroll of vorpalise weapon.
+This spell temporarily infuses the weapon held by the caster with the essence
+of pain itself. It will not affect weapons which are otherwise subject to
+special enchantments. Note that unlike other brands, pain can not be made
+permanent by reading a scroll of vorpalise weapon.
 %%%%
 Fire Brand
 
-This spell sets a weapon or launcher held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
+This spell sets a weapon or launcher held by the caster ablaze. It will not
+affect weapons otherwise subject to special enchantments.
 %%%%
 Fire Storm
 
-This spell calls forth a mighty storm of roaring flame directly onto the target, dealing partially irresistible fire damage in a large area and leaving behind short-lived fire vortices.
+This spell calls forth a mighty storm of roaring flame directly onto the
+target, dealing partially irresistible fire damage in a large area and leaving
+behind short-lived fire vortices.
 %%%%
 Fireball
 
-This spell hurls an exploding bolt of fire. This spell does not cost additional spell levels if the learner already knows Delayed Fireball.
+This spell hurls an exploding bolt of fire. This spell does not cost additional
+spell levels if the learner already knows Delayed Fireball.
 %%%%
 Flame Tongue
 
@@ -236,11 +293,14 @@ This spell grants to the caster the ability to fly through the air.
 %%%%
 Freeze
 
-This spell freezes a creature. This may temporarily slow the metabolism of a cold-blooded creature.
+This spell freezes a creature. This may temporarily slow the metabolism of a
+cold-blooded creature.
 %%%%
 Freezing Aura
 
-This spell surrounds a weapon or launcher held by the caster with an aura of freezing cold. It will not affect weapons which are otherwise subject to special enchantments.
+This spell surrounds a weapon or launcher held by the caster with an aura of
+freezing cold. It will not affect weapons which are otherwise subject to
+special enchantments.
 %%%%
 Freezing Cloud
 
@@ -248,7 +308,9 @@ This spell conjures up a large cloud of lethally cold vapour.
 %%%%
 Fulsome Distillation
 
-This spell extracts the vile and poisonous essences from a corpse. You probably don't want to drink the results. The type of potion produced corresponds roughly to the effects of eating said corpse.
+This spell extracts the vile and poisonous essences from a corpse. You probably
+don't want to drink the results. The type of potion produced corresponds
+roughly to the effects of eating said corpse.
 %%%%
 Major Healing
 
@@ -256,35 +318,41 @@ This spell heals a large amount of damage to the caster's body.
 %%%%
 Haste
 
-This spell speeds the actions of a creature. Hasting yourself will increase your magical contamination.
+This spell speeds the actions of a creature. Hasting yourself will increase
+your magical contamination.
 %%%%
 Haunt
 
-This spell calls wraiths and ghosts to haunt the caster's target. Calling on the undead exacts a toll on the caster's health, however.
-%%%%
-Hellfire
-
-This spell should only be available from Dispater's staff. So how are you reading this?
+This spell calls wraiths and ghosts to haunt the caster's target. Calling on
+the undead exacts a toll on the caster's health, however.
 %%%%
 Throw Icicle
 
-This spell throws forth a shard of ice. It is particularly effective against those creatures not immune to the effects of freezing. But as most of its destructive potential comes from strong impact and cutting edges, even cold-resistant creatures are notably affected.
+This spell throws forth a shard of ice. It is particularly effective against
+those creatures not immune to the effects of freezing. But as most of its
+destructive potential comes from strong impact and cutting edges, even
+cold-resistant creatures are notably affected.
 %%%%
 Ice Form
 
-This spell temporarily transforms the caster's body into a frozen ice-creature, light enough to float on water.
+This spell temporarily transforms the caster's body into a frozen ice-creature,
+light enough to float on water.
 %%%%
 Ice Storm
 
-This spell hurls a raging blizzard of ice, sleet and freezing gasses at the target, dealing partially irresistible cold damage in a large area.
+This spell hurls a raging blizzard of ice, sleet and freezing gasses at the
+target, dealing partially irresistible cold damage in a large area.
 %%%%
 Ignite Poison
 
-This spell attempts to convert all nearby poison into liquid flame, burning poisoned creatures from within. It is very effective against innately poisonous creatures. The caster is not affected.
+This spell attempts to convert all nearby poison into liquid flame, burning
+poisoned creatures from within. It is very effective against innately poisonous
+creatures. The caster is not affected.
 %%%%
 Inner Flame
 
-This spell fills an enemy with an intense fire, to be explosively released upon death. The size of the explosion caused is dependent on the size of the target.
+This spell fills an enemy with an intense fire, to be explosively released upon
+death. The size of the explosion caused is dependent on the size of the target.
 %%%%
 Insulation
 
@@ -292,21 +360,32 @@ This spell protects the caster from electric shocks.
 %%%%
 Invisibility
 
-This spell hides a creature from the sight of others. While invisible you will gain magical contamination, which may eventually cause enough glow to make you visible again.
+This spell hides a creature from the sight of others. While invisible you will
+gain magical contamination, which may eventually cause enough glow to make you
+visible again.
 %%%%
 Iskenderun's Mystic Blast
 
-This spell throws a crackling sphere of destructive energy. The sphere will sometimes explode on impact, and the chance of it doing so is higher if the sphere has traveled less distance.
+This spell throws a crackling sphere of destructive energy. The sphere will
+sometimes explode on impact, and the chance of it doing so is higher if the
+sphere has traveled less distance.
 %%%%
 Leda's Liquefaction
 
-This spell liquefies the ground around the caster, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
+This spell liquefies the ground around the caster, making it difficult to move
+through. Any attempt to move through the liquefied ground will be a very slow
+one.
 %%%%
 Lee's Rapid Deconstruction
 
-This spell fragments a wall or a suitably brittle visible monster into an explosion of deadly shrapnel. It can be used on monsters made of ice, bone, or any wall-like substance, as well as those turned to stone by petrification.
+This spell fragments a wall or a suitably brittle visible monster into an
+explosion of deadly shrapnel. It can be used on monsters made of ice, bone, or
+any wall-like substance, as well as those turned to stone by petrification.
 
-Targets made from rock, stone, ice or bone will cause a small or medium-sized explosion. Metal targets will cause a small but particularly damaging explosion, and targets made from crystal will cause a large and extremely damaging explosion.
+Targets made from rock, stone, ice or bone will cause a small or medium-sized
+explosion. Metal targets will cause a small but particularly damaging
+explosion, and targets made from crystal will cause a large and extremely
+damaging explosion.
 %%%%
 Lehudib's Crystal Spear
 
@@ -318,7 +397,8 @@ This spell heals a small amount of damage to the caster's body.
 %%%%
 Lethal Infusion
 
-This spell infuses a weapon held by the caster with unholy energies. It will not affect weapons which are otherwise subject to special enchantments.
+This spell infuses a weapon held by the caster with unholy energies. It will
+not affect weapons which are otherwise subject to special enchantments.
 %%%%
 Levitation
 
@@ -326,7 +406,9 @@ This spell allows the caster to float in the air.
 %%%%
 Lightning Bolt
 
-This spell hurls a mighty bolt of lightning. Although this spell inflicts less damage than similar fire and ice spells, it can at once rip through whole rows of creatures.
+This spell hurls a mighty bolt of lightning. Although this spell inflicts less
+damage than similar fire and ice spells, it can at once rip through whole rows
+of creatures.
 %%%%
 Magic Dart
 
@@ -334,11 +416,16 @@ This spell hurls a small bolt of magical energy. It never misses.
 %%%%
 Malign Gateway
 
-This spell tears a gash in reality, creating a self-sustained but thankfully temporary portal to an unknown, tainted otherworld. Which dastardly denizens of this place might choose to poke their tentacled appendages through, nobody knows, but certainly nobody would want to be nearby when it happens.
+This spell tears a gash in reality, creating a self-sustained but thankfully
+temporary portal to an unknown, tainted otherworld. Which dastardly denizens of
+this place might choose to poke their tentacled appendages through, nobody
+knows, but certainly nobody would want to be nearby when it happens.
 %%%%
 Mass Abjuration
 
-This spell attempts to send all hostile summoned creatures in sight to the place whence they came, or at least shorten their stay in the caster's locality.
+This spell attempts to send all hostile summoned creatures in sight to the
+place whence they came, or at least shorten their stay in the caster's
+locality.
 %%%%
 Mass Confusion
 
@@ -350,35 +437,60 @@ This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
 Metabolic Englaciation
 
-This spell tries to lower the metabolic rate of every creature in the caster's vicinity, slowing all those who are not resistant to cold. It bypasses magic resistance, although tougher monsters will not be slowed for as long as others.
+This spell tries to lower the metabolic rate of every creature in the caster's
+vicinity, slowing all those who are not resistant to cold. It bypasses magic
+resistance, although tougher monsters will not be slowed for as long as others.
 %%%%
 Necromutation
 
-This spell first transforms the caster into a semi-corporeal apparition receptive to negative energy, then infuses that form with the powers of Death. The caster becomes more resistant to cold and hostile enchantments and completely immune to poison, rotting, and negative energy, and requires no food at all for the duration of the spell.
+This spell first transforms the caster into a lich — a powerful skeletal
+figure. The caster gains some powers of death, and becomes more resistant to
+cold and hostile enchantments and completely immune to poison, rotting, and
+negative energy, and requires no food at all for the duration of the spell.
 
-The caster also gains some of the more dubious benefits of having an undead body, such as a vulnerability to holy weapons and an inability to consume potions.
+The caster also gains some of the more dubious benefits of having an undead
+body, such as a vulnerability to holy weapons and an inability to consume
+potions.
+
+Contrary to what one would expect, this spell works on octopodes, although what
+foul necromantic tissue serves as an analogue for bones remains a mystery.
 %%%%
 Olgreb's Toxic Radiance
 
-This spell bathes the caster's surroundings in a sickly green light, inflicting poison on everything nearby (including the caster). It can be blocked by translucent walls, however, and invisible creatures are completely unaffected.
+This spell bathes the caster's surroundings in a sickly green light, inflicting
+poison on everything nearby (including the caster). It can be blocked by
+translucent walls, however, and invisible creatures are completely unaffected.
 %%%%
 Orb of Destruction
 
-This spell conjures an orb made of pure destructive magic. Compared to most other projectiles, these orbs travel at a relatively slow pace. The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them. The orbs need some time to stabilize, and a nascent orb won't do the full damage it is capable of.
+This spell conjures an orb made of pure destructive magic. Compared to most
+other projectiles, these orbs travel at a relatively slow pace. The orbs home
+onto their targets, yet because of their huge inertia, especially agile
+opponents may be able to outmanoeuvre them. The orbs need some time to
+stabilize, and a nascent orb won't do the full damage it is capable of.
 
-It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range. Certain individuals may have access to spellbooks without this flaw, so beware!
+It is said that most copies of this spell suffer from a scribal error that
+makes the orbs unstable beyond a short range. Certain individuals may have
+access to spellbooks without this flaw, so beware!
 %%%%
 Ozocubu's Armour
 
-This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment will not suffer cold from this layer, yet can be affected by other sources of cold normally. The spell will not function for casters already wearing heavy armour (any body armour with an evasion penalty of 2 or more). The effects of this spell are boosted if the caster is in ice form.
+This spell envelops the caster's body in a protective layer of ice, the power
+of which depends on his or her skill with ice magic. The caster and the
+caster's equipment will not suffer cold from this layer, yet can be affected by
+other sources of cold normally. The spell will not function for casters already
+wearing heavy armour (any body armour with an evasion penalty of 2 or more).
+The effects of this spell are boosted if the caster is in ice form.
 %%%%
 Ozocubu's Refrigeration
 
-This spell drains the heat from the caster and his or her surroundings, causing harm to all creatures not resistant to cold.
+This spell drains the heat from the caster and his or her surroundings, causing
+harm to all creatures not resistant to cold.
 %%%%
 Pain
 
-This spell inflicts an extremely painful injury upon one living creature. The caster suffers minor damage from the backlash.
+This spell inflicts an extremely painful injury upon one living creature. The
+caster suffers minor damage from the backlash.
 %%%%
 Paralyse
 
@@ -386,27 +498,38 @@ This spell prevents a creature from moving.
 %%%%
 Passage of Golubria
 
-This spell opens two gateways (one always near the caster), which allow instantaneous transport to random other open gateways to any creature entering them. There is no limit to the number of gateways that can be open at one time, but a gateway will close when entered or after a moderate amount of time.
+This spell opens two gateways (one always near the caster), which allow
+instantaneous transport to random other open gateways to any creature entering
+them. There is no limit to the number of gateways that can be open at one time,
+but a gateway will close when entered or after a moderate amount of time.
 %%%%
 Passwall
 
-This spell tunes the caster's body such that it can instantly pass through solid rock. This can be dangerous, since it takes time for the caster to attune to the rock, during which time they will be helpless.
+This spell tunes the caster's body such that it can instantly pass through
+solid rock. This can be dangerous, since it takes time for the caster to attune
+to the rock, during which time they will be helpless.
 %%%%
 Petrify
 
-This spell attempts to petrify a monster. If successful, the monster is slowed down for a while until it is temporarily turned into stone. In this state, a monster will take less damage upon being hit.
+This spell attempts to petrify a monster. If successful, the monster is slowed
+down for a while until it is temporarily turned into stone. In this state, a
+monster will take less damage upon being hit.
 %%%%
 Phase Shift
 
-This spell allows the caster to phase in and out of the material plane, allowing them to occasionally avoid blows entirely.
+This spell allows the caster to phase in and out of the material plane,
+allowing them to occasionally avoid blows entirely.
 %%%%
 Poison Arrow
 
-This spell hurls a magical arrow coated with the most vile and noxious toxin. No living thing is completely immune to its effects, and even the undead will take damage from the physical component of the spell.
+This spell hurls a magical arrow coated with the most vile and noxious toxin.
+No living thing is completely immune to its effects, and even the undead will
+take damage from the physical component of the spell.
 %%%%
 Poison Weapon
 
-This spell temporarily coats any weapon or launcher with poison. It will only work on weapons without an existing enchantment.
+This spell temporarily coats any weapon or launcher with poison. It will only
+work on weapons without an existing enchantment.
 %%%%
 Poisonous Cloud
 
@@ -414,47 +537,68 @@ This spell conjures forth a great cloud of lethal gasses.
 %%%%
 Polymorph Other
 
-This spell randomly alters the form of another creature. It is especially effective against shape-changing creatures.
+This spell randomly alters the form of another creature. It is especially
+effective against shape-changing creatures.
 %%%%
 Portal Projectile
 
-This spell teleports a fired or thrown missile directly to its target, greatly increasing its accuracy (but not damage).
+This spell teleports a fired or thrown missile directly to its target, greatly
+increasing its accuracy (but not damage).
 %%%%
 Projected Noise
 
-This spell produces a noise emanating from a place of the caster's own choosing.
+This spell produces a noise emanating from a place of the caster's own
+choosing.
 %%%%
 Recall
 
-This spell is greatly prized by summoners and necromancers, as it allows the caster to recall any friendly creatures nearby to a position adjacent to the caster.
+This spell is greatly prized by summoners and necromancers, as it allows the
+caster to recall any friendly creatures nearby to a position adjacent to the
+caster.
 %%%%
 Regeneration
 
-This spell reanimates parts of the caster's wounds. This unholy act dramatically but temporarily increases the caster's recuperative abilities, while also increasing the rate of food consumption.
+This spell reanimates parts of the caster's wounds. This unholy act
+dramatically but temporarily increases the caster's recuperative abilities,
+while also increasing the rate of food consumption.
 %%%%
 Repel Missiles
 
-This spell reduces the chance of projectile attacks striking the caster. Even powerful attacks such as lightning bolts or dragon breath are affected, although smaller missiles are repelled to a much greater extent.
+This spell reduces the chance of projectile attacks striking the caster, by
+making them significantly easier to dodge.
 %%%%
 Ring of Flames
 
-This spell surrounds the caster with a mobile ring of searing flame, and keeps other fire clouds away from the caster. This spell attunes the caster to the forces of fire, increasing their fire magic and giving protection from fire. However, it also makes them much more susceptible to the forces of ice.
+This spell surrounds the caster with a mobile ring of searing flame, and keeps
+other fire clouds away from the caster. This spell attunes the caster to the
+forces of fire, increasing their fire magic and giving protection from fire.
+However, it also makes them much more susceptible to the forces of ice.
 %%%%
 Sandblast
 
-This spell creates a short blast of high-velocity particles. It works best when the caster provides some source (by wielding a stone), but will do what it can with whatever ambient grit is available.
+This spell creates a short blast of high-velocity particles. It works best when
+the caster provides some source (by wielding a stone), but will do what it can
+with whatever ambient grit is available.
 %%%%
 See Invisible
 
-This spell enables the caster to perceive things that are shielded from ordinary sight.
+This spell enables the caster to perceive things that are shielded from
+ordinary sight.
 %%%%
 Shadow Creatures
 
-This spell weaves a creature from shadows and threads of Abyssal matter. The creature thus brought into existence will recreate some type of creature found in the caster's immediate vicinity. The spell even creates appropriate equipment for the creature, which are given a lasting substance by their firm contact with reality.
+This spell weaves a creature from shadows and threads of Abyssal matter. The
+creature thus brought into existence will recreate some type of creature found
+in the caster's immediate vicinity. The spell even creates appropriate
+equipment for the creature, which are given a lasting substance by their firm
+contact with reality.
 %%%%
 Shatter
 
-This spell causes a burst of concussive force around the caster, which will damage most creatures, although those composed of stone, metal or crystal, or otherwise brittle, will particularly suffer. The magic has been known to adversely affect walls.
+This spell causes a burst of concussive force around the caster, which will
+damage most creatures, although those composed of stone, metal or crystal, or
+otherwise brittle, will particularly suffer. The magic has been known to
+adversely affect walls.
 %%%%
 Shock
 
@@ -462,45 +606,65 @@ This spell throws a bouncing bolt of electricity.
 %%%%
 Shroud of Golubria
 
-This spell bends space along a shroud covering your body, protecting you from some blows by redirecting their force to the air around you. Ranged attacks move too quickly to be diverted in this way. The shroud is highly unstable and may fall apart unexpectedly under stress.
+This spell bends space along a shroud covering your body, protecting you from
+some blows by redirecting their force to the air around you. Ranged attacks
+move too quickly to be diverted in this way. The shroud is highly unstable and
+may fall apart unexpectedly under stress.
 %%%%
 Silence
 
-This spell eliminates all sound near the caster. This makes reading scrolls, casting spells, praying or yelling in the caster's vicinity impossible. (Applies to caster too, of course.) This spell will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong.
+This spell eliminates all sound near the caster. This makes reading scrolls,
+casting spells, praying or yelling in the caster's vicinity impossible.
+(Applies to caster too, of course.) This spell will not hide your presence,
+since its oppressive, unnatural effect will almost certainly alert any living
+creature that something is very wrong.
 
-Silence starts out with a radius depending on power, which will then shrink, eventually covering only the caster, before the effect times out. Some creatures, such as demons, cast magic without speaking and so will be unaffected, and those with innate magical abilities will also still be able to use them.
+Silence starts out with a radius depending on power, which will then shrink,
+eventually covering only the caster, before the effect times out. Some
+creatures, such as demons, cast magic without speaking and so will be
+unaffected, and those with innate magical abilities will also still be able to
+use them.
 %%%%
 Simulacrum
 
-This spell uses a piece of flesh in hand to create a replica of the original being out of ice. This magic is unstable so eventually the replica will sublimate into a freezing cloud, if it isn't hacked or melted into a small puddle of water first. Note that simulacra are incapable of leaving the level they were created on.
+This spell uses a piece of flesh in hand to create a replica of the original
+being out of ice. This magic is unstable so eventually the replica will
+sublimate into a freezing cloud, if it isn't hacked or melted into a small
+puddle of water first. Note that simulacra are incapable of leaving the level
+they were created on.
 %%%%
 Slow
 
 This spell slows the actions of a creature.
 %%%%
-Smiting
-
-This spell smites one creature of the caster's choice.
-%%%%
 Spider Form
 
-This spell temporarily transforms the caster into a swift, venomous (but poison-susceptible), spider-like creature. Spellcasting is slightly more difficult in this form. While in this form, you can cling to walls.
+This spell temporarily transforms the caster into a swift, venomous (but
+poison-susceptible), spider-like creature. Spellcasting is slightly more
+difficult in this form. While in this form, you can cling to walls.
 %%%%
 Static Discharge
 
-This spell releases electric charges against those next to the caster. These may arc to adjacent monsters (or even the caster) before they eventually ground out.
+This spell releases electric charges against those next to the caster. These
+may arc to adjacent monsters (or even the caster) before they eventually ground
+out.
 %%%%
 Statue Form
 
-This spell temporarily transforms the caster into a slow-moving (but extremely robust) stone statue, capable of dealing monstrous blows with weapons or bare fists. The caster's stone body is insulated from electricity and gains resistance to poison, rotting and negative energy.
+This spell temporarily transforms the caster into a slow-moving (but extremely
+robust) stone statue, capable of dealing monstrous blows with weapons or bare
+fists. The caster's stone body is insulated from electricity and gains
+resistance to poison, rotting and negative energy.
 %%%%
 Sticks to Snakes
 
-This spell uses wooden items in the caster's grasp as raw material for a powerful transmutation. Note that magical artefacts will not be affected.
+This spell uses wooden items in the caster's grasp as raw material for a
+powerful transmutation. Note that magical artefacts will not be affected.
 %%%%
 Sticky Flame
 
-This spell conjures a sticky glob of liquid fire, which will adhere to and burn any creature it strikes.
+This spell conjures a sticky glob of liquid fire, which will adhere to and burn
+any creature it strikes.
 %%%%
 Sting
 
@@ -512,7 +676,10 @@ This spell hurls a sharp spine of rock outward from the caster.
 %%%%
 Stoneskin
 
-This spell hardens one's skin to a degree determined by one's skill in Earth Magic. It only works on relatively normal flesh, and will aid neither the undead nor the bodily transformed. However, there is one exception: the effects of this spell will be boosted for casters in Statue Form.
+This spell hardens one's skin to a degree determined by one's skill in Earth
+Magic. It only works on relatively normal flesh, and will aid neither the
+undead nor the bodily transformed. However, there is one exception: the effects
+of this spell will be boosted for casters in Statue Form.
 %%%%
 Striking
 
@@ -520,7 +687,10 @@ This spell hurls a small bolt of force.
 %%%%
 Sublimation of Blood
 
-This spell converts flesh, blood and other bodily fluids into magical energy. Casters may focus this spell on their own bodies (which can be dangerous but never directly lethal) or can wield freshly butchered flesh in order to draw power into themselves.
+This spell converts flesh, blood and other bodily fluids into magical energy.
+Casters may focus this spell on their own bodies (which can be dangerous but
+never directly lethal) or can wield freshly butchered flesh in order to draw
+power into themselves.
 %%%%
 Summon Butterflies
 
@@ -528,7 +698,9 @@ This spell creates a shower of colourful butterflies. How pretty!
 %%%%
 Summon Demon
 
-This spell opens a gate to the realm of Pandemonium and draws forth one of its inhabitants to serve the caster for a time (although the demon's servitude is by no means guaranteed).
+This spell opens a gate to the realm of Pandemonium and draws forth one of its
+inhabitants to serve the caster for a time (although the demon's servitude is
+by no means guaranteed).
 %%%%
 Summon Dragon
 
@@ -536,19 +708,28 @@ This spell summons and binds a powerful dragon to perform the caster's bidding.
 %%%%
 Summon Elemental
 
-This spell calls forth a spirit from the elemental planes to aid the caster. A large quantity of the desired element must be available; this is rarely a problem for earth and air, but may be for fire or water. The elemental will usually be friendly to casters - especially those skilled in the appropriate form of elemental magic.
+This spell calls forth a spirit from the elemental planes to aid the caster. A
+large quantity of the desired element must be available; this is rarely a
+problem for earth and air, but may be for fire or water. The elemental will
+usually be friendly to casters - especially those skilled in the appropriate
+form of elemental magic.
 %%%%
 Summon Greater Demon
 
-This spell calls forth one of the greater demons of Pandemonium to serve the caster. Beware, for the spell binding it to service may not outlast that which binds it to this world!
+This spell calls forth one of the greater demons of Pandemonium to serve the
+caster. Beware, for the spell binding it to service may not outlast that which
+binds it to this world!
 %%%%
 Summon Horrible Things
 
-This spell opens a gate to the Abyss and calls through one or more hideous abominations from that dreadful place. The powers who answer this invocation require of casters a portion of their intellect in exchange for this service.
+This spell opens a gate to the Abyss and calls through one or more hideous
+abominations from that dreadful place. The powers who answer this invocation
+require of casters a portion of their intellect in exchange for this service.
 %%%%
 Summon Hydra
 
-This spell summons a many-headed hydra to fight alongside the caster for a short time.
+This spell summons a many-headed hydra to fight alongside the caster for a
+short time.
 %%%%
 Summon Ice Beast
 
@@ -556,7 +737,8 @@ This spell calls forth a beast of ice to serve the caster.
 %%%%
 Summon Scorpions
 
-This spell summons one or more scorpions (some of which may not be bound to the caster's service).
+This spell summons one or more scorpions (some of which may not be bound to the
+caster's service).
 %%%%
 Summon Small Mammals
 
@@ -572,11 +754,14 @@ This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
 Sure Blade
 
-This spell forms a mystical bond between the caster and a wielded short blade, making the blade much easier to use.
+This spell forms a mystical bond between the caster and a wielded short blade,
+making the blade much easier to use.
 %%%%
 Swiftness
 
-This spell imbues its caster with the ability to achieve great movement speeds. But this speed comes at a price: the caster is less stealthy and more likely to blunder into traps while the spell is in effect.
+This spell imbues its caster with the ability to achieve great movement speeds.
+But this speed comes at a price: the caster is less stealthy and more likely to
+blunder into traps while the spell is in effect.
 %%%%
 Teleport Other
 
@@ -592,25 +777,35 @@ This spell throws a small bolt of frost.
 %%%%
 Tornado
 
-This spell turns the air around the caster in a mighty vortex, doing tremendous damage to everyone caught in it. Only the eye of the storm is a safe place, and it follows the caster. Everything not firmly nailed down will be lifted and tossed around.
+This spell turns the air around the caster in a mighty vortex, doing tremendous
+damage to everyone caught in it. Only the eye of the storm is a safe place, and
+it follows the caster. Everything not firmly nailed down will be lifted and
+tossed around.
 
 The spell's effectiveness is greatly diminished in closed areas.
 
-As a side effect, this spell may be used to cross lava, but beware of its short duration.
+As a side effect, this spell may be used to cross lava, but beware of its short
+duration.
 %%%%
 Tukima's Dance
 
-This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on certain wilful artefacts; any abilities that require evocation skill won't be used either.
+This spell causes a weapon held in the caster's hand to dance into the air and
+strike the caster's enemies. It will not function on certain wilful artefacts;
+any abilities that require evocation skill won't be used either.
 %%%%
 Twisted Resurrection
 
-This spell causes nearby corpses to begin crawling together, merging into horrible agglomerations of flesh. More and larger corpses result in more powerful creations.
+This spell causes nearby corpses to begin crawling together, merging into
+horrible agglomerations of flesh. More and larger corpses result in more
+powerful creations.
 %%%%
 Vampiric Draining
 
-This spell steals the life of a living creature and grants it to the caster. Life will not be drained in excess of what the caster can capably absorb.
+This spell steals the life of a living creature and grants it to the caster.
+Life will not be drained in excess of what the caster can capably absorb.
 
-However, attempting to drain an undead or demonic creature will backfire on the caster.
+However, attempting to drain an undead or demonic creature will backfire on the
+caster.
 %%%%
 Venom Bolt
 
@@ -618,5 +813,7 @@ This spell throws a bolt of poison.
 %%%%
 Warp Weapon
 
-This spell temporarily binds a localized warp field to the invoker's weapon. Note that unlike other brands, distortion can not be made permanent by reading a scroll of vorpalise weapon.
+This spell temporarily binds a localized warp field to the invoker's weapon.
+Note that unlike other brands, distortion can not be made permanent by reading
+a scroll of vorpalise weapon.
 %%%%

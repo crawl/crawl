@@ -24,7 +24,6 @@ int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
 
 bool is_valid_spell_in_book(const item_def &book, int spell);
-bool is_valid_spell_in_book(int splbook, int spell);
 
 void mark_had_book(const item_def &book);
 void mark_had_book(int booktype);
@@ -73,6 +72,7 @@ bool make_book_theme_randart(item_def &book,
                              int num_spells = -1, int max_levels = -1,
                              std::string owner = "", std::string title = "");
 void make_book_Roxanne_special(item_def *book);
+void make_book_Kiku_gift(item_def &book, bool first);
 
 bool book_has_title(const item_def &book);
 

@@ -13,6 +13,7 @@
 #include "libutil.h"
 #include "mon-info.h"
 #include "player.h"
+#include "transform.h"
 
 #define MONINF_METATABLE "monster.info"
 
@@ -49,10 +50,39 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(number, colour, colour)
 
+// const char* here would save a tiny bit of memory, but every std::map
+// for an unique pair of types costs 35KB of code.  We have
+// std::map<std::string, int> elsewhere.
+static std::map<std::string, int> mi_flags;
+static void _init_mi_flags()
+{
+    int f = 0;
+#define MI_FLAG(x) mi_flags[x] = f++;
+#include "mi-enum.h"
+#undef MI_FLAG
+}
+
 LUAFN(moninf_get_is)
 {
     MONINF(ls, 1, mi);
-    int num = luaL_checknumber(ls, 2);
+    int num = -1;
+    if (lua_isnumber(ls, 2)) // legacy scripts
+        num = lua_tonumber(ls, 2);
+    else
+    {
+        if (mi_flags.empty())
+            _init_mi_flags();
+        std::string flag = luaL_checkstring(ls, 2);
+        const std::map<std::string, int>::const_iterator f =
+            mi_flags.find(lowercase(flag));
+        if (f == mi_flags.end())
+        {
+            luaL_argerror(ls, 2, (std::string("no such moninf flag: '")
+                                  + flag + "'").c_str());
+            return 0;
+        }
+        num = f->second;
+    }
     if (num < 0 || num >= NUM_MB_FLAGS)
     {
         luaL_argerror(ls, 2, "mb:is() out of bounds");
@@ -62,11 +92,98 @@ LUAFN(moninf_get_is)
     return (1);
 }
 
-LUAFN(moninf_get_is_very_stabbable)
+static bool cant_see_you(const monster_info *mi)
+{
+    if (mons_class_flag(mi->type, M_SEE_INVIS))
+        return false;
+    if (mons_class_flag(mi->type, M_SENSE_INVIS)
+        && (you.pos() - mi->pos).abs() <= 17)
+    {
+        return false;
+    }
+    if (you.in_water())
+        return false;
+    return you.invisible() || mi->is(MB_BLIND);
+}
+
+LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    lua_pushboolean(ls, mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) ||
-                        mi->is(MB_PARALYSED));
+    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PARALYSED))
+        lua_pushnumber(ls, 1.0);
+    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
+             || mi->is(MB_PETRIFIED))
+    {
+        lua_pushnumber(ls, 0.5);
+    }
+    else if (mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi))
+        lua_pushnumber(ls, 0.25);
+    else if (mi->is(MB_DISTRACTED))
+        lua_pushnumber(ls, 0.16666666);
+    else
+        lua_pushnumber(ls, 0);
+
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricted)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, !mi->constrictor_name.empty());
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricting)
+{
+    MONINF(ls, 1, mi);
+    bool any = false;
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (!mi->constricting_name[i].empty())
+        {
+            any = true;
+            break;
+        }
+    lua_pushboolean(ls, any);
+    return (1);
+}
+
+LUAFN(moninf_get_is_constricting_you)
+{
+    MONINF(ls, 1, mi);
+    if (!you.is_constricted())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (mi->constricting_name[i] == "you") // yay the interface
+        {
+            lua_pushboolean(ls, true);
+            return (1);
+        }
+    lua_pushboolean(ls, false);
+    return (1);
+}
+
+LUAFN(moninf_get_can_be_constricted)
+{
+    MONINF(ls, 1, mi);
+    if (!mi->constrictor_name.empty()
+        || !form_keeps_mutations()
+        || (you.species != SP_NAGA
+            || you.experience_level <= 12
+            || you.is_constricting())
+         && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
+    {
+        lua_pushboolean(ls, false);
+    }
+    else
+    {
+        monster dummy;
+        dummy.type = mi->type;
+        dummy.base_monster = mi->base_type;
+        lua_pushboolean(ls, dummy.res_constrict() < 3);
+    }
     return (1);
 }
 
@@ -100,6 +217,14 @@ LUAFN(moninf_get_desc)
     return (1);
 }
 
+LUAFN(moninf_get_name)
+{
+    MONINF(ls, 1, mi);
+    std::string s = mi->full_name();
+    lua_pushstring(ls, s.c_str());
+    return (1);
+}
+
 static const struct luaL_reg moninf_lib[] =
 {
     MIREG(type),
@@ -110,14 +235,19 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is),
     MIREG(is_safe),
     MIREG(is_firewood),
-    MIREG(is_very_stabbable),
+    MIREG(stabbability),
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
+    MIREG(is_constricted),
+    MIREG(is_constricting),
+    MIREG(is_constricting_you),
+    MIREG(can_be_constricted),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
+    MIREG(name),
 
     { NULL, NULL }
 };

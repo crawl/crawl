@@ -2,7 +2,7 @@
 %prefix TILE
 %startvalue TILE_FLOOR_MAX floor
 
-%sdir dc-dngn/wall
+%sdir dngn/wall
 
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
@@ -171,12 +171,6 @@ relief3
 %lum 0 -25
 %repeat WALL_HALL WALL_HALL_DARKGRAY
 %resetcol
-
-# Maybe move these down to the "pebble" section?
-#hive0 WALL_HIVE_OLD
-#hive1
-#hive2
-#hive3
 
 beehives0 WALL_HIVE
 beehives1
@@ -503,6 +497,26 @@ snake8
 %weight 10
 snake9
 
+%weight 10
+spider00 WALL_SPIDER
+spider01
+spider02
+spider03
+spider04
+%weight 3
+spider05
+spider06
+spider07
+spider08
+spider09
+spider10
+spider11
+spider12
+spider13
+spider14
+spider15
+%weight 10
+
 stone_gray0 WALL_STONE_GRAY
 stone_gray1
 stone_gray2
@@ -689,10 +703,10 @@ stone2_brown3
 %repeat DNGN_STONE_WALL DNGN_STONE_WALL_WHITE
 %resetcol
 
-dngn_wax_wall DNGN_WAX_WALL
+wax_wall DNGN_WAX_WALL
 
 # Coloured glass walls
-dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
+transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
 %variation DNGN_TRANSPARENT_WALL blue
 %hue 180 240
@@ -738,9 +752,9 @@ dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
 
 # Coloured metal walls
-dngn_mirrored_wall DNGN_MIRROR_WALL
+mirrored_wall DNGN_MIRROR_WALL
 
-dngn_metal_wall DNGN_METAL_WALL
+metal_wall DNGN_METAL_WALL
 
 %variation DNGN_METAL_WALL blue
 %hue 26 240
@@ -751,7 +765,7 @@ dngn_metal_wall DNGN_METAL_WALL
 %hue 31 240
 %hue 32 240
 %hue 33 240
-dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
+metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL green
@@ -794,7 +808,7 @@ dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
 %repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
 %resetcol
 
-dngn_metal_wall_cracked DNGN_METAL_WALL_CRACKED
+metal_wall_cracked DNGN_METAL_WALL_CRACKED
 
 iron0-0 DNGN_METAL_IRON
 iron2-0
@@ -818,10 +832,10 @@ iron0-4
 iron1-4
 iron2-4
 
-dc-dngn/grate DNGN_GRATE
+dngn/grate DNGN_GRATE
 
 %hue 150 120
-dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 %resetcol
 
 %variation DNGN_CRYSTAL blue
@@ -900,7 +914,7 @@ dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 %repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
 %resetcol
 
-%sdir dc-dngn/wall
+%sdir dngn/wall
 emerald1 WALL_EMERALD
 emerald2
 emerald3
@@ -963,3 +977,6 @@ shadow_nw DNGN_WALL_SHADOW_NW
 shadow_n DNGN_WALL_SHADOW_N
 shadow_ne DNGN_WALL_SHADOW_NE
 shadow_e DNGN_WALL_SHADOW_E
+
+%sdir dngn/vaults
+brick_dark_leak WALL_BRICK_DARK_LEAK

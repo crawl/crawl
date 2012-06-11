@@ -16,9 +16,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
-#include "food.h"
 #include "fprop.h"
-#include "ghost.h"
 #include "godconduct.h"
 #include "goditem.h"
 #include "invent.h"
@@ -180,9 +178,6 @@ static bool _snakable_weapon(const item_def& item)
     return (item.base_type == OBJ_WEAPONS
             && !is_artefact(item)
             && (item.sub_type == WPN_CLUB
-#if TAG_MAJOR_VERSION == 32
-                || item.sub_type == WPN_ANKUS
-#endif
                 || item.sub_type == WPN_GIANT_CLUB
                 || item.sub_type == WPN_GIANT_SPIKED_CLUB
                 || item.sub_type == WPN_SPEAR
@@ -573,21 +568,16 @@ spret_type cast_summon_elemental(int pow, god_type god,
         horde_penalty *= _count_summons(mon);
 
     // silly - ice for water? 15jan2000 {dlb}
-    // little change here to help with the above... and differentiate
-    // elements a bit... {bwr}
-    // - Water elementals are now harder to be made reliably friendly.
-    // - Air elementals are harder because they're more dynamic/dangerous.
-    // - Earth elementals are more static and easy to tame (as before).
-    // - Fire elementals fall in between the two (10 is still fairly easy).
+
+    // - Air elementals are harder to tame because they're more dynamic and
+    //   like to hide.
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_FIRE_MAGIC)
                                              - horde_penalty, 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_ICE_MAGIC)
-                                             - horde_penalty,
-                                             (you.species == SP_MERFOLK) ? 5
-                                                                         : 15))
+                                             - horde_penalty, 10))
 
                         && (mon != MONS_AIR_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_AIR_MAGIC)
@@ -595,7 +585,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
                         && (mon != MONS_EARTH_ELEMENTAL
                             || x_chance_in_y(you.skill(SK_EARTH_MAGIC)
-                                             - horde_penalty, 5))
+                                             - horde_penalty, 10))
 
                         && random2(100) >= unfriendly);
 
@@ -1216,7 +1206,7 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
+coord_def find_gateway_location (actor* caster)
 {
     coord_def point = coord_def(0, 0);
 
@@ -1226,7 +1216,6 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
-    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1239,7 +1228,7 @@ coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dung
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
+            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
@@ -1849,65 +1838,115 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
 // reforming the original monster out of ice anyway.
+
+static struct { monster_type mons; const char* name; } mystery_meats[] =
+{
+    { MONS_HOUND, "dog" },
+    { MONS_FELID, "cat" },
+    { MONS_RAVEN, "crow" },
+    { MONS_WORM, "" },
+    { MONS_RAT, "" },
+    { MONS_YAK, "" },
+    { MONS_HOG, "" },
+    { MONS_SHEEP, "" },
+    { MONS_ELEPHANT, "" },
+    { MONS_WARG, "chupacabra" },
+    { MONS_QUOKKA, "wallaby" },
+    { MONS_DEATH_YAK, "mad cow" },
+    { MONS_YAK, "cow" },
+    { MONS_YAK, "bull" },
+};
+
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
-    int count = 0;
+    const item_def* flesh = you.weapon();
 
-    const item_def* weapon = you.weapon();
-
-    if (weapon
-        && weapon->base_type == OBJ_FOOD && weapon->sub_type == FOOD_CHUNK)
-    {
-        const monster_type sim_type = weapon->mon_type;
-
-        if (!mons_class_can_be_zombified(sim_type))
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
-            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-
-        // Can't create more than the available chunks.
-        int how_many = std::min(8, 4 + random2(pow) / 20);
-        how_many = std::min<int>(how_many, weapon->quantity);
-
-        const int monnum = weapon->orig_monnum - 1;
-
-        for (int i = 0; i < how_many; ++i)
-        {
-            // Use the original monster type as the zombified type here,
-            // to get the proper stats from it.
-            if (monster *sim = create_monster(
-                    mgen_data(mon, BEH_FRIENDLY, &you,
-                              0, SPELL_SIMULACRUM,
-                              you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god,
-                              static_cast<monster_type>(monnum))))
-            {
-                count++;
-
-                dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-                player_angers_monster(sim);
-                sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-            }
-        }
-
-        if (!count)
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return SPRET_SUCCESS;
-    }
-    else
+    if (!flesh || flesh->base_type != OBJ_FOOD
+        || flesh->sub_type != FOOD_CHUNK
+           && flesh->sub_type != FOOD_BEEF_JERKY
+           && flesh->sub_type != FOOD_MEAT_RATION
+           && flesh->sub_type != FOOD_SAUSAGE)
     {
         mpr("You need to wield a piece of raw flesh for this spell to be "
             "effective!");
         return SPRET_ABORT;
     }
+
+    monster_type sim_type = MONS_PROGRAM_BUG;
+    std::string name;
+
+    switch (flesh->sub_type)
+    {
+    case FOOD_CHUNK:
+        sim_type = flesh->mon_type;
+        break;
+    case FOOD_BEEF_JERKY:
+        sim_type = MONS_YAK;
+        name = coinflip() ? "cow" : "bull";
+        break;
+    case FOOD_SAUSAGE:
+        sim_type = MONS_HOG;
+        break;
+    default:
+        // usual suspects for mystery meat's identity
+        {
+            int which = random2(ARRAYSZ(mystery_meats));
+            sim_type = mystery_meats[which].mons;
+            name = mystery_meats[which].name;
+        }
+    }
+
+    if (!mons_class_can_be_zombified(sim_type))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
+        MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
+
+    mgen_data mg(mon, BEH_FRIENDLY, &you,
+                 0, SPELL_SIMULACRUM,
+                 you.pos(), MHITYOU,
+                 MG_FORCE_BEH, god,
+                 flesh->sub_type == FOOD_CHUNK ?
+                     static_cast<monster_type>(flesh->orig_monnum - 1) :
+                     sim_type);
+
+    // Can't create more than the available chunks.
+    int how_many = std::min(8, 4 + random2(pow) / 20);
+    how_many = std::min<int>(how_many, flesh->quantity);
+
+    int count = 0;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        // Use the original monster type as the zombified type here,
+        // to get the proper stats from it.
+        if (monster *sim = create_monster(mg))
+        {
+            if (!name.empty())
+            {
+                sim->mname = name;
+                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                sim->props["dbname"].get_string() = mons_class_name(mon);
+            }
+
+            count++;
+
+            dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+            player_angers_monster(sim);
+            sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        }
+    }
+
+    if (!count)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
 }
 
 static void _apport_and_butcher(monster *caster, item_def &item)
@@ -2391,9 +2430,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     fail_check();
     mpr("Send 'em back where they came from!");
     for (monster_iterator mi(you.get_los()); mi; ++mi)
-    {
         _abjuration(pow, *mi);
-    }
 
     return SPRET_SUCCESS;
 }

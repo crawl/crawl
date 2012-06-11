@@ -19,19 +19,10 @@ struct vault_placement;
 typedef std::vector<map_def> map_vector;
 typedef std::vector<const map_def *> mapref_vector;
 
-bool map_safe_vault_place(const map_def &md,
-                          const coord_def &c,
-                          const coord_def &size);
-
 map_section_type vault_main(vault_placement &vp, const map_def *vault,
                             bool check_place = false);
 
 bool resolve_subvault(map_def &vault);
-
-// Given a rectangular region, slides it to fit into the map. size must be
-// smaller than (GXM,GYM).
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
-                                int margin = 0);
 
 const map_def *map_by_index(int index);
 void strip_all_maps();
@@ -60,11 +51,9 @@ int weight_map_vector (std::vector<map_def> maps);
 
 void read_maps();
 void reread_maps();
-void sanity_check_maps();
 void read_map(const std::string &file);
 void run_map_global_preludes();
 void run_map_local_preludes();
-void reset_map_parser();
 std::string get_descache_path(const std::string &file,
                               const std::string &ext);
 

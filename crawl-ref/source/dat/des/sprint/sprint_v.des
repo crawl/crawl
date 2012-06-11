@@ -62,11 +62,8 @@ function setup_room(e, id)
     repeated=true }
   m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
   e.lua_marker('A', m_marker)
-  e.lua_marker('A', portal_desc {
-    desc = "teleporter" })
   e.colour("A = lightmagenta")
-  e.tile("A = dngn_the_teleporter_vaults")
-  e.subst("A = .")
+  e.kfeat("A = teleporter")
 
   if id > 1 then
     -- Place the teleporter exit
@@ -163,7 +160,7 @@ function choose_mset_1(e)
     e.kmons("1 = centaur / yaktaur")
 -- Vaults
   elseif rnd < 95 then
-    e.kmons("1 = place:Vault:1")
+    e.kmons("1 = place:Vaults:1")
 -- Pan
   elseif rnd < 97 then
     e.kmons("1 = lesser demon / common demon w:2 / pandemonium lord w:1")
@@ -190,7 +187,7 @@ function choose_mset_1(e)
     e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Jozef, Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
                Purgy, Sonja, Terence, Urug, human")
   end
 end
@@ -264,7 +261,7 @@ function choose_mset_2(e)
                yaktaur captain w:3")
 -- Vaults
   elseif rnd < 109 then
-    e.kmons("1 = place:Vault:3 / yaktaur w:2 / vault guard w:5")
+    e.kmons("1 = place:Vaults:3 / yaktaur w:2 / vault guard w:5")
 -- Pan
   elseif rnd < 114 then
     e.kmons("1 = lesser demon / common demon w:5 / pandemonium lord w:2")
@@ -291,7 +288,7 @@ function choose_mset_2(e)
     e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Jozef, Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
                Purgy, Sonja, Terence, Urug, human")
   end
 end
@@ -417,7 +414,7 @@ function choose_mset_3(e)
   elseif rnd < 114 then
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
-               Joseph / Josephine / Jozef / Maurice / Menkaure / Pikel /\
+               Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
                Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
@@ -536,7 +533,7 @@ local rnd = crawl.random2(149)
     e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
 -- Elf
   elseif rnd < 121 then
-    e.kmons("1 = place:Elf:5 w:50 / deep elf sorcerer / deep elf blademaster /\
+    e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster /\
                deep elf master archer / deep elf annihilator / deep elf high priest")
 -- Orc
   elseif rnd < 126 then
@@ -555,7 +552,7 @@ local rnd = crawl.random2(149)
   elseif rnd < 147 then
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
-               Joseph / Josephine / Jozef / Maurice / Menkaure / Pikel /\
+               Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
                Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
@@ -564,7 +561,7 @@ local rnd = crawl.random2(149)
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
                Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
-               the royal jelly / Tiamat / Xtahua / Nellie / Chuck / the Iron Giant")
+               the royal jelly / Tiamat / Xtahua / Nellie / Chuck / the iron giant")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \

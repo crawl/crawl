@@ -1,0 +1,33 @@
+%%%%
+amulet
+
+Ein Talisman der als Schmuck um den Hals getragen wird, durchströmt von Magie
+unbekannten Ursprungs.
+%%%%
+book
+
+Ein Buch mit Zaubersprüchen. Nimm dich in Acht, denn mit einigen der
+mächtigeren Zauberbücher ist nicht zu spaßen.
+%%%%
+deck of cards
+
+Ein Satz mächtiger magischer Karten, getuscht in Dämonenblut. Das Ziehen von
+Karten kann vielerlei nützliche oder riskante Auswirkungen zur Folge haben.
+%%%%
+potion
+
+Eine kleine Flasche Flüssigkeit.
+%%%%
+ring
+
+Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
+Magie unbekannten Ursprungs.
+%%%%
+scroll
+
+Eine von magischen Schriftzügen bedeckte Schriftrolle.
+%%%%
+wand
+
+Ein Stab. Vielleicht ist er magisch.
+%%%%

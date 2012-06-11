@@ -34,11 +34,8 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -260,7 +257,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     // Slot switching.
     tmp.slot = you.inv[to_slot].slot;
-    you.inv[to_slot].slot  = you.inv[from_slot].slot;
+    you.inv[to_slot].slot  = index_to_letter(to_slot);//you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
     you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
@@ -935,7 +932,7 @@ static std::vector<std::string> _get_branch_keys()
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
     {
         branch_type which_branch = static_cast<branch_type>(i);
-        Branch     &branch       = branches[which_branch];
+        const Branch &branch     = branches[which_branch];
 
         // Skip unimplemented branches
         if (branch_is_unfinished(which_branch))
@@ -943,15 +940,6 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-
-    //add handpicked places
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_ABYSS)), false));
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_PANDEMONIUM)), false));
-
     return (names);
 }
 
@@ -1316,7 +1304,7 @@ static bool _handle_FAQ()
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
-    const int width = std::min(80, get_number_of_cols());
+    const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
@@ -1364,7 +1352,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string(answer, width - 1);
+            linebreak_string(answer, width - 1, true);
             {
 #ifdef USE_TILE_WEB
                 tiles_crt_control show_as_menu(CRT_MENU, "faq_entry");
@@ -1702,7 +1690,7 @@ static void _find_description(bool *again, std::string *error_inout)
         else
         {
             ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() >= 1);
 
             std::string key;
 
@@ -2249,7 +2237,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
     _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
-    _add_command(cols, 1, CMD_LIST_WEAPONS, "display current weapons", 2);
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
     _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
     _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
@@ -2269,11 +2256,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         pickup part of a single stack\n",
                        false, true, _cmdhelp_textfilter);
 
-
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
-    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
+    cols.add_formatted(1, "         in view\n",
+                       false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
 #ifndef USE_TILE
     _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
 #endif
@@ -2596,10 +2585,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Z</w>      : gain lots of Zot Points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
-                       "<w>l</w>      : make entrance to labyrinth\n"
                        "<w>L</w>      : place a vault by name\n"
-                       "<w>p</w>      : make entrance to pandemonium\n"
-                       "<w>P</w>      : make a portal\n"
+                       "<w>p</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>      : turn cell into feature\n"
@@ -2622,7 +2609,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>}</w>      : detect all traps on level\n"
                        "<w>)</w>      : change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> : dump level builder information\n"
-                       "<w>Ctrl-R</w> : regenerate current level\n",
+                       "<w>Ctrl-R</w> : regenerate current level\n"
+                       "<w>P</w>      : create a level based on a vault\n",
                        true, true);
 
     cols.add_formatted(1,
@@ -2661,9 +2649,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>J</w>      : Jiyva off-level sacrifice\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
-                       "<w>f</w>      : player combat damage stats\n"
-                       "<w>F</w>      : combat stats with fsim_kit\n"
-                       "<w>Ctrl-F</w> : combat stats (monster vs PC)\n"
+                       "<w>f</w>      : quick fight simulation\n"
+                       "<w>F</w>      : single scale fsim\n"
+                       "<w>Ctrl-F</w> : double scale fsim\n"
                        "<w>Ctrl-I</w> : item generation stats\n"
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"

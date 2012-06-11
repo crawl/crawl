@@ -122,7 +122,7 @@ void pandemonium_mons(void)
         while (!mons_pan_rare(pan_mons));
     }
     mgen_data mg(pan_mons);
-    mg.level_type = LEVEL_PANDEMONIUM;
+    mg.place = level_id(BRANCH_PANDEMONIUM);
     mg.flags |= MG_PERMIT_BANDS;
 
     mons_place(mg);

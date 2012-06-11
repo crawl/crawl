@@ -10,7 +10,6 @@
 
 #include "abyss.h"
 #include "areas.h"
-#include "branch.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -33,12 +32,12 @@
 #include "player.h"
 #include "random.h"
 #include "shout.h"
-#include "spl-other.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -86,7 +85,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
     }
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
@@ -210,7 +209,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
         }
-        else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
+        else if (player_in_branch(BRANCH_ABYSS) && !wizard_blink)
         {
             abyss_teleport(false);
             if (you.pet_target != MHITYOU)
@@ -251,7 +250,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 
     if (item_blocks_teleport(true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && !override_abyss
              && _abyss_blocks_teleport(false))
     {
@@ -290,7 +289,6 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                    || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL)
                     || orb_haloed(you.pos()));
 
     // Tell the player why if they have teleport control.
@@ -329,7 +327,7 @@ void you_teleport(void)
 
         int teleport_delay = 3 + random2(3);
 
-        if (you.level_type == LEVEL_ABYSS && !one_chance_in(5))
+        if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
         {
             mpr("You have a feeling this translocation may take a while to kick in...");
             teleport_delay += 5 + random2(10);
@@ -433,7 +431,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     viewwindow();
     StashTrack.update_stash(you.pos());
 
-    if (you.level_type == LEVEL_ABYSS && !wizard_tele)
+    if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
         abyss_teleport(new_abyss_area);
         if (you.pet_target != MHITYOU)
@@ -584,7 +582,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         // (Check done for the straight line, no pathfinding involved.)
         bool need_distance_check = false;
         coord_def centre;
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
         {
             bool success = false;
             for (int xpos = 0; xpos < GXM; xpos++)
@@ -713,10 +711,10 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     // *less* dangerous than the old dangerous area.
     // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele
-        && (you.level_type == LEVEL_LABYRINTH
-            || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
+        && (player_in_branch(BRANCH_LABYRINTH)
+            || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
     {
-        if (you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR)
+        if (player_in_branch(BRANCH_LABYRINTH) && you.species == SP_MINOTAUR)
             xom_is_stimulated(100);
         else
             xom_is_stimulated(200);
@@ -757,7 +755,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
 
-    if (you.trans_wall_blocking(where))
+    if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;
@@ -809,7 +807,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         else
             mpr("The mass is resisting your pull.");
 
-            return SPRET_SUCCESS;
+        return SPRET_SUCCESS;
     }
 
     // We need to modify the item *before* we move it, because
@@ -977,7 +975,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     args.restricts = DIR_DIR;
     args.mode = TARG_ANY;
 
-    while(1)
+    while (1)
     {
         mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
         direction(bmove, args);

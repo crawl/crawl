@@ -28,7 +28,6 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "coord.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
@@ -64,16 +63,6 @@ int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_featu
     return count;
 }
 
-bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
-{
-    return (checker(feat));
-}
-
-bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type))
-{
-    return (checker(grd(c)));
-}
-
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
@@ -103,48 +92,18 @@ bool feat_is_stone_stair(dungeon_feature_type feat)
 bool feat_is_staircase(dungeon_feature_type feat)
 {
     if (feat_is_stone_stair(feat))
-    {
-        // Make up staircases in hell appear as gates.
-        if (player_in_hell())
-        {
-            switch (feat)
-            {
-                case DNGN_STONE_STAIRS_UP_I:
-                case DNGN_STONE_STAIRS_UP_II:
-                case DNGN_STONE_STAIRS_UP_III:
-                    return (false);
-                default:
-                    return (true);
-            }
-        }
         return (true);
-    }
 
     // All branch entries/exits are staircases, except for Zot.
     if (feat == DNGN_ENTER_ZOT || feat == DNGN_RETURN_FROM_ZOT)
         return (false);
 
+    if (feat == DNGN_EXIT_DUNGEON)
+        return (true);
+
     return (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
             || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
                && feat <= DNGN_RETURN_FROM_LAST_BRANCH);
-}
-
-bool feat_sealable_portal(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_TARTARUS:
-    case DNGN_ENTER_ABYSS:
-    case DNGN_ENTER_PANDEMONIUM:
-    case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_PORTAL_VAULT:
-        return (true);
-    default:
-        return (false);
-    }
 }
 
 bool feat_is_portal(dungeon_feature_type feat)
@@ -174,6 +133,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_DUNGEON:
     case DNGN_ENTER_HELL:
     case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
@@ -182,7 +142,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
     case DNGN_ENTER_VAULTS:
@@ -199,7 +158,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_FOREST:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_VAULTS:
@@ -236,23 +194,10 @@ bool feat_is_escape_hatch(dungeon_feature_type feat)
 // Returns true if the given dungeon feature can be considered a gate.
 bool feat_is_gate(dungeon_feature_type feat)
 {
-    // Make up staircases in hell appear as gates.
-    if (player_in_hell())
-    {
-        switch (feat)
-        {
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-            return (true);
-        default:
-            break;
-        }
-    }
-
     switch (feat)
     {
     case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
@@ -282,9 +227,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_DUNGEON:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_VAULTS:
@@ -316,13 +261,13 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
     case DNGN_ENTER_VAULTS:
@@ -351,12 +296,7 @@ bool feat_is_opaque(dungeon_feature_type feat)
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXSOLID || feat == DNGN_MALIGN_GATEWAY);
-}
-
-bool cell_is_solid(int x, int y)
-{
-    return (feat_is_solid(grd[x][y]));
+    return (feat <= DNGN_MAXSOLID);
 }
 
 bool cell_is_solid(const coord_def &c)
@@ -474,6 +414,7 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 {
     return (feat_is_branch_stairs(feat)
             || feat == DNGN_ENTER_HELL || feat == DNGN_ENTER_ABYSS
+            || feat == DNGN_EXIT_THROUGH_ABYSS
             || feat == DNGN_ENTER_PANDEMONIUM);
 }
 
@@ -494,6 +435,11 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 bool feat_is_fountain(dungeon_feature_type feat)
 {
     return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
+}
+
+bool feat_is_reachable_past(dungeon_feature_type feat)
+{
+    return feat > DNGN_MAX_NONREACH;
 }
 
 // Find all connected cells containing ft, starting at d.
@@ -653,7 +599,8 @@ coord_def get_random_stair()
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat))
+        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
+            && feat != DNGN_EXIT_DUNGEON && feat != DNGN_EXIT_HELL)
         {
             st.push_back(*ri);
         }
@@ -911,9 +858,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (!in_bounds(dst) || !in_bounds(src) || src == dst)
         return;
 
-    // Move terrain.
-    if (you.level_type == LEVEL_DUNGEON)
-        move_notable_thing(src, dst);
+    move_notable_thing(src, dst);
 
     dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
@@ -996,6 +941,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     // Move player's knowledge.
     env.map_knowledge(dst) = env.map_knowledge(src);
+    StashTrack.move_stash(src, dst);
 }
 
 static bool _dgn_shift_feature(const coord_def &pos)
@@ -1239,8 +1185,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const unsigned short col1 = env.grid_colours(pos1);
     const unsigned short col2 = env.grid_colours(pos2);
 
-    const unsigned long prop1 = env.pgrid(pos1);
-    const unsigned long prop2 = env.pgrid(pos2);
+    const terrain_property_t prop1 = env.pgrid(pos1);
+    const terrain_property_t prop2 = env.pgrid(pos2);
 
     trap_def* trap1 = find_trap(pos1);
     trap_def* trap2 = find_trap(pos2);
@@ -1683,53 +1629,63 @@ static const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"open_sea", "tree", "orcish_idol", "swamp_tree", "endless_lava", "",
-"granite_statue", "", "", "", "", "", "", "", "", "", "",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
-"deep_water", "", "", "shallow_water", "water_stuck", "floor",
-"", "floor_reserved", "exit_hell", "enter_hell",
-"open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
-"undiscovered_trap", "", "enter_shop", "enter_labyrinth",
+"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol",
+"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "",
+
+// DNGN_MINMOVE
+"lava", "deep_water",
+
+// DNGN_MINWALK
+"shallow_water", "floor", "open_door",
+"trap_mechanical", "trap_magical", "trap_natural", "trap_web",
+"undiscovered_trap", "enter_shop", "abandoned_shop",
+
 "stone_stairs_down_i", "stone_stairs_down_ii",
 "stone_stairs_down_iii", "escape_hatch_down", "stone_stairs_up_i",
-"stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up", "",
-"", "enter_dis", "enter_gehenna", "enter_cocytus",
+"stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up",
+
+"enter_dis", "enter_gehenna", "enter_cocytus",
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"", "", "", "", "", "",
-"", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
+"exit_dungeon", "exit_through_abyss",
+"exit_hell", "enter_hell", "enter_labyrinth",
+"teleporter", "enter_portal_vault", "exit_portal_vault",
+"expired_portal",
+
+"enter_dwarven_hall", "enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
-"enter_forest", "enter_reserved_1", "", "",
-"return_from_dwarven_hall", "return_from_orcish_mines", "return_from_hive",
+"enter_forest", "",
+
+"return_from_dwarven_hall", "return_from_orcish_mines",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
-"return_from_forest", "return_reserved_1", "", "", "", "", "",
-"", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
-"malign_gateway", "expired_portal", "", "", "", "", "",
-"", "", "", "", "", "", "", "", "",
-"", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
+"return_from_forest", "",
+
+"altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
 "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
 "altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados",
-"altar_ashenzari", "", "",
+"altar_ashenzari", "",
+
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
-"permadry_fountain", "abandoned_shop", "", "",
+"permadry_fountain",
+
 "explore_horizon",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
 {
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
+
     if (name.empty())
         return (DNGN_UNSEEN);
 
@@ -1876,7 +1832,7 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "portal";
     if (feat_is_travelable_stair(feat))
         return "staircase";
-    if (feat == DNGN_ENTER_SHOP)
+    if (feat == DNGN_ENTER_SHOP || feat == DNGN_ABANDONED_SHOP)
         return "shop";
     if (feat_is_fountain(feat))
         return "fountain";
@@ -1891,7 +1847,7 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
 
     // A portal deeper into the Ziggurat is boring.
-    if (feat == DNGN_ENTER_PORTAL_VAULT && you.level_type == LEVEL_PORTAL_VAULT)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
         return true;
 
     // Altars in the temple are boring.

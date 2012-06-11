@@ -6,7 +6,6 @@
 
 #include "libutil.h"
 #include "macro.h"
-#include "options.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tilefont.h"

@@ -128,11 +128,12 @@ bool player::floundering() const
 bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (grid == DNGN_SHALLOW_WATER
-             && (species == SP_NAGA                      // tails, not feet
-                 || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                    && (form == TRAN_LICH || form == TRAN_STATUE
-                        || !form_changed_physiology()));
+    return (species == SP_GREY_DRACONIAN
+               || grid == DNGN_SHALLOW_WATER
+                   && (species == SP_NAGA // tails, not feet
+                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
+                   && (form == TRAN_LICH || form == TRAN_STATUE
+                       || !form_changed_physiology()));
 }
 
 int player::get_experience_level() const
@@ -222,7 +223,7 @@ brand_type player::damage_brand(int)
 
     if (wpn != -1 && !you.melded[EQ_WEAPON])
     {
-        if (!is_range_weapon(inv[wpn]))
+        if (!is_range_weapon(inv[wpn]) && !you.suppressed())
             ret = get_weapon_brand(inv[wpn]);
     }
     else if (duration[DUR_CONFUSING_TOUCH])
@@ -257,7 +258,7 @@ brand_type player::damage_brand(int)
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
-// eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
+// eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded)
 {
     ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
@@ -533,6 +534,9 @@ bool player::cannot_fight() const
 // The probabilities for actually going berserk are cumulative!
 static bool _equipment_make_berserk()
 {
+    if (you.suppressed())
+        return (false);
+
     for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
     {
         const item_def *item = you.slot_item((equipment_type) eq, false);
@@ -606,7 +610,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
+    if (beheld() && !player_equip_unrand_effect(UNRAND_DEMON_AXE))
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");
@@ -636,7 +640,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
     // trigger when the player attempts to activate berserk,
     // auto-iding at that point, but also killing the berserk and
     // wasting a turn.
-    if (wearing_amulet(AMU_STASIS, false))
+    if (player_effect_stasis(false))
     {
         if (verbose)
         {

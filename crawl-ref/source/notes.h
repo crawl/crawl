@@ -67,9 +67,9 @@ struct Note
 
     NOTE_TYPES type;
     int first, second;
-    long turn;
+    int turn;
     unsigned short packed_place;
-    std::string place_abbrev;
+
     std::string name;
     std::string desc;
 };

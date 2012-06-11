@@ -10,6 +10,7 @@ class crawl_view_buffer;
 
 int get_number_of_lines();
 int get_number_of_cols();
+int num_to_lines(int num);
 
 void clrscr(void);
 void clear_to_end_of_line();

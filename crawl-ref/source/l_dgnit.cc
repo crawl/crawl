@@ -83,7 +83,7 @@ static int dgn_create_item(lua_State *ls)
 
     item_list ilist = _lua_get_ilist(ls, 3);
     const int level =
-    lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : you.absdepth0;
+    lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : env.absdepth0;
 
     dgn_place_multiple_items(ilist, c, level);
     link_items();
@@ -93,9 +93,7 @@ static int dgn_create_item(lua_State *ls)
 static int dgn_item_property_remove(lua_State *ls)
 {
     if (item_def *item = clua_get_item(ls, 1))
-    {
         item->props.erase(luaL_checkstring(ls, 2));
-    }
     return (0);
 }
 

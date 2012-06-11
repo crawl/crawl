@@ -10,6 +10,26 @@
 
 using namespace std;
 
+#if defined(_WIN32) || defined(_WIN64)
+/*
+ * Replacement for MSVCRT's broken implementation of tmpfile(): it
+ * attempts to place the files in the root directory, which obviously
+ * doesn't work for non-admin users...
+ */
+FILE *tmpfile(void)
+{
+    char *fn = tempnam(NULL, "tileg");
+
+    // T: short-lived
+    // D: delete-on-close
+    FILE *fp = fopen(fn, "w+TD");
+
+    free(fn);
+
+    return fp;
+}
+#endif
+
 tile_list_processor::tile_list_processor() :
     m_last_enum(0),
     m_rim(false),
@@ -1532,9 +1552,7 @@ bool tile_list_processor::write_data()
                     lcenum[c] = std::tolower(lcenum[c]);
 
                 if (i == 0 || m_page.m_counts[i] == 1)
-                {
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
-                }
                 else
                 {
                     total_prob = m_page.m_probs[i + m_page.m_counts[i] - 1];
@@ -1626,9 +1644,7 @@ bool tile_list_processor::write_data()
         {
             fprintf(fp, "define([\"jquery\",");
             for (size_t i = 0; i < m_abstract.size(); ++i)
-            {
                 fprintf(fp, "\"./tileinfo-%s\", ", m_abstract[i].first.c_str());
-            }
             fprintf(fp, "],\n       function ($, ");
             for (size_t i = 0; i < m_abstract.size(); ++i)
             {
@@ -1645,9 +1661,7 @@ bool tile_list_processor::write_data()
         if (m_abstract.size() > 0)
         {
             for (size_t i = 0; i < m_abstract.size(); ++i)
-            {
                 fprintf(fp, "$.extend(exports, %s);\n", m_abstract[i].first.c_str());
-            }
         }
 
         if (m_start_value_module.size() > 0)

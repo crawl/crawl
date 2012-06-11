@@ -553,7 +553,7 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), you.current_vision); ri; ++ri)
         if (you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
@@ -704,9 +704,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // of the time it replaces an element in an unchosen
         // slot -- but we don't care about them).
         if (count <= max_targs)
-        {
             targs[count - 1] = *ai;
-        }
         else if (x_chance_in_y(max_targs, count))
         {
             const int pick = random2(max_targs);
@@ -775,7 +773,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       targetter *hitfunc, desc_filter get_desc_func)
 {
     if (range < 1)
-        range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
+        range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
 
     direction_chooser_args args;
     args.restricts = restrict;
@@ -983,23 +981,20 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
-        if (maxrange < LOS_RADIUS)
-            maxrange++;
-
-        if (minrange < LOS_RADIUS)
-            minrange++;
+        maxrange++;
+        minrange++;
     }
 
     if (minrange == maxrange)
-        return minrange;
+        return std::min(minrange, (int)you.current_vision);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return std::min(maxrange, LOS_RADIUS);
+        return std::min(maxrange, (int)you.current_vision);
 
     // Round appropriately.
-    return std::min(LOS_RADIUS,
+    return std::min((int)you.current_vision,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
@@ -1163,9 +1158,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (player_movement_speed() <= 6)
             return (true);
         break;
-#if TAG_MAJOR_VERSION == 32
-    case SPELL_LEVITATION:
-#endif
     case SPELL_FLY:
         if (you.species == SP_TENGU && you.experience_level >= 15)
             return (true);

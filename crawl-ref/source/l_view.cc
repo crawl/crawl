@@ -61,10 +61,38 @@ LUAFN(view_is_safe_square)
     return (1);
 }
 
+LUAFN(view_can_reach)
+{
+    COORDSHOW(s, 1, 2)
+    const int x_distance  = abs(s.x);
+    const int y_distance  = abs(s.y);
+    if (x_distance > 2 || y_distance > 2)
+    {
+        PLUARET(boolean, false);
+        return (1);
+    }
+    if (x_distance < 2 && y_distance < 2)
+    {
+        PLUARET(boolean, true);
+        return (1);
+    }
+    const coord_def first_middle(s.x/2,s.y/2);
+    const coord_def second_middle(s.x - s.x/2, s.y - s.y/2);
+    if (!feat_is_reachable_past(grd(player2grid(first_middle)))
+        && !feat_is_reachable_past(grd(player2grid(second_middle))))
+    {
+        PLUARET(boolean, false);
+        return (1);
+    }
+    PLUARET(boolean, true);
+    return (1);
+}
+
 static const struct luaL_reg view_lib[] =
 {
     { "feature_at", view_feature_at },
     { "is_safe_square", view_is_safe_square },
+    { "can_reach", view_can_reach },
 
     { NULL, NULL }
 };

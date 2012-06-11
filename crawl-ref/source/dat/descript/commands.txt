@@ -5,7 +5,8 @@ Heal and search a bit
 %%%%
 CMD_REST verbose
 
-Spend up to 100 turns for regenerating health, recharging magic, and/or searching. Resting is interrupted as soon as a hostile monster comes into view.
+Spend up to 100 turns for regenerating health, recharging magic, and/or
+searching. Resting is interrupted as soon as a hostile monster comes into view.
 %%%%
 CMD_EXPLORE
 
@@ -13,7 +14,10 @@ Autoexplore the current level
 %%%%
 CMD_EXPLORE verbose
 
-Lets your character travel on autopilot towards unexplored areas of the current level and collect items subject to autopickup on the way. Travel stops as soon as a hostile monster comes into view, and also to announce items or features found.
+Lets your character travel on autopilot towards unexplored areas of the current
+level and collect items subject to autopickup on the way. Travel stops as soon
+as a hostile monster comes into view, and also to announce items or features
+found.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -21,7 +25,8 @@ Travel to distant levels
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Autotravel to distant levels. Travel is interrupted by monsters coming into view.
+Autotravel to distant levels. Travel is interrupted by monsters coming into
+view.
 %%%%
 CMD_USE_ABILITY
 
@@ -33,7 +38,9 @@ Pray to your god
 %%%%
 CMD_PRAY verbose
 
-If your god likes sacrifices, this will offer a corpse or other item. Also, if you're standing on an altar this allows you to join the corresponding god. For some gods, praying also has other special effects.
+If your god likes sacrifices, this will offer a corpse or other item. Also, if
+you're standing on an altar this allows you to join the corresponding god. For
+some gods, praying also has other special effects.
 %%%%
 CMD_SEARCH_STASHES
 
@@ -61,7 +68,8 @@ Display dungeon overmap
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-Displays location of branch entries, shops and other features you've encountered so far.
+Displays location of branch entries, shops and other features you've
+encountered so far.
 %%%%
 CMD_DISPLAY_RELIGION
 
@@ -69,7 +77,8 @@ Display religious status
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Displays your god's likes and dislikes, conduct, and your current religious standing and divine abilities.
+Displays your god's likes and dislikes, conduct, and your current religious
+standing and divine abilities.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
@@ -97,7 +106,8 @@ Save and exit
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-Saves the game for later and exits. Once you resume the game, the save file is deleted again.
+Saves the game for later and exits. Once you resume the game, the save file is
+deleted again.
 %%%%
 CMD_EDIT_PLAYER_TILE
 
@@ -121,7 +131,9 @@ Dump character progress
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Dump a huge amount of information about your character into a file 'playername.txt' in the morgue directory, to peruse at your leasure. This includes main stats, equipment, spells, skills, notes, etc.
+Dump a huge amount of information about your character into a file
+'playername.txt' in the morgue directory, to peruse at your leasure. This
+includes main stats, equipment, spells, skills, notes, etc.
 %%%%
 CMD_AUTOFIGHT
 
@@ -129,7 +141,8 @@ Hit the closest monster
 %%%%
 CMD_AUTOFIGHT verbose
 
-Move towards the closest hostile monster and attack it with your wielded weapon.
+Move towards the closest hostile monster and attack it with your wielded
+weapon.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 

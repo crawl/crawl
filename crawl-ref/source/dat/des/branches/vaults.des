@@ -6,14 +6,14 @@
 ###############################################################################
 
 {{
-  -- Vault:8 common loot substitutions
+  -- Vaults:8 common loot substitutions
   function vault8_loot(e)
     e.subst("? = | * .:40 ^:3")
     e.subst("| = | *:2")
     e.subst("* = * |:2")
   end
 
-  -- Vault:8 cross-vault rune subsitution
+  -- Vaults:8 cross-vault rune subsitution
   -- Turn 'O' into a rune (if it doesn't exist yet) or a good item
   function vault8_rune(e)
     if dgn.map_by_tag("vault8_rune") then
@@ -260,6 +260,34 @@ v%6...v``v...8|v
 vvvvvvv@@vvvvvvv
 ENDMAP
 
+############################################################
+# Tiered entry
+#
+NAME:   grunt_vault_entry_tiered
+TAGS:   vault_entry no_monster_gen no_rtele_into transparent
+MONS:   w:5 nothing / human
+MONS:   human / w:5 necromancer / w:5 wizard
+MONS:   human / w:5 vault guard
+SUBST:  ' : cxv
+KFEAT:  O = enter_vaults
+MAP
+...............
+.'''''''''''''.
+.'%%...'...%%'.
+.'%212.+.323%'.
+.'.1T1.+..O2.'.
+.'.1.1.+.323%'.
+.'.....'...%%'.
+.''+++''''''''.
+.'.....'...%%'.
+.'.111.+....%'.
+.'.2T..+.1T1.'.
+.'%111.+.1.1.'.
+.'%%...'.....'.
+.''''''''+++''.
+.........@@@...
+ENDMAP
+
 ###############################################################################
 # Vaults specific vaults
 ###############################################################################
@@ -272,7 +300,7 @@ MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop no_wall_fixup
 WEIGHT: 5
 KFEAT:  a = teleport trap
-DEPTH:  Vault
+DEPTH:  Vaults
 MAP
 vvvvvvvvvvvv
 vvv......vvv
@@ -292,7 +320,7 @@ ENDMAP
 #
 NAME:   metal_show
 ORIENT: float
-DEPTH:  Vault:3-7
+DEPTH:  Vaults:3-7
 TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
@@ -324,7 +352,7 @@ MONS:   wizard / necromancer
 MONS:   big kobold / kobold demonologist
 MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
         w:2 deep elf priest
-MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
+MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
@@ -374,13 +402,11 @@ lua_marker('e', portal_desc { teleport_spot=1})
 lua_marker('m', portal_desc { teleport_spot=2})
 }}
 ORIENT:     float
-DEPTH:      Vault:3-7
+DEPTH:      Vaults:3-7
 TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
-COLOUR:     ME = yellow
+KFEAT:      ME = teleporter
 MONS:       iron golem / crystal golem / stone golem
-TILE:       EM = dngn_the_teleporter_vaults
-SUBST:      EM = .
 SUBST:      em = U
 MARKER:     v = lua:props_marker { veto_shatter="veto" }
 MAP
@@ -406,7 +432,7 @@ ENDMAP
 # awkward to reach via teleport, and there is now always a monster on the
 # rune.
 #
-# Vaults:8 extensively uses subvaults. To provide another Vault:8 quadrant
+# Vaults:8 extensively uses subvaults. To provide another Vaults:8 quadrant
 # variation, create a map tagged vault8_quadrant that is 27x24. It should
 # have three blank cells on one corner (see any existing quadrant for an
 # example), which will be used to orient that corner towards the middle of
@@ -418,10 +444,10 @@ ENDMAP
 # vault8_quadrant_prize and come in their own section below.
 
 #############################################################
-# The main vault for Vault:8.
+# The main vault for Vaults:8.
 #
 NAME:     vaults_vault
-PLACE:    Vault:8
+PLACE:    Vaults:$
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
 SHUFFLE:  ABCD
@@ -504,7 +530,7 @@ ENDMAP
 
 
 ############################################################
-# Vault:8 - the subvault used to place the rune.
+# Vaults:8 - the subvault used to place the rune.
 #
 # Used by the 'vault8_rune()' function in the prelude.
 #
@@ -517,7 +543,7 @@ O
 ENDMAP
 
 ############################################################
-# Vault:8 - the subvault used for potential rune locations that do not
+# Vaults:8 - the subvault used for potential rune locations that do not
 # contain the real rune.
 #
 # Used by the 'vault8_rune()' function in the prelude.
@@ -535,7 +561,7 @@ o
 ENDMAP
 
 ############################################################
-# Vault:8 - the subvault used for potential rune locations that do not
+# Vaults:8 - the subvault used for potential rune locations that do not
 # contain the rune, but rather a mimic of it!
 #
 # Used by the 'vault8_rune()' function in the prelude.
@@ -2407,7 +2433,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################
-# Vault:8 - Rooms Quadrant
+# Vaults:8 - Rooms Quadrant
 #
 # This quadrant uses a subvault for each room. Any subvault tagged
 # vault8_room_rune should be guaranteed to provide a rune. Any subvault
@@ -2453,8 +2479,8 @@ x...........H..B..........
 xxxxxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Traps and Loot Subvault
-#           Replace each square with traps or loot, but mostly floor.
+# Vaults:8 - Rooms Quadrant - Traps and Loot Subvault
+#            Replace each square with traps or loot, but mostly floor.
 NAME: vault8_room_traps_and_loot
 TAGS: vault8_room
 : default_subvault_glyphs()
@@ -2463,8 +2489,8 @@ SUBST: . = ?
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Border Subvault
-#           Fill the room with loot, but leave an empty border.
+# Vaults:8 - Rooms Quadrant - Border Subvault
+#            Fill the room with loot, but leave an empty border.
 NAME: vault8_room_border
 TAGS: vault8_room
 {{
@@ -2486,8 +2512,8 @@ TAGS: vault8_room
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Diamond Subvault
-#           Fill the room with money in a diamond pattern.
+# Vaults:8 - Rooms Quadrant - Diamond Subvault
+#            Fill the room with money in a diamond pattern.
 NAME: vault8_room_diamond
 TAGS: vault8_room
 {{
@@ -2507,8 +2533,8 @@ TAGS: vault8_room
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Rune Subvault
-#           Potentially contains the rune.
+# Vaults:8 - Rooms Quadrant - Rune Subvault
+#            Potentially contains the rune.
 NAME: vault8_room_rune
 TAGS: vault8_room_rune
 SUBST: ^ = ^.

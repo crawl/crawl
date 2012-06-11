@@ -206,7 +206,13 @@ Xom przestawia.
 %%%%
 Xom swap weapons
 
-@Xom rearrange the pieces@
+“Zamieńcie się!”
+
+“To damy tobie, a to tobie.”
+
+“Czas na małą zamianę.”
+
+“Przewaga broni, tak?  Tak będzie bardziej sprawiedliwie.”
 %%%%
 Xom teleportation journey
 
@@ -351,7 +357,7 @@ Xom good mutations
 
 „Pozwól mi cię poprawić.”
 
-Xom zmienia twe ciał.
+Xom zmienia twe ciało.
 
 Słyszysz szalony chichot Xoma.
 %%%%
@@ -419,7 +425,7 @@ Xom life saving general
 
 „Eee, już robiło się ciekawie.”
 
-„NIEEEEEE, nie moja @xom_plaything@!”
+„NIEEEEEE, nie @_my_xom_plaything_@!”
 
 „Nie tak, nie teraz.”
 
@@ -430,11 +436,11 @@ Xom life saving actor
 w:20
 @Xom life saving general@
 
-„Hej, to moja @xom_plaything@!”
+„Hej, to @_my_xom_plaything_@!”
 
 „O nie, łapy precz!”
 
-„To moja @xom_plaything@, znajdź sobie własną!”
+„To @_my_xom_plaything_@, znajdź sobie własną!”
 
 „Zostaw moją zabawkę w spokoju!”
 %%%%
@@ -463,6 +469,19 @@ Xom uważa że to zabawne.
 Xom chichocze.
 
 Xom się smieje.
+%%%%
+_my_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "mój misiek"
+elseif you.piety_rank() > 2 then
+    return "moja zabawka"
+else
+    return "moja rozrywka"
+end
+}}
 %%%%
 ############################################
 # Beogh rants on destroying an orcish idol #

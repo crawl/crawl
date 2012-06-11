@@ -1,0 +1,295 @@
+%%%%
+the Portal card
+
+Esta carta te teleporta a una posición al azar, permitiendo el control de la
+translocación si tu poder es alto. Se encuentra en mazos de huída y de guerra,
+o en el mazo de castigo de Nemelex Xobeh.
+%%%%
+the Warp card
+
+Esta carta te transporta a corta distancia, bien al azar o con crecientes
+niveles de control a mayores niveles. Se encuentra en mazos de huída y de
+guerra.
+%%%%
+Swap card
+
+Esta carta intercambia tu posición con la de una criatura cercana. Se encuentra
+en mazos de huída y de guerra.
+%%%%
+Velocity card
+
+Esta carta te hace moverte o actuar más rápido. Se encuentra en mazos de huída
+y de guerra.
+%%%%
+the Tomb card
+
+Esta carta sepulta al jugador en muros protectores de roca sólida. Con niveles
+bajos, la tumba puede ser imperfecta. ¡Úsala con precaución! Se suele usar en
+mazos de defensa, de huída y de guerra, o en el mazo de castigo de Nemelex
+Xobeh.
+%%%%
+the Banshee card
+
+El lamento de la Banshee provoca miedo en criaturas cercanas. Se encuentra en
+mazos de defensa, de huída y de guerra.
+%%%%
+Damnation card
+
+Esta carta destierra al Abismo a una o más criaturas cercanas, posiblemente
+incluyéndote a ti. Habitualmente se encuentra en los mazos de defensa, de huída
+y de guerra, o en el mazo de castigo de Nemelex Xobeh.
+%%%%
+Solitude card
+
+Esta carta teleporta al azar a criaturas adyacentes. Se encuentra en mazos de
+defensa, huída y guerra.
+%%%%
+Warpwright card
+
+Esta carta puede crear teleportadores. Se encuentra en mazos de defensa, de
+huída y de guerra.
+%%%%
+Flight card
+
+Esta carta te ayuda a escapar transformándote, acelerándote o creando algún
+otro medios de huída. Se encuentra en mazos de defensa, huída y guerra.
+%%%%
+the Elixir card
+
+Esta carta te cura y también puede absorber o restaurar tu mana en el proceso.
+Se encuentra en mazos de cambios, de defensa y de guerra.
+%%%%
+Battlelust card
+
+Esta carta te hace más poderoso en el combate físico. Habitualmente se
+encuentra en los mazos de cambios, defensa y de guerra.
+%%%%
+Metamorphosis card
+
+Esta carta te transforma temporalmente. Se encuentra en mazos de cambios, de
+defensa y de guerra.
+%%%%
+the Helm card
+
+Esta carta incrementa tus defensas. Se encuentra en mazos de cambios, de
+defensa y de guerra.
+%%%%
+the Blade card
+
+Esta carta temporalmente encanta o incluso anima a tu arma. Se encuentra en
+mazos de cambios, de defensa y de guerra.
+%%%%
+the Shadow card
+
+Esta carta te permite fundirte en las sombras, haciéndote menos perceptible. Se
+encuentra en mazos de cambios, de defensa y de guerra.
+%%%%
+the Mercenary card
+
+Esta carta convoca a mercenarios para luchar a tu lado... por un precio. Se
+suele encontrar en mazos de cambios, de defensa y de guerra.
+%%%%
+the Potion card
+
+Esta carta tiene el mismo efecto, positivo o negativo, que beber una poción
+mágica al azar. Se encuentra en mazos de cambios y de prodigios.
+%%%%
+Focus card
+
+Esta carta potencia aún más tu mejor atributo a costa del peor. Se encuentra en
+mazos de cambios y de prodigios.
+%%%%
+Shuffle card
+
+Esta carta intercambia tus tres atributos. ¡Úsala con precaución! Se encuentra
+en mazos de cambios y de prodigios.
+%%%%
+Experience card
+
+Esta carta te vuelve más experimentado. Se suele encontrar en mazos de cambios
+y de prodigios.
+%%%%
+Wild Magic card
+
+Esta carta causa que magia indómita, como si proviniera de un hechizo mal
+recitado, actúe sobre ti. Se encuentra en mazos de cambios y de prodigios.
+%%%%
+the Helix card
+
+Esta carta cambia tus mutaciones. Niveles de poder altos hacen que el cambio
+suela ser beneficioso. Se encuentra en mazos de cambios y de prodigios.
+%%%%
+the Sage card
+
+Esta carta canalizará algo de tu experiencia ganada para entrenar alguna
+capacidad específica y entrenarla más rápido de lo normal. Se encuentra en
+mazos de cambios y de prodigios.
+%%%%
+the Alchemist card
+
+Esta carta transmuta algo de tu oro en salud y mana. Se encuentra en mazos de
+cambios y de prodigios.
+%%%%
+Water card
+
+Esta carta transforma el suelo de tu alrededor en agua. Se suele encontrar en
+mazos de cambios y de calabozos.
+%%%%
+Vitrification card
+
+Esta carta vuelve translúcidos a los muros. Se encuentra en mazos de cambios y
+de calabozos.
+%%%%
+Dowsing card
+
+Esta carta te permite detectar puertas secretas, trampas, criaturas o alguna
+combinación de ellas. Se suele hallar en los mazos de cambios y de calabozos.
+%%%%
+the Trowel card
+
+Esta carta puede crear un altar, una estatua, un golem o incluso un portal,
+pero solamente en el calabozo principal y sus ramificaciones. Se encuentra en
+mazos de cambios y de calabozos.
+%%%%
+the Minefield card
+
+Esta carta hace que tu entorno inmediato se vuelva más peligroso. Se encuentra
+en mazos de cambios y de calabozos, o en el mazo de castigo de Nemelex Xobeh.
+%%%%
+the Crusade card
+
+Esta carta intenta la conversión a tu causa de criaturas cercanas. Se encuentra
+en mazos de convocaciones y de guerra.
+%%%%
+the Herd card
+
+Esta carta convoca animales. Se encuentra en mazos de convocaciones y de
+guerra.
+%%%%
+the Pentagram card
+
+Esta carta convoca a un demonio en tu ayuda. Se encuentra en mazos de
+convocaciones y de guerra.
+%%%%
+the Dance card
+
+Esta carta convoca a un arma danzante. Se encuentra en mazos de convocaciones y
+de guerra.
+%%%%
+Foxfire card
+
+Esta carta convoca a criaturas voladoras. Se encuentra en mazos de
+convocaciones y de guerra.
+%%%%
+the Bones card
+
+Esta carta convoca a una criatura esquelética. Se encuentra en mazos de
+convocaciones y de guerra.
+%%%%
+Repulsiveness card
+
+Esta carta convoca a una cosa fea o a una cosa muy fea. Se encuentra en mazos
+de convocaciones y de guerra.
+%%%%
+Vitriol card
+
+Esta carta libera un hechizo de ataque corrosivo o degenerativo. Se encuentra
+en mazos de destrucción y de guerra.
+%%%%
+Flame card
+
+Esta carta libera un feroz hechizo de ataque. Se encuentra en mazos de
+destrucción y de guerra.
+%%%%
+Frost card
+
+Esta carta libera un hechizo de ataque de hielo. Se encuentra en mazos de
+destrucción y de guerra.
+%%%%
+Venom card
+
+Esta carta libera un hechizo de ataque venenoso, que puede afectarte también a
+ti. Se encuentra en mazos de destrucción y de guerra.
+%%%%
+the Spark card
+
+Esta carta libera un hechizo de ataque eléctrico. Se encuentra en mazos de
+destrucción y de guerra.
+%%%%
+the Hammer card
+
+Esta carta libera un hechizo de ataque físico. Se encuentra en mazos de
+destrucción y de guerra.
+%%%%
+Pain card
+
+Esta carta libera un hechizo de ataque necromántico, que puede afectarte
+también a ti. Se encuentra en mazos de destrucción y de guerra.
+%%%%
+Torment card
+
+Esta carta llama a los poderes de las tinieblas para causar agonía a cualquier
+criatura viviente. Se encuentra en mazos de destrucción y de guerra.
+%%%%
+the Orb card
+
+Esta carta libera un orbe destructivo de pura magia, a veces varios. Se
+encuentra en mazos de destrucción y de guerra.
+%%%%
+Wrath card
+
+Esta carta atrae la ira de un dios hacia ti. Normalmente solo se encuentra en
+el mazo de castigo de Nemelex Xobeh.
+%%%%
+the Wraith card
+
+Esta carta absorbe tu vida. Solamente se encuentra en el mazo de castigo de
+Nemelex Xobeh.
+%%%%
+the Curse card
+
+Esta carta maldice tus posesiones. Normalmente solo se encuentra en el mazo de
+castigo de Nemelex Xobeh.
+%%%%
+Xom card
+
+Esta carta atrae la atención de Xom sobre uno. Normalmente solo se encuentra en
+el mazo de castigo de Nemelex Xobeh.
+%%%%
+Famine card
+
+Esta carta te dejará famélico. Se suele encontrar en el mazo de castigo de
+Nemelex Xobeh.
+%%%%
+the Swine card
+
+Esta carta te volverá de color rosa y te hará escarbar buscando trufas.
+Solamente se encuentra en el mazo de castigo de Nemelex Xobeh.
+%%%%
+the Bargain card
+
+Esta carta te garantiza un descuento temporal en tiendas. No suele formar parte
+de ningún mazo.
+%%%%
+the Genie card
+
+El Genio puede concederte una petición o castigarte por intentarlo. No suele
+formar parte de ningún mazo.
+%%%%
+the Feast card
+
+Esta carta te alimenta. No suele formar parte de ningún mazo.
+%%%%
+the Stairs card
+
+Esta carta hace que las escaleras se desplazen hacia o lejos de ti. (Es un bug
+si alguna vez te encuentras esta carta).
+%%%%
+a buggy card
+
+Buggy (es un bug si lees esto).
+%%%%
+a very buggy card
+
+Buggy (es un bug si lees esto).
+%%%%

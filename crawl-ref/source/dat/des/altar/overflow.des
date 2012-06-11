@@ -235,8 +235,7 @@ NAME:   elyvilon_altar_3
 TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup
 DEPTH:  D:2-20
 KFEAT:  C = altar_elyvilon
-KMASK:  w = no_monster_gen
-KMASK:  W = no_monster_gen
+KMASK:  wW = no_monster_gen
 MONS:   butterfly
 MAP
         ttttttttttttt
@@ -551,7 +550,7 @@ ENDMAP
 
 NAME:  bloody_makhleb
 TAGS:  uniq_altar_makhleb temple_overflow_makhleb
-DEPTH: D:2-12, Orc, Vault
+DEPTH: D:2-12, Orc, Vaults
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_makhleb
 KITEM: _ = robe, whip
@@ -587,7 +586,7 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-DEPTH:  !Lair, !Orc
+DEPTH:  *, !Lair, !Orc
 TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
@@ -596,28 +595,29 @@ KPROP:  abcdefghBR' = no_rtele_into
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
 SUBST:  G:GTUVblw> , C=c
-KFEAT:  z = teleport trap
+SUBST:  ':.
 MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
             pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
 MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
             size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
+KFEAT:  RB = floor
 MAP
 CCCCCCCC+++CCCCCCCC
 Cnnnnnnn...nnnnnnnC
 Cnab'ban...ncd'dcnC
-Cnb...bn.G.nd...dnC
-Cn'.B..n...n..R.'nC
-Cnb...bn...nd...dnC
-Cnab.ban...ncd.dcnC
+Cnb'''bn.G.nd'''dnC
+Cn''B''n...n''R''nC
+Cnb'''bn...nd'''dnC
+Cnab'ban...ncd'dcnC
 Cnnnnnnn...nnnnnnnC
 CG......._.......GC
 Cnnnnnnn...nnnnnnnC
-Cnef.fen...ngh.hgnC
-Cnf...fn...nh...hnC
-Cn'.R..n...n..B.'nC
-Cnf...fn.G.nh...hnC
+Cnef'fen...ngh'hgnC
+Cnf'''fn...nh'''hnC
+Cn''R''n...n''B''nC
+Cnf'''fn.G.nh'''hnC
 Cnef'fen...ngh'hgnC
 Cnnnnnnn...nnnnnnnC
 CCCCCCCC+++CCCCCCCC
@@ -725,7 +725,7 @@ ENDMAP
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
-DEPTH:  D:2-18, Elf, Vault
+DEPTH:  D:2-18, Elf, Vaults
 TAGS:   no_monster_gen temple_overflow_sif_muna uniq_altar_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
@@ -743,7 +743,7 @@ DEPTH:      D:3-18, Elf
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
-MONS:       orc wizard w:15 / Jessica / Blork the Orc
+MONS:       orc wizard w:15 / Jessica / Blork the orc
 NSUBST:     M = 1:1 / *:"
 SUBST:      ' : "'., ' = ''.
 COLOUR:     . = blue
@@ -775,7 +775,7 @@ ENDMAP
 
 NAME:  bloody_trog
 TAGS:  uniq_altar_trog temple_overflow_trog
-DEPTH: D:2-12, Orc, Vault
+DEPTH: D:2-12, Orc, Vaults
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog
 KITEM: _ = animal skin, dagger
@@ -919,7 +919,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  !D:1
+DEPTH:  *, !D:1
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
@@ -959,7 +959,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
-DEPTH:   !D:1
+DEPTH:   *, !D:1
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
@@ -1137,10 +1137,9 @@ COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
 MONS:   angel god:zin name:glowing n_adj / \
-        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
-        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
-        angel god:zin name:glowing n_adj ; mace ego:holy_wrath
-MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"}
+        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath ident:type / \
+        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath ident:type / \
+        angel god:zin name:glowing n_adj ; mace ego:holy_wrath ident:type
 DEPTH:  2-27
 MAP
 xxxxxxxxx

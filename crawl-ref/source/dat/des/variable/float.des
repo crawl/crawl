@@ -7,7 +7,7 @@
 #            are stored in the files listed in mini.des.
 #            Vaults using global lua functions go into individual .des files.
 #
-#            All maps dealing with the Vault branch system, including Vaults:8
+#            All maps dealing with the Vaults branch system, including Vaults:8
 #            reside in vaults.des.
 ###############################################################################
 
@@ -16,42 +16,10 @@
 default-depth: D:12-26
 
 ##############################################################################
-# Dummy probability balancer vault for depths 1-11.
-#
-# Why this is necessary: there are very few vaults in the 1-11 range (entries
-# are not considered here); to avoid too much repetition of the existing vaults,
-# we use this dummy vault.
-#
-NAME: dummy_balancer
-DEPTH: D:1-11
-# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
-# by depth.
-TAGS: dummy
-ORIENT: float
-WEIGHT: 100
-MAP
-x
-ENDMAP
-
-##############################################################################
-# Dummy probability balancer vault for non-dungeon branches.
-#
-NAME: dummy_balancer_other
-DEPTH: 1-, !D, !Zot:1-4
-# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
-# by depth.
-TAGS: dummy
-ORIENT: float
-WEIGHT: 60
-MAP
-x
-ENDMAP
-
-##############################################################################
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D:2-26, Vault:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
+DEPTH:   D:2-26, Vaults:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 TAGS:    allow_dup
 SUBST:   m:mn
@@ -300,6 +268,18 @@ c$$$ccccc$$$c
 ccccccccccccc
 ENDMAP
 
+NAME:   firewood_loft
+TAGS:   extra
+DEPTH:  D:1-26
+ORIENT: float
+KITEM:  " = staff, quarterstaff, quarterstaff
+KITEM:  ' = staff, staff / any magical staff w:3
+MAP
+xxxxx
+x"']x
+xxxxx
+ENDMAP
+
 
 ################################################################################
 # Staircase flavour vaults.
@@ -429,6 +409,596 @@ MAP
 .bb...bb.
 ..bbmbb..
  .......
+ENDMAP
+
+NAME:    infiniplex_staircase_squiggle
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: }]){[(
+MAP
+    xxxxx
+xxxxx...x
+x}..x.x.xx
+xxx.x.x..@
+  x...xxxx
+  xxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_1
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D: 2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+x}..x...x
+xxx.x.x.x
+x...x.x.x
+x.xxx.x.x
+x.....x.x
+xxxxxxx.x
+@.......x
+x@xxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_2
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxxxxxx
+x}..x...x...x
+xxx.x.x.x.x.x
+xxx...x.x.x.x
+xxxxxxx.x.x.x
+xxxxxxx...x.x
+xxxxxxxxxxx@x
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_3
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx@x
+xxxxx...x.x
+xxxxx.x.x.x
+x}..x.x.x.x
+xxx...x.x.x
+xxxxxxx.x.x
+xxxxxxx...x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_4
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+x.......x
+x.xxxxx.x
+x.....x.x
+xxxxx.x.x
+x}..x.x.x
+xxx.x.x.x
+x...x.x.x
+x.xxx.x.x
+x.....x.@
+xxxxxxx@x
+ENDMAP
+
+NAME:    infiniplex_staircase_zigzag_5
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  @ 1:@ / *:x
+SHUFFLE: })]{([
+MAP
+xxxxxxx@x
+x.....x.@
+x.xxx.x.x
+x...x.x.x
+xxx.x.x.x
+x}x.x.x.x
+x.x.x.x.x
+x...x.x.x
+xxxxx.x.x
+x.....x.x
+x.xxxxx.x
+x.......x
+xxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_spiral
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+xxxxxxxxx
+@.......x
+xxxxxxx.x
+x.....x.x
+x.xxx.x.x
+x.x}..x.x
+x.xxxxx.x
+x.......x
+xxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_spiral_double
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+SUBST:   m : mxxxx
+MAP
+xxxxxxxxxxx
+@.........x
+xmxxxxxmx.x
+x.......x.x
+x.xxxxx.x.x
+x.m..}..m.x
+x.x.xxxxx.x
+x.x.......x
+x.xmxxxxxmx
+x.........@
+xxxxxxxxxxx
+ENDMAP
+
+NAME:    infiniplex_staircase_x
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   D : .x
+SHUFFLE: }]){[(
+MAP
+@xx   xx@
+x.xx xx.x
+xx.xxx.xx
+ xx.D.xx
+  xD}Dx
+ xx.D.xx
+xx.xxx.xx
+x.xx xx.x
+@xx   xx@
+ENDMAP
+
+NAME:    infiniplex_staircase_split_hallway
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SHUFFLE: })]{([
+MAP
+  x@x
+ xx.xx
+xxx.xxx
+xx...xx
+x.x+x.x
+x.x.x.x
+x.x}x.x
+x.x.x.x
+x.x+x.x
+xx...xx
+xxx.xxx
+ xx.xx
+  x@x
+ENDMAP
+
+NAME:    infiniplex_staircase_trident
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  } = 1:} / *:.
+NSUBST:  ~ = 1:~ / *:.
+SHUFFLE: })]{([
+MAP
+xxxxxxx
+x}x}x}x
+x.x.x.x
+x.x.x.x
+x.x.x.x
+x.x.x.x
+x+x+x+x
+x~~~~~x
+x.....x
+x.....x
+xx...xx
+ xx.xx
+  x@x
+ENDMAP
+
+NAME:    infiniplex_staircase_hallway_doors
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D: 2-26
+WEIGHT:  3
+SHUFFLE: DEHJK
+SUBST:   D : +
+SUBST:   E : +xx
+SUBST:   H : +xx
+SUBST:   J : +xx
+SUBST:   K : +xx
+SHUFFLE: py/qz
+SUBST:   p = .
+SUBST:   q = x
+SUBST:   y = @
+SUBST:   z = x
+SHUFFLE: })]{([
+MAP
+    xxxxxxxxxxxxxxxxxzxyx
+    @.................ppx
+xxxxxHxDxExDxKxDxExDxHxxx
+xxx}....................J
+xxxxxHxDxExDxKxDxExDxHxxx
+    @.................ppx
+    xxxxxxxxxxxxxxxxxzxyx
+ENDMAP
+
+NAME:    infiniplex_staircase_diamond
+ORIENT:  float
+TAGS:    extra luniq_staircase allow_dup
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+NSUBST:  ! = 1:+ / *:!
+SUBST:   ! = +x
+SHUFFLE: }]){[(
+MAP
+   x!x
+  xx.xx
+ xx...xx
+xx..c..xx
+x}.ccc..!
+xx..c..xx
+ xx...xx
+  xx.xx
+   x!x
+ENDMAP
+
+NAME:    infiniplex_staircase_star
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   D : .x
+SUBST:   x : x:40 c:5 m:4 b:1
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+...!...!...
+....DxD....
+....xxx....
+!...DxD...!
+.DxD...DxD.
+.xxx.}.xxx.
+.DxD...DxD.
+!...DxD...!
+....xxx....
+....DxD....
+...!...!...
+ENDMAP
+
+NAME:    infiniplex_staircase_door_maze
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  D = 1:+ / *:x
+NSUBST:  E = 1:+ / *:x
+NSUBST:  H = 1:+ / *:x
+SHUFFLE: }]){[(
+MAP
+xExExExEx
+E.D.D.H.E
+x+x+x+x+x
+E.D.D.x.E
+x+x+x+x+x
+E.D}D.x.E
+x+xxx+x+x
+E.+.+.H.E
+xExExExEx
+ENDMAP
+
+NAME:    infiniplex_staircase_9_rooms
+ORIENT:  float
+TAGS:    extra luniq_staircase no_monster_gen
+DEPTH:   D:2-26
+WEIGHT:  2
+# Room contents
+NSUBST:  } = 1:} / *:0
+SHUFFLE: }]){[(
+NSUBST:  0 = 1:% / 2:0 / *:.
+# Doors
+NSUBST:  @ = 1:+ / *:Z
+NSUBST:  D = 1:+ / *:Z
+NSUBST:  E = 1:+ / *:Z
+NSUBST:  H = 1:+ / *:Z
+NSUBST:  J = 1:Z / *:+
+SUBST:   Z = +xxxxxxxxx
+MAP
+xxExxxZxxx+xx
+x...x...x...x
+E.0.E.}.J.0.+
+x...x...x...x
+xxExxxJxxxJxx
+x...x...x...x
++.}.+.}.J.}.Z
+x...x...x...x
+xxDxxxDxxxHxx
+x...x...x...x
+D.0.+.}.H.0.H
+x...x...x...x
+xxDxxxDxxxHxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_1
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+MAP
+   xxx
+   x)x
+  xxqxx
+xxx...xx
+x}p.c..@
+xxx...xx
+  xxrxx
+   x]x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_2
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x   x@x
+  xxqxx xxDxx
+xxx...xxx...xx
+x}p.c.....c.E'
+xxx...xxx...xx
+  xxrxx xxHxx
+   x]x   x"x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_3a
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  3
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x
+  xxqxx xxxxx
+xxx...xxx...x
+x}p.c.....c.x
+xxx...xxx...x
+  xxrxx xx.xx
+   x]x   x.x
+   xxx  xx.xx
+       xx...xx
+       "H.c.D@
+       xx...xx
+        xxExx
+         x'x
+ENDMAP
+
+NAME:    infiniplex_staircase_pillars_3b
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+DEPTH:   D:2-26
+WEIGHT:  2
+SUBST:   c : x:45 .:15 c:10 m:5
+SHUFFLE: }p/)q/]r
+SUBST:   ) = x
+SUBST:   ] = x
+SUBST:   q = x
+SUBST:   r = x
+SHUFFLE: })]{([
+# entry
+SHUFFLE: D@/E'/H"
+SUBST:   E = x
+SUBST:   H = x
+SUBST:   ' = x
+SUBST:   " = x
+MAP
+   xxx
+   x)x         x@x
+  xxqxx xxxxx xxDxx
+xxx...xxx...xxx...xx
+x}p.c.....c.....c.E'
+xxx...xxx...xxx...xx
+  xxrxx xxxxx xxHxx
+   x]x         x"x
+   xxx
+ENDMAP
+
+NAME:    infiniplex_staircase_river
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+WEIGHT:  3
+NSUBST:  D = 1:W / *:w
+NSUBST:  E = 1:W / *:w
+NSUBST:  H = 1:W / *:w
+NSUBST:  } = 1:} / *:.
+SHUFFLE: }]){[(
+MAP
+xxxxxx
+x....x
+x.}}.x
+x.}}.x
+x....x
+xww..x
+xwDDwx
+xwEEwx
+xwHHwx
+x..wwx
+x....x
+x@..@x
+ENDMAP
+
+NAME:    infiniplex_staircase_pool_1
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen
+DEPTH:   D:2-26
+WEIGHT:  3
+# Water
+SUBST:   D = WW.
+SUBST:   E = W..
+# Place @(s)
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+     .!.
+   ..EDE..
+  !EDWWWDE!
+ .EwwwWwwwE.
+ .DwcwWwcwD.
+.EWwwwWwwwWE.
+!DWWWW}WWWWD!
+.EWwwwWwwwWE.
+ .DwcwWwcwD.
+ .EwwwWwwwE.
+  !EDWWWDE!
+   ..EDE..
+     .!.
+ENDMAP
+
+NAME:    infiniplex_staircase_pool_2
+ORIENT:  float
+TAGS:    transparent extra luniq_staircase no_monster_gen
+DEPTH:   D:2-26, Lair:*, Swamp:*
+WEIGHT:  3 (D), 10 (Swamp)
+# Water
+SUBST:   D = WW.
+SUBST:   E = W..
+SUBST:   Z = wwW
+# Guarentee a path
+NSUBST:  S = 1:W / *:w
+# Place @(s)
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+  !EEDEE!
+ EDWZZZWDE
+!DZwwwwwZD!
+EWwwwwwwwWE
+EZwwDEDwwZE
+DZwwE}EwwZD
+EZwwDEDwwZE
+EWwSWwwwwWE
+!DZSSSwwZD!
+ EDWZZZWDE
+  !EEDEE!
+ENDMAP
+
+# This is replaced by infiniplex_staircase_pool_lava for low levels
+NAME:    infiniplex_staircase_pool
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-20, Lair:*, Swamp:*
+WEIGHT:  2 (D), 20 (Swamp)
+SUBST:   D = ww.
+SUBST:   E = w..
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+   ...
+  !....E!
+ .D.}.DwDE
+ EwDEDwwwD.
+Ewwwwwwwww!
+Dwwwwwwwww.
+Ewwwwwwww.
+!wwwwwwwE.
+ .DwwwDE!
+  ..!...
+ENDMAP
+
+#  This is about the same as infiniplex_staircase_pool but with lava.
+#    There are a few small changes to accout for lava being impassible.
+NAME:    infiniplex_staircase_pool_lava
+ORIENT:  float
+TAGS:    extra luniq_staircase
+DEPTH:   D:21-26
+WEIGHT:  2
+SUBST:   D = ll.
+SUBST:   E = l..
+NSUBST:  ! = 1:@ / *:!
+SUBST:   ! = @...
+SHUFFLE: }]){[(
+MAP
+   ...
+  !....E!.
+ .D.}.DlDE.
+.ElDEDlllD.
+Elllllllll!
+Dlllllllll.
+Ellllllll.
+!lllllllE.
+ .DlllDE!
+  ..!...
 ENDMAP
 
 ##############################################################################
@@ -604,7 +1174,7 @@ ENDMAP
 # An old-fashioned vault, by Lemuel
 #
 NAME:  lemuel_traditional_vault
-DEPTH: D:12-27, Vault
+DEPTH: D:12-27, Vaults
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
@@ -665,7 +1235,7 @@ ENDMAP
 NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
-DEPTH:  D:5-12, Elf, Vault
+DEPTH:  D:5-12, Elf, Vaults
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
@@ -781,7 +1351,7 @@ ENDMAP
 #
 NAME:    lemuel_vampire_tower
 ORIENT:  float
-DEPTH:   D:12-26, Vault, Crypt
+DEPTH:   D:12-26, Vaults, Crypt
 MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
@@ -1090,7 +1660,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:23-27, Vault
+DEPTH:   D:23-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 COLOUR:  - : yellow
 SUBST:   - : +
@@ -1130,7 +1700,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27, Vault
+DEPTH:   D:18-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1181,7 +1751,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
 TAGS:    luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27, Vault
+DEPTH:   D:18-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1526,7 +2096,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-27, Vault
+DEPTH:   D:5-27, Vaults
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -1700,7 +2270,7 @@ ENDMAP
 # outer ring contains 10 to 30 monsters, mean of 16.7
 #
 NAME:   evilmike_marble_ring
-DEPTH:  D:14-, Vault:1-7
+DEPTH:  D:14-, Vaults:1-7
 ORIENT: float
 COLOUR: b-+89*| = white
 FTILE:  b-+89*| = FLOOR_MARBLE
@@ -1872,7 +2442,7 @@ ENDMAP
 # Cross vault (evilmike)
 #
 NAME:   evilmike_cross
-DEPTH:  D:14-, Vault:1-7
+DEPTH:  D:14-, Vaults:1-7
 ORIENT: float
 MAP
 ...................
@@ -1967,6 +2537,8 @@ xxxx@xx.xxxxxxxxx.xxxxxxx
       xxxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+
 NAME:   nooodl_glass_maze
 ORIENT: float
 SUBST:  M = cm..
@@ -1991,6 +2563,8 @@ c.cc.cc.cc.cc.cc.c
 c..M....M.....0.*c
 c@cccccccccccccccc
 ENDMAP
+
+##############################################################################
 
 NAME:    hangedman_screamer
 ORIENT:  float
@@ -2033,6 +2607,8 @@ xbbxx22x4x22xxddx
     xxxxxxxxx
 ENDMAP
 
+##############################################################################
+
 NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
@@ -2049,4 +2625,788 @@ xxxxxx......xxxxxx
 xxxxxxx....xxxxxxx
 xxxxxxxx||xxxxxxxx
 xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   nicolae_whirlpool
+TAGS:   patrolling no_pool_fixup no_rotate
+ORIENT: float
+MONS:   centaur, centaur warrior
+DEPTH:  D:6-20
+: if you.absdepth() < 13 then
+SUBST:  1 = ..1
+SUBST:  2 = 1
+: end
+KMONS:  ' = plant / nothing w:100
+SUBST:  ' = W
+KFEAT:  @ = W
+MAP
+@ww@wwwwwwww@
+ww'ww''''''ww
+w'ww'wwwwww'w
+w'w'ww''''ww@
+w'w'w'wwww'ww
+w'w'w1.1'ww'w
+w'w'w.2.w'w'w
+w'ww'1.1w'w'w
+ww'wwww'w'w'w
+@ww''''ww'w'w
+w'wwwwww'ww'w
+ww''''''ww'ww
+@wwwwwwww@ww@
+ENDMAP
+
+##############################################################################
+
+NAME:   nicolae_oklob_transplants
+TAGS:   no_hmirror
+DEPTH:  D:13-24, Lair:5-7
+WEIGHT: 3
+SHUFFLE: ]})
+ORIENT: float
+SUBST:  s = x.
+KMONS:  ]}) = oklob plant spells:.;blink_close;blink_away;.;.;blink \
+              name:unstable n_adj / nothing
+KFEAT:  } = stone_stairs_down_i
+KFEAT:  ] = stone_stairs_down_ii
+KFEAT:  ) = stone_stairs_down_iii
+MARKER: G = lua:props_marker { stop_explore = "a heavily-corroded statue."\
+        , feature_description = "heavily-corroded statue" }
+MAP
+     xxxxxxx
+  xxxxsssssxxxx
+ xxssss...ssssxx
+xxss....G....ssxx
+xs.............sx
+x....xx...xx....x
+@..sxx.....xxs..@
+@.xxx.......xxx.@
+xxxs.........sxxx
+ xss.........ssx
+ xs...........sx
+ xsss.......sssx
+  xxsss]})sssxx
+   xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   grunt_hell_entry_demonic_statue
+TAGS:   no_monster_gen no_rtele_into
+ORIENT: float
+DEPTH:  D:16-21
+MONS:   blue devil / orange demon / red devil / w:5 iron devil
+MONS:   ice devil / sun demon / soul eater
+MONS:   shadow demon / blizzard demon / hell beast
+ITEM:   skeleton
+KFEAT:  b = .
+: if you.absdepth() > 18 then
+KFEAT:  A = enter_hell
+: else
+KFEAT:  A = stone_arch
+: end
+KMONS:  A = silver statue
+MARKER: A = lua:fog_machine { cloud_type = "grey smoke", \
+            pow_min = 20, pow_max = 30, delay = 50, \
+            size = 1, walk_dist = 3, start_clouds = 1 }
+KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
+            / w:1 shadow imp
+KPROP:  b = nothing / w:5 bloody
+KITEM:  b = nothing / w:1 gold
+MARKER: + = lua:restrict_door()
+MARKER:  H = lua:props_marker { stop_explore = "statue" }
+KFEAT:   HI = G
+MAP
+      xxxxxxx
+    xxxbbbbbxxx
+  xxxbbbbbbbbbxxx
+  xbbbbGbbbGbbbbx
+ xxbG1bbbbbbd1Gbxx
+ xdb2bb2bGb2bb2bbx
+xxbbbbGbbbbbGbbbbxx
+xbbGb2bbd3*bb2bGbbx
+xbbbbbb%**d*bbbbdbx
+xbd1bGb%*A*%bGb1bbx
+xb%bbbb%*d*dbbbbbbx
+xbbGbbbd%b*bbbbGbbx
+xxbbbbGbbbbbGdbbbxx
+ xbb1bb2bGd2bb1bbx
+ xxbG1bbbbbbb1Gbxx
+  xbbbbG1b1Gbbbbx
+  xxxbbbbb%bbbxxx
+    xxxbdbbbxxx
+    xxxv===vxxx
+    xxxH...Ixxx
+    xx@@@@@@@xx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_pebble_path
+DEPTH:  D:2-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+c..............@..............c
+.x.............'.............x.
+x.x........I..'''..I........x.x
+cx.x.........'''''.........x.xc
+ccx.x.....I.'''''''.I.....x.xcc
+cccx.x.......'''''.......x.xccc
+ccccx.x....I..'''..I....x.xcccc
+cccccx.x...x..c'c..x...x.xccccc
+......x.xcxxxc.'.cxxxcx.x......
+cccccx.x...x..c'c..x...x.xccccc
+ccccx.x.......'''.......x.xcccc
+cccx.x........'''........x.xccc
+ccx.x.........'''.........x.xcc
+cx.x..........'''..........x.xc
+x.x.......c.cc'''cc.c.......x.x
+.x.......c.c.cc'cc.c.c.......x.
+c........cccccc+cccccc........c
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_lake_hut
+DEPTH:  D:2-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+FTILE: "1 = floor_dirt
+COLOUR: "1 = brown
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx1"1"WxxxxxxxxxxWWWwwwWWWWxx
+xxx""""WWWWxccccxWWWWWWwwwWWWWx
+xx"1""WWWWx.cccc.xWWWWWWwwWWWxx
+x11""Wxxxxcc.''.ccxxxxWWwwWxxxx
+x""""WWwwxcc''''ccxxWWWwwwWWWWx
+x""""Wwwwxcc''''ccxWWWwwwWWWWWx
+x"11Wwxxxxcc.''.ccxWwwwwxxxxxxx
+x1"WWwwwWWxcc++ccxWwwwWW"11""1x
+x"""WWwwwWWxc..cxWWWwwwWW""xx=x
+xx"1"WWwwxxxxx=xxxxWWwwwWW"x''x
+xx""1WWwxxWW.....xxxWWwwWWWx''x
+x1"""Wxxx"W..''..WWxxWwwWWWx''x
+x""Wxxx""WW.''''..WWxxWwwW"x''x
+xWxxx""1WWx''''''x.W"xxww"1xxxx
+xxx""""WWxxx.''.xxxWx"xxwww""1x
+x""xx1WWwwx..''..xwwW""xxwww""x
+x""1"WWWww..''''..ww"xx"xxww1"x
+x1"""1WWwwx''''''xwwW"xx"xxww1x
+x"xx""WW.xxx.''.xxx.WW1"""xxwwx
+xx""""1Wwwx..''..xwwWW"""xxxxxx
+xxx"1""Www..''''..wwWW""""1"xxx
+xx"xx"WWwwx''''''xwwWW"x""xx"xx
+xx""1"WW.xxx.''.xxx.WW""x"1"1xx
+x"xx""WWwwx..''..xwwWW"""""1xxx
+xx"1""1Www..''''..wwWW"""xx11xx
+xxx"xx"1wwx''''''xwwWW"xx.11xxx
+xxxx"1""Wxxx.''.xxx.WW".xx.xxxx
+xxxxxx""""x..''..x..WWxx1xxxxxx
+xxxxxxxxxxx.''@'.xxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_guarded_room
+DEPTH:  D:6-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+xx....xxxxxxxxxxxxxxxxxxxx
+x.........+.xxxxxxxxxxxxxx
+...xx...xxx..............x
+...xxx....x..xx..xx0.xx..x
+..xxx.....x..xx0.xx..xx..x
+...xx...xxxxx..xx..xx..xxx
+x......x.xxxx.0xx..xx.0xxx
+xx....xxx..xxxx0.xx..xx..x
+xx....xxx..xxxx..xx0.xx..x
+x......x.xxxx..xx..xx.0xxx
+...xx...xxxxx..xx..xx..xxx
+...xxx..xxxxxxx0.xx..xx.0x
+..xxx...xxxxxxx..xx..xx..x
+...xx...xxxxx..xx.0xx..xxx
+x......xxxxxx..xx..xx0.xxx
+xx....xxxx.............xxx
+xx....xxxx.xcccccc=ccccccx
+x......xxx.xc..xxx.xxx..cx
+...xx...xx.xcxxxx...xxxxcx
+...xxx..+..xcxxxx0'0xxxxcx
+..xxx...xxxxcxxx9.'.9xxxcx
+...xx...xxxxcxxxxx'xxxxxcx
+x......xxxxxcxx..0'0..xxcx
+xx....xxxxxxcxx.T.'.T.xxcx
+xx....xxxxxxcxx..'''..xxcx
+x......xxxxxcxx..'''..xxcx
+...xx...xxxxcxx.T.'.T.xxcx
+...xxx..xxxxcx%%%xxx%%%xcx
+..xxx...xxxxc**xxxxxxx**cx
+...xx...+..xcnncccccccnncx
+x......xxx...............@
+xx....xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_statue_garden
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+FTILE: 12"t> = floor_grass
+COLOUR: 12" = green
+FTILE: ; = floor_dirt
+COLOUR: ; = brown
+MONS:   plant, bush
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x""""""1;;;;;;;xxxxxxxxxxxxxxxcxxxxxxxxxxxxxxxx.+.9xx
+x""""""";"t"t";xxxxxGxcxGxcxGxcxGxcxGxcxGxxxxxx.xxxxx
+x""""""1;;;;;;;+.....+.................+.....+;;x'%'x
+x""""""";;"";;xxxx.xGxcxGxcxGc=cGxcxGxcxGx.xxx.;x.'0x
+x""""""1;2222;"t"c+ccccccccccc'ccccccccccc+c...;x'0'x
+x"""""1";2tt2;t"tc.cn%xxx'.'.'''.'0'xxx%nc.c...;xxx+x
+x1"1"1"1;2222;"t"c.nc%+...'0'.'9'.'...+%cn.c...;;;;;x
+x""WWWWW;;"";;cccc.cn*xxG'.'.'''.'.'Gxx*nc.cccc;xxx+x
+x"WWwwwWW;;;;;c'.'.cn%+...'.'.'.'0'...+%nc.'.'c;x'.'x
+x""WWWWW;;"";;c.G..nc*x..'.'.'U'.'.'..x%cn..G.c;x*'9x
+x1"1"1"1;2222;c'.'.cn%+...'0'.'.'.'...+*nc.'.'c;x'.'x
+x"""""1";2tt2;cccc.cn%xxG'.'.'''.'.'Gxx%nc.cccc;xxx+x
+x""""""1;2tt2;t11c.nc*+..0'.'.'.'.'...+*cn.c...;;;;;x
+x""""""";2tt2;t>1c.cn%xxx'.'8'''.'0'xxx%nc.cxx.;xxx+x
+x""""""1;2tt2;t"1c+ccccccccccccccccccccccc+cxx.;x'.'x
+x""""""";2222;t"tx.xxx.x.x.x.x.x.x.x.x.xxx.xx..;x0'%x
+x1"1"1"1;;"";;;.xx.xx...................xx.xx..;x'0'x
+xxxxxxxx;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;xxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   wad_bat_island
+DEPTH:  D:8-16
+ORIENT: float
+WEIGHT: 4
+FTILE: >.12t = floor_grass
+COLOUR: .12 = green
+FTILE: ; = floor_grass_dirt_mix
+COLOUR: ; = brown
+MONS:   plant, bat, shark
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx>xxxxxwwwwwwxxxwxwxxxxxxxwxxwxxxwwwxxxxxx
+xxxx1;WWxwwwwwwwwwwwwwxxxxxwwwwwwwwwwwwxxxxx
+xxxxx;1Wxxxxwwwwwwwwwwwwwwxxwwwwxwwwwwwwwwxx
+xxx21;WWwwxxxwwwwwwwwwwwwwwwwwwxxxwwwwwwwwwx
+xxxt;WWwwwwwwwwwwWWWWWwww3wwwwwwxwwwwwwwwwwx
+xx1;WWwwwww3xwwwWW;;;WWwwwwWWwwwwwwwwwwwwwxx
+xx;WWwwwwxwwwwwWW;2.t;WWwwWwwWwwwwwWWWWwwxxx
+xxWWwwwwxxwwwwWW;.12.2;WWWwwwwWWWwWxxxxWwwxx
+xxxwWWWxxxwwwwWW;t..1t;WWwwwwwwwwWxxxwwwWwwx
+xxxwwwwWWxwwwwWW;2tt2.;WWwwww3wwwwwwwwwwWwwx
+xxwwwwwwwWxWWWwWW;.1t;WWwwwwwwwwwwwwwwwxWwwx
+xwwww3wwwwWwwwwwWW;;;WWwwwwwwxxwwwwwwwxWwxwx
+xxwwwwwwwwwwxwwwwWWWWWwwwwwxxxxwwwwwwwWwwwxx
+xxwwwwxxwwwxxxwwwwwwwwwwwwwwwwwwwwwwwwWwwwwx
+xxwwwxxxwwwwxwwwwwwwwWWWWwwwwwwwwwWWwWWwwwxx
+xxwwxxxwwwwwwxxwwwwWWxxxxWWWwwwWWWwwWxwwwxxx
+xxxxxxwwwwwxxxwxwwWxxxwxwwwwWWWwxxxxxwwxxxxx
+xxxxxxxwxxxxxwxxx@xxxxxwxxxxxxwxwxwxxxxwwxxx
+ENDMAP
+
+##############################################################################
+
+NAME: wad_mega_maze
+ORIENT: float
+WEIGHT: 4
+NSUBST: ? = 1:n / 1:= / *:X
+SUBST:  X : cccvvb
+MAP
+X@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X....XXXXXXXX0X.X.............^...........X....X
+XXXX.XX.......X.X.XXX.XXXXXXXX.XXXXXXXX.X.X.XX.X
+X....XX.XXXXXXX.X...X.XG.....X.XXXXXXXX.X...XX.X
+X.XXXXX.X.......XXX.X.XXXXXX.X.X.....XX.XXXXXX.X
+X.XXXXX.X.XXXXX...X.X.X....X.X.X.XXX.XX.X......X
+X....XX.X.XXXXXXXXX.X.X.XX.X.X.X.XXX.X%9X.XXXXXX
+XXXX.XX.X...........X.X.XXXX.X.X.XXX.XXXX.XG...X
+X.....X.XXXXXXX.XXXXX.X....X.X.X.XXX......XXXX.X
+X.XX.XX..X....X.....X.X.XX.X.X.X.?X?XXXXXXXXXX.X
+X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.?|?...XX....X.X
+X......X.X.XXXXXXXXXXXXXXXXXXXXX.?|?.X.XX.XX.X.X
+XXXXXX.X.X..........^............?|?.X....XX.X.X
+X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.???XXXXXXXX.X.X
+X.XXXX.X.X.X.XX...X.X.XXXXX....X.XX..........X.X
+X......X...X....XXX.X.X...X.XX.X.XX.XXX.XXXXXX.X
+XXXXXX.XXXXXXX.XXXX.X.XXX.X.XX.X....XXX........X
+X....X.XXXXX.....X..X.XXX.X.XX.XXXXXXXXXXXXXXXXX
+X.XX.X.XXXXXXX.X.X.XX.XX..X.XX...X......XXX....X
+X.XX...XXX.XXX.X.X.XX.XX.XX.XXXX.X.XXXX.....XX.X
+X.XXXXXXXX.X...X...XX.XX.....9*X.X....XXX.XXXX.X
+X.XXXXXXXX.XXXXXXXXXX.XXXXXXXXXX.X.XXXX0X.X.GX.X
+X.XXXXXXXX............^..........X.XXX..X.X.XX.X
+X.X...XXXX.XXXXXXXXXX.XXXXXXXXXX.X.....XX.X.XX.X
+X.X.X.XXXX.X........X.XX.......X.XXXXXXXX.X.XX.X
+X...X........XXXXXX0X....XXXXX............X....X
+XXXXXXXXXXXXXXXXXXXXX@XXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+##############################################################################
+
+NAME: wad_river_or_something
+ORIENT: float
+DEPTH:  D:2-16
+WEIGHT: 4
+MAP
+xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx..0....0....0....+........x
+xxG%xxxG%xxxG%xxxG%x........x
+xxxxxxxxxxxxxxxxxxxx+xxxxxxxx
+xx0........0.......^.......xx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xx.........................xx
+xxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxx^.xxxxxxxxx..xxxxxG.xx
+xx.xx0.xx.xxxxxxx.xx.xxxxxx.x
+x.xxxxxxxx.xxx...xxxx..xxxx^x
+x.x...xxx.x.x.xxx.xxxxx.xx.xx
+xx.xxx...xxx.xxxxx.xx%0x..xxx
+xxxxxxxxxxxxxxxxxxx.xxxxxxxxx
+.x.0..x.x..0.x....x.x....x...
+..x..x...x..x.....^.......x..
+..................x.x........
+...................@.........
+ENDMAP
+
+##############################################################################
+
+NAME: wad_crossroads
+DEPTH:  D:2-15
+ORIENT: float
+WEIGHT: 4
+FTILE: 'G = floor_pebble
+SUBST:  X : cccvvb
+MAP
+Xxxxxxxxxxxxx..@..xxxxxxxxxxxxX
+xxx.xxxxx'...xx'xx...'xxxxx.xxx
+x0x...xx'.xxxx'''xxxx.'xx...x0x
+Xx.xx......'.''x''.'......xx.xX
+XXx%x...xxxx''xxx''xxxx...x.xXX
+XXXx.xx....'.''x''.'....xx.xXXX
+XXXXx.x...xxxx'''xxxx...x.xXXXX
+XXXXXx.xx..xGxX'XxGx..xx.xXXXXX
+@.....x.xXxxxX.'.XxxxXx.x.....@
+XXXXXxxxxxxx.xX'Xx.xxxxxxxXXXXX
+XXXXx.x.x..x..'''..x..x.x.xXXXX
+XXXxxx.x....x.'G'.x....x.xxxXXX
+XXx.x.....x..x'''x..x.....x.xXX
+Xxxx.......x..'G'..x.......xxxX
+x0x.....xxX.XX'''XX.Xxx.....x0x
+xx....xxxX.X.XX'XX.X.Xxxx..%.xx
+XxxxxxxxxXXXXXX@XXXXXXxxxxxxxxX
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_arrow_thing
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE:  ' = floor_pebble
+SUBST:  X : cccvvb
+MAP
+XXXXXXXXXXXXXXXXXXXXXXX
+X..%X.............X%..X
+X0G.X.GXGXG.GXGXG.X.G0X
+X.0.X.X.........X.X.0.X
+X+XXX.X.XXXXXXX.X.XXX+X
+X.......^.............X
+XXXXX+XXXXXXXXXXX+XXXXX
+XXXX...X.X.X.X.X...XXXX
+XXX.....'..X..'.9...XXX
+@.....%'''.+^'''......@
+XXX..0..'..X..'.....XXX
+XXXX...X.X.X.X9X...XXXX
+XXXXX+XXXXnXnXXXX+XXXXX
+XXXXX.XXX..*..XXX.XXXXX
+XXXXXX.XXX..0XXX.XXXXXX
+XXXXXXX.XXX9XXX.XXXXXXX
+XXXXXXXX.XX=XX.XXXXXXXX
+XXXXXXXXX.X.X.XXXXXXXXX
+XXXXXXXGXX.X.XXGXXXXXXX
+X0......XXX.XXX.^...0%X
+XXXXXXX.+..X..+.XXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_cavern_with_rooms
+DEPTH:  D:8-26
+ORIENT: float
+WEIGHT: 4
+FTILE: ' = floor_pebble
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxx@xxxxxxxxxx
+xxxxxx...xxxxxxx..xxxxxxxxxx
+xxxxxx..%xxxxxxx...xxxxxxxxx
+x%..xx.x^xxxxxxx....xxxxxxxx
+x...+.x.xxxxxxx..'..xxxxxxxx
+x...xxxx.xxx....'.'..xxxxxxx
+xxxxxxxxx......'.'.'^..xxxxx
+xxxx1.WWW..xxx..'.'.xx+xxxxx
+xx...WW....+0x^..'..x....xxx
+x1.........xxx......x...0xxx
+xxx.xxxx...'........xxxxxxxx
+xxxxx0.+..'.'...^.xxxxxxxxxx
+xxxxxxxx.'.'.'.xx+x%..x9..xx
+xxxxxxxxx.'.'xxxx.x...+...xx
+xxxxxxxxxx.'xxxxx....0x...xx
+xxxxxxxxxxx@xxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME:   wad_courtyard
+DEPTH:  D:12-26
+ORIENT: float
+WEIGHT: 4
+FTILE:  "+ = floor_pebble
+FTILE:  ; = floor_limestone
+COLOUR: ; = white
+SUBST:  X : cccvvb
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.%9x0x0x.x%xXXXXXXXXXXXx.x0x%x0x9%.x
+x...x...x...xX8..***..8Xx...x...x...x
+x...x...x...xX.;;;;;;;.Xx...x...x...x
+x...........xX.........Xx...........x
+x...........xXXX+XXX+XXXx...........x
+x........xxxxxxx"xxx"xxxxxxx........x
+xWWWWWWxxx0....+".x."+....0xxxWWWWWWx
+xwwwwwwx%+.;;;.x".x."x.;;;.+9xwwwwwwx
+xwWWWWWxxx0....x+xxx+x....0xxxWWWWWwx
+xwW......xxxxxxx.".".xxxxxxx......Wwx
+xwW............xxx+xxx............Wwx
+xwW............xG.".Gx............Wwx
+xwW......xxx...xxx+xxx...xxx......Wwx
+xwW...xxxxXx......"......xXxxxx...Wwx
+xwW...x..xxx...W.."..W...xxx..x...Wwx
+xwW........0..WWW.".WWW..0........Wwx
+xwW...........WWW.".WWW...........Wwx
+xwW.......xxx..W.."..W..xxx.......Wwx
+xwW....xxxxxx..T.."..T..xXxxxx....Wwx
+xwW....x..xxx..W.."..W..xxx..x....Wwx
+xwW.......0...WWW.".WWW...0.......Wwx
+xwW...........WWW.".WWW...........Wwx
+xwW........xxx.W.."..W.xxx........Wwx
+xwW.....xxxxXx...."....xXxxxx.....Wwx
+xwW.....x..xxx...."....xxx..x.....Wwx
+xwW.............x.".x.............Wwx
+xwWWWWWWWWWWWWWxxx.xxxWWWWWWWWWWWWWwx
+xwwwwwwwwwwwwwwwx...xwwwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_surveillance_ring
+TAGS:    no_monster_gen no_item_gen transparent patrolling
+ORIENT:  float
+DEPTH:   D:16-25, Vaults:2-6
+WEIGHT:  3
+MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
+MONS:    generate_awake golden eye, slime creature, brown ooze
+KFEAT:   > = known shaft trap
+KMASK:   ' = !no_monster_gen
+KMASK:   ' = !no_item_gen
+SHUFFLE: {[(<
+SUBST:   ( = (:70 <, [ = [:50 <
+MAP
+  '''''''''''''''''
+  ''''''cnnnc''''''
+''''ccccc.}.ccccc''''
+'''cc%.c..4..c.%cc'''
+''cc%..+.cnc.+..%cc''
+''c%.3%cnc6cnc%3.%c''
+''c..%cc.....cc%..c''
+''cc+cc.......cc+cc''
+'cc..n.........n..cc'
+'n..cc....{....cc..n'
+'n.1n2...[>(...2n1.n'
+'n..cc....<....cc..n'
+'cc..n.........n..cc'
+''cc+cc.......cc+cc''
+''c..*cc.....cc*..c''
+''c*55*ccc.ccc*55*c''
+''cc*54n.+++.n45*cc''
+'''cc*.n..2..n.*cc'''
+''''ccccc...ccccc''''
+  ''''..c+++c..''''
+  ''''.........''''
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_cross_stitches
+ORIENT:  float
+TAGS:    transparent no_monster_gen
+DEPTH:   D:5-, Vaults, Elf, Snake
+WEIGHT:  5 (Elf, Snake), 10
+KMONS:   " = 0
+KMONS:   ` = 9
+KITEM:   "` = % / $ w:5
+KMASK:   , = !no_monster_gen
+SHUFFLE: XzZ / '"`
+SUBST:   XzZ = x, ' = ., x : x:90 c
+MAP
+           ,,,,,,,,,,,,,,,,,,,,,
+          ,,,,,,,,,,,,,,,,,,,,,,,
+         ,,.X..'..X..'..X..'..X.,,
+        ,,.'x'XxX'x'XxX'x'XxX'x',,
+       ,,.,,X..'..X..'..X..'..X.,,
+      ,,.X,,'..z..`..z..'..X...,,
+     ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
+    ,,..,X..'..z..`..z..'..X.,,
+   ,,.X,,'..z..`..z..'..X...,,
+  ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
+ ,,...X..'..z..`..z..'..X.,,
+,,.X..'..X..'..X..'..X...,,
+,,'x'XxX'x'XxX'x'XxX'x'.,,
+,,.X..'..X..'..X..'..X.,,
+ ,,,,,,,,,,,,,,,,,,,,,,,
+  ,,,,,,,,,,,,,,,,,,,,,
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_cross_veins
+ORIENT:  float
+TAGS:    transparent no_monster_gen no_pool_fixup abyss
+DEPTH:   D:8-, Elf, Snake
+WEIGHT:  5 (Elf, Snake), 10
+KMONS:   12 = 0
+KMONS:   34 = 9
+KMONS:   5 = 9 / 8
+KITEM:   1 = $ / % w:5
+KITEM:   23 = % / $ w:5
+KITEM:   45 = * / % w:5
+: if you.branch() == "Abyss" then
+SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
+: elseif you.absdepth() > 20 then
+SUBST:   x : x m:5, X : xxxcccbv, ' : .:70 w:20 l
+: elseif you.absdepth() > 13 then
+SUBST:   x : x m:3, X : xcc, ' : .:80 wW
+: else
+SUBST:   x : x m:2, ' : .:90 W
+: end
+MAP
+  xxxxxxxx
+ xxXXXXXxxx
+xxxX1'1Xxxxx
+xXXXX.XXXXxx
+xX.XX.XX1Xxx
++.'..'..'Xxxxxx
+xX.XX.XX1Xxxxxxx
+xXXXX.XXXXXXXXxxx
+xxxX.'.XX5.'4Xxxxx
+xXXXX.XXXXX.XXXXxx
+xX2XX.XX.XX.XX4Xxx
+xX'..'..'..'..'Xxxxxx
+xX3XX.XX.XX.XX.Xxxxxxx
+xXXXX.XXXXX.XX5XXXXXxxx
+xxxX3'3XxX.'.XXX1'1Xxxx
+xxxXXXXXXXX.XXXXX.XXXXx
+ xxxxxxX3XX.XX.XX.XX1Xx
+  xxxxxX'..'..'..'..'Xx
+     xxX3XX.XX.XX.XX1Xx
+     xxXXXX.XXXXX.XXXXx
+     xxxxX3'2XxX.'.Xxxx
+      xxxXXXXXxXX.XXxx
+       xxxxxxxxxx+xxx
+ENDMAP
+
+###############################################################################
+
+NAME:   hangedman_cross_cluster
+TAGS:   patrolling transparent no_monster_gen
+DEPTH:  D:8-, Vaults
+ORIENT: float
+MONS:   place:D:3 w:98 / lesser demon w:1 / place:D:3 zombie w:1
+SUBST:  C = CTUV, y : xc, z : ccvb
+KMASK:  ' = !no_monster_gen
+MAP
+              '''''''''
+             '''.xxx.'''
+            '''...x...'''
+           ''''x.1x1.x''''
+        '''''''xxxyxxx'''''''
+       ''''''''x.0x0.x''''''''
+       ''.xxx.....x.....xxx.'''
+     '''...x.....xxx.....x...'''
+ '''''''x.1x$.x'''''''x.$x1.x'''''''
+''''''''xxxyxxx'''''''xxxyxxx''''''''
+'''xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
+''..x......x......c......x......x...'
+'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
+'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
+'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'...x.....ccc.....c.....ccc.....x...'
+''.xxx.....c.....ccc.....c.....xxx.''
+'''''...c.%c9.c.......c.9c%.c...'''''
+ '''''..ccczccc..|C|..ccczccc..'''''
+'''''...c.%c9.c.......c.9c%.c...'''''
+''.xxx.....c.....ccc.....c.....xxx.''
+'...x.....ccc.....c.....ccc.....x...'
+'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
+'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
+'...x......x......c......x......x...'
+''.xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
+''''''''xxxyxxx'''''''xxxyxxx''''''''
+ '''''''x.1x$.x'''''''x.$x1.x'''''''
+     '''...x.....xxx.....x...'''
+       ''.xxx.....x.....xxx.''
+       ''''''''x.0x0.x''''''''
+         ''''''xxxyxxx''''''
+          '''''x.1x1.x'''''
+            '''...x...'''
+             '''.xxx.'''
+              '''''''''
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_stitches_corridor
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:14-
+ORIENT:  float
+KFEAT:   ~ : needle trap / dart trap / . w:80
+KFEAT:   " : shallow_water / . w:90
+KFEAT:   ^ : alarm trap / . w:190
+KMASK:   '~ = !no_monster_gen
+SUBST:   1 = 0.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx"x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x@
+x"""''''''''''''''''''''''''''''''''@
+xx"xx'G'xxxxxxxxxxxxx'G'xxxxxxxxxxxxx
+x~'xcccccx"x.x.x.x"xcccccx"x~x~x~x"xx
+xx''c$0.c"""....."""c%0%c"""'''''"""x
+x~'xc0%1+x"xx.G.xx"x+0%9cx"xx'G'xx"xx
+xx''ccccc..xcccccx..ccccc..xcccccx'~x
+x~'mmmmmmm..c*9$c..xxxxxxx..c.0$c''xx
+xx''ccccc..xc9*$+x^.ccccc..x+1%0cx'~x
+x~'xc0%1+x..ccccc.^x+$*9cx..ccccc''xx
+xx''c$0.c..xxxxxxx..c$9*c..mmmmmmm'~x
+x~'xcccccx..ccccc..xcccccx..ccccc''xx
+xx"xx'G'xx"xc9%0+x"xx'G'xx"x+1%0cx'~x
+x"""'''''"""c%0%c"""....."""c.0$c''xx
+xx"x~x~x~x"xcccccx"x.x.x.x"xcccccx'~x
+xxxxxxxxxxxxx'G'xxxxxxxxxxxxx'G'xx"xx
+@''''''''''''''''''''''''''''''''"""x
+@x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x"xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_opposites_gauntlet
+TAGS:    no_monster_gen patrolling
+ORIENT:  float
+DEPTH:   D:14-26, Vaults:1-6
+MONS:    spriggan rider ; wand of frost . crossbow ego:flame . bolt q:25 / \
+         spriggan rider ; wand of flame . crossbow ego:frost . bolt q:25
+MONS:    two-headed ogre ; giant club ego:holy_wrath . \
+         great mace ego:draining . wand of confusion | wand of slowing
+MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic . \
+         dart ego:exploding q:25 / mermaid ; splint mail . javelin ego:poisoned q:6
+MONS:    fire giant ; battleaxe ego:freezing
+MONS:    frost giant ; great sword ego:flaming
+MONS:    ettin ; giant club ego:holy_wrath . great mace ego:draining . \
+         wand of confusion | wand of slowing / golden dragon
+MONS:    vampire knight ; wand of lightning | wand of draining / \
+         greater naga ; splint mail . halberd ego:anti-magic | glaive ego:anti-magic
+KMONS:   A = fire drake / flaming corpse / fire elemental
+KMONS:   B = lindwurm / mottled dragon / efreet w:5
+KMONS:   C = fire crab / hell knight
+KMONS:   D = small simulacrum w:5 / polar bear
+KMONS:   E = harpy simulacrum w:5 / snapping turtle simulacrum w:5 / ice dragon
+KMONS:   F = hydra simulacrum w:5 / golden dragon simulacrum w:5 / azure jelly
+KMONS:   G = insubstantial wisp / air elemental w:5
+KMONS:   H = air elemental / sixfirhy / vapour w:5
+KMONS:   I = spriggan air mage / storm dragon
+KMONS:   J = stone golem w:5 / earth elemental w:5 / basilisk
+KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
+KMONS:   L = iron dragon / crystal golem
+KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
+             merfolk ; trident ego:holy_wrath
+KMONS:   N = paladin / apis / phoenix w:5
+KMONS:   O = angel / cherub
+KMONS:   P = hellwing / red devil / hell hound
+KMONS:   Q = hell beast / smoke demon / ynoxinul
+KMONS:   R = shadow demon / reaper / cacodemon w:5
+KMONS:   S = eidolon / skeletal warrior / large zombie w:5
+KMONS:   T = flayed ghost / guardian mummy / rotting hulk
+KMONS:   U = death ooze / bone dragon / profane servitor w:5
+KMONS:   V = elephant / very ugly thing / wolf spider
+KMONS:   W = dire elephant / alligator / emperor scorpion
+KMONS:   Y = anaconda / alligator snapping turtle
+KMONS:   X = rock troll / orc knight / hill giant
+KMONS:   Z = iron troll / naga warrior / minotaur
+KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
+KMONS:   d = deep elf mage / wizard / boggart
+KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
+KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
+KMONS:   g = centaur / yaktaur / deep dwarf artificer w:5
+KMONS:   h = centaur warrior / yaktaur captain / cyclops
+KMONS:   i = stone giant / merfolk javelineer w:5
+KFEAT:   ! = granite_statue
+KFEAT:   u = fountain_sparkling
+KMASK:   @' = !no_monster_gen
+KITEM:   | = superb_item, star_item / any w:20
+: if you.absdepth() < 20 then
+SHUFFLE: ABDE / GHJK / MNPQ / VWde, PQ / ST, VW / XZ, de / gh
+: else
+SUBST: B = C, A = B, E = F, D = E, H = I, G = H, K = L, J = K
+SUBST: N = O, M = N, Q = R, P = Q, 2 = 6, 3 = 7
+SHUFFLE: BCEF / HIKL / NOQR / WYef, QR / TU, WY / Za, ef / hi
+NSUBST:  1 = 1:4 / 1:5
+: end
+MAP
+      vvvcbbb
+    vvv..2..bbb
+   vv1...u...1bb
+  vv...b...v...bb
+ vv...bb+c+vv...bb
+vv...bb.....vv...bb
+v|3bbb.......vvv3|b
+v|bbM.........Pvv|b
+bbbNMvvv...bbbPQvvv
+vvvvvvvv+c+bbbbbbbb
+bbbHGvvv...bbbJKvvv
+b*bbG.........Jvv*v
+b*Abbb.......vvvD*v
+bBA..bb.....vv..DEv
+vvv...bb+c+vv...bbb
+b$vv...b...v...bb$v
+b$$vv.........bb$$v
+bb$.vvv.....bbb.$vv
+ bb..!v++c++b!..vv
+  bb...........vv
+   bbb.u.}.u.vvv
+     bnbbnvvnv
+     '@'''''@'
 ENDMAP

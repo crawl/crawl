@@ -40,7 +40,6 @@
 #include "viewgeom.h"
 
 #ifdef USE_TILE
-#include "tilereg.h"
 #endif
 
 #ifndef USE_TILE_LOCAL
@@ -194,6 +193,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_COCYTUS:
         case DNGN_ENTER_TARTARUS:
         case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_THROUGH_ABYSS:
         case DNGN_EXIT_ABYSS:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
@@ -211,9 +211,9 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
+        case DNGN_EXIT_DUNGEON:
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
-        case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
         case DNGN_RETURN_FROM_VAULTS:
@@ -241,7 +241,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
         case DNGN_ENTER_VAULTS:
@@ -512,9 +511,6 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
         tp.set_feature_vector(&features);
         tp.get_features();
     }
-
-    // Sort features into the order the player is likely to prefer.
-    arrange_features(features);
 }
 
 // Sort glyphs within a group, for the feature list.
@@ -827,18 +823,14 @@ bool show_map(level_pos &lpos,
                 // keep the top line clear... which makes things look a whole
                 // lot better for small maps.
                 if (num_lines > map_lines)
-                {
                     screen_y = min_y + half_screen - 1;
-                }
                 else if (num_lines == map_lines
                          || screen_y - half_screen < min_y)
                 {
                     screen_y = min_y + half_screen;
                 }
                 else if (screen_y + half_screen > max_y)
-                {
                     screen_y = max_y - half_screen;
-                }
 
                 curs_x = lpos.pos.x - start_x + 1;
                 curs_y = lpos.pos.y - screen_y + half_screen + 1;
@@ -923,7 +915,8 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_FORGET:
-                forget_map(100, true);
+                if (yesno("Really forget level map?", true, 'n'))
+                    forget_map();
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:
@@ -936,7 +929,7 @@ bool show_map(level_pos &lpos,
 
                 // Cycle the radius of an exclude.
             case CMD_MAP_EXCLUDE_AREA:
-                if (you.level_type == LEVEL_LABYRINTH)
+                if (!is_map_persistent())
                     break;
 
                 cycle_exclude_radius(lpos.pos);
@@ -1036,7 +1029,7 @@ bool show_map(level_pos &lpos,
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
 
                 if (pos.id.depth < 1
-                    || pos.id.depth > branches[pos.id.branch].depth
+                    || pos.id.depth > brdepth[pos.id.branch]
                     || !is_existing_level(pos.id))
                 {
                     canned_msg(MSG_OK);
@@ -1202,7 +1195,7 @@ bool show_map(level_pos &lpos,
                 redraw_screen();
                 le.go_to(lpos.id);
 
-                if (lpos.id.level_type != LEVEL_DUNGEON)
+                if (!is_map_persistent())
                 {
                     mpr("You can't annotate this level.");
                     more();
@@ -1290,10 +1283,8 @@ bool show_map(level_pos &lpos,
 
 bool emphasise(const coord_def& where)
 {
-    dungeon_feature_type feat = env.map_knowledge(where).feat();
     return (is_unknown_stair(where)
-            && (you.absdepth0 || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && !player_in_branch(BRANCH_VESTIBULE_OF_HELL));
 }
 
 #ifndef USE_TILE_LOCAL

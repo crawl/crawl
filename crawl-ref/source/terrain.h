@@ -28,13 +28,10 @@ private:
 actor* actor_at(const coord_def& c);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
-bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type));
-bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain);
 
-bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
@@ -53,7 +50,6 @@ bool feat_is_staircase(dungeon_feature_type feat);
 bool feat_is_escape_hatch(dungeon_feature_type feat);
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
-bool feat_sealable_portal(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
 
@@ -79,6 +75,7 @@ bool feat_is_branch_stairs(dungeon_feature_type feat);
 bool feat_is_branchlike(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_reachable_past(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);

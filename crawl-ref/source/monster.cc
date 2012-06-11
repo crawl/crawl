@@ -14,7 +14,6 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
-#include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -22,6 +21,7 @@
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "items.h"
@@ -33,7 +33,6 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
-#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
@@ -50,7 +49,6 @@
 #include "tileview.h"
 #endif
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -208,9 +206,7 @@ void monster::reset_client_id()
 void monster::ensure_has_client_id()
 {
     if (client_id == 0)
-    {
         client_id = ++last_client_id;
-    }
 }
 
 mon_attitude_type monster::temp_attitude() const
@@ -259,7 +255,8 @@ bool monster::submerged() const
 
     if (grd(pos()) == DNGN_DEEP_WATER
         && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
-            || type == MONS_GREY_DRACONIAN)
+            || (mons_genus(type) == MONS_DRACONIAN
+                && draco_subspecies(this) == MONS_GREY_DRACONIAN))
         && !can_drown())
     {
         return (true);
@@ -271,9 +268,11 @@ bool monster::submerged() const
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
-    return (grid == DNGN_SHALLOW_WATER
-            && (mons_genus(type) == MONS_NAGA             // tails, not feet
-                || body_size(PSIZE_BODY) >= SIZE_LARGE));
+    return ((mons_genus(type) == MONS_DRACONIAN
+             && draco_subspecies(this) == MONS_GREY_DRACONIAN)
+                 || grid == DNGN_SHALLOW_WATER
+                    && (mons_genus(type) == MONS_NAGA // tails, not feet
+                        || body_size(PSIZE_BODY) >= SIZE_LARGE));
 }
 
 bool monster::extra_balanced() const
@@ -472,6 +471,23 @@ int monster::damage_type(int which_attack)
     }
 
     return (get_vorpal_type(*mweap));
+}
+
+int monster::has_claws(bool allow_tran) const
+{
+    for (int i = 0; i < MAX_NUM_ATTACKS; i++)
+    {
+        const mon_attack_def atk = mons_attack_spec(this, i);
+        if (atk.type == AT_CLAW)
+        {
+            // Some better criteria would be better.
+            if (body_size() < SIZE_LARGE || atk.damage < 15)
+                return 1;
+            return 3;
+        }
+    }
+
+    return 0;
 }
 
 item_def *monster::missiles()
@@ -774,6 +790,9 @@ void monster::bind_spell_flags()
         flags |= MF_ACTUAL_SPELLS;
     if (mons_class_flag(type, M_PRIEST))
         flags |= MF_PRIEST;
+
+    if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(this))
+        flags |= MF_SEEN_RANGED;
 }
 
 static bool _needs_ranged_attack(const monster* mon)
@@ -1086,6 +1105,13 @@ void monster::pickup_message(const item_def &item, int near)
 {
     if (need_message(near))
     {
+        if (is_range_weapon(item)
+            || is_throwable(this, item)
+            || item.base_type == OBJ_MISSILES)
+        {
+            flags |= MF_SEEN_RANGED;
+        }
+
         mprf("%s picks up %s.",
              name(DESC_THE).c_str(),
              item.base_type == OBJ_GOLD ? "some gold"
@@ -1404,6 +1430,14 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_MENNAS)
             return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
+
+        if (mons->type == MONS_ARACHNE)
+        {
+            return (weapon.base_type == OBJ_STAVES
+                    && weapon.sub_type == STAFF_POISON
+                 || weapon.base_type == OBJ_WEAPONS
+                    && weapon.special == UNRAND_OLGREB);
+        }
     }
 
     if (mons->is_holy())
@@ -1972,7 +2006,7 @@ bool monster::pickup_scroll(item_def &item, int near)
 {
     if (item.sub_type != SCR_TELEPORTATION
         && item.sub_type != SCR_BLINKING
-        && item.sub_type != SCR_SUMMONING)
+        && item.sub_type != SCR_UNHOLY_CREATION)
     {
         return (false);
     }
@@ -2794,7 +2828,7 @@ void monster::expose_to_element(beam_type flavour, int strength)
     }
 }
 
-void monster::banish(const std::string &)
+void monster::banish(actor *agent, const std::string &)
 {
     coord_def old_pos = pos();
 
@@ -2802,6 +2836,21 @@ void monster::banish(const std::string &)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
+    if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
+        && !has_ench(ENCH_FAKE_ABJURATION)
+        && !mons_class_flag(type, M_NO_EXP_GAIN))
+    {
+        // Double the existing damage blame counts, so the unassigned xp for
+        // remaining hp is effectively halved.  No need to pass flags this way.
+        damage_total *= 2;
+        damage_friendly *= 2;
+        blame_damage(agent, hit_points);
+        // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
+        // distinguishable from others of the same kind in the Abyss.
+
+        if (agent->is_player())
+            did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
+    }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
@@ -2974,7 +3023,7 @@ int monster::warding() const
 {
     const item_def *w = primary_weapon();
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
-        return 30;
+        return 60;
     return 0;
 }
 
@@ -3237,8 +3286,7 @@ bool monster::is_unclean(bool check_spells) const
         return (true);
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
-         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !is_chaotic())
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !is_chaotic())
     {
         return (true);
     }
@@ -3960,7 +4008,6 @@ void monster::ghost_init(bool need_pos)
 {
     ghost_demon_init();
 
-    set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
@@ -4133,8 +4180,7 @@ bool monster::needs_abyss_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
-                || you.level_type == LEVEL_DUNGEON
-                   && hit_dice > 8 + random2(25)
+                || hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
             && !has_ench(ENCH_ABJ));
 }
@@ -5070,7 +5116,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
             if (monster *mons = mons_place(
                                   mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, 0, god)))
+                                            jpos, foe, MG_DONT_COME, god)))
             {
                 // Don't allow milking the royal jelly.
                 mons->flags |= MF_NO_REWARD;

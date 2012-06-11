@@ -33,13 +33,13 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "stash.h"
 #include "state.h"
 #include "transform.h"
 #include "shout.h"
@@ -520,9 +520,7 @@ static bool _yredelemnul_retribution()
     if (random2(you.experience_level) > 4)
     {
         if (you.religion == god && coinflip() && yred_slaves_abandon_you())
-        {
             ;
-        }
         else
         {
             const bool zombified = one_chance_in(4);
@@ -849,7 +847,6 @@ static bool _sif_muna_retribution()
         // a duration of one round, thus potentially exposing
         // the player to real danger.
         antimagic();
-        mpr("Your magical effects suddenly unravel.", MSGCH_WARN);
         break;
     }
 

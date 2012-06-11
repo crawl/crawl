@@ -421,7 +421,7 @@ Xom life saving general
 
 "Hey, things were just getting interesting!"
 
-"NOOOOOOO, not my @xom_plaything@!"
+"NOOOOOOO, not my @_xom_plaything_@!"
 
 "Not here, not now."
 
@@ -432,13 +432,13 @@ Xom life saving actor
 w:20
 @Xom life saving general@
 
-"Hey, that's my @xom_plaything@!"
+"Hey, that's my @_xom_plaything_@!"
 
 "Oh, no, you don't!"
 
-"That's my @xom_plaything@, go get your own!"
+"That's my @_xom_plaything_@, go get your own!"
 
-"Leave my @xom_plaything@ alone!"
+"Leave my @_xom_plaything_@ alone!"
 %%%%
 Xom boring death
 
@@ -481,6 +481,19 @@ Xom titters!
 Xom chuckles heartily!
 
 Xom chortles!
+%%%%
+_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "teddy bear"
+elseif you.piety_rank() > 2 then
+    return "toy"
+else
+    return "plaything"
+end
+}}
 %%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
@@ -553,7 +566,7 @@ Elyvilon holy
 
 Elyvilon hisses: "You foul beast! How dare you!"
 
-Elyvilon sadly speaks: "How it came to be that such cruelty exists."
+Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
 
 Elyvilon whispers: "No one should ever harm others. Ever!"
 %%%%

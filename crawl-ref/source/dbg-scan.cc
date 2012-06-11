@@ -17,7 +17,9 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
+#include "shopping.h"
 #include "state.h"
+#include "traps.h"
 
 #define DEBUG_ITEM_SCAN
 #ifdef DEBUG_ITEM_SCAN
@@ -544,3 +546,33 @@ void debug_mons_scan()
     more();
 }
 #endif
+
+// These are nearly completely redundant, and should be useless, except for
+// some recent Abyss breakage.
+void check_map_validity()
+{
+#ifdef ASSERTS
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        dungeon_feature_type feat = grd(*ri);
+        ASSERT(feat > DNGN_UNSEEN);
+        ASSERT(feat < NUM_FEATURES);
+        const char *name = dungeon_feature_name(feat);
+        ASSERT(name);
+        ASSERT(*name); // placeholders get empty names
+
+        find_trap(*ri); // this has all needed asserts already
+
+        if (shop_struct *shop = get_shop(*ri))
+            ASSERT(shop->type >= 0 && shop->type < NUM_SHOPS);
+
+        // border must be impassable
+        if (!in_bounds(*ri))
+            ASSERT(feat_is_solid(feat));
+    }
+
+    // And just for good measure:
+    debug_item_scan();
+    debug_mons_scan();
+#endif
+}

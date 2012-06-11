@@ -430,7 +430,7 @@ KMONS:   1 = giant centipede w:35 / scorpion w:20 / spider w:13 / \
 KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler
-KMONS:   5eE = place:Spider:5 zombie
+KMONS:   5eE = place:Spider:$ zombie
 KMONS:   6cCfF = spiny worm / emperor scorpion w:8
 KMONS:   0% = crawling corpse hd:3 / nothing
 KMONS:   X = rock worm w:19 / rock worm zombie w:1
@@ -758,28 +758,6 @@ MAP
        .....
 ENDMAP
 
-NAME: nicolae_orb_outpost
-DEPTH: Spider:2-5
-WEIGHT: 3
-TAGS: no_pool_fixup no_monster_gen mini_float
-MONS: generate_awake orb spider
-KPROP: 1' = no_rtele_into
-MAP
-    .....
-  .........
- ...........
- ...........
-....wwwww....
-....w1'1w....
-....w'''w....
-....w1'1w....
-....wwwww....
- ...........
- ...........
-  .........
-    .....
-ENDMAP
-
 NAME:   nicolae_orb_stairs
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  Spider:2-5
@@ -898,12 +876,85 @@ MAP
          .1.
 ENDMAP
 
+NAME:   nicolae_orb_stairs_large
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  Spider:2-4
+ORIENT: float
+WEIGHT: 3
+MONS:   orb spider / spider
+SUBST:  s = x.
+SUBST:  . = ...^
+KFEAT:  ^ = web
+SHUFFLE: [{(<
+MAP
+     xxx@@@xxx
+    xxsx^^^xsxx
+   xxsss...sssxx
+  xxss...1...ssxx
+ xxs1.........1sxx
+xxss...wwwww...ssxx
+xss...^.www.^...ssx
+xxs..w.......w..sxx
+@^...ww...(.ww...^@
+@^.1.ww.[...ww.1.^@
+@^...ww...{.ww...^@
+xxs..w.......w..sxx
+xss...^.www.^...ssx
+xxss...wwwww...ssxx
+ xxs1.........1sxx
+  xxss...1...ssxx
+   xxsss...sssxx
+    xxsx^^^xsxx
+     xxx@@@xxx
+ENDMAP
+
+NAME:   nicolae_spider_corner
+DEPTH:  Spider:1-4
+ORIENT: southwest
+MONS:   orb spider
+SHUFFLE: ABC, DEF, GH, IJ, abcdefghi
+SUBST:  AEFGI = x, BCDHJ = .
+NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
+KMONS:  bcdefghi = tarantella / redback / wolf spider / \
+        jumping spider / orb spider / demonic crawler / \
+        scorpion / emperor scorpion / \
+        trapdoor spider / spiny worm / yellow wasp / \
+        red wasp / giant mite / nothing w:100
+SUBST: X = xxxx^....0
+KFEAT: ^ = web / floor w:20
+MAP
+xxxxxxxxX...
+xxaaaa.xGG....XXX
+xxa.0^^^xGX......X
+xxxxHHxxxxxXX..0..X
+xxc...xCCCxxxX.....X
+xx0cc.CCCCCCxxXX^^..X
+xxx..cxxxCCbbxxX..^..@@@@
+xxAAAxxxx0.bbxxX...^...0.@
+xxAAxxxx...bbxxX^^X.^^....
+x.0^.BBB..xxxxX...X^^xXX...
+x.^^.BBB.^.0.....^^..xxX...
+xddXXxxxx^.......X....XxX..
+xddXxxxxxxxxx^^^XXx....xx^^
+xxxxxXXxDDD...0.xxxxx..xx..
+xxeeee.DDDDD....xXXx^..xI..
+xxX....DDDxEE...xX...^xxIIx
+xx..0.xxxxEEEFFFxx.0.xxxIIx
+xx..xxxEEEEEFFFFxx..Xx.^.xx
+xx^^^EEEExxFFFFxx...Xxiiiix
+xxx...EExx....xxx^^^xx.^.xx
+xxff..^xx^^.ggxxh...XxxJJJx
+xxff.^.0...xggxxhh...0^...x
+xxxxx^....xxxxxxxxh...^..xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
 
 NAME:   spider_rune_water
-PLACE:  Spider:5
+PLACE:  Spider:$
 ORIENT: northwest
 KITEM:  O = piece of ambrosia q:3, gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
@@ -911,11 +962,12 @@ MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
 MONS:   ghost moth
 MONS:   orb spider
+KMONS:  8 = moth of wrath / ghost moth
 NSUBST: 6 = 1:6 / 1:46 / *:4
 COLOUR: c = white
-COLOUR: 1O+' = lightgrey
-FTILE:  1cO+' = floor_pebble_lightgray
-NSUBST: ' = 3:3 / 4:2 / *:'
+COLOUR: 18O+' = lightgrey
+FTILE:  18cO+' = floor_pebble_lightgray
+NSUBST: ' = 3:3 / 4:2 / 4=32'' / *:'
 TILE:   c = wall_vines
 SUBST:  x = c
 SUBST:  X = x
@@ -925,6 +977,8 @@ SUBST:  W = WW.
 SUBST:  W = W..
 : end
 KFEAT:  Ww = shallow_water
+SUBST:  = : .+
+SUBST:  9 : 7.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
@@ -935,7 +989,7 @@ xxxxxxxxxx44wwwW..WxxW.xx.57.WWxxxxxxxxxxxxxxxX
 xxxxxxxxxxx4xxW..Wxxx.WxxWWxW..WxwwwxxxxxxxxxxX
 xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww46xxxxxxX
 xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
-xxxxxxxxxxxxxW.Wxxc1'c++c'1cxxWW..Wxxxx4xxxxxxX
+xxxxxxxxxxxxxW.Wxxc1'c++c'8cxxWW..Wxxxx4xxxxxxX
 xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
 xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
 xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
@@ -948,8 +1002,102 @@ xxxxxxxxW..WxxxW.5WxxW.4.WxxW5WxxxxxW...WxxxxxX
 xxxxxxxxxW..WxW..WxxxxW..WxxW..WxxW..WWWxxxxxxX
 xxxxxxxxxxW.5.W..WxxxxxW...WxxW..W..WWxxxxxxXXX
 xxxxxxxxxxxWW...Wxxxxxxx...xxxxWW5WWxxxxxXXXX
-xxxxxxxxxxxxxWWWxxxxxxxx...xxxxxxWxxxxxXXX
+xxxxxxxxxxxxxWWWxxxxxxxx===xxxxxxWxxxxxXXX
 xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
-XXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX99.....99XXXXXXXXX
 XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
+ENDMAP
+
+NAME:   guppyfry_spider_rune
+PLACE:  Spider:$
+TAGS:   no_pool_fixup
+ORIENT: southwest
+KITEM:  O = gossamer rune of zot
+KMONS:  O = ghost moth
+KITEM:  * = piece of ambrosia q:3
+KMONS:  * = emperor scorpion
+MONS:   moth of wrath / ghost moth, ghost moth
+MONS:   yellow wasp / red wasp / w:5 nothing
+MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
+MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
+        w:5 brain worm / w:7 nothing
+MONS:   trapdoor spider / nothing
+MONS:   w:9 orb spider / w:1 nothing
+KFEAT:  ^ = web
+SUBST:  - = ....WWW^
+SUBST:  = = +.
+SHUFFLE: O12*
+MAP
+xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxccccccccccccc==cccccccccccccxxxxxx
+xxxxxxxxxxcccccccccccc-.--ccccccccccccxxxxxxx
+xxxxxxxxxxc6Wccccccccc.x.-cccccccccW6cxxxxxxxx
+xxxxxxxxxxc6...++.ccccx.-xccccc++...6cxxxxxxxx
+xxxxxxxxxxcW--.ccc45Oc6--6c154.cc.--Wcxxxxxxxx
+xxxxxxxxxxcc.--ccc55ccx.-xcc55ccc--.ccxxxxxxxx
+xxxxxxxxxxcccW--cccwcc.---ccwccc--Wcccxxxxxxxx
+xxxxxxxxxxcccc.--cc7ccx.-xcc7cc--.ccccxxxxxxxx
+xxxxxxxxxxccccxW--cwcc--.-ccwc--Wxccccxxxxxxxx
+xxxxxxxxxxcccc-.-xx^-x-xx.x-^xx-.-ccccxxxxxxxx
+xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
+xxxxxxxxxxccc.333.^.-.5445.-.^.333.cccxxxxxxxx
+xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
+xxxxxxxxxxcccc-.-xx^-x.xx-x-^xx-.-ccccxxxxxxxx
+xxxxxxxxxxccccxW--cwcc-.--ccwc--Wxccccxxxxxxxx
+xxxxxxxxxxcccc.--cc7ccx-.xcc7cc--.ccccxxxxxxxx
+xxxxxxxxxxcccW--cccwcc---.ccwccc--Wcccxxxxxxxx
+xxxxxxxxxxcc.--ccc55ccx-.xcc55ccc--.ccxxxxxxxx
+xxxxxxxxxxcW--.cc.45*c7--7c254.cc.--Wcxxxxxxxx
+xxxxxxxxxxc6...++cccccc-.cccccc++...6cxxxxxxxx
+xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
+xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   grunt_spider_rune_circles
+TAGS:   no_pool_fixup
+PLACE:  Spider:$
+ORIENT: northwest
+KITEM:  O = piece of ambrosia q:3, gossamer rune of Zot
+MONS:   ghost moth, moth of wrath, emperor scorpion
+MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
+MONS:   orb spider, trapdoor spider / nothing
+NSUBST: 7 = 3:1 / 1:2
+SUBST:  W = W..
+KFEAT:  ^ = web
+SUBST:  - = ....WWW^
+TILE:   c = wall_vines
+MAP
+cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxwwxWxxxxxxxxwwxxxxxxwxxxwxxxxxxxxxxxxcx
+cxxxxxxxxx.W..4..x..x........x..4.--.-wxxxxxxxxxxcx
+cxxxxxxxw.4....x......4.xx....5WxW.4..xxxxxxxxxxxcx
+cxxxxxxx..4.xcxxx.xxxxxxxxxxxwxxxwxx...Wxxxxxxxxxcx
+cxxxxxxW4W.4WcccxxxccxxxccccxxxcxxxxxW..--xxxxxxxcx
+cxxxxxx...4W6W6ccccWWccccWWcccccccccxxxx4.-xxxxxxcx
+cxxxxxW54.x6W6WcWWW.4..........444.ccccxx..Wxxxxxcx
+cxxxxxwW.xcccW666....W5.W....WWWWW..cccxx.W.xxxxxcx
+cxxxxxx4Wxcc66..wwwwcccccccc..444....cccxx...Wxxxcx
+cxxxxx.WxxcW-..wwcccc--575.ccccc..-.-.cccxx..-xxxcx
+cxxxxx..xxcW-4.wcc-.575.www4.--ccc.-..cccxx.4-xxxcx
+cxxxxx.4WxcW-..5c-4wwwww3Oww474-3c..W5cccxxxW.xxxcx
+cxxxxw..xxccW.4.c-74.wwwwwww4^.ccc6-.Wcccxx..Wxxxcx
+cxxxxx.4.xxccW4Wcccc...4...4---6-6-6ccccxx..-xxxxcx
+cxxxxxx...xxcW45..-cccc-3cc-66-6-ccccxxxx4.Wxxxxxcx
+cxxxxxxxW..xcccW-...44cccc6-6-6-ccxxxxxx..Wxxxxxxcx
+cxxxxxxxwW4xxxcccccc4.....-6-ccccxxWWxx.Wxxxxxxxxcx
+cxxxxxxxxx-..xxxxxxccc-----cccxxxx..4..Wxxxxxxxxxcx
+cxxxxxxxxxx-.W..--xxxcccccccxxx6x4.xxwwxxxxxxxxxxcx
+cxxxxxxxxxxxx-.4..--xxxxxxxxx-6-66xxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxx-.4.W.x..xxx-6-w-xxxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxxxxxx-...4....xx-4.xxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxxxxxxx--xx-W-xxxx.4xxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4xxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4.xxxxxxxxxxxxxxcx
+ccccccccccccccccccccccccccccccxx4.4.xxccccccccccccx
+cccccccccccccccccccccccccccccxx..4.4.xxcccccccccccx
+ccccccccccccccccccccccccccccxx........xxccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@@@@@@xxxxxxxxxxxxx
 ENDMAP

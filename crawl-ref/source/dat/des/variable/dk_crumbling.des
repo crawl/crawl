@@ -74,7 +74,7 @@ end
 function init_crumbling(e)
   e.depth('D')
   e.depth('Elf')
-  e.depth('Vault')
+  e.depth('Vaults')
   e.tags('no_monster_gen')
   e.tags('no_item_gen')
   e.tags('uniq_dk_crumbling')

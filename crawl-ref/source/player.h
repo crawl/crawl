@@ -83,6 +83,8 @@ public:
   FixedVector<bool, NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
+  FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
+
   // PC's symbol (usually @) and colour.
   monster_type symbol;
   transformation_type form;
@@ -105,8 +107,6 @@ public:
   bool fishtail; // Merfolk fishtail transformation
 
   unsigned short pet_target;
-
-  int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
   durations_t duration;
   int rotting;
@@ -177,32 +177,8 @@ public:
   // memory being freed twice.
   KillMaster* kills;
 
-  level_area_type level_type;
-
-  // Human-readable name for portal vault. Will be set to level_type_tag
-  // if not explicitly set by the entry portal.
-  std::string level_type_name;
-
-  // Three-letter extension for portal vault bones files. Will be set
-  // to first three letters of level_type_tag if not explicitly set by
-  // the entry portal.
-  std::string level_type_ext;
-
-  // Abbreviation of portal vault name, for use in notes.  If not
-  // explicitly set by the portal vault, will be set from level_type_name
-  // or level_type_tag if either is short enough, or the shorter of the
-  // two will be truncated if neither is short enough.
-  std::string level_type_name_abbrev;
-
-  // Item origin string for items from portal vaults, so that dumps
-  // can have origins like "You found it in on level 2 of a ziggurat".
-  // Will be set relative to level_type_name if not explicitly set.
-  std::string level_type_origin;
-
-  // .des file tag for portal vault
-  std::string level_type_tag;
-
   branch_type where_are_you;
+  int depth;
 
   FixedVector<uint8_t, 30> branch_stairs;
 
@@ -212,11 +188,12 @@ public:
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
-  FixedVector<uint8_t, MAX_NUM_GODS>  penance;
-  FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
-  FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
-  FixedVector<uint8_t, MAX_NUM_GODS>  piety_max;
+  FixedVector<uint8_t, NUM_GODS>  penance;
+  FixedVector<uint8_t, NUM_GODS>  worshipped;
+  FixedVector<short,   NUM_GODS>  num_current_gifts;
+  FixedVector<short,   NUM_GODS>  num_total_gifts;
+  FixedVector<bool,    NUM_GODS>  one_time_ability_used;
+  FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   // Nemelex sacrifice toggles
   FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
@@ -280,6 +257,9 @@ public:
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
+
+  // Path back from portal levels.
+  std::vector<level_pos> level_stack;
 
   // The player's knowledge about item types.
   id_arr type_ids;
@@ -361,9 +341,6 @@ public:
 
   int shield_blocks;         // number of shield blocks since last action
 
-  entry_cause_type entry_cause;
-  god_type         entry_cause_god;
-
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
@@ -402,7 +379,6 @@ public:
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
-    FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
 
 public:
     player();
@@ -578,7 +554,7 @@ public:
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const std::string &reason);
     void backlight();
-    void banish(const std::string &who = "");
+    void banish(actor *agent, const std::string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
@@ -603,6 +579,7 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
 
+    bool wont_attack() const { return true; };
     int warding() const;
 
     monster_type mons_species(bool zombie_base = false) const;
@@ -639,6 +616,7 @@ public:
     bool slowable() const;
 
     flight_type flight_mode() const;
+    bool cancellable_levitation() const;
     bool permanent_levitation() const;
     bool permanent_flight() const;
 
@@ -709,10 +687,7 @@ public:
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info
-    PlaceInfo& get_place_info(branch_type branch,
-                              level_area_type level_type2) const;
     PlaceInfo& get_place_info(branch_type branch) const;
-    PlaceInfo& get_place_info(level_area_type level_type2) const;
     void clear_place_info();
 
     void goto_place(const level_id &level);
@@ -793,13 +768,17 @@ bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool is_map_persistent(void);
-bool player_in_branch(int branch);
-bool player_in_level_area(level_area_type area);
+bool player_in_mappable_area(void);
+bool player_in_connected_branch(void);
 bool player_in_hell(void);
+
+static inline bool player_in_branch(int branch)
+{ return you.where_are_you == branch; };
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
 int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
+bool player_equip_unrand_effect(int unrand_index);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
@@ -852,6 +831,18 @@ int player_res_torment(bool calc_unid = true, bool temp = true);
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
+int player_effect_inaccuracy();
+int player_effect_mutagenic();
+int player_res_mutation_from_item(bool calc_unid = true);
+int player_effect_gourmand();
+int player_effect_stasis(bool calc_unid = true);
+int player_effect_notele(bool calc_unid = true);
+int player_effect_running();
+int player_effect_cfly(bool calc_unid = true);
+int player_effect_faith();
+int player_effect_archmagi();
+int player_effect_nocast();
+int player_effect_angry();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
@@ -912,7 +903,7 @@ int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-void forget_map(int chance_forgotten = 100, bool force = false);
+void forget_map(bool rot = false);
 
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
@@ -920,11 +911,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 bool player_in_bat_form();
 bool player_can_open_doors();
 bool player_can_reach_floor(std::string feat = "", bool quiet = false);
-
-inline bool player_can_handle_equipment()
-{
-    return player_can_open_doors();
-}
 
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
@@ -960,9 +946,6 @@ void rot_mp(int mp_loss);
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
-void inc_max_mp(int mp_gain);
-void dec_max_mp(int mp_loss);
-
 void deflate_hp(int new_level, bool floor);
 void set_hp(int new_amount);
 
@@ -996,7 +979,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
-void levitate_player(int pow);
+void levitate_player(int pow, bool already_levitating = false);
 void float_player(bool fly);
 bool land_player();
 

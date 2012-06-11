@@ -7,10 +7,10 @@
 ### - green, otherwise.
 
 %corpse 1
-%back_sdir dc-misc/blood
+%back_sdir misc/blood
 
 ### Animals
-%sdir dc-mon/animals
+%sdir mon/animals
 
 ## Insects ('a')
 %back blood_green
@@ -24,7 +24,7 @@ butterfly CORPSE_BUTTERFLY
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
 raven CORPSE_RAVEN
-dc-mon/holy/phoenix CORPSE_PHOENIX
+mon/holy/phoenix CORPSE_PHOENIX
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
@@ -38,7 +38,7 @@ hell_hog CORPSE_HELL_HOG
 holy_swine CORPSE_HOLY_SWINE
 %sdir player/felids
 cat1 CORPSE_FELID
-%sdir dc-mon/animals
+%sdir mon/animals
 
 ## Bees ('k')
 %back blood_green
@@ -69,7 +69,7 @@ grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
 porcupine CORPSE_PORCUPINE
-%sdir dc-mon/rat
+%sdir mon/rat
 labrat_plain CORPSE_LABORATORY_RAT
 labrat_armoured
 labrat_beastly
@@ -80,7 +80,7 @@ labrat_levitating
 labrat_mutated
 labrat_shifting
 labrat_venomous
-%sdir dc-mon/animals
+%sdir mon/animals
 
 ## Spiders and insects ('s')
 %back blood_green
@@ -95,11 +95,11 @@ wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
 orb_spider CORPSE_ORB_SPIDER
-%sdir dc-mon/demons
+%sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
-%sdir dc-mon/animals
+%sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 crocodile CORPSE_CROCODILE
 alligator_baby CORPSE_BABY_ALLIGATOR
@@ -173,11 +173,11 @@ elephant CORPSE_ELEPHANT
 elephant_dire CORPSE_DIRE_ELEPHANT
 elephant_demonic CORPSE_HELLEPHANT
 catoblepas CORPSE_CATOBLEPAS
-%sdir dc-mon/holy
+%sdir mon/holy
 apis CORPSE_APIS
 
 ### Non-animals
-%sdir dc-mon
+%sdir mon
 
 ## Centaurs ('c')
 centaur CORPSE_CENTAUR
@@ -192,23 +192,23 @@ hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
 
 ## Spriggans ('i')
-dc-mon/spriggan/spriggan CORPSE_SPRIGGAN
+mon/spriggan/spriggan CORPSE_SPRIGGAN
 
 ## Merfolk ('m')
-merfolk_plain_water CORPSE_MERFOLK
+merfolk_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
 ## Rotting monsters ('n')
 %back blood_green
-%sdir dc-mon/undead
+%sdir mon/undead
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
 rotting_hulk CORPSE_ROTTING_HULK
 
 ## Orcs ('o')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-%sdir dc-mon
+%sdir mon
 orc CORPSE_ORC
 
 ## Dwarves ('q')
@@ -217,7 +217,7 @@ deep_dwarf CORPSE_DEEP_DWARF
 gnome CORPSE_GNOME
 
 ## Ugly things ('u')
-%sdir dc-mon/demons
+%sdir mon/demons
 ugly_thing CORPSE_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -232,7 +232,7 @@ very_ugly_thing4
 very_ugly_thing5
 
 ## Giants ('C')
-%sdir dc-mon
+%sdir mon
 hill_giant CORPSE_HILL_GIANT
 ettin CORPSE_ETTIN
 cyclops CORPSE_CYCLOPS
@@ -242,7 +242,7 @@ stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 
 ## Drakes ('l')
-%sdir dc-mon/dragons
+%sdir mon/dragons
 swamp_drake CORPSE_SWAMP_DRAKE
 fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
@@ -261,17 +261,17 @@ iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
 golden_dragon CORPSE_GOLDEN_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
-dc-mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
+mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
 ## Eyes ('G')
-%sdir dc-mon/eyes
+%sdir mon/eyes
 %back blood_green
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
 shining_eye CORPSE_SHINING_EYE
-%sdir dc-mon
+%sdir mon
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
@@ -286,12 +286,12 @@ tengu CORPSE_TENGU
 holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')
-%sdir dc-mon/amorphous
+%sdir mon/amorphous
 %back blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
-%sdir dc-mon/
+%sdir mon/
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD

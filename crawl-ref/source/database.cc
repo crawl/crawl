@@ -52,11 +52,11 @@ class TextDB
     bool open_db();
     const char* const _db_name;
     std::string _directory;
-    const char* const _lang;
     std::vector<std::string> _input_files;
     DBM* _db;
     std::string timestamp;
-    TextDB *english;
+    TextDB *_parent;
+    const char* lang() { return _parent ? Options.lang_name : 0; }
 public:
     TextDB *translation;
 };
@@ -118,9 +118,10 @@ static TextDB AllDBs[] =
 
     TextDB("misc", "database/",
             "miscname.txt", // names for miscellaneous things
+            "godname.txt",  // god-related names (mostly His Xomminess)
             NULL),
 
-    TextDB("quotes", "database/",
+    TextDB("quotes", "descript/",
             "quotes.txt",   // quotes for items and monsters
             NULL),
 
@@ -155,8 +156,8 @@ static std::string _db_cache_path(std::string db, const char *lang)
 // ----------------------------------------------------------------------
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
-    : _db_name(db_name), _directory(dir), _lang(0),
-      _db(NULL), timestamp(""), english(0), translation(0)
+    : _db_name(db_name), _directory(dir),
+      _db(NULL), timestamp(""), _parent(0), translation(0)
 {
     va_list args;
     va_start(args, dir);
@@ -175,10 +176,10 @@ TextDB::TextDB(const char* db_name, const char* dir, ...)
 }
 
 TextDB::TextDB(TextDB *parent)
-    : _db_name(parent->_db_name), _lang(Options.lang),
-      _db(NULL), timestamp(""), english(parent), translation(0)
+    : _db_name(parent->_db_name),
+      _db(NULL), timestamp(""), _parent(parent), translation(0)
 {
-    _directory = parent->_directory + _lang + "/";
+    _directory = parent->_directory + Options.lang_name + "/";
     _input_files = parent->_input_files; // FIXME: pointless copy
 }
 
@@ -187,7 +188,7 @@ bool TextDB::open_db()
     if (_db)
         return true;
 
-    const std::string full_db_path = _db_cache_path(_db_name, _lang);
+    const std::string full_db_path = _db_cache_path(_db_name, lang());
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
     if (!_db)
         return false;
@@ -201,7 +202,7 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
-    if (Options.lang && !_lang)
+    if (Options.lang_name && !_parent)
     {
         translation = new TextDB(this);
         translation->init();
@@ -216,7 +217,7 @@ void TextDB::init()
     if (!open_db())
     {
         end(1, true, "Failed to open DB: %s",
-            _db_cache_path(_db_name, _lang).c_str());
+            _db_cache_path(_db_name, lang()).c_str());
     }
 }
 
@@ -239,12 +240,12 @@ bool TextDB::_needs_update() const
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, !_lang);
-        long mtime = file_modtime(full_input_path);
+        full_input_path = datafile_path(full_input_path, !_parent);
+        time_t mtime = file_modtime(full_input_path);
         if (mtime)
             no_files = false;
         char buf[20];
-        snprintf(buf, sizeof(buf), ":%ld", mtime);
+        snprintf(buf, sizeof(buf), ":%"PRId64, (int64_t)mtime);
         ts += buf;
     }
 
@@ -252,8 +253,8 @@ bool TextDB::_needs_update() const
     {
         // No point in empty databases, although for simplicity keep ones
         // for disappeared translations for now.
-        ASSERT(english);
-        TextDB *en = english;
+        ASSERT(_parent);
+        TextDB *en = _parent;
         delete en->translation; // ie, ourself
         en->translation = 0;
         return false;
@@ -266,13 +267,13 @@ void TextDB::_regenerate_db()
 {
     shutdown();
 #ifdef DEBUG_DIAGNOSTICS
-    if (_lang)
-        printf("Regenerating db: %s [%s]\n", _db_name, _lang);
+    if (_parent)
+        printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
     else
         printf("Regenerating db: %s\n", _db_name);
 #endif
 
-    std::string db_path = _db_cache_path(_db_name, _lang);
+    std::string db_path = _db_cache_path(_db_name, lang());
     std::string full_db_path = db_path + ".db";
 
     {
@@ -292,12 +293,12 @@ void TextDB::_regenerate_db()
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = _directory + _input_files[i];
-        full_input_path = datafile_path(full_input_path, !_lang);
+        full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
-        long mtime = file_modtime(full_input_path);
-        snprintf(buf, sizeof(buf), ":%ld", mtime);
+        time_t mtime = file_modtime(full_input_path);
+        snprintf(buf, sizeof(buf), ":%"PRId64, (int64_t)mtime);
         ts += buf;
-        if (mtime || !_lang) // english is mandatory
+        if (mtime || !_parent) // english is mandatory
             _store_text_db(full_input_path, _db);
     }
     _add_entry(_db, "TIMESTAMP", ts);
@@ -597,6 +598,9 @@ static std::string _getWeightedString(TextDB &db, const std::string &key,
                                       const std::string &suffix,
                                       int fixed_weight = -1)
 {
+    if (!db.get()) // when called by Gretell's "monster"
+        return "";
+
     // We have to canonicalise the key (in case the user typed it
     // in and got the case wrong.)
     std::string canonical_key = key + suffix;
@@ -636,20 +640,6 @@ static void _call_recursive_replacement(std::string &str, TextDB &db,
                                         const std::string &suffix,
                                         int &num_replacements,
                                         int recursion_depth = 0);
-
-static std::string _query_weighted_randomised(TextDB &db,
-                                              const std::string &key,
-                                              const std::string &suffix = "",
-                                              const int weight = -1)
-{
-    std::string result = _getWeightedString(db, key, suffix, weight);
-    if (result.empty())
-        return "";
-
-    int num_replacements = 0;
-    _call_recursive_replacement(result, db, suffix, num_replacements);
-    return (result);
-}
 
 static std::string _getRandomisedStr(TextDB &db, const std::string &key,
                                      const std::string &suffix,
@@ -741,6 +731,15 @@ static std::string _query_database(TextDB &db, std::string key,
 
     std::string str((const char *)result.dptr, result.dsize);
 
+    // <foo> is an alias to key foo
+    if (str[0] == '<' and str[str.size() - 2] == '>'
+        && str.find('<', 1) == str.npos
+        && str.find('\n') == str.size() - 1)
+    {
+        return _query_database(db, str.substr(1, str.size() - 3),
+                               canonicalise_key, run_lua, untranslated);
+    }
+
     if (run_lua)
         _execute_embedded_lua(str);
 
@@ -761,14 +760,6 @@ std::string getQuoteString(const std::string &key)
 std::string getLongDescription(const std::string &key)
 {
     return unwrap_desc(_query_database(DescriptionDB, key, true, true));
-}
-
-// god names only
-std::string getWeightedRandomisedDescription(const std::string &key)
-{
-    if (!DescriptionDB.get()) // when called by Gretell's "monster"
-        return "";
-    return _query_weighted_randomised(DescriptionDB, key);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
@@ -843,8 +834,6 @@ std::string getRandNameString(const std::string &itemtype,
 {
     int num_replacements = 0;
 
-    if (!RandartDB.get()) // when called by Gretell's "monster"
-        return "";
     return _getRandomisedStr(RandartDB, itemtype, suffix, num_replacements);
 }
 
@@ -880,7 +869,15 @@ std::string getFAQ_Question(const std::string &key)
 std::string getFAQ_Answer(const std::string &question)
 {
     std::string key = "a" + question.substr(1, question.length()-1);
-    return _query_database(FAQDB, key, false, true);
+    std::string val = unwrap_desc(_query_database(FAQDB, key, false, true));
+
+    // Remove blank lines between items on a bulleted list, for small
+    // terminals' sake.  Far easier to store them as separated paragraphs
+    // in the source.
+    // Also, use a nicer bullet as we're already here.
+    val = replace_all(val, "\n\n*", "\n•");
+
+    return val;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -892,5 +889,8 @@ std::string getMiscString(const std::string &misc,
 {
     int num_replacements = 0;
 
-    return _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
+    std::string txt = _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
+    _execute_embedded_lua(txt);
+
+    return txt;
 }

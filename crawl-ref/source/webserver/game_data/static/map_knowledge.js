@@ -34,8 +34,11 @@ define(["jquery", "./enums"], function ($, enums) {
     function visible(x, y)
     {
         var cell = get(x, y);
-        if (cell.t && ((cell.t.bg & enums.TILE_FLAG_UNSEEN) == 0))
-            return true;
+        if (cell.t)
+        {
+            cell.t.bg = enums.prepare_bg_flags(cell.t.bg || 0);
+            return !cell.t.bg.UNSEEN;
+        }
         return false;
     }
 
@@ -116,6 +119,8 @@ define(["jquery", "./enums"], function ($, enums) {
 
     function merge(val)
     {
+        if (val === undefined) return;
+
         var x, y;
         if (val.x === undefined)
             x = merge_last_x + 1;

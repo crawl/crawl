@@ -30,10 +30,12 @@
 #include <unistd.h>
 #endif
 
+#include "hiscores.h"
+
 #include "branch.h"
+#include "chardump.h"
 #include "files.h"
 #include "dungeon.h"
-#include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -41,6 +43,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "menu.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
@@ -55,6 +58,13 @@
 #include "status.h"
 #include "env.h"
 #include "tags.h"
+
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilereg-crt.h"
+#endif
 
 #include "skills2.h"
 #define SCORE_VERSION "0.1"
@@ -302,6 +312,201 @@ void hiscores_print_list(int display_count, int format)
     }
 }
 
+static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
+{
+    TextItem* tmp = NULL;
+    tmp = new TextItem();
+
+    coord_def min_coord(1,1);
+    coord_def max_coord(1,2);
+
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+
+    tmp->set_text(hiscores_format_single(se));
+    tmp->set_description_text(hiscores_format_single_long(se, true));
+    tmp->set_id(id);
+    tmp->set_bounds(coord_def(1,1), coord_def(1,2));
+
+    scroller->attach_item(tmp);
+    tmp->set_visible(true);
+}
+
+static void _construct_hiscore_table(MenuScroller* scroller)
+{
+    FILE *scores = _hs_open("r", _score_file_name());
+    int i;
+
+    if (scores == NULL)
+        return;
+
+    // read highscore file
+    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
+    {
+        hs_list[i].reset(new scorefile_entry);
+        if (_hs_read(scores, *hs_list[i]) == false)
+            break;
+    }
+
+    _hs_close(scores, "r", _score_file_name());
+
+    for (int j=0; j<i; j++)
+        _add_hiscore_row(scroller, *hs_list[j], j);
+
+}
+
+static void _show_morgue(scorefile_entry& se)
+{
+    formatted_scroller morgue_file;
+    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+    if (Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
+
+    morgue_file.set_flags(flags, false);
+    morgue_file.set_tag("morgue");
+
+    morgue_file.set_more(formatted_string::parse_string(
+#ifdef USE_TILE_LOCAL
+                            "<cyan>[ +/L-click : Page down.   - : Page up."
+                            "           Esc/R-click exits.]"));
+#else
+                            "<cyan>[ + : Page down.   - : Page up."
+                            "                           Esc exits.]"));
+#endif
+    std::string morgue_base = morgue_name(se.get_name(), se.get_death_time());
+    std::string morgue_path = morgue_directory()
+                              + strip_filename_unsafe_chars(morgue_base)
+                              + ".txt";
+    FILE* morgue = lk_open("r", morgue_path);
+
+    if (!morgue)
+        return;
+
+    char buf[200];
+    std::string morgue_text = "";
+
+    while (fgets(buf, sizeof buf, morgue) != NULL)
+    {
+        std::string line = std::string(buf);
+        line.erase(line.find_last_of('\n'));
+        morgue_text += "<w>" + line + "</w>" + '\n';
+    }
+
+    lk_close(morgue, "r", morgue_path);
+
+    clrscr();
+
+
+    column_composer cols(2, 40);
+    cols.add_formatted(
+            0,
+            morgue_text,
+            true, true);
+
+    std::vector<formatted_string> blines = cols.formatted_lines();
+
+    unsigned i;
+    for (i = 0; i < blines.size(); ++i)
+        morgue_file.add_item_formatted_string(blines[i]);
+
+    textcolor(WHITE);
+    morgue_file.show();
+}
+
+void show_hiscore_table()
+{
+    const int max_line   = get_number_of_lines() - 1;
+    const int max_col    = get_number_of_cols() - 1;
+
+    const int scores_col_start = 4;
+    const int descriptor_col_start = 4;
+    const int scores_row_start = 10;
+    const int scores_col_end = max_col;
+    const int scores_row_end = max_line - 1;
+
+    bool smart_cursor_enabled = is_smart_cursor_enabled();
+
+    clrscr();
+
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+
+    MenuScroller* score_entries = new MenuScroller();
+
+    score_entries->init(coord_def(scores_col_start, scores_row_start),
+            coord_def(scores_col_end, scores_row_end), "score entries");
+
+    _construct_hiscore_table(score_entries);
+
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(descriptor_col_start, 1),
+            coord_def(get_number_of_cols(), scores_row_start - 1),
+            "descriptor");
+
+#ifdef USE_TILE_LOCAL
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+#else
+    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+#endif
+    highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
+
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
+    // This freeform will only contain unfocusable texts
+    freeform->allow_focus(false);
+    freeform->set_visible(true);
+
+    NoSelectTextItem* tmp = new NoSelectTextItem();
+    std::string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
+    tmp->set_text(text);
+    tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
+    tmp->set_fg_colour(CYAN);
+    freeform->attach_item(tmp);
+    tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    score_entries->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
+
+    menu.attach_object(freeform);
+    menu.attach_object(score_entries);
+    menu.attach_object(descriptor);
+    menu.attach_object(highlighter);
+
+    menu.set_active_object(score_entries);
+    score_entries->activate_first_item();
+
+    enable_smart_cursor(false);
+    while (true)
+    {
+        menu.draw_menu();
+        textcolor(WHITE);
+        const int keyn = getch_ck();
+
+        if (key_is_escape(keyn))
+        {
+            // Go back to the menu and return the smart cursor to its previous state
+            enable_smart_cursor(smart_cursor_enabled);
+            return;
+        }
+
+        if (menu.process_key(keyn))
+        {
+            menu.clear_selections();
+            _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+            clrscr();
+#ifdef USE_TILE_LOCAL
+            tiles.get_crt()->attach_menu(&menu);
+#endif
+        }
+    }
+}
+
+
 // Trying to supply an appropriate verb for the attack type. -- bwr
 static const char *_range_type_verb(const char *const aux)
 {
@@ -507,7 +712,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     killerpath        = se.killerpath;
     dlvl              = se.dlvl;
     absdepth          = se.absdepth;
-    level_type        = se.level_type;
     branch            = se.branch;
     map               = se.map;
     mapdesc           = se.mapdesc;
@@ -609,6 +813,9 @@ enum old_job_type
 {
     OLD_JOB_THIEF        = -1,
     OLD_JOB_DEATH_KNIGHT = -2,
+    OLD_JOB_PALADIN      = -3,
+    OLD_JOB_REAVER       = -4,
+    NUM_OLD_JOBS
 };
 
 static const char* _job_name(int job)
@@ -622,6 +829,10 @@ static const char* _job_name(int job)
         return "Thief";
     case OLD_JOB_DEATH_KNIGHT:
         return "Death Knight";
+    case OLD_JOB_PALADIN:
+        return "Paladin";
+    case OLD_JOB_REAVER:
+        return "Reaver";
     default:
         return "unknown";
     }
@@ -638,6 +849,10 @@ static const char* _job_abbrev(int job)
         return "Th";
     case OLD_JOB_DEATH_KNIGHT:
         return "DK";
+    case OLD_JOB_PALADIN:
+        return "Pa";
+    case OLD_JOB_REAVER:
+        return "Re";
     default:
         return "??";
     }
@@ -650,10 +865,9 @@ static int _job_by_name(const std::string& name)
     if (job != JOB_UNKNOWN)
         return (job);
 
-    if (name == "Thief")
-        return (OLD_JOB_THIEF);
-    else if (name == "Death Knight")
-        return (OLD_JOB_DEATH_KNIGHT);
+    for (job = -1; job > NUM_OLD_JOBS - 2; job--)
+        if (name == _job_name(job))
+            return (job);
 
     return (JOB_UNKNOWN);
 }
@@ -662,7 +876,7 @@ void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
     tiles   = fields->int_field("tiles");
-    points  = fields->long_field("sc");
+    points  = fields->int_field("sc");
 
     name    = fields->str_field("name");
     race    = str_to_species(fields->str_field("race"));
@@ -684,7 +898,6 @@ void scorefile_entry::init_with_fields()
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl       = fields->int_field("lvl");
     absdepth   = fields->int_field("absdepth");
-    level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
     map        = fields->str_field("map");
     mapdesc    = fields->str_field("mapdesc");
@@ -708,13 +921,13 @@ void scorefile_entry::init_with_fields()
 
     birth_time = _parse_time(fields->str_field("start"));
     death_time = _parse_time(fields->str_field("end"));
-    real_time  = fields->long_field("dur");
-    num_turns  = fields->long_field("turn");
+    real_time  = fields->int_field("dur");
+    num_turns  = fields->int_field("turn");
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
 
-    kills = fields->long_field("kills");
+    kills = fields->int_field("kills");
     maxed_skills = fields->str_field("maxskills");
     fifteen_skills = fields->str_field("fifteenskills");
     status_effects = fields->str_field("status");
@@ -758,20 +971,15 @@ void scorefile_entry::set_base_xlog_fields() const
                       skill_title(best_skill, best_skill_lvl,
                                   race, str, dex, god).c_str());
 
-    // "place" is a human readable place name, and it is write-only,
-    // so we can write place names like "Bazaar" that Crawl cannot
-    // translate back. This does have the unfortunate side-effect that
-    // Crawl will not preserve the "place" field in the highscores file.
     fields->add_field("place", "%s",
-                      place_name(get_packed_place(branch, dlvl, level_type),
+                      place_name(get_packed_place(branch, dlvl),
                                  false, true).c_str());
 
-    // Note: "br", "lvl" and "ltyp" are saved in canonical names that
-    // can be read back by future versions of Crawl.
+    // Note: "br", "lvl" (and former "ltyp") are redundant with "place"
+    // but may still be used by DGL logs.
     fields->add_field("br",   "%s", _short_branch_name(branch));
     fields->add_field("lvl",  "%d", dlvl);
     fields->add_field("absdepth", "%d", absdepth);
-    fields->add_field("ltyp", "%s", level_area_type_name(level_type));
 
     fields->add_field("hp",   "%d", final_hp);
     fields->add_field("mhp",  "%d", final_max_hp);
@@ -990,9 +1198,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
 
             if (indirectkiller.find(" by ") != std::string::npos)
-            {
                 indirectkiller.erase(0, indirectkiller.find(" by ") + 4);
-            }
 
             killerpath = "";
 
@@ -1066,7 +1272,6 @@ void scorefile_entry::reset()
     killerpath.clear();
     dlvl                 = 0;
     absdepth             = 1;
-    level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
     map.clear();
     mapdesc.clear();
@@ -1274,12 +1479,10 @@ void scorefile_entry::init(time_t dt)
         penance = you.penance[you.religion];
     }
 
-    // main dungeon: level is simply level
-    dlvl       = player_branch_depth();
     branch     = you.where_are_you;  // no adjustments necessary.
-    level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
+    dlvl       = you.depth;
 
-    absdepth   = you.absdepth0 + 1;  // 1-based absolute depth.
+    absdepth   = env.absdepth0 + 1;  // 1-based absolute depth.
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {
@@ -1577,7 +1780,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
         const std::string pname =
-            place_name(get_packed_place(branch, dlvl, level_type), false, true);
+            place_name(get_packed_place(branch, dlvl), false, true);
         return make_stringf(" (%s)", pname.c_str());
     }
 
@@ -1586,7 +1789,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     // where did we die?
     std::string placename =
-        place_name(get_packed_place(branch, dlvl, level_type), true, true);
+        place_name(get_packed_place(branch, dlvl), true, true);
 
     // add appropriate prefix
     if (placename.find("Level") == 0)
@@ -1684,7 +1887,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             desc += "Succumbed to " + ((death_source_name == "you")
-                      ? "your own" : apostrophise(death_source_name)) + " "
+                      ? "their own" : apostrophise(death_source_name)) + " "
                     + (auxkilldata.empty()? "poison" : auxkilldata);
         }
         break;
@@ -1702,7 +1905,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         {
             snprintf(scratch, sizeof(scratch), "Engulfed by %s%s %s",
                 death_source_name.empty() ? "a" :
-                  death_source_name == "you" ? "own" :
+                  death_source_name == "you" ? "their own" :
                   apostrophise(death_source_name).c_str(),
                 death_source_name.empty() ? " cloud of" : "",
                 auxkilldata.c_str());
@@ -1892,7 +2095,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themselves with bad targetting";
+        desc += terse? "shot self" : "Killed themself with bad targetting";
         needs_damage = true;
         break;
 
@@ -1924,7 +2127,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "bounced beam";
         else
         {
-            desc += "Killed themselves with a bounced ";
+            desc += "Killed themself with a bounced ";
             if (auxkilldata.empty())
                 desc += "beam";
             else
@@ -1938,7 +2141,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "suicidal targetting";
         else
         {
-            desc += "Shot themselves with a ";
+            desc += "Shot themself with a ";
             if (auxkilldata.empty())
                 desc += "beam";
             else
@@ -2021,7 +2224,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             if (death_source_name == "you")
-                desc += "Blew themselves up";
+                desc += "Blew themself up";
             else
                 desc += "Blown up by " + death_source_desc();
             needs_beam_cause_line = true;
@@ -2040,7 +2243,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_STUPIDITY:
     case KILLED_BY_WEAKNESS:
     case KILLED_BY_CLUMSINESS:
-        if (terse)
+        if (terse || oneline)
         {
             desc += " (";
             desc += auxkilldata;
@@ -2179,9 +2382,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 }
 
                 if (semiverbose)
-                {
                     desc += std::string(summoners.size(), ')');
-                }
             }
 
             if (!semiverbose)
@@ -2335,12 +2536,6 @@ int xlog_fields::int_field(const std::string &s) const
     return atoi(field.c_str());
 }
 
-long xlog_fields::long_field(const std::string &s) const
-{
-    std::string field = str_field(s);
-    return atol(field.c_str());
-}
-
 void xlog_fields::map_fields() const
 {
     fieldmap.clear();
@@ -2410,19 +2605,23 @@ void mark_milestone(const std::string &type,
 
     const std::string milestone_file =
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
+    const scorefile_entry se(0, 0, KILL_MISC, NULL);
+    se.set_base_xlog_fields();
+    xlog_fields xl = se.get_fields();
+    if (report_origin_level)
+    {
+        // The branch entrance location
+        xl.add_field("oplace", "%s",
+                     current_level_parent().describe().c_str());
+    }
+    xl.add_field("time", "%s",
+                 make_date_string(se.get_death_time()).c_str());
+    xl.add_field("type", "%s", type.c_str());
+    xl.add_field("milestone", "%s", milestone.c_str());
+    const std::string xlog_line = xl.xlog_line();
     if (FILE *fp = lk_open("a", milestone_file))
     {
-        const scorefile_entry se(0, 0, KILL_MISC, NULL);
-        se.set_base_xlog_fields();
-        xlog_fields xl = se.get_fields();
-        if (report_origin_level)
-            xl.add_field("oplace", "%s",
-                         current_level_parent().describe().c_str());
-        xl.add_field("time", "%s",
-                     make_date_string(se.get_death_time()).c_str());
-        xl.add_field("type", "%s", type.c_str());
-        xl.add_field("milestone", "%s", milestone.c_str());
-        fprintf(fp, "%s\n", xl.xlog_line().c_str());
+        fprintf(fp, "%s\n", xlog_line.c_str());
         lk_close(fp, "a", milestone_file);
     }
 #endif // DGL_MILESTONES
