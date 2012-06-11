@@ -208,6 +208,8 @@ void package::commit()
 
     // Not a hard requirement, we'd have to pin chunks that are being read so
     // the commit won't free them.
+    // If you want this, please refcount chunks (by their initial block), and
+    // make free_block_chain() to add busy chunks to unlinked_blocks instead.
     ASSERT(!n_users);
 
 #ifdef COSTLY_ASSERTS
