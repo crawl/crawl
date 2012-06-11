@@ -14,9 +14,10 @@ Caveats/issues:
 * A commit() will break readers who read a chunk that was deleted or
   overwritten.  Not that it's a sane thing to do...  Writers don't have
   any such limitations, an uncompleted write will be not committed yet
-  but won't be corrupted.
+  but won't be corrupted.  [Currently not allowed]
 * Readers ignore uncompleted writes; completed but not committed ones will
-  be available immediately -- yet a crash will lose them.
+  be available immediately -- yet a crash will lose them.  Ie, this is known
+  as READ_UNCOMMITTED.
 */
 
 #include "AppHdr.h"
@@ -204,6 +205,10 @@ void package::commit()
     if (!dirty)
         return;
     ASSERT(!aborted);
+
+    // Not a hard requirement, we'd have to pin chunks that are being read so
+    // the commit won't free them.
+    ASSERT(!n_users);
 
 #ifdef COSTLY_ASSERTS
     fsck();
