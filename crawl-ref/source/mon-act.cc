@@ -780,6 +780,49 @@ static bool _handle_potion(monster* mons, bolt & beem)
     return (rc);
 }
 
+static bool _handle_evoke_equipment(monster* mons, bolt & beem)
+{
+    // TODO: check non-ring, non-amulet equipment
+    if (mons->asleep()
+        || mons->inv[MSLOT_JEWELLERY] == NON_ITEM
+        || !one_chance_in(3))
+    {
+        return (false);
+    }
+
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    // Make sure the item actually is a ring or amulet.
+    if (mitm[mons->inv[MSLOT_JEWELLERY]].base_type != OBJ_JEWELLERY)
+        return (false);
+
+    bool rc = false;
+
+    const int jewellery_idx = mons->inv[MSLOT_JEWELLERY];
+    item_def& jewellery = mitm[jewellery_idx];
+    const jewellery_type jtype =
+        static_cast<jewellery_type>(jewellery.sub_type);
+
+    if (mons->can_evoke_jewellery(jtype) &&
+        mons->should_evoke_jewellery(jtype))
+    {
+        const bool was_visible = you.can_see(mons);
+
+        // Drink the potion.
+        const item_type_id_state_type id = mons->evoke_jewellery_effect(jtype);
+
+        // Give ID if necessary.
+        if (was_visible && id != ID_UNKNOWN_TYPE)
+            set_ident_type(OBJ_JEWELLERY, jtype, id);
+
+        mons->lose_energy(EUT_ITEM);
+        rc = true;
+    }
+
+    return (rc);
+}
+
 static bool _handle_reaching(monster* mons)
 {
     bool       ret = false;
@@ -2055,6 +2098,12 @@ void handle_monster_move(monster* mons)
                 if (_handle_scroll(mons))
                 {
                     DEBUG_ENERGY_USE("_handle_scroll()");
+                    continue;
+                }
+
+                if (_handle_evoke_equipment(mons, beem))
+                {
+                    DEBUG_ENERGY_USE("_handle_evoke_equipment()");
                     continue;
                 }
 

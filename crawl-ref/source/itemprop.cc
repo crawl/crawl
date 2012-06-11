@@ -2466,6 +2466,129 @@ int get_armour_res_sticky_flame(const item_def &arm)
     }
 }
 
+int get_jewellery_res_fire(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    // intrinsic jewellery abilities
+    switch (ring.sub_type)
+    {
+    case RING_PROTECTION_FROM_FIRE:
+    case RING_FIRE:
+        res += 1;
+        break;
+    case RING_ICE:
+        res -= 1;
+        break;
+    default:
+        break;
+    }
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_FIRE);
+
+    return (res);
+}
+
+int get_jewellery_res_cold(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    // intrinsic jewellery abilities
+    switch (ring.sub_type)
+    {
+    case RING_PROTECTION_FROM_COLD:
+    case RING_ICE:
+        res += 1;
+        break;
+    case RING_FIRE:
+        res -= 1;
+        break;
+    default:
+        break;
+    }
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_COLD);
+
+    return (res);
+}
+
+int get_jewellery_res_poison(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    if (ring.sub_type == RING_POISON_RESISTANCE)
+        res += 1;
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_POISON);
+
+    return (res);
+}
+
+int get_jewellery_res_elec(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_ELECTRICITY);
+
+    return (res);
+}
+
+int get_jewellery_life_protection(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    // check for ego resistance
+    if (ring.sub_type == RING_LIFE_PROTECTION)
+        res += 1;
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_NEGATIVE_ENERGY);
+
+    return (res);
+}
+
+int get_jewellery_res_magic(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    if (ring.sub_type == RING_PROTECTION_FROM_MAGIC)
+        res += 40;
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_wpn_property(ring, ARTP_MAGIC);
+
+    return (res);
+}
+
+bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    if (ring.sub_type == RING_SEE_INVISIBLE)
+        return (true);
+
+    if (check_artp && is_artefact(ring))
+        return artefact_wpn_property(ring, ARTP_EYESIGHT);
+
+    return (false);
+}
+
 int property(const item_def &item, int prop_type)
 {
     weapon_type weapon_sub;

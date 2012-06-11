@@ -2052,7 +2052,8 @@ bool melee_attack::player_monattk_hit_effects()
         && !defender->as_monster()->has_ench(ENCH_CONFUSION)
         && mons_class_is_confusable(defender->type))
     {
-        if (defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+        if (!defender->as_monster()->check_clarity(false) &&
+            defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
             &you, 20+random2(30)))) // 1-3 turns
         {
             mprf("%s is stunned!", defender->name(DESC_THE).c_str());
@@ -3045,7 +3046,8 @@ bool melee_attack::apply_damage_brand()
 
         if (mons_class_is_confusable(defender->type)
             && hdcheck >= defender->get_experience_level()
-            && !one_chance_in(5))
+            && !one_chance_in(5)
+            && !defender->as_monster()->check_clarity(false))
         {
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
@@ -3591,6 +3593,19 @@ int melee_attack::calc_to_hit(bool random)
     {
         if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
+
+        const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
+        if (jewellery != NON_ITEM &&
+            mitm[jewellery].base_type == OBJ_JEWELLERY &&
+            mitm[jewellery].sub_type == RING_SLAYING)
+            mhit += mitm[jewellery].plus;
+
+        if (jewellery != NON_ITEM &&
+            mitm[jewellery].base_type == OBJ_JEWELLERY &&
+            mitm[jewellery].sub_type == AMU_INACCURACY)
+            mhit -= 5;
+
+        mhit += scan_mon_inv_randarts(attacker->as_monster(), ARTP_ACCURACY);
 
         if (weapon && weapon->base_type == OBJ_RODS)
             mhit += weapon->special;
@@ -4487,8 +4502,9 @@ void melee_attack::mons_do_eyeball_confusion()
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());
 
-            mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
-                                      30 + random2(100)));
+            if (!mon->check_clarity(false))
+                mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
+                                          30 + random2(100)));
         }
     }
 }
@@ -5021,6 +5037,15 @@ int melee_attack::calc_damage()
             int wpn_damage_plus = weapon->plus2;
             if (weapon->base_type == OBJ_RODS)
                 wpn_damage_plus = weapon->special;
+
+            const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
+            if (jewellery != NON_ITEM &&
+                mitm[jewellery].base_type == OBJ_JEWELLERY &&
+                mitm[jewellery].sub_type == RING_SLAYING)
+                wpn_damage_plus += mitm[jewellery].plus2;
+
+            wpn_damage_plus += scan_mon_inv_randarts(attacker->as_monster(),
+                                                     ARTP_DAMAGE);
 
             if (wpn_damage_plus >= 0)
                 damage += random2(wpn_damage_plus);

@@ -372,10 +372,11 @@ int scan_mon_inv_randarts(const monster* mon,
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        const int weapon = mon->inv[MSLOT_WEAPON];
-        const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
+        const int weapon    = mon->inv[MSLOT_WEAPON];
+        const int second    = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int armour    = mon->inv[MSLOT_ARMOUR];
+        const int shield    = mon->inv[MSLOT_SHIELD];
+        const int jewellery = mon->inv[MSLOT_JEWELLERY];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
             && is_artefact(mitm[weapon]))
@@ -399,6 +400,12 @@ int scan_mon_inv_randarts(const monster* mon,
             && is_artefact(mitm[shield]))
         {
             ret += artefact_wpn_property(mitm[shield], ra_prop);
+        }
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(mitm[jewellery]))
+        {
+            ret += artefact_wpn_property(mitm[jewellery], ra_prop);
         }
     }
 
@@ -1511,6 +1518,17 @@ flight_type mons_flies(const monster* mon, bool temp)
         if (armour != NON_ITEM
             && mitm[armour].base_type == OBJ_ARMOUR
             && mitm[armour].special == SPARM_LEVITATION)
+        {
+            ret = FL_LEVITATE;
+        }
+    }
+
+    if (temp && ret == FL_NONE)
+    {
+        const int jewellery = mon->inv[MSLOT_JEWELLERY];
+        if (jewellery != NON_ITEM
+            && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && mitm[jewellery].sub_type == RING_LEVITATION)
         {
             ret = FL_LEVITATE;
         }
@@ -3382,6 +3400,8 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     case EQ_WEAPON:      return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
     case EQ_SHIELD:      return MSLOT_SHIELD;
+    case EQ_RINGS:
+    case EQ_AMULET:      return MSLOT_JEWELLERY;
     default: return (NUM_MONSTER_SLOTS);
     }
 }

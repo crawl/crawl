@@ -207,6 +207,14 @@ static void _give_potion(monster* mon, int level)
     }
 }
 
+static bool make_item_for_monster(
+    monster* mons,
+    object_class_type base,
+    int subtype,
+    int level,
+    item_make_species_type race,
+    int allow_uniques);
+
 static item_make_species_type _give_weapon(monster* mon, int level,
                                            bool melee_only = false,
                                            bool give_aux_melee = true,
@@ -1096,9 +1104,23 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_FANNAR:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_STAVES;
-        item.sub_type = STAFF_COLD;
+        if (one_chance_in(3))
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_STAVES;
+            item.sub_type = STAFF_COLD;
+        }
+        else
+        {
+            force_item = true;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_STAFF;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
+            set_equip_race(item, ISFLAG_ELVEN);
+            // this might not be the best place for this logic, but:
+            make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
+                                  0, MAKE_ITEM_NO_RACE, 1);
+        }
         break;
 
     case MONS_KOBOLD_DEMONOLOGIST:

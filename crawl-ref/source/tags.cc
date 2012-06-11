@@ -1468,7 +1468,17 @@ static void unmarshall_follower(reader &th, follower &f)
 {
     unmarshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+#if TAG_MAJOR_VERSION == 33
+        if ((th.getMinorVersion() < TAG_MINOR_MONSTER_JEWELLERY) &&
+            (i == MSLOT_JEWELLERY))
+        {
+            f.items[i].clear();
+            continue;
+        }
+#endif
         unmarshallItem(th, f.items[i]);
+    }
 }
 
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
@@ -2907,6 +2917,13 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
+#if TAG_MAJOR_VERSION == 33
+        if ((th.getMinorVersion() < TAG_MINOR_MONSTER_JEWELLERY) &&
+            (i == MSLOT_JEWELLERY))
+        {
+            continue;
+        }
+#endif
         if (unmarshallBoolean(th))
         {
             mi.inv[i].reset(new item_def());
@@ -3246,7 +3263,17 @@ void unmarshallMonster(reader &th, monster& m)
     m.colour         = unmarshallShort(th);
 
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+    {
+#if TAG_MAJOR_VERSION == 33
+        if ((th.getMinorVersion() < TAG_MINOR_MONSTER_JEWELLERY) &&
+            (j == MSLOT_JEWELLERY))
+        {
+            m.inv[j] = NON_ITEM;
+            continue;
+        }
+#endif
         m.inv[j] = unmarshallShort(th);
+    }
 
     unmarshallSpells(th, m.spells);
 

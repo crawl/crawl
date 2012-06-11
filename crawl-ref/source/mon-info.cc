@@ -1419,6 +1419,7 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
         item_def* second = inv[MSLOT_ALT_WEAPON].get(); // Two-headed ogres, etc.
         item_def* armour = inv[MSLOT_ARMOUR].get();
         item_def* shield = inv[MSLOT_SHIELD].get();
+        item_def* ring   = inv[MSLOT_JEWELLERY].get();
 
         if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
             ret += artefact_wpn_property(*weapon, ra_prop);
@@ -1431,6 +1432,9 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 
         if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
             ret += artefact_wpn_property(*shield, ra_prop);
+
+        if (ring && ring->base_type == OBJ_JEWELLERY && is_artefact(*ring))
+            ret += artefact_wpn_property(*ring, ra_prop);
     }
 
     return (ret);
@@ -1461,6 +1465,14 @@ int monster_info::res_magic() const
         && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
     {
         mr += 30;
+    }
+
+    item_def *jewellery = inv[MSLOT_JEWELLERY].get();
+
+    if (jewellery && (jewellery->base_type == OBJ_JEWELLERY)
+        && (jewellery->sub_type == RING_PROTECTION_FROM_MAGIC))
+    {
+        mr += 40;
     }
 
     if (is(MB_VULN_MAGIC))

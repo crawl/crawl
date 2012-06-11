@@ -963,6 +963,52 @@ void monster::equip_armour(item_def &item, int near)
         ev = 1;   // This *shouldn't* happen.
 }
 
+void monster::equip_jewellery(item_def &item, int near)
+{
+    if (need_message(near))
+    {
+        snprintf(info, INFO_SIZE, " puts on %s.",
+                 item.name(DESC_A).c_str());
+        simple_monster_message(this, info);
+    }
+
+    if (item.sub_type == AMU_STASIS)
+    {
+        if (has_ench(ENCH_TP))
+            del_ench(ENCH_TP);
+        if (has_ench(ENCH_SLOW))
+            del_ench(ENCH_SLOW);
+        if (has_ench(ENCH_HASTE))
+            del_ench(ENCH_HASTE);
+        if (has_ench(ENCH_PARALYSIS))
+            del_ench(ENCH_PARALYSIS);
+        if (has_ench(ENCH_BERSERK))
+            del_ench(ENCH_BERSERK);
+    }
+
+    if (item.sub_type == AMU_CLARITY)
+    {
+        if (has_ench(ENCH_CONFUSION))
+            del_ench(ENCH_CONFUSION);
+        if (has_ench(ENCH_BERSERK))
+            del_ench(ENCH_BERSERK);
+    }
+
+    if (item.sub_type == RING_PROTECTION)
+    {
+        const int jewellery_plus = item.plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        ac += jewellery_plus;
+    }
+
+    if (item.sub_type == RING_EVASION)
+    {
+        const int jewellery_plus = item.plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        ev += jewellery_plus;
+    }
+}
+
 void monster::equip(item_def &item, int slot, int near)
 {
     switch (item.base_type)
@@ -978,6 +1024,11 @@ void monster::equip(item_def &item, int slot, int near)
     case OBJ_ARMOUR:
         equip_armour(item, near);
         break;
+
+    case OBJ_JEWELLERY:
+        equip_jewellery(item, near);
+    break;
+
     default:
         break;
     }
@@ -1064,6 +1115,30 @@ void monster::unequip_armour(item_def &item, int near)
         ev = 1;   // This *shouldn't* happen.
 }
 
+void monster::unequip_jewellery(item_def &item, int near)
+{
+    if (need_message(near))
+    {
+        snprintf(info, INFO_SIZE, " takes off %s.",
+                 item.name(DESC_A).c_str());
+        simple_monster_message(this, info);
+    }
+
+    if (item.sub_type == RING_PROTECTION)
+    {
+        const int jewellery_plus = item.plus;
+        ASSERT(abs(jewellery_plus) < 30);
+        ac -= jewellery_plus;
+    }
+
+    if (item.sub_type == RING_EVASION)
+    {
+        const int jewellery_plus = item.plus;
+        ASSERT(abs(jewellery_plus) < 30);
+        ev -= jewellery_plus;
+    }
+}
+
 bool monster::unequip(item_def &item, int slot, int near, bool force)
 {
     if (!force && item.cursed())
@@ -1083,6 +1158,10 @@ bool monster::unequip(item_def &item, int slot, int near, bool force)
     case OBJ_ARMOUR:
         unequip_armour(item, near);
         break;
+
+    case OBJ_JEWELLERY:
+        unequip_jewellery(item, near);
+    break;
 
     default:
         break;
@@ -1242,6 +1321,7 @@ bool monster::drop_item(int eslot, int near)
     // cursed items from being removed.
     bool was_unequipped = false;
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
+        || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
         if (!unequip(*pitem, eslot, near))
@@ -1710,6 +1790,12 @@ bool monster::wants_armour(const item_def &item) const
     return (check_armour_size(item, body_size()));
 }
 
+bool monster::wants_jewellery(const item_def &item) const
+{
+    // TODO: figure out what monsters actually want rings or amulets
+    return true;
+}
+
 // Monsters magically know the real properties of all items.
 static int _get_monster_armour_value(const monster *mon,
                                      const item_def &item)
@@ -1842,6 +1928,85 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
                     value_old = item_value(*existing_armour, true);
                     value_new = item_value(item, true);
                 }
+                if (value_old >= value_new)
+                    return (false);
+            }
+        }
+
+        if (!drop_item(mslot, near))
+            return (false);
+    }
+
+    return (pickup(item, mslot, near));
+}
+
+static int _get_monster_jewellery_value(const monster *mon,
+                                   const item_def &item)
+{
+    // Each resistance/property counts as much as 1 point of AC.
+    // Steam has been excluded because of its general uselessness.
+    // Well, the same's true for sticky flame but... (jpeg)
+    int value = ((item.sub_type == RING_PROTECTION) ||
+                 (item.sub_type == RING_EVASION))
+                 ? item.plus : 0;
+        value += get_jewellery_res_fire(item, true);
+        value += get_jewellery_res_cold(item, true);
+        value += get_jewellery_res_elec(item, true);
+
+    // Give a simple bonus, no matter the size of the MR bonus.
+    if (get_jewellery_res_magic(item, true) > 0)
+        value++;
+
+    // Poison becomes much less valuable if the monster is
+    // intrinsically resistant.
+    if (get_mons_resists(mon).poison <= 0)
+        value += get_jewellery_res_poison(item, true);
+
+    // Same for life protection.
+    if (mon->holiness() != MH_NATURAL)
+        value += get_jewellery_life_protection(item, true);
+
+    // See invisible also is only useful if not already intrinsic.
+    if (!mons_class_flag(mon->type, M_SEE_INVIS))
+        value += get_jewellery_see_invisible(item, true);
+
+    return value;
+}
+
+bool monster::pickup_jewellery(item_def &item, int near, bool force)
+{
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+
+    if (!force && !wants_jewellery(item))
+        return (false);
+
+    equipment_type eq = EQ_RINGS;
+
+    const mon_inv_type mslot = equip_slot_to_mslot(eq);
+    if (mslot == NUM_MONSTER_SLOTS)
+        return (false);
+
+    int value_new = _get_monster_jewellery_value(this, item);
+
+    // No armour yet -> get this one.
+    if (!mslot_item(mslot) && value_new > 0)
+        return pickup(item, mslot, near);
+
+    // Simplistic jewellery evaluation (comparing AC and resistances).
+    if (const item_def *existing_jewellery = slot_item(eq, false))
+    {
+        if (!force)
+        {
+            int value_old = _get_monster_jewellery_value(this, *existing_jewellery);
+            if (value_old > value_new)
+                return (false);
+
+            if (value_old == value_new)
+            {
+                // If items are of the same value, use shopping
+                // value as a further crude estimate.
+                value_old = item_value(*existing_jewellery, true);
+                value_new = item_value(item, true);
                 if (value_old >= value_new)
                     return (false);
             }
@@ -2112,6 +2277,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
             // These are not important enough for pickup when
             // seeking, fleeing etc.
             if (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
+                || itype == OBJ_JEWELLERY
                 || itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
             {
                 return (false);
@@ -2147,6 +2313,8 @@ bool monster::pickup_item(item_def &item, int near, bool force)
         return pickup_food(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
+    case OBJ_JEWELLERY:
+        return pickup_jewellery(item, near, force);
     // Fleeing monsters won't pick up these.
     // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_STAVES:
@@ -2791,6 +2959,9 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
     if (!can_go_berserk())
         return;
 
+    if (check_stasis(false))
+        return;
+
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
@@ -3017,6 +3188,11 @@ int monster::warding() const
 {
     const item_def *w = primary_weapon();
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
+        return 60;
+    const int jewellery = inv[MSLOT_JEWELLERY];
+    if (jewellery != NON_ITEM &&
+        mitm[jewellery].base_type == OBJ_JEWELLERY &&
+        mitm[jewellery].sub_type == AMU_WARDING)
         return 60;
     return 0;
 }
@@ -3365,14 +3541,18 @@ int monster::res_fire() const
     {
         u += scan_mon_inv_randarts(this, ARTP_FIRE);
 
-        const int armour = inv[MSLOT_ARMOUR];
-        const int shld   = inv[MSLOT_SHIELD];
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(mitm[shld], false);
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_fire(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_FIRE)
@@ -3409,14 +3589,18 @@ int monster::res_cold() const
     {
         u += scan_mon_inv_randarts(this, ARTP_COLD);
 
-        const int armour = inv[MSLOT_ARMOUR];
-        const int shld   = inv[MSLOT_SHIELD];
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(mitm[shld], false);
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_cold(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_COLD)
@@ -3444,9 +3628,16 @@ int monster::res_elec() const
         u += scan_mon_inv_randarts(this, ARTP_ELECTRICITY);
 
         // No ego armour, but storm dragon.
-        const int armour = inv[MSLOT_ARMOUR];
+        // Also no non-artifact rings at present,
+        // but it doesn't hurt to be thorough.
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int jewellery = inv[MSLOT_JEWELLERY];
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_elec(mitm[armour], false);
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_elec(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_AIR)
@@ -3493,14 +3684,18 @@ int monster::res_poison(bool temp) const
     {
         u += scan_mon_inv_randarts(this, ARTP_POISON);
 
-        const int armour = inv[MSLOT_ARMOUR];
-        const int shld   = inv[MSLOT_SHIELD];
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[shld], false);
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_ARMOUR)
+            u += get_jewellery_res_poison(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_POISON)
@@ -3598,14 +3793,18 @@ int monster::res_negative_energy() const
     {
         u += scan_mon_inv_randarts(this, ARTP_NEGATIVE_ENERGY);
 
-        const int armour = inv[MSLOT_ARMOUR];
-        const int shld   = inv[MSLOT_SHIELD];
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(mitm[shld], false);
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_ARMOUR)
+            u += get_armour_life_protection(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_DEATH)
@@ -3694,14 +3893,18 @@ int monster::res_magic() const
     u /= 100;
 
     // ego armour resistance
-    const int armour = inv[MSLOT_ARMOUR];
-    const int shld   = inv[MSLOT_SHIELD];
+    const int armour    = inv[MSLOT_ARMOUR];
+    const int shld      = inv[MSLOT_SHIELD];
+    const int jewellery = inv[MSLOT_JEWELLERY];
 
     if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         u += get_armour_res_magic(mitm[armour], false);
 
     if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
         u += get_armour_res_magic(mitm[shld], false);
+
+    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+        u += get_jewellery_res_magic(mitm[jewellery], false);
 
     const item_def *w = primary_weapon();
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_ENCHANTMENT)
@@ -3952,7 +4155,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
 void monster::confuse(actor *atk, int strength)
 {
-    enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
+    if (!check_clarity(false))
+        enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
 void monster::paralyse(actor *atk, int strength, std::string cause)
@@ -5071,6 +5275,86 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
     return (ident);
 }
 
+bool monster::can_evoke_jewellery(jewellery_type jtype) const
+{
+    if (mons_class_is_stationary(type))
+        return (false);
+
+    if (mons_itemuse(this) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    switch (jtype)
+    {
+        case RING_TELEPORTATION:
+            return (!has_ench(ENCH_TP));
+        case RING_INVISIBILITY:
+            // If there are any item using monsters that are permanently
+            // invisible, this might have to be restricted.
+            return (true);
+        case AMU_RAGE:
+            return (can_go_berserk());
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+bool monster::should_evoke_jewellery(jewellery_type jtype) const
+{
+    switch (jtype)
+    {
+    case RING_TELEPORTATION:
+        return (caught() || mons_is_fleeing(this) || pacified());
+    case AMU_RAGE:
+        // this implies !berserk()
+        return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
+                && needs_berserk());
+    case RING_INVISIBILITY:
+        // We're being nice: friendlies won't go invisible if the player
+        // won't be able to see them.
+        return (!has_ench(ENCH_INVIS)
+                && (you.can_see_invisible(false) || !friendly()));
+    default:
+        break;
+    }
+
+    return (false);
+}
+
+// Return the ID status gained.
+item_type_id_state_type monster::evoke_jewellery_effect(jewellery_type jtype)
+{
+    mprf("%s evokes %s %s.", name(DESC_THE).c_str(),
+         pronoun(PRONOUN_POSSESSIVE).c_str(),
+         jewellery_is_amulet(jtype) ? "amulet" : "ring");
+
+    item_type_id_state_type ident = ID_MON_TRIED_TYPE;
+
+    switch (jtype)
+    {
+    case AMU_RAGE:
+        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case RING_INVISIBILITY:
+        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case RING_TELEPORTATION:
+        teleport(false);
+        ident = ID_KNOWN_TYPE;
+        break;
+
+    default:
+        break;
+    }
+
+    return (ident);
+}
+
 void monster::react_to_damage(const actor *oppressor, int damage,
                                beam_type flavour)
 {
@@ -5581,6 +5865,42 @@ bool monster::shove(const char* feat_name)
 
             return true;
         }
+
+    return false;
+}
+
+bool monster::check_clarity(bool silent) const
+{
+    const int jewellery = inv[MSLOT_JEWELLERY];
+    if (jewellery != NON_ITEM &&
+        mitm[jewellery].base_type == OBJ_JEWELLERY &&
+        mitm[jewellery].sub_type == AMU_CLARITY)
+    {
+        if (!silent && you.can_see(this) && !mons_is_lurking(this))
+        {
+            simple_monster_message(this, " seems unimpeded by the mental distress.");
+            set_ident_type(mitm[jewellery], ID_KNOWN_TYPE);
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool monster::check_stasis(bool silent) const
+{
+    const int jewellery = inv[MSLOT_JEWELLERY];
+    if (jewellery != NON_ITEM &&
+        mitm[jewellery].base_type == OBJ_JEWELLERY &&
+        mitm[jewellery].sub_type == AMU_STASIS)
+    {
+        if (!silent && you.can_see(this) && !mons_is_lurking(this))
+        {
+            simple_monster_message(this, " looks uneasy for a moment.");
+            set_ident_type(mitm[jewellery], ID_KNOWN_TYPE);
+        }
+        return true;
+    }
 
     return false;
 }

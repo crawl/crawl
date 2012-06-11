@@ -3084,6 +3084,9 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
 bool monster_blink(monster* mons, bool quiet)
 {
+    if (mons->check_stasis(quiet))
+        return false;
+
     coord_def near = _random_monster_nearby_habitable_space(*mons, false,
                                                             true);
 
@@ -4260,6 +4263,12 @@ static bool _monster_random_space(const monster* mons, coord_def& target,
 
 void monster_teleport(monster* mons, bool instan, bool silent)
 {
+
+    bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
+
+    if (mons->check_stasis(silent))
+        return;
+
     if (!instan)
     {
         if (mons->del_ench(ENCH_TP))
@@ -4318,8 +4327,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // have been a mistake.
     if (newpos.origin())
         return;
-
-    bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
 
     if (!silent)
         simple_monster_message(mons, " disappears!");
