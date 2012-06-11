@@ -185,9 +185,9 @@ air behind him.
 In ages long past, Fannar's wisdom and precocious talent with frost magic won
 him the coveted position of magistrate, placing him in charge of enforcing the
 law throughout the Elven Halls. By all accounts, he was once well known for
-being benevolent, just, and passionate in keeping the elves free from corruption
-and crime, even as those around him began to dabble in necromancy and demonic
-magic.
+being benevolent, just, and passionate in keeping the elves free from
+corruption and crime, even as those around him began to dabble in necromancy
+and demonic magic.
 
 Over the long centuries of his tenure, Fannar's devotion to justice has warped
 into paranoia and despotism. Even his closest supporters now whisper that his
@@ -2789,8 +2789,8 @@ A lich who has grown expensive over countless years.
 %%%%
 apple tree
 
-This tree bears fruit that can feed a hungry tiger. And that's not an error
-— you will serve as the middle step in the food chain.
+This tree bears fruit that can feed a hungry tiger. And that's not an error —
+you will serve as the middle step in the food chain.
 %%%%
 apricot tree
 
@@ -2837,9 +2837,9 @@ citrus tree
 conjurer statue
 
 This statue seems to harness the mightiest pure conjurations ever devised by
-Iskenderun. It is not made in her likeness, as legends
-describe her as a female felid, but, if I were you, I'd pay more heed to the orbs
-of magic flying your way than the statue's appearance.
+Iskenderun. It is not made in her likeness, as legends describe her as a female
+felid, but, if I were you, I'd pay more heed to the orbs of magic flying your
+way than the statue's appearance.
 %%%%
 deformed humanoid
 
@@ -2847,10 +2847,10 @@ This poor creature looks hideously deformed.
 %%%%
 demonic plant
 
-Just as demons are shaped in a mockery of living beings, this... thing...
-here is a mockery of a plant. The colours don't match, and normal plants
-don't have mysterious appendages and tentacles writhing around. Fortunately,
-this one appears to be harmless, but with demons, you can never be sure.
+Just as demons are shaped in a mockery of living beings, this... thing... here
+is a mockery of a plant. The colours don't match, and normal plants don't have
+mysterious appendages and tentacles writhing around. Fortunately, this one
+appears to be harmless, but with demons, you can never be sure.
 %%%%
 earth elementalist statue
 
@@ -2962,9 +2962,9 @@ oklob sapling wizard
 %%%%
 petrified plant
 
-Something has turned these ordinary plants into stone. Better not tarry
-here. If whatever petrified these plants gets you as well, we'll be stuck
-with a statue as ugly as you standing here for ages.
+Something has turned these ordinary plants into stone. Better not tarry here.
+If whatever petrified these plants gets you as well, we'll be stuck with a
+statue as ugly as you standing here for ages.
 %%%%
 pristine statue
 
@@ -3003,8 +3003,8 @@ soapberry tree
 %%%%
 spooky statue
 
-You sense a ghostly presence around this statue, and it's not the slightest
-bit friendly.
+You sense a ghostly presence around this statue, and it's not the slightest bit
+friendly.
 %%%%
 spriggan necromancer
 
@@ -3040,9 +3040,9 @@ mommy tell you to not disrupt people from having a meal?
 %%%%
 vine covered stone golem
 
-While made of ordinary old weathered stone, covered with moss and vines,
-this golem still needs to be respected. It is still hard as
-stone, after all, and its weight spells massive damage if it connects a blow.
+While made of ordinary old weathered stone, covered with moss and vines, this
+golem still needs to be respected. It is still hard as stone, after all, and
+its weight spells massive damage if it connects a blow.
 %%%%
 warrior statue
 
@@ -3052,12 +3052,11 @@ the only way to keep your vital organs undamaged.
 %%%%
 withered plant
 
-This plant lost the war against life-draining influences, and yet its
-physical form is intact. Its dead body stays here uneaten, as the small
-creatures that would naturally decompose it prefer to stay away. And it
-looks like this plant died many {{ if you.branch() == "Crypt" or
-you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
-ago.
+This plant lost the war against life-draining influences, and yet its physical
+form is intact. Its dead body stays here uneaten, as the small creatures that
+would naturally decompose it prefer to stay away. And it looks like this plant
+died many {{ if you.branch() == "Crypt" or you.branch() == "Tomb" then return
+"centuries"; else return "years"; end }} ago.
 %%%%
 wizard statue
 
