@@ -916,6 +916,7 @@ bool InvMenu::process_key(int key)
     if (type == MT_KNOW)
         switch (key)
         {
+            case '-':
             case '\\':
             case CK_ENTER:
             CASE_ESCAPE

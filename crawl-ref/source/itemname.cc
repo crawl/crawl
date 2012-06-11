@@ -2145,9 +2145,9 @@ void check_item_knowledge(bool unknown_items)
     std::string stitle;
 
     if (unknown_items)
-        stitle = "Items not yet recognised: (toggle with \\)";
+        stitle = "Items not yet recognised: (toggle with -)";
     else if (!all_items_known)
-        stitle = "Recognised items. (\\ for unrecognised, select to toggle autopickup)";
+        stitle = "Recognised items. (- for unrecognised, select to toggle autopickup)";
     else
         stitle = "You recognise all items. (Select to toggle autopickup)";
 
@@ -2197,7 +2197,7 @@ void check_item_knowledge(bool unknown_items)
          delete *iter;
     }
 
-    if (!all_items_known && last_char == '\\')
+    if (!all_items_known && (last_char == '\\' || last_char == '-'))
         check_item_knowledge(!unknown_items);
 }
 
