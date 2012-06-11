@@ -12,7 +12,7 @@ NAME: abyss_entry
 TAGS: extra allow_dup can_overwrite
 DEPTH: D:21-27
 CHANCE: 100% (D:25), 3333
-: if you.where == 'D:25' then
+: if you.where() == 'D:25' then
 KFEAT: O = enter_abyss no_mimic
 : else
 KFEAT: O = enter_abyss
