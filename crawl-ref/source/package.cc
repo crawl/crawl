@@ -8,16 +8,14 @@ Guarantees:
 * A crash at any moment may not cause corruption -- the save will return to
   the exact state it had at the last commit().
 
-Caveats/issues:
+Notes:
 * Unless DO_FSYNC is defined, crashes that put down the operating system
   may break the consistency guarantee.
-* A commit() will break readers who read a chunk that was deleted or
-  overwritten.  Not that it's a sane thing to do...  Writers don't have
-  any such limitations, an uncompleted write will be not committed yet
-  but won't be corrupted.  [Currently not allowed]
-* Readers ignore uncompleted writes; completed but not committed ones will
-  be available immediately -- yet a crash will lose them.  Ie, this is known
-  as READ_UNCOMMITTED.
+* Incomplete writes don't have any effects, but don't break commits or reads
+  (which both use the last complete write).
+* Readers always get the last complete (but not necessarily committed) write
+  (ie, READ_UNCOMMITTED) at the time they started; it is safe to continue
+  reading even if the chunk has been changed since.
 */
 
 #include "AppHdr.h"
@@ -206,12 +204,6 @@ void package::commit()
         return;
     ASSERT(!aborted);
 
-    // Not a hard requirement, we'd have to pin chunks that are being read so
-    // the commit won't free them.
-    // If you want this, please refcount chunks (by their initial block), and
-    // make free_block_chain() to add busy chunks to unlinked_blocks instead.
-    ASSERT(!n_users);
-
 #ifdef COSTLY_ASSERTS
     fsck();
 #endif
@@ -352,7 +344,7 @@ void package::free_chunk(const std::string name)
     if (new_chunks.count(ci->second))
         free_block_chain(ci->second);
     else // can't free committed blocks yet
-        unlinked_blocks.push(ci->second);
+        unlinked_blocks.push_back(ci->second);
 
     dirty = true;
 }
@@ -390,16 +382,26 @@ len_t package::write_directory()
 
 void package::collect_blocks()
 {
-    while (!unlinked_blocks.empty())
+    for (ssize_t i = unlinked_blocks.size() - 1; i >= 0; --i)
     {
-        len_t at = unlinked_blocks.top();
-        unlinked_blocks.pop();
+        len_t at = unlinked_blocks[i];
+        // Blocks may be re-added onto the list if they're in use.
+        if (i != (ssize_t)unlinked_blocks.size() - 1)
+            unlinked_blocks[i] = unlinked_blocks[unlinked_blocks.size() - 1];
+        unlinked_blocks.pop_back();
         free_block_chain(at);
     }
 }
 
 void package::free_block_chain(len_t at)
 {
+    if (reader_count.count(at))
+    {
+        dprintf("deleting an in-use chain at %d\n", at);
+        unlinked_blocks.push_back(at);
+        return;
+    }
+
     dprintf("freeing an unlinked chain at %d\n", at);
     while (at)
     {
@@ -779,7 +781,7 @@ void chunk_reader::init(len_t start)
 {
     ASSERT(!pkg->aborted);
     pkg->n_users++;
-    next_block = start;
+    first_block = next_block = start;
     block_left = 0;
 
 #ifdef USE_ZLIB
@@ -820,6 +822,8 @@ chunk_reader::~chunk_reader()
     if (inflateEnd(&zs) != Z_OK)
         fail("save file decompression failed during clean-up: %s", zs.msg);
 #endif
+    if (!--pkg->reader_count[first_block])
+        pkg->reader_count.erase(first_block);
     ASSERT(pkg->n_users > 0);
     pkg->n_users--;
 }
