@@ -3699,6 +3699,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
         item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
         item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
+        item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
         // For Ashenzari warnings, we only care about ided and branded stuff.
@@ -3710,6 +3711,8 @@ std::string get_monster_equipment_desc(const monster_info& mi,
                 mon_shd = 0;
             if (mon_qvr && no_warn(mon_qvr))
                 mon_qvr = 0;
+            if (mon_rng && no_warn(mon_rng))
+                mon_rng = 0;
             if (mon_alt && (!item_type_known(*mon_alt)
                             || mon_alt->base_type == OBJ_WANDS
                                && !is_offensive_wand(*mon_alt)))
@@ -3730,7 +3733,8 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_arm)
         {
             if (found_sth)
-                desc += (!mon_shd && !mon_qvr && !mon_carry) ? " and" : ",";
+                desc += (!mon_shd && !mon_rng && !mon_qvr && !mon_carry)
+                        ? " and" : ",";
             else
                 found_sth = true;
 
@@ -3741,12 +3745,23 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_shd)
         {
             if (found_sth)
-                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
+                desc += (!mon_rng && !mon_qvr && !mon_carry) ? " and" : ",";
             else
                 found_sth = true;
 
             desc += " wearing ";
             desc += mon_shd->name(DESC_A);
+        }
+
+        if (mon_rng)
+        {
+            if (found_sth)
+                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
+            else
+                found_sth = true;
+
+            desc += " wearing ";
+            desc += mon_rng->name(DESC_A);
         }
 
         if (mon_qvr)

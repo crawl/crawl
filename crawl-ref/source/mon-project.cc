@@ -735,8 +735,10 @@ move_again:
             // Remove ROLLING and add DAZED
             mon.del_ench(ENCH_ROLLING,true);
             mons->del_ench(ENCH_ROLLING,true);
-            mon.add_ench(ENCH_CONFUSION);
-            mons->add_ench(ENCH_CONFUSION);
+            if (!mon.check_clarity(false))
+                mon.add_ench(ENCH_CONFUSION);
+            if (!mons->check_clarity(false))
+                mons->add_ench(ENCH_CONFUSION);
             return (true);
         }
 

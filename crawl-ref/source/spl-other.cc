@@ -332,6 +332,8 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
+        if (mons->check_clarity(false))
+            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(mons, " looks rather confused.");
         return 1;

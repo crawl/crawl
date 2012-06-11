@@ -952,6 +952,7 @@ void wizard_give_monster_item(monster* mon)
         case MSLOT_WEAPON:
         case MSLOT_ALT_WEAPON:
         case MSLOT_ARMOUR:
+        case MSLOT_JEWELLERY:
         case MSLOT_MISSILE:
             break;
 

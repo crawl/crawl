@@ -1153,7 +1153,14 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
         if (debug)
             return (XOM_GOOD_CONFUSION);
 
-        if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+        if (mi->check_clarity(false))
+        {
+            if (!rc)
+                god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+
+            rc = true;
+        }
+        else if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
               &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
         {
             // Only give this message once.
@@ -1410,6 +1417,9 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 static void _confuse_monster(monster* mons, int sever)
 {
     if (!mons_class_is_confusable(mons->type))
+        return;
+
+    if (mons->check_clarity(false))
         return;
 
     const bool was_confused = mons->confused();
@@ -2947,7 +2957,8 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
                     continue;
                 }
 
-                if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                if (!mi->check_clarity(false) &&
+                     mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
                       &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
                 {
                     simple_monster_message(*mi,

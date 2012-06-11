@@ -1883,6 +1883,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return (true);
         }
     }
+    else if (wh_enchant == ENCH_CONFUSION &&
+             mons->check_clarity(false))
+    {
+        *did_msg = true;
+        return (true);
+    }
     else if (wh_enchant == ENCH_CONFUSION
              || mons->holiness() == MH_NATURAL)
     {
@@ -1982,7 +1988,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
 void bolt::apply_bolt_paralysis(monster* mons)
 {
-    if (mons->paralysed())
+    if (mons->paralysed() || mons->check_stasis(false))
         return;
     // asleep monsters can still be paralysed (and will be always woken by
     // trying to resist); the message might seem wrong but paralysis is
@@ -4887,6 +4893,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_HASTE:
         if (YOU_KILL(thrower))
             did_god_conduct(DID_HASTY, 6, effect_known);
+
+        if (mon->check_stasis(false))
+            return (MON_AFFECTED);
+
         if (mon->del_ench(ENCH_SLOW, true))
         {
             if (simple_monster_message(mon, " is no longer moving slowly."))
@@ -4964,6 +4974,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_CONFUSION:
         if (!mons_class_is_confusable(mon->type))
             return (MON_UNAFFECTED);
+
+        if (mon->check_clarity(false))
+        {
+            if (you.can_see(mon) && !mons_is_lurking(mon))
+                obvious_effect = true;
+            return (MON_AFFECTED);
+        }
 
         if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent())))
         {

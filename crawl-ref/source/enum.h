@@ -2522,6 +2522,7 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
     MSLOT_WAND,
+    MSLOT_JEWELLERY,
     MSLOT_MISCELLANY,
 
     // [ds] Last monster gear slot that the player can observe by examining

@@ -171,6 +171,10 @@ public:
     bool should_drink_potion(potion_type ptype) const;
     item_type_id_state_type drink_potion_effect(potion_type pot_eff);
 
+    bool can_evoke_jewellery(jewellery_type jtype) const;
+    bool should_evoke_jewellery(jewellery_type jtype) const;
+    item_type_id_state_type evoke_jewellery_effect(jewellery_type jtype);
+
     void timeout_enchantments(int levels);
 
     bool is_travelling() const;
@@ -250,6 +254,7 @@ public:
     bool      pickup_throwable_weapon(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
     bool      pickup_armour(item_def &item, int near, bool force);
+    bool      pickup_jewellery(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
     bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
@@ -459,6 +464,9 @@ public:
     bool attempt_escape();
     bool has_usable_tentacle() const;
 
+    bool check_clarity(bool silent) const;
+    bool check_stasis(bool silent) const;
+
 private:
     void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);
@@ -468,13 +476,16 @@ private:
     bool pickup(item_def &item, int slot, int near, bool force_merge = false);
     void equip_weapon(item_def &item, int near, bool msg = true);
     void equip_armour(item_def &item, int near);
+    void equip_jewellery(item_def &item, int near);
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
+    void unequip_jewellery(item_def &item, int near);
 
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
 
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;
+    bool wants_jewellery(const item_def &item) const;
     void lose_pickup_energy();
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
