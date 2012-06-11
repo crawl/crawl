@@ -1119,6 +1119,12 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < 52; i++)
         marshallShort(th, you.ability_letter_table[i]);
 
+    marshallUByte(th, MAX_RECENT_SPELLS);
+    for (i = 0; i < MAX_RECENT_SPELLS; ++i)
+        marshallByte(th, you.vehumet_recent_spells[i]);
+
+    marshallByte(th, you.vehumet_gift_spell);
+
     // how many skills?
     marshallByte(th, NUM_SKILLS);
     for (j = 0; j < NUM_SKILLS; ++j)
@@ -1851,6 +1857,19 @@ static void tag_read_you(reader &th)
         ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
+
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_VEHUMET_SPELL_GIFT)
+    {
+#endif
+        count = unmarshallUByte(th);
+        for (i = 0; i < count && i < MAX_RECENT_SPELLS; ++i)
+            you.vehumet_recent_spells[i] = static_cast<spell_type>(unmarshallUByte(th));
+
+        you.vehumet_gift_spell = static_cast<spell_type>(unmarshallUByte(th));
+#if TAG_MAJOR_VERSION == 33
+    }
+#endif
 
     // how many skills?
     count = unmarshallUByte(th);
