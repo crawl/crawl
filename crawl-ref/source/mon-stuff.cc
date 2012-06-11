@@ -116,10 +116,9 @@ bool curse_an_item(bool quiet)
         if (!you.inv[i].defined())
             continue;
 
-        if (you.inv[i].base_type == OBJ_WEAPONS
+        if (is_weapon(you.inv[i])
             || you.inv[i].base_type == OBJ_ARMOUR
-            || you.inv[i].base_type == OBJ_JEWELLERY
-            || you.inv[i].base_type == OBJ_STAVES)
+            || you.inv[i].base_type == OBJ_JEWELLERY)
         {
             if (you.inv[i].cursed())
                 continue;

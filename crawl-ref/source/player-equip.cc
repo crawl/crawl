@@ -505,6 +505,13 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         break;
     }
 
+    case OBJ_RODS:
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        _wield_cursed(item, known_cursed, unmeld);
+        break;
+    }
+
     case OBJ_WEAPONS:
     {
         // Call unrandart equip func before item is identified.

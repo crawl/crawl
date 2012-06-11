@@ -5145,13 +5145,6 @@ void item_list::parse_random_by_class(std::string c, item_spec &spec)
         spec.plus      = -1;
         return;
     }
-    else if (c == "rod")
-    {
-        spec.base_type = OBJ_STAVES;
-        spec.sub_type  = STAFF_RANDOM_ROD;
-        spec.plus      = -1;
-        return;
-    }
 
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }

@@ -727,7 +727,7 @@ bool evoke_item(int slot)
             unevokable = true;
         break;
 
-    case OBJ_STAVES:
+    case OBJ_RODS:
         ASSERT(wielded);
 
         if (you.confused())
@@ -736,40 +736,48 @@ bool evoke_item(int slot)
             return false;
         }
 
-        if (item_is_rod(item))
-        {
-            pract = staff_spell(slot);
-            // [ds] Early exit, no turns are lost.
-            if (pract == -1)
-                return (false);
+        pract = rod_spell(slot);
+        // [ds] Early exit, no turns are lost.
+        if (pract == -1)
+            return (false);
 
-            did_work = true;  // staff_spell() will handle messages
-            count_action(CACT_EVOKE, EVOC_ROD);
-        }
-        else if (item.sub_type == STAFF_CHANNELING)
+        did_work = true;  // rod_spell() will handle messages
+        count_action(CACT_EVOKE, EVOC_ROD);
+        break;
+
+    case OBJ_STAVES:
+        ASSERT(wielded);
+        if (item.sub_type != STAFF_CHANNELING)
         {
-            if (!you.is_undead && you.hunger_state == HS_STARVING)
-            {
-                canned_msg(MSG_TOO_HUNGRY);
-                return (false);
-            }
-            else if (you.magic_points >= you.max_magic_points)
-            {
-                mpr("Your reserves of magic are already full.");
-                return (false);
-            }
-            else if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
-            {
-                mpr("You channel some magical energy.");
-                inc_mp(1 + random2(3));
-                make_hungry(50, false, true);
-                pract = 1;
-                did_work = true;
-                count_action(CACT_EVOKE, EVOC_MISC);
-            }
-        }
-        else
             unevokable = true;
+            break;
+        }
+
+        if (you.confused())
+        {
+            mpr("You're too confused.");
+            return false;
+        }
+
+        if (!you.is_undead && you.hunger_state == HS_STARVING)
+        {
+            canned_msg(MSG_TOO_HUNGRY);
+            return (false);
+        }
+        else if (you.magic_points >= you.max_magic_points)
+        {
+            mpr("Your reserves of magic are already full.");
+            return (false);
+        }
+        else if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
+        {
+            mpr("You channel some magical energy.");
+            inc_mp(1 + random2(3));
+            make_hungry(50, false, true);
+            pract = 1;
+            did_work = true;
+            count_action(CACT_EVOKE, EVOC_MISC);
+        }
         break;
 
     case OBJ_MISCELLANY:

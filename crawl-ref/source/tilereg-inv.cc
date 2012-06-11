@@ -180,11 +180,11 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 }
 
 // NOTE: Assumes the item is equipped in the first place!
-static bool _is_true_equipped_item(item_def item)
+static bool _is_true_equipped_item(const item_def &item)
 {
     // Weapons and staves are only truly equipped if wielded.
     if (item.link == you.equip[EQ_WEAPON])
-        return (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+        return is_weapon(item);
 
     // Cursed armour and rings are only truly equipped if *not* wielded.
     return (item.link != you.equip[EQ_WEAPON]);
@@ -346,7 +346,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (wielded && !item_is_evokable(item))
                 {
                     if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
-                        || type == OBJ_WEAPONS || type == OBJ_STAVES)
+                        || is_weapon(item))
                     {
                         type = OBJ_WEAPONS + EQUIP_OFFSET;
                     }
@@ -360,6 +360,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
+            case OBJ_RODS:
                 if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
@@ -398,7 +399,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     break;
                 }
                 // else fall-through
-            case OBJ_STAVES + EQUIP_OFFSET: // rods - other staves handled above
+            case OBJ_RODS + EQUIP_OFFSET:
                 tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE_WIELDED);
                 _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
@@ -610,7 +611,7 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     {
         desc.quantity = item.plus;
     }
-    else if (item_is_rod(item) && item.flags & ISFLAG_KNOW_PLUSES)
+    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
         desc.quantity = item.plus / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;

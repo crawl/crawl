@@ -384,7 +384,6 @@ enum special_ring_type // jewellery mitm[].special values
 
 enum stave_type
 {
-    // staves
     STAFF_WIZARDRY,
     STAFF_POWER,
     STAFF_FIRE,
@@ -398,20 +397,22 @@ enum stave_type
     STAFF_AIR,
     STAFF_EARTH,
     STAFF_CHANNELING,
-    // rods
-    STAFF_FIRST_ROD,
-    STAFF_SMITING = STAFF_FIRST_ROD,
-    STAFF_SPELL_SUMMONING,
-    STAFF_DESTRUCTION_I,
-    STAFF_DESTRUCTION_II,
-    STAFF_DESTRUCTION_III,
-    STAFF_DESTRUCTION_IV,
-    STAFF_WARDING,
-    STAFF_DEMONOLOGY,
-    STAFF_STRIKING,
-    STAFF_VENOM,
     NUM_STAVES,
-    STAFF_RANDOM_ROD // Hack for item generation.
+};
+
+enum rod_type
+{
+    ROD_LIGHTNING,
+    ROD_SUMMONING,
+    ROD_DESTRUCTION_I,
+    ROD_DESTRUCTION_II,
+    ROD_DESTRUCTION_III,
+    ROD_DESTRUCTION_IV,
+    ROD_WARDING,
+    ROD_DEMONOLOGY,
+    ROD_STRIKING,
+    ROD_VENOM,
+    NUM_RODS,
 };
 
 enum weapon_type

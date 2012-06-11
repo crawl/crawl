@@ -225,7 +225,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
         {
             if (you.form == TRAN_NONE || form_can_wield(you.form))
                 unequip = true;
-            if (equip->base_type != OBJ_WEAPONS && equip->base_type != OBJ_STAVES)
+            if (!is_weapon(*equip))
                 unequip = true;
         }
 

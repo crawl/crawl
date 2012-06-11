@@ -64,7 +64,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
 spell_type which_spell_in_book(const item_def &book, int spl)
 {
-    ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_STAVES);
+    ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_RODS);
 
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
@@ -117,9 +117,9 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         const int levels_req = spell_levels_required(stype);
 
         int colour = DARKGREY;
-        if (action == RBOOK_USE_STAFF)
+        if (action == RBOOK_USE_ROD)
         {
-            ASSERT(book.base_type == OBJ_STAVES);
+            ASSERT(book.base_type == OBJ_RODS);
             if (book.plus >= level_diff * ROD_CHARGE_MULT)
                 colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, true);
             else
@@ -155,7 +155,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
 
         std::string schools;
-        if (action == RBOOK_USE_STAFF)
+        if (action == RBOOK_USE_ROD)
             schools = "Evocations";
         else
         {
@@ -180,7 +180,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
     switch (action)
     {
-    case RBOOK_USE_STAFF:
+    case RBOOK_USE_ROD:
         out.cprintf("Select a spell to cast.\n");
         break;
 
@@ -1331,16 +1331,16 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     }
 }
 
-int count_staff_spells(const item_def &item, bool need_id)
+int count_rod_spells(const item_def &item, bool need_id)
 {
-    if (item.base_type != OBJ_STAVES)
+    if (item.base_type != OBJ_RODS)
         return (-1);
 
     if (need_id && !item_type_known(item))
         return (0);
 
     const int type = item.book_number();
-    if (!item_is_rod(item) || type == -1)
+    if (type == -1)
         return (0);
 
     int nspel = 0;
@@ -1350,11 +1350,11 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (nspel);
 }
 
-int staff_spell(int staff)
+int rod_spell(int rod)
 {
-    item_def& istaff(you.inv[staff]);
+    item_def& irod(you.inv[rod]);
 
-    if (!item_is_rod(istaff))
+    if (irod.base_type != OBJ_RODS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (-1);
@@ -1362,7 +1362,7 @@ int staff_spell(int staff)
 
     // ID code got moved to item_use::wield_effects. {due}
 
-    const int num_spells = count_staff_spells(istaff, false);
+    const int num_spells = count_rod_spells(irod, false);
 
     int keyin = 0;
     if (num_spells == 0)
@@ -1383,7 +1383,7 @@ int staff_spell(int staff)
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = read_book(you.inv[staff], RBOOK_USE_STAFF);
+            keyin = read_book(you.inv[rod], RBOOK_USE_ROD);
             // [ds] read_book sets turn_is_over.
             you.turn_is_over = false;
         }
@@ -1397,13 +1397,13 @@ int staff_spell(int staff)
 
     const int idx = letter_to_index(keyin);
 
-    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(istaff, idx))
+    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(irod, idx))
     {
         canned_msg(MSG_HUH);
         return -1;
     }
 
-    const spell_type spell = which_spell_in_book(istaff, idx);
+    const spell_type spell = which_spell_in_book(irod, idx);
     const int mana = spell_mana(spell) * ROD_CHARGE_MULT;
     int power = calc_spell_power(spell, false, false, true, true);
 
@@ -1422,7 +1422,7 @@ int staff_spell(int staff)
         return (-1);
     }
 
-    if (istaff.plus < mana)
+    if (irod.plus < mana)
     {
         mpr("The rod doesn't have enough magic points.");
         crawl_state.zero_turns_taken();
@@ -1442,7 +1442,7 @@ int staff_spell(int staff)
     }
 
     make_hungry(food, true, true);
-    istaff.plus -= mana;
+    irod.plus -= mana;
     you.wield_change = true;
     you.turn_is_over = true;
 

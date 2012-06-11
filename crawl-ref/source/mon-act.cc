@@ -1025,9 +1025,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     if (was_visible)
     {
         if (!beem.is_enchantment() || beem.obvious_effect)
-            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_KNOWN_TYPE);
-        else
-            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_MON_TRIED_TYPE);
+            set_ident_flags(rod, ISFLAG_KNOW_TYPE);
     }
 
     mons->lose_energy(EUT_ITEM);
@@ -1071,8 +1069,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     item_def &rod(mitm[weapon]);
 
     // Make sure the item actually is a rod.
-    if (!item_is_rod(rod))
-        return (false);
+    ASSERT(rod.base_type == OBJ_RODS);
 
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
@@ -1202,7 +1199,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return (false);
 
     if (mons->inv[MSLOT_WEAPON] != NON_ITEM
-        && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
+        && mitm[mons->inv[MSLOT_WEAPON]].base_type == OBJ_RODS)
     {
         return (_handle_rod(mons, beem));
     }

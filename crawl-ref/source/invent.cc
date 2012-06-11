@@ -290,6 +290,7 @@ static void _get_class_hotkeys(const int type, std::vector<char> &glyphs)
         glyphs.push_back('!');
         break;
     case OBJ_STAVES:
+    case OBJ_RODS:
         glyphs.push_back('\\');
         glyphs.push_back('|');
         break;
@@ -970,6 +971,7 @@ std::string item_class_name(int type, bool terse)
 {
     if (terse)
     {
+        // TODO: merge with base_type_string()
         switch (type)
         {
         case OBJ_GOLD:       return ("gold");
@@ -983,6 +985,7 @@ std::string item_class_name(int type, bool terse)
         case OBJ_POTIONS:    return ("potion");
         case OBJ_BOOKS:      return ("book");
         case OBJ_STAVES:     return ("magical staff");
+        case OBJ_RODS:       return ("rod");
         case OBJ_ORBS:       return ("orb");
         case OBJ_MISCELLANY: return ("misc");
         case OBJ_CORPSES:    return ("carrion");
@@ -1002,7 +1005,8 @@ std::string item_class_name(int type, bool terse)
         case OBJ_JEWELLERY:  return ("Jewellery");
         case OBJ_POTIONS:    return ("Potions");
         case OBJ_BOOKS:      return ("Books");
-        case OBJ_STAVES:     return ("Magical Staves and Rods");
+        case OBJ_STAVES:     return ("Magical Staves");
+        case OBJ_RODS:       return ("Rods");
         case OBJ_ORBS:       return ("Orbs of Power");
         case OBJ_MISCELLANY: return ("Miscellaneous");
         case OBJ_CORPSES:    return ("Carrion");
@@ -1145,10 +1149,8 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
 
     case OSEL_CURSED_WORN:
-        return (i.cursed() && item_is_equipped(i)
-                && (&i != you.weapon()
-                    || i.base_type == OBJ_WEAPONS
-                    || i.base_type == OBJ_STAVES));
+        return i.cursed() && item_is_equipped(i)
+               && (&i != you.weapon() || is_weapon(i));
 
     case OSEL_UNCURSED_WORN_ARMOUR:
         return (!i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR);
@@ -1637,7 +1639,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return (true);
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
-        && (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES))
+        && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
             && !you.duration[DUR_WEAPON_BRAND])
@@ -1944,7 +1946,7 @@ bool prompt_failed(int retval, std::string msg)
 bool item_is_wieldable(const item_def &item)
 {
     const int type = item.base_type;
-    return (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
+    return (is_weapon(item) || is_deck(item)
             || type == OBJ_MISCELLANY
                && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
@@ -2026,9 +2028,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             mpr("That item cannot be evoked!");
         return (false);
 
+    case OBJ_RODS:
+        if (!wielded)
+        {
+            if (msg)
+                mpr(error);
+            return (false);
+        }
+        return (true);
+
     case OBJ_STAVES:
-        if (item_is_rod(item)
-            || !known && !item_type_known(item)
+        if (!known && !item_type_known(item)
             || item.sub_type == STAFF_CHANNELING
                && item_type_known(item))
         {

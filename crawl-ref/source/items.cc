@@ -2774,11 +2774,10 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Interesting if we don't have any other edible food.
         return _item_different_than_inv(item, _edible_food);
 
-    case OBJ_STAVES:
+    case OBJ_RODS:
         // Rods are always interesting, even if you already have one of
         // the same type, since each rod has its own mana.
-        if (item_is_rod(item))
-            return (true);
+        return (true);
 
         // Intentional fall-through.
     case OBJ_MISCELLANY:
@@ -2793,6 +2792,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Intentional fall-through.
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
+    case OBJ_STAVES:
         // Item is boring only if there's an identical one in inventory.
         return _item_different_than_inv(item, _identical_types);
 
@@ -2981,6 +2981,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
+        NUM_RODS,
     };
     COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES);
 
@@ -3027,13 +3028,13 @@ bool item_is_active_manual(const item_def &item)
 bool item_def::has_spells() const
 {
     return (item_is_spellbook(*this) && item_type_known(*this)
-            || count_staff_spells(*this, true) > 1);
+            || count_rod_spells(*this, true) > 1);
 }
 
 int item_def::book_number() const
 {
-    return (base_type == OBJ_BOOKS  ? sub_type                             :
-            base_type == OBJ_STAVES ? sub_type + NUM_BOOKS - STAFF_FIRST_ROD + 1
+    return (base_type == OBJ_BOOKS  ? sub_type :
+            base_type == OBJ_RODS   ? sub_type + NUM_BOOKS + 1
                                     : -1);
 }
 
@@ -3607,13 +3608,10 @@ bool get_item_by_name(item_def *item, char* specs,
         item->plus = 24;
         break;
 
-    case OBJ_STAVES:
-        if (item_is_rod(*item))
-        {
-            item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-            item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-            init_rod_mp(*item);
-        }
+    case OBJ_RODS:
+        item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        init_rod_mp(*item);
         break;
 
     case OBJ_MISCELLANY:
@@ -3817,20 +3815,23 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         ii.special = item.special; // appearance
         break;
-    case OBJ_STAVES:
+    case OBJ_RODS:
         if (item_type_known(item))
         {
             ii.sub_type = item.sub_type;
             if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             {
-                if (item.props.exists("rod_enchantment"))
-                    ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+                ii.special = item.special;
                 ii.plus = item.plus;
                 ii.plus2 = item.plus2;
             }
         }
         else
-            ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;
+            ii.sub_type = 0;
+        ii.rnd = item.rnd; // appearance
+        break;
+    case OBJ_STAVES:
+        ii.sub_type = item_type_known(item) ? item.sub_type : 0;
         ii.special = item.special; // appearance
         break;
     case OBJ_MISCELLANY:
@@ -3963,6 +3964,7 @@ static const object_class_type _mimic_item_classes[] =
     OBJ_POTIONS,
     OBJ_BOOKS,
     OBJ_STAVES,
+    OBJ_RODS,
 };
 
 object_class_type get_random_item_mimic_type()

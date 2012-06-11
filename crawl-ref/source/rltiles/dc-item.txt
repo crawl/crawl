@@ -883,7 +883,7 @@ i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 %rim 1
 
 %sdir item/rod
-rod00 ROD_OFFSET
+rod00 ROD
 rod01
 rod02
 rod03

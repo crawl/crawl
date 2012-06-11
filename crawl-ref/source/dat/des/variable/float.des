@@ -273,7 +273,7 @@ TAGS:   extra
 DEPTH:  D:1-26
 ORIENT: float
 KITEM:  " = staff, quarterstaff, quarterstaff
-KITEM:  ' = staff, staff / any magical staff w:3
+KITEM:  ' = staff, staff / any magical staff w:2 / any rod w:1
 MAP
 xxxxx
 x"']x

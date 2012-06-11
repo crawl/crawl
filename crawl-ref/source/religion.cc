@@ -1245,6 +1245,7 @@ void get_pure_deck_weights(int weights[])
     weights[NEM_GIFT_ESCAPE]      = you.sacrifice_value[OBJ_ARMOUR] + 1;
     weights[NEM_GIFT_DESTRUCTION] = you.sacrifice_value[OBJ_WEAPONS]
                                     + you.sacrifice_value[OBJ_STAVES]
+                                    + you.sacrifice_value[OBJ_RODS]
                                     + you.sacrifice_value[OBJ_MISSILES] + 1;
     weights[NEM_GIFT_DUNGEONS]    = you.sacrifice_value[OBJ_MISCELLANY]
                                     + you.sacrifice_value[OBJ_JEWELLERY]
@@ -1267,9 +1268,11 @@ static void _update_sacrifice_weights(int which)
     case NEM_GIFT_DESTRUCTION:
         you.sacrifice_value[OBJ_WEAPONS]  /= 5;
         you.sacrifice_value[OBJ_STAVES]   /= 5;
+        you.sacrifice_value[OBJ_RODS]     /= 5;
         you.sacrifice_value[OBJ_MISSILES] /= 5;
         you.sacrifice_value[OBJ_WEAPONS]  *= 4;
         you.sacrifice_value[OBJ_STAVES]   *= 4;
+        you.sacrifice_value[OBJ_RODS]     *= 4;
         you.sacrifice_value[OBJ_MISSILES] *= 4;
         break;
     case NEM_GIFT_DUNGEONS:
@@ -3265,6 +3268,7 @@ bool god_likes_item(god_type god, const item_def& item)
             return false;
         return (item.base_type == OBJ_WEAPONS
              || item.base_type == OBJ_STAVES
+             || item.base_type == OBJ_RODS
              || item.base_type == OBJ_MISSILES);
 
     case GOD_BEOGH:

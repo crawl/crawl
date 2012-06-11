@@ -718,17 +718,11 @@ static bool _dump_item_origin(const item_def &item)
         return (true);
     }
 
-    if (fs(IODS_RODS) && item.base_type == OBJ_STAVES
-        && item_is_rod(item))
-    {
+    if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
         return (true);
-    }
 
-    if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES
-        && !item_is_rod(item))
-    {
+    if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
         return (true);
-    }
 
     if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
         return (true);
@@ -793,6 +787,7 @@ static void _sdump_inventory(dump_params &par)
                 case OBJ_POTIONS:    text += "Potions";         break;
                 case OBJ_BOOKS:      text += "Books";           break;
                 case OBJ_STAVES:     text += "Magical staves";  break;
+                case OBJ_RODS:       text += "Rods";            break;
                 case OBJ_ORBS:       text += "Orbs of Power";   break;
                 case OBJ_MISCELLANY: text += "Miscellaneous";   break;
                 case OBJ_CORPSES:    text += "Carrion";         break;

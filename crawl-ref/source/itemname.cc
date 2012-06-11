@@ -193,11 +193,11 @@ std::string item_def::name(description_level_type descrip,
                 switch (eq)
                 {
                 case EQ_WEAPON:
-                    if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
+                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES)
                         buff << " (weapon)";
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
-                    else
+                    else // including rods -- intentional?
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
                 case EQ_CLOAK:
@@ -987,9 +987,8 @@ static const char* staff_primary_string(int p)
 
 static const char* staff_type_name(int stafftype)
 {
-    switch (static_cast<stave_type>(stafftype))
+    switch ((stave_type)stafftype)
     {
-    // staves
     case STAFF_WIZARDRY:    return "wizardry";
     case STAFF_POWER:       return "power";
     case STAFF_FIRE:        return "fire";
@@ -1002,21 +1001,27 @@ static const char* staff_type_name(int stafftype)
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
     case STAFF_SUMMONING:   return "summoning";
+    case STAFF_CHANNELING:  return "channeling";
+    default:                return "bugginess";
+    }
+}
 
-    // rods
-    case STAFF_SPELL_SUMMONING: return "summoning";
-    case STAFF_CHANNELING:      return "channeling";
-    case STAFF_WARDING:         return "warding";
-    case STAFF_SMITING:         return "smiting";
-    case STAFF_STRIKING:        return "striking";
-    case STAFF_DEMONOLOGY:      return "demonology";
-    case STAFF_VENOM:           return "venom";
+static const char* rod_type_name(int type)
+{
+    switch ((rod_type)type)
+    {
+    case ROD_SUMMONING:       return "summoning";
+    case ROD_WARDING:         return "warding";
+    case ROD_LIGHTNING:       return "smiting";
+    case ROD_STRIKING:        return "striking";
+    case ROD_DEMONOLOGY:      return "demonology";
+    case ROD_VENOM:           return "venom";
 
-    case STAFF_DESTRUCTION_I:
-    case STAFF_DESTRUCTION_II:
-    case STAFF_DESTRUCTION_III:
-    case STAFF_DESTRUCTION_IV:
-        return "destruction";
+    case ROD_DESTRUCTION_I:
+    case ROD_DESTRUCTION_II:
+    case ROD_DESTRUCTION_III:
+    case ROD_DESTRUCTION_IV:
+                              return "destruction";
 
     default: return "bugginess";
     }
@@ -1037,12 +1042,12 @@ const char* racial_description_string(const item_def& item, bool terse)
     }
 }
 
-std::string base_type_string (const item_def &item, bool known)
+std::string base_type_string(const item_def &item, bool known)
 {
     return base_type_string(item.base_type, known);
 }
 
-std::string base_type_string (object_class_type type, bool known)
+std::string base_type_string(object_class_type type, bool known)
 {
     switch (type)
     {
@@ -1056,6 +1061,7 @@ std::string base_type_string (object_class_type type, bool known)
     case OBJ_POTIONS: return "potion";
     case OBJ_BOOKS: return "book";
     case OBJ_STAVES: return "staff";
+    case OBJ_RODS: return "rod";
     case OBJ_ORBS: return "orb";
     case OBJ_MISCELLANY: return "miscellaneous";
     case OBJ_CORPSES: return "corpse";
@@ -1101,7 +1107,8 @@ std::string sub_type_string(const item_def &item, bool known)
 
         return std::string("book of ") + _book_type_name(sub_type);
     }
-    case OBJ_STAVES: return staff_type_name(sub_type);
+    case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
+    case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
     case OBJ_MISCELLANY:
         if (sub_type == MISC_RUNE_OF_ZOT)
             return "rune of Zot";
@@ -1689,7 +1696,7 @@ std::string item_def::name_aux(description_level_type desc,
             buff << sub_type_string(*this, !dbname);
         break;
 
-    case OBJ_STAVES:
+    case OBJ_RODS:
         if (know_curse && !terse)
         {
             if (cursed())
@@ -1706,27 +1713,48 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (!basename)
             {
+                buff << staff_secondary_string((this->rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC)
+                     << staff_primary_string(this->rnd % NDSC_STAVE_PRI);
+            }
+
+            buff << "rod";
+        }
+        else
+        {
+            if (know_type && know_pluses && !basename && !qualname && !dbname)
+                buff << make_stringf("%+d ", special);
+
+            buff << "rod of " << rod_type_name(item_typ);
+        }
+
+        if (know_curse && cursed() && terse)
+            buff << " (curse)";
+        break;
+
+    case OBJ_STAVES:
+        if (know_curse && !terse)
+        {
+            if (cursed())
+                buff << "cursed ";
+            else if (Options.show_uncursed && desc != DESC_PLAIN
+                     && (!know_type || !is_artefact(*this)))
+            {
+                buff << "uncursed ";
+            }
+        }
+
+        if (!know_type)
+        {
+            if (!basename)
+            {
                 buff << staff_secondary_string(this->special / NDSC_STAVE_PRI)
                      << staff_primary_string(this->special % NDSC_STAVE_PRI);
             }
 
-            buff << (item_is_rod(*this) ? "rod" : "staff");
+            buff << "staff";
         }
         else
-        {
-            if (item_is_rod(*this) && know_type && know_pluses
-                && !basename && !qualname && !dbname)
-            {
-                short rmod = 0;
-                if (props.exists("rod_enchantment"))
-                    rmod = props["rod_enchantment"];
-
-                buff << make_stringf("%+d ", rmod);
-            }
-
-            buff << (item_is_rod(*this) ? "rod" : "staff")
-                 << " of " << staff_type_name(item_typ);
-        }
+            buff << "staff of " << staff_type_name(item_typ);
 
         if (know_curse && cursed() && terse)
             buff << " (curse)";
@@ -1797,19 +1825,19 @@ std::string item_def::name_aux(description_level_type desc,
     {
         switch (this->base_type)
         {
-        case OBJ_STAVES:
+        case OBJ_RODS:
             switch (item_typ)
             {
-            case STAFF_DESTRUCTION_I:
+            case ROD_DESTRUCTION_I:
                 buff << " [fire]";
                 break;
-            case STAFF_DESTRUCTION_II:
+            case ROD_DESTRUCTION_II:
                 buff << " [ice]";
                 break;
-            case STAFF_DESTRUCTION_III:
+            case ROD_DESTRUCTION_III:
                 buff << " [lightning,fireball,iron]";
                 break;
-            case STAFF_DESTRUCTION_IV:
+            case ROD_DESTRUCTION_IV:
                 buff << " [inacc,magma,cold]";
                 break;
             }
@@ -1821,7 +1849,7 @@ std::string item_def::name_aux(description_level_type desc,
     }
 
     // Rod charges.
-    if (item_is_rod(*this) && know_type && know_pluses
+    if (base_type == OBJ_RODS && know_type && know_pluses
         && !basename && !qualname && !dbname)
     {
         buff << " (" << (this->plus / ROD_CHARGE_MULT)
@@ -3032,10 +3060,15 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
         }
 
+    case OBJ_RODS:
+        if (you.species == SP_FELID)
+            return (true);
+        break;
+
     case OBJ_STAVES:
         if (you.species == SP_FELID)
             return (true);
-        if (you.religion == GOD_TROG && !item_is_rod(item))
+        if (you.religion == GOD_TROG)
             return (true);
         if (!item_type_known(item))
             return (false);
@@ -3216,6 +3249,7 @@ static const std::string _item_prefix(const item_def &item, bool temp,
         // fall through
 
     case OBJ_STAVES:
+    case OBJ_RODS:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
             prefixes.push_back("equipped");

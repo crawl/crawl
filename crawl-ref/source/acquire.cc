@@ -645,20 +645,20 @@ static int _acquirement_jewellery_subtype()
     return (result);
 }
 
-static int _acquirement_staff_subtype(const has_vector& already_has)
+static bool _want_rod()
 {
     // First look at skills to determine whether the player gets a rod.
     int spell_skills = 0;
     for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
         spell_skills += you.skills[i];
 
-    if (random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
-            && !one_chance_in(5))
-    {
-        return get_random_rod_type();
-    }
+    return random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
+           && !one_chance_in(5);
+}
 
-    // Now try to pick an enhancer staff matching the player's best skill.
+static int _acquirement_staff_subtype(const has_vector& already_has)
+{
+    // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
     bool found_enhancer = false;
     int result = random2(NUM_STAVES);
@@ -820,6 +820,10 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     while (1)
     {
+        // Staves and rods have a common acquirement class.
+        if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
+            class_wanted = _want_rod() ? OBJ_RODS : OBJ_STAVES;
+
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -834,6 +838,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
             break;
+        case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;
         case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
             break;
         default: break;         // gold, books

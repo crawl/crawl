@@ -388,7 +388,7 @@ void ghost_demon::init_player_ghost()
         // This includes ranged weapons, but they're treated as melee.
 
         const item_def& weapon = *you.weapon();
-        if (weapon.base_type == OBJ_WEAPONS || weapon.base_type == OBJ_STAVES)
+        if (is_weapon(weapon))
         {
             damage = property(weapon, PWPN_DAMAGE);
 

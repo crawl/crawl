@@ -469,7 +469,7 @@ IDEF(equip_type)
 
     equipment_type eq = EQ_NONE;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES)
+    if (is_weapon(*item))
         eq = EQ_WEAPON;
     else if (item->base_type == OBJ_ARMOUR)
         eq = get_armour_slot(*item);

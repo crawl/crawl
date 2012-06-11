@@ -827,9 +827,8 @@ bool monster::can_use_missile(const item_def &item) const
         return (is_throwable(this, item));
     }
 
-    // Rods are always non-throwable.
-    if (item_is_rod(item) || item_is_staff(item))
-        return (false);
+    if (item.base_type != OBJ_MISSILES)
+        return false;
 
     // Stones are allowed even without launcher.
     if (item.sub_type == MI_STONE)
@@ -970,6 +969,7 @@ void monster::equip(item_def &item, int slot, int near)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
         equip_weapon(item, near, give_msg);
@@ -1367,7 +1367,7 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
 static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 {
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-        return (weapon.base_type == OBJ_STAVES);
+        return (weapon.base_type == OBJ_RODS);
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1674,13 +1674,6 @@ bool monster::wants_weapon(const item_def &weap) const
         && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
     {
         return (false);
-    }
-
-    // deep dwarf artificers
-    if (weap.base_type == OBJ_STAVES
-        && type == MONS_DEEP_DWARF_ARTIFICER)
-    {
-        return (true);
     }
 
     // Nobody picks up giant clubs. Starting equipment is okay, of course.
@@ -2158,6 +2151,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_STAVES:
     case OBJ_WEAPONS:
+    case OBJ_RODS:
         return pickup_weapon(item, near, force);
     case OBJ_MISSILES:
         return pickup_missile(item, near, force);

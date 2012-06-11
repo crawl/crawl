@@ -751,7 +751,7 @@ MARKER:     A = feat:stone_arch
 TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
-ITEM:       any fixed theme book, any fixed level book, any magical staff
+ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
 {{
 
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",

@@ -48,11 +48,8 @@ COMPILE_CHECK(NUM_RINGS == TILE_RING_ID_LAST - TILE_RING_ID_FIRST + 1);
 COMPILE_CHECK(NUM_JEWELLERY - AMU_FIRST_AMULET
               == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1);
 COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1);
-// Note: STAFF_FIRST_ROD == total number of staves that aren't rods
-COMPILE_CHECK(STAFF_FIRST_ROD
-              == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
-COMPILE_CHECK(NUM_STAVES - STAFF_FIRST_ROD
-              == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
+COMPILE_CHECK(NUM_STAVES == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
+COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
@@ -3961,22 +3958,16 @@ tileidx_t tileidx_item(const item_def &item)
         }
 
     case OBJ_STAVES:
-        if (item_is_rod(item))
-        {
-            if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_ROD_ID_FIRST + type - STAFF_FIRST_ROD;
+        if (item.flags & ISFLAG_KNOW_TYPE)
+            return TILE_STAFF_ID_FIRST + type;
 
-            int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-            return TILE_ROD_OFFSET + desc;
-        }
-        else
-        {
-            if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_STAFF_ID_FIRST + type;
+        return TILE_STAFF_OFFSET + (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
-            int desc = (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-            return TILE_STAFF_OFFSET + desc;
-        }
+    case OBJ_RODS:
+        if (item.flags & ISFLAG_KNOW_TYPE)
+           return TILE_ROD_ID_FIRST + type;
+
+        return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -4153,18 +4144,6 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
             return TILE_UNSEEN_STAFF;
         else
             return (TILE_STAFF_OFFSET + desc);
-    }
-
-    if (label >= TILE_ROD_ID_FIRST && label <= TILE_ROD_ID_LAST)
-    {
-        int type = label - TILE_ROD_ID_FIRST + STAFF_FIRST_ROD;
-        int desc = you.item_description[IDESC_STAVES][type];
-        desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-
-        if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
-            return TILE_UNSEEN_STAFF;
-        else
-            return (TILE_ROD_OFFSET + desc);
     }
 
     return (0);

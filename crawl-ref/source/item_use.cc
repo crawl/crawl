@@ -89,8 +89,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability
         && you.weapon()
-        && (you.weapon()->base_type == OBJ_WEAPONS
-           || you.weapon()->base_type == OBJ_STAVES)
+        && is_weapon(*you.weapon())
         && you.weapon()->cursed())
     {
         SAY(mprf("You can't unwield your weapon%s!",
@@ -111,9 +110,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_FELID
-        && (weapon->base_type == OBJ_WEAPONS
-            || weapon->base_type == OBJ_STAVES))
+    if (you.species == SP_FELID && is_weapon(*weapon))
     {
         SAY(mpr("You can't use weapons."));
         return (false);
@@ -206,8 +203,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
 static bool _valid_weapon_swap(const item_def &item)
 {
-    // Weapons and staves are valid weapons.
-    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+    if (is_weapon(item))
         return (you.species != SP_FELID);
 
     // Some misc. items need to be wielded to be evoked.
@@ -2380,9 +2376,9 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         dam = 0;
     }
 
-    if (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES)
+    if (is_weapon(wpn))
     {
-        if (!is_artefact(wpn) && wpn.base_type != OBJ_STAVES)
+        if (!is_artefact(wpn) && wpn.base_type == OBJ_WEAPONS)
         {
             while (acc--)
             {
@@ -2814,8 +2810,7 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_VORPALISE_WEAPON:
-            if (!you.weapon() || you.weapon()->base_type != OBJ_WEAPONS
-                              && you.weapon()->base_type != OBJ_STAVES)
+            if (!you.weapon() || !is_weapon(*you.weapon()))
             {
                 mpr("You are not wielding a weapon.");
                 return;
@@ -3010,8 +3005,7 @@ void read_scroll(int slot)
 
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
-            || you.weapon()->base_type != OBJ_WEAPONS
-               && you.weapon()->base_type != OBJ_STAVES
+            || is_weapon(*you.weapon())
             || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -3438,6 +3432,7 @@ void tile_item_use(int idx)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
+        case OBJ_RODS:
         case OBJ_MISCELLANY:
         case OBJ_WANDS:
             // Wield any unwielded item of these types.

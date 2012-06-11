@@ -15,7 +15,7 @@ class formatted_string;
 
 enum read_book_action_type
 {
-    RBOOK_USE_STAFF,
+    RBOOK_USE_ROD,
     RBOOK_READ_SPELL,
 };
 
@@ -45,7 +45,7 @@ spell_type which_spell_in_book(const item_def &book, int spl);
 spell_type which_spell_in_book(int sbook_type, int spl);
 
 // returns amount practised (or -1 for abort)
-int staff_spell(int zap_device_2);
+int rod_spell(int zap_device_2);
 bool is_memorised(spell_type spell);
 
 bool you_cannot_memorise(spell_type spell);
@@ -57,7 +57,7 @@ std::vector<spell_type> get_mem_spell_list(std::vector<int> &books);
 int spellbook_contents(item_def &book, read_book_action_type action,
                         formatted_string *fs = NULL);
 
-int count_staff_spells(const item_def &item, bool need_id);
+int count_rod_spells(const item_def &item, bool need_id);
 
 bool make_book_level_randart(item_def &book, int level = -1,
                              int num_spells = -1, std::string owner = "");

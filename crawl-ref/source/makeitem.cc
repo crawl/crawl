@@ -558,11 +558,12 @@ void item_colour(item_def &item)
         }
         break;
 
+    case OBJ_RODS:
+        item.colour = YELLOW;
+        break;
+
     case OBJ_STAVES:
-        if (item_is_rod(item))
-            item.colour = YELLOW;
-        else
-            item.colour  = BROWN;
+        item.colour  = BROWN;
         item.special = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 
@@ -2837,11 +2838,7 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
     if (force_type == OBJ_RANDOM)
     {
-        item.sub_type = random2(STAFF_FIRST_ROD);
-
-        // rods are rare (10% of all staves)
-        if (one_chance_in(10))
-            item.sub_type = get_random_rod_type();
+        item.sub_type = random2(NUM_STAVES);
 
         // staves of energy/channeling are 25% less common, wizardry/power
         // are more common
@@ -2852,13 +2849,21 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
             item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
         }
     }
-    else if (force_type == STAFF_RANDOM_ROD)
-        item.sub_type = get_random_rod_type();
     else
         item.sub_type = force_type;
 
-    if (item_is_rod(item))
-        init_rod_mp(item, -1, item_level);
+    if (one_chance_in(16))
+        do_curse_item(item);
+}
+
+static void _generate_rod_item(item_def& item, int force_type, int item_level)
+{
+    if (force_type == OBJ_RANDOM)
+        item.sub_type = random2(NUM_RODS);
+    else
+        item.sub_type = force_type;
+
+    init_rod_mp(item, -1, item_level);
 
     if (one_chance_in(16))
         do_curse_item(item);
@@ -3078,17 +3083,18 @@ int items(bool allow_uniques,
     {
         ASSERT(force_type == OBJ_RANDOM);
         item.base_type = random_choose_weighted(
-                                     5, OBJ_STAVES,
-                                    15, OBJ_BOOKS,
-                                    25, OBJ_JEWELLERY,
-                                    35, OBJ_WANDS,
-                                    70, OBJ_FOOD,
-                                   100, OBJ_ARMOUR,
-                                   100, OBJ_WEAPONS,
-                                   100, OBJ_POTIONS,
-                                   150, OBJ_MISSILES,
-                                   200, OBJ_SCROLLS,
-                                   200, OBJ_GOLD,
+                                     1, OBJ_RODS,
+                                     9, OBJ_STAVES,
+                                    30, OBJ_BOOKS,
+                                    50, OBJ_JEWELLERY,
+                                    70, OBJ_WANDS,
+                                   140, OBJ_FOOD,
+                                   200, OBJ_ARMOUR,
+                                   200, OBJ_WEAPONS,
+                                   200, OBJ_POTIONS,
+                                   300, OBJ_MISSILES,
+                                   400, OBJ_SCROLLS,
+                                   400, OBJ_GOLD,
                                      0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
@@ -3098,6 +3104,7 @@ int items(bool allow_uniques,
         if (item_level < 7
             && (item.base_type == OBJ_BOOKS
                 || item.base_type == OBJ_STAVES
+                || item.base_type == OBJ_RODS
                 || item.base_type == OBJ_WANDS)
             && random2(7) >= item_level)
         {
@@ -3106,8 +3113,7 @@ int items(bool allow_uniques,
     }
 
     ASSERT(force_type == OBJ_RANDOM
-           || force_type < get_max_subtype(item.base_type)
-           || force_class == OBJ_STAVES && force_type == STAFF_RANDOM_ROD);
+           || force_type < get_max_subtype(item.base_type));
 
     item.quantity = 1;          // generally the case
 
@@ -3169,6 +3175,10 @@ int items(bool allow_uniques,
 
     case OBJ_STAVES:
         _generate_staff_item(item, force_type, item_level);
+        break;
+
+    case OBJ_RODS:
+        _generate_rod_item(item, force_type, item_level);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -3289,22 +3299,21 @@ static int _roll_rod_enchant(int item_level)
 
 void init_rod_mp(item_def &item, int ncharges, int item_level)
 {
-    if (!item_is_rod(item))
-        return;
+    ASSERT(item.base_type == OBJ_RODS);
 
     if (ncharges != -1)
     {
         item.plus2 = ncharges * ROD_CHARGE_MULT;
-        item.props["rod_enchantment"] = (short)0;
+        item.special = 0;
     }
     else
     {
-        if (item.sub_type == STAFF_STRIKING)
+        if (item.sub_type == ROD_STRIKING)
             item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
 
-        item.props["rod_enchantment"] = (short)_roll_rod_enchant(item_level);
+        item.special = _roll_rod_enchant(item_level);
     }
 
     item.plus = item.plus2;
@@ -3477,11 +3486,6 @@ static armour_type _get_random_armour_type(int item_level)
     }
 
     return static_cast<armour_type>(armtype);
-}
-
-stave_type get_random_rod_type()
-{
-    return (stave_type)(STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD));
 }
 
 // Sets item appearance to match brands, if any.

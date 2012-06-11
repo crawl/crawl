@@ -894,11 +894,8 @@ bool player_weapon_wielded()
     if (wpn == -1)
         return (false);
 
-    if (you.inv[wpn].base_type != OBJ_WEAPONS
-        && you.inv[wpn].base_type != OBJ_STAVES)
-    {
+    if (!is_weapon(you.inv[wpn]))
         return (false);
-    }
 
     return (true);
 }
@@ -910,8 +907,7 @@ bool berserk_check_wielded_weapon()
         return (true);
 
     const item_def weapon = *you.weapon();
-    if (weapon.defined() && weapon.base_type != OBJ_STAVES
-           && (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
+    if (weapon.defined() && (!is_weapon(weapon) || is_range_weapon(weapon))
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         std::string prompt = "Do you really want to go berserk while "
@@ -7125,8 +7121,7 @@ bool player::has_usable_tentacle() const
     {
         if (hands_reqd(*wp, body_size()) == HANDS_TWO)
             free_tentacles -= 2;
-        else if (wp->base_type != OBJ_STAVES &&
-                 weapon_skill(*wp) != SK_STAVES)
+        else
             free_tentacles--;
     }
 

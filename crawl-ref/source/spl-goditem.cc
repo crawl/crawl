@@ -613,9 +613,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 
         if (!item.cursed()
             || !item_is_equipped(item)
-            || &item == you.weapon()
-               && item.base_type != OBJ_WEAPONS
-               && item.base_type != OBJ_STAVES)
+            || &item == you.weapon() && !is_weapon(item))
         {
             mpr("Choose a cursed equipped item, or Esc to abort.");
             if (Options.auto_list)
@@ -647,9 +645,7 @@ bool remove_curse(bool alreadyknown, std::string *pre_msg)
     bool success = false;
 
     // Only cursed *weapons* in hand count as cursed. - bwr
-    if (you.weapon()
-        && (you.weapon()->base_type == OBJ_WEAPONS
-            || you.weapon()->base_type == OBJ_STAVES)
+    if (you.weapon() && is_weapon(*you.weapon())
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
