@@ -227,6 +227,7 @@ void package::commit()
         sysfail("flush error while saving");
 #endif
 
+    new_chunks.clear();
     collect_blocks();
     dirty = false;
 
@@ -330,6 +331,7 @@ void package::finish_chunk(const std::string name, len_t at)
 {
     free_chunk(name);
     directory[name] = at;
+    new_chunks.insert(at);
     dirty = true;
 }
 
@@ -340,7 +342,10 @@ void package::free_chunk(const std::string name)
         return;
 
     dprintf("freeing chunk(%s)\n", name.c_str());
-    unlinked_blocks.push(ci->second);
+    if (new_chunks.count(ci->second))
+        free_block_chain(ci->second);
+    else // can't free committed blocks yet
+        unlinked_blocks.push(ci->second);
 
     dirty = true;
 }
@@ -382,16 +387,21 @@ void package::collect_blocks()
     {
         len_t at = unlinked_blocks.top();
         unlinked_blocks.pop();
-        dprintf("freeing an unlinked chain at %d\n", at);
-        while (at)
-        {
-            bm_t::iterator bl = block_map.find(at);
-            ASSERT(bl != block_map.end());
-            dprintf("+- at %d size=%d+header\n", at, bl->second.first);
-            free_block(at, bl->second.first + sizeof(block_header));
-            at = bl->second.second;
-            block_map.erase(bl);
-        }
+        free_block_chain(at);
+    }
+}
+
+void package::free_block_chain(len_t at)
+{
+    dprintf("freeing an unlinked chain at %d\n", at);
+    while (at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        dprintf("+- at %d size=%d+header\n", at, bl->second.first);
+        free_block(at, bl->second.first + sizeof(block_header));
+        at = bl->second.second;
+        block_map.erase(bl);
     }
 }
 
