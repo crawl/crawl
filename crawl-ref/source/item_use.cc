@@ -449,6 +449,7 @@ void warn_shield_penalties()
     if (is_range_weapon(*weapon))
         _warn_launcher_shield_slowdown(*weapon);
     else if (weapon_skill(*weapon) == SK_STAVES
+             && weapon->base_type == OBJ_WEAPONS
              && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
         mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
