@@ -5661,7 +5661,7 @@ void player::init()
     spells.init(SPELL_NO_SPELL);
     vehumet_recent_spells.clear();
     spell_no        = 0;
-    vehumet_gift_spell = SPELL_NO_SPELL;
+    vehumet_gift    = SPELL_NO_SPELL;
     char_direction  = GDT_DESCENDING;
     opened_zot      = false;
     royal_jelly_dead = false;

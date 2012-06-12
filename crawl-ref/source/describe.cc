@@ -4516,7 +4516,7 @@ void describe_god(god_type which_god, bool give_title)
                 have_any = true;
                 _print_final_god_abil_desc(which_god,
                                            "You can memorise "
-                                           + std::string(spell_title(you.vehumet_gift_spell))
+                                           + std::string(spell_title(you.vehumet_gift))
                                            + ".",
                                            ABIL_VEHUMET_MEMORISE_SPELL);
             }
