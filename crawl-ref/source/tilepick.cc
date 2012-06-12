@@ -3821,6 +3821,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_DECK_OF_WAR:
     case MISC_DECK_OF_CHANGES:
     case MISC_DECK_OF_DEFENCE:
+    case NUM_MISCELLANY: // indicates unidentified deck
     {
         tileidx_t ch = TILE_ERROR;
         switch (item.special)
@@ -3911,7 +3912,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_JEWELLERY:
         if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
-        else if (type < NUM_RINGS)
+        else if (type <= NUM_RINGS)
         {
             if (is_artefact(item))
                 return TILE_RING_RANDOM_OFFSET + colour - 1;
