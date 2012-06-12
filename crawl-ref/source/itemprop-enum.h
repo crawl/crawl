@@ -402,7 +402,7 @@ enum stave_type
 
 enum rod_type
 {
-    ROD_LIGHTNING,
+    ROD_SMITING,
     ROD_SUMMONING,
     ROD_DESTRUCTION_I,
     ROD_DESTRUCTION_II,

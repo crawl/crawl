@@ -2547,15 +2547,11 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_OBJ_RODS && item.base_type == OBJ_STAVES)
     {
         const int STAFF_FIRST_ROD = 13;
-        const int STAFF_SMITING = 13;
         const int OLD_NUM_STAVES = 23;
         if (item.sub_type >= STAFF_FIRST_ROD && item.sub_type < OLD_NUM_STAVES)
         {
             item.base_type = OBJ_RODS;
-            if (item.sub_type == STAFF_SMITING)
-                item.sub_type = ROD_STRIKING;
-            else
-                item.sub_type -= STAFF_FIRST_ROD;
+            item.sub_type -= STAFF_FIRST_ROD;
             if (item.props.exists("rod_enchantment"))
             {
                 item.special = item.props["rod_enchantment"].get_short();
