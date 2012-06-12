@@ -392,7 +392,7 @@ int spell_hunger(spell_type which_spell, bool rod)
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     // Staff of energy
-    hunger /= (1 + player_energy());
+    hunger /= (1 + 2 * player_energy());
 
     if (hunger < 0)
         hunger = 0;
