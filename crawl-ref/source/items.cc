@@ -3770,6 +3770,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_WANDS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_WANDS;
         ii.special = item.special; // appearance
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus; // charges
@@ -3778,6 +3780,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_POTIONS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_POTIONS;
         ii.plus = item.plus; // appearance
         break;
     case OBJ_FOOD:
@@ -3796,6 +3800,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_SCROLLS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_SCROLLS;
         ii.special = item.special; // name seed, part 1
         ii.plus = item.plus;  // name seed, part 2
         break;
@@ -3804,7 +3810,7 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            ii.sub_type = jewellery_is_amulet(item) ? AMU_FIRST_AMULET : RING_FIRST_RING;
+            ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
             if (item_ident(ii, ISFLAG_KNOW_PLUSES))
                 ii.plus = item.plus; // str/dex/int/ac/ev ring plus
         }
@@ -3813,6 +3819,8 @@ item_info get_item_info(const item_def& item)
     case OBJ_BOOKS:
         if (item_type_known(item) || !item_is_spellbook(item))
             ii.sub_type = item.sub_type;
+        else
+            ii.sub_type = NUM_BOOKS;
         ii.special = item.special; // appearance
         break;
     case OBJ_RODS:
@@ -3827,11 +3835,11 @@ item_info get_item_info(const item_def& item)
             }
         }
         else
-            ii.sub_type = 0;
+            ii.sub_type = NUM_RODS;
         ii.rnd = item.rnd; // appearance
         break;
     case OBJ_STAVES:
-        ii.sub_type = item_type_known(item) ? item.sub_type : 0;
+        ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
         ii.special = item.special; // appearance
         break;
     case OBJ_MISCELLANY:
@@ -3840,7 +3848,9 @@ item_info get_item_info(const item_def& item)
         else
         {
             if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
-                ii.sub_type = MISC_DECK_OF_ESCAPE;
+                ii.sub_type = NUM_MISCELLANY; // Needs to be changed if we add other
+                                              // miscellaneous items that can be
+                                              // non-identified
             else
                 ii.sub_type = item.sub_type;
         }
