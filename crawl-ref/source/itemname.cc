@@ -1012,7 +1012,7 @@ static const char* rod_type_name(int type)
     {
     case ROD_SUMMONING:       return "summoning";
     case ROD_WARDING:         return "warding";
-    case ROD_LIGHTNING:       return "smiting";
+    case ROD_SMITING:         return "smiting";
     case ROD_STRIKING:        return "striking";
     case ROD_DEMONOLOGY:      return "demonology";
     case ROD_VENOM:           return "venom";
