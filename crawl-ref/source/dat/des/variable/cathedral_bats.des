@@ -18,7 +18,7 @@ function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
   if dgn.mons_at(x, y) then return end
 
   if (not dgn.create_monster(x, y,
-          "generate_awake bat name:megabat n_rpl n_spe n_des tile:mons_megabat / " ..
+          "generate_awake bat name:megabat n_rpl n_spe n_des n_noc tile:mons_megabat / " ..
           "generate_awake w:2 fire bat")) then
     return
   end

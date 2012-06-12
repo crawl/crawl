@@ -856,9 +856,9 @@ ORIENT:  float
 SHUFFLE: ABC
 KFEAT:   ABC = floor
 KMONS:  A = gnome ; nothing
-KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
-KMONS:  C = dwarf name:hill_dwarf n_rpl n_spe n_des ; nothing
-KMONS:  D = dwarf name:mountain_dwarf n_rpl n_spe n_des ; nothing
+KMONS:  B = elf col:darkgrey name:grey n_adj n_spe n_des ; nothing
+KMONS:  C = dwarf name:hill n_adj n_spe n_des ; nothing
+KMONS:  D = dwarf name:mountain n_adj n_spe n_des ; nothing
 FTILE:  .m+T = floor_vault
 TILE:   X = wall_vines
 COLOUR: .= lightgrey
