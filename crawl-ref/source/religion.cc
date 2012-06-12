@@ -2060,7 +2060,7 @@ static bool _jiyva_mutate()
 
 bool vehumet_is_currently_gifting()
 {
-    if (you.duration[DUR_VEHUMET_GIFT] && you.vehumet_gift_spell != SPELL_NO_SPELL)
+    if (you.duration[DUR_VEHUMET_GIFT] && you.vehumet_gift != SPELL_NO_SPELL)
         return (true);
 
     return (false);
@@ -2087,38 +2087,38 @@ bool _is_recent_spell(spell_type spell)
 void vehumet_gift_callback(bool accepted)
 {
     if (accepted
-        && (player_spell_levels() - spell_levels_required(you.vehumet_gift_spell) >= 0))
+        && (player_spell_levels() - spell_levels_required(you.vehumet_gift) >= 0))
     {
         std::string prompt = make_stringf("Do you really want to memorise %s (Level %d)?",
-                                          spell_title(you.vehumet_gift_spell),
-                                          spell_difficulty(you.vehumet_gift_spell));
+                                          spell_title(you.vehumet_gift),
+                                          spell_difficulty(you.vehumet_gift));
         if (yesno(prompt.c_str(), true, 'n'))
         {
-            add_spell_to_memory(you.vehumet_gift_spell);
-            you.seen_spell[you.vehumet_gift_spell] = true;
+            add_spell_to_memory(you.vehumet_gift);
+            you.seen_spell[you.vehumet_gift] = true;
             prompt = make_stringf(" grants you the knowledge of %s.",
-                                  spell_title(you.vehumet_gift_spell));
+                                  spell_title(you.vehumet_gift));
             simple_god_message(prompt.c_str());
 
-            you.vehumet_gift_spell = SPELL_NO_SPELL;
+            you.vehumet_gift = SPELL_NO_SPELL;
             you.duration[DUR_VEHUMET_GIFT] = 0;
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
 
             take_note(Note(NOTE_GOD_GIFT, you.religion));
-            _inc_gift_timeout(std::max(spell_difficulty(you.vehumet_gift_spell),
-                                       (spell_difficulty(you.vehumet_gift_spell)^2) / 3));
+            _inc_gift_timeout(std::max(spell_difficulty(you.vehumet_gift),
+                                       (spell_difficulty(you.vehumet_gift)^2) / 3));
         }
     }
     else if (accepted
-             && (player_spell_levels() - spell_levels_required(you.vehumet_gift_spell) < 0))
+             && (player_spell_levels() - spell_levels_required(you.vehumet_gift) < 0))
     {
         mpr("You can't memorise that many levels of magic yet!");
     }
     else
     {
         std::string prompt = make_stringf(" denies you the knowledge of %s.",
-                                          spell_title(you.vehumet_gift_spell));
+                                          spell_title(you.vehumet_gift));
         simple_god_message(prompt.c_str());
     }
 }
@@ -2390,8 +2390,8 @@ bool do_god_gift(bool forced)
                 spell_type spell = _vehumet_find_spell_gift();
                 if (spell != SPELL_NO_SPELL)
                 {
-                    you.vehumet_gift_spell = spell;
-                    _add_to_recent_spells(you.vehumet_gift_spell);
+                    you.vehumet_gift = spell;
+                    _add_to_recent_spells(you.vehumet_gift);
                     simple_god_message(" offers you a gift! Check the god screen for details.");
                     you.duration[DUR_VEHUMET_GIFT] = 500;
                     success = true;

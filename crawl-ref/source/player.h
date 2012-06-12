@@ -99,7 +99,7 @@ public:
   std::list<spell_type> vehumet_recent_spells;
 
   uint8_t spell_no;
-  spell_type vehumet_gift_spell;
+  spell_type vehumet_gift;
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;

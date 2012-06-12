@@ -1126,7 +1126,7 @@ static void tag_construct_you(writer &th)
         marshallByte(th, *it);
     }
 
-    marshallByte(th, you.vehumet_gift_spell);
+    marshallByte(th, you.vehumet_gift);
 
     // how many skills?
     marshallByte(th, NUM_SKILLS);
@@ -1869,7 +1869,7 @@ static void tag_read_you(reader &th)
         for (i = 0; i < count; ++i)
             you.vehumet_recent_spells.push_back(static_cast<spell_type>(unmarshallUByte(th)));
 
-        you.vehumet_gift_spell = static_cast<spell_type>(unmarshallUByte(th));
+        you.vehumet_gift = static_cast<spell_type>(unmarshallUByte(th));
 #if TAG_MAJOR_VERSION == 33
     }
 #endif
