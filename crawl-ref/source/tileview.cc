@@ -158,7 +158,10 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_SNAKE_PIT:
         flv.wall  = TILE_WALL_SNAKE;
-        flv.floor = TILE_FLOOR_SNAKE_A + random2(3) * 4;
+        flv.floor = random_choose(TILE_FLOOR_SNAKE_A,
+                                  TILE_FLOOR_SNAKE_C,
+                                  TILE_FLOOR_SNAKE_D,
+                                  -1);
         return;
 
     case BRANCH_SWAMP:
