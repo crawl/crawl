@@ -190,6 +190,8 @@ $user =~ s/lothar.dierkes/ldierk/;
 $user =~ s/brendan/bmh/;
 $user =~ s/sbalady/nfogravity/;
 $user =~ s/ben\.striegel/Wensley/;
+$user =~ s/thann/Thann/;
+$user =~ s/smelenchuk/Grunt/;
 
 $rev = substr($commit, 0, 12);
 

@@ -90,6 +90,7 @@ Dominic 'dk' Kexel
 Jarmo Kielosto
 Kornel Kisielewicz
 Daniel Klein
+Jon Knapp
 Ilkka Koskela
 Vambola Kotkas
 Ryan Kusnery
@@ -104,6 +105,7 @@ Paul Maloney
 Wille Mäntylä
 John McCartney
 James 'Eronarn' Meickle
+Steve Melenchuk
 Andrew Minton
 Shawn M Moore
 Eva Myers
