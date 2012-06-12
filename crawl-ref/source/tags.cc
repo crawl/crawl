@@ -1119,9 +1119,12 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < 52; i++)
         marshallShort(th, you.ability_letter_table[i]);
 
-    marshallUByte(th, MAX_RECENT_SPELLS);
-    for (i = 0; i < MAX_RECENT_SPELLS; ++i)
-        marshallByte(th, you.vehumet_recent_spells[i]);
+    marshallUByte(th, you.vehumet_recent_spells.size());
+    for (std::list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
+         it != you.vehumet_recent_spells.end(); ++it)
+    {
+        marshallByte(th, *it);
+    }
 
     marshallByte(th, you.vehumet_gift_spell);
 
@@ -1863,8 +1866,8 @@ static void tag_read_you(reader &th)
     {
 #endif
         count = unmarshallUByte(th);
-        for (i = 0; i < count && i < MAX_RECENT_SPELLS; ++i)
-            you.vehumet_recent_spells[i] = static_cast<spell_type>(unmarshallUByte(th));
+        for (i = 0; i < count; ++i)
+            you.vehumet_recent_spells.push_back(static_cast<spell_type>(unmarshallUByte(th)));
 
         you.vehumet_gift_spell = static_cast<spell_type>(unmarshallUByte(th));
 #if TAG_MAJOR_VERSION == 33

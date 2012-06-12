@@ -210,7 +210,7 @@ const int MAX_SEC_ENCHANT = 2;
 #define POWER_DECAY 50
 
 const int MAX_KNOWN_SPELLS = 21;
-const int MAX_RECENT_SPELLS = 10;
+const unsigned int MAX_RECENT_SPELLS = 10;
 
 const int INVALID_ABSDEPTH = -1000;
 
