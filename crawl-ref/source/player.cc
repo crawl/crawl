@@ -5659,7 +5659,7 @@ void player::init()
     burden          = 0;
     burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
-    vehumet_recent_spells.init(SPELL_NO_SPELL);
+    vehumet_recent_spells.clear();
     spell_no        = 0;
     vehumet_gift_spell = SPELL_NO_SPELL;
     char_direction  = GDT_DESCENDING;

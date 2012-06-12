@@ -2066,38 +2066,19 @@ bool vehumet_is_currently_gifting()
     return (false);
 }
 
-void _age_recent_spells()
-{
-    for (int i = 0; i < MAX_RECENT_SPELLS - 1 ; ++i)
-    {
-        you.vehumet_recent_spells[i] = you.vehumet_recent_spells[i + 1];
-    }
-    you.vehumet_recent_spells[MAX_RECENT_SPELLS - 1] = SPELL_NO_SPELL;
-}
-
 void _add_to_recent_spells(spell_type spell)
 {
-    int i = 0;
-    for (; i < MAX_RECENT_SPELLS; ++i)
-    {
-        if (you.vehumet_recent_spells[i] != SPELL_NO_SPELL)
-        {
-            you.vehumet_recent_spells[i] = spell;
-            break;
-        }
-    }
-    if (i == MAX_RECENT_SPELLS)
-    {
-        _age_recent_spells();
-        you.vehumet_recent_spells[MAX_RECENT_SPELLS - 1] = spell;
-    }
+    you.vehumet_recent_spells.push_front(spell);
+    if (you.vehumet_recent_spells.size() > MAX_RECENT_SPELLS)
+        you.vehumet_recent_spells.pop_back();
 }
 
 bool _is_recent_spell(spell_type spell)
 {
-    for (int i = 0; i < MAX_RECENT_SPELLS; ++i)
+    for (std::list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
+         it != you.vehumet_recent_spells.end(); ++it)
     {
-        if (you.vehumet_recent_spells[i] == spell)
+        if (*it == spell)
             return (true);
     }
 
@@ -2416,12 +2397,7 @@ bool do_god_gift(bool forced)
                     success = true;
                 }
                 else
-                {
-                    // TODO: Do not only age spells when no gift is found,
-                    // but in a timed manner, or by piety_gain or piety_loss?
-                    _age_recent_spells();
                     success=false;
-                }
             }
             break;
         }                       // switch (you.religion)
