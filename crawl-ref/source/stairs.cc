@@ -848,7 +848,9 @@ void down_stairs(dungeon_feature_type force_stair)
         && player_in_connected_branch()
         && old_level.branch != you.where_are_you)
     {
-        mprf("Welcome back to %s!", branches[you.where_are_you].longname);
+        mprf("Welcome %sto %s!",
+             you.char_direction == GDT_GAME_START ? "" : "back ",
+             branches[you.where_are_you].longname);
     }
 
     if (!you.airborne()
