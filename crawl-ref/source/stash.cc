@@ -325,7 +325,7 @@ void Stash::update()
             if (!verified)
             {
                 verified = !_grid_has_perceived_multiple_items(p)
-                           && !god_likes_item(you.religion, item);
+                           && (you.religion == GOD_NO_GOD || !god_likes_item(you.religion, item));
             }
             return;
         }
