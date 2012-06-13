@@ -2348,7 +2348,10 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws the offer.",
                               coinflip(), "Vehumet won't offer you this gift forever..."))
     {
-        vehumet_gift_callback(false);
+        simple_god_message(make_stringf(" denies you knowledge of %s.",
+                                        spell_title(you.vehumet_gift)).c_str());
+        you.vehumet_gift = SPELL_NO_SPELL;
+
     }
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");

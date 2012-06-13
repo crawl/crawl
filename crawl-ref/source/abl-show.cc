@@ -2705,8 +2705,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_VEHUMET_MEMORISE_SPELL:
-        vehumet_gift_callback(true);
-    break;
+        vehumet_accept_gift();
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
