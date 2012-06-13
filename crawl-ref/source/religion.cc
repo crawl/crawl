@@ -2113,6 +2113,8 @@ bool vehumet_accept_gift()
                                        (spell_difficulty(you.vehumet_gift)^2) / 3));
             return true;
         }
+        else
+            canned_msg(MSG_OK);
     }
     else
         mpr("You can't memorise that many levels of magic yet!");
