@@ -951,6 +951,10 @@ static bool _monster_filter(std::string key, std::string body)
 
 static bool _spell_filter(std::string key, std::string body)
 {
+    if (!ends_with(key, " spell"))
+        return true;
+    key.erase(key.length() - 6);
+
     spell_type spell = spell_by_name(key);
 
     if (spell == SPELL_NO_SPELL)
@@ -1171,7 +1175,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 
 // Returns the result of the keypress.
 static int _do_description(std::string key, std::string type,
-                            std::string footer = "")
+                           const std::string &suffix, std::string footer = "")
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
@@ -1273,6 +1277,8 @@ static int _do_description(std::string key, std::string type,
 
     inf.body << desc;
 
+    if (ends_with(key, suffix))
+        key.erase(key.length() - suffix.length());
     key = uppercase_first(key);
     linebreak_string(footer, width - 1);
 
@@ -1383,6 +1389,7 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     std::string    type;
     std::string    extra;
+    std::string    suffix;
     db_find_filter filter     = NULL;
     db_keys_recap  recap      = NULL;
     bool           want_regex = true;
@@ -1408,6 +1415,7 @@ static void _find_description(bool *again, std::string *error_inout)
     case 'S':
         type         = "spell";
         filter       = _spell_filter;
+        suffix       = " spell";
         doing_spells = true;
         break;
     case 'K':
@@ -1495,7 +1503,7 @@ static void _find_description(bool *again, std::string *error_inout)
     if (want_regex && !(*filter)(regex, ""))
     {
         // Try to get an exact match first.
-        std::string desc = getLongDescription(regex);
+        std::string desc = getLongDescription(regex + suffix);
 
         if (!desc.empty())
             exact_match = true;
@@ -1558,7 +1566,7 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        _do_description(key_list[0], type);
+        _do_description(key_list[0], type, suffix);
         return;
     }
 
@@ -1568,7 +1576,7 @@ static void _find_description(bool *again, std::string *error_inout)
         footer += regex;
         footer += "'. To see non-exact matches, press space.";
 
-        if (_do_description(regex, type, footer) != ' ')
+        if (_do_description(regex, type, suffix, footer) != ' ')
             return;
     }
 
@@ -1593,6 +1601,9 @@ static void _find_description(bool *again, std::string *error_inout)
     {
         const char  letter = index_to_letter(i);
         std::string str    = uppercase_first(key_list[i]);
+
+        if (ends_with(str, suffix)) // perhaps we should assert this?
+            str.erase(str.length() - suffix.length());
 
         MenuEntry *me = NULL;
 
@@ -1654,8 +1665,7 @@ static void _find_description(bool *again, std::string *error_inout)
             me = new GodMenuEntry(str_to_god(key_list[i]));
         else
         {
-            me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
-                               letter);
+            me = new MenuEntry(str, MEL_ITEM, 1, letter);
 
 #ifdef USE_TILE
             if (doing_spells)
@@ -1704,7 +1714,7 @@ static void _find_description(bool *again, std::string *error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            _do_description(key, type);
+            _do_description(key, type, suffix);
         }
     }
 }

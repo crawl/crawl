@@ -1,23 +1,23 @@
 %%%%
-Abjuration
+Abjuration spell
 
 Ten czar próbuje odesłać wskazane przyzwane stworzenie tam skąd przybyło, a
 nawet jeśli się to nie uda, skraca pozostały czas przyzwania.
 %%%%
-Agony
+Agony spell
 
 Ten czar połowi siły życiowe wskazanego stworzenia (jeśli nie zostanie
 odparty), nigdy jednak nie jest bezpośrednią przyczyną śmierci. Nie działa na
 istoty nie potrafiące czuć bólu, jak i na te nie posiadające normalnych sił
 życiowych.
 %%%%
-Airstrike
+Airstrike spell
 
 Ten czar powoduje małe lecz bardzo gwałtowne zawirowanie powietrza, zadając
 spore obrażenia wskazanemu stworzeniu. Zawsze trafia. Latające istoty są
 szczególnie wrażliwe na ten czar.
 %%%%
-Alistair's Intoxication
+Alistair's Intoxication spell
 
 Ten czar zmienia małą część komórek mózgu w alkohol, powodując efekty podobne
 do upicia we wszystkich inteligentnych stworzeniach w zasięgu wzroku
@@ -27,71 +27,71 @@ efektowi.
 
 Jak można zgadnąć, czar ten jest często nadużywany na imprezach czarodziei.
 %%%%
-Animate Dead
+Animate Dead spell
 
 Ten czar zmusza martwych do powstania i służenia rzucającemu, każde zwłoki
 zdolne do powstania są nim objęte. Za pomocą tego czaru można stworzyć ogromną
 armię, jednak utworzeni nieumarli nie są zdolni ani do regeneracji, ani do
 żadnych skomplikowanych akcji, ani nawet do chodzenia po schodach.
 %%%%
-Animate Skeleton
+Animate Skeleton spell
 
 Ten czar zmusza martwy szkielet do powstania, nawet jeśli ten szkielet jest
 ciągle jeszcze ubrany w mięso (które zostanie zrzucone). Szkielety są
 prymitywnymi nieumarłymi, niezdolnymi do regeneracji ani chodzenia po schodach.
 %%%%
-Apportation
+Apportation spell
 
 Ten czar pozwala przyciągnąć jakiś przedmiot, lub czasem nawet grupę
 przedmiotów, rzucając go pod nogi rzucającego. Cięższe przedmioty zostaną
 przesunięte tylko częściowo — lub nawet, przy małej mocy i dużym ciężarze,
 nawet w ogóle nie.
 %%%%
-Beastly Appendage
+Beastly Appendage spell
 
 Ten czar pozwala ci tymczasowo zmienić którąś z kończyn w jej zwierzęcy
 wariant, taki jak np. szpony, bycze rogi. Daje to dodatkowy atak wręcz. Ten
 czar nie działa na części ciała pokryte zbroją lub ubraniem.
 %%%%
-Blade Hands
+Blade Hands spell
 
 Ten czar tymczasowo zmienia twe ręce (macki, łapy, ...) w długie ostrza jak u
 kosy. To utrudnia czarowanie, ale pozwala na, powiedzmy, dość niedelikatny
 masaż.
 %%%%
-Blink
+Blink spell
 
 Ten czar przemieszcza rzucającego na krótki dystans, w niekontrolowany sposób.
 %%%%
-Bolt of Cold
+Bolt of Cold spell
 
 Ten czar emituje wielką wiązkę przejmującego zimna.
 %%%%
-Bolt of Draining
+Bolt of Draining spell
 
 Ten czar emituje wielką wiązkę nekromantycznej energii, wysysając życie z
 wszelkich trafionych żywych istot. Demony, nieumarli i animowane przedmioty nie
 ucierpią w żaden sposób.
 %%%%
-Bolt of Fire
+Bolt of Fire spell
 
 Ten czar emituje wielką wiązkę płomieni.
 %%%%
-Bolt of Inaccuracy
+Bolt of Inaccuracy spell
 
 Ten czar strzela magicznym pociskiem który zadaje ogromne obrażenia — o ile
 cokolwiek trafi. Celowanie nim jest niewiarygodnie trudne.
 %%%%
-Iron Shot
+Iron Shot spell
 
 Ten czar tworzy spory i ciężki metalowy pocisk, po czym ciska nim.
 %%%%
-Bolt of Magma
+Bolt of Magma spell
 
 Ten czar ciska pocisk z gorącej roztopionej skały, zadając spore obrażenia
 nawet istotom odpornym na ogień.
 %%%%
-Borgnjor's Revivification
+Borgnjor's Revivification spell
 
 Ten czar natychmiast leczy wszelkie rany odniesione przez rzucającego, ale
 kosztem nieodwracalnej utraty małej części zdrowia — tym większej, im mniejsze
@@ -100,30 +100,30 @@ są umiejętności.
 Czar ten ma wystarczającą moc aby dosłownie wydrzeć kogoś z Bram Śmierci, ale
 szok tym wywołany powoduje chwilowy paraliż.
 %%%%
-Call Canine Familiar
+Call Canine Familiar spell
 
 Ten czar przyzywa jakąś odmianę psa.
 %%%%
-Call Imp
+Call Imp spell
 
 Ten czar przyzywa pomniejszego demona z piekielnych czeluści.
 %%%%
-Cause Fear
+Cause Fear spell
 
 Ten czar sieje przerażenie wśród istot w najbliższym pobliżu.
 %%%%
-Chain Lightning
+Chain Lightning spell
 
 Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
-Cigotuvi's Degeneration
+Cigotuvi's Degeneration spell
 
 Ten czar, jeśli nie zostanie odparty, zmienia ofiarę w bezkształtną bryłę mięsa
 — która jednak wciąż jest żywa i wrogo nastawiona.
 %%%%
-Condensation Shield
+Condensation Shield spell
 
 Ten czar tworzy lodowy dysk z wilgoci zawartej w powietrzu, który unosi się
 przez okres działania czaru, sterowany umysłem czarującego. Działa jak zwykła
@@ -131,38 +131,38 @@ tarcza, jednak nie wymaga wolnej ręki a więc nie koliduje z oburęcznymi broń
 Grubość, rozmiar i wytrzymałość tego dysku zależy od umiejętności z dziedziny
 Magii Lodu.
 %%%%
-Confuse
+Confuse spell
 
 Ten czar, jeśli nie zostanie odparty, powoduje tymczasowe zaćmienie umysłu u
 ofiary.
 %%%%
-Confusing Touch
+Confusing Touch spell
 
 Ten czar rzuca urok na dłonie rzucającego. Po dotknięciu kogoś taką dłonią,
 jeśli czar nie zostanie odparty, powoduje on zmieszanie umysłu.
 %%%%
-Conjure Ball Lightning
+Conjure Ball Lightning spell
 
 Ten czar tworzy pioruny kuliste, które poruszają się bez jakiejkolwiek
 kontroli, po czym wybuchają w sporym wyładowaniu.
 %%%%
-Conjure Flame
+Conjure Flame spell
 
 Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
 tymczasową zaporę przeciw wrogom którzy boją się poparzeń — i zadaje spore
 obrażenia tym którzy w nią wejdą.
 %%%%
-Control Teleport
+Control Teleport spell
 
 Ten czar pozwala przez krótki okres kontrolować czary przemieszczeń.
 
 Uwaga: kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
 %%%%
-Control Undead
+Control Undead spell
 
 Ten czar próbuje zniewolić nieumarłych na których zostanie rzucony.
 %%%%
-Controlled Blink
+Controlled Blink spell
 
 Ten czar pozwala na przemieszczenie się na krótki dystans, z pełną precyzją.
  Jest na tyle potężny że nawet w miejscach gdzie magiczna aura uniemożliwia
@@ -170,35 +170,35 @@ jakakolwiek inną kontrolę teleportów, precyzja jest tylko zmniejszona.
 
 Kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
 %%%%
-Corona
+Corona spell
 
 Ten czar tworzy poświatę wokół ofiary, czyniąc ją bardziej widoczną. W
 warunkach słabego światła, takich jak te lochy, bardzo ułatwia to obserwację
 tej istoty a więc także i celowanie. Ponadto, blokuje to wszelką
 niewidzialność.
 %%%%
-Corpse Rot
+Corpse Rot spell
 
 Ten czar gwałtownie przyśpiesza rozkład zwłok w pobliżu rzucającego,
 wydzielając chmury nekromanckiej miazmy, wysoce niezdrowej dla wszelkich istot
 żywych.
 %%%%
-Cure Poison
+Cure Poison spell
 
 Ten czar leczy truciznę z ciała rzucającego.
 %%%%
-Darkness
+Darkness spell
 
 Ten czar przyciemnia światło, zmniejszając zasięg wzroku. Brzegi tego efektu są
 bardzo stopniowe, tak więc nie wzbudza to alarmu u niezbyt uważnych
 przeciwników.
 %%%%
-Death Channel
+Death Channel spell
 
 Ten czar zniewala dusze żywych istot zabitych przez zarówno rzucającego jak i
 sprzymierzeńców, tworząc z nich upiory.
 %%%%
-Death's Door
+Death's Door spell
 
 Ten czar jest wyjątkowo potężny, ale niesie ze sobą spore ryzyko. Stawia on
 rzucającego w stan pomiędzy życiem a śmiercią — daje zupełną odporność na
@@ -208,18 +208,18 @@ mija, pozostawia rzucającego niemal martwym.
 Umiejętności w dziedzinie Nekromacji, jak i łaska Kikubaaqudghy, pozwalają
 zachować nieco więcej zdrowia.
 %%%%
-Debugging Ray
+Debugging Ray spell
 
 Czar który powoduje 1500 obrażeń i zawsze trafia. I nie jest dostępny w
 normalnej grze.
 %%%%
-Deflect Missiles
+Deflect Missiles spell
 
 Ten czar chroni rzucającego przed wszelkimi typami pocisków, tak zwykłych jak i
 magicznych. Uniknięcie ich nadal wymaga przytomnej decyzji (robisz to odruchowo
 według wskaźnika EV), ale niemal zawsze jest śmiesznie łatwe.
 %%%%
-Delayed Fireball
+Delayed Fireball spell
 
 Rzucenie tego czaru nie ma natychmiastowego efektu. Zgromadzoną w nim energię
 magiczną możesz w każdej chwili uwolnić w postaci ognistej kuli; wypuszczenie
@@ -229,45 +229,45 @@ przygotować tylko jedną kulę naraz, można ją trzymać bez limitu czasu.
 Znajomość tego czasu pozwala nauczyć się zwykłej Ognistej Kuli bez zajmowania
 miejsca w pamięci.
 %%%%
-Demonic Horde
+Demonic Horde spell
 
 Ten czar przyzywa grupę pomniejszych demonów na usługi rzucającego, jakkolwiek
 niektóre z nich mogą być niesforne.
 %%%%
-Dig
+Dig spell
 
 Ten czar pozwala drążyć tunele w niewzmocnionej skale. Nadaje on skale
 półpłynną postać która spływa w dół, nie powodując wiele hałasu.
 %%%%
-Dispel Undead
+Dispel Undead spell
 
 Ten czar częściowo animuje wskazaną nieumarłą istotę, w sposób sprzeczny z
 czarami za pomocą których się ona porusza. Powoduje to ogromne obrażenia.
 %%%%
-Dispersal
+Dispersal spell
 
 Ten czar próbuje przeteleportować wszystkich znajdujących się bezpośrednio obok
 rzucającego.
 %%%%
-Dragon Form
+Dragon Form spell
 
 Ten czar tymczasowo nadaje rzucającemu postać wielkiego ognistego smoka, dając
 kły, pazury, nieludzko twardą skórę jak i zdolność ziania ogniem. Jeśli
 rzucający jest smokowcem, smok zamiast tego zachowa kolor jak i typ oddechu
 (np. biali smokowcy zmieniają się w lodowe smoki i zioną chłodem).
 %%%%
-Enslavement
+Enslavement spell
 
 Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
 istotą.
 %%%%
-Ensorcelled Hibernation
+Ensorcelled Hibernation spell
 
 Ten czar próbuje oziębić metabolizm wybranej istoty, co zwykle skutkuje
 zapadnięciem w stan przypominający sen. Zimnokrwiste stworzenia mogą ponieść
 dodatkowe konsekwencje.
 %%%%
-Evaporate
+Evaporate spell
 
 Ten czar podgrzewa eliksir trzymany w ręku, powodując gwałtowny wybuch.
 Naturalnie, rozsądny czarodziej zadba o to aby w tym momencie eliksiru w ręce
@@ -275,127 +275,127 @@ już nie było — rzut butelką jest elementem rzucania tego czaru.  Zazwyczaj
 opary eliksiru tworzą zabójczą chmurę utrzymującą się w powietrzu przez dłuższą
 chwilę.
 %%%%
-Excruciating Wounds
+Excruciating Wounds spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę cierpienia. Nie
 zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
 
 Nie jest możliwe utrwalenie tej marki za pomocą zwojów worpalizacji.
 %%%%
-Fire Brand
+Fire Brand spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę płomieni. Nie
 zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
 %%%%
-Fire Storm
+Fire Storm spell
 
 Ten czar przywołuje potężną burzę płomieni we wskazanym miejscu. Obiekty lub
 istoty znajdujące się po drodze nie stanowią problemu. Efekt kominowy powoduje
 powstanie wielu krótkotrwałych wirów ognia.
 %%%%
-Fireball
+Fireball spell
 
 Ten czar ciska kulę ognia która leci we wskazanie miejsce po czym wybucha.
 %%%%
-Flame Tongue
+Flame Tongue spell
 
 Ten czar wyzwala parometrowy płomień. Jego długość zależy od mocy czaru, i dla
 początkujących czarodziei może dosięgnąć co najwyżej na długość ręki.
 %%%%
-Flight
+Flight spell
 
 Ten czar daje rzucającemu zdolność lotu.
 %%%%
-Freeze
+Freeze spell
 
 Ten czar zmraża jakąś istotę stojącą w zasięgu ręki rzucającego (zawsze
 trafia). To powoduje obrażenia, i może nieść dodatkowe konsekwencje dla
 zimnokrwistych stworzeń.
 %%%%
-Freezing Aura
+Freezing Aura spell
 
 Ten czar tymczasowo nadaje trzymanej broni (ręcznej lub miotającej) magiczną
 markę lodu. Nie zadziała to na bronie już posiadające jakąś markę oraz na
 artefakty.
 %%%%
-Freezing Cloud
+Freezing Cloud spell
 
 Ten czar przyzywa duży obłok śmiertelnie zimnej pary.
 %%%%
-Fulsome Distillation
+Fulsome Distillation spell
 
 Ten czar wyciąga najgorsze esencje ze zwłok. Picie rezultatu jest wysoce
 niewskazane — służy on jako komponent niektórych czarów. Typ utworzonego w ten
 sposób eliksiru jest zwykle podobny do efektów spożycia mięsa z tych zwłok.
 %%%%
-Haste
+Haste spell
 
 Ten czar znacznie przyspiesza wszystkie ruchy jakiegoś stworzenia. Zwykle rzuca
 się ten czar na siebie samego, jednak nadużywanie grozi skażeniem magią.
 %%%%
-Haunt
+Haunt spell
 
 Ten czar przyzywa duchy i upiory wokół wskazanej istoty. Użycie tego czaru
 często powoduje że rzucającemu robi się niedobrze.
 %%%%
-Throw Icicle
+Throw Icicle spell
 
 Ten czar tworzy i ciska ostry sopel lodu. Jakkolwiek ten czar jest szczególnie
 skuteczny wobec istot wrażliwych na zimno, większość obrażeń jest zadawanych
 wskutek uderzenia i ostrych krawędzi, tak więc odporność na zimno nie za wiele
 pomaga.
 %%%%
-Ice Form
+Ice Form spell
 
 Ten czar tymczasowo zmienia rzucającego w lodową bestię — mniej więcej w
 kształcie niedźwiedzia, jednak zrobioną całkowicie z lodu. Jak wiadomo, lód
 może pływać po wodzie.
 %%%%
-Ice Storm
+Ice Storm spell
 
 Ten czar ciska groźną burzę lodu, gradu i mroźnego powietrza we wskazanym
 kierunku. Zadaje to to ogromne obrażenia, tak od zimna jak i od uderzeń lodu,
 na sporym obszarze.
 %%%%
-Ignite Poison
+Ignite Poison spell
 
 Ten czar zamienia wszelką truciznę w pobliżu w ogień, paląc od środka istoty
 które uległy zatruciu, mają trującą krew lub gruczoły lub zęby jadowe.
 
 Rzucający ten czar i jego wyposażenie nie podlegają temu efektowi.
 %%%%
-Inner Flame
+Inner Flame spell
 
 Ten czar, jeśli nie zostanie odparty, wypełnia ofiarę wewnętrznym ogniem. Nie
 daje to żadnego efektu póki ofiara w jakikolwiek sposób jeszcze żyje (łącznie z
 fałszywym życiem nieumarłych), jednak w momencie śmierci powoduje gwałtowną
 ognistą eksplozję. Rozmiar tego wybuchu zależy od rozmiaru ofiary.
 %%%%
-Insulation
+Insulation spell
 
 Ten czar chroni rzucającego przed porażeniem prądem.
 %%%%
-Invisibility
+Invisibility spell
 
 Ten czar ukrywa jakąś istotę (zwykle siebie samego) przed wzrokiem innych.
 Dłuższa niewidzialność z czasem powoduje magiczne skażenie, które w większych
 dawkach, oprócz innych nieprzyjemnych rezultatów, jest widoczne jako poświata,
 co czyni niewidzialność bezużyteczną.
 %%%%
-Iskenderun's Mystic Blast
+Iskenderun's Mystic Blast spell
 
 Ten czar ciska niestabilną kulę czystej magicznej energii. Ta kula często
 oprócz bezpośrednich obrażeń wybucha na boki w momencie uderzenia, zwłaszcza
 jeśli została użyta na krótki dystans.
 %%%%
-Leda's Liquefaction
+Leda's Liquefaction spell
 
 Ten czar czyni grunt wokół i pod rzucającym półpłynnym, wielce utrudniając
 chodzenie. Rzucający w niewielkim stopniu kontroluje ten czar, pozwalając
 wykonywać czynności inne niż chodzenie bez większego spowolnienia — wszyscy
 wokół nie mają tak dobrze.
 %%%%
-Lee's Rapid Deconstruction
+Lee's Rapid Deconstruction spell
 
 Ten czar rozwala na kawałki część ściany lub niektórych kruchych istot,
 zasypując wszystkich wokół odłamkami. Można ten czar użyć na istoty zrobione z
@@ -405,26 +405,26 @@ Cele zrobione ze skały, kamienia, lodu lub kości rozsiewają odłamki na krót
 lub średni dystans. Cele z metalu dają krótki zasięg ale większe obrażenia, zaś
 te z kryształu zadają ogromne obrażenia na duży dystans.
 %%%%
-Lehudib's Crystal Spear
+Lehudib's Crystal Spear spell
 
 Ten czar ciska długi i skrajnie ostry pocisk z kryształu.
 %%%%
-Lethal Infusion
+Lethal Infusion spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę wyssania. Nie
 zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
 %%%%
-Lightning Bolt
+Lightning Bolt spell
 
 Ten czar ciska potężny grom. Jakkolwiek ten czar zadaje trochę mniejsze
 obrażenia niż podobne czary Magii Ognia i Lodu, odbija się on od większości
 ścian, pozwalając uderzyć kogoś dwukrotnie.
 %%%%
-Magic Dart
+Magic Dart spell
 
 Ten czar ciska mały pocisk czystej magicznej energii. Zawsze trafia.
 %%%%
-Malign Gateway
+Malign Gateway spell
 
 Ten czar wyrywa dziurę w przestrzeni, tworząc krótkotrwały portal do innego
 świata, pełnego potwornych istot z wielkimi mackami. Zwykle po krótkim czasie
@@ -433,28 +433,28 @@ stronie. Nie jest dobrze być wówczas z pobliżu.
 
 Ten portal jest jednostronny.
 %%%%
-Mass Abjuration
+Mass Abjuration spell
 
 Ten czar próbuje odesłać wszystkie wrogie przyzwane istoty w zasięgu wzroku — a
 nawet jeśli zostanie odparty, mocno skraca pozostały czas przyzwania.
 %%%%
-Mass Confusion
+Mass Confusion spell
 
 Ten czar powoduje zaćmienie umysłu we wszystkich w zasięgu wzroku którzy nie
 odeprą tego czaru.
 %%%%
-Mephitic Cloud
+Mephitic Cloud spell
 
 Ten czar tworzy sporą lecz krótkotrwałą chmurę obrzydliwych oparów.
 %%%%
-Metabolic Englaciation
+Metabolic Englaciation spell
 
 Ten czar powoduje wychłodzenie metabolizmu wszystkich pobliskich istot,
 spowalniając wszystkie które nie są odporne na zimno. Nie można tego czaru w
 inny sposób odeprzeć, jednak mocniejsze stworzenia zwykle szybciej wracają do
 normy.
 %%%%
-Necromutation
+Necromutation spell
 
 Ten czar tymczasowo zmienia rzucającego w licza — potężny magiczny szkielet.
 Daje to moce śmierci (nekromancki dotyk, wzmocnienie czarów nekromancji),
@@ -468,13 +468,13 @@ niemożność picia eliksirów.
 Z niezrozumiałych powodów ten czar może być użyty przez czarodziejów będących
 mięczakami, jednak jaka tkanka pełni wówczas rolę kości pozostaje tajemnicą.
 %%%%
-Olgreb's Toxic Radiance
+Olgreb's Toxic Radiance spell
 
 Ten czar spowija wszystko w zasięgu wzroku w niezdrowym zielonym świetle,
 powodując zatrucie u wszystkich obecnych (łącznie z rzucającym). Zwykłe szkło
 zatrzymuje te promienie, a niewidzialność zapewnia całkowitą ochronę.
 %%%%
-Orb of Destruction
+Orb of Destruction spell
 
 Ten czar tworzy kulę czystej niszczącej magii, ciskając ją w wybranym kierunku.
 Te kule poruszają się znacznie wolniej niż większość pocisków. Same
@@ -488,7 +488,7 @@ rzucającego, jednak według pogłosek jest to skutek błędu kopisty, i czarown
 którzy żyli setki lat temu znali pełną wersję. Być może, dzięki nekromancji,
 niektórzy z nich jeszcze nie-żyją do dziś dnia.
 %%%%
-Ozocubu's Armour
+Ozocubu's Armour spell
 
 Ten czar pokrywa ciało rzucającego ochronną warstwą lodu, której moc zależy od
 umiejętności ze szkoły Magii Lodu. Rzucający i jego wyposażenie nie czują zimna
@@ -499,17 +499,17 @@ Ten czar koliduje z noszeniem sztywnej zbroi (czyli takiej dającej co najmniej
 Efekty tego czaru są silniejsze jeśli rzucający jest zamieniony w lodową
 bestię.
 %%%%
-Ozocubu's Refrigeration
+Ozocubu's Refrigeration spell
 
 Ten czar wysysa ciepło z całej okolicy, zadając obrażenia od zimna wszystkim w
 zasięgu wzroku, łącznie z rzucającym.
 %%%%
-Pain
+Pain spell
 
 Ten czar wywołuje małą ale wyjątkowo bolesną ranę we wskazanej żyjącej istocie.
 Rzucający sam otrzymuje pomniejsze obrażenia jako efekt uboczny.
 %%%%
-Passage of Golubria
+Passage of Golubria spell
 
 Ten czar otwiera dwa portale, z tego jeden zawsze blisko rzucającego, które
 pozwalają na natychmiastowy transport pomiędzy nimi. Jeśli więcej takich
@@ -517,40 +517,40 @@ portali jest otwartych jednocześnie, nie ma możliwości wyboru do którego si�
 trafi. Portale te są jednorazowe, i rozwiewają się po upływie czasu działania
 czaru.
 %%%%
-Passwall
+Passwall spell
 
 Ten czar, po krótkiej medytacji nad strukturą skały, pozwala przeniknąć na jej
 drugą stronę, o ile odległość jest wystarczająco krótka.
 %%%%
-Petrify
+Petrify spell
 
 Ten czar, jeśli nie zostanie odparty, obraca wskazaną istotę w kamień na krótki
 czas. Trwa to chwilę: początkowo ofiara jest tylko spowolniona, aż w końcu
 stopniowo zmieni się całkowicie w kamień. Oczywiście, łupanie kamienia jest
 trudniejsze niż żywego ciała, jednak ofiara, mimo że twarda, jest bezbronna.
 %%%%
-Phase Shift
+Phase Shift spell
 
 Ten czar pozwala rzucającemu „migotać” pomiędzy światem rzeczywistym a
 urojonym, co czasem pozwala całkowicie uniknąć pocisków i ciosów, jeśli w
 momencie ich zadania akurat będzie się „migniętym” poza świat.
 %%%%
-Poison Arrow
+Poison Arrow spell
 
 Ten czar ciska magiczną strzałę zatrutą skrajnie zjadliwą toksyną, przed którą
 żadna żywa istota nie jest zupełnie odporna. A i sama strzała zadaje pewne
 obrażenia, tak więc i nieumarli nie są bezpieczni.
 %%%%
-Poison Weapon
+Poison Weapon spell
 
 Ten czar tymczasowo pokrywa trzymaną w dłoni broń trucizną. To zadziała tylko
 na bronie nie posiadające jeszcze żadnej magicznej marki.
 %%%%
-Poisonous Cloud
+Poisonous Cloud spell
 
 Ten czar tworzy wielki obłok trujących gazów.
 %%%%
-Polymorph Other
+Polymorph Other spell
 
 Ten czar, jeśli nie zostanie odparty, zmienia jakąś istotę w jakieś inne,
 przypadkowe, stworzenie. Działa na wszelkie formy życia łącznie z demonami i
@@ -558,33 +558,33 @@ aniołami.
 
 Zmiennokształtne istoty nie mają możliwości odparcia tego czaru.
 %%%%
-Portal Projectile
+Portal Projectile spell
 
 Ten czar przemieszcza wystrzelony lub rzucony pocisk wprost z twego łuki/ręki
 na piędź przed cel, wielce poprawiając celność. Nie ma to jednak wpływu na
 zadane obrażenia.
 %%%%
-Projected Noise
+Projected Noise spell
 
 Ten czar wywołuje dźwięk we wskazanym odległym miejscu.
 %%%%
-Recall
+Recall spell
 
 Ten czar przemieszcza wszelkie przyjazne istoty w dużym zasięgu wprost koło
 rzucającego.
 %%%%
-Regeneration
+Regeneration spell
 
 Ten czar używa nekromancji aby animować świeżo martwe tkanki na brzegach ran
 rzucającego. Pozwala to zasklepić rany, wielce wzmagając naturalne leczenie.
 Ten czar także znacznie zwiększa zużycie pokarmu przez czas działania.
 %%%%
-Repel Missiles
+Repel Missiles spell
 
 Ten czar znacznie ułatwia uskakiwanie przed pociskami, tak zwykłymi jak i
 magicznymi.
 %%%%
-Ring of Flames
+Ring of Flames spell
 
 Ten czar otacza rzucającego ruchomym pierścieniem płomieni, co także powoduje
 odrzucenie wszelkiego innego ognia. Oprócz palenia kogokolwiek w pobliżu,
@@ -592,24 +592,24 @@ zapewnia to dużą odporność na ogień jak i wzmocnienie Magii Ognia, lecz
 niestety także daje wrażliwość na zimno i zmniejsza moc rzucanych czarów Magii
 Lodu.
 %%%%
-Sandblast
+Sandblast spell
 
 Ten czar ciska strumień ziaren żwiru. Dla dobrego efektu potrzebne jest jakieś
 źródło (np. kamień trzymany w dłoni), jednak wszędzie obecny piasek i brud też
 dają pewien rezultat.
 %%%%
-See Invisible
+See Invisible spell
 
 Ten czar pozwala rzucającemu widzieć rzeczy ukryte przed zwykłym wzrokiem.
 %%%%
-Shadow Creatures
+Shadow Creatures spell
 
 Ten czar tka i ożywia stworzenia ze strzępów cienia. Będą to zawsze istoty
 podobne do tych jakie zwykle żyją w danej okolicy, jednak nie ma możliwości
 wyboru co konkretnie utkać. Ten czar nawet utworzy odpowiednie wyposażenie,
 które, razem z istotami, rozwieje się po krótkim czasie.
 %%%%
-Shatter
+Shatter spell
 
 Ten czar powoduje trzęsienie ziemi wokół rzucającego, co zadaje ogromne
 obrażenia niemal wszystkim istotom. Tylko duchy są całkowicie niewrażliwe.
@@ -618,11 +618,11 @@ Najbardziej ucierpią stworzenia zrobione z kamienia, metalu lub kryształu,
 trochę mniej te z lodu lub kości. Zaś galarety i ci zdolni do lotu doznają
 tylko nieznacznych obrażeń.
 %%%%
-Shock
+Shock spell
 
 Ten czar ciska małą dawkę elektryczności, zdolną do odbijania się od ścian.
 %%%%
-Shroud of Golubria
+Shroud of Golubria spell
 
 Ten czar zakrzywia przestrzeń, tworząc osłonę wokół ciała rzucającego,
 zatrzymując ciosy. Nie daje to żadnej ochrony przed pociskami, jako że
@@ -630,7 +630,7 @@ poruszają się one zbyt szybko aby ten czar mógł je odchylić. Ta osłona jes
 bardzo niestabilna, i ma tendencję do zawodzenia, zwłaszcza wobec mocniejszych
 ataków.
 %%%%
-Silence
+Silence spell
 
 Ten czar całkowicie eliminuje wszelkie dźwięki w pobliżu czytającego. Póki ten
 efekt trwa, nikt, łącznie z rzucającym, nie może czytać zwojów, rzucać czarów,
@@ -641,7 +641,7 @@ stanie zauważyć że coś jest nie tak. Demony, jak i magiczne istoty (w
 przeciwieństwie do tych tylko posługujących się magią) nie potrzebują dźwięku
 do rzucania czarów.
 %%%%
-Simulacrum
+Simulacrum spell
 
 Ten czar zmienia kawałek mięsa w ręku rzucającego do stworzenia lodowej
 podobizny stworzenia z którego powstało to mięso. Magia ta jest niestabilna,
@@ -651,18 +651,18 @@ Simulacra nie są zdolne do żadnych czynności bardziej skomplikowanych niż
 poruszanie się i prosta walka wręcz — nie mogą więc strzelać, rzucać czarów ani
 nawet chodzić po schodach.
 %%%%
-Slow
+Slow spell
 
 Ten czar, jeśli nie zostanie odparty, spowalnia wszelkie czynności jakiejś
 istoty.
 %%%%
-Spider Form
+Spider Form spell
 
 Ten czar tymczasowo zmienia rzucającego w szybkiego, jadowitego wielkiego
 pająka. Czarowanie w tej postaci jest możliwe, lecz lekko utrudnione. Pająk ten
 może chodzić po ścianach, lecz jest wrażliwy na trucizny.
 %%%%
-Static Discharge
+Static Discharge spell
 
 Ten czar wyzwala ładunek elektryczności, porażając stworzenia w bezpośrednim
 sąsiedztwie rzucającego. Jeśli te stworzenia przewodzą prąd, porażeniu mogą
@@ -670,109 +670,109 @@ ulec też istoty stojące dalej w nieprzerwanym łańcuchu.
 
 Stworzenia nie dotykające podłoża są całkowicie niewrażliwe.
 %%%%
-Statue Form
+Statue Form spell
 
 Ten czar tymczasowo zmienia czarującego w powolną lecz bardzo wytrzymałą
 kamienną statuę. Ciosy zadawane w tej postaci, tak bronią jak i gołymi
 kamiennymi pięściami, zadają ogromne obrażenia. Ponadto, forma ta zapewnia
 odporność na elektryczność, trucizny, zgniliznę jak i nekromancję.
 %%%%
-Sticks to Snakes
+Sticks to Snakes spell
 
 Ten czar zmienia drewniane przedmioty w dłoni rzucającego w węże. Artefakty nie
 mogą zostać w ten sposób przemienione.
 %%%%
-Sticky Flame
+Sticky Flame spell
 
 Ten czar tworzy grudę lepkiego płynnego ognia, która opryskuje i przylepia się
 do pobliskiego stworzenia.
 %%%%
-Sting
+Sting spell
 
 Ten czar ciska magiczną zatrutą strzałką.
 %%%%
-Stone Arrow
+Stone Arrow spell
 
 Ten czar ciska ostrym odłamem kamienia.
 %%%%
-Stoneskin
+Stoneskin spell
 
 Ten czar zmienia skórę rzucającego w kamień, o twardości zależnej od
 umiejętności w Magii Ziemi. Działa to tylko na mniej więcej normalne żywe
 ciało, i koliduje z większością przemian. Z jednym wyjątkiem: w formie statuy,
 ten czar jest bardziej efektywny.
 %%%%
-Sublimation of Blood
+Sublimation of Blood spell
 
 Ten czar zmienia świeże mięso lub krew w magiczną moc. Można tego czaru użyć na
 sobie samym, kosztem własnego zdrowia (co może być niebezpieczne lecz nigdy nie
 bezpośrednio zabójcze), lub na trzymanym w dłoni kawałku świeżego mięsa.
 %%%%
-Summon Butterflies
+Summon Butterflies spell
 
 Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
 %%%%
-Summon Demon
+Summon Demon spell
 
 Ten czar przyzywa jakiegoś mieszkańca Pandemonium, i próbuje nakłonić do
 służby. Przyzwanie jest gwarantowane, służba nie.
 %%%%
-Summon Dragon
+Summon Dragon spell
 
 Ten czar przyzywa potężnego przyjaznego smoka.
 %%%%
-Summon Elemental
+Summon Elemental spell
 
 Ten czar przyzywa ducha żywiołu, dając mu we władanie odpowiedni materiał,
 którego spora ilość musi być dostępna. To rzadko jest problemem w przypadku
 ziemi (skała) i powietrza, lecz może być dla ognia lub wody. To czy przyzwany
 żywiołak będzie przyjazny zależy od umiejętności z danej szkoły magii.
 %%%%
-Summon Greater Demon
+Summon Greater Demon spell
 
 Ten czar przyzywa któregoś z większych demonów z Pandemonium, nakładając na
 niego urok zmuszający do posłuszeństwa. Demony te zwykle są wystarczająco
 potężne aby dość szybko przełamać ten urok, często nawet zanim upłynie czas
 przywołania.
 %%%%
-Summon Horrible Things
+Summon Horrible Things spell
 
 Ten czar otwiera portal do Otchłani, przyzywając jedno lub więcej z
 obrzydliwości zamieszkującej tą przeklętą krainę. Kontakt umysłu z Otchłanią
 często ma negatywny wpływ na zdrowie psychiczne rzucającego.
 %%%%
-Summon Hydra
+Summon Hydra spell
 
 Ten czar przyzywa wielogłową hydrę, niestety na krótki czas.
 %%%%
-Summon Ice Beast
+Summon Ice Beast spell
 
 Ten czar przyzywa lodową bestię.
 %%%%
-Summon Scorpions
+Summon Scorpions spell
 
 Ten czar przyzywa jednego lub kilka skorpionów. Niektóre z nich mogą być wrogo
 nastawione.
 %%%%
-Summon Small Mammals
+Summon Small Mammals spell
 
 Ten czar przyzywa jedno lub parę małych stworzeń.
 %%%%
-Summon Swarm
+Summon Swarm spell
 
 Ten czar przyzywa rój wściekle jadowitych owadów.
 %%%%
-Summon Ugly Thing
+Summon Ugly Thing spell
 
 Ten czar przyzywa zmutowaną kreaturę na służbę rzucającemu.
 %%%%
-Sure Blade
+Sure Blade spell
 
 Ten czar tworzy więź pomiędzy rzucającym a krótkim ostrzem trzymanym w dłoni,
 czyniąc to ostrze znacznie łatwiejszym w obsłudze. Wzmaga to celność lecz nie
 zadawane obrażenia.
 %%%%
-Swiftness
+Swiftness spell
 
 Czy kiedyś zdawało ci się że wiatr ci zawsze w oczy wieje? Ten czar zapewnia
 wiatr w plecy, znacznie zwiększając szybkość poruszania się (lecz nie inne
@@ -782,20 +782,20 @@ się, ponadto będąc pchanym wiatrem trudno uważać na pułapki.
 Za to, ten czar (poprawnie rzucony) nie powoduje skażenia magią, i może być
 używany łącznie z czarem Przyśpieszenie, dając w sumie ogromną prędkość.
 %%%%
-Teleport Other
+Teleport Other spell
 
 Ten czar przemieszcza inną istotę w przypadkowe, zwykle odległe, miejsce. Nie
 działa na siebie samego.
 %%%%
-Throw Flame
+Throw Flame spell
 
 Ten czar ciska małą porcją płomienia.
 %%%%
-Throw Frost
+Throw Frost spell
 
 ten czar ciska małą porcją szronu.
 %%%%
-Tornado
+Tornado spell
 
 Ten czar tworzy ogromny wir powietrza wokół rzucającego, zadając wielkie
 obrażenia wszystkim wokół. Tylko oko tego cyklonu jest bezpieczne, a przenosi
@@ -804,7 +804,7 @@ przytwierdzone do ziemi zostanie uniesione wiatrem i zwyobracane.
 
 Efektywność tego czaru gwałtownie spada w zamkniętych pomieszczeniach.
 %%%%
-Tukima's Dance
+Tukima's Dance spell
 
 Ten czar animuje broń trzymaną w dłoni rzucającego, i pozwala jej tańczyć w
 powietrzu i uderzać wrogów. Solidna dawka obrażeń zakończy ten urok, jednak bez
@@ -814,24 +814,24 @@ Ten czar nie zadziała na niektóre artefakty obdarzone własną wolą, broń po
 wpływem tego uroku nie posiada też żadnych umiejętności i zdolności, choć
 walczy całkiem nieźle.
 %%%%
-Twisted Resurrection
+Twisted Resurrection spell
 
 Ten czar pozwala pobliskim zwłokom pełzać o własnych siłach, łącząc się w
 potworne sterty ciała i kończyn. Więcej i większe zwłoki pozwalają utworzyć
 potężniejsze stwory.
 %%%%
-Vampiric Draining
+Vampiric Draining spell
 
 Ten czar kradnie życie dotkniętej żywej istoty i daje je rzucającemu. Nie
 zabierze to więcej życia niż rzucający jest w stanie przyswoić.
 
 Użycie tego czaru na demony i nieumarłych jest wysoce niewskazane.
 %%%%
-Venom Bolt
+Venom Bolt spell
 
 Ten czar ciska pocisk zrobiony z jadu.
 %%%%
-Warp Weapon
+Warp Weapon spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę zniekształcenia. Nie
 zadziała to na bronie już posiadające jakąś markę oraz na artefakty.

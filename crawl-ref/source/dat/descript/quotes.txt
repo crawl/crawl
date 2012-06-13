@@ -121,7 +121,7 @@ A tree
 ####################################################
 # Spells
 ####################################################
-Ice Storm
+Ice Storm spell
 
 “Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
 Stay These Messengers About Their Sacred Business. Do Not Ask Us About
