@@ -2844,6 +2844,7 @@ static void _append_spell_stats(const spell_type spell,
     description += spell_hunger_string(spell, rod);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
+    description += "\n";
 }
 
 // Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
@@ -2900,28 +2901,24 @@ static int _get_spell_description(const spell_type spell,
 
     const std::string quote = getQuoteString(std::string(spell_title(spell)) + " spell");
     if (!quote.empty())
-        description += "\n\n" + quote;
+        description += "\n" + quote;
 
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
-    {
-        description += "\n\n";
-        description += desc_cannot_memorise_reason(undead);
-    }
+        description += "\n" + desc_cannot_memorise_reason(undead) + "\n";
+
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
         if (you.has_spell(spell))
         {
-            description += "\n\n";
-            description += "(F)orget this spell by destroying the book.";
+            description += "\n(F)orget this spell by destroying the book.\n";
             if (you.religion == GOD_SIF_MUNA)
-                description +="\nSif Muna frowns upon the destroying of books.";
+                description +="Sif Muna frowns upon the destroying of books.\n";
             return (BOOK_FORGET);
         }
         else if (player_can_memorise_from_spellbook(*item)
                  && !you_cannot_memorise(spell, undead))
         {
-            description += "\n\n";
-            description += "(M)emorise this spell.";
+            description += "\n(M)emorise this spell.\n";
             return (BOOK_MEM);
         }
 
