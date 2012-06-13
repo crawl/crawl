@@ -2061,6 +2061,7 @@ xxxxx
 ENDMAP
 
 NAME: nrook_loot_triangle
+TAGS: extra luniq_mini
 DEPTH: D, Elf, Vaults, Snake, Dis
 MAP
     v
@@ -2124,7 +2125,7 @@ ENDMAP
 NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
@@ -2146,7 +2147,7 @@ ENDMAP
 NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
@@ -2163,7 +2164,7 @@ ENDMAP
 NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
@@ -2185,7 +2186,7 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 KITEM:  d = wand of disintegration charges:0 ident:all
-TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen mini_float
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen mini_float extra
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
 SUBST:  A = a, B = b
