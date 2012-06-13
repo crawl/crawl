@@ -2856,7 +2856,8 @@ static int _get_spell_description(const spell_type spell,
 
     description  = spell_title(spell);
     description += "\n\n";
-    const std::string long_descrip = getLongDescription(spell_title(spell));
+    const std::string long_descrip = getLongDescription(
+        std::string(spell_title(spell)) + " spell");
 
     if (!long_descrip.empty())
         description += long_descrip;
