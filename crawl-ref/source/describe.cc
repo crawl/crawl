@@ -2892,11 +2892,11 @@ static int _get_spell_description(const spell_type spell,
     if (spell_is_useless(spell))
         description += "This spell will have no effect right now.\n";
 
-    if (crawl_state.player_is_dead())
-        return (BOOK_NEITHER);
-
     bool rod = item && item->base_type == OBJ_RODS;
     _append_spell_stats(spell, description, rod);
+
+    if (crawl_state.player_is_dead())
+        return (BOOK_NEITHER);
 
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
