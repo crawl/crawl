@@ -2087,10 +2087,9 @@ bool _is_recent_spell(spell_type spell)
 
     return (false);
 }
-void vehumet_gift_callback(bool accepted)
+void vehumet_accept_gift()
 {
-    if (accepted
-        && (player_spell_levels() - spell_levels_required(you.vehumet_gift) >= 0))
+    if (player_spell_levels() >= spell_levels_required(you.vehumet_gift))
     {
         std::string prompt = make_stringf("Do you really want to memorise %s (Level %d)?",
                                           spell_title(you.vehumet_gift),
@@ -2113,17 +2112,8 @@ void vehumet_gift_callback(bool accepted)
                                        (spell_difficulty(you.vehumet_gift)^2) / 3));
         }
     }
-    else if (accepted
-             && (player_spell_levels() - spell_levels_required(you.vehumet_gift) < 0))
-    {
-        mpr("You can't memorise that many levels of magic yet!");
-    }
     else
-    {
-        std::string prompt = make_stringf(" denies you knowledge of %s.",
-                                          spell_title(you.vehumet_gift));
-        simple_god_message(prompt.c_str());
-    }
+        mpr("You can't memorise that many levels of magic yet!");
 }
 
 std::vector<spell_type> _vehumet_eligible_gift_spells()
