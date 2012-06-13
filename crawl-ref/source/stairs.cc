@@ -1070,7 +1070,11 @@ void down_stairs(dungeon_feature_type force_stair,
     }
 
     if (old_level.level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
-        mprf("Welcome back to %s!", branches[you.where_are_you].longname);
+    {
+        mprf("Welcome %sto %s!",
+             you.char_direction == GDT_GAME_START ? "" : "back ",
+             branches[you.where_are_you].longname);
+    }
 
     if (!you.airborne()
         && you.confused()
