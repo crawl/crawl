@@ -1603,7 +1603,7 @@ ttttt..t.t..t1txxtttxtx
 ENDMAP
 
 NAME:   wad_woods_04
-TAGS:   mini_float
+TAGS:   mini_float extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  '+*^T = floor_dirt
@@ -1630,7 +1630,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   wad_woods_06
-TAGS:   mini_float
+TAGS:   mini_float extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  '+T = floor_dirt
@@ -1704,7 +1704,7 @@ ttt.ttttttttttttttttt.tttttttt
 ENDMAP
 
 NAME:   wad_woods_river_02
-TAGS:   mini_float
+TAGS:   mini_float extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  t|+*q1203C%OI. = floor_woodground
@@ -1729,7 +1729,7 @@ ttttttttttttttttttttt
 ENDMAP
 
 NAME:   wad_woods_river_03
-TAGS:   mini_float
+TAGS:   mini_float extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  t+*q1203C%OI. = floor_woodground
@@ -1752,7 +1752,7 @@ WWWWt.t.t1tttt1t1t1t
 ENDMAP
 
 NAME:   wad_woods_river_04
-TAGS:   no_vmirror no_rotate mini_float
+TAGS:   no_vmirror no_rotate mini_float extra
 DEPTH:  D, Lair, Forest
 WEIGHT: 4
 FTILE:  t+*q1203C%I. = floor_woodground
@@ -1778,6 +1778,7 @@ ttttttWwWt..tttt
 ENDMAP
 
 NAME:   wad_woods_road_01
+TAGS:   extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  @' = floor_dirt
@@ -1806,6 +1807,7 @@ t1t.tt..2t1t.t.tt1t%ttt
 ENDMAP
 
 NAME:   wad_woods_road_02
+TAGS:   extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  @' = floor_dirt
@@ -1828,6 +1830,7 @@ ttttttttttttt1tttttt
 ENDMAP
 
 NAME:   wad_woods_road_03
+TAGS:   extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  @' = floor_dirt
@@ -1890,6 +1893,7 @@ tt.@t1ttttttttttxttt
 ENDMAP
 
 NAME:   wad_woods_road_06
+TAGS:   extra
 DEPTH:  Lair, Forest
 WEIGHT: 4
 FTILE:  @'^*+T = floor_dirt
