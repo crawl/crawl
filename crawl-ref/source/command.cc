@@ -997,18 +997,16 @@ static bool _feature_filter(std::string key, std::string body)
 
 static bool _card_filter(std::string key, std::string body)
 {
-    key = lowercase_string(key);
-    std::string name;
+    lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (key.find("card") != std::string::npos)
-        return (false);
+    if (!ends_with(key, " card"))
+        return (true);
+    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
-        name = lowercase_string(card_name(static_cast<card_type>(i)));
-
-        if (name.find(key) != std::string::npos)
+        if (key == lowercase_string(card_name(static_cast<card_type>(i))))
             return (false);
     }
     return (true);
@@ -1429,6 +1427,7 @@ static void _find_description(bool *again, std::string *error_inout)
     case 'C':
         type   = "card";
         filter = _card_filter;
+        suffix = " card";
         break;
     case 'I':
         type        = "item";
