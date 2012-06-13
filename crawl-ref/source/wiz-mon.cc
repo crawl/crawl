@@ -939,6 +939,9 @@ void wizard_give_monster_item(monster* mon)
     case OBJ_MISCELLANY:
         mon_slot = MSLOT_MISCELLANY;
         break;
+    case OBJ_JEWELLERY:
+        mon_slot = MSLOT_JEWELLERY;
+        break;
     default:
         mpr("You can't give that type of item to a monster.");
         return;
