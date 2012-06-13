@@ -2099,7 +2099,7 @@ void vehumet_gift_callback(bool accepted)
         {
             add_spell_to_memory(you.vehumet_gift);
             you.seen_spell[you.vehumet_gift] = true;
-            prompt = make_stringf(" grants you the knowledge of %s.",
+            prompt = make_stringf(" grants you knowledge of %s.",
                                   spell_title(you.vehumet_gift));
             simple_god_message(prompt.c_str());
 
@@ -2120,7 +2120,7 @@ void vehumet_gift_callback(bool accepted)
     }
     else
     {
-        std::string prompt = make_stringf(" denies you the knowledge of %s.",
+        std::string prompt = make_stringf(" denies you knowledge of %s.",
                                           spell_title(you.vehumet_gift));
         simple_god_message(prompt.c_str());
     }
@@ -2395,12 +2395,14 @@ bool do_god_gift(bool forced)
                 {
                     you.vehumet_gift = spell;
                     _add_to_recent_spells(you.vehumet_gift);
-                    simple_god_message(" offers you a gift! Check the god screen for details.");
+                    std::string prompt = make_stringf(" offers you knowledge of %s.",
+                                          spell_title(you.vehumet_gift));
+                    simple_god_message(prompt.c_str());
                     you.duration[DUR_VEHUMET_GIFT] = 500;
                     success = true;
                 }
                 else
-                    success=false;
+                    success = false;
             }
             break;
         }                       // switch (you.religion)
