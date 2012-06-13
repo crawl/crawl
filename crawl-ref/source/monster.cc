@@ -1943,15 +1943,13 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
 static int _get_monster_jewellery_value(const monster *mon,
                                    const item_def &item)
 {
-    // Each resistance/property counts as much as 1 point of AC.
-    // Steam has been excluded because of its general uselessness.
-    // Well, the same's true for sticky flame but... (jpeg)
+    // Each resistance/property counts as one point.
     int value = ((item.sub_type == RING_PROTECTION) ||
                  (item.sub_type == RING_EVASION))
                  ? item.plus : 0;
-        value += get_jewellery_res_fire(item, true);
-        value += get_jewellery_res_cold(item, true);
-        value += get_jewellery_res_elec(item, true);
+    value += get_jewellery_res_fire(item, true);
+    value += get_jewellery_res_cold(item, true);
+    value += get_jewellery_res_elec(item, true);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_jewellery_res_magic(item, true) > 0)
@@ -2253,6 +2251,10 @@ bool monster::pickup_item(item_def &item, int near, bool force)
             // Everything else is likely to only annoy the player
             // because the monster either won't use the object or
             // might use it in ways not helpful to the player.
+            //
+            // Not adding jewellery to the list because of potential
+            // balance implications for perm-allies. Perhaps this should
+            // be reconsidered -NFM
             if (itype != OBJ_ARMOUR && itype != OBJ_WEAPONS
                 && itype != OBJ_MISSILES)
             {
