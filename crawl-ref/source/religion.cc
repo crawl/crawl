@@ -2087,7 +2087,8 @@ bool _is_recent_spell(spell_type spell)
 
     return (false);
 }
-void vehumet_accept_gift()
+
+bool vehumet_accept_gift()
 {
     if (player_spell_levels() >= spell_levels_required(you.vehumet_gift))
     {
@@ -2110,10 +2111,13 @@ void vehumet_accept_gift()
             take_note(Note(NOTE_GOD_GIFT, you.religion));
             _inc_gift_timeout(std::max(spell_difficulty(you.vehumet_gift),
                                        (spell_difficulty(you.vehumet_gift)^2) / 3));
+            return true;
         }
     }
     else
         mpr("You can't memorise that many levels of magic yet!");
+
+    return false;
 }
 
 std::vector<spell_type> _vehumet_eligible_gift_spells()

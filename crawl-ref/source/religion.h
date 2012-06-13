@@ -94,7 +94,7 @@ bool bless_follower(monster* follower = NULL,
 
 // Vehumet gift interface.
 bool vehumet_is_currently_gifting();
-void vehumet_accept_gift();
+bool vehumet_accept_gift();
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_hates_attacking_friend(god_type god, monster_type species);
