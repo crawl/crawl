@@ -3006,7 +3006,7 @@ void read_scroll(int slot)
 
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
-            || is_weapon(*you.weapon())
+            || !is_weapon(*you.weapon())
             || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
