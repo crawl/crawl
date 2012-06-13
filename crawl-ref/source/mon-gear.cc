@@ -1104,15 +1104,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_FANNAR:
+        force_item = true;
         if (one_chance_in(3))
         {
-            item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_STAVES;
             item.sub_type = STAFF_COLD;
         }
         else
         {
-            force_item = true;
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_STAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
@@ -1121,6 +1120,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
                                   0, MAKE_ITEM_NO_RACE, 1);
         }
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_KOBOLD_DEMONOLOGIST:
@@ -1362,8 +1362,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     _give_monster_item(mon, thing_created, force_item);
 
-    if (give_aux_melee && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
+    if (give_aux_melee &&
+        ((i.base_type != OBJ_WEAPONS && i.base_type != OBJ_STAVES)
+        || is_range_weapon(i)))
+    {
         _give_weapon(mon, level, true, false);
+    }
 
     return (item_race);
 }
@@ -2043,6 +2047,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.plus = 1 + coinflip();
         set_item_ego_type(item, OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
         set_equip_race(item, ISFLAG_ELVEN);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
     }
 
