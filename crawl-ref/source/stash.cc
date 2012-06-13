@@ -30,6 +30,7 @@
 #include "notes.h"
 #include "options.h"
 #include "place.h"
+#include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -320,9 +321,12 @@ void Stash::update()
         if (items.empty())
         {
             add_item(item);
-            // Note that we could be lying here, since we can have
-            // a verified falsehood (if there's a mimic.)
-            verified = !_grid_has_perceived_multiple_items(p);
+            // sacrificiable items will be visited.
+            if (!verified)
+            {
+                verified = !_grid_has_perceived_multiple_items(p)
+                           && !god_likes_item(you.religion, item);
+            }
             return;
         }
 
