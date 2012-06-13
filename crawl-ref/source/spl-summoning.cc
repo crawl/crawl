@@ -1488,6 +1488,10 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
         case OBJ_POTIONS:
             continue;
 
+        // Stupid undead can't use jewellery.
+        case OBJ_JEWELLERY:
+            continue;
+
         // Stupid undead can't use miscellaneous objects.
         case OBJ_MISCELLANY:
             continue;
