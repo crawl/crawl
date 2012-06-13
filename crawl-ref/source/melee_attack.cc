@@ -3595,15 +3595,19 @@ int melee_attack::calc_to_hit(bool random)
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-        if (jewellery != NON_ITEM &&
-            mitm[jewellery].base_type == OBJ_JEWELLERY &&
-            mitm[jewellery].sub_type == RING_SLAYING)
+        if (jewellery != NON_ITEM
+            && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && mitm[jewellery].sub_type == RING_SLAYING)
+        {
             mhit += mitm[jewellery].plus;
+        }
 
-        if (jewellery != NON_ITEM &&
-            mitm[jewellery].base_type == OBJ_JEWELLERY &&
-            mitm[jewellery].sub_type == AMU_INACCURACY)
+        if (jewellery != NON_ITEM
+            && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && mitm[jewellery].sub_type == AMU_INACCURACY)
+        {
             mhit -= 5;
+        }
 
         mhit += scan_mon_inv_randarts(attacker->as_monster(), ARTP_ACCURACY);
 
@@ -4503,8 +4507,10 @@ void melee_attack::mons_do_eyeball_confusion()
                  mon->name(DESC_THE).c_str());
 
             if (!mon->check_clarity(false))
+            {
                 mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
                                           30 + random2(100)));
+            }
         }
     }
 }
@@ -5039,10 +5045,12 @@ int melee_attack::calc_damage()
                 wpn_damage_plus = weapon->special;
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-            if (jewellery != NON_ITEM &&
-                mitm[jewellery].base_type == OBJ_JEWELLERY &&
-                mitm[jewellery].sub_type == RING_SLAYING)
+            if (jewellery != NON_ITEM
+                && mitm[jewellery].base_type == OBJ_JEWELLERY
+                && mitm[jewellery].sub_type == RING_SLAYING)
+            {
                 wpn_damage_plus += mitm[jewellery].plus2;
+            }
 
             wpn_damage_plus += scan_mon_inv_randarts(attacker->as_monster(),
                                                      ARTP_DAMAGE);
