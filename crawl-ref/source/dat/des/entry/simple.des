@@ -1539,3 +1539,87 @@ x{....w12x
 x[(w3132wx
 xxxxxxxxxx
 ENDMAP
+
+##############################################################################
+# Saegor's simple entries
+
+NAME:   saegor_entry_simple_A
+TAGS:   entry
+ORIENT: float
+MAP
+ccc
+c{c
+.@.
+ENDMAP
+
+NAME:   saegor_entry_simple_B
+TAGS:   entry
+ORIENT: float
+MAP
+ttttt
+ttttt
+xt{tx
+xG.Gx
+xx+xx
+ENDMAP
+
+NAME:   saegor_entry_simple_C
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {([
+NSUBST: Z = 1:= / *:+
+MAP
+xxxxxxx
+x[.{.(x
+xx...xx
+x.vvv.x
+xGZ=ZGx
+xxv@vxx
+ENDMAP
+
+NAME:   saegor_entry_simple_D
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {([
+MAP
+xxxcccxxx
+xccc{cccx
+xc(c.c[cx
+xt.....tx
+xwt...twx
+xwwt.twwx
+xwwt.twwx
+xxwt.twxx
+xxxx+xxxx
+ENDMAP
+
+NAME:   saegor_entry_simple_E
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxx
+x.......xx
+x.xxxxGx.x
+xx....xx.x
+xxx.{.xx.x
+x(+...xx.x
+x[xx.xx.xx
+xxxxx=+xxx
+ENDMAP
+
+NAME:   saegor_entry_simple_F
+TAGS:   entry
+ORIENT: float
+MAP
+  xxx
+  x.@
+  x.xxxxxxx
+  x.x.....x
+  x....xx@x
+x@x..{..x
+x.xx....x
+x.....x.x
+xxxxxxx.x
+      @.x
+      xxx
+ENDMAP
