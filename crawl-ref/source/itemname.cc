@@ -1876,6 +1876,8 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_JEWELLERY <= MAX_SUBTYPES);
     COMPILE_CHECK(NUM_POTIONS   <= MAX_SUBTYPES);
     COMPILE_CHECK(NUM_STAVES    <= MAX_SUBTYPES);
+    COMPILE_CHECK(NUM_RODS      <= MAX_SUBTYPES);
+    COMPILE_CHECK(NUM_WEAPONS   <= MAX_SUBTYPES);
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS

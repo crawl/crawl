@@ -2115,14 +2115,17 @@ static void tag_read_you_items(reader &th)
 
     // Item descrip for each type & subtype.
     // how many types?
-    count = unmarshallByte(th);
+    count = unmarshallUByte(th);
     ASSERT(count <= NUM_IDESC);
     // how many subtypes?
-    count2 = unmarshallByte(th);
-    ASSERT(count2 == MAX_SUBTYPES); // if not, initialize the rest
+    count2 = unmarshallUByte(th);
+    ASSERT(count2 <= MAX_SUBTYPES);
     for (i = 0; i < count; ++i)
         for (j = 0; j < count2; ++j)
             you.item_description[i][j] = unmarshallByte(th);
+    for (i = 0; i < count; ++i)
+        for (j = count2; j < MAX_SUBTYPES; ++j)
+            you.item_description[i][j] = 0;
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
         for (j = SCR_REMOVE_CURSE + 1; j + 1 < count2; ++j)
@@ -2144,12 +2147,14 @@ static void tag_read_you_items(reader &th)
     {
         if (!item_type_has_ids((object_class_type)i))
             continue;
-        for (j = 0; j < MAX_SUBTYPES; ++j)
+        for (j = 0; j < count2; ++j)
         {
             uint8_t x = unmarshallUByte(th);
             ASSERT(x < NUM_ID_STATE_TYPES);
             you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
         }
+        for (j = count2; j < MAX_SUBTYPES; ++j)
+            you.type_ids[i][j] = ID_UNKNOWN_TYPE;
     }
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
@@ -2227,7 +2232,7 @@ static void tag_read_you_items(reader &th)
     if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE)
 #endif
         for (i = 0; i < iclasses; i++)
-            for (j = 0; j < MAX_SUBTYPES; j++)
+            for (j = 0; j < count2; j++)
                 you.force_autopickup[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
