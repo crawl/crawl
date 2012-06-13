@@ -78,7 +78,7 @@ enum extra_monster_index_type
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
 
-#define MAX_SUBTYPES    50
+#define MAX_SUBTYPES   60
 
 // max size of item list {dlb}:
 #define MAX_ITEMS 2000
