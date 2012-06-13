@@ -1047,6 +1047,24 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
     }
 }
 
+static void _recap_card_keys(std::vector<std::string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        lowercase(keys[i]);
+
+        for (int j = 0; j < NUM_CARDS; ++j)
+        {
+            card_type card = static_cast<card_type>(j);
+            if (keys[i] == lowercase_string(card_name(card)) + " card")
+            {
+                keys[i] = std::string(card_name(card)) + " card";
+                break;
+            }
+        }
+    }
+}
+
 // Extra info on this item wasn't found anywhere else.
 static void _append_non_item(std::string &desc, std::string key)
 {
@@ -1428,6 +1446,7 @@ static void _find_description(bool *again, std::string *error_inout)
         type   = "card";
         filter = _card_filter;
         suffix = " card";
+        recap  = _recap_card_keys;
         break;
     case 'I':
         type        = "item";
