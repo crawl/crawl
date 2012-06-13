@@ -439,7 +439,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // Vehumet
-    { ABIL_VEHUMET_MEMORISE_SPELL, "Memorise spell", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
+    { ABIL_VEHUMET_MEMORISE_SPELL, "Memorise spell", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, ABFLAG_ZOTDEF},
@@ -2705,7 +2705,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_VEHUMET_MEMORISE_SPELL:
-        vehumet_accept_gift();
+        if (!vehumet_accept_gift())
+            return false;
         break;
 
     case ABIL_RENOUNCE_RELIGION:
