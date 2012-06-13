@@ -1944,9 +1944,21 @@ static int _get_monster_jewellery_value(const monster *mon,
                                    const item_def &item)
 {
     // Each resistance/property counts as one point.
-    int value = ((item.sub_type == RING_PROTECTION) ||
-                 (item.sub_type == RING_EVASION))
-                 ? item.plus : 0;
+    int value = 0;
+
+    if (item.sub_type == RING_PROTECTION
+        || item.sub_type == RING_EVASION
+        || item.sub_type == RING_SLAYING)
+    {
+        value += item.plus;
+    }
+
+    if (item.sub_type == RING_SLAYING)
+        value += item.plus2;
+
+    if (item.sub_type == AMU_INACCURACY)
+        value -= 5;
+
     value += get_jewellery_res_fire(item, true);
     value += get_jewellery_res_cold(item, true);
     value += get_jewellery_res_elec(item, true);
