@@ -1883,8 +1883,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return (true);
         }
     }
-    else if (wh_enchant == ENCH_CONFUSION &&
-             mons->check_clarity(false))
+    else if (wh_enchant == ENCH_CONFUSION
+             && mons->check_clarity(false))
     {
         *did_msg = true;
         return (true);

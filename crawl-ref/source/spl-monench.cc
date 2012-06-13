@@ -102,7 +102,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
 bool do_slow_monster(monster* mon, const actor* agent, int dur)
 {
     if (mon->check_stasis(false))
-        return(true);
+        return (true);
 
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))

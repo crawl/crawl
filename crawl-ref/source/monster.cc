@@ -1324,7 +1324,8 @@ bool monster::drop_item(int eslot, int near)
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
     bool was_unequipped = false;
-    if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
+    if (eslot == MSLOT_WEAPON
+        || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
@@ -3210,10 +3211,12 @@ int monster::warding() const
     if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_SUMMONING)
         return 60;
     const int jewellery = inv[MSLOT_JEWELLERY];
-    if (jewellery != NON_ITEM &&
-        mitm[jewellery].base_type == OBJ_JEWELLERY &&
-        mitm[jewellery].sub_type == AMU_WARDING)
+    if (jewellery != NON_ITEM
+        && mitm[jewellery].base_type == OBJ_JEWELLERY
+        && mitm[jewellery].sub_type == AMU_WARDING)
+    {
         return 60;
+    }
     return 0;
 }
 

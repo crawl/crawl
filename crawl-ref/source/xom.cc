@@ -2957,9 +2957,9 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
                     continue;
                 }
 
-                if (!mi->check_clarity(false) &&
-                     mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                      &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
+                if (!mi->check_clarity(false)
+                    && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                           &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
                 {
                     simple_monster_message(*mi,
                                            " looks rather confused.");

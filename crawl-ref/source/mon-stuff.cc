@@ -4263,7 +4263,6 @@ static bool _monster_random_space(const monster* mons, coord_def& target,
 
 void monster_teleport(monster* mons, bool instan, bool silent)
 {
-
     bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
 
     if (mons->check_stasis(silent))
