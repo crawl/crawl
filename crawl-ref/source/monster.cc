@@ -965,6 +965,8 @@ void monster::equip_armour(item_def &item, int near)
 
 void monster::equip_jewellery(item_def &item, int near)
 {
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " puts on %s.",
@@ -1117,6 +1119,8 @@ void monster::unequip_armour(item_def &item, int near)
 
 void monster::unequip_jewellery(item_def &item, int near)
 {
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " takes off %s.",
@@ -1943,6 +1947,8 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
 static int _get_monster_jewellery_value(const monster *mon,
                                    const item_def &item)
 {
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+
     // Each resistance/property counts as one point.
     int value = 0;
 
