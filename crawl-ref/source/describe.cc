@@ -2898,6 +2898,10 @@ static int _get_spell_description(const spell_type spell,
     if (crawl_state.player_is_dead())
         return (BOOK_NEITHER);
 
+    const std::string quote = getQuoteString(std::string(spell_title(spell)) + " spell");
+    if (!quote.empty())
+        description += "\n\n" + quote;
+
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
     {
