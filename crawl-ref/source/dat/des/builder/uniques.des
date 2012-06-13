@@ -261,7 +261,7 @@ WEIGHT: 3
 TAGS:   place_unique uniq_ribbit transparent
 MONS:   Prince Ribbit, blink frog band
 MAP
-12
+1..2
 ENDMAP
 
 NAME:   uniq_psyche
