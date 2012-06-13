@@ -3148,3 +3148,32 @@ xcccccc....ccccccx
     ..crRRrct.
      .........
 ENDMAP
+
+##############################################################################
+NAME:   saegor_entry_miasma
+TAGS:   entry no_monster_gen
+ORIENT: float
+COLOUR: W# = lightgreen
+NSUBST: W = 6:% / 7:#
+KITEM:  % = nothing / q:1 green rat chunk / w:5 green rat skeleton
+MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", \
+                              pow_max = 10, delay = 5, size = 5 }
+KFEAT:  %# = W
+KPROP:  W#% = no_rtele_into
+MAP
+ xxxxxxxxxx
+xxWWWWWWWWxx
+xWWWWWWWWWWx
+xWWvWW#WvWWx
+xWWWWWWWWWWx
+xWWWWWWWWWWx
+xxxmmxxxmmxx
+@+.(..[..{.x
+xxxmmxxxmmxx
+xWWWWWWWWWWx
+xWWWWWWWWWWx
+xWWvW#WWvWWx
+xWWWWWWWWWWx
+xxWWWWWWWWxx
+ xxxxxxxxxx
+ENDMAP
