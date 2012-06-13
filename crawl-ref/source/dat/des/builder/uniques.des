@@ -157,9 +157,9 @@ NAME:   uniq_frederick
 DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:4-, Crypt, Blade, Tomb
 : place_unique(_G, "Frederick")
 
-# NAME:   uniq_fannar
-# DEPTH:  D:10-16, Orc:2-, Elf, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
-# : place_unique(_G, "Fannar")
+NAME:   uniq_fannar
+DEPTH:  D:10-16, Orc:2-, Elf, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+: place_unique(_G, "Fannar")
 
 NAME:   uniq_gastronok_1
 DEPTH:  D:8-13, Orc
