@@ -1,3 +1,26 @@
+Stone Soup 0.10.3 (20120614)
+----------------------------
+* Crash fixes.
+* rPois- doesn't grant rPois+ for potions of poison.
+* Clean chunks are no longer better than permafood when nauseated.
+* The Flight spell is no longer cancellable (could cause a death when
+  swapping a +Lev item above water due to incorrect assumptions).
+* A warning when transforming would meld your last +Lev item.
+* Backlash works for finding portals on the map screen.
+* Remembered traps no longer lose their identity when out of sight.
+* Certain rare monsters don't clutter tile displays with name tags anymore.
+* show_game_turns labels its display as "Time:" not "Turn:".
+* Greatly improved webtiles performance.
+* Fixed miscompiles or compilation failures with GCC 4.7.
+* A bunch of assorted minor fixes.
+* Some new interface functionality:
+  * can annotate remote levels (X[ then !)
+  * picking a stack of items you already had some of shows how many did you
+    just gain
+  * shops show item slot letters assigned to your new purchases
+  * enchanteable missiles are listed in the wield menu if you have scrolls
+    of Enchant Weapon
+
 Stone Soup 0.10.2 (20120411)
 ----------------------------
 * A bunch of crash fixes.
