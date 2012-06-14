@@ -807,8 +807,9 @@ MONS:     (list of monsters)
           match the launcher type.
 
           You can specify that a monster will always generate a corpse by
-          using the tag "always_corpse". This should only be used in vaults
-          where it is absolutely necessary, tutorial maps, etc.
+          using the tag "always_corpse", and that it will never generate
+          a corpse by using "never_corpse".  This should only be used in
+          vaults where it is absolutely necessary, tutorial maps, etc.
 
           Overriding Monster Names:
           -------------------------
