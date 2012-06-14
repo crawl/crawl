@@ -2415,6 +2415,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_OKLOB_PLANT:
     case MONS_OKLOB_SAPLING:
     case MONS_YELLOW_DRACONIAN:
+    case MONS_FOREST_DRAKE:
     {
         if (mons->has_ench(ENCH_CONFUSION))
             break;

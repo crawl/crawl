@@ -2165,7 +2165,6 @@ enum monster_type                      // menv[].type
     MONS_MERFOLK,
     MONS_MERMAID,
     MONS_SIREN,
-    MONS_DRYAD,
     MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
     MONS_MERFOLK_JAVELINEER,
@@ -2185,7 +2184,6 @@ enum monster_type                      // menv[].type
     MONS_CYCLOPS,
     MONS_ETTIN,
     MONS_STONE_GIANT,
-    MONS_LESHY,
     MONS_FIRE_GIANT,
     MONS_FROST_GIANT,
     MONS_TITAN,
@@ -2478,6 +2476,10 @@ enum monster_type                      // menv[].type
     MONS_ELEMENTAL,             // genus
 
     MONS_FANNAR,
+
+    MONS_DRYAD,
+    MONS_LESHY,
+    MONS_FOREST_DRAKE,
 
     NUM_MONSTERS,               // used for polymorph
 

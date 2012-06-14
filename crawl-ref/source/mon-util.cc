@@ -93,6 +93,8 @@ static habitat_type _grid2habitat(dungeon_feature_type grid)
 
     switch (grid)
     {
+    case DNGN_TREE:
+        return HT_FOREST;
     case DNGN_LAVA:
         return HT_LAVA;
     case DNGN_FLOOR:
@@ -111,6 +113,8 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_LAVA;
     case HT_ROCK:
         return DNGN_ROCK_WALL;
+    case HT_FOREST:
+        return DNGN_TREE;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     default:
@@ -2468,7 +2472,7 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_ROCK)
+    else if ((ht == HT_ROCK) || (ht == HT_FOREST))
         ht = HT_LAND;
     return ht;
 }
@@ -2482,6 +2486,12 @@ bool mons_wall_shielded(const monster* mon)
 {
     return (_mons_class_habitat(mons_base_type(mon)) == HT_ROCK);
 }
+
+bool mons_tree_shielded(const monster* mon)
+{
+    return (_mons_class_habitat(mons_base_type(mon)) == HT_FOREST);
+}
++
 
 bool intelligent_ally(const monster* mon)
 {
@@ -2937,6 +2947,7 @@ static bool _mons_has_ranged_ability(const monster* mon)
     case MONS_HELL_HOUND:
     case MONS_LINDWURM:
     case MONS_FIRE_DRAKE:
+    case MONS_FOREST_DRAKE:
     case MONS_XTAHUA:
     case MONS_FIRE_CRAB:
     case MONS_ELECTRIC_EEL:
@@ -3258,6 +3269,11 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
         // Permanent walls can't be passed through.
         return (!feat_is_solid(grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
+    }
+
+    if (_mons_class_habitat(mc) == HT_ROCK)
+    {
+        return (!feat_is_solid(grid) || feat_is_tree(grid));
     }
 
     return !feat_is_solid(grid);

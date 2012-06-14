@@ -362,7 +362,8 @@ SUBST:  h = 6
 SUBST:  i = 7
 SHUFFLE: OP
 KFEAT: m = iron_grate
-KITEM: O = mossy rune of Zot
+#KITEM: O = mossy rune of Zot
+KITEM: O = acquire any
 KITEM: P = acquire any
 MAP
 tttttttttttttttttttttttttttttttttccccttttttttttttttttttttttttttttttttt
@@ -410,7 +411,8 @@ ENDMAP
 NAME: forest_ending_chambers
 ORIENT: north
 PLACE: Forest:$
-KITEM: O = mossy rune of Zot
+#KITEM: O = mossy rune of Zot
+KITEM: O = acquire any
 KMONS: O = the Enchantress
 MONS:  spriggan defender, spriggan berserker, spriggan druid, \
        spriggan rider, spriggan air mage, spriggan, \

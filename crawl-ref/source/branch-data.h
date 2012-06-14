@@ -204,7 +204,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_hallzot_rare, mons_hallzot_level,
       'Z', true, 0 },
 
-    { BRANCH_FOREST, BRANCH_LAIR, 3, 6, 5, 15,
+    { BRANCH_FOREST, BRANCH_MAIN_DUNGEON, 18, 22, 5, 24,
       0, 0,
       DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
       "Forest", "the Enchanted Forest", "Forest",

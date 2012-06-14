@@ -1163,6 +1163,11 @@ flying skull
 An undead skull kept aloft and flitting swiftly about by unholy magic. It
 periodically emits loud, blood-curdling shrieks.
 %%%%
+forest drake
+
+A small but powerful dragon, quite comfortable weaving through the trees
+that comprise its home. It spits potent blasts of acid.
+%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the
