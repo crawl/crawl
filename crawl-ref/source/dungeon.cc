@@ -4417,6 +4417,9 @@ monster* dgn_place_monster(mons_spec &mspec,
     if (mspec.props.exists("always_corpse"))
         mons->props["always_corpse"] = true;
 
+    if (mspec.props.exists("never_corpse"))
+        mons->props["never_corpse"] = true;
+
     if (mspec.props.exists("dbname"))
         mons->props["dbname"].get_string() = mspec.props["dbname"].get_string();
 

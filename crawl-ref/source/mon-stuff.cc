@@ -384,6 +384,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     if (feat_is_wall(grd(mons->pos())))
         return (-1);
 
+    // If we were told not to leave a corpse, don't.
+    if (mons->props.exists("never_corpse"))
+        return (-1);
+
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
