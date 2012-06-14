@@ -1680,15 +1680,15 @@ WEIGHT: 4
 FTILE:  GT = floor_iron
 FTILE:  ;" = floor_pebble
 COLOUR: ; = darkgrey
-COLOUR: "^ = brown
+COLOUR: "~ = brown
 MAP
 xxx.".xxx
 xx;""";xx
-x;G;^;G;x
+x;G;~;G;x
 .";""";".
-""^"T"^""
+""~"T"~""
 .";""";".
-x;G;^;G;x
+x;G;~;G;x
 xx;""";xx
 xxx.".xxx
 ENDMAP
