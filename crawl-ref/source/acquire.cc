@@ -792,7 +792,7 @@ static int _acquirement_wand_subtype()
     return (picked);
 }
 
-static int _find_acquirement_subtype(object_class_type class_wanted,
+static int _find_acquirement_subtype(object_class_type &class_wanted,
                                      int &quantity, bool divine,
                                      int agent = -1)
 {
