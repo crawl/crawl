@@ -77,7 +77,12 @@ sub read_file($)
 
         if (/^%%%%/)
         {
-            add_key() if defined $key;
+            if (defined $key)
+            {
+                defined($value)
+                ? add_key()
+                : err("Incomplete entry '$key' at $file:$line\n");
+            }
             next;
         }
 
