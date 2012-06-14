@@ -2888,14 +2888,14 @@ NAME:   wad_rectangle_vault
 DEPTH:  D:3-26
 WEIGHT: 4
 FTILE:  ; = floor_pebble
-FTILE: "0^U = floor_pebble_brown
+FTILE: "0~U = floor_pebble_brown
 COLOUR: "0 = brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..xxx;;;;;.;;;;;.;;;;;xxx..x
 x..xxxx;";...;";...;";xxxx..x
 xx.x.x;""";.;"0";.;""";x.x.xx
-@.x.x;""^0";""U0";""^"0;x.x.@
+@.x.x;""~0";""U0";""~"0;x.x.@
 xx.x.x;""";.;""";.;0"";x.x.xx
 x..xxxx;";...;";...;0;xxxx..x
 x..xxx;;;;;.;;;;;.;;;;;xxx..x
@@ -2913,7 +2913,7 @@ MAP
 .""".vvvvv1....
 .."..vvvvv.."0.
 .....vvvvv.""".
-.^G..vvvvv.^...
+.~G..vvvvv.~...
 vvvvv.....vvvvv
 vvvvv."...xx*xv
 vvvvv."".G.x%8v
