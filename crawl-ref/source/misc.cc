@@ -2548,14 +2548,17 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
     int num_unknown = 0;
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
+        bool artefact = (player_wearing_slot(i)
+                         && is_artefact(you.inv[you.equip[i]]));
+
         if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY
-            && artp == ARTP_NUM_PROPERTIES)
+            && (artp == ARTP_NUM_PROPERTIES || !artefact))
         {
             continue;
         }
 
         if (i != EQ_AMULET && ring_type == NUM_JEWELLERY
-            && artp == ARTP_NUM_PROPERTIES)
+            && (artp == ARTP_NUM_PROPERTIES || !artefact))
         {
             continue;
         }
