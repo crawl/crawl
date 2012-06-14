@@ -3534,6 +3534,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (strip_tag(mon_str, "always_corpse"))
             mspec.props["always_corpse"] = true;
 
+        if (strip_tag(mon_str, "never_corpse"))
+            mspec.props["never_corpse"] = true;
+
         if (!mon_str.empty() && isadigit(mon_str[0]))
         {
             // Look for space after initial digits.
