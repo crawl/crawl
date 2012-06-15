@@ -260,7 +260,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 3;
         you.mutation[MUT_HERBIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 3;
+        you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     case SP_CENTAUR:
         you.mutation[MUT_TOUGH_SKIN]      = 3;
@@ -324,7 +324,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 2;
+        you.mutation[MUT_SLOW_METABOLISM] = 1;
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_CAMOUFLAGE]      = 1;

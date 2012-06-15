@@ -1938,6 +1938,19 @@ static void tag_read_you(reader &th)
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
+#if TAG_MAJOR_VERSION == 33
+    if (you.species == SP_FELID
+          && you.innate_mutations[MUT_SLOW_METABOLISM] == 2
+        || you.species == SP_SPRIGGAN
+          && you.innate_mutations[MUT_SLOW_METABOLISM] == 3)
+    {
+        you.mutation[MUT_SLOW_METABOLISM]--;
+        you.innate_mutations[MUT_SLOW_METABOLISM]--;
+    }
+    if (you.mutation[MUT_SLOW_METABOLISM] == 3)
+        you.mutation[MUT_SLOW_METABOLISM]--;
+#endif
+
     count = unmarshallUByte(th);
     you.demonic_traits.clear();
     for (j = 0; j < count; ++j)
