@@ -7,20 +7,22 @@
 
 
 # This represents the old 8/9 chance of *not* placing a regular vault.
+# It's 5/6 now. -- 1KB
 NAME: primary_dummy
 TAGS: dummy
 DEPTH: 1-100, !Hive, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab
 ORIENT: float
-CHANCE: 0 : 0 (D:26-27), 0 : 5000 (D:24-25), 0 : 7500 (D:20-23), 0 : 8888
+CHANCE: 0 : 0 (D:26-27), 0 : 3333 (D:24-25), 0 : 6666 (D:20-23), 0 : 8333
 MAP
 x
 ENDMAP
 
 # This represents the old 2/3 chance of *not* placing a minivault.
+# It's 1/2 now. -- 1KB
 NAME: primary_mini_dummy
 TAGS: dummy
 DEPTH: 1-100, Pan, Abyss
-CHANCE: 0 : 3333 (Swamp), 0 : 6666
+CHANCE: 0 : 1666 (Swamp), 0 : 5000
 MAP
 x
 ENDMAP
