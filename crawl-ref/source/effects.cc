@@ -2285,7 +2285,7 @@ void handle_time()
         }
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(20 / (6 - you.depth)), true);
+        place_webs(random2(3 * you.depth), true);
 }
 
 // Move monsters around to fake them walking around while player was
