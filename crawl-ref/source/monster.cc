@@ -1797,6 +1797,14 @@ bool monster::wants_armour(const item_def &item) const
 
 bool monster::wants_jewellery(const item_def &item) const
 {
+    // Arcane spellcasters don't want -CAST.
+    if (is_actual_spellcaster()
+        && is_artefact(item)
+        && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
+    {
+        return (false);
+    }
+
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
