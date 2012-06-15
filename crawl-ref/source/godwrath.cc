@@ -245,49 +245,33 @@ static void _ely_dull_inventory_weapons()
         if (!you.inv[i].defined())
             continue;
 
-        if (you.inv[i].base_type == OBJ_WEAPONS
-            || you.inv[i].base_type == OBJ_MISSILES)
+        if (you.inv[i].base_type == OBJ_WEAPONS)
         {
             // Don't dull artefacts at all, or weapons below -1/-1.
-            if (you.inv[i].base_type == OBJ_WEAPONS)
+            if (is_artefact(you.inv[i])
+                || you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
             {
-                if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1
-                    && you.inv[i].plus2 <= -1)
-                {
-                    continue;
-                }
-            }
-            // Don't dull missiles below -1.
-            else if (you.inv[i].plus <= -1)
                 continue;
+            }
 
             // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
                 continue;
 
             bool wielded = false;
-            bool quivered = false;
 
             if (you.inv[i].link == you.equip[EQ_WEAPON])
                 wielded = true;
-            if (you.inv[i].link == quiver_link)
-                quivered = true;
 
-            // Dull the weapon or missile(s).
+            // Dull the weapon.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].plus2 > -1)
-            {
+            if (you.inv[i].plus2 > -1)
                 you.inv[i].plus2--;
-            }
 
-            // Update the weapon/ammo display, if necessary.
+            // Update the weapon display, if necessary.
             if (wielded)
                 you.wield_change = true;
-            if (quivered)
-                you.redraw_quiver = true;
 
             chance += item_value(you.inv[i], true) / 50;
             num_dulled++;
