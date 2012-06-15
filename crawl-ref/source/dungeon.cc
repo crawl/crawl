@@ -3027,9 +3027,9 @@ static void _place_traps()
 
     if (player_in_branch(BRANCH_SPIDER_NEST))
     {
-        // Max webs ranges from around 35 (Spider:1) to 220 (Spider:5)
-        int max_webs = 35 * pow(2, (you.depth - 1) / (3 / 2)) - num_traps;
-        // Vary from 1/2 to full max amount
+        // Max webs ranges from around 35 (Spider:1) to 220 (Spider:5), actual
+        // amount will be much lower.
+        int max_webs = 35 * pow(2, (you.depth - 1) / 1.5) - num_traps;
         max_webs /= 2;
         place_webs(max_webs + random2(max_webs));
     }
