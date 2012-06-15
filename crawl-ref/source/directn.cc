@@ -661,7 +661,7 @@ void full_describe_view()
             glyph g = get_mons_glyph(*mi);
             const std::string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
-                     + stringize_glyph(g.ch)
+                     + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      + "</" + col_string + ">) ";
 #endif
 
