@@ -2806,6 +2806,11 @@ Being a statue, it doesn't appear to have a means of salvaging shot arrows or
 fletching new ones, but you guess the statue's creators gave it enough of a
 supply to kill you before someone comes to replenish the quiver.
 %%%%
+bittermelon vine
+
+An ordinary looking plant, growing some barely edible fruits. They provide
+nutrition but certainly not good taste.
+%%%%
 black sheep
 
 On first glance, this sheep has merely a different pigmentation, but you are
@@ -2840,6 +2845,12 @@ This statue seems to harness the mightiest pure conjurations ever devised by
 Iskenderun. It is not made in her likeness, as legends describe her as a female
 felid, but, if I were you, I'd pay more heed to the orbs of magic flying your
 way than the statue's appearance.
+%%%%
+crystal guardian
+
+This crystal golem is so ensorcelled it is not only immune to nearly any
+magic itself, but also can emit powerful beams of fire and cold at any
+tresspassers.
 %%%%
 deformed humanoid
 
@@ -2882,6 +2893,16 @@ A divine agent of Zin, it is a towering winged figure with an aura of brilliant
 white light. This angel's face, though, is marked by a scowl, as if its zeal
 against any real or perceived vice overshadows its goodness.
 %%%%
+gourd plant
+
+This sturdy vine bears nutritious but nearly tasteless fruits.
+%%%%
+grape vine
+
+Without a gardener to provide it with something to prop itself over, and not
+being lucky to have its seed fall near something to climb, this grape vine
+is still remarkably hard to step over.
+%%%%
 grey elf
 
 Once considered a unique species of its own, grey elves are now more properly
@@ -2914,6 +2935,10 @@ lasher statue
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
+lich demonologist
+
+<lich>
+%%%%
 malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
@@ -2925,6 +2950,15 @@ Mountain dwarves are surface-dwelling relatives of the deep dwarves. After
 years of war with the taller but otherwise quite similar hill orcs, the
 mountain dwarves were conquered and driven from these lands. This one has been
 imported from foreign shores.
+%%%%
+mummy warrior
+
+<guardian mummy>
+%%%%
+musa plant
+
+This bushy plant can grow bananas. Or were they banananas? Or bananananas?
+Some yellow curved thingies, at least.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -2959,6 +2993,10 @@ This immature oklob plant seems to be mumbling some orisons... er, what?!?
 oklob sapling wizard
 
 <oklob plant annihilator>
+%%%%
+orc demonologist
+
+<orc sorcerer>
 %%%%
 petrified plant
 
@@ -3022,6 +3060,12 @@ strange machine
 
 A glistening silver machine.
 %%%%
+strawberry plant
+
+Whatever radiation made cockroaches and spiders the size of a small dog,
+didn't spare this humble strawberry plant as well. Fortunately, even with
+its size it appears to be harmless.
+%%%%
 unstable oklob plant
 
 This oklob plant vibrates with translocational energy.
@@ -3037,6 +3081,15 @@ young halfling
 This lad has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
 mommy tell you to not disrupt people from having a meal?
+%%%%
+vampire noble
+
+<vampire>
+%%%%
+vampire warrior
+
+This vampire, formidable in combat, uses magic only for self-boosts,
+preferring to deal with pesky interlopers with their own hands.
 %%%%
 vine covered stone golem
 
