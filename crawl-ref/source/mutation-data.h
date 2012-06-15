@@ -225,20 +225,20 @@
   "fast metabolism"
 },
 
-{ MUT_SLOW_METABOLISM,            7,  3, false, false, false,
+{ MUT_SLOW_METABOLISM,            7,  2, false, false, false,
   "slow metabolism",
 
   {"You have a slow metabolism.",
-   "You have a slow metabolism.",
-   "You need consume almost no food."},
+   "You need consume almost no food.",
+   ""},
 
   {"Your metabolism slows.",
    "Your metabolism slows.",
-   "Your metabolism slows."},
+   ""},
 
   {"You feel a little hungry.",
    "You feel a little hungry.",
-   "You feel a little hungry."},
+   ""},
 
   "slow metabolism"
 },

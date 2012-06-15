@@ -1379,12 +1379,8 @@ int player_hunger_rate(bool temp)
     }
     else
     {
-        hunger += player_mutation_level(MUT_FAST_METABOLISM);
-
-        if (player_mutation_level(MUT_SLOW_METABOLISM) > 2)
-            hunger -= 2;
-        else if (player_mutation_level(MUT_SLOW_METABOLISM) > 0)
-            hunger--;
+        hunger += player_mutation_level(MUT_FAST_METABOLISM)
+                - player_mutation_level(MUT_SLOW_METABOLISM);
     }
 
     // burden
