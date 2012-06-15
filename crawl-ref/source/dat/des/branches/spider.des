@@ -1022,7 +1022,9 @@ MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
 MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
         w:5 brain worm / w:7 nothing
 MONS:   trapdoor spider / nothing
-MONS:   w:9 orb spider / w:1 nothing
+MONS:   orb spider
+KMONS:  8 = orb spider
+NSUBST: 8 = 2:c / *:8
 KFEAT:  ^ = web
 SUBST:  - = ....WWW^
 SUBST:  = = +.
@@ -1034,23 +1036,23 @@ xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
 xxxxxxxxxxccccccccccccc==cccccccccccccxxxxxx
 xxxxxxxxxxcccccccccccc-.--ccccccccccccxxxxxxx
 xxxxxxxxxxc6Wccccccccc.x.-cccccccccW6cxxxxxxxx
-xxxxxxxxxxc6...++.ccccx.-xccccc++...6cxxxxxxxx
-xxxxxxxxxxcW--.ccc45Oc6--6c154.cc.--Wcxxxxxxxx
+xxxxxxxxxxc6......ccccx.-xccccc.....6cxxxxxxxx
+xxxxxxxxxxcW--..cc45Oc6--6c154.c..--Wcxxxxxxxx
 xxxxxxxxxxcc.--ccc55ccx.-xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxcccW--cccwcc.---ccwccc--Wcccxxxxxxxx
-xxxxxxxxxxcccc.--cc7ccx.-xcc7cc--.ccccxxxxxxxx
-xxxxxxxxxxccccxW--cwcc--.-ccwc--Wxccccxxxxxxxx
+xxxxxxxxxxcccW--cccccc.---cccccc--Wcccxxxxxxxx
+xxxxxxxxxxcccc.--cccccx.-xccccc--.ccccxxxxxxxx
+xxxxxxxxxxccccxW--c8cc--.-cc8c--Wxccccxxxxxxxx
 xxxxxxxxxxcccc-.-xx^-x-xx.x-^xx-.-ccccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxccc.333.^.-.5445.-.^.333.cccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxcccc-.-xx^-x.xx-x-^xx-.-ccccxxxxxxxx
-xxxxxxxxxxccccxW--cwcc-.--ccwc--Wxccccxxxxxxxx
-xxxxxxxxxxcccc.--cc7ccx-.xcc7cc--.ccccxxxxxxxx
-xxxxxxxxxxcccW--cccwcc---.ccwccc--Wcccxxxxxxxx
+xxxxxxxxxxccccxW--c8cc-.--cc8c--Wxccccxxxxxxxx
+xxxxxxxxxxcccc.--cccccx-.xccccc--.ccccxxxxxxxx
+xxxxxxxxxxcccW--cccccc---.cccccc--Wcccxxxxxxxx
 xxxxxxxxxxcc.--ccc55ccx-.xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxcW--.cc.45*c7--7c254.cc.--Wcxxxxxxxx
-xxxxxxxxxxc6...++cccccc-.cccccc++...6cxxxxxxxx
+xxxxxxxxxxcW--..c.45*c7--7c254.c..--Wcxxxxxxxx
+xxxxxxxxxxc6.....cccccc-.cccccc.....6cxxxxxxxx
 xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
