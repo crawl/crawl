@@ -462,7 +462,7 @@ zapewnia zwiększoną odporność na zimno i wrogie uroki, i czyni rzucającego
 całkowicie odpornym na truciznę, zgniliznę i nekromancję działającą na istoty
 żywe, a także eliminuje wszelką potrzebę jedzenia przez okres trwania czaru.
 
-Są także i negatywne skutki, takie jak wraźliwość na poświęconą broń i
+Są także i negatywne skutki, takie jak wrażliwość na poświęconą broń i
 niemożność picia eliksirów.
 
 Z niezrozumiałych powodów ten czar może być użyty przez czarodziejów będących
