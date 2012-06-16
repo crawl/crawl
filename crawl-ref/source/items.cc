@@ -2526,16 +2526,23 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    int i = you.force_autopickup[item.base_type][item.sub_type];
-    if (i != 0)
-        return (i == 1);
+    if (item.base_type < NUM_OBJECT_CLASSES)
+    {
+        int force = you.force_autopickup[item.base_type][item.sub_type];
+        if (force != 0)
+            return (force == 1);
+    }
 
     //Check for initial settings
-    for (i = 0; i < (int)Options.force_autopickup.size(); ++i)
+    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
         if (Options.force_autopickup[i].first.matches(iname))
         {
             bool r = Options.force_autopickup[i].second;
-            you.force_autopickup[item.base_type][item.sub_type] = (r)? 1 : -1;
+            if (item.base_type < NUM_OBJECT_CLASSES)
+            {
+                int force = r ? 1 : -1;
+                you.force_autopickup[item.base_type][item.sub_type] = force;
+            }
             return r;
         }
 
