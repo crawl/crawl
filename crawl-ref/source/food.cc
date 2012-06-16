@@ -1813,9 +1813,13 @@ static void _eat_chunk(item_def& food)
         {
             if (x_chance_in_y(contam, 1000))
             {
-                mpr("There is something wrong with this meat.");
+                if (you.duration[DUR_NAUSEA])
+                    mpr("You can barely stomach this raw meat while nauseous.");
+                else
+                    mpr("There is something wrong with this meat.");
+
                 if (you.duration[DUR_DIVINE_STAMINA] > 0)
-                    mpr("Your divine stamina protects you.");
+                    mpr("Your divine stamina protects you from sickness.");
                 else
                 {
                     if (you.duration[DUR_NAUSEA])
