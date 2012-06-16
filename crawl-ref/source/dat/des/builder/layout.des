@@ -70,7 +70,7 @@
 #
 NAME:   layout_forbidden_donut
 DEPTH:  4-22, Pan, !Vaults
-WEIGHT: 1 (Pan), 10
+WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand
 {{
@@ -142,7 +142,7 @@ ENDMAP
 #
 NAME:    layout_cross
 DEPTH:   Pan, 4-22, !Vaults
-WEIGHT:  1 (Pan), 10
+WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 
@@ -211,7 +211,7 @@ ENDMAP
 
 NAME: layout_big_octagon
 DEPTH:   Pan, 4-22, !Vaults
-WEIGHT:  1 (Pan), 10
+WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 
@@ -384,7 +384,7 @@ ENDMAP
 #
 NAME: layout_rooms
 DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 6 (Pan), 20
+WEIGHT: 60 (Pan), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -582,7 +582,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
 DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 1 (Pan), 10
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -894,7 +894,7 @@ ENDMAP
 
 NAME: layout_chaotic_city
 DEPTH: Vaults, Pan, 4-
-WEIGHT: 1 (Pan), 2 (Vaults), 10
+WEIGHT: 2 (Vaults), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
