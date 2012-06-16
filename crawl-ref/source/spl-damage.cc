@@ -1553,6 +1553,9 @@ static int _disperse_monster(monster* mon, int pow)
     if (mons_is_projectile(mon->type))
         return (0);
 
+    if (mon->no_tele())
+        return 1;
+
     if (int res_margin = mon->check_res_magic(pow) > 0)
     {
         // XXX: Note that this might affect magic-immunes!

@@ -1470,6 +1470,13 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         // Monsters aren't smart enough to know when to cancel teleport.
         if (mon->has_ench(ENCH_TP))
             ret = true;
+    case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
+    case SPELL_BLINK_CLOSE:
+    case SPELL_BLINK_RANGE:
+    case SPELL_BLINK_AWAY:
+        if (mon->no_tele(true, false))
+            ret = true;
         break;
 
     case SPELL_TELEPORT_OTHER:

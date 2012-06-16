@@ -6705,7 +6705,7 @@ int player_res_magic(bool calc_unid, bool temp)
     return (rm);
 }
 
-bool player::no_tele(bool calc_unid, bool permit_id)
+bool player::no_tele(bool calc_unid, bool permit_id) const
 {
     if (crawl_state.game_is_sprint())
         return true;

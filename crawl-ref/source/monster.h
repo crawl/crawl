@@ -334,7 +334,7 @@ public:
     int res_petrify(bool temp = true) const;
     int res_constrict() const;
     int res_magic() const;
-    bool no_tele(bool calc_unid = true, bool permit_id = true);
+    bool no_tele(bool calc_unid = true, bool permit_id = true) const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;

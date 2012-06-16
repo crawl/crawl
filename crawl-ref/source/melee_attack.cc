@@ -2171,7 +2171,8 @@ bool melee_attack::distortion_affects_defender()
     {
         if (defender_visible)
             obvious_effect = true;
-        defender->blink();
+        if (!defender->no_tele(true, false))
+            defender->blink();
         return (false);
     }
 
@@ -2183,8 +2184,8 @@ bool melee_attack::distortion_affects_defender()
     {
         if (defender_visible)
             obvious_effect = true;
-        if ((crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
-            && defender->is_player())
+        if (crawl_state.game_is_sprint() && defender->is_player()
+            || defender->no_tele())
         {
             canned_msg(MSG_STRANGE_STASIS);
         }
@@ -4301,7 +4302,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BLINK:
-        if (one_chance_in(3))
+        if (one_chance_in(3) && !defender->no_tele(true, false))
             attacker->blink();
         break;
 

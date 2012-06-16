@@ -628,7 +628,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             }
             disarm();
         }
-        triggerer.teleport(true);
+        if (!triggerer.no_tele(true, you_know || you_trigger))
+            triggerer.teleport(true);
         break;
 
     case TRAP_ALARM:

@@ -2514,6 +2514,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MARA:
     case MONS_MARA_FAKE:
     case MONS_GOLDEN_EYE:
+        if (mons->no_tele(true, false))
+            break;
         if (one_chance_in(7) || mons->caught() && one_chance_in(3))
             used = monster_blink(mons);
         break;
