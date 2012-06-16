@@ -59,7 +59,6 @@ end
 
 NAME: grunt_burning_victim
 TAGS: allow_dup grunt_burning_victim no_item_gen no_monster_gen
-ORIENT: float
 {{
 
 local burnmarker = TriggerableFunction:new {
