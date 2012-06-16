@@ -1085,9 +1085,7 @@ WEIGHT:  2 (Pan), 20
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 {{
-  -- personally, I think that maps are better with rock walls
-  local wall_glyph = 'x'
-  -- local wall_glyph = getRandomWallMaterial()
+  local wall_glyph = getRandomWallMaterial()
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
@@ -1217,8 +1215,7 @@ TAGS:    no_rotate no_hmirror no_vmirror
   local STAIR_ROOM_DISTANCE = 8
   local STAIR_COUNT = 12
 
-  local wall_glyph = 'x'
-  -- local wall_glyph = getRandomWallMaterial()
+  local wall_glyph = getRandomWallMaterial()
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
@@ -1463,8 +1460,7 @@ WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 {{
-  -- local wall_glyph = getRandomWallMaterial()
-  local wall_glyph = 'x'
+  local wall_glyph = getRandomWallMaterial()
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
