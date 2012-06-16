@@ -1191,23 +1191,14 @@ ENDMAP
 #  adjacent arms.  Normally, at least two arms are directly
 #  connected but there is one that is not.
 #
-# There is always a (open) plus-shaped room placed ath the
+# There is always a (open) plus-shaped room placed at the
 #  center of this map where the four arms are guarenteed to be
-#  connected.  There is a chance of placing guards in that room
-#  (usually 1, can be 2 or 3).
+#  connected.
 #
 # There is a chance that this layout places all 6 staircase.
 #  If so, the three up stairs will be placed around one arm of
 #  the cross and the three down stairs will be placed around
-#  another (random) arm of the cross.  There is a chance that
-#  treasure will be placed in the corresponding points on the
-#  other two arms.
-#
-# Center guards and/or treasure, if explicitly placed, are
-#  placed using special subvaults (below).  This is to prevent a
-#  minivault from being generated on top of them.  Otherwise,
-#  the minivault may place something else in that cell, causing
-#  an error map generation time.
+#  another (random) arm of the cross.
 #
 NAME:    layout_loops_cross
 DEPTH:   Pan, 4-22, !Vaults
@@ -1221,8 +1212,6 @@ TAGS:    no_rotate no_hmirror no_vmirror
   local CONNECTION_VARIATION_SMALL = 3
 
   local PLACE_STAIRS_PERCENT = 33
-  local TREASURE_PERCENT = 33
-  local CENTER_GUARDS_PERCENT = 50
   local ROOM_CORNER_PERCENT = 20
 
   local STAIR_ROOM_DISTANCE = 8
@@ -1449,62 +1438,16 @@ TAGS:    no_rotate no_hmirror no_vmirror
     shuffle('[{( / ]}) / ABC / DEF')
     shuffle('[{(')
     shuffle(']})')
-
-    if crawl.random2(100) < TREASURE_PERCENT then
-      mapgrd[center_x]    [center_y]     = 'G'
-      mapgrd[center_x + 1][center_y]     = 'G'
-      mapgrd[center_x - 1][center_y]     = 'G'
-      mapgrd[center_x]    [center_y + 1] = 'G'
-      mapgrd[center_x]    [center_y - 1] = 'G'
-      subvault('A : subvault_loops_cross_item')
-      subvault('B : subvault_loops_cross_item')
-      subvault('C : subvault_loops_cross_item')
-      subvault('D : subvault_loops_cross_item')
-      subvault('E : subvault_loops_cross_item')
-      subvault('F : subvault_loops_cross_item')
-      subvault('G : subvault_loops_cross_monsters')
-    else
-      subst('A : .')
-      subst('B : .')
-      subst('C : .')
-      subst('D : .')
-      subst('E : .')
-      subst('F : .')
-    end
+    subst('A : .')
+    subst('B : .')
+    subst('C : .')
+    subst('D : .')
+    subst('E : .')
+    subst('F : .')
   end
   -- else place stairs randomly
-
-  if crawl.random2(100) < CENTER_GUARDS_PERCENT then
-    mapgrd[center_x][center_y] = 'G'
-    mapgrd[center_x + 1][center_y] = 'G'
-    mapgrd[center_x - 1][center_y] = 'G'
-    mapgrd[center_x][center_y + 1] = 'G'
-    mapgrd[center_x][center_y - 1] = 'G'
-    subvault('G : subvault_loops_cross_monsters')
-  end
 }}
 MAP
-ENDMAP
-
-#
-# These are the subvaults for layout_loops_cross.
-#
-
-NAME: subvault_loops_cross_item
-TAGS: subvault_loops_cross_item allow_dup unrand
-DEPTH:
-MAP
-*
-ENDMAP
-
-NAME: subvault_loops_cross_monsters
-TAGS: subvault_loops_cross_monsters allow_dup unrand
-DEPTH:
-NSUBST: . = 1:0 / 2:0... / *:.
-MAP
- .
-...
- .
 ENDMAP
 
 ##############################################################
