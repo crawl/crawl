@@ -922,7 +922,7 @@ static bool _handle_scroll(monster* mons)
     switch (scroll_type)
     {
     case SCR_TELEPORTATION:
-        if (!mons->has_ench(ENCH_TP))
+        if (!mons->has_ench(ENCH_TP) && !mons->no_tele(true, false))
         {
             if (mons->caught() || mons_is_fleeing(mons) || mons->pacified())
             {
@@ -936,7 +936,7 @@ static bool _handle_scroll(monster* mons)
 
     case SCR_BLINKING:
         if ((mons->caught() || mons_is_fleeing(mons) || mons->pacified())
-            && mons_near(mons))
+            && mons_near(mons) && !mons->no_tele(true, false))
         {
             simple_monster_message(mons, " reads a scroll.");
             read = true;

@@ -1141,7 +1141,7 @@ void MiscastEffect::_translocation(int severity)
             you_msg        = "Space bends around you!";
             mon_msg_seen   = "Space bends around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and distorts.";
-            if (_ouch(4 + random2avg(7, 2)) && target->alive())
+            if (_ouch(4 + random2avg(7, 2)) && target->alive() && !target->no_tele())
                 target->blink(false);
             break;
         case 5:
@@ -1174,10 +1174,14 @@ void MiscastEffect::_translocation(int severity)
             _ouch(5 + random2avg(9, 2));
             if (target->alive())
             {
-                if (one_chance_in(3))
-                    target->teleport(true);
-                else
-                    target->blink(false);
+                // Same message as a harmless miscast, thus no permit_id.
+                if (!target->no_tele(true, false))
+                {
+                    if (one_chance_in(3))
+                        target->teleport(true);
+                    else
+                        target->blink(false);
+                }
                 if (target->alive())
                     _potion_effect(POT_CONFUSION, 40);
             }
@@ -1222,7 +1226,8 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
             if (_ouch(9 + random2avg(17, 2)) && target->alive())
             {
-                target->teleport(true);
+                if (!target->no_tele())
+                    target->teleport(true);
                 if (target->alive())
                     _potion_effect(POT_CONFUSION, 60);
             }

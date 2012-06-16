@@ -657,6 +657,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     {
         if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
         {
+            // dlua only, don't heed no_tele
             monster* mons = monster_at(where);
             mons->teleport(true);
         }

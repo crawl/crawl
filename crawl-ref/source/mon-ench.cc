@@ -899,7 +899,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(i->first);
-            monster_blink(this, true);
+            if (!mons_is_stationary(this))
+                monster_blink(this, true);
             break;
 
         case ENCH_HELD:
@@ -1586,7 +1587,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
-        if (decay_enchantment(me, true))
+        if (decay_enchantment(me, true) && !no_tele(true, false))
             monster_teleport(this, true);
         break;
 

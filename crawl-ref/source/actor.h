@@ -286,7 +286,7 @@ public:
     virtual int res_constrict() const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
-    virtual bool no_tele(bool calc_unid = true, bool permit_id = true) = 0;
+    virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;

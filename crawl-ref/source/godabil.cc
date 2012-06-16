@@ -3094,7 +3094,8 @@ static int _lugonu_warp_monster(monster* mon, int pow)
             return (1);
     }
 
-    mon->blink();
+    if (!mon->no_tele(true, false))
+        mon->blink();
 
     return (1);
 }

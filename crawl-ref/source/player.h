@@ -608,7 +608,7 @@ public:
     int res_petrify(bool temp = true) const;
     int res_constrict() const { return 0; };
     int res_magic() const;
-    bool no_tele(bool calc_unid = true, bool permit_id = true);
+    bool no_tele(bool calc_unid = true, bool permit_id = true) const;
     bool confusable() const;
     bool slowable() const;
 

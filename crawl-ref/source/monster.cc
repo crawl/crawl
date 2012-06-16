@@ -3950,7 +3950,7 @@ int monster::res_magic() const
     return (u);
 }
 
-bool monster::no_tele(bool calc_unid, bool permit_id)
+bool monster::no_tele(bool calc_unid, bool permit_id) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
@@ -5695,6 +5695,9 @@ void monster::steal_item_from_player()
             beem.beam_source = mindex();
 
             // Try to teleport away.
+            if (no_tele())
+                return;
+
             if (has_ench(ENCH_TP))
             {
                 mons_cast_noise(this, beem, SPELL_BLINK);
