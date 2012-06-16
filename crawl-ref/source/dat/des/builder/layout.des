@@ -210,7 +210,7 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
-DEPTH:   4-22, !Vaults
+DEPTH:   Pan, 4-22, !Vaults
 WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
