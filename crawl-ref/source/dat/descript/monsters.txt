@@ -1931,10 +1931,10 @@ and violence.
 orb of destruction
 
 This globe of pure magic is a conjured projectile that homes onto a
-designated target, albeit with a massive inertia. A smart and agile person
-may move out of its path, causing it to do scenery damage or even go around
-in circles. Be sure to step at least two paces to the side, though, for the
-orb is not swayed by minute movements, including those from the Dodging
+designated target, albeit with massive inertia. A smart and agile person
+may move out of its path, causing it to damage its surroundings or even go around
+in circles. Be sure to step at least two paces to the side, though, for it
+is not swayed by minute movements, including those from the Dodging
 skill.
 %%%%
 orb of fire
@@ -2786,7 +2786,7 @@ Statue of Wucad Mu
 
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's
-powers, as you have no chances in mental combat against it.
+powers, as you have no chance in mental combat against it.
 
 This statue is very brittle; it will disintegrate at once.
 %%%%

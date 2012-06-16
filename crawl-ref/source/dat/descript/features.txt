@@ -27,9 +27,9 @@ An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 %%%%
 A bolt trap
 
-A well-concealed hole contains a crossbow-like contraption with a
+A well-concealed hole containing a crossbow-like contraption with a
 self-loading mechanism. Beware of its bolts, as a steel construction can
-handle draw forces far above those of a living arbalester.
+reach draw forces far above those of a living arbalester.
 %%%%
 A broken pillar
 
@@ -45,7 +45,7 @@ A dart trap
 
 This trap can shoot relatively weak spikes of metal. They are unlikely to
 kill anyone outright, but may be enough to put down someone who's running
-half-dead chased by some monster.
+half-dead while chased by some monster.
 %%%%
 A detected secret door
 
@@ -218,7 +218,7 @@ It is damn sure the needles from this trap are doused in something nasty.
 A net trap
 
 A large concealed net is hanging from the dungeon's ceiling, with a string
-attached rigged to make it fall onto anyone who trips it.
+attached and rigged to make it fall onto anyone who trips it.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
@@ -238,9 +238,8 @@ consuming and swallowing everything in sight.
 %%%%
 A pressure plate
 
-One of floor stones doesn't seem that sturdy, and you noticed that it is a
-trigger of some sort, although what kind of trap it is attached to — it is
-hard to tell.
+One of the floor stones doesn't seem that sturdy, and you notice that it is a
+trigger of some sort, although you can't tell what kind of trap it is attached to.
 %%%%
 A radiant altar of Vehumet
 
@@ -303,7 +302,7 @@ attract followers for Nemelex Xobeh.
 %%%%
 A spear trap
 
-This trap can skewer a tresspasser on long sharp poles that shoot from it.
+This trap shoots long sharp poles that can skewer tresspassers.
 %%%%
 A staircase back to the Crypt
 
@@ -419,7 +418,7 @@ Stepping on this teleporter will send you to another room.
 %%%%
 A teleportation trap
 
-This magical trap can displace anyone hapless enough to step — or even fly
+This magical trap can displace anyone hapless enough to step on it — or even fly
 above it — to a random place on the same dungeon level.
 %%%%
 A translucent rock wall
@@ -493,12 +492,12 @@ Kikubaaqudgha.
 %%%%
 An arrow trap
 
-You can see several bowstrings and arrows attached to fixed bow-like things;
-typically in a trap like this only one is released every time the trigger is
+You can see several bowstrings and arrows attached to fixed bow-like things.
+Typically, in a trap like this, only one is released every time the trigger is
 tripped. Such a trap is cheaper and easier to make than an auto-loading
-mechanism and a steel bow with a monstrous draw force of dreadful bolt
-traps, so don't expect enormous damage. A mere arrow through the artery is
-still enough to kill a person, of course.
+mechanism and a steel bow with the monstrous draw force of a bolt
+trap, so don't expect enormous damage. Still, a mere arrow through the artery is
+enough to kill a person.
 %%%%
 An empty arch of ancient stone
 
