@@ -4615,7 +4615,8 @@ void melee_attack::do_minotaur_retaliation()
 {
     if (defender->cannot_act()
         || defender->confused()
-        || !attacker->alive())
+        || !attacker->alive()
+        || mons_wall_shielded(attacker->as_monster()))
     {
         return;
     }
