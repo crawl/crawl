@@ -2782,6 +2782,14 @@ Hellbinder
 A mighty spellcaster, wreathed in arcane energies, and muttering the most
 profane incantations you might ever have heard.
 %%%%
+Statue of Wucad Mu
+
+This statue, made of a fine glassy orange crystal, depicts a mystic known as
+Wucad Mu, who mastered the matters of the mind. Beware of the statue's
+powers, as you have no chances in mental combat against it.
+
+This statue is very brittle; it will disintegrate at once.
+%%%%
 air elementalist statue
 
 A delicate statue of a tengu gliding through the air. It looks quite
