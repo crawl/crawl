@@ -1553,12 +1553,7 @@ static int _disperse_monster(monster* mon, int pow)
     if (mons_is_projectile(mon->type))
         return (0);
 
-    if (mons_genus(mon->type) == MONS_BLINK_FROG)
-    {
-        simple_monster_message(mon, " resists.");
-        return (1);
-    }
-    else if (int res_margin = mon->check_res_magic(pow) > 0)
+    if (int res_margin = mon->check_res_magic(pow) > 0)
     {
         // XXX: Note that this might affect magic-immunes!
         if (coinflip())
