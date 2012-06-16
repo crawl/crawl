@@ -737,9 +737,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     {
         monster* mon = victim->as_monster();
 
-        if (mon->check_stasis(false))
-            return (true);
-
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = SC_TELEPORT_IN;
 
