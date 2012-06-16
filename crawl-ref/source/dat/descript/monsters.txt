@@ -2809,7 +2809,7 @@ supply to kill you before someone comes to replenish the quiver.
 bittermelon vine
 
 An ordinary looking plant, growing some barely edible fruits. They provide
-nutrition but certainly not good taste.
+nutrition, but certainly not good taste.
 %%%%
 black sheep
 
@@ -2848,8 +2848,8 @@ way than the statue's appearance.
 %%%%
 crystal guardian
 
-This crystal golem is so ensorcelled it is not only immune to nearly any
-magic itself, but also can emit powerful beams of fire and cold at any
+This crystal golem is so ensorcelled that it is immune to nearly any
+magic itself, and it can also shoot powerful beams of fire and cold at any
 tresspassers.
 %%%%
 deformed humanoid
@@ -2900,7 +2900,7 @@ This sturdy vine bears nutritious but nearly tasteless fruits.
 grape vine
 
 Without a gardener to provide it with something to prop itself over, and not
-being lucky to have its seed fall near something to climb, this grape vine
+being lucky enough to have its seed fall near something it can climb, this grape vine
 is still remarkably hard to step over.
 %%%%
 grey elf
@@ -2957,7 +2957,7 @@ mummy warrior
 %%%%
 musa plant
 
-This bushy plant can grow bananas. Or were they banananas? Or bananananas?
+This bushy plant can grow bananas. Or are they banananas? Or bananananas?
 Some yellow curved thingies, at least.
 %%%%
 # Sprint only, too unhinged for regular games...
@@ -3062,9 +3062,9 @@ A glistening silver machine.
 %%%%
 strawberry plant
 
-Whatever radiation made cockroaches and spiders the size of a small dog,
-didn't spare this humble strawberry plant as well. Fortunately, even with
-its size it appears to be harmless.
+The same radiation that made cockroaches and spiders the size of small dogs
+didn't spare this humble strawberry plant, either. Fortunately, even with
+its size, it appears to be harmless.
 %%%%
 unstable oklob plant
 
@@ -3089,7 +3089,7 @@ vampire noble
 vampire warrior
 
 This vampire, formidable in combat, uses magic only for self-boosts,
-preferring to deal with pesky interlopers with their own hands.
+preferring hand to hand combat to deal with pesky interlopers.
 %%%%
 vine covered stone golem
 
