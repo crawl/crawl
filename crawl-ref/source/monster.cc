@@ -3961,6 +3961,9 @@ bool monster::no_tele(bool calc_unid, bool permit_id)
     if (mons_is_tentacle(type))
         return true;
 
+    if (check_stasis(!permit_id, calc_unid))
+        return true;
+
     return false;
 }
 
@@ -5918,12 +5921,13 @@ bool monster::check_clarity(bool silent) const
     return false;
 }
 
-bool monster::check_stasis(bool silent) const
+bool monster::check_stasis(bool silent, bool calc_unid) const
 {
     const int jewellery = inv[MSLOT_JEWELLERY];
-    if (jewellery != NON_ITEM &&
-        mitm[jewellery].base_type == OBJ_JEWELLERY &&
-        mitm[jewellery].sub_type == AMU_STASIS)
+    if (jewellery != NON_ITEM
+        && mitm[jewellery].base_type == OBJ_JEWELLERY
+        && mitm[jewellery].sub_type == AMU_STASIS
+        && (calc_unid || item_ident(mitm[jewellery], ISFLAG_KNOW_TYPE)))
     {
         if (!silent && you.can_see(this) && !mons_is_lurking(this))
         {

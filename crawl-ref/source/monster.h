@@ -465,7 +465,7 @@ public:
     bool has_usable_tentacle() const;
 
     bool check_clarity(bool silent) const;
-    bool check_stasis(bool silent) const;
+    bool check_stasis(bool silent, bool calc_unid = true) const;
 
 private:
     void init_with(const monster& mons);
