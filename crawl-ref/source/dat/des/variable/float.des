@@ -2659,39 +2659,6 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   nicolae_oklob_transplants
-TAGS:   no_hmirror
-DEPTH:  D:13-24, Lair:5-7
-WEIGHT: 3
-SHUFFLE: ]})
-ORIENT: float
-SUBST:  s = x.
-KMONS:  ]}) = oklob plant spells:.;blink_close;blink_away;.;.;blink \
-              name:unstable n_adj / nothing
-KFEAT:  } = stone_stairs_down_i
-KFEAT:  ] = stone_stairs_down_ii
-KFEAT:  ) = stone_stairs_down_iii
-MARKER: G = lua:props_marker { stop_explore = "a heavily-corroded statue."\
-        , feature_description = "heavily-corroded statue" }
-MAP
-     xxxxxxx
-  xxxxsssssxxxx
- xxssss...ssssxx
-xxss....G....ssxx
-xs.............sx
-x....xx...xx....x
-@..sxx.....xxs..@
-@.xxx.......xxx.@
-xxxs.........sxxx
- xss.........ssx
- xs...........sx
- xsss.......sssx
-  xxsss]})sssxx
-   xxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-
 NAME:   grunt_hell_entry_demonic_statue
 TAGS:   no_monster_gen no_rtele_into
 ORIENT: float
