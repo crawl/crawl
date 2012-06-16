@@ -1439,7 +1439,7 @@ MARKER: O  = lua:fog_machine { \
              size = 2, walk_dist = 1, spread_rate= 36 }
 MONS:   plant, gnoll, porcupine
 MAP
-               ..  qqqq   ...    ..
+               ..  qqqq   ...   ...
           .qq.q...q11q.......qq.qqq
        .qq..qq.q1...q.1q...q...q...qqq
      qq.qqq1q1q.q................q....qqq.
@@ -1482,7 +1482,7 @@ MARKER: O  = lua:fog_machine { \
              size = 2, walk_dist = 1, spread_rate= 36 }
 MONS:   plant, gnoll, porcupine
 MAP
-   qq.q...    .qq1   qq.q    qqqq  ..q
+   qqqq....   .qq1   qq.q    qqqq  ..q
 q.1.qqqq.qq.11O..q.11qqq..  13qqqq....q
 q..11xxx.q.qqqq.qqqq....q1q..11q.q..qqq.
  .q.xx'xxq.1qqq..q1q.qq.qqq.qqqq.1.qqq1
@@ -1517,7 +1517,7 @@ MAP
       qq1qq.1qOq.q.11qqq..1.13qqqq.1..
      qqq%q.qqqq.qqqq....q1q..11q.q.1qq..
     qqqqqqq1qqq..q1q.qq.qqq.qqqq.1.qqq1q
-    qqqqqqq.q.q..q..q..1.q..11qq1..q.1.qq.
+    qqqqqqq.q.q..q..q..1.q..11qq1..q.1.qqq
    qqqqqq1q.1.q.1qqq.1q..1..q.q...1q11..qq
   13qqqqqq1q.q...q1..I...q.q......qq..1q11
 q.qq.q.q.qq..q..1......a...a...q..q..q.q
@@ -1590,18 +1590,18 @@ FTILE:  tq23C%I. = floor_woodground
 MONS:   plant, gnoll, porcupine
 MAP
           .t t.tt'xx
-   .''t...tt'''''t.tx
-@'''.t''''~'ttttx11xttx
-  ttt..t.tttxttxx11xxtx
+   .''t...tt'''''t.1x
+@'''.t''''~'ttttx11x1tx
+  ttt..t.tttxttxx11xx1x
   ...1t.tttxxxxxxx+xxx1
   .t..tttxtx'''x''''x1x
   t.tt.tttxx''0+'''0xx1
   .tt.tttttxxxxxxxxxxxx
    ....tt..tttxxtxxxxxx
-    ..tttt..txtttxxxxxx
-    ...t1.tttt1ttxxxxxx
-      ..t.tt1txxtxxxxx1
-         ttxxxxxxxxxx1x
+    ..tttt..1xtttxxxxxx
+    ...t1.ttt.1ttxxxxxx
+      ..t.tt1txxtxxxxxx
+         ttxxxxxxxxxxxx
             t1txxtttxtx
 ENDMAP
 
@@ -1618,11 +1618,11 @@ MAP
       tt1t11tt11ttxxx.xxx
      tt.tt..tttttttx.x.xx
     tt1t..tt11txxtt.ttx..
-    1ttt.tttttxxxx.xxxxxx
+    tttt.tttttxxxx.xxxxxx
    tt1t2tttx.xxxx....xxxx
    ttt11tt1.t..t.txxx.x.x
   ..tttt1t.ttxx.xxxxxx.xx
- .t.t.tt....ttxttxt..xx.x
+ .t.1.tt....ttxttxt..xx.x
 .ttttt..tttttttt.xxx..1x.
 tt1t.t.txx..xx..xxxxxxxxx
 tt...tttttxx.t.xxtxxxxxxx
@@ -1660,8 +1660,8 @@ WEIGHT: 4
 FTILE:  t*q1234C%I. = floor_woodground
 MONS:   plant, soldier ant, queen ant, worker ant
 MAP
-xxxxxxxxxxx1.x1.t
-xxx1xxx1xt.t.txx1
+xxxxxxxxxxx1.xxxx
+xxx1xxx1xt.t.txxx
 x1xx1%..t1t.1x.tx
 xx..1.t...WWt%.x.
 xxxx.t.t.1tWWtt1.
@@ -1686,8 +1686,8 @@ MAP
       tttt       ttttt
    t.tt1t.tt.   tt.t..tt
   t..t1ttt.t.t.tt11t.tt.t
- .1tt.tt.tttt.t.t..t.t.t...
- .t.ttt.1t.t.tt1....t.t.t...
+ .1tt.ttttttt.t.t..t.t.t...
+ .t.tttttt.t.tt1....t.t.t...
   t.t1tttt.1ttt.t.ttt.t.tt1t.
 .ttt.t.tt1t.1t.tt1t.t.tt.t.ttt
 t.1t.tt.tt.tt.t.ttt.t.t.t1tttt
@@ -1721,7 +1721,7 @@ MAP
 ttt1ttt..WWWwwWWW..tt
 t11t.WWtWWWwwwwwWWWtt
 .tt.WWWWWWwww|twwwWWt
-WWWWWWwwwwwww1OwwwWWt
+WWWWWWwwwwwww>OwwwWWt
 wwwwwwwwwwwwwwwwwwWWt
 WWWWWWwwwwwwwwwwWWW1t
 ..ttWWWwwwwwwwWWW..tt
@@ -1766,7 +1766,7 @@ MONS:   plant, bush, fungus
 MAP
    ttttxxxtttt
  tt1txxxxxxxtt
-t1t1xxxxXxxxx1tt
+ttt1xxxxXxxxx1tt
 tttt1xxxWxxx1tt
 ttt.t.1tWt.1t1tt
 tt.t1tt1WW1tt.tt
@@ -1818,8 +1818,8 @@ FTILE:  qt123C%0ITU. = floor_woodground
 MONS:   plant, bush, fungus
 MAP
       ttt      t
-   t.ttt1t  111ttt
- t.tttt1tt..ttt1t.t
+   ttttt1t  111ttt
+ t.tttt1ttttt1t1t.t
 t1t.tt1ttttttt1ttt.t
 t....t.'''''0t....t.
 @'''''''.I%''''''''@
@@ -1882,7 +1882,7 @@ FTILE:  @'~*+T = floor_dirt
 FTILE:  tq123C%0I. = floor_woodground
 MONS:   plant, gnoll, porcupine
 MAP
-       .t1ttt1.@.tt
+       .ttttt1.@.tt
      .1ttttt..'t1tt
     .tt..1t.''tttttt
    tt1tttt.'.t.tW1tt
@@ -1912,7 +1912,7 @@ MAP
    tttt.t1tt.''.%.'....t1tt1ttt
      t1ttttttt.'''...tt111t1tt
       ttttttttt1....tt1ttt1tt
-       t1ttt1tttttt1tttt1t
+       tttttttttttt1tttttt
            tttttttttttt
 ENDMAP
 
@@ -1936,7 +1936,7 @@ MAP
 t.1t..t.1..tWWW.t.1.1..t.tt..tt.
 ttt.t11.1t...OWW.1t.t1..tt...ttt
 tttt.1..aaaaaaa1Wt.t...t..tt1ttt
-t.t1.t1aa..a.2aaWWt1.1t.tttttt1
+t.t1.t1aa..a.2aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
   tt.aa.2a3a~a.2aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
@@ -1986,7 +1986,7 @@ tcccccccccccccccc+c+ccccccccccccccc=ccccct
  ttt.t1t1t.tttxx.'''.xx1ttttttt.ttttt.ttt
  tt.tttt*.tt1ttt.'''.11ttttttt.tt1t.1tttt
  ttt1tttttttt1xx.'''.xxtttttt.t.%t1tt
- ttt..tttt.tttcI.'''.Icttttttt%.t.
+ ttt..ttttttttcI.'''.Icttttttt%.t.
   tttt1.%tt   xx..'..xxtttt
    ttttttt     1t.@.tttt
 ENDMAP
