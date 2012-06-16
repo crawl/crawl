@@ -1928,6 +1928,15 @@ A huge, glowing, four-limbed purple creature with heightened senses, created by
 the Orb to watch over itself. It guards the Orb with enormous punctiliousness
 and violence.
 %%%%
+orb of destruction
+
+This globe of pure magic is a conjured projectile that homes onto a
+designated target, albeit with a massive inertia. A smart and agile person
+may move out of its path, causing it to do scenery damage or even go around
+in circles. Be sure to step at least two paces to the side, though, for the
+orb is not swayed by minute movements, including those from the Dodging
+skill.
+%%%%
 orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics, and of
