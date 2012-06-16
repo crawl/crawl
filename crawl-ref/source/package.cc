@@ -781,6 +781,7 @@ void chunk_reader::init(len_t start)
 {
     ASSERT(!pkg->aborted);
     pkg->n_users++;
+    pkg->reader_count[start]++;
     first_block = next_block = start;
     block_left = 0;
 
@@ -822,6 +823,7 @@ chunk_reader::~chunk_reader()
     if (inflateEnd(&zs) != Z_OK)
         fail("save file decompression failed during clean-up: %s", zs.msg);
 #endif
+    ASSERT(pkg->reader_count[first_block] > 0);
     if (!--pkg->reader_count[first_block])
         pkg->reader_count.erase(first_block);
     ASSERT(pkg->n_users > 0);
