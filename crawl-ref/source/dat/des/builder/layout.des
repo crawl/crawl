@@ -1,8 +1,8 @@
 ###############################################################################
-# layout.des: All large layout vaults go here. These are defined by having
+# layout.des: Most large layout vaults go here. These are defined by having
 #             both ORIENT: encompass and TAGS: layout. These are not true
 #             vaults, in that the dungeon builder can add other vaults on
-#             top of them.
+#             top of them. For the "loops" level layouts, see layout_loops.des.
 #
 ###############################################################################
 
