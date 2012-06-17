@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
@@ -26,6 +27,10 @@ static bool _is_bookrod_type(const item_def& item,
                              bool (*suitable)(spell_type spell))
 {
     if (!item_is_spellbook(item) && item.base_type != OBJ_RODS)
+        return false;
+
+    // Return false for item_infos of unknown subtype (== NUM_{BOOKS,RODS})
+    if (item.sub_type == get_max_subtype(item.base_type))
         return false;
 
     int total       = 0;
