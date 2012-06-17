@@ -2849,9 +2849,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_GREAT_FLAIL;
 
     case WPN_MORNINGSTAR:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_MORNINGSTAR_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_MORNINGSTAR_DWARF;
         return TILE_WPN_MORNINGSTAR;
 
     case WPN_EVENINGSTAR:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_EVENINGSTAR_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_EVENINGSTAR_DWARF;
         return TILE_WPN_EVENINGSTAR;
 
     case WPN_GIANT_CLUB:

@@ -43,10 +43,22 @@ spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
 great_flail1 WPN_GREAT_FLAIL
 great_flail2
+%rim 0
 morningstar1 WPN_MORNINGSTAR
 morningstar2
+morningstar3
+dwarven_morningstar1 WPN_MORNINGSTAR_DWARF
+dwarven_morningstar2
+orcish_morningstar1 WPN_MORNINGSTAR_ORC
+orcish_morningstar2
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
+eveningstar3
+dwarven_eveningstar1 WPN_EVENINGSTAR_DWARF
+dwarven_eveningstar2
+orcish_eveningstar1 WPN_EVENINGSTAR_ORC
+orcish_eveningstar2
+%rim 1
 hammer1 WPN_HAMMER
 hammer2
 %rim 0
