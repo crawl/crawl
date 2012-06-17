@@ -88,15 +88,24 @@ protected:
 
         // per-glyph horizontal advance
         char advance;
-
         // per-glyph width
         char width;
-
+                // does glyph have any pixels?
         bool renderable;
+
+        // index of prev/next glyphs in LRU
+        ucs_t prev; ucs_t next;
+        // charcode of glyph
+        ucs_t uchar;
     };
     GlyphInfo *m_glyphs;
     std::map<ucs_t,ucs_t> m_glyphmap;
-    ucs_t m_glyphmap_top;
+    // index of least recently used glyph
+    ucs_t m_glyphs_lru;
+    // index of most recently used glyph
+    ucs_t m_glyphs_mru;
+    // index of last populated glyph until m_glyphs[] is full
+    ucs_t m_glyphs_top;
 
     // cached value of the maximum advance from m_advance
     coord_def m_max_advance;

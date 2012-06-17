@@ -18,9 +18,9 @@
 #include "unicode.h"
 #include "options.h"
 
-// maximum number of unique glyphs that can be rendered with this font; e.g. 4096, 256
+// maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
 #define MAX_GLYPHS 256
-// dimensions of glyph grid; GLYPHS_PER_ROWCOL^2 <= MAX_GLYPHS; e.g. 64, 16
+// dimensions of glyph grid; GLYPHS_PER_ROWCOL^2 <= MAX_GLYPHS; e.g. 64, 16, 6
 #define GLYPHS_PER_ROWCOL 16
 // char to use if we can't find it in the font (upside-down question mark)
 #define MISSING_CHAR 0xbf
@@ -32,7 +32,9 @@ FontWrapper* FontWrapper::create()
 
 FTFontWrapper::FTFontWrapper() :
     m_glyphs(NULL),
-    m_glyphmap_top(0),
+    m_glyphs_lru(0),
+    m_glyphs_mru(0),
+    m_glyphs_top(0),  // reinitialised to 1 in load_font
     m_max_advance(0, 0),
     m_min_offset(0),
     charsz(1,1)
@@ -46,8 +48,6 @@ FTFontWrapper::~FTFontWrapper()
     delete[] pixels;
     delete m_buf;
 }
-
-
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
                               bool outline)
@@ -122,10 +122,15 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     // Special case c = 0 for full block.
     {
         m_glyphmap[0] = 0;
-        m_glyphmap_top = 1;
+        m_glyphs_top = 1;
+        m_glyphs_lru = 1; // otherwise LRU algorithm will overwrite 0
+        m_glyphs_mru = 0;
         m_glyphs[0].offset  = 0;
         m_glyphs[0].advance = 0;
         m_glyphs[0].renderable = false;
+        m_glyphs[0].uchar   = MISSING_CHAR;
+        m_glyphs[0].prev    = 0;
+        m_glyphs[0].next    = 0;
         for (int x = 0; x < max_width; x++)
             for (int y = 0; y < max_height; y++)
             {
@@ -153,18 +158,41 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
 
 ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
 {
+    ucs_t     c;  // index in m_glyphs
     if(m_glyphmap.find(uchar) == m_glyphmap.end())
     {
-        FT_Error error;
-        ucs_t c = m_glyphmap_top;
+        // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
+        if(m_glyphs_top == MAX_GLYPHS)
+        {
+            //printf("replacing %d (%c) with %d (%c)\n",m_glyphs[m_glyphs_lru].uchar,m_glyphs[m_glyphs_lru].uchar,uchar,(uchar>31&&uchar<127)?uchar:191);
+            // create a pointer in gmap to the lru entry in gdata
+            c = m_glyphs_lru;
+            // delete lru glyph from map
+            m_glyphmap.erase(m_glyphs[m_glyphs_lru].uchar);
+            // move lru on to next
+            m_glyphs_lru = m_glyphs[c].next;
+            m_glyphs[m_glyphs_lru].prev = 0;
+        }
+        else // glyph data is not full
+        {
+            // create a pointer in m_glyphmap to the top of m_glyphs
+            c = m_glyphs_top;
+            // move top index on
+            m_glyphs_top++;
+        }
+        // set some default prev/next values
+        m_glyphs[c].prev = m_glyphs_mru;
+        m_glyphs[m_glyphs_mru].next = c;
+        m_glyphs[c].next = 0;
+        // update links between char and map
+        m_glyphs[c].uchar = uchar;
         m_glyphmap[uchar] = c;
 
+        // get on with rendering the new glyph
+        FT_Error error;
         m_glyphs[c].offset  = 0;
         m_glyphs[c].advance = 0;
         m_glyphs[c].renderable = false;
-
-        m_glyphmap_top++;
-        ASSERT(m_glyphmap_top < MAX_GLYPHS);
 
         FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
 
@@ -196,67 +224,115 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
 
         // Some glyphs (e.g. ' ') don't get a buffer.
         if (!bmp->buffer)
-            return c;
-
-        m_glyphs[c].renderable = true;
-
-        int vert_offset = ascender - face->glyph->bitmap_top;
-
-        ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
-        ASSERT(bmp->num_grays == 256);
-
-        // Horizontal offset stored in m_glyphs and handled when drawing
-        unsigned int offset_x = (c % GLYPHS_PER_ROWCOL) * charsz.x;
-        unsigned int offset_y = (c / GLYPHS_PER_ROWCOL) * charsz.y + vert_offset;
-
-        if (outl)
-        {
-            const int charw = bmp->width;
-            for (int x = -1; x <= bmp->width; x++)
-                for (int y = -1; y <= bmp->rows; y++)
-                {
-                    bool x_valid = x >= 0 && x < bmp->width;
-                    bool y_valid = y >= 0 && y < bmp->rows;
-                    bool valid   = x_valid && y_valid;
-                    unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
-
-                    unsigned char edge = 0;
-                    if (y_valid && x > 0)
-                        edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
-                    if (x_valid && y > 0)
-                        edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
-                    if (y_valid && x < bmp->width - 1)
-                        edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (x_valid && y < bmp->rows - 1)
-                        edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
-
-                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * m_ft_width;
-                    idx *= 4;
-
-                    pixels[idx] = orig;
-                    pixels[idx + 1] = orig;
-                    pixels[idx + 2] = orig;
-                    pixels[idx + 3] = std::min(orig + edge, 255);
-                }
-        }
+            m_glyphs[c].renderable = false;
         else
         {
-            for (int x = 0; x < bmp->width; x++)
-                for (int y = 0; y < bmp->rows; y++)
-                {
-                    unsigned int idx = offset_x + x + (offset_y + y) * m_ft_width;
-                    idx *= 4;
-                    unsigned char alpha = bmp->buffer[x + bmp->width * y];
-                    pixels[idx] = 255;
-                    pixels[idx + 1] = 255;
-                    pixels[idx + 2] = 255;
-                    pixels[idx + 3] = alpha;
-                }
-        }
-//      printf("mapped %d (%x; %c) to %d; px=%d\n",uchar,uchar,(uchar>31&&uchar<127)?uchar:191,c,(offset_x + bmp->width + (offset_y + bmp->rows) * m_ft_width)*4);
+            m_glyphs[c].renderable = true;
 
-        if(update) update_font_tex();
+            int vert_offset = ascender - face->glyph->bitmap_top;
+
+            ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
+            ASSERT(bmp->num_grays == 256);
+
+            // Horizontal offset stored in m_glyphs and handled when drawing
+            unsigned int offset_x = (c % GLYPHS_PER_ROWCOL) * charsz.x;
+            unsigned int offset_y = (c / GLYPHS_PER_ROWCOL) * charsz.y + vert_offset;
+
+            if(m_glyphs_top == MAX_GLYPHS)
+            {
+                // blank out above char if it's been replaced
+                for (int x = 0; x < bmp->width; x++)
+                    for (int y = 0; y < bmp->rows; y++)
+                    {
+                        unsigned int idx = offset_x + x + (offset_y + y - vert_offset) * m_ft_width;
+                        idx *= 4;
+                        pixels[idx + 3] = 0;
+                    }
+            }
+
+            if (outl)
+            {
+                const int charw = bmp->width;
+                for (int x = -1; x <= bmp->width; x++)
+                    for (int y = -1; y <= bmp->rows; y++)
+                    {
+                        bool x_valid = x >= 0 && x < bmp->width;
+                        bool y_valid = y >= 0 && y < bmp->rows;
+                        bool valid   = x_valid && y_valid;
+
+                        unsigned int idx = offset_x+x+1 + (offset_y+y+1) * m_ft_width;
+                        idx *= 4;
+
+                        if( x_valid || y_valid )
+                        {
+                            unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
+
+                            unsigned char edge = 0;
+                            if (y_valid && x > 0)
+                                edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
+                            if (x_valid && y > 0)
+                                edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
+                            if (y_valid && x < bmp->width - 1)
+                                edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
+                            if (x_valid && y < bmp->rows - 1)
+                                edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
+
+                            pixels[idx] = orig;
+                            pixels[idx + 1] = orig;
+                            pixels[idx + 2] = orig;
+                            pixels[idx + 3] = std::min(orig + edge, 255);
+                        }
+                    }
+            }
+            else
+            {
+                for (int x = 0; x < bmp->width; x++)
+                    for (int y = 0; y < bmp->rows; y++)
+                    {
+                        unsigned int idx = offset_x + x + (offset_y + y) * m_ft_width;
+                        idx *= 4;
+                        if( x < bmp->width && y < bmp->rows )
+                        {
+                            unsigned char alpha = bmp->buffer[x + bmp->width * y];
+                            pixels[idx] = 255;
+                            pixels[idx + 1] = 255;
+                            pixels[idx + 2] = 255;
+                            pixels[idx + 3] = alpha;
+                        }
+                    }
+            }
+            if (update)
+                update_font_tex();
+        }
+        //printf("mapped %d (%x; %c) to %d\n",uchar,uchar,(uchar>31&&uchar<127)?uchar:191,c);
     }
+    else // we found uchar in glyphmap
+    {
+        c = m_glyphmap[uchar];
+        if(m_glyphs_mru != c)
+        {
+            // point the <char previous to this one> to the <char after this one> and vice-versa
+            //printf("moving %c: %c -> %c; %c <- %c",uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar);
+            m_glyphs[m_glyphs[c].prev].next = m_glyphs[c].next;
+            m_glyphs[m_glyphs[c].next].prev = m_glyphs[c].prev;
+        }
+    } // regardless of how we came about 'c'
+
+    if(m_glyphs_mru != c)
+    {
+        // point the last character we wrote out to the one we're writing
+        //printf("updating %c.next = %c",m_glyphs[m_glyphs_mru].uchar,uchar);
+        m_glyphs[m_glyphs_mru].next = c;
+        m_glyphs[c].prev = m_glyphs_mru;
+    }
+
+    // update the mru to this one
+    m_glyphs_mru = c;
+    // if we've just used the lru glyph, move onto the next one
+    if( m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0 )
+        m_glyphs_lru = m_glyphs[m_glyphs_lru].next;
+
+    //printf("rendering %d (%x; <<<<<<%c>>>>>>); lru is %c, next lru is %c\n",uchar,uchar,(uchar>31&&uchar<127)?uchar:191,m_glyphs[m_glyphs_lru].uchar,m_glyphs[m_glyphs[m_glyphs_lru].next].uchar);
 
     return m_glyphmap[uchar];
 }
