@@ -68,8 +68,6 @@
 #include "viewchar.h"
 #include "xom.h"
 
-#define PORTAL_VAULT_ORIGIN_KEY "portal_vault_origin"
-
 static bool _invisible_to_player(const item_def& item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
@@ -1088,9 +1086,6 @@ static std::string _origin_monster_name(const item_def &item)
 
 static std::string _origin_place_desc(const item_def &item)
 {
-    if (item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
-        return item.props[PORTAL_VAULT_ORIGIN_KEY].get_string();
-
     return prep_branch_level_name(item.orig_place);
 }
 
