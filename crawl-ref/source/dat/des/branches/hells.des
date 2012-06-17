@@ -207,9 +207,8 @@ ENDMAP
 # Fire storm
 
 NAME:   gehenna_fire_generator
+TAGS:   extra allow_dup
 DEPTH:  Geh:*
-PLACE:  Geh:1
-ORIENT: float
 MARKER: . = lua:fog_machine { \
             pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
             size_buildup_amnt = 29, size_buildup_time = 1000, \
