@@ -872,7 +872,7 @@ TAGS: overwritable layout allow_dup unrand
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Vaults, !Pan
-WEIGHT: 90
+WEIGHT: 90, 200 (Geh), 200 (Coc)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
