@@ -710,13 +710,13 @@ void game_options::reset_options()
     char_set      = CSET_DEFAULT;
 
     // set it to the .crawlrc default
-    autopickups = ((1 << 15) | // gold
-                   (1 <<  6) | // scrolls
-                   (1 <<  8) | // potions
-                   (1 << 10) | // books
-                   (1 <<  7) | // jewellery
-                   (1 <<  3) | // wands
-                   (1 <<  4)); // food
+    autopickups = ((1 << OBJ_GOLD)      |
+                   (1 << OBJ_SCROLLS)   |
+                   (1 << OBJ_POTIONS)   |
+                   (1 << OBJ_BOOKS)     |
+                   (1 << OBJ_JEWELLERY) |
+                   (1 << OBJ_WANDS)     |
+                   (1 << OBJ_FOOD));
     auto_switch             = false;
     suppress_startup_errors = false;
 
