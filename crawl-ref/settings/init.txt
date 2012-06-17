@@ -90,7 +90,7 @@ lua_file = lua/autofight.lua
 #
 ##### 4-a       Picking up and Dropping ###############
 #
-autopickup = $?!+"/%
+# autopickup = $?!+"/%
 
 # There is a long list of autopickup exceptions in
 include = autopickup_exceptions.txt
