@@ -705,6 +705,7 @@ TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southwest
 : pan_lord_setup(_G, 'Gloorx Vloq')
 TILE:      c = dngn_stone_wall_darkgray
+SHUFFLE:   1O
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
