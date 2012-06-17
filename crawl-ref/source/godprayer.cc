@@ -773,6 +773,7 @@ static bool _check_nemelex_sacrificing_item_type(const item_def& item)
 
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
     case OBJ_MISSILES:
         return (you.nemelex_sacrificing[NEM_GIFT_DESTRUCTION]);
 
