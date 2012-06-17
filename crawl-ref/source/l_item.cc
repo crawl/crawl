@@ -296,9 +296,9 @@ static const char *ring_types[] =
 
 static const char *amulet_types[] =
 {
-    "rage", "resist slowing", "clarity", "warding", "resist corrosion",
+    "rage", "clarity", "warding", "resist corrosion",
     "gourmand", "conservation", "controlled flight", "inaccuracy",
-    "resist mutation"
+    "resist mutation", "guardian spirit", "faith", "stasis"
 };
 
 static int l_item_do_subtype (lua_State *ls)
