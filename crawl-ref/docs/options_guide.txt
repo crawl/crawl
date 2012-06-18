@@ -1698,7 +1698,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order of items in the tiles
-        inventory. By default, its value is "!?/%=([)x}+\".
+        inventory. By default, its value is: !?/%=([)X}:|\
         Items with glyphs not in the list will be shown last.
 
 tile_skip_title = false

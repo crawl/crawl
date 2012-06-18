@@ -1189,7 +1189,7 @@ void TilesFramework::update_minimap_bounds()
 
 void TilesFramework::update_tabs()
 {
-    if (!Options.tile_show_items || crawl_state.game_is_arena())
+    if (Options.tile_show_items.empty() || crawl_state.game_is_arena())
         return;
 
     m_region_tab->update();

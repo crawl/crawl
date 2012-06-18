@@ -65,8 +65,56 @@ const std::string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-const static char obj_syms[] = ")([/%?=!+\\0}X$";
-const static int  obj_syms_len = sizeof(obj_syms);
+object_class_type item_class_by_sym(ucs_t c)
+{
+    switch (c)
+    {
+    case ')':
+        return OBJ_WEAPONS;
+    case '(':
+    case 0x27b9: // ➹
+        return OBJ_MISSILES;
+    case '[':
+        return OBJ_ARMOUR;
+    case '/':
+        return OBJ_WANDS;
+    case '%':
+        return OBJ_FOOD;
+    case '?':
+        return OBJ_SCROLLS;
+    case '"': // Make the amulet symbol equiv to ring -- bwross
+    case '=':
+    case 0x00B0: // °
+        return OBJ_JEWELLERY;
+    case '!':
+        return OBJ_POTIONS;
+    case ':':
+    case '+': // ??? -- was the only symbol working for tile order up to 0.10,
+              // so keeping it for compat purposes (user configs).
+    case 0x221e: // ∞
+        return OBJ_BOOKS;
+    case '|':
+        return OBJ_STAVES;
+    case '0':
+        return OBJ_ORBS;
+    case '}':
+        return OBJ_MISCELLANY;
+    case '&':
+    case 'X':
+    case 'x':
+        return OBJ_CORPSES;
+    case '$':
+    case 0x20ac: // €
+    case 0x00a3: // £
+    case 0x00a5: // ¥
+        return OBJ_GOLD;
+    case '\\': // Compat break: used to be staves (why not '|'?).
+        return OBJ_RODS;
+    default:
+        return NUM_OBJECT_CLASSES;
+    }
+
+}
 
 template<class A, class B> static void append_vector(A &dest, const B &src)
 {
@@ -883,7 +931,7 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
-    strcpy(tile_show_items, "!?/%=([)x}+\\_.");
+    tile_show_items      = "!?/%=([)x}:|\\";
     tile_skip_title      = false;
     tile_menu_icons      = true;
 #endif
@@ -2086,43 +2134,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // clear out autopickup
         autopickups = 0;
 
-        for (size_t i = 0; i < field.length(); i++)
+        ucs_t c;
+        for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
         {
-            char type = field[i];
+            object_class_type type = item_class_by_sym(c);
 
-            // Make the amulet symbol equiv to ring -- bwross
-            switch (type)
-            {
-            case '"':
-                // also represents jewellery
-                type = '=';
-                break;
-
-            case '|':
-                // also represents staves
-                type = '\\';
-                break;
-
-            case ':':
-                // also represents books
-                type = '+';
-                break;
-
-            case '&':
-            case 'x':
-                // also corpses
-                type = 'X';
-                break;
-            }
-
-            int j;
-            for (j = 0; j < obj_syms_len && type != obj_syms[j]; j++)
-                ;
-
-            if (j < obj_syms_len)
-                autopickups |= (1 << j);
+            if (type < NUM_OBJECT_CLASSES)
+                autopickups |= (1 << type);
             else
-                report_error("Bad object type '%c' for autopickup.\n", type);
+                report_error("Bad object type '%*s' for autopickup.\n", s, tp);
         }
     }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
@@ -3042,7 +3062,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #ifdef USE_TILE
     else if (key == "tile_show_items")
-        strncpy(tile_show_items, field.c_str(), 18);
+        tile_show_items = field;
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
 #endif

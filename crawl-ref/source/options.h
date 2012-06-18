@@ -322,9 +322,9 @@ public:
 #endif  // WIZARD
 
 #ifdef USE_TILE
-    char        tile_show_items[20]; // show which item types in tile inventory
-    bool        tile_skip_title;     // wait for a key at title screen?
-    bool        tile_menu_icons;     // display icons in menus?
+    std::string tile_show_items; // show which item types in tile inventory
+    bool        tile_skip_title; // wait for a key at title screen?
+    bool        tile_menu_icons; // display icons in menus?
 
     // minimap colours
     char        tile_player_col;
@@ -453,6 +453,7 @@ private:
 };
 
 ucs_t get_glyph_override(int c);
+object_class_type item_class_by_sym(ucs_t c);
 
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)
