@@ -26,6 +26,7 @@
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
@@ -638,9 +639,6 @@ void InventoryRegion::update()
     if (mx * my == 0)
         return;
 
-    // item.base_type <-> char conversion table
-    const static char *obj_syms = ")([/%#?=!#+\\0}x";
-
     int max_pack_row = (ENDOFPACK-1) / mx + 1;
     int max_pack_items = max_pack_row * mx;
 
@@ -656,23 +654,18 @@ void InventoryRegion::update()
     max_pack_items = std::min(max_pack_items, mx * my - min_ground);
     max_pack_items = std::min(ENDOFPACK, max_pack_items);
 
-    const size_t show_types_len = strlen(Options.tile_show_items);
-    // Special case: show any type if (c == show_types_len).
-    for (unsigned int c = 0; c <= show_types_len; c++)
+    ucs_t c;
+    const char *tp = Options.tile_show_items.c_str();
+    int s;
+    do // Do one last iteration with the 0 char at the end.
     {
+        tp += s = utf8towc(&c, tp); // could be better to store this pre-parsed
+
         if ((int)m_items.size() >= max_pack_items)
             break;
 
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
+        bool show_any = !c;
+        object_class_type type = item_class_by_sym(c);
 
         // First, normal inventory
         for (int i = 0; i < ENDOFPACK; ++i)
@@ -709,7 +702,7 @@ void InventoryRegion::update()
             inv_shown[i] = true;
             m_items.push_back(desc);
         }
-    }
+    } while (s);
 
     int remaining = mx*my - m_items.size();
     int empty_on_this_row = mx - m_items.size() % mx;
@@ -761,21 +754,17 @@ void InventoryRegion::update()
     // Then, as many ground items as we can fit.
     bool ground_shown[MAX_ITEMS];
     memset(ground_shown, 0, sizeof(ground_shown));
-    for (unsigned int c = 0; c <= show_types_len; c++)
+
+    tp = Options.tile_show_items.c_str();
+    do
     {
+        tp += s = utf8towc(&c, tp);
+
         if ((int)m_items.size() >= mx * my)
             break;
 
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
+        bool show_any = !c;
+        object_class_type type = item_class_by_sym(c);
 
         for (int i = you.visible_igrd(you.pos()); i != NON_ITEM;
              i = mitm[i].link)
@@ -793,7 +782,7 @@ void InventoryRegion::update()
 
             m_items.push_back(desc);
         }
-    }
+    } while (s);
 
     while ((int)m_items.size() < mx * my)
     {

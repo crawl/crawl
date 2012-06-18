@@ -4,7 +4,7 @@
 # Uncomment this to continue recent versions' old saves that keep crashing.
 # tile_force_regenerate_levels = true
 
-# tile_show_items = !?/%=([)X}+\_.
+# tile_show_items = !?/%=([)x}:|\
 
 # tile_skip_title = true
 # tile_menu_icons = false
