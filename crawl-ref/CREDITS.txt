@@ -90,6 +90,7 @@ Mikko Juola
 Dominic 'dk' Kexel
 Jarmo Kielosto
 Kornel Kisielewicz
+Vesa Kivimäki
 Daniel Klein
 Jon Knapp
 Ilkka Koskela
