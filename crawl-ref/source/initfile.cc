@@ -1349,10 +1349,32 @@ static std::string _find_crawlrc()
     return (datafile_path("init.txt", false, false));
 }
 
+static const char* lua_builtins[] =
+{
+    "clua/stash.lua",
+    "clua/wield.lua",
+    "clua/runrest.lua",
+    "clua/gearset.lua",
+    "clua/trapwalk.lua",
+    "clua/autofight.lua",
+};
+
 // Returns an error message if the init.txt was not found.
 std::string read_init_file(bool runscript)
 {
     Options.reset_options();
+
+#ifdef CLUA_BINDINGS
+    if (runscript)
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(lua_builtins); ++i)
+        {
+            clua.execfile(lua_builtins[i], false, false);
+            if (!clua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
+    }
+#endif
 
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";

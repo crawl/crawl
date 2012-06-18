@@ -221,7 +221,8 @@ bool CLua::is_path_safe(std::string s, bool trusted)
 {
     lowercase(s);
     return (s.find("..") == std::string::npos && shell_safe(s.c_str())
-            && (trusted || s.find("clua") == std::string::npos));
+            // loading dlua stuff would spew tons of error messages
+            && (trusted || s.find("dlua") != 0));
 }
 
 int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
