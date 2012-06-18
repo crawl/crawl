@@ -1863,10 +1863,10 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         be added to the list too, but are not by default.
 
 tile_force_regenerate_levels = false
-
         If set to true, this will cause the tiles information of existing
         levels to be regenerated when loading the level, thus repairing
-        save files where this information has become corrupted.
+        save files where this information has become corrupted. This
+        shouldn't be ever needed anymore.
 
 
 5-  Character Dump.
