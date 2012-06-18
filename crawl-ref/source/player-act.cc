@@ -325,7 +325,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return (true);
 
     // Or any other object, although there's no point here.
-    if (!is_weapon(item));
+    if (!is_weapon(item))
         return (true);
 
     // Small species wielding large weapons...
