@@ -18,7 +18,6 @@ MONS:   spriggan, centaur warrior, wolf, black bear, grizzly bear
 SUBST:  t = t.
 FTILE:  t = floor_grass
 COLOUR: t = green
-SUBST:  . = A....
 FTILE:  .PQR = floor_grass / floor_dirt
 COLOUR: .PQR = green / brown
 KMONS:  P = plant / bush
@@ -44,7 +43,6 @@ KFEAT:  O = enter_forest
 MONS:   spriggan, centaur warrior, wolf, black bear, grizzly bear
 FTILE:  t = floor_grass
 COLOUR: t = green
-SUBST:  . = A....
 FTILE:  .PQR = floor_grass / floor_dirt
 COLOUR: .PQR = green / brown
 KMONS:  P = plant / bush
@@ -82,7 +80,7 @@ SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 appLe / w:1 pear / w:1 orange / w:30 nothing
+           / w:1 apple / w:1 pear / w:1 orange / w:30 nothing
 MAP
  tt...tt 
 t.......t
@@ -147,7 +145,7 @@ SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 appLe / w:1 pear / w:1 orange / w:30 nothing
+           / w:1 apple / w:1 pear / w:1 orange / w:30 nothing
 MAP
  tt...tt 
 t.......t
@@ -191,7 +189,7 @@ SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 appLe / w:1 pear / w:1 orange / w:30 nothing
+           / w:1 apple / w:1 pear / w:1 orange / w:30 nothing
 MAP
       tt...tt
     ttt.....ttt
@@ -254,7 +252,7 @@ SUBST: . = O.........
 KMONS: O = plant / bush
 KMONS: * = yaktaur
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 appLe / w:1 pear / w:1 orange / w:30 nothing
+           / w:1 apple / w:1 pear / w:1 orange / w:30 nothing
 MAP
       tt...tt
     ttt.....ttt
@@ -287,7 +285,7 @@ SUBST: w = wwW
 SUBST: W = WW.
 KMONS: O = plant / bush
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 appLe / w:1 pear / w:1 orange / w:30 nothing
+           / w:1 apple / w:1 pear / w:1 orange / w:30 nothing
 MAP
       tt...tt
     ttt.....ttt
@@ -367,9 +365,9 @@ KITEM: O = acquire any
 KITEM: P = acquire any
 MAP
 tttttttttttttttttttttttttttttttttccccttttttttttttttttttttttttttttttttt
-ttttttttttttttttLLLLLLLLLLttttttcc**ccttttttLLLLLLLLLLtttttttttttttttt
-ttttLLLLLLLLLLLLLLLtLLLhLLLLLtttc*OP*ctttLLLLLhLLLLLLLLLLLLLLLLLLLtttt
-ttLLLLLLLLhLLLLLLLLLLLLLLLttttttc****cttttttLLLLtLLLhLLLLLtLLLLhLLLLtt
+ttttttttttttttttLLLLLLLLLLttttttcc||ccttttttLLLLLLLLLLtttttttttttttttt
+ttttLLLLLLLLLLLLLLLtLLLhLLLLLtttc|OP|ctttLLLLLhLLLLLLLLLLLLLLLLLLLtttt
+ttLLLLLLLLhLLLLLLLLLLLLLLLttttttc||||cttttttLLLLtLLLhLLLLLtLLLLhLLLLtt
 tLLLcmmcLLLLLtLLLhLLLLLLLccccccccc..cccccccccLLLLLLLLLtLLLLLLLcmmcLLLt
 tLLcc77ccLttLLLLLLLLcccccc...Q...c++c...Q...ccccccLLLLLLLLLtLcc77ccLLt
 tLLm7...m.....ccccccc....+...Q..........Q...+....cccccccLLLLLm...7mhLt
@@ -413,6 +411,7 @@ ORIENT: north
 PLACE: Forest:$
 #KITEM: O = mossy rune of Zot
 KITEM: O = acquire any
+KITEM: 1 = acquire any
 KMONS: O = the Enchantress
 MONS:  spriggan defender, spriggan berserker, spriggan druid, \
        spriggan rider, spriggan air mage, spriggan, \
@@ -422,16 +421,16 @@ FTILE:  .*%OT123456+ = floor_normal
 MAP
 tttttttttttttttttttttttttttttttttt
 tttttttttttttccccccccttttttttttttt
-tttttttttttccc******cccttttttttttt
+tttttttttttccc||||||cccttttttttttt
 ttttttttttcc..........cctttttttttt
 tttttttttcc....4444....ccttttttttt
 tttttttttc..............cttttttttt
 ttttttttcc..6.5....5.6..cctttttttt
 ttttttttc%.6..........6.%ctttttttt
-ttttttttc%.6..........6.%ctttttttt
-ttttttttc%.6....O1....6.%ctttttttt
-ttttttttc%.6....11....6.%ctttttttt
-ttttttttc%.6..........6.%ctttttttt
+ttttttttc*.6..........6.*ctttttttt
+ttttttttc*.6....O1....6.*ctttttttt
+ttttttttc*.6....11....6.*ctttttttt
+ttttttttc*.6..........6.*ctttttttt
 ttttttttc%.6..5....5..6.%ctttttttt
 ttttttttcc..6........6..cctttttttt
 tttttttttc..............cttttttttt
@@ -440,11 +439,11 @@ ttttcccccccc..........cccccccctttt
 tttcc......ccc......ccc......ccttt
 ttcc.4.4.4..cccc++cccc..4.4.4.cctt
 tcc..........c.6..6.c..........cct
-tc%..........c+.66.+c...........ct
-tc%......1....cccccc....1.......ct
-tc%....T.2....cccccc....2.T.....ct
-tc%...........cccccc............ct
-tc%.6........c+.66.+c........6..ct
+tc%..........c+.66.+c..........%ct
+tc%......1....cccccc....1......%ct
+tc%....T.2....cccccc....2.T....%ct
+tc%...........cccccc...........%ct
+tc%.6........c+.66.+c........6.%ct
 tcc.6........c.6..6.c........6.cct
 ttc..66.....cccc++cccc.....66..ctt
 ttccc..66..cccc....cccc..66..ccctt

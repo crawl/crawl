@@ -37,6 +37,7 @@
 #include "feature.h"
 #include "fight.h"
 #include "files.h"
+#include "forest.h"
 #include "fprop.h"
 #include "food.h"
 #include "ghost.h"
@@ -2215,6 +2216,7 @@ void run_environment_effects()
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
     abyss_morph(you.time_taken);
+    forest_morph(you.time_taken);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);

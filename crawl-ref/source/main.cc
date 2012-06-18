@@ -62,6 +62,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "forest.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "godprayer.h"
@@ -4428,6 +4429,9 @@ static void _move_player(coord_def move)
 
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
+
+    if (player_in_branch(BRANCH_FOREST))
+        maybe_shift_forest();
 
     apply_berserk_penalty = !attacking;
 

@@ -3,6 +3,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "dgn-height.h"
+#include "forest.h"
 #include "mgen_data.h"
 #include "mon-place.h"
 #include "random.h"
@@ -127,4 +128,6 @@ void dgn_build_forest_level()
 
     dgn_place_stone_stairs();
     process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true, DNGN_TREE);
+
+    initialize_forest_state();
 }

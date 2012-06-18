@@ -18,6 +18,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "files.h"
+#include "forest.h"
 #include "ghost.h"
 #include "invent.h"
 #include "items.h"
@@ -1044,6 +1045,8 @@ static void _move_player(const coord_def& where)
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
+    if (player_in_branch(BRANCH_FOREST))
+        maybe_shift_forest();
 }
 
 static void _move_monster(const coord_def& where, int idx1)

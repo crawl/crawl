@@ -205,7 +205,7 @@ const Branch branches[NUM_BRANCHES] = {
       'Z', true, 0 },
 
     { BRANCH_FOREST, BRANCH_MAIN_DUNGEON, 18, 22, 5, 24,
-      0, 0,
+      0, LFLAG_NO_MAP,
       DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
       "Forest", "the Enchanted Forest", "Forest",
       NULL,

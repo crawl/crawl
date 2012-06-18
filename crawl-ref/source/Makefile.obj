@@ -61,6 +61,7 @@ fight.o \
 files.o \
 fineff.o \
 food.o \
+forest.o \
 format.o \
 fprop.o \
 geom2d.o \
