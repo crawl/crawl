@@ -992,3 +992,10 @@ room, is a vast and terrible sea of impossible size.
 
 Either that, or it's a blue wall.
 %%%%
+############
+### Tutorial
+############
+An exit from the tutorial
+
+This is a way out of the dungeon, letting you finish this lesson.
+%%%%
