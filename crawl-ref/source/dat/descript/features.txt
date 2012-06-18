@@ -58,6 +58,12 @@ A closed door
 
 A wooden door. To open it, try simply walking into it, or press 'O'.
 %%%%
+# These should get custom names instead. Currently used by: IceCv, Ossuary,
+# Sewer, Trove, Volcano.
+A collapsed entrance
+
+This passage was apparently shoddily made, and cannot be used anymore.
+%%%%
 A corrupted altar of Lugonu
 
 An altar to Lugonu the Unformed, possibly dedicated to some other power before
