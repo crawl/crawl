@@ -298,12 +298,14 @@ static const char *amulet_types[] =
 {
     "rage", "clarity", "warding", "resist corrosion",
     "gourmand", "conservation", "controlled flight", "inaccuracy",
-    "resist mutation", "guardian spirit", "faith", "stasis"
+    "resist mutation", "guardian spirit", "faith", "stasis",
 };
 
 static int l_item_do_subtype (lua_State *ls)
 {
     UDATA_ITEM(item);
+    COMPILE_CHECK(ARRAYSZ(ring_types) == NUM_RINGS);
+    COMPILE_CHECK(ARRAYSZ(amulet_types) == NUM_JEWELLERY - AMU_FIRST_AMULET);
 
     if (item)
     {
@@ -315,7 +317,7 @@ static int l_item_do_subtype (lua_State *ls)
             if (item->base_type == OBJ_JEWELLERY)
             {
                 if (jewellery_is_amulet(*item))
-                    s = amulet_types[ item->sub_type - AMU_RAGE ];
+                    s = amulet_types[item->sub_type - AMU_FIRST_AMULET];
                 else
                     s = ring_types[item->sub_type];
             }
