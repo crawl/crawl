@@ -73,18 +73,8 @@
 
 ##### 3-  Lua Files #################################################
 #
-lua_file = lua/stash.lua
-lua_file = lua/wield.lua
-lua_file = lua/runrest.lua
-lua_file = lua/gearset.lua
-lua_file = lua/trapwalk.lua
-
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
-
-# autofight.lua allows binding both movement and attack a single key.
-# Use at your own discretion! See options_guide.txt for details.
-lua_file = lua/autofight.lua
 
 ##### 4-  Interface #################################################
 #
