@@ -411,8 +411,7 @@ std::string FileLineInput::get_line()
         return out;
     }
 
-    ASSERT(!"our memory got trampled!");
-    return "говно";
+    die("memory got trampled");
 }
 
 UTF8FileLineInput::UTF8FileLineInput(const char *name)
