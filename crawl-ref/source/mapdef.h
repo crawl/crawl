@@ -896,7 +896,6 @@ private:
     feature_spec parse_trap(std::string s, int weight);
 };
 
-class map_def;
 class dlua_set_map
 {
 public:
@@ -906,7 +905,6 @@ private:
     std::auto_ptr<lua_datum> old_map;
 };
 
-class map_def;
 dungeon_feature_type map_feature_at(map_def *map,
                                     const coord_def &c,
                                     int rawfeat);
