@@ -54,8 +54,6 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
-#define NUMBER_SPELLBOOKS sizeof(spellbook_template_array)/(sizeof(spell_type) * SPELLBOOK_SIZE)
-
 // The list of spells in spellbooks:
 static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 {
@@ -81,7 +79,7 @@ spell_type which_spell_in_book(const item_def &book, int spl)
 spell_type which_spell_in_book(int sbook_type, int spl)
 {
     ASSERT(sbook_type >= 0);
-    ASSERT(sbook_type < static_cast<int>(NUMBER_SPELLBOOKS));
+    ASSERT(sbook_type < (int)ARRAYSZ(spellbook_template_array));
     return spellbook_template_array[sbook_type][spl];
 }
 

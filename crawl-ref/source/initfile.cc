@@ -1696,7 +1696,7 @@ static int _str_to_killcategory(const std::string &s)
         "other",
     };
 
-    for (unsigned i = 0; i < sizeof(kc) / sizeof(*kc); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(kc); ++i)
         if (s == kc[i])
             return i;
 

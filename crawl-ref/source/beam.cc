@@ -389,8 +389,6 @@ const zap_info zap_data[] = {
 
 };
 
-#define ZAPDATASIZE (sizeof(zap_data)/sizeof(zap_info))
-
 static int zap_index[NUM_ZAPS];
 
 void init_zap_index()
@@ -398,7 +396,7 @@ void init_zap_index()
     for (int i = 0; i < NUM_ZAPS; ++i)
         zap_index[i] = -1;
 
-    for (unsigned int i = 0; i < ZAPDATASIZE; ++i)
+    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
         zap_index[zap_data[i].ztype] = i;
 }
 
@@ -5920,8 +5918,7 @@ std::string bolt::get_source_name() const
 
 void clear_zap_info_on_exit()
 {
-    const unsigned int zap_size = sizeof(zap_data) / sizeof(zap_info);
-    for (unsigned int i = 0; i < zap_size; ++i)
+    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
     {
         delete zap_data[i].damage;
         delete zap_data[i].tohit;

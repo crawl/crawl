@@ -832,7 +832,7 @@ bool kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
-    PeekConsoleInputW(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    PeekConsoleInputW(inbuf, ir, ARRAYSZ(ir), &read_count);
     if (read_count > 0)
     {
         for (unsigned i = 0; i < read_count; ++i)

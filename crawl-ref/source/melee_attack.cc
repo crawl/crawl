@@ -3994,8 +3994,7 @@ std::string melee_attack::mons_attack_verb()
         "pounce on"
     };
 
-    ASSERT(attk_type <
-           static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
+    ASSERT(attk_type < ARRAYSZ(attack_types));
     return (attack_types[attk_type]);
 }
 

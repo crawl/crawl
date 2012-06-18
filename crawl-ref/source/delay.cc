@@ -1864,8 +1864,7 @@ static const char *activity_interrupt_names[] =
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)
 {
-    ASSERT(sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
 
     if (ai == NUM_AINTERRUPTS)
         return ("");
@@ -1875,8 +1874,7 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai)
 
 activity_interrupt_type get_activity_interrupt(const std::string &name)
 {
-    ASSERT(sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
 
     for (int i = 0; i < NUM_AINTERRUPTS; ++i)
         if (name == activity_interrupt_names[i])

@@ -104,7 +104,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 
-    for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(dchar_names); ++i)
         if (dchar_names[i] == name)
             return dungeon_char_type(i);
 

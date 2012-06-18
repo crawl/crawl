@@ -162,7 +162,7 @@ void init_mon_name_cache()
     if (!Mon_Name_Cache.empty())
         return;
 
-    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
     {
         std::string name = mondata[i].name;
         lowercase(name);
@@ -206,7 +206,7 @@ monster_type get_monster_by_name(std::string name, bool exact)
     }
 
     monster_type mon = MONS_PROGRAM_BUG;
-    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
     {
         std::string candidate = mondata[i].name;
         lowercase(candidate);

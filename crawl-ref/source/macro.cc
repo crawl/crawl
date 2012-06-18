@@ -153,7 +153,7 @@ static bool userfunc_referenced(int index, const macromap &mm)
 
 static bool userfunc_referenced(int index)
 {
-    for (unsigned i = 0; i < sizeof(all_maps) / sizeof(*all_maps); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(all_maps); ++i)
     {
         macromap *m = all_maps[i];
         if (userfunc_referenced(index, *m))
