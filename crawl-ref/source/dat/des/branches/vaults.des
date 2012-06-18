@@ -13,16 +13,16 @@
     e.subst("* = * |:2")
   end
 
-  -- Vaults:8 cross-vault rune subsitution
+  -- Vaults:8 cross-vault rune substitution
   -- Turn 'O' into a rune (if it doesn't exist yet) or a good item
   --
   -- Note that this assumes that only one "prize" subvault is ever picked, and
   -- that it is the first subvault of the four.
   function vault8_rune(e)
-    if (dgn.map_by_tag("vault8_rune"))
-      and (e.has_tag("vault8_quadrant_prize")
-      and (crawl.one_chance_in(4))
-      or (e.has_tag("vault8_quadrant")))
+    if dgn.map_by_tag("vault8_rune")
+       and (e.has_tag("vault8_quadrant_prize")
+              and crawl.one_chance_in(4)
+            or e.has_tag("vault8_quadrant"))
     then
       e.subvault("O : vault8_rune")
     else
