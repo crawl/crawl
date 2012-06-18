@@ -41,7 +41,7 @@ protected:
 public:
     void reset()
     {
-        for (unsigned int i = 0; i < sizeof(data) / sizeof(unsigned long); i++)
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] = 0;
     }
 
@@ -79,14 +79,14 @@ public:
 
     inline FixedBitArray<SIZE>& operator|=(const FixedBitArray<SIZE>&x)
     {
-        for (unsigned int i = 0; i < sizeof(data) / sizeof(unsigned long); i++)
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] |= x.data[i];
         return *this;
     }
 
     inline FixedBitArray<SIZE>& operator&=(const FixedBitArray<SIZE>&x)
     {
-        for (unsigned int i = 0; i < sizeof(data) / sizeof(unsigned long); i++)
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] &= x.data[i];
         return *this;
     }

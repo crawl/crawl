@@ -1579,7 +1579,7 @@ std::string scorefile_entry::terse_missile_name() const
     const std::string &aux = auxkilldata;
     std::string missile;
 
-    for (unsigned i = 0; i < sizeof(pre_post) / sizeof(*pre_post); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(pre_post); ++i)
     {
         if (aux.find(pre_post[i][0]) != 0)
             continue;

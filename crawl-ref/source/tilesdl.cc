@@ -241,7 +241,7 @@ void TilesFramework::calculate_default_options()
 {
     // Find which set of _screen_sizes to use.
     int auto_size = 0;
-    int num_screen_sizes = sizeof(_screen_sizes) / sizeof(_screen_sizes[0]);
+    int num_screen_sizes = ARRAYSZ(_screen_sizes);
     do
     {
         if (m_windowsz.x >= _screen_sizes[auto_size][0]

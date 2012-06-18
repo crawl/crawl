@@ -218,13 +218,13 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
     const skill_type str_weapons[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS };
 
-    int str_size = sizeof(str_weapons) / sizeof(skill_type);
+    int str_size = ARRAYSZ(str_weapons);
 
     const skill_type dex_weapons[] =
         { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int dex_size = sizeof(dex_weapons) / sizeof(skill_type);
+    int dex_size = ARRAYSZ(dex_weapons);
 
     const skill_type casting_schools[] =
         { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
@@ -232,7 +232,7 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
           SK_HEXES, SK_CHARMS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
           SK_AIR_MAGIC, SK_EARTH_MAGIC };
 
-    int casting_size = sizeof(casting_schools) / sizeof(skill_type);
+    int casting_size = ARRAYSZ(casting_schools);
 
     switch ((int)role)
     {
@@ -519,7 +519,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+    int total_weapons = ARRAYSZ(combined_weapon_skills);
 
     // Normalise the input type.
     if (skill == SK_FIGHTING)
@@ -675,7 +675,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+    int total_weapons = ARRAYSZ(combined_weapon_skills);
 
     // If we already gave an item for this type, just give the player
     // a consumable.
@@ -877,7 +877,7 @@ void create_wanderer(void)
         { SK_THROWING, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
-    int util_size = sizeof(util_skills) / sizeof(skill_type);
+    int util_size = ARRAYSZ(util_skills);
 
     // No Invocations for demigods.
     if (you.species == SP_DEMIGOD)

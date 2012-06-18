@@ -2818,7 +2818,7 @@ coord_def map_def::float_dock()
     map_section_type which_orient = MAP_NONE;
     int norients = 0;
 
-    for (unsigned i = 0; i < sizeof(orients) / sizeof(*orients); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(orients); ++i)
     {
         if (map.solid_borders(orients[i]) && can_dock(orients[i])
             && one_chance_in(++norients))
@@ -3018,8 +3018,7 @@ void map_def::rotate(bool clock)
             { MAP_WEST,         MAP_NORTH       },
             { MAP_NORTHWEST,    MAP_NORTHEAST   },
         };
-        const int nrots = sizeof(clockrotate_orients)
-                            / sizeof(*clockrotate_orients);
+        const int nrots = ARRAYSZ(clockrotate_orients);
 
         const int refindex = !clock;
         for (int i = 0; i < nrots; ++i)

@@ -2985,7 +2985,7 @@ int get_max_subtype(object_class_type base_type)
         1,              // gold         -- handled specially
         NUM_RODS,
     };
-    COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES);
+    COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
     ASSERT(base_type < NUM_OBJECT_CLASSES);
 
@@ -3935,7 +3935,7 @@ item_info get_item_info(const item_def& item)
     const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
                                 CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
                                 "drawn_cards"};
-    for (unsigned i = 0; i < (sizeof(copy_props) / sizeof(copy_props[0])); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
     {
         if (item.props.exists(copy_props[i]))
             ii.props[copy_props[i]] = item.props[copy_props[i]];

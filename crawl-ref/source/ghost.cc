@@ -730,8 +730,7 @@ static bool _know_spell(spell_type spell)
 
 static spell_type search_first_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_conj) / sizeof(*search_order_conj); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
      {
         if (search_order_conj[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);
@@ -748,8 +747,7 @@ static spell_type search_first_list(int ignore_spell)
 
 static spell_type search_second_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_third) / sizeof(*search_order_third); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_third); ++i)
     {
         if (search_order_third[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);
@@ -766,8 +764,7 @@ static spell_type search_second_list(int ignore_spell)
 
 static spell_type search_third_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_misc) / sizeof(*search_order_misc); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_misc); ++i)
     {
         if (search_order_misc[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);

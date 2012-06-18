@@ -68,8 +68,7 @@ static const option_handler *get_handler(const char *optname)
 {
     if (optname)
     {
-        for (int i = 0, count = sizeof(handlers) / sizeof(*handlers);
-             i < count; ++i)
+        for (int i = 0, count = ARRAYSZ(handlers); i < count; ++i)
         {
             if (!strcmp(handlers[i].option, optname))
                 return &handlers[i];

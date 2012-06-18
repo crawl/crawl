@@ -1744,7 +1744,7 @@ int str_to_shoptype(const std::string &s)
     if (s == "random" || s == "any")
         return (SHOP_RANDOM);
 
-    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
     {
         if (s == shop_types[i])
             return (i);

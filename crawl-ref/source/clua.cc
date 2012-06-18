@@ -788,8 +788,7 @@ unsigned int lua_text_pattern::lfndx = 0;
 
 bool lua_text_pattern::is_lua_pattern(const std::string &s)
 {
-    for (int i = 0, size = sizeof(pat_ops) / sizeof(*pat_ops);
-            i < size; ++i)
+    for (int i = 0, size = ARRAYSZ(pat_ops); i < size; ++i)
     {
         if (s.find(pat_ops[i].token) != std::string::npos)
             return (true);
@@ -877,7 +876,7 @@ bool lua_text_pattern::translate() const
     for (std::string::size_type i = 0; i < pattern.length(); ++i)
     {
         bool match = false;
-        for (unsigned p = 0; p < sizeof pat_ops / sizeof *pat_ops; ++p)
+        for (unsigned p = 0; p < ARRAYSZ(pat_ops); ++p)
         {
             const lua_pat_op &lop = pat_ops[p];
             if (pattern.find(lop.token, i) == i)

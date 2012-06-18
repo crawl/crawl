@@ -53,8 +53,6 @@ static mutation_def mut_data[] = {
 
 };
 
-#define MUTDATASIZE (sizeof(mut_data)/sizeof(mutation_def))
-
 static const body_facet_def _body_facets[] =
 {
     //{ EQ_NONE, MUT_FANGS, 1 },
@@ -92,7 +90,7 @@ void init_mut_index()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         mut_index[i] = -1;
 
-    for (unsigned int i = 0; i < MUTDATASIZE; ++i)
+    for (unsigned int i = 0; i < ARRAYSZ(mut_data); ++i)
     {
         const mutation_type mut = mut_data[i].mutation;
         ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
