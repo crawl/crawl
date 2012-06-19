@@ -2199,13 +2199,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_mons_drain_life(mons, false))
                 return (false);
         }
-    // Try to use Ozocubu's Refrigeration; if nothing happened,
-    // pretend we didn't cast it.
-    else if (spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
-    {
-        if (!_mons_ozocubus_refrigeration(mons, false))
-            return false;
-    }
+        // Try to use Ozocubu's Refrigeration; if nothing happened,
+        // pretend we didn't cast it.
+        else if (spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
+        {
+            if (!_mons_ozocubus_refrigeration(mons, false))
+                return false;
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2972,6 +2972,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
+    case SPELL_OZOCUBUS_REFRIGERATION:
         if (!monsterNearby
             // friendly holies don't care if you are friendly
             || (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
