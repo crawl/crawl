@@ -28,8 +28,8 @@ An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 A bolt trap
 
 A well-concealed hole containing a crossbow-like contraption with a
-self-loading mechanism. Beware of its bolts, as a steel construction can
-reach draw forces far above those of a living arbalester.
+self-loading mechanism. Beware of its bolts, as a steel construction can reach
+draw forces far above those of a living arbalester.
 %%%%
 A broken pillar
 
@@ -43,9 +43,9 @@ visible in the flames.
 %%%%
 A dart trap
 
-This trap can shoot relatively weak spikes of metal. They are unlikely to
-kill anyone outright, but may be enough to put down someone who's running
-half-dead while chased by some monster.
+This trap can shoot relatively weak spikes of metal. They are unlikely to kill
+anyone outright, but may be enough to put down someone who's running half-dead
+while chased by some monster.
 %%%%
 A detected secret door
 
@@ -245,7 +245,8 @@ consuming and swallowing everything in sight.
 A pressure plate
 
 One of the floor stones doesn't seem that sturdy, and you notice that it is a
-trigger of some sort, although you can't tell what kind of trap it is attached to.
+trigger of some sort, although you can't tell what kind of trap it is attached
+to.
 %%%%
 A radiant altar of Vehumet
 
@@ -424,8 +425,8 @@ Stepping on this teleporter will send you to another room.
 %%%%
 A teleportation trap
 
-This magical trap can displace anyone hapless enough to step on it — or even fly
-above it — to a random place on the same dungeon level.
+This magical trap can displace anyone hapless enough to step on it — or even
+fly above it — to a random place on the same dungeon level.
 %%%%
 A translucent rock wall
 
@@ -501,9 +502,9 @@ An arrow trap
 You can see several bowstrings and arrows attached to fixed bow-like things.
 Typically, in a trap like this, only one is released every time the trigger is
 tripped. Such a trap is cheaper and easier to make than an auto-loading
-mechanism and a steel bow with the monstrous draw force of a bolt
-trap, so don't expect enormous damage. Still, a mere arrow through the artery is
-enough to kill a person.
+mechanism and a steel bow with the monstrous draw force of a bolt trap, so
+don't expect enormous damage. Still, a mere arrow through the artery is enough
+to kill a person.
 %%%%
 An empty arch of ancient stone
 
@@ -853,28 +854,27 @@ This stump of granite was probably a statue at some point in the past.
 # Ice Cave
 An ice choked empty arch of ancient stone
 
-It looks like the way you came in has been unused for ages. The portal
-is not only old and inoperative, but also nearly completely encased in a
-mass of ice.
+It looks like the way you came in has been unused for ages. The portal is not
+only old and inoperative, but also nearly completely encased in a mass of ice.
 
 Fortunately, you can see another portal shimmering nearby.
 %%%%
 An ice covered gate leading back out of here
 
-A still-working portal is standing here. Its magic is holding the ice at
-bay, preventing it from completely blocking the gate. You are quite certain
-that you won't be able to return here after you pass through it, though, so
-you'd better explore this place first.
+A still-working portal is standing here. Its magic is holding the ice at bay,
+preventing it from completely blocking the gate. You are quite certain that you
+won't be able to return here after you pass through it, though, so you'd better
+explore this place first.
 
-Or, perhaps, escape with your life before you freeze into an
-ugly-looking icicle.
+Or, perhaps, escape with your life before you freeze into an ugly-looking
+icicle.
 %%%%
 An ice covered rock wall
 
-The rock here is covered by a thick layer of frost and ice. Since you can
-see liquid water dripping in places, it is obvious how this cave came to be:
-water seeped into cracks in the rock and then froze, slowly delving the place
-you're in. And so it delves on your remaining body heat.
+The rock here is covered by a thick layer of frost and ice. Since you can see
+liquid water dripping in places, it is obvious how this cave came to be: water
+seeped into cracks in the rock and then froze, slowly delving the place you're
+in. And so it delves on your remaining body heat.
 %%%%
 Some ice crusted deep water
 
@@ -883,8 +883,8 @@ inviting in the slightest.
 %%%%
 Some ice crusted shallow water
 
-It looks freezing, but if you don't mind hypothermia, you can probably
-wade through it.
+It looks freezing, but if you don't mind hypothermia, you can probably wade
+through it.
 %%%%
 # sewer_minmay_treatment (Sewer)
 A large window

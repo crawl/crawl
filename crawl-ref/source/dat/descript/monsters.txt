@@ -1930,12 +1930,11 @@ and violence.
 %%%%
 orb of destruction
 
-This globe of pure magic is a conjured projectile that homes onto a
-designated target, albeit with massive inertia. A smart and agile person
-may move out of its path, causing it to damage its surroundings or even go around
-in circles. Be sure to step at least two paces to the side, though, for it
-is not swayed by minute movements, including those from the Dodging
-skill.
+This globe of pure magic is a conjured projectile that homes onto a designated
+target, albeit with massive inertia. A smart and agile person may move out of
+its path, causing it to damage its surroundings or even go around in circles.
+Be sure to step at least two paces to the side, though, for it is not swayed by
+minute movements, including those from the Dodging skill.
 %%%%
 orb of fire
 
@@ -2785,8 +2784,8 @@ profane incantations you might ever have heard.
 Statue of Wucad Mu
 
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
-Wucad Mu, who mastered the matters of the mind. Beware of the statue's
-powers, as you have no chance in mental combat against it.
+Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
+as you have no chance in mental combat against it.
 
 This statue is very brittle; it will disintegrate at once.
 %%%%
@@ -2865,8 +2864,8 @@ way than the statue's appearance.
 %%%%
 crystal guardian
 
-This crystal golem is so ensorcelled that it is immune to nearly any
-magic itself, and it can also shoot powerful beams of fire and cold at any
+This crystal golem is so ensorcelled that it is immune to nearly any magic
+itself, and it can also shoot powerful beams of fire and cold at any
 tresspassers.
 %%%%
 deformed humanoid
@@ -2917,8 +2916,8 @@ This sturdy vine bears nutritious but nearly tasteless fruits.
 grape vine
 
 Without a gardener to provide it with something to prop itself over, and not
-being lucky enough to have its seed fall near something it can climb, this grape vine
-is still remarkably hard to step over.
+being lucky enough to have its seed fall near something it can climb, this
+grape vine is still remarkably hard to step over.
 %%%%
 grey elf
 
@@ -2974,8 +2973,8 @@ mummy warrior
 %%%%
 musa plant
 
-This bushy plant can grow bananas. Or are they banananas? Or bananananas?
-Some yellow curved thingies, at least.
+This bushy plant can grow bananas. Or are they banananas? Or bananananas? Some
+yellow curved thingies, at least.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3080,8 +3079,8 @@ A glistening silver machine.
 strawberry plant
 
 The same radiation that made cockroaches and spiders the size of small dogs
-didn't spare this humble strawberry plant, either. Fortunately, even with
-its size, it appears to be harmless.
+didn't spare this humble strawberry plant, either. Fortunately, even with its
+size, it appears to be harmless.
 %%%%
 water elementalist statue
 
@@ -3101,8 +3100,8 @@ vampire noble
 %%%%
 vampire warrior
 
-This vampire, formidable in combat, uses magic only for self-boosts,
-preferring hand to hand combat to deal with pesky interlopers.
+This vampire, formidable in combat, uses magic only for self-boosts, preferring
+hand to hand combat to deal with pesky interlopers.
 %%%%
 vine covered stone golem
 
