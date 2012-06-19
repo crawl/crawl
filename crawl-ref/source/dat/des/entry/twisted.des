@@ -290,30 +290,30 @@ NSUBST: 1 = 1/%
 MONS:   kobold / goblin / hobgoblin / nothing
 MARKER: # = lua:fog_machine { \
             pow_max = 5, delay_min = 100, delay_max = 150, \
-            size = 5, start_clouds = 1, \
-            excl_rad = 0, \
+            size = 4, start_clouds = 1, \
+            excl_rad = 1, \
             cloud_type = "flame" }
 KFEAT:  # = l
 FTILE:  ' = floor_rough_red
 COLOUR: ' = red
 SUBST:  ' = .
 MAP
-bbbbbbbbb
-b.(.{.[.b
-b.......b
-b.......b
-b.b...b.b
-b.......b
-b.......b
-b.b'''b.b
-b.'''''.b
-@.'#'#'.@
-b.b'G'b.b
-b.......b
-bbb+b+bbb
-=1=.b.=1=
-bbb.b.bbb
-  b@b@b
+bbbbbbbbbbb
+b..(.{.[..b
+b.........b
+b.........b
+b..b...b..b
+b.........b
+b.........b
+b..b'''b..b
+b..'''''..b
+@..'#'#'..@
+b..b'G'b..b
+b.........b
+bbbb+b+bbbb
+ =1=.b.=1=
+ bbb.b.bbb
+   b@b@b
 ENDMAP
 
 ########################################
