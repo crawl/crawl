@@ -371,9 +371,10 @@ public:
 
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;
-    void stop_constricting(int mindex, bool intentional = false);
-    void stop_constricting_all(bool intentional = false);
-    void stop_being_constricted();
+    void stop_constricting(int mindex, bool intentional = false,
+                           bool quiet = false);
+    void stop_constricting_all(bool intentional = false, bool quiet = false);
+    void stop_being_constricted(bool quiet = false);
 
     void clear_far_constrictions();
     void accum_has_constricted();

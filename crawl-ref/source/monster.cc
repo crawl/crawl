@@ -5835,24 +5835,7 @@ bool monster::attempt_escape()
 
     if (attfactor > randfact)
     {
-        if (constricted_by != MHITYOU)
-        {
-            // update monster's has constricted info
-            for (int i = 0; i < MAX_CONSTRICT; i++)
-                if (themonst->constricting[i] == mindex())
-                    themonst->constricting[i] = NON_ENTITY;
-        }
-        else
-        {
-            for (int i = 0; i < MAX_CONSTRICT; i++)
-                if (you.constricting[i] == mindex())
-                    you.constricting[i] = NON_ENTITY;
-        }
-
-        // update your constricted by info
-        constricted_by = NON_ENTITY;
-        escape_attempts = 0;
-
+        stop_being_constricted(true);
         return true;
     }
     else
