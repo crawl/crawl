@@ -307,7 +307,6 @@ crimson_imp MONS_CRIMSON_IMP
 quasit MONS_QUASIT
 lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
-midge MONS_MIDGE
 %rim 0
 shadow_imp MONS_SHADOW_IMP
 mon/unique/grinder MONS_GRINDER

@@ -1650,8 +1650,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_UFETUBUS;
     case MONS_IRON_IMP:
         return TILEP_MONS_IRON_IMP;
-    case MONS_MIDGE:
-        return TILEP_MONS_MIDGE;
     case MONS_SHADOW_IMP:
         return TILEP_MONS_SHADOW_IMP;
 

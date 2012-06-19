@@ -3430,7 +3430,6 @@ monster_type summon_any_demon(demon_class_type dct)
             1, MONS_LEMURE,
             1, MONS_UFETUBUS,
             1, MONS_IRON_IMP,
-            1, MONS_MIDGE,
             1, MONS_SHADOW_IMP,
             0);
         break;

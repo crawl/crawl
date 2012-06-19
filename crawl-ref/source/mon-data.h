@@ -197,6 +197,7 @@ static monsterentry mondata[] = {
 
 #if TAG_MAJOR_VERSION == 33
     AXED_MON(MONS_JOZEF)
+    AXED_MON(MONS_MIDGE)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -4727,18 +4728,6 @@ static monsterentry mondata[] = {
     { 3, 3, 5, 0 },
     6, 8, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
-},
-
-{
-    MONS_MIDGE, '5', LIGHTGREEN, "midge",
-    M_NO_FLAGS,
-    MR_RES_POISON,
-    0, 10, MONS_MIDGE, MONS_MIDGE, MH_DEMONIC, -3,
-    { {AT_HIT, AF_BLINK, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
-    4, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
 },
 

@@ -1894,7 +1894,7 @@ KITEM:      i = rod of demonology / ring of fire / ring of protection from fire 
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
 :           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
-:                        .. [[ufetubus / midge / red devil / rotting devil / orange demon / ]])
+:                        .. [[ufetubus / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
 :           dgn.set_feature_desc_short("floor", "hot floor")
 :           dgn.set_feature_desc_short("stone wall", "black wall")
