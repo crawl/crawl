@@ -5842,7 +5842,6 @@ void player::init()
 
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
-    dur_been_constricted = 0;
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
@@ -7601,19 +7600,6 @@ void player::goto_place(const level_id &lid)
     depth = lid.depth;
     ASSERT(depth >= 1);
     ASSERT(depth <= brdepth[you.where_are_you]);
-}
-
-void player::accum_been_constricted()
-{
-    if (!is_constricted())
-        dur_been_constricted += you.time_taken;
-}
-
-void player::accum_has_constricted()
-{
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != NON_ENTITY)
-            dur_has_constricted[i] += you.time_taken;
 }
 
 bool player::attempt_escape()

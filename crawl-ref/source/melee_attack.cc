@@ -5420,7 +5420,6 @@ bool melee_attack::handle_constriction()
                     attacker->constricting[i] = defender->mindex();
                     attacker->dur_has_constricted[i] = 0;
                     defender->constricted_by = attacker->mindex();
-                    defender->dur_been_constricted = 0;
                 }
             }
             ASSERT(grabslot != 0);

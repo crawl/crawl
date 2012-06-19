@@ -707,8 +707,6 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-    void accum_been_constricted();
-    void accum_has_constricted();
     bool attempt_escape();
     bool has_usable_tentacle() const;
 

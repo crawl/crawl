@@ -314,7 +314,6 @@ void actor::stop_constricting(int mind, bool intentional)
             constricting[i] = NON_ENTITY;
             dur_has_constricted[i] = 0;
             constrictee->constricted_by = NON_ENTITY;
-            constrictee->dur_been_constricted = 0;
             constrictee->escape_attempts = 0;
 
             if (alive() && constrictee->alive()
@@ -346,7 +345,6 @@ void actor::stop_being_constricted()
 
     // Just in case the constrictor no longer exists.
     constricted_by = NON_ENTITY;
-    dur_been_constricted = 0;
     escape_attempts = 0;
 }
 
@@ -377,6 +375,13 @@ bool actor::is_constricting() const
 bool actor::is_constricted() const
 {
     return (mindex_to_actor(constricted_by));
+}
+
+void actor::accum_has_constricted()
+{
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+        if (constricting[i] != NON_ENTITY)
+            dur_has_constricted[i] += you.time_taken;
 }
 
 actor *mindex_to_actor(short mindex)

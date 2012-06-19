@@ -459,8 +459,6 @@ public:
     void bind_melee_flags();
     void bind_spell_flags();
     void calc_speed();
-    void accum_been_constricted();
-    void accum_has_constricted();
     bool attempt_escape();
     bool has_usable_tentacle() const;
 
