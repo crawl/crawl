@@ -560,11 +560,6 @@ static void _ashenzari_sac_scroll(const item_def& item)
 // Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
-    // Once you've reached *** once, don't accept weapon sacrifices ever
-    // again just because of value.
-    if (you.piety_max[GOD_ELYVILON] >= piety_breakpoint(2))
-        return (false);
-
     // value/500 chance of piety normally
     if (value > random2(500))
         return (true);
@@ -913,7 +908,10 @@ static bool _offer_items()
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }
     if (num_sacced == 0 && you.religion == GOD_ELYVILON)
-        mpr("There are no weapons here to destroy!");
+    {
+        mprf("There are no %sweapons here to destroy!",
+             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "evil ");
+    }
 
     return (num_sacced > 0);
 }

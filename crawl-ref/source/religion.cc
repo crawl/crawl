@@ -3269,7 +3269,11 @@ bool god_likes_item(god_type god, const item_def& item)
         return (item.base_type == OBJ_WEAPONS
                 || item.base_type == OBJ_STAVES
                 || item.base_type == OBJ_RODS
-                || item.base_type == OBJ_MISSILES);
+                || item.base_type == OBJ_MISSILES)
+               // Once you've reached *** once, don't accept mundane weapon
+               // sacrifices ever again just because of value.
+               && (is_unholy_item(item) || is_evil_item(item)
+                   || you.piety_max[GOD_ELYVILON] < piety_breakpoint(2));
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
