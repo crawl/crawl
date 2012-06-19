@@ -2400,17 +2400,6 @@ microbat
 
 <bat>
 %%%%
-midge
-
-“A Toad, can die of Light —
- Death is the Common Right
- Of Toads and Men —
- Of Earl and Midge
- The privilege —
- Why swagger, then?
- The Gnat's supremacy is large as Thine —”
-    -Emily Dickinson, “A Toad, can die of Light”. ca. 1865.
-%%%%
 molten gargoyle
 
 <metal gargoyle>

@@ -99,7 +99,6 @@ int mons_abyss_rare(monster_type mcls)
 
     case MONS_IRON_IMP:
     case MONS_LEMURE:
-    case MONS_MIDGE:
     case MONS_UFETUBUS:
     case MONS_WHITE_IMP:
         return 80;
@@ -360,7 +359,6 @@ int mons_pan_rare(monster_type mcls)
     case MONS_HELLWING:
     case MONS_IRON_IMP:
     case MONS_LEMURE:
-    case MONS_MIDGE:
     case MONS_NEQOXEC:
     case MONS_ORANGE_DEMON:
     case MONS_SIXFIRHY:

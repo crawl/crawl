@@ -2185,7 +2185,7 @@ void check_demonic_guardian()
         {
         case 1:
             mt = random_choose(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
-                               MONS_IRON_IMP, MONS_MIDGE, -1);
+                               MONS_IRON_IMP, MONS_CRIMSON_IMP, -1);
             break;
         case 2:
             mt = random_choose(MONS_SIXFIRHY, MONS_SMOKE_DEMON, MONS_SOUL_EATER,

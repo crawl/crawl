@@ -1780,11 +1780,6 @@ microbat
 
 A bat that, despite its name, is not any smaller than a megabat.
 %%%%
-midge
-
-A bothersome little demon that cackles maddeningly as it phases in and out of
-existence.
-%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
