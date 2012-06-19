@@ -302,7 +302,7 @@ void actor::clear_clinging()
         props["clinging"] = false;
 }
 
-void actor::stop_constricting(int mind, bool intentional)
+void actor::stop_constricting(int mind, bool intentional, bool quiet)
 {
     actor* const constrictee = mindex_to_actor(mind);
     ASSERT(constrictee);
@@ -316,7 +316,7 @@ void actor::stop_constricting(int mind, bool intentional)
             constrictee->constricted_by = NON_ENTITY;
             constrictee->escape_attempts = 0;
 
-            if (alive() && constrictee->alive()
+            if (!quiet && alive() && constrictee->alive()
                 && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
             {
                 mprf("%s %s %s grip on %s.",
@@ -329,19 +329,19 @@ void actor::stop_constricting(int mind, bool intentional)
     }
 }
 
-void actor::stop_constricting_all(bool intentional)
+void actor::stop_constricting_all(bool intentional, bool quiet)
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
-            stop_constricting(constricting[i], intentional);
+            stop_constricting(constricting[i], intentional, quiet);
 }
 
-void actor::stop_being_constricted()
+void actor::stop_being_constricted(bool quiet)
 {
     actor* const constrictor = mindex_to_actor(constricted_by);
 
     if (constrictor)
-        constrictor->stop_constricting(mindex(), false);
+        constrictor->stop_constricting(mindex(), false, quiet);
 
     // Just in case the constrictor no longer exists.
     constricted_by = NON_ENTITY;

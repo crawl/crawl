@@ -7626,14 +7626,7 @@ bool player::attempt_escape()
         // Stun the monster to prevent it from constricting again right away.
         themonst->speed_increment -= 5;
 
-        // update monster's has constricted info
-        for (int i = 0; i < MAX_CONSTRICT; i++)
-            if (themonst->constricting[i] == MHITYOU)
-                themonst->constricting[i] = NON_ENTITY;
-
-        // update your constricted by info
-        constricted_by = NON_ENTITY;
-        escape_attempts = 0;
+        stop_being_constricted(true);
 
         return true;
     }
