@@ -834,8 +834,17 @@ void TilesFramework::_send_map(bool force_full)
 
             if (!is_dirty(gc) && !force_full)
                 continue;
-            else
-                mark_clean(gc);
+
+            if (cell_needs_redraw(gc))
+            {
+                screen_cell_t *cell = &m_next_view(gc);
+
+                draw_cell(cell, gc, false, m_current_flash_colour);
+                cell->tile.flv = env.tile_flv(gc);
+                pack_cell_overlays(gc, &(cell->tile));
+            }
+
+            mark_clean(gc);
 
             if (m_origin.equals(-1, -1))
                 m_origin = gc;
@@ -963,14 +972,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
             if (!crawl_view.in_viewport_g(coord_def(x, y)))
             {
-                coord_def grid(x, y);
-                screen_cell_t *cell = &m_next_view(grid);
-
-                draw_cell(cell, grid, false, m_next_flash_colour);
-                cell->tile.flv = env.tile_flv(grid);
-                pack_cell_overlays(grid, &(cell->tile));
-
-                mark_dirty(grid);
+                mark_for_redraw(coord_def(x, y));
             }
         }
 
@@ -993,6 +995,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             cell->tile.flv = env.tile_flv(grid);
             pack_cell_overlays(grid, &(cell->tile));
 
+            mark_clean(grid); // Remove redraw flag
             mark_dirty(grid);
         }
 
@@ -1185,19 +1188,7 @@ void TilesFramework::update_minimap(const coord_def& gc)
         gc.y < 0 || gc.y >= GYM)
         return;
 
-    if (you.see_cell(gc))
-        return; // This will get updated by load_dungeon.
-                // Also, it's possible that tile_bg is not yet
-                // initialized, which could lead to problems
-                // if we try to draw in-los cells.
-
-    screen_cell_t *cell = &m_next_view(gc);
-
-    draw_cell(cell, gc, false, m_next_flash_colour);
-    cell->tile.flv = env.tile_flv(gc);
-    pack_cell_overlays(gc, &(cell->tile));
-
-    mark_dirty(gc);
+    mark_for_redraw(gc);
 }
 
 void TilesFramework::clear_minimap()
@@ -1397,6 +1388,34 @@ void TilesFramework::clear_to_end_of_line()
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)
         m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
+}
+
+
+void TilesFramework::mark_for_redraw(const coord_def& gc)
+{
+    mark_dirty(gc);
+    m_cells_needing_redraw[gc.y * GXM + gc.x] = true;
+}
+
+void TilesFramework::mark_dirty(const coord_def& gc)
+{
+    m_dirty_cells[gc.y * GXM + gc.x] = true;
+}
+
+void TilesFramework::mark_clean(const coord_def& gc)
+{
+    m_cells_needing_redraw[gc.y * GXM + gc.x] = false;
+    m_dirty_cells[gc.y * GXM + gc.x] = false;
+}
+
+bool TilesFramework::is_dirty(const coord_def& gc)
+{
+    return m_dirty_cells[gc.y * GXM + gc.x];
+}
+
+bool TilesFramework::cell_needs_redraw(const coord_def& gc)
+{
+    return m_cells_needing_redraw[gc.y * GXM + gc.x];
 }
 
 
