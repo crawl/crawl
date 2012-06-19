@@ -853,37 +853,37 @@ This stump of granite was probably a statue at some point in the past.
 # Ice Cave
 An ice choked empty arch of ancient stone
 
-It looks like the way you came in from has been unused for ages. The portal
+It looks like the way you came in has been unused for ages. The portal
 is not only old and inoperative, but also nearly completely encased in a
 mass of ice.
 
-Fortunately, it appears that another portal shimmers nearby.
+Fortunately, you can see another portal shimmering nearby.
 %%%%
 An ice covered gate leading back out of here
 
-A still working portal is standing here. Its magic is holding the ice at
+A still-working portal is standing here. Its magic is holding the ice at
 bay, preventing it from completely blocking the gate. You are quite certain
 that you won't be able to return here after you pass through it, though, so
-let's better explore this place first.
+you'd better explore this place first.
 
-Or, perhaps, escape with your life before you have frozen into an
+Or, perhaps, escape with your life before you freeze into an
 ugly-looking icicle.
 %%%%
 An ice covered rock wall
 
 The rock here is covered by a thick layer of frost and ice. Since you can
 see liquid water dripping in places, it is obvious how this cave came to be:
-water seeped into cracks in the rock, then froze, slowly delving the place
-you're in. And so does it delve on the remnants of your body heat.
+water seeped into cracks in the rock and then froze, slowly delving the place
+you're in. And so it delves on your remaining body heat.
 %%%%
 Some ice crusted deep water
 
-The ice here is in pieces, and the water it is floating on doesn't look
-inviting by the slightest.
+The ice here is broken into pieces, and the water it floats on doesn't look
+inviting in the slightest.
 %%%%
 Some ice crusted shallow water
 
-It looks freezing, yet if hypothermia is what you want, you can probably
+It looks freezing, but if you don't mind hypothermia, you can probably
 wade through it.
 %%%%
 # sewer_minmay_treatment (Sewer)
