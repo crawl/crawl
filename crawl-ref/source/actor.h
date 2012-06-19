@@ -367,7 +367,6 @@ public:
     unsigned short constricted_by;
     unsigned short constricting[MAX_CONSTRICT];
     int escape_attempts;
-    int dur_been_constricted;
     int dur_has_constricted[MAX_CONSTRICT];
 
     // handles non-attack turn constrictions, does not need to be saved
@@ -377,6 +376,7 @@ public:
     void stop_being_constricted();
 
     void clear_far_constrictions();
+    void accum_has_constricted();
     bool is_constricted() const;
     bool is_constricting() const;
     virtual bool has_usable_tentacle() const = 0;

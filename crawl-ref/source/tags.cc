@@ -1290,7 +1290,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.constricted_by);
     marshallInt(th, you.escape_attempts);
-    marshallInt(th, you.dur_been_constricted);
+    marshallInt(th, 0); // was you.dur_been_constricted, will be removed soon
     for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
     {
         marshallShort(th, you.constricting[k]);
@@ -2088,7 +2088,8 @@ static void tag_read_you(reader &th)
 
     you.constricted_by = unmarshallShort(th);
     you.escape_attempts = unmarshallInt(th);
-    you.dur_been_constricted = unmarshallInt(th);
+    (void) unmarshallInt(th); // was you.dur_been_constricted, will be removed soon
+
     for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
     {
         you.constricting[k] = unmarshallShort(th);
@@ -2905,7 +2906,7 @@ void marshallMonster(writer &th, const monster& m)
 
     marshallShort(th, m.constricted_by);
     marshallInt(th, m.escape_attempts);
-    marshallInt(th, m.dur_been_constricted);
+    marshallInt(th, 0); // was m.dur_been_constricted, will be removed soon
     for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
     {
         marshallShort(th, m.constricting[k]);
@@ -3380,7 +3381,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.constricted_by = unmarshallShort(th);
     m.escape_attempts = unmarshallInt(th);
-    m.dur_been_constricted = unmarshallInt(th);
+    (void) unmarshallInt(th);// was m.dur_been_constricted, will be removed soon
     for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
     {
         m.constricting[k] = unmarshallShort(th);

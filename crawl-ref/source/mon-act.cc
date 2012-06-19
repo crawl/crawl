@@ -1739,7 +1739,6 @@ void handle_monster_move(monster* mons)
         _mons_in_cloud(mons);
 
     // Update constriction durations
-    mons->accum_been_constricted();
     mons->accum_has_constricted();
 
     // Apply monster enchantments once for every normal-speed

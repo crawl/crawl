@@ -3048,7 +3048,6 @@ static void _player_reacts()
         handle_noattack_constrictions(&you);
 
     // increment constriction durations
-    you.accum_been_constricted();
     you.accum_has_constricted();
 
     int capped_time = you.time_taken;

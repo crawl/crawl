@@ -76,7 +76,6 @@ monster::monster()
         foe = MHITNOT;
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
-    dur_been_constricted = 0;
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
@@ -139,7 +138,6 @@ void monster::reset()
     client_id = 0;
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
-    dur_been_constricted = 0;
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
@@ -5806,19 +5804,6 @@ bool monster::is_web_immune() const
 bool monster::nightvision() const
 {
     return (holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL);
-}
-
-void monster::accum_been_constricted()
-{
-    if (is_constricted())
-        dur_been_constricted += you.time_taken;
-}
-
-void monster::accum_has_constricted()
-{
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i])
-            dur_has_constricted[i] += you.time_taken;
 }
 
 bool monster::attempt_escape()

@@ -154,9 +154,6 @@ void debug_dump_constriction(const actor *act)
             fprintf(stderr, "%s ",
                     debug_mon_str(&env.mons[act->constricted_by]).c_str());
         }
-
-        fprintf(stderr, "for %d turns (%d escape attempts)\n",
-                act->dur_been_constricted, act->escape_attempts);
     }
 }
 
