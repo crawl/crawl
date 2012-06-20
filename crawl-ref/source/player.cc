@@ -3480,8 +3480,6 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through self-teleportation.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 17)
                 mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
-            if (you.experience_level == 18)
-                mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 19)
                 mpr("Your Zot abilities now extend through the making of lightning spires.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 20)

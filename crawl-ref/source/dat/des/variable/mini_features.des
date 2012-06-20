@@ -1935,7 +1935,7 @@ ENDMAP
 NAME:  minmay_trapped_gold
 TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
-KFEAT: a = axe trap / bolt trap
+KFEAT: a = spear trap / bolt trap
 KFEAT: b = blade trap
 KFEAT: c = zot trap
 MAP

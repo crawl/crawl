@@ -926,7 +926,7 @@ KMONS: D = dragon
 NSUBST: $ = 1:1 / *:|
 NSUBST: D = 1:D / *:*
 NSUBST: a = 1:+ / *:v
-KFEAT: - = axe trap
+KFEAT: - = spear trap
 NSUBST: - = 3:- / *:.
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
@@ -1038,7 +1038,7 @@ KMONS: 7 = patrolling large simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: ~ = 1:^ / 10:- / *:.
 SUBST: + = +==
 SUBST: ! = +
@@ -1061,7 +1061,7 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: . = 6:- / *:.
 
 MAP
@@ -1079,7 +1079,7 @@ ENDMAP
 NAME: sprint_mu_crypt_lich
 TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
 MONS: ancient lich, skeletal warrior
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: . = 10:- / *:.
 SUBST: : = .
 
@@ -1101,8 +1101,7 @@ NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror no_dup
 MONS: patrolling greater mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap /\
-    spear trap / zot trap
+KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement q:5

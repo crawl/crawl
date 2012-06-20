@@ -468,7 +468,7 @@ NSUBST:  B = 1:= / *:n
 NSUBST:  C = 1:= / *:n
 NSUBST:  D = 1:= / *:n
 NSUBST:  E = 1:= / *:n
-KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap / axe trap
+KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap
 SUBST:   ~ = ~.
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
@@ -655,10 +655,9 @@ MONS:    mummy
 MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
          generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
-             alarm trap / floor w:40
+KFEAT:   ~ = dart trap w:20 / net trap / needle trap / alarm trap / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
 : ossuary_setup_features(_G)

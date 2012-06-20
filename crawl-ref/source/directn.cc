@@ -2916,8 +2916,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("bolt trap");
         case TRAP_SPEAR:
             return ("spear trap");
-        case TRAP_AXE:
-            return ("axe trap");
         case TRAP_BLADE:
             return ("blade trap");
         case TRAP_NET:

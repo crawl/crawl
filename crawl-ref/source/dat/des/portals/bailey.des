@@ -602,7 +602,7 @@ NSUBST:  C = 1:= / *:c
 SUBST:   D = c
 #
 KFEAT:   ~ = net trap
-KFEAT:   ^ = alarm trap / axe trap
+KFEAT:   ^ = alarm trap / spear trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc

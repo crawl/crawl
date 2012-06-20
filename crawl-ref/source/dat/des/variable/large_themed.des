@@ -873,7 +873,7 @@ COLOUR: I5M% = white
 SUBST:  I = G
 SUBST:  " = +
 SUBST:  T = ......^
-KFEAT:  ^ = alarm trap / blade trap w:1 / axe trap / bolt trap
+KFEAT:  ^ = alarm trap / blade trap w:1 / spear trap / bolt trap
 # Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
