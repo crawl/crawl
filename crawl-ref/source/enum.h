@@ -3512,7 +3512,7 @@ enum tag_pref
 };
 enum tile_flags
 {
-    // Foreground flags
+    //// Foreground flags
 
     // 3 mutually exclusive flags for attitude.
     TILE_FLAG_ATT_MASK   = 0x00030000ULL,
@@ -3546,7 +3546,7 @@ enum tile_flags
     TILE_FLAG_MDAM_SEV   = 0x100000000ULL,
     TILE_FLAG_MDAM_ADEAD = 0x1C0000000ULL,
 
-    // Demon difficulty has 5 possibilitiesULL, so uses 3 bits.
+    // Demon difficulty has 5 possibilities, so uses 3 bits.
     TILE_FLAG_DEMON      = 0xE00000000ULL,
     TILE_FLAG_DEMON_5    = 0x200000000ULL,
     TILE_FLAG_DEMON_4    = 0x400000000ULL,
@@ -3554,7 +3554,15 @@ enum tile_flags
     TILE_FLAG_DEMON_2    = 0x800000000ULL,
     TILE_FLAG_DEMON_1    = 0xE00000000ULL,
 
-    // Background flags
+    // 3 mutually exclusive flags for mimics.
+    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
+    TILE_FLAG_MIMIC       = 0x4000000000ULL,
+    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
+    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
+
+
+    //// Background flags
+
     TILE_FLAG_RAY        = 0x00010000ULL,
     TILE_FLAG_MM_UNSEEN  = 0x00020000ULL,
     TILE_FLAG_UNSEEN     = 0x00040000ULL,
@@ -3586,11 +3594,9 @@ enum tile_flags
     TILE_FLAG_ELDRITCH_SE = 0x0800000000ULL,
     TILE_FLAG_ELDRITCH_SW = 0x1000000000ULL,
 
-    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
-    TILE_FLAG_MIMIC       = 0x4000000000ULL,
-    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
-    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
-    // General
+    //// General
+
+    // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,
 };
 
