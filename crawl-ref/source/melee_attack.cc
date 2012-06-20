@@ -4301,8 +4301,9 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BLINK:
-        if (one_chance_in(3) && !defender->no_tele(true, false))
-            attacker->blink();
+        // blinking can kill, delay the call
+        if (one_chance_in(3))
+            add_final_effect(FINEFF_BLINK, 0, attacker);
         break;
 
     case AF_CONFUSE:

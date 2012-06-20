@@ -72,6 +72,7 @@ void fire_final_effects()
                 mpr("Electricity arcs through the water!");
             conduct_electricity(fe.pos, attacker);
             break;
+
         case FINEFF_MIRROR_DAMAGE:
             if (!attacker || attacker == defender || !attacker->alive())
                 continue;
@@ -102,6 +103,7 @@ void fire_final_effects()
                 attacker->hurt(defender, fe.x);
             }
             break;
+
         case FINEFF_TRAMPLE_FOLLOW:
             if (!attacker
                 || attacker->pos() == fe.pos
@@ -111,6 +113,11 @@ void fire_final_effects()
                 continue;
             }
             attacker->move_to_pos(fe.pos);
+            break;
+
+        case FINEFF_BLINK:
+            if (defender && defender->alive() && !attacker->no_tele(true, false))
+                defender->blink();
             break;
         }
     }

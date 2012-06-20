@@ -5704,7 +5704,8 @@ void monster::steal_item_from_player()
             if (has_ench(ENCH_TP))
             {
                 mons_cast_noise(this, beem, SPELL_BLINK);
-                monster_blink(this);
+                // this can kill us, delay the call
+                add_final_effect(FINEFF_BLINK, 0, this);
             }
             else
                 mons_cast(this, beem, SPELL_TELEPORT_SELF);
