@@ -256,8 +256,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         }
         mons_att_changed(this);
         // clear any constrictions on/by you
-        stop_constricting(MHITYOU, true);
-        you.stop_constricting(mindex(), true);
+        stop_constricting(MID_PLAYER, true);
+        you.stop_constricting(mid, true);
 
         // TODO -- and friends
 

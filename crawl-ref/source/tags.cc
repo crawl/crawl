@@ -18,6 +18,7 @@
 #include <cstring>            // for memcpy
 #include <iterator>
 #include <algorithm>
+#include <vector>
 
 #ifdef UNIX
 #include <sys/types.h>
@@ -626,6 +627,127 @@ coord_def unmarshallCoord(reader &th)
     return (c);
 }
 
+static void _marshall_constriction(writer &th, const actor *who)
+{
+    _marshall_as_int(th, who->held);
+    marshallInt(th, who->constricted_by);
+    marshallInt(th, who->escape_attempts);
+
+    // Assumes an empty map is marshalled as just the int 0.
+    const actor::constricting_t * const cmap = who->constricting;
+    if (cmap)
+        marshallMap(th, *cmap, _marshall_as_int<mid_t>, _marshall_as_int<int>);
+    else
+        marshallInt(th, 0);
+}
+
+#if TAG_MAJOR_VERSION <= 33
+// Temporarily store constriction information here when reading from
+// an old (pre-TAG_MINOR_CONSTRICT_MID) save, so we can convert mindex
+// to mid in a separate pass after all monsters are loaded.
+struct old_constrict_t {
+    old_constrict_t(short who_midx, short whom_midx, int dur)
+        : constrictor(who_midx), constrictee(whom_midx), duration(dur)
+    { }
+
+    short constrictor, constrictee;
+    int duration;
+};
+
+static std::vector<old_constrict_t> *temp_constrict = 0;
+
+static bool _ok_mindex(short midx)
+{
+    return (midx == MHITYOU || !invalid_monster_index(midx));
+}
+
+static actor *_mindex_to_actor(short mindex)
+{
+    if (mindex == MHITYOU)
+        return &you;
+    else if (invalid_monster_index(mindex))
+        return 0;
+    else
+        return &env.mons[mindex];
+}
+
+static void _fixup_constriction()
+{
+    if (!temp_constrict)
+        return;
+
+    std::vector<old_constrict_t>::iterator i;
+
+    for (i = temp_constrict->begin(); i != temp_constrict->end(); ++i)
+    {
+        actor * const who  = _mindex_to_actor(i->constrictor);
+        actor * const whom = _mindex_to_actor(i->constrictee);
+
+        // Also sets up whom->constricted_by and whom->held
+        if (who && whom)
+            who->start_constricting(*whom, i->duration);
+    }
+
+    // Reset temp_constrict in preparation for the next load.
+    delete temp_constrict;
+    temp_constrict = 0;
+}
+#endif
+
+static void _unmarshall_constriction(reader &th, actor *who)
+{
+#if TAG_MAJOR_VERSION <= 33
+    const int MAX_CONSTRICT = 8;
+
+    if (th.getMinorVersion() < TAG_MINOR_CONSTRICT_MID)
+    {
+        // Not setting constricted_by or held here; they will be set later,
+        // based on the forward-direction 'constricting' data.  We don't
+        // have to worry about HELD_MONSTER vs HELD_CONSTRICTED because old
+        // versions didn't have that distinction.
+
+        (void) unmarshallShort(th); // was constricted_by
+        who->escape_attempts = unmarshallInt(th);
+        (void) unmarshallInt(th); // was dur_been_constricted
+
+        who->constricted_by = 0;
+        who->held = HELD_NONE;
+        who->constricting = 0;
+
+        for (int k = 0; k < MAX_CONSTRICT; k++)
+        {
+            short ctee = unmarshallShort(th);
+            int dur = unmarshallInt(th);
+
+            // Skip bad constrictions; not that they are known to have existed
+            // in the versions just before TAG_MINOR_CONSTRICT_MID, but if they
+            // did, there's no point asserting about them now.
+            if (!_ok_mindex(ctee))
+                continue;
+
+            if (!temp_constrict)
+                temp_constrict = new std::vector<old_constrict_t>();
+
+            temp_constrict->push_back(old_constrict_t(who->mindex(), ctee, dur));
+        }
+
+        return;
+    }
+
+#endif
+    who->held = unmarshall_long_as<held_type>(th);
+    who->constricted_by = unmarshallInt(th);
+    who->escape_attempts = unmarshallInt(th);
+
+    actor::constricting_t cmap;
+    unmarshallMap(th, cmap, unmarshall_long_as<mid_t>, unmarshallInt);
+
+    if (cmap.size() == 0)
+        who->constricting = 0;
+    else
+        who->constricting = new actor::constricting_t(cmap);
+}
+
 template <typename marshall, typename grid>
 static void _run_length_encode(writer &th, marshall m, const grid &g,
                                int width, int height)
@@ -891,6 +1013,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
     return ers.mapping[raw];
 }
+
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -1288,14 +1411,7 @@ static void tag_construct_you(writer &th)
     marshallFloat(th, abyssal_state.depth);
     marshallFloat(th, abyssal_state.phase);
 
-    marshallShort(th, you.constricted_by);
-    marshallInt(th, you.escape_attempts);
-    marshallInt(th, 0); // was you.dur_been_constricted, will be removed soon
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        marshallShort(th, you.constricting[k]);
-        marshallInt(th, you.dur_has_constricted[k]);
-    }
+    _marshall_constriction(th, &you);
 
     marshallUByte(th, you.octopus_king_rings);
 
@@ -2086,17 +2202,9 @@ static void tag_read_you(reader &th)
     abyssal_state.depth = unmarshallFloat(th);
     abyssal_state.phase = unmarshallFloat(th);
 
-    you.constricted_by = unmarshallShort(th);
-    you.escape_attempts = unmarshallInt(th);
-    (void) unmarshallInt(th); // was you.dur_been_constricted, will be removed soon
+    _unmarshall_constriction(th, &you);
 
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        you.constricting[k] = unmarshallShort(th);
-        you.dur_has_constricted[k] = unmarshallInt(th);
-    }
     you.octopus_king_rings = unmarshallUByte(th);
-
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
@@ -2904,14 +3012,7 @@ void marshallMonster(writer &th, const monster& m)
         marshallGhost(th, *m.ghost);
     }
 
-    marshallShort(th, m.constricted_by);
-    marshallInt(th, m.escape_attempts);
-    marshallInt(th, 0); // was m.dur_been_constricted, will be removed soon
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        marshallShort(th, m.constricting[k]);
-        marshallInt(th, m.dur_has_constricted[k]);
-    }
+    _marshall_constriction(th, &m);
 
     m.props.write(th);
 }
@@ -3379,14 +3480,7 @@ void unmarshallMonster(reader &th, monster& m)
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
 
-    m.constricted_by = unmarshallShort(th);
-    m.escape_attempts = unmarshallInt(th);
-    (void) unmarshallInt(th);// was m.dur_been_constricted, will be removed soon
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        m.constricting[k] = unmarshallShort(th);
-        m.dur_has_constricted[k] = unmarshallInt(th);
-    }
+    _unmarshall_constriction(th, &m);
 
     m.props.clear();
     m.props.read(th);
@@ -3465,6 +3559,12 @@ static void tag_read_level_monsters(reader &th)
             mgrd(m.pos()) = i;
         }
     }
+#if TAG_MAJOR_VERSION <= 33
+    // This relies on TAG_YOU (including lost monsters) being unmarshalled
+    // on game load before the initial level.
+    if (th.getMinorVersion() < TAG_MINOR_CONSTRICT_MID)
+        _fixup_constriction();
+#endif
 }
 
 static void _debug_count_tiles()

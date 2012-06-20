@@ -266,6 +266,7 @@ struct run_check_dir
 };
 
 typedef uint32_t mid_t;
+#define PRImidt PRIu32
 #define MID_PLAYER      ((mid_t)0xffffffff)
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.

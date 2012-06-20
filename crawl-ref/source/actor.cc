@@ -17,6 +17,8 @@
 
 actor::~actor()
 {
+    if (constricting)
+        delete constricting;
 }
 
 bool actor::has_equipped(equipment_type eq, int sub_type) const
@@ -302,94 +304,140 @@ void actor::clear_clinging()
         props["clinging"] = false;
 }
 
-void actor::stop_constricting(int mind, bool intentional, bool quiet)
+void actor::clear_constricted()
 {
-    actor* const constrictee = mindex_to_actor(mind);
-    ASSERT(constrictee);
+    constricted_by = 0;
+    held = HELD_NONE;
+    escape_attempts = 0;
+}
 
-    for (int i = 0; i < MAX_CONSTRICT; i++)
+// End my constriction of i->first, but don't yet update my constricting map,
+// so as not to invalidate i.
+void actor::end_constriction(actor::constricting_t::iterator i,
+                             bool intentional, bool quiet)
+{
+    actor *const constrictee = actor_by_mid(i->first);
+
+    if (!constrictee)
+        return;
+
+    constrictee->clear_constricted();
+
+    if (!quiet && alive() && constrictee->alive()
+        && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
-        if (constricting[i] == mind)
-        {
-            constricting[i] = NON_ENTITY;
-            dur_has_constricted[i] = 0;
-            constrictee->constricted_by = NON_ENTITY;
-            constrictee->escape_attempts = 0;
+        mprf("%s %s %s grip on %s.",
+                name(DESC_THE).c_str(),
+                conj_verb(intentional ? "release" : "lose").c_str(),
+                pronoun(PRONOUN_POSSESSIVE).c_str(),
+                constrictee->name(DESC_THE).c_str());
+    }
+}
 
-            if (!quiet && alive() && constrictee->alive()
-                && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
-            {
-                mprf("%s %s %s grip on %s.",
-                        name(DESC_THE).c_str(),
-                        conj_verb(intentional ? "release" : "lose").c_str(),
-                        pronoun(PRONOUN_POSSESSIVE).c_str(),
-                        constrictee->name(DESC_THE).c_str());
-            }
+void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
+{
+    if (!constricting)
+        return;
+
+    constricting_t::iterator i = constricting->find(whom);
+
+    if (i != constricting->end())
+    {
+        end_constriction(i, intentional, quiet);
+        constricting->erase(i);
+
+        if (constricting->empty())
+        {
+            delete constricting;
+            constricting = 0;
         }
     }
 }
 
 void actor::stop_constricting_all(bool intentional, bool quiet)
 {
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != NON_ENTITY)
-            stop_constricting(constricting[i], intentional, quiet);
+    if (!constricting)
+        return;
+
+    constricting_t::iterator i;
+
+    for (i = constricting->begin(); i != constricting->end(); ++i)
+        end_constriction(i, intentional, quiet);
+
+    delete constricting;
+    constricting = 0;
 }
 
 void actor::stop_being_constricted(bool quiet)
 {
-    actor* const constrictor = mindex_to_actor(constricted_by);
+    // Make sure we are actually being constricted.
+    actor* const constrictor = actor_by_mid(constricted_by);
 
     if (constrictor)
-        constrictor->stop_constricting(mindex(), false, quiet);
+        constrictor->stop_constricting(mid, false, quiet);
 
-    // Just in case the constrictor no longer exists.
-    constricted_by = NON_ENTITY;
-    escape_attempts = 0;
+    // In case the actor no longer exists.
+    clear_constricted();
 }
 
 void actor::clear_far_constrictions()
 {
-    actor* const constrictor = mindex_to_actor(constricted_by);
+    actor* const constrictor = actor_by_mid(constricted_by);
 
     if (!constrictor || !adjacent(pos(), constrictor->pos()))
         stop_being_constricted();
 
-    for (int i = 0; i < MAX_CONSTRICT; i++)
+    if (!constricting)
+        return;
+
+    std::vector<mid_t> need_cleared;
+    constricting_t::iterator i;
+    for (i = constricting->begin(); i != constricting->end(); ++i)
     {
-        actor* const constrictee = mindex_to_actor(constricting[i]);
-        if (constrictee && !adjacent(pos(), constrictee->pos()))
-            stop_constricting(constricting[i], false);
+        actor* const constrictee = actor_by_mid(i->first);
+        if (!constrictee || !adjacent(pos(), constrictee->pos()))
+            need_cleared.push_back(i->first);
     }
+
+    std::vector<mid_t>::iterator j;
+    for (j = need_cleared.begin(); j != need_cleared.end(); ++j)
+        stop_constricting(*j, false, false);
+}
+
+void actor::start_constricting(actor &whom, int dur)
+{
+    if (!constricting)
+        constricting = new constricting_t();
+
+    ASSERT(constricting->find(whom.mid) == constricting->end());
+
+    (*constricting)[whom.mid] = dur;
+    whom.constricted_by = mid;
+    // TODO: could be HELD_MONSTER
+    whom.held = HELD_CONSTRICTED;
+}
+
+int actor::num_constricting() const
+{
+    return (constricting ? constricting->size() : 0);
 }
 
 bool actor::is_constricting() const
 {
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mindex_to_actor(constricting[i]))
-            return true;
-
-    return false;
+    return (constricting && !constricting->empty());
 }
 
 bool actor::is_constricted() const
 {
-    return (mindex_to_actor(constricted_by));
+    return (constricted_by);
 }
 
 void actor::accum_has_constricted()
 {
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != NON_ENTITY)
-            dur_has_constricted[i] += you.time_taken;
-}
+    if (!constricting)
+        return;
 
-actor *mindex_to_actor(short mindex)
-{
-    if (mindex == MHITYOU)
-        return &you;
-    else if (invalid_monster_index(mindex))
-        return 0;
-    else
-        return &env.mons[mindex];
+    constricting_t::iterator i;
+    for (i = constricting->begin(); i != constricting->end(); ++i)
+        i->second += you.time_taken;
 }
