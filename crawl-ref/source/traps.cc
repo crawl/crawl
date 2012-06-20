@@ -1035,23 +1035,19 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 int trap_def::max_damage(const actor& act)
 {
-    int level = env.absdepth0;
-
-    // Trap damage to monsters is not a function of level, because
-    // they are fairly stupid and tend to have fewer hp than
-    // players -- this choice prevents traps from easily killing
-    // large monsters fairly deep within the dungeon.
-    if (act.is_monster())
-        level = 0;
+    // Trap damage to monsters is a lot smaller, because they are fairly
+    // stupid and tend to have fewer hp than players -- this choice prevents
+    // traps from easily killing large monsters.
+    bool mon = act.is_monster();
 
     switch (type)
     {
-        case TRAP_NEEDLE: return  0;
-        case TRAP_DART:   return  4 + level/2;
-        case TRAP_ARROW:  return  7 + level;
-        case TRAP_SPEAR:  return 10 + level;
-        case TRAP_BOLT:   return 13 + level;
-        case TRAP_BLADE:  return (act.is_monster() ? 48 : 10) + 28;
+        case TRAP_NEEDLE: return 0;
+        case TRAP_DART:   return mon ?  4 :  6;
+        case TRAP_ARROW:  return mon ?  7 : 15;
+        case TRAP_SPEAR:  return mon ? 10 : 26;
+        case TRAP_BOLT:   return mon ? 18 : 40;
+        case TRAP_BLADE:  return mon ? 38 : 76;
         default:          return  0;
     }
 
