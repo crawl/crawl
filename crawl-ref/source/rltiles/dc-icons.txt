@@ -34,6 +34,8 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+glowing GLOWING
+slowed SLOWED
 %rim 0
 fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
