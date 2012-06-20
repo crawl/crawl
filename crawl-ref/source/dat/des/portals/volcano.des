@@ -1028,7 +1028,7 @@ KFEAT:   ! = alarm trap
 NSUBST:  r = 2:r / *:.
 NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
-KFEAT:   s = axe trap
+KFEAT:   s = spear trap
 #        The monsters. The patrolling tag seems to keep them from wandering
 #        around, opening the secret doors. It might also be keeping them from
 #        "answering" the alarm traps though.

@@ -127,7 +127,7 @@ NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
 SUBST:  s = ccc=
 MARKER: = = lua:restrict_door()
-KFEAT:  ^ = alarm trap / blade trap / axe trap / bolt trap
+KFEAT:  ^ = alarm trap / blade trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
 FTILE:  "OnDx = floor_marble
@@ -823,7 +823,7 @@ SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
 SUBST:  . = .:9 ~:1
-KFEAT:  ~ = dart trap / arrow trap / bolt trap / axe trap / blade trap / \
+KFEAT:  ~ = dart trap / arrow trap / bolt trap / blade trap / \
             needle trap / spear trap / net trap
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 MAP

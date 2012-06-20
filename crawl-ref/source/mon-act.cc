@@ -2717,7 +2717,6 @@ static int _estimated_trap_damage(trap_type trap)
         case TRAP_ARROW: return (random2(7));
         case TRAP_SPEAR: return (random2(10));
         case TRAP_BOLT:  return (random2(13));
-        case TRAP_AXE:   return (random2(15));
         case TRAP_GAS:   return (random2(50));
         default:         return (0);
     }

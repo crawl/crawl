@@ -170,7 +170,6 @@ enum ability_type
     ABIL_MAKE_ARROW_TRAP,
     ABIL_MAKE_BOLT_TRAP,
     ABIL_MAKE_SPEAR_TRAP,
-    ABIL_MAKE_AXE_TRAP,
     ABIL_MAKE_NEEDLE_TRAP,
     ABIL_MAKE_NET_TRAP,
     ABIL_MAKE_TELEPORT_TRAP,
@@ -3254,7 +3253,9 @@ enum trap_type                         // env.trap_type[]
     TRAP_DART,
     TRAP_ARROW,
     TRAP_SPEAR,
-    TRAP_AXE,
+#if TAG_MAJOR_VERSION == 33
+    TRAP_AXED,
+#endif
     TRAP_TELEPORT,
     TRAP_ALARM,
     TRAP_BLADE,

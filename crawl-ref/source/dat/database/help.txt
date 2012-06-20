@@ -81,7 +81,7 @@ armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shiel
 
 You can search for dungeon features by name: all shops will be found by a
 search for <w>shop</w> (including shops that do not have "shop" in their name);
-other dungeon features can also be found by name: <w>fountain</w>, <w>axe trap</w>,
+other dungeon features can also be found by name: <w>fountain</w>, <w>spear trap</w>,
 <w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
 
 <h>Non-regex operators:</h>

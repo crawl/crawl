@@ -859,7 +859,7 @@ KFEAT:  Z = .
 KFEAT:  8 = .
 KFEAT:  o = granite_statue
 KFEAT:  _ = altar_kikubaaqudgha
-KFEAT:  ~ = bolt trap / blade trap / needle trap / axe trap
+KFEAT:  ~ = bolt trap / blade trap / needle trap
 SUBST:  s = v =
 SUBST:  B = b %
 KITEM:  b = any book

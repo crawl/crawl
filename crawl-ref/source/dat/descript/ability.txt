@@ -616,10 +616,6 @@ Make water
 
 Create a pool of shallow water at your location.
 %%%%
-Make axe trap
-
-Create an axe trap at the targeted location.
-%%%%
 Make lightning spire
 
 Construct a lightning spire with the ability to throw electricity at the

@@ -2707,7 +2707,13 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         feat_colour = unmarshallUnsigned(th);
 
     if (feat_is_trap(feature))
+    {
         trap = (trap_type)unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 33
+        if (trap == TRAP_AXED)
+            trap = TRAP_SPEAR;
+#endif
+    }
 
     cell.set_feature(feature, feat_colour, trap);
 
@@ -3197,6 +3203,10 @@ static void tag_read_level_items(reader &th)
             static_cast<trap_type>(unmarshallUByte(th));
         if (env.trap[i].type == TRAP_UNASSIGNED)
             continue;
+#if TAG_MAJOR_VERSION == 33
+        if (env.trap[i].type == TRAP_AXED)
+            env.trap[i].type = TRAP_SPEAR;
+#endif
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
         env.tgrid(env.trap[i].pos) = i;

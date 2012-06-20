@@ -200,7 +200,7 @@ TAGS:    minotaur generate_loot allow_dup
 MONS:    patrolling minotaur
 NSUBST:  g = 1:. / *:b
 NSUBST:  D = 1:. / *:D
-KFEAT:   d = axe trap / dart trap / needle trap / blade trap
+KFEAT:   d = bolt trap / dart trap / needle trap / blade trap
 KFEAT:   D = teleport trap
 SUBST:   b : vvb
 WEIGHT:  2

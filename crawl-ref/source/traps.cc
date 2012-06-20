@@ -62,7 +62,7 @@ bool trap_def::type_has_ammo() const
     switch (type)
     {
     case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
-    case TRAP_NEEDLE: case TRAP_SPEAR:  case TRAP_AXE:
+    case TRAP_NEEDLE: case TRAP_SPEAR:
         return (true);
     default:
         break;
@@ -121,7 +121,6 @@ void trap_def::prepare_ammo(int charges)
         ammo_qty = 3 + random2avg(9, 3);
         break;
     case TRAP_SPEAR:
-    case TRAP_AXE:
         ammo_qty = 2 + random2avg(6, 3);
         break;
     case TRAP_ALARM:
@@ -1052,7 +1051,6 @@ int trap_def::max_damage(const actor& act)
         case TRAP_ARROW:  return  7 + level;
         case TRAP_SPEAR:  return 10 + level;
         case TRAP_BOLT:   return 13 + level;
-        case TRAP_AXE:    return 15 + level;
         case TRAP_BLADE:  return (act.is_monster() ? 48 : 10) + 28;
         default:          return  0;
     }
@@ -1513,7 +1511,6 @@ item_def trap_def::generate_trap_item()
     case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
     case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;         break;
     case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;       break;
-    case TRAP_AXE:    base = OBJ_WEAPONS;  sub = WPN_HAND_AXE;    break;
     case TRAP_NEEDLE: base = OBJ_MISSILES; sub = MI_NEEDLE;       break;
     case TRAP_NET:    base = OBJ_MISSILES; sub = MI_THROWING_NET; break;
     default:          return item;
@@ -1687,7 +1684,6 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_SPEAR:
-    case TRAP_AXE:
     case TRAP_BLADE:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
@@ -1895,11 +1891,7 @@ static trap_type _random_trap_default(int level_number)
         type = TRAP_NEEDLE;
     if (random2(1 + level_number) > 3)
         type = TRAP_SPEAR;
-    if (random2(1 + level_number) > 5)
-        type = TRAP_AXE;
 
-    // Note we're boosting arrow trap numbers by moving it
-    // down the list, and making spear and axe traps rarer.
     if (type == TRAP_DART ? random2(1 + level_number) > 2
                           : one_chance_in(7))
     {

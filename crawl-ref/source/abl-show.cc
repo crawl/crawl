@@ -454,7 +454,6 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, 30, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, 300, ABFLAG_ZOTDEF},
     { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, 50, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, 500, ABFLAG_ZOTDEF},
     { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, 30, ABFLAG_ZOTDEF},
     { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
     { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap",
@@ -593,7 +592,6 @@ static trap_type _trap_for_ability(const ability_def& abil)
         case ABIL_MAKE_ARROW_TRAP: return TRAP_ARROW;
         case ABIL_MAKE_BOLT_TRAP: return TRAP_BOLT;
         case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
-        case ABIL_MAKE_AXE_TRAP: return TRAP_AXE;
         case ABIL_MAKE_NEEDLE_TRAP: return TRAP_NEEDLE;
         case ABIL_MAKE_NET_TRAP: return TRAP_NET;
         case ABIL_MAKE_TELEPORT_TRAP: return TRAP_TELEPORT;
@@ -661,7 +659,6 @@ static int _zp_cost(const ability_def& abil)
         case ABIL_MAKE_ARROW_TRAP:
         case ABIL_MAKE_BOLT_TRAP:
         case ABIL_MAKE_SPEAR_TRAP:
-        case ABIL_MAKE_AXE_TRAP:
         case ABIL_MAKE_NEEDLE_TRAP:
         case ABIL_MAKE_NET_TRAP:
         case ABIL_MAKE_ALARM_TRAP:
@@ -992,7 +989,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
     case ABIL_MAKE_SPEAR_TRAP:
-    case ABIL_MAKE_AXE_TRAP:
     case ABIL_MAKE_NEEDLE_TRAP:
     case ABIL_MAKE_NET_TRAP:
     case ABIL_MAKE_TELEPORT_TRAP:
@@ -1796,7 +1792,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
     case ABIL_MAKE_SPEAR_TRAP:
-    case ABIL_MAKE_AXE_TRAP:
     case ABIL_MAKE_NEEDLE_TRAP:
     case ABIL_MAKE_NET_TRAP:
     case ABIL_MAKE_ALARM_TRAP:
@@ -2988,8 +2983,6 @@ std::vector<talent> your_talents(bool check_confused)
             _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
         if (you.experience_level >= 17)
             _add_talent(talents, ABIL_MAKE_WATER, check_confused);
-        if (you.experience_level >= 18)
-            _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
         if (you.experience_level >= 19)
             _add_talent(talents, ABIL_MAKE_LIGHTNING_SPIRE, check_confused);
         if (you.experience_level >= 20)
