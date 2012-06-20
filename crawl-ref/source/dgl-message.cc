@@ -7,6 +7,7 @@
 #include "files.h"
 #include "format.h"
 #include "initfile.h"
+#include "libutil.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
