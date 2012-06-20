@@ -25,6 +25,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"

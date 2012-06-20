@@ -22,6 +22,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
+#include "state.h"
 #include "tags.h"
 
 #define NOTES_VERSION_NUMBER 1002

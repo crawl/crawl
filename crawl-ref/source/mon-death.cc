@@ -14,6 +14,7 @@
 #include "dactions.h"
 #include "env.h"
 #include "items.h"
+#include "libutil.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"

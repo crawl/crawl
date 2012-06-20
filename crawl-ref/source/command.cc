@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
+#include "directn.h"
 #include "files.h"
 #include "godmenu.h"
 #include "ghost.h"

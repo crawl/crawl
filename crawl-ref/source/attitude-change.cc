@@ -14,6 +14,7 @@
 #include "env.h"
 #include "goditem.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-iter.h"

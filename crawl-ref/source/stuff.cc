@@ -35,6 +35,7 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "state.h"
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"

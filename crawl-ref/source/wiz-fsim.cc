@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "coordit.h"
 #include "dbg-util.h"
+#include "directn.h"
 #include "env.h"
 #include "fight.h"
 #include "itemprop.h"

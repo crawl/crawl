@@ -14,6 +14,7 @@
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "files.h"

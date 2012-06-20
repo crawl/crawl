@@ -7,9 +7,6 @@
 #define CIO_H
 
 #include "enum.h"
-#include "externs.h"
-#include "defines.h"
-#include "directn.h"
 
 #include <cctype>
 #include <string>

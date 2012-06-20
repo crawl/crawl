@@ -26,6 +26,7 @@
 #include "place.h"
 #include "religion.h"
 #include "stairs.h"
+#include "state.h"
 #include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
