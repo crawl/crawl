@@ -1063,6 +1063,38 @@ int trap_def::shot_damage(actor& act)
     return random2(dam) + 1;
 }
 
+int trap_def::difficulty()
+{
+    switch (type)
+    {
+    // To-hit and disarming:
+    case TRAP_DART:
+        return 3;
+    case TRAP_ARROW:
+        return 7;
+    case TRAP_SPEAR:
+        return 10;
+    case TRAP_BOLT:
+        return 15;
+    case TRAP_NET:
+        return 5;
+    case TRAP_NEEDLE:
+        return 8;
+    // Disarming only:
+    case TRAP_BLADE:
+        return 20;
+    case TRAP_PLATE:
+        return 15;
+    case TRAP_WEB:
+        return 12;
+    case TRAP_GAS:
+        return 15;
+    // Irrelevant:
+    default:
+        return 0;
+    }
+}
+
 int reveal_traps(const int range)
 {
     int traps_found = 0;
@@ -1170,11 +1202,11 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(env.absdepth0 + 5))
+    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(trap.difficulty() + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) > 5 + random2(5 + env.absdepth0))
-            practise(EX_TRAP_DISARM_FAIL, env.absdepth0);
+        if (random2(you.dex()) > 5 + random2(5 + trap.difficulty()))
+            practise(EX_TRAP_DISARM_FAIL, trap.difficulty());
         else
         {
             if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
@@ -1196,7 +1228,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        practise(EX_TRAP_DISARM, env.absdepth0);
+        practise(EX_TRAP_DISARM, trap.difficulty());
     }
 }
 
@@ -1571,7 +1603,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (env.absdepth0*2)) * random2(200) / 100;
+    int trap_hit = (20 + (difficulty()*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 

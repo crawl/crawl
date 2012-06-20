@@ -21,6 +21,7 @@ struct trap_def
     bool active() const;
     bool defined() const { return active(); }
     int max_damage(const actor& act);
+    int difficulty();
 
 private:
     void shoot_ammo(actor& act, bool was_known);
