@@ -920,13 +920,13 @@ void tile_wizmap_terrain(const coord_def &gc)
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
-        flv->special = random2(256);
-    else if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
-             || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+        || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     }
+    else if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+        flv->special = random2(256);
     else if (bg_idx == TILE_WALL_NORMAL
              && flv->wall >= TILE_WALL_BRICK_TORCH_START
              && flv->wall <= TILE_WALL_BRICK_TORCH_END)
