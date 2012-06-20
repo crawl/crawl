@@ -441,14 +441,14 @@ altar_jiyva11
 %rim 1
 altar_fedhas DNGN_ALTAR_FEDHAS
 %rim 0
-altar_cheibriados_12 DNGN_ALTAR_CHEIBRIADOS
-altar_cheibriados_10
-altar_cheibriados_09
-altar_cheibriados_08
-altar_cheibriados_06
-altar_cheibriados_04
+altar_cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
 altar_cheibriados_03
-altar_cheibriados_02
+altar_cheibriados_04
+altar_cheibriados_06
+altar_cheibriados_08
+altar_cheibriados_09
+altar_cheibriados_10
+altar_cheibriados_12
 altar_ashenzari DNGN_ALTAR_ASHENZARI
 
 %sdir dngn
