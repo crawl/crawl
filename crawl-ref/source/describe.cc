@@ -27,6 +27,7 @@
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
+#include "directn.h"
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"

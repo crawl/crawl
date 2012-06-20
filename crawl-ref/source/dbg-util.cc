@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"

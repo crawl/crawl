@@ -32,6 +32,7 @@
 #include "player.h"
 #include "showsymb.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "tileview.h"

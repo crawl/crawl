@@ -8,17 +8,18 @@
 #include <cctype>
 
 #include "cio.h"
+#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
 #include "player.h"
-#include "hints.h"
-#include "colour.h"
+#include "state.h"
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"

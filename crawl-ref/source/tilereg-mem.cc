@@ -5,6 +5,7 @@
 #include "tilereg-mem.h"
 
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "macro.h"
 #include "spl-book.h"

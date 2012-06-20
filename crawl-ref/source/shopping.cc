@@ -34,6 +34,7 @@
 #include "player.h"
 #include "spl-book.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "travel.h"
 #include "env.h"

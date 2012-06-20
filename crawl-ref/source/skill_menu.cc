@@ -9,6 +9,7 @@
 
 #include "cio.h"
 #include "command.h"
+#include "describe.h"
 #include "fontwrapper-ft.h"
 #include "hints.h"
 #include "menu.h"
@@ -17,6 +18,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "state.h"
 #include "stuff.h"
 #include "tilepick.h"
 #include "tilereg-crt.h"

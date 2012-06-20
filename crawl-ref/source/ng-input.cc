@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 
+#include <wctype.h>
 #include "ng-input.h"
 
 #include "cio.h"
