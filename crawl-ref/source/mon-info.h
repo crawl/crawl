@@ -112,7 +112,7 @@ struct monster_info_base
     flight_type fly;
     CrawlHashTable props;
     std::string constrictor_name;
-    std::string constricting_name[MAX_CONSTRICT];
+    std::vector<std::string> constricting_name;
 
     uint32_t client_id;
 };

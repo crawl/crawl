@@ -695,25 +695,27 @@ monster_info::monster_info(const monster* m, int milev)
 
     // init names of constrictor and constrictees
     constrictor_name = "";
-    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
-        constricting_name[idx] = "";
+    constricting_name.clear();
 
     // name of what this monster is constricted by, if any
-    if (const_cast<monster *>(m)->is_constricted())
+    if (m->is_constricted())
     {
-        if (m->constricted_by == MHITYOU)
-            constrictor_name = "you";
-        else
-            constrictor_name = env.mons[m->constricted_by].
-                               name(DESC_PLAIN, true);
+        actor * const constrictor = actor_by_mid(m->constricted_by);
+        if (constrictor)
+            constrictor_name = constrictor->name(DESC_PLAIN, true);
     }
-    // names of what this monster is constricting, if any
-    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
-    {
-        actor* const constrictee = mindex_to_actor(m->constricting[idx]);
 
-        if (constrictee)
-            constricting_name[idx] = constrictee->name(DESC_PLAIN, true);
+    // names of what this monster is constricting, if any
+    if (m->constricting)
+    {
+        actor::constricting_t::const_iterator i;
+        for (i = m->constricting->begin(); i != m->constricting->end(); ++i)
+        {
+            actor* const constrictee = actor_by_mid(i->first);
+
+            if (constrictee)
+                constricting_name.push_back(constrictee->name(DESC_PLAIN, true));
+        }
     }
 
     if (mons_has_known_ranged_attack(m))
@@ -1389,24 +1391,17 @@ std::string monster_info::constriction_description() const
         bymsg = true;
     }
 
-    bool first = true;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting_name[i] != "")
-        {
-            if (first)
-            {
-                if (bymsg)
-                    cinfo += ", ";
-                cinfo += "constricting ";
-            }
-            else
-                cinfo += ", ";
-            first = false;
-            cinfo += constricting_name[i];
-        }
+    std::string constricting = comma_separated_line(
+            constricting_name.begin(), constricting_name.end());
+
+    if (constricting != "")
+    {
+        if (bymsg)
+            cinfo += ", ";
+        cinfo += "constricting " + constricting;
+    }
     return cinfo;
 }
-
 
 
 int monster_info::randarts(artefact_prop_type ra_prop) const

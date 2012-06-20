@@ -1649,6 +1649,15 @@ enum god_type
     GOD_VIABLE,
 };
 
+enum held_type
+{
+    HELD_NONE = 0,
+    HELD_NET,         // currently unused
+    HELD_WEB,         // currently unused
+    HELD_MONSTER,     // but no damage
+    HELD_CONSTRICTED, // damaging
+};
+
 enum holy_word_source_type
 {
     HOLY_WORD_GENERIC     = -1,

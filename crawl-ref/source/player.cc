@@ -5840,13 +5840,8 @@ void player::init()
     save                = 0;
     prev_save_version.clear();
 
-    constricted_by = NON_ENTITY;
-    escape_attempts = 0;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
+    clear_constricted();
+    constricting = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
@@ -7103,13 +7098,12 @@ bool player::has_usable_offhand() const
 
 bool player::has_usable_tentacle() const
 {
-    if (!has_usable_tentacles())
+    int numtentacle = has_usable_tentacles();
+
+    if (numtentacle == 0)
         return (false);
 
-    int free_tentacles = std::min(8, MAX_CONSTRICT);
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != NON_ENTITY)
-            free_tentacles--;
+    int free_tentacles = numtentacle - num_constricting();
 
     const item_def* wp = slot_item(EQ_WEAPON);
     if (wp)
@@ -7143,7 +7137,7 @@ int player::has_tentacles(bool allow_tran) const
     }
 
     if (you.species == SP_OCTOPODE)
-        return (1);
+        return (8);
 
     return (0);
 }
@@ -7609,19 +7603,15 @@ bool player::attempt_escape()
     if (!is_constricted())
         return true;
 
-    themonst = &env.mons[constricted_by];
+    themonst = monster_by_mid(constricted_by);
+    ASSERT(themonst);
     escape_attempts++;
 
     // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
     if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))
         >= roll_dice(5, 8 + div_rand_round(themonst->hit_dice, 4)))
     {
-        // message that you escaped
-
-        std::string emsg = "You escape ";
-        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-        emsg += "'s grasp.";
-        mpr(emsg);
+        mprf("You escape %s's grasp.", themonst->name(DESC_THE, true).c_str());
 
         // Stun the monster to prevent it from constricting again right away.
         themonst->speed_increment -= 5;
@@ -7633,7 +7623,7 @@ bool player::attempt_escape()
     else
     {
         std::string emsg = "While you don't manage to break free from ";
-        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+        emsg += themonst->name(DESC_THE, true);
         emsg += ", you feel that another attempt might be more successful.";
         mpr(emsg);
         you.turn_is_over = true;
@@ -7677,41 +7667,28 @@ bool need_expiration_warning(coord_def p)
 static std::string _constriction_description()
 {
     std::string cinfo = "";
-    std::string constrictor_name;
-    std::string constricting_name[MAX_CONSTRICT];
-
-    // init names of constrictor and constrictees
-    constrictor_name = "";
-    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
-        constricting_name[idx] = "";
+    std::vector<std::string> c_name;
 
     // name of what this monster is constricted by, if any
     if (you.is_constricted())
     {
-        constrictor_name = env.mons[you.constricted_by].
-                               name(DESC_A);
+        cinfo += ("You are being constricted by "
+                  + monster_by_mid(you.constricted_by)->name(DESC_A)
+                  + ".");
     }
 
-    // names of what this monster is constricting, if any
-    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
+    if (you.constricting && !you.constricting->empty())
     {
-        if (you.constricting[idx] != NON_ENTITY)
-            constricting_name[idx] = env.mons[you.constricting[idx]].
-                                     name(DESC_A);
-    }
+        actor::constricting_t::const_iterator i;
+        for (i = you.constricting->begin(); i != you.constricting->end(); ++i)
+        {
+            monster *whom = monster_by_mid(i->first);
+            ASSERT(whom);
+            c_name.push_back(whom->name(DESC_A));
+        }
 
-    if (constrictor_name != "")
-        cinfo += "You are being constricted by " + constrictor_name + ".";
-
-    std::vector<std::string> constricting;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting_name[i] != "")
-            constricting.push_back(constricting_name[i]);
-
-    if (!constricting.empty())
-    {
         cinfo += "\nYou are constricting ";
-        cinfo += comma_separated_line(constricting.begin(), constricting.end());
+        cinfo += comma_separated_line(c_name.begin(), c_name.end());
         cinfo += ".";
     }
 

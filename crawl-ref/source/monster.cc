@@ -74,13 +74,10 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
-    constricted_by = NON_ENTITY;
-    escape_attempts = 0;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
+
+    constricting = 0;
+
+    clear_constricted();
 };
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
@@ -90,6 +87,7 @@ monster::~monster()
 
 monster::monster(const monster& mon)
 {
+    constricting = 0;
     init_with(mon);
 }
 
@@ -136,13 +134,9 @@ void monster::reset()
     props.clear();
 
     client_id = 0;
-    constricted_by = NON_ENTITY;
-    escape_attempts = 0;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-    {
-        constricting[i] = NON_ENTITY;
-        dur_has_constricted[i] = 0;
-    }
+
+    stop_constricting_all(false, true);
+    stop_being_constricted(true);
 }
 
 void monster::init_with(const monster& mon)
@@ -5822,10 +5816,11 @@ bool monster::attempt_escape()
     thesize = body_size(PSIZE_BODY);
     attfactor = thesize * escape_attempts;
 
-    if (constricted_by != MHITYOU)
+    if (constricted_by != MID_PLAYER)
     {
         randfact = roll_dice(1,5) + 5;
-        themonst = &env.mons[constricted_by];
+        themonst = monster_by_mid(constricted_by);
+        ASSERT(themonst);
         randfact += roll_dice(1, themonst->hit_dice);
     }
     else
@@ -5847,14 +5842,8 @@ bool monster::has_usable_tentacle() const
     if (mons_species() != MONS_OCTOPODE)
         return(false);
 
-    int free_tentacles = std::min(8, MAX_CONSTRICT);
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != NON_ENTITY)
-            free_tentacles--;
-
     // ignoring monster octopodes with weapons, for now
-    return (free_tentacles > 0);
-
+    return (num_constricting() < 8);
 }
 
 // Move the monster to the nearest valid space.

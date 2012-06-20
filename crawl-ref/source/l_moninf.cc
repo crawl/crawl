@@ -15,6 +15,8 @@
 #include "player.h"
 #include "transform.h"
 
+#include <algorithm>
+
 #define MONINF_METATABLE "monster.info"
 
 void lua_push_moninf(lua_State *ls, monster_info *mi)
@@ -136,14 +138,7 @@ LUAFN(moninf_get_is_constricted)
 LUAFN(moninf_get_is_constricting)
 {
     MONINF(ls, 1, mi);
-    bool any = false;
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (!mi->constricting_name[i].empty())
-        {
-            any = true;
-            break;
-        }
-    lua_pushboolean(ls, any);
+    lua_pushboolean(ls, !mi->constricting_name.empty());
     return (1);
 }
 
@@ -155,13 +150,11 @@ LUAFN(moninf_get_is_constricting_you)
         lua_pushboolean(ls, false);
         return (1);
     }
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mi->constricting_name[i] == "you") // yay the interface
-        {
-            lua_pushboolean(ls, true);
-            return (1);
-        }
-    lua_pushboolean(ls, false);
+
+    // yay the interface
+    lua_pushboolean(ls, (std::find(mi->constricting_name.begin(),
+                                   mi->constricting_name.end(), "you")
+                         != mi->constricting_name.end()));
     return (1);
 }
 

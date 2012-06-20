@@ -116,44 +116,41 @@ std::string debug_mon_str(const monster* mon)
     return (out);
 }
 
+static void _debug_mid_name(mid_t mid)
+{
+    if (mid == MID_PLAYER)
+    {
+        fprintf(stderr, "player %s",
+                debug_coord_str(you.pos()).c_str());
+    }
+    else
+    {
+        monster * const mons = monster_by_mid(mid);
+        if (mons)
+            fprintf(stderr, "%s", debug_mon_str(mons).c_str());
+        else
+            fprintf(stderr, "bad monster[%"PRImidt"]", mid);
+    }
+}
+
 void debug_dump_constriction(const actor *act)
 {
-    for (int i_c = 0; i_c < MAX_CONSTRICT; ++i_c)
+    if (act->constricting)
     {
-        short constricted = act->constricting[i_c];
-
-        if (constricted != NON_ENTITY)
+        actor::constricting_t::const_iterator i;
+        for (i = act->constricting->begin(); i != act->constricting->end(); ++i)
         {
-            fprintf(stderr, "Constricting[%d] ", i_c);
-            if (constricted == MHITYOU)
-            {
-                fprintf(stderr, "player %s ",
-                        debug_coord_str(you.pos()).c_str());
-            }
-            else if (invalid_monster_index(constricted))
-                fprintf(stderr, "invalid[%hd] ", constricted);
-            else
-            {
-                fprintf(stderr, "%s ",
-                        debug_mon_str(&env.mons[constricted]).c_str());
-            }
-
-            fprintf(stderr, "for %d turns\n", act->dur_has_constricted[i_c]);
+            fprintf(stderr, "Constricting ");
+            _debug_mid_name(i->first);
+            fprintf(stderr, " for %d ticks\n", i->second);
         }
     }
 
-    if (act->constricted_by != NON_ENTITY)
+    if (act->constricted_by)
     {
         fprintf(stderr, "Constricted by ");
-        if (act->constricted_by == MHITYOU)
-            fprintf(stderr, "player %s ", debug_coord_str(you.pos()).c_str());
-        else if (invalid_monster_index(act->constricted_by))
-            fprintf(stderr, "invalid[%hd] ", act->constricted_by);
-        else
-        {
-            fprintf(stderr, "%s ",
-                    debug_mon_str(&env.mons[act->constricted_by]).c_str());
-        }
+        _debug_mid_name(act->constricted_by);
+        fprintf(stderr, "\n");
     }
 }
 

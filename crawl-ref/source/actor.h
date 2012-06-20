@@ -363,15 +363,24 @@ public:
 
     CrawlHashTable props;
 
-    // Constriction stuff
-    unsigned short constricted_by;
-    unsigned short constricting[MAX_CONSTRICT];
+    // Constriction stuff:
+
+    // What is holding us?  Not necessarily a monster.
+    held_type held;
+    mid_t constricted_by;
     int escape_attempts;
-    int dur_has_constricted[MAX_CONSTRICT];
+
+    // Map from mid to duration.
+    typedef std::map<mid_t, int> constricting_t;
+    // Freed and set to NULL when empty.
+    constricting_t *constricting;
 
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;
-    void stop_constricting(int mindex, bool intentional = false,
+
+    void start_constricting(actor &whom, int duration = 0);
+
+    void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false);
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
@@ -380,15 +389,19 @@ public:
     void accum_has_constricted();
     bool is_constricted() const;
     bool is_constricting() const;
+    int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
 
 protected:
+    void clear_constricted();
+    void end_constriction(constricting_t::iterator i, bool intentional,
+                          bool quiet);
+
     // These are here for memory management reasons...
     los_glob los;
     los_glob los_no_trans;
 };
 
 bool actor_slime_wall_immune(const actor *actor);
-actor *mindex_to_actor(short mindex);
 
 #endif

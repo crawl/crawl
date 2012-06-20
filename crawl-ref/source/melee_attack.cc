@@ -5366,23 +5366,20 @@ bool melee_attack::handle_constriction()
 
     bool defender_grabbed = false;
     bool any_grabbed = false;
-    int grabslot = 0;
 
-    int maxgrab = (attacker->mons_species(true) == MONS_OCTOPODE) ? 8 : 1;
-    ASSERT(maxgrab <= MAX_CONSTRICT);
-
-    for (int i = 0; i < maxgrab; i++)
+    if (attacker->constricting)
     {
-        if (attacker->constricting[i] == defender->mindex())
-            defender_grabbed = true;
-        if (attacker->constricting[i] != NON_ENTITY)
+        if (!attacker->constricting->empty())
             any_grabbed = true;
+
+        defender_grabbed = (attacker->constricting->find(defender->mid)
+                            != attacker->constricting->end());
     }
 
     // if a new constriction is possible, try it
     if (!defender_grabbed
         && (!any_grabbed || attacker->has_usable_tentacle())
-        && defender->constricted_by == NON_ENTITY
+        && !defender->is_constricted()
         && attacker->can_see(defender)
         && !attacker->confused())
     {
@@ -5412,20 +5409,10 @@ bool melee_attack::handle_constriction()
         {
             defender_grabbed = true;
             any_grabbed = true;
-            for (int i = 0; i < maxgrab && grabslot == 0; i++)
-            {
-                if (attacker->constricting[i] == NON_ENTITY)
-                {
-                    grabslot = i + 1;
-                    attacker->constricting[i] = defender->mindex();
-                    attacker->dur_has_constricted[i] = 0;
-                    defender->constricted_by = attacker->mindex();
-                }
-            }
-            ASSERT(grabslot != 0);
+            attacker->start_constricting(*defender);
         }
 
-        dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d gslot %d",
+        dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d",
              attacker->name(DESC_PLAIN, true).c_str(),
              defender->name(DESC_PLAIN, true).c_str(),
              (attacker->is_player()
@@ -5434,7 +5421,7 @@ bool melee_attack::handle_constriction()
              asize,
              attackdice,
              m_ev, dsize,
-             defenddice, grabslot);
+             defenddice);
     }
 
     // if anything is grabbed, do damage accordingly
@@ -5442,7 +5429,7 @@ bool melee_attack::handle_constriction()
         handle_noattack_constrictions(attacker);
 
     // if you got grabbed, interrupt stair climb and passwall
-    if (defender_grabbed && (defender->is_player()))
+    if (defender_grabbed && defender->is_player())
         stop_delay(true);
 
     attacker->has_constricted_this_turn = true;

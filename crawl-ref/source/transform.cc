@@ -964,7 +964,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Stop being constricted if we are now too large.
     if (you.is_constricted())
     {
-        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        actor* const constrictor = actor_by_mid(you.constricted_by);
+        ASSERT(constrictor);
+
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
             you.stop_being_constricted();
     }
@@ -1152,7 +1154,7 @@ void untransform(bool skip_wielding, bool skip_move)
     // Stop being constricted if we are now too large.
     if (you.is_constricted())
     {
-        actor* const constrictor = mindex_to_actor(you.constricted_by);
+        actor* const constrictor = actor_by_mid(you.constricted_by);
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
             you.stop_being_constricted();
     }

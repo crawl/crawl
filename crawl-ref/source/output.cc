@@ -2203,7 +2203,7 @@ static std::string _status_mut_abilities(int sw)
             "8 rings",
             !form_keeps_mutations() && you.form != TRAN_SPIDER));
         mutations.push_back(_annotate_form_based(
-            make_stringf("constrict %d", std::min(MAX_CONSTRICT, 8)),
+            make_stringf("constrict %d", you.has_tentacles(false)),
             !form_keeps_mutations()));
     }
 
