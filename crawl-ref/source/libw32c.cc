@@ -46,7 +46,6 @@
 
 #include <excpt.h>
 #include <stdarg.h>
-#undef ARRAYSZ
 #include <windows.h>
 #undef max
 #undef AF_CHAOS
