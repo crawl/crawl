@@ -1165,7 +1165,7 @@ endif
           while read x; \
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
-	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
 	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
