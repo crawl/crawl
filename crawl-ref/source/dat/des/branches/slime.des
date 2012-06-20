@@ -105,11 +105,11 @@ KFEAT: _ = altar_jiyva
 MAP
   .....
  .ccccc.
-.ccccccc.
-.cccSccc.
-.ccSO.cc.
-.ccS_..+@
-.cccSccc.
+.ccSSScc.
+.cS...Sc.
+.cS.O.cc.
+.cS.._.+@
+.ccScccc.
 .ccccccc.
  .ccccc.
   .....
@@ -202,12 +202,12 @@ KFEAT:  S = slimy_wall
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx......xxxxxx
-xxxxxx...........xxxx
-xxS11.......xx....xxx
-xxS11.....xxxx....xxx
-xxSO11..xxxxx....xxxx
-xxSS11xxxxxx.....xxxx
-xxxSSSxxxxx.....xxxxx
+xxSSxx...........xxxx
+xxS111......xx....xxx
+xSS.11....xxxx....xxx
+xS..O11.xxxxx....xxxx
+xSS..1xxxxxx.....xxxx
+xxSSSSxxxxx.....xxxxx
 xxxxxxxxxx.....xxxxxx
 xxxxxxxx.....xxxxxxxx
 xxxxxxx.@..xxxxxxxxxx
@@ -215,15 +215,15 @@ ENDMAP
 
 NAME:   dpeg_slime_entry_corner
 TAGS:   slime_entry ruin_lair
-ORIENT: northeast
+ORIENT: northwest
 WEIGHT: 5
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
 MAP
 xxxxxxxxxxx
 xSSSxxxxxx
-xSO..xxxx
-xS.....xx
+xS...xxxx
+xS.O...xx
 xxxxxx.xx
 xxxx....x
 xxx...xx.
