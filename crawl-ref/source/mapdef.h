@@ -1100,9 +1100,6 @@ public:
     range_chance_t   _chance;
     range_weight_t   _weight;
 
-    int              weight_depth_mult;
-    int              weight_depth_div;
-
     std::vector<std::string> welcome_messages;
 
     map_lines       map;

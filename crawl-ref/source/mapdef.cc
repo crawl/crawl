@@ -2097,7 +2097,7 @@ std::string depth_ranges::describe() const
 const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
     : name(), description(), tags(), place(), depths(), orient(), _chance(),
-      _weight(DEFAULT_MAP_WEIGHT), weight_depth_mult(), weight_depth_div(),
+      _weight(DEFAULT_MAP_WEIGHT),
       welcome_messages(), map(), mons(), items(), random_mons(),
       prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
@@ -2158,12 +2158,6 @@ void map_def::reinit()
     // picked with a probability of weight / (sum of weights of all
     // eligible vaults).
     _weight.clear(DEFAULT_MAP_WEIGHT);
-
-    // How to modify weight based on absolte dungeon depth.  This
-    // needs to be done in the C++ code since the map's lua code doesnt'
-    // get called again each time the depth changes.
-    weight_depth_mult = 0;
-    weight_depth_div  = 1;
 
     // Clearing the map also zaps map transforms.
     map.clear();
@@ -2269,9 +2263,7 @@ void map_def::read_full(reader& inf, bool check_cache_version)
 
 int map_def::weight(const level_id &lid) const
 {
-    const int base_weight = _weight.depth_value(lid);
-    return (base_weight
-            + lid.absdepth() * weight_depth_mult / weight_depth_div);
+    return _weight.depth_value(lid);
 }
 
 map_chance map_def::chance(const level_id &lid) const
