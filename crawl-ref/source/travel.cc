@@ -9,23 +9,25 @@
 #include "AppHdr.h"
 
 #include "artefact.h"
-#include "coord.h"
-#include "coordit.h"
-#include "files.h"
-#include "fixedarray.h"
-#include "food.h"
 #include "branch.h"
-#include "command.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
-#include "delay.h"
+#include "command.h"
+#include "coord.h"
+#include "coordit.h"
 #include "dactions.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "env.h"
 #include "exclude.h"
 #include "fight.h"
+#include "files.h"
+#include "fixedarray.h"
+#include "food.h"
 #include "godabil.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -41,20 +43,18 @@
 #include "stairs.h"
 #include "stash.h"
 #include "stuff.h"
-#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
 
 #include <algorithm>
-#include <set>
-#include <cstdarg>
 #include <cctype>
+#include <cstdarg>
 #include <cstdio>
 #include <memory>
+#include <set>
 #include <sstream>
 
 enum IntertravelDestination
