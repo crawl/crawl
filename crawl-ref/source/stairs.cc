@@ -533,7 +533,12 @@ level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
 
     case DNGN_ENTER_PORTAL_VAULT:
         if (dst.empty())
-            die("portal without a destination");
+        {
+            if (for_real)
+                die("portal without a destination");
+            else
+                return level_id();
+        }
         return level_id::parse_level_id(dst);
 
     case DNGN_ENTER_HELL:

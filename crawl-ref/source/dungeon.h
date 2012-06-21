@@ -29,7 +29,8 @@
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
 
-enum portal_type
+#if TAG_MAJOR_VERSION == 33
+enum oldportal_type
 {
     PORTAL_NONE = 0,
     PORTAL_LABYRINTH,
@@ -38,6 +39,7 @@ enum portal_type
     PORTAL_PANDEMONIUM,
     NUM_PORTALS
 };
+#endif
 
 const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;

@@ -69,10 +69,8 @@
 extern std::map<branch_type, std::set<level_id> > stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
-extern std::map<level_pos, portal_type> portals_present;
-extern std::map<level_pos, std::string> portal_vaults_present;
-extern std::map<level_pos, std::string> portal_vault_notes;
-extern std::map<level_pos, uint8_t> portal_vault_colours;
+extern std::map<level_pos, branch_type> portals_present;
+extern std::map<level_pos, std::string> portal_notes;
 extern std::map<level_id, std::string> level_annotations;
 extern std::map<level_id, std::string> level_exclusions;
 extern std::map<level_id, std::string> level_uniques;
@@ -324,15 +322,6 @@ void marshallUByte(writer &th, uint8_t data)
 uint8_t unmarshallUByte(reader &th)
 {
     return th.readByte();
-}
-
-// A hack to work around a template breakage.  It accepts shorts and ints
-// directly, but chars need to be passed as reference -- but in just one place.
-// Perhaps someone could understand this nonsense, but not me -- 1KB
-static void marshallUByteRef(writer &th, const uint8_t &data)
-{
-    CHECK_INITIALIZED(data);
-    th.writeByte(data);
 }
 
 void marshallShort(std::vector<unsigned char>& buf, short data)
@@ -1425,13 +1414,9 @@ static void tag_construct_you_dungeon(writer &th)
     marshallMap(th, altars_present,
                 marshall_level_pos, _marshall_as_int<god_type>);
     marshallMap(th, portals_present,
-                marshall_level_pos, _marshall_as_int<portal_type>);
-    marshallMap(th, portal_vaults_present,
+                marshall_level_pos, _marshall_as_int<branch_type>);
+    marshallMap(th, portal_notes,
                 marshall_level_pos, marshallStringNoMax);
-    marshallMap(th, portal_vault_notes,
-                marshall_level_pos, marshallStringNoMax);
-    marshallMap(th, portal_vault_colours,
-                marshall_level_pos, marshallUByteRef);
     marshallMap(th, level_annotations,
                 marshall_level_id, marshallStringNoMax);
     marshallMap(th, level_exclusions,
@@ -2327,14 +2312,58 @@ static void tag_read_you_dungeon(reader &th)
                   unmarshall_level_pos, unmarshall_long_as<shop_type>);
     unmarshallMap(th, altars_present,
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_UNIFIED_PORTALS)
+    {
+        // std::map<level_pos, portal_type> portals_present
+        count = unmarshallInt(th);
+        for (int i = 0; i < count; ++i)
+        {
+            level_pos p = unmarshall_level_pos(th);
+            switch (static_cast<oldportal_type>(unmarshallInt(th)))
+            {
+            case PORTAL_LABYRINTH:
+                portals_present[p] = BRANCH_LABYRINTH;
+                break;
+            case PORTAL_HELL:
+                portals_present[p] = BRANCH_VESTIBULE_OF_HELL;
+                break;
+            case PORTAL_ABYSS:
+                portals_present[p] = BRANCH_ABYSS;
+                break;
+            case PORTAL_PANDEMONIUM:
+                portals_present[p] = BRANCH_PANDEMONIUM;
+                break;
+            default: ; // buggy portals
+            }
+        }
+
+        // std::map<level_pos, std::string> portal_vaults_present
+        count = unmarshallInt(th);
+        for (int i = 0; i < count; ++i)
+        {
+            unmarshall_level_pos(th);
+            unmarshallStringNoMax(th);
+        }
+    }
+    else
+#endif
     unmarshallMap(th, portals_present,
-                  unmarshall_level_pos, unmarshall_long_as<portal_type>);
-    unmarshallMap(th, portal_vaults_present,
+                  unmarshall_level_pos, unmarshall_long_as<branch_type>);
+    unmarshallMap(th, portal_notes,
                   unmarshall_level_pos, unmarshallStringNoMax);
-    unmarshallMap(th, portal_vault_notes,
-                  unmarshall_level_pos, unmarshallStringNoMax);
-    unmarshallMap(th, portal_vault_colours,
-                  unmarshall_level_pos, unmarshallUByte);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_UNIFIED_PORTALS)
+    {
+        // std::map<level_pos, uint8_t> portal_vault_colours
+        count = unmarshallInt(th);
+        for (int i = 0; i < count; ++i)
+        {
+            unmarshall_level_pos(th);
+            unmarshallUByte(th);
+        }
+    }
+#endif
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
     unmarshallMap(th, level_exclusions,

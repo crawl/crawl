@@ -1947,7 +1947,7 @@ static int _get_nearest_level_depth(uint8_t branch)
 
 // Returns true if the player character knows of the existence of the given
 // branch (which would make the branch a valid target for interlevel travel).
-static bool _is_known_branch_id(int branch)
+static bool _is_known_branch_id(branch_type branch)
 {
     // The main dungeon is always known
     if (branch == root_branch)
@@ -1960,7 +1960,7 @@ static bool _is_known_branch_id(int branch)
     // The Vestibule is special: there are no stairs to it, just a
     // portal.
     if (branch == BRANCH_VESTIBULE_OF_HELL)
-        return overview_knows_portal(DNGN_ENTER_HELL);
+        return overview_knows_portal(branch);
 
     // If the overview knows the stairs to this branch, we know the branch.
     return (stair_level.find(static_cast<branch_type>(branch))

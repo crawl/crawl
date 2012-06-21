@@ -14,7 +14,7 @@ void overview_clear();
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos);
 bool move_notable_thing(const coord_def& orig, const coord_def& dest);
-bool overview_knows_portal(dungeon_feature_type portal);
+bool overview_knows_portal(branch_type portal);
 int  overview_knows_num_portals(dungeon_feature_type portal);
 void display_overview();
 bool unnotice_feature(const level_pos &pos);

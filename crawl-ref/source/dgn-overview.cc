@@ -26,6 +26,7 @@
 #include "message.h"
 #include "religion.h"
 #include "shopping.h"
+#include "stairs.h"
 #include "state.h"
 #include "tagstring.h"
 #include "terrain.h"
@@ -34,10 +35,8 @@
 typedef std::map<branch_type, std::set<level_id> > stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
-typedef std::map<level_pos, portal_type> portal_map_type;
-typedef std::map<level_pos, std::string> portal_vault_map_type;
+typedef std::map<level_pos, branch_type> portal_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
-typedef std::map<level_pos, colour_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
 typedef std::pair<std::string, level_id> monster_annotation;
 
@@ -45,9 +44,7 @@ stair_map_type stair_level;
 shop_map_type shops_present;
 altar_map_type altars_present;
 portal_map_type portals_present;
-portal_vault_map_type portal_vaults_present;
-portal_note_map_type portal_vault_notes;
-portal_vault_colour_map_type portal_vault_colours;
+portal_note_map_type portal_notes;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 annotation_map_type level_uniques;
@@ -55,8 +52,8 @@ std::set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
-static void _seen_other_thing(dungeon_feature_type which_thing,
-                              const coord_def& pos);
+static void _seen_shop(const coord_def& pos);
+static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
 
 static std::string _get_branches(bool display);
 static std::string _get_altars(bool display);
@@ -73,9 +70,7 @@ void overview_clear()
     shops_present.clear();
     altars_present.clear();
     portals_present.clear();
-    portal_vaults_present.clear();
-    portal_vault_notes.clear();
-    portal_vault_colours.clear();
+    portal_notes.clear();
     level_annotations.clear();
     level_exclusions.clear();
     level_uniques.clear();
@@ -93,8 +88,10 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
         _seen_altar(god, pos);
     else if (feat_is_branch_stairs(which_thing))
         _seen_staircase(pos);
-    else
-        _seen_other_thing(which_thing, pos);
+    else if (which_thing == DNGN_ENTER_SHOP)
+        _seen_shop(pos);
+    else if (feat_is_gate(which_thing)) // overinclusive
+        _seen_portal(which_thing, pos);
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -112,37 +109,42 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     shops_present[pos2]         = shops_present[pos1];
     altars_present[pos2]        = altars_present[pos1];
     portals_present[pos2]       = portals_present[pos1];
-    portal_vaults_present[pos2] = portal_vaults_present[pos1];
-    portal_vault_notes[pos2]    = portal_vault_notes[pos1];
-    portal_vault_colours[pos2]  = portal_vault_colours[pos1];
+    portal_notes[pos2]          = portal_notes[pos1];
 
     unnotice_feature(pos1);
 
     return (true);
 }
 
-static dungeon_feature_type portal_to_feature(portal_type p)
+static std::string coloured_branch(branch_type br)
 {
-    switch (p)
-    {
-    case PORTAL_LABYRINTH:   return DNGN_ENTER_LABYRINTH;
-    case PORTAL_HELL:        return DNGN_ENTER_HELL;
-    case PORTAL_ABYSS:       return DNGN_ENTER_ABYSS;
-    case PORTAL_PANDEMONIUM: return DNGN_ENTER_PANDEMONIUM;
-    default:                 return DNGN_FLOOR;
-    }
-}
+    if (br < 0 || br >= NUM_BRANCHES)
+        return "<lightred>Buggy buglands</lightred>";
 
-static const char* portaltype_to_string(portal_type p)
-{
-    switch (p)
+    colour_t col;
+    switch (br)
     {
-    case PORTAL_LABYRINTH:   return "<cyan>Labyrinth:</cyan>";
-    case PORTAL_HELL:        return "<red>Hell:</red>";
-    case PORTAL_ABYSS:       return "<magenta>Abyss:</magenta>";
-    case PORTAL_PANDEMONIUM: return "<blue>Pan:</blue>";
-    default:                 return "<lightred>Buggy:</lightred>";
+    // These make little sense: old code used the first colour of elemental
+    // colour used for the entrance portal.
+    case BRANCH_VESTIBULE_OF_HELL: col = RED; break;
+    case BRANCH_ABYSS:             col = MAGENTA; break; // ETC_RANDOM
+    case BRANCH_PANDEMONIUM:       col = BLUE; break;
+    case BRANCH_LABYRINTH:         col = CYAN; break;
+    case BRANCH_BAILEY:            col = LIGHTRED; break;
+    case BRANCH_BAZAAR:
+    case BRANCH_WIZLAB:
+    case BRANCH_ZIGGURAT:          col = BLUE; break; // ETC_SHIMMER_BLUE
+    case BRANCH_ICE_CAVE:          col = WHITE; break;
+    case BRANCH_OSSUARY:           col = BROWN; break;
+    case BRANCH_SEWER:             col = LIGHTGREEN; break;
+    case BRANCH_TROVE:             col = BLUE; break;
+    case BRANCH_VOLCANO:           col = RED; break;
+    default:                       col = YELLOW; // shouldn't happen
     }
+
+    const std::string colname = colour_to_str(col);
+    return make_stringf("<%s>%s</%s>", colname.c_str(), branches[br].shortname,
+                        colname.c_str());
 }
 
 static std::string shoptype_to_string(shop_type s)
@@ -175,29 +177,25 @@ inline static std::string altar_description(god_type god)
     return feature_description(altar_for_god(god));
 }
 
-inline static std::string portal_description(portal_type portal)
-{
-    return feature_description(portal_to_feature(portal));
-}
-
-bool overview_knows_portal(dungeon_feature_type portal)
+bool overview_knows_portal(branch_type portal)
 {
     for (portal_map_type::const_iterator pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter)
     {
-        if (portal_to_feature(pl_iter->second) == portal)
+        if (pl_iter->second == portal)
             return (true);
     }
     return (false);
 }
 
+// Ever used only for Pan, Abyss and Hell.
 int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
     for (portal_map_type::const_iterator pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter)
     {
-        if (portal_to_feature(pl_iter->second) == portal)
+        if (branches[pl_iter->second].entry_stairs == portal)
             num++;
     }
 
@@ -208,7 +206,8 @@ static std::string _portals_description_string()
 {
     std::string disp;
     level_id    last_id;
-    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
+    for (branch_type cur_portal = BRANCH_MAIN_DUNGEON; cur_portal < NUM_BRANCHES;
+         cur_portal = static_cast<branch_type>(cur_portal + 1))
     {
         last_id.depth = 10000;
         portal_map_type::const_iterator ci_portals;
@@ -222,7 +221,7 @@ static std::string _portals_description_string()
             if (ci_portals->second == cur_portal)
             {
                 if (last_id.depth == 10000)
-                    disp += portaltype_to_string(ci_portals->second);
+                    disp += coloured_branch(ci_portals->second)+ ":";
 
                 if (ci_portals->first.id == last_id)
                     disp += '*';
@@ -232,86 +231,11 @@ static std::string _portals_description_string()
                     disp += ci_portals->first.id.describe(false, true);
                 }
                 last_id = ci_portals->first.id;
-            }
-        }
-        if (last_id.depth != 10000)
-            disp += "\n";
-    }
-    return disp;
-}
 
-static std::string _portal_vaults_description_string()
-{
-    // Collect all the different portal vault entrance names and then
-    // display them in alphabetical order.
-    std::set<std::string>    vault_names_set;
-    std::vector<std::string> vault_names_vec;
-
-    portal_vault_map_type::const_iterator ci_portals;
-    for (ci_portals = portal_vaults_present.begin();
-         ci_portals != portal_vaults_present.end(); ++ci_portals)
-    {
-        vault_names_set.insert(ci_portals->second);
-    }
-
-    for (std::set<std::string>::iterator i = vault_names_set.begin();
-         i != vault_names_set.end(); ++i)
-    {
-        vault_names_vec.push_back(*i);
-    }
-    std::sort(vault_names_vec.begin(), vault_names_vec.end());
-
-    std::string disp;
-    level_id    last_id;
-    for (unsigned int i = 0; i < vault_names_vec.size(); i++)
-    {
-        last_id.depth = 10000;
-        for (ci_portals = portal_vaults_present.begin();
-             ci_portals != portal_vaults_present.end(); ++ci_portals)
-        {
-            // one line per region should be enough, they're all of
-            // the form D:XX, except for labyrinth portals, of which
-            // you would need 11 (at least) to have a problem.
-            if (ci_portals->second == vault_names_vec[i])
-            {
-                if (last_id.depth == 10000)
-                {
-                    colour_t col = portal_vault_colours[ci_portals->first];
-                    disp += '<';
-                    disp += colour_to_str(col) + '>';
-                    disp += vault_names_vec[i];
-                    disp += "</";
-                    disp += colour_to_str(col) + '>';
-                    disp += ':';
-                }
-
-                const level_id  lid   = ci_portals->first.id;
-                const level_pos where = ci_portals->first;
-
-                if (lid == last_id)
-                {
-                    if (!portal_vault_notes[where].empty())
-                    {
-                        disp += " (";
-                        disp += portal_vault_notes[where];
-                        disp += ")";
-                    }
-                    else
-                        disp += '*';
-                }
-                else
-                {
-                    disp += ' ';
-                    disp += lid.describe(false, true);
-
-                    if (!portal_vault_notes[where].empty())
-                    {
-                        disp += " (";
-                        disp += portal_vault_notes[where];
-                        disp += ") ";
-                    }
-                }
-                last_id = lid;
+                // Portals notes (Zig/Trovel price).
+                const std::string note = portal_notes[ci_portals->first];
+                if (!note.empty())
+                    disp += " (" + note + ")";
             }
         }
         if (last_id.depth != 10000)
@@ -639,10 +563,9 @@ static std::string _get_portals()
 {
     std::string disp;
 
-    if (!portals_present.empty() || !portal_vaults_present.empty())
+    if (!portals_present.empty())
         disp += "\n<green>Portals:</green>\n";
     disp += _portals_description_string();
-    disp += _portal_vaults_description_string();
 
     return disp;
 }
@@ -678,14 +601,8 @@ inline static bool _find_erase(Z &map, const Key &k)
 
 static bool _unnotice_portal(const level_pos &pos)
 {
+    (void) _find_erase(portal_notes, pos);
     return _find_erase(portals_present, pos);
-}
-
-static bool _unnotice_portal_vault(const level_pos &pos)
-{
-    (void) _find_erase(portal_vault_colours, pos);
-    (void) _find_erase(portal_vault_notes, pos);
-    return _find_erase(portal_vaults_present, pos);
 }
 
 static bool _unnotice_altar(const level_pos &pos)
@@ -725,7 +642,6 @@ bool unnotice_feature(const level_pos &pos)
     StashTrack.remove_shop(pos);
     shopping_list.forget_pos(pos);
     return (_unnotice_portal(pos)
-            || _unnotice_portal_vault(pos)
             || _unnotice_altar(pos)
             || _unnotice_shop(pos)
             || _unnotice_stair(pos));
@@ -766,67 +682,31 @@ static void _seen_altar(god_type god, const coord_def& pos)
     altars_present[where] = god;
 }
 
-static portal_type _feature_to_portal(dungeon_feature_type feat)
+static void _seen_shop(const coord_def& pos)
 {
-    switch (feat)
-    {
-    case DNGN_ENTER_LABYRINTH:   return PORTAL_LABYRINTH;
-    case DNGN_ENTER_HELL:        return PORTAL_HELL;
-    case DNGN_ENTER_ABYSS:       return PORTAL_ABYSS;
-    case DNGN_ENTER_PANDEMONIUM: return PORTAL_PANDEMONIUM;
-    default:                     return PORTAL_NONE;
-    }
+    shops_present[level_pos(level_id::current(), pos)] = get_shop(pos)->type;
 }
 
-// If player has seen any other thing; record it.
-static void _seen_other_thing(dungeon_feature_type which_thing,
-                              const coord_def& pos)
+static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
 {
-    level_pos where(level_id::current(), pos);
-
     switch (which_thing)
     {
-    case DNGN_ENTER_SHOP:
-        shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
-        break;
-
+    case DNGN_ENTER_HELL:
+        // hell upstairs are never interesting
+        if (player_in_hell())
+            break;
     case DNGN_ENTER_PORTAL_VAULT:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_ABYSS:
+    case DNGN_ENTER_PANDEMONIUM:
     {
-        std::string portal_name;
-
-        portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
-
-        if (portal_name.empty())
-            portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
-        if (portal_name.empty())
-            portal_name = env.markers.property_at(pos, MAT_ANY, "dst");
-        if (portal_name.empty())
-            portal_name = "buggy vault portal";
-
-        portal_name = replace_all(portal_name, "_", " ");
-        portal_vaults_present[where] = uppercase_first(portal_name);
-
-        colour_t col;
-        if (env.grid_colours(pos) != BLACK)
-            col = env.grid_colours(pos);
-        else
-            col = get_feature_def(which_thing).colour;
-
-        portal_vault_colours[where] = element_colour(col, true);
-        portal_vault_notes[where] =
+        level_pos where(level_id::current(), pos);
+        portals_present[where] = stair_destination(pos).branch;
+        portal_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");
-
         break;
     }
-
-    default:
-        const portal_type portal = _feature_to_portal(which_thing);
-        // hell upstairs are never interesting
-        if (portal == PORTAL_HELL && player_in_hell())
-            break;
-        if (portal != PORTAL_NONE)
-            portals_present[where] = portal;
-        break;
+    default:;
     }
 }
 
