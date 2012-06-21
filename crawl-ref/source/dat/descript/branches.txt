@@ -78,7 +78,7 @@ the Snake Pit is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Spider Nest
 
-And you thought you'll just wield a shoe and be done? If you don't have
+And you think you'll just wield a shoe and be done? If you don't have
 arachnophobia yet, you will soon.
 
 The Spider Nest is five levels deep and contains the gossamer rune. A dungeon
