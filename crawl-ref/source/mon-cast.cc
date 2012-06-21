@@ -1668,19 +1668,39 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
 
     switch (monspell)
     {
+    case SPELL_HEAL_OTHER:
+        return targ_friendly;
     case SPELL_TELEPORT_OTHER:
         return !targ_sanct && !targ_friendly;
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
+    case SPELL_INVISIBILITY:
+    case SPELL_TELEPORT_SELF:
+    case SPELL_HASTE:
+    case SPELL_DEATHS_DOOR:
+    case SPELL_BERSERKER_RAGE:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
+    case SPELL_MIRROR_DAMAGE:
         return !targ_friendly;
     case SPELL_BLINK_OTHER:
         return !targ_sanct && targ_adj && !targ_friendly;
+    case SPELL_CONFUSE:
+    case SPELL_DRAIN_LIFE:
+    case SPELL_BANISHMENT:
+    case SPELL_HELLFIRE_BURST:
+    case SPELL_FIREBALL:
+    case SPELL_AIRSTRIKE:
+    case SPELL_IOOD:
+    case SPELL_ENSNARE:
+    case SPELL_THROW_FLAME:
+    case SPELL_SILVER_BLAST:
+        return !targ_friendly && !targ_sanct;
     case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
         return true;
