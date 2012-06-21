@@ -18,6 +18,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "delay.h"
+#include "dgn-height.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
@@ -1456,7 +1457,8 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (floodout
         && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
     {
-        if (!env.map_knowledge(dc).seen())
+        if (!env.map_knowledge(dc).seen() && (!player_in_branch(BRANCH_SHOALS)
+                                              || dgn_height_at(dc) >= 0))
         {
             if (ignore_hostile)
             {
