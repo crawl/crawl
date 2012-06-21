@@ -1357,6 +1357,7 @@ static const char* lua_builtins[] =
     "clua/gearset.lua",
     "clua/trapwalk.lua",
     "clua/autofight.lua",
+    "clua/kills.lua",
 };
 
 // Returns an error message if the init.txt was not found.

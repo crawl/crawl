@@ -73,8 +73,6 @@
 
 ##### 3-  Lua Files #################################################
 #
-# kills.lua yields more information at the cost of huge dumps.
-# lua_file = lua/kills.lua
 
 ##### 4-  Interface #################################################
 #
@@ -413,6 +411,7 @@ force_more_message = Found .* abyssal rune of Zot
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
+# dump_kill_breakdowns = true
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 # dump_item_origin_price = -1
 # dump_message_count = 20
