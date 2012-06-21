@@ -2193,7 +2193,7 @@ static void tag_read_you_items(reader &th)
     for (j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
         you.had_book[j] = unmarshallByte(th);
     for (j = count; j < NUM_FIXED_BOOKS; ++j)
-        you.seen_spell[j] = 0;
+        you.had_book[j] = 0;
     for (j = NUM_FIXED_BOOKS; j < count; ++j)
         unmarshallByte(th);
 
