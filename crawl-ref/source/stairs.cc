@@ -467,9 +467,9 @@ level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
     {
         if (you.where_are_you == root_branch)
             feat = DNGN_EXIT_DUNGEON; // silly Sprint -- FIXME
-        else if (branches[you.where_are_you].parent_branch == NUM_BRANCHES)
+        else if (feat == DNGN_ESCAPE_HATCH_UP)
             feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
-        else
+        else if (branches[you.where_are_you].parent_branch < NUM_BRANCHES)
         {
             level_id lev = level_id(branches[you.where_are_you].parent_branch,
                                     startdepth[you.where_are_you]);
