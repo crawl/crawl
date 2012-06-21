@@ -416,17 +416,6 @@ static void _dgn_postprocess_level()
     _calc_density();
 }
 
-void level_welcome_messages()
-{
-    for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
-    {
-        const std::vector<std::string> &msgs
-            = env.level_vaults[i]->map.welcome_messages;
-        for (int j = 0, msize = msgs.size(); j < msize; ++j)
-            mpr(msgs[j].c_str());
-    }
-}
-
 void dgn_clear_vault_placements(vault_placement_refv &vps)
 {
     for (vault_placement_refv::const_iterator i = vps.begin();

@@ -1100,8 +1100,6 @@ public:
     range_chance_t   _chance;
     range_weight_t   _weight;
 
-    std::vector<std::string> welcome_messages;
-
     map_lines       map;
     mons_list       mons;
     item_list       items;
