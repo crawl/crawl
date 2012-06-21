@@ -227,8 +227,7 @@ const map_def *dgn_safe_place_map(const map_def *map,
                                   const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
-void level_welcome_messages();
-void run_map_epilogues ();
+void run_map_epilogues();
 
 struct trap_spec;
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);

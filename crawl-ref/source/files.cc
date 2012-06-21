@@ -1354,9 +1354,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        if (just_created_level)
-            level_welcome_messages();
-
         // new levels have less wary monsters, and we don't
         // want them to attack players quite as soon:
         you.time_taken *= (just_created_level ? 1 : 2);

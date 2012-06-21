@@ -610,13 +610,6 @@ static int dgn_name(lua_State *ls)
     PLUARET(string, map->name.c_str());
 }
 
-static int dgn_welcome(lua_State *ls)
-{
-    MAP(ls, 1, map);
-    map->welcome_messages.push_back(luaL_checkstring(ls, 2));
-    return (0);
-}
-
 typedef
     flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
     map_flood_finder;
@@ -1801,7 +1794,6 @@ const struct luaL_reg dgn_dlib[] =
 { "depth_chance", dgn_depth_chance },
 { "weight", dgn_weight },
 { "depth_weight", dgn_depth_weight },
-{ "welcome", dgn_welcome },
 { "orient", dgn_orient },
 { "shuffle", dgn_shuffle },
 { "subst", dgn_subst },
