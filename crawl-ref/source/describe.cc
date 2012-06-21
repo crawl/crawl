@@ -2414,7 +2414,7 @@ static command_type _get_action(int key, std::vector<command_type> actions)
     return CMD_NO_CMD;
 }
 
-static bool _need_autoinscribe (item_def &item)
+static bool _need_autoinscribe(item_def &item)
 {
     // Only allow autoinscription if we don't have all the text already.
     if (is_artefact(item))

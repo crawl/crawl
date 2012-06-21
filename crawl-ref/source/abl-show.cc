@@ -158,8 +158,8 @@ static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static std::string _describe_talent(const talent& tal);
 static int _scale_piety_cost(ability_type abil, int original_cost);
-static std::string _zd_mons_description_for_ability (const ability_def &abil);
-static monster_type _monster_for_ability (const ability_def& abil);
+static std::string _zd_mons_description_for_ability(const ability_def &abil);
+static monster_type _monster_for_ability(const ability_def& abil);
 
 /**
  * This all needs to be split into data/util/show files
@@ -526,7 +526,7 @@ std::string print_abilities()
     return text;
 }
 
-static monster_type _monster_for_ability (const ability_def& abil)
+static monster_type _monster_for_ability(const ability_def& abil)
 {
     monster_type mtyp = MONS_PROGRAM_BUG;
     switch (abil.ability)
@@ -549,7 +549,7 @@ static monster_type _monster_for_ability (const ability_def& abil)
     return mtyp;
 }
 
-static std::string _zd_mons_description_for_ability (const ability_def &abil)
+static std::string _zd_mons_description_for_ability(const ability_def &abil)
 {
     switch (abil.ability)
     {

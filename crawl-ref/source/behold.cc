@@ -18,7 +18,7 @@
 #include "state.h"
 #include "areas.h"
 
-static bool _mermaid_beholder (const monster* mons)
+static bool _mermaid_beholder(const monster* mons)
 {
     return (mons_genus(mons->type) == MONS_MERMAID);
 }
@@ -36,18 +36,14 @@ void player::add_beholder(const monster* mon, bool axe)
                      mon->name(DESC_THE).c_str());
             }
             else
-            {
                 mpr("The melody is strangely muted, and has no effect on you.");
-            }
         }
         else
         {
             if (you.can_see(mon))
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             else
-            {
                 mpr("Your mesmeriser suddenly seems less interesting!");
-            }
         }
 
         return;

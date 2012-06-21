@@ -166,7 +166,7 @@ static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char 
 }
 
 // Specifically only deals with horizontal lines.
-static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
+static std::vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
 {
     std::vector<coord_def> line;
 
@@ -194,8 +194,8 @@ static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int sid
 }
 
 // Does what count_passable_neighbors does, but in C++ form.
-static int _count_passable_neighbors (lua_State *ls, map_lines &lines, int x,
-                                      int y, const char *passable = traversable_glyphs)
+static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
+                                     int y, const char *passable = traversable_glyphs)
 {
     coord_def tl(x, y);
     int count = 0;
@@ -210,8 +210,8 @@ static int _count_passable_neighbors (lua_State *ls, map_lines &lines, int x,
     return (count);
 }
 
-static int _count_passable_neighbors (lua_State *ls, map_lines &lines, coord_def point,
-                                      const char *passable = traversable_glyphs)
+static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def point,
+                                     const char *passable = traversable_glyphs)
 {
     return (_count_passable_neighbors(ls, lines, point.x, point.y, passable));
 }

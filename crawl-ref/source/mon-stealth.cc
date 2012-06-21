@@ -8,7 +8,7 @@
 #include "monster.h"
 #include "mon-util.h"
 
-static int _clamp_stealth (int stealth)
+static int _clamp_stealth(int stealth)
 {
     if (stealth > 3)
         return (3);

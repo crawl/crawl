@@ -666,7 +666,7 @@ static int crawl_is_webtiles(lua_State *ls)
     return (1);
 }
 
-static int crawl_get_command (lua_State *ls)
+static int crawl_get_command(lua_State *ls)
 {
     if (lua_gettop(ls) == 0)
     {

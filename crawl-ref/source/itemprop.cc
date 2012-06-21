@@ -2214,7 +2214,7 @@ bool is_blood_potion(const item_def &item)
             || item.sub_type == POT_BLOOD_COAGULATED);
 }
 
-bool is_fizzing_potion (const item_def &item)
+bool is_fizzing_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
         return (false);
@@ -2931,7 +2931,7 @@ std::string item_base_name(const item_def &item)
     return item_base_name(item.base_type, item.sub_type);
 }
 
-std::string item_base_name (object_class_type type, int sub_type)
+std::string item_base_name(object_class_type type, int sub_type)
 {
     switch (type)
     {
@@ -2948,14 +2948,14 @@ std::string item_base_name (object_class_type type, int sub_type)
     }
 }
 
-std::string food_type_name (const item_def &item)
+std::string food_type_name(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_FOOD);
 
     return food_type_name(item.sub_type);
 }
 
-std::string food_type_name (int sub_type)
+std::string food_type_name(int sub_type)
 {
     return (Food_prop[Food_index[sub_type]].name);
 }

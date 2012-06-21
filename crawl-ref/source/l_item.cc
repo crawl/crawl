@@ -245,7 +245,7 @@ IDEF(equipped)
     return (1);
 }
 
-static int l_item_do_class (lua_State *ls)
+static int l_item_do_class(lua_State *ls)
 {
     UDATA_ITEM(item);
 
@@ -301,7 +301,7 @@ static const char *amulet_types[] =
     "resist mutation", "guardian spirit", "faith", "stasis",
 };
 
-static int l_item_do_subtype (lua_State *ls)
+static int l_item_do_subtype(lua_State *ls)
 {
     UDATA_ITEM(item);
     COMPILE_CHECK(ARRAYSZ(ring_types) == NUM_RINGS);
@@ -619,7 +619,7 @@ IDEF(snakable)
 }
 
 // DLUA-only functions
-static int l_item_do_pluses (lua_State *ls)
+static int l_item_do_pluses(lua_State *ls)
 {
     ASSERT_DLUA;
 
@@ -640,7 +640,7 @@ static int l_item_do_pluses (lua_State *ls)
 
 IDEFN(pluses, do_pluses)
 
-static int l_item_do_destroy (lua_State *ls)
+static int l_item_do_destroy(lua_State *ls)
 {
     ASSERT_DLUA;
 
@@ -661,7 +661,7 @@ static int l_item_do_destroy (lua_State *ls)
 
 IDEFN(destroy, do_destroy)
 
-static int l_item_do_dec_quantity (lua_State *ls)
+static int l_item_do_dec_quantity(lua_State *ls)
 {
     ASSERT_DLUA;
 
@@ -689,7 +689,7 @@ static int l_item_do_dec_quantity (lua_State *ls)
 
 IDEFN(dec_quantity, do_dec_quantity)
 
-static int l_item_do_inc_quantity (lua_State *ls)
+static int l_item_do_inc_quantity(lua_State *ls)
 {
     ASSERT_DLUA;
 
@@ -714,7 +714,7 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-static iflags_t _str_to_item_status_flags (std::string flag)
+static iflags_t _str_to_item_status_flags(std::string flag)
 {
     iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
@@ -732,7 +732,7 @@ static iflags_t _str_to_item_status_flags (std::string flag)
     return (flags);
 }
 
-static int l_item_do_identified (lua_State *ls)
+static int l_item_do_identified(lua_State *ls)
 {
     ASSERT_DLUA;
 

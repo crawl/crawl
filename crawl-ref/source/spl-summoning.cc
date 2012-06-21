@@ -1206,7 +1206,7 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-coord_def find_gateway_location (actor* caster)
+coord_def find_gateway_location(actor* caster)
 {
     coord_def point = coord_def(0, 0);
 

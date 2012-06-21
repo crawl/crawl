@@ -936,7 +936,7 @@ static int dgn_fprop_changed(lua_State *ls)
     return (1);
 }
 
-static int dgn_fprop_at (lua_State *ls)
+static int dgn_fprop_at(lua_State *ls)
 {
     feature_property_type prop = FPROP_NONE;
 
@@ -955,7 +955,7 @@ static int dgn_fprop_at (lua_State *ls)
     return (1);
 }
 
-static int dgn_cloud_at (lua_State *ls)
+static int dgn_cloud_at(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
@@ -1001,7 +1001,7 @@ static int lua_dgn_set_branch_epilogue(lua_State *ls)
 //      when the maps are stored. This relies on the individual map Lua prelude
 //      being executed whenever maps are loaded and verified, which means that
 //      the next time the map is loaded, border_fill_type is already stored.
-static int lua_dgn_set_border_fill_type (lua_State *ls)
+static int lua_dgn_set_border_fill_type(lua_State *ls)
 {
     MAP(ls, 1, map);
     if (lua_gettop(ls) != 2)

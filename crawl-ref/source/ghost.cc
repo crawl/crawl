@@ -1008,7 +1008,7 @@ int ghost_level_to_rank(const int xl)
 ///////////////////////////////////////////////////////////////////////////////
 // Laboratory rats!
 
-std::string adjective_for_labrat_colour (colour_t l_colour)
+std::string adjective_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
@@ -1031,7 +1031,7 @@ std::string adjective_for_labrat_colour (colour_t l_colour)
 }
 
 #ifdef USE_TILE
-int tile_offset_for_labrat_colour (colour_t l_colour)
+int tile_offset_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
@@ -1051,7 +1051,7 @@ int tile_offset_for_labrat_colour (colour_t l_colour)
 }
 #endif
 
-colour_t colour_for_labrat_adjective (std::string adjective)
+colour_t colour_for_labrat_adjective(std::string adjective)
 {
     if (adjective == "armoured")    return CYAN;
     if (adjective == "beastly")     return YELLOW;

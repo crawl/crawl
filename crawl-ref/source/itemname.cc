@@ -1122,7 +1122,7 @@ std::string sub_type_string(const item_def &item, bool known)
     }
 }
 
-std::string ego_type_string (const item_def &item)
+std::string ego_type_string(const item_def &item)
 {
     switch (item.base_type)
     {

@@ -127,7 +127,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       targetter *hitfunc = NULL,
                       desc_filter get_desc_func = NULL);
 
-skill_type spell_type2skill (unsigned int which_spelltype);
+skill_type spell_type2skill(unsigned int which_spelltype);
 
 spell_type zap_type_to_spell(zap_type zap);
 

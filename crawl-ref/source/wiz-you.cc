@@ -951,7 +951,7 @@ void set_xl(const int newxl, const bool train)
         debug_uptick_xl(newxl, train);
 }
 
-void wizard_get_god_gift (void)
+void wizard_get_god_gift(void)
 {
     if (you.religion == GOD_NO_GOD)
     {
