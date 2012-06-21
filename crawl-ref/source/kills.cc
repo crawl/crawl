@@ -243,6 +243,9 @@ void KillMaster::add_kill_info(std::string &killtext,
             killtext += numbuf;
         }
     }
+#ifdef CLUA_BINDINGS
+    lua_pop(clua, 1);
+#endif
 }
 
 int KillMaster::num_kills(const monster* mon, kill_category cat) const
