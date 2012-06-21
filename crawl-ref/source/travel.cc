@@ -2935,7 +2935,7 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     level_id id = current();
 
     if (gridc == branches[id.branch].exit_stairs)
-        return upstairs_destination();
+        return stair_destination(pos);
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
