@@ -116,7 +116,7 @@ void fire_final_effects()
             break;
 
         case FINEFF_BLINK:
-            if (defender && defender->alive() && !attacker->no_tele(true, false))
+            if (defender && defender->alive() && !defender->no_tele(true, false))
                 defender->blink();
             break;
         }
