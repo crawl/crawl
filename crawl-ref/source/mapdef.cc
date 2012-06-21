@@ -4229,7 +4229,7 @@ void item_list::clear()
     items.clear();
 }
 
-item_spec item_list::random_item ()
+item_spec item_list::random_item()
 {
     if (items.size() <= 0)
     {
@@ -4242,7 +4242,7 @@ item_spec item_list::random_item ()
 
 typedef std::pair<item_spec, int> item_pair;
 
-item_spec item_list::random_item_weighted ()
+item_spec item_list::random_item_weighted()
 {
     const item_spec none;
 
@@ -5655,7 +5655,7 @@ bool keyed_mapspec::replaces_glyph()
 //////////////////////////////////////////////////////////////////////////
 // feature_spec and feature_slot
 
-feature_spec::feature_spec ()
+feature_spec::feature_spec()
 {
     genweight = 0;
     feat = 0;
@@ -5689,7 +5689,7 @@ feature_spec& feature_spec::operator = (const feature_spec& other)
     return (*this);
 }
 
-void feature_spec::init_with (const feature_spec& other)
+void feature_spec::init_with(const feature_spec& other)
 {
     genweight = other.genweight;
     feat = other.feat;

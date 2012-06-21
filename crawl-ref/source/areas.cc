@@ -197,7 +197,7 @@ static void _update_agrid()
     _agrid_valid = true;
 }
 
-static area_centre_type _get_first_area (const coord_def& f)
+static area_centre_type _get_first_area(const coord_def& f)
 {
     uint32_t a = _agrid(f);
     if (a & APROP_SANCTUARY_1)
@@ -221,7 +221,7 @@ static area_centre_type _get_first_area (const coord_def& f)
     return AREA_NONE;
 }
 
-coord_def find_centre_for (const coord_def& f, area_centre_type at)
+coord_def find_centre_for(const coord_def& f, area_centre_type at)
 {
     if (!map_bounds(f))
         return coord_def(-1, -1);

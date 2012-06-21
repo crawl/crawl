@@ -309,7 +309,7 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     return (false);
 }
 
-std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::vector<std::string> results;
 

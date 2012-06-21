@@ -336,7 +336,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
 
 // Returns true if the monster did speak, false otherwise.
 // Maybe monsters will speak!
-void maybe_mons_speaks (monster* mons)
+void maybe_mons_speaks(monster* mons)
 {
 #define MON_SPEAK_CHANCE 21
 

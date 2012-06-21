@@ -148,7 +148,7 @@ bool ring_has_stackable_effect(const item_def &item);
 
 // food functions:
 bool is_blood_potion(const item_def &item);
-bool is_fizzing_potion (const item_def &item);
+bool is_fizzing_potion(const item_def &item);
 int food_value(const item_def &item);
 int food_turns(const item_def &item);
 bool can_cut_meat(const item_def &item);
@@ -182,9 +182,9 @@ equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
 
 std::string item_base_name(const item_def &item);
-std::string item_base_name (object_class_type type, int sub_type);
-std::string food_type_name (const item_def &item);
-std::string food_type_name (int sub_type);
+std::string item_base_name(object_class_type type, int sub_type);
+std::string food_type_name(const item_def &item);
+std::string food_type_name(int sub_type);
 const char* weapon_base_name(uint8_t subtype);
 
 void seen_item(const item_def &item);

@@ -195,7 +195,7 @@ class short_read_exception : std::exception {};
 
 int8_t      unmarshallByte    (reader &);
 int16_t     unmarshallShort   (reader &);
-int32_t     unmarshallInt    (reader &);
+int32_t     unmarshallInt     (reader &);
 float       unmarshallFloat   (reader &);
 uint8_t     unmarshallUByte   (reader &);
 bool        unmarshallBoolean (reader &);

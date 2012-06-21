@@ -65,7 +65,7 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
 static spell_type _map_wand_to_mspell(int wand_type);
-static void _shedu_movement_clamp (monster* mons);
+static void _shedu_movement_clamp(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
