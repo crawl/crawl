@@ -1,3 +1,22 @@
+crawl (2:0.10.3-2) unstable; urgency=low
+
+  * Never #define NEED_FAKE_FDATASYNC; all platforms supported by Debian
+    have a working fdatasync().
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Jun 2012 13:19:32 +0200
+
+crawl (2:0.10.3-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+    * Includes a workaround for miscompilation (amd64) or FTBFS (certain
+      other architectures) on gcc-4.7, caused by
+      http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53330
+  * Fix CPPFLAGS set by dpkg-buildflags being ignored (-D_FORTIFY_SOURCE=2).
+  * Spam the hell out of build logs, overridable by DEB_BUILD_OPTIONS=terse.
+    Closes: #668987
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 14 Jun 2012 11:41:30 +0200
+
 crawl (2:0.10.2-2) unstable; urgency=low
 
   * Build-Depend on libpng-dev.
