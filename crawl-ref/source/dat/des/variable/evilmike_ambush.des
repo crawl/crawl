@@ -10,7 +10,7 @@
 # post-lair.
 
 NAME:     evilmike_ambush
-DEPTH:    D:14-26, Vaults:1-7, Elf:1-4, Snake:1-4, Dis:1-6, Geh:1-6, Tar:1-6, \
+DEPTH:    D:14-26, Vaults:1-7, Elf:1-2, Snake:1-4, Dis:1-6, Geh:1-6, Tar:1-6, \
           Coc:1-6, Zot:1-4, Crypt:1-4
 TAGS:     allow_dup
 SUBVAULT: = : evilmike_ambush_outer
