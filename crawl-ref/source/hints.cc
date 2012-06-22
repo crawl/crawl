@@ -299,8 +299,8 @@ void hints_starting_screen()
 
     std::string text;
 
-    text  = "<white>Welcome to Dungeon Crawl!</white>\n\n";
-    text += "Your object is to lead a <w>"
+    text  = "<white>Welcome to Dungeon Crawl!</white>\n\n"
+            "Your object is to lead a <w>"
          + species_name(you.species) + " " + you.class_name
          +
         "</w> safely through the depths of the dungeon, retrieving the "
@@ -490,9 +490,7 @@ void hints_death_screen()
                    "press <w>s</w>, <w>.</w>, <w>delete</w> or "
                    "<w>keypad-5</w>. Pressing <w>5</w> or "
                    "<w>shift-and-keypad-5</w>"
-#ifdef USE_TILE
-                   ", or <w>clicking into the stat area</w>"
-#endif
+                   "<tiles>, or <w>clicking into the stat area</w></tiles>"
                    " will let you rest for a longer time (you will stop "
                    "resting after 100 turns, or when fully healed).";
             break;
@@ -522,7 +520,7 @@ void hints_death_screen()
                     "one.";
         }
     }
-    mpr(text, MSGCH_TUTORIAL, 0);
+    mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
     more();
 
     mpr("See you next game!", MSGCH_TUTORIAL);
@@ -552,11 +550,9 @@ void hints_finished()
     {
         text =  "Walking around and exploring levels gets easier by using "
                 "auto-explore (<w>%</w>). Crawl will let you automatically "
-                "move to and pick up interesting items.";
-#ifdef USE_TILE
-        text += "\nAutoexploration can also be started by <w>left-clicking</w> "
-                "on the minimap while the <w>Control</w> key is pressed.";
-#endif
+                "move to and pick up interesting items."
+                "<tiles>\nAutoexploration can also be started by <w>left-clicking</w> "
+                "on the minimap while the <w>Control</w> key is pressed.</tiles>";
         insert_commands(text, CMD_EXPLORE, 0);
     }
     else if (Hints.hints_travel)
@@ -662,13 +658,10 @@ void hints_dissection_reminder(bool healthy)
         text += "If you don't want to eat it, consider offering this "
                 "corpse up under <w>p</w>rayer as a sacrifice to ";
         text += god_name(you.religion);
-#ifdef USE_TILE
-        text += ". You can also chop up any corpse that shows in the floor "
+        text += "<tiles>. You can also chop up any corpse that shows in the floor "
                 "part of your inventory tiles by clicking on it with your "
-                "<w>left mouse button</w>";
-#endif
-
-        text += ". Whenever you view a corpse while in hint mode you can "
+                "<w>left mouse button</w></tiles>."
+                "Whenever you view a corpse while in hint mode you can "
                 "reread this information.";
 
         mpr(text, MSGCH_TUTORIAL, 0);
@@ -752,9 +745,7 @@ static void _hints_healing_reminder()
                     "terrain increases the chances of your rest being "
                     "interrupted by wandering monsters. For resting, press "
                     "<w>5</w> or <w>Shift-numpad 5</w>"
-#ifdef USE_TILE
-                    ", or <w>click on the stat area</w> with your mouse"
-#endif
+                    "<tiles>, or <w>click on the stat area</w> with your mouse</tiles>"
                     ".";
 
             if (you.hp < you.hp_max && you.religion == GOD_TROG
@@ -1007,43 +998,52 @@ void hints_monster_seen(const monster& mon)
     Hints.hints_events[HINT_SEEN_MONSTER] = false;
     Hints.hints_just_triggered = true;
 
-    std::string text = "That ";
     monster_info mi(&mon);
 #ifdef USE_TILE
     // need to highlight monster
     const coord_def gc = mon.pos();
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
     tiles.add_text_tag(TAG_TUTORIAL, mi);
+#endif
 
-    text += "monster is a ";
-    text += mon.name(DESC_PLAIN).c_str();
-    text += ". Examples for typical early monsters are rats, giant newts, "
+    std::string text = "That ";
+
+    if (is_tiles())
+    {
+        text +=
+            std::string("monster is a ") +
+            mon.name(DESC_PLAIN).c_str() +
+            ". Examples for typical early monsters are rats, giant newts, "
             "kobolds, or goblins. You can gain information about any monster "
             "by hovering your mouse over its tile, and read the monster "
-            "description by clicking on it with your <w>right mouse button</w>."
-#else
-    text += glyph_to_tagstr(get_mons_glyph(mi));
-    text += " is a monster, usually depicted by a letter. Some typical "
+            "description by clicking on it with your <w>right mouse button</w>.";
+    }
+    else
+    {
+        text +=
+            glyph_to_tagstr(get_mons_glyph(mi)) +
+            " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
-
-    if (crawl_view.mlistsz.y > 0)
-    {
-        text += "Your console settings allowing, you'll always see a "
-                "list of monsters somewhere on the screen.\n";
+        if (crawl_view.mlistsz.y > 0)
+        {
+            text += "Your console settings allowing, you'll always see a "
+                    "list of monsters somewhere on the screen.\n";
+        }
+        text += "You can gain information about it by pressing <w>x</w> and "
+                "moving the cursor on the monster, and read the monster "
+                "description by then pressing <w>v</w>. ";
     }
-    text += "You can gain information about it by pressing <w>x</w> and "
-            "moving the cursor on the monster, and read the monster "
-            "description by then pressing <w>v</w>. "
-#endif
-            "\nTo attack this monster with your wielded weapon, just move "
-            "into it. ";
 
-#ifdef USE_TILE
-    text += "Note that as long as there's a non-friendly monster in view you "
+    text += "\nTo attack this monster with your wielded weapon, just move "
+            "into it. ";
+    if (is_tiles())
+    {
+        text +=
+            "Note that as long as there's a non-friendly monster in view you "
             "won't be able to automatically move to distant squares, to avoid "
             "death by misclicking.";
-#endif
+    }
 
     mpr(text, MSGCH_TUTORIAL, 0);
 
@@ -1058,24 +1058,18 @@ void hints_monster_seen(const monster& mon)
             || you.weapon()->base_type != OBJ_WEAPONS
             || you.weapon()->sub_type != WPN_BOW)
         {
-            text += "First <w>w</w>ield it, then follow the instructions.";
-
-#ifdef USE_TILE
-        text += "\nAs a short-cut you can also <w>right-click</w> on your "
+            text += "First <w>w</w>ield it, then follow the instructions."
+                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
                 "bow to read its description, and <w>left-click</w> to wield "
-                "it.";
-#endif
+                "it.</tiles>";
         }
-#ifdef USE_TILE
         else
         {
-            text += "Clicking with your <w>right mouse button</w> on your bow "
-                    "will also let you read its description.";
+            text += "<tiles>Clicking with your <w>right mouse button</w> on your bow "
+                    "will also let you read its description.</tiles>";
         }
-#endif
 
-
-        mpr(text, MSGCH_TUTORIAL, 0);
+        mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
 
     }
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -1083,13 +1077,10 @@ void hints_monster_seen(const monster& mon)
         text =  "However, as a conjurer you will want to deal with it using "
                 "magic. If you have a look at your spellbook from your "
                 "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this.";
-
-#ifdef USE_TILE
-        text += "\nAs a short-cut you can also <w>right-click</w> on your "
-                "book in your inventory to read its description.";
-#endif
-        mpr(text, MSGCH_TUTORIAL, 0);
+                "this."
+                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
+                "book in your inventory to read its description.</tiles>";
+        mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
 
     }
 }
@@ -1120,40 +1111,30 @@ void hints_first_item(const item_def &item)
     Hints.hints_events[HINT_SEEN_FIRST_OBJECT] = false;
     Hints.hints_just_triggered = true;
 
-    std::string text = "That ";
-#ifndef USE_TILE
-    text += glyph_to_tagstr(get_item_glyph(&item));
-    text += " ";
-#else
+#ifdef USE_TILE
     const coord_def gc = item.pos;
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_A), gc);
 #endif
 
-    text += "is an item. If you move there and press <w>g</w> or "
+    std::string text = "That "
+            "<console>" + glyph_to_tagstr(get_item_glyph(&item)) + " </console>"
+            "is an item. If you move there and press <w>g</w> or "
             "<w>,</w> you will pick it up. "
-#ifndef USE_TILE
-            "Generally, items are shown by non-letter symbols like "
-            "<w>%?!\"=()[</w>. "
-#else
-            "You can also pick up an item by clicking on your <w>left mouse "
-            "button</w> while standing on its square. "
-#endif
+            "<console>Generally, items are shown by non-letter symbols like "
+            "<w>%?!\"=()[</w>. </console>"
+            "<tiles>You can also pick up an item by clicking on your <w>left mouse "
+            "button</w> while standing on its square. </tiles>"
             "Also, several types of objects will usually be picked up "
             "automatically. "
-#ifdef USE_TILE
-            "(In Tiles, these will be marked with a green frame around them.)"
-#endif
+            "<tiles>(In Tiles, these will be marked with a green frame around them.)</tiles>"
             "\nOnce it is in your inventory, you can drop it again with "
-#ifdef USE_TILE
-            "a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
-            "Whenever you <w>right-click</w> on an item"
-#else
-            "<w>d</w>. Any time you look at an item in your <w>i</w>nventory"
-#endif
+            "<tiles>a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
+            "Whenever you <w>right-click</w> on an item</tiles>"
+            "<console><w>d</w>. Any time you look at an item in your <w>i</w>nventory</console>"
             ", you can read about its properties and its description.";
 
-    mpr(text, MSGCH_TUTORIAL, 0);
+    mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
 }
 
 static void _new_god_conduct()
@@ -1195,13 +1176,11 @@ static void _new_god_conduct()
 
     text << "\nYou can check your god's likes and dislikes, as well as your "
             "current standing and divine abilities, by typing <w>^</w>"
-#ifdef USE_TILE
-            " (alternatively press <w>Shift</w> while "
-            "<w>right-clicking</w> on your avatar)"
-#endif
+            "<tiles> (alternatively press <w>Shift</w> while "
+            "<w>right-clicking</w> on your avatar)</tiles>"
             ".";
 
-    mpr(text.str(), MSGCH_TUTORIAL, 0);
+    mpr(untag_tiles_console(text.str()), MSGCH_TUTORIAL, 0);
 
 }
 
@@ -1258,21 +1237,15 @@ static std::string _describe_portal(const coord_def &gc)
     }
 
     text << "stand over the portal and press <w>></w>. To return find "
-#ifdef USE_TILE
-            "a similar looking portal tile "
-#else
-            "another <w>"
+            "<tiles>a similar looking portal tile </tiles>"
+            "<console>another <w>"
          << stringize_glyph(get_feat_symbol(DNGN_EXIT_PORTAL_VAULT))
          << "</w> (though NOT the ancient stone arch you'll start "
-            "out on) "
-#endif
-        "and press <w><<</w>.";
-
-#ifdef USE_TILE
-    text << "\nAlternatively, clicking on your <w>left mouse button</w> "
+            "out on) </console>"
+            "and press <w><<</w>."
+            "<tiles>\nAlternatively, clicking on your <w>left mouse button</w> "
             "while pressing the <w>Shift key</w> will let you enter any "
-            "portal you're standing on.";
-#endif
+            "portal you're standing on.</tiles>";
 
     return (text.str());
 }
@@ -1398,14 +1371,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     {
     case HINT_SEEN_POTION:
         text << "You have picked up your first potion"
-#ifndef USE_TILE
-                " ('<w>"
+                "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_POTION))
-             << "</w>'). Use "
-#else
-                ". Simply click on it with your <w>left mouse button</w>, or "
-                "press "
-#endif
+             << "</w>'). Use </console>"
+                "<tiles>. Simply click on it with your <w>left mouse button</w>, or "
+                "press </tiles>"
                 "<w>%</w> to quaff it.\n"
                 "Note that potion effects might be good or bad. For the bad "
                 "ones, you might want to wait until you're a bit tougher, but "
@@ -1416,14 +1386,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_SCROLL:
         text << "You have picked up your first scroll"
-#ifndef USE_TILE
-                " ('<w>"
+                "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_SCROLL))
-             << "</w>'). Type "
-#else
-                ". Simply click on it with your <w>left mouse button</w>, or "
-                "type "
-#endif
+             << "</w>'). Type </console>"
+                "<tiles>. Simply click on it with your <w>left mouse button</w>, or "
+                "type </tiles>"
                 "<w>%</w> to read it, though you might want to wait until "
                 "there's a monster around or you have some more items, so the "
                 "scroll can actually have an effect.";
@@ -1432,35 +1399,28 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_WAND:
         text << "You have picked up your first wand"
-#ifndef USE_TILE
-                " ('<w>"
+                "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_WAND))
-             << "</w>'). Type "
-#else
-                ". Simply click on it with your <w>left mouse button</w>, or "
-                "type "
-#endif
+             << "</w>'). Type </console>"
+                "<tiles>. Simply click on it with your <w>left mouse button</w>, or "
+                "type </tiles>"
                 "<w>%</w> to evoke it.";
         cmd.push_back(CMD_EVOKE);
         break;
 
     case HINT_SEEN_SPBOOK:
-        text << "You have picked up a book";
-#ifndef USE_TILE
-        text << " ('<w>";
-
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
+        text << "You have picked up a book"
+                "<console> ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
              << "that you can read by typing <w>%</w>. "
                 "If it's a spellbook you'll then be able to memorise spells "
-                "via <w>%</w> and cast a memorised spell with <w>%</w>.";
+                "via <w>%</w> and cast a memorised spell with <w>%</w>.</console>"
+                "<tiles>. You can read it doing a <w>right click</w> with your "
+                "mouse, and memorise spells with a <w>left click</w>. </tiles>";
         cmd.push_back(CMD_READ);
         cmd.push_back(CMD_MEMORISE_SPELL);
         cmd.push_back(CMD_CAST_SPELL);
-#else
-        text << ". You can read it doing a <w>right click</w> with your "
-                "mouse, and memorise spells with a <w>left click</w>. ";
-#endif
 
         if (you.religion == GOD_TROG)
         {
@@ -1473,32 +1433,23 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         text << "\nIn hint mode you can reread this information at "
                 "any time by "
-#ifndef USE_TILE
-                "having a look in your <w>%</w>nventory at the item in "
-                "question.";
+                "<console>having a look in your <w>%</w>nventory at the item in "
+                "question.</console>"
+                "<tiles>clicking on it with your <w>right mouse button</w>.</tiles>";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
-#else
-                "clicking on it with your <w>right mouse button</w>.";
-#endif
         break;
 
     case HINT_SEEN_WEAPON:
         text << "This is the first weapon "
-#ifndef USE_TILE
-                "('<w>"
+                "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_WEAPON))
-             << "</w>') "
-#endif
+             << "</w>') </console>"
                 "you've picked up. Use <w>%</w> "
-#ifdef USE_TILE
-                "or click on it with your <w>left mouse button</w> "
-#endif
+                "<tiles>or click on it with your <w>left mouse button</w> </tiles>"
                 "to wield it, but be aware that this weapon "
                 "might train a different skill from your current one. You can "
                 "view the weapon's properties from your <w>%</w>nventory"
-#ifdef USE_TILE
-                " or by <w>right-clicking</w> on it"
-#endif
+                "<tiles> or by <w>right-clicking</w> on it</tiles>"
                 ".";
 
         cmd.push_back(CMD_WIELD_WEAPON);
@@ -1519,11 +1470,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_MISSILES:
         text << "This is the first stack of missiles "
-#ifndef USE_TILE
-                "('<w>"
+                "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
-             << "</w>') "
-#endif
+             << "</w>') </console>"
                 "you've picked up. Missiles like darts and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
@@ -1558,23 +1507,18 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ARMOUR:
         text << "This is the first piece of armour "
-#ifndef USE_TILE
-                "('<w>"
+                "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_ARMOUR))
-             << "</w>') "
-#endif
+             << "</w>') </console>"
                 "you've picked up. "
-#ifdef USE_TILE
-                "You can click on it to wear it, and click a second time to "
+                "<tiles>You can click on it to wear it, and click a second time to "
                 "take it off again. Doing a <w>right mouse click</w> will "
-                "show you its properties.";
-#else
+                "show you its properties.</tiles>"
                 "Use <w>%</w> to wear it and <w>%</w> to take it off again. "
                 "You can view its properties from your <w>%</w>nventory.";
         cmd.push_back(CMD_WEAR_ARMOUR);
         cmd.push_back(CMD_REMOVE_ARMOUR);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
-#endif
 
         if (you.species == SP_CENTAUR || you.species == SP_MINOTAUR)
         {
@@ -1594,15 +1538,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_FOOD:
         text << "You have picked up some food"
-#ifndef USE_TILE
-                " ('<w>"
+                "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
-             << "</w>')"
-#endif
+             << "</w>')</console>"
                 ". You can eat it by typing <w>e</w>"
-#ifdef USE_TILE
-                " or by clicking on it with your <w>left mouse button</w>"
-#endif
+                "<tiles> or by clicking on it with your <w>left mouse button</w></tiles>"
                 ". However, it is usually best to conserve rations and fruit "
                 "until you are hungry or even starving.";
         break;
@@ -1622,20 +1562,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 text << "Ah, a corpse!";
             else
             {
-                text << "That ";
-#ifndef USE_TILE
+                text << "That <console>";
                 std::string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
                 const std::string::size_type found = glyph.find("%");
                 if (found != std::string::npos)
                     glyph.replace(found, 1, "percent");
                 text << glyph;
-                text << " ";
-#else
+                text << " </console> is a corpse.";
+#ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
                 tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
 #endif
-
-                text << "is a corpse.";
             }
         }
 
@@ -1654,13 +1591,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "(though they may not be healthful).";
         cmd.push_back(CMD_EAT);
 
-#ifdef USE_TILE
-        text << " With tiles, you can also chop up any corpse that shows up in "
+        text << "<tiles> With tiles, you can also chop up any corpse that shows up in "
                 "the floor part of your inventory region, simply by doing a "
                 "<w>left mouse click</w> while pressing <w>Shift</w>, and "
                 "then eat the resulting chunks with <w>Shift + right mouse "
-                "click</w>.";
-#endif
+                "click</w>.</tiles>";
 
         if (god_likes_fresh_corpses(you.religion))
         {
@@ -1678,23 +1613,18 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_JEWELLERY:
         text << "You have picked up a a piece of jewellery, either a ring"
-#ifndef USE_TILE
-             << " ('<w>"
+             << "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_RING))
-             << "</w>')"
-#endif
+             << "</w>')</console>"
              << " or an amulet"
-#ifndef USE_TILE
-             << " ('<w>"
+             << "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_AMULET))
              << "</w>')"
              << ". Type <w>%</w> to put it on and <w>%</w> to remove "
-                "it. You can view its properties from your <w>%</w>nventory"
-#else
-             << ". You can click on it to put it on, and click a second time "
+                "it. You can view its properties from your <w>%</w>nventory</console>"
+             << "<tiles>. You can click on it to put it on, and click a second time "
                 "remove it again. By clicking on it with your <w>right mouse "
-                "button</w> you can view its properties"
-#endif
+                "button</w> you can view its properties</tiles>"
              << ", though often magic is necessary to reveal its true "
                 "nature.";
         cmd.push_back(CMD_WEAR_JEWELLERY);
@@ -1705,11 +1635,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_MISC:
         text << "This is a curious object indeed. You can play around with "
                 "it to find out what it does by "
-#ifdef USE_TILE
-                "clicking on it to e<w>%</w>oke "
-#else
-                "e<w>%</w>oking "
-#endif
+                "<tiles>clicking on it to e<w>%</w>oke </tiles>"
+                "<console>e<w>%</w>oking </console>"
                 "it. Some items need to be <w>%</w>ielded first before you can "
                 "e<w>%</w>oke them. As usual, selecting it from your "
                 "<w>%</w>nventory might give you more information.";
@@ -1721,12 +1648,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ROD:
         text << "You have picked up a magical rod"
-#ifndef USE_TILE
-                " ('<w>";
-
+                "<console> ('<w>";
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
-             << "</w>', like staves)"
-#endif
+             << "</w>', like staves)</console>"
                 ". It must be <w>%</w>ielded to be of use. "
                 "A rod allows the casting of "
                 "certain spells even without magic knowledge simply by "
@@ -1736,11 +1660,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_WIELD_WEAPON);
         cmd.push_back(CMD_EVOKE_WIELDED);
 
-#ifdef USE_TILE
-        text << " Both wielding and evoking a wielded item can be achieved "
-                "by clicking on it with your <w>left mouse button</w>.";
-#endif
-        text << "\nIn hint mode you can reread this information at "
+        text << "<tiles> Both wielding and evoking a wielded item can be achieved "
+                "by clicking on it with your <w>left mouse button</w>.</tiles>"
+                "\nIn hint mode you can reread this information at "
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
@@ -1748,35 +1670,28 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_STAFF:
         text << "You have picked up a magic staff"
-#ifndef USE_TILE
-                " ('<w>";
+                "<console> ('<w>";
 
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
-             << "</w>', like rods)"
-#endif
+             << "</w>', like rods)</console>"
                 ". It must be <w>%</w>ielded to be of use. "
                 "Magicians use staves to increase their power in certain "
-                "spell schools. It can also be used as a weapon.";
-        cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_EVOKE_WIELDED);
-
-#ifdef USE_TILE
-        text << " Both wielding and evoking a wielded item can be achieved "
-                "by clicking on it with your <w>left mouse button</w>.";
-#endif
-        text << "\nIn hint mode you can reread this information at "
+                "spell schools. It can also be used as a weapon."
+                "<tiles> Both wielding and evoking a wielded item can be achieved "
+                "by clicking on it with your <w>left mouse button</w>.</tiles>"
+                "\nIn hint mode you can reread this information at "
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
+        cmd.push_back(CMD_WIELD_WEAPON);
+        cmd.push_back(CMD_EVOKE_WIELDED);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
     case HINT_SEEN_GOLD:
         text << "You have picked up your first pile of gold"
-#ifndef USE_TILE
-                " ('<yellow>"
+                "<console> ('<yellow>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
-             << "</yellow>')"
-#endif
+             << "</yellow>')</console>"
                 ". Unlike all other objects in Crawl it doesn't show up in "
                 "your inventory, takes up no space in your inventory, weighs "
                 "nothing and can't be dropped. Gold can be used to buy "

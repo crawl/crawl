@@ -1416,6 +1416,7 @@ std::string command_to_string(command_type cmd, bool tutorial)
 void insert_commands(std::string &desc, std::vector<command_type> cmds,
                      bool formatted)
 {
+    desc = untag_tiles_console(desc);
     for (unsigned int i = 0; i < cmds.size(); ++i)
     {
         const std::string::size_type found = desc.find("%");

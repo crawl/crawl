@@ -2038,7 +2038,7 @@ static void _add_command(column_composer &cols, const int column,
     std::string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";
-    line += ": " + desc + "\n";
+    line += ": " + untag_tiles_console(desc) + "\n";
 
     cols.add_formatted(
             column,
@@ -2292,9 +2292,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         in view\n",
                        false, true, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
-#ifndef USE_TILE
-    _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
-#endif
+    if (!is_tiles())
+        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
@@ -2455,80 +2454,58 @@ static void _add_formatted_hints_help(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<cyan>)</cyan> : "
-#endif
+                         "<console><cyan>)</cyan> : </console>"
                          "hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<brown>(</brown> : "
-#endif
+                         "<console><brown>(</brown> : </console>"
                          "missiles (<w>%</w>uiver, <w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
                          CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
                          CMD_CYCLE_QUIVER_BACKWARD, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<cyan>[</cyan> : "
-#endif
+                         "<console><cyan>[</cyan> : </console>"
                          "armour (<w>%</w>ear and <w>%</w>ake off)",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<brown>percent</brown> : "
-#endif
+                         "<console><brown>percent</brown> : </console>"
                          "corpses and food (<w>%</w>hop up and <w>%</w>at)",
                          CMD_BUTCHER, CMD_EAT, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<w>?</w> : "
-#endif
+                         "<console><w>?</w> : </console>"
                          "scrolls (<w>%</w>ead)",
                          CMD_READ, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<magenta>!</magenta> : "
-#endif
+                         "<console><magenta>!</magenta> : </console>"
                          "potions (<w>%</w>uaff)",
                          CMD_QUAFF, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<blue>=</blue> : "
-#endif
+                         "<console><blue>=</blue> : </console>"
                          "rings (<w>%</w>ut on and <w>%</w>emove)",
                          CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<red>\"</red> : "
-#endif
+                         "<console><red>\"</red> : </console>"
                          "amulets (<w>%</w>ut on and <w>%</w>emove)",
                          CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<lightgrey>/</lightgrey> : "
-#endif
+                         "<console><lightgrey>/</lightgrey> : </console>"
                          "wands (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
 
     std::string item_types =
-#ifndef USE_TILE
-                  "<lightcyan>";
+                  "<console><lightcyan>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
-        "</lightcyan> : "
-#endif
+        "</lightcyan> : </console>"
         "books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                          CMD_FORCE_CAST_SPELL, 0);
 
     item_types =
-#ifndef USE_TILE
-                  "<brown>";
+                  "<console><brown>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE));
     item_types +=
-        "</brown> : "
-#endif
+        "</brown> : </console>"
         "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
