@@ -644,13 +644,7 @@ LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
 
 static int crawl_is_tiles(lua_State *ls)
 {
-#ifdef USE_TILE_LOCAL
-    lua_pushboolean(ls, true);
-#elif defined(USE_TILE_WEB)
-    lua_pushboolean(ls, ::tiles.is_controlled_from_web());
-#else
-    lua_pushboolean(ls, false);
-#endif
+    lua_pushboolean(ls, is_tiles());
 
     return (1);
 }

@@ -83,6 +83,10 @@
     #endif
 #endif
 
+#if !defined(__cplusplus) || (__cplusplus < 201103)
+# define constexpr const
+#endif
+
 // =========================================================================
 //  System Defines
 // =========================================================================
@@ -380,11 +384,6 @@ template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
-
-// C++11 has stricter requirements for compile-time checks.
-# if __cplusplus < 201103
-#  define constexpr const
-# endif
 
 #endif // __cplusplus
 
