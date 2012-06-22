@@ -473,6 +473,37 @@ MAP
 .222..
 ENDMAP
 
+NAME:   fedhas_altar_decomposition
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:6-13
+MONS:   bush, plant, necrophage / w:25 nothing
+KFEAT:  _ = altar_fedhas
+FTILE:  '!12@ = floor_moss
+COLOUR: '!@ = green
+: if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
+:   and you.race() ~= "Vampire"
+: then
+MARKER:  ! = lua:message_at_spot("Fedhas urges you to decompose the vile \
+                                 beasts imprisoned behind the altar.", \
+                                 "god")
+: end
+SUBST:  ! = .
+KPROP:  .3 = no_rtele_into
+MAP
+ xxxxxxxxx
+xx33...33xx
+x33.....33x
+x33.111.33x
+x33.1_1.33x
+x33.1'1.33x
+x3..x'x..3x
+x3..x'x..3x
+xxxxx'xxxxx
+   xx!xx
+   x2@2x
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -833,6 +864,39 @@ MAP
        xx@xx
 ENDMAP
 
+NAME:   trog_eyes_of_draining
+TAGS:   uniq_altar_trog temple_overflow_trog patrolling
+DEPTH:  D:3-9
+WEIGHT: 4
+MONS:   eye of draining / w:20 nothing
+: if you.absdepth() > 5 and crawl.coinflip() then
+MONS:   ogre god:trog ; giant club ego:anti-magic | w:3 giant club / \
+        ogre god:trog ; giant spiked club ego:anti-magic | w:5 giant spiked club / \
+        orc warrior god:trog ; halberd ego:anti-magic | war axe ego:anti-magic | \
+        flail ego:anti-magic | great mace ego anti-magic | any weapon / \
+        big kobold god:trog ; short sword ego:anti-magic | dagger ego:anti-magic | \
+        sabre ego:anti-magic | sabre
+: else
+MONS:   orc god:trog ; spear ego:anti-magic | hand axe ego:anti-magic | \
+        war axe ego:anti-magic | any weapon / \
+        kobold god:trog ; short sword ego:anti-magic | hand axe ego:anti-magic | \
+        club ego:anti-magic | whip ego:anti-magic | any weapon / \
+        goblin god:trog ; dagger ego:anti-magic | short sword ego:anti-magic / \
+        gnoll god:trog ; spear ego:anti-magic | trident ego:anti-magic | \
+        halberd ego:anti-magic | whip ego:anti-magic | halberd | any weapon
+: end
+KFEAT:  2 = altar_trog
+MAP
+  xxxxx
+ xx111xx
+xx11211xx
+x11...11x
+x.......x
+x.G...G.x
+xx.....xx
+ xx@@@xx
+ENDMAP
+
 
 ### Vehumet overflow altars ###################################################
 
@@ -1177,6 +1241,35 @@ xct...tcx
 xccc+cccx
 ENDMAP
 
+NAME:    tso_metal_star
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen no_secret_doors
+TAGS:    temple_overflow_the_shining_one uniq_altar_the_shining_one
+KFEAT:   _ = altar_the_shining_one
+KFEAT:   m = iron_grate / w:5 clear_rock_wall
+SUBST:   ! : vmmTG..
+MAP
+          @
+          .
+         ...
+         .v.
+        ..v..
+       ..vvv..
+      ..vv.vv..
+     ..vv...vv..
+    ..vm..!..mv..
+  ...vv..!.!..vv...
+@..vvv..!._.!..vvv..@
+  ...vv..!.!..vv...
+    ..vm..!..+v..
+     ..vv...vv..
+      ..vv.vv..
+       ..vvv..
+        ..v..
+         .v.
+         ...
+          .
+          @
+ENDMAP
 
 ### Variable overflow altars ##################################################
 
