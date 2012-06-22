@@ -550,7 +550,7 @@ level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
         return level_id::parse_level_id(dst);
 
     case DNGN_ENTER_HELL:
-        if (for_real)
+        if (for_real && !player_in_hell())
         {
             you.hell_branch = you.where_are_you;
             you.hell_exit = you.depth;
