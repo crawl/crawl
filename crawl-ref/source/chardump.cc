@@ -201,6 +201,7 @@ static void _sdump_header(dump_params &par)
     if (::tiles.is_controlled_from_web())
         par.text += " (webtiles)";
     else
+        par.text += " (console)";
 #else
     par.text += " (console)";
 #endif
