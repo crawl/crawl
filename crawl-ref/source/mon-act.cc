@@ -1047,10 +1047,9 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
     return beem;
 }
 
-static void _rod_fired_pre(monster* mons, bool nice_spell)
+static void _rod_fired_pre(monster* mons)
 {
-    if (!nice_spell)
-        make_mons_stop_fleeing(mons);
+    make_mons_stop_fleeing(mons);
 
     if (!simple_monster_message(mons, " zaps a rod.")
         && !silenced(you.pos()))
@@ -1118,7 +1117,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool was_visible = you.can_see(mons);
 
     int overriding_power  = 0;
-    bool nice_spell       = false;
     bool check_validity   = true;
     bool is_direct_effect = false;
     spell_type mzap       = SPELL_NO_SPELL;
@@ -1157,7 +1155,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     case SPELL_SMITING:
         overriding_power = 1;
-        nice_spell = true;
         is_direct_effect = true;
         break;
 
@@ -1165,7 +1162,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
         return (true);
@@ -1191,7 +1188,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return (false);
         zap = true;
     }
-    else if (!nice_spell)
+    else
     {
         fire_tracer(mons, beem);
         zap = mons_should_fire(beem);
@@ -1202,13 +1199,13 @@ static bool _handle_rod(monster *mons, bolt &beem)
         actor* foe = mons->get_foe();
         if (!foe)
             return (false);
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
         direct_effect(mons, mzap, beem, foe);
         return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
     }
-    else if (nice_spell || zap)
+    else if (zap)
     {
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
         beem.is_tracer = false;
         beem.fire();
         return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
