@@ -1203,6 +1203,16 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.hell_exit);
     marshallByte(th, you.hell_branch);
 
+#if TAG_MAJOR_VERSION <= 33
+    // Fix a hell stair loop bug, present from 4f27c86 to d0ec4fc.
+    if (is_hell_subbranch(you.hell_branch))
+    {
+        // root_branch hasn't been loaded yet
+        you.hell_branch = BRANCH_MAIN_DUNGEON;
+        you.hell_exit = 1;
+    }
+#endif
+
     marshallInt(th, you.exp_docked);
     marshallInt(th, you.exp_docked_total);
 
