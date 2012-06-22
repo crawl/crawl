@@ -1067,7 +1067,7 @@ spret_type your_spells(spell_type spell, int powc,
         const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
                                      || testbits(flags, SPFLAG_ALLOW_SELF));
 
-        const int range = calc_spell_range(spell, powc, false);
+        const int range = calc_spell_range(spell, powc);
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
@@ -1088,7 +1088,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (hitfunc)
             delete hitfunc;
-        beam.range = calc_spell_range(spell, powc, true);
+        beam.range = range;
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
@@ -1818,11 +1818,11 @@ std::string spell_power_string(spell_type spell, bool rod)
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
 }
 
-int calc_spell_range(spell_type spell, int power, bool real_cast, bool rod)
+int calc_spell_range(spell_type spell, int power, bool rod)
 {
     if (power == 0)
         power = calc_spell_power(spell, true, false, false, rod);
-    const int range = spell_range(spell, power, real_cast);
+    const int range = spell_range(spell, power);
 
     return (range);
 }
@@ -1830,8 +1830,8 @@ int calc_spell_range(spell_type spell, int power, bool real_cast, bool rod)
 std::string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
-    const int range    = calc_spell_range(spell, 0, false, rod);
-    const int maxrange = spell_range(spell, cap, false);
+    const int range    = calc_spell_range(spell, 0, rod);
+    const int maxrange = spell_range(spell, cap);
 
     if (range < 0)
         return "N/A";

@@ -956,7 +956,7 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
+int spell_range(spell_type spell, int pow, bool player_spell)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;

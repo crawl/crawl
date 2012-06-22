@@ -49,7 +49,7 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
     if (distance(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
-                                                      pow, true))
+                                                      pow))
         || !in_bounds(where))
     {
         mpr("That's too far away.");
