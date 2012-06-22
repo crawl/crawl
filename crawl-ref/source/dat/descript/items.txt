@@ -868,6 +868,19 @@ lemon
 
 A yellow fruit.
 %%%%
+lightning rod
+
+A wizard with poor knowledge of how mundane items work misunderstood the
+purpose of lightning rods, and instead of making one that merely draws
+lightning, he made one that creates it instead.
+
+This rod shoots continuous lightning: the discharge is sustained, and can be
+redirected to new targets by evoking the rod in subsequent turns (failing
+to do so will release the trigger). The rod takes a moment to warm up,
+making short bursts rather ineffective. It also has slight troubles shooting
+through charged air, so for the best effect it's best to wave the rod at
+least a bit.
+%%%%
 long sword
 
 A straight, double-edged blade of medium size, with a sturdy hilt and pommel.
@@ -1282,10 +1295,6 @@ this unsuspecting world.
 rod of destruction
 
 This rod contains spells of mayhem and destruction.
-%%%%
-rod of smiting
-
-This rod allows its wielder to smite foes from afar.
 %%%%
 rod of striking
 

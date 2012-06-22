@@ -993,6 +993,11 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
         return new targetter_cloud(&you, range);
+    case SPELL_THUNDERBOLT:
+        return new targetter_thunderbolt(&you, range,
+            (you.props.exists("thunderbolt_last")
+             && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
+                you.props["thunderbolt_aim"].get_coord() : coord_def());
     default:
         return 0;
     }
@@ -1293,7 +1298,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // LOS spells
 
-    // Beogh ability and rod of smiting, no failure.
+    // Beogh ability, no failure.
     case SPELL_SMITING:
         return cast_smiting(powc, monster_at(target)) ? SPRET_SUCCESS
                                                       : SPRET_ABORT;
@@ -1331,6 +1336,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_TORNADO:
         return cast_tornado(powc, fail);
+
+    case SPELL_THUNDERBOLT:
+        return cast_thunderbolt(&you, powc, target, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters

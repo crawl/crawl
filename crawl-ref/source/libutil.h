@@ -187,6 +187,14 @@ void erase_any(std::vector<Z> &vec, unsigned long which)
     vec.pop_back();
 }
 
+template <typename Z>
+static inline void swapv(Z &a, Z &b)
+{
+    Z tmp = a;
+    a = b;
+    b = tmp;
+}
+
 inline int sqr(int x)
 {
     return x * x;

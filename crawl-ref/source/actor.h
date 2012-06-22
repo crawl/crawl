@@ -351,6 +351,7 @@ public:
     }
 
     virtual bool wont_attack() const = 0;
+    virtual mon_attitude_type temp_attitude() const = 0;
     virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;

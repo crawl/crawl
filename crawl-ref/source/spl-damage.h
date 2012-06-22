@@ -34,6 +34,8 @@ spret_type cast_tornado(int powc, bool fail);
 void tornado_damage(actor *caster, int dur);
 void cancel_tornado(bool tloc = false);
 void tornado_move(const coord_def &pos);
+spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim,
+                            bool fail = false);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const std::string &msg,
