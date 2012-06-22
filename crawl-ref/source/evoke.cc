@@ -79,7 +79,11 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     direction(beam, args);
 
     if (!beam.isValid)
+    {
+        if (beam.isCancel)
+            canned_msg(MSG_OK);
         return (false);
+    }
 
     if (beam.isMe())
     {
@@ -188,7 +192,13 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return (true);
     }
     else
-        fight_melee(&you, mons);
+    {
+        if (!fight_melee(&you, mons))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+    }
 
     return (true);
 }
