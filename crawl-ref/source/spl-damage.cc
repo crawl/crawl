@@ -1930,12 +1930,13 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.name              = "lightning";
     beam.aux_source        = "rod of lightning";
     beam.flavour           = BEAM_ELECTRICITY;
-    beam.glyph             = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = 7 + pow / 25;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
+    beam.tile_beam = -1;
     beam.draw_delay = 0;
 
     for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
