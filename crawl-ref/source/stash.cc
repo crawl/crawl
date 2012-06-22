@@ -312,9 +312,6 @@ void Stash::update()
         god_id_item(*pitem);
         const item_def& item = *pitem;
 
-        if (!_grid_has_perceived_multiple_items(p))
-            items.clear();
-
         // We knew of nothing on this square, so we'll assume this is the
         // only item here, but mark it as unverified unless we can see nothing
         // under the item.
@@ -322,11 +319,8 @@ void Stash::update()
         {
             add_item(item);
             // sacrificiable items will be visited.
-            if (!verified)
-            {
-                verified = !_grid_has_perceived_multiple_items(p)
-                           && (you.religion == GOD_NO_GOD || !god_likes_item(you.religion, item));
-            }
+            verified = !_grid_has_perceived_multiple_items(p)
+                       && (you.religion == GOD_NO_GOD || !god_likes_item(you.religion, item));
             return;
         }
 
