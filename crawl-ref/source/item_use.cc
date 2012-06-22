@@ -1015,6 +1015,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 //I think it looks better without the letters.
 // (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
+    mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
     for (int i = 0; i < num_rings; i++)
         mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
@@ -1037,12 +1038,15 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
                 c = ' ';
                 break;
             }
-    } while (!key_is_escape(c) && c != ' ');
+    } while (!key_is_escape(c) && c != ' ' && c != '?');
 
     mesclr();
 
-    if (eqslot == EQ_NONE)
-        return (-1);
+    if (c == '?')
+        return (EQ_NONE);
+    else if (key_is_escape(c) || eqslot == EQ_NONE)
+        return (-2);
+
     return (you.equip[eqslot]);
 }
 
@@ -1303,16 +1307,26 @@ static bool _swap_rings_octopode(int ring_slot)
     else if (available > 1)
     {
         unwanted = _prompt_ring_to_remove_octopode(ring_slot);
+
+        // Cancelled:
+	if (unwanted < -1)
+	{
+            canned_msg(MSG_OK);
+            return (false);
+	}
+
         if (!remove_ring(unwanted, false))
             return (false);
     }
 
+#if 0
     // In case something goes wrong.
     if (unwanted == -1)
     {
         canned_msg(MSG_OK);
         return (false);
     }
+#endif
 
     // Put on the new ring.
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
