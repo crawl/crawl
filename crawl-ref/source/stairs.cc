@@ -453,6 +453,9 @@ void up_stairs(dungeon_feature_type force_stair)
     request_autopickup();
 }
 
+// Find the other end of the stair or portal at location pos on the current
+// level.  for_real is true if we are actually traversing the feature rather
+// than merely asking what is on the other side.
 level_id stair_destination(coord_def pos, bool for_real)
 {
     return stair_destination(grd(pos),
@@ -460,6 +463,11 @@ level_id stair_destination(coord_def pos, bool for_real)
                              for_real);
 }
 
+// Find the other end of a stair or portal on the current level.  feat is the
+// type of feature (DNGN_EXIT_ABYSS, for example), dst is the target of a
+// portal vault entrance (and is ignored for other types of features), and
+// for_real is true if we are actually traversing the feature rather than
+// merely asking what is on the other side.
 level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
                            bool for_real)
 {
