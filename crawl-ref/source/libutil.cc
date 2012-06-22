@@ -890,6 +890,41 @@ bool version_is_stable(const char *v)
     }
 }
 
+std::string untag_tiles_console(std::string s)
+{
+    size_t p = 0;
+    while ((p = s.find("<tiles>", p)) != std::string::npos)
+    {
+        size_t q = s.find("</tiles>", p);
+        if (q == std::string::npos)
+            q = s.length();
+        if (is_tiles())
+        {
+            s.erase(q, 8);
+            s.erase(p, 7);
+        }
+        else
+            s.erase(p, q + 8 - p);
+    }
+
+    p = 0;
+    while ((p = s.find("<console>", p)) != std::string::npos)
+    {
+        size_t q = s.find("</console>", p);
+        if (q == std::string::npos)
+            q = s.length();
+        if (is_tiles())
+        {
+            s.erase(q, 10);
+            s.erase(p, 9);
+        }
+        else
+            s.erase(p, q + 10 - p);
+    }
+
+    return s;
+}
+
 #ifndef USE_TILE_LOCAL
 static coord_def _cgettopleft(GotoRegion region)
 {
@@ -969,6 +1004,7 @@ void cscroll(int n, GotoRegion region)
     if (region == GOTO_MSG)
         scroll_message_window(n);
 }
+
 
 
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;

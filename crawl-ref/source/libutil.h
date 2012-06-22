@@ -203,6 +203,8 @@ inline bool testbits(uint64_t flags, uint64_t test)
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
+std::string untag_tiles_console(std::string s);
+
 #ifdef TARGET_OS_WINDOWS
 enum taskbar_pos
 {
