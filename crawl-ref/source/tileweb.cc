@@ -1527,4 +1527,9 @@ void TilesFramework::json_write_string(const std::string& name,
 
     json_write_string(value);
 }
+
+bool is_tiles()
+{
+    return tiles.is_controlled_from_web();
+}
 #endif
