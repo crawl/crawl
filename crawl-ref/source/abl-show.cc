@@ -1915,12 +1915,10 @@ static bool _do_ability(const ability_def& abil)
     {
         // Note: Power level of ball calculated at release. - bwr
         power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
-        const int fake_range = spell_range(SPELL_FIREBALL, power, false);
+        beam.range = spell_range(SPELL_FIREBALL, power);
 
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, fake_range))
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, beam.range))
             return (false);
-
-        beam.range = spell_range(SPELL_FIREBALL, power, true);
 
         if (!fireball(power, beam))
             return (false);
