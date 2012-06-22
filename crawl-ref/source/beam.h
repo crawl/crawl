@@ -23,6 +23,17 @@ enum mon_resist_type
     MON_OTHER,                  // monster unaffected, but for other reasons
 };
 
+enum ac_type
+{
+    AC_NONE,
+    // These types block small amounts of damage, hardly affecting big hits.
+    AC_NORMAL,
+    AC_HALF,
+    AC_TRIPLE,
+    // This one stays fair over arbitrary splits.
+    AC_PROPORTIONAL,
+};
+
 class dist;
 
 typedef FixedArray<int, 19, 19> explosion_map;
@@ -106,6 +117,7 @@ struct bolt
     bool        was_missile;           // For determining if this was SPMSL_FLAME / FROST etc
                                        // this is required in order to change mulch rate on these types
     bool        animate;               // Do we draw animations?
+    ac_type     ac_rule;               // How does defender's AC affect damage.
 
     // Various callbacks.
     std::vector<range_used_func>  range_funcs;
@@ -232,10 +244,10 @@ private:
     void step();
     bool hit_wall();
 
-    bool damage_ignores_armour() const;
     bool apply_hit_funcs(actor* victim, int dmg);
     bool apply_dmg_funcs(actor* victim, int &dmg,
                          std::vector<std::string> &messages);
+    int apply_AC(const actor* victim, int hurted, int &mind);
 
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()

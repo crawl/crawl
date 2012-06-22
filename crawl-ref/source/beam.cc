@@ -464,6 +464,8 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
         pbolt.ench_power = power; // used for radius
         pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
     }
+    else if (z_type == ZAP_BREATHE_FROST)
+        pbolt.ac_rule = AC_NONE;
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }
@@ -3611,22 +3613,12 @@ void bolt::affect_player()
     int roll = hurted;
 #endif
 
+
     std::vector<std::string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
-    int armour_damage_reduction = random2(1 + you.armour_class());
-    if (flavour == BEAM_ELECTRICITY)
-        armour_damage_reduction /= 2;
-    else if (flavour == BEAM_HELLFIRE || name == "chilling blast")
-        armour_damage_reduction = 0;
-    hurted -= armour_damage_reduction;
-
-    // shrapnel has triple AC reduction
-    if (flavour == BEAM_FRAG)
-    {
-        hurted -= random2(1 + you.armour_class());
-        hurted -= random2(1 + you.armour_class());
-    }
+    int dummy; // why monsters don't estimate damage against the player?
+    hurted = apply_AC(&you, hurted, dummy);
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf("Player damage: rolled=%d; after AC=%d", roll, hurted);
@@ -3769,6 +3761,43 @@ void bolt::affect_player()
         beam_hits_actor(&you);
 }
 
+int bolt::apply_AC(const actor *victim, int hurted, int &mind)
+{
+    switch (flavour)
+    {
+    case BEAM_HELLFIRE:
+        ac_rule = AC_NONE; break;
+    case BEAM_ELECTRICITY:
+        ac_rule = AC_HALF; break;
+    case BEAM_FRAG:
+        ac_rule = AC_TRIPLE; break;
+    default: ;
+    }
+
+    int ac = victim->armour_class();
+    switch (ac_rule)
+    {
+    case AC_NONE:
+        return hurted;
+    case AC_PROPORTIONAL:
+        mind = 0;
+        return apply_chunked_AC(hurted, ac);
+    case AC_NORMAL:
+        mind -= ac;
+        return hurted - random2(1 + ac);
+    case AC_HALF:
+        mind -= ac / 2;
+        return hurted - random2(1 + ac) / 2;
+    case AC_TRIPLE:
+        mind -= ac * 3;
+        return hurted - random2(1 + ac)
+                      - random2(1 + ac)
+                      - random2(1 + ac);
+    default:
+        die("invalid AC rule");
+    }
+}
+
 const actor* bolt::beam_source_as_target() const
 {
     // This looks totally wrong. Preserving old behaviour for now, but it
@@ -3838,14 +3867,6 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     }
 }
 
-bool bolt::damage_ignores_armour() const
-{
-    // [ds] FIXME: replace beam name checks with flavour or origin spell checks
-    return (flavour == BEAM_HELLFIRE
-            || name == "freezing breath"
-            || name == "chilling blast");
-}
-
 // Return false if we should skip handling this monster.
 bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
@@ -3894,50 +3915,27 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    postac = preac;
-
     int tracer_postac_min = preac_min_damage;
     int tracer_postac_max = preac_max_damage;
 
-    // Hellfire and white draconian breath ignores AC.
-    if (!damage_ignores_armour())
-    {
-        int ac = mon->armour_class();
-        // Armour is less useful against electricity.
-        if (flavour == BEAM_ELECTRICITY)
-            ac /= 2;
-        if (is_tracer && preac_max_damage > 0)
-        {
-            tracer_postac_min = std::max(0, preac_min_damage - ac);
-            tracer_postac_max = preac_max_damage;
-            postac = div_round_up(tracer_postac_min + tracer_postac_max, 2);
-        }
-        else
-        {
-            postac -= maybe_random2(1 + ac, !is_tracer);
-
-            // Fragmentation has triple AC reduction.
-            if (flavour == BEAM_FRAG)
-            {
-                postac -= maybe_random2(1 + ac, !is_tracer);
-                postac -= maybe_random2(1 + ac, !is_tracer);
-            }
-        }
-    }
-
-    postac = std::max(postac, 0);
+    postac = apply_AC(mon, preac, tracer_postac_min);
 
     if (is_tracer)
     {
+        tracer_postac_min = std::max(0, tracer_postac_min);
+        postac = div_round_up(tracer_postac_min + tracer_postac_max, 2);
+
         const int adjusted_postac_max =
             mons_adjust_flavoured(mon, *this, tracer_postac_max, false);
         const int adjusted_postac_min =
             !tracer_postac_min? 0 :
             mons_adjust_flavoured(mon, *this, tracer_postac_min, false);
+
         final = div_round_up(adjusted_postac_max + adjusted_postac_min, 2);
     }
     else
     {
+        postac = std::max(0, postac);
         // Don't do side effects (beam might miss or be a tracer).
         final = mons_adjust_flavoured(mon, *this, postac, false);
     }
@@ -5676,7 +5674,8 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                loudness(0), noise_msg(), is_beam(false), is_explosion(false),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
-               draw_delay(15), special_explosion(NULL), animate(true), range_funcs(),
+               draw_delay(15), special_explosion(NULL), animate(true),
+               ac_rule(AC_NORMAL), range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
