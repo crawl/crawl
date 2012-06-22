@@ -399,15 +399,23 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     if (a == origin)
         return false;
 
+    arc_length.init(0);
+
     ray_def ray;
     coord_def p; // ray.pos() does lots of processing, cache it
 
     // For consistency with beams, we need to
     _make_ray(ray, origin, aim);
-    while ((origin - (p = ray.pos())).abs() <= range2 && opc_solid_see(p) < OPC_OPAQUE)
+    bool hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
     {
-        if (p != origin)
+        if (opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+        {
             zapped[p] = AFF_YES;
+            arc_length[origin.range(p)]++;
+        }
         ray.advance();
     }
 
@@ -415,10 +423,16 @@ bool targetter_thunderbolt::set_aim(coord_def a)
         return true;
 
     _make_ray(ray, origin, prev);
-    while ((origin - (p = ray.pos())).abs() <= range2 && opc_solid_see(p) < OPC_OPAQUE)
+    hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
     {
-        if (zapped[p] <= 0)
+        if (opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+        {
             zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
+            arc_length[origin.range(p)]++;
+        }
         ray.advance();
     }
 
@@ -436,9 +450,9 @@ bool targetter_thunderbolt::set_aim(coord_def a)
             if (left_of(a1, r) && left_of(r, a2))
             {
                 (p = r) += origin;
-                if (!cell_see_cell(origin, p, LOS_NO_TRANS))
-                    continue;
-                if (zapped[p] <= 0)
+                if (zapped.find(p) == zapped.end())
+                    arc_length[r.range()]++;
+                if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
                     zapped[p] = AFF_MAYBE;
             }
         }

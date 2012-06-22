@@ -1925,7 +1925,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     fail_check();
 
-    int juice = caster->props["thunderbolt_mana"].get_byte();
+    int juice = prev.origin() ? 2 : caster->props["thunderbolt_mana"].get_byte();
     bolt beam;
     beam.name              = "lightning";
     beam.aux_source        = "rod of lightning";
@@ -1933,12 +1933,8 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.glyph             = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    //beam.hit               = ?;
-    //beam.damage            = ?;
-    // NOTE: damage must not use the regular beam AC formula, or otherwise
-    // it will discourage hitting wide areas.  Instead of the standard which
-    // tends to block small damage but pass most of high-damage attacks barely
-    // reduced, use apply_chunked_AC() which works proportionately.
+    beam.hit               = 7 + pow / 25;
+    beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
     beam.draw_delay = 0;
 
@@ -1965,9 +1961,14 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         if (!actor_at(p->first))
             continue;
 
+        int arc = hitfunc.arc_length[p->first.range(hitfunc.origin)];
+        ASSERT(arc > 0);
+        dprf("at distance %d, arc length is %d", p->first.range(hitfunc.origin),
+                                                 arc);
         beam.source = beam.target = p->first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+        beam.damage = dice_def(juice, div_rand_round(25 + pow / 7, arc + 2));
         beam.fire();
     }
 
