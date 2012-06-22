@@ -350,3 +350,111 @@ aff_type targetter_los::is_affected(coord_def loc)
 
     return (loc - origin).abs() > range_max2 ? AFF_MAYBE : AFF_YES;
 }
+
+
+targetter_thunderbolt::targetter_thunderbolt(const actor *act, int r,
+                                             coord_def _prev)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    prev = _prev;
+    aim = prev.origin() ? origin : prev;
+    ASSERT(r > 1 && r <= you.current_vision);
+    range2 = sqr(r) + 1;
+}
+
+bool targetter_thunderbolt::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+static void _make_ray(ray_def &ray, coord_def a, coord_def b)
+{
+    // Like beams, we need to allow picking the "better" ray if one is blocked
+    // by a wall.
+    if (!find_ray(a, b, ray, opc_solid_see))
+        ray = ray_def(geom::ray(a.x + 0.5, a.y + 0.5, b.x + 0.5, b.y + 0.5));
+}
+
+static bool left_of(coord_def a, coord_def b)
+{
+    return a.x * b.y > a.y * b.x;
+}
+
+bool targetter_thunderbolt::set_aim(coord_def a)
+{
+    aim = a;
+    zapped.clear();
+
+    if (a == origin)
+        return false;
+
+    ray_def ray;
+    coord_def p; // ray.pos() does lots of processing, cache it
+
+    // For consistency with beams, we need to
+    _make_ray(ray, origin, aim);
+    while ((origin - (p = ray.pos())).abs() <= range2 && opc_solid_see(p) < OPC_OPAQUE)
+    {
+        if (p != origin)
+            zapped[p] = AFF_YES;
+        ray.advance();
+    }
+
+    if (prev.origin())
+        return true;
+
+    _make_ray(ray, origin, prev);
+    while ((origin - (p = ray.pos())).abs() <= range2 && opc_solid_see(p) < OPC_OPAQUE)
+    {
+        if (zapped[p] <= 0)
+            zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
+        ray.advance();
+    }
+
+    coord_def a1 = prev - origin;
+    coord_def a2 = aim - origin;
+    if (left_of(a2, a1))
+        swapv(a1, a2);
+
+    for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
+        for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
+        {
+            if (sqr(x) + sqr(y) > range2)
+                continue;
+            coord_def r(x, y);
+            if (left_of(a1, r) && left_of(r, a2))
+            {
+                (p = r) += origin;
+                if (!cell_see_cell(origin, p, LOS_NO_TRANS))
+                    continue;
+                if (zapped[p] <= 0)
+                    zapped[p] = AFF_MAYBE;
+            }
+        }
+
+    zapped[origin] = AFF_NO;
+
+    return true;
+}
+
+aff_type targetter_thunderbolt::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return zapped[loc] ? AFF_YES : AFF_TRACER;
+
+    if ((loc - origin).abs() > range2)
+        return AFF_NO;
+
+    return zapped[loc];
+}

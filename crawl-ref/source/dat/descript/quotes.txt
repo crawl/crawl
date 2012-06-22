@@ -1723,10 +1723,6 @@ rod of destruction
 
 <rod>
 %%%%
-rod of smiting
-
-<rod>
-%%%%
 rod of striking
 
 <rod>

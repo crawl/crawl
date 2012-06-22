@@ -1899,6 +1899,80 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     return ret;
 }
 
+static bool _elec_not_immune(const actor *act)
+{
+    return act->res_elec() < 3;
+}
+
+spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
+{
+    coord_def prev;
+    if (caster->props.exists("thunderbolt_last")
+        && caster->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
+    {
+        prev = caster->props["thunderbolt_aim"].get_coord();
+    }
+
+    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+                                  prev);
+    hitfunc.set_aim(aim);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    int juice = caster->props["thunderbolt_mana"].get_byte();
+    bolt beam;
+    beam.name              = "lightning";
+    beam.aux_source        = "rod of lightning";
+    beam.flavour           = BEAM_ELECTRICITY;
+    beam.glyph             = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour            = LIGHTCYAN;
+    beam.range             = 1;
+    //beam.hit               = ?;
+    //beam.damage            = ?;
+    beam.set_agent(caster);
+    beam.draw_delay = 0;
+
+    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        beam.draw(p->first);
+    }
+
+    delay(200);
+
+    beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
+
+    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        // beams are incredibly spammy in debug mode
+        if (!actor_at(p->first))
+            continue;
+
+        beam.source = beam.target = p->first;
+        beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+        beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+        beam.fire();
+    }
+
+    caster->props["thunderbolt_last"].get_int() = you.num_turns;
+    caster->props["thunderbolt_aim"].get_coord() = aim;
+
+    return SPRET_SUCCESS;
+}
+
 // Find an enemy who would suffer from Awaken Forest.
 actor* forest_near_enemy(const actor *mon)
 {

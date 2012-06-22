@@ -110,4 +110,19 @@ private:
     los_type los;
     int range2, range_max2;
 };
+
+class targetter_thunderbolt : public targetter
+{
+public:
+    targetter_thunderbolt(const actor *act, int r, coord_def _prev);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    std::map<coord_def, aff_type> zapped;
+private:
+    coord_def prev;
+    int range2;
+};
+
 #endif
