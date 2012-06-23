@@ -1326,6 +1326,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.duration[DUR_GOURMAND] = 0;
 
         if (you.species != SP_MUMMY
+            && you.species != SP_VAMPIRE
             && player_mutation_level(MUT_HERBIVOROUS) < 3)
         {
             mpr("You feel a craving for the dungeon's cuisine.");

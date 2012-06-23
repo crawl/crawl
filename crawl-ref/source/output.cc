@@ -1729,7 +1729,10 @@ static std::vector<formatted_string> _get_overview_resistances(
     const char* pregourmand;
     const char* postgourmand;
 
-    if (player_effect_gourmand())
+    if (you.species != SP_MUMMY
+        && you.species != SP_VAMPIRE
+        && player_mutation_level(MUT_HERBIVOROUS) < 3
+        && player_effect_gourmand())
     {
         pregourmand = "Gourmand  : ";
         postgourmand = _itosym1(1);
