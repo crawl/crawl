@@ -799,6 +799,7 @@ end
 function DgnTriggerer:turn(triggerable, marker, ev)
   if not self.countdown then
     triggerable:do_trigger(self, marker, ev)
+    return
   end
 
   self.countdown = self.countdown - ev:ticks()
