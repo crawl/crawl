@@ -879,6 +879,8 @@ xxxxxxxxxDxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
 
+###############################################################################
+
 NAME: nicolae_entry_kraken_aquarium_a
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
 ORIENT: float
@@ -906,6 +908,8 @@ MAP
  .........
   ...>...
 ENDMAP
+
+###############################################################################
 
 NAME: nicolae_entry_kraken_aquarium_b
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen
@@ -935,6 +939,7 @@ MAP
 .........
 ENDMAP
 
+###############################################################################
 # Three runes > orb of zot > upstairs
 NAME:   nicolae_entry_your_instructions
 TAGS:   entry no_monster_gen no_trap_gen no_item_gen
@@ -973,4 +978,52 @@ x...c---A----n...........@
 x...cccccccccc...xxxxxxxxx
 x................x
 xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME: grunt_entry_hellfire
+TAGS: entry no_monster_gen no_trap_gen no_item_gen
+WEIGHT: 4
+ORIENT: float
+SHUFFLE: {(
+KPROP: HdefghijkLMNP- = no_rtele_into
+TILE:  n = dngn_transparent_wall_red
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+SUBVAULT: L : grunt_burning_victim
+SUBVAULT: M : grunt_burning_victim
+SUBVAULT: N : grunt_burning_victim
+SUBVAULT: P : grunt_burning_victim
+MARKER: H = lua:fog_machine { cloud_type="flame", pow_min=10, pow_max=10, \
+                              delay = 10, walk_dist = 3, size = 5, \
+                              excl_rad = 0 }
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xxxxxxx.......xxxxxxx
+xxxxx...........xxxxx
+xxxx......[......xxxx
+xxx.....nnnnn.....xxx
+xx....nnn---nnn....xx
+xx...nn--d-e--nn...xx
+x....n-f-----g-n....x
+x...nn--H-H-H--nn...x
+x...n-h-------i-n...x
+@...n---H-G-H---n...@
+x...n-j-------k-n...x
+x...nn--H-H-H--nn...x
+x....n-L-----M-n....x
+xx..{nn--N-P--nn(..xx
+xx....nnn---nnn....xx
+xxx.....nnnnn.....xxx
+xxxx.............xxxx
+xxxxx...........xxxxx
+xxxxxxx.......xxxxxxx
+xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
