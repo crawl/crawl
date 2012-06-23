@@ -770,7 +770,7 @@ KMONS:  8 = giant centipede
 KMONS:  9 = hound / jackal
 KMONS:  B = butterfly att:neutral
 KMONS:  ' = wandering mushroom
-: if you.absdepth() < 11 then         
+: if you.absdepth() < 11 then
 KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
 SUBST:  5 = 25
@@ -831,7 +831,7 @@ KMONS:  8 = giant centipede
 KMONS:  9 = hound / jackal band
 KMONS:  B = butterfly att:neutral
 KMONS:  ' = wandering mushroom
-: if you.absdepth() < 11 then         
+: if you.absdepth() < 11 then
 KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
 SUBST:  5 = 25
