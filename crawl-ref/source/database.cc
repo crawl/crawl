@@ -363,7 +363,9 @@ static datum _database_fetch(DBM *database, const std::string &key)
     dbKey.dptr = (DPTR_COERCE) key.c_str();
     dbKey.dsize = key.length();
 
-    result = dbm_fetch(database, dbKey);
+    // Don't use the database if called from "monster".
+    if (database)
+        result = dbm_fetch(database, dbKey);
 
     return result;
 }
@@ -598,9 +600,6 @@ static std::string _getWeightedString(TextDB &db, const std::string &key,
                                       const std::string &suffix,
                                       int fixed_weight = -1)
 {
-    if (!db.get()) // when called by Gretell's "monster"
-        return "";
-
     // We have to canonicalise the key (in case the user typed it
     // in and got the case wrong.)
     std::string canonical_key = key + suffix;
@@ -728,6 +727,9 @@ static std::string _query_database(TextDB &db, std::string key,
         result = _database_fetch(db.translation->get(), key);
     if (result.dsize <= 0)
         result = _database_fetch(db.get(), key);
+
+    if (result.dsize <= 0)
+        return ("");
 
     std::string str((const char *)result.dptr, result.dsize);
 
