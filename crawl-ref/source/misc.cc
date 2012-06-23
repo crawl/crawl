@@ -2100,6 +2100,7 @@ void revive()
     if (you.form)
         untransform();
     you.clear_beholders();
+    you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
