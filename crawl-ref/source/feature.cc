@@ -168,13 +168,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap = MF_WALL;
             break;
 
-        case DNGN_WAX_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = YELLOW;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
-
         case DNGN_GRANITE_STATUE:
             f.dchar   = DCHAR_STATUE;
             f.colour  = DARKGREY;

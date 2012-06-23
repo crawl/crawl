@@ -212,7 +212,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
         m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
 
-    if (bg_idx >= TILE_DNGN_WAX_WALL)
+    if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         add_dngn_tile(cell.flv.floor, x, y);
 
     // Draw blood beneath feature tiles.

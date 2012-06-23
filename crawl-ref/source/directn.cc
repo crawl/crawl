@@ -2984,8 +2984,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
            return ("idol of Beogh");
         else
            return ("orcish idol");
-    case DNGN_WAX_WALL:
-        return ("wall of solid wax");
     case DNGN_GRANITE_STATUE:
         return ("granite statue");
     case DNGN_LAVA:

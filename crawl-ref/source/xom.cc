@@ -2456,9 +2456,6 @@ static void _xom_zero_miscast()
     if (in_view[DNGN_GRANITE_STATUE])
         priority.push_back("The granite statue turns to stare at you.");
 
-    if (in_view[DNGN_WAX_WALL])
-        priority.push_back("The wax wall pulsates ominously.");
-
     if (in_view[DNGN_CLEAR_ROCK_WALL] || in_view[DNGN_CLEAR_STONE_WALL]
         || in_view[DNGN_CLEAR_PERMAROCK_WALL])
     {

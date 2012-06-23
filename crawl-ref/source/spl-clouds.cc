@@ -60,9 +60,6 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
     {
         switch (grd(where))
         {
-        case DNGN_WAX_WALL:
-            mpr("The flames aren't hot enough to melt wax walls!");
-            break;
         case DNGN_METAL_WALL:
             mpr("You can't ignite solid metal!");
             break;

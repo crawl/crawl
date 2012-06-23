@@ -461,12 +461,6 @@ For some reason, some dungeon walls, like this one, have been made of this
 polished crystal, imbued with arcane magics. They prevent its easy destruction,
 and make it reflect heat and cold.
 %%%%
-A wall of solid wax
-
-These walls are built by bees. Occasionally a dungeon architect will manipulate
-bees into building wax walls for aesthetic reasons. (Theirs, not the bees'.)
-They are susceptible to fire and will melt and burn, given sufficient heat.
-%%%%
 A wall of the weird stuff which makes up Pandemonium
 
 This wall is made from the weird stuff which makes up Pandemonium, but seems to
