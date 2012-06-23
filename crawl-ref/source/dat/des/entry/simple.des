@@ -508,7 +508,6 @@ ENDMAP
 NAME:    dpeg_chamrin_entry_tetris
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: bbba
 MAP
           x.@.x
          xx...xx
@@ -932,7 +931,7 @@ ENDMAP
 NAME:    dpeg_entry_rooms_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
-SHUFFLE: {[(, cvba
+SHUFFLE: {[(, cvb
 MAP
 xxxxxxxxx@.xxxxxx
 xvvvvvvvx..xbbbbx

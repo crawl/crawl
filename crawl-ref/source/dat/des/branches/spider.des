@@ -482,6 +482,9 @@ MONS:   red wasp / w:5 yellow wasp
 SUBST:  1 = %1
 SUBST:  a = .a
 SUBST:  A = a
+COLOUR: a = yellow
+TILE:   a = wall_hive
+SUBST:  a = x
 MAP
   ......
  ..aaaa..
@@ -501,6 +504,9 @@ MONS:   yellow wasp / weight:2 red wasp
 WEIGHT: 1
 SUBST:  1=1 .:15
 SUBST:  ?=a.
+COLOUR: a = yellow
+TILE:   a = wall_hive
+SUBST:  a = x
 MAP
      a?@?a
      a?.?a

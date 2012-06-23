@@ -1927,7 +1927,9 @@ TILE:   x = wall_brick_brown
 SUBST:  y = ., q = .
 SUBST:  c = x
 MONS:   plant, killer bee, queen bee
-
+COLOUR: a = yellow
+TILE:   a = wall_hive
+SUBST:  a = x
 MAP
         ttttttt..t    tt.
       .ttt.t.tt...t  ttt..
