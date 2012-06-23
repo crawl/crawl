@@ -101,7 +101,7 @@ const Branch branches[NUM_BRANCHES] = {
       DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
       "Spider Nest", "the Spider Nest", "Spider",
       NULL,
-      true, BROWN, BROWN,
+      true, BROWN, YELLOW,
       mons_spidernest_rare, mons_spidernest_level,
       'N', true, 0 },
 
