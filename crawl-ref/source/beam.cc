@@ -857,76 +857,36 @@ void bolt::digging_wall_effect()
 
 void bolt::fire_wall_effect()
 {
-    dungeon_feature_type feat;
-    // Fire only affects wax walls and trees.
-    if ((feat = grd(pos())) != DNGN_WAX_WALL && !feat_is_tree(feat)
-        || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto")
+    dungeon_feature_type feat = grd(pos());
+    // Fire only affects trees.
+    if (!feat_is_tree(feat)
+        || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto"
+        || !is_superhot())
     {
         finish_beam();
         return;
     }
 
-    if (feat == DNGN_WAX_WALL)
-    {
-        if (!is_superhot())
-        {
-            // No actual effect.
-            if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
-            {
-                if (you.see_cell(pos()))
-                {
-                    emit_message(MSGCH_PLAIN,
-                                 "The wax appears to soften slightly.");
-                }
-                else if (you.can_smell())
-                    emit_message(MSGCH_PLAIN, "You smell warm wax.");
-            }
-        }
-        else
-        {
-            // Destroy the wall.
-            nuke_wall(pos());
-            if (you.see_cell(pos()))
-                emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
-            else if (you.can_smell())
-                emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            ASSERT(agent()); // if this is wrong, please preserve friendliness of kc
-            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, agent());
-            obvious_effect = true;
-        }
-    }
-    else
-    {
-        if (is_superhot())
-        {
-            // Destroy the wall.
-            nuke_wall(pos());
-            if (you.see_cell(pos()))
-                emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
-            else if (you.can_smell())
-                emit_message(MSGCH_PLAIN, "You smell burning wood.");
-            if (whose_kill() == KC_YOU)
-                did_god_conduct(DID_KILL_PLANT, 1, effect_known);
-            else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
-            ASSERT(agent());
-            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
-            obvious_effect = true;
-        }
-    }
+    // Destroy the wall.
+    nuke_wall(pos());
+    if (you.see_cell(pos()))
+        emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
+    else if (you.can_smell())
+        emit_message(MSGCH_PLAIN, "You smell burning wood.");
+    if (whose_kill() == KC_YOU)
+        did_god_conduct(DID_KILL_PLANT, 1, effect_known);
+    else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
+        did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
+    ASSERT(agent());
+    place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
+    obvious_effect = true;
+
     finish_beam();
 }
 
 void bolt::elec_wall_effect()
 {
-    const dungeon_feature_type feat = grd(pos());
-    if (feat_is_tree(feat)
-        && env.markers.property_at(pos(), MAT_ANY, "veto_fire") != "veto")
-    {
-        fire_wall_effect();
-        return;
-    }
-    finish_beam();
+    fire_wall_effect();
 }
 
 static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
@@ -940,7 +900,6 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     {
     case DNGN_ROCK_WALL:
     case DNGN_SLIMY_WALL:
-    case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
@@ -1022,7 +981,6 @@ void bolt::nuke_wall_effect()
     {
     case DNGN_ROCK_WALL:
     case DNGN_SLIMY_WALL:
-    case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRATE:
     case DNGN_GRANITE_STATUE:
@@ -2635,7 +2593,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return (B_TRUE);
     }
 
-    if (is_fiery() && (wall == DNGN_WAX_WALL || feat_is_tree(wall)))
+    if (is_fiery() && feat_is_tree(wall))
         return (is_superhot() ? B_TRUE : is_beam ? B_MAYBE : B_FALSE);
 
     if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
@@ -2646,7 +2604,6 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     {
         if (wall == DNGN_ROCK_WALL
             || wall == DNGN_SLIMY_WALL
-            || wall == DNGN_WAX_WALL
             || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_GRATE
             || wall == DNGN_GRANITE_STATUE

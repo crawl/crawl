@@ -189,8 +189,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_GREEN_CRYSTAL_WALL;
     case DNGN_ORCISH_IDOL:
         return TILE_DNGN_ORCISH_IDOL;
-    case DNGN_WAX_WALL:
-        return TILE_DNGN_WAX_WALL;
     case DNGN_TREE:
         return TILE_DNGN_TREE;
     case DNGN_SWAMP_TREE:

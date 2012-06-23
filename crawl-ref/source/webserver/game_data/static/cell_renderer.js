@@ -401,7 +401,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (cell.swtree && bg_idx > dngn.DNGN_UNSEEN)
                 this.draw_dngn(dngn.DNGN_SHALLOW_WATER, x, y);
-            else if (bg_idx >= dngn.DNGN_WAX_WALL)
+            else if (bg_idx >= dngn.DNGN_FIRST_TRANSPARENT)
                 this.draw_dngn(cell.flv.f, x, y); // f = floor
 
             // Draw blood beneath feature tiles.

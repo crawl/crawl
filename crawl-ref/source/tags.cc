@@ -2741,6 +2741,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 33
+    if (feature == DNGN_OLD_WAX_WALL)
+        feature = DNGN_ROCK_WALL;
+#endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
@@ -3118,6 +3122,10 @@ static void tag_read_level(reader &th)
         {
             grd[i][j] = static_cast<dungeon_feature_type>(unmarshallUByte(th));
             ASSERT(grd[i][j] < NUM_FEATURES);
+#if TAG_MAJOR_VERSION == 33
+            if (grd[i][j] == DNGN_OLD_WAX_WALL)
+                grd[i][j] = DNGN_ROCK_WALL;
+#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
