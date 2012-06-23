@@ -15,11 +15,12 @@ msc = $danger:clumsily bash
 msc = $danger:goes berserk!
 msc = $danger:Forgetting.* will destroy the book
 msc = $danger:The blast of calcifying dust hits you!
-msc = $danger:You are engulfed in calcifying dust
+msc = $danger:you are engulfed in calcifying dust
 msc = $danger:is moving more slowly
 msc = $danger:It .* you
-msc = $danger:You block its attack
+msc = $danger:you block its attack
 msc = $danger:constricts you
+msc = $danger:you convulse
 
 msc = $item_dmg:acid corrodes
 msc = $item_dmg:catch(es)? fire
