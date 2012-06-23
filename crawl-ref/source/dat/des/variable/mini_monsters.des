@@ -745,7 +745,7 @@ ITEM:   any potion
 : if crawl.one_chance_in(8) then
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:4 title:Nature \
+        randbook numspells:5 title:Nature \
         spells:beastly_appendage|summon_small_mammals|sticks_to_snakes|call_canine_familiar|spider_form
 : else
 ITEM:   randbook numspells:5 title:Nature \
@@ -807,7 +807,7 @@ ITEM:   any potion
 : if crawl.one_chance_in(8) then
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:4 title:Nature \
+        randbook numspells:5 title:Nature \
         spells:beastly_appendage|summon_small_mammals|sticks_to_snakes|call_canine_familiar|spider_form
 : else
 ITEM:   randbook numspells:5 title:Nature \
