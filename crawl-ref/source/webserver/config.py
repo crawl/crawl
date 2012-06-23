@@ -89,7 +89,7 @@ max_connections = 100
 # Script to initialize a user, e.g. make sure the paths
 # and the rc file exist. This is not done by the server
 # at the moment.
-init_player_program = "/bin/echo"
+init_player_program = "./util/webtiles-init-player.sh"
 
 ssl_options = None # No SSL
 #ssl_options = {

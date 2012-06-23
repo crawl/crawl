@@ -26,12 +26,6 @@ Tornado, then run "python webserver/server.py" from the source
 directory. Then open localhost:8080 with a browser, and you should see
 the lobby.
 
-To actually get Crawl to start, you will still need to make sure that
-the paths for rc files, game sockets and recordings exist. To create
-the default paths, do (in the source directory) "mkdir rcs rcs/running
-rcs/ttyrecs".
-
-
 3. Running a real server
 ------------------------
 The server can be configured by modifying the file config.py. Most of
@@ -43,4 +37,6 @@ in the logging_config.
 You will also need a script that initializes user-specific data, like
 copying a default rc file if the user doesn't yet have one --
 currently this is not done by the server. You can have the script be
-run on every login by setting init_player_program.
+run on every login by setting init_player_program. There is an example
+script in util/webtiles-init-player.sh, but you will probably want to
+customize it.
