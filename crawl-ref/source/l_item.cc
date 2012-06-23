@@ -53,7 +53,7 @@ void clua_push_item(lua_State *ls, item_def *item)
 
 // Push a (wrapped) temporary item_def.  A copy of the item will be allocated,
 // then deleted when the wrapper is GCed.
-void clua_push_item_temp(lua_State *ls, const item_def &item)
+static void _clua_push_item_temp(lua_State *ls, const item_def &item)
 {
     item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
     iw->item = new item_def(item);
@@ -1019,7 +1019,7 @@ static int l_item_get_items_at(lua_State *ls)
     for (std::vector<item_def>::const_iterator i = items.begin();
          i != items.end(); ++i)
     {
-        clua_push_item_temp(ls, *i);
+        _clua_push_item_temp(ls, *i);
         lua_rawseti(ls, -2, ++index);
     }
 

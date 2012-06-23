@@ -96,6 +96,10 @@ static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
 static void _place_specific_stair(dungeon_feature_type stair,
                                   const std::string &tag = "");
+static void _place_spec_shop(const coord_def& where,
+                             shop_spec* spec, bool representative = false);
+static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
+                                 int charges = 0);
 static void _place_branch_entrances();
 static void _place_extra_vaults();
 static void _place_chance_vaults();
@@ -4553,7 +4557,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
         if (spec && spec->tr_type == TRAP_INDEPTH)
             place_specific_trap(where, random_trap_for_place());
         else if (spec)
-            place_specific_trap(where, spec);
+            _place_specific_trap(where, spec);
 
         // f.feat == 1 means trap is generated known.
         if (f.feat == 1)
@@ -4564,7 +4568,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
     else if (f.shop.get())
-        place_spec_shop(where, f.shop.get());
+        _place_spec_shop(where, f.shop.get());
     else
         grd(where) = DNGN_FLOOR;
 
@@ -5019,11 +5023,11 @@ void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative)
 {
     shop_spec spec(static_cast<shop_type>(force_s_type));
-    place_spec_shop(where, &spec, representative);
+    _place_spec_shop(where, &spec, representative);
 }
 
-void place_spec_shop(const coord_def& where,
-                     shop_spec* spec, bool representative)
+static void _place_spec_shop(const coord_def& where,
+                             shop_spec* spec, bool representative)
 {
     int level_number = env.absdepth0;
     int force_s_type = static_cast<int>(spec->sh_type);
@@ -5333,10 +5337,10 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type, int charge
 {
     trap_spec spec(spec_type);
 
-    return place_specific_trap(where, &spec, charges);
+    return _place_specific_trap(where, &spec, charges);
 }
 
-bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges)
+static bool _place_specific_trap(const coord_def& where, trap_spec* spec, int charges)
 {
     trap_type spec_type = spec->tr_type;
 

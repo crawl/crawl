@@ -55,7 +55,6 @@ spell_type spell_by_name(std::string name, bool partial_match = false);
 spschool_flag_type school_by_name(std::string name);
 
 int get_spell_slot_by_letter(char letter);
-int get_spell_slot(spell_type spell);
 int get_spell_letter(spell_type spell);
 spell_type get_spell_by_letter(char letter);
 
@@ -69,7 +68,6 @@ int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool player_spell = true);
 int spell_noise(spell_type spell);
-int spell_noise(unsigned int disciplines, int level);
 
 const char *get_spell_target_prompt(spell_type which_spell);
 

@@ -421,15 +421,6 @@ void spawn_random_monsters()
     viewwindow();
 }
 
-// Caller must use !invalid_monster_type to check if the return value
-// is a real monster.
-monster_type pick_random_monster(const level_id &place,
-                                 bool *chose_ood_monster)
-{
-    int level = place.absdepth();
-    return pick_random_monster(place, level, level, chose_ood_monster);
-}
-
 static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
@@ -455,10 +446,10 @@ static bool _is_random_monster(int mt)
 
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
-monster_type pick_random_monster(const level_id &place, int power,
+static monster_type _pick_random_monster(const level_id &place, int power,
                                  int &lev_mons,
                                  bool *chose_ood_monster,
-                                 bool force_mobile)
+                                 bool force_mobile = false)
 {
     bool ood_dummy = false;
     bool *isood = chose_ood_monster? chose_ood_monster : &ood_dummy;
@@ -572,6 +563,15 @@ monster_type pick_random_monster(const level_id &place, int power,
              *isood? "YES" : "no");
 
     return (mon_type);
+}
+
+// Caller must use !invalid_monster_type to check if the return value
+// is a real monster.
+monster_type pick_random_monster(const level_id &place,
+                                 bool *chose_ood_monster)
+{
+    int level = place.absdepth();
+    return _pick_random_monster(place, level, level, chose_ood_monster);
 }
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap)
@@ -736,7 +736,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         {
             const int target_level = *lev_mons;
             // Now pick a monster of the given branch and level.
-            mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+            mon_type = _pick_random_monster(place, *lev_mons, *lev_mons,
                                        chose_ood_monster,
                                        mon_type == RANDOM_MOBILE_MONSTER);
 
@@ -758,7 +758,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             // Reset target level.
             *lev_mons = original_level;
 
-            mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+            mon_type = _pick_random_monster(place, *lev_mons, *lev_mons,
                                        chose_ood_monster,
                                        mon_type == RANDOM_MOBILE_MONSTER);
         }
@@ -788,7 +788,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
         zombie_class_size(zombie_monster) : Z_NOZOMBIE;
 
     do
-        chosen = pick_random_monster(place, lev, lev, NULL);
+        chosen = _pick_random_monster(place, lev, lev, NULL);
     while (!invalid_monster_type(chosen)
            && wanted_zombie_size != Z_NOZOMBIE
            && !mons_class_flag(chosen, M_NO_POLY_TO)

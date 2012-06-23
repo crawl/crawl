@@ -233,11 +233,8 @@ void run_map_epilogues();
 
 struct trap_spec;
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
-bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges = 0);
 
 struct shop_spec;
-void place_spec_shop(const coord_def& where,
-                     shop_spec* spec, bool representative = false);
 void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,

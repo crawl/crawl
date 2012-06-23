@@ -29,7 +29,6 @@ bool item_ident(const item_def &item, iflags_t flags);
 void set_ident_flags(item_def &item, iflags_t flags);
 void unset_ident_flags(item_def &item, iflags_t flags);
 bool fully_identified(const item_def &item);
-iflags_t full_ident_mask(const item_def& item);
 
 // racial item and item descriptions:
 void set_equip_race(item_def &item, iflags_t flags);
@@ -121,7 +120,6 @@ void maybe_change_train(const item_def &item, bool start);
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item);
 missile_type fires_ammo_type(const item_def &item);
-missile_type fires_ammo_type(weapon_type wtype);
 const char *ammo_name(missile_type ammo);
 const char *ammo_name(const item_def &bow);
 bool has_launcher(const item_def &ammo);
@@ -183,7 +181,6 @@ equipment_type get_item_slot(const item_def& item);
 
 std::string item_base_name(const item_def &item);
 std::string item_base_name(object_class_type type, int sub_type);
-std::string food_type_name(const item_def &item);
 std::string food_type_name(int sub_type);
 const char* weapon_base_name(uint8_t subtype);
 

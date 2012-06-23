@@ -25,7 +25,7 @@
 #include "env.h"
 #include "feature.h"
 #include "goditem.h"
-#include "item_use.h" // for safe_to_remove_or_wear()
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"

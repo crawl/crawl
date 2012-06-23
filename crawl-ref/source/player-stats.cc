@@ -530,42 +530,6 @@ bool lose_stat(stat_type which_stat, int stat_loss,
     return lose_stat(which_stat, stat_loss, force, name, vis);
 }
 
-bool lose_stat(stat_type which_stat, int stat_loss,
-               const item_def &cause, bool removed, bool force)
-{
-    std::string name = cause.name(DESC_THE, false, true, false, false,
-                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    std::string verb;
-
-    switch (cause.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (removed)
-            verb = "removing";
-        else
-            verb = "wearing";
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-    case OBJ_RODS:
-        if (removed)
-            verb = "unwielding";
-        else
-            verb = "wielding";
-        break;
-
-    case OBJ_WANDS:   verb = "zapping";  break;
-    case OBJ_FOOD:    verb = "eating";   break;
-    case OBJ_SCROLLS: verb = "reading";  break;
-    case OBJ_POTIONS: verb = "drinking"; break;
-    default:          verb = "using";
-    }
-
-    return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
-}
-
 static stat_type _random_lost_stat()
 {
     stat_type choice = NUM_STATS;

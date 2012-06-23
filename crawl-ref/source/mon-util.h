@@ -178,15 +178,12 @@ bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 flight_type mons_class_flies(monster_type mc);
 flight_type mons_flies(const monster* mon, bool temp = true);
 
-bool mons_class_flattens_trees(monster_type mc);
 bool mons_flattens_trees(const monster* mon);
 int mons_class_res_wind(monster_type mc);
-bool mons_class_wall_shielded(monster_type mc);
 bool mons_wall_shielded(const monster* mon);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster* mon);
-mon_itemeat_type mons_class_itemeat(monster_type mc);
 mon_itemeat_type mons_itemeat(const monster* mon);
 
 bool mons_sense_invis(const monster* mon);
@@ -238,7 +235,6 @@ mon_intel_type mons_intel(const monster* mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
-habitat_type mons_class_habitat(monster_type mc, bool real_amphibious = false);
 habitat_type mons_habitat(const monster* mon, bool real_amphibious = false);
 habitat_type mons_class_primary_habitat(monster_type mc);
 habitat_type mons_primary_habitat(const monster* mon);
@@ -280,7 +276,6 @@ ucs_t mons_char(monster_type mc);
 char mons_base_char(monster_type mc);
 
 int mons_class_colour(monster_type mc);
-int mons_colour(const monster* mon);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
@@ -379,7 +374,6 @@ bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monster* mon);
 std::string ugly_thing_colour_name(colour_t colour);
-std::string ugly_thing_colour_name(const monster* mon);
 colour_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
 colour_t random_monster_colour();
@@ -388,7 +382,6 @@ std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p);
-monster_type random_monster_at_grid(dungeon_feature_type grid);
 
 void         init_mon_name_cache();
 monster_type get_monster_by_name(std::string name, bool exact = false);
@@ -399,8 +392,6 @@ std::string do_mon_str_replacements(const std::string &msg,
 mon_body_shape get_mon_shape(const monster* mon);
 mon_body_shape get_mon_shape(const monster_type mc);
 
-std::string get_mon_shape_str(const monster* mon);
-std::string get_mon_shape_str(const monster_type mc);
 std::string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
