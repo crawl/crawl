@@ -1068,7 +1068,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
     case ENCH_DAZED:
-    case ENCH_LIQUEFYING:
     case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
     case ENCH_INNER_FLAME:
@@ -1089,6 +1088,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SILENCE:
+    case ENCH_LIQUEFYING:
         decay_enchantment(me);
         invalidate_agrid();
         break;

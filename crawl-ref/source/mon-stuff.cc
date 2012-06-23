@@ -1495,6 +1495,9 @@ int monster_die(monster* mons, killer_type killer,
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
 
+    // ... and liquefiers.
+    mons->del_ench(ENCH_LIQUEFYING);
+
     crawl_state.inc_mon_acting(mons);
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
