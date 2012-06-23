@@ -1098,7 +1098,7 @@ NAME:    xom_redecorated
 TAGS:    temple_overflow_xom uniq_altar_xom
 SUBST:   x = ccbbbv
 NSUBST:  . = 2:T / .
-SUBST:   . = lWwtma_~......
+SUBST:   . = lWwtm_~......
 KFEAT:   _ = altar_xom
 NSUBST:  T = 3:T / .
 KFEAT:   T = teleport trap

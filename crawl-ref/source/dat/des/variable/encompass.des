@@ -262,6 +262,9 @@ SUBST:   ; = 9 0
 SUBST:   !=%$, &=*%
 SUBST:   _ : _+ , _ = +=
 SUBST:   V = *
+COLOUR:  a = yellow
+TILE:    a = wall_hive
+SUBST:   a = x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.......xccccccxxxxxxx.........................................w"..xxx

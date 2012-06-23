@@ -836,7 +836,7 @@ NAME:    dpeg_entry_rooms_b
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(
-SHUFFLE: cvba
+SHUFFLE: cvb
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
 MAP
@@ -856,7 +856,7 @@ NAME:    dpeg_entry_rooms_c
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[
-SHUFFLE: cvba
+SHUFFLE: cvb
 MAP
 xxxxxxxxxxxx
 xvcvcvcvcvcx
@@ -2080,7 +2080,7 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: DX'/CY"
 SUBST:   D = c, XC" = x, 'Y = .
-SHUFFLE: cvba
+SHUFFLE: cvb
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
 MAP

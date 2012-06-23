@@ -47,6 +47,9 @@ CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
 ITEM:   w:2 honeycomb / w:1 royal jelly
+COLOUR: a = yellow
+TILE:   a = wall_hive
+SUBST:  a = x
 MAP
 ............
 ....aaaa....

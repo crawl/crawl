@@ -2665,7 +2665,7 @@ ENDMAP
 NAME:    minivault_11
 DEPTH:   D, Elf, Vaults, Crypt, Lair
 TAGS:    extra luniq_mini abyss ruin_abyss ruin_lair
-SHUFFLE: bcva
+SHUFFLE: bcv
 MAP
 ............
 .+xxxxxxxx+.

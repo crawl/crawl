@@ -889,7 +889,7 @@ COLOUR:  ^~ = warp
 FTILE:   ^ = floor_rough_magenta
 FTILE:   ~ = floor_rough_lightmagenta
 NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
-SUBST:   d = tGmcc, c = cccccbbvva, M = m`, ` = `:195 ':3 ":2
+SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
 SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
 SHUFFLE: 56, 78, ^~, cm / xn
 MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \

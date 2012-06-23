@@ -4476,12 +4476,16 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
+#if TAG_MAJOR_VERSION == 33
+    // not really related to save compat
+    if (glyph == 'a')
+        die("map %s tried to place a wax wall", place ? place->map.name.c_str() : "[NULL]");
+#endif
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
             (glyph == 'v') ? DNGN_METAL_WALL :
             (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-            (glyph == 'a') ? DNGN_WAX_WALL :
             (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
             (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
             (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
