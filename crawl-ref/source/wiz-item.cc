@@ -91,55 +91,29 @@ void wizard_create_spec_object_by_name()
 void wizard_create_spec_object()
 {
     char           specs[80];
-    int            keyin;
+    ucs_t          keyin;
     monster_type   mon;
 
     object_class_type class_wanted   = OBJ_UNASSIGNED;
 
     int            thing_created;
 
-    while (class_wanted == OBJ_UNASSIGNED)
+    while (class_wanted == OBJ_UNASSIGNED || class_wanted == NUM_OBJECT_CLASSES)
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
             MSGCH_PROMPT);
-        mpr("= - jewellery   ! - potions   : - books   | - staves   0  - The Orb",
+        mpr("= - jewellery   ! - potions   : - books   | - staves   \\  - rods",
             MSGCH_PROMPT);
-        mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit",
+        mpr("} - miscellany  X - corpses   % - food    $ - gold     0  - the Orb",
             MSGCH_PROMPT);
+        mpr("ESC - exit", MSGCH_PROMPT);
 
         msgwin_prompt("What class of item? ");
 
-        keyin = toupper(get_ch());
+        keyin = towupper(get_ch());
 
-        if (keyin == ')')
-            class_wanted = OBJ_WEAPONS;
-        else if (keyin == '(')
-            class_wanted = OBJ_MISSILES;
-        else if (keyin == '[' || keyin == ']')
-            class_wanted = OBJ_ARMOUR;
-        else if (keyin == '/' || keyin == '\\')
-            class_wanted = OBJ_WANDS;
-        else if (keyin == '?')
-            class_wanted = OBJ_SCROLLS;
-        else if (keyin == '=' || keyin == '"')
-            class_wanted = OBJ_JEWELLERY;
-        else if (keyin == '!')
-            class_wanted = OBJ_POTIONS;
-        else if (keyin == ':' || keyin == '+')
-            class_wanted = OBJ_BOOKS;
-        else if (keyin == '|')
-            class_wanted = OBJ_STAVES; // TODO: rods
-        else if (keyin == '0' || keyin == 'O')
-            class_wanted = OBJ_ORBS;
-        else if (keyin == '}' || keyin == '{')
-            class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'X' || keyin == '&')
-            class_wanted = OBJ_CORPSES;
-        else if (keyin == '%')
-            class_wanted = OBJ_FOOD;
-        else if (keyin == '$')
-            class_wanted = OBJ_GOLD;
-        else if (key_is_escape(keyin) || keyin == ' '
+        class_wanted = item_class_by_sym(keyin);
+        if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
         {
             msgwin_reply("");
