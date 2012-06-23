@@ -1936,7 +1936,9 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.hit               = 7 + pow / 25;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
+#ifdef USE_TILE
     beam.tile_beam = -1;
+#endif
     beam.draw_delay = 0;
 
     for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
