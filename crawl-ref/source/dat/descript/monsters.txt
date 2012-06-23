@@ -2851,6 +2851,12 @@ citrus tree
 
 <apple tree>
 %%%%
+chilling statue
+
+This grotesque statue, carved from brilliant blue ice, gives a fell chill to
+its surroundings. It's as though it's actively absorbing the heat from its
+environment.
+%%%%
 # In the first umpteen pages of googling, the only use of "Iskenderun" for a
 # living being is the first Turkish Van cat brought to Britain. With
 # Crawl's felids being sentient, it'd be hard to not make a connection with
