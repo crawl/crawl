@@ -5866,7 +5866,7 @@ VISUAL:Tears glisten in @possessive@ eyes as @subjective@ regards a sphere of st
 ################## Crystal golem ###########################
 crystal golem
 
-VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light. @Possessive@ facets promise deadly secrets.
+VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light.
 %%%%
 ################## Death cob ###############################
 death cob
