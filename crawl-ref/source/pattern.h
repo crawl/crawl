@@ -21,11 +21,6 @@ void *compile_pattern(const char *pattern, bool ignore_case = false);
 void free_compiled_pattern(void *cp);
 bool pattern_match(void *compiled_pattern, const char *text, int length);
 
-// Globs are always available.
-void *compile_glob_pattern(const char *pattern, bool ignore_case = false);
-void free_compiled_glob_pattern(void *cp);
-bool glob_pattern_match(void *compiled_pattern, const char *text, int length);
-
 typedef void *(*p_compile)(const char *pattern, bool ignore_case);
 typedef void (*p_free)(void *cp);
 typedef bool (*p_match)(void *compiled_pattern, const char *text, int length);
@@ -147,10 +142,4 @@ private:
 typedef
 basic_text_pattern<compile_pattern,
                    free_compiled_pattern, pattern_match> text_pattern;
-
-typedef
-basic_text_pattern<compile_glob_pattern,
-                   free_compiled_glob_pattern,
-                   glob_pattern_match> glob_pattern;
-
 #endif
