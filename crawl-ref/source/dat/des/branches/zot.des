@@ -1017,6 +1017,7 @@ ENDMAP
 
 NAME:   orb_original
 TAGS:   orb_chamber
+WEIGHT: 25
 KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
@@ -1279,6 +1280,39 @@ cX1..XX.XX..1Xc
 cX1..XX.XX..1Xc
 cXX..1...1..XXc
   XX...X...XX
+   XXXXXXXXX
+ENDMAP
+
+NAME:   orb_grunt_hallway
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: c = magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   ccXXXXXcc
+  ccXX.X.XXcc
+ccccX1!!!1XcXXc
+ccccXX!Z!XXccXc
+ cccX1!!!1XcXX
+  ccXX...XXcX
+  XXXX...XXXX
+ XXXXXG.GXXXXX
+ XX.XX...XX.XX
+ X1..X.1.X..1X
+ ....XG.GX....
+ X1..X...X..1X
+ XX..X...X..XX
+ XX..XG.GX..XX
+  X.1X...X1.X
+  X..X.1.X..X
+ cX..XG.GX..Xc
+ccX..X...X..Xcc
+ccX.........Xcc
+  XX.......XX
    XXXXXXXXX
 ENDMAP
 
