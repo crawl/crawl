@@ -459,6 +459,10 @@ KFEAT: # = closed_door
 :           door_description_suffix=" to the Hive",
 :           })
 MARKER: # = lua:restrict_door()
+COLOUR: a = yellow
+TILE:   a = wall_hive
+SUBST:  a = x
+
 
 MAP
 aaaaaaaaa
