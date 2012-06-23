@@ -35,6 +35,8 @@
 #include "shopping.h"
 #include "xom.h"
 
+static iflags_t _full_ident_mask(const item_def& item);
+
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
@@ -464,13 +466,13 @@ void init_properties()
 //
 bool item_known_cursed(const item_def &item)
 {
-    return (full_ident_mask(item) & ISFLAG_KNOW_CURSE
+    return (_full_ident_mask(item) & ISFLAG_KNOW_CURSE
             && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed());
 }
 
 static bool _item_known_uncursed(const item_def &item)
 {
-    return (!(full_ident_mask(item) & ISFLAG_KNOW_CURSE)
+    return (!(_full_ident_mask(item) & ISFLAG_KNOW_CURSE)
             || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed()));
 }
 
@@ -713,7 +715,7 @@ void unset_ident_flags(item_def &item, iflags_t flags)
 
 // Returns the mask of interesting identify bits for this item
 // (e.g., scrolls don't have know-cursedness).
-iflags_t full_ident_mask(const item_def& item)
+static iflags_t _full_ident_mask(const item_def& item)
 {
     iflags_t flagset = ISFLAG_IDENT_MASK;
     switch (item.base_type)
@@ -762,7 +764,7 @@ iflags_t full_ident_mask(const item_def& item)
 
 bool fully_identified(const item_def& item)
 {
-    return item_ident(item, full_ident_mask(item));
+    return item_ident(item, _full_ident_mask(item));
 }
 
 //
@@ -1983,15 +1985,6 @@ missile_type fires_ammo_type(const item_def &item)
     return (Weapon_prop[Weapon_index[item.sub_type]].ammo);
 }
 
-missile_type fires_ammo_type(weapon_type wtype)
-{
-    item_def wpn;
-    wpn.base_type = OBJ_WEAPONS;
-    wpn.sub_type = wtype;
-
-    return (fires_ammo_type(wpn));
-}
-
 bool is_range_weapon(const item_def &item)
 {
     return (fires_ammo_type(item) != MI_NONE);
@@ -2090,14 +2083,6 @@ int reach_range(reach_type rt)
     default:
         die("invalid reaching type: %d", rt);
     }
-}
-
-//
-// Staff/rod functions:
-//
-bool item_is_staff(const item_def &item)
-{
-    return (item.base_type == OBJ_STAVES);
 }
 
 //
@@ -2946,13 +2931,6 @@ std::string item_base_name(object_class_type type, int sub_type)
     default:
         return "";
     }
-}
-
-std::string food_type_name(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_FOOD);
-
-    return food_type_name(item.sub_type);
 }
 
 std::string food_type_name(int sub_type)

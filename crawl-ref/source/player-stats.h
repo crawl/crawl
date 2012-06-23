@@ -35,8 +35,6 @@ bool lose_stat(stat_type which_stat, int stat_loss,
                bool see_source = true);
 bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force = false);
-bool lose_stat(stat_type which_stat, int stat_loss,
-               const item_def &cause, bool removed, bool force = false);
 
 bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery = false);

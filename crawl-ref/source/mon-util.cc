@@ -138,15 +138,10 @@ static void _initialise_randmons()
 
 monster_type random_monster_at_grid(const coord_def& p)
 {
-    return (random_monster_at_grid(grd(p)));
-}
-
-monster_type random_monster_at_grid(dungeon_feature_type grid)
-{
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = _grid2habitat(grid);
+    const habitat_type ht = _grid2habitat(grd(p));
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
 
     ASSERT(!valid_mons.empty());
@@ -1135,7 +1130,7 @@ mon_itemuse_type mons_itemuse(const monster* mon)
     return (mons_class_itemuse(mon->type));
 }
 
-mon_itemeat_type mons_class_itemeat(monster_type mc)
+static mon_itemeat_type _mons_class_itemeat(monster_type mc)
 {
     ASSERT(smc);
     return (smc->gmon_eat);
@@ -1144,23 +1139,18 @@ mon_itemeat_type mons_class_itemeat(monster_type mc)
 mon_itemeat_type mons_itemeat(const monster* mon)
 {
     if (mons_enslaved_soul(mon))
-        return (mons_class_itemeat(mons_zombie_base(mon)));
+        return _mons_class_itemeat(mons_zombie_base(mon));
 
     if (mon->has_ench(ENCH_EAT_ITEMS))
         return (MONEAT_ITEMS);
 
-    return (mons_class_itemeat(mon->type));
+    return _mons_class_itemeat(mon->type);
 }
 
 int mons_class_colour(monster_type mc)
 {
     ASSERT(smc);
     return (monster_symbols[mc].colour);
-}
-
-int mons_colour(const monster* mon)
-{
-    return (mon->colour);
 }
 
 bool mons_class_can_regenerate(monster_type mc)
@@ -1540,14 +1530,9 @@ flight_type mons_flies(const monster* mon, bool temp)
     return (ret);
 }
 
-bool mons_class_flattens_trees(monster_type mc)
-{
-    return (mc == MONS_LERNAEAN_HYDRA);
-}
-
 bool mons_flattens_trees(const monster* mon)
 {
-    return (mons_class_flattens_trees(mons_base_type(mon)));
+    return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
 int mons_class_res_wind(monster_type mc)
@@ -1565,16 +1550,6 @@ int mons_class_res_wind(monster_type mc)
     // Insubstantial wisps are a toss-up between being immune and immediately
     // fatally dispersing.
     return 0;
-}
-
-bool mons_class_wall_shielded(monster_type mc)
-{
-    return (mons_class_habitat(mc) == HT_ROCK);
-}
-
-bool mons_wall_shielded(const monster* mon)
-{
-    return (mons_class_wall_shielded(mons_base_type(mon)));
 }
 
 // This nice routine we keep in exactly the way it was.
@@ -2240,14 +2215,6 @@ std::string ugly_thing_colour_name(colour_t colour)
     return (ugly_colour_names[colour_offset]);
 }
 
-std::string ugly_thing_colour_name(const monster* mon)
-{
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        return (ugly_thing_colour_name(mon->colour));
-    else
-        return ("buggy");
-}
-
 static const colour_t ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
@@ -2464,7 +2431,8 @@ mon_intel_type mons_intel(const monster* mon)
     return (mons_class_intel(mon->type));
 }
 
-habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
+static habitat_type _mons_class_habitat(monster_type mc,
+                                        bool real_amphibious = false)
 {
     const monsterentry *me = get_monster_data(mc);
     habitat_type ht = (me ? me->habitat
@@ -2482,12 +2450,12 @@ habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
 
 habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return (mons_class_habitat(mons_base_type(mon), real_amphibious));
+    return (_mons_class_habitat(mons_base_type(mon), real_amphibious));
 }
 
 habitat_type mons_class_primary_habitat(monster_type mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
+    habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_LAND;
     return (ht);
@@ -2500,7 +2468,7 @@ habitat_type mons_primary_habitat(const monster* mon)
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
+    habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
     else if (ht == HT_ROCK)
@@ -2511,6 +2479,11 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
 habitat_type mons_secondary_habitat(const monster* mon)
 {
     return (mons_class_secondary_habitat(mons_base_type(mon)));
+}
+
+bool mons_wall_shielded(const monster* mon)
+{
+    return (_mons_class_habitat(mons_base_type(mon)) == HT_ROCK);
 }
 
 bool intelligent_ally(const monster* mon)
@@ -3283,7 +3256,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
     if (grid == DNGN_MALIGN_GATEWAY)
         return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 
-    if (mons_class_wall_shielded(mc))
+    if (_mons_class_habitat(mc) == HT_ROCK)
     {
         // Permanent walls can't be passed through.
         return (!feat_is_solid(grid)
@@ -4093,16 +4066,6 @@ mon_body_shape get_mon_shape(const monster_type mc)
     }
 
     return (MON_SHAPE_MISC);
-}
-
-std::string get_mon_shape_str(const monster* mon)
-{
-    return get_mon_shape_str(get_mon_shape(mon));
-}
-
-std::string get_mon_shape_str(const monster_type mc)
-{
-    return get_mon_shape_str(get_mon_shape(mc));
 }
 
 std::string get_mon_shape_str(const mon_body_shape shape)

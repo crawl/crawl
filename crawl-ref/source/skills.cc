@@ -45,6 +45,7 @@
 #define MAX_SPENDING_LIMIT       250
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
+static void _train_skills(int exp, const int cost, const bool simu);
 
 // The progress of skill_cost_level depends only on total experience points,
 // it's independent of species. We try to keep close to the old system
@@ -737,14 +738,14 @@ void train_skills(bool simu)
         cost = calc_skill_cost(you.skill_cost_level);
         exp = you.exp_available;
         if (you.skill_cost_level == 27)
-            train_skills(exp, cost, simu);
+            _train_skills(exp, cost, simu);
         else
         {
             // Amount of experience points needed to reach the next skill cost level
             const int next_level = skill_cost_needed(you.skill_cost_level + 1)
                                    - you.total_experience;
             ASSERT(next_level > 0);
-            train_skills(std::min(exp, next_level + cost - 1), cost, simu);
+            _train_skills(std::min(exp, next_level + cost - 1), cost, simu);
         }
     }
     while (you.exp_available >= cost && exp != you.exp_available);
@@ -757,7 +758,7 @@ void train_skills(bool simu)
 }
 
 //#define DEBUG_TRAINING_COST
-void train_skills(int exp, const int cost, const bool simu)
+static void _train_skills(int exp, const int cost, const bool simu)
 {
     bool skip_first_phase = false;
     int magic_gain = 0;

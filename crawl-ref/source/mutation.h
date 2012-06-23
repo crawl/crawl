@@ -98,7 +98,6 @@ std::string mutation_name(mutation_type which_mutat, int level = -1,
                           bool colour = false);
 
 void roll_demonspawn_mutations();
-void adjust_racial_mutation(mutation_type mut, int diff);
 
 bool perma_mutate(mutation_type which_mut, int how_much, const std::string &reason);
 int how_mutated(bool all = false, bool levels = false);

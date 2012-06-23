@@ -1107,8 +1107,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_greater_demon(int pow, god_type god, int spell,
-                          bool quiet)
+static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
 {
     monster_type mon = summon_any_demon(DEMON_GREATER);
 
@@ -1164,7 +1163,7 @@ spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON))
+    if (!_summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;

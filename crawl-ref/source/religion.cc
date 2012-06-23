@@ -3203,11 +3203,8 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     if (!fr || fr->kill_alignment() != KC_FRIENDLY)
         return (false);
 
-    return (god_hates_attacking_friend(god, fr->mons_species()));
-}
+    monster_type species = fr->mons_species();
 
-bool god_hates_attacking_friend(god_type god, monster_type species)
-{
     if (mons_is_object(species))
         return (false);
     switch (god)

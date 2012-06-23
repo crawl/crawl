@@ -249,7 +249,7 @@ int get_spell_slot_by_letter(char letter)
     return (you.spell_letter_table[index]);
 }
 
-int get_spell_slot(spell_type spell)
+static int _get_spell_slot(spell_type spell)
 {
     for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
         if (you.spells[i] == spell)
@@ -260,7 +260,7 @@ int get_spell_slot(spell_type spell)
 
 int get_spell_letter(spell_type spell)
 {
-    return index_to_letter(get_spell_slot(spell));
+    return index_to_letter(_get_spell_slot(spell));
 }
 
 spell_type get_spell_by_letter(char letter)
@@ -361,7 +361,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
 bool del_spell_from_memory(spell_type spell)
 {
-    int i = get_spell_slot(spell);
+    int i = _get_spell_slot(spell);
     if (i == -1)
         return (false);
     else
@@ -1006,31 +1006,20 @@ int spell_range(spell_type spell, int pow, bool player_spell)
  * spell level.
  * @see spl-data.h
  *
+ * Formula (use first match):
+ * - Conjuration (noisy)    = \f$ level \f$
+ * - Air and poison (quiet) = \f$ \frac{level}{2} \f$
+ * - Other (normal)         = \f$ \frac{3 \times level}{4} \f$
+ *
  * \param spell  The spell being casted.
  * \return       The amount of noise generated.
 **/
 int spell_noise(spell_type spell)
 {
     const spell_desc *desc = _seekspell(spell);
+    unsigned int disciplines = desc->disciplines;
+    int level = desc->level + desc->noise_mod;
 
-    return spell_noise(desc->disciplines, desc->level + desc->noise_mod);
-}
-
-/**
- * Spell default noise.
- *
- * Default value for spell noise given a level and a set of schools.
- * Formula (use first match):
- * - Conjuration (noisy)    = \f$ level \f$
- * - Air and poison (quiet) = \f$ \frac{level}{2} \f$
- * - Other (normal)         = \f$ \frac{3 \times level}{4} \f$
- *
- * \param disciplines  An integer which contain the school flags.
- * \param level        The level of the spell.
- * \return             The amount of noise generated.
-**/
-int spell_noise(unsigned int disciplines, int level)
-{
     if (disciplines == SPTYP_NONE)
         return (0);
     else if (disciplines & SPTYP_CONJURATION)

@@ -61,6 +61,8 @@ static int _handle_enchant_armour(int item_slot = -1,
                                   std::string *pre_msg = NULL);
 
 static bool _is_cancellable_scroll(scroll_type scroll);
+static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
+                                    bool quiet = false);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -363,7 +365,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Ensure wieldable, stat loss non-fatal
     if (!can_wield(&new_wpn, true)
-        || !safe_to_remove_or_wear(new_wpn, false))
+        || !_safe_to_remove_or_wear(new_wpn, false))
     {
         if (!was_barehanded)
         {
@@ -839,7 +841,7 @@ bool do_wear_armour(int item, bool quiet)
 
     you.turn_is_over = true;
 
-    if (!safe_to_remove_or_wear(invitem, false))
+    if (!_safe_to_remove_or_wear(invitem, false))
         return (false);
 
     const int delay = armour_equip_delay(invitem);
@@ -894,7 +896,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!safe_to_remove_or_wear(invitem, true))
+    if (!_safe_to_remove_or_wear(invitem, true))
         return (false);
 
     bool removed_cloak = false;
@@ -1047,7 +1049,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 // Checks whether a to-be-worn or to-be-removed item affects
 // character stats and whether wearing/removing it could be fatal.
 // If so, warns the player, or just returns false if quiet is true.
-bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
+static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
 {
     if (remove && !safe_to_remove(item, quiet))
         return (false);
@@ -1237,7 +1239,7 @@ static bool _swap_rings(int ring_slot)
         return (false);
 
     // Check for stat loss.
-    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
+    if (!_safe_to_remove_or_wear(you.inv[ring_slot], false))
         return (false);
 
     // Put on the new ring.
@@ -1400,7 +1402,7 @@ static bool _puton_item(int item_slot)
         }
 
         // Check for stat loss.
-        if (!safe_to_remove_or_wear(item, false))
+        if (!_safe_to_remove_or_wear(item, false))
             return (false);
 
         // Put on the new amulet.
@@ -1411,7 +1413,7 @@ static bool _puton_item(int item_slot)
     }
 
     // Check for stat loss.
-    if (!safe_to_remove_or_wear(item, false))
+    if (!_safe_to_remove_or_wear(item, false))
         return (false);
 
     equipment_type hand_used;
@@ -1606,7 +1608,7 @@ bool remove_ring(int slot, bool announce)
     ring_wear_2 = you.equip[hand_used];
 
     // Remove the ring.
-    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
+    if (!_safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());

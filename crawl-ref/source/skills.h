@@ -30,7 +30,6 @@ void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
-void train_skills(int exp, const int cost, const bool simu);
 void train_skill(skill_type skill, int exp);
 bool skill_trained(int i);
 inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
