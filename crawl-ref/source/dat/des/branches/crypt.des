@@ -860,7 +860,6 @@ KFEAT:  8 = .
 KFEAT:  o = granite_statue
 KFEAT:  _ = altar_kikubaaqudgha
 KFEAT:  ~ = bolt trap / blade trap / needle trap
-SUBST:  s = v =
 SUBST:  B = b %
 KITEM:  b = any book
 SUBST:  ? = $ % * |:1
@@ -904,16 +903,14 @@ KMONS:  X = w:1 curse skull / w:19 flaming corpse
 KMONS:  t = w:20 hell knight / smoke demon / red devil
 KMONS:  X = w:1 curse skull / w:19 hell knight
 : end
-####### Randomisation of secret doors; there is a chance of no door at all.
+####### Randomisation of secret doors
 SUBST:  K : Kvvv
-SUBST:  ' : 'vvv
-SUBST:  " : "v
 NSUBST: K = 1:= / *:v
 NSUBST: ' = 1:= / *:v
 NSUBST: " = 1:= / *:v
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-vccccccccccccccccccccccccc......"<..Bvvvvvvvvvvvvvvvvvvvvvv
+vccccccccccccccccccccccccc......"...Bvvvvvvvvvvvvvvvvvvvvvv
 vc..D..c.....c....Bc;;+;;c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
 vc.c.c.+.....+....cc;;+;;c.ffFf.vvvv"vvvvvvvvvvvvvnP=.....v
 vc.._..+...D.c....Bc;;c;;m.ffFf.v????||$$$.vvvvv..nPn|????v
@@ -958,24 +955,24 @@ v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
 v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
 v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
 vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
-v........stvwwwwww.........wwwwwwwwwwwwwv.v=v=vvvv=vvvv...v
-v...ll...vsvwwwww...........wwwwwwwwwwwwv............vvv..v
-v...ll...stvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
-v...ll...vsvwwww.............wwww..;;.;;+.;;.....R......v.v
-v...ll...stvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
-v.llllll.vsvwww...................wwwwwwv.;;...S........v.v
-v.llllll.stvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
-v...ll...vsvwww.................wwwwwwwwv.;;.....R......v.v
+v........=tvwwwwww.........wwwwwwwwwwwwwv.v=v=vvvv=vvvv...v
+v...ll...v=vwwwww...........wwwwwwwwwwwwv............vvv..v
+v...ll...=tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
+v...ll...v=vwwww.............wwww..;;.;;+.;;.....R......v.v
+v...ll...=tvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
+v.llllll.v=vwww...................wwwwwwv.;;...S........v.v
+v.llllll.=tvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
+v...ll...v=vwww.................wwwwwwwwv.;;.....R......v.v
 v.t.ll...vtvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
-v.t.ll...v.*vwww.{...........wwwwwwwwwwv<..;...'o$.....vv.v
+v.t.ll...v.*vwww.{...........wwwwwwwwwwv...;...'o$.....vv.v
 v...ll...v.%vwww..[..........wwwwwwwwwwv....;..v$;....vvv.v
 v........=.*vvwww..(........wwwwwwwwwwvv..W..;.v..;..vvv..v
 vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW...;v.S.;vvv.S.v
 vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv;.WWWWW..'...vvv;...v
 vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv.;..W....v..vvv..;..v
-vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvv...;.W....v+vvv....;$v
-vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!s....;..R..'........$ov
-vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvvo..;.W....v+vvv....;$v
+vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!=....;..R..'........$ov
+vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvovvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
