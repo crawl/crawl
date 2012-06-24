@@ -308,11 +308,10 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!*show_msgs)
         return;
 
-    if (!item_type_known(*item))
+    if (!item->props.exists("ss_welcome"))
     {
-        mprf(MSGCH_TALK, "%s says, \"Hi!  I'm the Singing Sword!\"",
-             item->name(DESC_THE).c_str());
-        autoid_unrand(*item); // pluses too
+        mprf(MSGCH_TALK, "The sword says, \"Hi!  I'm the Singing Sword!\"");
+        item->props["ss_welcome"].get_bool() = true;
     }
     else
         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
