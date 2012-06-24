@@ -1,4 +1,4 @@
-Stone Soup 0.11 (up to 0.11-a0-1660-g8ce0e0f)
+Stone Soup 0.11 (up to 0.11-a0-2423-g1baa356)
 ---------------------------------------------
 
 Highlights
@@ -14,7 +14,10 @@ Branches, environment
   immunity to most forms of banishment.
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
+* Traps of a given type deal the same damage no matter where they are.
 * Gas traps get their separate type.
+* Axe traps got axed.
+* Wax walls are no more.
 * A metric buttload of new vaults.
 
 Character
@@ -39,7 +42,9 @@ Monsters
 * All abominations get dual demon/undead holiness.
 * Elephant skeletons lose their trunk slap attack.
 * Magical staves work for monsters as something more than a mere cudgel.
-* A new unique: Arachne.
+* Monsters can use rings and amulets.
+* Mindless monsters don't have any skills (zombies with pain weapons, etc).
+* New unique: Arachne, Fannar.
 * Margery gets dragon armour.
 * Monsters with arcane spells won't switch to heavy armour.
 * Donald can spawn in Labyrinths.
@@ -72,13 +77,15 @@ Items
 * Ambrosia gives more mp, but only as you digest it.
 * Raw troll hides grant regeneration.
 * Jewelry auto-ids when it shows an obvious effect.
-* Ankuses are no more.
+* Ankuses, scrolls of detect curse, and amulets of controlled flight are
+  no more.
 * Rods of striking are better.
-* Staves of energy merely halve spell hunger instead of eliminating it.
+* Staves of energy merely reduce spell hunger instead of eliminating it.
 * All missile brands start visible.
 * Visored helmets don't stop bite attacks.
 * Identifying weapons by use works instantly but requires a random (per
   item) level of skill.
+* Unbranded items can't be glowing/runed unless they're cursed.
 
 Cards
 -----
@@ -105,6 +112,8 @@ Gods
 * Xom grants far less item gifts.
 * Xom acts drastically more often when you're in a tough fight.
 * Elyvilon doesn't take piety when life-saving allies.
+* Non-newbie Elyvilonites can't destroy non-unholy weapons.
+* Fedhas' Sunlight stays in place.
 * Okawaru gives almost no heed to kills of easy monsters, rewards toughest
   fights more.
 * Concurrent god wraths don't dilute each other anymore.
@@ -114,12 +123,15 @@ Interface
 * Stash tracking, annotations, etc, work for portal levels.
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells
-* New options: auto_drop_chunks, autofight_throw.
+* New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns.
 * Fake translations: dwarven, jägerkin, kraut, wide, cyrillic.
 * Loads of new tiles.
 * Fixed Pan/Hell lords get special tall tiles.
 * An in-game high scores browser.
 * Picking up stackable items shows how many you picked up.
+* Every item, monster, feature has a description.
+* Autoexplore stops on items sacrificeable to your god.
+* Rods appear as a separate item class.
 
 Wizmode
 -------
