@@ -2830,6 +2830,10 @@ int item_mass(const item_def &item)
             unit_mass = 150;
             break;
 
+        case MISC_RUNE_OF_ZOT:
+            unit_mass = 0;
+            break;
+
         default:
             unit_mass = 100;
             break;
