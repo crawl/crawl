@@ -14,6 +14,7 @@
 #include "godprayer.h"
 #include "items.h"
 #include "itemname.h" // for make_name
+#include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -811,43 +812,25 @@ monster* zotdef_spawn(bool boss)
     return mon;
 }
 
-static rune_type _get_rune(int runenumber)
+static rune_type _get_rune()
 {
-    switch (runenumber)
-    {
-    case 1:
-        return RUNE_DIS;
-    case 2:
-        return RUNE_GEHENNA;
-    case 3:
-        return RUNE_COCYTUS;
-    case 4:
-        return RUNE_TARTARUS;
-    case 5:
-        return RUNE_SLIME_PITS;
-    case 6:
-        return RUNE_VAULTS;
-    case 7:
-        return RUNE_SNAKE_PIT;
-    case 8:
-        return RUNE_TOMB;
-    case 9:
-        return RUNE_SWAMP;
-    case 10:
-        return RUNE_SHOALS;
-    case 11:
-        return RUNE_ABYSSAL;
-    case 12:
-        return RUNE_MNOLEG;
-    case 13:
-        return RUNE_LOM_LOBON;
-    case 14:
-        return RUNE_CEREBOV;
-    case 15:
-        return RUNE_GLOORX_VLOQ;
-    default:
+    FixedBitArray<NUM_RUNE_TYPES> runes = you.runes;
+    for (int i = 0; i < MAX_ITEMS; i++)
+        if (item_is_rune(mitm[i]))
+            runes.set(mitm[i].plus);
+    int already = 0;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (runes[i])
+            already++;
+
+    if (already >= 15) // don't allow sitting for all 18/19
         return RUNE_DEMONIC;
-    }
+
+    rune_type rune;
+    do rune = (rune_type)random2(NUM_RUNE_TYPES);
+    while (runes[rune] || rune == RUNE_FOREST || rune == RUNE_DEMONIC);
+
+    return rune;
 }
 
 // Dowan is automatically placed together with Duvessa.
@@ -1046,9 +1029,7 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
             {
-                const rune_type which_rune =
-                    _get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
-                              / FREQUENCY_OF_RUNES);
+                const rune_type which_rune = _get_rune();
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
                                which_rune, which_rune);
                 int *const item_made = &ip;
