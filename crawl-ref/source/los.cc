@@ -129,7 +129,7 @@ static void _handle_los_change();
 
 void set_los_radius(int r)
 {
-    ASSERT(r <= LOS_MAX_RADIUS);
+    ASSERT(r <= LOS_RADIUS);
     _los_radius_sq = r * r + 1;
     invalidate_los();
     _handle_los_change();

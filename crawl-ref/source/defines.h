@@ -129,17 +129,14 @@ const int LABYRINTH_BORDER = 4;
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
-// default LOS radius
-#define LOS_RADIUS 8
-// default LOS radius squared, for comparison with distance()
-#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
 // maximal LOS radius
-#define LOS_MAX_RADIUS LOS_RADIUS
-#define LOS_MAX_RADIUS_SQ (LOS_MAX_RADIUS * LOS_MAX_RADIUS + 1)
+#define LOS_RADIUS 8
+// maximal LOS radius squared, for comparison with distance()
+#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
 //     0 <= x, y <= LOS_MAX_RANGE
-#define LOS_MAX_RANGE LOS_MAX_RADIUS
+#define LOS_MAX_RANGE LOS_RADIUS
 #define ENV_SHOW_OFFSET LOS_MAX_RANGE
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 

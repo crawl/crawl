@@ -30,7 +30,7 @@ circle_def::circle_def()
     : los_radius(true), origin(coord_def(0,0)), check_bounds(false)
 {
     // Set up bounding box and shape.
-    init(LOS_MAX_RADIUS, C_ROUND);
+    init(LOS_RADIUS, C_ROUND);
 }
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
