@@ -44,7 +44,7 @@ Monsters
 * Magical staves work for monsters as something more than a mere cudgel.
 * Monsters can use rings and amulets.
 * Mindless monsters don't have any skills (zombies with pain weapons, etc).
-* New unique: Arachne, Fannar.
+* New uniques: Arachne, Fannar.
 * Margery gets dragon armour.
 * Monsters with arcane spells won't switch to heavy armour.
 * Donald can spawn in Labyrinths.
