@@ -971,9 +971,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                 continue;
 
             if (!crawl_view.in_viewport_g(coord_def(x, y)))
-            {
                 mark_for_redraw(coord_def(x, y));
-            }
         }
 
     m_next_view_tl = view2grid(coord_def(1, 1));

@@ -1221,9 +1221,7 @@ void dgn_reset_level(bool enable_random_maps)
         env.spawn_random_rate = 0;
     }
     else if (player_in_connected_branch())
-    {
         env.spawn_random_rate = 240;
-    }
     else if (player_in_branch(BRANCH_ABYSS)
              || player_in_branch(BRANCH_PANDEMONIUM))
     {

@@ -3488,9 +3488,7 @@ bool monster::is_unclean(bool check_spells) const
 
     corpse_effect_type ce = mons_corpse_effect(type);
     if ((ce == CE_ROT || ce == CE_MUTAGEN) && !is_chaotic())
-    {
         return (true);
-    }
 
     return (false);
 }
