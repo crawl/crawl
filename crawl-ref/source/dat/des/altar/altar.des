@@ -187,9 +187,9 @@ SUBST:   X = .
 SUBST:   Y = =
 MAP
 .........
-.xxxXxxx.
-.xxx.xxx.
-.xxxYxxx.
+.xxxmxxx.
+.xxxmxxx.
+.xxxmxxx.
 .X.YCY.X.
 .xxxYxxx.
 .xxx.xxx.
