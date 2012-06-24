@@ -124,7 +124,7 @@ void trap_def::prepare_ammo(int charges)
         ammo_qty = 2 + random2avg(6, 3);
         break;
     case TRAP_ALARM:
-        ammo_qty = 1 + random2(3);
+        ammo_qty = 2 + random2(4);
         // Zotdef: alarm traps have practically unlimited ammo
         if (crawl_state.game_is_zotdef())
             ammo_qty = 3276; // *10, stored as short
