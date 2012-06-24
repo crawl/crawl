@@ -158,7 +158,6 @@ COLOUR: BLACK
 ####################### First come the old fixed arts.
 
 NAME:    Singing Sword
-APPEAR:  golden long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+7
 COLOUR:  ETC_GOLD
