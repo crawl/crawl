@@ -288,7 +288,7 @@ DEPTH:  D:14-19, Lair:3-, Elf, Dwarf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1
 : place_unique(_G, "Rupert")
 
 NAME:   uniq_saint_roka
-DEPTH:  Orc:4, D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
+DEPTH:  Orc:4, D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Vaults, Crypt, Blade, Tomb
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sigmund
