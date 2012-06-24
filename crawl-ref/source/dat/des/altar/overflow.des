@@ -166,10 +166,6 @@ TAGS:    patrolling no_monster_gen no_item_gen
 TAGS:    uniq_golem_altar temple_overflow_cheibriados
 KMONS:   _ = iron golem
 KFEAT:   _ = altar_cheibriados
-SHUFFLE: ac / XX / XX
-SHUFFLE: bd / XX / XX
-SUBST:   a = = , c = * , b = = , d = *
-SUBST:   X : x
 SUBST:   x : xxxcccvb
 MAP
 x..G..x
@@ -181,8 +177,6 @@ x.....x
 x.....x
 x.....x
 x.._..x
-xaxxxbx
-xcxxxdx
 xxxxxxx
 ENDMAP
 
