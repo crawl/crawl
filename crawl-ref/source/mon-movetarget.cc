@@ -1101,7 +1101,7 @@ void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
     const coord_def pos = mon->pos();
-    int mindist = LOS_MAX_RADIUS_SQ + 1;
+    int mindist = LOS_RADIUS_SQ + 1;
     for (radius_iterator ri(mon->get_los()); ri; ++ri)
     {
         // XXX: an iterator that spirals out would be nice.

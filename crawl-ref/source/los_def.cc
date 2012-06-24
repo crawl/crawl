@@ -48,7 +48,7 @@ void los_def::init_arena(const coord_def& c)
 {
     center = c;
     arena = true;
-    set_bounds(circle_def(LOS_MAX_RADIUS, C_SQUARE));
+    set_bounds(circle_def(LOS_RADIUS, C_SQUARE));
 }
 
 los_def::~los_def()
