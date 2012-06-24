@@ -151,12 +151,28 @@ def init_logging(logging_config):
     logging.addLevelName(logging.WARNING, "WARN")
 
 
+def check_config():
+    success = True
+    for (game_id, game_data) in games.iteritems():
+        if not os.path.exists(game_data["crawl_binary"]):
+            logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
+            success = False
+
+        if not os.path.exists(game_data["client_path"]):
+            logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
+            success = False
+    return success
+
 
 if __name__ == "__main__":
     if chroot:
         os.chroot(chroot)
 
     init_logging(logging_config)
+
+    if not check_config():
+        logging.error("Errors in config. Exiting.")
+        sys.exit(1)
 
     if daemon:
         daemonize()
