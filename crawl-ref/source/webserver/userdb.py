@@ -31,6 +31,8 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
 def ensure_user_db_exists():
     if os.path.exists(password_db): return
     logging.warn("User database didn't exist; creating it now.")
+    c = None
+    conn = None
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
