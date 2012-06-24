@@ -649,10 +649,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!you_know)
                 hide();
         }
-        else if (!(m && m->friendly()))
+        else
         {
-            // Alarm traps aren't set off by hostile monsters, because
-            // that would be way too nasty for the player.
             std::string msg;
             if (you_trigger)
                 msg = "An alarm trap emits a blaring wail!";
