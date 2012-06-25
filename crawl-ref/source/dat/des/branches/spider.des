@@ -911,8 +911,8 @@ MONS:    plant
 SHUFFLE: {}
 SUBST:   . = .:50 1:4 3:1
 SUBST:   > = <>
-SUBST:   }=} .:3
-SUBST:   {={ .:3
+SUBST:   }=} .:4
+SHUFFLE: {}
 SUBST:   == +:5 = .:3
 SUBST:   ? = x.
 MAP
