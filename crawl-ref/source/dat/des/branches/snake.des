@@ -433,6 +433,7 @@ ENDMAP
 #
 NAME:    snake_hunt
 PLACE:   Snake:$
+WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = weight:2 teleport trap / .
@@ -501,6 +502,7 @@ ENDMAP
 #
 NAME:   snake_pit
 PLACE:  Snake:$
+WEIGHT: 20
 ORIENT: southwest
 TAGS:   no_rotate
 MONS:   greater naga / nothing
@@ -667,6 +669,8 @@ cc..lllcc...ccc2452ccc...cclll..cc
             cc......cc
              cccccccc
 ENDMAP
+
+################################################################################
 
 NAME:   grunt_snake_rune_spirals
 PLACE:  Snake:$
