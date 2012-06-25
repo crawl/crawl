@@ -901,6 +901,48 @@ MAP
          .1.
 ENDMAP
 
+NAME:    lemuel_Spider_Zombies
+DEPTH:   Spider:1-4
+ORIENT:  float
+TAGS:    no_monster_gen
+MONS:    spider zombie / wolf spider zombie / tarantella zombie
+MONS:    necromancer
+MONS:    plant
+SHUFFLE: {}
+SUBST:   . = .:50 1:4 3:1
+SUBST:   > = <>
+SUBST:   }=} .:3
+SUBST:   {={ .:3
+SUBST:   == +:5 = .:3
+SUBST:   ? = x.
+MAP
+       xxxxxx
+      xx?..?xx
+xxxxxxx?....?xx
+x{...........?xxx
+xxxxxx?........?xxxx
+     xx...........?xxxx
+      x?..111........?xx
+      x?.11111........?x
+      xx.11111........?xx
+       x?.111..........?xxxxxxxx
+       x?.....................}x
+cccccccx...............?xxxxxxxx
+c|..=2.+...........??xxxx
+cccccccxx?.......?xxxx
+        xx?....?xxx
+         xxx...xx
+           x?.?x
+         xxx??xx
+       xxx????x
+     xxx....?xx
+    xx?.>..xxx
+    x?....xx
+    xx..?xx
+     x?xxx
+     xxx
+ENDMAP
+
 NAME:   nicolae_orb_stairs_large
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  Spider:2-4
