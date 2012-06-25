@@ -174,10 +174,10 @@ mesh1
 mesh2
 mesh3
 
-hive0 FLOOR_HIVE FLOOR_ORC
-hive1
-hive2
-hive3
+orc0 FLOOR_ORC
+orc1
+orc2
+orc3
 
 ice0 FLOOR_ICE
 ice1

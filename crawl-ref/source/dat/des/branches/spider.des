@@ -565,7 +565,7 @@ ORIENT: southwest
 TAGS:   uniq_spidermines
 SUBST:  B = z..
 RTILE:  O = wall_lair
-FTILE:  Oz = floor_hive
+FTILE:  Oz = floor_orc
 RTILE:  X = wall_stone_brick
 COLOUR: O = brown
 COLOUR: z = brown
@@ -606,7 +606,7 @@ ORIENT: southeast
 TAGS:   uniq_spidermines
 SUBST:  B = z..
 RTILE:  O = wall_lair
-FTILE:  OzI_ = floor_hive
+FTILE:  OzI_ = floor_orc
 RTILE:  X = wall_stone_brick
 COLOUR: O = brown
 COLOUR: z = brown
@@ -647,7 +647,7 @@ TAGS:   uniq_spidermines
 NSUBST: F = 1:Q / *:z
 SUBST:  B = z..
 RTILE:  O = wall_lair
-FTILE:  OzQ = floor_hive
+FTILE:  OzQ = floor_orc
 RTILE:  X = wall_stone_brick
 COLOUR: O = brown
 COLOUR: z = brown
