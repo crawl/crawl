@@ -1388,7 +1388,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        if (!foe || mon->hit_points + 1 >= mon->max_hit_points
+        if (!foe
+            || mon->hit_points + 1 >= mon->max_hit_points
             || grid_distance(mon->pos(), foe->pos()) > 1)
         {
             ret = true;
