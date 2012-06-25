@@ -98,14 +98,14 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     // Get maximum advance and other global metrics
     FT_Size_Metrics metrics = face->size->metrics;
-    m_max_advance = coord_def(0,0);
+    m_max_advance   = coord_def(0,0);
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
-    ascender  = (metrics.ascender>>6);
-    int max_width = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
+    ascender        = (metrics.ascender>>6);
+    int max_width   = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
     int max_height  = m_max_advance.y;
-    m_min_offset  = 0;
-    m_glyphs      = new GlyphInfo[MAX_GLYPHS];
+    m_min_offset    = 0;
+    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
     // Grow character size to power of 2
     //charsz(1,1);
@@ -143,7 +143,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
             {
                 unsigned int idx = x + y * m_ft_width;
                 idx *= 4;
-                pixels[idx] = 255;
+                pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = 255;
@@ -151,8 +151,8 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     }
 
     // precache common chars
-    for(int i = 0x20;  i <0x7f; i++)
-        map_unicode(i,false);
+    for(int i = 0x20; i < 0x7f; i++)
+        map_unicode(i, false);
     update_font_tex();
 
     return true;
@@ -165,11 +165,11 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
 
 ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
 {
-    ucs_t     c;  // index in m_glyphs
-    if(m_glyphmap.find(uchar) == m_glyphmap.end())
+    ucs_t c;  // index in m_glyphs
+    if (m_glyphmap.find(uchar) == m_glyphmap.end())
     {
         // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
-        if(m_glyphs_top == MAX_GLYPHS)
+        if (m_glyphs_top == MAX_GLYPHS)
         {
             dprintf("replacing %d (%lc) with %d (%lc)\n",
                     m_glyphs[m_glyphs_lru].uchar,
@@ -249,7 +249,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
             unsigned int offset_x = (c % GLYPHS_PER_ROWCOL) * charsz.x;
             unsigned int offset_y = (c / GLYPHS_PER_ROWCOL) * charsz.y + vert_offset;
 
-            if(m_glyphs_top == MAX_GLYPHS)
+            if (m_glyphs_top == MAX_GLYPHS)
             {
                 // blank out above char if it's been replaced
                 for (int x = 0; x < bmp->width; x++)
@@ -274,7 +274,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                         unsigned int idx = offset_x+x+1 + (offset_y+y+1) * m_ft_width;
                         idx *= 4;
 
-                        if( x_valid || y_valid )
+                        if (x_valid || y_valid)
                         {
                             unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
 
@@ -302,7 +302,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                     {
                         unsigned int idx = offset_x + x + (offset_y + y) * m_ft_width;
                         idx *= 4;
-                        if( x < bmp->width && y < bmp->rows )
+                        if (x < bmp->width && y < bmp->rows)
                         {
                             unsigned char alpha = bmp->buffer[x + bmp->width * y];
                             pixels[idx] = 255;
@@ -320,7 +320,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
     else // we found uchar in glyphmap
     {
         c = m_glyphmap[uchar];
-        if(m_glyphs_mru != c)
+        if (m_glyphs_mru != c)
         {
             // point the <char previous to this one> to the <char after this one> and vice-versa
             dprintf("moving %lc: %lc -> %lc; %lc <- %lc",
@@ -334,10 +334,10 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
         }
     } // regardless of how we came about 'c'
 
-    if(m_glyphs_mru != c)
+    if (m_glyphs_mru != c)
     {
         // point the last character we wrote out to the one we're writing
-        dprintf("updating %lc. next = %lc",
+        dprintf("updating %lc, next = %lc",
                 m_glyphs[m_glyphs_mru].uchar, uchar);
         m_glyphs[m_glyphs_mru].next = c;
         m_glyphs[c].prev = m_glyphs_mru;
@@ -346,7 +346,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
     // update the mru to this one
     m_glyphs_mru = c;
     // if we've just used the lru glyph, move onto the next one
-    if( m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0 )
+    if (m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0)
         m_glyphs_lru = m_glyphs[m_glyphs_lru].next;
 
     dprintf("rendering %d (%x; <<<<<<%lc>>>>>>); lru is %lc, next lru is %lc\n",
@@ -529,9 +529,9 @@ unsigned int FTFontWrapper::string_width(const char *text)
         }
         else
         {
-                        ucs_t c = map_unicode(*itr);
-                        width += m_glyphs[c].advance;
-                        adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
+            ucs_t c = map_unicode(*itr);
+            width += m_glyphs[c].advance;
+            adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
         }
     }
 
@@ -742,9 +742,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
             y += m_max_advance.y;
         }
         else
-        {
             store(buf, x, y, c, col);
-        }
     }
 }
 
