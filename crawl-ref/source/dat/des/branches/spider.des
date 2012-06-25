@@ -46,21 +46,6 @@ end
 }}
 
 ##############################################################################
-# Compat for the portal vault -- please remove after save break
-##############################################################################
-
-NAME:   old_spider
-ORIENT: encompass
-TAGS:   spiders_nest
-KFEAT:  < = exit_portal_vault
-MONS:   spider
-MAP
-xxxxx
-xA<1x
-xxxxx
-ENDMAP
-
-##############################################################################
 # Spider Nest entry vaults
 ##############################################################################
 
@@ -71,7 +56,7 @@ MAP
 O
 ENDMAP
 
-NAME:   spiders_nest_entry_a
+NAME:   spider_nest_entry_a
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 MONS:   spider
@@ -87,9 +72,7 @@ W.WW.WW.W
 .WWW.WWW.
 ENDMAP
 
-##########################
-# Web trappy entry
-NAME:   spiders_nest_entry_webs
+NAME:   spider_nest_entry_webs
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web
@@ -109,7 +92,7 @@ x^^^^..xxx...
 ..xxx........
 ENDMAP
 
-NAME:   spiders_nest_entry_funnel_web
+NAME:   spider_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web / floor
@@ -126,6 +109,44 @@ xx^^^^^xx
 @.^xxx
 @.xx
 @@x
+ENDMAP
+
+NAME:   spider_nest_entry_web_field
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = known web trap / floor
+KFEAT:  ~ = known web trap / w:20 floor
+MAP
+...~~~~~...
+.~~~~~~~~~.
+.~~~^^^~~~.
+~~~^^^^^~~~
+~~^^^^^^^~~
+~~^^^O^^^~~
+~~^^^^^^^~~
+~~~^^^^^~~~
+.~~~^^^~~~.
+.~~~~~~~~~.
+...~~~~~...
+ENDMAP
+
+NAME:   spider_nest_entry_rubble
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+KMONS:  O = wolf spider / tarantella / redback / jumping spider
+SUBST:  x = ..xx^
+MAP
+   xxxxx
+ @xxxxxxxx
+ x.xxxxxxx
+xxx.xxxxxxx
+xxxx.xxxxxx
+xxxxxOxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxx
+ xxxxxxxxx
+ xxxxxxxxx
+   xxxxx
 ENDMAP
 
 ##############################################################################
