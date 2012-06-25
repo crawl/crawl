@@ -123,8 +123,9 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     pixels = new unsigned char[4 * m_ft_width * m_ft_height];
     memset(pixels, 0, sizeof(unsigned char) * 4 * m_ft_width * m_ft_height);
 
-    dprintf("new font tex %d x %d x 4 = %dpx\n",
-            m_ft_width, m_ft_height, 4 * m_ft_width * m_ft_height);
+    dprintf("new font tex %d x %d x 4 = %dpx %d bytes\n",
+            m_ft_width, m_ft_height, m_ft_width * m_ft_height,
+            4 * m_ft_width * m_ft_height);
 
     // Special case c = 0 for full block.
     {
