@@ -292,7 +292,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                             pixels[idx] = orig;
                             pixels[idx + 1] = orig;
                             pixels[idx + 2] = orig;
-                            pixels[idx + 3] = std::min(orig + edge, 255);
+                            pixels[idx + 3] = std::min((int)orig + edge, 255);
                         }
                     }
             }
