@@ -25,6 +25,12 @@
 // char to use if we can't find it in the font (upside-down question mark)
 #define MISSING_CHAR 0xbf
 
+#if 0
+# define dprintf(...) debuglog(__VA_ARGS__)
+#else
+# define dprintf(...) (void)0
+#endif
+
 FontWrapper* FontWrapper::create()
 {
     return (new FTFontWrapper());
@@ -117,7 +123,8 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     pixels = new unsigned char[4 * m_ft_width * m_ft_height];
     memset(pixels, 0, sizeof(unsigned char) * 4 * m_ft_width * m_ft_height);
 
-//    printf("new font tex %d x %d x 4 = %dpx\n",m_ft_width,m_ft_height,4*m_ft_width*m_ft_height);
+    dprintf("new font tex %d x %d x 4 = %dpx\n",
+            m_ft_width, m_ft_height, 4 * m_ft_width * m_ft_height);
 
     // Special case c = 0 for full block.
     {
@@ -164,7 +171,11 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
         // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
         if(m_glyphs_top == MAX_GLYPHS)
         {
-            //printf("replacing %d (%c) with %d (%c)\n",m_glyphs[m_glyphs_lru].uchar,m_glyphs[m_glyphs_lru].uchar,uchar,(uchar>31&&uchar<127)?uchar:191);
+            dprintf("replacing %d (%lc) with %d (%lc)\n",
+                    m_glyphs[m_glyphs_lru].uchar,
+                    m_glyphs[m_glyphs_lru].uchar,
+                    uchar,
+                    uchar);
             // create a pointer in gmap to the lru entry in gdata
             c = m_glyphs_lru;
             // delete lru glyph from map
@@ -304,7 +315,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
             if (update)
                 update_font_tex();
         }
-        //printf("mapped %d (%x; %c) to %d\n",uchar,uchar,(uchar>31&&uchar<127)?uchar:191,c);
+        dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
     }
     else // we found uchar in glyphmap
     {
@@ -312,7 +323,12 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
         if(m_glyphs_mru != c)
         {
             // point the <char previous to this one> to the <char after this one> and vice-versa
-            //printf("moving %c: %c -> %c; %c <- %c",uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar);
+            dprintf("moving %lc: %lc -> %lc; %lc <- %lc",
+                    uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar);
             m_glyphs[m_glyphs[c].prev].next = m_glyphs[c].next;
             m_glyphs[m_glyphs[c].next].prev = m_glyphs[c].prev;
         }
@@ -321,7 +337,8 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
     if(m_glyphs_mru != c)
     {
         // point the last character we wrote out to the one we're writing
-        //printf("updating %c.next = %c",m_glyphs[m_glyphs_mru].uchar,uchar);
+        dprintf("updating %lc. next = %lc",
+                m_glyphs[m_glyphs_mru].uchar, uchar);
         m_glyphs[m_glyphs_mru].next = c;
         m_glyphs[c].prev = m_glyphs_mru;
     }
@@ -332,7 +349,10 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
     if( m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0 )
         m_glyphs_lru = m_glyphs[m_glyphs_lru].next;
 
-    //printf("rendering %d (%x; <<<<<<%c>>>>>>); lru is %c, next lru is %c\n",uchar,uchar,(uchar>31&&uchar<127)?uchar:191,m_glyphs[m_glyphs_lru].uchar,m_glyphs[m_glyphs[m_glyphs_lru].next].uchar);
+    dprintf("rendering %d (%x; <<<<<<%lc>>>>>>); lru is %lc, next lru is %lc\n",
+            uchar, uchar, uchar,
+            m_glyphs[m_glyphs_lru].uchar,
+            m_glyphs[m_glyphs[m_glyphs_lru].next].uchar);
 
     return m_glyphmap[uchar];
 }
