@@ -21,7 +21,7 @@ default-depth: D:12-26
 NAME:    lemuel_elevator
 DEPTH:   D:2-26, Vaults:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
-TAGS:    allow_dup
+TAGS:    allow_dup extra
 SUBST:   m:mn
 SHUFFLE: {}, ]}) , [{(
 MAP
@@ -3376,4 +3376,90 @@ bb$.vvv.....bbb.$vv
    bbb.u.}.u.vvv
      bnbbnvvnv
      '@'''''@'
+ENDMAP
+
+###############################################################################
+# Nasty temple of Zin. Note that the boss is locked in a room until
+# the player opens it... and the player can see it ahead of time.
+
+NAME:   evilmike_silver_temple
+TAGS:   no_monster_gen
+DEPTH:  D:20-27
+ORIENT: float
+MONS:   daeva god:Zin, angel god:Zin, cherub god:Zin
+: if you.absdepth() > 24 then
+MONS:   silver star
+: else
+KMONS:  4 = Mennas, angel god:Zin
+: end
+NSUBST: A = 3 / '
+KFEAT:  _ = altar_zin
+FTILE:  '+_!$%*|1234D = floor_vault
+TILE:   v = dngn_metal_wall_white
+TILE:   c = dngn_transparent_wall_white
+COLOUR: v = white
+MARKER: D = lua:restrict_door()
+SUBST:  D = +, !' = .
+MAP
+............@@@@@@@............
+....vvvvvvv...T.T...vvvvvvv....
+...v.v%%%vv.........v%%%%v.v...
+..v.vv'A'vvv..T.T..vv%vv%vv.v..
+.v.v.v'''vvv.......vv3''2v.v.v.
+.vvvvv'''vvvv.T.T.vvvv''vvvvvv.
+.v'2'+'''vvvv.....vvv''''v'''v.
+.v'''vvvvvvvvv...vvvv'vv'''v'v.
+.v'''v'''vvvvv...vvvv'vv'''v'v.
+.v'''v'''vv3'vv.vv'3v''''v'''v.
+.v'''+'''vv''vvDvv''vvvvvvvv+v.
+.v+vvv'A'vv+vvv'vvv+vvvvvvvv1v.
+.v1'vv%%%v'''''''''''vvvvvv''v.
+.vv''vvvvv'v'v'''v'v'vvvvv''vv.
+..vv'''''+'''''''''''+'''''vv..
+.v.vv''vvv'v'v'''v'v'vvv''vv.v.
+.vv.vv''vv'''''''''''vv''vv.vv.
+.....vv''vvvv'''''vvvv''vv.....
+...v.vvv''vvv'2'1'vvv''vvv.v...
+.v...vvvv''vvv'''vvv''vvvv...v.
+...v.vvvvv'3vvvnvvv3'vvvvv.v...
+.v...vvvvvvDv'''''Dvvvvvvv...v.
+...v.v$$$$v''''4''''v****v.v...
+.v...v$$$$D'''v_v'''D*||*v...v.
+...v.v$$$$vvvvvvvvvvv****v.v...
+.....vvvvvvvvvvvvvvvvvvvvv.....
+...............................
+ENDMAP
+
+###############################################################################
+
+NAME:   evilmike_horseshoe
+DEPTH:  D:12-27
+ORIENT: float
+MAP
+   xxxxxxxxxxxxxxxxxxxxx
+  xxcccccccccccccccccccxx
+ xxcc...c.........c...ccxx
+xxcc....+.x9.8.9x.+....ccxx
+xcc.....c.........c.....ccx
+xc.9...cccccc+cccccc...9.cx
+xc.x..cc**%%%%%%%**cc..x.cx
+xc...ccccccccccccccccc...cx
+xcc+ccxxxxxxxxxxxxxxxcc+ccx
+xc...cx     @@@     xc...cx
+xc.x.cx             xc.x.cx
+xc.0.cx             xc.0.cx
+xc...cx             xc...cx
+xc.9.cx             xc.9.cx
+xc...cx             xc...cx
+xc.0.cx             xc.0.cx
+xc.x.cx             xc.x.cx
+xc...cx             xc...cx
+xcc+ccxx           xxcc+ccx
+xc...ccxx         xxcc...cx
+xc....ccxx       xxcc....cx
+xc.....ccx       xcc.....cx
+xcc.....cx       xc.....ccx
+xxcc....cx       xc....ccxx
+ xxcc...cx       xc...ccxx
+  xxcc+ccx       xcc+ccxx
 ENDMAP
