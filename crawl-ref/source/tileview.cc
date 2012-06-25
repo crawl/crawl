@@ -82,7 +82,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_HIVE:
         flv.wall  = TILE_WALL_HIVE;
-        flv.floor = TILE_FLOOR_HIVE;
+        flv.floor = TILE_FLOOR_ORC;
         return;
 
     case BRANCH_VAULTS:
