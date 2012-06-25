@@ -529,11 +529,13 @@ void record_monster_defeat(monster* mons, killer_type killer)
 #if TAG_MAJOR_VERSION <= 33
 void note_montiers()
 {
+#if 0
     char buf[128];
     snprintf(buf, sizeof(buf), "Killed monsters: %d trivial, %d easy, "
         "%d tough, %d nasty; %d corpses", you.montiers[0], you.montiers[1],
         you.montiers[2], you.montiers[3], you.montiers[4]);
     take_note(Note(NOTE_MESSAGE, 0, 0, buf));
+#endif
     for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
         you.montiers[i] = 0;
 }
