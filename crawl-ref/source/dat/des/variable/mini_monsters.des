@@ -3108,6 +3108,59 @@ vvvvv."...xx*xv
 vvvvv0....vvvvv
 ENDMAP
 
+NAME:   evilmike_bad_box
+DEPTH:  D:13-27, Vaults
+TAGS:   mini_float no_wall_fixup
+MONS:   boring beetle
+NSUBST: 9 = 1:1 / 1:19 / *:9
+KMONS:  8 = 8
+KITEM:  8 = star_item / superb_item
+SUBST:  n : m.., o : m..
+MAP
+............
+............
+..nn.oo.nn..
+..nmmmmmmn..
+...m9999m...
+..om9889mo..
+..om9889mo..
+...m9999m...
+..nmmmmmmn..
+..nn.oo.nn..
+............
+............
+ENDMAP
+
+NAME:    evilmike_minifort
+DEPTH:   D:9-26, Vaults, Elf
+TILE:    x = wall_marble
+COLOUR:  x = white
+TILE:    c = wall_vines
+FTILE:   ABCDEFcx+. = floor_vines
+SHUFFLE: ABCDEF
+NSUBST:  A = 1:> / *=.%
+NSUBST:  B = 6:0 / *:., C = 6=$0 / *:., D = 6=%0 / *:.
+NSUBST:  E = 1:98 / 1:*| / *:., F = 1:90 / 1:$ / *:.
+SUBST:   x = c, ' = .
+MAP
+ccccc@'''''''@ccccc
+cAAAcwwwwwwwwwcBBBc
+cAAAcwwwwwwwwwcBBBc
+cAAAcGwwwwwwwGcBBBc
+cAAAccccc+ccccc.BBc
+cAAAc.........+.BBc
+cAA.c.........c.BBc
+cAA.+..xxxxx..ccccc
+cAA.c..xxxxx..+.DDc
+ccccc.........c.DDc
+cCC.+.........cDDDc
+cCC.ccccc+cc+cccccc
+cCCCcEEE..c...FFFFc
+cCCCcEEEEEcFFFFFFFc
+cCCCcEEEEEcFFFFFFFc
+ccccccccccccccccccc
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
