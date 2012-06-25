@@ -1678,6 +1678,13 @@ int player_res_corr(bool calc_unid, bool items)
     {
         if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
             return 1;
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (items && calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN)
+            && coinflip())
+        {
+            return 1;
+        }
     }
 
     if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
