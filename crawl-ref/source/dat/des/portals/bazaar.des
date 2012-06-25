@@ -70,7 +70,7 @@ function fixup_bazaar()
   local tileset = {
     blue = {rock="wall_brick_gray", floor="floor_grass", halo="halo_grass"},
     red = {rock="wall_pebble_red", floor="floor_vault", halo="halo_vault"},
-    lightblue = {rock="wall_hive", floor="floor_grass", halo="halo_grass2"},
+    lightblue = {rock="wall_pebble_lightblue", floor="floor_grass", halo="halo_grass2"},
     magenta = {rock="wall_stone_gray", floor="floor_dirt", halo="halo_dirt"},
     green = {rock="wall_stone_gray", floor="floor_grass", halo="halo_grass"},
   }
