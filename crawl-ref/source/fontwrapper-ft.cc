@@ -275,7 +275,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                         unsigned int idx = offset_x+x+1 + (offset_y+y+1) * m_ft_width;
                         idx *= 4;
 
-                        if (x_valid || y_valid)
+                        if (x_valid && y_valid)
                         {
                             unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
 
