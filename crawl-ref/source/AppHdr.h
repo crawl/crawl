@@ -177,12 +177,19 @@
 # define _WIN32_WINNT 0x501
 #endif
 
+// Note: clang does masquerade as GNUC.
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
 # define NORETURN __declspec(noreturn)
 #else
 # define NORETURN
+#endif
+
+#if defined(__GNUC__)
+# define PURE __attribute__ ((pure))
+#else
+# define PURE
 #endif
 
 // =========================================================================
