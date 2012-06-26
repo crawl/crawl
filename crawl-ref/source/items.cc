@@ -2517,26 +2517,30 @@ void autoinscribe()
 
 static bool _known_subtype(const item_def &item)
 {
-    //TODO : perfect this function
-    //ISSUE : while auto-pathing this will print leaked names!
-    fprintf(stderr, "ITEM[%d][%d]: ITK=%d  KF=%d  %s\n", item.base_type ,item.sub_type, item_type_known(item), item.flags & ISFLAG_KNOW_TYPE, item.name(DESC_PLAIN,false,true,false).c_str());
-
-
+    // Sensed items and item_infos of unknown subtype.
     if (item.base_type >= NUM_OBJECT_CLASSES
         || item.sub_type >= get_max_subtype(item.base_type))
+    {
         return false;
+    }
 
-    //if (item.base_type == OBJ_JEWELLERY )
-
-
-    if (is_artefact(item) && !item_type_known(item))
-        // don't leak randart base type
-        return false;
-
-    if (item.flags & ISFLAG_KNOW_TYPE || item_type_known(item))
-        return true;
-
-    return false;
+    // Only where item_type_known() refers to the subtype (as opposed to the
+    // brand, for example) do we have to check it.  For weapons etc. we always
+    // know the subtype.
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+    case OBJ_SCROLLS:
+    case OBJ_JEWELLERY:
+    case OBJ_POTIONS:
+    case OBJ_BOOKS:
+    case OBJ_STAVES:
+    case OBJ_MISCELLANY:
+    case OBJ_RODS:
+        return (item_type_known(item));
+    default:
+        return (true);
+    }
 }
 
 
