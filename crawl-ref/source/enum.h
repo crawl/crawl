@@ -3548,6 +3548,7 @@ enum final_effect_flavour
     FINEFF_MIRROR_DAMAGE,
     FINEFF_TRAMPLE_FOLLOW,
     FINEFF_BLINK,
+    FINEFF_DISTORTION_TELEPORT,
 };
 
 enum disable_type
