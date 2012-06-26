@@ -23,6 +23,7 @@ enum tag_minor_version
     TAG_MINOR_OBJ_RODS,            // Rods are a separate item class
     TAG_MINOR_MONSTER_JEWELLERY,   // Allow monsters to wear rings/amulets
     TAG_MINOR_UNIFIED_PORTALS,     // Use branch enums for remembered portals.
+    TAG_MINOR_CLEAR_APTABLE,       // Reset old broken force_autopickup tables.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
