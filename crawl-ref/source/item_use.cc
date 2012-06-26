@@ -1309,11 +1309,11 @@ static bool _swap_rings_octopode(int ring_slot)
         unwanted = _prompt_ring_to_remove_octopode(ring_slot);
 
         // Cancelled:
-	if (unwanted < -1)
-	{
+        if (unwanted < -1)
+        {
             canned_msg(MSG_OK);
             return (false);
-	}
+        }
 
         if (!remove_ring(unwanted, false))
             return (false);
