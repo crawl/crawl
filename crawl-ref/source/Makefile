@@ -952,7 +952,7 @@ GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/cr
 GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   $(INI_OBJECTS)
+                   cmd-name.h $(INI_OBJECTS)
 
 GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
@@ -1329,6 +1329,9 @@ art-enum.h: art-data.h
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
+cmd-name.h: enum.h util/cmd-name.pl
+	$(QUIET_GEN)util/cmd-name.pl
+
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
 
@@ -1341,6 +1344,7 @@ artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
 l_moninf.o: mi-enum.h
+macro.o: cmd-name.h
 
 #############################################################################
 # Translation files
