@@ -187,6 +187,14 @@ LUAFN(moninf_get_can_be_constricted)
     return (1);
 }
 
+LUAFN(moninf_get_reach_range)
+{
+    MONINF(ls, 1, mi);
+
+    lua_pushnumber(ls, mi->reach_range());
+    return (1);
+}
+
 LUAFN(moninf_get_is_unique)
 {
     MONINF(ls, 1, mi);
@@ -243,6 +251,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting),
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
+    MIREG(reach_range),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),

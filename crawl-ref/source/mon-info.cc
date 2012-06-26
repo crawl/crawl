@@ -1491,6 +1491,20 @@ bool monster_info::can_regenerate() const
     return !is(MB_NO_REGEN);
 }
 
+reach_type monster_info::reach_range() const
+{
+    const monsterentry *e = get_monster_data(type);
+    ASSERT(e);
+
+    reach_type range = e->attack[0].flavour == AF_REACH ? REACH_TWO : REACH_NONE;
+
+    const item_def *weapon = inv[MSLOT_WEAPON].get();
+    if (weapon)
+        range = std::max(range, weapon_reach(*weapon));
+
+    return range;
+}
+
 size_type monster_info::body_size() const
 {
     const monsterentry *e = get_monster_data(type);
