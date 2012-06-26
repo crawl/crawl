@@ -396,6 +396,7 @@ static void _print_hint(std::string key)
         return mprf(MSGCH_ERROR, "Error, no hint for '%s.'", key.c_str());
 
     _replace_static_tags(text);
+    text = untag_tiles_console(text);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
@@ -460,56 +461,7 @@ void hints_death_screen()
             }
         }
 
-        switch (hint)
-        {
-        case 0:
-            text = "Always consider using projectiles, wands or spells before "
-                   "engaging monsters in close combat.";
-            break;
-
-        case 1:
-            text = "Learn when to run away from things you can't handle - this "
-                   "is important! It is often wise to skip a particularly "
-                   "dangerous level. But don't overdo this as monsters will "
-                   "only get harder the deeper you delve.";
-            break;
-
-        case 2:
-            text = "Rest between encounters, if possible in an area already "
-                   "explored and cleared of monsters. In Crawl, searching and "
-                   "resting are one and the same. To search for one turn, "
-                   "press <w>s</w>, <w>.</w>, <w>delete</w> or "
-                   "<w>keypad-5</w>. Pressing <w>5</w> or "
-                   "<w>shift-and-keypad-5</w>"
-                   "<tiles>, or <w>clicking into the stat area</w></tiles>"
-                   " will let you rest for a longer time (you will stop "
-                   "resting after 100 turns, or when fully healed).";
-            break;
-
-        case 3:
-            text =  "Remember to use those scrolls, potions or wands you've "
-                    "found. Very often, you cannot expect to identify "
-                    "everything with the scroll only. Learn to improvise: "
-                    "identify through usage.";
-            break;
-
-        case 4:
-            text =  "If a particular encounter feels overwhelming don't "
-                    "forget to use emergency items early on. A scroll of "
-                    "teleportation or a potion of speed can really save your "
-                    "bacon.";
-            break;
-
-        case 5:
-            text =  "Never fight more than one monster, if you can help it. "
-                    "Always back into a corridor so that they are forced to "
-                    "fight you one on one.";
-            break;
-
-        default:
-            text =  "Sorry, no hint this time, though there should have been "
-                    "one.";
-        }
+        _print_hint(make_stringf("death random %d", hint));
     }
     mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
     more();
@@ -528,89 +480,17 @@ void hints_finished()
 
     crawl_state.type = GAME_TYPE_NORMAL;
 
-    text =  "Congrats! You survived until the end of the hint mode - be sure "
-            "to try the other ones as well. Note that the command help screen "
-            "(<w>%?</w>) will look very different from now on. Here's a last "
-            "playing hint:";
-    insert_commands(text, CMD_DISPLAY_COMMANDS, 0);
-
-    mpr(text, MSGCH_TUTORIAL, 0);
+    _print_hint("finished");
     more();
 
     if (Hints.hints_explored)
-    {
-        text =  "Walking around and exploring levels gets easier by using "
-                "auto-explore (<w>%</w>). Crawl will let you automatically "
-                "move to and pick up interesting items."
-                "<tiles>\nAutoexploration can also be started by <w>left-clicking</w> "
-                "on the minimap while the <w>Control</w> key is pressed.</tiles>";
-        insert_commands(text, CMD_EXPLORE, 0);
-    }
+        _print_hint("finished explored");
     else if (Hints.hints_travel)
-    {
-        text =  "There is a convenient way for travelling between far away "
-                "dungeon levels: press <w>%</w> or <w>G</w> and enter "
-                "the desired destination. If your travel gets interrupted, "
-                "issuing <w>% Enter</w> or <w>G Enter</w> will continue "
-                "it.";
-        insert_commands(text, CMD_INTERLEVEL_TRAVEL, CMD_INTERLEVEL_TRAVEL, 0);
-    }
+        _print_hint("finished travel");
     else if (Hints.hints_stashes)
-    {
-        text =  "You can search among all items existing in the dungeon with "
-                "the <w>%</w> command. For example, "
-                "<w>% \"knife\"</w> will list all knives. You can then "
-                "travel to one of the spots. It is even possible to enter "
-                "words like <w>\"shop\"</w> or <w>\"altar\"</w>.";
-        insert_commands(text, CMD_SEARCH_STASHES, CMD_SEARCH_STASHES, 0);
-    }
+        _print_hint("finished stashes");
     else
-    {
-        int hint = random2(4);
-        switch (hint)
-        {
-        case 0:
-            text = "The game keeps an automated logbook for your characters. "
-                   "Use <w>%:</w> to read it. You can enter notes manually "
-                   "with the <w>%</w> command. Once your character perishes, "
-                   "two morgue files are left in the <w>morgue/</w> "
-                   "directory. The one ending in .txt contains a copy of "
-                   "your logbook. During play, you can create a dump file "
-                   "with <w>%</w>.";
-            insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_MAKE_NOTE,
-                            CMD_CHARACTER_DUMP, 0);
-            break;
-
-        case 1:
-            text = "Crawl has a macro function built in: press <w>~m</w> "
-                   "to define a macro by first specifying a trigger key "
-                   "(say, <w>F1</w>) and a command sequence, for example "
-                   "<w>za+.</w>. The latter will make the <w>F1</w> "
-                   "key always zap the spell in slot a at the nearest "
-                   "monster. For more information on macros, type <w>%~</w>.";
-            insert_commands(text, CMD_DISPLAY_COMMANDS, 0);
-            break;
-
-        case 2:
-            text = "The interface can be greatly customised. All options are "
-                   "explained in the file <w>options_guide.txt</w> which "
-                   "can be found in the <w>docs</w> directory. The options "
-                   "themselves are set in <w>init.txt</w> or "
-                   "<w>.crawlrc</w>. Crawl will complain if it can't find "
-                   "either file.";
-            break;
-
-        case 3:
-            text = "You can ask other Crawl players for advice and help "
-                   "on the <w>##crawl</w> IRC (Internet Relay Chat) "
-                   "channel on freenode (<w>irc.freenode.net</w>).";
-            break;
-
-        default:
-            text =  "Oops... No hint for now. Better luck next time!";
-        }
-    }
-    mpr(text, MSGCH_TUTORIAL, 0);
+        _print_hint(make_stringf("finished random %d", random2(4)));
     more();
 
     Hints.hints_events.init(false);

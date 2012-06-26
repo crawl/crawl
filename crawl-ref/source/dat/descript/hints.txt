@@ -54,3 +54,113 @@ death ranger melee
 Your bow and arrows are extremely powerful against distant monsters. Be sure to
 collect all arrows lying around in the dungeon.
 %%%%
+death random 0
+
+Always consider using projectiles, wands or spells before
+engaging monsters in close combat.
+%%%%
+death random 1
+
+Learn when to run away from things you can't handle - this
+is important! It is often wise to skip a particularly
+dangerous level. But don't overdo this as monsters will
+only get harder the deeper you delve.
+%%%%
+death random 2
+
+Rest between encounters, if possible in an area already
+explored and cleared of monsters. In Crawl, searching and
+resting are one and the same. To search for one turn,
+press <w>s</w>, <w>.</w>, <w>delete</w> or
+<w>keypad-5</w>. Pressing <w>5</w> or <w>shift-and-keypad-5</w>
+<tiles>, or <w>clicking into the stat area</w></tiles>
+will let you rest for a longer time (you will stop
+resting after 100 turns, or when fully healed).
+%%%%
+death random 3
+
+Remember to use those scrolls, potions or wands you've
+found. Very often, you cannot expect to identify
+everything with the scroll only. Learn to improvise:
+identify through usage.
+%%%%
+death random 4
+
+If a particular encounter feels overwhelming don't
+forget to use emergency items early on. A scroll of
+teleportation or a potion of speed can really save your
+bacon.
+%%%%
+death random 5
+
+Never fight more than one monster, if you can help it.
+Always back into a corridor so that they are forced to
+fight you one on one.
+%%%%
+finished
+
+Congrats! You survived until the end of the hint mode - be sure
+to try the other ones as well. Note that the command help screen
+(<w>%cmd[CMD_DISPLAY_COMMANDS]?</w>) will look very different from now on. Here's a last
+playing hint:
+%%%%
+finished explored
+
+Walking around and exploring levels gets easier by using
+auto-explore (<w>%cmd[CMD_EXPLORE]</w>). Crawl will let you automatically
+move to and pick up interesting items.
+<tiles>
+
+Autoexploration can also be started by <w>left-clicking</w>
+on the minimap while the <w>Control</w> key is pressed.</tiles>
+%%%%
+finished travel
+
+There is a convenient way for travelling between far away
+dungeon levels: press <w>%cmd[CMD_INTERLEVEL_TRAVEL]</w> or <w>G</w> and enter
+the desired destination. If your travel gets interrupted,
+issuing <w>%cmd[CMD_INTERLEVEL_TRAVEL] Enter</w> or <w>G Enter</w> will continue
+it.
+%%%%
+finished stashes
+
+You can search among all items existing in the dungeon with
+the <w>%cmd[CMD_SEARCH_STASHES]</w> command. For example,
+<w>%cmd[CMD_SEARCH_STASHES] "knife"</w> will list all knives. You can then
+travel to one of the spots. It is even possible to enter
+words like <w>"shop"</w> or <w>"altar"</w>.
+%%%%
+finished random 0
+
+The game keeps an automated logbook for your characters.
+Use <w>%cmd[CMD_DISPLAY_COMMANDS]:</w> to read it. You can enter notes manually
+with the <w>%cmd[CMD_MAKE_NOTE]</w> command. Once your character perishes,
+two morgue files are left in the <w>morgue/</w>
+directory. The one ending in .txt contains a copy of
+your logbook. During play, you can create a dump file
+with <w>%cmd[CMD_CHARACTER_DUMP]</w>.
+%%%%
+finished random 1
+
+Crawl has a macro function built in: press <w>~m</w>
+to define a macro by first specifying a trigger key
+(say, <w>F1</w>) and a command sequence, for example
+<w>za+.</w>. The latter will make the <w>F1</w>
+key always zap the spell in slot a at the nearest
+monster. For more information on macros, type <w>%cmd[CMD_DISPLAY_COMMANDS]~</w>.
+%%%%
+finished random 2
+
+The interface can be greatly customised. All options are
+explained in the file <w>options_guide.txt</w> which
+can be found in the <w>docs</w> directory. The options
+themselves are set in <w>init.txt</w> or
+<w>.crawlrc</w>. Crawl will complain if it can't find
+either file.
+%%%%
+finished random 3
+
+You can ask other Crawl players for advice and help
+on the <w>##crawl</w> IRC (Internet Relay Chat)
+channel on freenode (<w>irc.freenode.net</w>).
+%%%%
