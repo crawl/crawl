@@ -8,7 +8,9 @@
 -----
 
 function echoall(...)
-  util.foreach({...}, crawl.mpr)
+  util.foreach({...}, function(x)
+      crawl.mpr(tostring(x))
+    end)
 end
 
 __echo = echoall
