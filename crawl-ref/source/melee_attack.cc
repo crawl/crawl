@@ -2172,7 +2172,7 @@ bool melee_attack::distortion_affects_defender()
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
-            defender->blink();
+            add_final_effect(FINEFF_BLINK, 0, defender);
         return (false);
     }
 
@@ -2189,8 +2189,10 @@ bool melee_attack::distortion_affects_defender()
         {
             canned_msg(MSG_STRANGE_STASIS);
         }
+        else if (coinflip())
+            add_final_effect(FINEFF_DISTORTION_TELEPORT, 0, defender);
         else
-            defender->teleport(coinflip(), one_chance_in(5));
+            defender->teleport();
         return (false);
     }
 

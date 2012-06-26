@@ -119,6 +119,11 @@ void fire_final_effects()
             if (defender && defender->alive() && !defender->no_tele(true, false))
                 defender->blink();
             break;
+
+        case FINEFF_DISTORTION_TELEPORT:
+            if (defender && defender->alive() && !defender->no_tele(true, false))
+                defender->teleport(true, one_chance_in(5));
+            break;
         }
     }
     env.final_effects.clear();
