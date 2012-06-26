@@ -703,7 +703,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     {
         const int dist = (you.pos() - mon->pos()).abs();
 
-        if (dist > 2 && weapon && reach_range(weapon_reach(*weapon)) >= dist)
+        if (dist > 2 && weapon && weapon_reach(*weapon) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targetting_commands(mon->pos());
@@ -1055,7 +1055,7 @@ static void _add_tip(std::string &tip, std::string text)
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 {
     const int attack_dist = you.weapon() ?
-        reach_range(weapon_reach(*you.weapon())) : 2;
+        weapon_reach(*you.weapon()) : 2;
 
     std::vector<command_type> cmd;
     tip = "";

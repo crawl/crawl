@@ -301,7 +301,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
         if (ally == NULL)
             continue;
 
-        if (mons_is_stationary(ally) || ally->reach_range())
+        if (mons_is_stationary(ally) || ally->reach_range() > REACH_NONE)
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
@@ -829,7 +829,7 @@ static bool _handle_reaching(monster* mons)
     const reach_type range = mons->reach_range();
     actor *foe = mons->get_foe();
 
-    if (!foe || !range)
+    if (!foe || range <= REACH_NONE)
         return (false);
 
     if (mons->submerged())
@@ -853,7 +853,7 @@ static bool _handle_reaching(monster* mons)
         // The monster has to be attacking the correct position.
         && mons->target == foepos
         // With a reaching attack with a large enough range:
-        && delta.abs() <= reach_range(range)
+        && delta.abs() <= range
         // And with no dungeon furniture in the way of the reaching
         // attack;
         && (feat_is_reachable_past(grd(first_middle))

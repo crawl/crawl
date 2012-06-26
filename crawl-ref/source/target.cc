@@ -144,7 +144,7 @@ bool targetter_reach::valid_aim(coord_def a)
 
     int dist = (origin - a).abs();
 
-    if (dist > reach_range(range))
+    if (dist > range)
         return notify_fail("You can't reach that far!");
 
     return true;
