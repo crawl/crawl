@@ -3052,6 +3052,11 @@ Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
 %%%%
+snail statue
+
+This idol to the god Cheibriados has the odd property of turning the ground in
+its presence into difficult-to-slog-through mud.
+%%%%
 soapberry tree
 
 <apple tree>
