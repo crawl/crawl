@@ -1441,12 +1441,7 @@ static void _go_upstairs()
     if (!_prompt_unique_pan_rune(ygrd))
         return;
 
-    const bool leaving_dungeon =
-        ygrd == DNGN_EXIT_DUNGEON
-        || level_id::current() == level_id(root_branch, 1)
-           && !feat_is_gate(ygrd);
-
-    if (leaving_dungeon)
+    if (ygrd == DNGN_EXIT_DUNGEON)
     {
         bool stay = true;
         std::string prompt = make_stringf("Are you sure you want to leave the "
