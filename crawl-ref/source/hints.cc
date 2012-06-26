@@ -283,6 +283,29 @@ void hints_zap_secret_doors()
             grd(*ri) = DNGN_CLOSED_DOOR;
 }
 
+static void _replace_static_tags(std::string &text)
+{
+    size_t p;
+    while ((p = text.find("$cmd[")) != std::string::npos)
+    {
+        size_t q = text.find("]", p + 5);
+        if (q == std::string::npos)
+        {
+            text += "<lightred>ERROR: unterminated $cmd</lightred>";
+            break;
+        }
+
+        std::string command = text.substr(p + 5, q - p - 5);
+        command_type cmd = name_to_command(command);
+
+        command = command_to_string(cmd);
+        if (command == "<")
+            command += "<";
+
+        text.replace(p, q - p + 1, command);
+    }
+}
+
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
@@ -299,8 +322,8 @@ void hints_starting_screen()
 #endif
 
     std::string text = getHintString("welcome");
+    _replace_static_tags(text);
 
-    insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
     linebreak_string(text, width);
     display_tagged_block(text);
 
@@ -371,6 +394,8 @@ static void _print_hint(std::string key)
     std::string text = getHintString(key);
     if (text.empty())
         return mprf(MSGCH_ERROR, "Error, no hint for '%s.'", key.c_str());
+
+    _replace_static_tags(text);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
