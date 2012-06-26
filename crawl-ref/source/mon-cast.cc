@@ -2781,10 +2781,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             if (res_margin > 0)
             {
                 if (actual)
-                {
-                    simple_monster_message(m,
-                                mons_resist_string(m, res_margin).c_str());
-                }
+                    simple_monster_message(m, mons_resist_string(m, res_margin));
                 continue;
             }
 

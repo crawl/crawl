@@ -1447,7 +1447,7 @@ static int _mons_damage(monster_type mc, int rt)
     return (smc->attack[rt].damage);
 }
 
-std::string resist_margin_phrase(int margin)
+const char* resist_margin_phrase(int margin)
 {
     ASSERT(margin > 0);
 
@@ -1462,7 +1462,7 @@ bool mons_immune_magic(const monster* mon)
     return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
-std::string mons_resist_string(const monster* mon, int res_margin)
+const char* mons_resist_string(const monster* mon, int res_margin)
 {
     if (mons_immune_magic(mon))
         return " is unaffected.";
@@ -4220,7 +4220,7 @@ const char* mons_class_name(monster_type mc)
     return get_monster_data(mc)->name;
 }
 
-bool mons_is_tentacle_end(const int mtype)
+bool mons_is_tentacle_end(monster_type mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
             || mtype == MONS_ELDRITCH_TENTACLE);

@@ -1565,10 +1565,7 @@ static int _disperse_monster(monster* mon, int pow)
             monster_blink(mon);
         }
         else
-        {
-            simple_monster_message(mon,
-                               mons_resist_string(mon, res_margin).c_str());
-        }
+            simple_monster_message(mon, mons_resist_string(mon, res_margin));
 
         return (1);
     }
