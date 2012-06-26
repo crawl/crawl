@@ -1493,7 +1493,8 @@ bool monster_info::can_regenerate() const
 
 reach_type monster_info::reach_range() const
 {
-    const monsterentry *e = get_monster_data(type);
+    const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
+                                             ? base_type : type);
     ASSERT(e);
 
     reach_type range = e->attack[0].flavour == AF_REACH ? REACH_TWO : REACH_NONE;
