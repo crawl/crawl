@@ -373,8 +373,7 @@ void up_stairs(dungeon_feature_type force_stair)
         old_level_info.update();
     }
 
-    if (player_in_branch(root_branch) && you.depth == 1
-        || stair_find == DNGN_EXIT_DUNGEON)
+    if (stair_find == DNGN_EXIT_DUNGEON)
     {
         you.depth = 0;
         mpr("You have escaped!");
@@ -473,9 +472,7 @@ level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
 {
     if (branches[you.where_are_you].exit_stairs == feat)
     {
-        if (you.where_are_you == root_branch)
-            feat = DNGN_EXIT_DUNGEON; // silly Sprint -- FIXME
-        else if (feat == DNGN_ESCAPE_HATCH_UP)
+        if (feat == DNGN_ESCAPE_HATCH_UP)
             feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
         else if (branches[you.where_are_you].parent_branch < NUM_BRANCHES)
         {
