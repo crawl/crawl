@@ -132,6 +132,10 @@ static TextDB AllDBs[] =
     TextDB("FAQ", "database/",
             "FAQ.txt",      // database for Frequently Asked Questions
             NULL),
+
+    TextDB("hints", "descript/",
+            "hints.txt",    // hints mode
+            NULL),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -143,6 +147,7 @@ static TextDB& MiscDB        = AllDBs[5];
 static TextDB& QuotesDB      = AllDBs[6];
 static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
+static TextDB& HintsDB       = AllDBs[9];
 
 static std::string _db_cache_path(std::string db, const char *lang)
 {
@@ -895,4 +900,12 @@ std::string getMiscString(const std::string &misc,
     _execute_embedded_lua(txt);
 
     return txt;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Hints DB specific functions.
+
+std::string getHintString(const std::string &key)
+{
+    return unwrap_desc(_query_database(HintsDB, key, true, true));
 }

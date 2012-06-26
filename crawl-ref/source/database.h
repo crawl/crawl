@@ -50,6 +50,7 @@ std::string getRandNameString(const std::string &itemtype,
 std::string getHelpString(const std::string &topic);
 std::string getMiscString(const std::string &misc,
                           const std::string &suffix = "");
+std::string getHintString(const std::string &key);
 
 std::vector<std::string> getAllFAQKeys(void);
 std::string getFAQ_Question(const std::string &key);
