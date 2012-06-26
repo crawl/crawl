@@ -1316,18 +1316,40 @@ static void _sdump_mutations(dump_params &par)
 //      Public Functions
 // ========================================================================
 
+static const char* hunger_names[] =
+{
+    "starving",
+    "near starving",
+    "very hungry",
+    "hungry",
+    "not hungry",
+    "full",
+    "very full",
+    "completely stuffed",
+};
+
+static const char* thirst_names[] =
+{
+    "bloodless",
+    "near bloodless",
+    "very thirsty",
+    "thirsty",
+    "not thirsty",
+    "full",
+    "very full",
+    "almost alive",
+};
+
 const char *hunger_level(void)
 {
-    const bool vamp = (you.species == SP_VAMPIRE);
+    COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
+    COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
 
-    return ((you.hunger <= 1000) ? (vamp ? "bloodless" : "starving") :
-            (you.hunger <= 1533) ? (vamp ? "near bloodless" : "near starving") :
-            (you.hunger <= 2066) ? (vamp ? "very thirsty" : "very hungry") :
-            (you.hunger <= 2600) ? (vamp ? "thirsty" : "hungry") :
-            (you.hunger <  7000) ? (vamp ? "not thirsty" : "not hungry") :
-            (you.hunger <  9000) ? "full" :
-            (you.hunger < 11000) ? "very full"
-                                 : (vamp ? "almost alive" : "completely stuffed"));
+    ASSERT(you.hunger_state <= HS_ENGORGED);
+
+    if (you.species == SP_VAMPIRE)
+        return thirst_names[you.hunger_state];
+    return hunger_names[you.hunger_state];
 }
 
 std::string morgue_directory()
