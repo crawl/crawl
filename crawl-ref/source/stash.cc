@@ -311,6 +311,7 @@ void Stash::update()
 
         god_id_item(*pitem);
         const item_def& item = *pitem;
+        const bool item_stack = _grid_has_perceived_multiple_items(p);
 
         // We knew of nothing on this square, so we'll assume this is the
         // only item here, but mark it as unverified unless we can see nothing
@@ -319,8 +320,8 @@ void Stash::update()
         {
             add_item(item);
             // sacrificiable items will be visited.
-            verified = !_grid_has_perceived_multiple_items(p)
-                       && (you.religion == GOD_NO_GOD || !god_likes_item(you.religion, item));
+            verified = !item_stack && (you.religion == GOD_NO_GOD
+                                       || !god_likes_item(you.religion, item));
             return;
         }
 
@@ -328,7 +329,7 @@ void Stash::update()
         // the top item matches what we remember.
         const item_def &first = items[0];
         // Compare these items
-        if (!are_items_same(first, item))
+        if (!are_items_same(first, item) || items.size() > 1 != item_stack)
         {
             // See if 'item' matches any of the items we have. If it does,
             // we'll just make that the first item and leave 'verified'
@@ -342,15 +343,16 @@ void Stash::update()
                     // Found it. Swap it to the front of the vector.
                     std::swap(items[i], items[0]);
 
-                    // We don't set verified to true. If this stash was
-                    // already unverified, it remains so.
+                    // The stash has changed, so we mark it as unverified.
+                    verified = false;
+
                     return;
                 }
             }
 
             // If this is unverified, forget last item on stack. This isn't
             // terribly clever, but it prevents the vector swelling forever.
-            if (!verified)
+            if (!verified && items.size() > 2)
                 items.pop_back();
 
             // Items are different. We'll put this item in the front of our
