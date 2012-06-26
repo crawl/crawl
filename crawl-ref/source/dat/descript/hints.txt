@@ -3,7 +3,7 @@ welcome
 
 <white>Welcome to Dungeon Crawl!</white>
 
-Your object is to lead a <w>{{ return you.race() }} {{ return you.class() }}</w>
+Your objective is to lead a <w>{{ return you.race() }} {{ return you.class() }}</w>
 safely through the depths of the dungeon, retrieving the fabled Orb of
 Zot and returning it to the surface. In the beginning, however, let discovery
 be your main goal. Try to delve as deeply as possible but beware; death lurks
