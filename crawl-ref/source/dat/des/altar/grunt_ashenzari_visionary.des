@@ -1,0 +1,121 @@
+{{
+function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,marker,ev)
+    if data.trig then
+        return
+    end
+    data.trig = true
+    crawl.god_speaks("Ashenzari", "Ashenzari says, \"See what I see, mortal...\"")
+    for slave in iter.slave_iterator("revealing_wall", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "clear_stone_wall", false, false, false)
+    end
+    crawl.mpr("You have a sudden vision...")
+end
+}}
+
+NAME: grunt_ashenzari_visionary
+DEPTH: D:2-12
+TAGS: temple_overflow_ashenzari uniq_altar_ashenzari no_trap_gen no_monster_gen
+SUBVAULT: e : grunt_ashenzari_visionary
+SUBVAULT: f : grunt_ashenzari_visionary
+{{
+lua_marker(":", Triggerable.synchronized_markers(
+    function_at_spot("callback.grunt_ashenzari_visionary_reveal", { trig = false },
+                     true, { only_at_slave = true, listen_to_slaves = true })))
+lua_marker('d', props_marker {revealing_wall=1})
+}}
+KFEAT: d = stone_wall
+KFEAT: _ = altar_ashenzari
+MAP
+ccccc.@.ccccc
+ceeed...dfffc
+ceeed...dfffc
+ceeed...dfffc
+ceeed...dfffc
+ceeed:::dfffc
+ceeed:::dfffc
+ceeed:::dfffc
+ceeed:_:dfffc
+ceeed:::dfffc
+ceeed:::dfffc
+ceeed:::dfffc
+ceeed...dfffc
+ceeed...dfffc
+ceeed...dfffc
+ceeed...dfffc
+ccccc.@.ccccc
+ENDMAP
+
+NAME: grunt_ashenzari_visionary_trees
+TAGS: grunt_ashenzari_visionary no_trap_gen no_monster_gen
+MONS: butterfly
+FTILE:  . = floor_grass_dirt_mix
+SUBST:  . = ....t1
+COLOUR: . = green / brown
+KPROP:  . = no_tele_into
+MAP
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+ENDMAP
+
+NAME: grunt_ashenzari_visionary_swamp
+TAGS: grunt_ashenzari_visionary no_trap_gen no_monster_gen
+KFEAT: H = w
+MARKER: H = lua:fog_machine { cloud_type = "thin mist", pow_min = 3, \
+                              pow_max = 10, delay = 10, start_clouds = 1, \
+                              size_min = 1, size_max = 3, walk_dist = 2 }
+SUBST: w = wwwWWt
+KPROP: wW = no_tele_into
+MAP
+www
+www
+wHw
+www
+www
+www
+www
+wHw
+www
+www
+www
+www
+wHw
+www
+www
+ENDMAP
+
+NAME: grunt_ashenzari_visionary_lava
+TAGS: grunt_ashenzari_visionary no_trap_gen no_monster_gen
+KFEAT: H = l
+MARKER: H = lua:fog_machine { cloud_type = "black smoke", pow_min = 3, \
+                              pow_max = 10, delay = 10, start_clouds = 1, \
+                              size_min = 1, size_max = 3, walk_dist = 2 }
+MAP
+lll
+lll
+lHl
+lll
+lll
+lll
+lll
+lHl
+lll
+lll
+lll
+lll
+lHl
+lll
+lll
+ENDMAP
