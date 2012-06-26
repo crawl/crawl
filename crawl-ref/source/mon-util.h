@@ -161,7 +161,7 @@ enum mon_threat_level_type
 
 dungeon_feature_type habitat2grid(habitat_type ht);
 
-monsterentry *get_monster_data(monster_type mc);
+monsterentry *get_monster_data(monster_type mc) PURE;
 const mon_resist_def &get_mons_class_resists(monster_type mc);
 mon_resist_def get_mons_resists(const monster* mon);
 
