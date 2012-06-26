@@ -915,6 +915,7 @@ bool InvMenu::process_key(int key)
     }
 
     if (type == MT_KNOW)
+    {
         switch (key)
         {
             case '-':
@@ -942,6 +943,7 @@ bool InvMenu::process_key(int key)
             flags |= MF_EASY_EXIT; //hackish way to get the menu to reopen
             return false;
         }
+    }
 
     if (items.size()
         && type == MT_DROP
