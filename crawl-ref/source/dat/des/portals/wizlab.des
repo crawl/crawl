@@ -1603,7 +1603,6 @@ TILE:    K = dngn_crystal_green / dngn_crystal_cyan w:5
 TILE:    J = dngn_metal_wall_green / dngn_metal_wall_cyan w:5
 TILE:    n = dngn_transparent_wall_green / dngn_transparen_wall_cyan w:5
 TILE:    D = dngn_dimension_edge
-TILE:    OPQRSTUVWXYZ&?[ = dngn_trap_golubria
 FTILE:   OPQRSTUVWXYZ&?[ = floor_rough_green
 TILE:    opqrstuvwxyz@!] = floor_black_cobalt
 
