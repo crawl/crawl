@@ -924,8 +924,23 @@ bool InvMenu::process_key(int key)
             {
                 lastch = key;
                 return (false);
-                break;
             }
+            case CONTROL('D'):
+            {
+                //Make next selection 'default'
+                if (lastch != CONTROL('D'))
+                    lastch = CONTROL('D');
+                else
+                    lastch = ' '; //disarm
+                return true;
+            }
+        }
+        if (lastch == CONTROL('D') || key == ',')
+        {
+            num = -2; //set selection default
+            Menu::process_key(key);
+            flags |= MF_EASY_EXIT; //hackish way to get the menu to reopen
+            return false;
         }
 
     if (items.size()

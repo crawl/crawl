@@ -2515,15 +2515,37 @@ void autoinscribe()
 }
 
 
+static bool _known_subtype(const item_def &item)
+{
+    //TODO : perfect this function
+    //ISSUE : while auto-pathing this will print leaked names!
+    fprintf(stderr, "ITEM[%d][%d]: ITK=%d  KF=%d  %s\n", item.base_type ,item.sub_type, item_type_known(item), item.flags & ISFLAG_KNOW_TYPE, item.name(DESC_PLAIN,false,true,false).c_str());
+
+
+    if (item.base_type >= NUM_OBJECT_CLASSES
+        || item.sub_type >= get_max_subtype(item.base_type))
+        return false;
+
+    //if (item.base_type == OBJ_JEWELLERY )
+
+
+    if (is_artefact(item) && !item_type_known(item))
+        // don't leak randart base type
+        return false;
+
+    if (item.flags & ISFLAG_KNOW_TYPE || item_type_known(item))
+        return true;
+
+    return false;
+}
+
 
 static bool _is_option_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    if (item.base_type < NUM_OBJECT_CLASSES
-        // don't leak randart base type
-        && (!is_artefact(item) || item_type_known(item)))
+    if (_known_subtype(item))
     {
         int force = you.force_autopickup[item.base_type][item.sub_type];
         if (force != 0)
@@ -2533,17 +2555,7 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     //Check for initial settings
     for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
         if (Options.force_autopickup[i].first.matches(iname))
-        {
-            bool r = Options.force_autopickup[i].second;
-            if (item.base_type < NUM_OBJECT_CLASSES
-                // don't leak randart base type
-                && (!is_artefact(item) || item_type_known(item)))
-            {
-                int force = r ? 1 : -1;
-                you.force_autopickup[item.base_type][item.sub_type] = force;
-            }
-            return r;
-        }
+            return Options.force_autopickup[i].second;
 
 #ifdef CLUA_BINDINGS
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",

@@ -2026,13 +2026,34 @@ public:
     virtual std::string get_text(const bool = false) const
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+        std::string name = item->name(DESC_PLAIN,false,true,false,false,flags);
+        if (item->sub_type != MISC_RUNE_OF_ZOT)
+            name = pluralise(name);
 
-        std::string s;
-        s += hotkeys[0];
-        s += selected_qty ? " + " : " - ";
+        char buff[256];
+        if (selected_qty == 0) //Default
+            sprintf(buff, "<g> %c %c %s</g>", hotkeys[0],
+                    item_needs_autopickup(*item) ? '+' : '-', name.c_str());
+        else //Forced Autopickup
+            sprintf(buff, "<w> %c %c %s</w>", hotkeys[0],
+                    selected_qty == 1 ? '+' : '-', name.c_str());
 
-        return std::string(" ") + s + pluralise(item->name(DESC_PLAIN, false,
-                                                   true, false, false, flags));
+        return std::string(buff);// + NAME;
+    }
+
+    virtual bool selected() const
+    {
+        return (selected_qty != 0 && quantity);
+    }
+
+    virtual void select(int qty)
+    {
+        if (qty == -2)
+            selected_qty = 0;
+        else if (selected_qty >= 2)
+            selected_qty = 1; //Set to 0 to allow triple toggle
+        else
+            selected_qty += 1;
     }
 };
 
@@ -2118,9 +2139,10 @@ void check_item_knowledge(bool unknown_items)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
 
-                    std::string pname;
-                    if (item_needs_autopickup(*ptmp))
+                    if (you.force_autopickup[i][j] == 1)
                         selected_items.push_back(SelItem(0,1,ptmp));
+                    if (you.force_autopickup[i][j] == -1)
+                        selected_items.push_back(SelItem(0,2,ptmp));
                 }
             }
             else
@@ -2158,12 +2180,10 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->quantity  = 1;
                 items2.push_back(ptmp);
 
-                if (you.force_autopickup[OBJ_MISSILES][i] == 1
-                    || you.force_autopickup[OBJ_MISSILES][i] == 0
-                       && Options.autopickups & (1L << OBJ_MISSILES))
-                {
+                if (you.force_autopickup[OBJ_MISSILES][i] == 1)
                     selected_items.push_back(SelItem(0,1,ptmp));
-                }
+                if (you.force_autopickup[OBJ_MISSILES][i] == -1)
+                    selected_items.push_back(SelItem(0,2,ptmp));
             }
         }
     }
@@ -2191,7 +2211,7 @@ void check_item_knowledge(bool unknown_items)
 
     menu.set_title(stitle);
     menu.set_preselect(&selected_items);
-    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING
+    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_ALLOW_FILTER
                     | ((unknown_items) ? MF_NOSELECT : MF_MULTISELECT));
     menu.set_type(MT_KNOW);
     menu_letter ml = menu.load_items(items, unknown_items ? unknown_item_mangle
@@ -2199,28 +2219,39 @@ void check_item_knowledge(bool unknown_items)
 
     menu.load_items(items2, known_item_mangle, ml);
 
-    menu.show(true);
-
-    char last_char = menu.getkey();
-    std::vector<SelItem> returned_selection;
-    returned_selection = menu.get_selitems();
-
-    if (!unknown_items)
+    char last_char;
+    do
     {
-        //mark all previously selected items as "never-pickup"
-        for (std::vector<SelItem>::iterator iter = selected_items.begin();
-             iter != selected_items.end(); ++iter)
+        menu.set_flags(menu.get_flags() & ~MF_EASY_EXIT);
+        menu.show(true);
+
+        last_char = menu.getkey();
+        std::vector<SelItem> returned_selection;
+        returned_selection = menu.get_selitems();
+
+        if (!unknown_items)
         {
-            you.force_autopickup[iter->item->base_type][iter->item->sub_type] = -1;
+            //mark all previously selected items as "never-force"
+            for (std::vector<SelItem>::iterator iter = selected_items.begin();
+                 iter != selected_items.end(); ++iter)
+            {
+                you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 0;
+            }
+
+            //mark all currently selected items as "always-pickup" or "never-pickup"
+            for (std::vector<SelItem>::iterator iter = returned_selection.begin();
+                 iter != returned_selection.end(); ++iter)
+            {
+                if (iter->quantity == 2)
+                    iter->quantity = -1;
+                you.force_autopickup[iter->item->base_type][iter->item->sub_type] = iter->quantity;
+            }
         }
 
-        //mark all currently selected items as "always-pickup"
-        for (std::vector<SelItem>::iterator iter = returned_selection.begin();
-             iter != returned_selection.end(); ++iter)
-        {
-            you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 1;
-        }
-    }
+    } //for the menu to display the correct +/- for defaults the menu needs to be reopened
+    while (!unknown_items && menu.is_set(MF_EASY_EXIT)); //hack
+
+
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
     {
