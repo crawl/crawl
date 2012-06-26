@@ -195,7 +195,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
 {
     const bool same = a.base_type == b.base_type
         && a.sub_type == b.sub_type
-        && a.plus == b.plus
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.colour == b.colour
