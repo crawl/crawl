@@ -128,7 +128,6 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile);
 
 reach_type weapon_reach(const item_def &item);
-int reach_range(reach_type rt);
 
 // Macguffins
 bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);

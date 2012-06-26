@@ -4097,11 +4097,10 @@ bool mons_landlubbers_in_reach(const monster* mons)
     if (mons_has_ranged_attack(mons))
         return (true);
 
-    const reach_type range = mons->reach_range();
     actor *act;
     for (radius_iterator ai(mons->pos(),
-                            range ? 2 : 1,
-                            (range == REACH_KNIGHT) ? C_ROUND : C_SQUARE,
+                            mons->reach_range(),
+                            C_CIRCLE,
                             NULL,
                             true);
                          ai; ++ai)
