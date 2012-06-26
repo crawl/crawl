@@ -1,0 +1,56 @@
+%%%%
+welcome
+
+<white>Welcome to Dungeon Crawl!</white>
+
+Your object is to lead a <w>{{ return you.race() }} {{ return you.class() }}</w>
+safely through the depths of the dungeon, retrieving the fabled Orb of
+Zot and returning it to the surface. In the beginning, however, let discovery
+be your main goal. Try to delve as deeply as possible but beware; death lurks
+around every corner.
+
+For the moment, just remember the following keys and their functions:
+  <white>%?</white> - shows the items and the commands
+  <white>%</white>  - saves the game, to be resumed later (but note that death is permanent)
+  <white>%</white>  - examines something in your vicinity
+
+The hint mode will help you play Crawl without reading any documentation. If
+you haven't yet, you might want to try out the tutorial. Also, if you feel
+intrigued, there is more information available in the following files from the
+docs/ directory (all of which can also be read in-game):
+  <lightblue>quickstart.txt</lightblue>     - A very short guide to Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   - This contains all details on species, magic, skills, etc.
+  <lightblue>options_guide.txt</lightblue>  - Crawl's interface is highly configurable. This document
+                       explains all the options.
+
+Happy Crawling!
+%%%%
+death
+
+Condolences! Your character's premature death is a sad, but common occurrence
+in Crawl. Rest assured that with diligence and playing experience your
+characters will last longer.
+
+Perhaps the following advice can improve your playing style:
+%%%%
+death conjurer melee
+
+As a Conjurer your main weapon should be offensive magic. Cast spells more
+often! Remember to rest when your Magic is low.
+%%%%
+death berserker unberserked
+
+Don't forget to go berserk when fighting particularly difficult foes. It's
+risky, but makes you faster and beefier.
+{{
+  if you.hunger() < 3
+    then return "Berserking is impossible while very hungry or worse, " ..
+                "so make sure to stay fed at all times, just in case " ..
+                "you need to berserk." end
+}}
+%%%%
+death ranger melee
+
+Your bow and arrows are extremely powerful against distant monsters. Be sure to
+collect all arrows lying around in the dungeon.
+%%%%

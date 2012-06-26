@@ -18,6 +18,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "command.h"
+#include "database.h"
 #include "decks.h"
 #include "describe.h"
 #include "files.h"
@@ -297,38 +298,7 @@ void hints_starting_screen()
         width = 80;
 #endif
 
-    std::string text;
-
-    text  = "<white>Welcome to Dungeon Crawl!</white>\n\n"
-            "Your object is to lead a <w>"
-         + species_name(you.species) + " " + you.class_name
-         +
-        "</w> safely through the depths of the dungeon, retrieving the "
-        "fabled Orb of Zot and returning it to the surface. "
-        "In the beginning, however, let discovery be your "
-        "main goal. Try to delve as deeply as possible but beware; "
-        "death lurks around every corner.\n\n"
-        "For the moment, just remember the following keys "
-        "and their functions:\n"
-        "  <white>%?</white> - shows the items and the commands\n"
-        "  <white>%</white>  - saves the game, to be resumed later "
-        "(but note that death is permanent)\n"
-        "  <white>%</white>  - examines something in your vicinity\n\n"
-        "The hint mode will help you play Crawl without reading any "
-        "documentation. If you haven't yet, you might want to try out "
-        "the tutorial. Also, if you feel intrigued, there is more information "
-        "available in the following files from the docs/ directory (all of "
-        "which can also be read in-game):"
-        "\n"
-        "  <lightblue>quickstart.txt</lightblue>     - "
-        "A very short guide to Crawl.\n"
-        "  <lightblue>crawl_manual.txt</lightblue>   - "
-        "This contains all details on species, magic, skills, etc.\n"
-        "  <lightblue>options_guide.txt</lightblue>  - "
-        "Crawl's interface is highly configurable. This document \n"
-        "                       explains all the options.\n"
-        "\n"
-        "Happy Crawling!";
+    std::string text = getHintString("welcome");
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
     linebreak_string(text, width);
@@ -396,45 +366,41 @@ void hints_new_turn()
     }
 }
 
+static void _print_hint(std::string key)
+{
+    std::string text = getHintString(key);
+    if (text.empty())
+        return mprf(MSGCH_ERROR, "Error, no hint for '%s.'", key.c_str());
+
+    // "\n" to preserve indented parts, the rest is unwrapped, or split into
+    // paragraphs by "\n\n", split_string() will ignore the empty line.
+    std::vector<std::string> chunks = split_string("\n", text);
+    for (size_t i = 0; i < chunks.size(); i++)
+        mpr(chunks[i], MSGCH_TUTORIAL);
+}
+
 // Once a hints mode character dies, offer some last playing hints.
 void hints_death_screen()
 {
     std::string text;
 
-    mpr("Condolences! Your character's premature death is a sad, but "
-         "common occurrence in Crawl. Rest assured that with diligence and "
-         "playing experience your characters will last longer.",
-         MSGCH_TUTORIAL);
-
-    mpr("Perhaps the following advice can improve your playing style:",
-         MSGCH_TUTORIAL);
+    _print_hint("death");
     more();
 
     if (Hints.hints_type == HINT_MAGIC_CHAR
         && Hints.hints_spell_counter < Hints.hints_melee_counter)
     {
-        text = "As a Conjurer your main weapon should be offensive magic. Cast "
-               "spells more often! Remember to rest when your Magic is low.";
+        _print_hint("death conjurer melee");
     }
     else if (you.religion == GOD_TROG && Hints.hints_berserk_counter <= 3
              && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
-        text = "Don't forget to go berserk when fighting particularly "
-               "difficult foes. It's risky, but makes you faster and beefier.";
-
-        if (you.hunger_state < HS_HUNGRY)
-        {
-            text += " Berserking is impossible while very hungry or worse, "
-                    "so make sure to stay fed at all times, just in case "
-                    "you need to berserk.";
-        }
+        _print_hint("death berserker unberserked");
     }
     else if (Hints.hints_type == HINT_RANGER_CHAR
              && 2*Hints.hints_throw_counter < Hints.hints_melee_counter)
     {
-        text = "Your bow and arrows are extremely powerful against distant "
-               "monsters. Be sure to collect all arrows lying around in the "
-               "dungeon.";
+        _print_hint("death ranger melee");
     }
     else
     {
