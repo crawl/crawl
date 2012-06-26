@@ -1383,7 +1383,9 @@ static void _fixup_branch_stairs()
         && you.depth == 1
         && player_in_connected_branch())
     {
-        const dungeon_feature_type exit = your_branch().exit_stairs;
+        dungeon_feature_type exit = your_branch().exit_stairs;
+        if (you.where_are_you == root_branch) // ZotDef
+            exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
@@ -2220,9 +2222,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
             _builder_monsters();
 
         _fixup_walls();
-        _fixup_branch_stairs();
     }
 
+    _fixup_branch_stairs();
     _fixup_misplaced_items();
 
     link_items();

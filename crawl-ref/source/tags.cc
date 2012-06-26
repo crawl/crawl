@@ -3120,11 +3120,20 @@ static void tag_read_level(reader &th)
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
-            grd[i][j] = static_cast<dungeon_feature_type>(unmarshallUByte(th));
-            ASSERT(grd[i][j] < NUM_FEATURES);
+            dungeon_feature_type feat = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+            grd[i][j] = feat;
+            ASSERT(feat < NUM_FEATURES);
 #if TAG_MAJOR_VERSION == 33
-            if (grd[i][j] == DNGN_OLD_WAX_WALL)
+            if (feat == DNGN_OLD_WAX_WALL)
                 grd[i][j] = DNGN_ROCK_WALL;
+            if (you.where_are_you == root_branch && you.depth == 1
+                && (feat == DNGN_ESCAPE_HATCH_UP
+                    || feat == DNGN_STONE_STAIRS_UP_I
+                    || feat == DNGN_STONE_STAIRS_UP_II
+                    || feat == DNGN_STONE_STAIRS_UP_III))
+            {
+                grd[i][j] = DNGN_EXIT_DUNGEON;
+            }
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
