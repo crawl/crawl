@@ -164,3 +164,22 @@ You can ask other Crawl players for advice and help
 on the <w>##crawl</w> IRC (Internet Relay Chat)
 channel on freenode (<w>irc.freenode.net</w>).
 %%%%
+HINT_SEEN_FIRST_OBJECT
+
+That
+<console>$1 </console>is an item. If you move there and press <w>g</w> or
+<w>,</w> you will pick it up.
+<console>Generally, items are shown by non-letter symbols like
+<w>%?!"=()[</w>. </console>
+<tiles>You can also pick up an item by clicking on your <w>left mouse
+button</w> while standing on its square. </tiles>
+Also, several types of objects will usually be picked up
+automatically.
+<tiles>(In Tiles, these will be marked with a green frame around them.)</tiles>
+
+Once it is in your inventory, you can drop it again with
+<tiles>a <w>left mouse click</w> while pressing the <w>Shift key</w>.
+Whenever you <w>right-click</w> on an item</tiles><console><w>d</w>.
+Any time you look at an item in your <w>i</w>nventory</console>,
+you can read about its properties and its description.
+%%%%
