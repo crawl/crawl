@@ -1832,7 +1832,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin).c_str()))
+                    mons_resist_string(mons, res_margin)))
             {
                 *did_msg = true;
             }
@@ -1864,7 +1864,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin).c_str()))
+                    mons_resist_string(mons, res_margin)))
             {
                 *did_msg = true;
             }
@@ -4067,7 +4067,7 @@ void bolt::enchantment_affect_monster(monster* mon)
         {
         case MON_RESIST:
             if (simple_monster_message(mon,
-                                   resist_margin_phrase(res_margin).c_str()))
+                                   resist_margin_phrase(res_margin)))
             {
                 msg_generated = true;
             }

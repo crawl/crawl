@@ -2909,7 +2909,7 @@ void mon_nearby_ability(monster* mons)
                 {
                     const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons,
-                           mons_resist_string(foe_mons, res_margin).c_str());
+                           mons_resist_string(foe_mons, res_margin));
                 }
                 break;
             }

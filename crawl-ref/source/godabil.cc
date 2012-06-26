@@ -3080,7 +3080,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     {
         mprf("%s%s",
              mon->name(DESC_THE).c_str(),
-             mons_resist_string(mon, res_margin).c_str());
+             mons_resist_string(mon, res_margin));
         return (1);
     }
 
@@ -3135,7 +3135,7 @@ void cheibriados_time_bend(int pow)
             {
                 mprf("%s%s",
                      mon->name(DESC_THE).c_str(),
-                     mons_resist_string(mon, res_margin).c_str());
+                     mons_resist_string(mon, res_margin));
                 continue;
             }
 
