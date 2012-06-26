@@ -389,7 +389,8 @@ void hints_new_turn()
     }
 }
 
-static void _print_hint(std::string key)
+static void _print_hint(std::string key, const std::string arg1 = "",
+                        const std::string arg2 = "")
 {
     std::string text = getHintString(key);
     if (text.empty())
@@ -397,6 +398,8 @@ static void _print_hint(std::string key)
 
     _replace_static_tags(text);
     text = untag_tiles_console(text);
+    text = replace_all(text, "$1", arg1);
+    text = replace_all(text, "$2", arg2);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
@@ -988,24 +991,8 @@ void hints_first_item(const item_def &item)
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_A), gc);
 #endif
 
-    std::string text = "That "
-            "<console>" + glyph_to_tagstr(get_item_glyph(&item)) + " </console>"
-            "is an item. If you move there and press <w>g</w> or "
-            "<w>,</w> you will pick it up. "
-            "<console>Generally, items are shown by non-letter symbols like "
-            "<w>%?!\"=()[</w>. </console>"
-            "<tiles>You can also pick up an item by clicking on your <w>left mouse "
-            "button</w> while standing on its square. </tiles>"
-            "Also, several types of objects will usually be picked up "
-            "automatically. "
-            "<tiles>(In Tiles, these will be marked with a green frame around them.)</tiles>"
-            "\nOnce it is in your inventory, you can drop it again with "
-            "<tiles>a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
-            "Whenever you <w>right-click</w> on an item</tiles>"
-            "<console><w>d</w>. Any time you look at an item in your <w>i</w>nventory</console>"
-            ", you can read about its properties and its description.";
-
-    mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
+    _print_hint("HINT_SEEN_FIRST_OBJECT",
+                glyph_to_tagstr(get_item_glyph(&item)));
 }
 
 static void _new_god_conduct()
