@@ -10,9 +10,9 @@ be your main goal. Try to delve as deeply as possible but beware; death lurks
 around every corner.
 
 For the moment, just remember the following keys and their functions:
-  <white>%?</white> - shows the items and the commands
-  <white>%</white>  - saves the game, to be resumed later (but note that death is permanent)
-  <white>%</white>  - examines something in your vicinity
+  <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - shows the items and the commands
+  <white>$cmd[CMD_SAVE_GAME]</white>  - saves the game, to be resumed later (but note that death is permanent)
+  <white>$cmd[CMD_LOOK_AROUND]</white>  - examines something in your vicinity
 
 The hint mode will help you play Crawl without reading any documentation. If
 you haven't yet, you might want to try out the tutorial. Also, if you feel
