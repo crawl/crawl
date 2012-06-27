@@ -25,6 +25,7 @@ for (/"([^"\n]*)"/g)
 {
     next if /^$/;
     next if /^undefined trap$/;
+    next if /^Error/;
 
     $features{articled($_)} = 1;
 }
