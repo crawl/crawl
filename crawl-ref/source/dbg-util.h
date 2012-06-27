@@ -12,8 +12,6 @@ skill_type skill_from_name(const char *name);
 
 int debug_cap_stat(int stat);
 
-void error_message_to_player(void);
-
 void debug_dump_levgen();
 
 struct item_def;
