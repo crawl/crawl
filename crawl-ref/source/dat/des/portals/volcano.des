@@ -550,6 +550,7 @@ ENDMAP
 # This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
 TAGS:       uniq_volcano chance_volcano
+KPROP:      .SLO = no_rtele_into
 CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
