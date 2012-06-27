@@ -406,6 +406,8 @@ static void _print_hint(std::string key, const std::string arg1 = "",
     std::vector<std::string> chunks = split_string("\n", text);
     for (size_t i = 0; i < chunks.size(); i++)
         mpr(chunks[i], MSGCH_TUTORIAL);
+
+    stop_running();
 }
 
 // Once a hints mode character dies, offer some last playing hints.
@@ -528,21 +530,7 @@ void hints_dissection_reminder(bool healthy)
     {
         Hints.hints_just_triggered = true;
 
-        std::string text;
-        text += "If you don't want to eat it, consider offering this "
-                "corpse up under <w>p</w>rayer as a sacrifice to ";
-        text += god_name(you.religion);
-        text += "<tiles>. You can also chop up any corpse that shows in the floor "
-                "part of your inventory tiles by clicking on it with your "
-                "<w>left mouse button</w></tiles>."
-                "Whenever you view a corpse while in hint mode you can "
-                "reread this information.";
-
-        mpr(text, MSGCH_TUTORIAL, 0);
-
-
-        if (is_resting())
-            stop_running();
+        _print_hint("dissection reminder");
     }
 }
 
@@ -993,53 +981,6 @@ void hints_first_item(const item_def &item)
 
     _print_hint("HINT_SEEN_FIRST_OBJECT",
                 glyph_to_tagstr(get_item_glyph(&item)));
-}
-
-static void _new_god_conduct()
-{
-    std::ostringstream text;
-
-    const std::string new_god_name  = god_name(you.religion);
-
-    text << "You've just converted to worshipping <w>" << new_god_name
-         << "</w>. ";
-
-    if (you.religion == GOD_XOM)
-    {
-        // Xom is a special case.
-        text << "You can keep Xom happy by keeping him amused; you do "
-                "absolutely not want this god to grow bored with you!\n"
-                "If you keep Xom amused he'll treat you like a plaything, "
-                "randomly helping and harming you for his own amusement; "
-                "otherwise he'll treat you like a disfavoured plaything.";
-
-        mpr(text.str(), MSGCH_TUTORIAL, 0);
-
-        return;
-    }
-
-    // Not the case for Chei, but not sure if we need to go into that much
-    // detail here.
-    text << "Your piety (divine favour) will gradually decrease over time, "
-            "and if it runs out "
-         << new_god_name << " will excommunicate you and punish you. "
-            "You can prevent this, however, and even gain enough piety to get "
-            "powers and divine gifts, by doing things to please "
-         << new_god_name << ". But don't panic: you start out with a decent "
-            "amount of piety, so any danger of excommunication is far off.\n";
-
-    mpr(text.str(), MSGCH_TUTORIAL, 0);
-
-    text.str("");
-
-    text << "\nYou can check your god's likes and dislikes, as well as your "
-            "current standing and divine abilities, by typing <w>^</w>"
-            "<tiles> (alternatively press <w>Shift</w> while "
-            "<w>right-clicking</w> on your avatar)</tiles>"
-            ".";
-
-    mpr(untag_tiles_console(text.str()), MSGCH_TUTORIAL, 0);
-
 }
 
 // If the player is wielding a cursed non-slicing weapon then butchery
@@ -2532,7 +2473,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_CONVERT:
-        _new_god_conduct();
+        if (you.religion == GOD_XOM)
+            return _print_hint("HINT_CONVERT Xom");
+
+        _print_hint("HINT_CONVERT");
         break;
 
     case HINT_GOD_DISPLEASED:
