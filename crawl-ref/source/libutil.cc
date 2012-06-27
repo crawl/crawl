@@ -890,38 +890,39 @@ bool version_is_stable(const char *v)
     }
 }
 
-std::string untag_tiles_console(std::string s)
+static void inline _untag(std::string &s, const std::string pre,
+                          const std::string post, bool onoff)
 {
     size_t p = 0;
-    while ((p = s.find("<tiles>", p)) != std::string::npos)
+    while ((p = s.find(pre, p)) != std::string::npos)
     {
-        size_t q = s.find("</tiles>", p);
+        size_t q = s.find(post, p);
         if (q == std::string::npos)
             q = s.length();
         if (is_tiles())
         {
-            s.erase(q, 8);
-            s.erase(p, 7);
+            s.erase(q, post.length());
+            s.erase(p, pre.length());
         }
         else
-            s.erase(p, q + 8 - p);
+            s.erase(p, q - p + post.length());
     }
+}
 
-    p = 0;
-    while ((p = s.find("<console>", p)) != std::string::npos)
-    {
-        size_t q = s.find("</console>", p);
-        if (q == std::string::npos)
-            q = s.length();
-        if (!is_tiles())
-        {
-            s.erase(q, 10);
-            s.erase(p, 9);
-        }
-        else
-            s.erase(p, q + 10 - p);
-    }
-
+std::string untag_tiles_console(std::string s)
+{
+    _untag(s, "<tiles>", "</tiles>", is_tiles());
+    _untag(s, "<console>", "</console>", !is_tiles());
+#ifdef USE_TILE_WEB
+    _untag(s, "<webtiles>", "</webtiles>", true);
+#else
+    _untag(s, "<webtiles>", "</webtiles>", false);
+#endif
+#ifdef USE_TILE_LOCAL
+    _untag(s, "<localtiles>", "</localtiles>", true);
+#else
+    _untag(s, "<localtiles>", "</localtiles>", false);
+#endif
     return s;
 }
 
