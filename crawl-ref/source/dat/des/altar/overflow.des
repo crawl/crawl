@@ -820,6 +820,45 @@ MAP
         xxxxx
 ENDMAP
 
+NAME:   led_sif_book
+DEPTH:  3-12, Orc
+TAGS:   no_item_gen no_pool_fixup no_monster_gen
+TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KFEAT:  _ = altar_sif_muna
+ITEM:   randbook owner:Sif_Muna numspells:1 slevels:1
+MONS:   orc wizard
+COLOUR: .@+1deG = blue
+FTILE:  .@+1deG_ = floor_marble
+MAP
+xxxxxxxxx
+xbbbbx..xx
+x1w..xG..x
+xdw..+._.@
+x1w..xG..x
+xbbbbx..xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   led_sif_pool
+DEPTH:  2-9
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KFEAT:  _ = altar_sif_muna
+COLOUR: . = blue
+FTILE:  ._ = floor_marble
+MAP
+ xxx@xxx
+ xxx+xxx
+xxWW.WWxx
+xWWW.WWWx
+xWW...WWx
+xWW._.WWx
+xWW...WWx
+xWWWWWWWx
+xxWWWWWxx
+ xxxxxxx
+ENDMAP
+
 
 ### Trog overflow altars ######################################################
 
@@ -1150,6 +1189,22 @@ X,,o_o,,X
 XX,o.o,XX
  XXX@XXX
 ENDMAP
+
+NAME:   led_xom_imps
+DEPTH:  3-5
+TAGS:   temple_overflow_xom uniq_altar_xom
+KFEAT:  _ = altar_xom
+KFEAT:  T = known teleport trap
+NSUBST: I = 1:1 / 3:2
+MONS: crimson imp ; dagger ego:chaos ident:type, crimson imp ; nothing
+MAP
+xxxx+xxxx
+xIT...TIx
+xxx._.xxx
+xIT...TIx
+xxxx+xxxx
+ENDMAP
+
 
 ### Yredelemnul overflow altars ###############################################
 
