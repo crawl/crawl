@@ -101,13 +101,13 @@ finished
 
 Congrats! You survived until the end of the hint mode - be sure
 to try the other ones as well. Note that the command help screen
-(<w>%cmd[CMD_DISPLAY_COMMANDS]?</w>) will look very different from now on. Here's a last
+(<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>) will look very different from now on. Here's a last
 playing hint:
 %%%%
 finished explored
 
 Walking around and exploring levels gets easier by using
-auto-explore (<w>%cmd[CMD_EXPLORE]</w>). Crawl will let you automatically
+auto-explore (<w>$cmd[CMD_EXPLORE]</w>). Crawl will let you automatically
 move to and pick up interesting items.
 <tiles>
 
@@ -117,28 +117,28 @@ on the minimap while the <w>Control</w> key is pressed.</tiles>
 finished travel
 
 There is a convenient way for travelling between far away
-dungeon levels: press <w>%cmd[CMD_INTERLEVEL_TRAVEL]</w> or <w>G</w> and enter
+dungeon levels: press <w>$cmd[CMD_INTERLEVEL_TRAVEL]</w> or <w>G</w> and enter
 the desired destination. If your travel gets interrupted,
-issuing <w>%cmd[CMD_INTERLEVEL_TRAVEL] Enter</w> or <w>G Enter</w> will continue
+issuing <w>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</w> or <w>G Enter</w> will continue
 it.
 %%%%
 finished stashes
 
 You can search among all items existing in the dungeon with
-the <w>%cmd[CMD_SEARCH_STASHES]</w> command. For example,
-<w>%cmd[CMD_SEARCH_STASHES] "knife"</w> will list all knives. You can then
+the <w>$cmd[CMD_SEARCH_STASHES]</w> command. For example,
+<w>$cmd[CMD_SEARCH_STASHES] "knife"</w> will list all knives. You can then
 travel to one of the spots. It is even possible to enter
 words like <w>"shop"</w> or <w>"altar"</w>.
 %%%%
 finished random 0
 
 The game keeps an automated logbook for your characters.
-Use <w>%cmd[CMD_DISPLAY_COMMANDS]:</w> to read it. You can enter notes manually
-with the <w>%cmd[CMD_MAKE_NOTE]</w> command. Once your character perishes,
+Use <w>$cmd[CMD_DISPLAY_COMMANDS]:</w> to read it. You can enter notes manually
+with the <w>$cmd[CMD_MAKE_NOTE]</w> command. Once your character perishes,
 two morgue files are left in the <w>morgue/</w>
 directory. The one ending in .txt contains a copy of
 your logbook. During play, you can create a dump file
-with <w>%cmd[CMD_CHARACTER_DUMP]</w>.
+with <w>$cmd[CMD_CHARACTER_DUMP]</w>.
 %%%%
 finished random 1
 
@@ -147,7 +147,7 @@ to define a macro by first specifying a trigger key
 (say, <w>F1</w>) and a command sequence, for example
 <w>za+.</w>. The latter will make the <w>F1</w>
 key always zap the spell in slot a at the nearest
-monster. For more information on macros, type <w>%cmd[CMD_DISPLAY_COMMANDS]~</w>.
+monster. For more information on macros, type <w>$cmd[CMD_DISPLAY_COMMANDS]~</w>.
 %%%%
 finished random 2
 
