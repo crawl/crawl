@@ -1148,10 +1148,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     if (!Hints.hints_events[seen_what])
         return;
 
-    // Don't give at the beginning of your spellcasting career.
-    if (seen_what == HINT_SPELL_MISCAST && you.max_magic_points <= 2)
-        return;
-
     // Don't trigger twice in the same turn.
     // Not required in the tutorial.
     if (crawl_state.game_is_hints() && Hints.hints_just_triggered
@@ -2817,6 +2813,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SPELL_MISCAST:
     {
+        // Don't give at the beginning of your spellcasting career.
+        if (you.max_magic_points <= 2)
+            DELAY_EVENT;
+
         if (!crawl_state.game_is_hints())
         {
             text << "Miscasting a spell can have nasty consequences, "
