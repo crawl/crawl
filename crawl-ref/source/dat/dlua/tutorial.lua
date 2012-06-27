@@ -37,3 +37,27 @@ function tutorial_intro (msg)
   crawl.mpr(text, "tutorial")
   crawl.more()
 end
+
+function tutorial_messenger_db(data, triggerable, triggerer, marker, ev)
+
+  crawl.mesclr(true)
+  crawl.tutorial_msg(data.text, data.exit)
+  if data.onetime == true then
+    triggerable:remove(marker)
+  end
+end
+
+function tutorial_msg(text, onetime, exit)
+  -- defaults to false
+  if onetime == nil then
+    onetime = false
+  end
+
+  if exit == nil then
+    exit = false
+  end
+
+  local data = {text=text, onetime=onetime, exit=exit}
+
+  return function_at_spot('tutorial_messenger_db', data, true)
+end

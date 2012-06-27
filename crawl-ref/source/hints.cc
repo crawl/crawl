@@ -4593,3 +4593,24 @@ void hints_observe_cell(const coord_def& gc)
             learned_something_new(HINT_HEAP_BRAND, gc);
     }
 }
+
+void tutorial_msg(const char *key, bool end)
+{
+    std::string text = getHintString(key);
+    if (text.empty())
+        return mprf(MSGCH_ERROR, "Error, no message for '%s'.", key);
+
+    _replace_static_tags(text);
+    text = untag_tiles_console(text);
+
+    if (end)
+        screen_end_game(replace_all(text, "\n\n", "\n"));
+
+    // "\n" to preserve indented parts, the rest is unwrapped, or split into
+    // paragraphs by "\n\n", split_string() will ignore the empty line.
+    std::vector<std::string> chunks = split_string("\n", text);
+    for (size_t i = 0; i < chunks.size(); i++)
+        mpr(chunks[i], MSGCH_TUTORIAL);
+
+    stop_running();
+}

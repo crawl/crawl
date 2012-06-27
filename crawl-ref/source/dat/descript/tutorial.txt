@@ -1,0 +1,124 @@
+%%%%
+##############################################
+# Tutorial map 5: Gods and divine abilities  #
+##############################################
+tutorial5 start
+
+In this lesson you're going to learn about gods and how to use their powers.
+%%%%
+tutorial5 secret_door
+
+There's got to be an entrance to the temple! Try searching
+the glass walls for secret doors with $cmd[CMD_REST]<localtiles> or
+by <white>mouseclick</white> in the command panel</localtiles>.
+%%%%
+tutorial5 dungeon_overview
+
+Trog is just one of many gods. In a real game, you check
+$cmd[CMD_DISPLAY_OVERMAP]<localtiles> or click on the <w>dungeon overmap
+button</w> in the command panel</localtiles>
+for a list of all altars and other interesting features found so far.
+%%%%
+tutorial5 altar
+
+You can pray on an altar with $cmd[CMD_PRAY]<localtiles> (or by clicking in
+the <w>command panel</w> or <white>Shift-clicking</white> on your
+character)</localtiles>
+to get an idea what a god offers you, and to join the faith.
+If you press <w>!</w>
+<localtiles>or <white>rightclick</white></localtiles>
+on the religion screen, you can see a more detailed description.
+
+Confirm your choice with an uppercase <w>Y</w>.
+%%%%
+tutorial5 religion
+
+Have a look at your current religious standing with
+$cmd[CMD_DISPLAY_RELIGION]<localtiles>
+(or via the <w>religion button</w> in the command panel,
+or by <white>Shift-rightclicking</white> on the player tile)</localtiles>.
+Again, pressing <w>!</w> <localtiles>or <white>rightclicking</white></localtiles>
+will bring up a more detailed description of your god.
+%%%%
+tutorial5 piety_on_kill
+
+Some gods really like it if you kill monsters in
+their name. Let the slaughter begin!
+%%%%
+tutorial5 sacrificing
+
+Praying on corpses with $cmd[CMD_PRAY]
+<localtiles>or via the <white>command panel</white></localtiles>
+will sacrifice them to Trog. Try it!
+%%%%
+tutorial5 burn_book
+
+Trog will like it if you burn that book (with
+$cmd[CMD_USE_ABILITY]<localtiles>
+or via the <white>command panel</white></localtiles>).
+Sometimes, you might want to wait (with $cmd[CMD_MOVE_NOWHERE])
+for a monster to step on it before doing so.
+%%%%
+tutorial5 berserk
+
+Against particularly tough foes, you may want to use
+Trog's Berserk power with $cmd[CMD_USE_ABILITY]<localtiles>
+or via the <white>command panel</white></localtiles>.
+%%%%
+tutorial5 exhaustion
+
+A berserker rage is truly exhausting. While fatigued,
+you cannot berserk again and are also slowed.
+It's best to rest with $cmd[CMD_REST]
+<localtiles>(or via the <white>command panel</white>)</localtiles>
+until you feel fit again.
+%%%%
+tutorial5 hunger
+
+You cannot berserk while very hungry, so you should
+always carry some food with you. This means that
+sometimes you'll have to decide between butchering
+a corpse or sacrificing it to Trog.
+%%%%
+tutorial5 berserk2
+
+Berserk is also really useful against multiple enemies
+— as long as you don't run out of steam in-between.
+%%%%
+tutorial5 tutorial_end
+
+Congratulations! You've finished the last tutorial lesson
+and are now ready for the real game. Good luck!
+
+To exit the tutorial, just go down these stairs.
+%%%%
+tutorial5 EXIT
+
+# A single screen recapping all commands.
+
+<yellow>Religious commands</yellow>
+
+  $cmd[CMD_PRAY]  pray at an altar to join a god, or sacrifice a corpse
+
+  $cmd[CMD_USE_ABILITY]  use a divine ability
+
+  $cmd[CMD_DISPLAY_RELIGION]  check your religious standing
+
+<localtiles>A <white>rightclick</white> on the player tile will also bring
+up the religion screen.</localtiles>
+
+
+<yellow>Resting</yellow>
+
+  $cmd[CMD_MOVE_NOWHERE]  wait, rest and search a single turn
+
+  $cmd[CMD_REST]  wait, rest and search up to 100 turns
+
+<yellow>Other commands</yellow>
+
+  $cmd[CMD_DISPLAY_OVERMAP]  display an overview of the dungeon
+
+  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  search the description database
+
+                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>
+%%%%
