@@ -2937,7 +2937,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         case TRAP_WEB:
             return ("web");
         default:
-            mprf(MSGCH_ERROR, "Error: invalid trap type %d", trap);
+            die("Error: invalid trap type %d", trap);
             return ("undefined trap");
         }
     }
