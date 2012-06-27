@@ -126,7 +126,7 @@ sub check_desc_links()
 {
     for (keys %entries)
     {
-        next unless $entries{$_} =~ /^<(.*)>$/;
+        next unless $entries{$_} =~ /^<([^>\n]*)>$/;
         err "$source{$_}: Dangling link '$_' -> '$1'\n" unless $entries{$1};
     }
 }
@@ -221,4 +221,5 @@ read_file("database/help");
 __________________________________________________________________________();
 read_file("database/FAQ");
 __________________________________________________________________________();
+read_file("descript/hints");
 check_desc_links();
