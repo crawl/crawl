@@ -198,4 +198,5 @@ struct hints_state
 
 extern hints_state Hints;
 
+void tutorial_msg(const char *text, bool end = false);
 #endif

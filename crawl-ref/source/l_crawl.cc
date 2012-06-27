@@ -21,6 +21,7 @@ module "crawl"
 #include "directn.h"
 #include "format.h"
 #include "hiscores.h"
+#include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "libutil.h"
@@ -768,6 +769,15 @@ static int crawl_err_trace(lua_State *ls)
     return (lua_gettop(ls));
 }
 
+static int crawl_tutorial_msg(lua_State *ls)
+{
+    const char *key = luaL_checkstring(ls, 1);
+    if (!key)
+        return 0;
+    tutorial_msg(key, lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
+    return 0;
+}
+
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
 {
@@ -874,6 +884,7 @@ static const struct luaL_reg crawl_clib[] =
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
+    { "tutorial_msg",   crawl_tutorial_msg },
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
 #endif

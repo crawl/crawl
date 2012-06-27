@@ -135,6 +135,7 @@ static TextDB AllDBs[] =
 
     TextDB("hints", "descript/",
             "hints.txt",    // hints mode
+            "tutorial.txt", // tutorial mode
             NULL),
 };
 
