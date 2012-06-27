@@ -763,6 +763,10 @@ void Stash::load(reader& inf)
 
     feat =  static_cast<dungeon_feature_type>(unmarshallUByte(inf));
     trap =  static_cast<trap_type>(unmarshallUByte(inf));
+#if TAG_MAJOR_VERSION == 33
+    if (trap == TRAP_AXED)
+        trap = TRAP_SPEAR;
+#endif
 
     uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
