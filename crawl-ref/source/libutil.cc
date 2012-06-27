@@ -913,7 +913,7 @@ std::string untag_tiles_console(std::string s)
         size_t q = s.find("</console>", p);
         if (q == std::string::npos)
             q = s.length();
-        if (is_tiles())
+        if (!is_tiles())
         {
             s.erase(q, 10);
             s.erase(p, 9);
