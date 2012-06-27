@@ -97,13 +97,6 @@ void debug_dump_levgen()
     mpr("");
 }
 
-void error_message_to_player(void)
-{
-    mpr("Oh dear. There appears to be a bug in the program.");
-    mpr("I suggest you leave this level then save as soon as possible.");
-
-}
-
 std::string debug_coord_str(const coord_def &pos)
 {
     return make_stringf("(%d, %d)%s", pos.x, pos.y,
