@@ -555,7 +555,7 @@ CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red
-NSUBST:     L = 4:. / *:l
+NSUBST:     L = 8:. / *:l
 :           volcano_portal(_G)
 MAP
  xxxxx
