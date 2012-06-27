@@ -1506,7 +1506,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
         cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_EVOKE_WIELDED);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
