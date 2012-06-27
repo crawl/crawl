@@ -304,6 +304,34 @@ static void _replace_static_tags(std::string &text)
 
         text.replace(p, q - p + 1, command);
     }
+
+    while ((p = text.find("$item[")) != std::string::npos)
+    {
+        size_t q = text.find("]", p + 6);
+        if (q == std::string::npos)
+        {
+            text += "<lightred>ERROR: unterminated $item</lightred>";
+            break;
+        }
+
+        std::string item = text.substr(p + 6, q - p - 6);
+        int type;
+        for (type = OBJ_WEAPONS; type < NUM_OBJECT_CLASSES; ++type)
+            if (item == item_class_name(type, true))
+                break;
+
+        item_def dummy;
+        dummy.base_type = static_cast<object_class_type>(type);
+        dummy.sub_type = 0;
+        if (item == "amulet") // yay shared item classes
+            dummy.base_type = OBJ_JEWELLERY, dummy.sub_type = AMU_RAGE;
+        item = stringize_glyph(get_item_symbol(show_type(dummy).item));
+
+        if (item == "<")
+            item += "<";
+
+        text.replace(p, q - p + 1, item);
+    }
 }
 
 // Prints the hints mode welcome screen.
