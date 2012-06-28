@@ -603,7 +603,7 @@ static bool _in_water(const packed_cell &cell)
 static bool _needs_flavour(const packed_cell &cell)
 {
     tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
-    if (bg_idx >= TILE_DNGN_MINWALL)
+    if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         return true; // Needs flv.floor
     if (cell.is_liquefied || cell.is_bloody ||
         cell.is_moldy || cell.glowing_mold)
