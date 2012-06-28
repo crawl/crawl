@@ -1,4 +1,9 @@
 %%%%
+tutorial intro
+
+You can reread all messages at any time with $cmd[CMD_REPLAY_MESSAGES].
+Also, press <white>Space</white> to clear the <cyan>--more--</cyan> prompts.
+%%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
 ##############################################
