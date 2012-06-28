@@ -42,7 +42,7 @@ Have a look at your current religious standing with
 <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>
 (or via the <w>religion button</w> in the command panel,
 or by <w>Shift-rightclicking</w> on the player tile)</localtiles>.
-Again, pressing <w>!</w> <localtiles>or <w>rightclicking</w></localtiles>
+Again, pressing <w>!</w><localtiles> or <w>rightclicking</w></localtiles>
 will bring up a more detailed description of your god.
 %%%%
 tutorial5 piety_on_kill
@@ -52,8 +52,8 @@ their name. Let the slaughter begin!
 %%%%
 tutorial5 sacrificing
 
-Praying on corpses with <w>$cmd[CMD_PRAY]</w>
-<localtiles>or via the <w>command panel</w></localtiles>
+Praying on corpses with <w>$cmd[CMD_PRAY]</w><localtiles> or
+via the <w>command panel</w></localtiles>
 will sacrifice them to Trog. Try it!
 %%%%
 tutorial5 burn_book
