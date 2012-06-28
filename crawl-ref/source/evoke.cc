@@ -660,7 +660,7 @@ bool evoke_item(int slot)
 
     if (you.berserk() && (slot == -1
                        || slot != you.equip[EQ_WEAPON]
-                       || !weapon_reach(*you.weapon())))
+                       || weapon_reach(*you.weapon()) <= 2))
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -690,7 +690,7 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, true, false, false, true))
         return (false);
 
-    if (you.suppressed() && !weapon_reach(item))
+    if (you.suppressed() && weapon_reach(item) <= 2)
     {
         canned_msg(MSG_EVOCATION_SUPPRESSED);
         return false;
@@ -723,7 +723,7 @@ bool evoke_item(int slot)
     case OBJ_WEAPONS:
         ASSERT(wielded);
 
-        if (weapon_reach(item))
+        if (weapon_reach(item) > 2)
         {
             if (_reaching_weapon_attack(item))
             {
