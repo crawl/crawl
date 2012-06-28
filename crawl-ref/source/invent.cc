@@ -19,6 +19,7 @@
 #include "artefact.h"
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
@@ -916,6 +917,27 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
+         if (lastch == CONTROL('D') || key == ',')
+        {
+            switch (key)
+            {
+                case CONTROL('D'):
+                {   //Ctrl+D again disarms
+                    lastch = ' ';
+                    break;
+                }
+                case '*':
+                    key = ',';
+                default:
+                {
+                    num = -2; //set selection default
+                    Menu::process_key(key);
+                }
+            }
+
+            flags |= MF_EASY_EXIT; //hackish way to get the menu to reopen
+            return false;
+        }
         switch (key)
         {
             case '-':
@@ -926,22 +948,26 @@ bool InvMenu::process_key(int key)
                 lastch = key;
                 return (false);
             }
+            case '_':
+            {
+                show_known_menu_help();
+#ifdef USE_TILE_WEB
+                webtiles_update_scroll_pos();
+#endif
+                draw_menu();
+                return true;
+            }
             case CONTROL('D'):
             {
                 //Make next selection 'default'
                 if (lastch != CONTROL('D'))
+                {
                     lastch = CONTROL('D');
-                else
-                    lastch = ' '; //disarm
+                    set_title("Select to reset item to default: ");
+                    update_title();
+                }
                 return true;
             }
-        }
-        if (lastch == CONTROL('D') || key == ',')
-        {
-            num = -2; //set selection default
-            Menu::process_key(key);
-            flags |= MF_EASY_EXIT; //hackish way to get the menu to reopen
-            return false;
         }
     }
 

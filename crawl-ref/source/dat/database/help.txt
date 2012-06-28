@@ -28,6 +28,46 @@ Global selects:  <w>,</w>   select all      <w>*</w>   invert all        <w>-</w
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
 narrows the range of items to be (de)selected. The default are useless items.
 %%%%
+known-menu
+
+                   <h>Known items menu</h>
+<h>Item letters</h>
+Pressing an item's letter key will select the item.
+
+<h>Selecting Items</h>
+Grey items use the default Autopickup value.
+Selecting it will toggle between the following Forced-Autopickup states:
+<w>+</w>  Means it will always be picked up.
+<w>-</w>  Means it will never be picked up.
+
+<h>Unknown Item Defaults</h>
+Selecting one such item will toggle the
+
+<h>Restoring Autopickup Defaults</h>
+Pressing <w>Ctrl-D</w> will make the next selected item restore to its default settings.
+Note that this works in combination with all other key commands.
+
+<h>Regular expressions</h>
+You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
+All matching items will be selected.
+
+<h>Cursor</h>
+There are shortcuts to quickly select several items in succession:
+<w>.</w>   selects the next item and moves the cursor down
+<w>'</w>   moves the cursor down without changing selection
+The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
+
+<h>Category shortcuts</h>
+You can quickly select items by type by pressing:
+<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery
+<w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
+<w>%</w>   food         <w>&</w>   carrion (corpses, skeletons, useless chunks)
+Global selects:  <w>,</w>   reset all to default      <w>*</w>   invert all
+
+<h>Viewing Unknown/Known Items</h>
+<w>/</w> and <w>-</w> will toggle between known and unknown item menus.
+Note that none of the above features apply to the unknown items menu.
+%%%%
 stash-search.prompt
 
 <h>Searching the stash-tracker</h>
