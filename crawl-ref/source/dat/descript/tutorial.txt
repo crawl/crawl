@@ -1,7 +1,7 @@
 %%%%
 tutorial intro
 
-You can reread all messages at any time with $cmd[CMD_REPLAY_MESSAGES].
+You can reread all messages at any time with <w>$cmd[CMD_REPLAY_MESSAGES]</w>.
 Also, press <w>Space</w> to clear the <cyan>--more--</cyan> prompts.
 %%%%
 ##############################################
@@ -14,19 +14,19 @@ In this lesson you're going to learn about gods and how to use their powers.
 tutorial5 secret_door
 
 There's got to be an entrance to the temple! Try searching
-the glass walls for secret doors with $cmd[CMD_REST]<localtiles> or
+the glass walls for secret doors with <w>$cmd[CMD_REST]</w><localtiles> or
 by <w>mouseclick</w> in the command panel</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
 Trog is just one of many gods. In a real game, you check
-$cmd[CMD_DISPLAY_OVERMAP]<localtiles> or click on the <w>dungeon overmap
+<w>$cmd[CMD_DISPLAY_OVERMAP]</w><localtiles> or click on the <w>dungeon overmap
 button</w> in the command panel</localtiles>
 for a list of all altars and other interesting features found so far.
 %%%%
 tutorial5 altar
 
-You can pray on an altar with $cmd[CMD_PRAY]<localtiles> (or by clicking in
+You can pray on an altar with <w>$cmd[CMD_PRAY]</w><localtiles> (or by clicking in
 the <w>command panel</w> or <w>Shift-clicking</w> on your
 character)</localtiles>
 to get an idea what a god offers you, and to join the faith.
@@ -39,7 +39,7 @@ Confirm your choice with an uppercase <w>Y</w>.
 tutorial5 religion
 
 Have a look at your current religious standing with
-$cmd[CMD_DISPLAY_RELIGION]<localtiles>
+<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>
 (or via the <w>religion button</w> in the command panel,
 or by <w>Shift-rightclicking</w> on the player tile)</localtiles>.
 Again, pressing <w>!</w> <localtiles>or <w>rightclicking</w></localtiles>
@@ -52,29 +52,29 @@ their name. Let the slaughter begin!
 %%%%
 tutorial5 sacrificing
 
-Praying on corpses with $cmd[CMD_PRAY]
+Praying on corpses with <w>$cmd[CMD_PRAY]</w>
 <localtiles>or via the <w>command panel</w></localtiles>
 will sacrifice them to Trog. Try it!
 %%%%
 tutorial5 burn_book
 
 Trog will like it if you burn that book (with
-$cmd[CMD_USE_ABILITY]<localtiles>
+<w>$cmd[CMD_USE_ABILITY]</w><localtiles>
 or via the <w>command panel</w></localtiles>).
-Sometimes, you might want to wait (with $cmd[CMD_MOVE_NOWHERE])
+Sometimes, you might want to wait (with <w>$cmd[CMD_MOVE_NOWHERE]</w>)
 for a monster to step on it before doing so.
 %%%%
 tutorial5 berserk
 
 Against particularly tough foes, you may want to use
-Trog's Berserk power with $cmd[CMD_USE_ABILITY]<localtiles>
+Trog's Berserk power with <w>$cmd[CMD_USE_ABILITY]</w><localtiles>
 or via the <w>command panel</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 
 A berserker rage is truly exhausting. While fatigued,
 you cannot berserk again and are also slowed.
-It's best to rest with $cmd[CMD_REST]
+It's best to rest with <w>$cmd[CMD_REST]</w>
 <localtiles>(or via the <w>command panel</w>)</localtiles>
 until you feel fit again.
 %%%%
