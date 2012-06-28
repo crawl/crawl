@@ -2,7 +2,7 @@
 tutorial intro
 
 You can reread all messages at any time with $cmd[CMD_REPLAY_MESSAGES].
-Also, press <white>Space</white> to clear the <cyan>--more--</cyan> prompts.
+Also, press <w>Space</w> to clear the <cyan>--more--</cyan> prompts.
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
@@ -15,7 +15,7 @@ tutorial5 secret_door
 
 There's got to be an entrance to the temple! Try searching
 the glass walls for secret doors with $cmd[CMD_REST]<localtiles> or
-by <white>mouseclick</white> in the command panel</localtiles>.
+by <w>mouseclick</w> in the command panel</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
@@ -27,11 +27,11 @@ for a list of all altars and other interesting features found so far.
 tutorial5 altar
 
 You can pray on an altar with $cmd[CMD_PRAY]<localtiles> (or by clicking in
-the <w>command panel</w> or <white>Shift-clicking</white> on your
+the <w>command panel</w> or <w>Shift-clicking</w> on your
 character)</localtiles>
 to get an idea what a god offers you, and to join the faith.
 If you press <w>!</w>
-<localtiles>or <white>rightclick</white></localtiles>
+<localtiles>or <w>rightclick</w></localtiles>
 on the religion screen, you can see a more detailed description.
 
 Confirm your choice with an uppercase <w>Y</w>.
@@ -41,8 +41,8 @@ tutorial5 religion
 Have a look at your current religious standing with
 $cmd[CMD_DISPLAY_RELIGION]<localtiles>
 (or via the <w>religion button</w> in the command panel,
-or by <white>Shift-rightclicking</white> on the player tile)</localtiles>.
-Again, pressing <w>!</w> <localtiles>or <white>rightclicking</white></localtiles>
+or by <w>Shift-rightclicking</w> on the player tile)</localtiles>.
+Again, pressing <w>!</w> <localtiles>or <w>rightclicking</w></localtiles>
 will bring up a more detailed description of your god.
 %%%%
 tutorial5 piety_on_kill
@@ -53,14 +53,14 @@ their name. Let the slaughter begin!
 tutorial5 sacrificing
 
 Praying on corpses with $cmd[CMD_PRAY]
-<localtiles>or via the <white>command panel</white></localtiles>
+<localtiles>or via the <w>command panel</w></localtiles>
 will sacrifice them to Trog. Try it!
 %%%%
 tutorial5 burn_book
 
 Trog will like it if you burn that book (with
 $cmd[CMD_USE_ABILITY]<localtiles>
-or via the <white>command panel</white></localtiles>).
+or via the <w>command panel</w></localtiles>).
 Sometimes, you might want to wait (with $cmd[CMD_MOVE_NOWHERE])
 for a monster to step on it before doing so.
 %%%%
@@ -68,14 +68,14 @@ tutorial5 berserk
 
 Against particularly tough foes, you may want to use
 Trog's Berserk power with $cmd[CMD_USE_ABILITY]<localtiles>
-or via the <white>command panel</white></localtiles>.
+or via the <w>command panel</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 
 A berserker rage is truly exhausting. While fatigued,
 you cannot berserk again and are also slowed.
 It's best to rest with $cmd[CMD_REST]
-<localtiles>(or via the <white>command panel</white>)</localtiles>
+<localtiles>(or via the <w>command panel</w>)</localtiles>
 until you feel fit again.
 %%%%
 tutorial5 hunger
@@ -109,7 +109,7 @@ tutorial5 exit
 
   $cmd[CMD_DISPLAY_RELIGION]  check your religious standing
 
-<localtiles>A <white>rightclick</white> on the player tile will also bring
+<localtiles>A <w>rightclick</w> on the player tile will also bring
 up the religion screen.</localtiles>
 
 
@@ -126,5 +126,5 @@ up the religion screen.</localtiles>
 
   $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  search the description database
 
-                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
 %%%%
