@@ -2779,9 +2779,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_SLING;
 
     case WPN_BOW:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_BOW_ORC;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_BOW_ELF;
         return TILE_WPN_BOW;
 
     case WPN_CROSSBOW:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_CROSSBOW_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_CROSSBOW_DWARF;
         return TILE_WPN_CROSSBOW;
 
     case WPN_SPEAR:
@@ -2886,6 +2894,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_TRISHULA;
 
     case WPN_LONGBOW:
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_LONGBOW_ELF;
         return TILE_WPN_LONGBOW;
 
     case WPN_LAJATANG:
