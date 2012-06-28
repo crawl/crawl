@@ -1986,6 +1986,11 @@ void show_pickup_menu_help()
     _show_specific_help(getHelpString("pick-up"));
 }
 
+void show_known_menu_help()
+{
+    _show_specific_help(getHelpString("known-menu"));
+}
+
 void show_targetting_help()
 {
     column_composer cols(2, 40);

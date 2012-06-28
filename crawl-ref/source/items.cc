@@ -2555,6 +2555,12 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
         if (force != 0)
             return (force == 1);
     }
+    else if (item.sub_type == get_max_subtype(item.base_type))
+    {
+        int force = you.force_autopickup[item.base_type][get_max_subtype(item.base_type)];
+        if (force != 0)
+            return (force == 1);
+    }
 
     //Check for initial settings
     for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)

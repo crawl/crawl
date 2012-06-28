@@ -2026,9 +2026,17 @@ public:
     virtual std::string get_text(const bool = false) const
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
-        std::string name = item->name(DESC_PLAIN,false,true,false,false,flags);
-        if (item->sub_type != MISC_RUNE_OF_ZOT)
-            name = pluralise(name);
+
+        std::string name;
+        //if (item->sub_type == get_max_subtype(item->base_type))
+        if (item->quantity == 2)
+            name = "unknown item default";
+        else
+        {
+            name = item->name(DESC_PLAIN,false,true,false,false,flags);
+            if (item->sub_type != MISC_RUNE_OF_ZOT)
+                name = pluralise(name);
+        }
 
         char buff[256];
         if (selected_qty == 0) //Default
@@ -2186,6 +2194,27 @@ void check_item_knowledge(bool unknown_items)
                     selected_items.push_back(SelItem(0,2,ptmp));
             }
         }
+        for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+        {
+            object_class_type i = (object_class_type)ii;
+            if (!item_type_has_ids(i))
+                continue;
+            item_def* ptmp = new item_def;
+            if (ptmp != 0)
+            {
+                ptmp->base_type = i;
+                ptmp->sub_type  = get_max_subtype(i);
+                ptmp->colour    = 1;
+                ptmp->quantity  = 2;
+                items.push_back(ptmp);
+
+                if (you.force_autopickup[i][ptmp->sub_type] == 1)
+                    selected_items.push_back(SelItem(0,1,ptmp));
+                if (you.force_autopickup[i][ptmp->sub_type ] == -1)
+                    selected_items.push_back(SelItem(0,2,ptmp));
+            }
+        }
+
     }
 
     std::sort(items.begin(), items.end(), _identified_item_names);
@@ -2209,10 +2238,10 @@ void check_item_knowledge(bool unknown_items)
                                                   - strwidth(prompt)),
                                       ' ') + prompt;
 
-    menu.set_title(stitle);
     menu.set_preselect(&selected_items);
-    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_ALLOW_FILTER
-                    | ((unknown_items) ? MF_NOSELECT : MF_MULTISELECT));
+    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING
+                    | ((unknown_items) ? MF_NOSELECT
+                                       : MF_MULTISELECT | MF_ALLOW_FILTER));
     menu.set_type(MT_KNOW);
     menu_letter ml = menu.load_items(items, unknown_items ? unknown_item_mangle
                                                           : known_item_mangle);
@@ -2222,6 +2251,7 @@ void check_item_knowledge(bool unknown_items)
     char last_char;
     do
     {
+        menu.set_title(stitle);
         menu.set_flags(menu.get_flags() & ~MF_EASY_EXIT);
         menu.show(true);
 
