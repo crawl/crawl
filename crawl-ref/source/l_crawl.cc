@@ -1020,6 +1020,30 @@ LUAFN(_crawl_set_max_runes)
 
 LUAWRAP(_crawl_mark_game_won, crawl_state.mark_last_game_won())
 
+LUAFN(crawl_hints_type)
+{
+    if (crawl_state.game_is_tutorial())
+        lua_pushstring(ls, "tutorial");
+    else if (!crawl_state.game_is_hints())
+        lua_pushstring(ls, "");
+    else
+        switch (Hints.hints_type)
+        {
+        case HINT_BERSERK_CHAR:
+            lua_pushstring(ls, "berserk");
+            break;
+        case HINT_RANGER_CHAR:
+            lua_pushstring(ls, "ranger");
+            break;
+        case HINT_MAGIC_CHAR:
+            lua_pushstring(ls, "magic");
+            break;
+        default:
+            die("invalid hints_type");
+        }
+    return 1;
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1036,6 +1060,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "tutorial_skill",  crawl_tutorial_skill },
 { "tutorial_hint",   crawl_tutorial_hint },
 { "mark_game_won", _crawl_mark_game_won },
+{ "hints_type", crawl_hints_type },
 
 { NULL, NULL }
 };
