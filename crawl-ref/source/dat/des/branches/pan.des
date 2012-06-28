@@ -1635,6 +1635,9 @@ local function swineherd_die(monster, killer_type, killer_index, silent, wizard)
     crawl.mpr("Error: someone stolen the pigsty gate!")
     return
   end
+  if dgn.grid(p.x, p.y) ~= dgn.fnum("iron_grate") then
+    return
+  end
   dgn.grid(p.x, p.y, "floor")
   if (you.see_cell(p.x, p.y)) then
     crawl.mpr("The grate goes up!")
