@@ -97,7 +97,7 @@ and are now ready for the real game. Good luck!
 
 To exit the tutorial, just go down these stairs.
 %%%%
-tutorial5 EXIT
+tutorial5 exit
 
 # A single screen recapping all commands.
 
@@ -118,6 +118,7 @@ up the religion screen.</localtiles>
   $cmd[CMD_MOVE_NOWHERE]  wait, rest and search a single turn
 
   $cmd[CMD_REST]  wait, rest and search up to 100 turns
+
 
 <yellow>Other commands</yellow>
 
