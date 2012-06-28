@@ -77,6 +77,12 @@ static int food_can_eat(lua_State *ls)
 
 static bool eat_item(const item_def &item)
 {
+    // Nasty special case: can_ingest() allows potions (why???), so we need
+    // to weed them away here; we wouldn't be able to return success status
+    // otherwise.
+    if (!can_ingest(item, false) || item.base_type == OBJ_POTIONS)
+        return false;
+
     if (in_inventory(item))
     {
         eat_inventory_item(item.link);
