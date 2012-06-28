@@ -422,7 +422,7 @@ static void _print_hint(std::string key, const std::string arg1 = "",
 {
     std::string text = getHintString(key);
     if (text.empty())
-        return mprf(MSGCH_ERROR, "Error, no hint for '%s.'", key.c_str());
+        return mprf(MSGCH_ERROR, "Error, no hint for '%s'.", key.c_str());
 
     _replace_static_tags(text);
     text = untag_tiles_console(text);
