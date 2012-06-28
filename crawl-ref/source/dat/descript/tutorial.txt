@@ -5,6 +5,132 @@ You can reread all messages at any time with <w>$cmd[CMD_REPLAY_MESSAGES]</w>.
 Also, press <w>Space</w> to clear the <cyan>--more--</cyan> prompts.
 %%%%
 ##############################################
+# Tutorial map 1: Movement and exploration   #
+##############################################
+tutorial1 start
+
+In this lesson you're going to learn how to move around and explore a level. You can move <localtiles>by clicking somewhere with your <w>[Mouse]</w>, or </localtiles>with the <w>[arrow keys]</w>.
+%%%%
+tutorial1 go_on
+
+You're doing great! Now, explore a bit until you reach the next blue square.
+%%%%
+tutorial1 diagonal
+
+You can move diagonally by way of the <w>[number pad]</w> (try Numlock on/off) or by using the <w>[vi keys]</w>.
+
+  Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+
+                   \|/                         \|/
+
+                <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+
+                   /|\                         /|\
+
+                <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+
+<localtiles>You can also move using <w>[Mouse clicks]</w>.</localtiles>
+%%%%
+tutorial1 shiftmove
+
+A quicker way to 'run' through a corridor is to press <w>[Shift]</w> along with the <w>[number pad]</w> (try Numlock on/off) or <w>[vi keys]</w>.
+%%%%
+tutorial1 downstairs
+
+When standing on a staircase leading downwards, you can enter the next level with <w>[$cmd[CMD_GO_DOWNSTAIRS]</w><localtiles> or with <w>[Shift-Click]</w> on your character</localtiles>.
+%%%%
+tutorial1 levelmap
+
+# Messy, repeating the same things for <console> and <webtiles>
+What's this? To find out where you are, <tiles>have a look at the <w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a closer look at a part of the map with a <w>[right mouseclick]</w> and also can travel there with a <w>[leftclick]</w>.</localtiles><webtiles>You can enter the overmap view with <w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to return to the normal game mode.</webtiles><console>enter the overmap view with <w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to return to the normal game mode.</console>
+%%%%
+tutorial1 autoexplore
+
+Exploring manually can get tedious after a while, so you might want to let that happen automatically. Try it by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
+%%%%
+tutorial1 exclusion
+
+Some dangerous ground is marked with <w>exclusions</w>. Autoexplore <localtiles>(including by <w>[mouseclick]</w>! </localtiles>will not lead you into exclusions. Instead you will automatically stop.
+
+However, autoexplore will move you safely around exclusions so you may continue by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
+%%%%
+tutorial1 autoexplore_announce
+
+Autoexplore will stop to announce features and items. To travel directly to the stairs, you can <localtiles><w>[click]</w> on them or you can </localtiles>press <w>[$cmd[CMD_DISPLAY_MAP] << Enter]</w>.
+%%%%
+tutorial1 tutorial_end
+
+Congratulations! You've completed the first lesson!
+
+To exit the tutorial, simply go up these stairs with <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w> on your character</localtiles>. Confirm the resulting prompt with an uppercase <w>[Y]</w>.
+%%%%
+tutorial1 newlevel
+
+A new level! To begin with, head over to that door to the right.
+
+Also, remember: You can reread old messages with <w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+%%%%
+tutorial1 door
+
+You can open a closed door by walking into it. To close an open door, press <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
+%%%%
+tutorial1 secret_door_glass
+
+It doesn't look like the corridor ends here. Try searching for a secret door with <w>[$cmd[CMD_REST]]</w>. This process might spend multiple turns.
+%%%%
+tutorial1 water
+
+Note how you can move through shallow but not through deep water.
+%%%%
+tutorial1 secret_door_wall
+
+A dead-end! Or, wait... is it another secret door? Try searching again with <w>[$cmd[CMD_REST]]</w> once again.
+%%%%
+tutorial1 upstairs
+
+When standing on a staircase leading upwards, you can enter the previous level with <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w> on your character</localtiles>.
+%%%%
+function tutorial1.exit
+# A single screen recapping all commands.
+
+<yellow>Movement commands</yellow>
+
+   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+                   \\|/                         \\|/
+                <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                   /|\\                         /|\\
+                <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+  <w>Shift + direction</w> moves you several squares into this direction.
+
+  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the <w>minimap</w>.</localtiles>
+
+
+<yellow>Staircases</yellow>
+
+  <w>$cmd[CMD_GO_UPSTAIRS]</w>  go back to the previous level
+  <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  enter the next level
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  travel to the nearest up/downstairs
+
+
+<yellow>Doors</yellow>
+
+  can be opened by walking into them
+  <w>$cmd[CMD_CLOSE_DOOR]</w>  close an open door
+  <w>$cmd[CMD_REST]</w>  search for secret doors
+
+
+<yellow>Travel</yellow>
+
+  <localtiles>mouseclick on the <w>minimap</w></localtiles>
+  <webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w></webtiles>
+  <console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w></console>
+  <w>$cmd[CMD_EXPLORE]</w>  autoexplore
+
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+%%%%
+##############################################
 # Tutorial map 5: Gods and divine abilities  #
 ##############################################
 tutorial5 start

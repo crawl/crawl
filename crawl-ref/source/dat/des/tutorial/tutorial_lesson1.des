@@ -7,32 +7,14 @@
 #  - because of the above, needs to look particularly interesting
 #
 # Still TODO:
-#  * Shorten the explanation on exclusions.
 #  * Maybe send the player back to the entrance?
 #
 {{
 require("dlua/tutorial.lua")
 
-tutorial_msg1 = {}
+tutorial1 = {}
 
-function tutorial_msg1.start ()
-    tutorial_intro("In this lesson you're going to learn how to move around and "
-                   .. "explore a level.")
-
-    local text = "You can move "
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "by clicking somewhere with your <white>[Mouse]</white>, or "
-    end
-    text = text .. "with the <white>[arrow keys]</white>. "
-    crawl.mpr(text, "tutorial")
-end
-
-function tutorial_msg1.go_on ()
-    return tutorial_message("You're doing great! Now, explore a bit until you "
-                            .. "reach the next blue square.")
-end
-
-function tutorial_msg1.diagonal ()
+function tutorial1.diagonal ()
     local text = "You can move diagonally by way of the <white>[number pad]</white> (try Numlock on/off) or by using the <white>[vi keys]</white>.\n"
                  .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
@@ -49,148 +31,11 @@ function tutorial_msg1.diagonal ()
     return tutorial_message(text)
 end
 
-function tutorial_msg1.shiftmove ()
-    local text = "A quicker way to 'run' through a corridor is to press "
-                 .. "<white>[Shift]</white> along with the <white>[number pad]</white> (try Numlock on/off) or <white>[vi keys]</white>."
-    return tutorial_message(text)
+function tutorial1.msg(text)
+    return tutorial_msg("tutorial1 " .. text)
 end
 
-function tutorial_msg1.downstairs ()
-    local text = "When standing on a staircase leading downwards, you can enter "
-                 .. "the next level with <white>[</white>"
-                 .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "<white>]</white>"
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-      text = text .. " or with <white>[Shift-Click]</white> on your character"
-    end
-
-    text = text .. ".\n"
-
-    return tutorial_message(text)
-end
-
--- The second part of the map.
-function tutorial_msg1.levelmap ()
-    local text = "What's this? To find out where you are, "
-
-    if crawl.is_webtiles() then
-        text = text .. "have a look at the <white>minimap</white> to the right of "
-                    .. "the screen."
-    elseif crawl.is_tiles() then
-        text = text .. "have a look at the <white>minimap</white> to the right of "
-                    .. "the screen. You can have a closer look at a part of the "
-                    .. "map with a <white>right mouseclick</white> and also can "
-                    .. "travel there with a <white>leftclick</white>."
-    else
-        text = text .. "enter the overmap view with "
-                    .. tutorial_get_cmd("CMD_DISPLAY_MAP")
-                    .. " and then move the cursor around to look around the level. "
-                    .. "You also can travel wherever your cursor is pointing by "
-                    .. "pressing <white>.</white> or <white>Enter</white>. "
-                    .. "Press <white>Escape</white> to return to the normal game mode."
-    end
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg1.autoexplore ()
-    return tutorial_message("Exploring manually can get tedious after a while, "
-                            .. "so you might want to let that happen automatically. "
-                            .. "Try it by pressing <white>[</white>"
-                            .. tutorial_get_cmd("CMD_EXPLORE") .. "<white>]</white>.")
-end
-
-function tutorial_msg1.exclusion ()
-
-    local text = "Some dangerous ground is marked with <white>exclusions</white>. "
-                 .. "Autoexplore "
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "(including by mouseclick!) "
-    end
-
-    text = text .. "will not lead you into exclusions. Instead you will automatically stop.\n"
-                .. "However, autoexplore will move you safely around exclusions so you may continue by pressing <white>[</white>"
-                .. tutorial_get_cmd("CMD_EXPLORE") .. "<white>]</white>."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg1.autoexplore_announce ()
-    local text = "Autoexplore will stop to announce features and items. To travel "
-                 .. "directly to the stairs, you can "
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "click on them or you can "
-    end
-    text = text .. "press <w>[</w>"
-                .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w> << Enter]</w>."
-    return tutorial_message(text)
-end
-
-function tutorial_msg1.tutorial_end ()
-    local text = "Congratulations! You've completed the first lesson!\n"
-                 .. "To exit the tutorial, simply go up these stairs with "
-                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-      text = text .. " or by <white>Shift-clicking</white> on your character"
-    end
-
-    text = text .. ". Confirm the resulting prompt with an uppercase <white>Y</white>."
-
-    return tutorial_message(text)
-end
-
-
------------------------------------------------------------
--- Lua code for level 2.
------------------------------------------------------------
-function tutorial_msg1.newlevel ()
-    local text = "A new level! To begin with, head over to that door to the right.\n"
-                 .. "Also, remember: You can reread old messages with <white>[</white>"
-                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "<white>]</white>."
-
-    crawl.mesclr(true)
-    crawl.mpr(text, "tutorial")
-end
-
-function tutorial_msg1.door ()
-    local text = "You can open a closed door by walking into it. To close an open "
-                 .. "door, press <white>[</white>"
-                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "<white>]</white>."
-    return tutorial_message(text)
-end
-
-function tutorial_msg1.secret_door_glass ()
-    return tutorial_message("It doesn't look like the corridor ends here. Try "
-                            .. "searching for a secret door with <white>[</white>"
-                            .. tutorial_get_cmd("CMD_REST") .. "<white>]</white>.\n"
-                            .. "This process might spend multiple turns.")
-end
-
-function tutorial_msg1.water ()
-    return tutorial_message("Note how you can move through shallow but not "
-                            .. "through deep water.")
-end
-
-function tutorial_msg1.secret_door_wall ()
-    return tutorial_message("A dead-end! Or, wait... is it another secret door? "
-                            .. "Try searching again with <white>[</white>"
-                            .. tutorial_get_cmd("CMD_REST") .. "<white>]</white> once again.")
-end
-
-function tutorial_msg1.upstairs ()
-    local text = "When standing on a staircase leading upwards, you can enter "
-                 .. "the previous level with <white>[</white>"
-                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "<white>]</white> "
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-      text = text .. " or by <white>Shift-clicking</white> on your character"
-    end
-
-    text = text .. "."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg1.exit ()
+function tutorial1.exit ()
     -- A single screen recapping all commands.
 
     local text = "<yellow>Movement commands</yellow>\n\n"
@@ -230,9 +75,9 @@ function tutorial_msg1.exit ()
     return crawl.endgame(text)
 end
 
-function tutorial_msg1.win()
+function tutorial1.win()
     crawl.mark_game_won()
-    return tutorial_msg1.exit()
+    tutorial1.exit()
 end
 }}
 
@@ -246,25 +91,27 @@ COLOUR:  ABCDEFHI = lightblue
 COLOUR:  ' = brown
 FTILE:   G'[ = floor_swamp, t = floor_grass
 FTILE:   ABCDEFHI$ = tutorial_pad
-MARKER:  A = lua:tutorial_msg1.go_on()
-MARKER:  B = lua:tutorial_msg1.diagonal()
-MARKER:  C = lua:tutorial_msg1.shiftmove()
-MARKER:  ) = lua:tutorial_msg1.downstairs()
-MARKER:  } = lua:tutorial_msg1.levelmap()
-MARKER:  F = lua:tutorial_msg1.autoexplore()
-MARKER:  H = lua:tutorial_msg1.exclusion()
-MARKER:  I = lua:tutorial_msg1.autoexplore_announce()
-MARKER:  [ = lua:tutorial_msg1.tutorial_end()
+MARKER:  A = lua:tutorial1.msg("go_on")
+MARKER:  B = lua:tutorial1.diagonal()
+MARKER:  C = lua:tutorial1.msg("shiftmove")
+MARKER:  ) = lua:tutorial1.msg("downstairs")
+MARKER:  } = lua:tutorial1.msg("levelmap")
+MARKER:  F = lua:tutorial1.msg("autoexplore")
+MARKER:  H = lua:tutorial1.msg("exclusion")
+MARKER:  I = lua:tutorial1.msg("autoexplore_announce")
+MARKER:  [ = lua:tutorial1.msg("tutorial_end")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson1", \
-                                 onclimb = "tutorial_msg1.exit" }
+                                 onclimb = "tutorial1.exit" }
 MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
                                  dst  = "tutorial_lesson1", \
-                                 onclimb = "tutorial_msg1.win" }
+                                 onclimb = "tutorial1.win" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
              size_max = 2, spread_rate = 0 }
 epilogue{{
-  tutorial_msg1.start()
+  crawl.mesclr(true)
+  crawl.tutorial_msg("tutorial1 start")
+  tutorial_intro()
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxttttttttttttttttttxxxxxxxxxxxxxx
@@ -314,16 +161,17 @@ ORIENT:  encompass
 KFEAT:   ABCD = .
 COLOUR:  ABCD = lightblue
 FTILE:   ABCD = tutorial_pad
-MARKER:  A = lua:tutorial_msg1.door()
-MARKER:  B = lua:tutorial_msg1.secret_door_glass()
-MARKER:  C = lua:tutorial_msg1.water()
-MARKER:  D = lua:tutorial_msg1.secret_door_wall()
-MARKER:  { = lua:tutorial_msg1.upstairs()
+MARKER:  A = lua:tutorial1.msg("door")
+MARKER:  B = lua:tutorial1.msg("secret_door_glass")
+MARKER:  C = lua:tutorial1.msg("water")
+MARKER:  D = lua:tutorial1.msg("secret_door_wall")
+MARKER:  { = lua:tutorial1.msg("upstairs")
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
              size_max = 2, spread_rate = 0 }
 epilogue{{
-  tutorial_msg1.newlevel()
+  crawl.mesclr(true)
+  crawl.tutorial_msg("tutorial1 newlevel");
 }}
 MAP
 vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
