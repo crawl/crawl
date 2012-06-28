@@ -899,7 +899,7 @@ static void inline _untag(std::string &s, const std::string pre,
         size_t q = s.find(post, p);
         if (q == std::string::npos)
             q = s.length();
-        if (is_tiles())
+        if (onoff)
         {
             s.erase(q, post.length());
             s.erase(p, pre.length());
