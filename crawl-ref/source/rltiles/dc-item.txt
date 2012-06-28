@@ -205,11 +205,27 @@ blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_SLING
 sling2
+
+%rim 0
 bow1 WPN_BOW
 bow2
+bow3
+orcish_bow1 WPN_BOW_ORC
+orcish_bow2
+elvish_bow1 WPN_BOW_ELF
+elvish_bow2
 crossbow1 WPN_CROSSBOW
 crossbow2
-longbow WPN_LONGBOW
+crossbow3
+orcish_crossbow1 WPN_CROSSBOW_ORC
+orcish_crossbow2
+dwarven_crossbow1 WPN_CROSSBOW_DWARF
+dwarven_crossbow2
+longbow1 WPN_LONGBOW
+longbow2
+longbow3
+elvish_longbow1 WPN_LONGBOW_ELF
+elvish_longbow2
 
 %sdir item/weapon/brands
 %rim 0
