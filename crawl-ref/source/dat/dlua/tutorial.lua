@@ -29,8 +29,10 @@ function tutorial_get_cmd (command)
 end
 
 function tutorial_intro (msg)
-  crawl.mesclr(true)
-  crawl.mpr(msg, "tutorial")
+  if msg ~= nil then
+    crawl.mesclr(true)
+    crawl.mpr(msg, "tutorial")
+  end
   local text = "You can reread all messages at any time with "
                .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. ".\n"
                .. "Also, press <white>Space</white> to clear the <cyan>--more--</cyan> prompts."
