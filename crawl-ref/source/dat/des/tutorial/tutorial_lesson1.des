@@ -14,65 +14,12 @@ require("dlua/tutorial.lua")
 
 tutorial1 = {}
 
-function tutorial1.diagonal ()
-    local text = "You can move diagonally by way of the <white>[number pad]</white> (try Numlock on/off) or by using the <white>[vi keys]</white>.\n"
-                 .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
-                 .. "                 \\|/                         " .. "\\|/\n"
-                 .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
-                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
-                 .. "                 /|\\                         " .. "/|\\\n"
-                 .. "                <white>1 2 3</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
-                 if crawl.is_tiles() and not crawl.is_webtiles() then
-                                        text = text .. "You can also move using <white>[Mouse clicks]</white>"
-                                end
-    text = text .. "."
-    return tutorial_message(text)
-end
-
 function tutorial1.msg(text)
     return tutorial_msg("tutorial1 " .. text)
 end
 
-function tutorial1.exit ()
-    -- A single screen recapping all commands.
-
-    local text = "<yellow>Movement commands</yellow>\n\n"
-                 .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
-                 .. "                 \\|/                         " .. "\\|/\n"
-                 .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
-                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
-                 .. "                 /|\\                         " .. "/|\\\n"
-                 .. "                <white>1 2 3</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
-                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
-    end
-
-    text = text .. "\n<yellow>Staircases</yellow>\n"
-                .. "  " .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "  go back to the previous level\n"
-                .. "  " .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "  enter the next level\n"
-                .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w><<</w>/<w>></w>" .. "  travel to the nearest up/downstairs\n"
-
-    text = text .. "\n<yellow>Doors</yellow>\n"
-                .. "  can be opened by walking into them\n"
-                .. "  " .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "  close an open door\n"
-                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  search for secret doors\n"
-
-    text = text .. "\n<yellow>Travel</yellow>\n"
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "  mouseclick on the <white>minimap</white>\n"
-    else
-        text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
-    end
-    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n"
-                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
-
-    return crawl.endgame(text)
+function tutorial1.exit()
+    crawl.tutorial_msg("tutorial1 exit", true)
 end
 
 function tutorial1.win()
@@ -92,7 +39,7 @@ COLOUR:  ' = brown
 FTILE:   G'[ = floor_swamp, t = floor_grass
 FTILE:   ABCDEFHI$ = tutorial_pad
 MARKER:  A = lua:tutorial1.msg("go_on")
-MARKER:  B = lua:tutorial1.diagonal()
+MARKER:  B = lua:tutorial1.msg("diagonal")
 MARKER:  C = lua:tutorial1.msg("shiftmove")
 MARKER:  ) = lua:tutorial1.msg("downstairs")
 MARKER:  } = lua:tutorial1.msg("levelmap")
