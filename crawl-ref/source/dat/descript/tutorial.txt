@@ -37,7 +37,7 @@ A quicker way to 'run' through a corridor is to press <w>[Shift]</w> along with 
 %%%%
 tutorial1 downstairs
 
-When standing on a staircase leading downwards, you can enter the next level with <w>$cmd[CMD_GO_DOWNSTAIRS]</w><localtiles> or with <w>[Shift-Click]</w> on your character</localtiles>.
+When standing on a staircase leading downwards, you can enter the next level with <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles> or with <w>[Shift-Click]</w> on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
