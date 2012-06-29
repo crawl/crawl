@@ -33,6 +33,8 @@ void packed_cell::clear()
     is_liquefied     = false;
     swamp_tree_water = false;
     orb_glow         = 0;
+    blood_rotation   = 0;
+    old_blood        = false;
 }
 
 bool packed_cell::operator ==(const packed_cell &other) const
@@ -50,6 +52,8 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (is_liquefied != other.is_liquefied) return false;
     if (swamp_tree_water != other.swamp_tree_water) return false;
     if (orb_glow != other.orb_glow) return false;
+    if (blood_rotation != other.blood_rotation) return false;
+    if (old_blood != other.old_blood) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)
