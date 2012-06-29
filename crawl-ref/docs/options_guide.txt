@@ -1339,15 +1339,21 @@ show_newturn_mark = true
         When set to false, this option disable the underscore (_) displayed in
         front of the first line of a turn.
 
-show_gold_turns = false
-        If set to true, this option adds an extra line to the stat area
-        to display the current gold and turn counters. In Tiles, this option is
-        ignored. Use the tile_layout_priority option instead.
+show_gold_turns = true
+        If set to false, this option hides the extra line in the stat area
+        which displays the current gold and turn counters. In Tiles, this
+        option is ignored. Use the tile_layout_priority option instead.
 
-show_game_turns = false
-        If set to true, the turn counter in the stat area will display game
-        turns instead of player turns. A second number is displayed in
-        parenthesis, showing the duration of the last action.
+show_game_turns = true
+        By default, the turn counter in the stat area display game turns, which
+        means absolute turns of constant duration. Most actions take one turn,
+        but some are quicker (putting a ring, wielding a weapon, ...) and
+        others are slower (ending a transformation, changing armour,...). The
+        duration of the last action is displayed in parenthesis, after the turn
+        count.
+        When set to false, the turn counter will display player turns instead,
+        which is the number of actions done, regardless of their duration. It
+        is this turn count which is used for scoring.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in
