@@ -374,6 +374,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 var basetile;
                 if (is_wall)
                 {
+                    basetile = cell.old_blood ? dngn.WALL_OLD_BLOOD : dngn.WALL_BLOOD_S;
+                    basetile += tile_dngn_count(basetile) * cell.bloodrot;
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
                         * cell.bloodrot;
                 }

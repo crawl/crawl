@@ -713,6 +713,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
             || next_pc.is_bloody != current_pc.is_bloody)
             write_message("bloody:%u,", next_pc.is_bloody);
 
+        if ((force_full && next_pc.old_blood)
+            || next_pc.old_blood != current_pc.old_blood)
+            write_message("old_blood:%u,", next_pc.old_blood);
+
         if ((force_full && next_pc.is_silenced)
             || next_pc.is_silenced != current_pc.is_silenced)
             write_message("silenced:%u,", next_pc.is_silenced);
