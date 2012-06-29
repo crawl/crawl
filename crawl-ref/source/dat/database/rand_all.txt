@@ -64,6 +64,10 @@ Doubts
 
 Suspected Treachery
 
+Scepticism
+
+Trepidation
+
 w:20
 @conflict_name@
 %%%%
@@ -99,6 +103,12 @@ Whim
 Displeasure
 
 Envy
+
+Castigation
+
+Condemnation
+
+Reproof
 
 w:70
 @anger_name@
@@ -180,6 +190,14 @@ the Harvest
 Eternal Night
 
 Eternity
+
+Noon
+
+the Present
+
+the Morning
+
+the Evening
 %%%%
 sky_colour_name
 
@@ -216,6 +234,12 @@ Starshine
 the Clouds
 
 the Sky
+
+the Gloaming
+
+the Heavens
+
+the Skies Above
 
 the @sky_colour_name@ Skies
 %%%%
@@ -301,6 +325,8 @@ Karma
 Kismet
 
 Wyrd
+
+Doom
 %%%%
 number_or_qualifier
 
@@ -323,13 +349,21 @@ the Ten
 
 the Eleven
 
+w:5
 the Twelve
+
+w:5
+the Dozen
 
 the Thirteen
 
 the Fifty
 
+w:5
 a Hundred
+
+w:5
+the Hundredfold
 
 a Thousand
 
@@ -339,6 +373,10 @@ the
 the Many
 
 the Countless
+
+the Assorted
+
+the Manifold
 
 # other qualifiers
 the Lost
@@ -362,6 +400,10 @@ the Exiled
 the Illusory
 
 the Pure
+
+the Peculiar
+
+the Special
 %%%%
 thing_names
 
@@ -412,4 +454,22 @@ Realms
 Wishes
 
 Wonders
+
+Beds
+
+Beggars
+
+Cities
+
+Dances
+
+Lies
+
+Ships
+
+Songs
+
+Souls
+
+Tales
 %%%%
