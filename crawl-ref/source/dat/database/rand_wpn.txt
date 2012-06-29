@@ -43,6 +43,12 @@ Dominance
 Victory
 
 Intimidation
+
+Grandeur
+
+Mastery
+
+Superiority
 %%%%
 conflict_name
 
@@ -57,6 +63,10 @@ Division
 Doubt
 
 Internal Strife
+
+Contention
+
+Dissent
 %%%%
 anger_name
 
@@ -73,6 +83,12 @@ Wrath
 Brutal Revenge
 
 Vengeance
+
+Hatred
+
+Indignation
+
+Outrage
 %%%%
 battle_or_war
 
@@ -85,6 +101,12 @@ War
 Eternal War
 
 the Eternal Warrior
+
+the Onslaught
+
+Skirmishing
+
+the Endless March
 
 # Lemuel's Suggestions
 the Warrior
@@ -105,10 +127,14 @@ Blood
 
 Fear
 
+Massacring
+
 # was Pain, clashing with the brand
 Insufficient Pleasure
 
 Agony
+
+Trauma
 
 # Lemuel's suggestion
 Hacking and Slashing
@@ -121,6 +147,8 @@ Severance
 Dullness
 
 Precise Incision
+
+Laceration
 
 #collateral effects
 Mourning
@@ -154,6 +182,8 @@ Uncertain Death
 
 Pain and Death
 
+Untimely Demise
+
 # doom
 Doom
 
@@ -171,6 +201,8 @@ Evisceration
 
 Extermination
 
+Extinguishment
+
 # pain and misery
 Infinite Pain
 
@@ -181,6 +213,14 @@ Dismemberment
 Terror
 
 Misery
+
+Woe
+
+Excruciating Pain
+
+Exquisite Torment
+
+Anguish
 %%%%
 strategy_or_justice
 
@@ -207,6 +247,12 @@ Reinforcement
 Expedience
 
 Optimality
+
+Overwhelming Force
+
+Subterfuge
+
+Strategic Superiority
 %%%%
 valour_name
 
@@ -239,6 +285,16 @@ Valiance
 Courage
 
 Eternal Vigilance
+
+Gallantry
+
+Tenacity
+
+True Grit
+
+Indomitability
+
+Conscience
 %%%%
 justice_name
 
@@ -267,6 +323,12 @@ Wrongful Imprisonment
 Corporal Punishment
 
 Capital Punishment
+
+Forgiveness
+
+Trial by Ordeal
+
+Blind Justice
 %%%%
 diviner_name
 
@@ -279,6 +341,14 @@ Soothsayer
 Seeker
 
 Visionary
+
+Oracle
+
+Fortune-Teller
+
+Sybil
+
+Seer
 %%%%
 people_name
 
@@ -300,6 +370,19 @@ Genius
 
 Coward
 
+Philosopher
+
+Hero
+
+Traitor
+
+Enemy
+
+Priest
+
+Madman
+
+w:15
 @diviner_name@
 %%%%
 weapon_animal
@@ -327,10 +410,18 @@ Scorpion
 # amphibians and reptiles
 Rattle-Snake
 
+Viper
+
+Asp
+
 # fish
 Shark
 
 Lamprey
+
+Eel
+
+Salmon
 
 # birds
 Penguin
@@ -339,28 +430,76 @@ Puffin
 
 Fulmar
 
+Dove
+
+Hawk
+
+Hummingbird
+
+Owl
+
+Stork
+
+Vulture
+
 # mammals
+w:5
 Weasel
 
 Goat
 
 Whale
+
+Ass
+
+Badger
+
+Bear
+
+Boar
+
+Fox
+
+Rat
+
+w:5
+Stoat
+
+Tiger
+
+Wolf
 %%%%
 # plants and fungi
 plant_name
 
+#plants
 Eggplant
 
 Turnip
 
+Chickpea
+
+Lettuce
+
+Radish
+
+Sugar Beet
+
+Shallot
+
+Tomato
+
+# er...aren't whelks gastropods?
 Whelk
 
+#fungus and similar
 Mushroom
 
 Toadstool
 
-# ???
 Puffball
+
+Slime-mold
 %%%%
 # undead and evil beings
 evil_stuff
@@ -396,6 +535,34 @@ Infection
 Corruption
 
 Demonkind
+
+Abuse
+
+the Dead
+
+Defilement
+
+the Evil Eye
+
+the Ghost
+
+the Living Dead
+
+Nightmares
+
+Perversion
+
+Putrescence
+
+the Reaper
+
+the Spectre
+
+the Unliving
+
+the Unspeakable One
+
+the Wraith
 %%%%
 # catastrophes etc.
 catastrophe_name
@@ -403,6 +570,16 @@ catastrophe_name
 the Inferno
 
 Earthquakes
+
+Cataclysm
+
+Drought
+
+Floods
+
+Holocaust
+
+Ruination
 
 # the Apocalypse
 the Apocalypse
@@ -412,6 +589,10 @@ Armageddon
 World's End
 
 Ragnarok
+
+Annihilation
+
+the End of Times
 
 # the Apocalyptic Riders (except Death)
 Pestilence
@@ -453,6 +634,28 @@ Change
 Extremism
 
 Impermanence
+
+Constant Reorganization
+
+Contradiction
+
+Disarray
+
+Disintegration
+
+Dissolution
+
+Distraction
+
+Forced Transition
+
+the Fray
+
+Revolt
+
+Tumult
+
+Upheaval
 %%%%
 balance_or_order
 
@@ -493,6 +696,20 @@ Linearity
 Law
 
 Order
+
+Accord
+
+Conformity
+
+Due Proportion
+
+Equilibrium
+
+the Establishment
+
+the Final Decision
+
+Propriety
 %%%%
 economics_or_politics
 
@@ -504,6 +721,42 @@ Deflation
 Supply
 
 Demand
+
+Amortization
+
+Animal Spirits
+
+Bankruptcy
+
+Capitalism
+
+Collusion
+
+Compound Interest
+
+Currency
+
+Debt
+
+Dividends
+
+Exchange
+
+Growth
+
+Income
+
+Luxury
+
+Profit
+
+Risk Management
+
+Taxation
+
+Valuable Assets
+
+Welfare
 
 # politics
 the Imperium
@@ -523,6 +776,30 @@ Wealth
 Poverty
 
 Reapportionment
+
+Checks and Balances
+
+the Common Good
+
+Conservatism
+
+the Dark Horse
+
+the Demagogue
+
+Governance
+
+the Lame Duck
+
+the Lesser Evil
+
+Popular Demand
+
+Radicalism
+
+Royalism
+
+the Silent Majority
 
 # akrasiac patch
 Impeachment
@@ -577,6 +854,38 @@ the Maze
 the Pit
 
 the Eternal Void
+
+Beyond
+
+the Blessed Realm
+
+the Desert
+
+Distant Shores
+
+the Hidden Vale
+
+the Hills
+
+the Known World
+
+the Land of Plenty
+
+the Other Side
+
+Parts Unknown
+
+Somewhere Else
+
+the Shore
+
+the Tundras
+
+the Valley
+
+the Valley of Death
+
+the Wasteland
 %%%%
 discomfort_weapon
 
@@ -603,6 +912,26 @@ Annoyance
 Anxiety
 
 Urgency
+
+Awkwardness
+
+Dissatisfaction
+
+Foul Odors
+
+Flawed Execution
+
+Gloom
+
+Inconvenience
+
+Irritation
+
+Malaise
+
+Stickiness
+
+Uncomfortable Rashes
 %%%%
 mental_illness_weapon
 
@@ -621,6 +950,20 @@ Obsession
 Compulsion
 
 Fatigue
+
+Exhibitionism
+
+Insomnia
+
+Oenomania
+
+Perfectionism
+
+Pyromania
+
+Satyriasis
+
+Suicidal Tendencies
 %%%%
 philosophy_or_science
 
@@ -679,6 +1022,34 @@ Nihilism
 Pragmatism
 
 Idealism
+
+Activism
+
+Altruism
+
+Anarchy
+
+Dogma
+
+Egalitarianism
+
+Elitism
+
+Ethics
+
+Fallacy
+
+Fanaticism
+
+Free Will
+
+Liberalism
+
+Morality
+
+Mysticism
+
+Rationality
 %%%%
 science_name
 
@@ -715,6 +1086,32 @@ Quantum Leap
 Gravity
 
 Rotation
+
+the Big Bang
+
+the Boiling Point
+
+Classification
+
+Evolution
+
+Experimentation
+
+Focus
+
+Inference
+
+Inquiry
+
+Objectivity
+
+Subjectivity
+
+Variability
+
+Patterns
+
+Theory
 %%%%
 item_name
 
@@ -733,12 +1130,54 @@ Key
 
 Ring
 
+Chain
+
+Coin
+
+Cup
+
+Feather
+
+Girdle
+
+Horn
+
+Pillar
+
+Purse
+
+Scroll
+
+Ship
+
+Tent
+
+Vase
+
+Vine
+
+Walnut
+
+Wheel
+
+Yoke
+
 # body parts
 Heart
 
 Brain
 
 Tooth
+
+Foot
+
+Hand
+
+Head
+
+Mouth
+
+Throat
 %%%%
 magic_name
 
@@ -747,6 +1186,10 @@ the Magi
 the Archmagi
 
 the Warrior-Mage
+
+the Hierophant
+
+the Sage
 %%%%
 # substances
 substance_name
@@ -766,6 +1209,30 @@ Ash
 Slime
 
 Bile
+
+Bodily Humours
+
+Cobwebs
+
+Cheese
+
+Dried Tears
+
+Dung
+
+Ointment
+
+Paper
+
+Rubbish
+
+Salt
+
+Saltpetre
+
+Sharkskin
+
+Terra Cotta
 
 # these don't really fit
 Mana
@@ -807,6 +1274,26 @@ No Interval
 
 Interdependent Arising
 
+the Blind Eye
+
+the Briny Deep
+
+Broken Luck
+
+Entrepreneurial Spirit
+
+the Vendetta
+
+the Empty Page
+
+the Final Chapter
+
+Hard Scrabble
+
+Red Wine
+
+Undoing
+
 # akrasiac patch
 Irrepressible Laughter
 %%%%
@@ -834,6 +1321,12 @@ Testudine
 
 w:1
 Pirate
+
+Beast
+
+Demon
+
+Goblin
 %%%%
 monster_name
 
@@ -864,6 +1357,10 @@ killer_name
 's Foe
 
 's Regret
+
+'s Curse
+
+'s Peril
 %%%%
 long_killer_name
 
@@ -872,6 +1369,13 @@ long_killer_name
 's Funeral
 
 's Nightmare
+
+'s Undoing
+
+'s Demise
+
+w:1
+'s Looming Annihilation
 %%%%
 real_weapon_name
 
