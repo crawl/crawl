@@ -51,7 +51,7 @@
 
 # Dummy Vaults entry
 NAME:   vaults_0_dummy
-TAGS:   vault_entry
+TAGS:   vaults_entry
 WEIGHT: 60
 ORIENT: float
 KFEAT:  O = enter_vaults
@@ -63,7 +63,7 @@ ENDMAP
 # Generic Vaults entry
 #
 NAME:    david_vaults_1
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
 ORIENT:  float
 SHUFFLE: !=
@@ -86,7 +86,7 @@ ENDMAP
 # Vault monsters near stair
 #
 NAME: david_vaults_2
-TAGS: vault_entry
+TAGS: vaults_entry
 MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
 MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre mage
 MONS: weight:100 nothing / shapeshifter
@@ -109,7 +109,7 @@ ENDMAP
 # Vaults patterns 0: vanguard
 #
 NAME:    david_vaults_3
-TAGS:    vault_entry
+TAGS:    vaults_entry
 ORIENT:  float
 MONS:    human, human / Donald, human / human / Norris, human / Rupert
 SHUFFLE: 2345
@@ -131,7 +131,7 @@ ENDMAP
 # Vaults patterns I
 #
 NAME:    david_vaults_4
-TAGS:    vault_entry
+TAGS:    vaults_entry
 ORIENT:  float
 SHUFFLE: 123456
 MONS:    dragon / golden dragon / ice dragon / iron dragon / shadow dragon /\
@@ -163,7 +163,7 @@ ENDMAP
 # Vaults patterns II
 #
 NAME:   david_vaults_5
-TAGS:   vault_entry
+TAGS:   vaults_entry
 ORIENT: float
 SUBST:  ! : ! .
 SUBST:  ? : ? .
@@ -187,7 +187,7 @@ ENDMAP
 # The Guard of Blades
 #
 NAME:    erik_vaults_1
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    dancing weapon
 ORIENT:  float
 SHUFFLE: vcxxx
@@ -208,7 +208,7 @@ ENDMAP
 # Above As Below
 #
 NAME:    erik_vaults_2
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    vault guard
 ORIENT:  float
 SHUFFLE: vxxx, bcc
@@ -229,7 +229,7 @@ ENDMAP
 # HangedMan's map
 #
 NAME:    hangedman_vaults_entry_quadrant_bands
-TAGS:    vault_entry no_monster_gen no_item_gen patrolling
+TAGS:    vaults_entry no_monster_gen no_item_gen patrolling
 ORIENT:  float
 MONS:    centaur warrior, centaur / nothing w:5
 MONS:    ogre mage, two-headed ogre / ogre / nothing w:5
@@ -270,8 +270,8 @@ ENDMAP
 ############################################################
 # Tiered entry
 #
-NAME:   grunt_vault_entry_tiered
-TAGS:   vault_entry no_monster_gen no_rtele_into transparent
+NAME:   grunt_vaults_entry_tiered
+TAGS:   vaults_entry no_monster_gen no_rtele_into transparent
 MONS:   w:5 nothing / human
 MONS:   human / w:5 necromancer / w:5 wizard
 MONS:   human / w:5 vault guard
