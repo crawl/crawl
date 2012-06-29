@@ -342,7 +342,8 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
         JsonWrapper content = json_find_member(obj.node, "content");
         content.check(JSON_STRING);
 
-        take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
+        if (Options.note_chat_messages)
+            take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
     }
 
     return c;

@@ -792,6 +792,7 @@ void game_options::reset_options()
     note_all_skill_levels  = false;
     note_skill_max         = true;
     note_xom_effects       = true;
+    note_chat_messages     = true;
     note_hp_percent        = 5;
 
     // [ds] Grumble grumble.
@@ -2535,6 +2536,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_all_skill_levels);
     else BOOL_OPTION(note_skill_max);
     else BOOL_OPTION(note_xom_effects);
+    else BOOL_OPTION(note_chat_messages);
     else BOOL_OPTION(clear_messages);
     else BOOL_OPTION(show_more);
     else BOOL_OPTION(small_more);
