@@ -743,13 +743,8 @@ void game_options::reset_options()
     default_manual_training = false;
 
     show_newturn_mark = true;
-#ifdef EUCLIDEAN
     show_gold_turns = true;
     show_game_turns = true;
-#else
-    show_gold_turns = false;
-    show_game_turns = false;
-#endif
 
     game = newgame_def();
 
