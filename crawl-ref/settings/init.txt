@@ -424,11 +424,12 @@ force_more_message = Found .* abyssal rune of Zot
 ##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
-#note_hp_percent = 5
+# note_hp_percent = 5
 note_skill_levels = 1,5,10,15,27
-#note_all_skill_levels = true
-#note_skill_max  = false
-#note_xom_effects = false
+# note_all_skill_levels = true
+# note_skill_max  = false
+# note_xom_effects = false
+# note_chat_messages = false
 note_items    = rod of, acquirement, preservation, running, of Zot
 note_messages = Your scales start
 note_messages = protects you from harm

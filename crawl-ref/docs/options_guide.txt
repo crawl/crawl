@@ -114,7 +114,7 @@ The contents of this text are:
                 user_note_prefix, note_items, note_monsters,
                 ood_interesting, note_hp_percent, note_skill_levels,
                 note_all_skill_levels, note_skill_max, note_xom_effects,
-                note_messages
+                note_messages, note_chat_messages
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
@@ -2029,6 +2029,11 @@ note_messages = <regex list>
              note_messages = [bB]anish.*Abyss
         If you want a note when your draconian scales turn <colour>, use
              note_messages = Your scales start
+
+note_chat_messages = false
+        If set to false, this will disable logging of chat messages
+        from other players. (This setting only applies on the online
+        servers.)
 
 
 6-  Miscellaneous.

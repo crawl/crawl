@@ -35,8 +35,9 @@ static void _show_message_line(std::string line)
         fs.textcolor(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_PLAIN, 0);
-        take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
-                       (sender + ": " + line).c_str()));
+        if (Options.note_chat_messages)
+            take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
+                           (sender + ": " + line).c_str()));
     }
 }
 
