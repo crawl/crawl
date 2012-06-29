@@ -56,7 +56,7 @@ SUBST:   a:=., BbCG=x, Y=.
 :end
 SHUFFLE: H4/'"
 SUBST:   '=x, ":x"
-NSUBST:  "=1:<>/*:%, H=1:=/*:x, 4:4%., 4=%.
+NSUBST:  "=1:<>/*:., H=1:=/*:x, 4:4..
 SUBST:   Z=.=
 : if crawl.one_chance_in(7) then
 SHUFFLE: LK, IJ
@@ -68,7 +68,7 @@ SUBST:   KL=x, X=.
 NSUBST:  M=1:=/*:x, I=1:=/*:x, J=1:=/*:x
 :end
 SHUFFLE: 123567
-SUBST:   12=., 3:3., 5:5., 3567=%, %=%.
+SUBST:   12=., 3:3., 5:5., 3567=.
 MAP
 xxxxxxxxxxxxx
 x11B2.D33F.[x
@@ -231,7 +231,8 @@ NAME:    shiori_entry_whats_in_store_for_you
 TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
-SUBST:   A==+++++ , B=@ , C=x , D=x
+SUBST:   A=+ , B=@ , C=x , D=x
+SUBST:   = = +
 NSUBST:  T = 1=T... / *=.
 KFEAT:   T = net trap
 # Seemingly pointless, since there are no active foes here... but
@@ -286,7 +287,6 @@ ENDMAP
 NAME:   shiori_entry_oz
 TAGS:   entry
 ORIENT: float
-NSUBST: 1 = 1/%
 MONS:   kobold / goblin / hobgoblin / nothing
 MARKER: # = lua:fog_machine { \
             pow_max = 5, delay_min = 100, delay_max = 150, \
@@ -314,26 +314,6 @@ bbbb+b+bbbb
  =1=.b.=1=
  bbb.b.bbb
    b@b@b
-ENDMAP
-
-########################################
-# Entry with hidden altar
-NAME:    shiori_entry_hidden_altar
-TAGS:    entry no_monster_gen no_secret_doors no_pool_fixup
-ORIENT:  float
-SUBST:   B:.A , A:.x
-NSUBST:  E= 1=+ / *=+=x
-SUBST:   +:@+ , d=mlwG
-SHUFFLE: ef/gh/ij
-SUBST:   g=> , h=C/x , e=x , f=w , i=x , j=l
-MAP
-xxxExxxxxxx
-xAB.BAxfffx
-xB...Bxxehx
-E..{..=dghx
-xB...Bxxihx
-xAB.BAxjjjx
-xxxExxxxxxx
 ENDMAP
 
 ############################################################################
@@ -378,7 +358,7 @@ ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
-SUBST:   z=x, y=x, B=., '==, V=., "==
+SUBST:   z=x, y=x, B=., '=+, V=., "=+
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
 MAP
@@ -406,7 +386,7 @@ NAME:    dpeg_entry_connections
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
-SUBST:   A==, a=...%, BCDEbcde=x
+SUBST:   A==, a=...>, BCDEbcde=x
 SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
 MAP
 22222222xxxxx333
@@ -483,7 +463,7 @@ NAME:    erik_entry_cave_to_hall
 TAGS:    cave_to_hall_subvault no_rotate
 SHUFFLE: TTGGVY
 SUBST:   X : cX
-NSUBST:  X = 1:= / *:c
+NSUBST:  X = 1:+ / *:c
 KMASK:   T = no_monster_gen
 MAP
 ...T....ccc.

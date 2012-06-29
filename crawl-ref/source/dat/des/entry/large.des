@@ -10,7 +10,6 @@
 # Ruined Dwarven Fortress Basement
 NAME:    elethiomel_entry_fortress_basement
 TAGS:    entry no_monster_gen no_rotate
-ITEM:    any armour / any weapon / nothing
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -22,7 +21,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccxxxxxxxxxxxxxxxxxxxcccccccx
 xc.....ccccccccccccccccccccc.....cx
 xc.....+...................+.....cx
-xc....[cccccccccc=cccccccccc{....cx
+xc....[cccccccccc+cccccccccc{....cx
 xccc+cccxxxxxxccc.cccxxxxxxccc+cccx
 xxxc.cxxxxxxxxc.....cxxxxxxxxc.cxxx
 xxxc.cxxxxxxxxc.0...cxxxxxxxxc.cxxx
@@ -34,9 +33,9 @@ xxxc.cxxxxxxxxxxxxxxxxxxxxxxxc..xxx
 xccc+ccxxxxxxxxxxxxxxxxxxxxccc+cccx
 xxx...xxcccccccccccccccccccc(....cx
 xxx.x..+...................+.....cx
-xc...x.cccccccccccccccc=cccc.....cx
-xccx.xccxxxxxxxxxxxxxxxdxxxcccccccx
-xxxx@xxxxxxxxxxxxxxxxxx=xxxxxxxxxxx
+xc...x.ccccccccccccccccccccc.....cx
+xccx.xccxxxxxxxxxxxxxxxxxxxcccccccx
+xxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -104,7 +103,7 @@ ENDMAP
 # 29 x 22
 NAME:    dpeg_entry_castle
 TAGS:    entry no_monster_gen no_rotate
-ITEM:    any, nothing, nothing
+ITEM:    stone, nothing, nothing
 ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
@@ -113,8 +112,6 @@ TILE:    x = wall_vines
 KFEAT:   ' = floor
 FTILE:   '+]def{[T = floor_cobble_blood
 SUBST:   X = T
-# A test run with 50 tries had precisely one level without shallow water
-# access to surroundings. This is intended and I like the low chance for this.
 MAP
   .........................
   .........................
@@ -126,8 +123,8 @@ MAP
 ...www+'''c'''''''c'''+www...
 ...wwwc+ccc'xxxxx'c+c+cwww...
 ...wwwww+'''x'''x'''cwwww....
-...wwwwwc'xxx'{'+'T'+www..X..
-...wwwwwc'xxx'['+'T'+www..X..
+...wwwwwc'xxx'{'+'T'+WwW..X..
+...wwwwwc'xxx'['+'T'+wWw..X..
 ...wwwww+'''x'''x'''cwwww....
 ...wwwc+ccc'xxxxx'ccc+cwww...
 ...www+'''+'''''''+'''+www...
@@ -151,8 +148,8 @@ SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x, b:xxxbcv
 RTILE:   x = wall_vines
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx''xxxxxxxxxxxxxxxxx%xxxxxxxxxxxxx
-xxx...x''...x...xxxxxxxxxxx.0%%xxxxxxxxxxx
+xxxxxxxxx''xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx
+xxx...x''...x...xxxxxxxxxxx.0..xxxxxxxxxxx
 xx..(....xx..''..xxxxxxxxxx.x.xxxxxxxxxxxx
 xx.....xxx'.xxx..xxxx''xxxx...xxxxxxxxxxxx
 xxx...xxxx=xxxxx.'xx'..'xxxx0xxxxxxxxxxxxx

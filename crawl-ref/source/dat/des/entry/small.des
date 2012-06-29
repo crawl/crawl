@@ -43,21 +43,20 @@ ENDMAP
 NAME:   evilmike_entry_crescent
 TAGS:   entry no_monster_gen
 ORIENT: float
-SUBST:  = = =+x, $ = $0.
 MAP
 xxxxxxxxxx
 xx({[xxxxx
 xxx...xxxx
 x>xx...xxx
-xw$x...xxx
+xw.x...xxx
 xw.xx...xx
 xww.x...xx
 xwwWxx...x
-xwwwW=...=
+xwwwW+...=
 xwwWxx...x
 xww.x...xx
 xw.xx...xx
-xw$x...xxx
+xw.x...xxx
 x<xx...xxx
 xxx...xxxx
 xx@@@xxxxx
@@ -165,12 +164,12 @@ yVV.```` UUUyUU....xxx.........@
 yyVVVVU.``.UUU................xy
 yyyyyyUU.`````......`.`.`.`...xy
      yyUUU..`.``...``........xxy
-     yyyy=UUU..``.``.......xxxyy
-     yyy.yyyUU............xxyyyy
-     yyy>yyyyxxxx...{..xxxxyy
-     yyy%yyyyyyyxx...xxxyyyyy
-     yyy.yyyyyyyyxxxxxyyyyyyy
-     yyy=yyyyyyyyyyyyyyyyyyyy
+     yyyyUUUU..``.``.......xxxyy
+     yyyyyyyUU............xxyyyy
+     yyyyyyyyxxxx...{..xxxxyy
+     yyyyyyyyyyyxx...xxxyyyyy
+     yyyyyyyyyyyyxxxxxyyyyyyy
+     yyyyyyyyyyyyyyyyyyyyyyyy
 ENDMAP
 
 ##############################################################################
@@ -1340,10 +1339,10 @@ MAP
 ..xxxxxxxx+xxxxxxxx..
 ..xxxx.........xxxx..
 ..xx...T.....%...xx..
-..x..T...c=c...%..x..
+..x..T...c+c...%..x..
 ..+.....cc{cc.....+..
 ..+.....cc>cc.....+..
-..x..%...c=c...T..x..
+..x..%...c+c...T..x..
 ..xx...%.....T...xx..
 ..xxxx.........xxxx..
 ..xxxxxxxx+xxxxxxxx..
@@ -1502,12 +1501,11 @@ xxxxxxxxxxxx.@.xxxx
 ENDMAP
 
 ##############################################################################
-NAME:    lemuel_entry_broad_hall_no_closet
+NAME:    lemuel_entry_broad_hall
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   ? : xxcvG.
-WEIGHT:  4
 MAP
 xxxxxxxxxxx
 x{...(...[x
@@ -1524,58 +1522,6 @@ x.........x
 x.?.....?.x
 x.........x
 x>.@.>.@.>x
-ENDMAP
-
-NAME:    lemuel_entry_broad_hall_high_closet
-TAGS:    entry no_monster_gen
-ORIENT:  float
-SUBST:   ? : xxcvG.
-ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
-         apple / club / hammer / dagger
-SHUFFLE: {[(
-WEIGHT:  3
-MAP
-xxxxxxxxxxxx
-x{...(...[xx
-x.........xx
-x.?.....?.xx
-x.........xx
-x.........xx
-x.?.....?.xx
-x.........xx
-x.........xxxxxx
-x.?.....?.xxxddx
-x.........=..ddx
-x.........xxxxxx
-x.?.....?.xx
-x.........xx
-x>.@.>.@.>xx
-ENDMAP
-
-NAME:    lemuel_entry_broad_hall_low_closet
-TAGS:    entry no_monster_gen
-ORIENT:  float
-SUBST:   ? : xxcvG.
-ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
-         apple / club / hammer / dagger
-SHUFFLE: {[(
-WEIGHT:  3
-MAP
-xxxxxxxxxxxx
-x{...(...[xx
-x.........xx
-x.?.....?.xx
-x.........xx
-x.........xxxxxx
-x.?.....?.xxxddx
-x.........=..ddx
-x.........xxxxxx
-x.?.....?.xx
-x.........xx
-x.........xx
-x.?.....?.xx
-x.........xx
-x>.@.>.@.>xx
 ENDMAP
 
 ##############################################################################
@@ -1619,8 +1565,7 @@ ENDMAP
 NAME:    dpeg_entry_oval
 TAGS:    entry no_rotate
 ORIENT:  float
-SHUFFLE: {[(<, @X, Aa/Bb/Dd/Ee
-SUBST:   A==, a=., B=c, b=c, D=c, d=c, E=c, e=c
+SHUFFLE: {[(<, @X
 SUBST:   v:vxxx, c:vxxxxc
 SUBST:   X=x
 MAP
@@ -1629,11 +1574,11 @@ MAP
   xxx.......vxvxvxv.......xxx
  xx......xvx.......xvx......xx
  x....vxv.............vxv....x
-xx...x......cccAcEc......x...xx
-x...v..[..ccBbcaceccc..(..v...x
-x...x....cDddd.%.ccccc....x...X
-x...v....ccccc.%.ccccc....v...x
-x...x..<..ccccc.ccccc..{..x...x
+xx...x......ccccccc......x...xx
+x...v..[..ccccccccccc..(..v...x
+x...x....ccccccccccccc....x...X
+x...v....ccccccccccccc....v...x
+x...x..<..ccccccccccc..{..x...x
 xx...v......ccccccc......v...xx
  x....xvx.............xvx....x
  xx......vxv.......vxv......xx
@@ -2272,7 +2217,6 @@ ENDMAP
 NAME:    elethiomel_entry_quiet
 TAGS:    entry no_monster_gen
 ORIENT:  float
-MONS:    rat / nothing, hobgoblin / goblin / nothing
 SHUFFLE: '"XY/ABVW, !?/CD
 SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, V=x, W=x, Y=@x
 SUBST:   c : cxx
@@ -2282,37 +2226,12 @@ MAP
          x.x
        ccc+ccc
        c.G.G.c
- xcccccc.....ccccccx
- c%.2.cc.....cc11.$c
- c%.2.=..G.G..=11..c
- c%...cc.....cc11.$c
+       c.....c
+       c.....c
+       c.G.G.c
+       c.....c
 xxcccccc.....ccccccxx
 YX''''"..G.G..?!!!!!!
-xxcccccc.....ccccccxx
-      cG.....Gc
-      c.[.{.(.c
-      ccccccccc
-ENDMAP
-
-NAME:    elethiomel_entry_005_b
-TAGS:    entry no_monster_gen
-ORIENT:  float
-MONS:    rat / nothing, hobgoblin / goblin / nothing
-SHUFFLE: '"/AB, !?XY/CDVW
-SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, Y=@x, V=x, W=x
-KFEAT:   X = teleport trap
-SUBST:   c : cxxx
-MAP
-         x@x
-         x.x
-       ccc+ccc
-       c.G.G.c
- xcccccc.....ccccccx
- c%.2.cc.....cc11.$c
- cX.2.c..G.G..c11.Xc
- c%...cc.....cc11.$c
-xxcccccc.....ccccccxx
-''''''"..G.G..?!!!!XY
 xxcccccc.....ccccccxx
       cG.....Gc
       c.[.{.(.c
@@ -2374,7 +2293,7 @@ NAME:    onia_entry_larder
 TAGS:    entry
 ORIENT:  float
 MONS:    w:100 rat / w:50 giant cockroach / quokka
-ITEM:    potion of water / any potion / choko / beef jerky / grape / sausage
+ITEM:    potion of water
 SUBST:   ? = .:30 1:20 d
 SUBST:   = = = +
 MAP
@@ -2394,16 +2313,15 @@ NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
 MONS:    w:30 rat / ooze / ball python
-MONS:    bat / w:6 ball python / w:2 adder / w:2 jackal / w:4 giant cockroach
-SUBST:   ! = $%%% , ? = ..~
+SUBST:   ? = ..~
 SHUFFLE: {[, [<(
 MAP
 .......@........
 .xx..xx>x{x..xx.
 .....xxxxxx.....
-.xx1xx2?2?xx1xx.
-.(xx=2?!!2?=xx<.
-.xx1xx2?2?xx1xx.
+.xx1xxxxxxxx1xx.
+.(xxxxxxxxxxxx<.
+.xx1xxxxxxxx1xx.
 .....xxxxxx.....
 .xx..x[x>xx..xx.
 .......@........
@@ -2465,17 +2383,15 @@ ENDMAP
 NAME:     eino_entry_cavern_c
 TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
-NSUBST:   A = 1:= / x
-SUBST:    % = % .:5
 WEIGHT:   2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx........xxxxxxx.%.%.%.%.%.xxxxx
-xxxxx.............xAxxxxAxxxx.xxxxx
-xxxxxxx.................xxxxxAxxxxx
+xxxx........xxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.............xxxxxxxxxxxxxxxxx
+xxxxxxx.................xxxxxxxxxxx
 xxxxxxxxxx......................xxb
 xxxxxxxxxxxxx.....................@
 xxxxxxxxxxxxxxxxx.............xxxxb
@@ -2617,24 +2533,20 @@ NAME:    shiori_angband_town
 ORIENT:  float
 WEIGHT:  1
 TAGS:    entry no_rotate
-NSUBST:  { = { / > / .
+NSUBST:  { = 1:{ / 1:[ / 1:( / 1:> / *:.
 NSUBST:  = = 3=+ / *=x
-SHUFFLE: ABC/DEF/GHI/JKL/MNO/PQR/STU
-NSUBST:  A = 1:=/x, B = *=%$, C = [/x
-NSUBST:  D = 1:=/x, E = *=%$, F = (/x
-SUBST:   GHIJKLMNOPQRSTU=x
 SUBST:   x:xc
 MAP
 xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxx=xxxxx
 x......................................x
-x.xAxxx..xxxxx....xSSSx....xPxxx.xxxMx.x
-=.ABCxx..xxxx+..{.STUTS..{.PQRxx.+xONM.=
-x.xCxxx...........xTxxx....xPxx+.xxxMx.x
+x.xxxxx..xxxxx....xxxxx....xxxxx.xxxxx.x
+=.xxxxx..xxxx+..{.xxxxx..{.xxxxx.+xxxx.=
+x.xxxxx...........xxxxx....xxxx+.xxxxx.x
 x.xxxxx..{........xxx+x................x
-x.xx+xx......{.............{.....xxxDx.x
-x.........xxxx+xx..xx+x...xxJxx..+xFED.x
-=.xxxx+...GHIxxxx..xxxx...xxKLx{.xxxFx.=
-x.xxxxx.{.xGxxxxx..xxxx.{.+xJxx..xxxxx.x
+x.xx+xx......{.............{.....xxxxx.x
+x.........xxxx+xx..xx+x...xxxxx..+xxxx.x
+=.xxxx+...xxxxxxx..xxxx...xxxxx{.xxxxx.=
+x.xxxxx.{.xxxxxxx..xxxx.{.+xxxx..xxxxx.x
 x......................................x
 xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxxx=xxxx
 ENDMAP
@@ -2865,7 +2777,7 @@ wcWc.cctt.....ttcc.cWcw
 wttG.ctW...1...Wtc.Gttw
 wcWc.Gc.........cG.cWcw
 wccc.cc...WtW...cc.cccw
-@=+..=+...tGt...+=..=+@
+@++..=+...tGt...+=..++@
 wccc.cc...WtW...cc.cccw
 wcWc.Gc.........cG.cWcw
 wttG.ctW...1...Wtc.Gttw
