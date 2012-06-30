@@ -698,7 +698,7 @@ std::string screenshot()
 int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
-        return (DARKGREY);
+        return (LIGHTGREY);
     else if (you.berserk())
         return (RED);
 
@@ -725,8 +725,7 @@ void view_update_at(const coord_def &pos)
     monster_type mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
-        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-         !you.berserk())
+        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
             ? real_colour(flash_colour)
             : g.col;
 
@@ -1136,8 +1135,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
             cell->colour = real_colour(flash_colour);
 #else
             monster_type mons = env.map_knowledge(gc).monster();
-            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-                !you.berserk())
+            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
             {
                 cell->colour = real_colour(flash_colour);
             }
