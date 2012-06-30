@@ -606,7 +606,7 @@ function (exports, $, key_conversion, chat, comm) {
                 $this.data("time", time)
                     .attr("data-time", "" + time);
                 $this.data("sort", "" + time)
-                    .attr("data-sort", "" + sort);
+                    .attr("data-sort", "" + time);
             }
         });
     }
