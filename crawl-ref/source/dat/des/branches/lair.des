@@ -1382,7 +1382,7 @@ NAME:   wad_woods_pond
 TAGS:   uniq_wad_woods_large
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
-WEIGHT: 4
+WEIGHT: 1
 KFEAT:  t  = swamp_tree
 KFEAT:  q  = tree
 FTILE:  '1 = floor_grass_dirt_mix
@@ -1430,7 +1430,7 @@ NAME:   wad_woods_settlement
 TAGS:   uniq_wad_woods_large
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
-WEIGHT: 4
+WEIGHT: 1
 KFEAT:  q  = tree
 FTILE:  '2*+ = floor_dirt
 FTILE:  q13%OtI. = floor_woodground
@@ -1473,7 +1473,7 @@ NAME:   wad_woods_tower
 TAGS:   uniq_wad_woods_med
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
-WEIGHT: 4
+WEIGHT: 1
 KFEAT:  q  = tree
 FTILE:  '2*+~T = floor_dirt
 FTILE:  q13%OI. = floor_woodground
@@ -1504,7 +1504,7 @@ NAME:   wad_woods_stonehenge
 TAGS:   uniq_wad_woods_med
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
-WEIGHT: 4
+WEIGHT: 1
 KFEAT:  q  = tree
 FTILE:  '2*+T = floor_dirt
 FTILE:  q1C3%OI. = floor_woodground
@@ -1534,7 +1534,7 @@ ENDMAP
 NAME:   wad_woods_01
 TAGS:   mini_float uniq_wad_woods_small
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  '*+T = floor_dirt
 FTILE:  qt123C%OI. = floor_woodground
 MARKER: O  = lua:fog_machine { \
@@ -1561,7 +1561,7 @@ ENDMAP
 NAME:   wad_woods_02
 TAGS:   mini_float uniq_wad_woods_small
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  '*+T = floor_dirt
 FTILE:  tq123C%I. = floor_woodground
 MONS:   plant, gnoll, porcupine
@@ -1584,7 +1584,7 @@ ENDMAP
 
 NAME:   wad_woods_03
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  '*~0+T1 = floor_dirt
 FTILE:  tq23C%I. = floor_woodground
 MONS:   plant, gnoll, porcupine
@@ -1608,7 +1608,7 @@ ENDMAP
 NAME:   wad_woods_04
 TAGS:   mini_float extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  '+*~T = floor_dirt
 FTILE:  t*q123C%I. = floor_woodground
 MONS:   plant, bush, fungus
@@ -1635,7 +1635,7 @@ ENDMAP
 NAME:   wad_woods_06
 TAGS:   mini_float extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  '+T = floor_dirt
 FTILE:  t*q123C%0I. = floor_woodground
 MONS:   plant, bush, fungus
@@ -1656,7 +1656,7 @@ ENDMAP
 NAME:   wad_woods_antlair
 TAGS:   mini_float
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  t*q1234C%I. = floor_woodground
 MONS:   plant, soldier ant, queen ant, worker ant
 MAP
@@ -1679,7 +1679,7 @@ ENDMAP
 NAME:   wad_woods_river_01
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  t+*q123C0%I. = floor_woodground
 MONS:   plant, bush, fungus
 MAP
@@ -1709,7 +1709,7 @@ ENDMAP
 NAME:   wad_woods_river_02
 TAGS:   mini_float extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  t|+*q1203C%OI. = floor_woodground
 MARKER: O  = lua:fog_machine { \
              pow_min = 4, pow_max = 9, delay = 32, \
@@ -1734,7 +1734,7 @@ ENDMAP
 NAME:   wad_woods_river_03
 TAGS:   mini_float extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  t+*q1203C%OI. = floor_woodground
 MARKER: O  = lua:fog_machine { \
              pow_min = 3, pow_max = 7, delay = 32, \
@@ -1757,7 +1757,7 @@ ENDMAP
 NAME:   wad_woods_river_04
 TAGS:   no_vmirror no_rotate mini_float extra
 DEPTH:  D, Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  t+*q1203C%I. = floor_woodground
 TILE:   X = wall_brick_dark_leak
 TILE:   x = wall_brick_dark
@@ -1783,7 +1783,7 @@ ENDMAP
 NAME:   wad_woods_road_01
 TAGS:   extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @' = floor_dirt
 FTILE:  qt0123C%OIT. = floor_woodground
 MONS:   plant, bush, fungus
@@ -1812,7 +1812,7 @@ ENDMAP
 NAME:   wad_woods_road_02
 TAGS:   extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @' = floor_dirt
 FTILE:  qt123C%0ITU. = floor_woodground
 MONS:   plant, bush, fungus
@@ -1835,7 +1835,7 @@ ENDMAP
 NAME:   wad_woods_road_03
 TAGS:   extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @' = floor_dirt
 FTILE:  qt123C%*0ITU. = floor_woodground
 MONS:   plant, bush, fungus
@@ -1855,7 +1855,7 @@ ENDMAP
 
 NAME:   wad_woods_road_04
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @'+T = floor_dirt
 FTILE:  t*q123C%I. = floor_woodground
 MONS:   plant, bush, oklob plant
@@ -1877,7 +1877,7 @@ ENDMAP
 
 NAME:   wad_woods_road_05
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @'~*+T = floor_dirt
 FTILE:  tq123C%0I. = floor_woodground
 MONS:   plant, gnoll, porcupine
@@ -1898,7 +1898,7 @@ ENDMAP
 NAME:   wad_woods_road_06
 TAGS:   extra
 DEPTH:  Lair, Forest
-WEIGHT: 4
+WEIGHT: 1
 FTILE:  @'~*+T = floor_dirt
 FTILE:  tq123C%0I. = floor_woodground
 MONS:   plant
