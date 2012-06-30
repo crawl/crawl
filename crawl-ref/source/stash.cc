@@ -320,8 +320,7 @@ void Stash::update()
         {
             add_item(item);
             // sacrificiable items will be visited.
-            verified = !item_stack && (you.religion == GOD_NO_GOD
-                                       || !god_likes_item(you.religion, item));
+            verified = !item_stack && !god_likes_item(you.religion, item);
             return;
         }
 
