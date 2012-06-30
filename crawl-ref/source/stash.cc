@@ -312,6 +312,7 @@ void Stash::update()
         god_id_item(*pitem);
         const item_def& item = *pitem;
         const bool item_stack = _grid_has_perceived_multiple_items(p);
+        const bool need_visit = item_stack || god_likes_item(you.religion, item);
 
         // We knew of nothing on this square, so we'll assume this is the
         // only item here, but mark it as unverified unless we can see nothing
@@ -319,8 +320,8 @@ void Stash::update()
         if (items.empty())
         {
             add_item(item);
-            // sacrificiable items will be visited.
-            verified = !item_stack && !god_likes_item(you.religion, item);
+            // sacrificiable items and stacks of items will be visited.
+            verified = !need_visit;
             return;
         }
 
@@ -343,7 +344,7 @@ void Stash::update()
                     std::swap(items[i], items[0]);
 
                     // The stash has changed, so we mark it as unverified.
-                    verified = false;
+                    verified = !need_visit;
 
                     return;
                 }
