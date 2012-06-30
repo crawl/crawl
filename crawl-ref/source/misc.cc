@@ -2678,12 +2678,12 @@ bool maybe_id_weapon(item_def &item, const char *msg)
         if (item.flags & ISFLAG_KNOW_CURSE
             && item.flags & ISFLAG_KNOW_TYPE
             && you.skill(is_range_weapon(item) ? range_skill(item)
-                         : weapon_skill(item), 20) > min_skill20)
+                         : weapon_skill(item), 20, true) > min_skill20)
         {
             id = ISFLAG_KNOW_PLUSES;
         }
         else if (is_throwable(&you, item)
-                 && you.skill(SK_THROWING, 20) > min_skill20)
+                 && you.skill(SK_THROWING, 20, true) > min_skill20)
         {
             id = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
         }
