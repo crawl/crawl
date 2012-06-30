@@ -3238,7 +3238,7 @@ bool god_likes_items(god_type god)
     case GOD_ELYVILON:
         return (true);
 
-    case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
+    case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
         mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god));
 
     default:

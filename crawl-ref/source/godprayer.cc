@@ -800,7 +800,7 @@ static bool _check_nemelex_sacrificing_item_type(const item_def& item)
 
 static bool _offer_items()
 {
-    if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
+    if (!god_likes_items(you.religion))
         return false;
 
     if (!_confirm_pray_sacrifice(you.religion))
