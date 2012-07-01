@@ -159,16 +159,14 @@ void TilesFramework::write_message(const char *format, ...)
     write_message(); // prefixes
 
     char buf[2048];
-    size_t len;
+    int len;
 
     va_list  argp;
     va_start(argp, format);
     if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= sizeof (buf))
     {
         if (len == -1)
-        {
             die("Webtiles message format error! (%s)", format);
-        }
         else
             die("Webtiles message too long! (%d)", (int)len);
     }
@@ -234,16 +232,14 @@ void TilesFramework::send_message(const char *format, ...)
     write_message();
 
     char buf[2048];
-    size_t len;
+    int len;
 
     va_list  argp;
     va_start(argp, format);
     if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= sizeof (buf))
     {
         if (len == -1)
-        {
             die("Webtiles message format error! (%s)", format);
-        }
         else
             die("Webtiles message too long! (%d)", (int)len);
     }
