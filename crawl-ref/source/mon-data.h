@@ -2354,7 +2354,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GHOST_MOTH, 'y', MAGENTA, "ghost moth",
-    M_NO_SKELETON | M_INVIS,
+    M_NO_SKELETON | M_INVIS | M_NO_FLEE,
     MR_RES_POISON | MR_RES_COLD,
     600, 18, MONS_MOTH, MONS_GHOST_MOTH, MH_NATURAL, -6,
     { {AT_HIT, AF_DRAIN_STAT, 18}, {AT_HIT, AF_DRAIN_STAT, 18},
