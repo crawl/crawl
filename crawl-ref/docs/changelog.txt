@@ -124,7 +124,7 @@ Interface
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells
 * New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns.
-* Fake translations: dwarven, jägerkin, kraut, wide, cyrillic.
+* Fake translations: dwarven, jägerkin, kraut, wide.
 * Loads of new tiles.
 * Fixed Pan/Hell lords get special tall tiles.
 * An in-game high scores browser.
