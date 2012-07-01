@@ -2214,8 +2214,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // option.  Let's try to keep to less rude ones, though.
         else if (field == "kraut" || field == "jerry" || field == "fritz")
             lang = LANG_KRAUT;
+/*
         else if (field == "cyr" || field == "cyrillic" || field == "commie" || field == "кириллица")
             lang = LANG_CYRILLIC;
+*/
         else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
             lang = LANG_WIDE;
         else
