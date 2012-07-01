@@ -249,6 +249,13 @@ static std::string branch_epilogues[NUM_BRANCHES];
  *********************************************************************/
 bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 {
+    // Re-check whether we're in a valid place, it leads to obscure errors
+    // otherwise.
+    ASSERT(you.where_are_you >= 0);
+    ASSERT(you.where_are_you < NUM_BRANCHES);
+    ASSERT(you.depth > 0);
+    ASSERT(you.depth <= brdepth[you.where_are_you]);
+
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
 
