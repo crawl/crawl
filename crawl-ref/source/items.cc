@@ -2549,15 +2549,11 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    if (_known_subtype(item))
+    if (item.base_type < NUM_OBJECT_CLASSES)
     {
-        int force = you.force_autopickup[item.base_type][item.sub_type];
-        if (force != 0)
-            return (force == 1);
-    }
-    else if (item.sub_type == get_max_subtype(item.base_type))
-    {
-        int force = you.force_autopickup[item.base_type][get_max_subtype(item.base_type)];
+        const int subtype = _known_subtype(item) ? item.sub_type
+                                           : get_max_subtype(item.base_type);
+        const int force = you.force_autopickup[item.base_type][subtype];
         if (force != 0)
             return (force == 1);
     }
