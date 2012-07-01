@@ -3360,6 +3360,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         else
         {
             simple_monster_message(mons, " struggles to escape constriction.");
+            _swim_or_move_energy(mons);
             return(true);
         }
     }
