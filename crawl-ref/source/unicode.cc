@@ -242,7 +242,7 @@ std::string wcstoutf8(const std::wstring &s)
     {
         char buf[4];
         int r = wctoutf8(buf, s[j]);
-        for (int i = 0; i < r; j++)
+        for (int i = 0; i < r; i++)
             out.push_back(buf[i]);
     }
 
