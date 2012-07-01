@@ -1248,14 +1248,6 @@ void dgn_reset_level(bool enable_random_maps)
     env.tile_names.clear();
 }
 
-static void _build_layout_skeleton()
-{
-    _builder_by_type();
-
-    if (player_in_branch(BRANCH_SLIME_PITS))
-        _slime_connectivity_fixup();
-}
-
 static int _num_items_wanted(int absdepth0)
 {
     if (branches[you.where_are_you].branch_flags & BFLAG_NO_ITEMS)
@@ -2156,7 +2148,7 @@ static void _place_item_mimics()
 
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
-    _build_layout_skeleton();
+    _builder_by_type();
 
     if (player_in_branch(BRANCH_LABYRINTH))
         return;
@@ -2237,6 +2229,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     {
         _prepare_water();
     }
+
+    if (player_in_branch(BRANCH_SLIME_PITS))
+        _slime_connectivity_fixup();
 
     // Translate stairs for pandemonium levels.
     if (player_in_branch(BRANCH_PANDEMONIUM))
