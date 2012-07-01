@@ -2030,7 +2030,7 @@ public:
         std::string name;
         //if (item->sub_type == get_max_subtype(item->base_type))
         if (item->quantity == 2)
-            name = "unknown item default";
+            name = "unknown " + lowercase_string(item_class_name(item->base_type));
         else
         {
             name = item->name(DESC_PLAIN,false,true,false,false,flags);
