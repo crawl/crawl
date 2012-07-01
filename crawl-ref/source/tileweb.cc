@@ -1332,36 +1332,6 @@ void TilesFramework::textbackground(int col)
     m_print_bg = col;
 }
 
-void TilesFramework::put_string(char *buffer)
-{
-    // This basically just converts buffer to ucs_t and then uses put_ucs_string
-    ucs_t buf2[1024], c;
-
-    int j = 0;
-
-    int clen;
-    do
-    {
-        buffer += clen = utf8towc(&c, buffer);
-
-        // TODO: use wcwidth() to handle widths!=1:
-        // *  2 for CJK chars -- add a zero-width blank?
-        // *  0 for combining characters -- would need extra support
-        // * -1 for non-printable stuff -- assert or ignore
-        buf2[j] = c;
-        j++;
-
-        if (c == 0 || j == (ARRAYSZ(buf2) - 1))
-        {
-            if (c != 0)
-                buf2[j + 1] = 0;
-
-            if (j - 1 != 0)
-                put_ucs_string(buf2);
-        }
-    } while (clen);
-}
-
 void TilesFramework::put_ucs_string(ucs_t *str)
 {
     if (m_print_area == NULL)
