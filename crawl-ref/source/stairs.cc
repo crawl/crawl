@@ -333,9 +333,6 @@ void up_stairs(dungeon_feature_type force_stair)
     if (_stair_moves_pre(stair_find))
         return;
 
-    // Since the overloaded message set turn_is_over, I'm assuming that
-    // the overloaded character makes an attempt... so we're doing this
-    // check before that one. -- bwr
     if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(stair_find)
