@@ -2,7 +2,7 @@
 
 RCDIR=./rcs/
 INPROGRESSDIR=./rcs/running
-TTYRECDIR=./rcs/ttyrecs
+TTYRECDIR=./rcs/ttyrecs/$1
 DEFAULT_RC=../settings/init.txt
 PLAYERNAME=$1
 
