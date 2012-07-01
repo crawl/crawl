@@ -2160,6 +2160,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     if (player_in_branch(BRANCH_LABYRINTH))
         return;
 
+    if (player_in_branch(BRANCH_SLIME_PITS))
+        _slime_connectivity_fixup();
+
     // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
@@ -2236,9 +2239,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     {
         _prepare_water();
     }
-
-    if (player_in_branch(BRANCH_SLIME_PITS))
-        _slime_connectivity_fixup();
 
     // Translate stairs for pandemonium levels.
     if (player_in_branch(BRANCH_PANDEMONIUM))
