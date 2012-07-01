@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include <errno.h>
+#include <langinfo.h>
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
@@ -235,6 +236,13 @@ __attribute__((externally_visible))
 int main(int argc, char *argv[])
 {
     setlocale(LC_ALL, "");
+#ifdef USE_TILE_WEB
+    if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
+    {
+        fprintf(stderr, "Webtiles require an UTF-8 locale.\n");
+        exit(1);
+    }
+#endif
 #ifdef DEBUG_GLOBALS
     real_Options = new game_options();
     real_you = new player();
