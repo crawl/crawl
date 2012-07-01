@@ -72,7 +72,6 @@ public:
     // Webtiles-specific
     void textcolor(int col);
     void textbackground(int col);
-    void put_string(char *str);
     void put_ucs_string(ucs_t *str);
     void clear_to_end_of_line();
 
