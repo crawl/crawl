@@ -21,7 +21,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         var bg = 0;
         var attr = (col & 0xF0) >> 4;
         var param = (col & 0xF000) >> 12;
-        return { fg: fg, bg: bg, attr: attr };
+        return { fg: fg, bg: bg, attr: attr, param: param };
     }
 
     function term_colour_apply_attributes(col)
