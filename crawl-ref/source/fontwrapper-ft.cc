@@ -253,8 +253,8 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
             if (m_glyphs_top == MAX_GLYPHS)
             {
                 // blank out above char if it's been replaced
-                for (int x = 0; x < bmp->width; x++)
-                    for (int y = 0; y < bmp->rows; y++)
+                for (int x = 0; x < charsz.x; x++)
+                    for (int y = 0; y < charsz.y; y++)
                     {
                         unsigned int idx = offset_x + x + (offset_y + y - vert_offset) * m_ft_width;
                         idx *= 4;
