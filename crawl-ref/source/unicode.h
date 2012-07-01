@@ -45,6 +45,10 @@ char *next_glyph(char *s);
 #define OUTS(x) utf8_to_mb(x).c_str()
 #define OUTW(x) utf8_to_16(x).c_str()
 
+#ifdef USE_TILE_WEB
+std::string wcstoutf8(const std::wstring &s);
+#endif
+
 class LineInput
 {
 public:

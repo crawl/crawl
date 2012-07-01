@@ -3,6 +3,7 @@
 
 #include "tileweb-text.h"
 #include "tileweb.h"
+#include "unicode.h"
 
 #include <sstream>
 
@@ -178,7 +179,7 @@ void WebTextArea::send(bool force)
                 sending = true;
             }
 
-            tiles.write_message("%u:\"%ls\",", y, html.str().c_str());
+            tiles.write_message("%u:\"%s\",", y, wcstoutf8(html.str()).c_str());
         }
     }
     if (sending)
