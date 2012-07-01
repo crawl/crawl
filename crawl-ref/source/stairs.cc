@@ -107,9 +107,10 @@ static void _player_change_level_reset()
     you.prev_grd_targ.reset();
 }
 
-static void _player_change_level_upstairs()
+static void _player_change_level_upstairs(dungeon_feature_type feat)
 {
-    level_id lev = stair_destination(you.pos(), true);
+    level_id lev = feat ? stair_destination(feat, "", true)
+                        : stair_destination(you.pos(), true);
     you.depth         = lev.depth;
     you.where_are_you = lev.branch;
 }
@@ -385,7 +386,7 @@ void up_stairs(dungeon_feature_type force_stair)
     }
 
     _player_change_level_reset();
-    _player_change_level_upstairs();
+    _player_change_level_upstairs(force_stair);
 
     if (old_level.branch == BRANCH_VESTIBULE_OF_HELL
         && !player_in_branch(BRANCH_VESTIBULE_OF_HELL))
