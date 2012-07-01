@@ -2519,7 +2519,8 @@ static bool _known_subtype(const item_def &item)
 {
     // Sensed items and item_infos of unknown subtype.
     if (item.base_type >= NUM_OBJECT_CLASSES
-        || item.sub_type >= get_max_subtype(item.base_type))
+        || get_max_subtype(item.base_type) > 0
+           && item.sub_type >= get_max_subtype(item.base_type))
     {
         return false;
     }
