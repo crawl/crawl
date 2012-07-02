@@ -944,21 +944,19 @@ jet
 
 opal
 
-chrysoberyl
-
 garnet
 
 amethyst
 
 jasper
 
-fluorite
-
 obsidian
 
 agate
 
 jade
+
+pearl
 %%%%
 ######################################################
 # Jewellery appearance
