@@ -12,7 +12,7 @@
 # for more details.
 ######################################################
 %%%%
-armour_animal
+_armour_animal_
 
 # microorganisms
 Amoeba
@@ -140,7 +140,7 @@ Wild Haggis
 
 Chupacabra
 %%%%
-flower_name
+_flower_name_
 
 Lilacs
 
@@ -161,7 +161,7 @@ the Lily
 the Lotus Blossom
 %%%%
 # non-Crawl critters
-critter_name
+_critter_name_
 
 Slorg
 
@@ -181,7 +181,7 @@ Were-rabbit
 
 Wumpus
 %%%%
-discomfort_and_inaction
+_discomfort_and_inaction_
 
 # discomfort
 Minor Irritation
@@ -221,7 +221,7 @@ the Doldrums
 
 Listlessness
 %%%%
-mental_illness_armour
+_mental_illness_armour_
 
 Paranoia
 
@@ -247,7 +247,7 @@ Masochism
 
 Narcissism
 %%%%
-good_or_divine
+_good_or_divine_
 
 # good things
 the Good
@@ -309,9 +309,9 @@ Salvation
 
 the Will of the Gods
 %%%%
-# in contrast to "wacky_armour_name" these do have some
+# in contrast to "_wacky_armour_name_" these do have some
 # connection to armour and protection
-armour_name_shielding
+_armour_name_shielding_
 
 Shielding
 
@@ -344,7 +344,7 @@ the Ward
 Fortification
 %%%%
 # other armour properties (beside protection)
-armour_property_name
+_armour_property_name_
 
 Supple Strength
 
@@ -368,7 +368,7 @@ Fashionability
 
 Impressiveness
 %%%%
-wacky_armour_name
+_wacky_armour_name_
 
 the Onion
 
@@ -433,7 +433,7 @@ Too Many Cooks
 Thrice Damned Blessings
 %%%%
 # Lemuel's suggestions
-celestial_bodies
+_celestial_bodies_
 
 Sun
 
@@ -463,7 +463,7 @@ Harvest Moon
 # astrological
 Black Moon
 %%%%
-instrument_name
+_instrument_name_
 
 Trumpets
 
@@ -483,7 +483,7 @@ the Flute
 
 the Harp
 %%%%
-evil_being
+_evil_being_
 
 the Devil
 
@@ -516,7 +516,7 @@ the Imp
 
 the Villain
 %%%%
-weather_name
+_weather_name_
 
 the First Snow
 
@@ -536,7 +536,7 @@ the Blizzard
 
 Chill Winds
 %%%%
-profession_name
+_profession_name_
 
 Guilds
 
@@ -587,7 +587,7 @@ Merchant
 Sailor
 %%%%
 # something for Xom
-game_name
+_game_name_
 
 # general games
 Fun and Games
@@ -634,7 +634,7 @@ Marbles
 
 Noughts and Crosses
 %%%%
-politics_name_armour
+_politics_name_armour_
 
 the King
 
@@ -686,7 +686,7 @@ the Burgomaster
 
 the Failed Coup
 %%%%
-other_armour_name
+_other_armour_name_
 
 #unpleasantness
 w:5
@@ -745,7 +745,7 @@ the Other World
 
 Inevitability
 %%%%
-plain_armour_name
+_plain_armour_name_
 
 Forget-Me-Not
 

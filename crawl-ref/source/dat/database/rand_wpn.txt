@@ -10,17 +10,17 @@
 # for more details.
 ######################################################
 %%%%
-power_or_anger
+_power_or_anger_
 
-@power_name@
-
-w:7
-@conflict_name@
+@_power_name_@
 
 w:7
-@anger_name@
+@_conflict_name_@
+
+w:7
+@_anger_name_@
 %%%%
-power_name
+_power_name_
 
 Power
 
@@ -50,7 +50,7 @@ Mastery
 
 Superiority
 %%%%
-conflict_name
+_conflict_name_
 
 Conflict
 
@@ -68,7 +68,7 @@ Contention
 
 Dissent
 %%%%
-anger_name
+_anger_name_
 
 Anger
 
@@ -90,7 +90,7 @@ Indignation
 
 Outrage
 %%%%
-battle_or_war
+_battle_or_war_
 
 Battle
 
@@ -157,6 +157,7 @@ Death's Door
 
 the Grave
 %%%%
+# used from C++'s side
 death_or_doom
 
 # death
@@ -222,18 +223,18 @@ Exquisite Torment
 
 Anguish
 %%%%
-strategy_or_justice
+_strategy_or_justice_
 
 w:2
-@strategy_name@
+@_strategy_name_@
 
 w:4
-@valour_name@
+@_valour_name_@
 
 w:3
-@justice_name@
+@_justice_name_@
 %%%%
-strategy_name
+_strategy_name_
 
 #strategy
 Defence
@@ -254,7 +255,7 @@ Subterfuge
 
 Strategic Superiority
 %%%%
-valour_name
+_valour_name_
 
 Honour
 
@@ -296,7 +297,7 @@ Indomitability
 
 Conscience
 %%%%
-justice_name
+_justice_name_
 
 Tender Mercy
 
@@ -330,7 +331,7 @@ Trial by Ordeal
 
 Blind Justice
 %%%%
-diviner_name
+_diviner_name_
 
 Augurer
 
@@ -350,7 +351,7 @@ Sybil
 
 Seer
 %%%%
-people_name
+_people_name_
 
 King
 
@@ -383,9 +384,9 @@ Priest
 Madman
 
 w:15
-@diviner_name@
+@_diviner_name_@
 %%%%
-weapon_animal
+_weapon_animal_
 
 # insects
 Pill Bug
@@ -470,7 +471,7 @@ Tiger
 Wolf
 %%%%
 # plants and fungi
-plant_name
+_plant_name_
 
 #plants
 Eggplant
@@ -502,7 +503,7 @@ Puffball
 Slime-mold
 %%%%
 # undead and evil beings
-evil_stuff
+_evil_stuff_
 
 Curses
 
@@ -565,7 +566,7 @@ the Unspeakable One
 the Wraith
 %%%%
 # catastrophes etc.
-catastrophe_name
+_catastrophe_name_
 
 the Inferno
 
@@ -601,7 +602,7 @@ Plague
 
 Famine
 %%%%
-chaos_name
+_chaos_name_
 
 Chaos
 
@@ -657,7 +658,7 @@ Tumult
 
 Upheaval
 %%%%
-balance_or_order
+_balance_or_order_
 
 the Middle
 
@@ -711,7 +712,7 @@ the Final Decision
 
 Propriety
 %%%%
-economics_or_politics
+_economics_or_politics_
 
 # economics
 Inflation
@@ -821,7 +822,7 @@ Termination
 
 Sequestration
 %%%%
-place_name
+_place_name_
 
 the World
 
@@ -887,7 +888,7 @@ the Valley of Death
 
 the Wasteland
 %%%%
-discomfort_weapon
+_discomfort_weapon_
 
 Unpleasantness
 
@@ -933,7 +934,7 @@ Stickiness
 
 Uncomfortable Rashes
 %%%%
-mental_illness_weapon
+_mental_illness_weapon_
 
 Psychosis
 
@@ -965,13 +966,13 @@ Satyriasis
 
 Suicidal Tendencies
 %%%%
-philosophy_or_science
+_philosophy_or_science_
 
-@philosophy_name@
+@_philosophy_name_@
 
-@science_name@
+@_science_name_@
 %%%%
-philosophy_name
+_philosophy_name_
 
 Monotheism
 
@@ -1051,7 +1052,7 @@ Mysticism
 
 Rationality
 %%%%
-science_name
+_science_name_
 
 Reason
 
@@ -1113,7 +1114,7 @@ Patterns
 
 Theory
 %%%%
-item_name
+_item_name_
 
 # items
 Orb
@@ -1179,7 +1180,7 @@ Mouth
 
 Throat
 %%%%
-magic_name
+_magic_name_
 
 the Magi
 
@@ -1192,7 +1193,7 @@ the Hierophant
 the Sage
 %%%%
 # substances
-substance_name
+_substance_name_
 
 Bread
 
@@ -1298,7 +1299,7 @@ Undoing
 Irrepressible Laughter
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
-short_monster_name
+short_monster_name_
 
 Dragon
 
@@ -1328,9 +1329,9 @@ Demon
 
 Goblin
 %%%%
-monster_name
+_monster_name_
 
-@short_monster_name@
+@short_monster_name_@
 
 @player_species@
 
@@ -1340,12 +1341,13 @@ Killer Klown
 
 Orb Guardian
 %%%%
-short_killer_name
+_short_killer_name_
 
 bane
 
 slayer
 %%%%
+# used from the C++ side
 killer_name
 
 's Bane
@@ -1362,7 +1364,7 @@ killer_name
 
 's Peril
 %%%%
-long_killer_name
+_long_killer_name_
 
 's Death Toll
 
@@ -1377,7 +1379,7 @@ long_killer_name
 w:1
 's Looming Annihilation
 %%%%
-real_weapon_name
+_real_weapon_name_
 
 Grim Tooth
 
@@ -1432,13 +1434,13 @@ Undertaker
 
 Embalmer
 
-Trog's @anger_name@
+Trog's @_anger_name_@
 
 Hellblazer
 
 Hell-Harrower
 %%%%
-joke_weapon_name
+_joke_weapon_name_
 
 Secret Weapon
 
@@ -1448,7 +1450,7 @@ Thing
 
 Mud Pie of Death
 
-Xom's @xom_esteem@
+Xom's @_xom_esteem_@
 
 String
 
@@ -1507,23 +1509,23 @@ ETAOIN SHRDLU
 
 Lorem Ipsum
 %%%%
-plain_weapon_name
+_plain_weapon_name_
 
 w:15
-@short_monster_name@@short_killer_name@
+@short_monster_name_@@_short_killer_name_@
 
 w:8
-@monster_name@@killer_name@
+@_monster_name_@@killer_name@
 
 w:2
-@short_monster_name@@long_killer_name@
+@short_monster_name_@@_long_killer_name_@
 
 w:1
 @player_death@
 
 w:15
-@real_weapon_name@
+@_real_weapon_name_@
 
 w:5
-@joke_weapon_name@
+@_joke_weapon_name_@
 %%%%

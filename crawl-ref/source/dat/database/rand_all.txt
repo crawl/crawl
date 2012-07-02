@@ -16,7 +16,7 @@
 ######################################################
 # Library of keywords used (mostly) for randart jewellery.
 ######################################################
-jewellery_animal
+_jewellery_animal_
 
 Magpie
 
@@ -24,7 +24,7 @@ Firefly
 
 Scarab
 %%%%
-jewellery_special_name
+_jewellery_special_name_
 
 Disaster
 
@@ -48,7 +48,7 @@ Temptation
 
 False Pretenses
 %%%%
-suspicion_name
+_suspicion_name_
 
 Secrets
 
@@ -69,11 +69,12 @@ Scepticism
 Trepidation
 
 w:20
-@conflict_name@
+@_conflict_name_@
 %%%%
 ######################################################
 # Library of keywords used for all randart types.
 ######################################################
+# used for god gifts
 divine_esteem
 
 # good
@@ -111,9 +112,9 @@ Condemnation
 Reproof
 
 w:70
-@anger_name@
+@_anger_name_@
 %%%%
-xom_esteem
+_xom_esteem_
 
 # chosen 20% of the time
 w:40
@@ -151,7 +152,7 @@ Wantonness
 
 Recklessness
 %%%%
-time_name
+_time_name_
 
 Day
 
@@ -199,7 +200,7 @@ the Morning
 
 the Evening
 %%%%
-sky_colour_name
+_sky_colour_name_
 
 Black
 
@@ -213,7 +214,7 @@ Purple
 
 Red
 %%%%
-sky_or_light
+_sky_or_light_
 
 the Sun
 
@@ -241,18 +242,18 @@ the Heavens
 
 the Skies Above
 
-the @sky_colour_name@ Skies
+the @_sky_colour_name_@ Skies
 %%%%
-virtue_or_vice
+_virtue_or_vice_
 
 w:5
-@virtue_name@
+@_virtue_name_@
 
-@valour_name@
+@_valour_name_@
 
-@vice_name@
+@_vice_name_@
 %%%%
-virtue_name
+_virtue_name_
 
 Virtue
 
@@ -278,7 +279,7 @@ Patience
 
 Modesty
 %%%%
-vice_name
+_vice_name_
 
 # some of the deadly sins
 Sloth
@@ -312,7 +313,7 @@ Amorality
 
 Untruth
 %%%%
-destiny_name
+_destiny_name_
 
 Causality
 
@@ -328,7 +329,7 @@ Wyrd
 
 Doom
 %%%%
-number_or_qualifier
+_number_or_qualifier_
 
 # exact numbers
 the Three
@@ -405,7 +406,7 @@ the Peculiar
 
 the Special
 %%%%
-thing_names
+_thing_names_
 
 Suns
 
