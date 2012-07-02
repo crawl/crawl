@@ -20,7 +20,6 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
-#include "fprop.h"
 #include "fight.h"
 #include "fineff.h"
 #include "godpassive.h"
@@ -29,7 +28,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "libutil.h"
 #include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
@@ -1561,111 +1559,6 @@ static void _monster_add_energy(monster* mons)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
-#ifdef DEBUG_DIAGNOSTICS
-# define DIAG_ONLY(x) x
-#else
-# define DIAG_ONLY(x) (void)0
-#endif
-void handle_noattack_constrictions(actor *attacker)
-{
-    if (is_sanctuary(attacker->pos()))
-        attacker->stop_constricting_all(true);
-
-    // Constriction should have stopped the moment the actors became
-    // non-adjacent; but disabling constriction by hand in every single place
-    // is too error-prone.
-    attacker->clear_far_constrictions();
-
-    if (!attacker->constricting)
-        return;
-
-    actor::constricting_t::iterator i = attacker->constricting->begin();
-    // monster_die() can cause attacker->constricting() to go away.
-    while (attacker->constricting && i != attacker->constricting->end())
-    {
-        actor* const defender = actor_by_mid(i->first);
-        int duration = i->second;
-        ASSERT(defender);
-
-        // Must increment before potentially killing the constrictee and
-        // thus invalidating the old i.
-        ++i;
-
-        int damage;
-
-        if (attacker->is_player())
-            damage = roll_dice(2, div_rand_round(you.strength(), 5));
-        else
-            damage = (attacker->as_monster()->hit_dice + 1) / 2;
-        DIAG_ONLY(const int basedam = damage);
-        damage += div_rand_round(duration, BASELINE_DELAY);
-        if (attacker->is_player())
-            damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-        DIAG_ONLY(const int durdam = damage);
-        damage -= random2(1 + (defender->armour_class() / 2));
-        DIAG_ONLY(const int acdam = damage);
-        damage = timescale_damage(attacker, damage);
-        DIAG_ONLY(const int timescale_dam = damage);
-
-        damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-        DIAG_ONLY(const int infdam = damage);
-
-        std::string exclams;
-        if (damage <= 0 && attacker->is_player()
-            && you.can_see(defender))
-        {
-            exclams = ", but do no damage.";
-        }
-        else if (damage < HIT_WEAK)
-            exclams = ".";
-        else if (damage < HIT_MED)
-            exclams = "!";
-        else if (damage < HIT_STRONG)
-            exclams = "!!";
-        else
-            exclams = "!!!";
-
-        if (you.can_see(attacker) || attacker->is_player())
-        {
-            mprf("%s %s %s%s%s",
-                 (attacker->is_player()
-                     ? "You"
-                     : attacker->name(DESC_THE).c_str()),
-                 attacker->conj_verb("constrict").c_str(),
-                 defender->name(DESC_THE).c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclams.c_str());
-        }
-        else if (you.can_see(defender) || defender->is_player())
-        {
-            mprf("%s %s constricted%s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("are").c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclams.c_str());
-        }
-
-        dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
-             attacker->name(DESC_PLAIN, true).c_str(),
-             defender->name(DESC_PLAIN, true).c_str(),
-             basedam, durdam, acdam, timescale_dam, infdam);
-
-        if (defender->is_monster()
-            && defender->as_monster()->hit_points < 1)
-        {
-            monster_die(defender->as_monster(), attacker);
-        }
-    }
-}
-
 static void _confused_move_dir(monster *mons)
 {
     mmov.reset();
@@ -1702,7 +1595,6 @@ static void _confused_move_dir(monster *mons)
 
 void handle_monster_move(monster* mons)
 {
-    mons->has_constricted_this_turn = false;
     mons->hit_points = std::min(mons->max_hit_points,
                                 mons->hit_points);
 
@@ -2235,8 +2127,7 @@ void handle_monster_move(monster* mons)
         move_kraken_tentacles(mons);
     }
 
-    if (!mons->has_constricted_this_turn)
-        handle_noattack_constrictions(mons);
+    mons->handle_constriction();
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
