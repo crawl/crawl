@@ -375,9 +375,6 @@ public:
     // Freed and set to NULL when empty.
     constricting_t *constricting;
 
-    // handles non-attack turn constrictions, does not need to be saved
-    bool has_constricted_this_turn;
-
     void start_constricting(actor &whom, int duration = 0);
 
     void stop_constricting(mid_t whom, bool intentional = false,
@@ -387,6 +384,7 @@ public:
 
     void clear_far_constrictions();
     void accum_has_constricted();
+    void handle_constriction();
     bool is_constricted() const;
     bool is_constricting() const;
     int num_constricting() const;

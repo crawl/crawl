@@ -3,11 +3,15 @@
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
+#include "attack.h"
 #include "coord.h"
 #include "env.h"
+#include "fprop.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "los.h"
 #include "mon-death.h"
+#include "ouch.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
@@ -440,4 +444,110 @@ void actor::accum_has_constricted()
     constricting_t::iterator i;
     for (i = constricting->begin(); i != constricting->end(); ++i)
         i->second += you.time_taken;
+}
+
+#ifdef DEBUG_DIAGNOSTICS
+# define DIAG_ONLY(x) x
+#else
+# define DIAG_ONLY(x) (void)0
+#endif
+
+// Deal damage over time
+void actor::handle_constriction()
+{
+    if (is_sanctuary(pos()))
+        stop_constricting_all(true);
+
+    // Constriction should have stopped the moment the actors became
+    // non-adjacent; but disabling constriction by hand in every single place
+    // is too error-prone.
+    clear_far_constrictions();
+
+    if (!constricting)
+        return;
+
+    actor::constricting_t::iterator i = constricting->begin();
+    // monster_die() can cause constricting() to go away.
+    while (constricting && i != constricting->end())
+    {
+        actor* const defender = actor_by_mid(i->first);
+        int duration = i->second;
+        ASSERT(defender);
+
+        // Must increment before potentially killing the constrictee and
+        // thus invalidating the old i.
+        ++i;
+
+        int damage;
+
+        if (is_player())
+            damage = roll_dice(2, div_rand_round(you.strength(), 5));
+        else
+            damage = (as_monster()->hit_dice + 1) / 2;
+        DIAG_ONLY(const int basedam = damage);
+        damage += div_rand_round(duration, BASELINE_DELAY);
+        if (is_player())
+            damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
+        DIAG_ONLY(const int durdam = damage);
+        damage -= random2(1 + (defender->armour_class() / 2));
+        DIAG_ONLY(const int acdam = damage);
+        damage = timescale_damage(this, damage);
+        DIAG_ONLY(const int timescale_dam = damage);
+
+        damage = defender->hurt(this, damage, BEAM_MISSILE, false);
+        DIAG_ONLY(const int infdam = damage);
+
+        std::string exclams;
+        if (damage <= 0 && is_player()
+            && you.can_see(defender))
+        {
+            exclams = ", but do no damage.";
+        }
+        else if (damage < HIT_WEAK)
+            exclams = ".";
+        else if (damage < HIT_MED)
+            exclams = "!";
+        else if (damage < HIT_STRONG)
+            exclams = "!!";
+        else
+            exclams = "!!!";
+
+        if (is_player() || you.can_see(this))
+        {
+            mprf("%s %s %s%s%s",
+                 (is_player() ? "You"
+                              : name(DESC_THE).c_str()),
+                 conj_verb("constrict").c_str(),
+                 defender->name(DESC_THE).c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                 make_stringf(" for %d", damage).c_str(),
+#else
+                 "",
+#endif
+                 exclams.c_str());
+        }
+        else if (you.can_see(defender) || defender->is_player())
+        {
+            mprf("%s %s constricted%s%s",
+                 defender->name(DESC_THE).c_str(),
+                 defender->conj_verb("are").c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                 make_stringf(" for %d", damage).c_str(),
+#else
+                 "",
+#endif
+                 exclams.c_str());
+        }
+
+        dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+             name(DESC_PLAIN, true).c_str(),
+             defender->name(DESC_PLAIN, true).c_str(),
+             basedam, durdam, acdam, timescale_dam, infdam);
+
+        if (defender->is_monster()
+            && defender->as_monster()->hit_points < 1)
+        {
+            monster_die(defender->as_monster(), this);
+        }
+    }
 }

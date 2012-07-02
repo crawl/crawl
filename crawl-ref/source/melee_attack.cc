@@ -5424,14 +5424,9 @@ bool melee_attack::handle_constriction()
              defenddice);
     }
 
-    // if anything is grabbed, do damage accordingly
-    if (any_grabbed)
-        handle_noattack_constrictions(attacker);
-
     // if you got grabbed, interrupt stair climb and passwall
     if (defender_grabbed && defender->is_player())
         stop_delay(true);
 
-    attacker->has_constricted_this_turn = true;
     return true;
 }

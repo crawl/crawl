@@ -1809,7 +1809,6 @@ static void _do_list_gold()
 void process_command(command_type cmd)
 {
     apply_berserk_penalty = true;
-    you.has_constricted_this_turn = false;
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -3043,9 +3042,7 @@ static void _player_reacts()
         expose_player_to_element(BEAM_LAVA);
 
     _decrement_durations();
-    // handle no attack constrictions
-    if (!you.has_constricted_this_turn)
-        handle_noattack_constrictions(&you);
+    you.handle_constriction();
 
     // increment constriction durations
     you.accum_has_constricted();
