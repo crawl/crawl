@@ -485,7 +485,8 @@ void actor::handle_constriction()
         else
             damage = as_monster()->constriction_damage();
         DIAG_ONLY(const int basedam = damage);
-        damage += div_rand_round(duration, BASELINE_DELAY);
+        damage += div_rand_round(damage * stepdown((float)duration, 50.0),
+                                 BASELINE_DELAY * 5);
         if (is_player())
             damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
         DIAG_ONLY(const int durdam = damage);
