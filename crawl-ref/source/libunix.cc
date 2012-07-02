@@ -490,10 +490,7 @@ void putwch(ucs_t chr)
     addnwstr(&c, 1);
 
 #ifdef USE_TILE_WEB
-    ucs_t buf[2];
-    buf[0] = chr;
-    buf[1] = 0;
-    tiles.put_ucs_string(buf);
+    tiles.put_wch(chr);
 #endif
 }
 

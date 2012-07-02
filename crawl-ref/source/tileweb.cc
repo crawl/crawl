@@ -1328,38 +1328,50 @@ void TilesFramework::textbackground(int col)
     m_print_bg = col;
 }
 
-void TilesFramework::put_ucs_string(ucs_t *str)
+void TilesFramework::put_wch(ucs_t chr)
 {
     if (m_print_area == NULL)
         return;
 
-    while (*str)
+    if (chr == '\n')
     {
-        if (*str == '\r')
-            continue;
+        m_print_x = 0;
+        m_print_y++;
+    }
+    else
+    {
+        int w = wcwidth(chr);
 
-        if (*str == '\n')
+        if (m_print_x + w > m_print_area->mx)
         {
             m_print_x = 0;
             m_print_y++;
-            // TODO: Clear end of line?
         }
-        else
+
+        if (m_print_y < m_print_area->my)
         {
-            if (m_print_x >= m_print_area->mx)
+            if (w == 2 || w == 1)
             {
-                m_print_x = 0;
-                m_print_y++;
+                m_print_area->set_character(chr, m_print_fg, m_print_bg,
+                                            m_print_x, m_print_y);
+            }
+            else if (w == 0)
+            {
+                ASSERT(m_print_x > 0);
+                // Append combining character to the previous one
+                m_print_area->append_character(chr, m_print_x - 1, m_print_y);
             }
 
-            if (m_print_y < m_print_area->my)
-                m_print_area->put_character(*str, m_print_fg, m_print_bg,
-                                            m_print_x, m_print_y);
+            /* Ignore unprintable characters. Crashing may be better? */
 
-            m_print_x++;
+            if (w == 2)
+            {
+                ASSERT(m_print_x + 1 < m_print_area->mx);
+                m_print_area->clear_cell(m_print_x + 1, m_print_y);
+            }
         }
 
-        str++;
+        m_print_x += wcwidth(chr);
     }
 }
 
@@ -1370,7 +1382,7 @@ void TilesFramework::clear_to_end_of_line()
         return;
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)
-        m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
+        m_print_area->set_character(' ', m_print_fg, m_print_bg, x, m_print_y);
 }
 
 
