@@ -810,18 +810,18 @@ void discover_mimic(const coord_def& pos, bool wake)
     if (wake)
         mg.flags |= MG_DONT_COME;
 
-    // HD is scaled with depth
     const int level = env.absdepth0 + 1;
-    mg.hd = stepdown_value(level, 12, 12, 24, 36);
 
-    // Early levels get inept mimics instead
-    if (!x_chance_in_y(level - 6, 6))
-        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
-    else if (level > 20)
-        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
-
+    // Orb mimic is special
     if (item && item->base_type == OBJ_ORBS)
         mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
+    // Early levels get inept mimics instead
+    else if (!x_chance_in_y(level - 6, 6))
+        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
+    // Deeper, you get ravenous mimics
+    else if (x_chance_in_y(level - 15, 6))
+        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
+
 
     if (feature_mimic)
     {
@@ -1432,9 +1432,6 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
-
-    if (mons_is_mimic(mon->type))
-        attk.damage += mon->hit_dice;
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
