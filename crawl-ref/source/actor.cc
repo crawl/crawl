@@ -483,7 +483,7 @@ void actor::handle_constriction()
         if (is_player())
             damage = roll_dice(2, div_rand_round(you.strength(), 5));
         else
-            damage = (as_monster()->hit_dice + 1) / 2;
+            damage = as_monster()->constriction_damage();
         DIAG_ONLY(const int basedam = damage);
         damage += div_rand_round(duration, BASELINE_DELAY);
         if (is_player())
