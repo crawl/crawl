@@ -4214,6 +4214,21 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                 goto retry;
             }
 
+            if ((item.base_type == OBJ_WEAPONS
+                 || item.base_type == OBJ_ARMOUR
+                 || item.base_type == OBJ_JEWELLERY
+                 || item.base_type == OBJ_WANDS)
+                && spec.props.exists("plus"))
+            {
+                item.plus = spec.props["plus"].get_int();
+            }
+            if ((item.base_type == OBJ_WEAPONS
+                 || item.base_type == OBJ_JEWELLERY)
+                && spec.props.exists("plus2"))
+            {
+                item.plus2 = spec.props["plus2"].get_int();
+            }
+
             // Mark items on summoned monsters as such.
             if (mspec.abjuration_duration != 0)
                 item.flags |= ISFLAG_SUMMONED;
