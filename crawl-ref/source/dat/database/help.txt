@@ -32,20 +32,30 @@ known-menu
 
                    <h>Known items menu</h>
 <h>Item letters</h>
-Pressing an item's letter key will select the item.
+Pressing an item type's letter key selects that item.
 
-<h>Selecting Items</h>
-Grey items use the default Autopickup value.
-Selecting it will toggle between the following Forced-Autopickup states:
-<w>+</w>  Means it will always be picked up.
-<w>-</w>  Means it will never be picked up.
+<h>Selecting item types</h>
+Items types displayed in grey use the default autopickup options set in your
+configuration file.  Selecting a type of item overrides those options
+(indicated by <w>white</w> text), and toggles the item between the states:
+ <w>+</w>  Items of this type will be picked up automatically.
+ <w>-</w>  Items of this type will will not be picked up automatically.
+Autopickup can also be toggled for all unknown items of a given category.
 
-<h>Unknown Item Defaults</h>
-Selecting one such item will toggle the
+<h>Category shortcuts</h>
+You can quickly select all item types in a given category by pressing:
+<w>!</w>   potions      <w>?</w>   scrolls      <w>(</w>   ammunition   <w>=</w> or <w>"</w>   jewellery
+<w>/</w>   wands        <w>|</w>   magical staves
+Global selects:  <w>*</w>   invert all   <w>,</w>   reset all to default
 
-<h>Restoring Autopickup Defaults</h>
-Pressing <w>Ctrl-D</w> will make the next selected item restore to its default settings.
-Note that this works in combination with all other key commands.
+<h>Viewing unknown and known items</h>
+<w>\</w> and <w>-</w> toggle between the known and unknown items menus.  Note
+that none of the above features are available from the unknown items menu.
+
+<h>Restoring autopickup defaults</h>
+Pressing <w>Ctrl-D</w> followed by an item letter or a category shortcut
+cancels the override and restores the selected item or items to their default
+settings.
 
 <h>Regular expressions</h>
 You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
@@ -57,16 +67,6 @@ There are shortcuts to quickly select several items in succession:
 <w>'</w>   moves the cursor down without changing selection
 The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 
-<h>Category shortcuts</h>
-You can quickly select items by type by pressing:
-<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery
-<w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
-<w>%</w>   food         <w>&</w>   carrion (corpses, skeletons, useless chunks)
-Global selects:  <w>,</w>   reset all to default      <w>*</w>   invert all
-
-<h>Viewing Unknown/Known Items</h>
-<w>/</w> and <w>-</w> will toggle between known and unknown item menus.
-Note that none of the above features apply to the unknown items menu.
 %%%%
 stash-search.prompt
 
