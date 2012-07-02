@@ -3126,6 +3126,17 @@ bool monster::has_damage_type(int dam_type)
     return (false);
 }
 
+int monster::constriction_damage()
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        const mon_attack_def attack = mons_attack_spec(this, i);
+        if (attack.type == AT_CONSTRICT)
+            return (attack.damage);
+    }
+    return -1;
+}
+
 // Whether the monster is temporarily confused.
 // False for butterflies, vapours etc.
 bool monster::confused() const
