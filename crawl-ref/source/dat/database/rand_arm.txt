@@ -431,6 +431,8 @@ the Blind Marksman
 Too Many Cooks
 
 Thrice Damned Blessings
+
+Duck's Teeth
 %%%%
 # Lemuel's suggestions
 _celestial_bodies_
@@ -482,6 +484,8 @@ Chimes
 the Flute
 
 the Harp
+
+the Gusle
 %%%%
 _evil_being_
 
@@ -585,6 +589,12 @@ Beggar
 Merchant
 
 Sailor
+
+Gravedigger
+
+Pirate
+
+Buccaneer
 %%%%
 # something for Xom
 _game_name_
