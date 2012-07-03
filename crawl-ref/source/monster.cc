@@ -3126,7 +3126,7 @@ bool monster::has_damage_type(int dam_type)
     return (false);
 }
 
-int monster::constriction_damage()
+int monster::constriction_damage() const
 {
     for (int i = 0; i < 4; ++i)
     {

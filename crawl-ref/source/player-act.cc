@@ -706,3 +706,8 @@ bool player::shove(const char* feat_name)
         }
     return false;
 }
+
+int player::constriction_damage() const
+{
+    return roll_dice(2, div_rand_round(you.strength(), 5));
+}

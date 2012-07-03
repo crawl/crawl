@@ -478,12 +478,8 @@ void actor::handle_constriction()
         // thus invalidating the old i.
         ++i;
 
-        int damage;
+        int damage = constriction_damage();
 
-        if (is_player())
-            damage = roll_dice(2, div_rand_round(you.strength(), 5));
-        else
-            damage = as_monster()->constriction_damage();
         DIAG_ONLY(const int basedam = damage);
         damage += div_rand_round(damage * stepdown((float)duration, 50.0),
                                  BASELINE_DELAY * 5);

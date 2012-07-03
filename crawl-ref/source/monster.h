@@ -389,7 +389,7 @@ public:
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
-    int constriction_damage();
+    int constriction_damage() const;
 
     bool can_throw_large_rocks() const;
     bool can_speak();
