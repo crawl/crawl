@@ -501,6 +501,7 @@ public:
     int         total_weight() const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
+    int         constriction_damage() const;
 
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;

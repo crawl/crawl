@@ -389,6 +389,8 @@ public:
     bool is_constricting() const;
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
+    virtual int constriction_damage() const = 0;
+
 
 protected:
     void clear_constricted();
