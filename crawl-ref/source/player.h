@@ -709,6 +709,7 @@ public:
                       const char *msg = NULL);
 
     bool attempt_escape();
+    int usable_tentacles() const;
     bool has_usable_tentacle() const;
 
 protected:
