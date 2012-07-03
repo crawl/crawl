@@ -2169,9 +2169,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     _check_doors();
 
-    if (!player_in_branch(BRANCH_DIS) && !player_in_branch(BRANCH_VAULTS))
-        _hide_doors();
-
     if (player_in_branch(BRANCH_LAIR))
     {
         int depth = you.depth + 1;
@@ -2322,27 +2319,6 @@ static void _check_doors()
                 solid_count++;
 
         _set_grd(*ri, solid_count < 2 ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
-    }
-}
-
-static void _hide_doors()
-{
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        // Only one out of four doors are candidates for hiding. {gdl}
-        if (grd(*ri) == DNGN_CLOSED_DOOR && one_chance_in(4)
-            && !map_masked(*ri, MMT_NO_DOOR))
-        {
-            int wall_count = 0;
-
-            for (orth_adjacent_iterator rai(*ri); rai; ++rai)
-                if (grd(*rai) == DNGN_ROCK_WALL)
-                    wall_count++;
-
-            // If door is attached to more than one wall, hide it. {dlb}
-            if (wall_count > 1)
-                grd(*ri) = DNGN_SECRET_DOOR; // don't clear tile flavour
-        }
     }
 }
 
