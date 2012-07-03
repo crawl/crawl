@@ -959,7 +959,6 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     switch (mons->type)
     {
         case MONS_MENKAURE:
-        case MONS_BOG_MUMMY:
         case MONS_MUMMY:          pow = 1; break;
         case MONS_GUARDIAN_MUMMY: pow = 3; break;
         case MONS_MUMMY_PRIEST:   pow = 8; break;
@@ -994,8 +993,8 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     if (!target->alive())
         return;
 
-    if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE
-        || mons->type == MONS_BOG_MUMMY) && YOU_KILL(killer))
+    if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
+        && YOU_KILL(killer))
     {
         // Kiku protects you from ordinary mummy curses.
         if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance()

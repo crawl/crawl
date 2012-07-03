@@ -1662,10 +1662,10 @@
 
     {  MST_BOG_MUMMY,
       {
-       SPELL_THROW_FROST,
+       SPELL_BOLT_OF_COLD,
        SPELL_SLOW,
        SPELL_NO_SPELL,
-       SPELL_CORPSE_ROT,
+       SPELL_BOLT_OF_COLD,
        SPELL_CORPSE_ROT,
        SPELL_NO_SPELL
       }
