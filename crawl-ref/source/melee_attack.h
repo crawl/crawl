@@ -73,8 +73,6 @@ private:
     bool handle_phase_damaged();
     bool handle_phase_killed();
     bool handle_phase_end();
-    // Replaces some of the above phases.
-    bool handle_constriction();
 
     /* Combat Calculations */
     int test_hit(int to_hit, int ev, bool randomise_ev);
