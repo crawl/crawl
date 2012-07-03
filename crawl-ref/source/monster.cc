@@ -5822,8 +5822,6 @@ bool monster::attempt_escape()
         return true;
 
     escape_attempts++;
-    // player breaks free if size*attempts > 5 + d(12) + d(HD)
-    // this is inefficient on purpose, simplify after debug
     thesize = body_size(PSIZE_BODY);
     attfactor = thesize * escape_attempts;
 
