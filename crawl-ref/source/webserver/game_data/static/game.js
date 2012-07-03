@@ -11,7 +11,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         ui_state = -1;
     }
 
-    $(document).on("game_preinit", init);
+    $(document).on("game_preinit game_cleanup", init);
 
     function layout_params_differ(old_params, new_params)
     {
