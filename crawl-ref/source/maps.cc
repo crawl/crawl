@@ -34,15 +34,15 @@
 #include "tags.h"
 #include "terrain.h"
 
-static map_section_type write_vault(map_def &mdef,
-                                    vault_placement &,
-                                    bool check_place);
-static map_section_type apply_vault_definition(
+static map_section_type _write_vault(map_def &mdef,
+                                     vault_placement &,
+                                     bool check_place);
+static map_section_type _apply_vault_definition(
     map_def &def,
     vault_placement &,
     bool check_place);
 
-static bool resolve_map(map_def &def);
+static bool _resolve_map(map_def &def);
 
 static bool _map_safe_vault_place(const map_def &map,
                                   const coord_def &c,
@@ -97,12 +97,12 @@ map_section_type vault_main(vault_placement &place, const map_def *vault,
     // level, except for branch entry vaults where dungeon.cc just
     // rejects the vault and places a vanilla entry.
 
-    return (write_vault(const_cast<map_def&>(*vault), place, check_place));
+    return (_write_vault(const_cast<map_def&>(*vault), place, check_place));
 }
 
-static map_section_type write_vault(map_def &mdef,
-                                    vault_placement &place,
-                                    bool check_place)
+static map_section_type _write_vault(map_def &mdef,
+                                     vault_placement &place,
+                                     bool check_place)
 {
     mdef.load();
 
@@ -120,13 +120,13 @@ static map_section_type write_vault(map_def &mdef,
         if (place.map.test_lua_veto())
             break;
 
-        if (!resolve_map(place.map))
+        if (!_resolve_map(place.map))
             continue;
 
         // Must set size here, or minivaults will not be placed correctly.
         place.size = place.map.size();
-        place.orient = apply_vault_definition(place.map,
-                                              place, check_place);
+        place.orient = _apply_vault_definition(place.map,
+                                               place, check_place);
 
         if (place.orient != MAP_NONE)
             return (place.orient);
@@ -145,7 +145,7 @@ static void _dgn_flush_map_environment_for(const std::string &mapname)
     dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
 }
 
-static bool resolve_map_lua(map_def &map)
+static bool _resolve_map_lua(map_def &map)
 {
     _dgn_flush_map_environment_for(map.name);
     map.reinit();
@@ -176,9 +176,9 @@ static bool resolve_map_lua(map_def &map)
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
-static bool resolve_map(map_def &map)
+static bool _resolve_map(map_def &map)
 {
-    if (!resolve_map_lua(map))
+    if (!_resolve_map_lua(map))
         return (false);
 
     // Don't bother flipping or rotating 1x1 subvaults.
@@ -210,7 +210,7 @@ bool resolve_subvault(map_def &map)
     if (map.test_lua_veto())
         return (false);
 
-    if (!resolve_map_lua(map))
+    if (!_resolve_map_lua(map))
         return false;
 
     int width = map.subvault_width();
@@ -465,9 +465,9 @@ static coord_def _find_minivault_place(
     return (coord_def(-1, -1));
 }
 
-static bool apply_vault_grid(map_def &def,
-                             vault_placement &place,
-                             bool check_place)
+static bool _apply_vault_grid(map_def &def,
+                              vault_placement &place,
+                              bool check_place)
 {
     const map_lines &ml = def.map;
     const int orient = def.orient;
@@ -538,12 +538,12 @@ static bool apply_vault_grid(map_def &def,
     return (true);
 }
 
-static map_section_type apply_vault_definition(
+static map_section_type _apply_vault_definition(
     map_def &def,
     vault_placement &place,
     bool check_place)
 {
-    if (!apply_vault_grid(def, place, check_place))
+    if (!_apply_vault_grid(def, place, check_place))
         return (MAP_NONE);
 
     const map_section_type orient = def.orient;
@@ -553,7 +553,7 @@ static map_section_type apply_vault_definition(
 ///////////////////////////////////////////////////////////////////////////
 // Map lookups
 
-static bool map_matches_layout_type(const map_def &map)
+static bool _map_matches_layout_type(const map_def &map)
 {
     if (env.level_layout_types.empty() || !map.has_tag_prefix("layout_"))
         return true;
@@ -712,7 +712,7 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
             && (!mapdef.has_tag_prefix("temple_")
                 || mapdef.has_tag_prefix("uniq_altar_"))
             && _map_matches_species(mapdef)
-            && (!check_layout || map_matches_layout_type(mapdef)));
+            && (!check_layout || _map_matches_layout_type(mapdef)));
 }
 
 bool map_selector::accept(const map_def &mapdef) const
@@ -728,7 +728,7 @@ bool map_selector::accept(const map_def &mapdef) const
         }
         return (mapdef.is_minivault() == mini
                 && mapdef.place.is_usable_in(place)
-                && map_matches_layout_type(mapdef)
+                && _map_matches_layout_type(mapdef)
                 && !mapdef.map_already_used());
 
     case DEPTH:
@@ -756,7 +756,7 @@ bool map_selector::accept(const map_def &mapdef) const
                     || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
                 && _map_matches_species(mapdef)
-                && map_matches_layout_type(mapdef)
+                && _map_matches_layout_type(mapdef)
                 && !mapdef.map_already_used());
 
     default:
@@ -1086,7 +1086,7 @@ static std::string _des_cache_dir(const std::string &relpath = "")
     return catpath(savedir_versioned_path("des"), relpath);
 }
 
-static void check_des_index_dir()
+static void _check_des_index_dir()
 {
     if (checked_des_index_dir)
         return;
@@ -1129,17 +1129,17 @@ static bool verify_file_version(const std::string &file, time_t mtime)
     }
 }
 
-static bool verify_map_index(const std::string &base, time_t mtime)
+static bool _verify_map_index(const std::string &base, time_t mtime)
 {
     return verify_file_version(base + ".idx", mtime);
 }
 
-static bool verify_map_full(const std::string &base, time_t mtime)
+static bool _verify_map_full(const std::string &base, time_t mtime)
 {
     return verify_file_version(base + ".dsc", mtime);
 }
 
-static bool load_map_index(const std::string& cache, const std::string &base,
+static bool _load_map_index(const std::string& cache, const std::string &base,
                            time_t mtime)
 {
     // If there's a global prelude, load that first.
@@ -1189,9 +1189,9 @@ static bool load_map_index(const std::string& cache, const std::string &base,
     return (true);
 }
 
-static bool load_map_cache(const std::string &filename, const std::string &cachename)
+static bool _load_map_cache(const std::string &filename, const std::string &cachename)
 {
-    check_des_index_dir();
+    _check_des_index_dir();
     const std::string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);
@@ -1201,16 +1201,16 @@ static bool load_map_cache(const std::string &filename, const std::string &cache
     std::string file_dsc = descache_base + ".dsc";
 
     // What's the point in checking these twice (here and in load_ma_index)?
-    if (!verify_map_index(descache_base, mtime)
-        || !verify_map_full(descache_base, mtime))
+    if (!_verify_map_index(descache_base, mtime)
+        || !_verify_map_full(descache_base, mtime))
     {
         return (false);
     }
 
-    return load_map_index(cachename, descache_base, mtime);
+    return _load_map_index(cachename, descache_base, mtime);
 }
 
-static void write_map_prelude(const std::string &filebase, time_t mtime)
+static void _write_map_prelude(const std::string &filebase, time_t mtime)
 {
     const std::string luafile = filebase + ".lux";
     if (lc_global_prelude.empty())
@@ -1228,8 +1228,8 @@ static void write_map_prelude(const std::string &filebase, time_t mtime)
     fclose(fp);
 }
 
-static void write_map_full(const std::string &filebase, size_t vs, size_t ve,
-                           time_t mtime)
+static void _write_map_full(const std::string &filebase, size_t vs, size_t ve,
+                            time_t mtime)
 {
     const std::string cfile = filebase + ".dsc";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
@@ -1245,8 +1245,8 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve,
     fclose(fp);
 }
 
-static void write_map_index(const std::string &filebase, size_t vs, size_t ve,
-                            time_t mtime)
+static void _write_map_index(const std::string &filebase, size_t vs, size_t ve,
+                             time_t mtime)
 {
     const std::string cfile = filebase + ".idx";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
@@ -1268,21 +1268,21 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve,
     fclose(fp);
 }
 
-static void write_map_cache(const std::string &filename, size_t vs, size_t ve,
-                            time_t mtime)
+static void _write_map_cache(const std::string &filename, size_t vs, size_t ve,
+                             time_t mtime)
 {
-    check_des_index_dir();
+    _check_des_index_dir();
 
     const std::string descache_base = get_descache_path(filename, "");
 
     file_lock deslock(descache_base + ".lk", "wb");
 
-    write_map_prelude(descache_base, mtime);
-    write_map_full(descache_base, vs, ve, mtime);
-    write_map_index(descache_base, vs, ve, mtime);
+    _write_map_prelude(descache_base, mtime);
+    _write_map_full(descache_base, vs, ve, mtime);
+    _write_map_index(descache_base, vs, ve, mtime);
 }
 
-static void parse_maps(const std::string &s)
+static void _parse_maps(const std::string &s)
 {
     std::string cache_name = get_cache_name(s);
     if (map_files_read.find(cache_name) != map_files_read.end())
@@ -1290,7 +1290,7 @@ static void parse_maps(const std::string &s)
 
     map_files_read.insert(cache_name);
 
-    if (load_map_cache(s, cache_name))
+    if (_load_map_cache(s, cache_name))
         return;
 
     FILE *dat = fopen_u(s.c_str(), "r");
@@ -1314,12 +1314,12 @@ static void parse_maps(const std::string &s)
 
     global_preludes.push_back(lc_global_prelude);
 
-    write_map_cache(cache_name, file_start, vdefs.size(), mtime);
+    _write_map_cache(cache_name, file_start, vdefs.size(), mtime);
 }
 
 void read_map(const std::string &file)
 {
-    parse_maps(lc_desfile = datafile_path(file));
+    _parse_maps(lc_desfile = datafile_path(file));
     _dgn_flush_map_environments();
     // Force GC to prevent heap from swelling unnecessarily.
     dlua.gc();
@@ -1448,18 +1448,18 @@ static weighted_map_names mg_find_random_vaults(
     return (wms);
 }
 
-static bool weighted_map_more_likely(
+static bool _weighted_map_more_likely(
     const weighted_map_name &a,
     const weighted_map_name &b)
 {
     return (a.second > b.second);
 }
 
-static void mg_report_random_vaults(
+static void _mg_report_random_vaults(
     FILE *outf, const level_id &place, bool wantmini)
 {
     weighted_map_names wms = mg_find_random_vaults(place, wantmini);
-    std::sort(wms.begin(), wms.end(), weighted_map_more_likely);
+    std::sort(wms.begin(), wms.end(), _weighted_map_more_likely);
     int weightsum = 0;
     for (int i = 0, size = wms.size(); i < size; ++i)
         weightsum += wms[i].second;
@@ -1488,9 +1488,9 @@ static void mg_report_random_vaults(
 void mg_report_random_maps(FILE *outf, const level_id &place)
 {
     fprintf(outf, "---------------- Mini\n");
-    mg_report_random_vaults(outf, place, true);
+    _mg_report_random_vaults(outf, place, true);
     fprintf(outf, "------------- Regular\n");
-    mg_report_random_vaults(outf, place, false);
+    _mg_report_random_vaults(outf, place, false);
 }
 
 #endif
