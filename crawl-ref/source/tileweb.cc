@@ -745,9 +745,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
             || next_pc.orb_glow != current_pc.orb_glow)
             write_message("orb_glow:%u,", next_pc.orb_glow);
 
-        if ((force_full && next_pc.swamp_tree_water)
-            || next_pc.swamp_tree_water != current_pc.swamp_tree_water)
-            write_message("swtree:%u,", next_pc.swamp_tree_water);
+        if ((force_full && next_pc.mangrove_water)
+            || next_pc.mangrove_water != current_pc.mangrove_water)
+            write_message("swtree:%u,", next_pc.mangrove_water);
 
         if ((force_full && next_pc.blood_rotation)
             || next_pc.blood_rotation != current_pc.blood_rotation)

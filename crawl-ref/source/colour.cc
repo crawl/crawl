@@ -203,7 +203,7 @@ static int _etc_tree(int, const coord_def& loc)
     return (h>>30) ? GREEN : LIGHTGREEN;
 }
 
-static int _etc_swamp_tree(int, const coord_def& loc)
+static int _etc_mangrove(int, const coord_def& loc)
 {
     uint32_t h = loc.x;
     h+=h<<10; h^=h>>6;
@@ -552,7 +552,7 @@ void init_element_colours()
                             ETC_TREE, "tree", _etc_tree
                        ));
     add_element_colour(new element_colour_calc(
-                            ETC_SWAMP_TREE, "swamp_tree", _etc_swamp_tree
+                            ETC_MANGROVE, "mangrove", _etc_mangrove
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_TORNADO, "tornado", _etc_tornado

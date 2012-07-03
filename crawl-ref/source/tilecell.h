@@ -30,7 +30,7 @@ struct packed_cell
     bool glowing_mold;
     bool is_sanctuary;
     bool is_liquefied;
-    bool swamp_tree_water;
+    bool mangrove_water;
     uint8_t orb_glow;
     char blood_rotation;
     bool old_blood;
@@ -41,7 +41,7 @@ struct packed_cell
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), is_bloody(false),
                     is_silenced(false), is_suppressed(false), halo(HALO_NONE),
                     is_moldy(false), glowing_mold(false), is_sanctuary(false),
-                    is_liquefied(false), swamp_tree_water(false), orb_glow(0),
+                    is_liquefied(false), mangrove_water(false), orb_glow(0),
                     blood_rotation(0), old_blood(false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
@@ -54,7 +54,7 @@ struct packed_cell
                                         glowing_mold(c->glowing_mold),
                                         is_sanctuary(c->is_sanctuary),
                                         is_liquefied(c->is_liquefied),
-                                        swamp_tree_water(c->swamp_tree_water),
+                                        mangrove_water(c->mangrove_water),
                                         orb_glow(c->orb_glow),
                                         blood_rotation(c->blood_rotation),
                                         old_blood(c->old_blood) {}

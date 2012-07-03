@@ -209,7 +209,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
-    if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
+    if (cell.mangrove_water && bg_idx > TILE_DNGN_UNSEEN)
         m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
 
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
@@ -219,7 +219,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     if (bg_idx > TILE_WALL_MAX)
         add_blood_overlay(x, y, cell);
 
-    add_dngn_tile(bg_idx, x, y, cell.swamp_tree_water);
+    add_dngn_tile(bg_idx, x, y, cell.mangrove_water);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {

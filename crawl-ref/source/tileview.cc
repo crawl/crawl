@@ -940,7 +940,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 static bool _suppress_blood(const map_cell& mc)
 {
     const dungeon_feature_type feat = mc.feat();
-    if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
+    if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
         return (true);
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
@@ -1205,8 +1205,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_SUPPRESSED)
         cell.is_suppressed = true;
 
-    if (feat == DNGN_SWAMP_TREE)
-        cell.swamp_tree_water = true;
+    if (feat == DNGN_MANGROVE)
+        cell.mangrove_water = true;
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
