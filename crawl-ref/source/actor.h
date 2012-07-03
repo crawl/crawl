@@ -382,6 +382,7 @@ public:
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
+    bool can_constrict(actor* defender);
     void clear_far_constrictions();
     void accum_has_constricted();
     void handle_constriction();

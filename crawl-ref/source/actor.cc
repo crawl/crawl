@@ -446,6 +446,17 @@ void actor::accum_has_constricted()
         i->second += you.time_taken;
 }
 
+bool actor::can_constrict(actor* defender)
+{
+    return (!is_constricting() || has_usable_tentacle())
+           && !defender->is_constricted()
+           && can_see(defender)
+           && !confused()
+           && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
+           && defender->res_constrict() < 3
+           && adjacent(pos(), defender->pos());
+}
+
 #ifdef DEBUG_DIAGNOSTICS
 # define DIAG_ONLY(x) x
 #else

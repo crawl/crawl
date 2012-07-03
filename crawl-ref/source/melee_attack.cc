@@ -172,7 +172,8 @@ bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
     if (!adjacent(attacker->pos(), defender->pos()) && attk_type != AT_HIT
-        && attk_flavour != AF_REACH || attk_type == AT_SHOOT)
+        && attk_flavour != AF_REACH || attk_type == AT_SHOOT
+       || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
     {
         --effective_attack_number;
 
@@ -491,7 +492,7 @@ bool melee_attack::handle_phase_hit()
     if (check_unrand_effects() || stop_hit)
         return (false);
 
-    if (damage_done > 0)
+    if (damage_done > 0 || attk_flavour == AF_CRUSH)
     {
         if (!handle_phase_damaged())
             return (false);
@@ -780,13 +781,6 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-
-    // monster constriction is completely different.
-    // I hate to special case so soon after the rewrite, it just doesn't fit
-
-    if (!attacker->is_player() && attk_type == AT_CONSTRICT)
-        return (handle_constriction());
-
     if (!handle_phase_attempted())
         return (false);
 
@@ -1088,8 +1082,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        aux_attack = aux_verb = "constrict";
-        aux_damage = 1; // place holder
+        aux_attack = aux_verb = "grab";
+        aux_damage = 0;
         noise_factor = 10; // extremely quiet?
         break;
 
@@ -1325,13 +1319,8 @@ bool melee_attack::player_aux_unarmed()
         // Determine and set damage and attack words.
         player_aux_setup(atk);
 
-        if (atk == UNAT_CONSTRICT) // special case, handle in own proc
-        {
-            handle_constriction();
-            if (!defender->alive())
-                return (true);
+        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
             continue;
-        }
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
                          damage_brand == SPWPN_VAMPIRICISM));
@@ -1376,6 +1365,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage  = random2(aux_damage);
 
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
+
     aux_damage += (slaying > -1) ? random2(1 + slaying)
                                  : -random2(1 - slaying);
     aux_damage  = player_apply_misc_modifiers(aux_damage);
@@ -1383,7 +1373,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     const int pre_ac_dmg = aux_damage;
     const int post_ac_dmg = apply_defender_ac(aux_damage);
 
-    aux_damage = post_ac_dmg;
+    if (atk == UNAT_CONSTRICT)
+        aux_damage = 0;
+    else
+        aux_damage = post_ac_dmg;
+
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
@@ -1416,11 +1410,15 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             break;
         }
 
+        case UNAT_CONSTRICT:
+            attacker->start_constricting(*defender);
+            break;
+
         default:
             break;
     }
 
-    if (damage_done > 0)
+    if (damage_done > 0 || atk == UNAT_CONSTRICT)
     {
         player_announce_aux_hit();
 
@@ -4021,7 +4019,7 @@ std::string melee_attack::mons_attack_desc()
 
 void melee_attack::announce_hit()
 {
-    if (!needs_message)
+    if (!needs_message || attk_flavour == AF_CRUSH)
         return;
 
     if (attacker->is_monster())
@@ -4448,6 +4446,21 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_ENSNARE:
         if (one_chance_in(3))
             ensnare(defender);
+        break;
+
+    case AF_CRUSH:
+        if (needs_message)
+        {
+            mprf("%s %s %s.",
+                 atk_name(DESC_THE).c_str(),
+                 attacker->conj_verb("grab").c_str(),
+                 defender_name().c_str());
+        }
+        attacker->start_constricting(*defender);
+        // if you got grabbed, interrupt stair climb and passwall
+        if (defender->is_player())
+            stop_delay(true);
+        break;
     }
 }
 
@@ -5023,6 +5036,10 @@ int melee_attack::calc_base_unarmed_damage()
 
 int melee_attack::calc_damage()
 {
+    // Constriction deals damage over time, not when grabbing.
+    if (attk_flavour == AF_CRUSH)
+        return 0;
+
     if (attacker->is_monster())
     {
         monster *as_mon = attacker->as_monster();
@@ -5358,75 +5375,4 @@ int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
         defender->props["reaper"].get_int() = attacker->mid;
     }
     return defender->hurt(attacker, dam, flavour, clean);
-}
-
-bool melee_attack::handle_constriction()
-{
-    // see what is grabbed already
-
-    bool defender_grabbed = false;
-    bool any_grabbed = false;
-
-    if (attacker->constricting)
-    {
-        if (!attacker->constricting->empty())
-            any_grabbed = true;
-
-        defender_grabbed = (attacker->constricting->find(defender->mid)
-                            != attacker->constricting->end());
-    }
-
-    // if a new constriction is possible, try it
-    if (!defender_grabbed
-        && (!any_grabbed || attacker->has_usable_tentacle())
-        && !defender->is_constricted()
-        && attacker->can_see(defender)
-        && !attacker->confused())
-    {
-        // calculate to_hit
-        size_type asize = attacker->body_size(PSIZE_BODY);
-        size_type dsize = defender->body_size(PSIZE_BODY);
-        int m_ev = defender->melee_evasion(attacker);
-
-        int attackdice, defenddice;
-        if (attacker->is_player())
-        {
-            attackdice = roll_dice(3, you.strength() * (asize + 1));
-            defenddice = roll_dice(1, 3 * m_ev * (dsize + 1));
-        }
-        else
-        {
-            attackdice = roll_dice(1, attacker->as_monster()->hit_dice
-                                       * (asize + 1));
-            defenddice = roll_dice(1, m_ev * (dsize + 1));
-        }
-
-        // if hit, grab
-        if (asize >= dsize
-            && defender->res_constrict() < 3
-            && adjacent(attacker->pos(), defender->pos())
-            && attackdice >= defenddice)
-        {
-            defender_grabbed = true;
-            any_grabbed = true;
-            attacker->start_constricting(*defender);
-        }
-
-        dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d",
-             attacker->name(DESC_PLAIN, true).c_str(),
-             defender->name(DESC_PLAIN, true).c_str(),
-             (attacker->is_player()
-                 ? you.strength()
-                 : attacker->as_monster()->hit_dice),
-             asize,
-             attackdice,
-             m_ev, dsize,
-             defenddice);
-    }
-
-    // if you got grabbed, interrupt stair climb and passwall
-    if (defender_grabbed && defender->is_player())
-        stop_delay(true);
-
-    return true;
 }
