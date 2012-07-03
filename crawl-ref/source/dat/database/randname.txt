@@ -800,7 +800,7 @@ pearl
 # material ("runed wooden ring"), making a description like "runed ring" a bit
 # weird. So give randart jewellery an adjective that no non-artefact jewellery
 # would have, plus a material that a non-artefact might or might not have.
-jewellery appearance
+_jewellery appearance_
 
 scintillating
 
@@ -938,9 +938,9 @@ amethyst
 %%%%
 ring appearance
 
-@jewellery appearance@ @_ring material_@
+@_jewellery appearance_@ @_ring material_@
 %%%%
 amulet appearance
 
-@jewellery appearance@ @_amulet material_@
+@_jewellery appearance_@ @_amulet material_@
 %%%%
