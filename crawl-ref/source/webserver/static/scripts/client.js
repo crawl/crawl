@@ -707,19 +707,25 @@ function (exports, $, key_conversion, chat, comm) {
         send_message("force_terminate", { answer: true });
         hide_dialog();
     }
-    function stale_processes_keydown(ev)
+    function stale_processes_keypress(ev)
     {
-        ev.preventDefault();
-        send_message("stop_stale_process_purge");
-        hide_dialog();
+        if ($("#stale_processes_message").is(":visible"))
+        {
+            ev.preventDefault();
+            send_message("stop_stale_process_purge");
+            hide_dialog();
+        }
     }
-    function force_terminate_keydown(ev)
+    function force_terminate_keypress(ev)
     {
-        ev.preventDefault();
-        if (ev.which == "y".charCodeAt(0))
-            force_terminate_yes();
-        else
-            force_terminate_no();
+        if ($("#force_terminate").is(":visible"))
+        {
+            ev.preventDefault();
+            if (ev.which == "y".charCodeAt(0))
+                force_terminate_yes();
+            else
+                force_terminate_no();
+        }
     }
     function handle_stale_processes(data)
     {
@@ -892,8 +898,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
-        $("#stale_processes_message").keydown(stale_processes_keydown);
-        $("#force_terminate").keydown(force_terminate_keydown);
+        $(document).on("game_keypress", stale_processes_keypress);
+        $(document).on("game_keypress", force_terminate_keypress);
 
         do_layout();
 

@@ -11,7 +11,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         ui_state = -1;
     }
 
-    $(document).bind("game_init", init);
+    $(document).on("game_preinit", init);
 
     function layout_params_differ(old_params, new_params)
     {
@@ -109,6 +109,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         if (state == ui_state) return;
         var old_state = ui_state;
         ui_state = state;
+        if (old_state == -1) client.hide_dialog();
         switch (ui_state)
         {
         case enums.ui.NORMAL:
