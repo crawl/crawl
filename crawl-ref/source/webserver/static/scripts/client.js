@@ -525,6 +525,7 @@ function (exports, $, key_conversion, chat, comm) {
 
         hide_dialog();
 
+        $(document).trigger("game_cleanup");
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         $("#username").focus();
