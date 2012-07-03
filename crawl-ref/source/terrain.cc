@@ -1630,9 +1630,9 @@ static const char *dngn_feature_names[] =
 "waxed_wall",
 #endif
 "metal_wall", "green_crystal_wall", "rock_wall",
-"slimy_wall", "stone_wall", "permarock_wall",
+"slimy_wall", "stone_wall", "permarock_wall", "swamp_tree",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol",
+"tree", "open_sea", "endless_lava", "orcish_idol",
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "",
 #if TAG_MAJOR_VERSION > 33
 "",
