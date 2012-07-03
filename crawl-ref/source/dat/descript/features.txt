@@ -199,6 +199,11 @@ A gateway to an intricate maze designed by subtle and malicious minds, its exit
 guarded by a fearsome monster. Many a hapless adventurer has lost his way in
 the twisted, shifting passages, and starved to death.
 %%%%
+A mangrove
+
+This tree is specially adapted for growing in swampy conditions. Its vines are
+too thick to see through.
+%%%%
 A magical trap
 
 A magical device designed to harm trespassers that can't be deactivated.
