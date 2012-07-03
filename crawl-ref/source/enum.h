@@ -1182,8 +1182,8 @@ enum dungeon_feature_type
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
-    DNGN_SWAMP_TREE,
-        DNGN_MAXOPAQUE = DNGN_SWAMP_TREE,
+    DNGN_MANGROVE,
+        DNGN_MAXOPAQUE = DNGN_MANGROVE,
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
         // Lowest grid value which can be seen through.
         DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,

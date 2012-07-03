@@ -67,7 +67,7 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
             mpr("You can't ignite solid crystal!");
             break;
         case DNGN_TREE:
-        case DNGN_SWAMP_TREE:
+        case DNGN_MANGROVE:
             fail_check();
             _burn_tree(where);
             return SPRET_SUCCESS;

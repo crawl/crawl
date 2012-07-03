@@ -357,7 +357,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
-            || feat == DNGN_SWAMP_TREE);
+            || feat == DNGN_MANGROVE);
 }
 
 bool feat_is_watery(dungeon_feature_type feat)
@@ -420,7 +420,7 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE);
+    return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -782,7 +782,7 @@ bool is_valid_border_feat(dungeon_feature_type feat)
 {
     return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
             || (feat == DNGN_TREE
-               || feat == DNGN_SWAMP_TREE
+               || feat == DNGN_MANGROVE
                || feat == DNGN_OPEN_SEA
                || feat == DNGN_LAVA_SEA));
 }
@@ -1630,7 +1630,7 @@ static const char *dngn_feature_names[] =
 "waxed_wall",
 #endif
 "metal_wall", "green_crystal_wall", "rock_wall",
-"slimy_wall", "stone_wall", "permarock_wall", "swamp_tree",
+"slimy_wall", "stone_wall", "permarock_wall", "mangrove",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "tree", "open_sea", "endless_lava", "orcish_idol",
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "",
@@ -1750,7 +1750,7 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
     set_terrain_changed(p);
 }
 

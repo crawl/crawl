@@ -36,7 +36,7 @@ static dungeon_feature_type _swamp_feature_for_height(int height)
         height > 0 ? DNGN_SHALLOW_WATER :
         height > -9 ? DNGN_FLOOR :
         height > -10 ? DNGN_SHALLOW_WATER :
-        DNGN_SWAMP_TREE;
+        DNGN_MANGROVE;
 }
 
 static void _swamp_apply_features(int margin)
@@ -49,7 +49,7 @@ static void _swamp_apply_features(int margin)
             if (c.x < margin || c.y < margin || c.x >= GXM - margin
                 || c.y >= GYM - margin)
             {
-                grd(c) = DNGN_SWAMP_TREE;
+                grd(c) = DNGN_MANGROVE;
             }
             else
                grd(c) = _swamp_feature_for_height(dgn_height_at(c));
@@ -70,5 +70,5 @@ void dgn_build_swamp_level()
     env.heightmap.reset(NULL);
 
     dgn_place_stone_stairs();
-    process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true, DNGN_SWAMP_TREE);
+    process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true, DNGN_MANGROVE);
 }
