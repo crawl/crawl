@@ -150,9 +150,9 @@ In this lesson you're going to learn about gods and how to use their powers.
 %%%%
 tutorial5 secret_door
 
-There's got to be an entrance to the temple! Try searching
-the glass walls for secret doors with <w>$cmd[CMD_REST]</w><localtiles> or
-by <w>mouseclick</w> in the command panel</localtiles>.
+There's got to be an entrance to the temple! Try walking around the glass
+walls and searching for secret doors with <w>$cmd[CMD_REST]</w><localtiles>
+or by <w>mouseclick</w> in the command panel</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
