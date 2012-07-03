@@ -14,7 +14,7 @@ W tej lekcji nauczysz się o bogach, i jak używać ich mocy.
 %%%%
 tutorial5 secret_door
 
-Gdzieś tu musi być wejście do świątyni! Spróbuj obszukać szklane ściany aby
+Gdzieś tu musi być wejście do świątyni! Spróbuj obejść i obszukać szklane ściany aby
 znaleźć tajne przejśćie wciskając <w>$cmd[CMD_REST]</w><localtiles> lub
 <w>klikając myszą</w> w panelu czynności</localtiles>.
 %%%%
