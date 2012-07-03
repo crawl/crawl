@@ -7098,6 +7098,11 @@ bool player::has_usable_offhand() const
 
 bool player::has_usable_tentacle() const
 {
+    return usable_tentacles();
+}
+
+int player::usable_tentacles() const
+{
     int numtentacle = has_usable_tentacles();
 
     if (numtentacle == 0)
@@ -7105,16 +7110,20 @@ bool player::has_usable_tentacle() const
 
     int free_tentacles = numtentacle - num_constricting();
 
+    if (you.shield())
+        free_tentacles -= 2;
+
     const item_def* wp = slot_item(EQ_WEAPON);
     if (wp)
     {
-        if (hands_reqd(*wp, body_size()) == HANDS_TWO)
-            free_tentacles -= 2;
-        else
-            free_tentacles--;
+        hands_reqd_type hands_req = hands_reqd(*wp, body_size());
+        if (hands_req == HANDS_HALF && you.shield())
+            hands_req = HANDS_ONE;
+
+        free_tentacles -= hands_req + 2;
     }
 
-    return (free_tentacles > 0);
+    return free_tentacles;
 }
 
 int player::has_pseudopods(bool allow_tran) const
@@ -7669,9 +7678,19 @@ static std::string _constriction_description()
     std::string cinfo = "";
     std::vector<std::string> c_name;
 
+    const int num_free_tentacles = you.usable_tentacles();
+    if (num_free_tentacles)
+    {
+        cinfo += make_stringf("You have %d tentacle%s available for constriction.",
+                              num_free_tentacles,
+                              num_free_tentacles > 1 ? "s" : "");
+    }
     // name of what this monster is constricted by, if any
     if (you.is_constricted())
     {
+        if (!cinfo.empty())
+            cinfo += "\n";
+
         cinfo += make_stringf("You are being %s by %s.",
                       you.held == HELD_MONSTER ? "held" : "constricted",
                       monster_by_mid(you.constricted_by)->name(DESC_A).c_str());
@@ -7687,7 +7706,10 @@ static std::string _constriction_description()
             c_name.push_back(whom->name(DESC_A));
         }
 
-        cinfo += "\nYou are constricting ";
+        if (!cinfo.empty())
+            cinfo += "\n";
+
+        cinfo += "You are constricting ";
         cinfo += comma_separated_line(c_name.begin(), c_name.end());
         cinfo += ".";
     }
