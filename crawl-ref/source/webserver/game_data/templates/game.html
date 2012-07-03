@@ -5,6 +5,7 @@
   require(['jquery', 'client'], function ($, client) {
     client.inhibit_messages();
     require(['game/game'], function (game) {
+      $(document).trigger("game_preinit");
       $(document).trigger("game_init");
       client.uninhibit_messages();
     });
