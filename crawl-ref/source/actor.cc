@@ -417,8 +417,7 @@ void actor::start_constricting(actor &whom, int dur)
 
     (*constricting)[whom.mid] = dur;
     whom.constricted_by = mid;
-    // TODO: could be HELD_MONSTER
-    whom.held = HELD_CONSTRICTED;
+    whom.held = constriction_damage() ? HELD_CONSTRICTED : HELD_MONSTER;
 }
 
 int actor::num_constricting() const
@@ -474,7 +473,7 @@ void actor::handle_constriction()
     // is too error-prone.
     clear_far_constrictions();
 
-    if (!constricting)
+    if (!constricting || !constriction_damage())
         return;
 
     actor::constricting_t::iterator i = constricting->begin();

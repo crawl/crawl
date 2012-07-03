@@ -7672,9 +7672,9 @@ static std::string _constriction_description()
     // name of what this monster is constricted by, if any
     if (you.is_constricted())
     {
-        cinfo += ("You are being constricted by "
-                  + monster_by_mid(you.constricted_by)->name(DESC_A)
-                  + ".");
+        cinfo += make_stringf("You are being %s by %s.",
+                      you.held == HELD_MONSTER ? "held" : "constricted",
+                      monster_by_mid(you.constricted_by)->name(DESC_A).c_str());
     }
 
     if (you.constricting && !you.constricting->empty())
