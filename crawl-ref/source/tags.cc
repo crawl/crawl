@@ -587,7 +587,7 @@ void unmarshallMap(reader& th, map& data,
 }
 
 template<typename T>
-static T unmarshall_long_as(reader& th)
+static T unmarshall_int_as(reader& th)
 {
     return static_cast<T>(unmarshallInt(th));
 }
@@ -735,12 +735,12 @@ static void _unmarshall_constriction(reader &th, actor *who)
     }
 
 #endif
-    who->held = unmarshall_long_as<held_type>(th);
+    who->held = unmarshall_int_as<held_type>(th);
     who->constricted_by = unmarshallInt(th);
     who->escape_attempts = unmarshallInt(th);
 
     actor::constricting_t cmap;
-    unmarshallMap(th, cmap, unmarshall_long_as<mid_t>, unmarshallInt);
+    unmarshallMap(th, cmap, unmarshall_int_as<mid_t>, unmarshallInt);
 
     if (cmap.size() == 0)
         who->constricting = 0;
@@ -2435,12 +2435,12 @@ static void tag_read_you_dungeon(reader &th)
 #endif
 
     unmarshallMap(th, stair_level,
-                  unmarshall_long_as<branch_type>,
+                  unmarshall_int_as<branch_type>,
                   unmarshall_level_id_set);
     unmarshallMap(th, shops_present,
-                  unmarshall_level_pos, unmarshall_long_as<shop_type>);
+                  unmarshall_level_pos, unmarshall_int_as<shop_type>);
     unmarshallMap(th, altars_present,
-                  unmarshall_level_pos, unmarshall_long_as<god_type>);
+                  unmarshall_level_pos, unmarshall_int_as<god_type>);
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() < TAG_MINOR_UNIFIED_PORTALS)
     {
@@ -2478,7 +2478,7 @@ static void tag_read_you_dungeon(reader &th)
     else
 #endif
     unmarshallMap(th, portals_present,
-                  unmarshall_level_pos, unmarshall_long_as<branch_type>);
+                  unmarshall_level_pos, unmarshall_int_as<branch_type>);
     unmarshallMap(th, portal_notes,
                   unmarshall_level_pos, unmarshallStringNoMax);
 #if TAG_MAJOR_VERSION == 33
