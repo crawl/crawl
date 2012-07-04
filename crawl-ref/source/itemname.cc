@@ -2176,7 +2176,8 @@ void check_item_knowledge(bool unknown_items)
         all_items_known = false;
 
     else
-    {// runes are shown only if known
+    {
+        // runes are shown only if known
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
             if (you.runes[i])
             {
@@ -2295,12 +2296,11 @@ void check_item_knowledge(bool unknown_items)
     } //for the menu to display the correct +/- for defaults the menu needs to be reopened
     while (!unknown_items && menu.is_set(MF_EASY_EXIT)); //hack
 
-
-    for (std::vector<const item_def*>::iterator iter = items.begin();
-         iter != items.end(); ++iter)
-    {
+    std::vector<const item_def*>::iterator iter;
+    for (iter = items.begin(); iter != items.end(); ++iter)
          delete *iter;
-    }
+    for (iter = items2.begin(); iter != items2.end(); ++iter)
+         delete *iter;
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
         check_item_knowledge(!unknown_items);
