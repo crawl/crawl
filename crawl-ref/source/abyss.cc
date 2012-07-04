@@ -65,6 +65,9 @@ static std::list<monster*> displaced_monsters;
 static void abyss_area_shift(void);
 static void _push_items(void);
 
+// The feature chosen last turn, ignoring terrain modification.
+static feature_grid _previous_abyss_feature;
+
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.  Returns the chosen location, or INVALID_COORD if it
 // could not be placed.
@@ -893,6 +896,11 @@ static void _abyss_shift_level_contents_around_player(
 
     abyssal_state.major_coord += (source_centre - ABYSS_CENTRE);
 
+    // We could shift around the remembered previous features, but for now
+    // we'll just recompute them; shifts should be infrequent enough that
+    // this isn't a big CPU hit.
+    recompute_saved_abyss_features();
+
     ASSERT(radius >= LOS_RADIUS);
 #ifdef WIZARD
     // This should only really happen due to wizmode blink/movement.
@@ -1017,9 +1025,12 @@ static bool _abyss_teleport_within_level()
     return (false);
 }
 
-static dungeon_feature_type _abyss_grid(double x, double y, double depth,
+static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
+    double x = (p.x + abyssal_state.major_coord.x);
+    double y = (p.y + abyssal_state.major_coord.y);
+
     const dungeon_feature_type terrain_elements[] =
     {
         DNGN_ROCK_WALL,
@@ -1088,11 +1099,12 @@ static dungeon_feature_type _abyss_grid(double x, double y, double depth,
         cloud_lifetime = 0;
     }
 
+    _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }
 
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
-                                 bool morph = false, double old_depth = 0.0)
+                                 bool morph = false)
 {
     if (one_chance_in(3) && !morph)
         _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
@@ -1106,7 +1118,6 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
 
-    const coord_def major_coord = abyssal_state.major_coord;
     const double abyss_depth = abyssal_state.depth;
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
@@ -1131,17 +1142,13 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (grd(p) != DNGN_UNSEEN && !morph)
             continue;
 
-        double x = (p.x + major_coord.x);
-        double y = (p.y + major_coord.y);
-
         cloud_type cloud = CLOUD_NONE;
         int cloud_lifetime = 0;
 
         // What should have been there previously?  It might not be because
         // of external changes such as digging.
-        const dungeon_feature_type oldfeat = _abyss_grid(x, y, old_depth,
-                                                         cloud, cloud_lifetime);
-        const dungeon_feature_type feat = _abyss_grid(x, y, abyss_depth,
+        const dungeon_feature_type oldfeat = _previous_abyss_feature[p.x][p.y];
+        const dungeon_feature_type feat = _abyss_grid(p, abyss_depth,
                                                       cloud, cloud_lifetime);
 
         // If the selected grid is already there, *or* if we're morphing and
@@ -1180,6 +1187,19 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
          _abyss_check_place_feat(p, 10000, NULL, NULL,
                                  DNGN_STONE_ARCH,
                                  abyss_genlevel_mask));
+    }
+}
+
+void recompute_saved_abyss_features()
+{
+    // Junk variables for unused out-parameters.
+    cloud_type cloud = CLOUD_NONE;
+    int cloud_lifetime = 0;
+
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        const coord_def p = *ri;
+        _abyss_grid(p, abyssal_state.depth, cloud, cloud_lifetime);
     }
 }
 
@@ -1266,6 +1286,8 @@ static void _initialize_abyss_state()
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
     abyssal_state.phase = 0.0;
     abyssal_state.depth = 0.0;
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        _previous_abyss_feature[ri->x][ri->y] = NUM_FEATURES;
 }
 
 static colour_t _roll_abyss_floor_colour()
@@ -1410,7 +1432,6 @@ void abyss_morph(double duration)
         delta_t /= 2.0;
 
     const double theta = abyssal_state.phase;
-    const double old_depth = abyssal_state.depth;
 
     // Up to 3 times the old rate of change, as low as 1/5, with an average of
     // 89%.  Period of 2*pi, so from 90 to 314 turns depending on abyss speed
@@ -1426,7 +1447,7 @@ void abyss_morph(double duration)
 
     map_mask abyss_genlevel_mask(1);
     dgn_erase_unused_vault_placements();
-    _abyss_apply_terrain(abyss_genlevel_mask, true, old_depth);
+    _abyss_apply_terrain(abyss_genlevel_mask, true);
     _place_displaced_monsters();
     _push_items();
     los_changed();
