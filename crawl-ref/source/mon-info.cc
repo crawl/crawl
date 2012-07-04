@@ -720,8 +720,8 @@ monster_info::monster_info(const monster* m, int milev)
             if (constrictee)
             {
                 constricting_name.push_back(
-                                m->constriction_damage() ? "constricting "
-                                                         : "holding "
+                                (m->constriction_damage() ? "constricting "
+                                                          : "holding ")
                                 + constrictee->name(DESC_A, true));
             }
         }
