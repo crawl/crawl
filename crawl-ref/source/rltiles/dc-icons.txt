@@ -104,3 +104,22 @@ mdam_moderately_damaged MDAM_MODERATELY_DAMAGED
 mdam_heavily_damaged MDAM_HEAVILY_DAMAGED
 mdam_severely_damaged MDAM_SEVERELY_DAMAGED
 mdam_almost_dead MDAM_ALMOST_DEAD
+
+%shrink 0
+travel_path_from1 TRAVEL_PATH_FROM
+travel_path_from2
+travel_path_from3
+travel_path_from4
+travel_path_from5
+travel_path_from6
+travel_path_from7
+travel_path_from8
+
+travel_path_to1 TRAVEL_PATH_TO
+travel_path_to2
+travel_path_to3
+travel_path_to4
+travel_path_to5
+travel_path_to6
+travel_path_to7
+travel_path_to8

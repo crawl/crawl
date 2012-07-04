@@ -19,10 +19,12 @@
 #include "show.h"
 #include "state.h"
 #include "terrain.h"
+#include "travel.h"
 #include "viewchar.h"
 
 static
-unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
+unsigned short _cell_feat_show_colour(const map_cell& cell,
+                                      const coord_def& loc, bool coloured)
 {
     dungeon_feature_type feat = cell.feat();
     unsigned short colour = BLACK;
@@ -119,6 +121,10 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_SUPPRESSED)
             colour = LIGHTGREEN;
+        else if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+        {
+            colour |= COLFLAG_REVERSE;
+        }
     }
     return (colour);
 }
@@ -308,7 +314,7 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
         show = cell.feat();
 
         if (!gloom)
-            g.col = _cell_feat_show_colour(cell, coloured);
+            g.col = _cell_feat_show_colour(cell, loc, coloured);
 
         if (cell.item())
         {
@@ -334,7 +340,7 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
                 if (!feat_is_water(cell.feat()))
                     g.col = eitem->colour;
                 else
-                    g.col = _cell_feat_show_colour(cell, coloured);
+                    g.col = _cell_feat_show_colour(cell, loc, coloured);
 
                 // monster(mimic)-owned items have link = NON_ITEM+1+midx
                 if (cell.flags & MAP_MORE_ITEMS)

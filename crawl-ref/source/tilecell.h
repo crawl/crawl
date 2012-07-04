@@ -34,6 +34,7 @@ struct packed_cell
     uint8_t orb_glow;
     char blood_rotation;
     bool old_blood;
+    uint8_t travel_trail;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -42,7 +43,7 @@ struct packed_cell
                     is_silenced(false), is_suppressed(false), halo(HALO_NONE),
                     is_moldy(false), glowing_mold(false), is_sanctuary(false),
                     is_liquefied(false), mangrove_water(false), orb_glow(0),
-                    blood_rotation(0), old_blood(false) {}
+                    blood_rotation(0), old_blood(false), travel_trail(0) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -57,7 +58,8 @@ struct packed_cell
                                         mangrove_water(c->mangrove_water),
                                         orb_glow(c->orb_glow),
                                         blood_rotation(c->blood_rotation),
-                                        old_blood(c->old_blood) {}
+                                        old_blood(c->old_blood),
+                                        travel_trail(c->travel_trail) {}
 
     void clear();
 };

@@ -753,6 +753,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
             || next_pc.blood_rotation != current_pc.blood_rotation)
             write_message("bloodrot:%d,", next_pc.blood_rotation);
 
+        if ((force_full && next_pc.travel_trail)
+            || next_pc.travel_trail != current_pc.travel_trail)
+            write_message("tt:%d,", next_pc.travel_trail);
+
         if (_needs_flavour(next_pc) &&
             ((next_pc.flv.floor != current_pc.flv.floor)
              || (next_pc.flv.special != current_pc.flv.special)

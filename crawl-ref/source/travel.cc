@@ -4399,3 +4399,24 @@ void clear_level_target()
     level_target.clear();
     trans_travel_dest.clear();
 }
+
+void clear_travel_trail()
+{
+#ifdef USE_TILE_WEB
+    for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
+    {
+        tiles.update_minimap(env.travel_trail[i]);
+    }
+#endif
+    env.travel_trail.clear();
+}
+
+int travel_trail_index(const coord_def& gc)
+{
+    unsigned int idx = std::find(env.travel_trail.begin(), env.travel_trail.end(), gc)
+        - env.travel_trail.begin();
+    if (idx < env.travel_trail.size())
+        return idx;
+    else
+        return -1;
+}

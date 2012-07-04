@@ -180,6 +180,9 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
     if (type == DELAY_WEAPON_SWAP)
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
+    if (delay_is_run(type))
+        clear_travel_trail();
+
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
     {

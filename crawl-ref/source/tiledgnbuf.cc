@@ -438,6 +438,17 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(type, x, y);
     }
 
+    if (cell.travel_trail & 0xF)
+    {
+        m_buf_icons.add(TILEI_TRAVEL_PATH_FROM +
+                        (cell.travel_trail & 0xF) - 1, x, y);
+    }
+    if (cell.travel_trail & 0xF0)
+    {
+        m_buf_icons.add(TILEI_TRAVEL_PATH_TO +
+                        ((cell.travel_trail & 0xF0) >> 4) - 1, x, y);
+    }
+
     if (fg & TILE_FLAG_MDAM_MASK)
     {
         tileidx_t mdam_flag = fg & TILE_FLAG_MDAM_MASK;

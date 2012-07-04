@@ -1132,6 +1132,19 @@ static bool _top_item_is_corpse(const map_cell& mc)
             && item->sub_type == CORPSE_BODY);
 }
 
+static uint8_t _get_direction_index(const coord_def& delta)
+{
+    if (delta.x ==  0 && delta.y == -1) return 1;
+    if (delta.x ==  1 && delta.y == -1) return 2;
+    if (delta.x ==  1 && delta.y ==  0) return 3;
+    if (delta.x ==  1 && delta.y ==  1) return 4;
+    if (delta.x ==  0 && delta.y ==  1) return 5;
+    if (delta.x == -1 && delta.y ==  1) return 6;
+    if (delta.x == -1 && delta.y ==  0) return 7;
+    if (delta.x == -1 && delta.y == -1) return 8;
+    return 0;
+}
+
 void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 {
     if (is_excluded(gc))
@@ -1210,6 +1223,24 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
+
+    if (Options.show_travel_trail)
+    {
+        int tt_idx = travel_trail_index(gc);
+        if (tt_idx >= 0 && tt_idx < (int) env.travel_trail.size() - 1)
+        {
+            if (tt_idx > 0)
+            {
+                coord_def delta = gc - env.travel_trail[tt_idx-1];
+                cell.travel_trail = _get_direction_index(delta);
+            }
+            if (tt_idx < (int) env.travel_trail.size() - 1)
+            {
+                coord_def delta = env.travel_trail[tt_idx+1] - gc;
+                cell.travel_trail |= _get_direction_index(delta) << 4;
+            }
+        }
+    }
 }
 
 void tile_clear_map(const coord_def& gc)
