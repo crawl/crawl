@@ -322,8 +322,8 @@ ENDMAP
 # Swamp ending vaults
 #
 # They come in two flavours: normal and themed. The first three are normal and
-# use regular swamp monsters. The other four have special themes. Each group has
-# a total weight of 12.
+# use regular swamp monsters. The other four have special themes, and are less
+# common.
 ###############################################################################
 
 ###############################################################################
@@ -331,7 +331,7 @@ ENDMAP
 #
 NAME:    swamp
 PLACE:   Swamp:$
-WEIGHT:  4
+WEIGHT:  20
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon / nothing
@@ -369,7 +369,7 @@ ENDMAP
 #
 NAME:    swamp_alternative
 PLACE:   Swamp:$
-WEIGHT:  4
+WEIGHT:  20
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake
@@ -405,7 +405,7 @@ ENDMAP
 #
 NAME:    swamp_old_school
 PLACE:   Swamp:$
-WEIGHT:  4
+WEIGHT:  20
 TAGS:    no_pool_fixup
 ORIENT:  southeast
 MONS:    swamp dragon, hydra, swamp drake
@@ -451,7 +451,6 @@ ENDMAP
 # Swamp:5 alternative (due)
 NAME:    swamp_fiery
 PLACE:   Swamp:$
-WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
@@ -491,7 +490,6 @@ ENDMAP
 #
 NAME:    swamp_icy
 PLACE:   Swamp:$
-WEIGHT:  3
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  southeast
 SHUFFLE: OR
@@ -544,7 +542,6 @@ ENDMAP
 #
 NAME:    swamp_pestilence
 PLACE:   Swamp:$
-WEIGHT:  3
 TAGS:    no_pool_fixup
 ORIENT:  southeast
 MONS:    spectral swamp dragon / spectral hydra
@@ -603,7 +600,6 @@ ENDMAP
 # occupied by demons, beasts, messes of flesh, and other vile tricks.
 NAME:    swamp_vile
 PLACE:   Swamp:$
-WEIGHT:  3
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  southwest
 MONS:    rotting hulk / ugly thing, large abomination / very ugly thing, \
