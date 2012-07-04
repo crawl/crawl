@@ -193,6 +193,8 @@ public:
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
 
+    bool        show_travel_trail;
+
     int         arena_delay;
     bool        arena_dump_msgs;
     bool        arena_dump_msgs_all;

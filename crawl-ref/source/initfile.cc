@@ -806,6 +806,7 @@ void game_options::reset_options()
 
     travel_delay           = 20;
     explore_delay          = -1;
+    show_travel_trail       = false;
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
@@ -2807,6 +2808,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (explore_delay > 2000)
             explore_delay = 2000;
     }
+    else BOOL_OPTION(show_travel_trail);
     else if (key == "level_map_cursor_step")
     {
         level_map_cursor_step = atoi(field.c_str());

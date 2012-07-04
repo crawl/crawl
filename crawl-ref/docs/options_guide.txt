@@ -73,7 +73,7 @@ The contents of this text are:
                 mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
-                msg_condense_repeats, msg_condense_short
+                msg_condense_repeats, msg_condense_short, show_travel_trail
 4-k     Missiles.
                 fire_items_start, fire_order
 4-l     Message Channels.
@@ -1537,6 +1537,10 @@ msg_condense_repeats = true
 msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
+
+show_travel_trail = true
+        When set to true, the path taken during autoexplore or travel
+        will be highlighted.
 
 show_no_ctele = true
         If set, -cTele will be displayed in the status light area when

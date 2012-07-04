@@ -4339,6 +4339,11 @@ static void _move_player(coord_def move)
                 random_range(3, 10), &you, 0, ETC_RANDOM);
         }
 
+        if (delay_is_run(current_delay_action()) && env.travel_trail.empty())
+            env.travel_trail.push_back(you.pos());
+        else if (!delay_is_run(current_delay_action()))
+            clear_travel_trail();
+
         you.time_taken *= player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
 
@@ -4352,6 +4357,9 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         move_player_to_grid(targ, true, false);
+
+        if (delay_is_run(current_delay_action()))
+            env.travel_trail.push_back(you.pos());
 
         you.walking = move.abs();
         you.prev_move = move;

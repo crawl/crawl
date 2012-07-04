@@ -235,6 +235,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # msg_condense_short     = false
 # show_no_ctele          = false
 # skill_focus            = false
+# show_travel_trail       = true
 
 #####          Colours (messages and menus) #####
 #

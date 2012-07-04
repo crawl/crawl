@@ -688,6 +688,17 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 this.draw_icon(icons.CURSOR3, x, y);
             }
 
+            if (cell.tt & 0xF)
+            {
+                this.draw_icon(icons.TRAVEL_PATH_FROM +
+                               (cell.tt & 0xF) - 1, x, y);
+            }
+            if (cell.tt & 0xF0)
+            {
+                this.draw_icon(icons.TRAVEL_PATH_TO +
+                               ((cell.tt & 0xF0) >> 4) - 1, x, y);
+            }
+
             if (fg.MDAM_LIGHT)
                 this.draw_icon(icons.MDAM_LIGHTLY_DAMAGED, x, y);
             else if (fg.MDAM_MOD)

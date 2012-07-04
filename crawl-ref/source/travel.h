@@ -622,4 +622,7 @@ int click_travel(const coord_def &gc, bool force);
 bool check_for_interesting_features();
 void clear_level_target();
 
+void clear_travel_trail();
+int travel_trail_index(const coord_def& gc);
+
 #endif // TRAVEL_H

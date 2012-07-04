@@ -50,6 +50,8 @@ struct crawl_environment
     FixedArray< map_cell, GXM, GYM >         map_shadow;
     std::set<coord_def> visible;
 
+    std::vector<coord_def>                   travel_trail;
+
     // indexed by grid coords
 #ifdef USE_TILE
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;

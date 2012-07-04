@@ -1199,6 +1199,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.position.reset();
     }
 
+    clear_travel_trail();
+
 #ifdef USE_TILE
     if (load_mode != LOAD_VISITOR)
     {
