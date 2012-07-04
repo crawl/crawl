@@ -708,7 +708,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-    bool attempt_escape();
+    bool attempt_escape(int attempts = 1);
     int usable_tentacles() const;
     bool has_usable_tentacle() const;
 

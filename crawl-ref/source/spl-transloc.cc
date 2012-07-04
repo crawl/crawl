@@ -196,6 +196,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             }
         }
 
+        if (!you.attempt_escape(2))
+            return false;
+
         if (pre_msg)
             mpr(pre_msg->c_str());
 
@@ -273,7 +276,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         cast_semi_controlled_blink(100, false);
         maybe_id_ring_TC();
     }
-    else
+    else if (you.attempt_escape(2))
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
@@ -995,7 +998,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     fail_check();
 
     // Note: this can silently fail, eating the blink -- WHY?
-    if (_quadrant_blink(bmove.delta, pow))
+    if (you.attempt_escape(2) && _quadrant_blink(bmove.delta, pow))
     {
         // Controlled blink causes glowing.
         contaminate_player(1, true);
