@@ -664,7 +664,6 @@ mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
 greater_mummy MONS_GREATER_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
-bog_body MONS_BOG_BODY
 
 ## Nagas ('N')
 %sdir mon/unique
@@ -902,16 +901,18 @@ skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
-%sdir mon/unique
-murray MONS_MURRAY
+bog_body MONS_BOG_BODY
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
+%sdir mon/unique
+murray MONS_MURRAY
+%sdir mon/vault
 ## From a special vault (ancient_champions.des)
-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
+ancient_champion MONS_ANCIENT_CHAMPION
 
 %include dc-zombie.txt
 
