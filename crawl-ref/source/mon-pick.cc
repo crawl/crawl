@@ -1333,6 +1333,10 @@ int mons_swamp_level(monster_type mcls)
 {
     switch (mcls)
     {
+    case MONS_PLANT:
+    case MONS_FUNGUS:
+        return 1;
+
     case MONS_BAT:
     case MONS_GIANT_FROG:
     case MONS_GIANT_AMOEBA:
@@ -1346,16 +1350,14 @@ int mons_swamp_level(monster_type mcls)
     case MONS_ALLIGATOR:
         return 2;
 
-    case MONS_FUNGUS:
     case MONS_NECROPHAGE:
-    case MONS_PLANT:
     case MONS_ADDER:
     case MONS_BUTTERFLY:
     case MONS_CROCODILE:
     case MONS_VAMPIRE_MOSQUITO:
     case MONS_AGATE_SNAIL:
     case MONS_HYDRA:
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         return 3;
 
     case MONS_WATER_MOCCASIN:
@@ -1386,17 +1388,14 @@ int mons_swamp_rare(monster_type mcls)
 {
     switch (mcls)
     {
-    case MONS_VAMPIRE_MOSQUITO:
-        return 250;
-
-    case MONS_PLANT:
-        return 200;
-
-    case MONS_GIANT_FROG:
+    case MONS_SPINY_FROG:
     case MONS_ALLIGATOR:
+    case MONS_PLANT:
         return 150;
 
-    case MONS_BAT:
+    case MONS_VAMPIRE_MOSQUITO:
+        return 125;
+
     case MONS_FUNGUS:
         return 99;
 
@@ -1406,35 +1405,30 @@ int mons_swamp_rare(monster_type mcls)
     case MONS_HYDRA:
         return 70;
 
-    case MONS_RAT:
     case MONS_GIANT_LEECH:
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         return 61;
 
     case MONS_SLIME_CREATURE:
         return 54;
 
-    case MONS_ADDER:
+    case MONS_WATER_MOCCASIN:
         return 52;
 
     case MONS_INSUBSTANTIAL_WISP:
         return 43;
 
-    case MONS_WATER_MOCCASIN:
+    case MONS_ADDER:
         return 33;
 
     case MONS_RED_WASP:
     case MONS_SWAMP_DRAGON:
-    case MONS_SPINY_FROG:
+    case MONS_GIANT_FROG:
         return 30;
 
     case MONS_JELLY:
-    case MONS_BUTTERFLY:
     case MONS_CROCODILE:
         return 25;
-
-    case MONS_WORM:
-        return 20;
 
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
@@ -1456,6 +1450,10 @@ int mons_swamp_rare(monster_type mcls)
     case MONS_GIANT_SLUG:
     case MONS_AGATE_SNAIL:
     case MONS_TENTACLED_MONSTROSITY:
+    case MONS_RAT:
+    case MONS_WORM:
+    case MONS_BUTTERFLY:
+    case MONS_BAT:
         return 10;
 
     default:

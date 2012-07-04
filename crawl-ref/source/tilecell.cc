@@ -31,7 +31,7 @@ void packed_cell::clear()
     glowing_mold     = false;
     is_sanctuary     = false;
     is_liquefied     = false;
-    swamp_tree_water = false;
+    mangrove_water = false;
     orb_glow         = 0;
     blood_rotation   = 0;
     old_blood        = false;
@@ -50,7 +50,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (glowing_mold != other.glowing_mold) return false;
     if (is_sanctuary != other.is_sanctuary) return false;
     if (is_liquefied != other.is_liquefied) return false;
-    if (swamp_tree_water != other.swamp_tree_water) return false;
+    if (mangrove_water != other.mangrove_water) return false;
     if (orb_glow != other.orb_glow) return false;
     if (blood_rotation != other.blood_rotation) return false;
     if (old_blood != other.old_blood) return false;
@@ -280,7 +280,7 @@ static bool _is_seen_shallow(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return (feat == DNGN_SHALLOW_WATER || feat == DNGN_SWAMP_TREE);
+    return (feat == DNGN_SHALLOW_WATER || feat == DNGN_MANGROVE);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
@@ -290,7 +290,7 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
     // Treat trees in Swamp as though they were shallow water.
-    if (cell->swamp_tree_water && feat == DNGN_TREE)
+    if (cell->mangrove_water && feat == DNGN_TREE)
         feat = DNGN_SHALLOW_WATER;
 
     if (!feat_is_water(feat) && !feat_is_lava(feat) || env.grid_colours(gc))

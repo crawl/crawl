@@ -24,7 +24,7 @@ tree1_dead DNGN_TREE_DEAD
 tree2_dead
 
 %weight 10
-mangrove1 DNGN_SWAMP_TREE
+mangrove1 DNGN_MANGROVE
 %weight 8
 mangrove2
 %weight 5

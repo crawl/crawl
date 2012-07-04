@@ -1182,7 +1182,12 @@ enum dungeon_feature_type
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
+#if TAG_MAJOR_VERSION > 33
+    DNGN_MANGROVE,
+        DNGN_MAXOPAQUE = DNGN_MANGROVE,
+#else
         DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
+#endif
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
         // Lowest grid value which can be seen through.
         DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
@@ -1191,9 +1196,13 @@ enum dungeon_feature_type
         DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
     DNGN_GRATE,
     DNGN_TREE,
-    DNGN_SWAMP_TREE,
+#if TAG_MAJOR_VERSION == 33
+    DNGN_MANGROVE,
         // Highest grid value which can't be reached through.
-        DNGN_MAX_NONREACH = DNGN_SWAMP_TREE,
+        DNGN_MAX_NONREACH = DNGN_MANGROVE,
+#else
+        DNGN_MAX_NONREACH = DNGN_TREE,
+#endif
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
@@ -2299,7 +2308,7 @@ enum monster_type                      // menv[].type
     MONS_GHOUL,
     MONS_FLAMING_CORPSE,
     MONS_MUMMY,
-    MONS_BOG_MUMMY,
+    MONS_BOG_BODY,
     MONS_GUARDIAN_MUMMY,
     MONS_GREATER_MUMMY,
     MONS_MUMMY_PRIEST,

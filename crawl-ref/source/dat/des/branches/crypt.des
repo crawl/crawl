@@ -1184,7 +1184,7 @@ MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
         sword | battleaxe | war axe | broad axe . chain mail w:10 | splint mail \
         w:5 | plate armour w:1
 MONS:   guardian mummy
-MONS:   bog mummy / mummy / guardian mummy
+MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
 KFEAT:  Q = closed_door

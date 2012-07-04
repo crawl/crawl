@@ -70,7 +70,7 @@ const Branch branches[NUM_BRANCHES] = {
       'L', false, 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 15,
-      BFLAG_ISLANDED, 0,
+      0, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       NULL,
