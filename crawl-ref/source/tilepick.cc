@@ -1433,8 +1433,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GREATER_MUMMY;
     case MONS_MUMMY_PRIEST:
         return TILEP_MONS_MUMMY_PRIEST;
-    case MONS_BOG_MUMMY:
-        return TILEP_MONS_BOG_MUMMY;
+    case MONS_BOG_BODY:
+        return TILEP_MONS_BOG_BODY;
 
     // nagas ('N')
     case MONS_NAGA:

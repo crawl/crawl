@@ -2535,7 +2535,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         if (one_chance_in(8))
         {
             // A hacky way of making these rot regularly.

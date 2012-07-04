@@ -2299,7 +2299,7 @@ enum monster_type                      // menv[].type
     MONS_GHOUL,
     MONS_FLAMING_CORPSE,
     MONS_MUMMY,
-    MONS_BOG_MUMMY,
+    MONS_BOG_BODY,
     MONS_GUARDIAN_MUMMY,
     MONS_GREATER_MUMMY,
     MONS_MUMMY_PRIEST,
