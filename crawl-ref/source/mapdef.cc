@@ -2159,6 +2159,7 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+    feat_renames.clear();
 }
 
 bool map_def::map_already_used() const
@@ -2296,6 +2297,7 @@ void map_def::strip()
     validate.clear();
     veto.clear();
     epilogue.clear();
+    feat_renames.clear();
 }
 
 void map_def::load()

@@ -10,7 +10,7 @@ function dis_setup(e)
    e.lflags("no_tele_control")
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
-   dgn.set_feature_desc_short("granite statue", "iron statue")
+   e.set_feature_name("granite_statue", "iron statue")
 end
 
 function dis_rune(e)
@@ -27,8 +27,8 @@ function geh_setup(e)
    e.lfloorcol("lightgrey")
    e.lfloortile("floor_pebble_darkgray")
    e.colour("v = red")
-   dgn.set_feature_desc_short("floor", "Ashen ground")
-   dgn.set_feature_desc_short("metal wall", "tempered metal wall")
+   e.set_feature_name("floor", "Ashen ground")
+   e.set_feature_name("metal_wall", "tempered metal wall")
 end
 
 function coc_setup(e)
@@ -41,9 +41,9 @@ function coc_setup(e)
    e.lfloorcol("white")
    e.lfloortile("floor_ice")
    e.colour("c = lightblue")
-   dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-   dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-   dgn.set_feature_desc_short("floor", "Frost-covered floor")
+   e.set_feature_name("rock_wall", "ice-covered rock wall")
+   e.set_feature_name("stone_wall", "ice-covered stone wall")
+   e.set_feature_name("floor", "Frost-covered floor")
 end
 
 function tar_setup(e)

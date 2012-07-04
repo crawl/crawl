@@ -243,7 +243,7 @@ bool melee_attack::handle_phase_attempted()
             // Don't waste a turn hitting a rock worm when you know it
             // will do nothing.
             mprf("The %s protects %s from harm.",
-                 raw_feature_description(grd(defender->pos())).c_str(),
+                 raw_feature_description(defender->pos()).c_str(),
                  defender->name(DESC_THE).c_str());
             cancel_attack = true;
             return (false);
@@ -322,7 +322,7 @@ bool melee_attack::handle_phase_attempted()
         && mons_wall_shielded(defender->as_monster())
         && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
     {
-        std::string feat_name = raw_feature_description(grd(defender->pos()));
+        std::string feat_name = raw_feature_description(defender->pos());
 
         if (attacker->is_player())
         {

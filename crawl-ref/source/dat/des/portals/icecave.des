@@ -108,15 +108,12 @@ function ice_cave_appearance(e)
   e.tile("< = dngn_portal_ice_cave")
 
   -- Alter short feature descriptions for all ice cave destination vaults.
-  dgn.set_feature_desc_short("rock wall", "ice covered rock wall")
-  dgn.set_feature_desc_short("gate leading back out of here",
+  e.set_feature_name("rock_wall", "ice covered rock wall")
+  e.set_feature_name("exit_portal_vault",
                              "ice covered gate leading back out of here")
-  dgn.set_feature_desc_short("empty arch of ancient stone",
-                             "ice choked empty arch of ancient stone")
-  dgn.set_feature_desc_short("Some shallow water",
-                             "Some ice crusted shallow water")
-  dgn.set_feature_desc_short("Some deep water",
-                             "Some ice crusted deep water")
+  e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
+  e.set_feature_name("shallow_water", "Some ice crusted shallow water")
+  e.set_feature_name("deep_water", "Some ice crusted deep water")
 end
 }}
 

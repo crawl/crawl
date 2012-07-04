@@ -1025,6 +1025,26 @@ static int lua_dgn_set_border_fill_type(lua_State *ls)
     return (0);
 }
 
+static int lua_dgn_set_feature_name(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) != 3)
+        luaL_error(ls, "set_feature_name takes a feature and the new name.");
+
+    std::string feat_string = luaL_checkstring(ls, 2);
+    dungeon_feature_type feat_type = dungeon_feature_by_name(feat_string);
+
+    if (feat_type == DNGN_UNSEEN)
+    {
+        luaL_error(ls, ("unknown feature '" + feat_string + "'.").c_str());
+        return 0;
+    }
+
+    map->feat_renames[feat_type] = luaL_checkstring(ls, 3);
+
+    return (0);
+}
+
 static int dgn_floor_halo(lua_State *ls)
 {
     std::string error = "";
@@ -1840,6 +1860,7 @@ const struct luaL_reg dgn_dlib[] =
 { "change_rock_colour",  dgn_change_rock_colour },
 { "set_branch_epilogue", lua_dgn_set_branch_epilogue },
 { "set_border_fill_type", lua_dgn_set_border_fill_type },
+{ "set_feature_name", lua_dgn_set_feature_name },
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },

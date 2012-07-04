@@ -1683,6 +1683,8 @@ static void marshall_mapdef(writer &th, const map_def &map)
     map.write_index(th);
     map.write_maplines(th);
     marshallString(th, map.description);
+    marshallMap(th, map.feat_renames,
+                _marshall_as_int<dungeon_feature_type>, marshallStringNoMax);
 }
 
 static map_def unmarshall_mapdef(reader &th)
@@ -1692,6 +1694,12 @@ static map_def unmarshall_mapdef(reader &th)
     map.read_index(th);
     map.read_maplines(th);
     map.description = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_FEAT_RENAMES)
+#endif
+    unmarshallMap(th, map.feat_renames,
+                  unmarshall_int_as<dungeon_feature_type>,
+                  unmarshallStringNoMax);
     return map;
 }
 

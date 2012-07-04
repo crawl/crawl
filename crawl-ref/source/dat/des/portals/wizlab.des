@@ -125,11 +125,9 @@ function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
-    dgn.set_feature_desc_short("gate leading back out of here",
-                               "portal leading out of here")
+    e.set_feature_name("exit_portal_vault", "portal leading out of here")
     if wizlab_desc ~= "Eringya's Formal Garden" then
-      dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "empty arch of stone")
+      e.set_feature_name("stone_arch", "empty arch of stone")
     end
 end
 
@@ -682,12 +680,11 @@ KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "crystal clear mirror")
-:           dgn.set_feature_desc_short("granite statue", "strange machine")
-:           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
-:           dgn.set_feature_desc_short("stone wall", "black marble wall")
-:           dgn.set_feature_desc_short("floor", "marble floor")
+:           set_feature_name("clear_rock_wall", "crystal clear mirror")
+:           set_feature_name("granite_statue", "strange machine")
+:           set_feature_name("dry_fountain_blue", "glistening fountain")
+:           set_feature_name("stone_wall", "black marble wall")
+:           set_feature_name("floor", "marble floor")
 :           set_random_mon_list("dancing weapon")
 :           wizlab_setup(_G, "Tukima's Studio")
 epilogue{{
@@ -769,11 +766,10 @@ lua_marker("_", grow_marker)
 }}
 :           set_border_fill_type("stone_wall")
 :           wizlab_setup(_G, "Eringya's Formal Garden")
-:           dgn.set_feature_desc_short("empty arch of ancient stone",
-:                                      "rose-covered archway")
-:           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
-:           dgn.set_feature_desc_short("stone wall", "crumbling stone wall")
-:           dgn.set_feature_desc_short("floor", "the grass-covered ground")
+:           set_feature_name("stone_arch", "rose-covered archway")
+:           set_feature_name("granite_statue", "vine-covered statue")
+:           set_feature_name("stone_wall", "crumbling stone wall")
+:           set_feature_name("floor", "the grass-covered ground")
 :           set_random_mon_list ("oklob plant / centaur / centaur warrior")
 epilogue{{
             wizlab_milestone(_G, "Eringya's Formal Garden")
@@ -997,9 +993,9 @@ box_marker:add_triggerer(DgnTriggerer:new { type="turn",
 
 lua_marker("A", box_marker)
 }}
-:           dgn.set_feature_desc_short("rock wall", "strange rock wall")
-:           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
-:           dgn.set_feature_desc_short("floor", "rough-hewn floor")
+:           set_feature_name("rock_wall", "strange rock wall")
+:           set_feature_name("stone_wall", "highly decorated stone wall")
+:           set_feature_name("floor", "rough-hewn floor")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
@@ -1117,10 +1113,10 @@ TILE:       + = no_random dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
-:           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
-:           dgn.set_feature_desc_short("stone wall", "sinewy wall")
-:           dgn.set_feature_desc_short("translucent rock wall", "thin membrane")
-:           dgn.set_feature_desc_short("floor", "pulsating floor")
+:           set_feature_name("shallow_water", "Viscous fluid")
+:           set_feature_name("stone_wall", "sinewy wall")
+:           set_feature_name("clear_rock_wall", "thin membrane")
+:           set_feature_name("floor", "pulsating floor")
 : lua_marker('+', props_marker {
 :           door_description_noun="fleshy orifice",
 :           door_berserk_verb_open="You part the %s%s",
@@ -1330,8 +1326,8 @@ lua_marker("D", zombies_killed_marker)
 lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
-:           dgn.set_feature_desc_short("granite statue", "gravestone")
-:           dgn.set_feature_desc_short("floor", "the ground")
+:           set_feature_name("granite_statue", "gravestone")
+:           set_feature_name("floor", "the ground")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1461,10 +1457,10 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
 :           set_border_fill_type("tree")
 :           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
-:           dgn.set_feature_desc_short("tree", "autumnal tree")
-:           dgn.set_feature_desc_short("stone wall", "crumbled stone wall")
-:           dgn.set_feature_desc_short("granite statue", "strange statue")
-:           dgn.set_feature_desc_short("floor", "timeless floor")
+:           set_feature_name("tree", "autumnal tree")
+:           set_feature_name("stone_wall", "crumbled stone wall")
+:           set_feature_name("granite_statue", "strange statue")
+:           set_feature_name("floor", "timeless floor")
 epilogue{{
             wizlab_milestone(_G, "Wucad Mu's Monastery")
 }}
@@ -1639,8 +1635,8 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
                     golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
 
 set_border_fill_type('permarock_wall')
-dgn.set_feature_desc_short("unnaturally hard rock wall", "The dimension's edge")
-dgn.set_feature_desc_short("wall of green crystal", "wall of crystal")
+set_feature_name("clear_permarock_wall", "The dimension's edge")
+set_feature_name("green_crystal_wall", "wall of crystal")
 wizlab_setup(_G, "The Roulette of Golubria")
 }}
 
@@ -1751,9 +1747,9 @@ COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
-:           dgn.set_feature_desc_short("floor", "damp floor")
-:           dgn.set_feature_desc_short("wall of green crystal", "wall of white crystal")
-:           dgn.set_feature_desc_short("translucent unnaturally hard rock wall", "wall of transparent white crystal")
+:           set_feature_name("floor", "damp floor")
+:           set_feature_name("green_crystal_wall", "wall of white crystal")
+:           set_feature_name("clear_permarock_wall", "wall of transparent white crystal")
 
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
@@ -1900,9 +1896,9 @@ NSUBST:     i = 2:B / *:i
 :           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
 :                        .. [[ufetubus / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
-:           dgn.set_feature_desc_short("floor", "hot floor")
-:           dgn.set_feature_desc_short("stone wall", "black wall")
-:           dgn.set_feature_desc_short("rock wall", "carved rock wall")
+:           set_feature_name("floor", "hot floor")
+:           set_feature_name("stone_wall", "black wall")
+:           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
             wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
 }}

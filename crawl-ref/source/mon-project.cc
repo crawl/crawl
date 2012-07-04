@@ -339,7 +339,7 @@ move_again:
         {
             if (you.see_cell(pos))
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
-                     feature_description(pos, false, DESC_A).c_str());
+                     feature_description_at(pos, false, DESC_A).c_str());
         }
 
         monster* mons = (victim && victim->is_monster()) ?
@@ -717,7 +717,7 @@ move_again:
             if (you.see_cell(pos))
             {
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
-                     feature_description(pos, false, DESC_A).c_str());
+                     feature_description_at(pos, false, DESC_A).c_str());
             }
             _boulder_stop(mon,you.see_cell(pos));
         }

@@ -4021,7 +4021,7 @@ explore_discoveries::explore_discoveries()
 std::string explore_discoveries::cleaned_feature_description(
     const coord_def &pos) const
 {
-    std::string s = lowercase_first(feature_description(pos));
+    std::string s = lowercase_first(feature_description_at(pos));
     if (s.length() && s[s.length() - 1] == '.')
         s.erase(s.length() - 1);
     if (s.find("a ") != std::string::npos)
@@ -4097,7 +4097,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
             env.markers.property_at(pos, MAT_ANY, "stop_explore");
         if (!feat_stop.empty())
         {
-            std::string desc = lowercase_first(feature_description(pos));
+            std::string desc = lowercase_first(feature_description_at(pos));
             marked_feats.push_back(desc);
             return;
         }

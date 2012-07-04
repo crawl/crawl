@@ -270,7 +270,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
         potion of brilliance w:4 / potion of agility w:4 /\
         potion of levitation w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
-: dgn.set_feature_desc_short("translucent stone wall", "large window")
+: set_feature_name("clear_stone_wall", "large window")
 KFEAT:  C = deep_water
 MAP
 vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv

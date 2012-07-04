@@ -1186,8 +1186,7 @@ void disarm_trap(const coord_def& where)
     {
         std::string prompt = make_stringf(
                                "Really try disarming that %s?",
-                               feature_description(trap.category(),
-                                                   get_trap_type(where),
+                               feature_description_at(where,
                                                    "", DESC_BASENAME,
                                                    false).c_str());
 

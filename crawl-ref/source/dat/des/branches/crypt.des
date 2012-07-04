@@ -1090,8 +1090,8 @@ KMONS:  F = patrolling reaper
 : end
 SUBST:  n : ncc
 KFEAT: ABCEFH = .
-: dgn.set_feature_desc_short("granite statue", "gravestone")
-: dgn.set_feature_desc_short("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+: set_feature_name("tree", "dead tree")
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt

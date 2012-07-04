@@ -76,27 +76,11 @@ static int dgn_feature_desc_at(lua_State *ls)
     description_type_by_name(lua_tostring(ls, 3));
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
     const std::string s =
-    feature_description(coord_def(luaL_checkint(ls, 1),
+    feature_description_at(coord_def(luaL_checkint(ls, 1),
                                   luaL_checkint(ls, 2)),
                         false, dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);
-}
-
-static int dgn_set_feature_desc_short(lua_State *ls)
-{
-    const std::string base_name = luaL_checkstring(ls, 1);
-    const std::string desc      = luaL_checkstring(ls, 2);
-
-    if (base_name.empty())
-    {
-        luaL_argerror(ls, 1, "Base name can't be empty");
-        return (0);
-    }
-
-    set_feature_desc_short(base_name, desc);
-
-    return (0);
 }
 
 static int dgn_max_bounds(lua_State *ls)
@@ -151,7 +135,6 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "feature_name", dgn_feature_name },
 { "feature_desc", dgn_feature_desc },
 { "feature_desc_at", dgn_feature_desc_at },
-{ "set_feature_desc_short", dgn_set_feature_desc_short },
 { "seen_replace_feat", dgn_seen_replace_feat },
 
 { "grid", dgn_grid },

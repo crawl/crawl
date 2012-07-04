@@ -528,9 +528,8 @@ SUBVAULT: D : vault8_quadrant
 SUBST:    ABCD = .
 MONS: vault guard
 {{
-  dgn.set_feature_desc_short("metal wall", "heavily etched metal wall")
-  dgn.set_feature_desc_short("wall of green crystal",
-                             "heavily etched wall of green crystal")
+  set_feature_name("metal_wall", "heavily etched metal wall")
+  set_feature_name("green_crystal_wall", "heavily etched wall of green crystal")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
