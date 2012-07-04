@@ -2045,13 +2045,22 @@ public:
 
         char buff[256];
         if (selected_qty == 0) //Default
-            sprintf(buff, "<g> %c %c %s</g>", hotkeys[0],
+            sprintf(buff, "%c %c %s", hotkeys[0],
                     item_needs_autopickup(*item) ? '+' : '-', name.c_str());
         else //Forced Autopickup
-            sprintf(buff, "<w> %c %c %s</w>", hotkeys[0],
+            sprintf(buff, "%c %c %s", hotkeys[0],
                     selected_qty == 1 ? '+' : '-', name.c_str());
 
         return std::string(buff);// + NAME;
+    }
+
+    virtual int highlight_colour() const
+    {
+        if (selected_qty >= 1)
+            return WHITE;
+        else
+            return MENU_ITEM_STOCK_COLOUR;
+
     }
 
     virtual bool selected() const
