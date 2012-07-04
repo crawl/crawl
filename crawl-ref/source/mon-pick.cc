@@ -1333,6 +1333,10 @@ int mons_swamp_level(monster_type mcls)
 {
     switch (mcls)
     {
+    case MONS_PLANT:
+    case MONS_FUNGUS:
+        return 1;
+
     case MONS_BAT:
     case MONS_GIANT_FROG:
     case MONS_GIANT_AMOEBA:
@@ -1346,9 +1350,8 @@ int mons_swamp_level(monster_type mcls)
     case MONS_ALLIGATOR:
         return 2;
 
-    case MONS_FUNGUS:
+
     case MONS_NECROPHAGE:
-    case MONS_PLANT:
     case MONS_ADDER:
     case MONS_BUTTERFLY:
     case MONS_CROCODILE:
