@@ -2477,6 +2477,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{
+    MONS_BOG_BODY, 'z', LIGHTGREEN, "bog body",
+    M_SPELLCASTER | M_ACTUAL_SPELLS,
+    MR_RES_FIRE | MR_RES_COLD,
+    0, 21, MONS_BOG_BODY, MONS_BOG_BODY, MH_UNDEAD, -5,
+    { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_COLD, 4 }, AT_NO_ATK, AT_NO_ATK },
+    { 6, 5, 3, 0 },
+    1, 9, MST_BOG_BODY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 8, SWIM_ENERGY(14),
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // These nasties are never randomly generated, only sometimes specially
 // placed in the Crypt.
 {
@@ -3426,19 +3438,6 @@ static monsterentry mondata[] = {
     I_NORMAL, HT_LAND, FL_NONE, 6, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
-
-{
-    MONS_BOG_BODY, 'z', LIGHTGREEN, "bog body",
-    M_SPELLCASTER | M_ACTUAL_SPELLS,
-    MR_RES_FIRE | MR_RES_COLD,
-    0, 21, MONS_BOG_BODY, MONS_BOG_BODY, MH_UNDEAD, -5,
-    { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_COLD, 4 }, AT_NO_ATK, AT_NO_ATK },
-    { 6, 5, 3, 0 },
-    1, 9, MST_BOG_BODY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 8, SWIM_ENERGY(14),
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
-},
-
 
 {
     MONS_GUARDIAN_MUMMY, 'M', YELLOW, "guardian mummy",
