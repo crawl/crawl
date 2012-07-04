@@ -1393,20 +1393,18 @@ int mons_swamp_rare(monster_type mcls)
     case MONS_PLANT:
         return 150;
 
-    case MONS_VAMPIRE_MOSQUITO:
-        return 125;
-
     case MONS_FUNGUS:
+    case MONS_VAMPIRE_MOSQUITO:
         return 99;
 
     case MONS_SWAMP_DRAKE:
         return 80;
 
     case MONS_HYDRA:
+    case MONS_BOG_BODY:
         return 70;
 
     case MONS_GIANT_LEECH:
-    case MONS_BOG_BODY:
         return 61;
 
     case MONS_SLIME_CREATURE:
@@ -1416,13 +1414,13 @@ int mons_swamp_rare(monster_type mcls)
         return 52;
 
     case MONS_INSUBSTANTIAL_WISP:
+    case MONS_SWAMP_DRAGON:
         return 43;
 
     case MONS_ADDER:
         return 33;
 
     case MONS_RED_WASP:
-    case MONS_SWAMP_DRAGON:
     case MONS_GIANT_FROG:
         return 30;
 

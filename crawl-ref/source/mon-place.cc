@@ -2336,8 +2336,11 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
 
     case MONS_VAMPIRE_MOSQUITO:
-        band = BAND_VAMPIRE_MOSQUITOES;
-        band_size = 1 + random2(3);
+        if (coinflip())
+        {
+            band = BAND_VAMPIRE_MOSQUITOES;
+            band_size = 1 + random2(3);
+        }
         break;
 
     case MONS_FIRE_BAT:
