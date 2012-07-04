@@ -361,16 +361,15 @@ rough_red3
 %resetcol
 
 %weight 5
-floor_sand_stone0 FLOOR_SAND_STONE
-floor_sand_stone1
-floor_sand_stone2
-floor_sand_stone3
+sand1 FLOOR_SAND
+sand2
+sand3
+sand4
 %weight 2
-floor_sand_stone4
-floor_sand_stone5
-floor_sand_stone7
-%weight 1
-floor_sand_stone6
+sand5
+sand6
+sand7
+sand8
 
 %weight 5
 cobble_blood1 FLOOR_COBBLE_BLOOD

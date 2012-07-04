@@ -210,31 +210,36 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 
         // Then check for deep water, overwriting shallow
         // corner waves, if necessary.
+
+        // TILE_WAVE_DEEP_* is transition tile to floor;
+        // deep water has another one for shallow water in TILE_WAVE_DEEP_* + 1
+        int mod = (feat == DNGN_SHALLOW_WATER) ? 1 : 0;
+
         if (north == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_N, cell);
+            _add_overlay(TILE_WAVE_DEEP_N + mod, cell);
         if (south == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_S, cell);
+            _add_overlay(TILE_WAVE_DEEP_S + mod, cell);
         if (east == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_E, cell);
+            _add_overlay(TILE_WAVE_DEEP_E + mod, cell);
         if (west == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_W, cell);
+            _add_overlay(TILE_WAVE_DEEP_W + mod, cell);
 
         if (ne == WV_SHALLOW && !north && !east)
             _add_overlay(TILE_WAVE_CORNER_NE, cell);
         else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_NE, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_NE + mod, cell);
         if (nw == WV_SHALLOW && !north && !west)
             _add_overlay(TILE_WAVE_CORNER_NW, cell);
         else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_NW, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_NW + mod, cell);
         if (se == WV_SHALLOW && !south && !east)
             _add_overlay(TILE_WAVE_CORNER_SE, cell);
         else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_SE, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_SE + mod, cell);
         if (sw == WV_SHALLOW && !south && !west)
             _add_overlay(TILE_WAVE_CORNER_SW, cell);
         else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_SW, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_SW + mod, cell);
     }
 
     // Overlay with ink sheen, if necessary.

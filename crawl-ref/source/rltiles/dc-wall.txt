@@ -397,10 +397,10 @@ pebble_red3
 %repeat WALL_PEBBLE WALL_PEBBLE_WHITE
 %resetcol
 
-wall_yellow_rock0 WALL_YELLOW_ROCK
-wall_yellow_rock1
-wall_yellow_rock2
-wall_yellow_rock3
+shoals_wall1 WALL_SHOALS
+shoals_wall2
+shoals_wall3
+shoals_wall4
 
 brick_gray0 WALL_BRICK_GRAY
 brick_gray1
