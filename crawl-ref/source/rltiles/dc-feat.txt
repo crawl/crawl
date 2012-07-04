@@ -151,6 +151,7 @@ teleport DNGN_TRAP_TELEPORT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
+gas_trap DNGN_TRAP_GAS
 
 # order matters (tilepick.c tileidx_feature())
 cobweb_none_0 DNGN_TRAP_WEB

@@ -103,7 +103,7 @@ static tileidx_t _tileidx_trap(trap_type type)
     case TRAP_NET:
         return TILE_DNGN_TRAP_NET;
     case TRAP_GAS:
-        return TILE_DNGN_ERROR;
+        return TILE_DNGN_TRAP_GAS;
     case TRAP_ZOT:
         return TILE_DNGN_TRAP_ZOT;
     case TRAP_NEEDLE:
