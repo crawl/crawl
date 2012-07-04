@@ -1660,7 +1660,7 @@
       }
     },
 
-    {  MST_BOG_MUMMY,
+    {  MST_BOG_BODY,
       {
        SPELL_BOLT_OF_COLD,
        SPELL_SLOW,

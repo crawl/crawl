@@ -1355,7 +1355,7 @@ int mons_swamp_level(monster_type mcls)
     case MONS_VAMPIRE_MOSQUITO:
     case MONS_AGATE_SNAIL:
     case MONS_HYDRA:
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         return 3;
 
     case MONS_WATER_MOCCASIN:
@@ -1404,7 +1404,7 @@ int mons_swamp_rare(monster_type mcls)
         return 70;
 
     case MONS_GIANT_LEECH:
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         return 61;
 
     case MONS_SLIME_CREATURE:
