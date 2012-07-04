@@ -141,7 +141,7 @@ ENDMAP
 # A series of pools by Jude.
 ###############################################################################
 NAME:   swamp_pool1
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
 DEPTH:  Swamp
 WEIGHT: 1000
 {{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
@@ -158,7 +158,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool2
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
 DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  "=ttttw
@@ -174,7 +174,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool3
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
 DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
@@ -189,7 +189,7 @@ twwww"t
 ENDMAP
 
 NAME:   swamp_pool4
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
 DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  "=ttttw
@@ -205,7 +205,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool5
-TAGS:   no_pool_fixup allow_dup extra luniq_pool
+TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
 DEPTH:  Swamp
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
@@ -384,8 +384,8 @@ MAP
    1'       2'
     1      2'
     .      .
-  '2 3. ''3
-  '' "c..1""""
+   2 3. ''3
+     "c..1""""
     ""c".ccccc""   '3
    "cc_.2LLl.ccc""2.'3
   "cc..33LL..2._c1'   @
@@ -429,15 +429,15 @@ MAP
  ....'''''''''''''''''''uuwwccw'cccctt
  .""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
 @"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
-  "tt.wccccc12u'uu2uu2u'u2uwccabcctttt
-  w"tt.wccccuuu'u1uu1uu'uuwccccabccttt
-  w.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
+ W"tt.wccccc12u'uu2uu2u'u2uwccabcctttt
+  W"tt.wccccuuu'u1uu1uu'uuwccccabccttt
+  W.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
    .xw"tccwuuuu'uuuuuuu'uuccccuu'ccctt
 x  .ww"ttccwu2u'u1uuu2u'u2ucc2u'uucctt
   WxW"ttccwuuuu'uu2uuuu'uuuuuu'1uccttt
   ww"tttcwuu''''''''''''''''''uucctttt
    ww""tccwuuuu2uuuuuuu'uuuuu2uu3ccttt
- 3 WwwW"tccccuuuu1''''''uuuuuuuucctttt
+ 3wWwwW"tccccuuuu1''''''uuuuuuuucctttt
    xwwWxttcccu1uuu2uuuu''''''uuccctttt
    Wwww"ttccwuuu3uuuu3u'uuuuuuuuuccttt
    wWW"ttccwuuwuuccuuuu'ucccuccucctttt
@@ -467,8 +467,8 @@ KFEAT:   t = mangrove
 KITEM:   O = decaying rune of Zot
 MAP
                              @      .@
-                       lS     .  3.'
-              '.@    SlRl      '.
+                       lS     .  3..
+              '.@    SlRl      ..
               3       lS      '.
           "cc.'              3'
         ""cc3c"               .
@@ -523,7 +523,7 @@ MAP
      .    .wwtttttccX2.ctt
       .  ...?wttttccc2.cct
        .2..wwwwttttcc.2cct
-    ? ....ww?wttttccc..cct
+    ?.....ww?wttttccc..cct
    ttww.wwwwwtttttcc..cctt
    ttw?ww?wwtttcccc.2ccttt
   ttttwwwwtttcccccc2Xctttt
@@ -584,9 +584,9 @@ MAP
    'cc1Xcc...cc6666666ctt
    tc211ccc..cccc5.666c"t
    ccc2.1cc.Y.cccc..6cc"t
-   '"c.1.ccc...ccc...cc"t
-   'tcc.1.ccc...cc....ctt
-   't"c2.21ccc..ccc5.cctt
+   ""c.1.ccc...ccc...cc"t
+   "tcc.1.ccc...cc....ctt
+   "t"c2.21ccc..ccc5.cctt
    tttcc...ccc..c....c"tt
    ttt"cc.1.2c...5.cccttt
    tttt"c2......?wcc""ttt
@@ -621,21 +621,21 @@ SHUFFLE: yz, '", 56~ / ``9
 SUBST:   yX = x:20 t:4 W:1, z = .wwwwWWW, ' = ...W, " = wWW, ~ = 56
 NSUBST:  & = 1:4 / *:7
 MAP
-     @ XxccxcxcctWW
-    WXfXW""'..WcctWW
-   @XWXWx''"zyW.xctWW
-    fXWx"wwwyzwxWcctWW
-   XXWx.x1wwzyw.x.xctWWW
-  txWx"x3wwwyzwx1W.ccttWW
-  xt"'w1w38wzywx21xWccttWW
-  ct"'www88wyxwcxx.xWxtttWW
-   x'"wwwww.cXWwwwwWwWctttW
-   c.yzyzyzcX..zyzyzWx8xctWW
-  ct.zyzyzxX.f.yzyzy.fxWcctWW
-  xt"'wWWWwW..wWW.WWw.WwWcctWW
-   x"'WxxxWwzyWwcwc.WyzWwWxctWW
-   c'"wx1xWwyzWcf.wcWzywWx.cctWW
-  xt"'wx2.xwzy.w.&.w.yzwx1..xctW
+     @ Xxccxcxcctww
+    WXfXW""'..Wcctww
+   @XWXWx''"zyW.xctww
+    fXWx"wwwyzwxWcctww
+   XXWx.x1wwzyw.x.xctwww
+  txWx"x3wwwyzwx1W.ccttww
+  xt"'w1w38wzywx21xWccttww
+  ct"'www88wyxwcxx.xWxtttww
+   x'"wwwww.cXWwwwwWwWctttw
+   c.yzyzyzcX..zyzyzWx8xctww
+  ct.zyzyzxX.f.yzyzy.fxWcctww
+  xt"'wWWWwW..wWW.WWw.WwWcctww
+   x"'WxxxWwzyWwcwc.WyzWwWxctww
+   c'"wx1xWwyzWcf.wcWzywWx.cctww
+  xt"'wx2.xwzy.w.&.w.yzwx1..xctw
   ct'"wx1xWwyzWcw..cWzywc21xWcct
    x"'WxxWwWzyW.cwcfWyzwxcxWwWccc
    c"'wWWwWf..wWW.WWw.wWwWWwWwWcc
