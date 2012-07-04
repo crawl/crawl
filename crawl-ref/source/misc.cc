@@ -1486,12 +1486,6 @@ bool go_berserk(bool intentional, bool potion)
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
-    // Don't consider sleeping monsters safe, in case the player would
-    // rather retreat and try another path for maximum stabbing chances.
-    // TODO: This doesn't cover monsters encaged in glass.
-    if (mon->asleep())
-        return (true);
-
     if (mons_is_stationary(mon) && !mons_is_tentacle_end(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
