@@ -944,7 +944,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
 
     case DNGN_TREE:
-    case DNGN_SWAMP_TREE:
+    case DNGN_MANGROVE:
         if (see)
             msg = "The tree breaks and falls down!";
         else if (hear)
@@ -986,7 +986,7 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-    case DNGN_SWAMP_TREE:
+    case DNGN_MANGROVE:
         nuke_wall(pos());
         break;
 
@@ -1013,7 +1013,7 @@ void bolt::nuke_wall_effect()
         if (beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
-    else if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
+    else if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
     {
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
@@ -2295,7 +2295,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return (false);
 
     if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
-        && feat != DNGN_TREE && feat != DNGN_SWAMP_TREE)
+        && feat != DNGN_TREE && feat != DNGN_MANGROVE)
     {
         return (true);
     }
@@ -2609,7 +2609,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_TREE
-            || wall == DNGN_SWAMP_TREE
+            || wall == DNGN_MANGROVE
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)

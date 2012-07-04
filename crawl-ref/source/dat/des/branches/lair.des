@@ -1383,7 +1383,7 @@ TAGS:   uniq_wad_woods_large
 DEPTH:  Lair, Forest, D:2-16
 ORIENT: float
 WEIGHT: 1
-KFEAT:  t  = swamp_tree
+KFEAT:  t  = mangrove
 KFEAT:  q  = tree
 FTILE:  '1 = floor_grass_dirt_mix
 FTILE:  q1. = floor_woodground
@@ -1921,7 +1921,7 @@ TAGS:   no_monster_gen
 DEPTH:  Lair, Forest, D:8-16
 ORIENT: float
 WEIGHT: 5
-KFEAT:  O = swamp_tree
+KFEAT:  O = mangrove
 FTILE:  ~%.12t3 = floor_woodground
 TILE:   x = wall_brick_brown
 SUBST:  y = ., q = .

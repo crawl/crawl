@@ -191,8 +191,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_TREE:
         return TILE_DNGN_TREE;
-    case DNGN_SWAMP_TREE:
-        return TILE_DNGN_SWAMP_TREE;
+    case DNGN_MANGROVE:
+        return TILE_DNGN_MANGROVE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA_SEA: // FIXME
@@ -1433,8 +1433,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GREATER_MUMMY;
     case MONS_MUMMY_PRIEST:
         return TILEP_MONS_MUMMY_PRIEST;
-    case MONS_BOG_MUMMY:
-        return TILEP_MONS_BOG_MUMMY;
+    case MONS_BOG_BODY:
+        return TILEP_MONS_BOG_BODY;
 
     // nagas ('N')
     case MONS_NAGA:

@@ -718,7 +718,7 @@ static int _noise_attenuation_millis(const coord_def &pos)
     case DNGN_SECRET_DOOR:
         return BASE_NOISE_ATTENUATION_MILLIS * 8;
     case DNGN_TREE:
-    case DNGN_SWAMP_TREE:
+    case DNGN_MANGROVE:
         return BASE_NOISE_ATTENUATION_MILLIS * 3;
     default:
         if (feat_is_statue_or_idol(feat))

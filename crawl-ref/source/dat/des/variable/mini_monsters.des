@@ -664,6 +664,9 @@ SHUFFLE:  t' / x"
 SUBST:    " = x
 NSUBST:   x = 1:= / *:x
 : end
+: if you.branch() == "Swamp" then
+KFEAT:  t = mangrove
+: end
 SUBST:    ' = .
 : kmons("% = nothing w:10 / raven w:"..you.absdepth())
 MAP
@@ -1373,6 +1376,9 @@ TAGS:    no_pool_fixup
 MONS:    tengu
 MONS:    tengu ; war axe / tengu ; long sword / tengu ; scimitar
 MONS:    tengu spells:airstrike;magic_dart;iskenderun's_mystic_blast tile:mons_tengu_conjurer
+: if you.branch() == "Swamp" then
+KFEAT:  t = mangrove
+: end
 MAP
  .........
 ..wwwww.1..

@@ -108,10 +108,10 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
-        case DNGN_SWAMP_TREE:
+        case DNGN_MANGROVE:
             f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = ETC_SWAMP_TREE;
+            f.colour       = ETC_MANGROVE;
             f.minimap      = MF_WALL;
             break;
 
