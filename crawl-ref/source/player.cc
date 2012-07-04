@@ -7605,7 +7605,7 @@ void player::goto_place(const level_id &lid)
     ASSERT(depth <= brdepth[you.where_are_you]);
 }
 
-bool player::attempt_escape()
+bool player::attempt_escape(int attempts)
 {
     monster *themonst;
 
@@ -7614,7 +7614,7 @@ bool player::attempt_escape()
 
     themonst = monster_by_mid(constricted_by);
     ASSERT(themonst);
-    escape_attempts++;
+    escape_attempts += attempts;
 
     // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
     if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))

@@ -5811,7 +5811,7 @@ bool monster::nightvision() const
     return (holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL);
 }
 
-bool monster::attempt_escape()
+bool monster::attempt_escape(int attempts)
 {
     size_type thesize;
     int attfactor;
@@ -5821,7 +5821,7 @@ bool monster::attempt_escape()
     if (!is_constricted())
         return true;
 
-    escape_attempts++;
+    escape_attempts += attempts;
     thesize = body_size(PSIZE_BODY);
     attfactor = thesize * escape_attempts;
 

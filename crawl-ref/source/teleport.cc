@@ -57,6 +57,9 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return (false);
 
+    if (!attempt_escape(2))
+        return (false);
+
     const bool jump = type == MONS_JUMPING_SPIDER;
 
     if (!quiet)
