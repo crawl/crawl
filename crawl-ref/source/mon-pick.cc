@@ -1350,7 +1350,6 @@ int mons_swamp_level(monster_type mcls)
     case MONS_ALLIGATOR:
         return 2;
 
-
     case MONS_NECROPHAGE:
     case MONS_ADDER:
     case MONS_BUTTERFLY:
