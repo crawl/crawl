@@ -96,10 +96,8 @@ function volcano_setup (e)
     e.colour("c = lightred")
     e.colour("G = lightred")
     e.colour("= = lightred")
-    dgn.set_feature_desc_short("gate leading back out of here",
-                               "rocky tunnel leading out of this place")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "rock-blocked tunnel")
+    e.set_feature_name("exit_portal_vault", "rocky tunnel leading out of this place")
+    e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
@@ -1130,7 +1128,7 @@ COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
 :           place_chained_volcano(_G)
-:           dgn.set_feature_desc_short("translucent rock wall", "glass window")
+:           set_feature_name("clear_rock_wall", "glass window")
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )

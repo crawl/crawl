@@ -883,7 +883,7 @@ MARKER: V = lua:fog_machine { \
 MARKER: v = lua:props_marker { veto_fragmentation="veto", veto_disintegrate="veto" }
 # Final subst
 SUBST:  MV = .
-:       dgn.set_feature_desc_short("granite statue", "iron statue")
+:       set_feature_name("granite_statue", "iron statue")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then

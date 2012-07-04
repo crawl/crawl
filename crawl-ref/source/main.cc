@@ -3802,11 +3802,8 @@ static void _open_door(coord_def move, bool check_confused)
             if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
             {
                 seen_secret = true;
-                dungeon_feature_type secret
-                    = grid_secret_door_appearance(dc);
                 mprf("That %s was a secret door!",
-                     feature_description(secret, NUM_TRAPS, "",
-                                         DESC_PLAIN, false).c_str());
+                     feature_description_at(dc, "", DESC_PLAIN, false).c_str());
             }
         }
         grd(dc) = DNGN_OPEN_DOOR;

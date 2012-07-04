@@ -2208,7 +2208,7 @@ void MiscastEffect::_ice(int severity)
          || feat_is_staircase(feat) || feat_is_water(feat));
 
     const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
-        feature_description(target->pos(), false, DESC_THE);
+        feature_description_at(target->pos(), false, DESC_THE);
 
     int num;
     switch (severity)

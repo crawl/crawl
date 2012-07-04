@@ -1124,6 +1124,9 @@ public:
     std::string     rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;
+
+    std::map<dungeon_feature_type, std::string> feat_renames;
+
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;

@@ -552,8 +552,7 @@ epilogue{{
 COLOUR:     n = blue
 TILE:       n = dngn_metal_wall_cracked
 TILE:       v = dngn_metal_wall_brown
-:           dgn.set_feature_desc_short("translucent stone wall",
-:                                      "cracked metal wall")
+:           set_feature_name("clear_stone_wall", "cracked metal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1762,12 +1761,10 @@ FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
 FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
-: dgn.set_feature_desc_short("granite statue",
-:                            "golden statue")
-: dgn.set_feature_desc_short("metal wall",
-:                            "silver wall")
-: _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
-:                        "apis / paladin / apis / ophan / angel")
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_wall", "silver wall")
+: set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
+:                     "apis / paladin / apis / ophan / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
 veto {{
     if you.god() == "the Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then

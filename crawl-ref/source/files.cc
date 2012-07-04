@@ -1375,7 +1375,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     setup_environment_effects();
 
     setup_vault_mon_list();
-    setup_feature_descs_short();
 
     // Inform user of level's annotation.
     if (load_mode != LOAD_VISITOR
@@ -1441,8 +1440,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 std::string stair_str =
-                    feature_description(feat, NUM_TRAPS, "",
-                                        DESC_THE, false);
+                    feature_description_at(you.pos(), "", DESC_THE, false);
                 std::string verb = stair_climb_verb(feat);
 
                 if (coinflip()

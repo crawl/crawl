@@ -2719,7 +2719,6 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
 
 static void _mons_open_door(monster* mons, const coord_def &pos)
 {
-    dungeon_feature_type grid = grd(pos);
     const char *adj = "", *noun = "door";
 
     bool was_secret = false;
@@ -2733,10 +2732,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     {
         const coord_def& dc = *i;
         if (grd(dc) == DNGN_SECRET_DOOR && you.see_cell(dc))
-        {
-            grid = grid_secret_door_appearance(dc);
             was_secret = true;
-        }
 
         if (you.see_cell(dc))
             was_seen = true;
@@ -2752,8 +2748,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         if (was_secret)
         {
             mprf("%s was actually a secret door!",
-                 feature_description(grid, NUM_TRAPS, "",
-                                     DESC_THE, false).c_str());
+                 feature_description_at(pos, "", DESC_THE, false).c_str());
             learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
         }
 

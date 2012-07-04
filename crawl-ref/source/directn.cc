@@ -65,12 +65,6 @@
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
-const std::string SHORT_DESC_KEY = "short_desc_key";
-
-typedef std::map<std::string, std::string> desc_map;
-
-static desc_map base_desc_to_short;
-
 enum LOSSelect
 {
     LOS_ANY      = 0x00,
@@ -725,7 +719,7 @@ void full_describe_view()
 
             desc += "</" + colour_str +">) ";
 #endif
-            desc += feature_description(c);
+            desc += feature_description_at(c);
             if (is_unknown_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
@@ -1557,7 +1551,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
     _debug_describe_feature_at(target());
 #else
     mprf(MSGCH_EXAMINE_FILTER, "%s",
-         feature_description(target(), true).c_str());
+         feature_description_at(target(), true).c_str());
 #endif
 }
 
@@ -2111,7 +2105,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         if (env.map_knowledge(gc).seen())
         {
-            desc = "[" + feature_description(gc, false, DESC_PLAIN, false)
+            desc = "[" + feature_description_at(gc, false, DESC_PLAIN, false)
                        + "]";
         }
         else
@@ -2125,7 +2119,7 @@ std::string get_terse_square_desc(const coord_def &gc)
             desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
-        desc = feature_description(gc, false, DESC_PLAIN, false);
+        desc = feature_description_at(gc, false, DESC_PLAIN, false);
 
     return desc;
 }
@@ -2771,12 +2765,13 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
+    std::string desc;
+
     dungeon_feature_type feat = env.map_knowledge(where).feat();
     if (feat == DNGN_SECRET_DOOR)
-        feat = grid_secret_door_appearance(where);
-
-    std::string desc;
-    desc = feature_description(feat, env.map_knowledge(where).trap());
+        desc = feature_description(grid_secret_door_appearance(where));
+    else
+        desc = feature_description_at(where);
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
@@ -2824,7 +2819,7 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.pos(), true,
+    feat = feature_description_at(you.pos(), true,
                                DESC_A, false);
     if (feat.empty())
         return;
@@ -2885,18 +2880,6 @@ std::string thing_do_grammar(description_level_type dtype,
     default:
         return (desc);
     }
-}
-
-std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap,
-                                const std::string & cover_desc,
-                                description_level_type dtype,
-                                bool add_stop, bool base_desc)
-{
-    std::string desc = raw_feature_description(grid, trap, base_desc);
-    desc += cover_desc;
-
-    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
 static std::string _base_feature_desc(dungeon_feature_type grid,
@@ -3177,66 +3160,33 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     }
 }
 
-std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type trap, bool base_desc)
+std::string feature_description(dungeon_feature_type grid,
+                                trap_type trap,
+                                const std::string & cover_desc,
+                                description_level_type dtype,
+                                bool add_stop, bool base_desc)
 {
-    std::string base_str = _base_feature_desc(grid, trap);
+    std::string desc = _base_feature_desc(grid, trap);
+    desc += cover_desc;
 
-    if (base_desc)
-        return (base_str);
-
-    desc_map::iterator i = base_desc_to_short.find(base_str);
-
-    if (i != base_desc_to_short.end())
-        return (i->second);
-
-    return (base_str);
+    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
-void set_feature_desc_short(dungeon_feature_type grid,
-                            const std::string &desc)
+std::string raw_feature_description(const coord_def &where)
 {
-    set_feature_desc_short(_base_feature_desc(grid, NUM_TRAPS), desc);
-}
+    dungeon_feature_type feat = grd(where);
 
-void set_feature_desc_short(const std::string &base_name,
-                            const std::string &_desc)
-{
-    ASSERT(!base_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(SHORT_DESC_KEY))
-        props[SHORT_DESC_KEY].new_table();
-
-    CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
-
-    if (_desc.empty())
+    int mapi = env.level_map_ids(where);
+    if (mapi != INVALID_MAP_INDEX)
     {
-        base_desc_to_short.erase(base_name);
-        desc_table.erase(base_name);
+        const vault_placement *v = env.level_vaults[mapi];
+        std::map<dungeon_feature_type, std::string>::const_iterator it =
+            v->map.feat_renames.find(feat);
+        if (it != v->map.feat_renames.end())
+            return it->second;
     }
-    else
-    {
-        base_desc_to_short[base_name] = _desc;
-        desc_table[base_name]         = _desc;
-    }
-}
 
-void setup_feature_descs_short()
-{
-    base_desc_to_short.clear();
-
-    const CrawlHashTable &props = env.properties;
-
-    if (!props.exists(SHORT_DESC_KEY))
-        return;
-
-    const CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
-
-    CrawlHashTable::const_iterator i;
-    for (i = desc_table.begin(); i != desc_table.end(); ++i)
-        base_desc_to_short[i->first] = i->second.get_string();
+    return _base_feature_desc(feat, get_trap_type(where));
 }
 
 #ifndef DEBUG_DIAGNOSTICS
@@ -3249,7 +3199,7 @@ static bool _interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(const coord_def& where, bool covering,
+std::string feature_description_at(const coord_def& where, bool covering,
                                 description_level_type dtype, bool add_stop,
                                 bool base_desc)
 {
@@ -3354,8 +3304,8 @@ std::string feature_description(const coord_def& where, bool covering,
                     dtype, add_stop, false,
                     "UNAMED PORTAL VAULT ENTRY"));
     default:
-        return (feature_description(grid, NUM_TRAPS, covering_description,
-                                    dtype, add_stop, base_desc));
+        return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
+                   raw_feature_description(where) + covering_description);
     }
 }
 
@@ -3497,7 +3447,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 
     if (mi.fire_blocker)
     {
-        descs.push_back("fire blocked by "
+        descs.push_back("fire blocked by " // FIXME, renamed features
                         + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                               DESC_A, false));
     }
@@ -3577,7 +3527,7 @@ static std::string _get_monster_desc(const monster_info& mi)
     if (mi.fire_blocker)
     {
         text += std::string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
-              + " is blocked by "
+              + " is blocked by " // FIXME: renamed features
               + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                     DESC_A)
               + "\n";
@@ -3853,7 +3803,7 @@ static bool _print_item_desc(const coord_def where)
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where)
 {
-    const std::string feature_desc = feature_description(where, true);
+    const std::string feature_desc = feature_description_at(where, true);
     std::string marker;
     if (map_marker *mark = env.markers.find(where, MAT_ANY))
     {
@@ -3970,7 +3920,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     bool cloud_described = _print_cloud_desc(where);
     bool item_described = _print_item_desc(where);
 
-    std::string feature_desc = feature_description(where, true);
+    std::string feature_desc = feature_description_at(where, true);
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {

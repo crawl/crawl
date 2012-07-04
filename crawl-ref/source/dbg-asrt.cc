@@ -149,9 +149,8 @@ static void _dump_player(FILE *file)
 
     if (in_bounds(you.pos()))
     {
-        const dungeon_feature_type feat = grd(you.pos());
         fprintf(file, "Standing on/in/over feature: %s\n",
-                raw_feature_description(feat, NUM_TRAPS, true).c_str());
+                raw_feature_description(you.pos()).c_str());
     }
 
     debug_dump_constriction(&you);

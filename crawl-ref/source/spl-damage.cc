@@ -1720,7 +1720,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
                                 "veto_fragmentation") == "veto")
     {
         mprf("%s seems to be unnaturally hard.",
-             feature_description(spd.target, false, DESC_THE, false).c_str());
+             feature_description_at(spd.target, false, DESC_THE, false).c_str());
         return SPRET_ABORT;
     }
 

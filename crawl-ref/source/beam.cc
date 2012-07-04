@@ -1103,11 +1103,11 @@ bool bolt::hit_wall()
         else
         {
             prompt += "the targeted "
-                    + feature_description(target, false, DESC_PLAIN, false);
+                    + feature_description_at(target, false, DESC_PLAIN, false);
         }
 
         prompt += " is blocked by "
-                + feature_description(pos(), false, DESC_A, false);
+                + feature_description_at(pos(), false, DESC_A, false);
 
         prompt += ". Continue anyway?";
 
@@ -1179,7 +1179,7 @@ void bolt::affect_cell()
             else
             {
                 mprf("The %s protects %s from harm.",
-                     raw_feature_description(grd(act->pos())).c_str(),
+                     raw_feature_description(act->pos()).c_str(),
                      act->name(DESC_THE).c_str());
             }
         }

@@ -2837,7 +2837,7 @@ COLOUR:  ' = brown / darkgrey
 COLOUR:  t = darkgrey
 COLOUR:  G = white
 SUBST:   t = t.
-: dgn.set_feature_desc_short("granite statue", "adventurer's gravestone")
+: set_feature_name("granite_statue", "adventurer's gravestone")
 MAP
     ....'....
   ...'....'..

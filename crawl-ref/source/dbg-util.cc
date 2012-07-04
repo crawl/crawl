@@ -171,7 +171,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     if (in_bounds(mon->pos()))
     {
         std::string feat =
-            raw_feature_description(grd(mon->pos()), NUM_TRAPS, true);
+            raw_feature_description(mon->pos());
         fprintf(stderr, "On/in/over feature: %s\n\n", feat.c_str());
     }
 

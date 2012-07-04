@@ -38,7 +38,7 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
     close IN;
 
     $features{articled($_)} = 1
-        for /set_feature_desc_short\s*\(\s*"[^"\n"]+"\s*,[ \n:]*"([^"\n]+)"\s*\)/sg;
+        for /set_feature_name\s*\(\s*"[^"\n"]+"\s*,[ \n:]*"([^"\n]+)"\s*\)/sg;
 
     $features{articled($_)} = 1
         for /\bdesc\s*=\s*"([^"]*)"/g;

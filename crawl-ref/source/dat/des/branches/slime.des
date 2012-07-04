@@ -293,7 +293,7 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 : lua_marker("Z", fixup_marker)
 
 {{
-    dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
+    set_feature_name("stone_wall", "rune carved stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
