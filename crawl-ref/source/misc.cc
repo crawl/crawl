@@ -2178,7 +2178,7 @@ static void apply_environment_effect(const coord_def &c)
         return;
     if (grid == DNGN_LAVA)
         check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), 0);
-    else if (grid == DNGN_SHALLOW_WATER)
+    else if (one_chance_in(3) && grid == DNGN_SHALLOW_WATER)
         check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), 0);
 }
 
