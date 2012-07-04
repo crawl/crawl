@@ -694,7 +694,7 @@ TAGS:   no_monster_gen
 : end
 SUBST:  E = .S
 COLOUR: Sv : brown
-FTILE:  vSwWj = floor_sand_stone
+FTILE:  vSwWj = floor_sand
 SUBST:  S = .
 MAP
       xxxxx

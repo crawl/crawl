@@ -537,7 +537,7 @@ ENDMAP
 NAME:   enne_entry_octagon_isle
 ORIENT: float
 TAGS:   entry no_monster_gen
-FTILE:  '[({ = floor_sand_stone
+FTILE:  '[({ = floor_sand
 SUBST:  ' = .
 {{
     octa_room({
