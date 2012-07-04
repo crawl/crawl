@@ -258,22 +258,16 @@ shallow_bord_tl DNGN_WAVE_NW
 # Make all base variants equally likely, but their special ones less so.
 %weight 4
 shoals_deep_water1 SHOALS_DEEP_WATER
-%weight 2
-shoals_deep_water1_shape
-%weight 4
 shoals_deep_water2
-%weight 1
-shoals_deep_water2_shape
-shoals_deep_water2_bubbles
-%weight 4
 shoals_deep_water3
-%weight 2
-shoals_deep_water3_bubbles
-%weight 4
 shoals_deep_water4
-%weight 2
-shoals_deep_water4_bubbles
 %weight 1
+shoals_deep_water5
+shoals_deep_water6
+shoals_deep_water7
+shoals_deep_water8
+shoals_deep_water9
+
 shoals_shallow_water1 SHOALS_SHALLOW_WATER
 shoals_shallow_water2
 shoals_shallow_water3
@@ -285,16 +279,24 @@ shoals_shallow_water_disturbance3
 %shrink 0
 ## deep water waves
 # corner waves (diagonals)
-deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
-deep_water_wave_corner_NW WAVE_DEEP_CORNER_NW
-deep_water_wave_corner_SE WAVE_DEEP_CORNER_SE
-deep_water_wave_corner_SW WAVE_DEEP_CORNER_SW
+deep_water_wave_corner_NE1 WAVE_DEEP_CORNER_NE
+deep_water_wave_corner_NE2
+deep_water_wave_corner_NW1 WAVE_DEEP_CORNER_NW
+deep_water_wave_corner_NW2
+deep_water_wave_corner_SE1 WAVE_DEEP_CORNER_SE
+deep_water_wave_corner_SE2
+deep_water_wave_corner_SW1 WAVE_DEEP_CORNER_SW
+deep_water_wave_corner_SW2
 
 # orthogonal waves
-deep_water_wave_N WAVE_DEEP_N
-deep_water_wave_S WAVE_DEEP_S
-deep_water_wave_E WAVE_DEEP_E
-deep_water_wave_W WAVE_DEEP_W
+deep_water_wave_N1 WAVE_DEEP_N
+deep_water_wave_N2
+deep_water_wave_S1 WAVE_DEEP_S
+deep_water_wave_S2
+deep_water_wave_E1 WAVE_DEEP_E
+deep_water_wave_E2
+deep_water_wave_W1 WAVE_DEEP_W
+deep_water_wave_W2
 
 ## shallow water waves
 # corner waves (diagonals)
