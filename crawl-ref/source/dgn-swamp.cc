@@ -7,7 +7,7 @@
 
 static void _swamp_slushy_patches(int depth_multiplier)
 {
-    const int margin = 6;
+    const int margin = 11;
     const int yinterval = 4;
     const int xinterval = 4;
     const int fuzz = 9;
