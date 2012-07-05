@@ -1012,7 +1012,7 @@ static const char* rod_type_name(int type)
     {
     case ROD_SUMMONING:       return "summoning";
     case ROD_WARDING:         return "warding";
-    case ROD_SMITING:         return "smiting";
+    case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
     case ROD_DEMONOLOGY:      return "demonology";
     case ROD_VENOM:           return "venom";
@@ -1724,7 +1724,10 @@ std::string item_def::name_aux(description_level_type desc,
             if (know_type && know_pluses && !basename && !qualname && !dbname)
                 buff << make_stringf("%+d ", special);
 
-            buff << "rod of " << rod_type_name(item_typ);
+            if (item_typ == ROD_LIGHTNING)
+                buff << "lightning rod";
+            else
+                buff << "rod of " << rod_type_name(item_typ);
         }
 
         if (know_curse && cursed() && terse)

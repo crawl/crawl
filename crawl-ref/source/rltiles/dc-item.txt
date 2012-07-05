@@ -920,7 +920,7 @@ rod07
 rod08
 rod09
 
-i-rod_smiting ROD_SMITING ROD_ID_FIRST
+i-rod_smiting ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
 i-rod_destruction_ice ROD_DESTRUCTION_ICE

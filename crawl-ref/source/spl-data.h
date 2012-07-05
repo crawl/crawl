@@ -2898,6 +2898,19 @@ struct spell_desc
 },
 
 {
+    SPELL_THUNDERBOLT, "Thunderbolt",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET,
+     2, // 2-5
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
