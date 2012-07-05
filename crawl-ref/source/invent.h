@@ -176,6 +176,7 @@ protected:
     const std::vector<SelItem> *pre_select;
 
     invtitle_annotator title_annotate;
+    std::string temp_title;
 };
 
 bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);

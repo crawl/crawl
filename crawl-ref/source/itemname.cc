@@ -2089,6 +2089,12 @@ public:
 
         if (selected_qty > 2)
             selected_qty = 1; //Set to 0 to allow triple toggle
+
+		// Set the force_autopickup values
+		if (selected_qty == 2)
+            you.force_autopickup[item->base_type][item->sub_type] = -1;
+        else
+			you.force_autopickup[item->base_type][item->sub_type] = selected_qty;
     }
 };
 
@@ -2276,40 +2282,10 @@ void check_item_knowledge(bool unknown_items)
 
     menu.load_items(items2, known_item_mangle, ml);
 
-    char last_char;
-    do
-    {
-        menu.set_title(stitle);
-        menu.show(true);
+    menu.set_title(stitle);
+    menu.show(true);
 
-        last_char = menu.getkey();
-        std::vector<SelItem> returned_selection;
-        returned_selection = menu.get_selitems();
-
-        if (!unknown_items)
-        {
-            //mark all previously selected items as "never-force"
-            for (std::vector<SelItem>::iterator iter = selected_items.begin();
-                 iter != selected_items.end(); ++iter)
-            {
-                you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 0;
-            }
-
-            // Prepare for next round.
-            selected_items = returned_selection;
-
-            //mark all currently selected items as "always-pickup" or "never-pickup"
-            for (std::vector<SelItem>::iterator iter = returned_selection.begin();
-                 iter != returned_selection.end(); ++iter)
-            {
-                if (iter->quantity == 2)
-                    iter->quantity = -1;
-                you.force_autopickup[iter->item->base_type][iter->item->sub_type] = iter->quantity;
-            }
-        }
-
-    } //for the menu to display the correct +/- for defaults the menu needs to be reopened
-    while (!unknown_items && last_char == CONTROL('R')); //hack
+    char last_char = menu.getkey();
 
     std::vector<const item_def*>::iterator iter;
     for (iter = items.begin(); iter != items.end(); ++iter)

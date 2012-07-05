@@ -47,7 +47,7 @@ Autopickup can also be toggled for all unknown items of a given category.
 You can quickly select all item types in a given category by pressing:
 <w>!</w>   potions      <w>?</w>   scrolls      <w>(</w>   ammunition        <w>"</w>   amulets
 <w>=</w>   rings        <w>/</w>   wands        <w>|</w>   magical staves
-Global selects:  <w>*</w>   invert all   <w>,</w>   reset all to default
+Global selects:  <w>*</w>   invert all   <w>^</w>   reset all to default
 
 <h>Viewing unknown and known items</h>
 <w>\</w> and <w>-</w> toggle between the known and unknown items menus.  Note

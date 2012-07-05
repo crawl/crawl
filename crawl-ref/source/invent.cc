@@ -914,9 +914,6 @@ std::vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
-    // Does the menu need to be restarted?
-    bool resetting = false;
-
     if ( key == CONTROL('W') )
     {
         Options.show_inventory_weights = !Options.show_inventory_weights;
@@ -926,21 +923,26 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
-        // Make sure we don't reenter the menu just because we were supposed
-        // to reenter after the last iteration.
-        if (lastch == CONTROL('R'))
-            lastch = ' ';
-
-        resetting = (lastch == CONTROL('D') || key == ',');
-
-        num = resetting ? -2 : -1;
+        if (lastch == CONTROL('D'))
+        {
+            //return the menu title to its previous text.
+            set_title(temp_title);
+            update_title();
+            num = -2;
+        }
+        else
+            num = -1;
 
         switch (key)
         {
+        case ',':
+            key = ' ';
+            break;
         case '*':
-            // Ctrl-D * is the same as ,
-            if (resetting)
-                key = ',';
+            if (lastch != CONTROL('D'))
+                break;
+        case '^':
+            key = ',';
             break;
 
         case '-':
@@ -962,21 +964,21 @@ bool InvMenu::process_key(int key)
             // If we cannot select anything (e.g. on the unknown items
             // page), ignore Ctrl-D.
             if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-                return true;
+                return (true);
 
             // Reset the next selection to default.
-            if (!resetting)
+            if (lastch != CONTROL('D'))
             {
                 lastch = CONTROL('D');
+                temp_title = title->text;
                 set_title("Select to reset item to default: ");
                 update_title();
                 return true;
             }
             else
             {
-                // Re-enter the menu.
-                lastch = CONTROL('R');
-                return false;
+                lastch = ' '; //disarm
+                return true;
             }
         }
     }
@@ -997,30 +999,14 @@ bool InvMenu::process_key(int key)
         return true;
     }
 
-    const bool result = Menu::process_key(key);
-    if (resetting)
-    {
-        // If we should stay in the menu, exit and re-enter it instead, to
-        // remove the "Select to reset" header and to correctly display
-        // default autopickup settings.  See check_item_knowledge() for the
-        // other side of this hack.
-        if (result)
-            lastch = CONTROL('R');
-
-        return false;
-    }
-    else
-        return result;
+    return Menu::process_key(key);
 }
 
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
-    if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER
-                                      || mkey == CONTROL('R')))
-    {
+    if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER))
         return mkey;
-    }
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
