@@ -1451,33 +1451,6 @@ MAP
    .....@.....
 ENDMAP
 
-NAME:   evilmike_dwarf_pyromaniacs
-DEPTH:  D:13-22, Vaults, Elf
-MONS:   deep dwarf artificer ; w:5 wand of flame | wand of fire
-MONS:   stone golem name:experimental n_adj perm_ench:inner_flame
-KMONS:  3 = fire elemental
-KITEM:  3 = gold, gold, gold, gold, star_item
-SUBST:  4 = 2.
-MAP
-     xxxxxx
-    xx....x
-   xx....1x
-   x....2%x
-   x...xxxxxxx
-   x...xxxx.xx
-xxxxx+xxxx..1xxxxxx
-x......xx....2xbbbx
-+....1.+......4=3bx
-x......xx....2xbbbx
-xxxxx+xxxx..1xxxxxx
-   x...xxxx.xx
-   x...xxxxxxx
-   x....2%x
-   xx....1x
-    xx....x
-     xxxxxx
-ENDMAP
-
 NAME: lookout_dungeons_type
 DEPTH: D:4-14
 TAGS: extra no_pool_fixup layout_rooms layout_city
