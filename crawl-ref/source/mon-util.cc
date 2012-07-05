@@ -423,7 +423,7 @@ bool mons_class_is_confusable(monster_type mc)
 
 bool mons_class_is_stationary(monster_type mc)
 {
-    return (mons_class_flag(mc, M_STATIONARY));
+    return mons_class_flag(mc, M_STATIONARY);
 }
 
 bool mons_is_stationary(const monster* mon)
@@ -445,7 +445,7 @@ bool mons_class_is_firewood(monster_type mc)
 
 bool mons_is_firewood(const monster* mon)
 {
-    return (mons_class_is_firewood(mon->type));
+    return mons_class_is_firewood(mon->type);
 }
 
 // "body" in a purely grammatical sense.
@@ -657,12 +657,12 @@ bool mons_class_is_slime(monster_type mc)
 
 bool mons_is_slime(const monster* mon)
 {
-    return (mons_class_is_slime(mon->type));
+    return mons_class_is_slime(mon->type);
 }
 
 bool herd_monster(const monster* mon)
 {
-    return (mons_class_flag(mon->type, M_HERD));
+    return mons_class_flag(mon->type, M_HERD);
 }
 
 // Plant or fungus really
@@ -675,7 +675,7 @@ bool mons_class_is_plant(monster_type mc)
 
 bool mons_is_plant(const monster* mon)
 {
-    return (mons_class_is_plant(mon->type));
+    return mons_class_is_plant(mon->type);
 }
 
 bool mons_eats_items(const monster* mon)
@@ -994,7 +994,7 @@ monster_type draco_subspecies(const monster* mon)
     ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
 
     if (mon->type == MONS_PLAYER_ILLUSION)
-        return (player_species_to_mons_species(mon->ghost->species));
+        return player_species_to_mons_species(mon->ghost->species);
 
     monster_type retval = mons_species(mon->type);
 
@@ -1097,12 +1097,12 @@ bool mons_is_pghost(monster_type mc)
 
 bool mons_is_unique(monster_type mc)
 {
-    return (mons_class_flag(mc, M_UNIQUE));
+    return mons_class_flag(mc, M_UNIQUE);
 }
 
 bool mons_sense_invis(const monster* mon)
 {
-    return (mons_class_flag(mon->type, M_SENSE_INVIS));
+    return mons_class_flag(mon->type, M_SENSE_INVIS);
 }
 
 ucs_t mons_char(monster_type mc)
@@ -1125,9 +1125,9 @@ mon_itemuse_type mons_class_itemuse(monster_type mc)
 mon_itemuse_type mons_itemuse(const monster* mon)
 {
     if (mons_enslaved_soul(mon))
-        return (mons_class_itemuse(mons_zombie_base(mon)));
+        return mons_class_itemuse(mons_zombie_base(mon));
 
-    return (mons_class_itemuse(mon->type));
+    return mons_class_itemuse(mon->type);
 }
 
 static mon_itemeat_type _mons_class_itemeat(monster_type mc)
@@ -1165,7 +1165,7 @@ bool mons_can_regenerate(const monster* mon)
     if (testbits(mon->flags, MF_NO_REGEN))
         return false;
 
-    return (mons_class_can_regenerate(mon->type));
+    return mons_class_can_regenerate(mon->type);
 }
 
 bool mons_class_can_display_wounds(monster_type mc)
@@ -1177,7 +1177,7 @@ bool mons_can_display_wounds(const monster* mon)
 {
     _get_kraken_head(mon);
 
-    return (mons_class_can_display_wounds(mon->type));
+    return mons_class_can_display_wounds(mon->type);
 }
 
 // Size based on zombie class.
@@ -1221,7 +1221,7 @@ bool mons_class_is_zombified(monster_type mc)
 
 bool mons_is_zombified(const monster* mon)
 {
-    return (mons_class_is_zombified(mon->type));
+    return mons_class_is_zombified(mon->type);
 }
 
 monster_type mons_base_type(const monster* mon)
@@ -1262,7 +1262,7 @@ bool mons_class_can_use_stairs(monster_type mc)
 
 bool mons_can_use_stairs(const monster* mon)
 {
-    return (mons_class_can_use_stairs(mon->type));
+    return mons_class_can_use_stairs(mon->type);
 }
 
 bool mons_enslaved_body_and_soul(const monster* mon)
@@ -1272,7 +1272,7 @@ bool mons_enslaved_body_and_soul(const monster* mon)
 
 bool mons_enslaved_soul(const monster* mon)
 {
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL));
+    return testbits(mon->flags, MF_ENSLAVED_SOUL);
 }
 
 bool name_zombie(monster* mon, monster_type mc, const std::string &mon_name)
@@ -1324,7 +1324,7 @@ bool name_zombie(monster* mon, const monster* orig)
     else
         name = mons_type_name(orig->type, DESC_PLAIN);
 
-    return (name_zombie(mon, orig->type, name));
+    return name_zombie(mon, orig->type, name);
 }
 
 static int _downscale_zombie_damage(int damage)
@@ -2218,7 +2218,7 @@ static const colour_t ugly_colour_values[] = {
 
 colour_t ugly_thing_random_colour()
 {
-    return (RANDOM_ELEMENT(ugly_colour_values));
+    return RANDOM_ELEMENT(ugly_colour_values);
 }
 
 int str_to_ugly_thing_colour(const std::string &s)
@@ -2397,7 +2397,7 @@ int mons_class_base_speed(monster_type mc)
 
 int mons_class_zombie_base_speed(monster_type zombie_base_mc)
 {
-    return (std::max(3, mons_class_base_speed(zombie_base_mc) - 2));
+    return std::max(3, mons_class_base_speed(zombie_base_mc) - 2);
 }
 
 int mons_base_speed(const monster* mon)
@@ -2406,7 +2406,7 @@ int mons_base_speed(const monster* mon)
         return mon->ghost->speed;
 
     if (mons_enslaved_soul(mon))
-        return (mons_class_base_speed(mons_zombie_base(mon)));
+        return mons_class_base_speed(mons_zombie_base(mon));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
                                    : mons_class_base_speed(mon->type));
@@ -2423,9 +2423,9 @@ mon_intel_type mons_intel(const monster* mon)
     _get_kraken_head(mon);
 
     if (mons_enslaved_soul(mon))
-        return (mons_class_intel(mons_zombie_base(mon)));
+        return mons_class_intel(mons_zombie_base(mon));
 
-    return (mons_class_intel(mon->type));
+    return mons_class_intel(mon->type);
 }
 
 static habitat_type _mons_class_habitat(monster_type mc,
@@ -2460,7 +2460,7 @@ habitat_type mons_class_primary_habitat(monster_type mc)
 
 habitat_type mons_primary_habitat(const monster* mon)
 {
-    return (mons_class_primary_habitat(mons_base_type(mon)));
+    return mons_class_primary_habitat(mons_base_type(mon));
 }
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
@@ -2475,7 +2475,7 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
 
 habitat_type mons_secondary_habitat(const monster* mon)
 {
-    return (mons_class_secondary_habitat(mons_base_type(mon)));
+    return mons_class_secondary_habitat(mons_base_type(mon));
 }
 
 bool mons_wall_shielded(const monster* mon)
@@ -2492,7 +2492,7 @@ int mons_power(monster_type mc)
 {
     // For now, just return monster hit dice.
     ASSERT(smc);
-    return (mons_class_hit_dice(mc));
+    return mons_class_hit_dice(mc);
 }
 
 bool mons_aligned(const actor *m1, const actor *m2)
@@ -2523,7 +2523,7 @@ bool mons_aligned(const actor *m1, const actor *m2)
         fr2 = mons_attitude(mon2);
     }
 
-    return (mons_atts_aligned(fr1, fr2));
+    return mons_atts_aligned(fr1, fr2);
 }
 
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
@@ -2536,7 +2536,7 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 
 bool mons_class_wields_two_weapons(monster_type mc)
 {
-    return (mons_class_flag(mc, M_TWO_WEAPONS));
+    return mons_class_flag(mc, M_TWO_WEAPONS);
 }
 
 bool mons_wields_two_weapons(const monster* mon)
@@ -2544,7 +2544,7 @@ bool mons_wields_two_weapons(const monster* mon)
     if (testbits(mon->flags, MF_TWO_WEAPONS))
         return true;
 
-    return (mons_class_wields_two_weapons(mons_base_type(mon)));
+    return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
 bool mons_self_destructs(const monster* m)
@@ -2764,7 +2764,7 @@ bool mons_should_fire(struct bolt &beam)
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
-        return (_mons_should_fire_beneficial(beam));
+        return _mons_should_fire_beneficial(beam);
 
     // Friendly monsters shouldn't be targetting you: this will happen
     // often because the default behaviour for charmed monsters is to
@@ -2968,7 +2968,7 @@ static bool _mons_has_ranged_weapon(const monster* mon)
     if (!missile)
         return false;
 
-    return (is_launched(mnc, weapon, *missile));
+    return is_launched(mnc, weapon, *missile);
 }
 
 bool mons_has_ranged_attack(const monster* mon)

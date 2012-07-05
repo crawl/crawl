@@ -242,7 +242,7 @@ int SQL_DBM::do_query(const std::string &key, std::string *result)
     if (err == SQLITE_DONE)
         err = SQLITE_OK;
 
-    return (ec(err));
+    return ec(err);
 }
 
 std::string SQL_DBM::query(const std::string &key)

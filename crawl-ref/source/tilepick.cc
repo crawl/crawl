@@ -410,7 +410,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
 
         // FIXME: This accesses grd directly, instead of map_knowledge
         find_secret_door_info(gc, &door_feat, &door);
-        return (_tileidx_feature_base(door_feat));
+        return _tileidx_feature_base(door_feat);
     }
     case DNGN_CLOSED_DOOR:
     {
@@ -429,7 +429,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             else
                 return TILE_DNGN_GATE_CLOSED_LEFT;
         }
-        return (_tileidx_feature_base(feat));
+        return _tileidx_feature_base(feat);
     }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
@@ -462,7 +462,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
         return TILE_DNGN_TRAP_WEB;
     }
     case DNGN_ENTER_SHOP:
-        return (_tileidx_shop(gc));
+        return _tileidx_shop(gc);
     case DNGN_DEEP_WATER:
         if (env.map_knowledge(gc).feat_colour() == GREEN
             || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
@@ -493,7 +493,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             return t;
         }
     default:
-        return (_tileidx_feature_base(feat));
+        return _tileidx_feature_base(feat);
     }
 }
 
@@ -2995,7 +2995,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
 static tileidx_t _tileidx_missile(const item_def &item)
 {
     int tile = _tileidx_missile_base(item);
-    return (tileidx_enchant_equ(item, tile));
+    return tileidx_enchant_equ(item, tile);
 }
 
 static tileidx_t _tileidx_armour_base(const item_def &item)
@@ -4092,7 +4092,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 break;
         }
         if (ch != -1)
-            return (tileidx_enchant_equ(item, ch));
+            return tileidx_enchant_equ(item, ch);
     }
 
     // If not a special case, just return the default tile.

@@ -314,7 +314,7 @@ bool is_known_artefact(const item_def &item)
     if (!item_type_known(item))
         return false;
 
-    return (is_artefact(item));
+    return is_artefact(item);
 }
 
 bool is_artefact(const item_def &item)
@@ -679,7 +679,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
     // If an artefact has exactly one stat property, we might want to add
     // some more. (66% chance if it's Acc/Dam, else always.)
     if (num_acc_dam > 0)
-        return (random2(3));
+        return random2(3);
 
     return (1 + random2(2));
 }

@@ -76,7 +76,7 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
         return false;
     }
 
-    return (validate_player_name(name, verbose));
+    return validate_player_name(name, verbose);
 }
 
 static bool _read_player_name(std::string &name)

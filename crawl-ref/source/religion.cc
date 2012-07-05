@@ -1482,13 +1482,13 @@ static bool _has_jelly()
 bool is_follower(const monster* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
-        return (is_yred_undead_slave(mon));
+        return is_yred_undead_slave(mon);
     else if (you.religion == GOD_BEOGH)
-        return (is_orcish_follower(mon));
+        return is_orcish_follower(mon);
     else if (you.religion == GOD_JIYVA)
-        return (is_fellow_slime(mon));
+        return is_fellow_slime(mon);
     else if (you.religion == GOD_FEDHAS)
-        return (_is_neutral_plant(mon));
+        return _is_neutral_plant(mon);
     else
         return (mon->alive() && mon->friendly());
 }
@@ -2050,15 +2050,15 @@ static bool _jiyva_mutate()
     const int rand = random2(100);
 
     if (rand < 10)
-        return (delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true));
+        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 30)
-        return (delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true));
+        return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 55)
-        return (mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true));
+        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 75)
-        return (mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true));
+        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
-        return (mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true));
+        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
 bool do_god_gift(bool forced)
@@ -3217,9 +3217,9 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
         case GOD_BEOGH: // added penance to avoid killings for loot
             return (mons_genus(species) == MONS_ORC);
         case GOD_JIYVA:
-            return (mons_class_is_slime(species));
+            return mons_class_is_slime(species);
         case GOD_FEDHAS:
-            return (_fedhas_protects_species(species));
+            return _fedhas_protects_species(species);
         default:
             return false;
     }
@@ -3664,7 +3664,7 @@ bool god_hates_your_god(god_type god, god_type your_god)
     if (god == GOD_ZIN && is_chaotic_god(your_god))
         return true;
 
-    return (is_evil_god(your_god));
+    return is_evil_god(your_god);
 }
 
 bool god_hates_cannibalism(god_type god)
@@ -3716,9 +3716,9 @@ bool god_likes_spell(spell_type spell, god_type god)
     switch (god)
     {
     case GOD_VEHUMET:
-        return (vehumet_supports_spell(spell));
+        return vehumet_supports_spell(spell);
     case GOD_KIKUBAAQUDGHA:
-        return (spell_typematch(spell, SPTYP_NECROMANCY));
+        return spell_typematch(spell, SPTYP_NECROMANCY);
     default: // quash unhandled constants warnings
         return false;
     }

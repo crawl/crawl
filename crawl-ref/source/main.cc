@@ -997,7 +997,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_NOWHERE:
     case CMD_REST:
     case CMD_SEARCH:
-        return (i_feel_safe(true));
+        return i_feel_safe(true);
 
     case CMD_MOVE_LEFT:
     case CMD_MOVE_DOWN:

@@ -47,7 +47,7 @@ static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
     if (mons_class_flag(mons->type, M_COLD_BLOOD))
         duration *= 2;
 
-    return (do_slow_monster(mons, actor, duration));
+    return do_slow_monster(mons, actor, duration);
 }
 
 spret_type cast_englaciation(int pow, bool fail)

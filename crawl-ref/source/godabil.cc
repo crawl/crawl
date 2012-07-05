@@ -2873,7 +2873,7 @@ static bool _possible_evolution(const monster* input,
 bool mons_is_evolvable(const monster* mon)
 {
     monster_conversion temp;
-    return (_possible_evolution(mon, temp));
+    return _possible_evolution(mon, temp);
 }
 
 static bool _place_ballisto(const coord_def & pos)
@@ -2961,7 +2961,7 @@ bool fedhas_evolve_flora()
                 mpr("You must target a plant or fungus.");
             return false;
         }
-        return (_place_ballisto(spelld.target));
+        return _place_ballisto(spelld.target);
 
     }
 

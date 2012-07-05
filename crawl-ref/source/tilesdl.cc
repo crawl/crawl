@@ -389,7 +389,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     {
         delete font;
         if (default_on_fail)
-            return (load_font(MONOSPACED_FONT, 12, false, outline));
+            return load_font(MONOSPACED_FONT, 12, false, outline);
         else
             return -1;
     }

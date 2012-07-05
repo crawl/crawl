@@ -31,7 +31,7 @@ monster_type debug_prompt_for_monster(void)
         if (specs[0] == '\0')
             return MONS_NO_MONSTER;
 
-        return (get_monster_by_name(specs));
+        return get_monster_by_name(specs);
     }
     return MONS_NO_MONSTER;
 }

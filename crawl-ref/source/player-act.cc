@@ -205,7 +205,7 @@ int player::total_weight() const
 int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
-        return (get_vorpal_type(*wp));
+        return get_vorpal_type(*wp);
     else if (form == TRAN_BLADE_HANDS)
         return DVORP_SLICING;
     else if (has_usable_claws())
@@ -286,7 +286,7 @@ item_def *player::weapon(int /* which_attack */)
     if (you.melded[EQ_WEAPON])
         return NULL;
 
-    return (slot_item(EQ_WEAPON, false));
+    return slot_item(EQ_WEAPON, false);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -348,7 +348,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 // Returns the shield the player is wearing, or NULL if none.
 item_def *player::shield()
 {
-    return (slot_item(EQ_SHIELD, false));
+    return slot_item(EQ_SHIELD, false);
 }
 
 void player::make_hungry(int hunger_increase, bool silent)
@@ -580,7 +580,7 @@ void player::go_berserk(bool intentional, bool potion)
 
 bool player::can_go_berserk() const
 {
-    return (can_go_berserk(false));
+    return can_go_berserk(false);
 }
 
 bool player::can_go_berserk(bool intentional, bool potion) const
@@ -691,7 +691,7 @@ bool player::can_cling_to_walls() const
 bool player::is_web_immune() const
 {
     // Spider form
-    return (can_cling_to_walls());
+    return can_cling_to_walls();
 }
 
 bool player::shove(const char* feat_name)

@@ -65,15 +65,15 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
         return (mon->wont_attack() && mon->is_actual_spellcaster());
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
-        return (is_yred_undead_slave(mon));
+        return is_yred_undead_slave(mon);
     case DACT_ALLY_BEOGH: // both orcies and demons summoned by sorcerers
         return (mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH));
     case DACT_ALLY_SLIME:
-        return (is_fellow_slime(mon));
+        return is_fellow_slime(mon);
     case DACT_ALLY_PLANT:
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
-        return (mons_is_plant(mon));
+        return mons_is_plant(mon);
 
     // Not a stored counter:
     case DACT_ALLY_TROG:

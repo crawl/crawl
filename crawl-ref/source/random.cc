@@ -80,7 +80,7 @@ int maybe_random2(int x, bool random_factor)
     if (x <= 1)
         return 0;
     if (random_factor)
-        return (random2(x));
+        return random2(x);
     else
         return (x / 2);
 }
@@ -100,7 +100,7 @@ int maybe_random_div(int nom, int denom, bool random_factor)
 int maybe_roll_dice(int num, int size, bool random)
 {
     if (random)
-        return (roll_dice(num, size));
+        return roll_dice(num, size);
     else
         return ((num + num * size) / 2);
 }

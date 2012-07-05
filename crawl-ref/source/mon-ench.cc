@@ -1890,7 +1890,7 @@ actor* mon_enchant::agent() const
 
 int mon_enchant::modded_speed(const monster* mons, int hdplus) const
 {
-    return (_mod_speed(mons->hit_dice + hdplus, mons->speed));
+    return _mod_speed(mons->hit_dice + hdplus, mons->speed);
 }
 
 int mon_enchant::calc_duration(const monster* mons,

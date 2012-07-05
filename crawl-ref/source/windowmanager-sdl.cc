@@ -410,7 +410,7 @@ void SDLWrapper::resize(coord_def &m_windowsz)
 
 unsigned int SDLWrapper::get_ticks() const
 {
-    return (SDL_GetTicks());
+    return SDL_GetTicks();
 }
 
 key_mod SDLWrapper::get_mod_state() const
@@ -542,7 +542,7 @@ int SDLWrapper::raise_custom_event()
 {
     SDL_Event send_event;
     send_event.type = SDL_USEREVENT;
-    return (SDL_PushEvent(&send_event));
+    return SDL_PushEvent(&send_event);
 }
 
 void SDLWrapper::swap_buffers()
@@ -613,7 +613,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
     assert(count >= 0);
 
-    return (std::max(count, 0));
+    return std::max(count, 0);
 }
 
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,

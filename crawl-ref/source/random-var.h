@@ -26,7 +26,7 @@ public:
     int roll() const;        // evaluate the random variable
     operator int() const
     {
-        return (roll());
+        return roll();
     }
 
     double expected() const; // expected value

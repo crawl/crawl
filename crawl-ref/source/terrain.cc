@@ -49,7 +49,7 @@ actor* actor_at(const coord_def& c)
         return NULL;
     if (c == you.pos())
         return (&you);
-    return (monster_at(c));
+    return monster_at(c);
 }
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
@@ -307,7 +307,7 @@ bool feat_is_solid(dungeon_feature_type feat)
 
 bool cell_is_solid(const coord_def &c)
 {
-    return (feat_is_solid(grd(c)));
+    return feat_is_solid(grd(c));
 }
 
 bool feat_has_solid_floor(dungeon_feature_type feat)

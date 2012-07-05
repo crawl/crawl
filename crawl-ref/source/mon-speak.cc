@@ -792,7 +792,7 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
+    return mons_speaks_msg(mons, msg, MSGCH_TALK, silence);
 }
 
 bool mons_speaks_msg(monster* mons, const std::string &msg,

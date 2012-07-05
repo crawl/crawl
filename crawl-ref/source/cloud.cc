@@ -1152,7 +1152,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
         cloud_struct cloud;
         cloud.type = type;
         cloud.decay = 100;
-        return (_cloud_is_harmful(&you, cloud, 0));
+        return _cloud_is_harmful(&you, cloud, 0);
     }
     else
     {
@@ -1195,7 +1195,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_DEBUGGING:
         return true;
     default:
-        return (_cloud_is_cosmetic(type));
+        return _cloud_is_cosmetic(type);
     }
 }
 

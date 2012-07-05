@@ -249,7 +249,7 @@ static bool _check_moveto_terrain(const coord_def& p,
     if (you.is_wall_clinging()
         && (move_verb == "blink" || move_verb == "passwall"))
     {
-        return (_check_moveto_dangerous(p, msg, false));
+        return _check_moveto_dangerous(p, msg, false);
     }
 
     if (!need_expiration_warning() && need_expiration_warning(p))
@@ -2300,9 +2300,9 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
             return mlevel;
         case HS_VERY_FULL:
         case HS_FULL:
-            return (std::min(mlevel, 2));
+            return std::min(mlevel, 2);
         case HS_SATIATED:
-            return (std::min(mlevel, 1));
+            return std::min(mlevel, 1);
         default:
             return 0;
         }
@@ -2574,7 +2574,7 @@ int player_evasion(ev_ignore_type evit)
     const int final_evasion =
         _player_scale_evasion(prescaled_evasion, scale);
 
-    return (unscale_round_up(final_evasion, scale));
+    return unscale_round_up(final_evasion, scale);
 }
 
 static int _player_body_armour_racial_spellcasting_bonus(const int scale)
@@ -4363,7 +4363,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
             return true;
         // else fall-through
     case AMU_CONSERVATION:
-        return (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
+        return player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION);
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
@@ -5968,7 +5968,7 @@ int player::visible_igrd(const coord_def &where) const
         return NON_ITEM;
     }
 
-    return (igrd(where));
+    return igrd(where);
 }
 
 bool player::has_spell(spell_type spell) const
@@ -6512,22 +6512,22 @@ bool player::is_insubstantial() const
 
 int player::res_acid() const
 {
-    return (player_res_acid());
+    return player_res_acid();
 }
 
 int player::res_fire() const
 {
-    return (player_res_fire());
+    return player_res_fire();
 }
 
 int player::res_steam() const
 {
-    return (player_res_steam());
+    return player_res_steam();
 }
 
 int player::res_cold() const
 {
-    return (player_res_cold());
+    return player_res_cold();
 }
 
 int player::res_elec() const
@@ -6552,7 +6552,7 @@ int player::res_asphyx() const
 
 int player::res_poison(bool temp) const
 {
-    return (player_res_poison(true, temp));
+    return player_res_poison(true, temp);
 }
 
 int player::res_rotting(bool temp) const
@@ -6586,7 +6586,7 @@ int player::res_rotting(bool temp) const
 
 int player::res_sticky_flame() const
 {
-    return (player_res_sticky_flame());
+    return player_res_sticky_flame();
 }
 
 int player::res_holy_energy(const actor *attacker) const
@@ -6605,12 +6605,12 @@ int player::res_holy_energy(const actor *attacker) const
 
 int player::res_negative_energy() const
 {
-    return (player_prot_life());
+    return player_prot_life();
 }
 
 int player::res_torment() const
 {
-    return (player_res_torment());
+    return player_res_torment();
 }
 
 int player::res_wind() const
@@ -7003,7 +7003,7 @@ int player::has_claws(bool allow_tran) const
     if (const int c = species_has_claws(you.species))
         return c;
 
-    return (player_mutation_level(MUT_CLAWS, allow_tran));
+    return player_mutation_level(MUT_CLAWS, allow_tran);
 }
 
 bool player::has_usable_claws(bool allow_tran) const
@@ -7017,7 +7017,7 @@ int player::has_talons(bool allow_tran) const
     if (you.fishtail)
         return 0;
 
-    return (player_mutation_level(MUT_TALONS, allow_tran));
+    return player_mutation_level(MUT_TALONS, allow_tran);
 }
 
 bool player::has_usable_talons(bool allow_tran) const
@@ -7034,12 +7034,12 @@ int player::has_fangs(bool allow_tran) const
             return 3;
     }
 
-    return (player_mutation_level(MUT_FANGS, allow_tran));
+    return player_mutation_level(MUT_FANGS, allow_tran);
 }
 
 int player::has_usable_fangs(bool allow_tran) const
 {
-    return (has_fangs(allow_tran));
+    return has_fangs(allow_tran);
 }
 
 int player::has_tail(bool allow_tran) const
@@ -7076,7 +7076,7 @@ int player::has_usable_tail(bool allow_tran) const
         return 0;
     }
 
-    return (has_tail(allow_tran));
+    return has_tail(allow_tran);
 }
 
 // Whether the player has a usable offhand for the
@@ -7127,12 +7127,12 @@ int player::usable_tentacles() const
 
 int player::has_pseudopods(bool allow_tran) const
 {
-    return (player_mutation_level(MUT_PSEUDOPODS, allow_tran));
+    return player_mutation_level(MUT_PSEUDOPODS, allow_tran);
 }
 
 int player::has_usable_pseudopods(bool allow_tran) const
 {
-    return (has_pseudopods(allow_tran));
+    return has_pseudopods(allow_tran);
 }
 
 int player::has_tentacles(bool allow_tran) const
@@ -7152,7 +7152,7 @@ int player::has_tentacles(bool allow_tran) const
 
 int player::has_usable_tentacles(bool allow_tran) const
 {
-    return (has_tentacles(allow_tran));
+    return has_tentacles(allow_tran);
 }
 
 bool player::sicken(int amount, bool allow_hint)
@@ -7229,7 +7229,7 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
 
 bool player::can_see_invisible() const
 {
-    return (can_see_invisible(true));
+    return can_see_invisible(true);
 }
 
 bool player::invisible() const
@@ -7366,7 +7366,7 @@ bool player::mutate(const std::string &reason)
         }
     }
 
-    return (give_bad_mutation(reason));
+    return give_bad_mutation(reason);
 }
 
 bool player::is_icy() const

@@ -90,7 +90,7 @@ int ng_num_species()
 {
     // The list musn't be longer than the number of actual species.
     COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
-    return (ARRAYSZ(species_order));
+    return ARRAYSZ(species_order);
 }
 
 // Does a case-sensitive lookup of the species name supplied.

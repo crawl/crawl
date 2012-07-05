@@ -846,7 +846,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     const int rarity = mdef.rarity + you.innate_mutations[mutat];
 
     // Low rarity means unlikely to choose it.
-    return (x_chance_in_y(rarity, 10));
+    return x_chance_in_y(rarity, 10);
 }
 
 static mutation_type _get_random_slime_mutation()
@@ -1187,7 +1187,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     default:
         die("invalid stat mutation: %d", mut);
     }
-    return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
+    return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
 bool mutate(mutation_type which_mutation, const std::string &reason,
@@ -1655,7 +1655,7 @@ bool delete_mutation(mutation_type which_mutation, const std::string &reason,
             return false;
     }
 
-    return (_delete_single_mutation_level(mutat, reason));
+    return _delete_single_mutation_level(mutat, reason);
 }
 
 bool delete_all_mutations(const std::string &reason)

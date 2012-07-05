@@ -45,7 +45,7 @@
 
 spret_type fireball(int pow, bolt &beam, bool fail)
 {
-    return (zapping(ZAP_FIREBALL, pow, beam, true, NULL, fail));
+    return zapping(ZAP_FIREBALL, pow, beam, true, NULL, fail);
 }
 
 // This spell has two main advantages over Fireball:

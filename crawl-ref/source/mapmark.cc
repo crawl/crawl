@@ -229,7 +229,7 @@ bool map_lua_marker::get_table() const
     if (marker_table.get())
     {
         marker_table->push();
-        return (lua_istable(dlua, -1));
+        return lua_istable(dlua, -1);
     }
     else
     {
@@ -369,7 +369,7 @@ std::string map_lua_marker::call_str_fn(const char *fn) const
 
 std::string map_lua_marker::debug_describe() const
 {
-    return (call_str_fn("describe"));
+    return call_str_fn("describe");
 }
 
 std::string map_lua_marker::property(const std::string &pname) const

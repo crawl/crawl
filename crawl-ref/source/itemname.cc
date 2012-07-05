@@ -3119,7 +3119,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING);
 
         case RING_SEE_INVISIBLE:
-            return (player_mutation_level(MUT_ACUTE_VISION));
+            return player_mutation_level(MUT_ACUTE_VISION);
 
         case RING_POISON_RESISTANCE:
             return (player_res_poison(false, temp, false) > 0
@@ -3133,7 +3133,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.religion == GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (player_control_teleport(true, temp, false));
+            return player_control_teleport(true, temp, false);
 
         case RING_TELEPORTATION:
             return (crawl_state.game_is_sprint());
@@ -3205,7 +3205,7 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MISC_EMPTY_EBONY_CASKET:
-            return (item_type_known(item));
+            return item_type_known(item);
         case MISC_DISC_OF_STORMS:
             return (player_res_electricity(false, temp) > 0);
         case MISC_LAMP_OF_FIRE:

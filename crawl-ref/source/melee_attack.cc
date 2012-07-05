@@ -2810,7 +2810,7 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
     attack_flavour flavours[] =
         {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_NASTY, AF_VAMPIRIC, AF_DISTORT,
          AF_CONFUSE, AF_CHAOS};
-    return (RANDOM_ELEMENT(flavours));
+    return RANDOM_ELEMENT(flavours);
 }
 
 bool melee_attack::apply_damage_brand()
@@ -3709,7 +3709,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         dprf("Weapon speed: %d; min: %d; attack time: %d",
              final_delay, min_delay, you.time_taken);
 
-        return (std::max(2, div_rand_round(you.time_taken * final_delay, 10)));
+        return std::max(2, div_rand_round(you.time_taken * final_delay, 10));
     }
     else
     {
@@ -3948,7 +3948,7 @@ std::string melee_attack::mons_attack_verb()
     };
 
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
-        return (RANDOM_ELEMENT(klown_attack));
+        return RANDOM_ELEMENT(klown_attack);
 
     if (mons_is_feat_mimic(attacker->type))
     {
@@ -5125,7 +5125,7 @@ int melee_attack::calc_damage()
                  damage);
         }
 
-        return (apply_defender_ac(damage, damage_max));
+        return apply_defender_ac(damage, damage_max);
     }
     else
     {

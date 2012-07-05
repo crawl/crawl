@@ -446,7 +446,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    return (feat_is_traversable_now(grid));
+    return feat_is_traversable_now(grid);
 }
 
 // Returns true if the location at (x,y) is monster-free and contains
@@ -1971,7 +1971,7 @@ static bool _is_known_branch_id(branch_type branch)
 
 static bool _is_known_branch(const Branch &br)
 {
-    return (_is_known_branch_id(br.id));
+    return _is_known_branch_id(br.id);
 }
 
 // Returns a list of the branches that the player knows the location of the

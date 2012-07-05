@@ -749,7 +749,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
     else
         macro_buf_add_long(keys, Keymaps[mc]);
 
-    return (macro_buf_get());
+    return macro_buf_get();
 }
 
 /*
@@ -771,7 +771,7 @@ int getch_with_command_macros()
     // Apply longest matching macro at front of buffer:
     macro_buf_apply_command_macro();
 
-    return (macro_buf_get());
+    return macro_buf_get();
 }
 
 /*

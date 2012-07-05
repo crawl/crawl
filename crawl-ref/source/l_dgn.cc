@@ -1462,7 +1462,7 @@ static bool _lua_map_place_valid(const map_def &map,
         return true;
     }
 
-    return (lua_toboolean(ls, -1));
+    return lua_toboolean(ls, -1);
 }
 
 LUAFN(dgn_with_map_bounds_fn)

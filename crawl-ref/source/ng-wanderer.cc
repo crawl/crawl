@@ -285,7 +285,7 @@ static skill_type _weighted_skill_roll()
     {
         covered_region += you.skills[i];
         if (probe < covered_region)
-            return (skill_type(i));
+            return skill_type(i);
     }
 
     return NUM_SKILLS;

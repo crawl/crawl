@@ -786,7 +786,7 @@ bool eat_food(int slot)
         }
     }
 
-    return (prompt_eat_inventory_item(slot));
+    return prompt_eat_inventory_item(slot);
 }
 
 //     END PUBLIC FUNCTIONS
@@ -1688,7 +1688,7 @@ static int _chunk_nutrition(int likes_chunks)
                 gourmand, nutrition, effective_nutrition, epercent);
 #endif
 
-    return (_apply_herbivore_nutrition_effects(effective_nutrition));
+    return _apply_herbivore_nutrition_effects(effective_nutrition);
 }
 
 static void _say_chunk_flavour(bool likes_chunks)
@@ -2169,7 +2169,7 @@ bool is_poisonous(const item_def &food)
     if (player_res_poison(false) > 0)
         return false;
 
-    return (chunk_is_poisonous(mons_corpse_effect(food.mon_type)));
+    return chunk_is_poisonous(mons_corpse_effect(food.mon_type));
 }
 
 // Returns true if a food item (also corpses) is mutagenic.
@@ -2297,7 +2297,7 @@ bool is_preferred_food(const item_def &food)
     // Vampires don't really have a preferred food type, but they really
     // like blood potions.
     if (you.species == SP_VAMPIRE)
-        return (is_blood_potion(food));
+        return is_blood_potion(food);
 
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
         && item_type_known(food))
@@ -2318,7 +2318,7 @@ bool is_preferred_food(const item_def &food)
 
     // Ghouls specifically like rotten food.
     if (you.species == SP_GHOUL)
-        return (food_is_rotten(food));
+        return food_is_rotten(food);
 
     if (player_mutation_level(MUT_CARNIVOROUS) == 3)
         return (_player_likes_food_type(food.sub_type) < 0);

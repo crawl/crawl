@@ -454,7 +454,7 @@ int CLua::return_count(lua_State *ls, const char *format)
 
     const char *gs = strchr(format, '>');
     if (gs)
-        return (strlen(gs + 1));
+        return strlen(gs + 1);
 
     const char *cs = strchr(format, ':');
     if (cs && isdigit(*format))
@@ -514,7 +514,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    return (callmbooleanfn(fn, params, args));
+    return callmbooleanfn(fn, params, args);
 }
 
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
@@ -522,7 +522,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
-    return (tobool(r, def));
+    return tobool(r, def);
 }
 
 bool CLua::proc_returns(const char *par) const
@@ -700,7 +700,7 @@ bool CLua::is_managed_vm(lua_State *ls)
     lua_stack_cleaner clean(ls);
     lua_pushstring(ls, "lua_vm_is_managed");
     lua_gettable(ls, LUA_REGISTRYINDEX);
-    return (lua_toboolean(ls, -1));
+    return lua_toboolean(ls, -1);
 }
 
 void CLua::load_chooks()
@@ -857,7 +857,7 @@ void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
 
 std::string lua_text_pattern::new_fn_name()
 {
-    return (make_stringf("__ch_stash_search_%u", lfndx++));
+    return make_stringf("__ch_stash_search_%u", lfndx++);
 }
 
 bool lua_text_pattern::translate() const
@@ -967,7 +967,7 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
         return NULL;
     }
     else
-        return (realloc(ptr, nsize));
+        return realloc(ptr, nsize);
 }
 
 static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
@@ -1052,7 +1052,7 @@ static int _clua_guarded_pcall(lua_State *ls)
     lua_pushboolean(ls, !err);
     lua_insert(ls, 1);
 
-    return (lua_gettop(ls));
+    return lua_gettop(ls);
 }
 
 static int _clua_loadfile(lua_State *ls)
@@ -1094,10 +1094,10 @@ static int _clua_dofile(lua_State *ls)
 
     const int err = CLua::loadfile(ls, file, !CLua::is_managed_vm(ls));
     if (err)
-        return (lua_error(ls));
+        return lua_error(ls);
 
     lua_call(ls, 0, LUA_MULTRET);
-    return (lua_gettop(ls));
+    return lua_gettop(ls);
 }
 
 std::string quote_lua_string(const std::string &s)

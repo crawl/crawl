@@ -495,7 +495,7 @@ static int _silence_range(int dur)
 
 int player::silence_radius2() const
 {
-    return (_silence_range(you.duration[DUR_SILENCE]));
+    return _silence_range(you.duration[DUR_SILENCE]);
 }
 
 int monster::silence_radius2() const
@@ -510,7 +510,7 @@ int monster::silence_radius2() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
         std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return (_silence_range(moddur));
+    return _silence_range(moddur);
 }
 
 bool silenced(const coord_def& p)
@@ -519,7 +519,7 @@ bool silenced(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return (_check_agrid_flag(p, APROP_SILENCE));
+    return _check_agrid_flag(p, APROP_SILENCE);
 }
 
 /////////////
@@ -531,7 +531,7 @@ bool haloed(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return (_check_agrid_flag(p, APROP_HALO));
+    return _check_agrid_flag(p, APROP_HALO);
 }
 
 bool actor::haloed() const
@@ -597,7 +597,7 @@ int monster::halo_radius2() const
         return 4;
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
-        return (std::max(4, size));  // mere humans
+        return std::max(4, size);  // mere humans
     case MONS_BLESSED_TOE:
         return 17;
     case MONS_SILVER_STAR:
@@ -615,7 +615,7 @@ int monster::halo_radius2() const
 
 int player::liquefying_radius2() const
 {
-    return (_silence_range(you.duration[DUR_LIQUEFYING]));
+    return _silence_range(you.duration[DUR_LIQUEFYING]);
 }
 
 int monster::liquefying_radius2() const
@@ -626,7 +626,7 @@ int monster::liquefying_radius2() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
         std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return (_silence_range(moddur));
+    return _silence_range(moddur);
 }
 
 bool liquefied(const coord_def& p, bool check_actual)
@@ -642,10 +642,10 @@ bool liquefied(const coord_def& p, bool check_actual)
 
     // "actually" liquified (ie, check for movement)
     if (check_actual)
-        return (_check_agrid_flag(p, APROP_ACTUAL_LIQUID));
+        return _check_agrid_flag(p, APROP_ACTUAL_LIQUID);
     // just recoloured for consistency
     else
-        return (_check_agrid_flag(p, APROP_LIQUID));
+        return _check_agrid_flag(p, APROP_LIQUID);
 }
 
 
@@ -660,7 +660,7 @@ bool orb_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return (_check_agrid_flag(p, APROP_ORB));
+    return _check_agrid_flag(p, APROP_ORB);
 }
 
 /////////////
@@ -674,7 +674,7 @@ bool umbraed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return (_check_agrid_flag(p, APROP_UMBRA));
+    return _check_agrid_flag(p, APROP_UMBRA);
 }
 
 // Whether actor is in an umbra.
@@ -713,7 +713,7 @@ bool suppressed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return (_check_agrid_flag(p, APROP_SUPPRESSION));
+    return _check_agrid_flag(p, APROP_SUPPRESSION);
 }
 
 int monster::suppression_radius2() const

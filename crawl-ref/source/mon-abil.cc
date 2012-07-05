@@ -664,7 +664,7 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return (_do_merge_slimes(thing, merge_target));
+        return _do_merge_slimes(thing, merge_target);
 
     // No adjacent slime creatures we could merge with.
     return false;
@@ -710,7 +710,7 @@ static bool _crawling_corpse_merge(monster *crawlie)
     }
 
     if (merge_target)
-        return (_do_merge_crawlies(crawlie, merge_target));
+        return _do_merge_crawlies(crawlie, merge_target);
 
     // No adjacent crawlies.
     return false;
@@ -775,7 +775,7 @@ static monster *_slime_split(monster* thing, bool force_split)
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return (_do_split(thing, target));
+            return _do_split(thing, target);
         }
     }
 
@@ -797,7 +797,7 @@ static bool _slime_split_merge(monster* thing)
     if (_slime_split(thing, false))
         return true;
 
-    return (_slime_merge(thing));
+    return _slime_merge(thing);
 }
 
 // Splits and polymorphs merged slime creatures.
@@ -818,7 +818,7 @@ bool slime_creature_mutate(monster* slime)
         }
     }
 
-    return (monster_polymorph(slime, RANDOM_MONSTER));
+    return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
 // Returns true if you resist the siren's call.

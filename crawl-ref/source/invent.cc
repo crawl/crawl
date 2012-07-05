@@ -1179,7 +1179,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
-        return (item_is_wieldable(i));
+        return item_is_wieldable(i);
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
@@ -1188,13 +1188,13 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
 
     case OSEL_RECHARGE:
-        return (item_is_rechargeable(i, true));
+        return item_is_rechargeable(i, true);
 
     case OSEL_EVOKABLE:
-        return (item_is_evokable(i, true, true, true));
+        return item_is_evokable(i, true, true, true);
 
     case OSEL_ENCH_ARM:
-        return (is_enchantable_armour(i, true, true));
+        return is_enchantable_armour(i, true, true);
 
     case OBJ_FOOD:
         return (itype == OBJ_FOOD && !is_inedible(i));
@@ -1204,7 +1204,7 @@ static bool _item_class_selected(const item_def &i, int selector)
                 && !food_is_rotten(i) && mons_has_blood(i.mon_type));
 
     case OSEL_DRAW_DECK:
-        return (is_deck(i));
+        return is_deck(i);
 
     case OSEL_EQUIP:
     {
@@ -1763,7 +1763,7 @@ bool check_warning_inscriptions(const item_def& item,
             // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
+                return check_old_item_warning(item, oper);
         }
         else if (oper == OPER_PUTON)
         {
@@ -1783,7 +1783,7 @@ bool check_warning_inscriptions(const item_def& item,
 
                     equip = you.equip[slots];
                     if (equip != -1 && item.link == equip)
-                        return (check_old_item_warning(item, oper));
+                        return check_old_item_warning(item, oper);
                 }
             }
         }
@@ -1806,7 +1806,7 @@ bool check_warning_inscriptions(const item_def& item,
                 && check_old_item_warning(item, oper));
     }
     else
-        return (check_old_item_warning(item, oper));
+        return check_old_item_warning(item, oper);
 }
 
 // This function prompts the user for an item, handles the '?' and '*'

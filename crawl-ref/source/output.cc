@@ -1505,7 +1505,7 @@ static std::string _god_powers(bool simple)
                 return asterisks;
             godpowers = chop_string(godpowers, 20, false)
                       + " [" + asterisks + "]";
-            return (colour_string(godpowers, god_colour(you.religion)));
+            return colour_string(godpowers, god_colour(you.religion));
         }
     }
     return "";

@@ -1711,7 +1711,7 @@ static bool _add_connecting_escape_hatches()
     if (!player_in_branch(BRANCH_ORCISH_MINES))
         return true;
 
-    return (_add_feat_if_missing(_is_upwards_exit_stair, DNGN_ESCAPE_HATCH_UP));
+    return _add_feat_if_missing(_is_upwards_exit_stair, DNGN_ESCAPE_HATCH_UP);
 }
 
 static bool _branch_entrances_are_connected()
@@ -3139,7 +3139,7 @@ static coord_def _dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
                                     monster_free))
                 return c;
         }
-        return (coord_def(0, 0));
+        return coord_def(0, 0);
     }
 }
 
@@ -4992,7 +4992,7 @@ static dungeon_feature_type _pick_an_altar()
     if (is_unavailable_god(god))
         god = GOD_NO_GOD;
 
-    return (altar_for_god(god));
+    return altar_for_god(god);
 }
 
 static bool _need_varied_selection(shop_type shop)
@@ -5503,7 +5503,7 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 
 static coord_def _dgn_find_labyrinth_entry_point()
 {
-    return (dgn_find_feature_marker(DNGN_ENTER_LABYRINTH));
+    return dgn_find_feature_marker(DNGN_ENTER_LABYRINTH);
 }
 
 // Make hatches and shafts land the player a bit away from the wall.

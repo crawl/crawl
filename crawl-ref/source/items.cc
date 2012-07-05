@@ -2538,7 +2538,7 @@ static bool _known_subtype(const item_def &item)
     case OBJ_STAVES:
     case OBJ_MISCELLANY:
     case OBJ_RODS:
-        return (item_type_known(item));
+        return item_type_known(item);
     default:
         return true;
     }

@@ -117,7 +117,7 @@ static void _player_change_level_upstairs(dungeon_feature_type feat)
 
 static bool _marker_vetoes_level_change()
 {
-    return (marker_vetoes_operation("veto_level_change"));
+    return marker_vetoes_operation("veto_level_change");
 }
 
 static bool _stair_moves_pre(dungeon_feature_type stair)

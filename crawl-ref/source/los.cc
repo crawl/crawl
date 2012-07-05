@@ -669,7 +669,7 @@ bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func& opc, const circle_def &bds)
 {
     ray_def ray;
-    return (find_ray(source, target, ray, opc, bds));
+    return find_ray(source, target, ray, opc, bds);
 }
 
 // Assuming that target is in view of source, but line of
@@ -868,7 +868,7 @@ struct los_param_funcs : public los_param
 
     opacity_type opacity(const coord_def& p) const
     {
-        return (opc(p + center));
+        return opc(p + center);
     }
 };
 

@@ -1772,7 +1772,7 @@ skill_type weapon_skill(object_class_type wclass, int wtype)
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return (weapon_skill(wpn));
+    return weapon_skill(wpn);
 }
 
 // Returns range skill of the item.
@@ -1797,7 +1797,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return (range_skill(wpn));
+    return range_skill(wpn);
 }
 
 // Check whether an item can be easily and quickly equipped. This needs to
@@ -2217,7 +2217,7 @@ int food_turns(const item_def &item)
 
 bool can_cut_meat(const item_def &item)
 {
-    return (_does_damage_type(item, DAM_SLICE));
+    return _does_damage_type(item, DAM_SLICE);
 }
 
 bool is_fruit(const item_def & item)

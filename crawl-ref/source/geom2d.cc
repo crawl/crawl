@@ -20,7 +20,7 @@ static bool double_is_zero(double d)
 // Is v parallel to the kernel of f?
 bool parallel(const vector &v, const form &f)
 {
-    return (double_is_zero(f(v)));
+    return double_is_zero(f(v));
 }
 
 vector ray::shoot(double t) const
@@ -102,7 +102,7 @@ bool ray::to_next_cell(const grid &g)
 
 vector normal(const form &f)
 {
-    return (vector(f.a, f.b));
+    return vector(f.a, f.b);
 }
 
 vector reflect(const vector &v, const form &f)
@@ -147,7 +147,7 @@ vector vector::operator-(const vector &v) const
 
 vector operator*(double t, const vector &v)
 {
-    return (vector(t*v.x, t*v.y));
+    return vector(t*v.x, t*v.y);
 }
 
 double form::operator()(const vector& v) const

@@ -232,7 +232,7 @@ struct coord_def
 
     int rdist() const
     {
-        return (std::max(std::abs(x), std::abs(y)));
+        return std::max(std::abs(x), std::abs(y));
     }
 
     bool origin() const

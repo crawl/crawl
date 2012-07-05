@@ -1264,7 +1264,7 @@ public:
         // feature slots, but that's fine by us.
         dungeon_feature_type operator () (const coord_def &c) const
         {
-            return (map_feature_at(&map, c, -1));
+            return map_feature_at(&map, c, -1);
         }
     };
 

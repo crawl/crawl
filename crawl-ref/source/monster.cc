@@ -462,7 +462,7 @@ int monster::damage_type(int which_attack)
                                                : DVORP_CRUSHING);
     }
 
-    return (get_vorpal_type(*mweap));
+    return get_vorpal_type(*mweap);
 }
 
 int monster::has_claws(bool allow_tran) const
@@ -816,7 +816,7 @@ bool monster::can_use_missile(const item_def &item) const
     if (item.base_type == OBJ_WEAPONS
         || item.base_type == OBJ_MISSILES && !has_launcher(item))
     {
-        return (is_throwable(this, item));
+        return is_throwable(this, item);
     }
 
     if (item.base_type != OBJ_MISSILES)
@@ -1676,7 +1676,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
     if (inv[eslot] != NON_ITEM && !drop_item(eslot, near))
         return false;
 
-    return (pickup(item, eslot, near));
+    return pickup(item, eslot, near);
 }
 
 // Arbitrary damage adjustment for quantity of missiles. So sue me.
@@ -1942,7 +1942,7 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
             return false;
     }
 
-    return (pickup(item, mslot, near));
+    return pickup(item, mslot, near);
 }
 
 static int _get_monster_jewellery_value(const monster *mon,
@@ -2033,7 +2033,7 @@ bool monster::pickup_jewellery(item_def &item, int near, bool force)
             return false;
     }
 
-    return (pickup(item, mslot, near));
+    return pickup(item, mslot, near);
 }
 
 bool monster::pickup_weapon(item_def &item, int near, bool force)
@@ -2052,7 +2052,7 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     //   missiles are the same type), pick it up.
 
     if (is_range_weapon(item))
-        return (pickup_launcher(item, near, force));
+        return pickup_launcher(item, near, force);
 
     if (pickup_melee_weapon(item, near))
         return true;
@@ -2092,7 +2092,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
     }
 
     if (miss && items_stack(*miss, item))
-        return (pickup(item, MSLOT_MISSILE, near));
+        return pickup(item, MSLOT_MISSILE, near);
 
     if (!force && !can_use_missile(item))
         return false;
@@ -2191,7 +2191,7 @@ bool monster::pickup_scroll(item_def &item, int near)
     if ((is_holy() || is_good_god(god)) && is_evil_item(item))
         return false;
 
-    return (pickup(item, MSLOT_SCROLL, near));
+    return pickup(item, MSLOT_SCROLL, near);
 }
 
 bool monster::pickup_potion(item_def &item, int near)
@@ -2203,12 +2203,12 @@ bool monster::pickup_potion(item_def &item, int near)
     if (!can_drink_potion(ptype))
         return false;
 
-    return (pickup(item, MSLOT_POTION, near));
+    return pickup(item, MSLOT_POTION, near);
 }
 
 bool monster::pickup_gold(item_def &item, int near)
 {
-    return (pickup(item, MSLOT_GOLD, near));
+    return pickup(item, MSLOT_GOLD, near);
 }
 
 bool monster::pickup_food(item_def &item, int near)
@@ -2241,7 +2241,7 @@ bool monster::pickup_misc(item_def &item, int near)
     if ((is_holy() || is_good_god(god)) && is_evil_item(item))
         return false;
 
-    return (pickup(item, MSLOT_MISCELLANY, near));
+    return pickup(item, MSLOT_MISCELLANY, near);
 }
 
 // Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
@@ -2416,7 +2416,7 @@ void monster::wield_melee_weapon(int near)
 
 item_def *monster::slot_item(equipment_type eq, bool include_melded)
 {
-    return (mslot_item(equip_slot_to_mslot(eq)));
+    return mslot_item(equip_slot_to_mslot(eq));
 }
 
 item_def *monster::mslot_item(mon_inv_type mslot) const
@@ -2427,7 +2427,7 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
 
 item_def *monster::shield()
 {
-    return (mslot_item(MSLOT_SHIELD));
+    return mslot_item(MSLOT_SHIELD);
 }
 
 bool monster::is_named() const
@@ -2569,7 +2569,7 @@ std::string monster::full_name(description_level_type desc,
 
 std::string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return (mons_pronoun(type, pro, force_visible || you.can_see(this)));
+    return mons_pronoun(type, pro, force_visible || you.can_see(this));
 }
 
 std::string monster::conj_verb(const std::string &verb) const
@@ -2592,7 +2592,7 @@ std::string monster::conj_verb(const std::string &verb) const
         return (verb + "s");
     }
 
-    return (pluralise(verb));
+    return pluralise(verb);
 }
 
 std::string monster::hand_name(bool plural, bool *can_plural) const
@@ -2704,7 +2704,7 @@ std::string monster::hand_name(bool plural, bool *can_plural) const
    {
        // Reduce the chance of a random-shaped monster having hands.
        if (rand && coinflip())
-           return (hand_name(plural, can_plural));
+           return hand_name(plural, can_plural);
 
        str = "hand";
    }
@@ -2819,7 +2819,7 @@ std::string monster::foot_name(bool plural, bool *can_plural) const
    {
        // Reduce the chance of a random-shaped monster having feet.
        if (rand && coinflip())
-           return (foot_name(plural, can_plural));
+           return foot_name(plural, can_plural);
 
        return (plural ? "feet" : "foot");
    }
@@ -3141,7 +3141,7 @@ int monster::constriction_damage() const
 // False for butterflies, vapours etc.
 bool monster::confused() const
 {
-    return (mons_is_confused(this));
+    return mons_is_confused(this);
 }
 
 bool monster::confused_by_you() const
@@ -3169,7 +3169,7 @@ bool monster::cannot_act() const
 
 bool monster::cannot_move() const
 {
-    return (cannot_act());
+    return cannot_act();
 }
 
 bool monster::asleep() const
@@ -3203,17 +3203,17 @@ bool monster::glows_naturally() const
 
 bool monster::caught() const
 {
-    return (has_ench(ENCH_HELD));
+    return has_ench(ENCH_HELD);
 }
 
 bool monster::petrified() const
 {
-    return (has_ench(ENCH_PETRIFIED));
+    return has_ench(ENCH_PETRIFIED);
 }
 
 bool monster::petrifying() const
 {
-    return (has_ench(ENCH_PETRIFYING));
+    return has_ench(ENCH_PETRIFYING);
 }
 
 int monster::warding() const
@@ -3397,7 +3397,7 @@ mon_holy_type monster::holiness() const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    return (mons_class_holiness(type));
+    return mons_class_holiness(type);
 }
 
 bool monster::undead_or_demonic() const
@@ -3534,7 +3534,7 @@ bool monster::is_chaotic() const
 
 bool monster::is_artificial() const
 {
-    return (mons_class_flag(type, M_ARTIFICIAL));
+    return mons_class_flag(type, M_ARTIFICIAL);
 }
 
 bool monster::is_unbreathing() const
@@ -3548,12 +3548,12 @@ bool monster::is_unbreathing() const
         return true;
     }
 
-    return (mons_class_flag(type, M_UNBREATHING));
+    return mons_class_flag(type, M_UNBREATHING);
 }
 
 bool monster::is_insubstantial() const
 {
-    return (mons_class_flag(type, M_INSUBSTANTIAL));
+    return mons_class_flag(type, M_INSUBSTANTIAL);
 }
 
 int monster::res_hellfire() const
@@ -3785,7 +3785,7 @@ int monster::res_rotting(bool temp) const
     if (get_mons_resists(this).rotting)
         res += 1;
 
-    return (std::min(3, res));
+    return std::min(3, res);
 }
 
 int monster::res_holy_energy(const actor *attacker) const
@@ -3970,7 +3970,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id) const
 
 flight_type monster::flight_mode() const
 {
-    return (mons_flies(this));
+    return mons_flies(this);
 }
 
 bool monster::is_levitating() const
@@ -4347,7 +4347,7 @@ bool monster::find_home_near_place(const coord_def &c)
         if (dist(p - c) >= last_dist && nvalid)
         {
             // already found a valid closer destination
-            return (move_to_pos(place));
+            return move_to_pos(place);
         }
         else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
             break;
@@ -4380,7 +4380,7 @@ bool monster::find_home_anywhere()
     int nvalid = 0;
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
-            return (move_to_pos(place));
+            return move_to_pos(place);
     return false;
 }
 
@@ -4491,7 +4491,7 @@ bool monster::is_actual_spellcaster() const
 
 bool monster::is_shapeshifter() const
 {
-    return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
+    return has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER);
 }
 
 void monster::forget_random_spell()
@@ -4664,7 +4664,7 @@ bool monster::can_go_berserk() const
 
 bool monster::frenzied() const
 {
-    return (has_ench(ENCH_INSANE));
+    return has_ench(ENCH_INSANE);
 }
 
 bool monster::berserk() const
@@ -4755,12 +4755,12 @@ bool monster::can_mutate() const
 
 bool monster::can_safely_mutate() const
 {
-    return (can_mutate());
+    return can_mutate();
 }
 
 bool monster::can_bleed(bool /*allow_tran*/) const
 {
-    return (mons_has_blood(type));
+    return mons_has_blood(type);
 }
 
 bool monster::mutate(const std::string &reason)
@@ -4779,9 +4779,9 @@ bool monster::mutate(const std::string &reason)
     // Polymorphing a shapeshifter will make it revert to its original
     // form.
     if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));
+        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER);
     if (has_ench(ENCH_SHAPESHIFTER))
-        return (monster_polymorph(this, MONS_SHAPESHIFTER));
+        return monster_polymorph(this, MONS_SHAPESHIFTER);
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
@@ -4791,7 +4791,7 @@ bool monster::mutate(const std::string &reason)
         return true;
     }
 
-    return (monster_polymorph(this, RANDOM_MONSTER));
+    return monster_polymorph(this, RANDOM_MONSTER);
 }
 
 static bool _mons_is_icy(int mc)
@@ -4804,7 +4804,7 @@ static bool _mons_is_icy(int mc)
 
 bool monster::is_icy() const
 {
-    return (_mons_is_icy(type));
+    return _mons_is_icy(type);
 }
 
 static bool _mons_is_fiery(int mc)
@@ -4824,7 +4824,7 @@ static bool _mons_is_fiery(int mc)
 
 bool monster::is_fiery() const
 {
-    return (_mons_is_fiery(type));
+    return _mons_is_fiery(type);
 }
 
 static bool _mons_is_skeletal(int mc)
@@ -4840,7 +4840,7 @@ static bool _mons_is_skeletal(int mc)
 
 bool monster::is_skeletal() const
 {
-    return (_mons_is_skeletal(type));
+    return _mons_is_skeletal(type);
 }
 
 static bool _mons_is_spiny(int mc)
@@ -4851,7 +4851,7 @@ static bool _mons_is_spiny(int mc)
 
 bool monster::is_spiny() const
 {
-    return (_mons_is_spiny(type));
+    return _mons_is_spiny(type);
 }
 
 bool monster::has_action_energy() const
@@ -5195,7 +5195,7 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
         case POT_BERSERK_RAGE:
-            return (can_go_berserk());
+            return can_go_berserk();
         case POT_SPEED:
         case POT_MIGHT:
         case POT_INVISIBILITY:
@@ -5330,7 +5330,7 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
             // invisible, this might have to be restricted.
             return true;
         case AMU_RAGE:
-            return (can_go_berserk());
+            return can_go_berserk();
         default:
             break;
     }
