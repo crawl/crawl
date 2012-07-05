@@ -1461,7 +1461,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
     {
         if (!env.map_knowledge(dc).seen() && (!player_in_branch(BRANCH_SHOALS)
-            || dgn_height_at(dc) >= 0 || feat_is_traversable_now(DNGN_DEEP_WATER)))
+                                              || dgn_height_at(dc) > SHT_SHORE))
         {
             if (ignore_hostile)
             {

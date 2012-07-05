@@ -10,6 +10,7 @@
 #include "showsymb.h"
 
 #include "colour.h"
+#include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
 #include "map_knowledge.h"
@@ -95,8 +96,14 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
         }
     }
 
-    if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
-        colour = ETC_WAVES;
+    if (player_in_branch(BRANCH_SHOALS))
+    {
+        const int height = dgn_height_at(loc);
+        if (feat == DNGN_SHALLOW_WATER)
+            colour = height > SHT_SHORE ? LIGHTCYAN : CYAN;
+        if (feat == DNGN_DEEP_WATER)
+            colour = height > SHT_SHORE ? LIGHTBLUE : BLUE;
+    }
 
     if (feat_has_solid_floor(feat) && !feat_is_water(feat)
         && cell.flags & MAP_LIQUEFIED)
