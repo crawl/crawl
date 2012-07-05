@@ -1668,7 +1668,7 @@ COLOUR: D = random
 COLOUR: .x = disco
 COLOUR: 0123456789 = disco
 KFEAT:  D = granite_statue
-MARKER: D = lua:portal_desc { desc="weirdly glowing ball" }
+: set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }

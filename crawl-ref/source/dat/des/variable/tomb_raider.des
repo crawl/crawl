@@ -81,8 +81,8 @@ KMONS: M = mummy priest
     lua_marker('!', props_marker {stone_door=1})
     lua_marker('X', props_marker {closet=1})
     lua_marker('G', portal_desc {
-        desc = "sealed sarcophagus",
         veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
+    set_feature_name("granite_statue", "sealed sarcophagus")
 }}
 SUBST:  ! = .
 SUBST:  XC = c
