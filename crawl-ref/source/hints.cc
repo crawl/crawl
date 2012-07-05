@@ -580,11 +580,11 @@ static bool _advise_use_healing_potion()
         if (obj.sub_type == POT_CURING
             || obj.sub_type == POT_HEAL_WOUNDS)
         {
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 void hints_healing_check()
@@ -810,7 +810,7 @@ static bool _advise_use_wand()
 
         // Wand type unknown, might be useful.
         if (!item_type_known(obj))
-            return (true);
+            return true;
 
         // Empty wands are no good.
         if (obj.plus2 == ZAPCOUNT_EMPTY
@@ -837,11 +837,11 @@ static bool _advise_use_wand()
         case WAND_DRAINING:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 void hints_monster_seen(const monster& mon)
@@ -1122,9 +1122,9 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_GAINED_RANGED_SKILL:
     case HINT_CHOOSE_STAT:
     case HINT_AUTO_EXCLUSION:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1150,9 +1150,9 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_CLOUD_WARNING:
     case HINT_ANIMATE_CORPSE_SKELETON:
     case HINT_SKILL_RAISE:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -3185,7 +3185,7 @@ static std::string _hints_target_mode(bool spells = false)
     result += "</w> fires at the same target again.";
     insert_commands(result, cmd, 0);
 
-    return (result);
+    return result;
 }
 
 static std::string _hints_abilities(const item_def& item)
@@ -3221,7 +3221,7 @@ static std::string _hints_abilities(const item_def& item)
     cmd.push_back(CMD_USE_ABILITY);
 
     insert_commands(str, cmd);
-    return (str);
+    return str;
 }
 
 static std::string _hints_throw_stuff(const item_def &item)
@@ -3239,7 +3239,7 @@ static std::string _hints_throw_stuff(const item_def &item)
     result += _hints_target_mode();
 
     insert_commands(result, CMD_FIRE, 0);
-    return (result);
+    return result;
 }
 
 // num_old_talents describes the number of activatable abilities you had
@@ -4018,9 +4018,9 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
 {
     // Altars and branch entrances are always interesting.
     if (feat_is_altar(feat))
-        return (true);
+        return true;
     if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
-        return (true);
+        return true;
 
     switch (feat)
     {
@@ -4040,9 +4040,9 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_ENTER_PORTAL_VAULT:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -4404,7 +4404,7 @@ static bool _water_is_disturbed(int x, int y)
     const monster* mon = monster_at(c);
 
     if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
-        return (false);
+        return false;
 
     return (!mon->visible_to(&you) && !mons_flies(mon));
 }
@@ -4412,11 +4412,11 @@ static bool _water_is_disturbed(int x, int y)
 bool hints_monster_interesting(const monster* mons)
 {
     if (mons_is_unique(mons->type) || mons->type == MONS_PLAYER_GHOST)
-        return (true);
+        return true;
 
     // Highlighted in some way.
     if (_mons_is_highlighted(mons))
-        return (true);
+        return true;
 
     // The monster is (seriously) out of depth.
     return (mons_level(mons->type) >= you.depth + 8);

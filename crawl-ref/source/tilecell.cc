@@ -271,7 +271,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 static dungeon_feature_type _safe_feat(coord_def gc)
 {
     if (!map_bounds(gc))
-        return (DNGN_UNSEEN);
+        return DNGN_UNSEEN;
 
     return (env.map_knowledge(gc).feat());
 }

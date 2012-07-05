@@ -91,6 +91,6 @@ short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
     case MR_RES_COLD:    return cold;
     case MR_RES_ACID:    return acid;
     case MR_RES_ROTTING: return rotting;
-    default:             return (0);
+    default:             return 0;
     }
 }

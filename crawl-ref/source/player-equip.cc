@@ -79,7 +79,7 @@ bool unequip_item(equipment_type slot, bool msg)
 
     const int item_slot = you.equip[slot];
     if (item_slot == -1)
-        return (false);
+        return false;
     else
     {
         item_skills(you.inv[item_slot], you.stop_train);
@@ -92,7 +92,7 @@ bool unequip_item(equipment_type slot, bool msg)
         else
             you.melded[slot] = false;
         ash_check_bondage();
-        return (true);
+        return true;
     }
 }
 
@@ -106,9 +106,9 @@ bool meld_slot(equipment_type slot, bool msg)
     {
         you.melded[slot] = true;
         _unequip_effect(slot, you.equip[slot], true, msg);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool unmeld_slot(equipment_type slot, bool msg)
@@ -120,9 +120,9 @@ bool unmeld_slot(equipment_type slot, bool msg)
     {
         you.melded[slot] = false;
         _equip_effect(slot, you.equip[slot], true, msg);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
@@ -1549,13 +1549,13 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
 bool unwield_item(bool showMsgs)
 {
     if (!you.weapon())
-        return (false);
+        return false;
 
     if (you.berserk())
     {
         if (showMsgs)
             canned_msg(MSG_TOO_BERSERK);
-        return (false);
+        return false;
     }
 
     item_def& item = *you.weapon();
@@ -1563,7 +1563,7 @@ bool unwield_item(bool showMsgs)
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
     if (is_weapon && !safe_to_remove(item))
-        return (false);
+        return false;
 
     unequip_item(EQ_WEAPON, showMsgs);
 
@@ -1571,5 +1571,5 @@ bool unwield_item(bool showMsgs)
     you.redraw_quiver    = true;
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
-    return (true);
+    return true;
 }

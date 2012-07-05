@@ -28,7 +28,7 @@
         else if (lua_isstring(ls, 1)) \
             lua_pushboolean(ls, val(dungeon_feature_by_name(\
                                                 luaL_checkstring(ls, 1))));\
-        return (1); \
+        return 1; \
     }
 
 FEATF(_feat_is_wall, feat_is_wall)

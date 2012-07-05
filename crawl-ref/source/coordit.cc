@@ -79,7 +79,7 @@ circle_iterator::circle_iterator(const circle_def &circle_)
 
 circle_iterator::operator bool() const
 {
-    return (iter);
+    return iter;
 }
 
 coord_def circle_iterator::operator*() const
@@ -145,12 +145,12 @@ void radius_iterator::advance(bool may_stay)
 
 radius_iterator::operator bool() const
 {
-    return (iter);
+    return iter;
 }
 
 coord_def radius_iterator::operator *() const
 {
-    return (current);
+    return current;
 }
 
 const coord_def* radius_iterator::operator->() const
@@ -161,10 +161,10 @@ const coord_def* radius_iterator::operator->() const
 bool radius_iterator::is_valid_square(const coord_def &p) const
 {
     if (exclude_center && p == circle.get_center())
-        return (false);
+        return false;
     if (los && !los->see_cell(p))
-        return (false);
-    return (true);
+        return false;
+    return true;
 }
 
 void radius_iterator::operator++()

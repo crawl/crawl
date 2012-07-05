@@ -69,5 +69,5 @@ bit_array bit_array::operator & (const bit_array& other) const
     bit_array res = bit_array(size);
     for (int w = 0; w < nwords; ++w)
         res.data[w] = data[w] & other.data[w];
-    return (res);
+    return res;
 }

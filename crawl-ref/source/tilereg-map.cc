@@ -272,7 +272,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             {
                 // Start autotravel, or give an appropriate message.
                 do_explore_cmd();
-                return (CK_MOUSE_CMD);
+                return CK_MOUSE_CMD;
             }
             else
             {
@@ -280,7 +280,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
                 if (cmd != CK_MOUSE_CMD)
                     process_command((command_type) cmd);
 
-                return (CK_MOUSE_CMD);
+                return CK_MOUSE_CMD;
             }
         }
         else if (event.button == MouseEvent::RIGHT)
@@ -295,16 +295,16 @@ int MapRegion::handle_mouse(MouseEvent &event)
             m_far_view = false;
             tiles.load_dungeon(crawl_view.vgrdc);
         }
-        return (0);
+        return 0;
     default:
-        return (0);
+        return 0;
     }
 }
 
 bool MapRegion::update_tip_text(std::string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
+        return false;
 
     tip = "[L-Click] Travel / [R-Click] View";
     if (!player_in_branch(BRANCH_LABYRINTH)
@@ -313,7 +313,7 @@ bool MapRegion::update_tip_text(std::string& tip)
     {
         tip += "\n[Shift + L-Click] Autoexplore";
     }
-    return (true);
+    return true;
 }
 
 #endif

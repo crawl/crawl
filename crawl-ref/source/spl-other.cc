@@ -238,7 +238,7 @@ bool recall(int type_recalled)
     if (!success)
         mpr("Nothing appears to have answered your call.");
 
-    return (success);
+    return success;
 }
 
 // Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
@@ -266,9 +266,9 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     case DNGN_SLIMY_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SECRET_DOOR:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 

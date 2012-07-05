@@ -101,7 +101,7 @@ bool summon_animals(int pow)
         }
     }
 
-    return (success);
+    return success;
 }
 
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
@@ -438,14 +438,14 @@ static int _count_summons(monster_type type)
             cnt++;
         }
 
-    return (cnt);
+    return cnt;
 }
 
 static monster_type _feature_to_elemental(const coord_def& where,
                                           monster_type strict_elem)
 {
     if (!in_bounds(where))
-        return (MONS_NO_MONSTER);
+        return MONS_NO_MONSTER;
 
     if (strict_elem != MONS_NO_MONSTER
         && strict_elem != MONS_EARTH_ELEMENTAL
@@ -453,7 +453,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
         && strict_elem != MONS_WATER_ELEMENTAL
         && strict_elem != MONS_AIR_ELEMENTAL)
     {
-        return (MONS_NO_MONSTER);
+        return MONS_NO_MONSTER;
     }
 
     const bool any_elem = strict_elem == MONS_NO_MONSTER;
@@ -461,7 +461,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
     if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
         && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
     {
-            return (MONS_EARTH_ELEMENTAL);
+            return MONS_EARTH_ELEMENTAL;
     }
 
     if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
@@ -469,22 +469,22 @@ static monster_type _feature_to_elemental(const coord_def& where,
             && env.cloud[env.cgrid(where)].type == CLOUD_FIRE
             || grd(where) == DNGN_LAVA))
     {
-        return (MONS_FIRE_ELEMENTAL);
+        return MONS_FIRE_ELEMENTAL;
     }
 
     if ((any_elem || strict_elem == MONS_WATER_ELEMENTAL)
         && feat_is_watery(grd(where)))
     {
-        return (MONS_WATER_ELEMENTAL);
+        return MONS_WATER_ELEMENTAL;
     }
 
     if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
         && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
     {
-        return (MONS_AIR_ELEMENTAL);
+        return MONS_AIR_ELEMENTAL;
     }
 
-    return (MONS_NO_MONSTER);
+    return MONS_NO_MONSTER;
 }
 
 // 'unfriendly' is percentage chance summoned elemental goes
@@ -839,10 +839,10 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     monster *mons = create_monster(mg);
 
     if (!mons)
-        return (false);
+        return false;
 
     _make_mons_berserk_summon(mons);
-    return (true);
+    return true;
 }
 
 static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
@@ -868,7 +868,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     monster *summon = create_monster(mg);
 
     if (!summon)
-        return (false);
+        return false;
 
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -876,7 +876,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
         mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(summon);
-    return (true);
+    return true;
 }
 
 static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
@@ -1080,7 +1080,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         }
     }
 
-    return (success);
+    return success;
 }
 
 static bool _summon_demon_wrapper(int pow, god_type god, int spell,
@@ -1247,7 +1247,7 @@ coord_def find_gateway_location(actor* caster)
 
     you.xray_vision = xray;
 
-    return (point);
+    return point;
 }
 
 spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
@@ -1548,10 +1548,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const item_def& item = mitm[corps];
 
     if (!_animatable_remains(item))
-        return (false);
+        return false;
 
     if (!actual)
-        return (true);
+        return true;
 
     const monster_type zombie_type = item.mon_type;
 
@@ -1575,7 +1575,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
             mprf("The headless hydra %s sways and immediately collapses!",
                  item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
         }
-        return (false);
+        return false;
     }
 
     monster_type mon = MONS_PROGRAM_BUG;
@@ -1611,7 +1611,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         *raised = mons;
 
     if (!mons)
-        return (false);
+        return false;
 
     // If the original monster has been drained or levelled up, its HD
     // might be different from its class HD, in which case its HP should
@@ -1667,7 +1667,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     else
         *motions_r |= DEAD_ARE_WALKING;
 
-    return (true);
+    return true;
 }
 
 // Note that quiet will *not* suppress the message about a corpse
@@ -1681,7 +1681,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     monster** mon, int* motions_r)
 {
     if (is_sanctuary(a))
-        return (0);
+        return 0;
 
     int number_found = 0;
     bool success = false;
@@ -1736,9 +1736,9 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         return (-1);
 
     if (!success)
-        return (0);
+        return 0;
 
-    return (1);
+    return 1;
 }
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
@@ -1773,7 +1773,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     if (actual && number_seen > 0)
         _display_undead_motions(motions);
 
-    return (number_raised);
+    return number_raised;
 }
 
 // XXX: we could check if there's any corpse or skeleton and abort
@@ -2256,7 +2256,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         return (num_crawlies >= (caster->is_player() ? 1 : 2));
 
     if (num_lost + num_crawlies + num_masses == 0)
-        return (false);
+        return false;
 
     if (num_lost)
         mprf("%s %s into %s!",
@@ -2280,7 +2280,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     if (num_holy > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
-    return (true);
+    return true;
 }
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
@@ -2372,7 +2372,7 @@ static int _abjuration(int pow, monster *mon)
 
     // XXX: make this a prompt
     if (mon->wont_attack())
-        return (false);
+        return false;
 
     int duration;
     if (mon->is_summoned(&duration))
@@ -2409,7 +2409,7 @@ static int _abjuration(int pow, monster *mon)
             simple_monster_message(mon, " shudders.");
     }
 
-    return (true);
+    return true;
 }
 
 spret_type cast_abjuration(int pow, const coord_def& where, bool fail)

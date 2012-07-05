@@ -1192,7 +1192,7 @@ public:
     std::string validate_map_def(const depth_ranges &);
     std::string validate_temple_map();
     // Returns true if this map is in the middle of validation.
-    bool is_validating() const { return (validating_map_flag); }
+    bool is_validating() const { return validating_map_flag; }
 
     void add_prelude_line(int line,  const std::string &s);
     void add_main_line(int line, const std::string &s);

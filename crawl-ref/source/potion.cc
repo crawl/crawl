@@ -290,7 +290,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
             // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
-            return (true);
+            return true;
         }
 
         if (get_contamination_level() > 1)

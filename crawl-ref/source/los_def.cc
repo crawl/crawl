@@ -102,7 +102,7 @@ bool los_def::see_cell(const coord_def& p) const
 
 coord_def los_glob::get_center() const
 {
-    return (center);
+    return center;
 }
 
 circle_def los_glob::get_bounds() const

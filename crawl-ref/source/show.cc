@@ -86,9 +86,9 @@ show_type::show_type(show_item_type t)
 bool show_type::operator < (const show_type &other) const
 {
     if (cls < other.cls)
-        return (false);
+        return false;
     else if (cls > other.cls)
-        return (true);
+        return true;
     switch (cls)
     {
     case SH_FEATURE:
@@ -98,7 +98,7 @@ bool show_type::operator < (const show_type &other) const
     case SH_MONSTER:
         return (mons < other.mons);
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -192,24 +192,24 @@ static show_item_type _item_to_show_code(const item_def &item)
 {
     switch (item.base_type)
     {
-    case OBJ_ORBS:       return (SHOW_ITEM_ORB);
-    case OBJ_WEAPONS:    return (SHOW_ITEM_WEAPON);
-    case OBJ_MISSILES:   return (SHOW_ITEM_MISSILE);
-    case OBJ_ARMOUR:     return (SHOW_ITEM_ARMOUR);
-    case OBJ_WANDS:      return (SHOW_ITEM_WAND);
-    case OBJ_FOOD:       return (SHOW_ITEM_FOOD);
-    case OBJ_SCROLLS:    return (SHOW_ITEM_SCROLL);
+    case OBJ_ORBS:       return SHOW_ITEM_ORB;
+    case OBJ_WEAPONS:    return SHOW_ITEM_WEAPON;
+    case OBJ_MISSILES:   return SHOW_ITEM_MISSILE;
+    case OBJ_ARMOUR:     return SHOW_ITEM_ARMOUR;
+    case OBJ_WANDS:      return SHOW_ITEM_WAND;
+    case OBJ_FOOD:       return SHOW_ITEM_FOOD;
+    case OBJ_SCROLLS:    return SHOW_ITEM_SCROLL;
     case OBJ_JEWELLERY:
         return (jewellery_is_amulet(item)? SHOW_ITEM_AMULET : SHOW_ITEM_RING);
-    case OBJ_POTIONS:    return (SHOW_ITEM_POTION);
-    case OBJ_BOOKS:      return (SHOW_ITEM_BOOK);
-    case OBJ_STAVES:     return (SHOW_ITEM_STAVE);
-    case OBJ_RODS:       return (SHOW_ITEM_STAVE);
-    case OBJ_MISCELLANY: return (SHOW_ITEM_MISCELLANY);
-    case OBJ_CORPSES:    return (SHOW_ITEM_CORPSE);
-    case OBJ_GOLD:       return (SHOW_ITEM_GOLD);
-    case OBJ_DETECTED:   return (SHOW_ITEM_DETECTED);
-    default:             return (SHOW_ITEM_ORB); // bad item character
+    case OBJ_POTIONS:    return SHOW_ITEM_POTION;
+    case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
+    case OBJ_STAVES:     return SHOW_ITEM_STAVE;
+    case OBJ_RODS:       return SHOW_ITEM_STAVE;
+    case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
+    case OBJ_CORPSES:    return SHOW_ITEM_CORPSE;
+    case OBJ_GOLD:       return SHOW_ITEM_GOLD;
+    case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
+    default:             return SHOW_ITEM_ORB; // bad item character
    }
 }
 
@@ -313,12 +313,12 @@ static bool _valid_invis_spot(const coord_def &where, const monster* mons)
     monster *mons_at = monster_at(where);
 
     if (mons_at && mons_at != mons)
-        return (false);
+        return false;
 
     if (monster_habitable_grid(mons, grd(where)))
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)

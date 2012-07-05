@@ -395,7 +395,7 @@ static const bool _is_appropriate_spell(spell_type spell,
 
     // We don't handle grid targeted spells yet.
     if (flags & SPFLAG_GRID)
-        return (false);
+        return false;
 
     // Most spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
@@ -410,7 +410,7 @@ static const bool _is_appropriate_spell(spell_type spell,
             break;
 
         default:
-            return (false);
+            return false;
         }
     }
 
@@ -419,17 +419,17 @@ static const bool _is_appropriate_spell(spell_type spell,
     if (target->is_player())
     {
         if (flags & SPFLAG_NOT_SELF)
-            return (false);
+            return false;
 
         return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY))
                 || !targeted);
     }
 
     if (!targeted)
-        return (false);
+        return false;
 
     if (flags & SPFLAG_NEUTRAL)
-        return (false);
+        return false;
 
     bool friendly = target->as_monster()->wont_attack();
 
@@ -440,23 +440,23 @@ static const bool _is_appropriate_evokable(const item_def& item,
                                            const actor* target)
 {
     if (!item_is_evokable(item, false, false, true))
-        return (false);
+        return false;
 
     // Only wands for now.
     if (item.base_type != OBJ_WANDS)
-        return (false);
+        return false;
 
     // Aren't yet any wands that can go through transparent walls.
     if (!you.see_cell_no_trans(target->pos()))
-        return (false);
+        return false;
 
     // We don't know what it is, so it *might* be appropriate.
     if (!item_type_known(item))
-        return (true);
+        return true;
 
     // Random effects are always (in)apropriate for all targets.
     if (item.sub_type == WAND_RANDOM_EFFECTS)
-        return (true);
+        return true;
 
     spell_type spell = zap_type_to_spell(item.zap());
     if (spell == SPELL_TELEPORT_OTHER && target->is_player())
@@ -469,7 +469,7 @@ static const bool _have_appropriate_evokable(const actor* target)
 {
     // Felids cannot use wands.
     if (you.species == SP_FELID)
-        return (false);
+        return false;
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -479,10 +479,10 @@ static const bool _have_appropriate_evokable(const actor* target)
             continue;
 
         if (_is_appropriate_evokable(item, target))
-            return (true);
+            return true;
    }
 
-    return (false);
+    return false;
 }
 
 static item_def* _get_evokable_item(const actor* target)
@@ -514,7 +514,7 @@ static item_def* _get_evokable_item(const actor* target)
     redraw_screen();
 
     if (sel.empty())
-        return (NULL);
+        return NULL;
 
     return (const_cast<item_def*>(sel[0].item));
 }
@@ -530,7 +530,7 @@ static bool _evoke_item_on_target(actor* target)
     }
 
     if (item == NULL)
-        return (false);
+        return false;
 
     if (item->base_type == OBJ_WANDS)
     {
@@ -538,20 +538,20 @@ static bool _evoke_item_on_target(actor* target)
             || item_type_known(*item) && item->plus <= 0)
         {
             mpr("That wand is empty.");
-            return (false);
+            return false;
         }
     }
 
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
     _add_targetting_commands(target->pos());
-    return (true);
+    return true;
 }
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
     if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
-        return (true);
+        return true;
 
     int range = calc_spell_range(spell);
 
@@ -604,7 +604,7 @@ static bool _cast_spell_on_target(actor* target)
         _spell_target = NULL;
 
         if (letter == 0)
-            return (false);
+            return false;
 
         spell = get_spell_by_letter(letter);
     }
@@ -616,13 +616,13 @@ static bool _cast_spell_on_target(actor* target)
     {
         mprf("%s is out of range for that spell.",
              target->name(DESC_THE).c_str());
-        return (true);
+        return true;
     }
 
     if (spell_mana(spell) > you.magic_points)
     {
         mpr("You don't have enough mana to cast that spell.");
-        return (true);
+        return true;
     }
 
     int item_slot = -1;
@@ -632,11 +632,11 @@ static bool _cast_spell_on_target(actor* target)
                                            OBJ_POTIONS);
 
         if (prompt_failed(pot))
-            return (false);
+            return false;
         else if (you.inv[pot].base_type != OBJ_POTIONS)
         {
             mpr("This spell works only on potions!");
-            return (false);
+            return false;
         }
         item_slot = you.inv[pot].slot;
     }
@@ -649,7 +649,7 @@ static bool _cast_spell_on_target(actor* target)
     if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
         _add_targetting_commands(target->pos());
 
-    return (true);
+    return true;
 }
 
 static const bool _have_appropriate_spell(const actor* target)
@@ -662,9 +662,9 @@ static const bool _have_appropriate_spell(const actor* target)
             continue;
 
         if (_is_appropriate_spell(spell, target))
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _can_fire_item()
@@ -691,7 +691,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targetting_commands(mon->pos());
-        return (true);
+        return true;
     }
 
     // Handle casting spells at monster.
@@ -707,11 +707,11 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targetting_commands(mon->pos());
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 static bool _handle_zap_player(MouseEvent &event)
@@ -726,7 +726,7 @@ static bool _handle_zap_player(MouseEvent &event)
     if (ctrl && _have_appropriate_spell(&you))
         return _cast_spell_on_target(&you);
 
-    return (false);
+    return false;
 }
 
 int DungeonRegion::handle_mouse(MouseEvent &event)
@@ -879,7 +879,7 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     if (mon && you.can_see(mon))
     {
         if (_handle_distant_monster(mon, mod))
-            return (CK_MOUSE_CMD);
+            return CK_MOUSE_CMD;
     }
 
     if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
@@ -888,19 +888,19 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         if (cmd != CK_MOUSE_CMD)
             process_command((command_type) cmd);
 
-        return (CK_MOUSE_CMD);
+        return CK_MOUSE_CMD;
     }
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
     if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
-        return (CK_MOUSE_CMD);
+        return CK_MOUSE_CMD;
 
     const int cmd = click_travel(gc, mod & MOD_CTRL);
     if (cmd != CK_MOUSE_CMD)
         process_command((command_type) cmd);
 
-    return (CK_MOUSE_CMD);
+    return CK_MOUSE_CMD;
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const
@@ -963,12 +963,12 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     // and some parsing of formatting to get that to work.
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
+        return false;
 
     if (m_cursor[CURSOR_MOUSE] == NO_CURSOR)
-        return (false);
+        return false;
     if (!map_bounds(m_cursor[CURSOR_MOUSE]))
-        return (false);
+        return false;
 
     const coord_def gc = m_cursor[CURSOR_MOUSE];
     bool ret = (tile_dungeon_tip(gc, tip));
@@ -1015,7 +1015,7 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     }
 #endif
 
-    return (ret);
+    return ret;
 }
 
 static std::string _check_spell_evokable(const actor* target,
@@ -1178,24 +1178,24 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
     if (!tip.empty())
         insert_commands(tip, cmd, false);
 
-    return (true);
+    return true;
 }
 
 bool DungeonRegion::update_alt_text(std::string &alt)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
+        return false;
 
     const coord_def &gc = m_cursor[CURSOR_MOUSE];
 
     if (gc == NO_CURSOR)
-        return (false);
+        return false;
     if (!map_bounds(gc))
-        return (false);
+        return false;
     if (!env.map_knowledge(gc).seen())
-        return (false);
+        return false;
     if (m_last_clicked_grid == gc)
-        return (false);
+        return false;
 
     describe_info inf;
     if (you.see_cell(gc))
@@ -1223,9 +1223,9 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     if (alt == "Floor.")
     {
         alt.clear();
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 void DungeonRegion::clear_text_tags(text_tag_type type)

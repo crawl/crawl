@@ -47,7 +47,7 @@ static keycode_type _numpad2vi(keycode_type key)
         const char *vikeys = "bjnh.lyku";
         return keycode_type(vikeys[key - '1']);
     }
-    return (key);
+    return key;
 }
 
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
@@ -100,7 +100,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
 #endif
     }
 
-    return (keyin);
+    return keyin;
 }
 
 // Wrapper around cgotoxy that can draw a fake cursor for Unix terms where
@@ -247,7 +247,7 @@ line_reader::~line_reader()
 
 std::string line_reader::get_text() const
 {
-    return (buffer);
+    return buffer;
 }
 
 void line_reader::set_input_history(input_history *i)
@@ -285,7 +285,7 @@ void line_reader::cursorto(int ncx)
 int line_reader::read_line(bool clear_previous)
 {
     if (bufsz <= 0)
-        return (false);
+        return false;
 
     cursor_control con(true);
 
@@ -329,7 +329,7 @@ int line_reader::read_line(bool clear_previous)
         if (crawl_state.seen_hups)
         {
             buffer[0] = '\0';
-            return (0);
+            return 0;
         }
 
         if (keyfn)
@@ -340,18 +340,18 @@ int line_reader::read_line(bool clear_previous)
                 buffer[length] = 0;
                 if (history && length)
                     history->new_input(buffer);
-                return (0);
+                return 0;
             }
             else if (whattodo == -1)
             {
                 buffer[length] = 0;
-                return (ch);
+                return ch;
             }
         }
 
         int ret = process_key(ch);
         if (ret != -1)
-            return (ret);
+            return ret;
     }
 }
 
@@ -454,7 +454,7 @@ int line_reader::process_key(int ch)
     switch (ch)
     {
     CASE_ESCAPE
-        return (CK_ESCAPE);
+        return CK_ESCAPE;
     case CK_UP:
     case CK_DOWN:
     {
@@ -487,7 +487,7 @@ int line_reader::process_key(int ch)
         buffer[length] = 0;
         if (history && length)
             history->new_input(buffer);
-        return (0);
+        return 0;
 
     case CONTROL('K'):
     {
@@ -612,7 +612,7 @@ c_mouse_event get_mouse_event()
 
     c_mouse_event ce = mouse_events.front();
     mouse_events.pop();
-    return (ce);
+    return ce;
 }
 
 void new_mouse_event(const c_mouse_event &ce)

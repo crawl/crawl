@@ -60,7 +60,7 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
         if (branches[i].abbrevname && branches[i].abbrevname == branch)
             return (static_cast<branch_type>(i));
 
-    return (err);
+    return err;
 }
 
 int current_level_ambient_noise()

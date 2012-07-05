@@ -916,7 +916,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_READ_MESSAGES:
     case CMD_SEARCH_STASHES:
         mpr("You can't repeat informational commands.");
-        return (false);
+        return false;
 
     // Multi-turn commands
     case CMD_PICKUP:
@@ -933,7 +933,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
         mpr("You can't repeat multi-turn commands.");
-        return (false);
+        return false;
 
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
@@ -958,20 +958,20 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_EDIT_PLAYER_TILE:
 #endif
         mpr("You can't repeat that command.");
-        return (false);
+        return false;
 
     case CMD_DISPLAY_MAP:
         mpr("You can't repeat map commands.");
-        return (false);
+        return false;
 
     case CMD_MOUSE_MOVE:
     case CMD_MOUSE_CLICK:
         mpr("You can't repeat mouse clicks or movements.");
-        return (false);
+        return false;
 
     case CMD_REPEAT_CMD:
         mpr("You can't repeat the repeat command!");
-        return (false);
+        return false;
 
     case CMD_RUN_LEFT:
     case CMD_RUN_DOWN:
@@ -982,14 +982,14 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_RUN_UP_RIGHT:
     case CMD_RUN_DOWN_RIGHT:
         mpr("Why would you want to repeat a run command?");
-        return (false);
+        return false;
 
     case CMD_PREV_CMD_AGAIN:
         ASSERT(!is_again);
         if (crawl_state.prev_cmd == CMD_NO_CMD)
         {
             mpr("No previous command to repeat.");
-            return (false);
+            return false;
         }
 
         return _cmd_is_repeatable(crawl_state.prev_cmd, true);
@@ -1013,18 +1013,18 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
                          "are nearby?", false, 'n');
         }
 
-        return (true);
+        return true;
 
     case CMD_NO_CMD:
     case CMD_NO_CMD_DEFAULT:
         mpr("Unknown command, not repeating.");
-        return (false);
+        return false;
 
     default:
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Used to determine whether to apply the berserk penalty at end of round.
@@ -1331,10 +1331,10 @@ static bool _stairs_check_mesmerised()
         const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
              beholder->name(DESC_THE, true).c_str());
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static bool _marker_vetoes_stair()
@@ -1359,7 +1359,7 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
                      "self.", false, 'n');
 
     default:
-        return (true);
+        return true;
     }
 }
 
@@ -2172,7 +2172,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
                                   msg_channel_type chan = MSGCH_DURATION)
 {
     if (you.duration[dur] < 1)
-        return (false);
+        return false;
 
     const int midpoint = get_expiration_threshold(dur);
 
@@ -3346,7 +3346,7 @@ static command_type _get_next_cmd()
     if (is_userfunction(keyin))
     {
         run_macro(get_userfunction(keyin).c_str());
-        return (CMD_NEXT_CMD);
+        return CMD_NEXT_CMD;
     }
 
     return _keycode_to_command(keyin);
@@ -3383,7 +3383,7 @@ static keycode_type _get_next_keycode()
     if (!is_synthetic_key(keyin))
         mesclr();
 
-    return (keyin);
+    return keyin;
 }
 
 // Check squares adjacent to player for given feature and return how
@@ -3450,7 +3450,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             if (yesno(prompt.c_str(), true, 'n'))
             {
                 remove_net_from(mon);
-                return (true);
+                return true;
             }
         }
 
@@ -3460,7 +3460,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
 
-        return (true);
+        return true;
     }
 
     if (find_trap(target) && grd(target) != DNGN_UNDISCOVERED_TRAP)
@@ -3470,24 +3470,24 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             if (!form_can_wield())
             {
                 mpr("You can't disarm traps in your present form.");
-                return (true);
+                return true;
             }
 
             if (!player_can_reach_floor())
-                return (true);
+                return true;
 
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
                 && is_damaging_cloud(env.cloud[ cloud ].type, true))
             {
                 mpr("You can't get to that trap right now.");
-                return (true);
+                return true;
             }
         }
 
         // If you're confused, you may attempt it and stumble into the trap.
         disarm_trap(target);
-        return (true);
+        return true;
     }
 
     const dungeon_feature_type feat = grd(target);
@@ -3497,7 +3497,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         {
         case DNGN_OPEN_DOOR:
             _close_door(move); // for convenience
-            return (true);
+            return true;
         default:
         {
             bool do_msg = true;
@@ -3518,13 +3518,13 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You swing at nothing.");
             make_hungry(3, true);
             you.turn_is_over = true;
-            return (true);
+            return true;
         }
         }
     }
 
     // Else it's a closed door and needs further handling.
-    return (false);
+    return false;
 }
 
 // Opens doors and may also handle untrapping/attacking, etc.
@@ -4464,7 +4464,7 @@ static command_type _find_command(const keyseq& keys)
     if (is_userfunction(keyin))
         cmd = CMD_NEXT_CMD;
     flush_input_buffer(FLUSH_REPEAT_SETUP_DONE);
-    return (cmd);
+    return cmd;
 }
 
 static void _check_cmd_repeat(int last_turn)

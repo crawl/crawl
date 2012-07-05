@@ -194,7 +194,7 @@ std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
                 files.push_back(filename);
         }
     }
-    return (files);
+    return files;
 }
 
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
@@ -226,7 +226,7 @@ std::string get_base_filename(const std::string &filename)
     if (pos != std::string::npos)
         return filename.substr(pos + 1);
 #endif
-    return (filename);
+    return filename;
 }
 
 std::string get_cache_name(const std::string &filename)
@@ -243,7 +243,7 @@ std::string get_cache_name(const std::string &filename)
     if (pos != std::string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #endif
-    return (filename);
+    return filename;
 }
 
 bool is_absolute_path(const std::string &path)
@@ -264,7 +264,7 @@ bool is_absolute_path(const std::string &path)
 std::string catpath(const std::string &first, const std::string &second)
 {
     if (first.empty())
-        return (second);
+        return second;
 
     std::string directory = first;
     if (directory[directory.length() - 1] != FILE_SEPARATOR
@@ -274,7 +274,7 @@ std::string catpath(const std::string &first, const std::string &second)
     }
     directory += second;
 
-    return (directory);
+    return directory;
 }
 
 // Given a relative path and a reference file name, returns the relative path
@@ -299,7 +299,7 @@ time_t file_modtime(const std::string &file)
 {
     struct stat filestat;
     if (stat(file.c_str(), &filestat))
-        return (0);
+        return 0;
 
     return (filestat.st_mtime);
 }
@@ -308,7 +308,7 @@ time_t file_modtime(FILE *f)
 {
     struct stat filestat;
     if (fstat(fileno(f), &filestat))
-        return (0);
+        return 0;
 
     return (filestat.st_mtime);
 }
@@ -343,11 +343,11 @@ static bool _create_dirs(const std::string &dir)
             path = FILE_SEPARATOR + path;
 
         if (!_create_directory(path.c_str()))
-            return (false);
+            return false;
 
         path += FILE_SEPARATOR;
     }
-    return (true);
+    return true;
 }
 
 // Checks whether the given path is safe to read from. A path is safe if:
@@ -447,7 +447,7 @@ std::string datafile_path(std::string basename,
     basename = canonicalise_file_separator(basename);
 
     if (test_base_path && thing_exists(basename))
-        return (basename);
+        return basename;
 
     std::vector<std::string> bases = _get_base_dirs();
 
@@ -455,7 +455,7 @@ std::string datafile_path(std::string basename,
     {
         std::string name = bases[b] + basename;
         if (thing_exists(name))
-            return (name);
+            return name;
     }
 
     // Die horribly.
@@ -482,7 +482,7 @@ std::string datafile_path(std::string basename,
 bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
 {
     if (dir->empty())
-        return (true);
+        return true;
 
     *dir = canonicalise_file_separator(*dir);
 
@@ -496,10 +496,10 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
             fprintf(stderr, "%s \"%s\" does not exist "
                     "and I can't create it.\n",
                     whatdir.c_str(), dir->c_str());
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 // Get the directory that contains save files for the current game
@@ -512,7 +512,7 @@ static std::string _get_savefile_directory()
     check_mkdir("Save directory", &dir, false);
     if (dir.empty())
         dir = ".";
-    return (dir);
+    return dir;
 }
 
 static std::string _get_bonefile_directory()
@@ -522,7 +522,7 @@ static std::string _get_bonefile_directory()
     check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
-    return (dir);
+    return dir;
 }
 
 // Returns a subdirectory of the current savefile directory as returned by
@@ -656,7 +656,7 @@ static std::vector<player_save_info> _find_saved_characters()
 
     std::sort(chars.rbegin(), chars.rend());
 #endif // !DISABLE_SAVEGAME_LISTS
-    return (chars);
+    return chars;
 }
 
 std::vector<player_save_info> find_all_saved_characters()
@@ -680,7 +680,7 @@ std::vector<player_save_info> find_all_saved_characters()
                                 chars_in_dir.begin(),
                                 chars_in_dir.end());
     }
-    return (saved_characters);
+    return saved_characters;
 }
 
 bool save_exists(const std::string& filename)
@@ -767,7 +767,7 @@ public:
                     filemode,
                     lock? "YES" : "no");
         }
-        return (filep);
+        return filep;
     }
 
     void close()
@@ -937,15 +937,15 @@ static void _clear_clouds()
 static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
-        return (false);
+        return false;
 
     monster* fol = monster_at(pos);
     if (!fol || !fol->alive())
-        return (false);
+        return false;
 
     // The monster has to already be tagged in order to follow.
     if (!testbits(fol->flags, MF_TAKING_STAIRS))
-        return (false);
+        return false;
 
     // If a monster that can't use stairs was marked as a follower,
     // it's because it's an ally and there might be another ally
@@ -953,7 +953,7 @@ static bool _grab_follower_at(const coord_def &pos)
     // This means we don't actually send it on transit, but we do
     // return true, so adjacent real followers are handled correctly. (jpeg)
     if (!mons_can_use_stairs(fol))
-        return (true);
+        return true;
 
     level_id dest = level_id::current();
 
@@ -965,7 +965,7 @@ static bool _grab_follower_at(const coord_def &pos)
     monster_cleanup(fol);
     if (could_see)
         view_update_at(pos);
-    return (true);
+    return true;
 }
 
 static void _grab_followers()
@@ -1638,7 +1638,7 @@ bool load_ghost(bool creating_level)
     {
         if (wiz_cmd && !creating_level)
             mpr("No ghost files for this level.", MSGCH_PROMPT);
-        return (false);                 // no such ghost.
+        return false;                 // no such ghost.
     }
 
     if (_ghost_version_compatible(inf))
@@ -1666,7 +1666,7 @@ bool load_ghost(bool creating_level)
              "Refusing to load buggy ghost from file \"%s\"!",
              ghost_filename.c_str());
 
-        return (false);
+        return false;
     }
 
 #ifdef BONES_DIAGNOSTICS
@@ -1727,7 +1727,7 @@ bool load_ghost(bool creating_level)
         more();
 #endif
 
-    return (true);
+    return true;
 }
 
 // returns false if a new game should start instead
@@ -1930,13 +1930,13 @@ bool get_save_version(reader &file, int &major, int &minor)
     {
         // Empty file?
         major = minor = -1;
-        return (false);
+        return false;
     }
 
     major = buf[0];
     minor = buf[1];
 
-    return (true);
+    return true;
 }
 
 static bool _read_char_chunk(package *save)
@@ -1990,7 +1990,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
     if (!get_save_version(inf, major, minor))
     {
         *reason = "File is corrupt.";
-        return (false);
+        return false;
     }
 
     if (major != TAG_MAJOR_VERSION)
@@ -2007,14 +2007,14 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
             *reason = make_stringf("Major version mismatch: %d (want %d).",
                                    major, TAG_MAJOR_VERSION);
         }
-        return (false);
+        return false;
     }
 
     if (minor < 0)
     {
         *reason = make_stringf("Minor version %d is negative!",
                                minor);
-        return (false);
+        return false;
     }
 
     if (minor > TAG_MINOR_VERSION)
@@ -2022,11 +2022,11 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
         *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
                                "The save is from a newer version.",
                                minor, TAG_MINOR_VERSION);
-        return (false);
+        return false;
     }
 
     inf.setMinorVersion(minor);
-    return (true);
+    return true;
 }
 
 static bool _restore_tagged_chunk(package *save, const std::string name,
@@ -2072,14 +2072,14 @@ static bool _ghost_version_compatible(reader &inf)
             dprf("Ghost version mismatch: ghost was %d.%d; wanted %d.%d",
                  majorVersion, minorVersion,
                  TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
-            return (false);
+            return false;
         }
 
         inf.setMinorVersion(minorVersion);
 
         // Check for the DCSS ghost signature.
         if (unmarshallShort(inf) != GHOST_SIGNATURE)
-            return (false);
+            return false;
 
         // Discard three more 32-bit words of padding.
         inf.read(NULL, 3*4);
@@ -2089,9 +2089,9 @@ static bool _ghost_version_compatible(reader &inf)
         mprf(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
              inf.filename().c_str());
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 void save_ghost(bool force)
@@ -2251,7 +2251,7 @@ std::vector<std::string> get_title_files()
             if (files[j].substr(0, 6) == "title_")
                 titles.push_back(files[j]);
     }
-    return (titles);
+    return titles;
 }
 
 void sighup_save_and_exit()

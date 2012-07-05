@@ -61,7 +61,7 @@ bool is_holy_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_HOLY)
-            return (true);
+            return true;
     }
 
     switch (item.base_type)
@@ -77,12 +77,12 @@ bool is_holy_item(const item_def& item)
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 bool is_potentially_unholy_item(const item_def& item)
 {
-    return (false);
+    return false;
 }
 
 bool is_unholy_item(const item_def& item)
@@ -94,7 +94,7 @@ bool is_unholy_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_UNHOLY)
-            return (true);
+            return true;
     }
 
     switch (item.base_type)
@@ -116,7 +116,7 @@ bool is_unholy_item(const item_def& item)
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 bool is_potentially_evil_item(const item_def& item)
@@ -127,25 +127,25 @@ bool is_potentially_evil_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_CHAOS)
-            return (true);
+            return true;
         }
         break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
         if (item_brand == SPMSL_CHAOS)
-            return (true);
+            return true;
         }
         break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_RANDOM_EFFECTS)
-            return (true);
+            return true;
         break;
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 // This is a subset of is_evil_item().
@@ -158,7 +158,7 @@ bool is_corpse_violating_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_CORPSE_VIOLATING)
-            return (true);
+            return true;
     }
 
     switch (item.base_type)
@@ -180,7 +180,7 @@ bool is_corpse_violating_item(const item_def& item)
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 bool is_evil_item(const item_def& item)
@@ -190,7 +190,7 @@ bool is_evil_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_EVIL)
-            return (true);
+            return true;
     }
 
     switch (item.base_type)
@@ -228,7 +228,7 @@ bool is_unclean_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_UNCLEAN)
-            return (true);
+            return true;
     }
 
     if (item.has_spells())
@@ -246,7 +246,7 @@ bool is_chaotic_item(const item_def& item)
         unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_CHAOTIC)
-            return (true);
+            return true;
     }
 
     switch (item.base_type)
@@ -286,7 +286,7 @@ bool is_chaotic_item(const item_def& item)
         retval = true;
     }
 
-    return (retval);
+    return retval;
 }
 
 static bool _is_potentially_hasty_item(const item_def& item)
@@ -297,25 +297,25 @@ static bool _is_potentially_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_CHAOS)
-            return (true);
+            return true;
         }
         break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
         if (item_brand == SPMSL_CHAOS || item_brand == SPMSL_RAGE)
-            return (true);
+            return true;
         }
         break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_RANDOM_EFFECTS)
-            return (true);
+            return true;
         break;
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 bool is_hasty_item(const item_def& item)
@@ -364,7 +364,7 @@ bool is_hasty_item(const item_def& item)
         retval = true;
     }
 
-    return (retval);
+    return retval;
 }
 
 bool is_poisoned_item(const item_def& item)
@@ -375,25 +375,25 @@ bool is_poisoned_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_VENOM)
-            return (true);
+            return true;
         }
         break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
         if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-            return (true);
+            return true;
         }
         break;
     case OBJ_STAVES:
         if (item.sub_type == STAFF_POISON)
-            return (true);
+            return true;
         break;
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 bool is_unholy_spell(spell_type spell)
@@ -448,21 +448,21 @@ conduct_type good_god_hates_item_handling(const item_def &item)
     if (!is_good_god(you.religion)
         || (!is_unholy_item(item) && !is_evil_item(item)))
     {
-        return (DID_NOTHING);
+        return DID_NOTHING;
     }
 
     if (item_type_known(item) || is_unrandom_artefact(item))
     {
         if (is_evil_item(item))
-            return (DID_NECROMANCY);
+            return DID_NECROMANCY;
         else
-            return (DID_UNHOLY);
+            return DID_UNHOLY;
     }
 
     if (is_demonic(item))
-        return (DID_UNHOLY);
+        return DID_UNHOLY;
 
-    return (DID_NOTHING);
+    return DID_NOTHING;
 }
 
 conduct_type god_hates_item_handling(const item_def &item)
@@ -471,43 +471,43 @@ conduct_type god_hates_item_handling(const item_def &item)
     {
     case GOD_ZIN:
         if (!item_type_known(item))
-            return (DID_NOTHING);
+            return DID_NOTHING;
 
         if (is_unclean_item(item))
-            return (DID_UNCLEAN);
+            return DID_UNCLEAN;
 
         if (is_chaotic_item(item))
-            return (DID_CHAOS);
+            return DID_CHAOS;
         break;
 
     case GOD_SHINING_ONE:
         if (item_type_known(item) && is_poisoned_item(item))
-            return (DID_POISON);
+            return DID_POISON;
         break;
 
     case GOD_YREDELEMNUL:
         if (item_type_known(item) && is_holy_item(item))
-            return (DID_HOLY);
+            return DID_HOLY;
         break;
 
     case GOD_TROG:
         if (item_is_spellbook(item))
-            return (DID_SPELL_MEMORISE);
+            return DID_SPELL_MEMORISE;
         // Only Trog cares about spellsbooks vs rods.
         if (item.base_type == OBJ_RODS)
-            return (DID_NOTHING);
+            return DID_NOTHING;
         break;
 
     case GOD_FEDHAS:
         if (item_type_known(item) && is_corpse_violating_item(item))
-            return (DID_CORPSE_VIOLATION);
+            return DID_CORPSE_VIOLATION;
         break;
 
     case GOD_CHEIBRIADOS:
         if (item_type_known(item)
             && (_is_potentially_hasty_item(item) || is_hasty_item(item)))
         {
-            return (DID_HASTY);
+            return DID_HASTY;
         }
         break;
 
@@ -518,27 +518,27 @@ conduct_type god_hates_item_handling(const item_def &item)
     if (item_type_known(item) && is_potentially_unholy_item(item)
         && is_good_god(you.religion))
     {
-        return (DID_UNHOLY);
+        return DID_UNHOLY;
     }
 
     if (item_type_known(item) && is_potentially_evil_item(item)
         && is_good_god(you.religion))
     {
-        return (DID_NECROMANCY);
+        return DID_NECROMANCY;
     }
 
     if (item_type_known(item) && _is_bookrod_type(item, _your_god_hates_spell))
     {
-        return (NUM_CONDUCTS); // FIXME: Get the specific reason, if it
+        return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.
 
-    return (DID_NOTHING);
+    return DID_NOTHING;
 }
 
 bool god_dislikes_spell_type(spell_type spell, god_type god)
 {
     if (god_hates_spell(spell, god))
-        return (true);
+        return true;
 
     unsigned int flags       = get_spell_flags(spell);
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -552,7 +552,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
             || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
             || spell == SPELL_HIBERNATION)
         {
-            return (true);
+            return true;
         }
         break;
 
@@ -565,30 +565,30 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
                      | SPFLAG_RECOVERY | SPFLAG_MAPPING))
         {
-            return (true);
+            return true;
         }
 
         // Things are more fun for Xom the less the player knows in
         // advance.
         if (disciplines & SPTYP_DIVINATION)
-            return (true);
+            return true;
         break;
 
     case GOD_ELYVILON:
         // A peaceful god of healing wouldn't like combat spells.
         if (disciplines & SPTYP_CONJURATION)
-            return (true);
+            return true;
 
         // Also doesn't like battle spells of the non-conjuration type.
         if (flags & SPFLAG_BATTLE)
-            return (true);
+            return true;
         break;
 
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 bool god_dislikes_spell_discipline(int discipline, god_type god)
@@ -596,7 +596,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
     ASSERT(discipline < (1 << (SPTYP_LAST_EXPONENT + 1)));
 
     if (is_good_god(god) && (discipline & SPTYP_NECROMANCY))
-        return (true);
+        return true;
 
     switch (god)
     {
@@ -610,5 +610,5 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         break;
     }
 
-    return (false);
+    return false;
 }

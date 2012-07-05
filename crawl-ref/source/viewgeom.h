@@ -24,8 +24,8 @@ public:
     void resize(const coord_def &sz);
     bool empty() const;
 
-    operator screen_cell_t * () { return (m_buffer); }
-    operator const screen_cell_t * () const { return (m_buffer); }
+    operator screen_cell_t * () { return m_buffer; }
+    operator const screen_cell_t * () const { return m_buffer; }
     const crawl_view_buffer & operator = (const crawl_view_buffer &rhs);
 
     void clear();

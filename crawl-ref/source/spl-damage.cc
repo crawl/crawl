@@ -167,7 +167,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     if (beam.beam_cancelled)
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     mpr("You call forth a pillar of hellfire!");
@@ -176,7 +176,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.in_explosion_phase = false;
     beam.explode(true);
 
-    return (true);
+    return true;
 }
 
 // XXX no friendly check
@@ -835,11 +835,11 @@ static bool _player_hurt_monster(monster& m, int damage,
         else
         {
             monster_die(&m, KILL_YOU, NON_MONSTER);
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 // Here begin the actual spells:
@@ -905,7 +905,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     monster* mon = monster_at(where);
 
     if (mon == NULL || mon == agent)
-        return (0);
+        return 0;
 
     dam_dice.num = _shatter_mon_dice(mon);
     int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
@@ -923,7 +923,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     else
         mon->hurt(agent, damage);
 
-    return (damage);
+    return damage;
 }
 
 static int _shatter_items(coord_def where, int pow, actor *)
@@ -1025,10 +1025,10 @@ static int _shatter_walls(coord_def where, int pow, actor *)
         if (grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
-        return (1);
+        return 1;
     }
 
-    return (0);
+    return 0;
 }
 
 static bool _shatterable(const actor *act)
@@ -1105,7 +1105,7 @@ static int _shatter_player(int pow, actor *wielder)
     if (damage > 0)
         ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
 
-    return (damage);
+    return damage;
 }
 
 void shillelagh(actor *wielder, coord_def where, int pow)
@@ -1267,7 +1267,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
                     strength + roll_dice(3, strength / 4), actor);
     }
 
-    return (strength);
+    return strength;
 }
 
 static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
@@ -1311,7 +1311,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 
     monster* mon = monster_at(where);
     if (mon == NULL || mon == actor)
-        return (0);
+        return 0;
 
     // Monsters which have poison corpses or poisonous attacks.
     if (mons_is_poisoner(mon))
@@ -1354,10 +1354,10 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
                         actor->mindex());
         }
 
-        return (1);
+        return 1;
     }
 
-    return (0);
+    return 0;
 }
 
 // The self effects of Ignite Poison are beautiful and
@@ -1367,7 +1367,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 {
     if (actor->is_player() || where != you.pos())
-        return (0);
+        return 0;
 
     int totalstrength = 0;
 
@@ -1432,9 +1432,9 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
     }
 
     if (damage || totalstrength)
-        return (1);
+        return 1;
     else
-        return (0);
+        return 0;
 }
 
 spret_type cast_ignite_poison(int pow, bool fail)
@@ -1478,9 +1478,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "static electricity");
     }
     else if (mons == NULL)
-        return (0);
+        return 0;
     else if (mons->res_elec() > 0 || mons_flies(mons))
-        return (0);
+        return 0;
     else
     {
         damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));
@@ -1512,7 +1512,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         mpr("The lightning grounds out.");
     }
 
-    return (damage);
+    return damage;
 }
 
 // XXX no friendly check.
@@ -1549,9 +1549,9 @@ spret_type cast_discharge(int pow, bool fail)
 static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
-        return (0);
+        return 0;
     if (mons_is_projectile(mon->type))
-        return (0);
+        return 0;
 
     if (mon->no_tele())
         return 1;
@@ -1567,15 +1567,15 @@ static int _disperse_monster(monster* mon, int pow)
         else
             simple_monster_message(mon, mons_resist_string(mon, res_margin));
 
-        return (1);
+        return 1;
     }
     else
     {
         monster_teleport(mon, true);
-        return (1);
+        return 1;
     }
 
-    return (0);
+    return 0;
 }
 
 spret_type cast_dispersal(int pow, bool fail)
@@ -1864,13 +1864,13 @@ int wielding_rocks()
 {
     const item_def* wpn = you.weapon();
     if (!wpn || wpn->base_type != OBJ_MISSILES)
-        return (0);
+        return 0;
     else if (wpn->sub_type == MI_STONE)
-        return (1);
+        return 1;
     else if (wpn->sub_type == MI_LARGE_ROCK)
-        return (2);
+        return 2;
     else
-        return (0);
+        return 0;
 }
 
 spret_type cast_sandblast(int pow, bolt &beam, bool fail)
@@ -1909,10 +1909,10 @@ actor* forest_near_enemy(const actor *mon)
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
-                return (foe);
+                return foe;
     }
 
-    return (NULL);
+    return NULL;
 }
 
 // Print a message only if you can see any affected trees.

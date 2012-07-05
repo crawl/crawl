@@ -284,7 +284,7 @@ namespace arena
     std::string find_monster_spec()
     {
         if (!teams.empty())
-            return (teams);
+            return teams;
         else
             return ("random v random");
     }
@@ -574,7 +574,7 @@ namespace arena
                 faction_a.won = false;
                 faction_b.won = false;
             }
-            return (true);
+            return true;
         }
 
         // Sync up our book-keeping with the actual state, and report
@@ -1052,7 +1052,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
     }
 
     if (!arena::cycle_random)
-        return (RANDOM_MONSTER);
+        return RANDOM_MONSTER;
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
@@ -1072,19 +1072,19 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
     game_ended_with_error(
         make_stringf("No random monsters for place '%s'",
                      arena::place.describe().c_str()));
-    return (NUM_MONSTERS);
+    return NUM_MONSTERS;
 }
 
 bool arena_veto_random_monster(monster_type type)
 {
     if (!arena::allow_immobile && mons_class_is_stationary(type))
-        return (true);
+        return true;
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
-        return (true);
+        return true;
     if (!(mons_char(type) & !127) && arena::banned_glyphs[mons_char(type)])
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
@@ -1098,12 +1098,12 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
         if (mg.behaviour == BEH_FRIENDLY
             && arena::faction_a.active_members > arena::summon_throttle)
         {
-            return (true);
+            return true;
         }
         else if (mg.behaviour == BEH_HOSTILE
                  && arena::faction_b.active_members > arena::summon_throttle)
         {
-            return (true);
+            return true;
         }
 
     }
@@ -1389,7 +1389,7 @@ int arena_cull_items()
     {
         dprf("On turn #%d culled %d items dropped by monsters, done.",
              arena::turns, cull_count);
-        return (first_avail);
+        return first_avail;
     }
 
     dprf("On turn #%d culled %d items dropped by monsters, culling some more.",
@@ -1409,12 +1409,12 @@ int arena_cull_items()
     {
         dprf("Culled %d (probably) ammo items, done.",
              cull_count - count1);
-        return (first_avail);
+        return first_avail;
     }
 
     dprf("Culled %d items total, short of target %d.",
          cull_count, cull_target);
-    return (first_avail);
+    return first_avail;
 } // arena_cull_items
 
 /////////////////////////////////////////////////////////////////////////////

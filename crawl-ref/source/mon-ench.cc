@@ -66,9 +66,9 @@ bool monster::has_ench(enchant_type ench, enchant_type ench2) const
 
     for (int i = ench; i <= ench2; ++i)
         if (has_ench(static_cast<enchant_type>(i)))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 mon_enchant monster::get_ench(enchant_type ench1,
@@ -103,12 +103,12 @@ bool monster::add_ench(const mon_enchant &ench)
 {
     // silliness
     if (ench.ench == ENCH_NONE)
-        return (false);
+        return false;
 
     if (ench.ench == ENCH_FEAR
         && (holiness() == MH_NONLIVING || berserk()))
     {
-        return (false);
+        return false;
     }
 
     if (ench.ench == ENCH_LEVITATION && has_ench(ENCH_LIQUEFYING))
@@ -140,7 +140,7 @@ bool monster::add_ench(const mon_enchant &ench)
     if (new_enchantment)
         add_enchantment_effect(ench);
 
-    return (true);
+    return true;
 }
 
 void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
@@ -282,7 +282,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
-        return (true);
+        return true;
 
     // Lurking monsters only unsubmerge when their foe is in sight if the foe
     // is right next to them.
@@ -292,7 +292,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         if (foe != NULL && mon->can_see(foe)
             && !adjacent(mon->pos(), foe->pos()))
         {
-            return (false);
+            return false;
         }
     }
 
@@ -302,7 +302,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         mgrd(mon->pos()) = midx;
 
     if (mon->pos() != you.pos() && midx == mgrd(mon->pos()))
-        return (true);
+        return true;
 
     if (midx != mgrd(mon->pos()))
     {
@@ -320,7 +320,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
                  mon->name(DESC_PLAIN, true).c_str());
 
             if (mon->pos() != you.pos())
-                return (true);
+                return true;
         }
         else
             mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
@@ -348,7 +348,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     // No available adjacent squares from which the monster could also
     // have unsubmerged.  Can it just stay submerged where it is?
     if (monster_can_submerge(mon, grd(mon->pos())))
-        return (false);
+        return false;
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
@@ -366,26 +366,26 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (okay_squares > 0)
         return (mon->move_to_pos(target_square));
 
-    return (true);
+    return true;
 }
 
 bool monster::del_ench(enchant_type ench, bool quiet, bool effect)
 {
     mon_enchant_list::iterator i = enchantments.find(ench);
     if (i == enchantments.end())
-        return (false);
+        return false;
 
     const mon_enchant me = i->second;
     const enchant_type et = i->first;
 
     if (!_prepare_del_ench(this, me))
-        return (false);
+        return false;
 
     enchantments.erase(et);
     ench_cache.set(et, false);
     if (effect)
         remove_enchantment_effect(me, quiet);
-    return (true);
+    return true;
 }
 
 void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
@@ -775,40 +775,40 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 bool monster::lose_ench_levels(const mon_enchant &e, int lev)
 {
     if (!lev)
-        return (false);
+        return false;
 
     if (e.degree <= lev)
     {
         del_ench(e.ench);
-        return (true);
+        return true;
     }
     else
     {
         mon_enchant newe(e);
         newe.degree -= lev;
         update_ench(newe);
-        return (false);
+        return false;
     }
 }
 
 bool monster::lose_ench_duration(const mon_enchant &e, int dur)
 {
     if (!dur)
-        return (false);
+        return false;
 
     if (e.duration >= INFINITE_DURATION)
         return false;
     if (e.duration <= dur)
     {
         del_ench(e.ench);
-        return (true);
+        return true;
     }
     else
     {
         mon_enchant newe(e);
         newe.duration -= dur;
         update_ench(newe);
-        return (false);
+        return false;
     }
 }
 
@@ -970,17 +970,17 @@ bool monster::decay_enchantment(const mon_enchant &me, bool decay_degree)
                                              10;
     const int actdur = speed_to_duration(spd);
     if (lose_ench_duration(me, actdur))
-        return (true);
+        return true;
 
     if (!decay_degree)
-        return (false);
+        return false;
 
     // Decay degree so that higher degrees decay faster than lower
     // degrees, and a degree of 1 does not decay (it expires when the
     // duration runs out).
     const int level = me.degree;
     if (level <= 1)
-        return (false);
+        return false;
 
     const int decay_factor = level * (level + 1) / 2;
     if (me.duration < me.maxduration * (decay_factor - 1) / decay_factor)
@@ -992,12 +992,12 @@ bool monster::decay_enchantment(const mon_enchant &me, bool decay_degree)
         if (newme.degree <= 0)
         {
             del_ench(me.ench);
-            return (true);
+            return true;
         }
         else
             update_ench(newme);
     }
-    return (false);
+    return false;
 }
 
 void monster::apply_enchantment(const mon_enchant &me)
@@ -1688,7 +1688,7 @@ bool monster::is_summoned(int* duration, int* summon_type) const
         if (summon_type != NULL)
             *summon_type = 0;
 
-        return (false);
+        return false;
     }
     if (duration != NULL)
         *duration = abj.duration;
@@ -1699,13 +1699,13 @@ bool monster::is_summoned(int* duration, int* summon_type) const
         if (summon_type != NULL)
             *summon_type = 0;
 
-        return (true);
+        return true;
     }
     if (summon_type != NULL)
         *summon_type = summ.degree;
 
     if (mons_is_conjured(type))
-        return (false);
+        return false;
 
     switch (summ.degree)
     {
@@ -1726,10 +1726,10 @@ bool monster::is_summoned(int* duration, int* summon_type) const
 
     // Some object which was animated, and thus not really summoned.
     case MON_SUMM_ANIMATE:
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 void monster::apply_enchantments()
@@ -1868,7 +1868,7 @@ mon_enchant mon_enchant::operator + (const mon_enchant &other) const
 {
     mon_enchant tmp(*this);
     tmp += other;
-    return (tmp);
+    return tmp;
 }
 
 killer_type mon_enchant::killer() const
@@ -1994,11 +1994,11 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_PORTAL_PACIFIED:
         // Must be set by spell.
-        return (0);
+        return 0;
 
     case ENCH_BREATH_WEAPON:
         // Must be set by creature.
-        return (0);
+        return 0;
 
     case ENCH_PORTAL_TIMER:
         cturn = 30 * 10 / _mod_speed(10, mons->speed);
@@ -2051,7 +2051,7 @@ int mon_enchant::calc_duration(const monster* mons,
 
     dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);
 
-    return (raw_duration);
+    return raw_duration;
 }
 
 // Calculate the effective duration (in terms of normal player time - 10

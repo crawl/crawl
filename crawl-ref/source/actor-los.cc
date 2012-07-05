@@ -16,7 +16,7 @@ bool actor::observable() const
 bool actor::see_cell(const coord_def &p) const
 {
     if (!in_bounds(pos()))
-        return (false); // actor is off the map
+        return false; // actor is off the map
 
     return (cell_see_cell(pos(), p, LOS_DEFAULT));
 }
@@ -24,9 +24,9 @@ bool actor::see_cell(const coord_def &p) const
 bool player::see_cell(const coord_def &p) const
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (crawl_state.game_is_arena() && is_player())
-        return (true);
+        return true;
     if (xray_vision)
         return ((pos() - p).abs() <= dist_range(you.current_vision));
     return (actor::see_cell(p));

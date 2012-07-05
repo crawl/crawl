@@ -354,7 +354,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     if (doEffects && hurted != original)
         maybe_id_resist(flavour);
 
-    return (hurted);
+    return hurted;
 }
 
 void splash_with_acid(int acid_strength, bool corrode_items,
@@ -545,7 +545,7 @@ static int _get_target_class(beam_type flavour)
         break;
     }
 
-    return (target_class);
+    return target_class;
 }
 
 // XXX: These expose functions could use being reworked into a real system...
@@ -559,7 +559,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
-        return (false);
+        return false;
 
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
@@ -568,7 +568,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     {
         simple_god_message(" protects your food from the spores.",
                            GOD_FEDHAS);
-        return (false);
+        return false;
     }
 
     // Currently we test against each stack (and item in the stack)
@@ -686,15 +686,15 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     }
 
     if (!total_dest)
-        return (false);
+        return false;
 
     // Message handled elsewhere.
     if (flavour == BEAM_DEVOUR_FOOD)
-        return (true);
+        return true;
 
     xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
-    return (true);
+    return true;
 }
 
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
@@ -704,11 +704,11 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
-        return (false);
+        return false;
 
     // Beams fly *over* water and lava.
     if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
-        return (false);
+        return false;
 
     for (stack_iterator si(where); si; ++si)
     {
@@ -731,10 +731,10 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     }
 
     if (!num_dest)
-        return (false);
+        return false;
 
     if (flavour == BEAM_DEVOUR_FOOD)
-        return (true);
+        return true;
 
     if (you.see_cell(where))
     {
@@ -765,7 +765,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
-    return (true);
+    return true;
 }
 
 // Handle side-effects for exposure to element other than damage.  This
@@ -784,7 +784,7 @@ bool expose_player_to_element(beam_type flavour, int strength,
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
 
     if (strength <= 0 || !damage_inventory)
-        return (false);
+        return false;
 
     return (_expose_invent_to_element(flavour, strength));
 }
@@ -835,7 +835,7 @@ bool drain_exp(bool announce_full)
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
 
-        return (false);
+        return false;
     }
 
     if (you.experience == 0)
@@ -843,14 +843,14 @@ bool drain_exp(bool announce_full)
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
 
         // Return in case death was escaped via wizard mode.
-        return (true);
+        return true;
     }
 
     if (you.experience_level == 1)
     {
         you.experience = 0;
 
-        return (true);
+        return true;
     }
 
     unsigned int total_exp = exp_needed(you.experience_level + 1)
@@ -886,10 +886,10 @@ bool drain_exp(bool announce_full)
 
         level_change();
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _xom_checks_damage(kill_method_type death_type,
@@ -1391,7 +1391,7 @@ std::string morgue_name(std::string char_name, time_t when_crawl_got_even)
     if (!time.empty())
         name += "-" + time;
 
-    return (name);
+    return name;
 }
 
 // Delete save files on game end.
@@ -1556,11 +1556,11 @@ void _end_game(scorefile_entry &se)
 int actor_to_death_source(const actor* agent)
 {
     if (agent->is_player())
-        return (NON_MONSTER);
+        return NON_MONSTER;
     else if (agent->is_monster())
         return (agent->as_monster()->mindex());
     else
-        return (NON_MONSTER);
+        return NON_MONSTER;
 }
 
 int timescale_damage(const actor *act, int damage)

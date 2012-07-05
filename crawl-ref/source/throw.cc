@@ -219,10 +219,10 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
-    case '(': case CONTROL('N'): cycle_fire_item(true);  return (CMD_NO_CMD);
-    case ')': case CONTROL('P'): cycle_fire_item(false); return (CMD_NO_CMD);
-    case 'i': pick_fire_item_from_inventory(); return (CMD_NO_CMD);
-    case '?': display_help(); return (CMD_NO_CMD);
+    case '(': case CONTROL('N'): cycle_fire_item(true);  return CMD_NO_CMD;
+    case ')': case CONTROL('P'): cycle_fire_item(false); return CMD_NO_CMD;
+    case 'i': pick_fire_item_from_inventory(); return CMD_NO_CMD;
+    case '?': display_help(); return CMD_NO_CMD;
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
@@ -252,7 +252,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         if (!_fire_validate_item(slot, warn))
         {
             mpr(warn.c_str());
-            return (false);
+            return false;
         }
         // Force item to be the prechosen one.
         beh.m_slot = slot;
@@ -268,20 +268,20 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
     if (!beh.active_item())
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     if (!target.isValid)
     {
         if (target.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
-    return (true);
+    return true;
 }
 
 // Bring up an inventory screen and have user choose an item.
@@ -311,19 +311,19 @@ static bool _fire_validate_item(int slot, std::string &err)
         && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your " + you.hand_name(false) + "!";
-        return (false);
+        return false;
     }
     else if (item_is_worn(slot))
     {
         err = "You are wearing that object!";
-        return (false);
+        return false;
     }
     else if (you.inv[slot].base_type == OBJ_ORBS)
     {
        err = "You don't feel like leaving the orb behind!";
-       return (false);
+       return false;
     }
-    return (true);
+    return true;
 }
 
 // Returns true if warning is given.
@@ -333,7 +333,7 @@ bool fire_warn_if_impossible(bool silent)
     {
         if (!silent)
             mpr("You can't grasp things well enough to throw them.");
-        return (true);
+        return true;
     }
 
     // If you can't wield it, you can't throw it.
@@ -341,7 +341,7 @@ bool fire_warn_if_impossible(bool silent)
     {
         if (!silent)
             canned_msg(MSG_PRESENT_FORM);
-        return (true);
+        return true;
     }
 
     if (you.attribute[ATTR_HELD])
@@ -351,14 +351,14 @@ bool fire_warn_if_impossible(bool silent)
         {
             if (!silent)
                 mprf("You cannot throw anything while %s.", held_status());
-            return (true);
+            return true;
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             if (!silent)
                 mprf("You cannot shoot with your %s while %s.",
                      weapon->name(DESC_BASENAME).c_str(), held_status());
-            return (true);
+            return true;
         }
         // Else shooting is possible.
     }
@@ -366,9 +366,9 @@ bool fire_warn_if_impossible(bool silent)
     {
         if (!silent)
             canned_msg(MSG_TOO_BERSERK);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _autoswitch_to_ranged()
@@ -420,7 +420,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         mpr(warn.c_str());
         return (-1);
     }
-    return (item);
+    return item;
 }
 
 // If item == -1, prompt the user.
@@ -482,7 +482,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
 {
     int speed_adjust = 100;
     if (!shield)
-        return (speed_adjust);
+        return speed_adjust;
 
     const int shield_type = shield->sub_type;
     hands_reqd_type hands = hands_reqd(launcher, you.body_size());
@@ -510,7 +510,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
     if (speed_adjust > 100)
         speed_adjust -= you.skill_rdiv(SK_SHIELDS, speed_adjust - 100, 27 * 2);
 
-    return (speed_adjust);
+    return speed_adjust;
 }
 
 // Returns the attack cost of using the launcher, taking skill and shields
@@ -573,7 +573,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield, bool 
         speed /= 2;
     }
 
-    return (speed);
+    return speed;
 }
 
 // Determines if the combined launcher + ammo brands produce a
@@ -583,12 +583,12 @@ static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
     if (launcher_brand == SPWPN_FLAME && ammo_brand == SPMSL_FROST ||
         launcher_brand == SPWPN_FROST && ammo_brand == SPMSL_FLAME)
     {
-        return (false);
+        return false;
     }
     if (ammo_brand == SPMSL_CHAOS || ammo_brand == SPMSL_FROST || ammo_brand == SPMSL_FLAME)
-        return (true);
+        return true;
     if (ammo_brand != SPMSL_NORMAL)
-        return (false);
+        return false;
     return (launcher_brand == SPWPN_CHAOS || launcher_brand == SPWPN_FROST ||
             launcher_brand == SPWPN_FLAME);
 }
@@ -596,10 +596,10 @@ static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (!victim->alive() || victim->res_poison() > 0)
-        return (false);
+        return false;
 
     if (beam.is_tracer)
-        return (true);
+        return true;
 
     int levels = 0;
 
@@ -612,21 +612,21 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
     }
 
     if (levels <= 0)
-        return (false);
+        return false;
 
     victim->poison(agent, levels);
 
-    return (true);
+    return true;
 }
 
 static bool _item_penetrates_victim(const bolt &beam, int &used)
 {
     if (beam.aimed_at_feet)
-        return (false);
+        return false;
 
     used = 0;
 
-    return (true);
+    return true;
 }
 
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
@@ -657,12 +657,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         dmg = (dmg * multiplier) / 100;
     }
     else
-        return (false);
+        return false;
 
     if (!beam.is_tracer && you.can_see(victim))
        dmg_msg = "The silver sears " + victim->name(DESC_THE) + "!";
 
-    return (false);
+    return false;
 }
 
 static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
@@ -670,16 +670,16 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     const actor* agent = beam.agent();
 
     if (!victim->alive() || victim == agent || dmg == 0)
-        return (false);
+        return false;
 
     if (beam.is_tracer)
-        return (true);
+        return true;
 
     if (victim->no_tele(true, true))
     {
         if (victim->is_player())
             canned_msg(MSG_STRANGE_STASIS);
-        return (false);
+        return false;
     }
 
     const bool was_seen = you.can_see(victim);
@@ -693,13 +693,13 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         if (!random_near_space(victim->pos(), pos, false, true, false,
                                no_sanct))
         {
-            return (false);
+            return false;
         }
     }
     while (!victim->is_habitable(pos) && tries++ < 100);
 
     if (!victim->is_habitable(pos))
-        return (false);
+        return false;
 
     tries = 0;
     do
@@ -707,7 +707,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     while (!victim->is_habitable(pos2) && tries++ < 100);
 
     if (!victim->is_habitable(pos2))
-        return (false);
+        return false;
 
     // Pick the square further away from the agent.
     const coord_def from = agent->pos();
@@ -718,7 +718,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     }
 
     if (pos == victim->pos())
-        return (false);
+        return false;
 
     const coord_def oldpos = victim->pos();
     victim->clear_clinging();
@@ -756,14 +756,14 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
             mprf("%s vanishes!", name.c_str());
     }
 
-    return (true);
+    return true;
 }
 
 static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
                                     std::string &dmg_msg)
 {
     if (victim->airborne() || victim->res_elec() > 0 || !one_chance_in(3))
-        return (false);
+        return false;
 
     // A hack and code duplication, but that's easier than adding accounting
     // for each of multiple brands.
@@ -777,7 +777,7 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
         dmg += 10 + random2(15);
 
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (you.can_see(victim))
     {
@@ -795,7 +795,7 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
                          victim->pos(), 0);
     }
 
-    return (false);
+    return false;
 }
 
 static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
@@ -810,7 +810,7 @@ static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
                    + victim->conj_verb("convulse") + "!";
     }
 
-    return (false);
+    return false;
 }
 
 static int _blowgun_power_roll(bolt &beam)
@@ -851,13 +851,13 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
             simple_monster_message(victim->as_monster(), " is unaffected.");
         else
             canned_msg(MSG_YOU_UNAFFECTED);
-        return (false);
+        return false;
     }
 
     actor* agent = beam.agent();
 
     if (!agent || agent->is_monster() || beam.reflections > 0)
-        return (true);
+        return true;
 
     const int skill = you.skill_rdiv(SK_THROWING);
     const item_def* wp = agent->weapon();
@@ -867,7 +867,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     // You have a really minor chance of hitting with no skills or good
     // enchants.
     if (victim->get_experience_level() < 15 && random2(100) <= 2)
-        return (true);
+        return true;
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
@@ -880,91 +880,91 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
             simple_monster_message(victim->as_monster(), " resists.");
         else
             canned_msg(MSG_YOU_RESIST);
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
     victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
-    return (true);
+    return true;
 }
 
 static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
     victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
-    return (true);
+    return true;
 }
 
 static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
     victim->confuse(beam.agent(), 5 + random2(blowgun_power));
-    return (true);
+    return true;
 }
 
 static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
     victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
-    return (true);
+    return true;
 }
 
 static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
     victim->sicken(40 + random2(blowgun_power));
-    return (true);
+    return true;
 }
 
 static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
-        return (false);
+        return false;
 
     if (!_blowgun_check(beam, victim))
-        return (false);
+        return false;
 
     if (victim->is_monster())
         victim->as_monster()->go_frenzy();
     else
         victim->go_berserk(false);
 
-    return (true);
+    return true;
 }
 
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
@@ -1077,9 +1077,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         case SM_CONTINUE:
             break;
         case SM_FINISHED:
-            return (false);
+            return false;
         case SM_CANCEL:
-            return (true);
+            return true;
         }
     }
 
@@ -1275,7 +1275,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     else
         ammo_name = "the " + ammo_name;
 
-    return (false);
+    return false;
 }
 
 static int stat_adjust(int value, int stat, int statbase,
@@ -1292,7 +1292,7 @@ static int stat_adjust(int value, int stat, int statbase,
     else if (multiplier < 100)
         value = value * (100 - random2avg(100 - multiplier, 2)) / 100;
 
-    return (value);
+    return value;
 }
 
 static int str_adjust_thrown_damage(int dam)
@@ -1394,7 +1394,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             if (thr.isCancel)
                 canned_msg(MSG_OK);
 
-            return (false);
+            return false;
         }
     }
     pbolt.set_target(thr);
@@ -1424,7 +1424,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
     {
         you.turn_is_over = false;
-        return (false);
+        return false;
     }
 
     // Did we know the ammo's brand before throwing it?
@@ -1497,7 +1497,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             you.turn_is_over = false;
             if (pbolt.special_explosion != NULL)
                 delete pbolt.special_explosion;
-            return (false);
+            return false;
         }
         pbolt.hit    = 0;
         pbolt.damage = dice_def();
@@ -1512,7 +1512,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false))
-            return (false);
+            return false;
 
         unwielded = true;
     }
@@ -2063,7 +2063,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (pbolt.special_explosion != NULL)
         delete pbolt.special_explosion;
 
-    return (hit);
+    return hit;
 }
 
 void setup_monster_throw_beam(monster* mons, struct bolt &beam)
@@ -2120,7 +2120,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
     beam.range         = you.current_vision;
 
     if (setup_missile_beam(mons, beam, item, ammo_name, returning))
-        return (false);
+        return false;
 
     beam.aimed_at_spot = returning;
 
@@ -2470,7 +2470,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
     if (beam.special_explosion != NULL)
         delete beam.special_explosion;
 
-    return (true);
+    return true;
 }
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where)
@@ -2480,15 +2480,15 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     std::string name = item->name(DESC_PLAIN, false, true, false);
 
     if (item->base_type != OBJ_MISSILES)
-        return (false);
+        return false;
 
     int brand = get_ammo_brand(*item);
     if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL || brand == SPMSL_EXPLODING)
-        return (true);
+        return true;
 
     // Nets don't get destroyed by throwing.
     if (item->sub_type == MI_THROWING_NET)
-        return (false);
+        return false;
 
     int chance;
 

@@ -25,7 +25,7 @@ static int mapgrd_get(lua_State *ls)
     mapref->map = map;
     mapref->col = column;
 
-    return (1);
+    return 1;
 }
 
 static int mapgrd_set(lua_State *ls)
@@ -41,7 +41,7 @@ static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
 
     map_lines &lines = mapc->map->map;
     if (row < 0 || col < 0 || col >= lines.width() || row >= lines.height())
-        return (NULL);
+        return NULL;
 
     coord_def mc(col, row);
     return (&lines(mc));
@@ -60,7 +60,7 @@ static int mapgrd_col_get(lua_State *ls)
 
     lua_pushstring(ls, buf);
 
-    return (1);
+    return 1;
 }
 
 static int mapgrd_col_set(lua_State *ls)
@@ -76,7 +76,7 @@ static int mapgrd_col_set(lua_State *ls)
 
     (*gly) = str[0];
 
-    return (0);
+    return 0;
 }
 
 void dluaopen_mapgrd(lua_State *ls)

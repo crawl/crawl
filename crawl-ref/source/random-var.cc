@@ -37,7 +37,7 @@ const random_var& random_var::operator=(const random_var& other)
 int random_var::weight(int val) const
 {
     if (val < start || val >= end)
-        return (0);
+        return 0;
     return (weights[val - start]);
 }
 
@@ -67,7 +67,7 @@ int random_var::roll2val(int r) const
         v++;
         w += weight(v);
     }
-    return (v);
+    return v;
 }
 
 int random_var::roll() const
@@ -82,7 +82,7 @@ int random_var::max() const
 
 int random_var::min() const
 {
-    return (start);
+    return start;
 }
 
 double random_var::expected() const
@@ -90,7 +90,7 @@ double random_var::expected() const
     double ev = 0;
     for (int i = start; i < end; ++i)
         ev += i * weight(i) / (double)total;
-    return (ev);
+    return ev;
 }
 
 
@@ -134,13 +134,13 @@ random_var operator-(const random_var& x, const random_var& y)
 const random_var& operator+=(random_var& x, const random_var& y)
 {
     x = x + y;
-    return (x);
+    return x;
 }
 
 const random_var& operator-=(random_var& x, const random_var& y)
 {
     x = x - y;
-    return (x);
+    return x;
 }
 
 random_var operator/(const random_var& x, int d)
@@ -205,7 +205,7 @@ random_var rv::roll_dice(int d, int n)
     random_var x = constant(0);
     for (int i = 0; i < d; ++i)
         x += random_var(1, n+1);
-    return (x);
+    return x;
 }
 
 random_var rv::random2(int n)

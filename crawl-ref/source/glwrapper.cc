@@ -92,7 +92,7 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
     case GLW_LINES:
         return (num_verts % 2 == 0);
     default:
-        return (false);
+        return false;
     }
 }
 #endif // ASSERTS

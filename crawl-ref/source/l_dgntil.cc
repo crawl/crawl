@@ -142,7 +142,7 @@ LUAFN(dgn_tile_feat_changed)
     {
         env.tile_flv(c).feat     = 0;
         env.tile_flv(c).feat_idx = 0;
-        return (0);
+        return 0;
     }
 
     std::string tilename = luaL_checkstring(ls, 3);
@@ -160,7 +160,7 @@ LUAFN(dgn_tile_feat_changed)
     env.tile_flv(c).feat_idx =
         store_tilename_get_index(tilename);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_tile_floor_changed)
@@ -171,7 +171,7 @@ LUAFN(dgn_tile_floor_changed)
     {
         env.tile_flv(c).floor     = 0;
         env.tile_flv(c).floor_idx = 0;
-        return (0);
+        return 0;
     }
 
     std::string tilename = luaL_checkstring(ls, 3);
@@ -189,7 +189,7 @@ LUAFN(dgn_tile_floor_changed)
     env.tile_flv(c).floor_idx =
         store_tilename_get_index(tilename);
 
-    return (0);
+    return 0;
 }
 
 const struct luaL_reg dgn_tile_dlib[] =

@@ -82,13 +82,13 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     {
         if (beam.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     if (beam.isMe())
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return (false);
+        return false;
     }
 
     if (you.confused())
@@ -112,7 +112,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
-        return (false); // Shouldn't happen with confused swings
+        return false; // Shouldn't happen with confused swings
     }
     else if (!feat_is_reachable_past(grd(first_middle))
              && !feat_is_reachable_past(grd(second_middle)))
@@ -122,12 +122,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if (you.confused())
         {
             mpr("You swing wildly and hit a wall.");
-            return (true);
+            return true;
         }
         else
         {
             mpr("There's a wall in the way.");
-            return (false);
+            return false;
         }
     }
 
@@ -189,18 +189,18 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                                        " and almost hit yourself!" : ".");
         else
             mpr("You attack empty space.");
-        return (true);
+        return true;
     }
     else
     {
         if (!fight_melee(&you, mons))
         {
             canned_msg(MSG_OK);
-            return (false);
+            return false;
         }
     }
 
-    return (true);
+    return true;
 }
 
 static bool _evoke_horn_of_geryon(item_def &item)
@@ -269,7 +269,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
             mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
                 true, 4, 0, you.pos()));
     }
-    return (rc);
+    return rc;
 }
 
 static bool _efreet_flask(int slot)
@@ -308,7 +308,7 @@ static bool _efreet_flask(int slot)
 
     dec_inv_item_quantity(slot, 1);
 
-    return (true);
+    return true;
 }
 
 static bool _check_crystal_ball()
@@ -316,20 +316,20 @@ static bool _check_crystal_ball()
     if (you.intel() <= 1)
     {
         mpr("You lack the intelligence to focus on the shapes in the ball.");
-        return (false);
+        return false;
     }
 
     if (you.confused())
     {
         mpr("You are unable to concentrate on the shapes in the ball.");
-        return (false);
+        return false;
     }
 
     if (you.magic_points == you.max_magic_points)
     {
         mpr("With no energy to recover, the crystal ball of energy is "
             "presently useless to you.");
-        return (false);
+        return false;
     }
 
     if (you.skill(SK_EVOCATIONS) < 2)
@@ -338,7 +338,7 @@ static bool _check_crystal_ball()
         return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool disc_of_storms(bool drac_breath)
@@ -397,7 +397,7 @@ bool disc_of_storms(bool drac_breath)
             }
         }
     }
-    return (rc);
+    return rc;
 }
 
 void tome_of_power(int slot)
@@ -613,7 +613,7 @@ static bool _box_of_beasts(item_def &box)
         }
     }
 
-    return (success);
+    return success;
 }
 
 static bool _ball_of_energy(void)
@@ -652,7 +652,7 @@ static bool _ball_of_energy(void)
         }
     }
 
-    return (ret);
+    return ret;
 }
 
 bool evoke_item(int slot)
@@ -663,7 +663,7 @@ bool evoke_item(int slot)
                        || weapon_reach(*you.weapon()) <= 2))
     {
         canned_msg(MSG_TOO_BERSERK);
-        return (false);
+        return false;
     }
 
     if (slot == -1)
@@ -674,10 +674,10 @@ bool evoke_item(int slot)
                                    NULL, OPER_EVOKE);
 
         if (prompt_failed(slot))
-            return (false);
+            return false;
     }
     else if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
-        return (false);
+        return false;
 
     ASSERT(slot >= 0);
 
@@ -688,7 +688,7 @@ bool evoke_item(int slot)
     item_def& item = you.inv[slot];
     // Also handles messages.
     if (!item_is_evokable(item, true, false, false, true))
-        return (false);
+        return false;
 
     if (you.suppressed() && weapon_reach(item) <= 2)
     {
@@ -711,14 +711,14 @@ bool evoke_item(int slot)
         {
             if (!unevokable)
                 count_action(CACT_EVOKE, EVOC_MISC);
-            return (did_work);
+            return did_work;
         }
     }
     else switch (item.base_type)
     {
     case OBJ_WANDS:
         zap_wand(slot);
-        return (true);
+        return true;
 
     case OBJ_WEAPONS:
         ASSERT(wielded);
@@ -731,7 +731,7 @@ bool evoke_item(int slot)
                 did_work = true;
             }
             else
-                return (false);
+                return false;
         }
         else
             unevokable = true;
@@ -749,7 +749,7 @@ bool evoke_item(int slot)
         pract = rod_spell(slot);
         // [ds] Early exit, no turns are lost.
         if (pract == -1)
-            return (false);
+            return false;
 
         did_work = true;  // rod_spell() will handle messages
         count_action(CACT_EVOKE, EVOC_ROD);
@@ -772,12 +772,12 @@ bool evoke_item(int slot)
         if (!you.is_undead && you.hunger_state == HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);
-            return (false);
+            return false;
         }
         else if (you.magic_points >= you.max_magic_points)
         {
             mpr("Your reserves of magic are already full.");
-            return (false);
+            return false;
         }
         else if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
         {
@@ -893,5 +893,5 @@ bool evoke_item(int slot)
     else
         crawl_state.zero_turns_taken();
 
-    return (did_work);
+    return did_work;
 }

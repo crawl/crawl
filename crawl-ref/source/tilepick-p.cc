@@ -441,31 +441,31 @@ static int _draconian_colour(int race, int level)
     {
         switch (race)
         {
-        case MONS_DRACONIAN:        return (0);
-        case MONS_BLACK_DRACONIAN:  return (1);
-        case MONS_YELLOW_DRACONIAN: return (2);
-        case MONS_GREY_DRACONIAN:   return (3);
-        case MONS_GREEN_DRACONIAN:  return (4);
-        case MONS_MOTTLED_DRACONIAN:return (5);
-        case MONS_PALE_DRACONIAN:   return (6);
-        case MONS_PURPLE_DRACONIAN: return (7);
-        case MONS_RED_DRACONIAN:    return (8);
-        case MONS_WHITE_DRACONIAN:  return (9);
+        case MONS_DRACONIAN:        return 0;
+        case MONS_BLACK_DRACONIAN:  return 1;
+        case MONS_YELLOW_DRACONIAN: return 2;
+        case MONS_GREY_DRACONIAN:   return 3;
+        case MONS_GREEN_DRACONIAN:  return 4;
+        case MONS_MOTTLED_DRACONIAN:return 5;
+        case MONS_PALE_DRACONIAN:   return 6;
+        case MONS_PURPLE_DRACONIAN: return 7;
+        case MONS_RED_DRACONIAN:    return 8;
+        case MONS_WHITE_DRACONIAN:  return 9;
         }
     }
     switch (race)
     {
-    case SP_BLACK_DRACONIAN:   return (1);
-    case SP_YELLOW_DRACONIAN:  return (2);
-    case SP_GREY_DRACONIAN:    return (3);
-    case SP_GREEN_DRACONIAN:   return (4);
-    case SP_MOTTLED_DRACONIAN: return (5);
-    case SP_PALE_DRACONIAN:    return (6);
-    case SP_PURPLE_DRACONIAN:  return (7);
-    case SP_RED_DRACONIAN:     return (8);
-    case SP_WHITE_DRACONIAN:   return (9);
+    case SP_BLACK_DRACONIAN:   return 1;
+    case SP_YELLOW_DRACONIAN:  return 2;
+    case SP_GREY_DRACONIAN:    return 3;
+    case SP_GREEN_DRACONIAN:   return 4;
+    case SP_MOTTLED_DRACONIAN: return 5;
+    case SP_PALE_DRACONIAN:    return 6;
+    case SP_PURPLE_DRACONIAN:  return 7;
+    case SP_RED_DRACONIAN:     return 8;
+    case SP_WHITE_DRACONIAN:   return 9;
     }
-    return (0);
+    return 0;
 }
 
 tileidx_t tilep_species_to_base_tile(int sp, int level)

@@ -519,11 +519,11 @@ bool yes_or_no(const char* fmt, ...)
     mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
 
     if (cancelable_get_line(buf, sizeof buf))
-        return (false);
+        return false;
     if (strcasecmp(buf, "yes") != 0)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 // jmf: general helper (should be used all over in code)
@@ -579,9 +579,9 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             mesclr();
 
         if (tmp == 'N')
-            return (false);
+            return false;
         else if (tmp == 'Y')
-            return (true);
+            return true;
         else if (!noprompt)
         {
             bool upper = (!safe && crawl_state.game_is_hints_tutorial());
@@ -646,7 +646,7 @@ static std::string _list_allowed_keys(char yes1, char yes2,
                 result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
                 result += "]";
 
-    return (result);
+    return result;
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
@@ -750,12 +750,12 @@ bool tobool(maybe_bool mb, bool def)
     switch (mb)
     {
     case B_TRUE:
-        return (true);
+        return true;
     case B_FALSE:
-        return (false);
+        return false;
     case B_MAYBE:
     default:
-        return (def);
+        return def;
     }
 }
 
@@ -803,7 +803,7 @@ int prompt_for_int(const char *prompt, bool nonneg)
     if (ret < 0 && nonneg || ret == 0 && end == specs)
         ret = (nonneg ? -1 : 0);
 
-    return (ret);
+    return ret;
 }
 
 double prompt_for_float(const char* prompt)
@@ -821,6 +821,6 @@ double prompt_for_float(const char* prompt)
     if (ret == 0 && end == specs)
         ret = -1;
 
-    return (ret);
+    return ret;
 
 }

@@ -259,9 +259,9 @@ static bool _is_better(const cellray& a, const cellray& b)
     // calc_params() has been called.
     ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
     if (a.imbalance < b.imbalance)
-        return (true);
+        return true;
     else if (a.imbalance > b.imbalance)
-        return (false);
+        return false;
     else
         return (a.first_diag && !b.first_diag);
 }
@@ -595,12 +595,12 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
             blocked += opc(c[j]);
     }
     if (blocked >= OPC_OPAQUE)
-        return (false);
+        return false;
 
     ray = c.ray;
     ray.cycle_idx = index;
 
-    return (true);
+    return true;
 }
 
 // Coordinate transformation so we can find_ray quadrant-by-quadrant.
@@ -650,7 +650,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     opacity_trans opc_trans = opacity_trans(opc, source, signx, signy);
 
     if (!_find_ray_se(abs, ray, opc_trans, bds, cycle))
-        return (false);
+        return false;
 
     if (signx < 0)
         ray.r.start.x = 1.0 - ray.r.start.x;
@@ -662,7 +662,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     ray.r.start.x += source.x;
     ray.r.start.y += source.y;
 
-    return (true);
+    return true;
 }
 
 bool exists_ray(const coord_def& source, const coord_def& target,
@@ -681,7 +681,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     if (!find_ray(source, target, ray, opc_default))
     {
         ASSERT(you.xray_vision);
-        return (NUM_FEATURES);
+        return NUM_FEATURES;
     }
 
     ray.advance();
@@ -694,7 +694,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
         ray.advance();
     }
     ASSERT(false);
-    return (NUM_FEATURES);
+    return NUM_FEATURES;
 }
 
 // Returns a straight ray from source to target.
@@ -726,7 +726,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     ASSERT(map_bounds(source) && map_bounds(target));
 
     if (source == target)
-        return (0); // XXX: might want to count the cell.
+        return 0; // XXX: might want to count the cell.
 
     // We don't need to find the shortest beam, any beam will suffice.
     fallback_ray(source, target, ray);
@@ -752,7 +752,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
             count++;
 
             if (just_check) // Only needs to be > 0.
-                return (count);
+                return count;
         }
 
         if (reached_target)
@@ -761,7 +761,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
         ray.advance();
     }
 
-    return (count);
+    return count;
 }
 
 // Is p2 visible from p1, disregarding half-opaque objects?

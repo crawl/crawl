@@ -208,7 +208,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 {
     // No preparation necessary.
     if (can_butcher)
-        return (true);
+        return true;
 
     // At least one of these has to be true, else what are we doing
     // here?
@@ -220,7 +220,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
         // Actually take off the gloves; this creates a delay.  We
         // assume later on that gloves have a 1-turn takeoff delay!
         if (!takeoff_armour(you.equip[EQ_GLOVES]))
-            return (false);
+            return false;
 
         // Ensure that the gloves are taken off by now by finishing the
         // DELAY_ARMOUR_OFF delay started by takeoff_armour() above.
@@ -231,11 +231,11 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (wpn_switch
         && !wield_weapon(true, SLOT_BARE_HANDS, false, true, false, false))
     {
-        return (false);
+        return false;
     }
 
     // Switched to a good butchering tool.
-    return (true);
+    return true;
 }
 
 static bool _should_butcher(int corpse_id, bool bottle_blood = false)
@@ -245,7 +245,7 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
                       false, 'n')))
     {
-        return (false);
+        return false;
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
              && (can_bottle_blood_from_corpse(mitm[corpse_id].mon_type)
@@ -256,10 +256,10 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
                  || !yesno("You could drain or bottle this corpse's blood instead. "
                            "Continue anyway?", true, 'n')))
     {
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _corpse_butchery(int corpse_id, int butcher_tool,
@@ -271,7 +271,7 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
     const bool rotten = food_is_rotten(mitm[corpse_id]);
 
     if (!_should_butcher(corpse_id, bottle_blood))
-        return (false);
+        return false;
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
@@ -291,7 +291,7 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
                 butcher_tool);
 
     you.turn_is_over = true;
-    return (true);
+    return true;
 }
 
 static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
@@ -342,7 +342,7 @@ static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
     const int num = count_corpses_in_pack(bottle_blood);
 
     if (num == 0)
-        return (false);
+        return false;
 
     std::string verb = (bottle_blood ? "bottle" : "butcher");
 
@@ -369,7 +369,7 @@ static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
              noun.c_str(), verb.c_str(), pronoun.c_str());
     }
 
-    return (true);
+    return true;
 }
 
 bool butchery(int which_corpse, bool bottle_blood)
@@ -378,11 +378,11 @@ bool butchery(int which_corpse, bool bottle_blood)
     {
         if (!_have_corpses_in_pack(false, bottle_blood))
             mpr("There isn't anything here!");
-        return (false);
+        return false;
     }
 
     if (!player_can_reach_floor())
-        return (false);
+        return false;
 
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
@@ -416,7 +416,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         // somehow true at the point, the following message would be wrong and
         // (even worse) bottling success would depend on can_butcher == true.
         mpr("You are too berserk to search for a butchering tool!");
-        return (false);
+        return false;
     }
 
     // First determine how many things there are to butcher.
@@ -449,7 +449,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             mprf("There isn't anything to %s here.",
                  bottle_blood ? "bottle" : "butcher");
         }
-        return (false);
+        return false;
     }
 
     int old_weapon      = you.equip[EQ_WEAPON];
@@ -489,11 +489,11 @@ bool butchery(int which_corpse, bool bottle_blood)
         {
             mprf("There isn't anything suitable to %s here.",
                  bottle_blood ? "bottle" : "butcher");
-            return (false);
+            return false;
         }
 
         if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
-            return (false);
+            return false;
 
         success = _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
@@ -501,7 +501,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         // Remind player of corpses in pack that could be butchered or
         // bottled.
         _have_corpses_in_pack(true, bottle_blood);
-        return (success);
+        return success;
     }
 
     // Now pick what you want to butcher. This is only a problem
@@ -533,7 +533,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                 if (!_should_butcher(si->index(), bottle_blood))
                     continue;
                 if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
-                    return (false);
+                    return false;
 
                 corpse_id = si->index();
                 _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
@@ -572,7 +572,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                             did_weap_swap = true;
                         }
                         else
-                            return (false);
+                            return false;
                     }
                     corpse_id = si->index();
 
@@ -585,7 +585,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                     canned_msg(MSG_OK);
                     _terminate_butchery(wpn_switch, removed_gloves, old_weapon,
                                         old_gloves);
-                    return (false);
+                    return false;
 
                 case '?':
                     show_butchering_help();
@@ -627,7 +627,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         _have_corpses_in_pack(true, bottle_blood);
     }
 
-    return (success);
+    return success;
 }
 
 bool prompt_eat_inventory_item(int slot)
@@ -635,7 +635,7 @@ bool prompt_eat_inventory_item(int slot)
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return (false);
+        return false;
     }
 
     int which_inventory_slot = slot;
@@ -652,7 +652,7 @@ bool prompt_eat_inventory_item(int slot)
                                    OPER_EAT);
 
         if (prompt_failed(which_inventory_slot))
-            return (false);
+            return false;
     }
 
     // This conditional can later be merged into food::can_ingest() when
@@ -662,7 +662,7 @@ bool prompt_eat_inventory_item(int slot)
         if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
         {
             mpr("You can't eat that!");
-            return (false);
+            return false;
         }
     }
     else
@@ -671,19 +671,19 @@ bool prompt_eat_inventory_item(int slot)
             || you.inv[which_inventory_slot].sub_type != CORPSE_BODY)
         {
             mpr("You crave blood!");
-            return (false);
+            return false;
         }
     }
 
     if (!can_ingest(you.inv[which_inventory_slot], false))
-        return (false);
+        return false;
 
     eat_inventory_item(which_inventory_slot);
 
     burden_change();
     you.turn_is_over = true;
 
-    return (true);
+    return true;
 }
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
@@ -695,7 +695,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
             mpr("You can't eat.");
             crawl_state.zero_turns_taken();
         }
-        return (false);
+        return false;
     }
 
     if (!check_hunger)
@@ -708,7 +708,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
             mpr("You can't stomach food right now!");
             crawl_state.zero_turns_taken();
         }
-        return (false);
+        return false;
     }
 
     if (you.hunger_state >= HS_ENGORGED)
@@ -719,9 +719,9 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
                  you.species == SP_VAMPIRE ? "drain" : "eat");
             crawl_state.zero_turns_taken();
         }
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 static bool _has_edible_chunks()
@@ -764,7 +764,7 @@ void end_nausea()
 bool eat_food(int slot)
 {
     if (!_eat_check())
-        return (false);
+        return false;
 
     // Skip the prompts if we already know what we're eating.
     if (slot == -1)
@@ -779,9 +779,9 @@ bool eat_food(int slot)
             {
                 result = eat_from_floor(true);
                 if (result == 1)
-                    return (true);
+                    return true;
                 if (result == -1)
-                    return (false);
+                    return false;
             }
         }
     }
@@ -971,7 +971,7 @@ bool food_change(bool suppress_message)
                 break;
 
             default:
-                return (state_changed);
+                return state_changed;
             }
 
             if (!less_hungry)
@@ -979,7 +979,7 @@ bool food_change(bool suppress_message)
         }
     }
 
-    return (state_changed);
+    return state_changed;
 }
 
 // food_increment is positive for eating, negative for hungering
@@ -1015,12 +1015,12 @@ static void _describe_food_change(int food_increment)
 static bool _player_can_eat_rotten_meat(bool need_msg = false)
 {
     if (player_mutation_level(MUT_SAPROVOROUS))
-        return (true);
+        return true;
 
     if (need_msg)
         mpr("You refuse to eat that rotten meat.");
 
-    return (false);
+    return false;
 }
 
 // Should really be merged into function below. -- FIXME
@@ -1087,18 +1087,18 @@ public:
         ASSERT(food1->base_type == food2->base_type);
 
         if (is_inedible(*food1))
-            return (false);
+            return false;
 
         if (is_inedible(*food2))
-            return (true);
+            return true;
 
         if (food1->base_type == OBJ_FOOD)
         {
             // Prefer chunks to non-chunks. (Herbivores handled above.)
             if (food1->sub_type != FOOD_CHUNK && food2->sub_type == FOOD_CHUNK)
-                return (false);
+                return false;
             if (food2->sub_type != FOOD_CHUNK && food1->sub_type == FOOD_CHUNK)
-                return (true);
+                return true;
         }
 
         // Both food types are edible (not rotten, or player is Saprovore).
@@ -1107,17 +1107,17 @@ public:
         {
             // Always offer poisonous/mutagenic chunks last.
             if (is_bad_food(*food1) && !is_bad_food(*food2))
-                return (false);
+                return false;
             if (is_bad_food(*food2) && !is_bad_food(*food1))
-                return (true);
+                return true;
 
             if (Options.prefer_safe_chunks && !you.is_undead)
             {
                 // Offer contaminated chunks last.
                 if (is_contaminated(*food1) && !is_contaminated(*food2))
-                    return (false);
+                    return false;
                 if (is_contaminated(*food2) && !is_contaminated(*food1))
-                    return (true);
+                    return true;
             }
         }
 
@@ -1129,14 +1129,14 @@ public:
 int eat_from_floor(bool skip_chunks)
 {
     if (!_eat_check())
-        return (false);
+        return false;
 
     if (you.flight_mode() == FL_LEVITATE)
-        return (0);
+        return 0;
 
     // Corpses should have been handled before.
     if (you.species == SP_VAMPIRE && skip_chunks)
-        return (0);
+        return 0;
 
     bool need_more = false;
     int unusable_corpse = 0;
@@ -1234,16 +1234,16 @@ int eat_from_floor(bool skip_chunks)
                     if (ilink != NON_ITEM)
                     {
                         eat_floor_item(ilink);
-                        return (true);
+                        return true;
                     }
-                    return (false);
+                    return false;
                 }
                 need_more = true;
                 break;
             case 'i':
             case '?':
                 // Directly skip ahead to inventory.
-                return (0);
+                return 0;
             default:
                 // Else no: try next one.
                 break;
@@ -1286,13 +1286,13 @@ int eat_from_floor(bool skip_chunks)
     if (need_more && Options.auto_list)
         more();
 
-    return (0);
+    return 0;
 }
 
 bool eat_from_inventory()
 {
     if (!_eat_check())
-        return (false);
+        return false;
 
     // Corpses should have been handled before.
     if (you.species == SP_VAMPIRE)
@@ -1379,13 +1379,13 @@ bool eat_from_inventory()
             case 'q':
             CASE_ESCAPE
                 canned_msg(MSG_OK);
-                return (false);
+                return false;
             case 'e':
             case 'y':
                 if (can_ingest(*item, false))
                 {
                     eat_inventory_item(item->link);
-                    return (true);
+                    return true;
                 }
                 break;
             default:
@@ -1425,7 +1425,7 @@ bool eat_from_inventory()
         }
     }
 
-    return (false);
+    return false;
 }
 
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten,
@@ -1434,14 +1434,14 @@ int prompt_eat_chunks(bool only_auto)
 {
     // Full herbivores cannot eat chunks.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return (0);
+        return 0;
 
     // If we *know* the player can eat chunks, doesn't have the gourmand
     // effect and isn't hungry, don't prompt for chunks.
     if (you.species != SP_VAMPIRE
         && you.hunger_state >= HS_SATIATED + player_likes_chunks())
     {
-        return (0);
+        return 0;
     }
 
     bool found_valid = false;
@@ -1574,7 +1574,7 @@ int prompt_eat_chunks(bool only_auto)
                     if (in_inventory(*item))
                     {
                         eat_inventory_item(item->link);
-                        return (1);
+                        return 1;
                     }
                     else
                     {
@@ -1583,9 +1583,9 @@ int prompt_eat_chunks(bool only_auto)
                         if (ilink != NON_ITEM)
                         {
                             eat_floor_item(ilink);
-                            return (1);
+                            return 1;
                         }
-                        return (0);
+                        return 0;
                     }
                 }
                 break;
@@ -1596,7 +1596,7 @@ int prompt_eat_chunks(bool only_auto)
         }
     }
 
-    return (0);
+    return 0;
 }
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)
@@ -1638,7 +1638,7 @@ static const char *_chunk_flavour_phrase(bool likes_chunks)
             phrase = "is not very appetising.";
     }
 
-    return (phrase);
+    return phrase;
 }
 
 void chunk_nutrition_message(int nutrition)
@@ -1657,7 +1657,7 @@ static int _apply_herbivore_nutrition_effects(int nutrition)
     while (how_herbivorous--)
         nutrition = nutrition * 75 / 100;
 
-    return (nutrition);
+    return nutrition;
 }
 
 static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
@@ -2164,10 +2164,10 @@ bool is_bad_food(const item_def &food)
 bool is_poisonous(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-        return (false);
+        return false;
 
     if (player_res_poison(false) > 0)
-        return (false);
+        return false;
 
     return (chunk_is_poisonous(mons_corpse_effect(food.mon_type)));
 }
@@ -2176,11 +2176,11 @@ bool is_poisonous(const item_def &food)
 bool is_mutagenic(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-        return (false);
+        return false;
 
     // Has no effect on ghouls.
     if (you.species == SP_GHOUL)
-        return (false);
+        return false;
 
     return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
 }
@@ -2190,7 +2190,7 @@ bool is_contaminated(const item_def &food)
 {
     if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
             && food.base_type != OBJ_CORPSES)
-        return (false);
+        return false;
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
     return (chunk_type == CE_CONTAMINATED
@@ -2203,11 +2203,11 @@ bool is_contaminated(const item_def &food)
 bool causes_rot(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-        return (false);
+        return false;
 
     // Has no effect on ghouls.
     if (you.species == SP_GHOUL)
-        return (false);
+        return false;
 
     return (mons_corpse_effect(food.mon_type) == CE_ROT);
 }
@@ -2261,28 +2261,28 @@ bool is_inedible(const item_def &item)
 {
     // Mummies don't eat.
     if (you.is_undead == US_UNDEAD)
-        return (true);
+        return true;
 
     if (food_is_rotten(item)
         && !player_mutation_level(MUT_SAPROVOROUS))
     {
-        return (true);
+        return true;
     }
 
     if (item.base_type == OBJ_FOOD
         && !can_ingest(item, true, false))
     {
-        return (true);
+        return true;
     }
 
     if (item.base_type == OBJ_CORPSES
         && (item.sub_type == CORPSE_SKELETON
             || you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type)))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // As we want to avoid autocolouring the entire food selection, this should
@@ -2292,7 +2292,7 @@ bool is_preferred_food(const item_def &food)
 {
     // Mummies don't eat.
     if (you.is_undead == US_UNDEAD)
-        return (false);
+        return false;
 
     // Vampires don't really have a preferred food type, but they really
     // like blood potions.
@@ -2306,15 +2306,15 @@ bool is_preferred_food(const item_def &food)
     }
 
     if (food.base_type != OBJ_FOOD)
-        return (false);
+        return false;
 
     // Poisoned, mutagenic, etc. food should never be marked as "preferred".
     if (is_bad_food(food))
-        return (false);
+        return false;
 
     // Honeycombs are tasty for everyone.
     if (food.sub_type == FOOD_HONEYCOMB || food.sub_type == FOOD_ROYAL_JELLY)
-        return (true);
+        return true;
 
     // Ghouls specifically like rotten food.
     if (you.species == SP_GHOUL)
@@ -2327,7 +2327,7 @@ bool is_preferred_food(const item_def &food)
         return (_player_likes_food_type(food.sub_type) > 0);
 
     // No food preference.
-    return (false);
+    return false;
 }
 
 bool is_forbidden_food(const item_def &food)
@@ -2335,29 +2335,29 @@ bool is_forbidden_food(const item_def &food)
     if (food.base_type != OBJ_CORPSES
         && (food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK))
     {
-        return (false);
+        return false;
     }
 
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
         && is_player_same_species(food.mon_type))
     {
-        return (true);
+        return true;
     }
 
     // Holy gods do not like it if you are eating holy creatures
     if (is_good_god(you.religion)
         && mons_class_holiness(food.mon_type) == MH_HOLY)
     {
-        return (true);
+        return true;
     }
 
     // Zin doesn't like it if you eat beings with a soul.
     if (you.religion == GOD_ZIN && mons_class_intel(food.mon_type) >= I_NORMAL)
-        return (true);
+        return true;
 
     // Everything else is allowed.
-    return (false);
+    return false;
 }
 
 bool can_ingest(const item_def &food, bool suppress_msg, bool check_hunger)
@@ -2388,24 +2388,24 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
     // [ds] These redundant checks are now necessary - Lua might be calling us.
     if (!_eat_check(check_hunger, suppress_msg))
-        return (false);
+        return false;
 
     if (you.species == SP_VAMPIRE)
     {
         if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
-            return (true);
+            return true;
 
         if (what_isit == OBJ_POTIONS
             && (kindof_thing == POT_BLOOD
                 || kindof_thing == POT_BLOOD_COAGULATED))
         {
-            return (true);
+            return true;
         }
 
         if (!suppress_msg)
             mpr("Blech - you need blood!");
 
-        return (false);
+        return false;
     }
 
     bool ur_carnivorous = player_mutation_level(MUT_CARNIVOROUS) == 3;
@@ -2424,7 +2424,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         {
             if (!suppress_msg)
                 mpr("Blech - you need blood!");
-             return (false);
+             return false;
         }
 
         const int vorous = _player_likes_food_type(kindof_thing);
@@ -2434,10 +2434,10 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             {
                 if (!suppress_msg)
                     mpr("Sorry, you're a carnivore.");
-                return (false);
+                return false;
             }
             else
-                return (true);
+                return true;
         }
         else if (vorous < 0) // Carnivorous food.
         {
@@ -2445,44 +2445,44 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             {
                 if (!suppress_msg)
                     mpr("Sorry, you're a herbivore.");
-                return (false);
+                return false;
             }
             else if (kindof_thing == FOOD_CHUNK)
             {
                 if (rotten && !_player_can_eat_rotten_meat(!suppress_msg))
-                    return (false);
+                    return false;
 
                 if (ur_chunkslover)
-                    return (true);
+                    return true;
 
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
 
-                return (false);
+                return false;
             }
         }
         // Any food types not specifically handled until here (e.g. meat
         // rations for non-herbivores) are okay.
-        return (true);
+        return true;
     }
 
     case OBJ_CORPSES:
         if (you.species == SP_VAMPIRE)
         {
             if (kindof_thing == CORPSE_BODY)
-                return (true);
+                return true;
             else
             {
                 if (!suppress_msg)
                     mpr("Blech - you need blood!");
-                return (false);
+                return false;
             }
         }
-        return (false);
+        return false;
 
     case OBJ_POTIONS: // called by lua
         if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
-            return (true);
+            return true;
 
         switch (kindof_thing)
         {
@@ -2492,42 +2492,42 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 {
                     if (!suppress_msg)
                         mpr("Sorry, you're a herbivore.");
-                    return (false);
+                    return false;
                 }
-                return (true);
+                return true;
             case POT_WATER:
                 if (you.species == SP_VAMPIRE)
                 {
                     if (!suppress_msg)
                         mpr("Blech - you need blood!");
-                    return (false);
+                    return false;
                 }
-                return (true);
+                return true;
              case POT_PORRIDGE:
                 if (you.species == SP_VAMPIRE)
                 {
                     if (!suppress_msg)
                         mpr("Blech - you need blood!");
-                    return (false);
+                    return false;
                 }
                 else if (ur_carnivorous)
                 {
                     if (!suppress_msg)
                         mpr("Sorry, you're a carnivore.");
-                    return (false);
+                    return false;
                 }
              default:
-                return (true);
+                return true;
         }
 
     // Other object types are set to return false for now until
     // someone wants to recode the eating code to permit consumption
     // of things other than just food.
     default:
-        return (false);
+        return false;
     }
 
-    return (survey_says);
+    return survey_says;
 }
 
 bool chunk_is_poisonous(int chunktype)
@@ -2585,7 +2585,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
         }
     }
 
-    return (chunktype);
+    return chunktype;
 }
 
 static bool _vampire_consume_corpse(int slot, bool invent)
@@ -2601,13 +2601,13 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     if (!mons_has_blood(corpse.mon_type))
     {
         mpr("There is no blood in this body!");
-        return (false);
+        return false;
     }
 
     if (food_is_rotten(corpse))
     {
         mpr("It's not fresh enough.");
-        return (false);
+        return false;
     }
 
     // The delay for eating a chunk (mass 1000) is 2
@@ -2625,7 +2625,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     // the continue/finish messages if it takes longer than 1 turn.
     start_delay(DELAY_FEED_VAMPIRE, duration, invent, slot);
 
-    return (true);
+    return true;
 }
 
 static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
@@ -2667,9 +2667,9 @@ int you_min_hunger()
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
     if (you.is_undead)
-        return (701);
+        return 701;
 
-    return (0);
+    return 0;
 }
 
 void handle_starvation()

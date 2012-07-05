@@ -159,12 +159,12 @@ static bool _blocked_ray(const coord_def &where,
     if (exists_ray(you.pos(), where, opc_solid_see)
         || !exists_ray(you.pos(), where, opc_default))
     {
-        return (false);
+        return false;
     }
     if (feat == NULL)
-        return (true);
+        return true;
     *feat = ray_blocker(you.pos(), where);
-    return (true);
+    return true;
 }
 
 static bool _is_public_key(std::string key)
@@ -197,7 +197,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 {
     // We can see the segment, no guessing necessary.
     if (!tentacle->submerged())
-        return (false);
+        return false;
 
     const coord_def t_pos = tentacle->pos();
 
@@ -223,12 +223,12 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
             {
                 // Could originate from the kraken.
                 if (mon->type == MONS_KRAKEN)
-                    return (true);
+                    return true;
 
                 // Otherwise, we know the segment can't be there.
                 continue;
             }
-            return (true);
+            return true;
         }
 
         if (grd(*ai) == DNGN_SHALLOW_WATER)
@@ -241,12 +241,12 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 
             // Disturbance in shallow water -> might be a tentacle.
             if (mon->type == MONS_KRAKEN || mon->submerged())
-                return (true);
+                return true;
         }
     }
 
     // Using a directional tile leaks no information.
-    return (false);
+    return false;
 }
 
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
@@ -948,7 +948,7 @@ std::string monster_info::common_name(description_level_type desc) const
     if (desc == DESC_ITS)
         s = apostrophise(s);
 
-    return (s);
+    return s;
 }
 
 dungeon_feature_type monster_info::get_mimic_feature() const
@@ -1046,9 +1046,9 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                              bool zombified, bool fullname)
 {
     if (m1.attitude < m2.attitude)
-        return (true);
+        return true;
     else if (m1.attitude > m2.attitude)
-        return (false);
+        return false;
 
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
@@ -1057,30 +1057,30 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         && m2.type >= MONS_DRACONIAN
         && m2.type <= MONS_PALE_DRACONIAN)
     {
-        return (false);
+        return false;
     }
 
     int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
     if (diff_delta > 0)
-        return (true);
+        return true;
     else if (diff_delta < 0)
-        return (false);
+        return false;
 
     // Force mimics of different types to be treated like the same one.
     if (mons_is_mimic(m1.type) && mons_is_mimic(m2.type))
-        return (false);
+        return false;
 
     if (m1.type < m2.type)
-        return (true);
+        return true;
     else if (m1.type > m2.type)
-        return (false);
+        return false;
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
     if (m1.type == MONS_DANCING_WEAPON)
-        return (false);
+        return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
         return (m1.number > m2.number);
@@ -1095,18 +1095,18 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
             // Because of the type checks above, if one of the two is zombified, so
             // is the other, and of the same type.
             if (m1.base_type < m2.base_type)
-                return (true);
+                return true;
             else if (m1.base_type > m2.base_type)
-                return (false);
+                return false;
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
         if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
         {
             if (m1.number > m2.number)
-                return (true);
+                return true;
             else if (m1.number < m2.number)
-                return (false);
+                return false;
         }
     }
 
@@ -1116,12 +1116,12 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 #if 0 // for now, sort mb together.
     // By descending mb, so no mb sorts to the end
     if (m1.mb > m2.mb)
-        return (true);
+        return true;
     else if (m1.mb < m2.mb)
-        return (false);
+        return false;
 #endif
 
-    return (false);
+    return false;
 }
 
 static std::string _verbose_info0(const monster_info& mi)
@@ -1441,14 +1441,14 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
             ret += artefact_wpn_property(*ring, ra_prop);
     }
 
-    return (ret);
+    return ret;
 }
 
 int monster_info::res_magic() const
 {
     int mr = (get_monster_data(type))->resist_magic;
     if (mr == MAG_IMMUNE)
-        return (MAG_IMMUNE);
+        return MAG_IMMUNE;
 
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)
@@ -1482,7 +1482,7 @@ int monster_info::res_magic() const
     if (is(MB_VULN_MAGIC))
         mr /= 2;
 
-    return (mr);
+    return mr;
 }
 
 bool monster_info::wields_two_weapons() const
@@ -1540,7 +1540,7 @@ size_type monster_info::body_size() const
             ret = SIZE_MEDIUM;
     }
 
-    return (ret);
+    return ret;
 }
 
 bool monster_info::cannot_move() const

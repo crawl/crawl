@@ -458,7 +458,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);
 
-        return (false);
+        return false;
     }
 
     const bool wizard_map = (you.wizard && map_radius == 1000);
@@ -588,7 +588,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             mpr_comma_separated_list("You sensed ", sensed);
     }
 
-    return (did_map);
+    return did_map;
 }
 
 void fully_map_level()
@@ -614,7 +614,7 @@ void fully_map_level()
 bool mons_near(const monster* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return (true);
+        return true;
     return (you.see_cell(mons->pos()));
 }
 
@@ -622,13 +622,13 @@ bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
     if (mons->foe != MHITNOT && mons->foe != MHITYOU)
-        return (true);
+        return true;
 
     if (crawl_state.game_is_arena())
     {
         // If the arena-mode code in _handle_behaviour() hasn't set a foe then
         // we don't have one.
-        return (false);
+        return false;
     }
     else if (mons->wont_attack())
     {
@@ -698,11 +698,11 @@ std::string screenshot()
 int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
-        return (LIGHTGREY);
+        return LIGHTGREY;
     else if (you.berserk())
-        return (RED);
+        return RED;
 
-    return (BLACK);
+    return BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -770,9 +770,9 @@ bool view_update()
     if (you.num_turns > you.last_view_update)
     {
         viewwindow();
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 void flash_view(colour_t colour, targetter *where)
@@ -900,7 +900,7 @@ static int player_view_update_at(const coord_def &gc)
     env.tile_bk_bg(gc) = env.tile_bg(ep);
 #endif
 
-    return (ret);
+    return ret;
 }
 
 static void player_view_update()

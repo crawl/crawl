@@ -560,18 +560,18 @@ int str_to_trap(const std::string &s)
 
     // allow a couple of synonyms
     if (tspec == "random" || tspec == "any")
-        return (TRAP_RANDOM);
+        return TRAP_RANDOM;
     else if (tspec == "suitable")
-        return (TRAP_INDEPTH);
+        return TRAP_INDEPTH;
     else if (tspec == "nonteleport" || tspec == "noteleport"
              || tspec == "nontele" || tspec == "notele")
     {
-        return (TRAP_NONTELEPORT);
+        return TRAP_NONTELEPORT;
     }
 
     for (int i = 0; i < NUM_TRAPS; ++i)
         if (tspec == lowercase_string(trap_names[i]))
-            return (i);
+            return i;
 
     return (-1);
 }
@@ -1056,7 +1056,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
     description += _corrosion_resistance_string(item);
 
-    return (description);
+    return description;
 }
 
 
@@ -1247,7 +1247,7 @@ static std::string _describe_ammo(const item_def &item)
     else if (item.sub_type != MI_THROWING_NET)
         append_missile_info(description);
 
-    return (description);
+    return description;
 }
 
 void append_armour_stats(std::string &description, const item_def &item)
@@ -1545,7 +1545,7 @@ static std::string _describe_jewellery(const item_def &item, bool verbose)
         }
     }
 
-    return (description);
+    return description;
 }
 
 static bool _compare_card_names(card_type a, card_type b)
@@ -1563,7 +1563,7 @@ static bool _check_buggy_deck(const item_def &deck, std::string &desc)
     if (!is_deck(deck))
     {
         desc += "This isn't a deck at all!\n";
-        return (true);
+        return true;
     }
 
     const CrawlHashTable &props = deck.props;
@@ -1573,10 +1573,10 @@ static bool _check_buggy_deck(const item_def &deck, std::string &desc)
         || props["cards"].get_vector().get_type() != SV_BYTE
         || cards_in_deck(deck) == 0)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static std::string _describe_deck(const item_def &item)
@@ -1675,7 +1675,7 @@ static std::string _describe_deck(const item_def &item)
         description += "\n";
     }
 
-    return (description);
+    return description;
 }
 
 // Adds a list of all spells contained in a book or rod to its
@@ -1731,7 +1731,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
         ret = true;
     }
 
-    return (ret);
+    return ret;
 }
 
 
@@ -2216,7 +2216,7 @@ static int _print_toggle_message(const describe_info &inf, int& key)
     {
         mouse_control mc(MOUSE_MODE_MORE);
         key = getchm();
-        return (false);
+        return false;
     }
     else
     {
@@ -2233,9 +2233,9 @@ static int _print_toggle_message(const describe_info &inf, int& key)
         key = getchm();
 
         if (key == '!' || key == CK_MOUSE_CMD)
-            return (true);
+            return true;
 
-        return (false);
+        return false;
     }
 }
 
@@ -2320,7 +2320,7 @@ static bool _describe_spells(const item_def &item)
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
         mesclr();
-        return (false);
+        return false;
     }
 
     const int spell_index = letter_to_index(c);
@@ -2328,7 +2328,7 @@ static bool _describe_spells(const item_def &item)
     spell_type nthing =
         which_spell_in_book(item, spell_index);
     if (nthing == SPELL_NO_SPELL)
-        return (false);
+        return false;
 
     describe_spell(nthing, &item);
     return item.is_valid();
@@ -2355,7 +2355,7 @@ static bool _describe_spellbook(item_def &item)
     {
         // Memorised spell while reading a spellbook.
         if (already_learning_spell(-1))
-            return (false);
+            return false;
 
         _show_item_description(item);
         _update_inscription(item);
@@ -2625,7 +2625,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 {
     if (!item.defined())
-        return (true);
+        return true;
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
@@ -2651,7 +2651,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     else
         getchm();
 
-    return (true);
+    return true;
 }
 
 static void _safe_newline()
@@ -2898,7 +2898,7 @@ static int _get_spell_description(const spell_type spell,
     _append_spell_stats(spell, description, rod);
 
     if (crawl_state.player_is_dead())
-        return (BOOK_NEITHER);
+        return BOOK_NEITHER;
 
     const std::string quote = getQuoteString(std::string(spell_title(spell)) + " spell");
     if (!quote.empty())
@@ -2914,13 +2914,13 @@ static int _get_spell_description(const spell_type spell,
             description += "\n(F)orget this spell by destroying the book.\n";
             if (you.religion == GOD_SIF_MUNA)
                 description +="Sif Muna frowns upon the destroying of books.\n";
-            return (BOOK_FORGET);
+            return BOOK_FORGET;
         }
         else if (player_can_memorise_from_spellbook(*item)
                  && !you_cannot_memorise(spell, undead))
         {
             description += "\n(M)emorise this spell.\n";
-            return (BOOK_MEM);
+            return BOOK_MEM;
         }
 
     return BOOK_NEITHER;
@@ -3064,7 +3064,7 @@ static std::string _describe_draconian(const monster_info& mi)
             description += " " + drac_role;
     }
 
-    return (description);
+    return description;
 }
 
 static const char* _get_resist_name(mon_resist_flags res_type)
@@ -3715,7 +3715,7 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 {
     // If no message then no power.
     if (final_msg.empty())
-        return (false);
+        return false;
 
     std::string buf = final_msg;
 
@@ -3742,7 +3742,7 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     cprintf("%s\n", buf.c_str());
 
-    return (true);
+    return true;
 }
 
 static bool _print_god_abil_desc(int god, int numpower)
@@ -3753,18 +3753,18 @@ static bool _print_god_abil_desc(int god, int numpower)
         _print_final_god_abil_desc(god,
                                    "You can provide lesser healing for yourself and others.",
                                    ABIL_ELYVILON_LESSER_HEALING_SELF);
-        return (true);
+        return true;
     }
     const char* pmsg = god_gain_power_messages[god][numpower];
 
     // If no message then no power.
     if (!pmsg[0])
-        return (false);
+        return false;
 
     // Don't display ability upgrades here.
     std::string buf = adjust_abil_message(pmsg, false);
     if (buf.empty())
-        return (false);
+        return false;
 
     if (!isupper(pmsg[0])) // Complete sentence given?
         buf = "You can " + buf + ".";
@@ -3773,7 +3773,7 @@ static bool _print_god_abil_desc(int god, int numpower)
     const ability_type abil = god_abilities[god][numpower];
     _print_final_god_abil_desc(god, buf, abil);
 
-    return (true);
+    return true;
 }
 
 //---------------------------------------------------------------
@@ -4032,7 +4032,7 @@ std::string god_title(god_type which_god, species_type which_species)
     title = replace_all(title, "%s",
                         species_name(which_species, true, false));
 
-    return (title);
+    return title;
 }
 
 static std::string _describe_ash_skill_boost()
@@ -4755,10 +4755,10 @@ bool alt_desc_proc::chop(std::string &str)
             loc = i;
 
     if (loc == -1)
-        return (false);
+        return false;
 
     str.resize(loc);
-    return (true);
+    return true;
 }
 
 void alt_desc_proc::get_string(std::string &str)

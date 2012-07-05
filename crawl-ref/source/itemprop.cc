@@ -986,10 +986,10 @@ bool set_item_ego_type(item_def &item, int item_type, int ego_type)
     if (item.base_type == item_type && !is_artefact(item))
     {
         item.special = ego_type;
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 brand_type get_weapon_brand(const item_def &item)
@@ -998,7 +998,7 @@ brand_type get_weapon_brand(const item_def &item)
 
     // Staves "brands" handled specially
     if (item.base_type != OBJ_WEAPONS)
-        return (SPWPN_NORMAL);
+        return SPWPN_NORMAL;
 
     if (is_artefact(item))
         return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
@@ -1010,7 +1010,7 @@ special_missile_type get_ammo_brand(const item_def &item)
 {
     // No artefact arrows yet. -- bwr
     if (item.base_type != OBJ_MISSILES || is_artefact(item))
-        return (SPMSL_NORMAL);
+        return SPMSL_NORMAL;
 
     return (static_cast<special_missile_type>(item.special));
 }
@@ -1019,7 +1019,7 @@ special_armour_type get_armour_ego_type(const item_def &item)
 {
     // Armour ego types are "brands", so we do the randart lookup here.
     if (item.base_type != OBJ_ARMOUR)
-        return (SPARM_NORMAL);
+        return SPARM_NORMAL;
 
     if (is_artefact(item))
     {
@@ -1034,12 +1034,12 @@ special_armour_type get_armour_ego_type(const item_def &item)
 bool hide2armour(item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
-        return (false);
+        return false;
 
     switch (item.sub_type)
     {
     default:
-        return (false);
+        return false;
 
     case ARM_FIRE_DRAGON_HIDE:
         item.sub_type = ARM_FIRE_DRAGON_ARMOUR;
@@ -1078,7 +1078,7 @@ bool hide2armour(item_def &item)
         break;
     }
 
-    return (true);
+    return true;
 }
 
 // Return the enchantment limit of a piece of armour.
@@ -1096,7 +1096,7 @@ int armour_max_enchant(const item_def &item)
     else if (eq_slot == EQ_SHIELD)
         max_plus = 3;
 
-    return (max_plus);
+    return max_plus;
 }
 
 // Doesn't include animal skin (only skins we can make and enchant).
@@ -1115,7 +1115,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_GOLD_DRAGON_ARMOUR:
     case ARM_SWAMP_DRAGON_ARMOUR:
     case ARM_PEARL_DRAGON_ARMOUR:
-        return (inc_made);
+        return inc_made;
 
     case ARM_TROLL_HIDE:
     case ARM_FIRE_DRAGON_HIDE:
@@ -1126,13 +1126,13 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_GOLD_DRAGON_HIDE:
     case ARM_SWAMP_DRAGON_HIDE:
     case ARM_PEARL_DRAGON_HIDE:
-        return (true);
+        return true;
 
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 equipment_type get_armour_slot(const item_def &item)
@@ -1172,7 +1172,7 @@ int fit_armour_size(const item_def &item, size_type size)
     else if (size > max)
         return (max - size);    // +'ve means levels too large
 
-    return (0);
+    return 0;
 }
 
 // Returns true if armour fits size (shape needs additional verification).
@@ -1192,20 +1192,20 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
     if (it.base_type == OBJ_WANDS)
     {
         if (!hide_charged)
-            return (true);
+            return true;
 
         // Don't offer wands already maximally charged.
         if (item_ident(it, ISFLAG_KNOW_PLUSES)
             && it.plus >= wand_max_charges(it.sub_type))
         {
-            return (false);
+            return false;
         }
-        return (true);
+        return true;
     }
     else if (it.base_type == OBJ_RODS)
     {
         if (!hide_charged)
-            return (true);
+            return true;
 
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
@@ -1213,10 +1213,10 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
                     || it.plus < it.plus2
                     || it.special < MAX_WPN_ENCHANT);
         }
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 int wand_charge_value(int type)
@@ -1287,17 +1287,17 @@ bool is_offensive_wand(const item_def& item)
 bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
-        return (false);
+        return false;
 
     // Melded armour cannot be enchanted.
     if (item_is_melded(arm))
-        return (false);
+        return false;
 
     // If we don't know the plusses, assume enchanting is possible.
     if (unknown && !is_known_artefact(arm)
         && !item_ident(arm, ISFLAG_KNOW_PLUSES))
     {
-        return (true);
+        return true;
     }
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
@@ -1305,7 +1305,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
         return (uncurse && arm.cursed() && you.religion != GOD_ASHENZARI);
 
-    return (true);
+    return true;
 }
 
 //
@@ -1320,11 +1320,11 @@ int weapon_rarity(int w_type)
     {
     case WPN_CLUB:
     case WPN_DAGGER:
-        return (10);
+        return 10;
 
     case WPN_HAND_AXE:
     case WPN_MACE:
-        return (9);
+        return 9;
 
     case WPN_BOW:
     case WPN_FLAIL:
@@ -1334,45 +1334,45 @@ int weapon_rarity(int w_type)
     case WPN_SLING:
     case WPN_SPEAR:
     case WPN_QUARTERSTAFF:
-        return (8);
+        return 8;
 
     case WPN_FALCHION:
     case WPN_LONG_SWORD:
     case WPN_MORNINGSTAR:
     case WPN_WAR_AXE:
-        return (7);
+        return 7;
 
     case WPN_BATTLEAXE:
     case WPN_CROSSBOW:
     case WPN_GREAT_SWORD:
     case WPN_SCIMITAR:
     case WPN_TRIDENT:
-        return (6);
+        return 6;
 
     case WPN_GLAIVE:
     case WPN_HALBERD:
     case WPN_BLOWGUN:
-        return (5);
+        return 5;
 
     case WPN_BROAD_AXE:
     case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
     case WPN_STAFF:
-        return (4);
+        return 4;
 
     case WPN_GREAT_MACE:
-        return (3);
+        return 3;
 
     case WPN_DIRE_FLAIL:
     case WPN_SCYTHE:
     case WPN_LONGBOW:
     case WPN_LAJATANG:
-        return (2);
+        return 2;
 
     case WPN_GIANT_CLUB:
     case WPN_GIANT_SPIKED_CLUB:
     case WPN_BARDICHE:
-        return (1);
+        return 1;
 
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
@@ -1392,13 +1392,13 @@ int weapon_rarity(int w_type)
     case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
-        return (0);
+        return 0;
 
     default:
         break;
     }
 
-    return (0);
+    return 0;
 }
 
 int get_vorpal_type(const item_def &item)
@@ -1408,7 +1408,7 @@ int get_vorpal_type(const item_def &item)
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAMV_MASK);
 
-    return (ret);
+    return ret;
 }
 
 int get_damage_type(const item_def &item)
@@ -1420,7 +1420,7 @@ int get_damage_type(const item_def &item)
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
 
-    return (ret);
+    return ret;
 }
 
 static bool _does_damage_type(const item_def &item, int dam_type)
@@ -1446,7 +1446,7 @@ int single_damage_type(const item_def &item)
         }
     }
 
-    return (ret);
+    return ret;
 }
 
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
@@ -1568,14 +1568,14 @@ bool is_demonic(const item_def &item)
         case WPN_DEMON_BLADE:
         case WPN_DEMON_WHIP:
         case WPN_DEMON_TRIDENT:
-            return (true);
+            return true;
 
         default:
             break;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool is_blessed(const item_def &item)
@@ -1593,14 +1593,14 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
-            return (true);
+            return true;
 
         default:
             break;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool is_blessed_convertible(const item_def &item)
@@ -1616,28 +1616,28 @@ bool is_blessed_convertible(const item_def &item)
 bool convert2good(item_def &item, bool allow_blessed)
 {
     if (item.base_type != OBJ_WEAPONS)
-        return (false);
+        return false;
 
     switch (item.sub_type)
     {
     default:
-        return (false);
+        return false;
 
     case WPN_FALCHION:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_FALCHION;
         break;
 
     case WPN_LONG_SWORD:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_LONG_SWORD;
         break;
 
     case WPN_SCIMITAR:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_SCIMITAR;
         break;
 
@@ -1650,19 +1650,19 @@ bool convert2good(item_def &item, bool allow_blessed)
 
     case WPN_DOUBLE_SWORD:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_DOUBLE_SWORD;
         break;
 
     case WPN_GREAT_SWORD:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_GREAT_SWORD;
         break;
 
     case WPN_TRIPLE_SWORD:
         if (!allow_blessed)
-            return (false);
+            return false;
         item.sub_type = WPN_BLESSED_TRIPLE_SWORD;
         break;
 
@@ -1684,18 +1684,18 @@ bool convert2good(item_def &item, bool allow_blessed)
     if (is_blessed(item))
         item.flags &= ~ISFLAG_RACIAL_MASK;
 
-    return (true);
+    return true;
 }
 
 bool convert2bad(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
-        return (false);
+        return false;
 
     switch (item.sub_type)
     {
     default:
-        return (false);
+        return false;
 
     case WPN_BLESSED_FALCHION:
         item.sub_type = WPN_FALCHION;
@@ -1734,7 +1734,7 @@ bool convert2bad(item_def &item)
         break;
     }
 
-    return (true);
+    return true;
 }
 
 int weapon_str_weight(const item_def &wpn)
@@ -1756,12 +1756,12 @@ skill_type weapon_skill(const item_def &item)
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
     else if (item.base_type == OBJ_RODS)
-        return (SK_MACES_FLAILS); // Rods are short and stubby
+        return SK_MACES_FLAILS; // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
-        return (SK_STAVES);
+        return SK_STAVES;
 
     // This is used to mark that only fighting applies.
-    return (SK_FIGHTING);
+    return SK_FIGHTING;
 }
 
 // Front function for the above when we don't have a physical item to check.
@@ -1783,10 +1783,10 @@ skill_type range_skill(const item_def &item)
     else if (item.base_type == OBJ_MISSILES)
     {
         if (!has_launcher(item))
-            return (SK_THROWING);
+            return SK_THROWING;
     }
 
-    return (SK_THROWING);
+    return SK_THROWING;
 }
 
 // Front function for the above when we don't have a physical item to check.
@@ -1960,7 +1960,7 @@ bool check_weapon_wieldable_size(const item_def &item, size_type size)
     if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
         || weapon_skill(item) == SK_STAVES)
     {
-        return (true);
+        return true;
     }
 
     int fit = _fit_weapon_wieldable_size(item, size);
@@ -1980,7 +1980,7 @@ bool check_weapon_wieldable_size(const item_def &item, size_type size)
 missile_type fires_ammo_type(const item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
-        return (MI_NONE);
+        return MI_NONE;
 
     return (Weapon_prop[Weapon_index[item.sub_type]].ammo);
 }
@@ -2027,21 +2027,21 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
                     || !actor->can_throw_large_rocks())
                 && wpn.sub_type == MI_LARGE_ROCK)
             {
-                return (false);
+                return false;
             }
 
             if (bodysize < SIZE_MEDIUM
                 && (wpn.sub_type == MI_JAVELIN
                     || wpn.sub_type == MI_THROWING_NET))
             {
-                return (false);
+                return false;
             }
         }
 
         return (Missile_prop[Missile_index[wpn.sub_type]].throwable);
     }
 
-    return (false);
+    return false;
 }
 
 // Decide if something is launched or thrown.
@@ -2052,7 +2052,7 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
         && launcher
         && missile.launched_by(*launcher))
     {
-        return (LRET_LAUNCHED);
+        return LRET_LAUNCHED;
     }
 
     return (is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED);
@@ -2120,25 +2120,25 @@ int ring_has_pluses(const item_def &item)
 
     // not known -> no pluses
     if (!item_type_known(item))
-        return (0);
+        return 0;
 
     switch (item.sub_type)
     {
     case RING_SLAYING:
-        return (2);
+        return 2;
 
     case RING_PROTECTION:
     case RING_EVASION:
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
-        return (1);
+        return 1;
 
     default:
         break;
     }
 
-    return (0);
+    return 0;
 }
 
 // Returns true if having two rings of the same type on at the same
@@ -2149,10 +2149,10 @@ bool ring_has_stackable_effect(const item_def &item)
     ASSERT(!jewellery_is_amulet(item));
 
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     if (ring_has_pluses(item))
-        return (true);
+        return true;
 
     switch (item.sub_type)
     {
@@ -2163,13 +2163,13 @@ bool ring_has_stackable_effect(const item_def &item)
     case RING_WIZARDRY:
     case RING_FIRE:
     case RING_ICE:
-        return (true);
+        return true;
 
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 //
@@ -2178,7 +2178,7 @@ bool ring_has_stackable_effect(const item_def &item)
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
-        return (false);
+        return false;
 
     return (item.sub_type == POT_BLOOD
             || item.sub_type == POT_BLOOD_COAGULATED);
@@ -2187,7 +2187,7 @@ bool is_blood_potion(const item_def &item)
 bool is_fizzing_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
-        return (false);
+        return false;
 
     return (item.sub_type == POT_FIZZING);
 }
@@ -2223,7 +2223,7 @@ bool can_cut_meat(const item_def &item)
 bool is_fruit(const item_def & item)
 {
     if (item.base_type != OBJ_FOOD)
-        return (false);
+        return false;
 
     return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
 }
@@ -2278,7 +2278,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_FIRE);
 
-    return (res);
+    return res;
 }
 
 int get_armour_res_cold(const item_def &arm, bool check_artp)
@@ -2314,7 +2314,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_COLD);
 
-    return (res);
+    return res;
 }
 
 int get_armour_res_poison(const item_def &arm, bool check_artp)
@@ -2345,7 +2345,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_POISON);
 
-    return (res);
+    return res;
 }
 
 int get_armour_res_elec(const item_def &arm, bool check_artp)
@@ -2368,7 +2368,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
 
-    return (res);
+    return res;
 }
 
 int get_armour_life_protection(const item_def &arm, bool check_artp)
@@ -2388,7 +2388,7 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_NEGATIVE_ENERGY);
 
-    return (res);
+    return res;
 }
 
 int get_armour_res_magic(const item_def &arm, bool check_artp)
@@ -2404,7 +2404,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_MAGIC);
 
-    return (res);
+    return res;
 }
 
 bool get_armour_see_invisible(const item_def &arm, bool check_artp)
@@ -2413,12 +2413,12 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
-        return (true);
+        return true;
 
     if (check_artp && is_artefact(arm))
         return artefact_wpn_property(arm, ARTP_EYESIGHT);
 
-    return (false);
+    return false;
 }
 
 int get_armour_res_sticky_flame(const item_def &arm)
@@ -2459,7 +2459,7 @@ int get_jewellery_res_fire(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_FIRE);
 
-    return (res);
+    return res;
 }
 
 int get_jewellery_res_cold(const item_def &ring, bool check_artp)
@@ -2485,7 +2485,7 @@ int get_jewellery_res_cold(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_COLD);
 
-    return (res);
+    return res;
 }
 
 int get_jewellery_res_poison(const item_def &ring, bool check_artp)
@@ -2500,7 +2500,7 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_POISON);
 
-    return (res);
+    return res;
 }
 
 int get_jewellery_res_elec(const item_def &ring, bool check_artp)
@@ -2512,7 +2512,7 @@ int get_jewellery_res_elec(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_ELECTRICITY);
 
-    return (res);
+    return res;
 }
 
 int get_jewellery_life_protection(const item_def &ring, bool check_artp)
@@ -2528,7 +2528,7 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_NEGATIVE_ENERGY);
 
-    return (res);
+    return res;
 }
 
 int get_jewellery_res_magic(const item_def &ring, bool check_artp)
@@ -2543,7 +2543,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_MAGIC);
 
-    return (res);
+    return res;
 }
 
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
@@ -2551,12 +2551,12 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
     ASSERT(ring.base_type == OBJ_JEWELLERY);
 
     if (ring.sub_type == RING_SEE_INVISIBLE)
-        return (true);
+        return true;
 
     if (check_artp && is_artefact(ring))
         return artefact_wpn_property(ring, ARTP_EYESIGHT);
 
-    return (false);
+    return false;
 }
 
 int property(const item_def &item, int prop_type)
@@ -2616,14 +2616,14 @@ int property(const item_def &item, int prop_type)
         break;
     }
 
-    return (0);
+    return 0;
 }
 
 // Returns true if item is evokable.
 bool gives_ability(const item_def &item)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     switch (item.base_type)
     {
@@ -2635,40 +2635,40 @@ bool gives_ability(const item_def &item)
             || item.sub_type == RING_INVISIBILITY
             || item.sub_type == AMU_RAGE)
         {
-            return (true);
+            return true;
         }
         break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
         if (eq == EQ_NONE)
-            return (false);
+            return false;
         const special_armour_type ego = get_armour_ego_type(item);
 
         if (ego == SPARM_DARKNESS || ego == SPARM_LEVITATION)
-            return (true);
+            return true;
         break;
     }
     default:
-        return (false);
+        return false;
     }
 
     if (!is_artefact(item))
-        return (false);
+        return false;
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
         if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 // Returns true if the item confers an intrinsic that is shown on the % screen.
 bool gives_resistance(const item_def &item)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     switch (item.base_type)
     {
@@ -2684,26 +2684,26 @@ bool gives_resistance(const item_def &item)
                    && item.sub_type <= RING_TELEPORT_CONTROL
                 || item.sub_type == RING_SUSTAIN_ABILITIES)
             {
-                return (true);
+                return true;
             }
         }
         else
         {
             if (item.sub_type != AMU_RAGE && item.sub_type != AMU_INACCURACY)
-                return (true);
+                return true;
         }
         break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
         if (eq == EQ_NONE)
-            return (false);
+            return false;
 
         const int ego = get_armour_ego_type(item);
         if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
             || ego == SPARM_RESISTANCE || ego == SPARM_POSITIVE_ENERGY)
         {
-            return (true);
+            return true;
         }
         break;
     }
@@ -2711,15 +2711,15 @@ bool gives_resistance(const item_def &item)
         if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
             || item.sub_type == STAFF_AIR)
         {
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     default:
-        return (false);
+        return false;
     }
 
     if (!is_artefact(item))
-        return (false);
+        return false;
 
     // Check for randart resistances.
     for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
@@ -2728,10 +2728,10 @@ bool gives_resistance(const item_def &item)
             continue;
 
         if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 int item_mass(const item_def &item)
@@ -2854,7 +2854,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     case OBJ_STAVES:
     case OBJ_RODS:
     case OBJ_MISCELLANY:
-        return (EQ_WEAPON);
+        return EQ_WEAPON;
 
     case OBJ_ARMOUR:
         return get_armour_slot(static_cast<armour_type>(sub_type));
@@ -2866,7 +2866,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
         break;
     }
 
-    return (EQ_NONE);
+    return EQ_NONE;
 }
 
 bool is_shield(const item_def &item)
@@ -2881,7 +2881,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 {
     // If there's no shield, there's no problem.
     if (!shield && !(shield = you.shield()))
-        return (false);
+        return false;
 
     hands_reqd_type hand = hands_reqd(weapon, you.body_size());
     return (hand == HANDS_TWO && !is_range_weapon(weapon));

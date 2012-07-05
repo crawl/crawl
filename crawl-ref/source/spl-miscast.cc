@@ -518,7 +518,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         dam = check_your_resists(dam, flavour, cause);
 
         if (avoid_lethal(dam))
-            return (false);
+            return false;
 
         do_msg(true);
 
@@ -544,7 +544,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         ouch(dam, kill_source, method, cause.c_str(), see_source);
     }
 
-    return (true);
+    return true;
 }
 
 bool MiscastEffect::_explosion()
@@ -556,24 +556,24 @@ bool MiscastEffect::_explosion()
     int max_dam = beam.damage.num * beam.damage.size;
     max_dam = check_your_resists(max_dam, beam.flavour, cause);
     if (avoid_lethal(max_dam))
-        return (false);
+        return false;
 
     do_msg(true);
     beam.explode();
 
-    return (true);
+    return true;
 }
 
 bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
                                int spread_rate)
 {
     if (avoid_lethal(2 * max_cloud_damage(cl_type, cloud_pow)))
-        return (false);
+        return false;
 
     do_msg(true);
     big_cloud(cl_type, guilty, target->pos(), cloud_pow, size, spread_rate);
 
-    return (true);
+    return true;
 }
 
 bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
@@ -619,7 +619,7 @@ bool MiscastEffect::_send_to_abyss()
         return (_malign_gateway()); // attempt to degrade to malign gateway
 
     target->banish(act_source, cause);
-    return (true);
+    return true;
 }
 
 // XXX: Mostly duplicated from cast_malign_gateway.
@@ -648,13 +648,13 @@ bool MiscastEffect::_malign_gateway()
         do_msg();
     }
 
-    return (success);
+    return success;
 }
 
 bool MiscastEffect::avoid_lethal(int dam)
 {
     if (lethality_margin <= 0 || (you.hp - dam) > lethality_margin)
-        return (false);
+        return false;
 
     if (recursion_depth == MAX_RECURSE)
     {
@@ -662,7 +662,7 @@ bool MiscastEffect::avoid_lethal(int dam)
         mpr("Couldn't avoid lethal miscast: too much recursion.",
             MSGCH_ERROR);
 #endif
-        return (false);
+        return false;
     }
 
     if (did_msg)
@@ -671,7 +671,7 @@ bool MiscastEffect::avoid_lethal(int dam)
         mpr("Couldn't avoid lethal miscast: already printed message for this "
             "miscast.", MSGCH_ERROR);
 #endif
-        return (false);
+        return false;
     }
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
@@ -680,7 +680,7 @@ bool MiscastEffect::avoid_lethal(int dam)
 
     do_miscast();
 
-    return (true);
+    return true;
 }
 
 bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
@@ -745,7 +745,7 @@ static bool _has_hair(actor* target)
 {
     // Don't bother for monsters.
     if (target->is_monster())
-        return (false);
+        return false;
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
             && you.species != SP_OCTOPODE

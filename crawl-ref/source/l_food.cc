@@ -18,7 +18,7 @@ static int food_do_eat(lua_State *ls)
     if (!you.turn_is_over)
         eaten = eat_food(-1);
     lua_pushboolean(ls, eaten);
-    return (1);
+    return 1;
 }
 
 static int food_prompt_eat_chunks(lua_State *ls)
@@ -28,7 +28,7 @@ static int food_prompt_eat_chunks(lua_State *ls)
         eaten = prompt_eat_chunks();
 
     lua_pushboolean(ls, (eaten != 0));
-    return (1);
+    return 1;
 }
 
 static int food_prompt_floor(lua_State *ls)
@@ -41,7 +41,7 @@ static int food_prompt_floor(lua_State *ls)
             burden_change();
     }
     lua_pushboolean(ls, (eaten != 0));
-    return (1);
+    return 1;
 }
 
 static int food_prompt_inventory(lua_State *ls)
@@ -50,7 +50,7 @@ static int food_prompt_inventory(lua_State *ls)
     if (!you.turn_is_over)
         eaten = eat_from_inventory();
     lua_pushboolean(ls, eaten);
-    return (1);
+    return 1;
 }
 
 static int food_prompt_inventory_menu(lua_State *ls)
@@ -59,7 +59,7 @@ static int food_prompt_inventory_menu(lua_State *ls)
     if (!you.turn_is_over)
         eaten = prompt_eat_inventory_item();
     lua_pushboolean(ls, eaten);
-    return (1);
+    return 1;
 }
 
 static int food_can_eat(lua_State *ls)
@@ -72,7 +72,7 @@ static int food_can_eat(lua_State *ls)
 
     bool edible = item && can_ingest(*item, true, hungercheck);
     lua_pushboolean(ls, edible);
-    return (1);
+    return 1;
 }
 
 static bool eat_item(const item_def &item)
@@ -86,7 +86,7 @@ static bool eat_item(const item_def &item)
     if (in_inventory(item))
     {
         eat_inventory_item(item.link);
-        return (true);
+        return true;
     }
     else
     {
@@ -95,9 +95,9 @@ static bool eat_item(const item_def &item)
         if (ilink != NON_ITEM)
         {
             eat_floor_item(ilink);
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 }
 
@@ -112,7 +112,7 @@ static int food_eat(lua_State *ls)
             eaten = eat_item(*item);
     }
     lua_pushboolean(ls, eaten);
-    return (1);
+    return 1;
 }
 
 static int food_rotting(lua_State *ls)
@@ -124,7 +124,7 @@ static int food_rotting(lua_State *ls)
         rotting = food_is_rotten(*item);
 
     lua_pushboolean(ls, rotting);
-    return (1);
+    return 1;
 }
 
 static int food_dangerous(lua_State *ls)
@@ -138,7 +138,7 @@ static int food_dangerous(lua_State *ls)
                      || causes_rot(*item) || is_forbidden_food(*item));
     }
     lua_pushboolean(ls, dangerous);
-    return (1);
+    return 1;
 }
 
 static int food_ischunk(lua_State *ls)
@@ -147,14 +147,14 @@ static int food_ischunk(lua_State *ls)
     lua_pushboolean(ls,
             item && item->base_type == OBJ_FOOD
                  && item->sub_type == FOOD_CHUNK);
-    return (1);
+    return 1;
 }
 
 static int food_isfruit(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
     lua_pushboolean(ls, is_fruit(*item));
-    return (1);
+    return 1;
 }
 
 static const struct luaL_reg food_lib[] =

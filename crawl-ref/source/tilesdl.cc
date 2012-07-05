@@ -288,11 +288,11 @@ bool TilesFramework::initialise()
     // Create an instance of UIWrapper for the library we were compiled for
     WindowManager::create();
     if (!wm)
-        return (false);
+        return false;
 
     // Initialize the wrapper
     if (!wm->init(&m_windowsz))
-        return (false);
+        return false;
 
     wm->set_window_title(title.c_str());
     wm->set_window_icon(icon_name);
@@ -310,7 +310,7 @@ bool TilesFramework::initialise()
     // as this appears to make things blurry on some users machines.
     bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
     if (!m_image->load_textures(need_mips))
-        return (false);
+        return false;
 
     calculate_default_options();
 
@@ -328,7 +328,7 @@ bool TilesFramework::initialise()
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || m_lbl_font == -1)
     {
-        return (false);
+        return false;
     }
 
     m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
@@ -367,7 +367,7 @@ bool TilesFramework::initialise()
 
     resize();
 
-    return (true);
+    return true;
 }
 
 int TilesFramework::load_font(const char *font_file, int font_size,
@@ -498,7 +498,7 @@ static unsigned int _timer_callback(unsigned int ticks)
     wm->raise_custom_event();
 
     unsigned int res = Options.tile_tooltip_ms;
-    return (res);
+    return res;
 }
 
 int TilesFramework::getch_ck()
@@ -1113,14 +1113,14 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 GotoRegion TilesFramework::get_cursor_region() const
 {
     if (TextRegion::text_mode == m_region_crt)
-        return (GOTO_CRT);
+        return GOTO_CRT;
     if (TextRegion::text_mode == m_region_msg)
-        return (GOTO_MSG);
+        return GOTO_MSG;
     if (TextRegion::text_mode == m_region_stat)
-        return (GOTO_STAT);
+        return GOTO_STAT;
 
     die("Bogus region");
-    return (GOTO_CRT);
+    return GOTO_CRT;
 }
 
 // #define DEBUG_TILES_REDRAW

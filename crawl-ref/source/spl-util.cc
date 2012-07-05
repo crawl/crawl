@@ -150,7 +150,7 @@ void init_spell_name_cache()
 spell_type spell_by_name(std::string name, bool partial_match)
 {
     if (name.empty())
-        return (SPELL_NO_SPELL);
+        return SPELL_NO_SPELL;
 
     lowercase(name);
 
@@ -161,7 +161,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         if (i != spell_name_cache.end())
             return (i->second);
 
-        return (SPELL_NO_SPELL);
+        return SPELL_NO_SPELL;
     }
 
     spell_type spellmatch = SPELL_NO_SPELL;
@@ -326,7 +326,7 @@ bool add_spell_to_memory(spell_type spell)
     redraw_screen();
 #endif
 
-    return (true);
+    return true;
 }
 
 bool del_spell_from_memory_by_slot(int slot)
@@ -356,14 +356,14 @@ bool del_spell_from_memory_by_slot(int slot)
     redraw_screen();
 #endif
 
-    return (true);
+    return true;
 }
 
 bool del_spell_from_memory(spell_type spell)
 {
     int i = _get_spell_slot(spell);
     if (i == -1)
-        return (false);
+        return false;
     else
         return del_spell_from_memory_by_slot(i);
 }
@@ -485,7 +485,7 @@ int spell_levels_required(spell_type which_spell)
         levels = 0;
     }
 
-    return (levels);
+    return levels;
 }
 
 unsigned int get_spell_flags(spell_type which_spell)
@@ -522,7 +522,7 @@ int count_bits(unsigned int bits)
         if (n & bits)
             c++;
 
-    return (c);
+    return c;
 }
 
 // NOTE: Assumes that any single spell won't belong to conflicting
@@ -557,7 +557,7 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
         if (you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
-    return (rv);
+    return rv;
 }
 
 // Applies the effect to all nine squares around/including the target.
@@ -570,7 +570,7 @@ static int _apply_area_square(cell_func cf, const coord_def& where,
     for (adjacent_iterator ai(where, false); ai; ++ai)
         rv += cf(*ai, power, 0, agent);
 
-    return (rv);
+    return rv;
 }
 
 
@@ -584,7 +584,7 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where,
     for (adjacent_iterator ai(where, true); ai; ++ai)
         rv += cf(*ai, power, 0, agent);
 
-    return (rv);
+    return rv;
 }
 
 // Like apply_area_around_square, but for monsters in those squares,
@@ -604,7 +604,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
         }
     }
 
-   return (rv);
+   return rv;
 }
 
 // Affect up to max_targs monsters around a point, chosen randomly.
@@ -726,7 +726,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         }
     }
 
-    return (rv);
+    return rv;
 }
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
@@ -797,13 +797,13 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     {
         // Check for user cancel.
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     pbolt.set_target(spelld);
     pbolt.source = you.pos();
 
-    return (true);
+    return true;
 }
 
 const char* spelltype_short_name(int which_spelltype)
@@ -884,23 +884,23 @@ skill_type spell_type2skill(unsigned int spelltype)
 {
     switch (spelltype)
     {
-    case SPTYP_CONJURATION:    return (SK_CONJURATIONS);
-    case SPTYP_HEXES:          return (SK_HEXES);
-    case SPTYP_CHARMS:         return (SK_CHARMS);
-    case SPTYP_FIRE:           return (SK_FIRE_MAGIC);
-    case SPTYP_ICE:            return (SK_ICE_MAGIC);
-    case SPTYP_TRANSMUTATION:  return (SK_TRANSMUTATIONS);
-    case SPTYP_NECROMANCY:     return (SK_NECROMANCY);
-    case SPTYP_SUMMONING:      return (SK_SUMMONINGS);
-    case SPTYP_TRANSLOCATION:  return (SK_TRANSLOCATIONS);
-    case SPTYP_POISON:         return (SK_POISON_MAGIC);
-    case SPTYP_EARTH:          return (SK_EARTH_MAGIC);
-    case SPTYP_AIR:            return (SK_AIR_MAGIC);
+    case SPTYP_CONJURATION:    return SK_CONJURATIONS;
+    case SPTYP_HEXES:          return SK_HEXES;
+    case SPTYP_CHARMS:         return SK_CHARMS;
+    case SPTYP_FIRE:           return SK_FIRE_MAGIC;
+    case SPTYP_ICE:            return SK_ICE_MAGIC;
+    case SPTYP_TRANSMUTATION:  return SK_TRANSMUTATIONS;
+    case SPTYP_NECROMANCY:     return SK_NECROMANCY;
+    case SPTYP_SUMMONING:      return SK_SUMMONINGS;
+    case SPTYP_TRANSLOCATION:  return SK_TRANSLOCATIONS;
+    case SPTYP_POISON:         return SK_POISON_MAGIC;
+    case SPTYP_EARTH:          return SK_EARTH_MAGIC;
+    case SPTYP_AIR:            return SK_AIR_MAGIC;
 
     default:
     case SPTYP_DIVINATION:
         dprf("spell_type2skill: called with spelltype %u", spelltype);
-        return (SK_NONE);
+        return SK_NONE;
     }
 }
 
@@ -942,17 +942,17 @@ int spell_power_cap(spell_type spell)
     const int zcap = spell_zap_power_cap(spell);
 
     if (scap == 0)
-        return (zcap);
+        return zcap;
     else if (zcap == 0)
-        return (scap);
+        return scap;
     else
     {
         // Two separate power caps; pre-zapping spell power
         // goes into range.
         if (scap <= zcap || _spell_range_varies(spell))
-            return (scap);
+            return scap;
         else
-            return (zcap);
+            return zcap;
     }
 }
 
@@ -1021,9 +1021,9 @@ int spell_noise(spell_type spell)
     int level = desc->level + desc->noise_mod;
 
     if (disciplines == SPTYP_NONE)
-        return (0);
+        return 0;
     else if (disciplines & SPTYP_CONJURATION)
-        return (level);
+        return level;
     else if (disciplines && !(disciplines & (SPTYP_POISON | SPTYP_AIR)))
         return div_round_up(level * 3, 4);
     else
@@ -1086,7 +1086,7 @@ static bool _spell_is_empowered(spell_type spell)
         && vehumet_supports_spell(spell)
         && piety_rank() > 2)
     {
-        return (true);
+        return true;
     }
 
     switch (spell)
@@ -1096,7 +1096,7 @@ static bool _spell_is_empowered(spell_type spell)
             && you.form == TRAN_STATUE
             && you.duration[DUR_STONESKIN] < 1)
         {
-            return (true);
+            return true;
         }
         break;
     case SPELL_OZOCUBUS_ARMOUR:
@@ -1104,14 +1104,14 @@ static bool _spell_is_empowered(spell_type spell)
             && you.form == TRAN_ICE_BEAST
             && you.duration[DUR_ICY_ARMOUR] < 1)
         {
-            return (true);
+            return true;
         }
         break;
     default:
         break;
     }
 
-    return (false);
+    return false;
 }
 
 // This function attempts to determine if 'spell' is useless to
@@ -1122,7 +1122,7 @@ static bool _spell_is_empowered(spell_type spell)
 bool spell_is_useless(spell_type spell, bool transient)
 {
     if (you_cannot_memorise(spell))
-        return (true);
+        return true;
 
     if (transient)
     {
@@ -1130,7 +1130,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             || spell_mana(spell) > you.magic_points
             || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
         {
-            return (true);
+            return true;
         }
     }
 
@@ -1145,25 +1145,25 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
-            return (true);
+            return true;
         break;
     case SPELL_FLY:
         if (you.species == SP_TENGU && you.experience_level >= 15)
-            return (true);
+            return true;
         if (transient && you.is_levitating())
-            return (true);
+            return true;
         break;
     case SPELL_INVISIBILITY:
         if (transient && (you.duration[DUR_INVIS] > 0 || you.backlit()))
-            return (true);
+            return true;
         break;
     case SPELL_CONTROL_TELEPORT:
         if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
-            return (true);
+            return true;
         break;
     case SPELL_SEE_INVISIBLE:
         if (you.can_see_invisible(false, false))
-            return (true);
+            return true;
         break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
@@ -1180,7 +1180,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         break; // quash unhandled constants warnings
     }
 
-    return (false);
+    return false;
 }
 
 // This function takes a spell, and determines what color it should be
@@ -1198,7 +1198,7 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     // If your god hates the spell, that
     // overrides all other concerns
     if (god_hates_spell(spell, you.religion))
-        return (COL_FORBIDDEN);
+        return COL_FORBIDDEN;
 
     if (_spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
@@ -1206,13 +1206,13 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
 
-    return (default_color);
+    return default_color;
 }
 
 bool spell_no_hostile_in_range(spell_type spell, int minRange)
 {
     if (minRange < 0)
-        return (false);
+        return false;
 
     bool bonus = 0;
     switch (spell)
@@ -1232,7 +1232,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_LIGHTNING_BOLT:
 
     case SPELL_FIRE_STORM:
-        return (false);
+        return false;
 
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
@@ -1250,15 +1250,15 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
 
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
-        return (false);
+        return false;
 
     const int range = calc_spell_range(spell);
     if (range < 0)
-        return (false);
+        return false;
 
     const int rsq = (range + bonus) * (range + bonus) + 1;
     if (rsq < minRange)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }

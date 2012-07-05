@@ -58,15 +58,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack() &&
             !mons_is_confused(attacker->as_monster()))
-            return (false);
+            return false;
 
         // It's hard to attack from within a shell.
         if (attacker->as_monster()->withdrawn())
-            return (false);
+            return false;
 
         // Boulders can't melee while they're rolling past you
         if (attacker->as_monster()->rolling())
-            return (false);
+            return false;
 
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
@@ -79,7 +79,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (mons_is_projectile(defender->type) && !you.confused())
         {
             you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
         melee_attack attk(&you, defender);
@@ -97,7 +97,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
         if (!attk.attack())
@@ -105,13 +105,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             // Attack was cancelled or unsuccessful...
             if (attk.cancel_attack)
                 you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        return (true);
+        return true;
     }
 
     // If execution gets here, attacker != Player, so we can safely continue
@@ -131,7 +131,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
          ++attack_number, ++effective_attack_number)
     {
         if (!attacker->alive())
-            return (false);
+            return false;
 
         // Monster went away?
         if (!defender->alive() || defender->pos() != pos)
@@ -186,7 +186,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             *did_hit = melee_attk.did_hit;
     }
 
-    return (true);
+    return true;
 }
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
@@ -199,7 +199,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     // plants) or monsters the attacker can't see (either due to
     // invisibility or being behind opaque clouds).
     if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
-        return (unchivalric);
+        return unchivalric;
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
@@ -244,7 +244,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     if (defender->asleep())
         unchivalric = UCAT_SLEEPING;
 
-    return (unchivalric);
+    return unchivalric;
 }
 
 static bool is_boolean_resist(beam_type flavour)
@@ -256,9 +256,9 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_NAPALM:
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -271,20 +271,20 @@ static inline int get_resistible_fraction(beam_type flavour)
     // Drowning damage from water is resistible by being a water thing, or
     // otherwise asphyx resistant.
     case BEAM_WATER:
-        return (40);
+        return 40;
 
     // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return (40);
+        return 40;
 
     case BEAM_LAVA:
-        return (55);
+        return 55;
 
     case BEAM_POISON_ARROW:
-        return (70);
+        return 70;
 
     default:
-        return (100);
+        return 100;
     }
 }
 
@@ -300,7 +300,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged)
 {
     if (!res)
-        return (rawdamage);
+        return rawdamage;
 
     const bool mons = (defender->is_monster());
 
@@ -340,10 +340,10 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 bool is_melee_weapon(const item_def *weapon)
 {
     if (weapon->base_type == OBJ_STAVES || weapon->base_type == OBJ_RODS)
-        return (true);
+        return true;
 
     if (weapon->base_type != OBJ_WEAPONS)
-        return (false);
+        return false;
 
     return (!is_range_weapon(*weapon));
 }
@@ -377,7 +377,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         && (weapon_warning || unarmed_warning))
     {
         if (no_message)
-            return (false);
+            return false;
 
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
@@ -393,10 +393,10 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         if (result)
             you.received_weapon_warning = true;
 
-        return (result);
+        return result;
     }
 
-    return (true);
+    return true;
 }
 
 // Returns a value between 0 and 10 representing the weight given to str
@@ -459,7 +459,7 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
             ret = 8;
     }
 
-    return (ret);
+    return ret;
 }
 
 // Returns a value from 0 to 10 representing the weight of strength to
@@ -472,14 +472,14 @@ int player_weapon_str_weight()
     // but then we'd be punishing Trolls and Ghouls who are strong and
     // get special unarmed bonuses.
     if (!weapon)
-        return (4);
+        return 4;
 
     int ret = weapon_str_weight(weapon->base_type, weapon->sub_type);
 
     if (hands_reqd(*weapon, you.body_size()) == HANDS_HALF && !you.shield())
         ret += 1;
 
-    return (ret);
+    return ret;
 }
 
 // weapon_dex_weight() + weapon_str_weight == 10, so we only need to

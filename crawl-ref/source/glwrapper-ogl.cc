@@ -240,7 +240,7 @@ OGLShapeBuffer::OGLShapeBuffer(bool texture, bool colour, drawing_modes prim) :
 
 const char *OGLShapeBuffer::print_statistics() const
 {
-    return (NULL);
+    return NULL;
 }
 
 unsigned int OGLShapeBuffer::size() const

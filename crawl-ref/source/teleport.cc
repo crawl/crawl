@@ -30,13 +30,13 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     ASSERT(is_player());
 
     if (dest == pos())
-        return (false);
+        return false;
 
     if (item_blocks_teleport(true, true))
     {
         if (!quiet)
             canned_msg(MSG_STRANGE_STASIS);
-        return (false);
+        return false;
     }
 
     if (!quiet)
@@ -49,16 +49,16 @@ bool player::blink_to(const coord_def& dest, bool quiet)
 
     place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
 
-    return (true);
+    return true;
 }
 
 bool monster::blink_to(const coord_def& dest, bool quiet)
 {
     if (dest == pos())
-        return (false);
+        return false;
 
     if (!attempt_escape(2))
-        return (false);
+        return false;
 
     const bool jump = type == MONS_JUMPING_SPIDER;
 
@@ -70,7 +70,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
 
     const coord_def oldplace = pos();
     if (!move_to_pos(dest, true))
-        return (false);
+        return false;
 
     // Leave a purple cloud.
     if (!jump)
@@ -81,7 +81,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
 
     mons_relocated(this);
 
-    return (true);
+    return true;
 }
 
 
@@ -253,7 +253,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         }
 
         if (!trans_wall_block && !origin_is_player)
-            return (true);
+            return true;
 
         // If the monster is on a visible square which is on the other
         // side of one or more translucent walls from the player, then it
@@ -266,13 +266,13 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
         if (!origin_is_player && !you.see_cell(target))
-            return (true);
+            return true;
 
         // Player can't randomly pass through translucent walls.
         if (origin_is_player)
         {
             if (you.see_cell_no_trans(target))
-                return (true);
+                return true;
 
             continue;
         }
@@ -282,7 +282,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
                                              DNGN_MAX_NONREACH,
                                              true, true);
         if (walls_passed == 0)
-            return (true);
+            return true;
 
         // Player can't randomly pass through translucent walls.
         if (origin_is_player)
@@ -297,8 +297,8 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         }
 
         if (walls_between >= min_walls_between)
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }

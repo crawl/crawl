@@ -94,7 +94,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
 int clua_pushcxxstring(lua_State *ls, const std::string &s)
 {
     lua_pushstring(ls, s.c_str());
-    return (1);
+    return 1;
 }
 
 int clua_stringtable(lua_State *ls, const std::vector<std::string> &s)
@@ -112,5 +112,5 @@ int clua_pushpoint(lua_State *ls, const coord_def &pos)
     if (!vm.callfn("dgn.point", 2, 1))
         luaL_error(ls, "dgn.point(%d,%d) failed: %s",
                    pos.x, pos.y, vm.error.c_str());
-    return (1);
+    return 1;
 }

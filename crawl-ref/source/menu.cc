@@ -286,7 +286,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     tiles.pop_menu();
 #endif
 
-    return (sel);
+    return sel;
 }
 
 void Menu::do_menu()
@@ -313,7 +313,7 @@ int Menu::get_cursor() const
     if (items[next]->level != MEL_ITEM)
         next = (next + 1) % item_count();
 
-    return (next);
+    return next;
 }
 
 bool Menu::is_set(int flag) const
@@ -323,12 +323,12 @@ bool Menu::is_set(int flag) const
 
 int Menu::pre_process(int k)
 {
-    return (k);
+    return k;
 }
 
 int Menu::post_process(int k)
 {
-    return (k);
+    return k;
 }
 
 bool Menu::process_key(int keyin)
@@ -336,7 +336,7 @@ bool Menu::process_key(int keyin)
     if (items.empty())
     {
         lastch = keyin;
-        return (false);
+        return false;
     }
     else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
     {
@@ -348,14 +348,14 @@ bool Menu::process_key(int keyin)
 
         sel.clear();
         update_title();
-        return (true);
+        return true;
     }
     else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
         update_title();
-        return (true);
+        return true;
     }
 
     bool nav = false, repaint = false;
@@ -368,13 +368,13 @@ bool Menu::process_key(int keyin)
     switch (keyin)
     {
     case 0:
-        return (true);
+        return true;
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
         sel.clear();
         lastch = keyin;
-        return (false);
+        return false;
     case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
@@ -438,7 +438,7 @@ bool Menu::process_key(int keyin)
                     {
                         // Return the first item found.
                         get_selected(&sel);
-                        return (false);
+                        return false;
                     }
                 }
             }
@@ -528,7 +528,7 @@ bool Menu::process_key(int keyin)
 
     case CK_ENTER:
         if (!(flags & MF_PRESELECTED) || !sel.empty())
-            return (false);
+            return false;
         // else fall through
     default:
         // Even if we do return early, lastch needs to be set first,
@@ -538,7 +538,7 @@ bool Menu::process_key(int keyin)
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-            return (false);
+            return false;
 
         if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
         {
@@ -551,7 +551,7 @@ bool Menu::process_key(int keyin)
         select_items(keyin, num);
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
-            return (false);
+            return false;
 
         draw_select_count(sel.size());
 #ifdef USE_TILE_WEB
@@ -561,7 +561,7 @@ bool Menu::process_key(int keyin)
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
         {
-            return (false);
+            return false;
         }
 
         break;
@@ -583,9 +583,9 @@ bool Menu::process_key(int keyin)
             draw_menu();
         }
         else if (allow_easy_exit() && is_set(MF_EASY_EXIT))
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 // Easy exit should not kill the menu if there are selected items.
@@ -597,7 +597,7 @@ bool Menu::allow_easy_exit() const
 bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
-        return (true);
+        return true;
 
     int oldx = wherex(), oldy = wherey();
 
@@ -608,7 +608,7 @@ bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return (false);
+        return false;
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
@@ -617,13 +617,13 @@ bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
     cprintf("%s", towrite.c_str());
 
     cgotoxy(oldx, oldy);
-    return (true);
+    return true;
 }
 
 bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
-        return (true);
+        return true;
 
     int oldx = wherex(), oldy = wherey();
 
@@ -634,7 +634,7 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return (false);
+        return false;
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
@@ -657,7 +657,7 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     }
 
     cgotoxy(oldx, oldy);
-    return (true);
+    return true;
 }
 
 std::string Menu::get_select_count_string(int count) const
@@ -688,7 +688,7 @@ std::vector<MenuEntry*> Menu::selected_entries() const
 {
     std::vector<MenuEntry*> selection;
     get_selected(&selection);
-    return (selection);
+    return selection;
 }
 
 void Menu::get_selected(std::vector<MenuEntry*> *selected) const
@@ -839,12 +839,12 @@ PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
 bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons || tiles.empty())
-        return (false);
+        return false;
 
     for (unsigned int i = 0; i < tiles.size(); i++)
         tileset.push_back(tiles[i]);
 
-    return (true);
+    return true;
 }
 
 void MenuEntry::add_tile(tile_def tile)
@@ -855,11 +855,11 @@ void MenuEntry::add_tile(tile_def tile)
 bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     monster_info* m = (monster_info*)(data);
     if (!m)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -979,16 +979,16 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     else if (m->is(MB_DISTRACTED))
         tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
 
-    return (true);
+    return true;
 }
 
 bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     if (feat == DNGN_UNSEEN)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -998,13 +998,13 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILEI_NEW_STAIR, TEX_ICONS));
 
-    return (true);
+    return true;
 }
 
 bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -1079,21 +1079,21 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
 
-    return (true);
+    return true;
 }
 #endif
 
 bool Menu::is_selectable(int item) const
 {
     if (select_filter.empty())
-        return (true);
+        return true;
 
     std::string text = items[item]->get_filter_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
         if (select_filter[i].matches(text))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 void Menu::select_item_index(int idx, int qty, bool draw_cursor)
@@ -1174,7 +1174,7 @@ int Menu::get_entry_index(const MenuEntry *e) const
     for (unsigned int i = first_entry; i < items.size(); i++)
     {
         if (items[i] == e)
-            return (index);
+            return index;
 
         if (items[i]->quantity != 0)
             index++;
@@ -1306,9 +1306,9 @@ bool Menu::page_down()
         //    first_entry = items.size() - pagesize;
 
         if (old_first != first_entry)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::page_up()
@@ -1321,9 +1321,9 @@ bool Menu::page_up()
             first_entry = 0;
 
         if (old_first != first_entry)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::line_down()
@@ -1331,9 +1331,9 @@ bool Menu::line_down()
     if (first_entry + pagesize < (int) items.size())
     {
         ++first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::line_up()
@@ -1341,9 +1341,9 @@ bool Menu::line_up()
     if (first_entry > 0)
     {
         --first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 #ifdef USE_TILE_WEB
@@ -1655,7 +1655,7 @@ void column_composer::add_formatted(int ncol,
 
 std::vector<formatted_string> column_composer::formatted_lines() const
 {
-    return (flines);
+    return flines;
 }
 
 void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
@@ -1797,7 +1797,7 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
 bool formatted_scroller::jump_to(int i)
 {
     if (i == first_entry + 1)
-        return (false);
+        return false;
 
     if (i == 0)
         first_entry = 0;
@@ -1824,7 +1824,7 @@ bool formatted_scroller::jump_to(int i)
     webtiles_write_menu(true);
 #endif
 
-    return (true);
+    return true;
 }
 
 // Don't scroll past MEL_TITLE entries
@@ -1833,7 +1833,7 @@ bool formatted_scroller::page_down()
     const int old_first = first_entry;
 
     if ((int) items.size() <= first_entry + pagesize)
-        return (false);
+        return false;
 
     // If, when scrolling forward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
@@ -1858,7 +1858,7 @@ bool formatted_scroller::page_up()
     // just before it becomes visible
 
     if (items[first_entry]->level == MEL_TITLE)
-        return (false);
+        return false;
 
     for (int i = 0; i < pagesize; ++i)
     {
@@ -1877,9 +1877,9 @@ bool formatted_scroller::line_down()
         && items[first_entry + pagesize]->level != MEL_TITLE)
     {
         ++first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool formatted_scroller::line_up()
@@ -1888,9 +1888,9 @@ bool formatted_scroller::line_up()
         && items[first_entry]->level != MEL_TITLE)
     {
         --first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool formatted_scroller::jump_to_hotkey(int keyin)
@@ -1899,7 +1899,7 @@ bool formatted_scroller::jump_to_hotkey(int keyin)
         if (items[i]->is_hotkey(keyin))
             return jump_to(i);
 
-    return (false);
+    return false;
 }
 
 std::vector<MenuEntry *> formatted_scroller::show(bool reuse_selections)
@@ -1929,10 +1929,10 @@ bool formatted_scroller::process_key(int keyin)
     switch (keyin)
     {
     case 0:
-        return (true);
+        return true;
     case CK_MOUSE_CMD:
     CASE_ESCAPE
-        return (false);
+        return false;
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
     case CK_MOUSE_CLICK:
@@ -1966,7 +1966,7 @@ bool formatted_scroller::process_key(int keyin)
             select_items(keyin);
             get_selected(&sel);
             if (sel.size() >= 1)
-                return (false);
+                return false;
         }
         else
             repaint = jump_to_hotkey(keyin);
@@ -1977,9 +1977,9 @@ bool formatted_scroller::process_key(int keyin)
     if (repaint)
         draw_menu();
     else if (!moved || is_set(MF_EASY_EXIT))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 int ToggleableMenu::pre_process(int key)

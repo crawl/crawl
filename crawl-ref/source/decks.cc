@@ -394,7 +394,7 @@ static const deck_archetype* _random_sub_deck(uint8_t deck_type)
 
     ASSERT(pdeck);
 
-    return (pdeck);
+    return pdeck;
 }
 
 static card_type _choose_from_archetype(const deck_archetype* pdeck,
@@ -518,7 +518,7 @@ static bool _check_buggy_deck(item_def& deck)
     {
         crawl_state.zero_turns_taken();
         strm << "This isn't a deck at all!" << std::endl;
-        return (true);
+        return true;
     }
 
     CrawlHashTable &props = deck.props;
@@ -567,7 +567,7 @@ static bool _check_buggy_deck(item_def& deck)
         dec_inv_item_quantity(deck.link, 1);
         did_god_conduct(DID_CARDS, 1);
 
-        return (true);
+        return true;
     }
 
     bool problems = false;
@@ -627,7 +627,7 @@ static bool _check_buggy_deck(item_def& deck)
         dec_inv_item_quantity(deck.link, 1);
         did_god_conduct(DID_CARDS, 1);
 
-        return (true);
+        return true;
     }
 
     if (num_cards > deck.plus)
@@ -727,7 +727,7 @@ static bool _check_buggy_deck(item_def& deck)
     }
 
     if (!problems)
-        return (false);
+        return false;
 
     you.wield_change = true;
 
@@ -735,9 +735,9 @@ static bool _check_buggy_deck(item_def& deck)
                "still use deck?", true, 'n'))
     {
         crawl_state.zero_turns_taken();
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 // Choose a deck from inventory and return its slot (or -1).
@@ -768,11 +768,11 @@ bool choose_deck_and_draw()
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
     evoke_deck(you.inv[slot]);
-    return (true);
+    return true;
 }
 
 static void _deck_ident(item_def& deck)
@@ -812,12 +812,12 @@ bool deck_peek()
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
-        return (false);
+        return false;
 
     if (cards_in_deck(deck) > 2)
     {
@@ -842,7 +842,7 @@ bool deck_peek()
         deck.plus2 = -1;
         you.wield_change = true;
 
-        return (true);
+        return true;
     }
 
     card2 = get_card_and_flags(deck, 1, flags2);
@@ -866,14 +866,14 @@ bool deck_peek()
     _deck_ident(deck);
 
     you.wield_change = true;
-    return (true);
+    return true;
 }
 
 bool deck_identify_first(int slot)
 {
     item_def& deck(you.inv[slot]);
     if (top_card_is_known(deck))
-        return (false);
+        return false;
 
     uint8_t flags;
     card_type card = get_card_and_flags(deck, -1, flags);
@@ -882,7 +882,7 @@ bool deck_identify_first(int slot)
     deck.props["num_marked"]++;
 
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
-    return (true);
+    return true;
 
 }
 
@@ -895,24 +895,24 @@ bool deck_deal()
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
     item_def& deck(you.inv[slot]);
     if (_check_buggy_deck(deck))
-        return (false);
+        return false;
 
     CrawlHashTable &props = deck.props;
     if (props["num_marked"].get_byte() > 0)
     {
         mpr("You cannot deal from marked decks.");
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
     if (props["stacked"].get_bool())
     {
         mpr("This deck seems insufficiently random for dealing.");
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
     const int num_cards = cards_in_deck(deck);
@@ -955,7 +955,7 @@ bool deck_deal()
         dec_inv_item_quantity(slot, 1);
     }
 
-    return (true);
+    return true;
 }
 
 static void _redraw_stacked_cards(const std::vector<card_type>& draws,
@@ -1003,19 +1003,19 @@ bool deck_stack()
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
     item_def& deck(you.inv[slot]);
     if (_check_buggy_deck(deck))
-        return (false);
+        return false;
 
     CrawlHashTable &props = deck.props;
     if (props["num_marked"].get_byte() > 0)
     {
         mpr("You can't stack a marked deck.");
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
     _deck_ident(deck);
@@ -1149,7 +1149,7 @@ bool deck_stack()
     _check_buggy_deck(deck);
     you.wield_change = true;
 
-    return (true);
+    return true;
 }
 
 // Draw the next three cards, discard two and pick one.
@@ -1159,13 +1159,13 @@ bool deck_triple_draw()
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
-        return (false);
+        return false;
 
     const int num_cards = cards_in_deck(deck);
 
@@ -1178,7 +1178,7 @@ bool deck_triple_draw()
     {
         // Only one card to draw, so just draw it.
         evoke_deck(deck);
-        return (true);
+        return true;
     }
 
     const int num_to_draw = (num_cards < 3 ? num_cards : 3);
@@ -1258,7 +1258,7 @@ bool deck_triple_draw()
     card_effect(draws[selected], rarity,
                 flags[selected] | CFLAG_SEEN | CFLAG_MARKED, false);
 
-    return (true);
+    return true;
 }
 
 // This is Nemelex retribution.  If deal is true, use the word "deal"
@@ -2846,7 +2846,7 @@ static int _card_power(deck_rarity_type rarity)
     if (result < 0)
         result = 0;
 
-    return (result);
+    return result;
 }
 
 void card_effect(card_type which_card, deck_rarity_type rarity,
@@ -3002,7 +3002,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 bool top_card_is_known(const item_def &deck)
 {
     if (!is_deck(deck))
-        return (false);
+        return false;
 
     uint8_t flags;
     get_card_and_flags(deck, -1, flags);
@@ -3013,14 +3013,14 @@ bool top_card_is_known(const item_def &deck)
 card_type top_card(const item_def &deck)
 {
     if (!is_deck(deck))
-        return (NUM_CARDS);
+        return NUM_CARDS;
 
     uint8_t flags;
     card_type card = get_card_and_flags(deck, -1, flags);
 
     UNUSED(flags);
 
-    return (card);
+    return card;
 }
 
 bool is_deck(const item_def &item)
@@ -3033,7 +3033,7 @@ bool is_deck(const item_def &item)
 bool bad_deck(const item_def &item)
 {
     if (!is_deck(item))
-        return (false);
+        return false;
 
     return (!item.props.exists("cards")
             || item.props["cards"].get_type() != SV_VEC
@@ -3068,7 +3068,7 @@ colour_t deck_rarity_to_colour(deck_rarity_type rarity)
         die("unset deck rarity");
     }
 
-    return (WHITE);
+    return WHITE;
 }
 
 void init_deck(item_def &item)

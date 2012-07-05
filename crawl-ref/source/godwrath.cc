@@ -151,7 +151,7 @@ static bool _tso_retribution()
         }
         break;
     }
-    return (false);
+    return false;
 }
 
 static void _zin_remove_good_mutations()
@@ -229,7 +229,7 @@ static bool _zin_retribution()
         _zin_remove_good_mutations();
         break;
     }
-    return (false);
+    return false;
 }
 
 static void _ely_dull_inventory_weapons()
@@ -315,7 +315,7 @@ static bool _elyvilon_retribution()
         break;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _cheibriados_retribution()
@@ -392,7 +392,7 @@ static bool _cheibriados_retribution()
 
     if (wrath_type > 2)
         dec_penance(god, 1 + random2(wrath_type));
-    return (glammer);
+    return glammer;
 }
 
 static bool _makhleb_retribution()
@@ -441,7 +441,7 @@ static bool _makhleb_retribution()
                                      : "'s minions fail to arrive.", god);
     }
 
-    return (true);
+    return true;
 }
 
 static bool _kikubaaqudgha_retribution()
@@ -493,7 +493,7 @@ static bool _kikubaaqudgha_retribution()
     animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
                  "the malice of Kikubaaqudgha", GOD_KIKUBAAQUDGHA);
 
-    return (true);
+    return true;
 }
 
 static bool _yredelemnul_retribution()
@@ -535,7 +535,7 @@ static bool _yredelemnul_retribution()
                       random2avg(88, 3), "the anger of Yredelemnul");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _trog_retribution()
@@ -627,7 +627,7 @@ static bool _trog_retribution()
                       random2avg(98, 3), "the fiery rage of Trog");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _beogh_retribution()
@@ -765,7 +765,7 @@ static bool _beogh_retribution()
     }
     }
 
-    return (true);
+    return true;
 }
 
 static bool _okawaru_retribution()
@@ -782,7 +782,7 @@ static bool _okawaru_retribution()
     simple_god_message(count > 0 ? " sends forces against you!"
                                  : "'s forces are busy with other wars.", god);
 
-    return (true);
+    return true;
 }
 
 static bool _sif_muna_retribution()
@@ -834,7 +834,7 @@ static bool _sif_muna_retribution()
         break;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _lugonu_retribution()
@@ -899,7 +899,7 @@ static bool _lugonu_retribution()
                                    : "'s minions fail to arrive.", god);
     }
 
-    return (false);
+    return false;
 }
 
 static bool _vehumet_retribution()
@@ -911,7 +911,7 @@ static bool _vehumet_retribution()
     MiscastEffect(&you, -god, coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                    8 + you.experience_level, random2avg(98, 3),
                    "the wrath of Vehumet");
-    return (true);
+    return true;
 }
 
 static bool _nemelex_retribution()
@@ -922,7 +922,7 @@ static bool _nemelex_retribution()
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
-    return (true);
+    return true;
 }
 
 static bool _jiyva_retribution()
@@ -1027,7 +1027,7 @@ static bool _jiyva_retribution()
                                 : "The ground quivers slightly.");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _fedhas_retribution()
@@ -1165,14 +1165,14 @@ static bool _fedhas_retribution()
         if (success)
         {
             god_speaks(god, "Plants grow around you in an ominous manner.");
-            return (false);
+            return false;
         }
 
         break;
     }
     }
 
-    return (true);
+    return true;
 }
 
 bool divine_retribution(god_type god, bool no_bonus, bool force)
@@ -1180,7 +1180,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     ASSERT(god != GOD_NO_GOD);
 
     if (is_unavailable_god(god))
-        return (false);
+        return false;
 
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
@@ -1188,7 +1188,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     if (!force && ((god == you.religion && is_good_god(god))
         || (!god_hates_your_god(god))))
     {
-        return (false);
+        return false;
     }
 
     god_acting gdact(god, true);
@@ -1219,7 +1219,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 
     case GOD_ASHENZARI:
         // No reduction with time.
-        return (false);
+        return false;
 
     default:
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
@@ -1227,11 +1227,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
              god_name(god).c_str());
 #endif
         do_more    = false;
-        return (false);
+        return false;
     }
 
     if (no_bonus)
-        return (true);
+        return true;
 
     // Sometimes divine experiences are overwhelming...
     if (do_more && one_chance_in(5) && you.experience_level < random2(37))
@@ -1257,7 +1257,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
 
-    return (true);
+    return true;
 }
 
 bool do_god_revenge(conduct_type thing_done, const monster *victim)
@@ -1283,7 +1283,7 @@ bool do_god_revenge(conduct_type thing_done, const monster *victim)
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 // Currently only used when orcish idols have been destroyed.
@@ -1294,7 +1294,7 @@ static std::string _get_beogh_speech(const std::string key)
     if (result.empty())
         return ("Beogh is angry!");
 
-    return (result);
+    return result;
 }
 
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
@@ -1319,10 +1319,10 @@ static bool _beogh_idol_revenge()
 
         _god_smites_you(GOD_BEOGH, revenge);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)
@@ -1360,7 +1360,7 @@ static std::string _get_tso_speech(const std::string key)
     if (result.empty())
         return ("The Shining One is angry!");
 
-    return (result);
+    return result;
 }
 
 // Killing holy beings may anger TSO.
@@ -1382,10 +1382,10 @@ static bool _tso_holy_revenge()
 
         _tso_blasts_cleansing_flame(revenge);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Killing apises may make Elyvilon sad.  She'll sulk and stuff.
@@ -1430,7 +1430,7 @@ static bool _ely_holy_revenge(const monster *victim)
         (*mi)->heal(10 + random2(10), false);
     }
 
-    return (true);
+    return true;
 }
 
 static void _god_smites_you(god_type god, const char *message,

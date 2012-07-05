@@ -43,7 +43,7 @@ static brand_type _convert_to_launcher(brand_type which_brand)
     {
     case SPWPN_FREEZING: return SPWPN_FROST;
     case SPWPN_FLAMING: return SPWPN_FLAME;
-    default: return (which_brand);
+    default: return which_brand;
     }
 }
 
@@ -61,9 +61,9 @@ static bool _ok_for_launchers(brand_type which_brand)
     case SPWPN_RETURNING:
     case SPWPN_CHAOS:
     case SPWPN_VORPAL:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 

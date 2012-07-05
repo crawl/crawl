@@ -361,8 +361,8 @@ int MenuRegion::maxpagesize() const
     // Non-inventory menus only have one column and need
     // *really* big screens to cover more than 52 lines.
     if (pagesize > 52)
-        return (52);
-    return (pagesize);
+        return 52;
+    return pagesize;
 }
 
 void MenuRegion::set_offset(int lines)

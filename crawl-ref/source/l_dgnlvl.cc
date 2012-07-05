@@ -72,14 +72,14 @@ LUAFN(dgn_level_id)
         _push_level_id(ls, level_id::current());
     else if (nargs == 1)
         _push_level_id(ls, dlua_level_id(ls, 1));
-    return (1);
+    return 1;
 }
 
 LUAFN(dgn_level_name)
 {
     const level_id lid(dlua_level_id(ls, 1));
     lua_pushstring(ls, lid.describe().c_str());
-    return (1);
+    return 1;
 }
 
 const struct luaL_reg dgn_level_dlib[] =

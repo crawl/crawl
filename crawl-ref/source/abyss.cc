@@ -96,10 +96,10 @@ static coord_def _place_feature_near(const coord_def &centre,
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
             grd(cp) = replacement;
-            return (cp);
+            return cp;
         }
     }
-    return (INVALID_COORD);
+    return INVALID_COORD;
 }
 
 //#define DEBUG_ABYSS
@@ -201,7 +201,7 @@ static int _abyssal_rune_roll()
     dprf("Abyssal rune odds: %d in %d (%.2f%%)",
          odds, ABYSSAL_RUNE_MAX_ROLL, odds * 100.0 / ABYSSAL_RUNE_MAX_ROLL);
 #endif
-    return (odds);
+    return odds;
 }
 
 static void _abyss_create_room(const map_mask &abyss_genlevel_mask)
@@ -260,7 +260,7 @@ static bool _abyss_place_map(const map_def *mdef)
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
 
-    return (did_place);
+    return did_place;
 }
 
 static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
@@ -272,7 +272,7 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
         return (_abyss_place_map(map));
     }
-    return (false);
+    return false;
 }
 
 static bool _abyss_place_rune_vault(const map_mask &abyss_genlevel_mask)
@@ -285,7 +285,7 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
 {
     // Use a rune vault if there's one.
     if (use_vaults && _abyss_place_rune_vault(abyss_genlevel_mask))
-        return (true);
+        return true;
 
     coord_def chosen_spot;
     int places_found = 0;
@@ -318,7 +318,7 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
         return (thing_created != NON_ITEM);
     }
 
-    return (false);
+    return false;
 }
 
 // Returns true if items can be generated on the given square.
@@ -404,7 +404,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
         }
     }
 
-    return (items_placed);
+    return items_placed;
 }
 
 void push_features_to_abyss()
@@ -476,7 +476,7 @@ static bool _abyss_check_place_feat(coord_def p,
                                     const map_mask &abyss_genlevel_mask)
 {
     if (!which_feat)
-        return (false);
+        return false;
 
     const bool place_feat = feat_chance && one_chance_in(feat_chance);
 
@@ -502,16 +502,16 @@ static bool _abyss_check_place_feat(coord_def p,
 
         if (feats_wanted)
             --*feats_wanted;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static dungeon_feature_type _abyss_pick_altar()
 {
     // Lugonu has a flat 50% chance of corrupting the altar.
     if (coinflip())
-        return (DNGN_ALTAR_LUGONU);
+        return DNGN_ALTAR_LUGONU;
 
     god_type god;
 
@@ -1019,10 +1019,10 @@ static bool _abyss_teleport_within_level()
                  newspot.x, newspot.y);
 #endif
             you.moveto(newspot);
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
@@ -1220,7 +1220,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
             break;
     }
 
-    return (vaults_placed);
+    return vaults_placed;
 }
 
 static void _generate_area(const map_mask &abyss_genlevel_mask)
@@ -1526,7 +1526,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     // [ds] No longer summon hostiles -- don't create the monster if
     // it would be hostile.
     if (beh == BEH_HOSTILE)
-        return (true);
+        return true;
 
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
@@ -1544,7 +1544,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         // Got a place, summon the beast.
         monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
         if (invalid_monster_type(mons))
-            return (false);
+            return false;
 
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
@@ -1553,7 +1553,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         return create_monster(mg);
     }
 
-    return (false);
+    return false;
 }
 
 static void _apply_corruption_effect(map_marker *marker, int duration)
@@ -1596,19 +1596,19 @@ void run_corruption_effects(int duration)
 static bool _is_grid_corruptible(const coord_def &c)
 {
     if (c == you.pos())
-        return (false);
+        return false;
 
     const dungeon_feature_type feat = grd(c);
 
     // Stairs and portals cannot be corrupted.
     if (feat_stair_direction(feat) != CMD_NO_CMD)
-        return (false);
+        return false;
 
     switch (feat)
     {
     case DNGN_PERMAROCK_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
-        return (false);
+        return false;
 
     case DNGN_METAL_WALL:
     case DNGN_GREEN_CRYSTAL_WALL:
@@ -1623,7 +1623,7 @@ static bool _is_grid_corruptible(const coord_def &c)
         return (!one_chance_in(3));
 
     default:
-        return (true);
+        return true;
     }
 }
 
@@ -1642,10 +1642,10 @@ static bool _is_crowded_square(const coord_def &c)
                 continue;
 
             if (++neighbours > 4)
-                return (false);
+                return false;
         }
 
-    return (true);
+    return true;
 }
 
 // Returns true if the square has all opaque neighbours.
@@ -1653,9 +1653,9 @@ static bool _is_sealed_square(const coord_def &c)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
         if (!feat_is_opaque(grd(*ai)))
-            return (false);
+            return false;
 
-    return (true);
+    return true;
 }
 
 static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
@@ -1751,7 +1751,7 @@ static void _corrupt_level_features(const corrupt_env &cenv)
 static bool _is_level_corrupted()
 {
     if (player_in_branch(BRANCH_ABYSS))
-        return (true);
+        return true;
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
@@ -1761,10 +1761,10 @@ bool is_level_incorruptible()
     if (_is_level_corrupted())
     {
         mpr("This place is already infused with evil and corruption.");
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _corrupt_choose_colours(corrupt_env *cenv)
@@ -1785,7 +1785,7 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
 bool lugonu_corrupt_level(int power)
 {
     if (is_level_incorruptible())
-        return (false);
+        return false;
 
     simple_god_message("'s Hand of Corruption reaches out!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
@@ -1805,5 +1805,5 @@ bool lugonu_corrupt_level(int power)
     delay(1000);
 #endif
 
-    return (true);
+    return true;
 }

@@ -117,7 +117,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     int idx = m_items[item_idx].idx;
 
@@ -197,7 +197,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 {
     // There's nothing you can do with an empty box if you can't unwield it.
     if (!equipped && item.sub_type == MISC_EMPTY_EBONY_CASKET)
-        return (false);
+        return false;
 
     // Vampires can drain corpses.
     if (item.base_type == OBJ_CORPSES)
@@ -212,7 +212,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
     {
         // Misc. items/rods can always be evoked, cursed or not.
         if (item_is_evokable(item))
-            return (true);
+            return true;
 
         // You can't unwield/fire a wielded cursed weapon/staff
         // but cursed armour and rings can be unwielded without problems.
@@ -224,7 +224,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
 
     // In all other cases you can use the item in some way.
-    return (true);
+    return true;
 }
 
 static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
@@ -248,17 +248,17 @@ bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display inventory",
                        prefix2, "Use items");
 
-    return (true);
+    return true;
 }
 
 bool InventoryRegion::update_tip_text(std::string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int idx = m_items[item_idx].idx;
 
@@ -274,7 +274,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         const item_def &item = mitm[idx];
 
         if (!item.defined())
-            return (false);
+            return false;
 
         tip = "";
         if (m_items[item_idx].key)
@@ -286,7 +286,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         tip += item.name(DESC_A);
 
         if (!display_actions)
-            return (true);
+            return true;
 
         tip += "\n[L-Click] Pick up (%)";
         cmd.push_back(CMD_PICKUP);
@@ -325,12 +325,12 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     {
         const item_def &item = you.inv[idx];
         if (!item.defined())
-            return (false);
+            return false;
 
         tip = item.name(DESC_INVENTORY_EQUIP);
 
         if (!display_actions)
-            return (true);
+            return true;
 
         int type = item.base_type;
         const bool equipped = m_items[item_idx].flag & TILEI_FLAG_EQUIP;
@@ -527,22 +527,22 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     }
 
     insert_commands(tip, cmd);
-    return (true);
+    return true;
 }
 
 bool InventoryRegion::update_alt_text(std::string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
@@ -554,7 +554,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
         item = &you.inv[idx];
 
     if (!item->defined())
-        return (false);
+        return false;
 
     describe_info inf;
     get_item_desc(*item, inf, true);
@@ -564,7 +564,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
 
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 void InventoryRegion::draw_tag()

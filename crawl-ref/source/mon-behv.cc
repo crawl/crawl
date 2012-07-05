@@ -812,14 +812,14 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
     if (!in_bounds(p))
-        return (false);
+        return false;
 
     if (p == you.pos())
     {
         // The player: We don't return true here because
         // otherwise wandering monsters will always
         // attack the player.
-        return (false);
+        return false;
     }
 
     if (monster* foe = monster_at(p))
@@ -833,10 +833,10 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
             && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
                 // Zotdef allies take out firewood
         {
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 // Choose random nearest monster as a foe.

@@ -140,7 +140,7 @@ static msg_colour_type _str_to_channel_colour(const std::string &str)
     else
         ret = msg_colour(str_to_colour(str));
 
-    return (ret);
+    return ret;
 }
 
 static const std::string message_channel_names[] =
@@ -184,37 +184,37 @@ std::string channel_to_str(int channel)
 weapon_type str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
-        return (WPN_SHORT_SWORD);
+        return WPN_SHORT_SWORD;
     else if (str == "falchion")
-        return (WPN_FALCHION);
+        return WPN_FALCHION;
     else if (str == "quarterstaff")
-        return (WPN_QUARTERSTAFF);
+        return WPN_QUARTERSTAFF;
     else if (str == "mace")
-        return (WPN_MACE);
+        return WPN_MACE;
     else if (str == "spear")
-        return (WPN_SPEAR);
+        return WPN_SPEAR;
     else if (str == "trident")
-        return (WPN_TRIDENT);
+        return WPN_TRIDENT;
     else if (str == "hand axe" || str == "handaxe")
-        return (WPN_HAND_AXE);
+        return WPN_HAND_AXE;
     else if (str == "unarmed" || str == "claws")
-        return (WPN_UNARMED);
+        return WPN_UNARMED;
     else if (str == "sling")
-        return (WPN_SLING);
+        return WPN_SLING;
     else if (str == "bow")
-        return (WPN_BOW);
+        return WPN_BOW;
     else if (str == "crossbow")
-        return (WPN_CROSSBOW);
+        return WPN_CROSSBOW;
     else if (str == "rocks")
-        return (WPN_ROCKS);
+        return WPN_ROCKS;
     else if (str == "javelins")
-        return (WPN_JAVELINS);
+        return WPN_JAVELINS;
     else if (str == "darts")
-        return (WPN_DARTS);
+        return WPN_DARTS;
     else if (str == "random")
-        return (WPN_RANDOM);
+        return WPN_RANDOM;
 
-    return (WPN_UNKNOWN);
+    return WPN_UNKNOWN;
 }
 
 static std::string _weapon_to_str(int weapon)
@@ -260,19 +260,19 @@ static std::string _weapon_to_str(int weapon)
 int str_to_summon_type(const std::string &str)
 {
     if (str == "clone")
-        return (MON_SUMM_CLONE);
+        return MON_SUMM_CLONE;
     if (str == "animate")
-        return (MON_SUMM_ANIMATE);
+        return MON_SUMM_ANIMATE;
     if (str == "chaos")
-        return (MON_SUMM_CHAOS);
+        return MON_SUMM_CHAOS;
     if (str == "miscast")
-        return (MON_SUMM_MISCAST);
+        return MON_SUMM_MISCAST;
     if (str == "zot")
-        return (MON_SUMM_ZOT);
+        return MON_SUMM_ZOT;
     if (str == "wrath")
-        return (MON_SUMM_WRATH);
+        return MON_SUMM_WRATH;
     if (str == "aid")
-        return (MON_SUMM_AID);
+        return MON_SUMM_AID;
 
     return (spell_by_name(str));
 }
@@ -280,31 +280,31 @@ int str_to_summon_type(const std::string &str)
 static fire_type _str_to_fire_types(const std::string &str)
 {
     if (str == "launcher")
-        return (FIRE_LAUNCHER);
+        return FIRE_LAUNCHER;
     else if (str == "dart")
-        return (FIRE_DART);
+        return FIRE_DART;
     else if (str == "stone")
-        return (FIRE_STONE);
+        return FIRE_STONE;
     else if (str == "rock")
-        return (FIRE_ROCK);
+        return FIRE_ROCK;
     else if (str == "dagger")
-        return (FIRE_DAGGER);
+        return FIRE_DAGGER;
     else if (str == "spear")
-        return (FIRE_SPEAR);
+        return FIRE_SPEAR;
     else if (str == "hand axe" || str == "handaxe" || str == "axe")
-        return (FIRE_HAND_AXE);
+        return FIRE_HAND_AXE;
     else if (str == "club")
-        return (FIRE_CLUB);
+        return FIRE_CLUB;
     else if (str == "javelin")
-        return (FIRE_JAVELIN);
+        return FIRE_JAVELIN;
     else if (str == "net")
-        return (FIRE_NET);
+        return FIRE_NET;
     else if (str == "return" || str == "returning")
-        return (FIRE_RETURNING);
+        return FIRE_RETURNING;
     else if (str == "inscribed")
-        return (FIRE_INSCRIBED);
+        return FIRE_INSCRIBED;
 
-    return (FIRE_NONE);
+    return FIRE_NONE;
 }
 
 std::string gametype_to_str(game_type type)
@@ -333,9 +333,9 @@ static game_type _str_to_gametype(const std::string& s)
     {
         game_type t = static_cast<game_type>(i);
         if (s == gametype_to_str(t))
-            return (t);
+            return t;
     }
-    return (NUM_GAME_TYPE);
+    return NUM_GAME_TYPE;
 }
 #endif
 
@@ -367,7 +367,7 @@ static species_type _str_to_species(const std::string &str)
     if (ret == SP_UNKNOWN)
         fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
 
-    return (ret);
+    return ret;
 }
 
 static std::string _job_to_str(job_type job)
@@ -399,7 +399,7 @@ static job_type _str_to_job(const std::string &str)
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
-    return (job);
+    return job;
 }
 
 static bool _read_bool(const std::string &field, bool def_value)
@@ -412,7 +412,7 @@ static bool _read_bool(const std::string &field, bool def_value)
     if (field == "false" || field == "0" || field == "no")
         ret = false;
 
-    return (ret);
+    return ret;
 }
 
 // read a value which can be either a boolean (in which case return
@@ -432,7 +432,7 @@ static int _read_bool_or_number(const std::string &field, int def_value,
     if (field.find(num_prefix) == 0)
         ret = atoi(field.c_str() + num_prefix.size());
 
-    return (ret);
+    return ret;
 }
 
 
@@ -1122,7 +1122,7 @@ ucs_t get_glyph_override(int c)
 static int read_symbol(std::string s)
 {
     if (s.empty())
-        return (0);
+        return 0;
 
     if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
@@ -1205,7 +1205,7 @@ mon_display game_options::parse_mon_glyph(const std::string &s) const
         else
             md.glyph = p == "_"? ' ' : read_symbol(p);
     }
-    return (md);
+    return md;
 }
 
 void game_options::add_mon_glyph_override(const std::string &text)
@@ -1324,7 +1324,7 @@ static std::string _find_crawlrc()
             const std::string rc(
                 catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
             if (file_exists(rc))
-                return (rc);
+                return rc;
         }
     }
 
@@ -1337,7 +1337,7 @@ static std::string _find_crawlrc()
             const std::string rc =
                 catpath(locations_data[i][0], locations_data[i][1]);
             if (file_exists(rc))
-                return (rc);
+                return rc;
         }
     }
 
@@ -1771,7 +1771,7 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
     }
-    return (conditions);
+    return conditions;
 }
 
 void game_options::add_alias(const std::string &key, const std::string &val)
@@ -3242,7 +3242,7 @@ std::string game_options::resolve_include(
         const std::string candidate =
             get_path_relative_to(parent_file, included_file);
         if (file_exists(candidate))
-            return (candidate);
+            return candidate;
     }
 
     if (rcdirs)
@@ -3252,7 +3252,7 @@ std::string game_options::resolve_include(
         {
             const std::string candidate(catpath(dirs[i], included_file));
             if (file_exists(candidate))
-                return (candidate);
+                return candidate;
         }
     }
 
@@ -3269,7 +3269,7 @@ std::string game_options::resolve_include(const std::string &file,
 
         if (resolved.empty())
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
-        return (resolved);
+        return resolved;
     }
     catch (const std::string &err)
     {
@@ -3704,21 +3704,21 @@ static bool _check_extra_opt(char* _opt)
     {
         fprintf(stderr, "An extra option can't use Lua (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
     if (opt[0] == '#')
     {
         fprintf(stderr, "An extra option can't be a comment (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
     if (opt.find_first_of('=') == std::string::npos)
     {
         fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
     std::vector<std::string> parts = split_string(opt, "=");
@@ -3726,10 +3726,10 @@ static bool _check_extra_opt(char* _opt)
     {
         fprintf(stderr, "An extra opt must have an option name (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool parse_args(int argc, char **argv, bool rc_only)
@@ -3755,7 +3755,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
     SysEnv.rcdirs.clear();
 
     if (argc < 2)           // no args!
-        return (true);
+        return true;
 
     char *arg, *next_arg;
     int current = 1;
@@ -3790,7 +3790,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             fprintf(stderr,
                     "Option '%s' is invalid; options must be prefixed "
                     "with -\n\n", arg);
-            return (false);
+            return false;
         }
 
         // Look for match (we accept both -option and --option).
@@ -3806,18 +3806,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         // Print the list of commandline options for "--help".
         if (o == CLO_HELP)
-            return (false);
+            return false;
 
         if (o == num_cmd_ops)
         {
             fprintf(stderr,
                     "Unknown option: %s\n\n", argv[current]);
-            return (false);
+            return false;
         }
 
         // Disallow options specified more than once.
         if (arg_seen[o] == true)
-            return (false);
+            return false;
 
         // Set arg to 'seen'.
         arg_seen[o] = true;
@@ -3922,20 +3922,20 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_BUILDDB:
             if (next_is_param)
-                return (false);
+                return false;
             crawl_state.build_db = true;
             break;
 
         case CLO_MACRO:
             if (!next_is_param)
-                return (false);
+                return false;
             SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
         case CLO_MORGUE:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 SysEnv.morgue_dir = next_arg;
             nextUsed = true;
@@ -3943,7 +3943,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SCOREFILE:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 SysEnv.scorefile = next_arg;
             nextUsed = true;
@@ -3951,7 +3951,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_NAME:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 Options.game.name = next_arg;
             nextUsed = true;
@@ -3960,7 +3960,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RACE:
         case CLO_CLASS:
             if (!next_is_param)
-                return (false);
+                return false;
 
             if (!rc_only)
             {
@@ -3975,7 +3975,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_PLAIN:
             if (next_is_param)
-                return (false);
+                return false;
 
             if (!rc_only)
             {
@@ -3987,7 +3987,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RCDIR:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.add_rcdir(next_arg);
             nextUsed = true;
@@ -3996,7 +3996,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_DIR:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.crawl_dir = next_arg;
             nextUsed = true;
@@ -4005,7 +4005,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RC:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.crawl_rc = next_arg;
             nextUsed = true;
@@ -4013,7 +4013,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_HELP:
             // Shouldn't happen.
-            return (false);
+            return false;
 
         case CLO_VERSION:
             _print_version();
@@ -4022,7 +4022,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_SAVE_VERSION:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             _print_save_version(next_arg);
             end(0);
@@ -4030,17 +4030,17 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_EDIT_SAVE:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             _edit_save(argc - current - 1, argv + current + 1);
             end(0);
 
         case CLO_SEED:
             if (!next_is_param)
-                return (false);
+                return false;
 
             if (!sscanf(next_arg, "%x", &Options.seed))
-                return (false);
+                return false;
             nextUsed = true;
             break;
 
@@ -4051,7 +4051,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SPRINT_MAP:
             if (!next_is_param)
-                return (false);
+                return false;
 
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
@@ -4101,11 +4101,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)
-                return (false);
+                return false;
 
             if (!_check_extra_opt(next_arg))
                 // Don't print the help message if the opt was wrong
-                return (true);
+                return true;
             SysEnv.extra_opts_first.push_back(next_arg);
             nextUsed = true;
 
@@ -4119,7 +4119,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
             if (!_check_extra_opt(next_arg))
                 // Don't print the help message if the opt was wrong
-                return (true);
+                return true;
             SysEnv.extra_opts_last.push_back(next_arg);
             nextUsed = true;
 
@@ -4134,7 +4134,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             current++;
     }
 
-    return (true);
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -4146,7 +4146,7 @@ int game_options::o_int(const char *name, int def) const
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
         val = atoi(i->second.c_str());
-    return (val);
+    return val;
 }
 
 bool game_options::o_bool(const char *name, bool def) const
@@ -4155,7 +4155,7 @@ bool game_options::o_bool(const char *name, bool def) const
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
         val = _read_bool(i->second, val);
-    return (val);
+    return val;
 }
 
 std::string game_options::o_str(const char *name, const char *def) const
@@ -4166,7 +4166,7 @@ std::string game_options::o_str(const char *name, const char *def) const
         val = i->second;
     else if (def)
         val = def;
-    return (val);
+    return val;
 }
 
 int game_options::o_colour(const char *name, int def) const

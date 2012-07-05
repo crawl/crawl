@@ -56,7 +56,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
@@ -73,7 +73,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
         redraw_screen();
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
 bool SpellRegion::update_tab_tip_text(std::string &tip, bool active)
@@ -85,17 +85,17 @@ bool SpellRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display memorised spells",
                        prefix2, "Cast spells");
 
-    return (true);
+    return true;
 }
 
 bool SpellRegion::update_tip_text(std::string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
@@ -111,22 +111,22 @@ bool SpellRegion::update_tip_text(std::string& tip)
     cmd.push_back(CMD_DISPLAY_SPELLS);
     insert_commands(tip, cmd);
 
-    return (true);
+    return true;
 }
 
 bool SpellRegion::update_alt_text(std::string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
@@ -141,12 +141,12 @@ bool SpellRegion::update_alt_text(std::string &alt)
 
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 int SpellRegion::get_max_slots()
 {
-    return (MAX_KNOWN_SPELLS);
+    return MAX_KNOWN_SPELLS;
 }
 
 void SpellRegion::pack_buffers()

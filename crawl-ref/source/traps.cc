@@ -63,11 +63,11 @@ bool trap_def::type_has_ammo() const
     {
     case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
     case TRAP_NEEDLE: case TRAP_SPEAR:
-        return (true);
+        return true;
     default:
         break;
     }
-    return (false);
+    return false;
 }
 
 void trap_def::disarm()
@@ -170,7 +170,7 @@ std::string trap_def::name(description_level_type desc) const
     else if (desc == DESC_THE)
         return (std::string("the ") + basename);
     else                        // everything else
-        return (basename);
+        return basename;
 }
 
 bool trap_def::is_known(const actor* act) const
@@ -178,7 +178,7 @@ bool trap_def::is_known(const actor* act) const
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
     if (act == NULL || act->is_player())
-        return (player_knows);
+        return player_knows;
     else if (act->is_monster())
     {
         const monster* mons = act->as_monster();
@@ -286,7 +286,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
             return (si->index());
         }
     }
-    return (NON_ITEM);
+    return NON_ITEM;
 }
 
 // If there are more than one net on this square
@@ -388,12 +388,12 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
 bool player_caught_in_net()
 {
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return (false);
+        return false;
 
     if (you.flight_mode() == FL_FLY && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
-        return (false);
+        return false;
     }
 
     if (!you.attribute[ATTR_HELD])
@@ -412,9 +412,9 @@ bool player_caught_in_net()
 
         stop_delay(true); // even stair delays
         redraw_screen(); // Account for changes in display.
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 void check_net_will_hold_monster(monster* mons)
@@ -467,7 +467,7 @@ static bool _player_caught_in_web()
     you.attribute[ATTR_HELD] = 10;
     // No longer stop_running() and stop_delay().
     redraw_screen(); // Account for changes in display.
-    return (true);
+    return true;
 }
 
 std::vector<coord_def> find_golubria_on_level()
@@ -1049,7 +1049,7 @@ int trap_def::max_damage(const actor& act)
         default:          return  0;
     }
 
-    return (0);
+    return 0;
 }
 
 int trap_def::shot_damage(actor& act)
@@ -1113,7 +1113,7 @@ int reveal_traps(const int range)
         }
     }
 
-    return (traps_found);
+    return traps_found;
 }
 
 void destroy_trap(const coord_def& pos)
@@ -1125,7 +1125,7 @@ void destroy_trap(const coord_def& pos)
 trap_def* find_trap(const coord_def& pos)
 {
     if (!feat_is_trap(grd(pos), true))
-        return (NULL);
+        return NULL;
 
     unsigned short t = env.tgrid(pos);
 
@@ -1140,7 +1140,7 @@ trap_type get_trap_type(const coord_def& pos)
     if (trap_def* ptrap = find_trap(pos))
         return (ptrap->type);
 
-    return (TRAP_UNASSIGNED);
+    return TRAP_UNASSIGNED;
 }
 
 static bool _disarm_is_deadly(trap_def& trap)
@@ -1376,7 +1376,7 @@ static int damage_or_escape_net(int hold)
     if (damage >= escape)
         return (-damage); // negate value
 
-    return (escape);
+    return escape;
 }
 
 // Calls the above function to decide on how to get free.
@@ -1696,15 +1696,15 @@ dungeon_feature_type trap_category(trap_type type)
     switch (type)
     {
     case TRAP_WEB:
-        return (DNGN_TRAP_WEB);
+        return DNGN_TRAP_WEB;
     case TRAP_SHAFT:
-        return (DNGN_TRAP_NATURAL);
+        return DNGN_TRAP_NATURAL;
 
     case TRAP_TELEPORT:
     case TRAP_ALARM:
     case TRAP_ZOT:
     case TRAP_GOLUBRIA:
-        return (DNGN_TRAP_MAGICAL);
+        return DNGN_TRAP_MAGICAL;
 
     case TRAP_DART:
     case TRAP_ARROW:
@@ -1715,7 +1715,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_NET:
     case TRAP_GAS:
     case TRAP_PLATE:
-        return (DNGN_TRAP_MECHANICAL);
+        return DNGN_TRAP_MECHANICAL;
 
     default:
         die("placeholder trap type %d used", type);
@@ -1728,16 +1728,16 @@ bool is_valid_shaft_level(const level_id &place)
         || crawl_state.game_is_sprint()
         || crawl_state.game_is_zotdef())
     {
-        return (false);
+        return false;
     }
 
     if (!is_connected_branch(place))
-        return (false);
+        return false;
 
     // Shafts are now allowed on the first two levels, as they have a
     // good chance of being detected. You'll also fall less deep.
     /* if (place == BRANCH_MAIN_DUNGEON && you.depth < 3)
-        return (false); */
+        return false; */
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
@@ -1745,7 +1745,7 @@ bool is_valid_shaft_level(const level_id &place)
     // on lower levels with the innability to use teleport control to
     // get back up.
     if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL))
-        return (false);
+        return false;
 
     const Branch &branch = branches[place.branch];
 
@@ -1905,7 +1905,7 @@ static trap_type _random_trap_slime(int level_number)
     if (one_chance_in(10))
         type = TRAP_ALARM;
 
-    return (type);
+    return type;
 }
 
 static trap_type _random_trap_default(int level_number)
@@ -1944,7 +1944,7 @@ static trap_type _random_trap_default(int level_number)
     if (one_chance_in(40))
         type = TRAP_ALARM;
 
-    return (type);
+    return type;
 }
 
 trap_type random_trap_for_place()

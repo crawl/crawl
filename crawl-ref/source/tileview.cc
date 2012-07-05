@@ -307,7 +307,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
     if (count == 1)
-        return (idx);
+        return idx;
 
     const int total = tile_dngn_probs(idx + count - 1);
     const int rand  = (value == -1 ? random2(total) : value % total);
@@ -316,10 +316,10 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     {
         tileidx_t curr = idx + i;
         if (rand < tile_dngn_probs(curr))
-            return (curr);
+            return curr;
     }
 
-    return (idx);
+    return idx;
 }
 
 void tile_init_flavour(const coord_def &gc)
@@ -418,10 +418,10 @@ static bool _adjacent_target(dungeon_feature_type target, int x, int y)
         if (!map_bounds(*ai))
             continue;
         if (grd(*ai) == target)
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
@@ -941,24 +941,24 @@ static bool _suppress_blood(const map_cell& mc)
 {
     const dungeon_feature_type feat = mc.feat();
     if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
-        return (true);
+        return true;
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
-        return (true);
+        return true;
 
     if (feat_is_altar(feat))
-        return (true);
+        return true;
 
     if (feat_stair_direction(feat) != CMD_NO_CMD)
-        return (true);
+        return true;
 
     if (feat == DNGN_MALIGN_GATEWAY)
-        return (true);
+        return true;
 
     if (mc.trap() == TRAP_SHAFT)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static bool _suppress_blood(tileidx_t bg_idx)

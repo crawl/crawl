@@ -66,7 +66,7 @@ int mons_tracking_range(const monster* mon)
     if (you.penance[GOD_ASHENZARI])
         range *= 5;
 
-    return (range);
+    return range;
 }
 
 //#define DEBUG_PATHFIND
@@ -111,7 +111,7 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
         if (msg)
             mpr("The monster is already there!");
 
-        return (true);
+        return true;
     }
 
     return start_pathfind(msg);
@@ -127,7 +127,7 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
 
     // Easy enough. :P
     if (start == target)
-        return (true);
+        return true;
 
     return start_pathfind(msg);
 }
@@ -155,7 +155,7 @@ bool monster_pathfind::start_pathfind(bool msg)
         // and add them to the hash, if they haven't already been looked at.
         success = calc_path_to_neighbours();
         if (success)
-            return (true);
+            return true;
 
         // Pull the position with shortest distance estimate to our target grid.
         success = get_best_position();
@@ -167,7 +167,7 @@ bool monster_pathfind::start_pathfind(bool msg)
                 mprf("Couldn't find a path from (%d,%d) to (%d,%d).",
                      target.x, target.y, start.x, start.y);
             }
-            return (false);
+            return false;
         }
     }
     while (true);
@@ -279,11 +279,11 @@ bool monster_pathfind::calc_path_to_neighbours()
 #ifdef DEBUG_PATHFIND
                 mpr("Arrived at target.");
 #endif
-                return (true);
+                return true;
             }
         }
     }
-    return (false);
+    return false;
 }
 
 // Starting at known min_length (minimum total estimated path distance), check
@@ -309,7 +309,7 @@ bool monster_pathfind::get_best_position()
                  pos.x, pos.y, min_length);
 #endif
 
-            return (true);
+            return true;
         }
 #ifdef DEBUG_PATHFIND
         mprf("No positions for path length %d.", i);
@@ -317,7 +317,7 @@ bool monster_pathfind::get_best_position()
     }
 
     // Nothing found? Then there's no path! :(
-    return (false);
+    return false;
 }
 
 // Using the prev vector backtrack from start to target to find all steps to
@@ -352,7 +352,7 @@ std::vector<coord_def> monster_pathfind::backtrack()
     while (pos != start);
     ASSERT(pos == start);
 
-    return (path);
+    return path;
 }
 
 // Reduces the path coordinates to only a couple of key waypoints needed
@@ -396,20 +396,20 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     if (pos != path[path.size() - 1])
         waypoints.push_back(path[path.size() - 1]);
 
-    return (waypoints);
+    return waypoints;
 }
 
 bool monster_pathfind::traversable(const coord_def& p)
 {
     if (!traverse_unmapped && grd(p) == DNGN_UNSEEN)
-        return (false);
+        return false;
 
     // XXX: Hack to be somewhat consistent with uses of
     //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
     if (opc_immob(p) == OPC_OPAQUE)
-        return (false);
+        return false;
 
     if (mons)
         return mons_traversable(p);
@@ -443,7 +443,7 @@ int monster_pathfind::travel_cost(coord_def npos)
     if (mons)
         return mons_travel_cost(npos);
 
-    return (1);
+    return 1;
 #endif
 }
 
@@ -457,7 +457,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR
         && env.markers.property_at(npos, MAT_ANY, "door_restrict") != "veto")
     {
-        return (2);
+        return 2;
     }
 
     const monster_type mt = mons_base_type(mons);
@@ -470,7 +470,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
     if (mons->floundering_at(npos))
-        return (2);
+        return 2;
 
     // Try to avoid (known) traps.
     const trap_def* ptrap = find_trap(npos);
@@ -483,19 +483,19 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
             // Your allies take extra precautions to avoid known alarm traps.
             // Zot traps are considered intraversable.
             if (knows_trap && mons->friendly())
-                return (3);
+                return 3;
 
             // To hostile monsters, these traps are completely harmless.
-            return (1);
+            return 1;
         }
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
         if (knows_trap && ground_level)
-            return (2);
+            return 2;
     }
 
-    return (1);
+    return 1;
 }
 
 // The estimated cost to reach a grid is simply max(dx, dy).

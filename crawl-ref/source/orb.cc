@@ -35,10 +35,10 @@ static bool _orb_noise(const coord_def& where, int loudness)
         flash_view_delay(MAGENTA, 100);
         flash_view_delay(LIGHTMAGENTA, 100);
 
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 /**

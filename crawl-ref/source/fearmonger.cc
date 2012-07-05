@@ -29,7 +29,7 @@ bool player::add_fearmonger(const monster* mon)
         else
             mpr("The fearful aura is strangely muted, and has no effect on you.");
 
-        return (false);
+        return false;
     }
 
     if (!duration[DUR_AFRAID])
@@ -46,7 +46,7 @@ bool player::add_fearmonger(const monster* mon)
             fearmongers.push_back(mon->mindex());
     }
 
-    return (true);
+    return true;
 }
 
 // Whether player is afraid.
@@ -61,8 +61,8 @@ bool player::afraid_of(const monster* mon) const
 {
     for (unsigned int i = 0; i < fearmongers.size(); i++)
         if (fearmongers[i] == mon->mindex())
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 // Checks whether a fearmonger keeps you from moving to
@@ -76,9 +76,9 @@ monster* player::get_fearmonger(const coord_def &target) const
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist > newdist)
-            return (mon);
+            return mon;
     }
-    return (NULL);
+    return NULL;
 }
 
 monster* player::get_any_fearmonger() const
@@ -86,7 +86,7 @@ monster* player::get_any_fearmonger() const
     if (!fearmongers.empty())
         return (&menv[fearmongers[0]]);
     else
-        return (NULL);
+        return NULL;
 }
 
 // Removes a monster from the list of fearmongers if present.
@@ -179,7 +179,7 @@ void player::_removed_fearmonger()
 bool player::_possible_fearmonger(const monster* mon) const
 {
     if (crawl_state.game_is_arena())
-        return (false);
+        return false;
 
     return (mon->alive()
          && !silenced(pos()) && !silenced(mon->pos())

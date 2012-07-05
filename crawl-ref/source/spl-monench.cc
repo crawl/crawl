@@ -26,13 +26,13 @@ static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
     monster* mons = monster_at(where);
 
     if (!mons)
-        return (0);
+        return 0;
 
     if (mons->res_cold() > 0 || mons_is_stationary(mons))
     {
         if (!mons_is_firewood(mons))
             simple_monster_message(mons, " is unaffected.");
-        return (0);
+        return 0;
     }
 
     int duration = (roll_dice(3, pow) / 6 - random2(mons->get_experience_level()))
@@ -41,7 +41,7 @@ static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
     if (duration <= 0)
     {
         simple_monster_message(mons, " resists.");
-        return (0);
+        return 0;
     }
 
     if (mons_class_flag(mons->type, M_COLD_BLOOD))
@@ -65,11 +65,11 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
 
     monster* mons = monster_at(where);
     if (mons == NULL)
-        return (false);
+        return false;
 
     // Already glowing.
     if (mons->glows_naturally())
-        return (false);
+        return false;
 
     mon_enchant bklt = mons->get_ench(ENCH_CORONA);
     mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
@@ -84,7 +84,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
                 mon_enchant(ENCH_CORONA, 1, 0, random_range(30, 50)));
             simple_monster_message(mons, " is lined in light.");
         }
-        return (true);
+        return true;
     }
 
     mons->add_ench(mon_enchant(ENCH_CORONA, 1));
@@ -96,19 +96,19 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     else
         simple_monster_message(mons, " glows brighter.");
 
-    return (true);
+    return true;
 }
 
 bool do_slow_monster(monster* mon, const actor* agent, int dur)
 {
     if (mon->check_stasis(false))
-        return (true);
+        return true;
 
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))
     {
         if (simple_monster_message(mon, " is no longer moving quickly."))
-            return (true);
+            return true;
     }
 
     // Not hasted, slow it.
@@ -119,11 +119,11 @@ bool do_slow_monster(monster* mon, const actor* agent, int dur)
         if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))
         {
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 // XXX: Not sure why you can't exit map and cancel the spell.

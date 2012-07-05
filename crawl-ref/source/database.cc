@@ -400,7 +400,7 @@ static std::vector<std::string> _database_find_keys(DBM *database,
         dbKey = dbm_nextkey(database);
     }
 
-    return (matches);
+    return matches;
 }
 
 static std::vector<std::string> _database_find_bodies(DBM *database,
@@ -430,7 +430,7 @@ static std::vector<std::string> _database_find_bodies(DBM *database,
         dbKey = dbm_nextkey(database);
     }
 
-    return (matches);
+    return matches;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -751,7 +751,7 @@ static std::string _query_database(TextDB &db, std::string key,
     if (run_lua)
         _execute_embedded_lua(str);
 
-    return (str);
+    return str;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -776,7 +776,7 @@ std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
     if (!DescriptionDB.get())
     {
         std::vector<std::string> empty;
-        return (empty);
+        return empty;
     }
 
     // FIXME: need to match regex against translated keys, which can't
@@ -790,7 +790,7 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
     if (!DescriptionDB.get())
     {
         std::vector<std::string> empty;
-        return (empty);
+        return empty;
     }
 
     // On partial translations, this will match only translated descriptions.
@@ -863,7 +863,7 @@ std::vector<std::string> getAllFAQKeys()
     if (!FAQDB.get())
     {
         std::vector<std::string> empty;
-        return (empty);
+        return empty;
     }
 
     return _database_find_keys(FAQDB.get(), "^q.+", false);

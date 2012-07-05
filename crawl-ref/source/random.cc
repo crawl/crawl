@@ -42,7 +42,7 @@ const char* random_choose<const char*>(const char* first, ...)
     ASSERT(nargs > 0);
 
     va_end(args);
-    return (chosen);
+    return chosen;
 }
 
 #ifndef UINT32_MAX
@@ -53,7 +53,7 @@ const char* random_choose<const char*>(const char* first, ...)
 int random2(int max)
 {
     if (max <= 1)
-        return (0);
+        return 0;
 
     uint32_t partn = UINT32_MAX / max;
 
@@ -78,7 +78,7 @@ bool coinflip(void)
 int maybe_random2(int x, bool random_factor)
 {
     if (x <= 1)
-        return (0);
+        return 0;
     if (random_factor)
         return (random2(x));
     else
@@ -89,7 +89,7 @@ int maybe_random2(int x, bool random_factor)
 int maybe_random_div(int nom, int denom, bool random_factor)
 {
     if (nom <= 0)
-        return (0);
+        return 0;
     if (random_factor)
         return (random2(nom + denom) / denom);
     else
@@ -121,7 +121,7 @@ int roll_dice(int num, int size)
             ret += random2(size);
     }
 
-    return (ret);
+    return ret;
 }
 
 int dice_def::roll() const
@@ -151,7 +151,7 @@ dice_def calc_dice(int num_dice, int max_damage)
         ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
     }
 
-    return (ret);
+    return ret;
 }
 
 // Attempts to make missile weapons nicer to the player by reducing the
@@ -190,7 +190,7 @@ int bestroll(int max, int rolls)
             best = curr;
     }
 
-    return (best);
+    return best;
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance
@@ -216,13 +216,13 @@ int random2limit(int max, int limit)
     int sum = 0;
 
     if (max < 1)
-        return (0);
+        return 0;
 
     for (i = 0; i < max; i++)
         if (random2(limit) >= i)
             sum++;
 
-    return (sum);
+    return sum;
 }
 
 // Generate samples from a binomial distribution with n_trials and trial_prob
@@ -265,10 +265,10 @@ bool one_chance_in(int a_million)
 bool x_chance_in_y(int x, int y)
 {
     if (x <= 0)
-        return (false);
+        return false;
 
     if (x >= y)
-        return (true);
+        return true;
 
     return (random2(y) < x);
 }
@@ -286,10 +286,10 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
 {
     if (x <= 0)
-        return (false);
+        return false;
 
     if (x >= y)
-        return (true);
+        return true;
 
     do
     {
@@ -301,10 +301,10 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
         uint64_t expn_minimum_fail = uint64_t(x) << 32;
 
         if (expn_minimum_fail <= expn_rand_1)
-            return (false);
+            return false;
 
         if (expn_rand_2 <= expn_minimum_fail)
-            return (true);
+            return true;
 
         // y = expn_rand_2 - expn_rand_1;  no-op
         x = expn_minimum_fail - expn_rand_1;
@@ -314,7 +314,7 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
 int defer_rand::random2(int maxp1)
 {
     if (maxp1 <= 1)
-        return (0);
+        return 0;
 
     if (bits.empty())
         bits.push_back(random_int());
@@ -326,7 +326,7 @@ int defer_rand::random2(int maxp1)
     int val2 = int(expn_rand_2 >> 32);
 
     if (val2 == val1)
-        return (val1);
+        return val1;
 
     // val2 == val1 + 1
     uint64_t expn_thresh = uint64_t(val2) << 32;

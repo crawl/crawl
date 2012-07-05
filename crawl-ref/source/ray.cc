@@ -36,7 +36,7 @@ static int ifloor(double d)
 {
     int r = iround(d);
     if (double_is_zero(d - r))
-        return (r);
+        return r;
     else
         return (_ifloor(d));
 }
@@ -89,7 +89,7 @@ static bool _to_grid(geom::ray *r, bool half);
 static bool bad_corner(const geom::ray &r)
 {
     if (!is_corner(r.start))
-        return (false);
+        return false;
     geom::ray copy = r;
     _to_grid(&copy, true);
     return (in_non_diamond_int(copy.start));
@@ -144,7 +144,7 @@ static bool _to_next_cell(geom::ray *r)
     bool c = r->to_next_cell(diamonds);
     if (c)
         _round_to_corner(r);
-    return (c);
+    return c;
 }
 
 static bool _to_grid(geom::ray *r, bool half)
@@ -155,7 +155,7 @@ static bool _to_grid(geom::ray *r, bool half)
     c = c || is_corner(r->start);
     if (c)
         _round_to_corner(r);
-    return (c);
+    return c;
 }
 
 static bool _advance_from_non_diamond(geom::ray *r)
@@ -164,13 +164,13 @@ static bool _advance_from_non_diamond(geom::ray *r)
     if (!_to_next_cell(r))
     {
         ASSERT(in_diamond_int(r->start));
-        return (false);
+        return false;
     }
     else
     {
         // r is now on a corner, going from non-diamond to non-diamond.
         ASSERT(is_corner(r->start));
-        return (true);
+        return true;
     }
 }
 
@@ -209,7 +209,7 @@ bool ray_def::advance()
             // r is now on a corner, going from diamond to diamond.
             _to_grid(&r, true);
             ASSERT(_valid());
-            return (true);
+            return true;
         }
     }
 
@@ -237,7 +237,7 @@ static geom::vector _mirror_pt(const geom::vector &vorig, const coord_def &side)
         v.x = 1.0 - v.x;
     if (side.y == -1)
         v.y = 1.0 - v.y;
-    return (v);
+    return v;
 }
 
 static geom::vector _mirror_dir(const geom::vector &vorig, const coord_def &side)
@@ -247,7 +247,7 @@ static geom::vector _mirror_dir(const geom::vector &vorig, const coord_def &side
         v.x = -v.x;
     if (side.y == -1)
         v.y = -v.y;
-    return (v);
+    return v;
 }
 
 static geom::ray _mirror(const geom::ray &rorig, const coord_def &side)
@@ -255,7 +255,7 @@ static geom::ray _mirror(const geom::ray &rorig, const coord_def &side)
     geom::ray r;
     r.start = _mirror_pt(rorig.start, side);
     r.dir = _mirror_dir(rorig.dir, side);
-    return (r);
+    return r;
 }
 
 static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
@@ -305,7 +305,7 @@ static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
         l.f = geom::form(0, 1);
         l.val = 1;
     }
-    return (l);
+    return l;
 }
 
 static geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
@@ -327,7 +327,7 @@ static geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
             v.y -= 20 * EPSILON_VALUE;
         ASSERT(!rg(floor_vec(v)));
     }
-    return (v);
+    return v;
 }
 
 // Bounce a ray leaving (0,0) through the positive side
@@ -349,7 +349,7 @@ static geom::ray _bounce_diag_corridor(const geom::ray &rorig)
     }
     // Now pointing inside the destination cell (1,1) -- move inside.
     _to_grid(&r, true);
-    return (r);
+    return r;
 }
 
 // Bounce a ray leaving (0,0) properly through one of the sides
@@ -465,7 +465,7 @@ static geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
             _to_grid(&r, true);
         }
     }
-    return (r);
+    return r;
 }
 
 void ray_def::bounce(const reflect_grid &rg)

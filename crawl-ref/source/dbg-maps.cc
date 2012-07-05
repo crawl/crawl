@@ -53,7 +53,7 @@ static bool _mg_is_disconnected_level()
     // Don't care about non-Dungeon levels.
     if (!player_in_connected_branch()
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
-        return (false);
+        return false;
 
     return dgn_count_disconnected_zones(true);
 }
@@ -78,7 +78,7 @@ static bool mg_do_build_level(int niters)
         if (kbhit() && key_is_escape(getchk()))
         {
             mprf(MSGCH_WARN, "User requested cancel");
-            return (false);
+            return false;
         }
 
         ++mg_levels_tried;
@@ -132,10 +132,10 @@ static bool mg_do_build_level(int niters)
 
             dump_map(fp);
 
-            return (false);
+            return false;
         }
     }
-    return (true);
+    return true;
 }
 
 static std::vector<level_id> mg_dungeon_places()
@@ -151,7 +151,7 @@ static std::vector<level_id> mg_dungeon_places()
         for (int depth = 1; depth <= brdepth[br]; ++depth)
             places.push_back(level_id(branch, depth));
     }
-    return (places);
+    return places;
 }
 
 static bool mg_build_dungeon()
@@ -164,9 +164,9 @@ static bool mg_build_dungeon()
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
         if (!mg_do_build_level(1))
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static void mg_build_levels(int niters)

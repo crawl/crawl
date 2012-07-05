@@ -167,7 +167,7 @@ static dgn_island_plan _shoals_island_plan()
     plan.island_aux_radius_range = int_range(2, 7);
     plan.island_aux_point_height_increment = int_range(50, 65);
 
-    return (plan);
+    return plan;
 }
 
 static void _shoals_init_islands(int depth)
@@ -464,7 +464,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
                 regions.push_back(weighted_region(featcount, c));
         }
     }
-    return (regions);
+    return regions;
 }
 
 static coord_def _shoals_pick_region(
@@ -894,14 +894,14 @@ static dungeon_feature_type _shoals_apply_tide_feature_at(
 
     // Return DNGN_UNSEEN if the feature isn't changed.
     if (feat == current_feat)
-        return (DNGN_UNSEEN);
+        return DNGN_UNSEEN;
 
     if (Generating_Level)
         grd(c) = feat;
     else
         dungeon_terrain_changed(c, feat, true, false, true);
 
-    return (feat);
+    return feat;
 }
 
 // Determines if the tide is rising or falling based on before and

@@ -79,8 +79,8 @@ bool player::beheld_by(const monster* mon) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon->mindex())
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 // Checks whether a beholder keeps you from moving to
@@ -94,9 +94,9 @@ monster* player::get_beholder(const coord_def &target) const
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist < newdist)
-            return (mon);
+            return mon;
     }
-    return (NULL);
+    return NULL;
 }
 
 monster* player::get_any_beholder() const
@@ -104,7 +104,7 @@ monster* player::get_any_beholder() const
     if (!beholders.empty())
         return (&menv[beholders[0]]);
     else
-        return (NULL);
+        return NULL;
 }
 
 // Removes a monster from the list of beholders if present.
@@ -256,7 +256,7 @@ void player::_removed_beholder()
 bool player::possible_beholder(const monster* mon) const
 {
     if (crawl_state.game_is_arena())
-        return (false);
+        return false;
 
     return (mon->alive() && !mon->submerged()
          && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())

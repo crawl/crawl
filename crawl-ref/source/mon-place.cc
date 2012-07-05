@@ -158,11 +158,11 @@ bool monster_habitable_grid(monster_type mt,
 {
     // No monster may be placed on open sea.
     if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
-        return (false);
+        return false;
 
     // Monsters can't use teleporters, and standing there would look just wrong.
     if (actual_grid == DNGN_TELEPORTER)
-        return (false);
+        return false;
 
     const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(mt));
@@ -185,24 +185,24 @@ bool monster_habitable_grid(monster_type mt,
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
-        return (false);
+        return false;
 
     if (actual_grid == DNGN_MALIGN_GATEWAY)
     {
         if (mt == MONS_ELDRITCH_TENTACLE
             || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
         {
-            return (true);
+            return true;
         }
         else
-            return (false);
+            return false;
     }
 
     if (feat_compatible(feat_preferred, actual_grid)
         || (feat_nonpreferred != feat_preferred
             && feat_compatible(feat_nonpreferred, actual_grid)))
     {
-        return (true);
+        return true;
     }
 
     // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
@@ -211,19 +211,19 @@ bool monster_habitable_grid(monster_type mt,
     if (monster_is_airborne
         && (actual_grid == DNGN_LAVA || actual_grid == DNGN_DEEP_WATER))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Returns true if the monster can submerge in the given grid.
 bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
 {
     if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
-        return (false);
+        return false;
     if (!mon->is_habitable_feat(feat))
-        return (false);
+        return false;
     if (mons_class_flag(mon->type, M_SUBMERGES))
         switch (mons_habitat(mon))
         {
@@ -236,10 +236,10 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
             // Currently, trapdoor spider and air elemental only.
             return (feat == DNGN_FLOOR);
         default:
-            return (false);
+            return false;
         }
     else
-        return (false);
+        return false;
 }
 
 static bool _is_spawn_scaled_area(const level_id &here)
@@ -312,7 +312,7 @@ static int _fuzz_mons_level(int level)
 
         return level + fuzz;
     }
-    return (level);
+    return level;
 }
 
 static int _vestibule_spawn_rate()
@@ -427,7 +427,7 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     static level_id last_monster_type_place;
 
     if (last_monster_type_place == place)
-        return (valid_monster_types);
+        return valid_monster_types;
 
     valid_monster_types.clear();
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
@@ -435,7 +435,7 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
             valid_monster_types.push_back(i);
 
     last_monster_type_place = place;
-    return (valid_monster_types);
+    return valid_monster_types;
 }
 
 static bool _is_random_monster(int mt)
@@ -460,12 +460,12 @@ static monster_type _pick_random_monster(const level_id &place, int power,
     {
         monster_type type = arena_pick_random_monster(place, power, lev_mons);
         if (!_is_random_monster(type))
-            return (type);
+            return type;
     }
 
     // Short-circuit it when we know it will fail.
     if (!branch_has_monsters(place.branch))
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
 
     monster_type mon_type = MONS_PROGRAM_BUG;
 
@@ -550,7 +550,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
     }
 
     if (monster_pick_tries <= 0)
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
 
     if (level > original_level + 5)
         *isood = true;
@@ -562,7 +562,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
              "NONE" : get_monster_data(mon_type)->name,
              *isood? "YES" : "no");
 
-    return (mon_type);
+    return mon_type;
 }
 
 // Caller must use !invalid_monster_type to check if the return value
@@ -577,18 +577,18 @@ monster_type pick_random_monster(const level_id &place,
 bool can_place_on_trap(monster_type mon_type, trap_type trap)
 {
     if (trap == TRAP_TELEPORT)
-        return (false);
+        return false;
 
     if (trap == TRAP_SHAFT)
     {
         if (_is_random_monster(mon_type))
-            return (false);
+            return false;
 
         return (mons_class_flies(mon_type) != FL_NONE
                 || get_monster_data(mon_type)->size == SIZE_TINY);
     }
 
-    return (true);
+    return true;
 }
 
 bool drac_colour_incompatible(int drac, int colour)
@@ -727,7 +727,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                               stair_type, lev_mons,
                                               chose_ood_monster);
                 }
-                return (mon_type);
+                return mon_type;
             }
         }
 
@@ -763,7 +763,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                        mon_type == RANDOM_MOBILE_MONSTER);
         }
     }
-    return (mon_type);
+    return mon_type;
 }
 
 monster_type pick_random_monster_for_place(const level_id &place,
@@ -800,7 +800,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
     if (!tries)
         chosen = MONS_NO_MONSTER;
 
-    return (chosen);
+    return chosen;
 }
 
 // A short function to check the results of near_stairs().
@@ -831,7 +831,7 @@ static int _is_near_stairs(coord_def &p)
             }
         }
 
-    return (result);
+    return result;
 }
 
 // Checks if the monster is ok to place at mg_pos. If force_location
@@ -844,7 +844,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!in_bounds(mg_pos)
         || monster_at(mg_pos)
         || you.pos() == mg_pos && !fedhas_passthrough_class(mg.cls))
-        return (false);
+        return false;
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                                   : mg.cls);
@@ -853,7 +853,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
         || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
             && is_sanctuary(mg_pos)))
     {
-        return (false);
+        return false;
     }
 
     // Check player proximity to avoid band members being placed
@@ -863,16 +863,16 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (mg.proximity == PROX_AWAY_FROM_PLAYER
         && distance(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
     {
-        return (false);
+        return false;
     }
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
     const trap_def* ptrap = find_trap(mg_pos);
     if (ptrap && !can_place_on_trap(mg.cls, ptrap->type))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 static bool _valid_monster_generation_location(mgen_data &mg)
@@ -1235,7 +1235,7 @@ monster* get_free_monster()
             return (&env.mons[i]);
         }
 
-    return (NULL);
+    return NULL;
 }
 
 void mons_add_blame(monster* mon, const std::string &blame_string)
@@ -1812,16 +1812,16 @@ static bool _good_zombie(monster_type base, monster_type cs,
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
     if (in_bounds(pos) && !monster_habitable_grid(base, grd(pos)))
-        return (false);
+        return false;
 
     if (cs == MONS_NO_MONSTER)
-        return (true);
+        return true;
 
     // If skeleton, monster must have a skeleton.
     if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
         && !mons_skeleton(base))
     {
-        return (false);
+        return false;
     }
 
     // Size must match, but you can make a spectral thing out of
@@ -1829,10 +1829,10 @@ static bool _good_zombie(monster_type base, monster_type cs,
     if (cs != MONS_SPECTRAL_THING
         && mons_zombie_size(base) != zombie_class_size(cs))
     {
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
@@ -1882,7 +1882,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // Hack -- non-dungeon zombies are always made out of nastier
         // monsters.
         if (hack_hd && !player_in_connected_branch() && mons_power(base) > 8)
-            return (base);
+            return base;
 
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
@@ -1896,7 +1896,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         if (power > level - relax && power < level + relax
             && random2avg(100, 2) <= chance)
         {
-            return (base);
+            return base;
         }
 
         // Every so often, we'll relax the OOD restrictions.  Avoids
@@ -2038,7 +2038,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     if ((mon->type != MONS_ZOMBIE_SMALL && mon->type != MONS_ZOMBIE_LARGE)
         || !mons_skeleton(mon->base_monster))
     {
-        return (false);
+        return false;
     }
 
     int acmod = 0;
@@ -2067,7 +2067,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
     mon->hit_points     = std::max(mon->hit_points, 1);
 
-    return (true);
+    return true;
 }
 
 static band_type _choose_band(monster_type mon_type, int power, int &band_size,
@@ -2540,7 +2540,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     if (band_size >= BIG_BAND)
         band_size = BIG_BAND - 1;
 
-    return (band);
+    return band;
 }
 
 static monster_type _band_member(band_type band, int power)
@@ -2549,7 +2549,7 @@ static monster_type _band_member(band_type band, int power)
     int temp_rand;
 
     if (band == BAND_NO_BAND)
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
 
     switch (band)
     {
@@ -2918,7 +2918,7 @@ static monster_type _band_member(band_type band, int power)
         break;
     }
 
-    return (mon_type);
+    return mon_type;
 }
 
 void mark_interesting_monst(monster* mons, beh_type behaviour)
@@ -2977,7 +2977,7 @@ static monster_type _pick_zot_exit_defender()
                 return static_cast<monster_type>(MONS_MNOLEG + i);
             }
         }
-        return (MONS_PANDEMONIUM_LORD);
+        return MONS_PANDEMONIUM_LORD;
     }
 
     const int temp_rand = random2(276);
@@ -3086,14 +3086,14 @@ monster* mons_place(mgen_data mg)
 static dungeon_feature_type _monster_primary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
-        return (DNGN_FLOOR);
+        return DNGN_FLOOR;
     return (habitat2grid(mons_class_primary_habitat(mc)));
 }
 
 static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
-        return (DNGN_FLOOR);
+        return DNGN_FLOOR;
     return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
 
@@ -3136,18 +3136,18 @@ public:
     bool path_flood(const coord_def &c, const coord_def &dc)
     {
         if (best_distance && traveled_distance > best_distance)
-            return (true);
+            return true;
 
         if (!in_bounds(dc)
             || (maxdistance > 0 && traveled_distance > maxdistance))
         {
-            return (false);
+            return false;
         }
         if (!feat_compatible(feat_wanted, grd(dc)))
         {
             if (passable.find(grd(dc)) != passable.end())
                 good_square(dc);
-            return (false);
+            return false;
         }
         if (_valid_spot(dc) && one_chance_in(++nfound))
         {
@@ -3159,7 +3159,7 @@ public:
         {
             good_square(dc);
         }
-        return (false);
+        return false;
     }
 };
 
@@ -3215,7 +3215,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
         pos = empty;
     }
 
-    return (pos);
+    return pos;
 }
 
 bool can_spawn_mushrooms(coord_def where)
@@ -3307,10 +3307,10 @@ bool player_angers_monster(monster* mon)
             }
         }
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 monster* create_monster(mgen_data mg, bool fail_msg)
@@ -3383,7 +3383,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
     if (!summd && fail_msg && you.see_cell(mg.pos))
         mpr("You see a puff of smoke.");
 
-    return (summd);
+    return summd;
 }
 
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
@@ -3500,7 +3500,7 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
     }
 
-    return (mon);
+    return mon;
 }
 
 monster_type summon_any_holy_being(holy_being_class_type hbct)
@@ -3520,7 +3520,7 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
         break;
     }
 
-    return (mon);
+    return mon;
 }
 
 monster_type summon_any_dragon(dragon_class_type dct)
@@ -3561,7 +3561,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
         break;
     }
 
-    return (mon);
+    return mon;
 }
 
 /////////////////////////////////////////////////////////////////////////////

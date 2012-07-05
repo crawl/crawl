@@ -154,7 +154,7 @@ static const duration_def* _lookup_duration(duration_type dur)
 {
     ASSERT(dur >= 0 && dur < NUM_DURATIONS);
     if (duration_index[dur] == -1)
-        return (NULL);
+        return NULL;
     else
         return (&duration_data[duration_index[dur]]);
 }
@@ -170,31 +170,31 @@ static void _reset_status_info(status_info* inf)
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
     if (lvl > red)
-        return (RED);
+        return RED;
     else if (lvl > orange)
-        return (LIGHTRED);
+        return LIGHTRED;
 
-    return (YELLOW);
+    return YELLOW;
 }
 
 static int _dur_colour(int exp_colour, bool expiring)
 {
     if (expiring)
-        return (exp_colour);
+        return exp_colour;
     else
     {
         switch (exp_colour)
         {
         case GREEN:
-            return (LIGHTGREEN);
+            return LIGHTGREEN;
         case BLUE:
-            return (LIGHTBLUE);
+            return LIGHTBLUE;
         case MAGENTA:
-            return (LIGHTMAGENTA);
+            return LIGHTMAGENTA;
         case LIGHTGREY:
-            return (WHITE);
+            return WHITE;
         default:
-            return (exp_colour);
+            return exp_colour;
         }
     }
 }

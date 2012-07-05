@@ -92,7 +92,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
 GridRegion *TabbedRegion::get_tab_region(int idx)
 {
     if (invalid_index(idx))
-        return (NULL);
+        return NULL;
 
     return (m_tabs[idx].reg);
 }
@@ -100,7 +100,7 @@ GridRegion *TabbedRegion::get_tab_region(int idx)
 tileidx_t TabbedRegion::get_tab_tile(int idx)
 {
     if (invalid_index(idx))
-        return (0);
+        return 0;
 
     return (m_tabs[idx].tile_tab);
 }
@@ -129,7 +129,7 @@ void TabbedRegion::activate_tab(int idx)
 
 int TabbedRegion::active_tab() const
 {
-    return (m_active);
+    return m_active;
 }
 
 int TabbedRegion::num_tabs() const
@@ -175,13 +175,13 @@ void TabbedRegion::disable_tab(int idx)
 bool TabbedRegion::active_is_valid() const
 {
     if (invalid_index(m_active))
-        return (false);
+        return false;
     if (!m_tabs[m_active].enabled)
-        return (false);
+        return false;
     if (!m_tabs[m_active].reg)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 void TabbedRegion::update()
@@ -287,7 +287,7 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
-            return (i);
+            return i;
     }
     return (-1);
 }
@@ -295,7 +295,7 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
 int TabbedRegion::handle_mouse(MouseEvent &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (0);
+        return 0;
 
     int mouse_tab = get_mouseover_tab(event);
     if (mouse_tab != m_mouse_tab)
@@ -310,26 +310,26 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
         if (event.event == MouseEvent::PRESS)
         {
             activate_tab(m_mouse_tab);
-            return (0);
+            return 0;
         }
     }
 
     // Otherwise, pass input to the active tab.
     if (!active_is_valid())
-        return (0);
+        return 0;
 
     return (get_tab_region(active_tab())->handle_mouse(event));
 }
 
 bool TabbedRegion::update_tab_tip_text(std::string &tip, bool active)
 {
-    return (false);
+    return false;
 }
 
 bool TabbedRegion::update_tip_text(std::string &tip)
 {
     if (!active_is_valid())
-        return (false);
+        return false;
 
     if (m_mouse_tab != -1)
     {
@@ -344,7 +344,7 @@ bool TabbedRegion::update_tip_text(std::string &tip)
 bool TabbedRegion::update_alt_text(std::string &alt)
 {
     if (!active_is_valid())
-        return (false);
+        return false;
 
     return (get_tab_region(active_tab())->update_alt_text(alt));
 }

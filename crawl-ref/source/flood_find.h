@@ -78,7 +78,7 @@ bool flood_find<fgrd, bound_check>::points_connected_from(
     const coord_def &sp)
 {
     if (needed_points.empty())
-        return (true);
+        return true;
     set_floodseed(sp);
     pathfind(RMODE_EXPLORE);
     return (needed_points.empty());
@@ -89,7 +89,7 @@ bool flood_find<fgrd, bound_check>::any_point_connected_from(
     const coord_def &sp)
 {
     if (needed_points.empty())
-        return (true);
+        return true;
     set_floodseed(sp);
     const size_t sz = needed_points.size();
     pathfind(RMODE_EXPLORE);
@@ -116,9 +116,9 @@ bool flood_find<fgrd, bound_check>::path_flood(
         {
             greedy_dist = 100;
             greedy_place = coord_def(-1, -1);
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     if (no_vault && (*vaults)[dc.x][dc.y])
@@ -132,7 +132,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         {
             needed_points.erase(i);
             if (needed_points.empty())
-                return (true);
+                return true;
         }
     }
 
@@ -144,23 +144,23 @@ bool flood_find<fgrd, bound_check>::path_flood(
         {
             greedy_dist = 100;
             greedy_place = coord_def(-1, -1);
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     if (needed_features[ feat ])
     {
         unexplored_place = dc;
         unexplored_dist  = traveled_distance;
-        return (true);
+        return true;
     }
 
     if (check_traversable && !feat_is_traversable(feat)
         && feat != DNGN_SECRET_DOOR
         && !feat_is_trap(feat))
     {
-        return (false);
+        return false;
     }
 
     if (!left_vault && vaults && !(*vaults)[dc.x][dc.y])
@@ -168,7 +168,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
     good_square(dc);
 
-    return (false);
+    return false;
 }
 
 #endif

@@ -144,7 +144,7 @@ bool TilesFramework::initialise()
     // Initially, switch to CRT.
     cgotoxy(1, 1, GOTO_CRT);
 
-    return (true);
+    return true;
 }
 
 void TilesFramework::write_message()

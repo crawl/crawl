@@ -180,7 +180,7 @@ static void _fuzz_direction(monster& mon, int pow)
 static bool _iood_shielded(monster& mon, actor &victim)
 {
     if (!victim.shield() || victim.incapacitated())
-        return (false);
+        return false;
 
     const int to_hit = 15 + mon.props["iood_pow"].get_short()/12;
     const int con_block = random2(to_hit + victim.shield_block_penalty());
@@ -230,7 +230,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     else
         beam.fire();
 
-    return (true);
+    return true;
 }
 
 // returns true if the orb is gone
@@ -250,7 +250,7 @@ bool iood_act(monster& mon, bool no_trail)
     if (!vx && !vy) // not initialized
     {
         _iood_dissipate(mon);
-        return (true);
+        return true;
     }
 
     _normalize(vx, vy);
@@ -316,18 +316,18 @@ move_again:
     if (!in_bounds(pos))
     {
         _iood_dissipate(mon);
-        return (true);
+        return true;
     }
 
     if (mon.props["iood_kc"].get_byte() == KC_YOU
         && (you.pos() - pos).rdist() > LOS_RADIUS)
     {   // not actual vision, because of the smoke trail
         _iood_dissipate(mon);
-        return (true);
+        return true;
     }
 
     if (pos == mon.pos())
-        return (false);
+        return false;
 
     if (!no_trail)
         place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(), 2 + random2(3), &mon);
@@ -353,7 +353,7 @@ move_again:
                 noisy(40, pos, "You hear a loud magical explosion!");
             monster_die(mons, KILL_DISMISSED, NON_MONSTER);
             _iood_hit(mon, pos, true);
-            return (true);
+            return true;
         }
 
         if (mons && mons->submerged())
@@ -369,7 +369,7 @@ move_again:
                 mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 
-                return (false);
+                return false;
             }
             else // if swap fails, move ahead
             {
@@ -393,7 +393,7 @@ move_again:
                 }
                 victim->shield_block_succeeded(&mon);
                 _iood_dissipate(mon);
-                return (true);
+                return true;
             }
 
             if (victim->is_player())
@@ -439,20 +439,20 @@ move_again:
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))
-            return (true);
+            return true;
     }
 
     if (!mon.move_to_pos(pos))
     {
         _iood_dissipate(mon);
-        return (true);
+        return true;
     }
 
     // move_to_pos() just trashed the coords, set them again
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
 
-    return (false);
+    return false;
 }
 
 // Reduced copy of iood_act to move the orb while the player
@@ -468,7 +468,7 @@ static bool _iood_catchup_move(monster& mon)
     if (!vx && !vy) // not initialized
     {
         _iood_dissipate(mon, false);
-        return (true);
+        return true;
     }
 
     _normalize(vx, vy);
@@ -484,31 +484,31 @@ static bool _iood_catchup_move(monster& mon)
     if (!in_bounds(pos))
     {
         _iood_dissipate(mon, true);
-        return (true);
+        return true;
     }
 
     if (pos == mon.pos())
-        return (false);
+        return false;
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
     {
         // Just dissipate instead of hitting something.
         _iood_dissipate(mon, true);
-        return (true);
+        return true;
     }
 
     if (!mon.move_to_pos(pos))
     {
         _iood_dissipate(mon);
-        return (true);
+        return true;
     }
 
     // move_to_pos() just trashed the coords, set them again
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
 
-    return (false);
+    return false;
 }
 
 void iood_catchup(monster* mons, int pturns)
@@ -581,7 +581,7 @@ static void _boulder_stop(monster& mon, bool msg = true)
 static bool _boulder_shielded(monster& mon, actor &victim)
 {
     if (!victim.shield() || victim.incapacitated())
-        return (false);
+        return false;
 
     const int to_hit = 15 + mon.hit_dice/2;
     const int con_block = random2(to_hit + victim.shield_block_penalty());
@@ -614,7 +614,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 
     beam.fire();
 
-    return (true);
+    return true;
 }
 
 bool boulder_act(monster& mon)
@@ -634,7 +634,7 @@ bool boulder_act(monster& mon)
     if (!vx && !vy) // not initialized
     {
         _boulder_stop(mon);
-        return (true);
+        return true;
     }
 
     _normalize(vx, vy);
@@ -700,11 +700,11 @@ move_again:
     if (!in_bounds(pos))
     {
         _boulder_stop(mon);
-        return (true);
+        return true;
     }
 
     if (pos == mon.pos())
-        return (false);
+        return false;
 
     // Place a dust trail (so we can see which way it's rolling)
     place_cloud(CLOUD_DUST_TRAIL, mon.pos(), 2 + random2(3), &mon);
@@ -739,7 +739,7 @@ move_again:
                 mon.add_ench(ENCH_CONFUSION);
             if (!mons->check_clarity(false))
                 mons->add_ench(ENCH_CONFUSION);
-            return (true);
+            return true;
         }
 
         if (mons && mons->submerged())
@@ -753,7 +753,7 @@ move_again:
                 mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 
-                return (false);
+                return false;
             }
             else // if swap fails, move ahead
             {
@@ -777,7 +777,7 @@ move_again:
                 }
                 victim->shield_block_succeeded(&mon);
                 _boulder_stop(mon);
-                return (true);
+                return true;
             }
 
             if (victim->atype() == ACT_PLAYER)
@@ -823,19 +823,19 @@ move_again:
         {
             if (victim && victim->alive())
                 _boulder_stop(mon);
-            return (true);
+            return true;
         }
     }
 
     if (!mon.move_to_pos(pos))
     {
         _boulder_stop(mon);
-        return (true);
+        return true;
     }
 
     // move_to_pos() just trashed the coords, set them again
     mon.props["boulder_x"] = x;
     mon.props["boulder_y"] = y;
 
-    return (false);
+    return false;
 }

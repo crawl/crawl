@@ -593,7 +593,7 @@ std::string munge_description(std::string inStr)
                 + "\n";
     }
 
-    return (outStr);
+    return outStr;
 }
 
 static void _sdump_messages(dump_params &par)
@@ -690,12 +690,12 @@ static bool _dump_item_origin(const item_def &item)
 #define fs(x) (flags & (x))
     const int flags = Options.dump_item_origins;
     if (flags == IODS_EVERYTHING)
-        return (true);
+        return true;
 
     if (fs(IODS_ARTEFACTS)
         && is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
-        return (true);
+        return true;
     }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
         && item_type_known(item))
@@ -711,26 +711,26 @@ static bool _dump_item_origin(const item_def &item)
     }
 
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
-        return (true);
+        return true;
 
     if (fs(IODS_RUNES) && item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_RUNE_OF_ZOT)
     {
-        return (true);
+        return true;
     }
 
     if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
-        return (true);
+        return true;
 
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
-        return (true);
+        return true;
 
     if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
-        return (true);
+        return true;
 
     const int refpr = Options.dump_item_origin_price;
     if (refpr == -1)
-        return (false);
+        return false;
     return ((int)item_value(item, false) >= refpr);
 #undef fs
 }
@@ -865,7 +865,7 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 
     ret += spelltype_short_name(spell_class);
 
-    return (ret);
+    return ret;
 }
 
 //---------------------------------------------------------------
@@ -1361,7 +1361,7 @@ std::string morgue_directory()
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
 
-    return (dir);
+    return dir;
 }
 
 void dump_map(FILE *fp, bool debug, bool dist)
@@ -1470,7 +1470,7 @@ static bool _write_dump(const std::string &fname, dump_params &par,
     else
         mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
 
-    return (succeeded);
+    return succeeded;
 }
 
 void display_notes()
@@ -1575,7 +1575,7 @@ bool dgl_unknown_timestamp_file(const std::string &filename)
         fclose(inh);
         return (file_version != DGL_TIMESTAMP_VERSION);
     }
-    return (false);
+    return false;
 }
 
 // Returns a filehandle to use to write turn timestamps, NULL if
