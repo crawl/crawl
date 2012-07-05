@@ -5,6 +5,16 @@
 #include "fixedarray.h"
 #include <vector>
 
+enum shoals_height_thresholds
+{
+    SHT_UNDEFINED = -10000,
+    SHT_STONE = 400,
+    SHT_ROCK  = 135,
+    SHT_FLOOR = 0,
+    SHT_SHALLOW_WATER = -30,
+    SHT_SHORE = -18, // sand limit at low tide
+};
+
 // The caller is responsible for ensuring that env.heightmap is set.
 static inline short &dgn_height_at(const coord_def &c)
 {
