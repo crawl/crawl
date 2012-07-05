@@ -140,6 +140,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __eq__(self, other):
         return self.id == other.id
 
+    def allow_draft76(self):
+        return True
+
     def open(self):
         self.logger.info("Socket opened from ip %s (fd%s).",
                          self.request.remote_ip,
