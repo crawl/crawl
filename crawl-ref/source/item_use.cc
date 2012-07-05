@@ -2636,7 +2636,7 @@ static bool _scroll_modify_item(item_def scroll)
         // where you use identify on itself.
         item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
                                        MT_INVLIST, OSEL_ANY, true, true, false, 0,
-                                       item_slot, NULL, OPER_ANY, true);
+                                       scroll.link, NULL, OPER_ANY, true);
 
         if (item_slot == PROMPT_NOTHING)
             return (false);
