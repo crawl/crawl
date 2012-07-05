@@ -421,7 +421,7 @@ ENDMAP
 
 NAME:  ziggurat_pillar_centre_j
 TAGS:  ziggurat_pillar centered
-SUBST: x : abcmvxG
+SUBST: x : bcmvxG
 MAP
  x
 xxx
