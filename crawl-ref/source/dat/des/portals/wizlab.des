@@ -284,6 +284,11 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         dgn.tile_feat_changed(x, y, nil)
         dgn.terrain_changed(x, y, "closed_door", false, false, false)
         data.door_appeared = true
+        if you.see_cell(x, y) then
+            crawl.mpr("A door appears!")
+        else
+            crawl.mpr("The walls vibrate.")
+        end
     end
 end
 
@@ -1363,7 +1368,7 @@ x?!G.Gccc.1ccccc1.cccG.G!?x
 x?!.G.G.cc.1.c.1.cc.G.G.!?x
 x?!G.G.G.c...c...c.G.G.G!?x
 x?!.G.G.GccccDccccG.G.G.!?x
-x?!!.G.G.G.G...G.G.G.G.!!?x
+x?!!.G.G.G.GV.VG.G.G.G.!!?x
 xx?!!.G.G.G..<..G.G.G.!!?xx
  xx?!!.G.G.G.A.G.G.G.!!?xx
   xx?!!!!!!!!!!!!!!!!!?xx
