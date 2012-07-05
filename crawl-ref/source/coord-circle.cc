@@ -23,7 +23,7 @@ rect_def rect_def::intersect(const rect_def& other) const
 
 rectangle_iterator rect_def::iter() const
 {
-    return (rectangle_iterator(min, max));
+    return rectangle_iterator(min, max);
 }
 
 circle_def::circle_def()
@@ -101,7 +101,7 @@ const coord_def& circle_def::get_center() const
 
 circle_iterator circle_def::iter() const
 {
-    return (circle_iterator(*this));
+    return circle_iterator(*this);
 }
 
 bool circle_def::contains(const coord_def &p) const

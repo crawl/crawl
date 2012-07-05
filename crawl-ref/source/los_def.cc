@@ -84,7 +84,7 @@ void los_def::set_bounds(const circle_def &b)
 
 circle_def los_def::get_bounds() const
 {
-    return (circle_def(center, bds));
+    return circle_def(center, bds);
 }
 
 bool los_def::in_bounds(const coord_def& p) const
@@ -95,7 +95,7 @@ bool los_def::in_bounds(const coord_def& p) const
 bool los_def::see_cell(const coord_def& p) const
 {
     if (arena)
-        return (in_bounds(p));
+        return in_bounds(p);
     const coord_def sp = p - center;
     return (sp.rdist() <= LOS_MAX_RANGE && show(sp));
 }
@@ -107,7 +107,7 @@ coord_def los_glob::get_center() const
 
 circle_def los_glob::get_bounds() const
 {
-    return (circle_def(center, bds));
+    return circle_def(center, bds);
 }
 
 bool los_glob::in_bounds(const coord_def& p) const

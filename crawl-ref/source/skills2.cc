@@ -190,7 +190,7 @@ static std::string _stk_genus_cap()
 static std::string _stk_genus_nocap()
 {
     std::string s = _stk_genus_cap();
-    return (lowercase(s));
+    return lowercase(s);
 }
 
 static std::string _stk_genus_short_cap()
@@ -378,7 +378,7 @@ std::string skill_title(skill_type best_skill, uint8_t skill_lev,
 std::string player_title()
 {
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    return (skill_title(best, you.skills[ best ]));
+    return skill_title(best, you.skills[ best ]);
 }
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,

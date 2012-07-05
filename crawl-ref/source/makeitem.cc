@@ -66,7 +66,7 @@ bool got_curare_roll(const int item_level)
 
 static bool _got_distortion_roll(const int item_level)
 {
-    return (one_chance_in(25));
+    return one_chance_in(25);
 }
 
 static int _exciting_colour()
@@ -3386,7 +3386,7 @@ jewellery_type get_random_ring_type()
            || j == RING_SLAYING)
         && !one_chance_in(3))
     {
-        return (_get_raw_random_ring_type());
+        return _get_raw_random_ring_type();
     }
 
     return j;

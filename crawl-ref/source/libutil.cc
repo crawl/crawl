@@ -536,7 +536,7 @@ std::string apostrophise_fixup(const std::string &msg)
         return msg;
 
     // XXX: This is rather hackish.
-    return (replace_all(msg, "s's", "s'"));
+    return replace_all(msg, "s's", "s'");
 }
 
 static std::string pow_in_words(int pow)

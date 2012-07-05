@@ -766,7 +766,7 @@ static int crawl_err_trace(lua_State *ls)
         lua_error(ls);
     }
 
-    return (lua_gettop(ls));
+    return lua_gettop(ls);
 }
 
 static int crawl_tutorial_msg(lua_State *ls)

@@ -2396,7 +2396,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
         if (x != B_MAYBE)
-            return (tobool(x));
+            return tobool(x);
     }
 #endif
 
@@ -2439,7 +2439,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
                 || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
 
     if (mode == TARG_EVOLVABLE_PLANTS)
-        return (mons_is_evolvable(mon));
+        return mons_is_evolvable(mon);
 
     if (mode == TARG_HOSTILE_UNDEAD)
         return  !mon->friendly() && mon->holiness() == MH_UNDEAD;

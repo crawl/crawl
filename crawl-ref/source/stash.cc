@@ -247,7 +247,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
     case DNGN_UNDISCOVERED_TRAP:
         return true;
     default:
-        return (feat_is_solid(feature));
+        return feat_is_solid(feature);
     }
 }
 
@@ -1137,7 +1137,7 @@ bool LevelStashes::needs_visit(const coord_def& c) const
     if (s && (s->unverified() || s->pickup_eligible()))
         return true;
 
-    return (shop_needs_visit(c));
+    return shop_needs_visit(c);
 }
 
 bool LevelStashes::unverified_stash(const coord_def &c) const

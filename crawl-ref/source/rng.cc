@@ -60,7 +60,7 @@ void seed_rng()
 
 uint32_t random_int(void)
 {
-    return (get_uint32());
+    return get_uint32();
 }
 
 void push_rng_state()

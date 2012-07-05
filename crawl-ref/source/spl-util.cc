@@ -619,10 +619,10 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         return 0;
 
     if (max_targs >= 9 && !exclude_center)
-        return (_apply_area_square(cf, where, power, agent));
+        return _apply_area_square(cf, where, power, agent);
 
     if (max_targs >= 8 && exclude_center)
-        return (_apply_area_around_square(cf, where, power, agent));
+        return _apply_area_around_square(cf, where, power, agent);
 
     coord_def targs[8];
 

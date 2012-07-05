@@ -578,7 +578,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
 
 bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
 {
-    return (lose_stat(which_stat, stat_loss, false, cause));
+    return lose_stat(which_stat, stat_loss, false, cause);
 }
 
 void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
@@ -616,7 +616,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 bool MiscastEffect::_send_to_abyss()
 {
     if (player_in_branch(BRANCH_ABYSS) || source == HELL_EFFECT_MISCAST)
-        return (_malign_gateway()); // attempt to degrade to malign gateway
+        return _malign_gateway(); // attempt to degrade to malign gateway
 
     target->banish(act_source, cause);
     return true;
@@ -737,7 +737,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.summon_type = MON_SUMM_MISCAST;
     }
 
-    return (create_monster(data));
+    return create_monster(data);
 }
 
 // hair or hair-equivalent (like bandages)

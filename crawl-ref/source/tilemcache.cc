@@ -533,7 +533,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
 
 bool mcache_draco::valid(const monster_info& mon)
 {
-    return (mons_is_draconian(mon.type));
+    return mons_is_draconian(mon.type);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -676,7 +676,7 @@ const dolls_data *mcache_ghost::doll() const
 
 bool mcache_ghost::valid(const monster_info& mon)
 {
-    return (mons_is_pghost(mon.type));
+    return mons_is_pghost(mon.type);
 }
 
 bool mcache_ghost::transparent() const

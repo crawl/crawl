@@ -2429,7 +2429,7 @@ static monster_type _pick_swarmer()
         MONS_WORKER_ANT,
     };
 
-    return (RANDOM_ELEMENT(swarmers));
+    return RANDOM_ELEMENT(swarmers);
 }
 
 static monster_type _pick_random_wraith()
@@ -2441,7 +2441,7 @@ static monster_type _pick_random_wraith()
         MONS_FLAYED_GHOST
     };
 
-    return (RANDOM_ELEMENT(wraiths));
+    return RANDOM_ELEMENT(wraiths);
 }
 
 static monster_type _pick_horrible_thing()
@@ -2462,7 +2462,7 @@ static monster_type _pick_undead_summon()
         MONS_SIMULACRUM_LARGE, MONS_SHADOW
     };
 
-    return (RANDOM_ELEMENT(undead));
+    return RANDOM_ELEMENT(undead);
 }
 
 static void _do_high_level_summon(monster* mons, bool monsterNearby,

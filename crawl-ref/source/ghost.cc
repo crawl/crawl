@@ -1073,7 +1073,7 @@ static const colour_t labrat_colour_values[] = {
 
 static colour_t _labrat_random_colour()
 {
-    return (RANDOM_ELEMENT(labrat_colour_values));
+    return RANDOM_ELEMENT(labrat_colour_values);
 }
 
 void ghost_demon::init_labrat (colour_t force_colour)

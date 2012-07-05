@@ -462,7 +462,7 @@ static coord_def _find_minivault_place(
         }
         return v1;
     }
-    return (coord_def(-1, -1));
+    return coord_def(-1, -1);
 }
 
 static bool _apply_vault_grid(map_def &def,

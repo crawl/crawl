@@ -97,12 +97,12 @@ public:
 
     inline coord_def grid2show(const coord_def &pos) const
     {
-        return (view2show(grid2view(pos)));
+        return view2show(grid2view(pos));
     }
 
     inline coord_def show2grid(const coord_def &pos) const
     {
-        return (view2grid(show2view(pos)));
+        return view2grid(show2view(pos));
     }
 
     inline coord_def screen2view(const coord_def& pos) const

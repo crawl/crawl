@@ -501,7 +501,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 // The estimated cost to reach a grid is simply max(dx, dy).
 int monster_pathfind::estimated_cost(coord_def p)
 {
-    return (grid_distance(p, target));
+    return grid_distance(p, target);
 }
 
 void monster_pathfind::add_new_pos(coord_def npos, int total)

@@ -639,7 +639,7 @@ bool mon_enemies_around(const monster* mons)
     else
     {
         // For hostile monster* you* are the main enemy.
-        return (mons_near(mons));
+        return mons_near(mons);
     }
 }
 

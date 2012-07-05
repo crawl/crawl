@@ -270,7 +270,7 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (_abyss_place_map(map));
+        return _abyss_place_map(map);
     }
     return false;
 }
@@ -519,7 +519,7 @@ static dungeon_feature_type _abyss_pick_altar()
         god = random_god();
     while (is_good_god(god));
 
-    return (altar_for_god(god));
+    return altar_for_god(god);
 }
 
 static bool _abyssal_rune_at(const coord_def p)
@@ -1612,11 +1612,11 @@ static bool _is_grid_corruptible(const coord_def &c)
 
     case DNGN_METAL_WALL:
     case DNGN_GREEN_CRYSTAL_WALL:
-        return (one_chance_in(4));
+        return one_chance_in(4);
 
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        return (one_chance_in(3));
+        return one_chance_in(3);
 
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:

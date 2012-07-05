@@ -257,7 +257,7 @@ struct coord_wrapper
     int (*test) (const coord_def & pos);
     int  operator()(const coord_def & pos)
     {
-        return (test(pos));
+        return test(pos);
     }
 
     coord_wrapper()

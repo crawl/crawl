@@ -618,7 +618,7 @@ static time_t _parse_time(const std::string &st)
     date.tm_sec   = _val_char(st[12]) * 10 + _val_char(st[13]);
     date.tm_isdst = (st[14] == 'D');
 
-    return (mktime(&date));
+    return mktime(&date);
 }
 
 static void _hs_write(FILE *scores, scorefile_entry &se)
@@ -750,7 +750,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
 xlog_fields scorefile_entry::get_fields() const
 {
     if (!fields.get())
-        return (xlog_fields());
+        return xlog_fields();
     else
         return (*fields.get());
 }
@@ -778,7 +778,7 @@ bool scorefile_entry::parse(const std::string &line)
     }
 
     raw_line = line;
-    return (parse_scoreline(line));
+    return parse_scoreline(line);
 }
 
 std::string scorefile_entry::raw_string() const

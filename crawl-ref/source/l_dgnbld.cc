@@ -213,7 +213,7 @@ static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
 static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def point,
                                      const char *passable = traversable_glyphs)
 {
-    return (_count_passable_neighbors(ls, lines, point.x, point.y, passable));
+    return _count_passable_neighbors(ls, lines, point.x, point.y, passable);
 }
 
 
@@ -725,10 +725,10 @@ LUAFN(dgn_replace_first)
         return 0;
 
     if (xdir < -1 || xdir > 1)
-        return (luaL_error(ls, "Invalid xdir: %d", xdir));
+        return luaL_error(ls, "Invalid xdir: %d", xdir);
 
     if (ydir < -1 || ydir > 1)
-        return (luaL_error(ls, "Invalid ydir: %d", ydir));
+        return luaL_error(ls, "Invalid ydir: %d", ydir);
 
     while (lines.in_bounds(coord_def(x, y)))
     {
@@ -743,7 +743,7 @@ LUAFN(dgn_replace_first)
     }
 
     if (required)
-        return (luaL_error(ls, "Could not find feature '%c' to replace", find));
+        return luaL_error(ls, "Could not find feature '%c' to replace", find);
 
     return 0;
 }
@@ -779,7 +779,7 @@ LUAFN(dgn_replace_random)
     if (loc.empty())
     {
         if (required)
-            return (luaL_error(ls, "Could not find '%c'", find));
+            return luaL_error(ls, "Could not find '%c'", find);
     }
 
     int idx = random2(loc.size());

@@ -179,7 +179,7 @@ bool monster_habitable_grid(monster_type mt,
             || feat_compatible(feat_nonpreferred, wanted_grid_feature)
             || (monster_is_airborne && !feat_is_solid(wanted_grid_feature))))
     {
-        return (feat_compatible(wanted_grid_feature, actual_grid));
+        return feat_compatible(wanted_grid_feature, actual_grid);
     }
 
     // Special check for fire elementals since their habitat is floor which
@@ -229,7 +229,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
-            return (feat_is_watery(feat));
+            return feat_is_watery(feat);
         case HT_LAVA:
             return (feat == DNGN_LAVA);
         case HT_LAND:
@@ -638,7 +638,7 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     if (crawl_state.game_is_zotdef())
         distance = 9999;
     pos = find_newmons_square_contiguous(habitat_target, pos, distance);
-    return (in_bounds(pos));
+    return in_bounds(pos);
 }
 
 static monster_type _resolve_monster_type(monster_type mon_type,
@@ -3087,14 +3087,14 @@ static dungeon_feature_type _monster_primary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return DNGN_FLOOR;
-    return (habitat2grid(mons_class_primary_habitat(mc)));
+    return habitat2grid(mons_class_primary_habitat(mc));
 }
 
 static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
 {
     if (_is_random_monster(mc))
         return DNGN_FLOOR;
-    return (habitat2grid(mons_class_secondary_habitat(mc)));
+    return habitat2grid(mons_class_secondary_habitat(mc));
 }
 
 static bool _valid_spot(coord_def pos)
@@ -3239,7 +3239,7 @@ conduct_type player_will_anger_monster(monster_type type)
     monster dummy;
     dummy.type = type;
 
-    return (player_will_anger_monster(&dummy));
+    return player_will_anger_monster(&dummy);
 }
 
 conduct_type player_will_anger_monster(monster* mon)

@@ -38,12 +38,12 @@ static int ifloor(double d)
     if (double_is_zero(d - r))
         return r;
     else
-        return (_ifloor(d));
+        return _ifloor(d);
 }
 
 static bool double_is_integral(double d)
 {
-    return (double_is_zero(d - round(d)));
+    return double_is_zero(d - round(d));
 }
 
 // Is v in the interiour of a diamond?
@@ -92,21 +92,21 @@ static bool bad_corner(const geom::ray &r)
         return false;
     geom::ray copy = r;
     _to_grid(&copy, true);
-    return (in_non_diamond_int(copy.start));
+    return in_non_diamond_int(copy.start);
 }
 
 static coord_def floor_vec(const geom::vector &v)
 {
     int x = ifloor(v.x);
     int y = ifloor(v.y);
-    return (coord_def(x, y));
+    return coord_def(x, y);
 }
 
 coord_def ray_def::pos() const
 {
     ASSERT(_valid());
     // XXX: pretty arbitrary if we're just on a corner.
-    return (floor_vec(r.start));
+    return floor_vec(r.start);
 }
 
 static void _round_to_corner(geom::ray *r)
@@ -403,7 +403,7 @@ static geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
     }
 
     // Mirror back.
-    return (_mirror(rmirr, side));
+    return _mirror(rmirr, side);
 }
 
 static geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)

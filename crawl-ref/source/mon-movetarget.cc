@@ -850,7 +850,7 @@ static monster * _active_band_leader(monster * mon)
     // Try to find our fearless leader.
     unsigned leader_mid = mon->props["band_leader"].get_int();
 
-    return (monster_by_mid(leader_mid));
+    return monster_by_mid(leader_mid);
 }
 
 // Return true if a target still needs to be set. If returns false, mon->target

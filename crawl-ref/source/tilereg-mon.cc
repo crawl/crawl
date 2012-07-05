@@ -79,7 +79,7 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
     if (event.button == MouseEvent::LEFT)
     {
         m_last_clicked_item = item_idx;
-        return (tile_click_cell(gc, event.mod));
+        return tile_click_cell(gc, event.mod);
     }
     else if (event.button == MouseEvent::RIGHT)
     {
@@ -101,7 +101,7 @@ bool MonsterRegion::update_tip_text(std::string &tip)
     if (!mon)
         return false;
 
-    return (tile_dungeon_tip(mon->pos, tip));
+    return tile_dungeon_tip(mon->pos, tip);
 }
 
 bool MonsterRegion::update_tab_tip_text(std::string &tip, bool active)

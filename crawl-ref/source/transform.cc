@@ -703,7 +703,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     {
         if (!force)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return (_abort_or_fizzle(just_check));
+        return _abort_or_fizzle(just_check);
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
@@ -713,7 +713,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("The transformation conflicts with an enchantment "
                 "already in effect.");
         }
-        return (_abort_or_fizzle(just_check));
+        return _abort_or_fizzle(just_check);
     }
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);

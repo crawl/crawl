@@ -214,7 +214,7 @@ bool xom_is_nice(int tension)
 #endif
 
         // Whether Xom is nice depends largely on his mood (== piety).
-        return (x_chance_in_y(effective_piety, MAX_PIETY));
+        return x_chance_in_y(effective_piety, MAX_PIETY);
     }
     else // CARD_XOM
         return coinflip();
@@ -455,7 +455,7 @@ static bool _spell_weapon_check(const spell_type spell)
     {
     case SPELL_TUKIMAS_DANCE:
         // Requires a wielded weapon.
-        return (player_weapon_wielded());
+        return player_weapon_wielded();
     case SPELL_FIRE_BRAND:
     case SPELL_FREEZING_AURA:
     case SPELL_POISON_WEAPON:
@@ -525,7 +525,7 @@ static bool _transformation_check(const spell_type spell)
     // Check whether existing enchantments/transformations, cursed
     // equipment or potential stat loss interfere with this
     // transformation.
-    return (transform(0, tran, true, true));
+    return transform(0, tran, true, true);
 }
 
 static int _xom_makes_you_cast_random_spell(int sever, int tension,
@@ -671,13 +671,13 @@ static int _xom_do_divination(int sever, int tension, bool debug = false)
     switch (random2(3))
     {
     case 0:
-        return (_xom_magic_mapping(sever, tension, debug));
+        return _xom_magic_mapping(sever, tension, debug);
 
     case 1:
-        return (_xom_detect_items(sever, tension, debug));
+        return _xom_detect_items(sever, tension, debug);
 
     case 2:
-        return (_xom_detect_creatures(sever, tension, debug));
+        return _xom_detect_creatures(sever, tension, debug);
     }
 
     return XOM_DID_NOTHING;

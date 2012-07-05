@@ -748,7 +748,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         }
 
         // Both are polearms, right?
-        return (weapon_restriction(WPN_SPEAR, ng));
+        return weapon_restriction(WPN_SPEAR, ng);
 
     case WPN_QUARTERSTAFF:
         if (ng.job != JOB_GLADIATOR)

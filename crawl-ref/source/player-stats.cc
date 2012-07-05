@@ -27,39 +27,39 @@ int player::stat(stat_type s, bool nonneg) const
 
 int player::strength() const
 {
-    return (stat(STAT_STR));
+    return stat(STAT_STR);
 }
 
 int player::intel() const
 {
-    return (stat(STAT_INT));
+    return stat(STAT_INT);
 }
 
 int player::dex() const
 {
-    return (stat(STAT_DEX));
+    return stat(STAT_DEX);
 }
 
 static int _stat_modifier(stat_type stat);
 
 int player::max_stat(stat_type s) const
 {
-    return (std::min(base_stats[s] + _stat_modifier(s), 72));
+    return std::min(base_stats[s] + _stat_modifier(s), 72);
 }
 
 int player::max_strength() const
 {
-    return (max_stat(STAT_STR));
+    return max_stat(STAT_STR);
 }
 
 int player::max_intel() const
 {
-    return (max_stat(STAT_INT));
+    return max_stat(STAT_INT);
 }
 
 int player::max_dex() const
 {
-    return (max_stat(STAT_DEX));
+    return max_stat(STAT_DEX);
 }
 
 static void _handle_stat_change(stat_type stat, const char *aux = NULL,

@@ -2636,7 +2636,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Determine if the monster is happy on current tile.
-    return (monster_habitable_grid(new_mclass, current_tile));
+    return monster_habitable_grid(new_mclass, current_tile);
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
@@ -2942,7 +2942,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return (simple_monster_message(mons, " shudders."));
+                return simple_monster_message(mons, " shudders.");
         }
         while (tries-- && (!_valid_morph(mons, targetc)
                            || source_tier != target_tier && !x_chance_in_y(relax, 200)
@@ -2951,7 +2951,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
 
     if (!_valid_morph(mons, targetc))
-        return (simple_monster_message(mons, " looks momentarily different."));
+        return simple_monster_message(mons, " looks momentarily different.");
 
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
@@ -3877,7 +3877,7 @@ int mons_natural_regen_rate(monster* mons)
         break;
     }
 
-    return (std::max(div_rand_round(mons->hit_dice, divider), 1));
+    return std::max(div_rand_round(mons->hit_dice, divider), 1);
 }
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,

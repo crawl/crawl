@@ -351,7 +351,7 @@ void level_range::reset()
 bool level_range::matches(const level_id &lid) const
 {
     if (branch == NUM_BRANCHES)
-        return (matches(absdungeon_depth(lid.branch, lid.depth)));
+        return matches(absdungeon_depth(lid.branch, lid.depth));
     else
         return (branch == lid.branch
                 && (lid.depth >= shallowest
@@ -645,7 +645,7 @@ void map_lines::add_line(const std::string &s)
 
 std::string map_lines::clean_shuffle(std::string s)
 {
-    return (replace_all_of(s, " \t", ""));
+    return replace_all_of(s, " \t", "");
 }
 
 std::string map_lines::check_block_shuffle(const std::string &s)
@@ -1613,7 +1613,7 @@ keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
             return NULL;
     }
 
-    return (mapspec_for_key(key));
+    return mapspec_for_key(key);
 }
 
 const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
@@ -1633,7 +1633,7 @@ const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
             return NULL;
     }
 
-    return (mapspec_for_key(key));
+    return mapspec_for_key(key);
 }
 
 std::string map_lines::add_key_field(
@@ -2765,7 +2765,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     }
 
     dlua_set_map dl(this);
-    return (validate_map_placeable());
+    return validate_map_placeable();
 }
 
 bool map_def::is_usable_in(const level_id &lid) const
@@ -2785,7 +2785,7 @@ bool map_def::has_depth() const
 
 bool map_def::is_minivault() const
 {
-    return (has_tag("minivault"));
+    return has_tag("minivault");
 }
 
 // Returns true if the map is a layout that allows other vaults to be
@@ -3272,7 +3272,7 @@ int mons_list::fix_demon(int demon) const
 
     demon = -100 - demon;
 
-    return (summon_any_demon(static_cast<demon_class_type>(demon)));
+    return summon_any_demon(static_cast<demon_class_type>(demon));
 }
 
 mons_spec mons_list::pick_monster(mons_spec_slot &slot)
@@ -3309,20 +3309,20 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 mons_spec mons_list::get_monster(int index)
 {
     if (index < 0 || index >= (int)mons.size())
-        return (mons_spec(RANDOM_MONSTER));
+        return mons_spec(RANDOM_MONSTER);
 
-    return (pick_monster(mons[index]));
+    return pick_monster(mons[index]);
 }
 
 mons_spec mons_list::get_monster(int slot_index, int list_index) const
 {
     if (slot_index < 0 || slot_index >= (int)mons.size())
-        return (mons_spec(RANDOM_MONSTER));
+        return mons_spec(RANDOM_MONSTER);
 
     const mons_spec_list &list = mons[slot_index].mlist;
 
     if (list_index < 0 || list_index >= (int)list.size())
-        return (mons_spec(RANDOM_MONSTER));
+        return mons_spec(RANDOM_MONSTER);
 
     return (list[list_index]);
 }
@@ -3956,7 +3956,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
         nheads = 20;
     }
 
-    return (mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads));
+    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
 }
 
 mons_spec mons_list::get_slime_spec(const std::string &name) const
@@ -3981,7 +3981,7 @@ mons_spec mons_list::get_slime_spec(const std::string &name) const
 #endif
      }
 
-    return (mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size));
+    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
 }
 
 // Handle draconians specified as:
@@ -4115,10 +4115,10 @@ mons_spec mons_list::mons_by_name(std::string name) const
         return MONS_ABOMINATION_LARGE;
 
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
-        return (get_hydra_spec(name));
+        return get_hydra_spec(name);
 
     if (ends_with(name, " slime creature"))
-        return (get_slime_spec(name));
+        return get_slime_spec(name);
 
     if (name.find(" ugly thing") != std::string::npos)
     {
@@ -4155,7 +4155,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
     if (name.find("draconian") != std::string::npos)
         return drac_monspec(name);
 
-    return (get_monster_by_name(name, true));
+    return get_monster_by_name(name, true);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -4292,7 +4292,7 @@ item_spec item_list::get_item(int index)
         return none;
     }
 
-    return (pick_item(items[index]));
+    return pick_item(items[index]);
 }
 
 std::string item_list::add_item(const std::string &spec, bool fix)

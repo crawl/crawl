@@ -86,7 +86,7 @@ static bool immobile_monster[MAX_MONSTERS];
 static inline bool _mons_natural_regen_roll(monster* mons)
 {
     const int regen_rate = mons_natural_regen_rate(mons);
-    return (x_chance_in_y(regen_rate, 25));
+    return x_chance_in_y(regen_rate, 25);
 }
 
 // Do natural regeneration for monster.
@@ -343,25 +343,25 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-        return (mons_is_native_in_branch(mon, BRANCH_ORCISH_MINES));
+        return mons_is_native_in_branch(mon, BRANCH_ORCISH_MINES);
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return (mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
+        return mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS);
 
     // Same for dwarves and the Dwarven Hall.
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
-        return (mons_is_native_in_branch(mon, BRANCH_DWARVEN_HALL));
+        return mons_is_native_in_branch(mon, BRANCH_DWARVEN_HALL);
 
     // Spiders...
     case DNGN_ENTER_SPIDER_NEST:
-        return (mons_is_native_in_branch(mon, BRANCH_SPIDER_NEST));
+        return mons_is_native_in_branch(mon, BRANCH_SPIDER_NEST);
 
     // And spriggans.
     case DNGN_ENTER_FOREST:
-        return (mons_is_native_in_branch(mon, BRANCH_FOREST));
+        return mons_is_native_in_branch(mon, BRANCH_FOREST);
 
     default:
         return false;
@@ -1202,14 +1202,14 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return false;
         _rod_fired_pre(mons, nice_spell);
         direct_effect(mons, mzap, beem, foe);
-        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
     else if (nice_spell || zap)
     {
         _rod_fired_pre(mons, nice_spell);
         beem.is_tracer = false;
         beem.fire();
-        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
 
     return false;
@@ -1242,7 +1242,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
     if (mons->inv[MSLOT_WEAPON] != NON_ITEM
         && mitm[mons->inv[MSLOT_WEAPON]].base_type == OBJ_RODS)
     {
-        return (_handle_rod(mons, beem));
+        return _handle_rod(mons, beem);
     }
 
     if (mons->inv[MSLOT_WAND] == NON_ITEM
@@ -1531,7 +1531,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
             mons->swap_weapons();
 
         beem.name.clear();
-        return (mons_throw(mons, beem, mon_item));
+        return mons_throw(mons, beem, mon_item);
     }
 
     return false;
@@ -2607,11 +2607,11 @@ static int _estimated_trap_damage(trap_type trap)
     switch (trap)
     {
         case TRAP_BLADE: return (10 + random2(30));
-        case TRAP_DART:  return (random2(4));
-        case TRAP_ARROW: return (random2(7));
-        case TRAP_SPEAR: return (random2(10));
-        case TRAP_BOLT:  return (random2(13));
-        case TRAP_GAS:   return (random2(50));
+        case TRAP_DART:  return random2(4);
+        case TRAP_ARROW: return random2(7);
+        case TRAP_SPEAR: return random2(10);
+        case TRAP_BOLT:  return random2(13);
+        case TRAP_GAS:   return random2(50);
         default:         return 0;
     }
 }
@@ -3679,7 +3679,7 @@ static bool _monster_move(monster* mons)
     }
 
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
-        return (_do_move_monster(mons, mmov));
+        return _do_move_monster(mons, mmov);
 
     if (mons_is_wandering(mons))
     {

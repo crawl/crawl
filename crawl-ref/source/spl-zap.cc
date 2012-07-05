@@ -117,7 +117,7 @@ int spell_zap_power(spell_type spell, int pow)
     case SPELL_CORONA:
         return (pow + 10);
     case SPELL_HIBERNATION:
-        return (stepdown_value(pow * 9 / 10, 5, 35, 45, 50));
+        return stepdown_value(pow * 9 / 10, 5, 35, 45, 50);
     default:
         return pow;
     }
@@ -135,7 +135,7 @@ int spell_zap_power_cap(spell_type spell)
     switch (spell)
     {
     case SPELL_CORONA:
-        return (std::max<int>(cap - 10, 0));
+        return std::max<int>(cap - 10, 0);
     case SPELL_HIBERNATION:
         return 50;
     default:

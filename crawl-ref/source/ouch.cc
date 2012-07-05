@@ -786,7 +786,7 @@ bool expose_player_to_element(beam_type flavour, int strength,
     if (strength <= 0 || !damage_inventory)
         return false;
 
-    return (_expose_invent_to_element(flavour, strength));
+    return _expose_invent_to_element(flavour, strength);
 }
 
 void lose_level()

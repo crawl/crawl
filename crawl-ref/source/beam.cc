@@ -2970,7 +2970,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return (is_good_god(you.religion));
+        return is_good_god(you.religion);
 
     case BEAM_STEAM:
         return (player_res_steam(false) >= 3);
@@ -2989,7 +2989,7 @@ bool bolt::harmless_to_player() const
                 || you.is_unbreathing());
 
     case BEAM_ELECTRICITY:
-        return (player_res_electricity(false));
+        return player_res_electricity(false);
 
     case BEAM_FIRE:
     case BEAM_COLD:
@@ -4725,7 +4725,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         }
     }
 
-    return (apply_enchantment_to_monster(mon));
+    return apply_enchantment_to_monster(mon);
 }
 
 mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)

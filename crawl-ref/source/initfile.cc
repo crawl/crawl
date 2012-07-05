@@ -274,7 +274,7 @@ int str_to_summon_type(const std::string &str)
     if (str == "aid")
         return MON_SUMM_AID;
 
-    return (spell_by_name(str));
+    return spell_by_name(str);
 }
 
 static fire_type _str_to_fire_types(const std::string &str)
@@ -1343,7 +1343,7 @@ static std::string _find_crawlrc()
 
     // Last attempt: pick up init.txt from datafile_path, which will
     // also search the settings/ directory.
-    return (datafile_path("init.txt", false, false));
+    return datafile_path("init.txt", false, false);
 }
 
 static const char* lua_builtins[] =

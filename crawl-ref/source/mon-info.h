@@ -204,7 +204,7 @@ struct monster_info : public monster_info_base
 
     const char *pronoun(pronoun_type variant) const
     {
-        return (mons_pronoun(type, variant, true));
+        return mons_pronoun(type, variant, true);
     }
 
     std::string wounds_description_sentence() const;

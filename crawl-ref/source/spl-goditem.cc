@@ -457,7 +457,7 @@ int detect_traps(int pow)
 
     // Trap detection moved to traps.cc. -am
     const int range = 8 + random2(8) + pow;
-    return (reveal_traps(range));
+    return reveal_traps(range);
 }
 
 // pow -1 for passive

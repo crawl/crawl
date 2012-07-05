@@ -462,7 +462,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
     if (spell == SPELL_TELEPORT_OTHER && target->is_player())
         spell = SPELL_TELEPORT_SELF;
 
-    return (_is_appropriate_spell(spell, target));
+    return _is_appropriate_spell(spell, target);
 }
 
 static const bool _have_appropriate_evokable(const actor* target)
@@ -576,7 +576,7 @@ static actor* _spell_target = NULL;
 
 static bool _spell_selector(spell_type spell)
 {
-    return (_is_appropriate_spell(spell, _spell_target));
+    return _is_appropriate_spell(spell, _spell_target);
 }
 
 // TODO: Cast spells which target a particular cell.
@@ -870,7 +870,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
-    return (tile_click_cell(gc, event.mod));
+    return tile_click_cell(gc, event.mod);
 }
 
 int tile_click_cell(const coord_def &gc, unsigned char mod)

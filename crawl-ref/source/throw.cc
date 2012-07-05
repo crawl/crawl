@@ -2534,5 +2534,5 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     if (brand == SPMSL_FROST)
         chance /= 2;
 
-    return (x_chance_in_y(mult, chance));
+    return x_chance_in_y(mult, chance);
 }

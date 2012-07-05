@@ -1452,7 +1452,7 @@ static bool _check_ability_possible(const ability_def& abil,
     }
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        return (how_mutated());
+        return how_mutated();
 
     case ABIL_ZIN_SANCTUARY:
         if (env.sanctuary_time)
