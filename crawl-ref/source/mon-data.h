@@ -1414,7 +1414,7 @@ static monsterentry mondata[] = {
     MONS_BOG_BODY, 'n', GREEN, "bog body",
     M_SPELLCASTER | M_ACTUAL_SPELLS,
     MR_RES_FIRE | MR_RES_COLD,
-    500, 21, MONS_GHOUL, MONS_BOG_BODY, MH_UNDEAD, -5,
+    500, 16, MONS_GHOUL, MONS_BOG_BODY, MH_UNDEAD, -5,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_COLD, 4}, AT_NO_ATK, AT_NO_ATK },
     { 6, 5, 3, 0 },
     1, 9, MST_BOG_BODY, CE_ROT, Z_NOZOMBIE, S_SILENT,
