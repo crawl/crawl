@@ -600,6 +600,134 @@ x............1x
 xxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   st_shrine_of_skulls
+DEPTH:  Crypt
+MONS:   flying skull band, lich
+KMONS:  3 = curse skull
+KMONS:  4 = lich / ancient lich
+KMONS:  P = w:2 col:darkgrey plant name:withered name_adjective             \
+          tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+          name_adjective tile:mons_withered_plant
+KFEAT:  4 = |
+SUBST:  p = Pp, p = PP., o = P..
+MAP
+    ooooooooo
+  ooopppppppooo
+ oopppcccccpppoo
+ooppccc.1.cccppoo
+oppcc.......ccppo
+oppc..ccccc..cpp..
+opcc+cc|4|cc+cc...
+opcc3c*|||*c..+1.@
+opcc+ccc3cccccc...
+oppc...c.c...cpp..
+oppcc.......ccppo
+ooppccc.2.cccppoo
+ oopppcccccpppoo
+  ooopppppppooo
+    ooooooooo
+ENDMAP
+
+NAME:   st_burial_chamber
+TAGS:   no_wall_fixup
+DEPTH:  Crypt
+MONS:   mummy, guardian mummy
+KMONS:  3 = guardian mummy
+KMONS:  4 = mummy priest
+KMONS:  5 = greater mummy
+SUBST:  1 = 221
+KITEM:  345 = |
+MAP
+ ccccccccccccc
+cc...........cc
+cc.cccc+cccc.cc
+cc.cc1...1cc.cc
+ccxccc...cccxcc
+c3x3c1...1c3x3c
+cxxxcc...ccxxxc
+c4x4c1...1c4x4c
+cxxxcc...ccxxxc
+c4x5c1...1c5x4c
+ccccccc+ccccccc
+.ccGcc...ccGcc.
+.......@.......
+ENDMAP
+
+NAME:   st_small_mortuary
+DEPTH:  Crypt
+KMONS:  1 : vampire mage w:20 / necromancer
+: dgn.delayed_decay(_G, 'd', 'human corpse')
+NSUBST: ' = 5:d / *:.
+MAP
+   ccccccccc
+ ccc...1...ccc
+cc*.........*cc
+c|*1.......1*|c
+cc*.........*cc
+cccc.......cccc
+cd.cc.....cc.dc
+c.............c
+cd.cc.....cc.dc
+cccc'''''''cccc
+cc'''''''''''cc
+c'''''''''''''c
+cc'''''''''''cc
+.ccc''ddd''ccc.
+...cccc+cccc...
+ ......@......
+ENDMAP
+
+NAME:   st_vampire_maze
+DEPTH:  Crypt
+MONS:   vampire, vampire knight, vampire mage
+SUBST:  1 = 12233
+MAP
+ccccccccccccccccc
+c...c**c........c
+c.c.c11c.cccc.c.c
+c.c.+..c....c1c.c
+c.ccccccccc+ccc.c
+c......c*1..c...c
+c.cccc.c*1..c.c.c
+c1c....c*1..c.c1c
+ccc.ccccccccc.ccc
+c1..c.....c.....c
+ccc.c.ccc.c.ccc+c
+c...c.c1..c.c1..c
+c.ccc.ccc.c.c*..c
+c.......c...c**1c
+ccccccc@ccccccccc
+ENDMAP
+
+NAME:   st_chilly_death
+TAGS:   no_pool_fixup
+DEPTH:  Crypt
+KMONS:  1 = lich
+KMONS:  2 = small simulacrum w:5 / large simulacrum / nothing w:20
+KMONS:  3 = large simulacrum
+KMONS:  4 = wraith / shadow wraith / freezing wraith w:30
+KFEAT:  4 = deep_water
+KITEM:  1 = |
+KITEM:  3 = *
+MAP
+    cccccccccc
+   cc444cc444cc
+  ccwwwwwwwwwwcc
+ ccww22222222wwcc
+ccww22ww22ww22wwcc
+c4w22www22www22w4c
+c4w2wwcc++ccww2w4c
+ccw2wcc3333ccw2wcc
+ccw2wcc3133ccw2wcc
+c4w2wwcc33ccww2w4c
+c4w..wwccccww..w4c
+ccww..ww44ww..wwcc
+ ccww..wwww..wwcc
+  ccww......wwcc
+   cc44c++c44cc
+    cccc@@cccc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################
