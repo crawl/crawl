@@ -2274,7 +2274,6 @@ void check_item_knowledge(bool unknown_items)
     do
     {
         menu.set_title(stitle);
-        menu.set_flags(menu.get_flags() & ~MF_EASY_EXIT);
         menu.show(true);
 
         last_char = menu.getkey();
@@ -2304,7 +2303,7 @@ void check_item_knowledge(bool unknown_items)
         }
 
     } //for the menu to display the correct +/- for defaults the menu needs to be reopened
-    while (!unknown_items && menu.is_set(MF_EASY_EXIT)); //hack
+    while (!unknown_items && last_char == CONTROL('R')); //hack
 
     std::vector<const item_def*>::iterator iter;
     for (iter = items.begin(); iter != items.end(); ++iter)

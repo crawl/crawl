@@ -471,6 +471,8 @@ protected:
     virtual bool is_selectable(int index) const;
 
     virtual bool process_key(int keyin);
+
+    virtual bool allow_easy_exit() const;
 };
 
 /// Allows toggling by specific keys.

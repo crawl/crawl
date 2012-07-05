@@ -582,14 +582,16 @@ bool Menu::process_key(int keyin)
 #endif
             draw_menu();
         }
-        // Easy exit should not kill the menu if there are selected items.
-        else if (sel.empty() && is_set(MF_EASY_EXIT))
-        {
-            sel.clear();
+        else if (allow_easy_exit() && is_set(MF_EASY_EXIT))
             return (false);
-        }
     }
     return (true);
+}
+
+// Easy exit should not kill the menu if there are selected items.
+bool Menu::allow_easy_exit() const
+{
+    return sel.empty();
 }
 
 bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)

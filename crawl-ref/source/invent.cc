@@ -632,6 +632,11 @@ bool InvMenu::is_selectable(int index) const
     return Menu::is_selectable(index);
 }
 
+bool InvMenu::allow_easy_exit() const
+{
+    return (type == MT_KNOW || Menu::allow_easy_exit());
+}
+
 template <std::string (*proc)(const InvEntry *a)>
 static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
@@ -921,6 +926,11 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
+        // Make sure we don't reenter the menu just because we were supposed
+        // to reenter after the last iteration.
+        if (lastch == CONTROL('R'))
+            lastch = ' ';
+
         resetting = (lastch == CONTROL('D') || key == ',');
 
         num = resetting ? -2 : -1;
@@ -964,8 +974,8 @@ bool InvMenu::process_key(int key)
             }
             else
             {
-                lastch = ' ';
-                flags |= MF_EASY_EXIT;
+                // Re-enter the menu.
+                lastch = CONTROL('R');
                 return (false);
             }
         }
@@ -990,16 +1000,12 @@ bool InvMenu::process_key(int key)
     const bool result = Menu::process_key(key);
     if (resetting)
     {
-        // If Menu::process_key didn't set lastch, make sure we still cancel
-        // reset mode.  This is necessary for the '.' command, among others.
-        if (lastch == CONTROL('D'))
-            lastch = ' ';
-
         // If we should stay in the menu, exit and re-enter it instead, to
         // remove the "Select to reset" header and to correctly display
-        // default autopickup settings.
+        // default autopickup settings.  See check_item_knowledge() for the
+        // other side of this hack.
         if (result)
-            flags |= MF_EASY_EXIT;
+            lastch = CONTROL('R');
 
         return (false);
     }
@@ -1010,8 +1016,11 @@ bool InvMenu::process_key(int key)
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
-    if (type == MT_KNOW && ( mkey == 0 || mkey == CK_ENTER ))
+    if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER
+                                      || mkey == CONTROL('R')))
+    {
         return mkey;
+    }
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')

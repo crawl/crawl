@@ -169,6 +169,7 @@ protected:
     bool process_key(int key);
     void do_preselect(InvEntry *ie);
     virtual bool is_selectable(int index) const;
+    virtual bool allow_easy_exit() const;
 
 protected:
     menu_type type;
