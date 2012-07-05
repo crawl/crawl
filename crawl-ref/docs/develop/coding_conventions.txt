@@ -64,7 +64,7 @@ This probably seems obvious for simple ifs ...
                  || keyin == '\r' || keyin == '\n')
         {
             canned_msg(MSG_OK);
-            return (false);
+            return false;
         }
 
 Space allowing, logical connectives of different precedence should use nested
@@ -77,7 +77,7 @@ indenting.
                 || !player_in_mappable_area()))
         {
             mpr("You feel momentarily disoriented.");
-            return (false);
+            return false;
         }
 
 If a logical connective needs to be distributed over several lines,
@@ -89,7 +89,7 @@ beginning of the new line rather than at the end of the old one.
              && mutat != MUT_AGILE && mutat != MUT_WEAK
              && mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
     {
-        return (false);
+        return false;
     }
 
 Since conjunctions (&&) take precedence over disjunctions (||), pure
@@ -222,7 +222,7 @@ Otherwise, place braces.
             || tran == TRAN_AIR || tran == TRAN_LICH
             || tran == TRAN_SPIDER) // monster spiders don't bleed either
         {
-            return (false);
+            return false;
         }
 
 
@@ -422,3 +422,20 @@ Put a space before opening parenthesis if it's part of a conditional or preceded
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
     tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
+
+H) Parenthesis around the value of return statement
+---------------------------------------------------
+Only use them if the value returned is an expression.
+
+    return (prop_str >= 0 && prop_int >= 0 && prop_dex >= 0);
+
+	return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
+
+For simple scalar values and function calls, the parenthesis serve no purpose
+other than making the statement looks like a function call.
+
+	return true;
+
+	return -1;
+
+	return coinflip();
