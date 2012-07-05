@@ -2290,6 +2290,9 @@ void check_item_knowledge(bool unknown_items)
                 you.force_autopickup[iter->item->base_type][iter->item->sub_type] = 0;
             }
 
+            // Prepare for next round.
+            selected_items = returned_selection;
+
             //mark all currently selected items as "always-pickup" or "never-pickup"
             for (std::vector<SelItem>::iterator iter = returned_selection.begin();
                  iter != returned_selection.end(); ++iter)
