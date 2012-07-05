@@ -739,7 +739,7 @@ KMASK:   wWl = no_monster_gen
 MAP
 cccccccWW.@@.WWccccccc
 c54..2ccW.xx.Wcc2..45c
-cc3ww..c......c..ww3cc
+cc3ww.%c......c%.ww3cc
  c*.ww1cc....cc1ww.*c
  cc*.w1........1w.*cc
   cc"2.cc.xx.cc.2"cc
@@ -1920,9 +1920,9 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  D:12-26
 WEIGHT: 5
 KMONS:  S = silver statue
-KITEM:  S = superb_item
+KITEM:  S = superb_item / any good_item
 : if you.absdepth() < 18 then
-MONS:   lesser demon, common demon, efreet / large abomination
+MONS:   lesser demon, common demon, efreet / large abomination / rakshasa
 : else
 MONS:   lesser demon / common demon, common demon, greater demon
 : end
@@ -1934,9 +1934,9 @@ xxxxxxxxxxxx@@x
 @``xll.l.l....x
 @``xl.l.l.l..lx
 x``x.%vvvvvvvxx
-x{`m.*v11123vxx
+x{`m$*v11123vxx
 x`[mlS+11222vxx
-x(`m.*v11123vxx
+x(`m$*v11123vxx
 x``x.%vvvvvvvxx
 @``xl.l.l.l..lx
 @``xll.l.l....x
@@ -2454,9 +2454,12 @@ ENDMAP
 
 NAME:   hangedman_glaring_trap
 DEPTH:  D:12-, Vaults
+WEIGHT: 5
 KMASK:  m = no_wall_fixup
 KMONS:  1 = eye of devastation
-KITEM:  1 = star_item / nothing
+KMONS:  8 = 8
+KITEM:  18 = star_item w:9 / any w:1
+MARKER: + = lua:restrict_door()
 MAP
 xxx@x
 x8m.xxxxxx
@@ -2512,31 +2515,32 @@ ENDMAP
 NAME:    hangedman_cracks_in_the_wall
 TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-26
-: if you.absdepth() < 17 then
+: if you.absdepth() < 18 then
 MONS:    stone golem, cyclops, basilisk, catoblepas
 KMONS:   b = rock worm
-SUBST:   * = %*, | = *|
+SUBST:   * = %%***, | = *|
 : else
-MONS:    stone golem / earth elemental, stone giant, catoblepas, iron dragon
+MONS:    stone golem / earth elemental w:7, stone giant, catoblepas, iron dragon
 KMONS:   bdf = spectral rock worm
 SHUFFLE: ab / cd / ef
 : end
 KFEAT:   abcd = rock_wall
 KFEAT:   ef = stone_wall
+SUBST:   5 = 111..
 MAP
 xxxxxxxxxxxxxx.@@
 xxxxaaaaaaaxxx..@
-xxxxa1a.a1axxx...
+xxxxa1a.a5axxx...
 xxaaaa.a.aaaax...
-xxa1a.aaa.a1ax...
+xxa5a.aaa.a1ax...
 xxaa.aa2aa.aax...
 xba.aa.*3aa.a...@
-xb.a..x*|4aa.x..@
+xb.a$$x*|4aa.x..@
 xba.aa.*3aa.a...@
 xxaa.aa2aa.aax...
-xxa1a.aaa.a1ax...
+xxa5a.aaa.a1ax...
 xxaaaa.a.aaaxx...
-xxxxa1a.a1axxx...
+xxxxa1a.a5axxx...
 xxxxaaaaaaaxxx..@
 xxxxxxxxxxxxxx.@@
 ENDMAP

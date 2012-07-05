@@ -2569,14 +2569,14 @@ ENDMAP
 NAME:    hangedman_screamer
 ORIENT:  float
 TAGS:    no_monster_gen
-DEPTH:   D:7-, Crypt
+DEPTH:   D:9-, Crypt
 MONS:    patrolling flying skull
 MONS:    small zombie / large zombie / small skeleton / large skeleton
-: if you.absdepth() > 18 then
+: if you.absdepth() > 19 then
 MONS:    vampire knight / ghoul / phantasmal warrior
-KMONS:   4 = Frederick / lich / unborn deep dwarf
+KMONS:   4 = Boris / lich / unborn deep dwarf
 KMONS:   5 = lich / unborn deep dwarf
-: elseif you.absdepth() > 11 then
+: elseif you.absdepth() > 13 then
 MONS:    skeletal warrior / rotting hulk / eidolon
 KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
 KMONS:   5 = vampire mage / deep dwarf necromancer
@@ -2594,14 +2594,14 @@ MAP
     xxxxxxxxx
     x2233322x
 xaaxx22x5x22xxccx
-xAAx.x2x=x2x.xCCx
+xAAx.x2x+x2x.xCCx
 xAAxx.xx1xx.xxCCx
-xAAxxx.x.x.xxxCCx
+xAAxxx.x*x.xxxCCx
 x...............x
 x...............x
-xBBxxx.x.x.xxxDDx
+xBBxxx.x*x.xxxDDx
 xBBxx.xx1xx.xxDDx
-xBBx.x2x=x2x.xDDx
+xBBx.x2x+x2x.xDDx
 xbbxx22x4x22xxddx
     x2233322x
     xxxxxxxxx
