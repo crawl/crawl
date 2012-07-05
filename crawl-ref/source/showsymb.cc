@@ -121,11 +121,11 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_SUPPRESSED)
             colour = LIGHTGREEN;
-        else if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
-        {
-            colour |= COLFLAG_REVERSE;
-        }
     }
+
+    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+        colour |= COLFLAG_REVERSE;
+
     return (colour);
 }
 
