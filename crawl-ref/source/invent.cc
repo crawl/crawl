@@ -921,57 +921,52 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
-        if (lastch == CONTROL('D') || key == ',')
-            resetting = true;
+        resetting = (lastch == CONTROL('D') || key == ',');
 
         num = resetting ? -2 : -1;
 
         switch (key)
         {
-            case '*':
-                // Ctrl-D * is the same as ,
-                if (resetting)
-                    key = ',';
-                break;
+        case '*':
+            // Ctrl-D * is the same as ,
+            if (resetting)
+                key = ',';
+            break;
 
-            case '-':
-            case '\\':
-            case CK_ENTER:
-            CASE_ESCAPE
-            {
-                lastch = key;
-                return (false);
-            }
-            case '_':
-            {
-                show_known_menu_help();
+        case '-':
+        case '\\':
+        case CK_ENTER:
+        CASE_ESCAPE
+            lastch = key;
+            return (false);
+
+        case '_':
+            show_known_menu_help();
 #ifdef USE_TILE_WEB
-                webtiles_update_scroll_pos();
+            webtiles_update_scroll_pos();
 #endif
-                draw_menu();
-                return true;
-            }
-            case CONTROL('D'):
-            {
-                // If we cannot select anything (e.g. on the unknown items
-                // page), ignore Ctrl-D.
-                if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-                    return (true);
+            draw_menu();
+            return (true);
 
-                // Reset the next selection to default.
-                if (!resetting)
-                {
-                    lastch = CONTROL('D');
-                    set_title("Select to reset item to default: ");
-                    update_title();
-                    return true;
-                }
-                else
-                {
-                    lastch = ' ';
-                    flags |= MF_EASY_EXIT;
-                    return (false);
-                }
+        case CONTROL('D'):
+            // If we cannot select anything (e.g. on the unknown items
+            // page), ignore Ctrl-D.
+            if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
+                return (true);
+
+            // Reset the next selection to default.
+            if (!resetting)
+            {
+                lastch = CONTROL('D');
+                set_title("Select to reset item to default: ");
+                update_title();
+                return (true);
+            }
+            else
+            {
+                lastch = ' ';
+                flags |= MF_EASY_EXIT;
+                return (false);
             }
         }
     }
@@ -991,6 +986,7 @@ bool InvMenu::process_key(int key)
         draw_select_count(0, true);
         return (true);
     }
+
     const bool result = Menu::process_key(key);
     if (resetting)
     {
