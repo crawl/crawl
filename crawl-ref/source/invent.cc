@@ -909,6 +909,9 @@ std::vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
+    // Does the menu need to be restarted?
+    bool resetting = false;
+
     if ( key == CONTROL('W') )
     {
         Options.show_inventory_weights = !Options.show_inventory_weights;
@@ -918,29 +921,19 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
-         if (lastch == CONTROL('D') || key == ',')
-        {
-            switch (key)
-            {
-                case CONTROL('D'):
-                {   //Ctrl+D again disarms
-                    lastch = ' ';
-                    break;
-                }
-                case '*':
-                    key = ',';
-                default:
-                {
-                    num = -2; //set selection default
-                    Menu::process_key(key);
-                }
-            }
+        if (lastch == CONTROL('D') || key == ',')
+            resetting = true;
 
-            flags |= MF_EASY_EXIT; //hackish way to get the menu to reopen
-            return false;
-        }
+        num = resetting ? -2 : -1;
+
         switch (key)
         {
+            case '*':
+                // Ctrl-D * is the same as ,
+                if (resetting)
+                    key = ',';
+                break;
+
             case '-':
             case '\\':
             case CK_ENTER:
@@ -960,14 +953,25 @@ bool InvMenu::process_key(int key)
             }
             case CONTROL('D'):
             {
-                //Make next selection 'default'
-                if (lastch != CONTROL('D'))
+                // If we cannot select anything (e.g. on the unknown items
+                // page), ignore Ctrl-D.
+                if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
+                    return (true);
+
+                // Reset the next selection to default.
+                if (!resetting)
                 {
                     lastch = CONTROL('D');
                     set_title("Select to reset item to default: ");
                     update_title();
+                    return true;
                 }
-                return true;
+                else
+                {
+                    lastch = ' ';
+                    flags |= MF_EASY_EXIT;
+                    return (false);
+                }
             }
         }
     }
@@ -987,7 +991,24 @@ bool InvMenu::process_key(int key)
         draw_select_count(0, true);
         return (true);
     }
-    return Menu::process_key(key);
+    const bool result = Menu::process_key(key);
+    if (resetting)
+    {
+        // If Menu::process_key didn't set lastch, make sure we still cancel
+        // reset mode.  This is necessary for the '.' command, among others.
+        if (lastch == CONTROL('D'))
+            lastch = ' ';
+
+        // If we should stay in the menu, exit and re-enter it instead, to
+        // remove the "Select to reset" header and to correctly display
+        // default autopickup settings.
+        if (result)
+            flags |= MF_EASY_EXIT;
+
+        return (false);
+    }
+    else
+        return (result);
 }
 
 unsigned char InvMenu::getkey() const
