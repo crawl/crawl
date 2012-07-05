@@ -330,6 +330,7 @@ ENDMAP
 # Swamp:5 standard
 #
 NAME:    swamp
+TAGS:    transparent
 PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  float
@@ -341,33 +342,31 @@ SHUFFLE: 12
 SUBST:   ' = t
 KITEM:   O = decaying rune of Zot
 KFEAT:   t = mangrove
+SUBST:   - = WW.
 MAP
-       @
-       2
-      2
-       .
-      2 2
-        .
-     cc.cc
-   'cc3.2cc'
-   cc3.2.3cc
-  'c11.3322c''
- 'cc...21.1ccc
- 'c.13321.1.cc'
-'cc31333.113cc'
-'cc22113.223cc
- 'cc3333113cc'
- 'cccc3O3ccc'
-  'cccccccc'
-   ''ccccc'
-     ''cc'
-       '
+     2-2-2-2
+   ---cc.cc---
+   -'cc3.2cc'-
+  --cc3.2.3cc---
+ --'c11.3322c''-
+ -'cc...21.1ccc--
+--'c.13321.1.cc'-
+-'cc31333.113cc'-
+-'cc22113.223cc--
+--'cc3333113cc'-
+ -'cccc3O3ccc'--
+ --'cccccccc'--
+  --''ccccc'--
+   ---''cc'--
+     ---'---
+       ---
 ENDMAP
 
 ###############################################################################
 # Swamp:5 alternative (dp)
 #
 NAME:    swamp_alternative
+TAGS:    transparent
 PLACE:   Swamp:$
 WEIGHT:  20
 TAGS:    no_pool_fixup no_rotate
@@ -377,27 +376,26 @@ ITEM:    nothing
 SUBST:   1=111., 2=2., 3=333., 4=4., L=l.
 SHUFFLE: Od, 123, lw
 SUBST:   l=l .:2, '=.t, "=tc, _=c.
+SUBST:   - = WW.
 KITEM:   O = decaying rune of Zot
 KFEAT:   t = mangrove
 MAP
-   @       @
-   1'       2'
-    1      2'
-    .      .
-   2 3. ''3
-     "c..1""""
-    ""c".ccccc""   '3
-   "cc_.2LLl.ccc""2.'3
-  "cc..33LL..2._c1'   @
- "cc1122lLL...1.1""
- "c....llllll21.2c"
- "cc33l4llllll2.cc"
-  "ccll.llll34lcc"
-   "cccO.lld3ccc"
-    ""cccccccc""
-     """"""""""
-       "" """
-           "
+    1  -1---
+   2.3.2''3-2--
+   -."c..1""""--- ----
+  --""c".ccccc""-..'3-
+ --"cc_.2LLl.ccc""2-'3
+--"cc..33LL..2._c1'.--
+-"cc1122lLL...1.1""-
+-"c....llllll21.2c"-
+-"cc33l4llllll2.cc"-
+--"ccll.llll34lcc"--
+ --"cccO.lld3ccc"--
+  --""cccccccc""--
+   --""""""""""--
+    ---""-"""---
+      -----"--
+          ---
 ENDMAP
 
 ###############################################################################
@@ -418,17 +416,17 @@ KITEM:   O = decaying rune of Zot
 KFEAT:   t = mangrove
 MAP
                t
-    x   "t     t"   x        t
-       "ttt"  tt"    "t"    tt   ttt
- x    "ttttt"tttt"  tttt"  tttt ttttt
-    ""tttttttttttttttttttttttttttttttt
- @  "ttt.wtcccccttcccttccttttttccctttt
-.WW"tt.wcccccwwccccwcccccccttcccOccctt
- .W""'ccccuuwuuwuuwuwuuwccccccwu'ucctt
- 3.''''ccuu3uuuuuuuuuu3uuwcccwu'uwcctt
- ....'''''''''''''''''''uuwwccw'cccctt
- .""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
-@"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
+@@''x   "t     t"   x        t
+@'''   "ttt"  tt"    "t"    tt   ttt
+'x'"  "ttttt"tttt"  tttt"  tttt ttttt
+''''""tttttttttttttttttttttttttttttttt
+'''""ttt.wtcccccttcccttccttttttccctttt
+'''"tt.wcccccwwccccwcccccccttcccOccctt
+'''""'ccccuuwuuwuuwuwuuwccccccwu'ucctt
+'3'''''ccuu3uuuuuuuuuu3uuwcccwu'uwcctt
+''''''''''''''''''''''''uuwwccw'cccctt
+''""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
+'"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
  W"tt.wccccc12u'uu2uu2u'u2uwccabcctttt
   W"tt.wccccuuu'u1uu1uu'uuwccccabccttt
   W.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
@@ -451,7 +449,7 @@ ENDMAP
 # Swamp:5 alternative (due)
 NAME:    swamp_fiery
 PLACE:   Swamp:$
-TAGS:    no_pool_fixup no_rotate
+TAGS:    no_pool_fixup no_rotate transparent
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
 MONS:    fire drake / lindwurm w:3 / fire crab w:3
@@ -464,25 +462,24 @@ MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
 KFEAT:   XR = lava
 KFEAT:   t = mangrove
 KITEM:   O = decaying rune of Zot
+SUBST:   - = WW.
 MAP
-                             @      .@
-                       lS     .  3..
-              '.@    SlRl      ..
-              3       lS      '.
-          "cc.'              3'
-        ""cc3c"               .
-       "ccc2cc" """       "cc.c"
-       "c.L.2cc"cccc""""""ccLcc"
-      "ccL3ll.ccc34cccccccc2Lc""
-       "cc.LLl...Ll.33cc.c.L3ccc"
-      "cccc3llLLlllLLl..L2Lll.Lc"
-       "cc.LllllclllllLlllllL.cc"
-        "cc2LllRcclLllRll.332cc"
-        "ccL.Lllllccllll2lcccc"
-         "ccc2Lllcc"ccX2lcc"""
-          ""cc1Occ" "ccccc"
-            "cccc"   """"
-             """"
+         -----3-     ----
+       ---"cc-'-   ---lS-    3'
+      --""cc3c"---3-SlRl--3------
+      -"ccc2cc"-"""--lS---"cc-c"-
+     --"c.L.2cc"cccc""""""ccLcc"-
+     -"ccL3ll.ccc34cccccccc2Lc""--
+     --"cc.LLl...Ll.33cc.c.L3ccc"-
+     -"cccc3llLLlllLLl..L2Lll.Lc"-
+     --"cc.LllllclllllLlllllL.cc"-
+      --"cc2LllRcclLllRll.332cc"--
+       -"ccL.Lllllccllll2lcccc"--
+       --"ccc2Lllcc"ccX2lcc"""--
+        --""cc1Occ"-"ccccc"----
+         ---"cccc"---""""---
+           --""""-- -------
+            ------
 ENDMAP
 
 ###############################################################################
@@ -503,25 +500,25 @@ SUBST:   X = tt., RY = wWwww., Q=t
 KITEM:   O = decaying rune of Zot
 KFEAT:   t = mangrove
 MAP
-               wwttttttttt
-        @.  @ wwttcccccctt
-          .  ..wwcc3c3cctt
-           ..w?.wXXc..Xctt
-            ?ww....Q.cXctt
+@@             wwttttttttt
+@.            wwttcccccctt
+  ..        ...wwcc3c3cctt
+    ..  .....w?.wXXc..Xctt
+      ..    ?ww....Q.cXctt
            www.wwXc3c3Xctt
             w?.wXcXc.3cctt
              ww.wccc..cctt
-               @ttcc..cctt
-                 tcc2.cctt
-                ttc..ccctt
-   @        t   ttcc2Xcctt
-    .      ttt   tcc.2.ctt
-     .    ttttt  tc..ccctt
-      .   ttttttttcc2.cctt
-     .    .wwtttttccX2.ctt
-      .  ...?wttttccc2.cct
-       .2..wwwwttttcc.2cct
-    ?.....ww?wttttccc..cct
+              ..ttcc..cctt
+             ..wwtcc2.cctt
+            ..wwttc..ccctt
+           .twwwttcc2Xcctt
+          .tttwwwtcc.2.ctt
+         .tttttwwtc..ccctt
+         .ttttttttcc2.cctt
+          .wwtttttccX2.ctt
+          ..?wttttccc2.cct
+         2.wwwwttttcc.2cct
+    ?.. ..ww?wttttccc..cct
    ttww.wwwwwtttttcc..cctt
    ttw?ww?wwtttcccc.2ccttt
   ttttwwwwtttcccccc2Xctttt
@@ -568,6 +565,9 @@ KFEAT:   ! = deep_water
 KFEAT:   t = mangrove
 SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=tc, '=.w
 MAP
+@@
+@...
+    ....
     ?w7.....w?w"tt     tt
     w?ww.7ww?wwc"tt   ttt
     "wWWwww?w?cc"ttt tttt
@@ -601,7 +601,7 @@ ENDMAP
 NAME:    swamp_vile
 PLACE:   Swamp:$
 TAGS:    no_pool_fixup no_monster_gen
-ORIENT:  southwest
+ORIENT:  southeast
 MONS:    rotting hulk / ugly thing, large abomination / very ugly thing, \
          rotting devil / orange demon, green death, hell beast, \
          death ooze, titanic slime creature
@@ -617,25 +617,25 @@ SHUFFLE: yz, '", 56~ / ``9
 SUBST:   yX = x:20 t:4 W:1, z = .wwwwWWW, ' = ...W, " = wWW, ~ = 56
 NSUBST:  & = 1:4 / *:7
 MAP
-     @ Xxccxcxcctww
-    WXfXW""'..Wcctww
-   @XWXWx''"zyW.xctww
-    fXWx"wwwyzwxWcctww
-   XXWx.x1wwzyw.x.xctwww
-  txWx"x3wwwyzwx1W.ccttww
-  xt"'w1w38wzywx21xWccttww
-  ct"'www88wyxwcxx.xWxtttww
-   x'"wwwww.cXWwwwwWwWctttw
-   c.yzyzyzcX..zyzyzWx8xctww
-  ct.zyzyzxX.f.yzyzy.fxWcctww
-  xt"'wWWWwW..wWW.WWw.WwWcctww
-   x"'WxxxWwzyWwcwc.WyzWwWxctww
-   c'"wx1xWwyzWcf.wcWzywWx.cctww
-  xt"'wx2.xwzy.w.&.w.yzwx1..xctw
+@@  '' Xxccxcxcct
+@'''WXfXW""'..Wcct
+   'XWXWx''"zyW.xct
+    fXWx"wwwyzwxWcct
+   XXWx.x1wwzyw.x.xct
+  txWx"x3wwwyzwx1W.cctt
+  xt"'w1w38wzywx21xWcctt
+  ct"'www88wyxwcxx.xWxttt
+   x'"wwwww.cXWwwwwWwWcttt
+   c.yzyzyzcX..zyzyzWx8xct
+  ct.zyzyzxX.f.yzyzy.fxWcct
+  xt"'wWWWwW..wWW.WWw.WwWcct
+   x"'WxxxWwzyWwcwc.WyzWwWxct
+   c'"wx1xWwyzWcf.wcWzywWx.cct
+  xt"'wx2.xwzy.w.&.w.yzwx1..xct
   ct'"wx1xWwyzWcw..cWzywc21xWcct
    x"'WxxWwWzyW.cwcfWyzwxcxWwWccc
    c"'wWWwWf..wWW.WWw.wWwWWwWwWcc
-  ctfzyzyzWW.w.yzyzy.W.WWzyzyzftX
+  ctfzyzyzWW.w.yzyzy.W.WWzyzyzftt
   xt.yzyzyzxw..zyzyzw..xzyzyzy.tc
    c"'wWWw.WXWfwwwwwwWXc.WW.w'"ct
    c"'WxxWW.yWwWWxWwWWy.fWxx."'xt
@@ -645,7 +645,6 @@ MAP
    ct'xxxxWwzywWwwwWwzyw.xtcc8tXc
    ccW'8""''yz""'&'""yz'"'"'8ftcc
    tccct''""f.''"'"''f."'"'"Wt&cc
-  t    ccxcccttcxctcxcXctcXXxtccc
- t                              t
-t
+  tttttccxcccttcxctcxcXctcXXxtccc
+ttttttttttttttttttttttttttttttttt
 ENDMAP
