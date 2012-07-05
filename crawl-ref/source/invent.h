@@ -80,10 +80,12 @@ class InvEntry : public MenuEntry
 private:
     static bool show_prices;
     static bool show_glyph;
-    static bool show_cursor;
 
     mutable std::string basename;
     mutable std::string qualname;
+
+protected:
+    static bool show_cursor;
 
 public:
     const item_def *item;
