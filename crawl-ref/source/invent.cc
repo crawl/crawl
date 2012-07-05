@@ -291,9 +291,10 @@ static void _get_class_hotkeys(const int type, std::vector<char> &glyphs)
         glyphs.push_back('!');
         break;
     case OBJ_STAVES:
+        glyphs.push_back('|');
+        break;
     case OBJ_RODS:
         glyphs.push_back('\\');
-        glyphs.push_back('|');
         break;
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
