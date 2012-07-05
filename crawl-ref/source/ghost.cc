@@ -1012,15 +1012,15 @@ std::string adjective_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
-    case CYAN:           return ("armoured");
-    case YELLOW:         return ("beastly");
-    case RED:            return ("fiery");
-    case LIGHTCYAN:      return ("gaseous");
-    case LIGHTRED:       return ("parasitic");
-    case LIGHTBLUE:      return ("airborne");
-    case LIGHTMAGENTA:   return ("mutated");
-    case MAGENTA:        return ("shifting");
-    case GREEN:          return ("venomous");
+    case CYAN:           return "armoured";
+    case YELLOW:         return "beastly";
+    case RED:            return "fiery";
+    case LIGHTCYAN:      return "gaseous";
+    case LIGHTRED:       return "parasitic";
+    case LIGHTBLUE:      return "airborne";
+    case LIGHTMAGENTA:   return "mutated";
+    case MAGENTA:        return "shifting";
+    case GREEN:          return "venomous";
     case LIGHTGRAY:      return ("");
     default:
         die("invalid labrat adjective");

@@ -811,33 +811,33 @@ const char* spelltype_short_name(int which_spelltype)
     switch (which_spelltype)
     {
     case SPTYP_CONJURATION:
-        return ("Conj");
+        return "Conj";
     case SPTYP_HEXES:
-        return ("Hex");
+        return "Hex";
     case SPTYP_CHARMS:
-        return ("Chrm");
+        return "Chrm";
     case SPTYP_FIRE:
-        return ("Fire");
+        return "Fire";
     case SPTYP_ICE:
-        return ("Ice");
+        return "Ice";
     case SPTYP_TRANSMUTATION:
-        return ("Trmt");
+        return "Trmt";
     case SPTYP_NECROMANCY:
-        return ("Necr");
+        return "Necr";
     case SPTYP_SUMMONING:
-        return ("Summ");
+        return "Summ";
     case SPTYP_DIVINATION:
-        return ("Divn");
+        return "Divn";
     case SPTYP_TRANSLOCATION:
-        return ("Tloc");
+        return "Tloc";
     case SPTYP_POISON:
-        return ("Pois");
+        return "Pois";
     case SPTYP_EARTH:
-        return ("Erth");
+        return "Erth";
     case SPTYP_AIR:
-        return ("Air");
+        return "Air";
     case SPTYP_RANDOM:
-        return ("Rndm");
+        return "Rndm";
     default:
         return "Bug";
     }
@@ -848,33 +848,33 @@ const char* spelltype_long_name(int which_spelltype)
     switch (which_spelltype)
     {
     case SPTYP_CONJURATION:
-        return ("Conjuration");
+        return "Conjuration";
     case SPTYP_HEXES:
-        return ("Hexes");
+        return "Hexes";
     case SPTYP_CHARMS:
-        return ("Charms");
+        return "Charms";
     case SPTYP_FIRE:
-        return ("Fire");
+        return "Fire";
     case SPTYP_ICE:
-        return ("Ice");
+        return "Ice";
     case SPTYP_TRANSMUTATION:
-        return ("Transmutation");
+        return "Transmutation";
     case SPTYP_NECROMANCY:
-        return ("Necromancy");
+        return "Necromancy";
     case SPTYP_SUMMONING:
-        return ("Summoning");
+        return "Summoning";
     case SPTYP_DIVINATION:
-        return ("Divination");
+        return "Divination";
     case SPTYP_TRANSLOCATION:
-        return ("Translocation");
+        return "Translocation";
     case SPTYP_POISON:
-        return ("Poison");
+        return "Poison";
     case SPTYP_EARTH:
-        return ("Earth");
+        return "Earth";
     case SPTYP_AIR:
-        return ("Air");
+        return "Air";
     case SPTYP_RANDOM:
-        return ("Random");
+        return "Random";
     default:
         return "Bug";
     }

@@ -166,7 +166,7 @@ static std::string _get_xom_speech(const std::string key)
         result = getSpeakString("Xom general effect");
 
     if (result.empty())
-        return ("Xom makes something happen.");
+        return "Xom makes something happen.";
 
     return result;
 }

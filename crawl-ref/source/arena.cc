@@ -286,7 +286,7 @@ namespace arena
         if (!teams.empty())
             return teams;
         else
-            return ("random v random");
+            return "random v random";
     }
 
     void parse_faction(faction &fact, std::string spec)

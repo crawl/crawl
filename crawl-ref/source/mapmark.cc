@@ -395,7 +395,7 @@ std::string map_lua_marker::debug_to_string() const
     lua_stack_cleaner cln(dlua);
 
     if (!get_table())
-        return ("Unable to get table for lua marker.");
+        return "Unable to get table for lua marker.";
 
     if (!dlua.callfn("table_to_string", 1, 1))
         return make_stringf("error (table_to_string): %s",

@@ -291,7 +291,7 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 {
     // paranoia
     if (is_invalid_skill(best_skill))
-        return ("Adventurer");
+        return "Adventurer";
 
     if (species == -1)
         species = you.species;

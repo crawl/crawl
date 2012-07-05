@@ -455,7 +455,7 @@ static std::string _no_selectables_message(int item_selector)
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
-            return ("Your armour is currently melded into you.");
+            return "Your armour is currently melded into you.";
         else if (_has_tran_unwearable_armour())
             return ("You aren't carrying any armour you can wear in your "
                    "current form.");
@@ -1044,42 +1044,42 @@ std::string item_class_name(int type, bool terse)
         // TODO: merge with base_type_string()
         switch (type)
         {
-        case OBJ_GOLD:       return ("gold");
-        case OBJ_WEAPONS:    return ("weapon");
-        case OBJ_MISSILES:   return ("missile");
-        case OBJ_ARMOUR:     return ("armour");
-        case OBJ_WANDS:      return ("wand");
-        case OBJ_FOOD:       return ("food");
-        case OBJ_SCROLLS:    return ("scroll");
-        case OBJ_JEWELLERY:  return ("jewellery");
-        case OBJ_POTIONS:    return ("potion");
-        case OBJ_BOOKS:      return ("book");
-        case OBJ_STAVES:     return ("magical staff");
-        case OBJ_RODS:       return ("rod");
-        case OBJ_ORBS:       return ("orb");
-        case OBJ_MISCELLANY: return ("misc");
-        case OBJ_CORPSES:    return ("carrion");
+        case OBJ_GOLD:       return "gold";
+        case OBJ_WEAPONS:    return "weapon";
+        case OBJ_MISSILES:   return "missile";
+        case OBJ_ARMOUR:     return "armour";
+        case OBJ_WANDS:      return "wand";
+        case OBJ_FOOD:       return "food";
+        case OBJ_SCROLLS:    return "scroll";
+        case OBJ_JEWELLERY:  return "jewellery";
+        case OBJ_POTIONS:    return "potion";
+        case OBJ_BOOKS:      return "book";
+        case OBJ_STAVES:     return "magical staff";
+        case OBJ_RODS:       return "rod";
+        case OBJ_ORBS:       return "orb";
+        case OBJ_MISCELLANY: return "misc";
+        case OBJ_CORPSES:    return "carrion";
         }
     }
     else
     {
         switch (type)
         {
-        case OBJ_GOLD:       return ("Gold");
-        case OBJ_WEAPONS:    return ("Hand Weapons");
-        case OBJ_MISSILES:   return ("Missiles");
-        case OBJ_ARMOUR:     return ("Armour");
-        case OBJ_WANDS:      return ("Wands");
-        case OBJ_FOOD:       return ("Comestibles");
-        case OBJ_SCROLLS:    return ("Scrolls");
-        case OBJ_JEWELLERY:  return ("Jewellery");
-        case OBJ_POTIONS:    return ("Potions");
-        case OBJ_BOOKS:      return ("Books");
-        case OBJ_STAVES:     return ("Magical Staves");
-        case OBJ_RODS:       return ("Rods");
-        case OBJ_ORBS:       return ("Orbs of Power");
-        case OBJ_MISCELLANY: return ("Miscellaneous");
-        case OBJ_CORPSES:    return ("Carrion");
+        case OBJ_GOLD:       return "Gold";
+        case OBJ_WEAPONS:    return "Hand Weapons";
+        case OBJ_MISSILES:   return "Missiles";
+        case OBJ_ARMOUR:     return "Armour";
+        case OBJ_WANDS:      return "Wands";
+        case OBJ_FOOD:       return "Comestibles";
+        case OBJ_SCROLLS:    return "Scrolls";
+        case OBJ_JEWELLERY:  return "Jewellery";
+        case OBJ_POTIONS:    return "Potions";
+        case OBJ_BOOKS:      return "Books";
+        case OBJ_STAVES:     return "Magical Staves";
+        case OBJ_RODS:       return "Rods";
+        case OBJ_ORBS:       return "Orbs of Power";
+        case OBJ_MISCELLANY: return "Miscellaneous";
+        case OBJ_CORPSES:    return "Carrion";
         }
     }
     return ("");

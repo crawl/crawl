@@ -2146,13 +2146,13 @@ bool monster_simulacrum(monster *caster, bool actual)
 static const char *_count_article(int number, bool definite)
 {
     if (number == 0)
-        return ("No");
+        return "No";
     else if (definite)
-        return ("The");
+        return "The";
     else if (number == 1)
-        return ("A");
+        return "A";
     else
-        return ("Some");
+        return "Some";
 }
 
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,

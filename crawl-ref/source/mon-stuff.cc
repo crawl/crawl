@@ -1362,35 +1362,35 @@ static std::string _killer_type_name(killer_type killer)
     switch (killer)
     {
     case KILL_NONE:
-        return ("none");
+        return "none";
     case KILL_YOU:
-        return ("you");
+        return "you";
     case KILL_MON:
-        return ("mon");
+        return "mon";
     case KILL_YOU_MISSILE:
-        return ("you_missile");
+        return "you_missile";
     case KILL_MON_MISSILE:
-        return ("mon_missile");
+        return "mon_missile";
     case KILL_YOU_CONF:
-        return ("you_conf");
+        return "you_conf";
     case KILL_MISCAST:
-        return ("miscast");
+        return "miscast";
     case KILL_MISC:
-        return ("misc");
+        return "misc";
     case KILL_RESET:
-        return ("reset");
+        return "reset";
     case KILL_DISMISSED:
-        return ("dismissed");
+        return "dismissed";
     case KILL_BANISHED:
-        return ("banished");
+        return "banished";
     case KILL_UNSUMMONED:
-        return ("unsummoned");
+        return "unsummoned";
     case KILL_TIMEOUT:
-        return ("timeout");
+        return "timeout";
     case KILL_PACIFIED:
-        return ("pacified");
+        return "pacified";
     case KILL_ENSLAVED:
-        return ("enslaved");
+        return "enslaved";
     }
     die("invalid killer type");
 }

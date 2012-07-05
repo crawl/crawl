@@ -565,7 +565,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         {
             i++;
             if (i == size)
-                return ("BUG, WEIGHT AT END OF ENTRY");
+                return "BUG, WEIGHT AT END OF ENTRY";
         }
         else
             weight = 10;
