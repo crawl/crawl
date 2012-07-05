@@ -1247,7 +1247,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 
 const coord_def &TilesFramework::get_cursor() const
 {
-    return (m_region_tile->get_cursor());
+    return m_region_tile->get_cursor();
 }
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)

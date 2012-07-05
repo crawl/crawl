@@ -154,13 +154,13 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     switch (flavour)
     {
     case BEAM_HASTE:
-        return (!monster.has_ench(ENCH_HASTE));
+        return !monster.has_ench(ENCH_HASTE);
 
     case BEAM_MIGHT:
-        return (!monster.has_ench(ENCH_MIGHT));
+        return !monster.has_ench(ENCH_MIGHT);
 
     case BEAM_INVISIBILITY:
-        return (!monster.has_ench(ENCH_INVIS));
+        return !monster.has_ench(ENCH_INVIS);
 
     case BEAM_HEALING:
         return (monster.hit_points != monster.max_hit_points);
@@ -2691,7 +2691,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         || mons->pacified()               // pacified,
         || mons->friendly())              // or friendly!
     {
-        return (-1);
+        return -1;
     }
 
     // Messages can be simple: if the monster is invisible, it won't try to

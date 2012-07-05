@@ -699,17 +699,17 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 
 unsigned int FTFontWrapper::char_width() const
 {
-    return (m_max_advance.x);
+    return m_max_advance.x;
 }
 
 unsigned int FTFontWrapper::char_height() const
 {
-    return (m_max_advance.y);
+    return m_max_advance.y;
 }
 
 const GenericTexture *FTFontWrapper::font_tex() const
 {
-    return (&m_tex);
+    return &m_tex;
 }
 
 #endif // USE_FT

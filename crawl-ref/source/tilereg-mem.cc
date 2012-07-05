@@ -26,7 +26,7 @@ void MemoriseRegion::activate()
 
 int MemoriseRegion::get_max_slots()
 {
-    return (m_items.size());
+    return m_items.size();
 }
 
 void MemoriseRegion::draw_tag()

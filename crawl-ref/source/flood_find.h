@@ -81,7 +81,7 @@ bool flood_find<fgrd, bound_check>::points_connected_from(
         return true;
     set_floodseed(sp);
     pathfind(RMODE_EXPLORE);
-    return (needed_points.empty());
+    return needed_points.empty();
 }
 
 template <typename fgrd, typename bound_check>

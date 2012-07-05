@@ -315,12 +315,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
 int SDLWrapper::screen_width() const
 {
-    return (video_info->current_w);
+    return video_info->current_w;
 }
 
 int SDLWrapper::screen_height() const
 {
-    return (video_info->current_h);
+    return video_info->current_h;
 }
 
 int SDLWrapper::desktop_width() const

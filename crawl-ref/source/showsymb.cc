@@ -402,7 +402,7 @@ ucs_t get_feat_symbol(dungeon_feature_type feat)
 
 ucs_t get_item_symbol(show_item_type it)
 {
-    return (get_feature_def(show_type(it)).symbol);
+    return get_feature_def(show_type(it)).symbol;
 }
 
 glyph get_item_glyph(const item_def *item)

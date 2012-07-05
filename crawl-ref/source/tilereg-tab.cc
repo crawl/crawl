@@ -134,7 +134,7 @@ int TabbedRegion::active_tab() const
 
 int TabbedRegion::num_tabs() const
 {
-    return (m_tabs.size());
+    return m_tabs.size();
 }
 
 bool TabbedRegion::invalid_index(int idx) const
@@ -282,14 +282,14 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     int y = event.py - sy;
 
     if (x < 0 || x > ox || y < 0 || y > wy)
-        return (-1);
+        return -1;
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
             return i;
     }
-    return (-1);
+    return -1;
 }
 
 int TabbedRegion::handle_mouse(MouseEvent &event)
@@ -335,7 +335,7 @@ bool TabbedRegion::update_tip_text(std::string &tip)
     {
         GridRegion *reg = m_tabs[m_mouse_tab].reg;
         if (reg)
-            return (reg->update_tab_tip_text(tip, m_mouse_tab == m_active));
+            return reg->update_tab_tip_text(tip, m_mouse_tab == m_active);
     }
 
     return (get_tab_region(active_tab())->update_tip_text(tip));

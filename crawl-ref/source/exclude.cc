@@ -188,7 +188,7 @@ bool travel_exclude::affects(const coord_def& p) const
     else if (radius == 1)
         return ((p - pos).rdist() <= 1);
     else
-        return (los.see_cell(p));
+        return los.see_cell(p);
 }
 
 bool travel_exclude::in_bounds(const coord_def &p) const
@@ -371,7 +371,7 @@ bool is_excluded(const coord_def &p, const exclude_set &exc)
 
 bool is_exclude_root(const coord_def &p)
 {
-    return (curr_excludes.get_exclude_root(p));
+    return curr_excludes.get_exclude_root(p);
 }
 
 int get_exclusion_radius(const coord_def &p)

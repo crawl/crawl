@@ -410,7 +410,7 @@ int scan_mon_inv_randarts(const monster* mon,
 mon_holy_type mons_class_holiness(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->holiness);
+    return smc->holiness;
 }
 
 bool mons_class_is_confusable(monster_type mc)
@@ -953,13 +953,13 @@ bool mons_foe_is_mons(const monster* mons)
 int mons_weight(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->weight);
+    return smc->weight;
 }
 
 corpse_effect_type mons_corpse_effect(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->corpse_thingy);
+    return smc->corpse_thingy;
 }
 
 monster_type mons_species(monster_type mc)
@@ -981,7 +981,7 @@ monster_type mons_genus(monster_type mc)
         return MONS_NO_MONSTER;
 
     ASSERT(smc);
-    return (smc->genus);
+    return smc->genus;
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -1119,7 +1119,7 @@ char mons_base_char(monster_type mc)
 mon_itemuse_type mons_class_itemuse(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->gmon_use);
+    return smc->gmon_use;
 }
 
 mon_itemuse_type mons_itemuse(const monster* mon)
@@ -1133,7 +1133,7 @@ mon_itemuse_type mons_itemuse(const monster* mon)
 static mon_itemeat_type _mons_class_itemeat(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->gmon_eat);
+    return smc->gmon_eat;
 }
 
 mon_itemeat_type mons_itemeat(const monster* mon)
@@ -1155,7 +1155,7 @@ int mons_class_colour(monster_type mc)
 
 bool mons_class_can_regenerate(monster_type mc)
 {
-    return (!mons_class_flag(mc, M_NO_REGEN));
+    return !mons_class_flag(mc, M_NO_REGEN);
 }
 
 bool mons_can_regenerate(const monster* mon)
@@ -1170,7 +1170,7 @@ bool mons_can_regenerate(const monster* mon)
 
 bool mons_class_can_display_wounds(monster_type mc)
 {
-    return (!monster_descriptor(mc, MDSC_NOMSG_WOUNDS));
+    return !monster_descriptor(mc, MDSC_NOMSG_WOUNDS);
 }
 
 bool mons_can_display_wounds(const monster* mon)
@@ -1203,12 +1203,12 @@ zombie_size_type zombie_class_size(monster_type cs)
 int mons_zombie_size(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->zombie_size);
+    return smc->zombie_size;
 }
 
 monster_type mons_zombie_base(const monster* mon)
 {
-    return (mon->base_monster);
+    return mon->base_monster;
 }
 
 bool mons_class_is_zombified(monster_type mc)
@@ -1267,7 +1267,7 @@ bool mons_can_use_stairs(const monster* mon)
 
 bool mons_enslaved_body_and_soul(const monster* mon)
 {
-    return (mon->has_ench(ENCH_SOUL_RIPE));
+    return mon->has_ench(ENCH_SOUL_RIPE);
 }
 
 bool mons_enslaved_soul(const monster* mon)
@@ -1390,7 +1390,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
                                          mon->ghost->att_flav));
         }
 
-        return (mon_attack_def::attk(0, AT_NONE));
+        return mon_attack_def::attk(0, AT_NONE);
     }
 
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
@@ -1469,7 +1469,7 @@ const char* mons_resist_string(const monster* mon, int res_margin)
 
 bool mons_skeleton(monster_type mc)
 {
-    return (!mons_class_flag(mc, M_NO_SKELETON));
+    return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
 flight_type mons_class_flies(monster_type mc)
@@ -2238,7 +2238,7 @@ int ugly_thing_colour_offset(colour_t colour)
             return i;
     }
 
-    return (-1);
+    return -1;
 }
 
 static const char *drac_colour_names[] = {
@@ -2332,7 +2332,7 @@ static std::string _get_proper_monster_name(const monster* mon)
 {
     const monsterentry *me = mon->find_monsterentry();
     if (!me)
-        return ("");
+        return "";
 
     std::string name = getRandNameString(me->name, " name");
     if (!name.empty())
@@ -2371,7 +2371,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     if (mon->friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
 
-    return (mon->is_named());
+    return mon->is_named();
 }
 
 // See mons_init for initialization of mon_entry array.
@@ -2386,13 +2386,13 @@ monsterentry *get_monster_data(monster_type mc)
 static int _mons_exp_mod(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->exp_mod);
+    return smc->exp_mod;
 }
 
 int mons_class_base_speed(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->speed);
+    return smc->speed;
 }
 
 int mons_class_zombie_base_speed(monster_type zombie_base_mc)
@@ -2415,7 +2415,7 @@ int mons_base_speed(const monster* mon)
 mon_intel_type mons_class_intel(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->intel);
+    return smc->intel;
 }
 
 mon_intel_type mons_intel(const monster* mon)
@@ -3112,7 +3112,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                     (gender == GENDER_MALE)   ? "him" : "her");
      }
 
-    return ("");
+    return "";
 }
 
 // Checks if the monster can use smiting/torment to attack without
@@ -3260,7 +3260,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
 
-    return (!feat_is_solid(grid));
+    return !feat_is_solid(grid);
 }
 
 static bool _mons_can_open_doors(const monster* mon)

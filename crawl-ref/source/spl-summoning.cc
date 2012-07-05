@@ -1733,7 +1733,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         *motions_r |= motions;
 
     if (number_found == 0)
-        return (-1);
+        return -1;
 
     if (!success)
         return 0;

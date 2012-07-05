@@ -106,7 +106,7 @@ const tracer_info& tracer_info::operator+=(const tracer_info &other)
 
     dont_stop = dont_stop || other.dont_stop;
 
-    return (*this);
+    return *this;
 }
 
 bool bolt::is_blockable() const
@@ -2343,9 +2343,9 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
     default:
         // Leave it the colour of the potion, the clouds will colour
         // themselves on the next refresh. -- bwr
-        return (-1);
+        return -1;
     }
-    return (-1);
+    return -1;
 }
 
 void bolt::affect_endpoint()
@@ -2909,7 +2909,7 @@ bool bolt::is_harmless(const monster* mon) const
 {
     // For enchantments, this is already handled in nasty_to().
     if (is_enchantment())
-        return (!nasty_to(mon));
+        return !nasty_to(mon);
 
     // The others are handled here.
     switch (flavour)
@@ -2931,7 +2931,7 @@ bool bolt::is_harmless(const monster* mon) const
         return (mon->res_cold() >= 3);
 
     case BEAM_MIASMA:
-        return (mon->res_rotting());
+        return mon->res_rotting();
 
     case BEAM_NEG:
         return (mon->res_negative_energy() == 3);
@@ -2976,7 +2976,7 @@ bool bolt::harmless_to_player() const
         return (player_res_steam(false) >= 3);
 
     case BEAM_MIASMA:
-        return (you.res_rotting());
+        return you.res_rotting();
 
     case BEAM_NEG:
         return (player_prot_life(false) >= 3);
@@ -5726,7 +5726,7 @@ actor* bolt::agent() const
         nominal_source = reflector;
     }
     if (YOU_KILL(nominal_ktype))
-        return (&you);
+        return &you;
     else if (!invalid_monster_index(nominal_source))
         return (&menv[nominal_source]);
     else

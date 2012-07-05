@@ -129,7 +129,7 @@ static map_section_type _write_vault(map_def &mdef,
                                                place, check_place);
 
         if (place.orient != MAP_NONE)
-            return (place.orient);
+            return place.orient;
     }
     return MAP_NONE;
 }
@@ -799,10 +799,10 @@ static std::string _vault_chance_tag(const map_def &map)
         for (int i = 0, size = tags.size(); i < size; ++i)
         {
             if (tags[i].find("chance_") == 0)
-                return (tags[i]);
+                return tags[i];
         }
     }
-    return ("");
+    return "";
 }
 
 typedef std::vector<unsigned> vault_indices;
@@ -864,7 +864,7 @@ public:
     {
         ++current;
         find_valid();
-        return (*this);
+        return *this;
     }
 
     vault_chance_roll_iterator operator ++ (int)
@@ -1037,7 +1037,7 @@ const map_def *random_map_for_tag(const std::string &tag,
 
 int map_count()
 {
-    return (vdefs.size());
+    return vdefs.size();
 }
 
 int map_count_for_tag(const std::string &tag,

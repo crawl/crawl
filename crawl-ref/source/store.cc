@@ -451,7 +451,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
     }
 
-    return (*this);
+    return *this;
 }
 
 ///////////////////////////////////
@@ -1076,97 +1076,97 @@ CrawlStoreValue::operator level_pos() const
 CrawlStoreValue &CrawlStoreValue::operator = (const bool &_val)
 {
     get_bool() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const char &_val)
 {
     get_byte() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const short &_val)
 {
     get_short() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const int &_val)
 {
     get_int() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const int64_t &_val)
 {
     get_int64() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const float &_val)
 {
     get_float() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const std::string &_val)
 {
     get_string() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const char* _val)
 {
     get_string() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const coord_def &_val)
 {
     get_coord() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlHashTable &_val)
 {
     get_table() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlVector &_val)
 {
     get_vector() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const item_def &_val)
 {
     get_item() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const level_id &_val)
 {
     get_level_id() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const level_pos &_val)
 {
     get_level_pos() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const monster& _val)
 {
     get_monster() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
 {
     get_lua() = _val;
-    return (*this);
+    return *this;
 }
 
 ///////////////////////////////////////////////////
@@ -1270,12 +1270,12 @@ CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
     if (other.hash_map == NULL)
     {
         hash_map = NULL;
-        return (*this);
+        return *this;
     }
 
     hash_map = new hash_map_type(*(other.hash_map));
 
-    return (*this);
+    return *this;
 }
 
 //////////////////////////////
@@ -1433,7 +1433,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
         return val;
     }
 
-    return (i->second);
+    return i->second;
 }
 
 const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
@@ -1454,7 +1454,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));
 
-    return (i->second);
+    return i->second;
 }
 
 ///////////////////////////

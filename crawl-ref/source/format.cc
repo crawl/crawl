@@ -277,7 +277,7 @@ const formatted_string &
 formatted_string::operator += (const formatted_string &other)
 {
     ops.insert(ops.end(), other.ops.begin(), other.ops.end());
-    return (*this);
+    return *this;
 }
 
 int formatted_string::width() const
@@ -458,7 +458,7 @@ void formatted_string::clear()
 
 bool formatted_string::empty()
 {
-    return (ops.empty());
+    return ops.empty();
 }
 
 void formatted_string::cprintf(const char *s, ...)

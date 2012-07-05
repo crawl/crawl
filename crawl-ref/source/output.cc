@@ -1136,13 +1136,13 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 int update_monster_pane()
 {
     if (!map_bounds(you.pos()) && !crawl_state.game_is_arena())
-        return (-1);
+        return -1;
 
     const int max_print = crawl_view.mlistsz.y;
     textbackground(BLACK);
 
     if (max_print <= 0)
-        return (-1);
+        return -1;
 
     std::vector<monster_info> mons;
     get_monster_info(mons);
@@ -1198,7 +1198,7 @@ int update_monster_pane()
     }
 
     if (mons.empty())
-        return (-1);
+        return -1;
 
     return full_info;
 }

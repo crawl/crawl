@@ -85,7 +85,7 @@ struct map_cell
     map_cell& operator=(const map_cell& c)
     {
         if (&c == this)
-            return (*this);
+            return *this;
         if (_cloud)
             delete _cloud;
         if (_mons)
@@ -99,7 +99,7 @@ struct map_cell
             _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
-         return (*this);
+         return *this;
     }
 
     void clear()

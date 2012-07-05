@@ -513,7 +513,7 @@ static int _find_save(const std::vector<player_save_info>& chars,
     for (int i = 0; i < static_cast<int>(chars.size()); ++i)
         if (chars[i].name == name)
             return i;
-    return (-1);
+    return -1;
 }
 
 static bool _game_defined(const newgame_def& ng)

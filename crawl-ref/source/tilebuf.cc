@@ -66,7 +66,7 @@ void VertBuffer::add_primitive(const GLWPrim &rect)
 
 unsigned int VertBuffer::size() const
 {
-    return (m_vert_buf->size());
+    return m_vert_buf->size();
 }
 
 void VertBuffer::set_tex(const GenericTexture *new_tex)

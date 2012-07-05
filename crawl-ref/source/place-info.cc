@@ -75,7 +75,7 @@ const PlaceInfo &PlaceInfo::operator += (const PlaceInfo &other)
     elapsed_resting    += other.elapsed_resting;
     elapsed_other      += other.elapsed_other;
 
-    return (*this);
+    return *this;
 }
 
 const PlaceInfo &PlaceInfo::operator -= (const PlaceInfo &other)
@@ -102,7 +102,7 @@ const PlaceInfo &PlaceInfo::operator -= (const PlaceInfo &other)
     elapsed_resting    -= other.elapsed_resting;
     elapsed_other      -= other.elapsed_other;
 
-    return (*this);
+    return *this;
 }
 
 PlaceInfo PlaceInfo::operator + (const PlaceInfo &other) const

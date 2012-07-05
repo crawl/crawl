@@ -912,7 +912,7 @@ unsigned int item_value(item_def item, bool ident)
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
         if (entry->value != 0)
-            return (entry->value);
+            return entry->value;
     }
 
     int valued = 0;
@@ -2162,7 +2162,7 @@ static std::string _shop_type_suffix(shop_type type, const coord_def &where)
         || type == SHOP_GENERAL_ANTIQUE
         || type == SHOP_DISTILLERY)
     {
-        return ("");
+        return "";
     }
 
     const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
@@ -2548,14 +2548,14 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     if (add_item && !on_list)
         add_thing(item, cost);
 
-    return (to_del.size());
+    return to_del.size();
 }
 
 int ShoppingList::size() const
 {
     ASSERT(list);
 
-    return (list->size());
+    return list->size();
 }
 
 bool ShoppingList::items_are_same(const item_def& item_a,
@@ -2904,7 +2904,7 @@ int ShoppingList::find_thing(const item_def &item,
             return i;
     }
 
-    return (-1);
+    return -1;
 }
 
 int ShoppingList::find_thing(const std::string &desc,
@@ -2925,7 +2925,7 @@ int ShoppingList::find_thing(const std::string &desc,
             return i;
     }
 
-    return (-1);
+    return -1;
 }
 
 bool ShoppingList::thing_is_item(const CrawlHashTable& thing)

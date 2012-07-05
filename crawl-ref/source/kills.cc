@@ -123,7 +123,7 @@ int KillMaster::total_kills() const
 std::string KillMaster::kill_info() const
 {
     if (empty())
-        return ("");
+        return "";
 
     std::string killtext;
 

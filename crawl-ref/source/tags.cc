@@ -864,10 +864,10 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
 std::string unmarshallString(reader &th, int maxSize)
 {
     if (maxSize <= 0)
-        return ("");
+        return "";
     char *buffer = new char [maxSize];
     if (!buffer)
-        return ("");
+        return "";
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
     ASSERT(slen >= 0 && slen < maxSize);
@@ -911,7 +911,7 @@ bool unmarshallBoolean(reader &th)
 std::string make_date_string(time_t in_date)
 {
     if (in_date <= 0)
-        return ("");
+        return "";
 
     struct tm *date = TIME_FN(&in_date);
 

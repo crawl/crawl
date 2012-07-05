@@ -2432,7 +2432,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         return (mons_attitude(mon) == ATT_HOSTILE);
 
     if (mode == TARG_FRIEND)
-        return (mon->friendly());
+        return mon->friendly();
 
     if (mode == TARG_INJURED_FRIEND)
         return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
@@ -2449,7 +2449,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         return false;
 
     // Don't target zero xp monsters.
-    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN));
+    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
 }
 
 static bool _find_feature(const coord_def& where, int mode,
@@ -2876,7 +2876,7 @@ std::string thing_do_grammar(description_level_type dtype,
     case DESC_A:
         return article_a(desc, true);
     case DESC_NONE:
-        return ("");
+        return "";
     default:
         return desc;
     }
@@ -3156,7 +3156,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_EXPLORE_HORIZON:
         return "explore horizon";
     default:
-        return ("");
+        return "";
     }
 }
 
@@ -3365,7 +3365,7 @@ static std::string _stair_destination_description(const coord_def &pos)
         else if (feat_is_stair(grd(pos)))
             return " (unknown stair)";
     }
-    return ("");
+    return "";
 }
 #endif
 

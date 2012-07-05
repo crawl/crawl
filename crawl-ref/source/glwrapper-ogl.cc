@@ -245,7 +245,7 @@ const char *OGLShapeBuffer::print_statistics() const
 
 unsigned int OGLShapeBuffer::size() const
 {
-    return (m_position_buffer.size());
+    return m_position_buffer.size();
 }
 
 void OGLShapeBuffer::add(const GLWPrim &rect)

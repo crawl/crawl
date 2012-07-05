@@ -980,7 +980,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 {
     const int noise_travel_distance = cells(affected_pos).noise_travel_distance;
     if (!noise_travel_distance)
-        return (noise.noise_source);
+        return noise.noise_source;
 
     const int cell_grid_distance =
         grid_distance(affected_pos, noise.noise_source);
@@ -988,7 +988,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
     if (cell_grid_distance <= LOS_RADIUS)
     {
         if (act->see_cell(noise.noise_source))
-            return (noise.noise_source);
+            return noise.noise_source;
     }
 
     const int extra_distance_covered =

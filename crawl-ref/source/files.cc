@@ -213,7 +213,7 @@ std::string get_parent_directory(const std::string &filename)
     if (pos != std::string::npos)
         return filename.substr(0, pos + 1);
 #endif
-    return ("");
+    return "";
 }
 
 std::string get_base_filename(const std::string &filename)
@@ -301,7 +301,7 @@ time_t file_modtime(const std::string &file)
     if (stat(file.c_str(), &filestat))
         return 0;
 
-    return (filestat.st_mtime);
+    return filestat.st_mtime;
 }
 
 time_t file_modtime(FILE *f)
@@ -310,7 +310,7 @@ time_t file_modtime(FILE *f)
     if (fstat(fileno(f), &filestat))
         return 0;
 
-    return (filestat.st_mtime);
+    return filestat.st_mtime;
 }
 
 static bool _create_directory(const char *dir)
@@ -465,7 +465,7 @@ std::string datafile_path(std::string basename,
             basename.c_str());
     }
 
-    return ("");
+    return "";
 }
 
 // Checks if directory 'dir' exists and tries to create it if it

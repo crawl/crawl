@@ -86,7 +86,7 @@ std::string attack::anon_name(description_level_type desc,
     switch (desc)
     {
     case DESC_NONE:
-        return ("");
+        return "";
     case DESC_YOUR:
     case DESC_ITS:
         return "its";
@@ -138,7 +138,7 @@ std::string attack::debug_damage_number()
 if (you.wizard)
     return make_stringf(" for %d", damage_done);
 else
-    return ("");
+    return "";
 }
 
 /* Returns special punctuation

@@ -769,7 +769,7 @@ bool do_wear_armour(int item, bool quiet)
     if (item_is_worn(item))
     {
         if (Options.equip_unequip)
-            return (!takeoff_armour(item));
+            return !takeoff_armour(item);
         else
         {
             mpr("You're already wearing that object!");
@@ -985,7 +985,7 @@ static int _prompt_ring_to_remove(int new_ring)
     mesclr();
 
     if (key_is_escape(c) || c == ' ')
-        return (-1);
+        return -1;
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
@@ -1045,7 +1045,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     if (c == '?')
         return EQ_NONE;
     else if (key_is_escape(c) || eqslot == EQ_NONE)
-        return (-2);
+        return -2;
 
     return (you.equip[eqslot]);
 }
@@ -1343,7 +1343,7 @@ static bool _puton_item(int item_slot)
         {
             // "Putting on" an equipped item means taking it off.
             if (Options.equip_unequip)
-                return (!remove_ring(item_slot));
+                return !remove_ring(item_slot);
             else
             {
                 mpr("You're already wearing that object!");
@@ -2529,7 +2529,7 @@ static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
                                            OSEL_ENCH_ARM, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (-1);
+            return -1;
 
         item_def& arm(you.inv[item_slot]);
 

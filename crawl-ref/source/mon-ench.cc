@@ -83,7 +83,7 @@ mon_enchant monster::get_ench(enchant_type ench1,
             enchantments.find(static_cast<enchant_type>(e));
 
         if (i != enchantments.end())
-            return (i->second);
+            return i->second;
     }
 
     return mon_enchant();
@@ -343,7 +343,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         }
 
     if (okay_squares > 0)
-        return (mon->move_to_pos(target_square));
+        return mon->move_to_pos(target_square);
 
     // No available adjacent squares from which the monster could also
     // have unsubmerged.  Can it just stay submerged where it is?
@@ -364,7 +364,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     }
 
     if (okay_squares > 0)
-        return (mon->move_to_pos(target_square));
+        return mon->move_to_pos(target_square);
 
     return true;
 }
@@ -957,7 +957,7 @@ std::string monster::describe_enchantments() const
             oss << ", ";
         oss << std::string(i->second);
     }
-    return (oss.str());
+    return oss.str();
 }
 
 bool monster::decay_enchantment(const mon_enchant &me, bool decay_degree)
@@ -1861,7 +1861,7 @@ mon_enchant &mon_enchant::operator += (const mon_enchant &other)
             duration = INFINITE_DURATION;
         merge_killer(other.who, other.source);
     }
-    return (*this);
+    return *this;
 }
 
 mon_enchant mon_enchant::operator + (const mon_enchant &other) const

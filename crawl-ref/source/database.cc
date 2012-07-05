@@ -735,7 +735,7 @@ static std::string _query_database(TextDB &db, std::string key,
         result = _database_fetch(db.get(), key);
 
     if (result.dsize <= 0)
-        return ("");
+        return "";
 
     std::string str((const char *)result.dptr, result.dsize);
 

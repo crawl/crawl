@@ -488,7 +488,7 @@ void create_sanctuary(const coord_def& center, int time)
 static int _silence_range(int dur)
 {
     if (dur <= 0)
-        return (-1);
+        return -1;
     dur /= BASELINE_DELAY; // now roughly number of turns
     return std::max(0, std::min(dur - 6, 37));
 }
@@ -504,7 +504,7 @@ int monster::silence_radius2() const
         return 150;
 
     if (!has_ench(ENCH_SILENCE))
-        return (-1);
+        return -1;
 
     const int dur = get_ench(ENCH_SILENCE).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
@@ -621,7 +621,7 @@ int player::liquefying_radius2() const
 int monster::liquefying_radius2() const
 {
     if (!has_ench(ENCH_LIQUEFYING))
-        return (-1);
+        return -1;
     const int dur = get_ench(ENCH_LIQUEFYING).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
@@ -686,20 +686,20 @@ bool actor::umbraed() const
 // Stub for player umbra.
 int player::umbra_radius2() const
 {
-    return (-1);
+    return -1;
 }
 
 int monster::umbra_radius2() const
 {
     if (holiness() != MH_UNDEAD)
-        return (-1);
+        return -1;
 
     switch (type)
     {
     case MONS_PROFANE_SERVITOR:
         return 40; // Very unholy!
     default:
-        return (-1);
+        return -1;
     }
 }
 
@@ -721,7 +721,7 @@ int monster::suppression_radius2() const
     if (type == MONS_MOTH_OF_SUPPRESSION)
         return 150;
     else
-        return (-1);
+        return -1;
 }
 
 bool actor::suppressed() const
@@ -731,5 +731,5 @@ bool actor::suppressed() const
 
 int player::suppression_radius2() const
 {
-    return (-1);
+    return -1;
 }

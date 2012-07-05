@@ -918,7 +918,7 @@ static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
     case RANDOM_MUTATION:
         return true;
     case RANDOM_BAD_MUTATION:
-        return (mdef.bad);
+        return mdef.bad;
     case RANDOM_GOOD_MUTATION:
         return (!mdef.bad);
     default:
@@ -1666,7 +1666,7 @@ bool delete_all_mutations(const std::string &reason)
             ;
     }
 
-    return (!how_mutated());
+    return !how_mutated();
 }
 
 // Return a string describing the mutation.

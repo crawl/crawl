@@ -52,7 +52,7 @@ bit_array& bit_array::operator |= (const bit_array& other)
     ASSERT(size == other.size);
     for (int w = 0; w < nwords; ++w)
         data[w] |= other.data[w];
-    return (*this);
+    return *this;
 }
 
 bit_array& bit_array::operator &= (const bit_array& other)
@@ -60,7 +60,7 @@ bit_array& bit_array::operator &= (const bit_array& other)
     ASSERT(size == other.size);
     for (int w = 0; w < nwords; ++w)
         data[w] &= other.data[w];
-    return (*this);
+    return *this;
 }
 
 bit_array bit_array::operator & (const bit_array& other) const

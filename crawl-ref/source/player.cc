@@ -462,7 +462,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
 
 bool is_map_persistent(void)
 {
-    return (!testbits(env.level_flags, LFLAG_NO_MAP));
+    return !testbits(env.level_flags, LFLAG_NO_MAP);
 }
 
 bool player_in_hell(void)
@@ -2824,7 +2824,7 @@ int burden_change(void)
                             : "You feel heavier in the air.");
     }
 
-    return (you.burden);
+    return you.burden;
 }
 
 void forget_map(bool rot)
@@ -4951,7 +4951,7 @@ std::string describe_contamination(int cont)
     else if (cont == 1)
         return "You are very lightly contaminated with residual magic.";
     else
-        return ("");
+        return "";
 }
 
 // controlled is true if the player actively did something to cause
@@ -5881,7 +5881,7 @@ player_save_info& player_save_info::operator=(const player& rhs)
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
 
-    return (*this);
+    return *this;
 }
 
 bool player_save_info::operator<(const player_save_info& rhs) const
@@ -6097,7 +6097,7 @@ int player::shield_bonus() const
 {
     const int shield_class = player_shield_class();
     if (shield_class <= 0)
-        return (-100);
+        return -100;
 
     return random2avg(shield_class * 2, 2) / 3 - 1;
 }
@@ -6592,10 +6592,10 @@ int player::res_sticky_flame() const
 int player::res_holy_energy(const actor *attacker) const
 {
     if (undead_or_demonic())
-        return (-2);
+        return -2;
 
     if (is_evil())
-        return (-1);
+        return -1;
 
     if (is_holy())
         return 1;
@@ -6883,7 +6883,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
 bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return (::drain_exp());
+    return ::drain_exp();
 }
 
 void player::confuse(actor *who, int str)

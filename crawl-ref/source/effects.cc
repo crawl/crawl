@@ -766,7 +766,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                                             OSEL_RECHARGE, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (-1);
+            return -1;
 
         item_def &wand = you.inv[ item_slot ];
 

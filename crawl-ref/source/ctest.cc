@@ -198,7 +198,7 @@ bool run_tests(bool exit_on_complete)
         end(code, false, "%d %ss, %d succeeded, %d failed",
             ntests, activity, nsuccess, (int)failures.size());
     }
-    return (failures.empty());
+    return failures.empty();
 }
 
 #endif // DEBUG_DIAGNOSTICS

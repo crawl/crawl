@@ -211,7 +211,7 @@ struct stash_search_result
         stash = o.stash;
         shop = o.shop;
         matching_items = o.matching_items;
-        return (*this);
+        return *this;
     }
 
     bool operator < (const stash_search_result &ssr) const

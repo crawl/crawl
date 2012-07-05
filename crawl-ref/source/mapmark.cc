@@ -73,7 +73,7 @@ void map_marker::read(reader &inf)
 
 std::string map_marker::property(const std::string &pname) const
 {
-    return ("");
+    return "";
 }
 
 map_marker *map_marker::read_marker(reader &inf)
@@ -524,9 +524,9 @@ std::string map_wiz_props_marker::property(const std::string &pname) const
         i = properties.find(pname);
 
     if (i != properties.end())
-        return (i->second);
+        return i->second;
     else
-        return ("");
+        return "";
 }
 
 std::string map_wiz_props_marker::set_property(const std::string &key,
@@ -780,7 +780,7 @@ map_markers &map_markers::operator = (const map_markers &c)
         clear();
         init_from(c);
     }
-    return (*this);
+    return *this;
 }
 
 map_markers::~map_markers()
@@ -897,7 +897,7 @@ map_marker *map_markers::find(const coord_def &c, map_marker_type type)
         els = markers.equal_range(c);
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
-            return (i->second);
+            return i->second;
     return NULL;
 }
 
@@ -907,7 +907,7 @@ map_marker *map_markers::find(map_marker_type type)
          i != markers.end(); ++i)
     {
         if (type == MAT_ANY || i->second->get_type() == type)
-            return (i->second);
+            return i->second;
     }
     return NULL;
 }
@@ -993,7 +993,7 @@ std::string map_markers::property_at(const coord_def &c, map_marker_type type,
         if (!prop.empty())
             return prop;
     }
-    return ("");
+    return "";
 }
 
 void map_markers::clear()

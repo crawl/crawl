@@ -417,7 +417,7 @@ static int find_trap_slot()
         if (env.trap[i].type == TRAP_UNASSIGNED)
             return i;
 
-    return (-1);
+    return -1;
 }
 
 void debug_make_trap()

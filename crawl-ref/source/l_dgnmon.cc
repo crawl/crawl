@@ -35,7 +35,7 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
         mons_list **mlist =
         clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx);
         if (mlist)
-            return (**mlist);
+            return **mlist;
 
         luaL_argerror(ls, ndx, "Expected monster list object or string");
         return mons_list();

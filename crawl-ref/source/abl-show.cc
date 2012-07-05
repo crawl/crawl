@@ -484,10 +484,10 @@ static const ability_def& _get_ability_def(ability_type abil)
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
     {
         if (Ability_List[i].ability == abil)
-            return (Ability_List[i]);
+            return Ability_List[i];
     }
 
-    return (Ability_List[0]);
+    return Ability_List[0];
 }
 
 bool string_matches_ability_name(const std::string& key)
@@ -572,7 +572,7 @@ static std::string _zd_mons_description_for_ability(const ability_def &abil)
     case ABIL_MAKE_LIGHTNING_SPIRE:
         return "You mount a charged rod inside a coil.";
     default:
-        return ("");
+        return "";
     }
 }
 
@@ -817,7 +817,7 @@ const std::string make_cost_description(ability_type ability)
     if (ret.str().empty())
         ret << "None";
 
-    return (ret.str());
+    return ret.str();
 }
 
 static std::string _get_piety_amount_str(int value)
@@ -909,7 +909,7 @@ static const std::string _detailed_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_STAT_DRAIN)
         ret << "\nIt will temporarily drain your strength, intelligence or dexterity when used.";
 
-    return (ret.str());
+    return ret.str();
 }
 
 static ability_type _fixup_ability(ability_type ability)
@@ -1497,7 +1497,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_LUGONU_CORRUPT:
-        return (!is_level_incorruptible());
+        return !is_level_incorruptible();
 
     case ABIL_LUGONU_ABYSS_ENTER:
         if (player_in_branch(BRANCH_ABYSS))
@@ -1718,7 +1718,7 @@ static int _calc_breath_ability_range(ability_type ability)
         die("Bad breath type!");
         break;
     }
-    return (-2);
+    return -2;
 }
 
 static bool _do_ability(const ability_def& abil)
@@ -3347,7 +3347,7 @@ static int _find_ability_slot(const ability_def &abil)
     }
 
     // All letters are assigned.
-    return (-1);
+    return -1;
 }
 
 std::vector<ability_type> get_god_abilities(bool include_unusable)

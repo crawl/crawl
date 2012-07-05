@@ -133,14 +133,14 @@ static bool _mons_hostile(const monster* mon)
 int is_pacifiable(const monster* mon)
 {
     if (you.religion != GOD_ELYVILON)
-        return (-1);
+        return -1;
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
         || mons_is_tentacle(mon->type)) // body part
     {
-        return (-1);
+        return -1;
     }
 
     const mon_holy_type holiness = mon->holiness();
@@ -150,14 +150,14 @@ int is_pacifiable(const monster* mon)
         && holiness != MH_DEMONIC
         && holiness != MH_NATURAL)
     {
-        return (-1);
+        return -1;
     }
 
     if (mons_is_stationary(mon)) // not able to leave the level
-        return (-1);
+        return -1;
 
     if (mon->asleep()) // not aware of what is happening
-        return (-2);
+        return -2;
 
     return 0;
 }
@@ -197,7 +197,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
                                          + max_healed) / divisor))
     {
-        return (-4);
+        return -4;
     }
 
     int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
@@ -210,7 +210,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (mon->max_hit_points < factor * random_factor)
         return 1;
     if (mon->max_hit_points < factor * random_factor * 1.15)
-        return (-3);
+        return -3;
 
     return 0;
 }
@@ -249,14 +249,14 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     }
 
     if (!spd.isValid)
-        return (-1);
+        return -1;
 
     if (spd.target == you.pos())
     {
         if (not_self)
         {
             mpr("You can only heal others!");
-            return (-1);
+            return -1;
         }
 
         mpr("You are healed.");
@@ -308,7 +308,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-            return (-1);
+            return -1;
         }
     }
 

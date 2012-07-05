@@ -1313,7 +1313,7 @@ static std::string _find_crawlrc()
 
     // -rc option always wins.
     if (!SysEnv.crawl_rc.empty())
-        return (SysEnv.crawl_rc);
+        return SysEnv.crawl_rc;
 
     // If we have any rcdirs, look in them for files from the
     // rc_dir_names list.
@@ -1421,7 +1421,7 @@ std::string read_init_file(bool runscript)
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
-    return ("");
+    return "";
 }
 
 newgame_def read_startup_prefs()
@@ -1434,7 +1434,7 @@ newgame_def read_startup_prefs()
     game_options temp;
     temp.read_options(fl, false);
 
-    return (temp.game);
+    return temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 

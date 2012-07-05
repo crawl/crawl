@@ -1743,7 +1743,7 @@ int str_to_shoptype(const std::string &s)
         if (s == shop_types[i])
             return i;
     }
-    return (-1);
+    return -1;
 }
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.

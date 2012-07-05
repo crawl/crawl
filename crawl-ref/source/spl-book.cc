@@ -349,7 +349,7 @@ int spell_rarity(spell_type which_spell)
     const int rarity = _lowest_rarity[which_spell];
 
     if (rarity == 255)
-        return (-1);
+        return -1;
 
     return rarity;
 }
@@ -1333,7 +1333,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 int count_rod_spells(const item_def &item, bool need_id)
 {
     if (item.base_type != OBJ_RODS)
-        return (-1);
+        return -1;
 
     if (need_id && !item_type_known(item))
         return 0;
@@ -1356,7 +1356,7 @@ int rod_spell(int rod)
     if (irod.base_type != OBJ_RODS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (-1);
+        return -1;
     }
 
     // ID code got moved to item_use::wield_effects. {due}
@@ -1418,7 +1418,7 @@ int rod_spell(int rod)
     {
         canned_msg(MSG_NO_ENERGY);
         crawl_state.zero_turns_taken();
-        return (-1);
+        return -1;
     }
 
     if (irod.plus < mana)
@@ -1427,7 +1427,7 @@ int rod_spell(int rod)
         crawl_state.zero_turns_taken();
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
-        return (-1);
+        return -1;
     }
 
     // All checks passed, we can cast the spell.
@@ -1437,7 +1437,7 @@ int rod_spell(int rod)
                 == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
-        return (-1);
+        return -1;
     }
 
     make_hungry(food, true, true);

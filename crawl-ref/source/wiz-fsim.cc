@@ -107,7 +107,7 @@ static std::string _time_string()
                  ltime->tm_min,
                  ltime->tm_sec);
     }
-    return ("");
+    return "";
 }
 
 static void _write_version(FILE * o)

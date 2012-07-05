@@ -429,7 +429,7 @@ static geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
         // diagonal wall through side and -e
         wall = side + e;
     }
-    return (geom::form(wall.y, -wall.x));
+    return geom::form(wall.y, -wall.x);
 }
 
 // Bounce a ray that leaves cell (0,0) through a corner. We could
@@ -526,7 +526,7 @@ void ray_def::bounce(const reflect_grid &rg)
 
 double ray_def::get_degrees() const
 {
-    return (geom::degrees(r.dir));
+    return geom::degrees(r.dir);
 }
 
 void ray_def::set_degrees(double d)

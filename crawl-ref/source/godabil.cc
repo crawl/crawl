@@ -664,7 +664,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     else if (!found_eligible && found_ineligible)
     {
         dprf("No sensible audience found!");
-        return (-1);
+        return -1;
     }
 
     if (!prayertype)
@@ -2778,7 +2778,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                  true, 'y') <= 0)
     {
         viewwindow(false);
-        return (-1);
+        return -1;
     }
 
     for (unsigned i = 0; i < positions.size(); ++i)

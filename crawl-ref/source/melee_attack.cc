@@ -654,7 +654,7 @@ bool melee_attack::handle_phase_damaged()
         // the brand damage (so we return here).  If the monster was killed
         // by the decapitation, we should stop the rest of the attack, too.
         if (decapitate_hydra(damage_done, attacker->damage_type(attack_number)))
-            return (defender->alive());
+            return defender->alive();
 
         special_damage = 0;
         special_damage_message.clear();
@@ -2026,7 +2026,7 @@ bool melee_attack::player_monattk_hit_effects()
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
-        return (defender->alive());
+        return defender->alive();
 
     // Mutually exclusive with (overrides) brand damage!
     apply_staff_damage();
@@ -4001,7 +4001,7 @@ std::string melee_attack::mons_attack_verb()
 std::string melee_attack::mons_attack_desc()
 {
     if (!you.can_see(attacker))
-        return ("");
+        return "";
 
     std::string ret;
     int dist = (attacker->pos() - defender->pos()).abs();
@@ -4799,7 +4799,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.form == TRAN_BAT);
 
     case UNAT_CONSTRICT:
-        return (!form_keeps_mutations());
+        return !form_keeps_mutations();
 
     default:
         return false;

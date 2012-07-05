@@ -63,7 +63,7 @@ const GLState &GLState::operator=(const GLState &state)
     alpharef = state.alpharef;
     colour = state.colour;
 
-    return (*this);
+    return *this;
 }
 
 bool GLState::operator==(const GLState &state) const

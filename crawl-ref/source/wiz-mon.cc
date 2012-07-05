@@ -771,7 +771,7 @@ void debug_make_monster_shout(monster* mon)
 
 static bool _force_suitable(const monster* mon)
 {
-    return (mon->alive());
+    return mon->alive();
 }
 
 void wizard_gain_monster_level(monster* mon)

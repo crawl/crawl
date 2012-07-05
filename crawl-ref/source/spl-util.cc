@@ -159,7 +159,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         spell_name_map::iterator i = spell_name_cache.find(name);
 
         if (i != spell_name_cache.end())
-            return (i->second);
+            return i->second;
 
         return SPELL_NO_SPELL;
     }
@@ -244,7 +244,7 @@ int get_spell_slot_by_letter(char letter)
     const int index = letter_to_index(letter);
 
     if (you.spell_letter_table[ index ] == -1)
-        return (-1);
+        return -1;
 
     return (you.spell_letter_table[index]);
 }

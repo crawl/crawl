@@ -1553,11 +1553,11 @@ int prompt_eat_chunks(bool only_auto)
             case 'q':
             CASE_ESCAPE
                 canned_msg(MSG_OK);
-                return (-1);
+                return -1;
             case 'i':
             case '?':
                 // Skip ahead to the inventory.
-                return (-2);
+                return -2;
             case 'e':
             case 'y':
                 if (can_ingest(*item, false))
@@ -2302,7 +2302,7 @@ bool is_preferred_food(const item_def &food)
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
         && item_type_known(food))
     {
-        return (!player_mutation_level(MUT_CARNIVOROUS));
+        return !player_mutation_level(MUT_CARNIVOROUS);
     }
 
     if (food.base_type != OBJ_FOOD)

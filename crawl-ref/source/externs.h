@@ -141,42 +141,42 @@ struct coord_def
     {
         x += other.x;
         y += other.y;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator += (int offset)
     {
         x += offset;
         y += offset;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator -= (const coord_def &other)
     {
         x -= other.x;
         y -= other.y;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator -= (int offset)
     {
         x -= offset;
         y -= offset;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator /= (int div)
     {
         x /= div;
         y /= div;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator *= (int mul)
     {
         x *= mul;
         y *= mul;
-        return (*this);
+        return *this;
     }
 
     coord_def operator + (const coord_def &other) const
@@ -402,7 +402,7 @@ public:
     {
         branch     = id.branch;
         depth      = id.depth;
-        return (*this);
+        return *this;
     }
 
     bool operator == (const level_id &id) const

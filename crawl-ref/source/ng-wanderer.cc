@@ -133,7 +133,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
         region_covered += reciprocal_apt;
 
         if (probe < region_covered)
-            return (skill_array[i]);
+            return skill_array[i];
     }
 
     return NUM_SKILLS;

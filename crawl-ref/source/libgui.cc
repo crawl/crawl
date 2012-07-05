@@ -149,7 +149,7 @@ int num_to_lines(int num)
 
 int getch_ck()
 {
-    return (tiles.getch_ck());
+    return tiles.getch_ck();
 }
 
 int getchk()
@@ -175,7 +175,7 @@ coord_def cgetpos(GotoRegion region)
 
 GotoRegion get_cursor_region()
 {
-    return (tiles.get_cursor_region());
+    return tiles.get_cursor_region();
 }
 
 void delay(unsigned int ms)

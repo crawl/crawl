@@ -95,7 +95,7 @@ monster &monster::operator = (const monster& mon)
 {
     if (this != &mon)
         init_with(mon);
-    return (*this);
+    return *this;
 }
 
 void monster::reset()
@@ -234,7 +234,7 @@ bool monster::wants_submerge() const
     if (!mons_is_retreating(this) && mons_can_move_towards_target(this))
         return false;
 
-    return (!mons_landlubbers_in_reach(this));
+    return !mons_landlubbers_in_reach(this);
 }
 
 bool monster::submerged() const
@@ -441,7 +441,7 @@ brand_type monster::damage_brand(int which_attack)
     if (!mweap)
     {
         if (mons_is_ghost_demon(type))
-            return (ghost->brand);
+            return ghost->brand;
 
         return SPWPN_NORMAL;
     }
@@ -490,7 +490,7 @@ item_def *monster::missiles()
 int monster::missile_count()
 {
     if (const item_def *missile = missiles())
-        return (missile->quantity);
+        return missile->quantity;
 
     return 0;
 }
@@ -2575,7 +2575,7 @@ std::string monster::pronoun(pronoun_type pro, bool force_visible) const
 std::string monster::conj_verb(const std::string &verb) const
 {
     if (!verb.empty() && verb[0] == '!')
-        return (verb.substr(1));
+        return verb.substr(1);
 
     if (verb == "are")
         return "is";
@@ -3132,7 +3132,7 @@ int monster::constriction_damage() const
     {
         const mon_attack_def attack = mons_attack_spec(this, i);
         if (attack.type == AT_CONSTRICT)
-            return (attack.damage);
+            return attack.damage;
     }
     return -1;
 }
@@ -3277,7 +3277,7 @@ int monster::shield_bonus() const
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         return (random2avg(shld_c + hit_dice * 4 / 3, 2) / 2);
     }
-    return (-100);
+    return -100;
 }
 
 int monster::shield_block_penalty() const
@@ -3794,10 +3794,10 @@ int monster::res_holy_energy(const actor *attacker) const
         return 1;
 
     if (undead_or_demonic())
-        return (-2);
+        return -2;
 
     if (is_evil())
-        return (-1);
+        return -1;
 
     if (is_holy()
         || is_good_god(god)
@@ -4404,12 +4404,12 @@ void monster::destroy_inventory()
 
 bool monster::is_travelling() const
 {
-    return (!travel_path.empty());
+    return !travel_path.empty();
 }
 
 bool monster::is_patrolling() const
 {
-    return (!patrol_point.origin());
+    return !patrol_point.origin();
 }
 
 bool monster::needs_abyss_transit() const
@@ -4699,7 +4699,7 @@ bool monster::needs_berserk(bool check_spells) const
 bool monster::can_see_invisible() const
 {
     if (mons_is_ghost_demon(type))
-        return (ghost->see_invis);
+        return ghost->see_invis;
     else if (mons_class_flag(type, M_SEE_INVIS))
         return true;
     else if (scan_mon_inv_randarts(this, ARTP_EYESIGHT) > 0)
@@ -5231,7 +5231,7 @@ bool monster::should_drink_potion(potion_type ptype) const
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                 && needs_berserk());
     case POT_SPEED:
-        return (!has_ench(ENCH_HASTE));
+        return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_INVISIBILITY:
@@ -5324,7 +5324,7 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
     switch (jtype)
     {
         case RING_TELEPORTATION:
-            return (!has_ench(ENCH_TP));
+            return !has_ench(ENCH_TP);
         case RING_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
