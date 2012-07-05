@@ -2079,10 +2079,13 @@ public:
     {
         if (qty == -2)
             selected_qty = 0;
-        else if (selected_qty >= 2)
-            selected_qty = 1; //Set to 0 to allow triple toggle
+        else if (selected_qty == 0)
+            selected_qty = item_needs_autopickup(*item) ? 2 : 1;
         else
-            selected_qty += 1;
+            ++selected_qty;
+
+        if (selected_qty > 2)
+            selected_qty = 1; //Set to 0 to allow triple toggle
     }
 };
 
