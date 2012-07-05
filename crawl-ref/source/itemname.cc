@@ -2028,8 +2028,9 @@ public:
         selected_qty = inv->selected_qty;
     }
 
-    virtual std::string get_text(const bool = false) const
+    virtual std::string get_text(bool need_cursor) const
     {
+        need_cursor = need_cursor && show_cursor;
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 
         std::string name;
@@ -2045,11 +2046,17 @@ public:
 
         char buff[256];
         if (selected_qty == 0) //Default
-            sprintf(buff, "%c %c %s", hotkeys[0],
-                    item_needs_autopickup(*item) ? '+' : '-', name.c_str());
+            sprintf(buff, "%c%c%c%c%s", hotkeys[0],
+                    need_cursor ? '[' : ' ',
+                    item_needs_autopickup(*item) ? '+' : '-',
+                    need_cursor ? ']' : ' ',
+                    name.c_str());
         else //Forced Autopickup
-            sprintf(buff, "%c %c %s", hotkeys[0],
-                    selected_qty == 1 ? '+' : '-', name.c_str());
+            sprintf(buff, "%c%c%c%c%s", hotkeys[0],
+                    need_cursor ? '[' : ' ',
+                    selected_qty == 1 ? '+' : '-',
+                    need_cursor ? ']' : ' ',
+                    name.c_str());
 
         return std::string(buff);// + NAME;
     }
