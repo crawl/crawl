@@ -2889,10 +2889,10 @@ static std::string _god_hates_your_god_reaction(god_type god, god_type your_god)
 
         // Zin hates chaotic gods.
         if (god == GOD_ZIN && is_chaotic_god(your_god))
-            return (" for chaos");
+            return " for chaos";
 
         if (is_evil_god(your_god))
-            return (" for evil");
+            return " for evil";
     }
 
     return ("");

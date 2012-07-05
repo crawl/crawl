@@ -4936,9 +4936,9 @@ int get_contamination_level()
 std::string describe_contamination(int cont)
 {
     if (cont > 5)
-        return ("You are engulfed in a nimbus of crackling magics!");
+        return "You are engulfed in a nimbus of crackling magics!";
     else if (cont == 5)
-        return ("Your entire body has taken on an eerie glow!");
+        return "Your entire body has taken on an eerie glow!";
     else if (cont > 1)
     {
         return (make_stringf("You are %s with residual magics%s",
@@ -4949,7 +4949,7 @@ std::string describe_contamination(int cont)
                    (cont == 4) ? "!" : "."));
     }
     else if (cont == 1)
-        return ("You are very lightly contaminated with residual magic.");
+        return "You are very lightly contaminated with residual magic.";
     else
         return ("");
 }

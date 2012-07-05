@@ -37,17 +37,17 @@ namespace Version
 #if defined(__GNUC__) && defined(__VERSION__)
         return make_stringf("GCC %s", __VERSION__);
 #elif defined(__GNUC__)
-        return ("GCC (unknown version)");
+        return "GCC (unknown version)";
 #elif defined(TARGET_COMPILER_MINGW)
-        return ("MINGW");
+        return "MINGW";
 #elif defined(TARGET_COMPILER_CYGWIN)
-        return ("CYGWIN");
+        return "CYGWIN";
 #elif defined(TARGET_COMPILER_VC)
-        return ("Visual C++");
+        return "Visual C++";
 #elif defined(TARGET_COMPILER_ICC)
-        return ("Intel C++");
+        return "Intel C++";
 #else
-        return ("Unknown compiler");
+        return "Unknown compiler";
 #endif
     }
 

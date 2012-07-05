@@ -2152,7 +2152,7 @@ static std::string _shop_type_name(shop_type type)
         case SHOP_GENERAL:
             return "General Store";
         default:
-            return ("Bug");
+            return "Bug";
     }
 }
 
@@ -2181,7 +2181,7 @@ std::string shop_name(const coord_def& where)
     if (!cshop)
     {
         mpr("Help! Non-existent shop.");
-        return ("Buggy Shop");
+        return "Buggy Shop";
     }
 
     const shop_type type = cshop->type;

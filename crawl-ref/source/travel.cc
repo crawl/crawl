@@ -3073,7 +3073,7 @@ std::string stair_info::describe() const
     else if (destination.id.is_valid())
         return make_stringf(" (->%s (?))", destination.id.describe().c_str());
 
-    return (" (?)");
+    return " (?)";
 }
 
 void LevelInfo::set_level_excludes()

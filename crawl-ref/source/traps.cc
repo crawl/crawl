@@ -156,7 +156,7 @@ void trap_def::reveal()
 std::string trap_def::name(description_level_type desc) const
 {
     if (type >= NUM_TRAPS)
-        return ("buggy");
+        return "buggy";
 
     std::string basename = trap_name(type);
     if (desc == DESC_A)

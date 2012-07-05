@@ -1078,9 +1078,9 @@ static std::string _origin_monster_name(const item_def &item)
 {
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
     if (monnum == MONS_PLAYER_GHOST)
-        return ("a player ghost");
+        return "a player ghost";
     else if (monnum == MONS_PANDEMONIUM_LORD)
-        return ("a pandemonium lord");
+        return "a pandemonium lord";
     return mons_type_name(monnum, DESC_A);
 }
 

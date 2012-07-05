@@ -2207,7 +2207,7 @@ std::string ugly_thing_colour_name(colour_t colour)
     int colour_offset = ugly_thing_colour_offset(colour);
 
     if (colour_offset == -1)
-        return ("buggy");
+        return "buggy";
 
     return (ugly_colour_names[colour_offset]);
 }
@@ -2251,7 +2251,7 @@ std::string draconian_colour_name(monster_type mon_type)
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN);
 
     if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
-        return ("buggy");
+        return "buggy";
 
     return (drac_colour_names[mon_type - MONS_BLACK_DRACONIAN]);
 }

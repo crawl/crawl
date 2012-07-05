@@ -554,7 +554,7 @@ static const char* _behaviour_name(beh_type beh)
     if (0 <= beh && beh < NUM_BEHAVIOURS)
         return (_monster_behaviour_names[beh]);
     else
-        return ("invalid");
+        return "invalid";
 }
 
 static beh_type behaviour_by_name(const std::string &name)

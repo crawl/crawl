@@ -2508,7 +2508,7 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
                                      && mon.submerged();
 
     if (type == MONS_NO_MONSTER)
-        return ("DEAD MONSTER");
+        return "DEAD MONSTER";
     else if (invalid_monster_type(type) && type != MONS_PROGRAM_BUG)
         return _invalid_monster_str(type);
 
@@ -2518,11 +2518,11 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
         switch (desc)
         {
         case DESC_THE: case DESC_A: case DESC_PLAIN:
-            return ("it");
+            return "it";
         case DESC_ITS:
-            return ("its");
+            return "its";
         default:
-            return ("it (buggy)");
+            return "it (buggy)";
         }
     }
 
@@ -2578,13 +2578,13 @@ std::string monster::conj_verb(const std::string &verb) const
         return (verb.substr(1));
 
     if (verb == "are")
-        return ("is");
+        return "is";
 
     if (verb == "snap closed at")
-        return ("snaps closed at");
+        return "snaps closed at";
 
     if (verb == "pounce on")
-        return ("pounces on");
+        return "pounces on";
 
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))

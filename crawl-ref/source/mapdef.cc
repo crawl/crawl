@@ -198,10 +198,10 @@ void level_range::read(reader& inf)
 std::string level_range::str_depth_range() const
 {
     if (shallowest == -1)
-        return (":??");
+        return ":??";
 
     if (shallowest == BRANCH_END)
-        return (":$");
+        return ":$";
 
     if (deepest == BRANCH_END)
         return (shallowest == 1? "" : make_stringf("%d-", shallowest));
@@ -656,7 +656,7 @@ std::string map_lines::check_block_shuffle(const std::string &s)
     for (int i = 1, vsize = segs.size(); i < vsize; ++i)
     {
         if (seglen != segs[i].length())
-            return ("block shuffle segment length mismatch");
+            return "block shuffle segment length mismatch";
     }
 
     return ("");
@@ -665,7 +665,7 @@ std::string map_lines::check_block_shuffle(const std::string &s)
 std::string map_lines::check_shuffle(std::string &s)
 {
     if (s.find(',') != std::string::npos)
-        return ("use / for block shuffle, or multiple SHUFFLE: lines");
+        return "use / for block shuffle, or multiple SHUFFLE: lines";
 
     s = clean_shuffle(s);
 
@@ -2578,7 +2578,7 @@ std::string map_def::validate_temple_map()
         temple_tag = strip_tag_prefix(temple_tag, "temple_overflow_");
 
         if (temple_tag.empty())
-            return ("Malformed temple_overflow_ tag");
+            return "Malformed temple_overflow_ tag";
 
         int num = 0;
         parse_int(temple_tag.c_str(), num);
@@ -2610,7 +2610,7 @@ std::string map_def::validate_temple_map()
     }
 
     if (altars.empty())
-        return ("Temple vault must contain at least one altar.");
+        return "Temple vault must contain at least one altar.";
 
     // TODO: check for substitutions and shuffles
 
@@ -2620,13 +2620,13 @@ std::string map_def::validate_temple_map()
     {
         const keyed_mapspec *spec = map.mapspec_at(*i);
         if (spec != NULL && !spec->feat.feats.empty())
-            return ("Can't change feat 'B' in temple (KFEAT)");
+            return "Can't change feat 'B' in temple (KFEAT)";
     }
 
     std::vector<god_type> god_list = temple_god_list();
 
     if (altars.size() > god_list.size())
-        return ("Temple vault has too many altars");
+        return "Temple vault has too many altars";
 
     return ("");
 }
@@ -3095,7 +3095,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
 
     // Randomly picking a different vault per-glyph is not supported.
     if (sep != ':')
-        return ("SUBVAULT does not support '='.  Use ':' instead.");
+        return "SUBVAULT does not support '='.  Use ':' instead.";
 
     map_string_list vlist;
     err = _parse_weighted_str<map_string_list>(substitute, vlist);

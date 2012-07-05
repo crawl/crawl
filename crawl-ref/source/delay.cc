@@ -95,7 +95,7 @@ static std::string _get_zin_recite_speech(int trits[], size_t len, int prayertyp
     if (str.empty())
     {
         // In case nothing is found.
-        return ("mumble mumble buggy mumble");
+        return "mumble mumble buggy mumble";
     }
     return str;
 }

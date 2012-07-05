@@ -89,7 +89,7 @@ std::string attack::anon_name(description_level_type desc,
         return ("");
     case DESC_YOUR:
     case DESC_ITS:
-        return ("its");
+        return "its";
     case DESC_THE:
     case DESC_A:
     case DESC_PLAIN:

@@ -850,10 +850,10 @@ static bool _player_has_enough_food()
 static std::string _how_hungry()
 {
     if (you.hunger_state > HS_SATIATED)
-        return ("full");
+        return "full";
     else if (you.species == SP_VAMPIRE)
-        return ("thirsty");
-    return ("hungry");
+        return "thirsty";
+    return "hungry";
 }
 
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
@@ -2698,7 +2698,7 @@ void handle_starvation()
 std::string hunger_cost_string(const int hunger)
 {
     if (you.is_undead == US_UNDEAD)
-        return ("N/A");
+        return "N/A";
 
 #ifdef WIZARD
     if (you.wizard)

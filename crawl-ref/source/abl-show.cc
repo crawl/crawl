@@ -554,23 +554,23 @@ static std::string _zd_mons_description_for_ability(const ability_def &abil)
     switch (abil.ability)
     {
     case ABIL_MAKE_PLANT:
-        return ("Tendrils and shoots erupt from the earth and gnarl into the form of a plant.");
+        return "Tendrils and shoots erupt from the earth and gnarl into the form of a plant.";
     case ABIL_MAKE_OKLOB_SAPLING:
-        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+        return "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.";
     case ABIL_MAKE_OKLOB_PLANT:
-        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+        return "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.";
     case ABIL_MAKE_BURNING_BUSH:
-        return ("Blackened shoots writhe from the ground and burst into flame!");
+        return "Blackened shoots writhe from the ground and burst into flame!";
     case ABIL_MAKE_ICE_STATUE:
-        return ("Water vapor collects and crystallizes into an icy humanoid shape.");
+        return "Water vapor collects and crystallizes into an icy humanoid shape.";
     case ABIL_MAKE_OCS:
-        return ("Quartz juts from the ground and forms a humanoid shape. You smell citrus.");
+        return "Quartz juts from the ground and forms a humanoid shape. You smell citrus.";
     case ABIL_MAKE_SILVER_STATUE:
-        return ("Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.");
+        return "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.";
     case ABIL_MAKE_CURSE_SKULL:
-        return ("You sculpt a terrible being from the primitive principle of evil.");
+        return "You sculpt a terrible being from the primitive principle of evil.";
     case ABIL_MAKE_LIGHTNING_SPIRE:
-        return ("You mount a charged rod inside a coil.");
+        return "You mount a charged rod inside a coil.";
     default:
         return ("");
     }

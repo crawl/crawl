@@ -1127,56 +1127,56 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 static std::string _verbose_info0(const monster_info& mi)
 {
     if (mi.is(MB_BERSERK))
-        return ("berserk");
+        return "berserk";
     if (mi.is(MB_FRENZIED))
-        return ("frenzied");
+        return "frenzied";
     if (mi.is(MB_ROUSED))
-        return ("roused");
+        return "roused";
     if (mi.is(MB_INNER_FLAME))
-        return ("inner flame");
+        return "inner flame";
     if (mi.is(MB_DUMB))
-        return ("dumb");
+        return "dumb";
     if (mi.is(MB_PARALYSED))
-        return ("paralysed");
+        return "paralysed";
     if (mi.is(MB_CAUGHT))
-        return ("caught");
+        return "caught";
     if (mi.is(MB_WEBBED))
-        return ("webbed");
+        return "webbed";
     if (mi.is(MB_PETRIFIED))
-        return ("petrified");
+        return "petrified";
     if (mi.is(MB_PETRIFYING))
-        return ("petrifying");
+        return "petrifying";
     if (mi.is(MB_MAD))
-        return ("mad");
+        return "mad";
     if (mi.is(MB_CONFUSED))
-        return ("confused");
+        return "confused";
     if (mi.is(MB_FLEEING))
-        return ("fleeing");
+        return "fleeing";
     if (mi.is(MB_DORMANT))
-        return ("dormant");
+        return "dormant";
     if (mi.is(MB_SLEEPING))
-        return ("sleeping");
+        return "sleeping";
     if (mi.is(MB_UNAWARE))
-        return ("unaware");
+        return "unaware";
     if (mi.is(MB_WITHDRAWN))
-        return ("withdrawn");
+        return "withdrawn";
     if (mi.is(MB_DAZED))
-        return ("dazed");
+        return "dazed";
     if (mi.is(MB_MUTE))
-        return ("mute");
+        return "mute";
     if (mi.is(MB_BLIND))
-        return ("blind");
+        return "blind";
     // avoid jelly (wandering) (fellow slime)
     if (mi.is(MB_WANDERING) && mi.attitude != ATT_STRICT_NEUTRAL)
-        return ("wandering");
+        return "wandering";
     if (mi.is(MB_BURNING))
-        return ("burning");
+        return "burning";
     if (mi.is(MB_ROTTING))
-        return ("rotting");
+        return "rotting";
     if (mi.is(MB_BLEEDING))
-        return ("bleeding");
+        return "bleeding";
     if (mi.is(MB_INVISIBLE))
-        return ("invisible");
+        return "invisible";
 
     return ("");
 }

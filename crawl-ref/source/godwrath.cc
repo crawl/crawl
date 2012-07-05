@@ -1292,7 +1292,7 @@ static std::string _get_beogh_speech(const std::string key)
     std::string result = getSpeakString("Beogh " + key);
 
     if (result.empty())
-        return ("Beogh is angry!");
+        return "Beogh is angry!";
 
     return result;
 }
@@ -1358,7 +1358,7 @@ static std::string _get_tso_speech(const std::string key)
     std::string result = getSpeakString("the Shining One " + key);
 
     if (result.empty())
-        return ("The Shining One is angry!");
+        return "The Shining One is angry!";
 
     return result;
 }

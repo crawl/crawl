@@ -1217,7 +1217,7 @@ std::string command_to_name(command_type cmd)
     cmd_to_name_map::iterator it = _cmds_to_names.find(cmd);
 
     if (it == _cmds_to_names.end())
-        return ("CMD_NO_CMD");
+        return "CMD_NO_CMD";
 
     return (it->second);
 }

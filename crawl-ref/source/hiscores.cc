@@ -511,15 +511,15 @@ void show_hiscore_table()
 static const char *_range_type_verb(const char *const aux)
 {
     if (strncmp(aux, "Shot ", 5) == 0)                // launched
-        return ("shot");
+        return "shot";
     else if (aux[0] == 0                                // unknown
              || strncmp(aux, "Hit ", 4) == 0          // thrown
              || strncmp(aux, "volley ", 7) == 0)      // manticore spikes
     {
-        return ("hit from afar");
+        return "hit from afar";
     }
 
-    return ("blasted");                                 // spells, wands
+    return "blasted";                                 // spells, wands
 }
 
 std::string hiscores_format_single(const scorefile_entry &se)
@@ -552,7 +552,7 @@ static void _hiscore_date_string(time_t time, char buff[INFO_SIZE])
 
 static std::string _hiscore_newline_string()
 {
-    return ("\n             ");
+    return "\n             ";
 }
 
 std::string hiscores_format_single_long(const scorefile_entry &se,
@@ -1608,7 +1608,7 @@ std::string scorefile_entry::terse_missile_cause() const
     // We're looking for Shot with a%s %s by %s/ Hit by a%s %s thrown by %s
     std::string::size_type by = aux.rfind(monster_prefix);
     if (by == std::string::npos)
-        return ("???");
+        return "???";
 
     std::string mcause = aux.substr(by + monster_prefix.length());
     mcause = strip_article_a(mcause);

@@ -450,11 +450,11 @@ static std::string _stat_name(stat_type stat)
     switch (stat)
     {
     case STAT_STR:
-        return ("strength");
+        return "strength";
     case STAT_INT:
-        return ("intelligence");
+        return "intelligence";
     case STAT_DEX:
-        return ("dexterity");
+        return "dexterity";
     default:
         die("invalid stat");
     }

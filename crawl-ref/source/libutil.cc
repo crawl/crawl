@@ -452,7 +452,7 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "y"))
     {
         if (name == "y")
-            return ("ys");
+            return "ys";
         // day -> days, boy -> boys, etc
         else if (is_vowel(name[name.length() - 2]))
             return name + "s";
@@ -600,7 +600,7 @@ std::string number_in_words(unsigned num, int pow)
 
     unsigned thousands = num % 1000, rest = num / 1000;
     if (!rest && !thousands)
-        return ("zero");
+        return "zero";
 
     return join_strings((rest? number_in_words(rest, pow + 3) : ""),
                         (thousands? hundreds_in_words(thousands)

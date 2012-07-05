@@ -3963,7 +3963,7 @@ std::string melee_attack::mons_attack_verb()
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
     {
-        return ("slap");
+        return "slap";
     }
 
     static const char *attack_types[] =

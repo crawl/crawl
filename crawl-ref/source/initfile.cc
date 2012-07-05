@@ -312,17 +312,17 @@ std::string gametype_to_str(game_type type)
     switch (type)
     {
     case GAME_TYPE_NORMAL:
-        return ("normal");
+        return "normal";
     case GAME_TYPE_TUTORIAL:
-        return ("tutorial");
+        return "tutorial";
     case GAME_TYPE_ARENA:
-        return ("arena");
+        return "arena";
     case GAME_TYPE_SPRINT:
-        return ("sprint");
+        return "sprint";
     case GAME_TYPE_ZOTDEF:
-        return ("zotdef");
+        return "zotdef";
     default:
-        return ("none");
+        return "none";
     }
 }
 
