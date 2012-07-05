@@ -839,6 +839,7 @@ siren_water MONS_SIREN_WATER
 
 ## Rotting monsters ('n')
 %sdir mon/undead
+bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
 rotting_hulk MONS_ROTTING_HULK
@@ -901,7 +902,6 @@ skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
-bog_body MONS_BOG_BODY
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE

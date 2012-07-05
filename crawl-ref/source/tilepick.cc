@@ -1055,6 +1055,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
 
     // rotting monsters ('n')
+    case MONS_BOG_BODY:
+        return TILEP_MONS_BOG_BODY;
     case MONS_NECROPHAGE:
         return TILEP_MONS_NECROPHAGE;
     case MONS_GHOUL:
@@ -1248,8 +1250,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FLYING_SKULL;
     case MONS_FLAMING_CORPSE:
         return TILEP_MONS_FLAMING_CORPSE;
-    case MONS_BOG_BODY:
-        return TILEP_MONS_BOG_BODY;
     case MONS_CURSE_SKULL:
         return TILEP_MONS_CURSE_SKULL;
     case MONS_CURSE_TOE:
@@ -3412,6 +3412,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SIREN;
 
     // rotting monsters ('n')
+    case MONS_BOG_BODY:
+        return TILE_CORPSE_BOG_BODY;
     case MONS_NECROPHAGE:
         return TILE_CORPSE_NECROPHAGE;
     case MONS_GHOUL:

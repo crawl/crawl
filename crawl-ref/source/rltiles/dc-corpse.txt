@@ -202,6 +202,7 @@ siren_water CORPSE_SIREN
 ## Rotting monsters ('n')
 %back blood_green
 %sdir mon/undead
+bog_body CORPSE_BOG_BODY
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
 rotting_hulk CORPSE_ROTTING_HULK
