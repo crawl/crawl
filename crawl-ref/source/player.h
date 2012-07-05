@@ -578,6 +578,7 @@ public:
              bool cleanup_dead = true);
 
     bool wont_attack() const { return true; };
+    mon_attitude_type temp_attitude() const { return ATT_FRIENDLY; };
     int warding() const;
 
     monster_type mons_species(bool zombie_base = false) const;

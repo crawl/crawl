@@ -530,8 +530,8 @@
 
     // Rods - start at NUM_BOOKS.
 
-{   // Rod of smiting
-    SPELL_SMITING,
+{   // Lightning rod
+    SPELL_THUNDERBOLT,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

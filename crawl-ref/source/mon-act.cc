@@ -47,6 +47,7 @@
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spl-book.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "teleport.h"
@@ -1045,10 +1046,9 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
     return beem;
 }
 
-static void _rod_fired_pre(monster* mons, bool nice_spell)
+static void _rod_fired_pre(monster* mons)
 {
-    if (!nice_spell)
-        make_mons_stop_fleeing(mons);
+    make_mons_stop_fleeing(mons);
 
     if (!simple_monster_message(mons, " zaps a rod.")
         && !silenced(you.pos()))
@@ -1098,6 +1098,44 @@ static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
     return success;
 }
 
+static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
+{
+    coord_def prev;
+    if (caster->props.exists("thunderbolt_last")
+        && caster->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
+    {
+        prev = caster->props["thunderbolt_aim"].get_coord();
+    }
+
+    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+                                  prev);
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        const actor *victim = actor_at(p->first);
+        if (!victim)
+            continue;
+
+        int dam = 4 >> victim->res_elec();
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += dam;
+        else
+            enemy += dam;
+    }
+
+    return enemy > friendly;
+
+    return false;
+}
+
 // handle_rod
 // -- implemented as a dependent to handle_wand currently
 // (no wand + rod turns this way)
@@ -1115,8 +1153,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    int overriding_power  = 0;
-    bool nice_spell       = false;
     bool check_validity   = true;
     bool is_direct_effect = false;
     spell_type mzap       = SPELL_NO_SPELL;
@@ -1153,17 +1189,21 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return false;
         break;
 
-    case SPELL_SMITING:
-        overriding_power = 1;
-        nice_spell = true;
-        is_direct_effect = true;
+    case SPELL_THUNDERBOLT:
+        if (mons->props.exists("thunderbolt_last")
+            && mons->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
+        {
+            int oomph = std::max(1, std::min(5, rod.plus / ROD_CHARGE_MULT));
+            mons->props["thunderbolt_mana"].get_int() = oomph;
+            rate = oomph * ROD_CHARGE_MULT;
+        }
         break;
 
     case SPELL_CALL_IMP:
     case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
         return true;
@@ -1175,7 +1215,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool zap = false;
 
     // set up the beam
-    const int power = std::max(_generate_rod_power(mons, overriding_power), 1);
+    const int power = std::max(_generate_rod_power(mons), 1);
 
     dprf("using rod with power %d", power);
 
@@ -1189,7 +1229,9 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return false;
         zap = true;
     }
-    else if (!nice_spell)
+    else if (mzap == SPELL_THUNDERBOLT)
+        zap = _thunderbolt_tracer(mons, power, beem.target);
+    else
     {
         fire_tracer(mons, beem);
         zap = mons_should_fire(beem);
@@ -1200,13 +1242,19 @@ static bool _handle_rod(monster *mons, bolt &beem)
         actor* foe = mons->get_foe();
         if (!foe)
             return false;
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
         direct_effect(mons, mzap, beem, foe);
         return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
-    else if (nice_spell || zap)
+    else if (mzap == SPELL_THUNDERBOLT)
     {
-        _rod_fired_pre(mons, nice_spell);
+        _rod_fired_pre(mons);
+        cast_thunderbolt(mons, power, beem.target);
+        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
+    }
+    else if (zap)
+    {
+        _rod_fired_pre(mons);
         beem.is_tracer = false;
         beem.fire();
         return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);

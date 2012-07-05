@@ -111,6 +111,7 @@ static void _scale_draconian_breath(bolt& beam, int drac_type)
         beam.aux_source = "blast of chilling breath";
         beam.short_name = "frost";
         scaling         = 65;
+        beam.ac_rule    = AC_NONE;
         break;
 
     case MONS_PLAYER_GHOST: // draconians only
