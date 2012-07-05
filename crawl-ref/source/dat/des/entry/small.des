@@ -3089,3 +3089,22 @@ xWWWWWWWWWWx
 xxWWWWWWWWxx
  xxxxxxxxxx
 ENDMAP
+
+##############################################################################
+NAME:   lightli_entry_statuegarden
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+@..xxxG+Gxxx..@
+..xxwwW.Wwwxx..
+.xxwww.1.wwwxx.
+xxww1..G..1wwxx
+xwwW.......wwwx
+xw1.G..{..G.1wx
+xwww.......wwwx
+xxww1..G..1wwxx
+.xxwww.1.wwwxx.
+..xxwwwwwwwxx..
+@..xxxxxxxxx..@
+ENDMAP
