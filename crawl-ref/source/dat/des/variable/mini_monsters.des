@@ -886,6 +886,41 @@ tt1wwwWwwt1Wtt
     ...@
 ENDMAP
 
+NAME:    hangedman_parallel_progression
+TAGS:    patrolling no_monster_gen transparent
+TAGS:    layout_rooms layout_misc layout_roguey layout_basic
+DEPTH:   D:11-16
+MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
+MONS:    giant cockroach / giant mite w:8, jackal
+KMONS:   8 = ball python / adder w:8
+KMONS:   A = green rat
+KMONS:   B = vampire bat / fire bat w:8
+KMONS:   C = iguana / basilisk w:8
+KMONS:   D = brain worm w:5 / giant leech
+KMONS:   E = jelly
+KMONS:   F = worker ant / giant centipede w:8
+KMONS:   G = hound / wolf w:5
+KMONS:   H = water moccasin
+KMONS:   I = orange rat
+KMONS:   J = unseen horror
+KMONS:   K = alligator
+KMONS:   L = rock worm
+KMONS:   M = brown ooze / slime creature
+KMONS:   N = demonic crawler
+KMONS:   O = hell hound
+KMONS:   P = black mamba
+KITEM:   IJKLMNOP = any, any / gold w:5 / nothing
+SHUFFLE: 1AI / 2BJ / 3CK / 4DL / 5EM / 6FN / 7GO / 8HP
+MAP
+xxxx+xxx    xxxx+xxx    xxxx+xxx    xxxx+xxx
+x1x..xIx    x2x..xJx    x3x..xKx    x4x..xLx
+x11.xxAx    x22.xxBx    x33.xxCx    x44.xxDx
+xAx%%xAx    xBx%%xBx    xCx%%xCx    xDx%%xDx
+xAxx.11x    xBxx.22x    xCxx.33x    xDxx.44x
+xIx..x1x    xJx..x2x    xKx..x3x    xLx..x4x
+xxx+xxxx    xxx+xxxx    xxx+xxxx    xxx+xxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
@@ -2616,6 +2651,56 @@ MAP
  ....ccccc....
   ...........
     .......
+ENDMAP
+
+NAME:    hangedman_jelly_panic
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:4-, Vaults
+MONS:    ooze
+KMONS:   2J = jelly
+KMONS:   3 = brown ooze
+KMONS:   4K = slime creature
+KMONS:   5L = acid blob w:5 / azure jelly / death ooze
+KFEAT:   JKL = altar_jiyva
+KITEM:   $ = $, $ w:5 / nothing
+MARKER:  + = lua:restrict_door()
+: if you.absdepth() > 19 then
+SHUFFLE: CD, 2"6; / 3`5~
+SUBST:   35`~ : xx., '"~- = .
+SUBST:   1 = 5L, 26 = 2
+SUBST:   ABE : $, C : $$., D : m..
+: elseif you.absdepth() > 12 then
+SHUFFLE: AB, CD, 2" / 3`
+SUBST:   456-~; = x, '"`E = .
+SUBST:   1 = 4:7 K:3
+SUBST:   AD : $, B : m.., C : $m.
+: elseif you.absdepth() > 7  then
+SHUFFLE: AB, CD, 2"6; / 3`5~
+SUBST:   14'- = x, 35`~ : xx., ";ED = .
+SUBST:   2 : 2:8 J:2, 6 = 1
+SUBST:   AC : $, B : m..
+: else
+SHUFFLE: AB, 3` / 4- / 5~
+SUBST:   26"; = x, 35`~ : xx., '-CED = .
+SUBST:   1 = 2:9 J:1, 4 = 1
+SUBST:   A : $, B : m..
+: end
+MAP
+   xxxxxxxxx
+   xxxxxxxxx
+  xxx2x1x2xxx
+xxxcx"x'x"xcxxx
+xxxx.......xxxx
+xx3`.DECED.`3xx
+xxxx.EABAE.xxxx
+xx4-.CB$BC.-4xx
+xxxx.EABAE.xxxx
+xx5~.DECED.~5xx
+xxxx.......xxxx
+xxxcx;x+x;xcxxx
+  xxx6x.x6xxx
+   xxxx+xxxx
+   xxxx@xxxx
 ENDMAP
 
 ###################################################################
