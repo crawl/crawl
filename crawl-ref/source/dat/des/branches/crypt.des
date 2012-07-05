@@ -281,6 +281,58 @@ MAP
 ................
 ENDMAP
 
+##############################################################################
+# Crypt arrival vaults
+##############################################################################
+
+# It's been undisturbed for so long, cobwebs are starting to form.
+NAME:   grunt_crypt_arrival_webbed
+TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
+KFEAT:  ^ = known web trap / w:20 floor
+DEPTH:  Crypt:1
+ORIENT: south
+MAP
+      .@.
+xxxxxc+++cxxxxx
+xxxxxc^.^cxxxxx
+xxxxcc^.^ccxxxx
+xxcccG^.^Gcccxx
+xxcG^^^.^^^Gcxx
+xcc^^.....^^ccx
+xcG^.V...V.^Gcx
+xc^^..[.(..^^cx
+xcV.........Vcx
+xc^^...{...^^cx
+xcG^.V...V.^Gcx
+xcc^^.....^^ccx
+xxcG^^^.^^^Gcxx
+xxcccG^V^Gcccxx
+xxxxcccccccxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   grunt_crypt_arrival_split
+TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
+DEPTH:  Crypt:1
+ORIENT: south
+MAP
+       .@.
+xxxxxxx+++xxxxxxx
+xxxxx.......xxxxx
+xxG...xxGxx...Gxx
+xx..xxxxxxxxx..xx
+x..xxxxxxxxxxx..x
+x.xxxxxxxxxxxxx.x
+x.VxxxxxxxxxxxV.x
+x.xxxxxxxxxxxxx.x
+x..xxxxxxxxxxx..x
+xx..xGxxGxxGx..xx
+xx.....[.(.....xx
+xxxG....V....Gxxx
+xxxxxG..{..Gxxxxx
+xxxxxxxG.Gxxxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##############################################################################
 # Crypt minivaults
