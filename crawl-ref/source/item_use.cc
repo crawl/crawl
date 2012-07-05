@@ -2964,6 +2964,8 @@ void read_scroll(int slot)
     case SCR_ACQUIREMENT:
         mpr("This is a scroll of acquirement!");
         more();
+        // Identify it early in case the player checks the '\' screen.
+        set_ident_type(scroll, ID_KNOWN_TYPE);
         acquirement(OBJ_RANDOM, AQ_SCROLL);
         break;
 
