@@ -3463,3 +3463,122 @@ xxcc....cx       xc....ccxx
  xxcc...cx       xc...ccxx
   xxcc+ccx       xcc+ccxx
 ENDMAP
+
+###############################################################################
+# Death Spiral stair vault (in two versions, with the smaller one being for
+# non-D branches)
+
+NAME:   grunt_deathspiral_large
+TAGS:   patrolling uniq_deathspiral
+DEPTH:  D:16-26
+ORIENT: float
+SHUFFLE: )]}>
+SUBST:  } = }>
+SUBST:  ] = ]>
+MAP
+   xxxxxxxxxxxxccccc@
+   xxxxxxxxxcccc.....
+   xxxxxxxxcc........
+   xxxxxxccc....ccccccccccccxxxxxxxxxxxx
+   xxxxxcc....ccc..........cccxxxxxxxxxx
+   xxxxcc...ccc..............cccxxxxxxxx
+   xxxcc...cc.....cccccccc.....cccxxxxxx
+   xxxc...cc...cccc......cccc....ccxxxxx
+   xxcc..cc...cc............ccc...ccxxxx
+   xxc..cc...cc.....ccc.......cc...ccxxx
+   xcc..c...cc...cccc%ccccc....cc...cxxx
+   xc..cc..cc..ccc........ccc...cc..ccxx
+   cc..c...c..cc....0.......cc...cc..ccx
+   c...c..cc..c....ccccccc...cc...c...cx
+   c..cc..c..cc..ccc0....ccc..cc..cc..cx
+   c..c...c..c..cccc+ccc...cc..cc..c..cc
+   c..c...c..c.cc0..8.0cc...c...c..cc..c
+   c..c..cc..c.c0*....*0cc..cc..c...c..c
+   c..c..c%..c.c........cc...c..cc..c..c
+@..c..c..cc.0c0+8..}]...ccc..c...c..c..c
+c..c..c...c..ccc...)>..8+0c0.cc..c..c..@
+c..c..cc..c...cc........c.c..%c..c..c
+c..c...c..cc..cc0*....*0c.c..cc..c..c
+c..cc..c...c...cc0.8..0cc.c..c...c..c
+cc..c..cc..cc...ccc+cccc..c..c...c..c
+xc..cc..cc..ccc....0ccc..cc..c..cc..c
+xc...c...cc...ccccccc....c..cc..c...c
+xcc..cc...cc.......0....cc..c...c..cc
+xxcc..cc...ccc........ccc..cc..cc..cx
+xxxc...cc....ccccc%cccc...cc...c..ccx
+xxxcc...cc.......ccc.....cc...cc..cxx
+xxxxcc...ccc............cc...cc..ccxx
+xxxxxcc....cccc......cccc...cc...cxxx
+xxxxxxccc.....cccccccc.....cc...ccxxx
+xxxxxxxxccc..............ccc...ccxxxx
+xxxxxxxxxxccc..........ccc....ccxxxxx
+xxxxxxxxxxxxcccccccccccc....cccxxxxxx
+                   ........ccxxxxxxxx
+                   .....ccccxxxxxxxxx
+                   @cccccxxxxxxxxxxxx
+ENDMAP
+
+NAME: grunt_deathspiral_small
+TAGS: patrolling uniq_deathspiral
+DEPTH: D:16-26, Vaults:1-7, Crypt:1-4, Dis:1-6, Geh:1-6, Tar:1-6, Coc:1-6, \
+       Zot:1-4
+ORIENT: float
+SHUFFLE: )]}>
+SUBST:  } = }>
+SUBST:  ] = ]>
+# Like the door vault, pick interesting monsters for the 8s in branches,
+# but use normal OOD for D and Vaults.
+# Also remove the bits of loot for Hell branches and Zot.
+: if you.branch() == "Crypt" then
+KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
+            w:5 curse toe / w:5 large zombie / w:5 large skeleton / eidolon / \
+            w:20 reaper / soul eater / w:30 place:Crypt
+: elseif you.branch() == "Dis" then
+KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / \
+            w:5 hell sentinel / iron dragon / tormentor / iron golem / \
+            place:Dis
+SUBST:  *% = .
+: elseif you.branch() == "Geh" then
+KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
+            fire giant / place:Geh
+SUBST:  *% = .
+: elseif you.branch() == "Tar" then
+KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / \
+            lich / ancient lich / w:15 place:Tar
+SUBST:  *% = .
+: elseif you.branch() == "Coc" then
+KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
+            w:5 large simulacrum / place:Coc
+SUBST:  *% = .
+: elseif you.branch() == "Zot" then
+KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
+            killer klown / death cob / w:5 curse toe / w:5 ancient lich
+SUBST:  *% = .
+: end
+MAP
+  xxxxxccccc@
+  xxxxcc.....
+  xxxcc.cccccccccccxxxxxx
+  xxcc.cc.........cccxxxx
+  xcc.cc.ccccccccc..ccxxx
+  xc.cc.cc..0....ccc.ccxx
+  cc.c.cc.ccccccc..cc.ccx
+  c.cc.c.cc%0...ccc.cc.cc
+  c.c.cc.ccc+ccc..cc.cc.c
+  c.c.c.cc.080.ccc.cc.c.c
+  c.c.c.c.*...*.ccc.c.c.c
+  c.c.c.c0..}..0c%c.c.c.c
+@.c.c0c0+8.].).8+0c0c.c.@
+c.c.c.c%c0..>..0c.c.c.c
+c.c.c.ccc.*...*.c.c.c.c
+c.c.cc.ccc.080.cc.c.c.c
+c.cc.cc..ccc+ccc.cc.c.c
+cc.cc.ccc...0%cc.c.cc.c
+xcc.cc..ccccccc.cc.c.cc
+xxcc.ccc....0..cc.cc.cx
+xxxcc..ccccccccc.cc.ccx
+xxxxccc.........cc.ccxx
+xxxxxxccccccccccc.ccxxx
+            .....ccxxxx
+            @cccccxxxxx
+ENDMAP
