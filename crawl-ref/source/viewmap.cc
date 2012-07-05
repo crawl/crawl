@@ -489,6 +489,9 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                         cell->glyph = ch;
                     }
                 }
+
+                if (Options.show_travel_trail && travel_trail_index(c) >= 0)
+                    cell->colour |= COLFLAG_REVERSE;
             }
 
             cell++;
